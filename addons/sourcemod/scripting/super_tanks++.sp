@@ -12,8 +12,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-/* 36 Super Tanks
- * Acid
+/* Acid
  * Ammo
  * Blind
  * Bomb
@@ -1278,56 +1277,57 @@ void vAmmoHit(int client)
 	{
 		char sWeapon[32];
 		int iActiveWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+		int iAmmo = FindDataMapInfo(client, "m_iAmmo");
 		GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
 		if (IsValidEntity(iActiveWeapon))
 		{
 			if (StrEqual(sWeapon, "weapon_rifle", false))
 			{
-				bIsL4D2Game() ? SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 12), g_cvSTAmmoCount.IntValue) : SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 12), g_cvSTAmmoCount.IntValue);
+				bIsL4D2Game() ? SetEntData(client, iAmmo + 12, g_cvSTAmmoCount.IntValue) : SetEntData(client, iAmmo + 12, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_rifle_desert", false) || StrEqual(sWeapon, "weapon_rifle_ak47", false) || StrEqual(sWeapon, "weapon_rifle_sg552", false))
 			{
-				SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 12), g_cvSTAmmoCount.IntValue);
+				SetEntData(client, iAmmo + 12, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_smg", false))
 			{
-				bIsL4D2Game() ? SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 20), g_cvSTAmmoCount.IntValue) : SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 20), g_cvSTAmmoCount.IntValue);
+				bIsL4D2Game() ? SetEntData(client, iAmmo + 20, g_cvSTAmmoCount.IntValue) : SetEntData(client, iAmmo + 20, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_smg_silenced", false) || StrEqual(sWeapon, "weapon_smg_mp5", false))
 			{
-				SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 20), g_cvSTAmmoCount.IntValue);
+				SetEntData(client, iAmmo + 20, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_pumpshotgun", false))
 			{
-				bIsL4D2Game() ? SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 28), g_cvSTAmmoCount.IntValue) : SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 24), g_cvSTAmmoCount.IntValue);
+				bIsL4D2Game() ? SetEntData(client, iAmmo + 28, g_cvSTAmmoCount.IntValue) : SetEntData(client, iAmmo + 24, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_shotgun_chrome", false))
 			{
-				SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 28), g_cvSTAmmoCount.IntValue);
+				SetEntData(client, iAmmo + 28, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_autoshotgun", false))
 			{
-				bIsL4D2Game() ? SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 24), g_cvSTAmmoCount.IntValue) : SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 32), g_cvSTAmmoCount.IntValue);
+				bIsL4D2Game() ? SetEntData(client, iAmmo + 24, g_cvSTAmmoCount.IntValue) : SetEntData(client, iAmmo + 32, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_shotgun_spas", false))
 			{
-				SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 32), g_cvSTAmmoCount.IntValue);
+				SetEntData(client, iAmmo + 32, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_hunting_rifle", false))
 			{
-				bIsL4D2Game() ? SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 36), g_cvSTAmmoCount.IntValue) : SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 8), g_cvSTAmmoCount.IntValue);
+				bIsL4D2Game() ? SetEntData(client, iAmmo + 36, g_cvSTAmmoCount.IntValue) : SetEntData(client, iAmmo + 8, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_sniper_scout", false))
 			{
-				SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 36), g_cvSTAmmoCount.IntValue);
+				SetEntData(client, iAmmo + 36, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_sniper_military", false) || StrEqual(sWeapon, "weapon_sniper_awp", false))
 			{
-				SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 40), g_cvSTAmmoCount.IntValue);
+				SetEntData(client, iAmmo + 40, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_grenade_launcher", false))
 			{
-				SetEntData(client, (FindDataMapInfo(client, "m_iAmmo") + 68), g_cvSTAmmoCount.IntValue);
+				SetEntData(client, iAmmo + 68, g_cvSTAmmoCount.IntValue);
 			}
 		}
 		SetEntProp(GetPlayerWeaponSlot(client, 0), Prop_Data, "m_iClip1", g_cvSTAmmoCount.IntValue, 1);
