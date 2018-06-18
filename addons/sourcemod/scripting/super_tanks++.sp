@@ -540,12 +540,14 @@ public void OnMapStart()
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, aOnTakeDamage);
+	SDKHook(client, SDKHook_TraceAttack, aTraceAttack);
 	vStopTimers(client);
 }
 
 public void OnClientDisconnect(int client)
 {
 	SDKUnhook(client, SDKHook_OnTakeDamage, aOnTakeDamage);
+	SDKUnhook(client, SDKHook_TraceAttack, aTraceAttack);
 	vStopTimers(client);
 }
 
@@ -867,7 +869,7 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 			}
 			else if (bIsBotInfected(victim) && bIsTank(victim))
 			{
-				if (damagetype == 8 || damagetype == 2056 || damagetype == 268435464 || StrEqual(sClassname, "inferno", false))
+				if (damagetype == 8 || damagetype == 2056 || damagetype == 268435464)
 				{
 					if (g_cvSTFireImmunity[g_iTankType[victim]].BoolValue)
 					{
