@@ -12,7 +12,8 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-/* Acid
+/* 36 Super Tanks
+ * Acid
  * Ammo
  * Blind
  * Bomb
@@ -191,6 +192,7 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTEnable, "st_enable", "1", "Enable Super Tanks++?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTEnabledGameModes, "st_enabledgamemodes", "", "Enable Super Tanks++ in these game modes.\nSeparate game modes with commas.\nGame mode limit: 64\nCharacter limit for each game mode: 32\n(Empty: All)\n(Not empty: Enabled only in these game modes.)");
 	vCreateConVar(g_cvSTFinalesOnly, "st_finalesonly", "0", "Enable Super Tanks++ in finales only?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
+	cvST_ConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	vCreateConVar(g_cvSTTankTypes, "st_tanktypes", "0123456789abcdefghijklmnopqrstuvwxyz", "Which Super Tank types can be spawned?\nCombine letters and numbers in any order for different results.\nRepeat the same letter or number to increase its chance of being chosen.\nCharacter limit: 52\nView the README.md file for a list of options.");
 	vCreateConVar(g_cvSTTankWaves, "st_tankwaves", "2,3,4", "How many Tanks to spawn for each finale wave?\n(1st number = 1st wave)\n(2nd number = 2nd wave)\n(3rd number = 3rd wave)");
 	vCreateConVar(g_cvSTAcidChance, "stacid_acidchance", "4", "Acid Tank has 1 out of this many chances to spawn an acid puddle underneath survivors.", _, true, 1.0, true, 99999.0);
