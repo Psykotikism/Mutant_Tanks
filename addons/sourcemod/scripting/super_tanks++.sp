@@ -1307,7 +1307,7 @@ void vAmmoHit(int client)
 			}
 			else if (StrEqual(sWeapon, "weapon_autoshotgun", false))
 			{
-				bIsL4D2Game() ? SetEntData(client, iAmmo + 24, g_cvSTAmmoCount.IntValue) : SetEntData(client, iAmmo + 32, g_cvSTAmmoCount.IntValue);
+				bIsL4D2Game() ? SetEntData(client, iAmmo + 32, g_cvSTAmmoCount.IntValue) : SetEntData(client, iAmmo + 24, g_cvSTAmmoCount.IntValue);
 			}
 			else if (StrEqual(sWeapon, "weapon_shotgun_spas", false))
 			{
