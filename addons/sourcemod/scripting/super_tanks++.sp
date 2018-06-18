@@ -842,8 +842,8 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 							case 2: vAmmoHit(victim);
 							case 3: vBlindHit(victim);
 							case 4: vBombHit(victim);
-							case 7: vCommonHit(victim);
-							case 8: vDrugHit(victim);
+							case 8: vCommonHit(victim);
+							case 9: vDrugHit(victim);
 							case 10: vFireHit(victim);
 							case 12: vFlingHit(victim);
 							case 13: vGhostHit(victim, attacker);
@@ -3262,7 +3262,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 				{
 					switch (g_iTankType[iTank])
 					{
-						case 7: vCommonAbility(iTank);
+						case 8: vCommonAbility(iTank);
 						case 11: vFlashAbility(iTank);
 						case 13: vGhostAbility(iTank);
 						case 14: vGravityAbility(iTank);
@@ -3361,17 +3361,17 @@ public Action tTimerRockThrow(Handle timer)
 		{
 			switch (g_iTankType[iThrower])
 			{
-				case 4:
+				case 5:
 				{
 					g_iThrower[iThrower] = iEntity;
 					CreateTimer(0.1, tTimerBoomerThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
-				case 5:
+				case 6:
 				{
 					g_iThrower[iThrower] = iEntity;
 					CreateTimer(0.1, tTimerChargerThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
-				case 6:
+				case 7:
 				{
 					g_iThrower[iThrower] = iEntity;
 					CreateTimer(0.1, tTimerCloneThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
