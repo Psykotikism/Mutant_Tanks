@@ -1,3 +1,4 @@
+// Super Tanks++
 #include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
@@ -952,7 +953,8 @@ public Action aTraceAttack(int victim, int &attacker, int &inflictor, float &dam
 
 public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcast)
 {
-	int iTank = GetClientOfUserId(event.GetInt("userid"));
+	int iUserId = event.GetInt("userid");
+	int iTank = GetClientOfUserId(iUserId);
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
 	{
 		vThrowInterval(iTank, g_cvSTThrowInterval[g_iTankType[iTank]].FloatValue);
@@ -1005,8 +1007,10 @@ public Action eEventPlayerBotReplace(Event event, const char[] name, bool dontBr
 
 public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	int iAttacker = GetClientOfUserId(event.GetInt("attacker"));
-	int iTank = GetClientOfUserId(event.GetInt("userid"));
+	int iAttackerId = event.GetInt("userid");
+	int iAttacker = GetClientOfUserId(iAttackerId);
+	int iUserId = event.GetInt("userid");
+	int iTank = GetClientOfUserId(iUserId);
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
 	{
 		if (bIsValidClient(iTank))
@@ -1067,6 +1071,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						}
 					}
 				}
+				iEntity = -1;
 				while ((iEntity = FindEntityByClassname(iEntity, "beam_spotlight")) != INVALID_ENT_REFERENCE)
 				{
 					int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
@@ -1075,6 +1080,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						AcceptEntityInput(iEntity, "Kill");
 					}
 				}
+				iEntity = -1;
 				while ((iEntity = FindEntityByClassname(iEntity, "point_push")) != INVALID_ENT_REFERENCE)
 				{
 					if (bIsL4D2Game())
@@ -1139,7 +1145,8 @@ public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcas
 
 public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int iTank = GetClientOfUserId(event.GetInt("userid"));
+	int iUserId = event.GetInt("userid");
+	int iTank = GetClientOfUserId(iUserId);
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
 	{
 		if (bIsValidClient(iTank))
@@ -1234,7 +1241,7 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 					}
 				}
 			}
-			CreateTimer(0.1, tTimerTankSpawn, iTank, TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(0.1, tTimerTankSpawn, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 }
@@ -1394,7 +1401,7 @@ void vBlindHit(int client)
 	if (GetRandomInt(1, g_cvSTBlindChance.IntValue) == 1 && bIsSurvivor(client))
 	{
 		vApplyBlindness(client, 255);
-		CreateTimer(g_cvSTBlindDuration.FloatValue, tTimerStopBlindness, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_cvSTBlindDuration.FloatValue, tTimerStopBlindness, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -1549,9 +1556,9 @@ void vDrugHit(int client)
 	{
 		if (g_hDrugTimer[client] == null)
 		{
-			g_hDrugTimer[client] = CreateTimer(1.0, tTimerDrug, client, TIMER_REPEAT);
+			g_hDrugTimer[client] = CreateTimer(1.0, tTimerDrug, GetClientUserId(client), TIMER_REPEAT);
 		}
-		CreateTimer(g_cvSTDrugDuration.FloatValue, tTimerStopDrug, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_cvSTDrugDuration.FloatValue, tTimerStopDrug, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -1627,7 +1634,7 @@ void vFlashAbility(int client)
 				g_bFlash[client] = true;
 				if (g_hFlashTimer[client] == null)
 				{
-					g_hFlashTimer[client] = CreateTimer(0.25, tTimerFlashEffect, client, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					g_hFlashTimer[client] = CreateTimer(0.25, tTimerFlashEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 			}
 		}
@@ -1772,7 +1779,7 @@ void vGravityHit(int client)
 	if (GetRandomInt(1, g_cvSTGravityChance.IntValue) == 1 && bIsSurvivor(client))
 	{
 		SetEntityGravity(client, 0.3);
-		CreateTimer(2.0, tTimerStopGravity, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(2.0, tTimerStopGravity, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -1782,7 +1789,7 @@ void vHealAbility(int client)
 	{
 		if (g_hHealTimer[client] == null)
 		{
-			g_hHealTimer[client] = CreateTimer(g_cvSTHealInterval.FloatValue, tTimerHeal, client, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			g_hHealTimer[client] = CreateTimer(g_cvSTHealInterval.FloatValue, tTimerHeal, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
 }
@@ -1804,7 +1811,7 @@ void vHypnoHit(int client)
 	if (GetRandomInt(1, g_cvSTHypnoChance.IntValue) == 1 && bIsSurvivor(client))
 	{
 		g_bHypno[client] = true;
-		CreateTimer(g_cvSTHypnoDuration.FloatValue, tTimerStopHypnosis, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_cvSTHypnoDuration.FloatValue, tTimerStopHypnosis, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -1819,7 +1826,7 @@ void vIceHit(int client)
 			SetEntityRenderColor(client, 0, 128, 255, 192);
 			EmitAmbientSound("physics/glass/glass_impact_bullet4.wav", g_flIce, client, SNDLEVEL_RAIDSIREN);
 		}
-		CreateTimer(5.0, tTimerStopIce, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(5.0, tTimerStopIce, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -1893,7 +1900,7 @@ void vInvertHit(int client)
 	if (GetRandomInt(1, g_cvSTInvertChance.IntValue) == 1 && bIsSurvivor(client))
 	{
 		g_bInvert[client] = true;
-		CreateTimer(g_cvSTInvertDuration.FloatValue, tTimerStopInversion, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_cvSTInvertDuration.FloatValue, tTimerStopInversion, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -1901,7 +1908,7 @@ void vJumperEffect(int client)
 {
 	if (g_iTankType[client] == 22 && bIsValidClient(client))
 	{
-		CreateTimer(1.0, tTimerJump, client, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		CreateTimer(1.0, tTimerJump, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 }
 
@@ -2066,8 +2073,8 @@ void vRocketHit(int client)
 			g_iRocket[client] = iFlame;
 		}
 		EmitSoundToAll("weapons/rpg/rocketfire1.wav", client, _, _, _, 0.8);
-		CreateTimer(2.0, tTimerRocketLaunch, client);
-		CreateTimer(3.5, tTimerRocketDetonate, client);
+		CreateTimer(2.0, tTimerRocketLaunch, GetClientUserId(client));
+		CreateTimer(3.5, tTimerRocketDetonate, GetClientUserId(client));
 	}
 }
 
@@ -2232,9 +2239,9 @@ void vShakeHit(int client)
 	{
 		if (g_hShakeTimer[client] == null)
 		{
-			g_hShakeTimer[client] = CreateTimer(5.0, tTimerShake, client, TIMER_REPEAT);
+			g_hShakeTimer[client] = CreateTimer(5.0, tTimerShake, GetClientUserId(client), TIMER_REPEAT);
 		}
-		CreateTimer(g_cvSTShakeDuration.FloatValue, tTimerStopShake, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_cvSTShakeDuration.FloatValue, tTimerStopShake, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -2284,7 +2291,7 @@ void vShieldAbility(int client, bool shield)
 					}
 				}
 			}
-			CreateTimer(g_cvSTShieldDelay.FloatValue, tTimerShield, client, TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_cvSTShieldDelay.FloatValue, tTimerShield, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 			g_bShielded[client] = false;
 		}
 	}
@@ -2296,9 +2303,9 @@ void vShoveHit(int client)
 	{
 		if (g_hShoveTimer[client] == null)
 		{
-			g_hShoveTimer[client] = CreateTimer(1.0, tTimerShove, client, TIMER_REPEAT);
+			g_hShoveTimer[client] = CreateTimer(1.0, tTimerShove, GetClientUserId(client), TIMER_REPEAT);
 		}
-		CreateTimer(g_cvSTShoveDuration.FloatValue, tTimerStopShove, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_cvSTShoveDuration.FloatValue, tTimerStopShove, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -2332,7 +2339,7 @@ void vSmokerEffect(int client)
 	{
 		if (g_hSmokerTimer[client] == null)
 		{
-			g_hSmokerTimer[client] = CreateTimer(1.5, tTimerSmoker, client, TIMER_REPEAT);
+			g_hSmokerTimer[client] = CreateTimer(1.5, tTimerSmoker, GetClientUserId(client), TIMER_REPEAT);
 		}
 	}
 }
@@ -2342,7 +2349,7 @@ void vStunHit(int client)
 	if (GetRandomInt(1, g_cvSTStunChance.IntValue) == 1 && bIsSurvivor(client))
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", g_cvSTStunSpeed.FloatValue);
-		CreateTimer(g_cvSTStunDuration.FloatValue, tTimerStopStun, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_cvSTStunDuration.FloatValue, tTimerStopStun, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -2352,9 +2359,9 @@ void vVisualHit(int client)
 	{
 		if (g_hVisionTimer[client] == null)
 		{
-			g_hVisionTimer[client] = CreateTimer(0.1, tTimerVision, client, TIMER_REPEAT);
+			g_hVisionTimer[client] = CreateTimer(0.1, tTimerVision, GetClientUserId(client), TIMER_REPEAT);
 		}
-		CreateTimer(g_cvSTVisualDuration.FloatValue, tTimerStopVision, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_cvSTVisualDuration.FloatValue, tTimerStopVision, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -2481,16 +2488,18 @@ public void vSwitchCvars(ConVar convar, const char[] oldValue, const char[] newV
 	}
 }
 
-public Action tTimerStopBlindness(Handle timer, any client)
+public Action tTimerStopBlindness(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		vApplyBlindness(client, 0);
 	}
 }
 
-public Action tTimerBoomerThrow(Handle timer, any client)
+public Action tTimerBoomerThrow(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 4 && bIsValidClient(client))
 	{
 		vInfectedThrow(client, 2);
@@ -2499,8 +2508,9 @@ public Action tTimerBoomerThrow(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action tTimerChargerThrow(Handle timer, any client)
+public Action tTimerChargerThrow(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 5 && bIsValidClient(client))
 	{
 		vInfectedThrow(client, 6);
@@ -2509,8 +2519,9 @@ public Action tTimerChargerThrow(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action tTimerCloneThrow(Handle timer, any client)
+public Action tTimerCloneThrow(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 6 && bIsValidClient(client))
 	{
 		vInfectedThrow(client, 8);
@@ -2519,16 +2530,18 @@ public Action tTimerCloneThrow(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopCommon(Handle timer, any client)
+public Action tTimerStopCommon(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 7 && bIsValidClient(client))
 	{
 		delete g_hCommonTimer[client];
 	}
 }
 
-public Action tTimerDrug(Handle timer, any client)
+public Action tTimerDrug(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		float flAngles[3];
@@ -2567,8 +2580,9 @@ public Action tTimerDrug(Handle timer, any client)
 	return Plugin_Handled;
 }
 
-public Action tTimerStopDrug(Handle timer, any client)
+public Action tTimerStopDrug(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		float flAngles[3];
@@ -2626,8 +2640,9 @@ public Action tTimerStopExplosion(Handle timer, any entity)
 	return Plugin_Continue;
 }
 
-public Action tTimerFlashEffect(Handle timer, any client)
+public Action tTimerFlashEffect(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 11 && bIsValidClient(client))
 	{
 		float flTankPos[3];
@@ -2651,24 +2666,27 @@ public Action tTimerFlashEffect(Handle timer, any client)
 	}
 }
 
-public Action tTimerStopFlash(Handle timer, any client)
+public Action tTimerStopFlash(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 11 && bIsValidClient(client))
 	{
 		delete g_hFlashTimer[client];
 	}
 }
 
-public Action tTimerStopGravity(Handle timer, any client)
+public Action tTimerStopGravity(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		SetEntityGravity(client, 1.0);
 	}
 }
 
-public Action tTimerHeal(Handle timer, any client)
+public Action tTimerHeal(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 15 && bIsValidClient(client))
 	{
 		int iType;
@@ -2754,16 +2772,18 @@ public Action tTimerHeal(Handle timer, any client)
 	}
 }
 
-public Action tTimerStopHeal(Handle timer, any client)
+public Action tTimerStopHeal(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 15 && bIsValidClient(client))
 	{
 		delete g_hHealTimer[client];
 	}
 }
 
-public Action tTimerHunterThrow(Handle timer, any client)
+public Action tTimerHunterThrow(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 16 && bIsValidClient(client))
 	{
 		vInfectedThrow(client, 3);
@@ -2772,16 +2792,18 @@ public Action tTimerHunterThrow(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopHypnosis(Handle timer, any client)
+public Action tTimerStopHypnosis(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		g_bHypno[client] = false;
 	}
 }
 
-public Action tTimerStopIce(Handle timer, any client)
+public Action tTimerStopIce(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		GetClientEyePosition(client, g_flIce);
@@ -2819,16 +2841,18 @@ public Action tTimerIdleFix(Handle timer, Handle pack)
 	}
 }
 
-public Action tTimerStopInversion(Handle timer, any client)
+public Action tTimerStopInversion(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		g_bInvert[client] = false;
 	}
 }
 
-public Action tTimerJockeyThrow(Handle timer, any client)
+public Action tTimerJockeyThrow(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 21 && bIsValidClient(client))
 	{
 		vInfectedThrow(client, 5);
@@ -2837,8 +2861,9 @@ public Action tTimerJockeyThrow(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action tTimerJump(Handle timer, any client)
+public Action tTimerJump(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 22 && GetRandomInt(1, g_cvSTJumperChance.IntValue) == 1 && bIsValidClient(client))
 	{
 		if (iGetNearestSurvivor(client) > 200 && iGetNearestSurvivor(client) < 2000)
@@ -2848,8 +2873,9 @@ public Action tTimerJump(Handle timer, any client)
 	}
 }
 
-public Action tTimerStopJump(Handle timer, any client)
+public Action tTimerStopJump(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 22 && bIsValidClient(client))
 	{
 		delete g_hJumpTimer[client];
@@ -2914,6 +2940,7 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 		}
 		else
 		{
+			iEntity = -1;
 			while ((iEntity = FindEntityByClassname(iEntity, "tank_rock")) != INVALID_ENT_REFERENCE)
 			{
 				int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
@@ -2924,6 +2951,7 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 			}
 			delete pack;
 		}
+		iEntity = -1;
 		while ((iEntity = FindEntityByClassname(iEntity, "tank_rock")) != INVALID_ENT_REFERENCE)
 		{
 			int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
@@ -2954,8 +2982,9 @@ public Action tTimerRestartCoordinates(Handle timer)
 	}
 }
 
-public Action tTimerRocketLaunch(Handle timer, any client)
+public Action tTimerRocketLaunch(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		float flVelocity[3];
@@ -2970,8 +2999,9 @@ public Action tTimerRocketLaunch(Handle timer, any client)
 	return Plugin_Handled;
 }
 
-public Action tTimerRocketDetonate(Handle timer, any client)
+public Action tTimerRocketDetonate(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		float flPosition[3];
@@ -2985,8 +3015,9 @@ public Action tTimerRocketDetonate(Handle timer, any client)
 	return Plugin_Handled;
 }
 
-public Action tTimerShake(Handle timer, any client)
+public Action tTimerShake(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		Handle hShakeTarget = StartMessageOne("Shake", client);
@@ -3002,24 +3033,27 @@ public Action tTimerShake(Handle timer, any client)
 	}
 }
 
-public Action tTimerStopShake(Handle timer, any client)
+public Action tTimerStopShake(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		delete g_hShakeTimer[client];
 	}
 }
 
-public Action tTimerShield(Handle timer, any client)
+public Action tTimerShield(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 28 && bIsValidClient(client) && !g_bShielded[client])
 	{
 		vShieldAbility(client, true);
 	}
 }
 
-public Action tTimerPropaneThrow(Handle timer, any client)
+public Action tTimerPropaneThrow(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 28 && bIsValidClient(client))
 	{
 		float flVelocity[3];
@@ -3051,8 +3085,9 @@ public Action tTimerPropaneThrow(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action tTimerShove(Handle timer, any client)
+public Action tTimerShove(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	float flVecOrigin[3];
 	for (int iSender = 1; iSender <= MaxClients; iSender++)
 	{
@@ -3064,24 +3099,27 @@ public Action tTimerShove(Handle timer, any client)
 	}
 }
 
-public Action tTimerStopShove(Handle timer, any client)
+public Action tTimerStopShove(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		delete g_hShoveTimer[client];
 	}
 }
 
-public Action tTimerSmoker(Handle timer, any client)
+public Action tTimerSmoker(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 30 && bIsValidClient(client))
 	{
 		vAttachParticle(client, "smoker_smokecloud", 1.2, 0.0);
 	}
 }
 
-public Action tTimerSmokerThrow(Handle timer, any client)
+public Action tTimerSmokerThrow(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 30 && bIsValidClient(client))
 	{
 		vInfectedThrow(client, 1);
@@ -3090,16 +3128,18 @@ public Action tTimerSmokerThrow(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopSmoker(Handle timer, any client)
+public Action tTimerStopSmoker(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 30 && bIsValidClient(client))
 	{
 		delete g_hSmokerTimer[client];
 	}
 }
 
-public Action tTimerSpitterThrow(Handle timer, any client)
+public Action tTimerSpitterThrow(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 31 && bIsValidClient(client))
 	{
 		vInfectedThrow(client, 4);
@@ -3108,16 +3148,18 @@ public Action tTimerSpitterThrow(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopStun(Handle timer, any client)
+public Action tTimerStopStun(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	}
 }
 
-public Action tTimerVision(Handle timer, any client)
+public Action tTimerVision(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (IsValidEntity(client))
 	{
 		SetEntData(client, FindSendPropInfo("CBasePlayer", "m_iFOV"), g_cvSTVisualFOV.IntValue, 4, true);
@@ -3125,8 +3167,9 @@ public Action tTimerVision(Handle timer, any client)
 	}
 }
 
-public Action tTimerStopVision(Handle timer, any client)
+public Action tTimerStopVision(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client) && IsValidEntity(client))
 	{
 		SetEntData(client, FindSendPropInfo("CBasePlayer", "m_iFOV"), 90, 4, true);
@@ -3135,8 +3178,9 @@ public Action tTimerStopVision(Handle timer, any client)
 	}
 }
 
-public Action tTimerWitchThrow(Handle timer, any client)
+public Action tTimerWitchThrow(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 36 && bIsValidClient(client))
 	{
 		vInfectedThrow(client, 7);
@@ -3210,7 +3254,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 				int iInfectedType = GetEntData(iTank, FindSendPropInfo("CTerrorPlayer", "m_zombieClass"));
 				if ((bIsL4D2Game() && iInfectedType == 8) || (!bIsL4D2Game() && iInfectedType == 5))
 				{
-					CreateTimer(3.0, tTimerTankLifeCheck, iTank, TIMER_FLAG_NO_MAPCHANGE);
+					CreateTimer(3.0, tTimerTankLifeCheck, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 				}
 				if (bIsTank(iTank))
 				{
@@ -3236,8 +3280,9 @@ public Action tTimerTankTypeUpdate(Handle timer)
 	return Plugin_Continue;
 }
 
-public Action tTimerTankSpawn(Handle timer, any client)
+public Action tTimerTankSpawn(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
 	if (bIsBotInfected(client) && bIsTank(client))
 	{
 		switch (g_iTankType[client])
@@ -3317,47 +3362,47 @@ public Action tTimerRockThrow(Handle timer)
 				case 4:
 				{
 					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerBoomerThrow, iThrower, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(0.1, tTimerBoomerThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 				case 5:
 				{
 					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerChargerThrow, iThrower, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(0.1, tTimerChargerThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 				case 6:
 				{
 					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerCloneThrow, iThrower, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(0.1, tTimerCloneThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 				case 16:
 				{
 					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerHunterThrow, iThrower, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(0.1, tTimerHunterThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 				case 21:
 				{
 					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerJockeyThrow, iThrower, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(0.1, tTimerJockeyThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 				case 28:
 				{
 					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerPropaneThrow, iThrower, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(0.1, tTimerPropaneThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 				case 31:
 				{
 					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerSmokerThrow, iThrower, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(0.1, tTimerSmokerThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 				case 32:
 				{
 					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerSpitterThrow, iThrower, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(0.1, tTimerSpitterThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 				case 36:
 				{
 					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerWitchThrow, iThrower, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(0.1, tTimerWitchThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
 			}
 		}
@@ -3402,31 +3447,34 @@ public Action tTimerTankWave3(Handle timer)
 	}
 }
 
-public Action tTimerTankLifeCheck(Handle timer, any client)
+public Action tTimerTankLifeCheck(Handle timer, any userid)
 {
-	if (bIsBotInfected(client))
+	int client = GetClientOfUserId(userid);
+	if (bIsBotInfected(client) && GetEntData(client, FindSendPropInfo("CTerrorPlayer", "m_lifeState")) == 0)
 	{
-		if (GetEntData(client, FindSendPropInfo("CTerrorPlayer", "m_lifeState")) == 0)
+		int iTank = CreateFakeClient("Tank");
+		if (iTank > 0)
 		{
-			int iTank = CreateFakeClient("Tank");
-			if (iTank > 0)
-			{
-				float flOrigin[3];
-				float flAngles[3];
-				GetClientAbsOrigin(client, flOrigin);
-				GetClientAbsAngles(client, flAngles);
-				KickClient(client);
-				TeleportEntity(iTank, flOrigin, flAngles, NULL_VECTOR);
-				vSpawnInfected(iTank, 8, true);
-			}
-		}	
+			float flOrigin[3];
+			float flAngles[3];
+			GetClientAbsOrigin(client, flOrigin);
+			GetClientAbsAngles(client, flAngles);
+			KickClient(client);
+			TeleportEntity(iTank, flOrigin, flAngles, NULL_VECTOR);
+			vSpawnInfected(iTank, 8, true);
+		}
 	}
 }
 
-public Action tTimerDeleteEntity(Handle timer, any particle)
+public Action tTimerDeleteEntity(Handle timer, any entity)
 {
-	if (IsValidEntity(particle))
+	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
 	{
-		AcceptEntityInput(particle, "Kill");
+		return Plugin_Stop;
 	}
+	if (IsValidEntity(entity))
+	{
+		AcceptEntityInput(entity, "Kill");
+	}
+	return Plugin_Continue;
 }
