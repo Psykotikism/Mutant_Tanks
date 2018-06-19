@@ -9,7 +9,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.2"
+#define ST_VERSION "8.3"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_LOCK "=="
 #define ST_UNLOCK "!="
@@ -780,7 +780,7 @@ stock void vCheatCommand(int client, char[] command, char[] arguments = "")
 	int iCmdFlags = GetCommandFlags(command);
 	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
 	FakeClientCommand(client, "%s %s", command, arguments);
-	SetCommandFlags(command, iCmdFlags);
+	SetCommandFlags(command, iCmdFlags | FCVAR_CHEAT);
 }
 
 stock void vKickFakeClient(int client)

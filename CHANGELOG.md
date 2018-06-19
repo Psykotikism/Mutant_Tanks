@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 8.3 (July 4, 2018)
+
+Bug fixes:
+
+1. Fixed the Meteor Tank's meteor shower not working after a certain amount of time.
+
+Changes:
+
+1. Added a check to destroy all effects when a Tank dies.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.2 (June 19, 2018)
 
 Bug fixes:

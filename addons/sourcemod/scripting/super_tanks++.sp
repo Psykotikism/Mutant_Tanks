@@ -1061,12 +1061,105 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 					SetEntProp(iTank, Prop_Data, "m_iFrags", GetClientFrags(iTank) + 1);
 					SetEntProp(iAttacker, Prop_Data, "m_iFrags", GetClientFrags(iAttacker) + 1);
 				}
-				tTimerStopCommon(null, iTank);
-				tTimerStopFlash(null, iTank);
-				tTimerStopGravity(null, iTank);
-				tTimerStopHeal(null, iTank);
-				tTimerStopJump(null, iTank);
-				tTimerStopSmoker(null, iTank);
+				switch (g_iTankType[iTank])
+				{
+					case 3:
+					{
+						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+						{
+							if (bIsSurvivor(iSurvivor))
+							{
+								tTimerStopBlindness(null, iSurvivor);
+							}
+						}
+					}
+					case 8: tTimerStopCommon(null, iTank);
+					case 9:
+					{
+						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+						{
+							if (bIsSurvivor(iSurvivor))
+							{
+								delete g_hDrugTimer[iSurvivor];
+							}
+						}
+					}
+					case 11: tTimerStopFlash(null, iTank);
+					case 14: tTimerStopGravity(null, iTank);
+					case 15: tTimerStopHeal(null, iTank);
+					case 17:
+					{
+						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+						{
+							if (bIsSurvivor(iSurvivor))
+							{
+								g_bHypno[iSurvivor] = false;
+							}
+						}
+					}
+					case 18:
+					{
+						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+						{
+							if (bIsSurvivor(iSurvivor))
+							{
+								tTimerStopIce(null, iSurvivor);
+							}
+						}
+					}
+					case 20:
+					{
+						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+						{
+							if (bIsSurvivor(iSurvivor))
+							{
+								g_bInvert[iSurvivor] = false;
+							}
+						}
+					}
+					case 22: tTimerStopJump(null, iTank);
+					case 27:
+					{
+						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+						{
+							if (bIsSurvivor(iSurvivor))
+							{
+								delete g_hShakeTimer[iSurvivor];
+							}
+						}
+					}
+					case 29:
+					{
+						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+						{
+							if (bIsSurvivor(iSurvivor))
+							{
+								delete g_hShoveTimer[iSurvivor];
+							}
+						}
+					}
+					case 31: tTimerStopSmoker(null, iTank);
+					case 33:
+					{
+						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+						{
+							if (bIsSurvivor(iSurvivor))
+							{
+								SetEntPropFloat(iSurvivor, Prop_Data, "m_flLaggedMovementValue", 1.0);
+							}
+						}
+					}
+					case 34:
+					{
+						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+						{
+							if (bIsSurvivor(iSurvivor))
+							{
+								delete g_hVisionTimer[iSurvivor];
+							}
+						}
+					}
+				}
 				int iEntity = -1;
 				while ((iEntity = FindEntityByClassname(iEntity, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 				{
@@ -3008,7 +3101,7 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 			g_bMeteor[iTank] = false;
 		}
 		int iEntity = -1;
-		if (g_bMeteor[iTank])
+		if (bIsTank(iTank) && g_bMeteor[iTank])
 		{
 			float flAngle[3];
 			float flVelocity[3];
@@ -3049,7 +3142,7 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 				}
 			}
 		}
-		else if (g_bMeteor[iTank])
+		else if (!g_bMeteor[iTank])
 		{
 			while ((iEntity = FindEntityByClassname(iEntity, "tank_rock")) != INVALID_ENT_REFERENCE)
 			{
@@ -3346,7 +3439,7 @@ public Action tTimerWitchThrow(Handle timer, any client)
 				int iInfected = CreateFakeClient("Witch");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, 7, true);
+					vSpawnInfected(iInfected, 7, false);
 					float flPos[3];
 					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iEntity, "Kill");
