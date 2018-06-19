@@ -836,7 +836,7 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 			{
 				if (bIsBotInfected(attacker) && bIsTank(attacker) && damagetype != 2)
 				{
-					if (StrEqual(sClassname, "weapon_tank_claw", false) || StrEqual(sClassname, "weapon_tank_rock", false))
+					if (StrEqual(sClassname, "weapon_tank_claw", false) || StrEqual(sClassname, "tank_rock", false))
 					{
 						switch (g_iTankType[attacker])
 						{

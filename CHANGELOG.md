@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 8.2 (June 19, 2018)
+
+Bug fixes:
+
+1. Fixed the Tank's rocks not doing anything when survivors are hit.
+
 ## Version 8.1 (June 19, 2018)
 
 Bug fixes:
