@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 8.1 (June 19, 2018)
+
+Bug fixes:
+
+1. Fixed the Common Tank not spawning any common infected.
+2. Fixed the Gravity Tank's gravity force not stopping upon death.
+3. Fixed the Hypno Tank's effect instantly killing survivors (Now it sets survivors to 1 HP).
+4. Fixed the Meteor Tank's meteor shower not working.
+5. Fixed the special infected thrower Tanks not throwing any special infected.
+
 ## Version 8.0 (June 18, 2018)
 
 1. Major code overhaul.
