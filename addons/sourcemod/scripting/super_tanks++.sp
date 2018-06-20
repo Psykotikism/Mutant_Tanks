@@ -1223,7 +1223,7 @@ public Action eEventRoundEnd(Event event, const char[] name, bool dontBroadcast)
 	{
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{
-			if (bIsInfected(iInfected) && !bIsTank(iInfected) && iGetInfectedCount() > 36)
+			if (bIsInfected(iInfected) && !bIsTank(iInfected))
 			{
 				vKickFakeClient(iInfected);
 			}
@@ -1327,7 +1327,7 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 						{
 							CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
 						}
-						else if (iGetTankCount() > iWave1)
+						else if (iGetTankCount() > iWave1 && bIsTank(iTank))
 						{
 							vKickFakeClient(iTank);
 						}
@@ -1338,7 +1338,7 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 						{
 							CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
 						}
-						else if (iGetTankCount() > iWave2)
+						else if (iGetTankCount() > iWave2 && bIsTank(iTank))
 						{
 							vKickFakeClient(iTank);
 						}
@@ -1349,7 +1349,7 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 						{
 							CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
 						}
-						else if (iGetTankCount() > iWave3)
+						else if (iGetTankCount() > iWave3 && bIsTank(iTank))
 						{
 							vKickFakeClient(iTank);
 						}
