@@ -144,7 +144,6 @@ float g_flSpawnPosition[3];
 Handle g_hCommonTimer[MAXPLAYERS + 1];
 Handle g_hDrugTimer[MAXPLAYERS + 1];
 Handle g_hFlashTimer[MAXPLAYERS + 1];
-Handle g_hGameData;
 Handle g_hHealTimer[MAXPLAYERS + 1];
 Handle g_hJumpTimer[MAXPLAYERS + 1];
 Handle g_hSDKAcidPlayer;
@@ -425,18 +424,18 @@ public void OnPluginStart()
 	HookEvent("round_end", eEventRoundEnd);
 	HookEvent("round_start", eEventRoundStart);
 	HookEvent("tank_spawn", eEventTankSpawn);
-	g_hGameData = LoadGameConfigFile("super_tanks++");
+	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	if (bIsL4D2Game())
 	{
 		StartPrepSDKCall(SDKCall_Entity);
-		PrepSDKCall_SetFromConf(g_hGameData, SDKConf_Signature, "CSpitterProjectile_Detonate");
+		PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CSpitterProjectile_Detonate");
 		g_hSDKAcidPlayer = EndPrepSDKCall();
 		if (g_hSDKAcidPlayer == null)
 		{
 			PrintToServer("%s Your \"CSpitterProjectile_Detonate\" signature is outdated.", ST_PREFIX);
 		}
 		StartPrepSDKCall(SDKCall_Player);
-		PrepSDKCall_SetFromConf(g_hGameData, SDKConf_Signature, "CTerrorPlayer_Fling");
+		PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_Fling");
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
@@ -448,7 +447,7 @@ public void OnPluginStart()
 		}
 	}
 	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(g_hGameData, SDKConf_Signature, "CTerrorPlayer_SetHealthBuffer");
+	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_SetHealthBuffer");
 	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 	g_hSDKHealPlayer = EndPrepSDKCall();
 	if (g_hSDKHealPlayer == null)
@@ -456,21 +455,21 @@ public void OnPluginStart()
 		PrintToServer("%s Your \"CTerrorPlayer_SetHealthBuffer\" signature is outdated.", ST_PREFIX);
 	}
 	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(g_hGameData, SDKConf_Signature, "CTerrorPlayer_OnRevived");
+	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnRevived");
 	g_hSDKRevivePlayer = EndPrepSDKCall();
 	if (g_hSDKRevivePlayer == null)
 	{
 		PrintToServer("%s Your \"CTerrorPlayer_OnRevived\" signature is outdated.", ST_PREFIX);
 	}
 	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(g_hGameData, SDKConf_Signature, "CTerrorPlayer::GoAwayFromKeyboard");
+	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::GoAwayFromKeyboard");
 	g_hSDKIdlePlayer = EndPrepSDKCall();
 	if (g_hSDKIdlePlayer == null)
 	{
 		PrintToServer("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", ST_PREFIX);
 	}
 	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(g_hGameData, SDKConf_Signature, "SetHumanSpec");
+	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "SetHumanSpec");
 	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 	g_hSDKSpecPlayer = EndPrepSDKCall();
 	if (g_hSDKSpecPlayer == null)
@@ -478,7 +477,7 @@ public void OnPluginStart()
 		PrintToServer("%s Your \"SetHumanSpec\" signature is outdated.", ST_PREFIX);
 	}
 	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(g_hGameData, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon");
+	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon");
 	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 	g_hSDKPukePlayer = EndPrepSDKCall();
@@ -487,14 +486,14 @@ public void OnPluginStart()
 		PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", ST_PREFIX);
 	}
 	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(g_hGameData, SDKConf_Signature, "RoundRespawn");
+	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "RoundRespawn");
 	g_hSDKRespawnPlayer = EndPrepSDKCall();
 	if (g_hSDKRespawnPlayer == null)
 	{
 		PrintToServer("%s Your \"RoundRespawn\" signature is outdated.", ST_PREFIX);
 	}
 	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(g_hGameData, SDKConf_Signature, "CTerrorPlayer_OnStaggered");
+	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnStaggered");
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_Pointer);
 	g_hSDKShovePlayer = EndPrepSDKCall();
@@ -502,6 +501,7 @@ public void OnPluginStart()
 	{
 		PrintToServer("%s Your \"CTerrorPlayer_OnStaggered\" signature is outdated.", ST_PREFIX);
 	}
+	delete hGameData;
 	g_umFadeUserMsgId = GetUserMessageId("Fade");
 }
 
@@ -770,16 +770,16 @@ public void OnEntityDestroyed(int entity)
 						case 10:
 						{
 							int iProp = CreateEntityByName("prop_physics");
-							if (iProp > 36 && IsValidEntity(iProp))
+							if (IsValidEntity(iProp))
 							{
 								float flPos[3];
 								GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 								flPos[2] += 10.0;
-								DispatchKeyValue(iProp, "model", "models/props_junk/gascan001a.mdl");
+								SetEntityModel(iProp, "models/props_junk/gascan001a.mdl");
 								DispatchSpawn(iProp);
-								SetEntData(iProp, GetEntSendPropOffs(iProp, "m_CollisionGroup"), 1, 1, true);
+								SetEntProp(iProp, Prop_Send, "m_CollisionGroup", 1);
 								TeleportEntity(iProp, flPos, NULL_VECTOR, NULL_VECTOR);
-								AcceptEntityInput(iProp, "break");
+								AcceptEntityInput(iProp, "Break");
 							}
 						}
 					}
@@ -843,7 +843,7 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 							case 1: vAcidHit(victim);
 							case 2: vAmmoHit(victim);
 							case 3: vBlindHit(victim);
-							case 4: vBombHit(victim);
+							case 4: vBombHit(victim, attacker);
 							case 8: vCommonHit(victim);
 							case 9: vDrugHit(victim);
 							case 10: vFireHit(victim);
@@ -867,48 +867,30 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 					}
 				}
 			}
-			else if (bIsBotInfected(victim) && bIsTank(victim))
+			else if (bIsBotInfected(victim))
 			{
-				if (damagetype == 8 || damagetype == 2056 || damagetype == 268435464)
+				if (bIsTank(victim))
 				{
-					if (g_cvSTFireImmunity[g_iTankType[victim]].BoolValue)
+					if (damagetype == DMG_BURN)
 					{
-						return Plugin_Handled;
+						if (g_cvSTFireImmunity[g_iTankType[victim]].BoolValue)
+						{
+							return Plugin_Handled;
+						}
 					}
-				}
-				else if (bIsSurvivor(attacker))
-				{
-					switch (g_iTankType[victim])
+					if (bIsSurvivor(attacker))
 					{
-						case 1:
+						if (StrEqual(sClassname, "weapon_melee", false))
 						{
-							if (StrEqual(sClassname, "weapon_melee", false))
+							switch (g_iTankType[victim])
 							{
-								vAcidHit(attacker);
+								case 1: vAcidHit(attacker);
+								case 10: vFireHit(attacker);
+								case 13: vGhostHit(attacker, victim);
+								case 23: vMeteorAbility(victim);
 							}
 						}
-						case 10:
-						{
-							if (StrEqual(sClassname, "weapon_melee", false))
-							{
-								vFireHit(attacker);
-							}
-						}
-						case 13:
-						{
-							if (StrEqual(sClassname, "weapon_melee", false))
-							{
-								vGhostHit(attacker, victim);
-							}
-						}
-						case 23:
-						{
-							if (StrEqual(sClassname, "weapon_melee", false))
-							{
-								vMeteorAbility(victim);
-							}
-						}
-						case 28:
+						if (g_iTankType[victim] == 28)
 						{
 							if (damagetype == 64 || damagetype == 134217792 || damagetype == 33554432 || damagetype == 16777280)
 							{
@@ -925,6 +907,15 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 								}
 							}
 						}
+					}
+				}
+				if (inflictor != -1)
+				{
+					int iOwner = GetEntProp(inflictor, Prop_Send, "m_hOwnerEntity");
+					if (iOwner == victim || bIsTank(iOwner))
+					{
+						damage = 0.0;
+						return Plugin_Changed;
 					}
 				}
 			}
@@ -1015,8 +1006,10 @@ public Action eEventPlayerAFK(Event event, const char[] name, bool dontBroadcast
 
 public Action eEventPlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
 {
-	int iSurvivor = GetClientOfUserId(GetEventInt(event, "player"));
-	int iBot = GetClientOfUserId(GetEventInt(event, "bot"));
+	int iSurvivorId = event.GetInt("player");
+	int iSurvivor = GetClientOfUserId(iSurvivorId);
+	int iBotId = event.GetInt("bot");
+	int iBot = GetClientOfUserId(iBotId);
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes) && bIsIdlePlayer(iBot, iSurvivor)) 
 	{
 		Handle hDataPack = CreateDataPack();
@@ -1378,12 +1371,12 @@ void vAcidHit(int client)
 		int iAcid = CreateEntityByName("spitter_projectile");
 		for (int iSender = 1; iSender <= MaxClients; iSender++)
 		{
-			if (IsValidEntity(iAcid) && IsValidEntity(iSender))
+			if (IsValidEntity(iAcid) && bIsSurvivor(iSender))
 			{
 				DispatchSpawn(iAcid);
 				SetEntPropFloat(iAcid, Prop_Send, "m_DmgRadius", 1024.0);
 				SetEntProp(iAcid, Prop_Send, "m_bIsLive", 1);
-				SetEntPropEnt(iAcid, Prop_Send, "m_hThrower", iSender);
+				SetEntProp(iAcid, Prop_Send, "m_hThrower", iSender);
 				TeleportEntity(iAcid, flVecPos, NULL_VECTOR, NULL_VECTOR);
 				SDKCall(g_hSDKAcidPlayer, iAcid);
 				break;
@@ -1491,7 +1484,7 @@ void vApplyBlindness(int client, int amount)
 
 void vAttachParticle(int client, char[] particlename, float time, float origin)
 {
-	if (bIsValidClient(client) && IsValidEntity(client))
+	if (bIsValidClient(client))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (IsValidEntity(iParticle))
@@ -1514,7 +1507,8 @@ void vAttachParticle(int client, char[] particlename, float time, float origin)
 			AcceptEntityInput(iParticle, "SetParent", iParticle, iParticle);
 			AcceptEntityInput(iParticle, "Enable");
 			AcceptEntityInput(iParticle, "start");
-			CreateTimer(time, tTimerDeleteEntity, iParticle, TIMER_FLAG_NO_MAPCHANGE);
+			iParticle = EntIndexToEntRef(iParticle);
+			vDeleteEntity(iParticle, time);
 		}
 	}
 }
@@ -1528,7 +1522,7 @@ void vBlindHit(int client)
 	}
 }
 
-void vBombHit(int client)
+void vBombHit(int client, int owner)
 {
 	if (GetRandomInt(1, g_cvSTBombChance.IntValue) == 1 && bIsSurvivor(client))
 	{
@@ -1557,16 +1551,19 @@ void vBombHit(int client)
 		DispatchSpawn(iTrace);
 		ActivateEntity(iTrace);
 		TeleportEntity(iTrace, flPosition, NULL_VECTOR, NULL_VECTOR);
+		SetEntProp(iEntity, Prop_Send, "m_hOwnerEntity", owner);
 		DispatchKeyValue(iEntity, "fireballsprite", "sprites/muzzleflash4.vmt");
 		DispatchKeyValue(iEntity, "iMagnitude", "150");
 		DispatchKeyValue(iEntity, "iRadiusOverride", "150");
 		DispatchKeyValue(iEntity, "spawnflags", "828");
 		DispatchSpawn(iEntity);
 		TeleportEntity(iEntity, flPosition, NULL_VECTOR, NULL_VECTOR);
+		SetEntProp(iPhysics, Prop_Send, "m_hOwnerEntity", owner);
 		DispatchKeyValue(iPhysics, "radius", "150");
 		DispatchKeyValue(iPhysics, "magnitude", "150");
 		DispatchSpawn(iPhysics);
 		TeleportEntity(iPhysics, flPosition, NULL_VECTOR, NULL_VECTOR);
+		SetEntProp(iHurt, Prop_Send, "m_hOwnerEntity", owner);
 		DispatchKeyValue(iHurt, "DamageRadius", "150");
 		DispatchKeyValue(iHurt, "DamageDelay", "0.5");
 		DispatchKeyValue(iHurt, "Damage", "5");
@@ -1587,15 +1584,22 @@ void vBombHit(int client)
 		AcceptEntityInput(iEntity, "Explode");
 		AcceptEntityInput(iPhysics, "Explode");
 		AcceptEntityInput(iHurt, "TurnOn");
-		CreateTimer(16.5, tTimerDeleteEntity, iParticle, TIMER_FLAG_NO_MAPCHANGE);
-		CreateTimer(16.5, tTimerDeleteEntity, iParticle2, TIMER_FLAG_NO_MAPCHANGE);
-		CreateTimer(16.5, tTimerDeleteEntity, iParticle3, TIMER_FLAG_NO_MAPCHANGE);
-		CreateTimer(16.5, tTimerDeleteEntity, iTrace, TIMER_FLAG_NO_MAPCHANGE);
-		CreateTimer(16.5, tTimerDeleteEntity, iEntity, TIMER_FLAG_NO_MAPCHANGE);
-		CreateTimer(16.5, tTimerDeleteEntity, iPhysics, TIMER_FLAG_NO_MAPCHANGE);
-		CreateTimer(16.5, tTimerDeleteEntity, iHurt, TIMER_FLAG_NO_MAPCHANGE);
-		CreateTimer(15.0, tTimerStopExplosion, iTrace, TIMER_FLAG_NO_MAPCHANGE);
-		CreateTimer(15.0, tTimerStopExplosion, iHurt, TIMER_FLAG_NO_MAPCHANGE);
+		iParticle = EntIndexToEntRef(iParticle);
+		vDeleteEntity(iParticle, 16.5);
+		iParticle2 = EntIndexToEntRef(iParticle2);
+		vDeleteEntity(iParticle2, 16.5);
+		iParticle3 = EntIndexToEntRef(iParticle3);
+		vDeleteEntity(iParticle, 16.5);
+		iTrace = EntIndexToEntRef(iTrace);
+		vDeleteEntity(iTrace, 16.5);
+		vDeleteExplosion(iTrace, 15.0, "Stop");
+		iEntity = EntIndexToEntRef(iEntity);
+		vDeleteEntity(iEntity, 16.5);
+		iPhysics = EntIndexToEntRef(iPhysics);
+		vDeleteEntity(iPhysics, 16.5);
+		iHurt = EntIndexToEntRef(iHurt);
+		vDeleteEntity(iHurt, 16.5);
+		vDeleteExplosion(iHurt, 15.0, "TurnOff");
 	}
 }
 
@@ -1660,7 +1664,8 @@ void vCreateParticle(int client, char[] particlename, float time, float origin)
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "start");
-			CreateTimer(time, tTimerDeleteEntity, iParticle, TIMER_FLAG_NO_MAPCHANGE);
+			iParticle = EntIndexToEntRef(iParticle);
+			vDeleteEntity(iParticle, time);
 		}
 	}
 }
@@ -1736,11 +1741,11 @@ void vFireHit(int client)
 		if (IsValidEntity(iEntity))
 		{
 			flPos[2] += 10.0;
-			DispatchKeyValue(iEntity, "model", "models/props_junk/gascan001a.mdl");
+			SetEntityModel(iEntity, "models/props_junk/gascan001a.mdl");
 			DispatchSpawn(iEntity);
-			SetEntData(iEntity, GetEntSendPropOffs(iEntity, "m_CollisionGroup"), 1, 1, true);
+			SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 1);
 			TeleportEntity(iEntity, flPos, NULL_VECTOR, NULL_VECTOR);
-			AcceptEntityInput(iEntity, "break");
+			AcceptEntityInput(iEntity, "Break");
 		}
 	}
 }
@@ -2024,32 +2029,36 @@ void vMeteor(int entity, int client)
 		flPos[2] += 50.0;
 		AcceptEntityInput(entity, "Kill");
 		int iEntity = CreateEntityByName("prop_physics"); 		
-		DispatchKeyValue(iEntity, "model", "models/props_junk/propanecanister001a.mdl"); 
+		SetEntityModel(iEntity, "models/props_junk/propanecanister001a.mdl"); 
 		DispatchSpawn(iEntity);
 		TeleportEntity(iEntity, flPos, NULL_VECTOR, NULL_VECTOR);
 		ActivateEntity(iEntity);
 		AcceptEntityInput(iEntity, "Break");
 		int iPointHurt = CreateEntityByName("point_hurt");
+		SetEntProp(iPointHurt, Prop_Send, "m_hOwnerEntity", client);
 		DispatchKeyValueFloat(iPointHurt, "Damage", g_cvSTMeteorDamage.FloatValue);
 		DispatchKeyValue(iPointHurt, "DamageType", "2");
 		DispatchKeyValue(iPointHurt, "DamageDelay", "0.0");
 		DispatchKeyValueFloat(iPointHurt, "DamageRadius", 200.0);
 		DispatchSpawn(iPointHurt);
 		TeleportEntity(iPointHurt, flPos, NULL_VECTOR, NULL_VECTOR);
-		if (IsValidEntity(client) && bIsTank(client))
+		if (bIsValidClient(client) && bIsTank(client))
 		{
 			AcceptEntityInput(iPointHurt, "Hurt", client);
 		}
-		CreateTimer(0.1, tTimerDeleteEntity, iPointHurt, TIMER_FLAG_NO_MAPCHANGE);
+		iPointHurt = EntIndexToEntRef(iPointHurt);
+		vDeleteEntity(iPointHurt, 0.1);
 		int iPointPush = CreateEntityByName("point_push");
-  		DispatchKeyValueFloat (iPointPush, "magnitude", 600.0);
-		DispatchKeyValueFloat (iPointPush, "radius", 200.0 * 1.0);
+		SetEntProp(iPointPush, Prop_Send, "m_hOwnerEntity", client);
+  		DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
+		DispatchKeyValueFloat(iPointPush, "radius", 200.0 * 1.0);
   		SetVariantString("spawnflags 24");
 		AcceptEntityInput(iPointPush, "AddOutput");
  		DispatchSpawn(iPointPush);
 		TeleportEntity(iPointPush, flPos, NULL_VECTOR, NULL_VECTOR);
  		AcceptEntityInput(iPointPush, "Enable", -1, -1);
-		CreateTimer(0.5, tTimerDeleteEntity, iPointPush, TIMER_FLAG_NO_MAPCHANGE);
+		iPointPush = EntIndexToEntRef(iPointPush);
+		vDeleteEntity(iPointPush, 0.5);
 	}
 }
 
@@ -2080,7 +2089,8 @@ void vPrecacheParticle(char[] particlename)
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
 		AcceptEntityInput(iParticle, "start");
-		CreateTimer(0.1, tTimerDeleteEntity, iParticle, TIMER_FLAG_NO_MAPCHANGE);
+		iParticle = EntIndexToEntRef(iParticle);
+		vDeleteEntity(iParticle, 0.1);
 	}
 }
 
@@ -2167,7 +2177,8 @@ void vRocketHit(int client)
 			TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
 			SetVariantString(sTargetName);
 			AcceptEntityInput(iFlame, "SetParent", iFlame, iFlame, 0);
-			CreateTimer(3.0, tTimerDeleteEntity, iFlame);
+			iFlame = EntIndexToEntRef(iFlame);
+			vDeleteEntity(iFlame, 3.0);
 			g_iRocket[client] = iFlame;
 		}
 		EmitSoundToAll("weapons/rpg/rocketfire1.wav", client, _, _, _, 0.8);
@@ -2256,7 +2267,7 @@ void vSetProps(int client, bool light, bool spikes, bool wheels, int red, int gr
 					Format(sTargetName, sizeof(sTargetName), "Tank%d", client);
 					DispatchKeyValue(client, "targetname", sTargetName);
 					GetEntPropString(client, Prop_Data, "m_iName", sTargetName, sizeof(sTargetName));
-					DispatchKeyValue(iEntity[iSpike], "model", "models/props_debris/concrete_chunk01a.mdl");
+					SetEntityModel(iEntity[iSpike], "models/props_debris/concrete_chunk01a.mdl");
 					SetEntityRenderMode(iEntity[iSpike], mode);
 					SetEntityRenderColor(iEntity[iSpike], red, green, blue, alpha);
 					DispatchKeyValue(iEntity[iSpike], "targetname", "RockEntity");
@@ -2305,7 +2316,7 @@ void vSetProps(int client, bool light, bool spikes, bool wheels, int red, int gr
 					Format(sTargetName, sizeof(sTargetName), "Tank%d", client);
 					DispatchKeyValue(client, "targetname", sTargetName);
 					GetEntPropString(client, Prop_Data, "m_iName", sTargetName, sizeof(sTargetName));
-					DispatchKeyValue(iEntity[iTire], "model", "models/props_vehicles/tire001c_car.mdl");
+					SetEntityModel(iEntity[iTire], "models/props_vehicles/tire001c_car.mdl");
 					SetEntityRenderMode(iEntity[iTire], mode);
 					SetEntityRenderColor(iEntity[iTire], red, green, blue, alpha);
 					DispatchKeyValue(iEntity[iTire], "targetname", "TireEntity");
@@ -2361,14 +2372,14 @@ void vShieldAbility(int client, bool shield)
 				GetEntPropString(client, Prop_Data, "m_iName", sTargetName, sizeof(sTargetName));
 				DispatchKeyValue(iEntity, "targetname", "Player");
 				DispatchKeyValue(iEntity, "parentname", sTargetName);
-				DispatchKeyValue(iEntity, "model", "models/props_unique/airport/atlas_break_ball.mdl");
+				SetEntityModel(iEntity, "models/props_unique/airport/atlas_break_ball.mdl");
 				DispatchKeyValueVector(iEntity, "origin", flOrigin);
 				DispatchSpawn(iEntity);
 				SetVariantString(sTargetName);
 				AcceptEntityInput(iEntity, "SetParent", iEntity, iEntity);
 				SetEntityRenderMode(iEntity, RENDER_TRANSTEXTURE);
 				SetEntityRenderColor(iEntity, 25, 125, 125, 50);
-				SetEntData(iEntity, GetEntSendPropOffs(iEntity, "m_CollisionGroup"), 1, 1, true);
+				SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 1);
 				SetEntProp(iEntity, Prop_Send, "m_hOwnerEntity", client);
 			}
 			g_bShielded[client] = true;
@@ -2779,28 +2790,6 @@ public Action tTimerStopDrug(Handle timer, any userid)
 	}
 }
 
-public Action tTimerStopExplosion(Handle timer, any entity)
-{
-	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-	char sClassname[32];
-	GetEntityClassname(entity, sClassname, sizeof(sClassname));
-	if (IsValidEntity(entity))
-	{
-		if (StrEqual(sClassname, "info_particle_system", false))
-		{
-			AcceptEntityInput(entity, "Stop");
-		}
-		else if (StrEqual(sClassname, "point_hurt", false))
-		{
-			AcceptEntityInput(entity, "TurnOff");
-		}
-	}
-	return Plugin_Continue;
-}
-
 public Action tTimerFlashEffect(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
@@ -2814,7 +2803,7 @@ public Action tTimerFlashEffect(Handle timer, any userid)
 		int iEntity = CreateEntityByName("prop_dynamic");
 		if (IsValidEntity(iEntity))
 		{
-			DispatchKeyValue(iEntity, "model", "models/infected/hulk.mdl");
+			SetEntityModel(iEntity, "models/infected/hulk.mdl");
 			DispatchKeyValue(iEntity, "solid", "6");
 			DispatchSpawn(iEntity);
 			AcceptEntityInput(iEntity, "DisableCollision");
@@ -2822,7 +2811,8 @@ public Action tTimerFlashEffect(Handle timer, any userid)
 			SetEntProp(iEntity, Prop_Send, "m_nSequence", iAnim);
 			SetEntPropFloat(iEntity, Prop_Send, "m_flPlaybackRate", 5.0);
 			TeleportEntity(iEntity, flTankPos, flTankAng, NULL_VECTOR);
-			CreateTimer(0.3, tTimerDeleteEntity, iEntity, TIMER_FLAG_NO_MAPCHANGE);
+			iEntity = EntIndexToEntRef(iEntity);
+			vDeleteEntity(iEntity, 0.3);
 		}		
 	}
 }
@@ -3089,11 +3079,12 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 {
 	ResetPack(pack);
 	float flPos[3];
+	float flTime;
 	int iTank = ReadPackCell(pack);
 	flPos[0] = ReadPackFloat(pack);
 	flPos[1] = ReadPackFloat(pack);
 	flPos[2] = ReadPackFloat(pack);
-	float flTime = ReadPackFloat(pack);
+	flTime = ReadPackFloat(pack);
 	if (g_iTankType[iTank] == 23 && bIsValidClient(iTank))
 	{
 		if ((GetEngineTime() - flTime) > 5.0)
@@ -3126,7 +3117,7 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 				int iRock = CreateEntityByName("tank_rock");
 				if (iRock > 0)
 				{
-					DispatchKeyValue(iRock, "model", "models/props_debris/concrete_chunk01a.mdl");
+					SetEntityModel(iRock, "models/props_debris/concrete_chunk01a.mdl");
 					DispatchSpawn(iRock);
 					float flAngle2[3];
 					flAngle2[0] = GetRandomFloat(-180.0, 180.0);
@@ -3138,7 +3129,6 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 					TeleportEntity(iRock, flHitpos, flAngle2, flVelocity);
 					ActivateEntity(iRock);
 					AcceptEntityInput(iRock, "Ignite");
-					SetEntProp(iRock, Prop_Send, "m_hOwnerEntity", iTank);
 				}
 			}
 		}
@@ -3271,7 +3261,7 @@ public Action tTimerPropaneThrow(Handle timer, any client)
 				int iPropane = CreateEntityByName("prop_physics");
 				if (IsValidEntity(iPropane))
 				{
-					DispatchKeyValue(iPropane, "model", "models/props_junk/propanecanister001a.mdl");
+					SetEntityModel(iPropane, "models/props_junk/propanecanister001a.mdl");
 					DispatchSpawn(iPropane);
 					float flPos[3];
 					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
@@ -3405,7 +3395,7 @@ public Action tTimerStopStun(Handle timer, any userid)
 public Action tTimerVision(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
-	if (IsValidEntity(client))
+	if (bIsSurvivor(client))
 	{
 		SetEntData(client, FindSendPropInfo("CBasePlayer", "m_iFOV"), g_cvSTVisualFOV.IntValue, 4, true);
 		SetEntData(client, FindSendPropInfo("CBasePlayer", "m_iDefaultFOV"), g_cvSTVisualFOV.IntValue, 4, true);
@@ -3415,7 +3405,7 @@ public Action tTimerVision(Handle timer, any userid)
 public Action tTimerStopVision(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
-	if (bIsSurvivor(client) && IsValidEntity(client))
+	if (bIsSurvivor(client))
 	{
 		SetEntData(client, FindSendPropInfo("CBasePlayer", "m_iFOV"), 90, 4, true);
 		SetEntData(client, FindSendPropInfo("CBasePlayer", "m_iDefaultFOV"), 90, 4, true);
@@ -3515,7 +3505,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 	{
 		for (int iTank = 1; iTank <= MaxClients; iTank++)
 		{
-			if (bIsBotInfected(iTank) && IsValidEntity(iTank))
+			if (bIsBotInfected(iTank))
 			{
 				int iInfectedType = GetEntData(iTank, FindSendPropInfo("CTerrorPlayer", "m_zombieClass"));
 				if ((bIsL4D2Game() && iInfectedType == 8) || (!bIsL4D2Game() && iInfectedType == 5))
@@ -3731,17 +3721,4 @@ public Action tTimerTankLifeCheck(Handle timer, any userid)
 			vSpawnInfected(iTank, 8, true);
 		}
 	}
-}
-
-public Action tTimerDeleteEntity(Handle timer, any entity)
-{
-	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-	if (IsValidEntity(entity))
-	{
-		AcceptEntityInput(entity, "Kill");
-	}
-	return Plugin_Continue;
 }

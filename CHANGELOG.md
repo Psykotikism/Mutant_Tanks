@@ -9,6 +9,7 @@ Bug fixes:
 Changes:
 
 1. Added a check to destroy all effects when a Tank dies.
+2. Added a check for Bomber Tank's explosion to not damage any infected including the Bomber Tank.
 
 Files:
 

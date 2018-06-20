@@ -399,9 +399,8 @@ stock bool bIsInfected(int client)
 
 stock bool bIsL4D2Game()
 {
-	char sGameName[64];
-	GetGameFolderName(sGameName, sizeof(sGameName));
-	return StrEqual(sGameName, "left4dead2", false);
+	EngineVersion evEngine = GetEngineVersion();
+	return evEngine == Engine_Left4Dead2;
 }
 
 stock bool bIsPlayerBurning(int client)
@@ -503,6 +502,11 @@ stock bool bIsTank(int client)
 stock bool bIsValidClient(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+stock bool bIsValidEntRef(int entity)
+{
+	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
 public bool bTraceRayDontHitSelf(int entity, int mask, any data)
@@ -781,6 +785,29 @@ stock void vCheatCommand(int client, char[] command, char[] arguments = "")
 	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
 	FakeClientCommand(client, "%s %s", command, arguments);
 	SetCommandFlags(command, iCmdFlags | FCVAR_CHEAT);
+}
+
+stock void vDeleteEntity(int entity, float time)
+{
+	if (bIsValidEntRef(entity))
+	{
+		char sVariant[64];
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, "AddOutput");
+		AcceptEntityInput(entity, "FireUser1");
+	}
+}
+
+stock void vDeleteExplosion(int entity, float time, char[] input)
+{
+	if (bIsValidEntRef(entity))
+	{
+		char sVariant[64];
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, input);
+	}
 }
 
 stock void vKickFakeClient(int client)
