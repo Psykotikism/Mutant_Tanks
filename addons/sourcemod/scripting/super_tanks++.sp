@@ -761,7 +761,7 @@ public void OnEntityDestroyed(int entity)
 								{
 									float flPos[3];
 									GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
-									TeleportEntity(iSpitter, flPos, NULL_VECTOR, NULL_VECTOR);	
+									TeleportEntity(iSpitter, flPos, NULL_VECTOR, NULL_VECTOR);
 									SDKCall(g_hSDKAcidPlayer, iSpitter);
 									KickClient(iSpitter);
 								}
@@ -2025,11 +2025,12 @@ void vMeteor(int entity, int client)
 			return;
 		}
 		float flPos[3];
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);	
+		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 		flPos[2] += 50.0;
 		AcceptEntityInput(entity, "Kill");
-		int iEntity = CreateEntityByName("prop_physics"); 		
-		SetEntityModel(iEntity, "models/props_junk/propanecanister001a.mdl"); 
+		int iEntity = CreateEntityByName("prop_physics");
+		SetEntityModel(iEntity, "models/props_junk/propanecanister001a.mdl");
+		SetEntProp(iEntity, Prop_Send, "m_hOwnerEntity", client);
 		DispatchSpawn(iEntity);
 		TeleportEntity(iEntity, flPos, NULL_VECTOR, NULL_VECTOR);
 		ActivateEntity(iEntity);
@@ -2042,7 +2043,7 @@ void vMeteor(int entity, int client)
 		DispatchKeyValueFloat(iPointHurt, "DamageRadius", 200.0);
 		DispatchSpawn(iPointHurt);
 		TeleportEntity(iPointHurt, flPos, NULL_VECTOR, NULL_VECTOR);
-		if (bIsValidClient(client) && bIsTank(client))
+		if (IsValidEntity(client) && bIsTank(client))
 		{
 			AcceptEntityInput(iPointHurt, "Hurt", client);
 		}
@@ -2050,7 +2051,7 @@ void vMeteor(int entity, int client)
 		vDeleteEntity(iPointHurt, 0.1);
 		int iPointPush = CreateEntityByName("point_push");
 		SetEntProp(iPointPush, Prop_Send, "m_hOwnerEntity", client);
-  		DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
+		DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
 		DispatchKeyValueFloat(iPointPush, "radius", 200.0 * 1.0);
   		SetVariantString("spawnflags 24");
 		AcceptEntityInput(iPointPush, "AddOutput");
@@ -2995,7 +2996,7 @@ public Action tTimerIdleFix(Handle timer, Handle pack)
 	int iBot = ReadPackCell(pack);
 	if (!IsClientInGame(iSurvivor) || GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor) || IsFakeClient(iSurvivor))
 	{
-		g_bAFK[iSurvivor] = false;	
+		g_bAFK[iSurvivor] = false;
 	}
 	if (!bIsBotIdleSurvivor(iBot) || GetClientTeam(iBot) != 2)
 	{
@@ -3003,7 +3004,7 @@ public Action tTimerIdleFix(Handle timer, Handle pack)
 	}
 	if (iBot < 1)
 	{
-		g_bAFK[iSurvivor] = false; 
+		g_bAFK[iSurvivor] = false;
 	}
 	if (g_bAFK[iSurvivor])
 	{
@@ -3079,12 +3080,11 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 {
 	ResetPack(pack);
 	float flPos[3];
-	float flTime;
 	int iTank = ReadPackCell(pack);
 	flPos[0] = ReadPackFloat(pack);
 	flPos[1] = ReadPackFloat(pack);
 	flPos[2] = ReadPackFloat(pack);
-	flTime = ReadPackFloat(pack);
+	float flTime = ReadPackFloat(pack);
 	if (g_iTankType[iTank] == 23 && bIsValidClient(iTank))
 	{
 		if ((GetEngineTime() - flTime) > 5.0)
@@ -3129,6 +3129,7 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 					TeleportEntity(iRock, flHitpos, flAngle2, flVelocity);
 					ActivateEntity(iRock);
 					AcceptEntityInput(iRock, "Ignite");
+					SetEntProp(iRock, Prop_Send, "m_hOwnerEntity", iTank);
 				}
 			}
 		}
