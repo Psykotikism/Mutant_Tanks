@@ -2663,7 +2663,7 @@ public Action tTimerBoomerThrow(Handle timer, any client)
 				int iInfected = CreateFakeClient("Boomer");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, 2, true);
+					vSpawnInfected(iInfected, 2, false);
 					float flPos[3];
 					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iEntity, "Kill");
@@ -2695,7 +2695,7 @@ public Action tTimerChargerThrow(Handle timer, any client)
 				int iInfected = CreateFakeClient("Charger");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, 6, true);
+					vSpawnInfected(iInfected, 6, false);
 					float flPos[3];
 					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iEntity, "Kill");
@@ -2727,7 +2727,7 @@ public Action tTimerCloneThrow(Handle timer, any client)
 				int iInfected = CreateFakeClient("Clone");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, 8, true);
+					vSpawnInfected(iInfected, 8, false);
 					float flPos[3];
 					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iEntity, "Kill");
@@ -2989,7 +2989,7 @@ public Action tTimerHunterThrow(Handle timer, any client)
 				int iInfected = CreateFakeClient("Hunter");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, 3, true);
+					vSpawnInfected(iInfected, 3, false);
 					float flPos[3];
 					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iEntity, "Kill");
@@ -3079,7 +3079,7 @@ public Action tTimerJockeyThrow(Handle timer, any client)
 				int iInfected = CreateFakeClient("Jockey");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, 5, true);
+					vSpawnInfected(iInfected, 5, false);
 					float flPos[3];
 					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iEntity, "Kill");
@@ -3366,7 +3366,7 @@ public Action tTimerSmokerThrow(Handle timer, any client)
 				int iInfected = CreateFakeClient("Smoker");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, 1, true);
+					vSpawnInfected(iInfected, 1, false);
 					float flPos[3];
 					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iEntity, "Kill");
@@ -3407,7 +3407,7 @@ public Action tTimerSpitterThrow(Handle timer, any client)
 				int iInfected = CreateFakeClient("Spitter");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, 4, true);
+					vSpawnInfected(iInfected, 4, false);
 					float flPos[3];
 					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iEntity, "Kill");

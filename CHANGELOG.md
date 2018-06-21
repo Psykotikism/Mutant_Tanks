@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 8.4 (June 20, 2018)
+
+Bug fixes:
+
+1. Fixed the infected thrower Tanks not throwing special infected directly from their rocks.
+
 ## Version 8.3 (June 20, 2018)
 
 Bug fixes:
