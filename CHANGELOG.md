@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.3 (July 4, 2018)
+## Version 8.3 (June 20, 2018)
 
 Bug fixes:
 
@@ -10,6 +10,11 @@ Changes:
 
 1. Added a check to destroy all effects when a Tank dies.
 2. Added a check for Bomber Tank's explosion to not damage any infected including the Bomber Tank.
+3. Added a check for Fire Tank's fires to not damage any infected including the Fire Tank.
+4. Added a check for Meteor Tank's meteor showers to not damage any infected including the Meteor Tank.
+5. Converted some code to new syntax.
+6. Removed unnecessary code.
+7. Optimized some code.
 
 Files:
 

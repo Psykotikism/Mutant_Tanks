@@ -57,6 +57,7 @@ bool g_bHeadshot[MAXPLAYERS + 1];
 bool g_bHypno[MAXPLAYERS + 1];
 bool g_bIdle[MAXPLAYERS + 1];
 bool g_bInvert[MAXPLAYERS + 1];
+bool g_bLateLoad;
 bool g_bMeteor[MAXPLAYERS + 1];
 bool g_bRestartValid;
 bool g_bShielded[MAXPLAYERS + 1];
@@ -176,6 +177,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	if (!StrEqual(sGameName, "left4dead", false) && !StrEqual(sGameName, "left4dead2", false))
 	{
 		return APLRes_SilentFailure;
+	}
+	if (late)
+	{
+		g_bLateLoad = true;
 	}
 	return APLRes_Success;
 }
@@ -535,20 +540,30 @@ public void OnMapStart()
 		PrecacheSound("ambient/explosions/explode_3.wav", true);
 		PrecacheSound("animation/van_inside_debris.wav", true);
 		PrecacheSound("physics/glass/glass_impact_bullet4.wav", true);
+		if (g_bLateLoad)
+		{
+	        for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++ )
+	        {
+	            if (bIsValidClient(iPlayer))
+	            {
+	                SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+	            }
+	        }
+		}
 	}
 }
 
 public void OnClientPostAdminCheck(int client)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, aOnTakeDamage);
-	SDKHook(client, SDKHook_TraceAttack, aTraceAttack);
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(client, SDKHook_TraceAttack, TraceAttack);
 	vStopTimers(client);
 }
 
 public void OnClientDisconnect(int client)
 {
-	SDKUnhook(client, SDKHook_OnTakeDamage, aOnTakeDamage);
-	SDKUnhook(client, SDKHook_TraceAttack, aTraceAttack);
+	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKUnhook(client, SDKHook_TraceAttack, TraceAttack);
 	vStopTimers(client);
 }
 
@@ -772,13 +787,18 @@ public void OnEntityDestroyed(int entity)
 							int iProp = CreateEntityByName("prop_physics");
 							if (IsValidEntity(iProp))
 							{
+								DispatchKeyValue(iProp, "disableshadows", "1");
+								SetEntityModel(iProp, "models/props_junk/gascan001a.mdl");
 								float flPos[3];
 								GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 								flPos[2] += 10.0;
-								SetEntityModel(iProp, "models/props_junk/gascan001a.mdl");
-								DispatchSpawn(iProp);
-								SetEntProp(iProp, Prop_Send, "m_CollisionGroup", 1);
 								TeleportEntity(iProp, flPos, NULL_VECTOR, NULL_VECTOR);
+								DispatchSpawn(iProp);
+								SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", iTank);
+								SetEntPropFloat(iProp, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
+								SetEntProp(iProp, Prop_Send, "m_CollisionGroup", 1);
+								SetEntityRenderMode(entity, RENDER_TRANSCOLOR);
+								SetEntityRenderColor(entity, 0, 0, 0, 0);
 								AcceptEntityInput(iProp, "Break");
 							}
 						}
@@ -824,7 +844,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
 	{
@@ -846,7 +866,7 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 							case 4: vBombHit(victim, attacker);
 							case 8: vCommonHit(victim);
 							case 9: vDrugHit(victim);
-							case 10: vFireHit(victim);
+							case 10: vFireHit(victim, attacker);
 							case 12: vFlingHit(victim);
 							case 13: vGhostHit(victim, attacker);
 							case 14: vGravityHit(victim);
@@ -871,12 +891,18 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 			{
 				if (bIsTank(victim))
 				{
-					if (damagetype == DMG_BURN)
+					if (damagetype & DMG_BURN)
 					{
-						if (g_cvSTFireImmunity[g_iTankType[victim]].BoolValue)
+						if (g_cvSTFireImmunity[g_iTankType[victim]].BoolValue || attacker == victim)
 						{
+							damage = 0.0;
 							return Plugin_Handled;
 						}
+					}
+					if (damagetype & DMG_BLAST && victim == attacker)
+					{
+						damage = 0.0;
+						return Plugin_Handled;
 					}
 					if (bIsSurvivor(attacker))
 					{
@@ -885,14 +911,14 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 							switch (g_iTankType[victim])
 							{
 								case 1: vAcidHit(attacker);
-								case 10: vFireHit(attacker);
+								case 10: vFireHit(attacker, victim);
 								case 13: vGhostHit(attacker, victim);
 								case 23: vMeteorAbility(victim);
 							}
 						}
 						if (g_iTankType[victim] == 28)
 						{
-							if (damagetype == 64 || damagetype == 134217792 || damagetype == 33554432 || damagetype == 16777280)
+							if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 							{
 								if (g_bShielded[victim])
 								{
@@ -909,9 +935,14 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 						}
 					}
 				}
+				if ((damagetype & DMG_BURN || damagetype & DMG_BLAST) && (attacker == victim || bIsInfected(attacker)))
+				{
+					damage = 0.0;
+					return Plugin_Handled;
+				}
 				if (inflictor != -1)
 				{
-					int iOwner = GetEntProp(inflictor, Prop_Send, "m_hOwnerEntity");
+					int iOwner = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == victim || bIsTank(iOwner))
 					{
 						damage = 0.0;
@@ -921,10 +952,10 @@ public Action aOnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 			}
 		}
 	}
-	return Plugin_Changed;
+	return Plugin_Continue;
 }
 
-public Action aTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
+public Action TraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
 	if (bIsSurvivor(attacker))
 	{
@@ -1012,10 +1043,10 @@ public Action eEventPlayerBotReplace(Event event, const char[] name, bool dontBr
 	int iBot = GetClientOfUserId(iBotId);
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes) && bIsIdlePlayer(iBot, iSurvivor)) 
 	{
-		Handle hDataPack = CreateDataPack();
-		WritePackCell(hDataPack, iSurvivor);
-		WritePackCell(hDataPack, iBot);
-		CreateTimer(0.2, tTimerIdleFix, hDataPack, TIMER_FLAG_NO_MAPCHANGE);
+		DataPack dpDataPack;
+		CreateDataTimer(0.2, tTimerIdleFix, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+		dpDataPack.WriteCell(iSurvivorId);
+		dpDataPack.WriteCell(iBotId);
 		if (g_bIdle[iSurvivor])
 		{
 			g_bIdle[iSurvivor] = false;
@@ -1160,7 +1191,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 					GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 					if (StrEqual(sModel, "models/props_debris/concrete_chunk01a.mdl"))
 					{
-						int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
+						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iTank)
 						{
 							AcceptEntityInput(iEntity, "Kill");
@@ -1168,7 +1199,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 					}
 					else if (StrEqual(sModel, "models/props_vehicles/tire001c_car.mdl"))
 					{
-						int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
+						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iTank)
 						{
 							AcceptEntityInput(iEntity, "Kill");
@@ -1176,7 +1207,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 					}
 					else if (StrEqual(sModel, "models/props_unique/airport/atlas_break_ball.mdl"))
 					{
-						int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
+						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iTank)
 						{
 							AcceptEntityInput(iEntity, "Kill");
@@ -1185,7 +1216,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 				}
 				while ((iEntity = FindEntityByClassname(iEntity, "beam_spotlight")) != INVALID_ENT_REFERENCE)
 				{
-					int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
+					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == iTank)
 					{
 						AcceptEntityInput(iEntity, "Kill");
@@ -1201,7 +1232,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 							AcceptEntityInput(iEntity, "Kill");
 						}
 					}
-					int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
+					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == iTank)
 					{
 						AcceptEntityInput(iEntity, "Kill");
@@ -1492,7 +1523,6 @@ void vAttachParticle(int client, char[] particlename, float time, float origin)
 			float flPos[3];
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
 			flPos[2] += origin;
-			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			char sTargetName[64];
 			Format(sTargetName, sizeof(sTargetName), "Attach%d", client);
 			DispatchKeyValue(client, "targetname", sTargetName);
@@ -1501,6 +1531,7 @@ void vAttachParticle(int client, char[] particlename, float time, float origin)
 			DispatchKeyValue(iParticle, "effect_name", particlename);
 			DispatchKeyValue(iParticle, "parentname", sTargetName);
 			DispatchKeyValue(iParticle, "targetname", "particle");
+			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
 			SetVariantString(sTargetName);
@@ -1536,40 +1567,40 @@ void vBombHit(int client, int owner)
 		int iHurt = CreateEntityByName("point_hurt");
 		int iEntity = CreateEntityByName("env_explosion");
 		DispatchKeyValue(iParticle, "effect_name", "FluidExplosion_fps");
+		TeleportEntity(iParticle, flPosition, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
-		TeleportEntity(iParticle, flPosition, NULL_VECTOR, NULL_VECTOR);
 		DispatchKeyValue(iParticle2, "effect_name", "weapon_grenade_explosion");
+		TeleportEntity(iParticle2, flPosition, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iParticle2);
 		ActivateEntity(iParticle2);
-		TeleportEntity(iParticle2, flPosition, NULL_VECTOR, NULL_VECTOR);
 		DispatchKeyValue(iParticle3, "effect_name", "explosion_huge_b");
+		TeleportEntity(iParticle3, flPosition, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iParticle3);
 		ActivateEntity(iParticle3);
-		TeleportEntity(iParticle3, flPosition, NULL_VECTOR, NULL_VECTOR);
 		DispatchKeyValue(iTrace, "effect_name", "gas_explosion_ground_fire");
+		TeleportEntity(iTrace, flPosition, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iTrace);
 		ActivateEntity(iTrace);
-		TeleportEntity(iTrace, flPosition, NULL_VECTOR, NULL_VECTOR);
-		SetEntProp(iEntity, Prop_Send, "m_hOwnerEntity", owner);
+		SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", owner);
 		DispatchKeyValue(iEntity, "fireballsprite", "sprites/muzzleflash4.vmt");
 		DispatchKeyValue(iEntity, "iMagnitude", "150");
 		DispatchKeyValue(iEntity, "iRadiusOverride", "150");
 		DispatchKeyValue(iEntity, "spawnflags", "828");
-		DispatchSpawn(iEntity);
 		TeleportEntity(iEntity, flPosition, NULL_VECTOR, NULL_VECTOR);
-		SetEntProp(iPhysics, Prop_Send, "m_hOwnerEntity", owner);
+		DispatchSpawn(iEntity);
+		SetEntPropEnt(iPhysics, Prop_Send, "m_hOwnerEntity", owner);
 		DispatchKeyValue(iPhysics, "radius", "150");
 		DispatchKeyValue(iPhysics, "magnitude", "150");
-		DispatchSpawn(iPhysics);
 		TeleportEntity(iPhysics, flPosition, NULL_VECTOR, NULL_VECTOR);
-		SetEntProp(iHurt, Prop_Send, "m_hOwnerEntity", owner);
+		DispatchSpawn(iPhysics);
+		SetEntPropEnt(iHurt, Prop_Send, "m_hOwnerEntity", owner);
 		DispatchKeyValue(iHurt, "DamageRadius", "150");
 		DispatchKeyValue(iHurt, "DamageDelay", "0.5");
 		DispatchKeyValue(iHurt, "Damage", "5");
 		DispatchKeyValue(iHurt, "DamageType", "8");
-		DispatchSpawn(iHurt);
 		TeleportEntity(iHurt, flPosition, NULL_VECTOR, NULL_VECTOR);
+		DispatchSpawn(iHurt);
 		switch (GetRandomInt(1, 3))
 		{
 			case 1: EmitSoundToAll("ambient/explosions/explode_1.wav", client);
@@ -1731,20 +1762,25 @@ void vFakeJump(int client)
 	}
 }
 
-void vFireHit(int client)
+void vFireHit(int client, int owner)
 {
 	if (GetRandomInt(1, g_cvSTFireChance.IntValue) == 1 && bIsSurvivor(client))
 	{
-		float flPos[3];
-		GetClientAbsOrigin(client, flPos);
 		int iEntity = CreateEntityByName("prop_physics");
 		if (IsValidEntity(iEntity))
 		{
-			flPos[2] += 10.0;
+			DispatchKeyValue(iEntity, "disableshadows", "1");
 			SetEntityModel(iEntity, "models/props_junk/gascan001a.mdl");
-			DispatchSpawn(iEntity);
-			SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 1);
+			float flPos[3];
+			GetClientAbsOrigin(client, flPos);
+			flPos[2] += 10.0;
 			TeleportEntity(iEntity, flPos, NULL_VECTOR, NULL_VECTOR);
+			DispatchSpawn(iEntity);
+			SetEntPropEnt(iEntity, Prop_Data, "m_hPhysicsAttacker", owner);
+			SetEntPropFloat(iEntity, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
+			SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 1);
+			SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
+			SetEntityRenderColor(iEntity, 0, 0, 0, 0);
 			AcceptEntityInput(iEntity, "Break");
 		}
 	}
@@ -1895,7 +1931,7 @@ void vGravityAbility(int client)
 		SetVariantString(sTargetName);
 		AcceptEntityInput(iBlackhole, "SetParent", iBlackhole, iBlackhole);
 		AcceptEntityInput(iBlackhole, "Enable");
-		SetEntProp(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
+		SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
 		if (bIsL4D2Game())
 		{
 			SetEntProp(iBlackhole, Prop_Send, "m_glowColorOverride", client);
@@ -2024,25 +2060,29 @@ void vMeteor(int entity, int client)
 		{
 			return;
 		}
-		float flPos[3];
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
-		flPos[2] += 50.0;
 		AcceptEntityInput(entity, "Kill");
 		int iEntity = CreateEntityByName("prop_physics");
 		SetEntityModel(iEntity, "models/props_junk/propanecanister001a.mdl");
-		SetEntProp(iEntity, Prop_Send, "m_hOwnerEntity", client);
-		DispatchSpawn(iEntity);
+		float flPos[3];
+		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
+		flPos[2] += 50.0;
 		TeleportEntity(iEntity, flPos, NULL_VECTOR, NULL_VECTOR);
+		DispatchSpawn(iEntity);
 		ActivateEntity(iEntity);
+		SetEntPropEnt(iEntity, Prop_Data, "m_hPhysicsAttacker", client);
+		SetEntPropFloat(iEntity, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
+		SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 1);
+		SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
+		SetEntityRenderColor(iEntity, 0, 0, 0, 0);
 		AcceptEntityInput(iEntity, "Break");
 		int iPointHurt = CreateEntityByName("point_hurt");
-		SetEntProp(iPointHurt, Prop_Send, "m_hOwnerEntity", client);
+		SetEntPropEnt(iPointHurt, Prop_Send, "m_hOwnerEntity", client);
 		DispatchKeyValueFloat(iPointHurt, "Damage", g_cvSTMeteorDamage.FloatValue);
 		DispatchKeyValue(iPointHurt, "DamageType", "2");
 		DispatchKeyValue(iPointHurt, "DamageDelay", "0.0");
 		DispatchKeyValueFloat(iPointHurt, "DamageRadius", 200.0);
-		DispatchSpawn(iPointHurt);
 		TeleportEntity(iPointHurt, flPos, NULL_VECTOR, NULL_VECTOR);
+		DispatchSpawn(iPointHurt);
 		if (IsValidEntity(client) && bIsTank(client))
 		{
 			AcceptEntityInput(iPointHurt, "Hurt", client);
@@ -2050,14 +2090,14 @@ void vMeteor(int entity, int client)
 		iPointHurt = EntIndexToEntRef(iPointHurt);
 		vDeleteEntity(iPointHurt, 0.1);
 		int iPointPush = CreateEntityByName("point_push");
-		SetEntProp(iPointPush, Prop_Send, "m_hOwnerEntity", client);
+		SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", client);
 		DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
 		DispatchKeyValueFloat(iPointPush, "radius", 200.0 * 1.0);
   		SetVariantString("spawnflags 24");
 		AcceptEntityInput(iPointPush, "AddOutput");
+ 		TeleportEntity(iPointPush, flPos, NULL_VECTOR, NULL_VECTOR);
  		DispatchSpawn(iPointPush);
-		TeleportEntity(iPointPush, flPos, NULL_VECTOR, NULL_VECTOR);
- 		AcceptEntityInput(iPointPush, "Enable", -1, -1);
+		AcceptEntityInput(iPointPush, "Enable", -1, -1);
 		iPointPush = EntIndexToEntRef(iPointPush);
 		vDeleteEntity(iPointPush, 0.5);
 	}
@@ -2070,13 +2110,13 @@ void vMeteorAbility(int client)
 		g_bMeteor[client] = true;
 		float flPos[3];
 		GetClientEyePosition(client, flPos);
-		Handle hDataPack = CreateDataPack();
-		WritePackCell(hDataPack, client);
-		WritePackFloat(hDataPack, flPos[0]);
-		WritePackFloat(hDataPack, flPos[1]);
-		WritePackFloat(hDataPack, flPos[2]);
-		WritePackFloat(hDataPack, GetEngineTime());
-		CreateTimer(0.6, tTimerUpdateMeteor, hDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		DataPack dpDataPack;
+		CreateDataTimer(0.6, tTimerUpdateMeteor, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpDataPack.WriteCell(GetClientUserId(client));
+		dpDataPack.WriteFloat(flPos[0]);
+		dpDataPack.WriteFloat(flPos[1]);
+		dpDataPack.WriteFloat(flPos[2]);
+		dpDataPack.WriteFloat(GetEngineTime());
 	}
 }
 
@@ -2174,8 +2214,8 @@ void vRocketHit(int client)
 			DispatchKeyValue(iFlame,"JetLength", "400");
 			DispatchKeyValue(iFlame,"RenderColor", "180 71 8");
 			DispatchKeyValue(iFlame,"RenderAmt", "180");
-			DispatchSpawn(iFlame);
 			TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
+			DispatchSpawn(iFlame);
 			SetVariantString(sTargetName);
 			AcceptEntityInput(iFlame, "SetParent", iFlame, iFlame, 0);
 			iFlame = EntIndexToEntRef(iFlame);
@@ -2241,6 +2281,7 @@ void vSetProps(int client, bool light, bool spikes, bool wheels, int red, int gr
 				DispatchKeyValue(iEntity, "HDRColorScale", "0.7");
 				DispatchKeyValue(iEntity, "fadescale", "1");
 				DispatchKeyValue(iEntity, "fademindist", "-1");
+				TeleportEntity(iEntity, NULL_VECTOR, flAngles, NULL_VECTOR);
 				DispatchSpawn(iEntity);
 				SetVariantString(sTargetName);
 				AcceptEntityInput(iEntity, "SetParent", iEntity, iEntity);
@@ -2248,8 +2289,7 @@ void vSetProps(int client, bool light, bool spikes, bool wheels, int red, int gr
 				AcceptEntityInput(iEntity, "SetParentAttachment");
 				AcceptEntityInput(iEntity, "Enable");
 				AcceptEntityInput(iEntity, "DisableCollision");
-				SetEntProp(iEntity, Prop_Send, "m_hOwnerEntity", client);
-				TeleportEntity(iEntity, NULL_VECTOR, flAngles, NULL_VECTOR);
+				SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
 			}
 		}
 		if (spikes)
@@ -2275,7 +2315,6 @@ void vSetProps(int client, bool light, bool spikes, bool wheels, int red, int gr
 					DispatchKeyValue(iEntity[iSpike], "parentname", sTargetName);
 					DispatchKeyValueVector(iEntity[iSpike], "origin", flOrigin);
 					DispatchKeyValueVector(iEntity[iSpike], "angles", flAngles);
-					DispatchSpawn(iEntity[iSpike]);
 					SetVariantString(sTargetName);
 					AcceptEntityInput(iEntity[iSpike], "SetParent", iEntity[iSpike], iEntity[iSpike]);
 					switch (iSpike)
@@ -2293,11 +2332,12 @@ void vSetProps(int client, bool light, bool spikes, bool wheels, int red, int gr
 						case 1, 2: SetEntPropFloat(iEntity[iSpike], Prop_Data, "m_flModelScale", 0.4);
 						case 3, 4: SetEntPropFloat(iEntity[iSpike], Prop_Data, "m_flModelScale", 0.5);
 					}
-					SetEntProp(iEntity[iSpike], Prop_Send, "m_hOwnerEntity", client);
+					SetEntPropEnt(iEntity[iSpike], Prop_Send, "m_hOwnerEntity", client);
 					flAngles[0] = flAngles[0] + GetRandomFloat(-90.0, 90.0);
 					flAngles[1] = flAngles[1] + GetRandomFloat(-90.0, 90.0);
 					flAngles[2] = flAngles[2] + GetRandomFloat(-90.0, 90.0);
 					TeleportEntity(iEntity[iSpike], NULL_VECTOR, flAngles, NULL_VECTOR);
+					DispatchSpawn(iEntity[iSpike]);
 				}
 			}
 		}
@@ -2324,7 +2364,6 @@ void vSetProps(int client, bool light, bool spikes, bool wheels, int red, int gr
 					DispatchKeyValue(iEntity[iTire], "parentname", sTargetName);
 					DispatchKeyValueVector(iEntity[iTire], "origin", flOrigin);
 					DispatchKeyValueVector(iEntity[iTire], "angles", flAngles);
-					DispatchSpawn(iEntity[iTire]);
 					SetVariantString(sTargetName);
 					AcceptEntityInput(iEntity[iTire], "SetParent", iEntity[iTire], iEntity[iTire]);
 					switch (iTire)
@@ -2335,8 +2374,9 @@ void vSetProps(int client, bool light, bool spikes, bool wheels, int red, int gr
 					AcceptEntityInput(iEntity[iTire], "SetParentAttachment");
 					AcceptEntityInput(iEntity[iTire], "Enable");
 					AcceptEntityInput(iEntity[iTire], "DisableCollision");
-					SetEntProp(iEntity[iTire], Prop_Send, "m_hOwnerEntity", client);
+					SetEntPropEnt(iEntity[iTire], Prop_Send, "m_hOwnerEntity", client);
 					TeleportEntity(iEntity[iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
+					DispatchSpawn(iEntity[iTire]);
 				}
 			}
 		}
@@ -2381,7 +2421,7 @@ void vShieldAbility(int client, bool shield)
 				SetEntityRenderMode(iEntity, RENDER_TRANSTEXTURE);
 				SetEntityRenderColor(iEntity, 25, 125, 125, 50);
 				SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 1);
-				SetEntProp(iEntity, Prop_Send, "m_hOwnerEntity", client);
+				SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
 			}
 			g_bShielded[client] = true;
 		}
@@ -2394,7 +2434,7 @@ void vShieldAbility(int client, bool shield)
 				GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 				if (StrEqual(sModel, "models/props_unique/airport/atlas_break_ball.mdl"))
 				{
-					int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
+					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == client)
 					{
 						AcceptEntityInput(iEntity, "Kill");
@@ -2806,12 +2846,12 @@ public Action tTimerFlashEffect(Handle timer, any userid)
 		{
 			SetEntityModel(iEntity, "models/infected/hulk.mdl");
 			DispatchKeyValue(iEntity, "solid", "6");
+			TeleportEntity(iEntity, flTankPos, flTankAng, NULL_VECTOR);
 			DispatchSpawn(iEntity);
 			AcceptEntityInput(iEntity, "DisableCollision");
 			SetEntityRenderColor(iEntity, 255, 0, 0, 50);
 			SetEntProp(iEntity, Prop_Send, "m_nSequence", iAnim);
 			SetEntPropFloat(iEntity, Prop_Send, "m_flPlaybackRate", 5.0);
-			TeleportEntity(iEntity, flTankPos, flTankAng, NULL_VECTOR);
 			iEntity = EntIndexToEntRef(iEntity);
 			vDeleteEntity(iEntity, 0.3);
 		}		
@@ -2989,11 +3029,11 @@ public Action tTimerStopIce(Handle timer, any userid)
 	}
 }
 
-public Action tTimerIdleFix(Handle timer, Handle pack)
+public Action tTimerIdleFix(Handle timer, DataPack pack)
 {
-	ResetPack(pack);
-	int iSurvivor = ReadPackCell(pack);
-	int iBot = ReadPackCell(pack);
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iBot = GetClientOfUserId(pack.ReadCell());
 	if (!IsClientInGame(iSurvivor) || GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor) || IsFakeClient(iSurvivor))
 	{
 		g_bAFK[iSurvivor] = false;
@@ -3076,15 +3116,15 @@ public Action tTimerStopJump(Handle timer, any userid)
 	}
 }
 
-public Action tTimerUpdateMeteor(Handle timer, Handle pack)
+public Action tTimerUpdateMeteor(Handle timer, DataPack pack)
 {
-	ResetPack(pack);
+	pack.Reset();
 	float flPos[3];
-	int iTank = ReadPackCell(pack);
-	flPos[0] = ReadPackFloat(pack);
-	flPos[1] = ReadPackFloat(pack);
-	flPos[2] = ReadPackFloat(pack);
-	float flTime = ReadPackFloat(pack);
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	flPos[0] = pack.ReadFloat();
+	flPos[1] = pack.ReadFloat();
+	flPos[2] = pack.ReadFloat();
+	float flTime = pack.ReadFloat();
 	if (g_iTankType[iTank] == 23 && bIsValidClient(iTank))
 	{
 		if ((GetEngineTime() - flTime) > 5.0)
@@ -3118,7 +3158,6 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 				if (iRock > 0)
 				{
 					SetEntityModel(iRock, "models/props_debris/concrete_chunk01a.mdl");
-					DispatchSpawn(iRock);
 					float flAngle2[3];
 					flAngle2[0] = GetRandomFloat(-180.0, 180.0);
 					flAngle2[1] = GetRandomFloat(-180.0, 180.0);
@@ -3127,9 +3166,10 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 					flVelocity[1] = GetRandomFloat(0.0, 350.0);
 					flVelocity[2] = GetRandomFloat(0.0, 30.0);
 					TeleportEntity(iRock, flHitpos, flAngle2, flVelocity);
+					DispatchSpawn(iRock);
 					ActivateEntity(iRock);
 					AcceptEntityInput(iRock, "Ignite");
-					SetEntProp(iRock, Prop_Send, "m_hOwnerEntity", iTank);
+					SetEntPropEnt(iRock, Prop_Send, "m_hOwnerEntity", iTank);
 				}
 			}
 		}
@@ -3137,18 +3177,17 @@ public Action tTimerUpdateMeteor(Handle timer, Handle pack)
 		{
 			while ((iEntity = FindEntityByClassname(iEntity, "tank_rock")) != INVALID_ENT_REFERENCE)
 			{
-				int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
+				int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 				if (iTank == iOwner)
 				{
 					vMeteor(iEntity, iOwner);
 				}
 			}
-			delete pack;
 			return Plugin_Stop;
 		}
 		while ((iEntity = FindEntityByClassname(iEntity, "tank_rock")) != INVALID_ENT_REFERENCE)
 		{
-			int iOwner = GetEntProp(iEntity, Prop_Send, "m_hOwnerEntity");
+			int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 			if (iTank == iOwner)
 			{
 				if (flGetGroundUnits(iEntity) < 200.0)
@@ -3263,7 +3302,6 @@ public Action tTimerPropaneThrow(Handle timer, any client)
 				if (IsValidEntity(iPropane))
 				{
 					SetEntityModel(iPropane, "models/props_junk/propanecanister001a.mdl");
-					DispatchSpawn(iPropane);
 					float flPos[3];
 					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iEntity, "Kill");
@@ -3271,6 +3309,7 @@ public Action tTimerPropaneThrow(Handle timer, any client)
 					float flSpeed = g_cvSTTankThrowForce.FloatValue;
 					ScaleVector(flVelocity, flSpeed * 1.4);
 					TeleportEntity(iPropane, flPos, NULL_VECTOR, flVelocity);
+					DispatchSpawn(iPropane);
 				}
 				return Plugin_Stop;
 			}

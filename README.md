@@ -2040,7 +2040,7 @@ stconfig_timeoffset "-10" // Subtracts 10 hours to the server time.
 
 **Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?p=2402076) plugin.
 
-**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes and help with gamedata signatures.
+**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, and the code to prevent Tanks from damaging themselves and other infected with their own abilities.
 
 **Milo|** - For the code that automatically generates config files for each day and each map installed on a server.
 
