@@ -1,5 +1,20 @@
 # Changelog
 
+## Version 8.7 (June 21, 2018)
+
+Bug fixes:
+
+1. Fixed the Ghost Tank and Gravity Tank convars being switched.
+
+Changes:
+
+1. Added options for the st_displayhealth convar. (1: show names only, 2: show health only, 3: show both names and health.)
+2. Added a convar for each Tank type to decide what props to attach to it. (1: attach lights only, 2: attach rocks only, 3: attach tires only, 4: attach all 3.)
+
+Files:
+
+1. Updated include file
+
 ## Version 8.6 (June 21, 2018)
 
 Bug fixes:

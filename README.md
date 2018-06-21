@@ -247,14 +247,16 @@ Throws Witches at survivors.
 // Default: ""
 st_disabledgamemodes ""
 
-// Display Tanks' health?
+// Display Tanks' names and health?
 // (0: OFF)
-// (1: ON)
+// (1: ON, show names only.)
+// (2: ON, show health only.)
+// (3: ON, show both names and health.)
 // -
-// Default: "1"
+// Default: "3"
 // Minimum: "0.000000"
-// Maximum: "1.000000"
-st_displayhealth "1"
+// Maximum: "3.000000"
+st_displayhealth "3"
 
 // Enable Super Tanks++?
 // (0: OFF)
@@ -308,6 +310,18 @@ st_tankwaves "2,3,4"
 // Maximum: "99999.000000"
 stacid_acidchance "4"
 
+// Attach props to Acid Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stacid_attachprops "4"
+
 // Extra health given to Acid Tank.
 // -
 // Default: "0"
@@ -352,6 +366,18 @@ stammo_ammochance "4"
 // Maximum: "100.000000"
 stammo_ammocount "0"
 
+// Attach props to Ammo Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stammo_attachprops "4"
+
 // Extra health given to Ammo Tank.
 // -
 // Default: "0"
@@ -381,6 +407,18 @@ stammo_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stammo_throwinterval "5.0"
+
+// Attach props to Blind Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stblind_attachprops "4"
 
 // Blind Tank has 1 out of this many chances to make survivors blind.
 // -
@@ -426,6 +464,18 @@ stblind_runspeed "1.0"
 // Maximum: "99999.000000"
 stblind_throwinterval "5.0"
 
+// Attach props to Bomb Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stbomb_attachprops "4"
+
 // Bomb Tank has 1 out of this many chances to cause an explosion.
 // -
 // Default: "4"
@@ -463,6 +513,18 @@ stbomb_runspeed "1.0"
 // Maximum: "99999.000000"
 stbomb_throwinterval "5.0"
 
+// Attach props to Boomer Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stboomer_attachprops "4"
+
 // Extra health given to Boomer Tank.
 // -
 // Default: "0"
@@ -492,6 +554,18 @@ stboomer_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stboomer_throwinterval "5.0"
+
+// Attach props to Charger Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stcharger_attachprops "4"
 
 // Extra health given to Charger Tank.
 // -
@@ -523,6 +597,18 @@ stcharger_runspeed "1.0"
 // Maximum: "99999.000000"
 stcharger_throwinterval "5.0"
 
+// Attach props to Clone Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stclone_attachprops "4"
+
 // Extra health given to Clone Tank.
 // -
 // Default: "0"
@@ -552,6 +638,18 @@ stclone_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stclone_throwinterval "5.0"
+
+// Attach props to Common Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stcommon_attachprops "4"
 
 // Extra health given to Common Tank.
 // -
@@ -665,6 +763,18 @@ stdefault_runspeed "1.0"
 // Maximum: "99999.000000"
 stdefault_throwinterval "5.0"
 
+// Attach props to Drug Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stdrug_attachprops "4"
+
 // Drug Tank has 1 out of this many chances to drug survivors.
 // -
 // Default: "4"
@@ -709,6 +819,18 @@ stdrug_runspeed "1.0"
 // Maximum: "99999.000000"
 stdrug_throwinterval "5.0"
 
+// Attach props to Fire Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stfire_attachprops "4"
+
 // Extra health given to Fire Tank.
 // -
 // Default: "0"
@@ -745,6 +867,18 @@ stfire_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stfire_throwinterval "5.0"
+
+// Attach props to Flash Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stflash_attachprops "4"
 
 // Extra health given to Flash Tank.
 // -
@@ -790,6 +924,18 @@ stflash_specialspeed "5.0"
 // Maximum: "99999.000000"
 stflash_throwinterval "5.0"
 
+// Attach props to Fling Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stfling_attachprops "4"
+
 // Extra health given to Fling Tank.
 // -
 // Default: "0"
@@ -826,6 +972,18 @@ stfling_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stfling_throwinterval "5.0"
+
+// Attach props to Ghost Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stghost_attachprops "4"
 
 // Extra health given to Ghost Tank.
 // -
@@ -876,6 +1034,18 @@ stghost_throwinterval "5.0"
 // Default: "12345"
 stghost_weaponslot "12345"
 
+// Attach props to Gravity Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stgravity_attachprops "4"
+
 // Extra health given to Gravity Tank.
 // -
 // Default: "0"
@@ -921,6 +1091,18 @@ stgravity_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stgravity_throwinterval "5.0"
+
+// Attach props to Heal Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stheal_attachprops "4"
 
 // Health absorbed from common infected.
 // -
@@ -987,6 +1169,18 @@ stheal_tankamount "500"
 // Maximum: "99999.000000"
 stheal_throwinterval "5.0"
 
+// Attach props to Hunter Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+sthunter_attachprops "4"
+
 // Extra health given to Hunter Tank.
 // -
 // Default: "0"
@@ -1016,6 +1210,18 @@ sthunter_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 sthunter_throwinterval "5.0"
+
+// Attach props to Hypno Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+sthypno_attachprops "4"
 
 // Hypno Tank's hypnosis effect lasts this long.
 // -
@@ -1061,6 +1267,18 @@ sthypno_runspeed "1.0"
 // Maximum: "99999.000000"
 sthypno_throwinterval "5.0"
 
+// Attach props to Ice Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stice_attachprops "4"
+
 // Extra health given to Ice Tank.
 // -
 // Default: "0"
@@ -1098,6 +1316,18 @@ stice_runspeed "1.0"
 // Maximum: "99999.000000"
 stice_throwinterval "5.0"
 
+// Attach props to Idle Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stidle_attachprops "4"
+
 // Extra health given to Idle Tank.
 // -
 // Default: "0"
@@ -1134,6 +1364,18 @@ stidle_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stidle_throwinterval "5.0"
+
+// Attach props to Invert Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stinvert_attachprops "4"
 
 // Invert Tank's inversion effect lasts this long.
 // -
@@ -1179,6 +1421,18 @@ stinvert_runspeed "1.0"
 // Maximum: "99999.000000"
 stinvert_throwinterval "5.0"
 
+// Attach props to Jockey Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stjockey_attachprops "4"
+
 // Extra health given to Jockey Tank.
 // -
 // Default: "0"
@@ -1208,6 +1462,18 @@ stjockey_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stjockey_throwinterval "5.0"
+
+// Attach props to Jumper Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stjumper_attachprops "4"
 
 // Jumper Tank has 1 out of this many chances to jump into the air.
 // -
@@ -1253,6 +1519,18 @@ stjumper_runspeed "1.0"
 // Maximum: "99999.000000"
 stjumper_throwinterval "5.0"
 
+// Attach props to Meteor Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stmeteor_attachprops "4"
+
 // Extra health given to Meteor Tank.
 // -
 // Default: "0"
@@ -1297,6 +1575,18 @@ stmeteor_runspeed "1.0"
 // Maximum: "99999.000000"
 stmeteor_throwinterval "5.0"
 
+// Attach props to Puke Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stpuke_attachprops "4"
+
 // Extra health given to Puke Tank.
 // -
 // Default: "0"
@@ -1333,6 +1623,18 @@ stpuke_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stpuke_throwinterval "5.0"
+
+// Attach props to Restart Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+strestart_attachprops "4"
 
 // Extra health given to Restart Tank.
 // -
@@ -1384,6 +1686,18 @@ strestart_runspeed "1.0"
 // Maximum: "99999.000000"
 strestart_throwinterval "5.0"
 
+// Attach props to Rocket Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+strocket_attachprops "4"
+
 // Extra health given to Rocket Tank.
 // -
 // Default: "0"
@@ -1420,6 +1734,18 @@ strocket_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 strocket_throwinterval "5.0"
+
+// Attach props to Shake Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stshake_attachprops "4"
 
 // Shake Tank's shake effect lasts this long.
 // -
@@ -1465,6 +1791,18 @@ stshake_shakechance "4"
 // Maximum: "99999.000000"
 stshake_throwinterval "5.0"
 
+// Attach props to Shield Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stshield_attachprops "4"
+
 // Extra health given to Shield Tank.
 // -
 // Default: "0"
@@ -1501,6 +1839,18 @@ stshield_shielddelay "7.5"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stshield_throwinterval "5.0"
+
+// Attach props to Shove Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stshove_attachprops "4"
 
 // Shove Tank's shove effect lasts this long.
 // -
@@ -1546,6 +1896,18 @@ stshove_shovechance "4"
 // Maximum: "99999.000000"
 stshove_throwinterval "5.0"
 
+// Attach props to Slug Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stslug_attachprops "4"
+
 // Extra health given to Slug Tank.
 // -
 // Default: "0"
@@ -1583,6 +1945,18 @@ stslug_slugchance "4"
 // Maximum: "99999.000000"
 stslug_throwinterval "5.0"
 
+// Attach props to Smoker Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stsmoker_attachprops "4"
+
 // Extra health given to Smoker Tank.
 // -
 // Default: "0"
@@ -1612,6 +1986,18 @@ stsmoker_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stsmoker_throwinterval "5.0"
+
+// Attach props to Spitter Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stspitter_attachprops "4"
 
 // Extra health given to Spitter Tank.
 // -
@@ -1649,6 +2035,18 @@ stspitter_throwinterval "5.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 ststun_duration "5.0"
+
+// Attach props to Stun Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+ststun_attachprops "4"
 
 // Extra health given to Stun Tank.
 // -
@@ -1701,6 +2099,18 @@ ststun_throwinterval "5.0"
 // Maximum: "99999.000000"
 stvisual_duration "5.0"
 
+// Attach props to Visual Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stvisual_attachprops "4"
+
 // Extra health given to Visual Tank.
 // -
 // Default: "0"
@@ -1745,6 +2155,18 @@ stvisual_throwinterval "5.0"
 // Maximum: "99999.000000"
 stvisual_visualchance "4"
 
+// Attach props to Warp Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stwarp_attachprops "4"
+
 // Extra health given to Warp Tank.
 // -
 // Default: "0"
@@ -1781,6 +2203,18 @@ stwarp_throwinterval "5.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stwarp_warpinterval "10"
+
+// Attach props to Witch Tank?
+// (0: OFF)
+// (1: ON, attach lights only.)
+// (2: ON, attach rocks only.)
+// (3: ON, attach tires only.)
+// (4: ON, all 3 props.)
+// -
+// Default: "4"
+// Minimum: "0.000000"
+// Maximum: "4.000000"
+stwitch_attachprops "4"
 
 // Extra health given to Witch Tank.
 // -
