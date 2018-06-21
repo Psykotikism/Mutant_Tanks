@@ -9,7 +9,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.8"
+#define ST_VERSION "8.9"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_LOCK "=="
 #define ST_UNLOCK "!="
@@ -509,6 +509,18 @@ stock bool bIsValidEntRef(int entity)
 	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
+public bool bTankFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsTank(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
 public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 {
 	if (entity == data) 
@@ -815,6 +827,15 @@ stock void vKickFakeClient(int client)
 	if (IsFakeClient(client))
 	{
 		KickClient(client);
+	}
+}
+
+stock void vMultiTargetTanks(int toggle)
+{
+	switch (toggle)
+	{
+		case 0: RemoveMultiTargetFilter("@tanks", bTankFilter);
+		case 1: AddMultiTargetFilter("@tanks", bTankFilter, "all Tanks", false);
 	}
 }
 

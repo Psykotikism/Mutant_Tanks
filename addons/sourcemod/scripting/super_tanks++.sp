@@ -185,6 +185,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	vMultiTargetTanks(1);
 	g_smConVars = new StringMap();
 	vST_CreateConfig(true);
 	vST_CreateDirectory(true);
@@ -775,6 +776,11 @@ public void OnMapEnd()
 	{
 		vStopTimers(iPlayer);
 	}
+}
+
+public void OnPluginEnd()
+{
+	vMultiTargetTanks(0);
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
@@ -2287,9 +2293,10 @@ void vSetName(int client, char[] name = "Default Tank", bool light = false, bool
 
 void vSetProps(int client, bool light, bool rocks, bool tires, int red, int green, int blue, int alpha, char[] color, RenderMode mode)
 {
-	if (bIsValidClient(client) && bIsL4D2Game())
+	if (bIsValidClient(client))
 	{
-		if (light && (g_cvSTAttachProps[g_iTankType[client]].IntValue == 1 || g_cvSTAttachProps[g_iTankType[client]].IntValue == 4))
+		int iRandom = GetRandomInt(1, 7);
+		if (light && (iRandom == 1 || iRandom == 4 || iRandom == 5 || iRandom == 7) && (g_cvSTAttachProps[g_iTankType[client]].IntValue == 1 || g_cvSTAttachProps[g_iTankType[client]].IntValue == 4))
 		{
 			float flOrigin[3];
 			float flAngles[3];
@@ -2327,7 +2334,7 @@ void vSetProps(int client, bool light, bool rocks, bool tires, int red, int gree
 				SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
 			}
 		}
-		if (rocks && (g_cvSTAttachProps[g_iTankType[client]].IntValue == 2 || g_cvSTAttachProps[g_iTankType[client]].IntValue == 4))
+		if (rocks && (iRandom == 2 || iRandom == 4 || iRandom == 6 || iRandom == 7) && (g_cvSTAttachProps[g_iTankType[client]].IntValue == 2 || g_cvSTAttachProps[g_iTankType[client]].IntValue == 4))
 		{
 			float flOrigin[3];
 			float flAngles[3];
@@ -2362,10 +2369,13 @@ void vSetProps(int client, bool light, bool rocks, bool tires, int red, int gree
 					AcceptEntityInput(iEntity[iSpike], "SetParentAttachment");
 					AcceptEntityInput(iEntity[iSpike], "Enable");
 					AcceptEntityInput(iEntity[iSpike], "DisableCollision");
-					switch (iSpike)
+					if (bIsL4D2Game())
 					{
-						case 1, 2: SetEntPropFloat(iEntity[iSpike], Prop_Data, "m_flModelScale", 0.4);
-						case 3, 4: SetEntPropFloat(iEntity[iSpike], Prop_Data, "m_flModelScale", 0.5);
+						switch (iSpike)
+						{
+							case 1, 2: SetEntPropFloat(iEntity[iSpike], Prop_Data, "m_flModelScale", 0.4);
+							case 3, 4: SetEntPropFloat(iEntity[iSpike], Prop_Data, "m_flModelScale", 0.5);
+						}
 					}
 					SetEntPropEnt(iEntity[iSpike], Prop_Send, "m_hOwnerEntity", client);
 					flAngles[0] = flAngles[0] + GetRandomFloat(-90.0, 90.0);
@@ -2376,7 +2386,7 @@ void vSetProps(int client, bool light, bool rocks, bool tires, int red, int gree
 				}
 			}
 		}
-		if (tires && (g_cvSTAttachProps[g_iTankType[client]].IntValue == 3 || g_cvSTAttachProps[g_iTankType[client]].IntValue == 4))
+		if (tires && (iRandom == 3 || iRandom == 5 || iRandom == 6 || iRandom == 7) && (g_cvSTAttachProps[g_iTankType[client]].IntValue == 3 || g_cvSTAttachProps[g_iTankType[client]].IntValue == 4))
 		{
 			float flOrigin[3];
 			float flAngles[3];

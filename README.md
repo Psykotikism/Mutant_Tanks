@@ -2381,7 +2381,11 @@ Example:
 stflash_throwinterval "8.0" // Add 3.0 to Flash Tank's throw interval. Default interval is 5.0.
 ```
 
-9. What are the different Tank types?
+9. Why do some Tanks spawn with different props?
+
+Since v8.9, there's a randomizer that determines which props Tanks spawn with.
+
+10. What are the different Tank types?
 
 ```
 1. Acid // Add "0" to st_tanktypes to use.

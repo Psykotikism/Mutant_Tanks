@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 8.9 (June 25, 2018)
+
+Changes:
+
+1. Added a randomizer for Tanks spawning with props to add more variety.
+2. Added the target filter "@tanks" for developers/testers to use.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.8 (June 21, 2018)
 
 Bug fixes:
