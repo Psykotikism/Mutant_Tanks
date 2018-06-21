@@ -1071,7 +1071,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
 				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
 			}
-			if (bIsTank(iTank))
+			if (bIsTank(iTank, false))
 			{
 				if (g_bHypno[iAttacker] && iTank > 0 && iAttacker != iTank)
 				{

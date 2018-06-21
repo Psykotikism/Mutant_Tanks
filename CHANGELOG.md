@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 8.6 (June 21, 2018)
+
+Bug fixes:
+
+1. Fixed the proper amount of Tanks not spawning on the 2nd wave during finales.
+2. Fixed the props attached to the Tanks not disappearing right away when they die.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.5 (June 20, 2018)
 
 Bug fixes:

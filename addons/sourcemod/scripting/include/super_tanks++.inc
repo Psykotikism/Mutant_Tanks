@@ -9,7 +9,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.5"
+#define ST_VERSION "8.6"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_LOCK "=="
 #define ST_UNLOCK "!="
@@ -392,9 +392,9 @@ stock bool bIsIdlePlayer(int bot, int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsFakeClient(client) && GetClientTeam(bot) == 2;
 }
 
-stock bool bIsInfected(int client)
+stock bool bIsInfected(int client, bool alive = true)
 {
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3 && IsPlayerAlive(client) && !IsClientInKickQueue(client);
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3 && (!alive || (alive && IsPlayerAlive(client))) && !IsClientInKickQueue(client);
 }
 
 stock bool bIsL4D2Game()
@@ -485,10 +485,10 @@ stock bool bIsSystemValid(ConVar convar, ConVar convar2, ConVar convar3)
 	return true;
 }
 
-stock bool bIsTank(int client)
+stock bool bIsTank(int client, bool alive = true)
 {
 	char sClassname[32];
-	if (bIsInfected(client))
+	if (bIsInfected(client, alive))
 	{
 		GetEntityNetClass(client, sClassname, sizeof(sClassname));
 		if (StrEqual(sClassname, "Tank", false))
