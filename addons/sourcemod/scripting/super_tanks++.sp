@@ -1093,11 +1093,11 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						{
 							if (bIsSurvivor(iSurvivor))
 							{
-								tTimerStopBlindness(null, iSurvivor);
+								tTimerStopBlindness(null, GetClientUserId(iSurvivor));
 							}
 						}
 					}
-					case 8: tTimerStopCommon(null, iTank);
+					case 8: tTimerStopCommon(null, iUserId);
 					case 9:
 					{
 						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -1108,9 +1108,9 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 							}
 						}
 					}
-					case 11: tTimerStopFlash(null, iTank);
-					case 14: tTimerStopGravity(null, iTank);
-					case 15: tTimerStopHeal(null, iTank);
+					case 11: tTimerStopFlash(null, iUserId);
+					case 14: tTimerStopGravity(null, iUserId);
+					case 15: tTimerStopHeal(null, iUserId);
 					case 17:
 					{
 						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -1127,7 +1127,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						{
 							if (bIsSurvivor(iSurvivor))
 							{
-								tTimerStopIce(null, iSurvivor);
+								tTimerStopIce(null, GetClientUserId(iSurvivor));
 							}
 						}
 					}
@@ -1141,7 +1141,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 							}
 						}
 					}
-					case 22: tTimerStopJump(null, iTank);
+					case 22: tTimerStopJump(null, iUserId);
 					case 27:
 					{
 						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -1162,7 +1162,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 							}
 						}
 					}
-					case 31: tTimerStopSmoker(null, iTank);
+					case 31: tTimerStopSmoker(null, iUserId);
 					case 33:
 					{
 						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -2557,21 +2557,21 @@ void vStopTimers(int client)
 		g_bMeteor[client] = false;
 		g_bShielded[client] = false;
 		g_iTankType[client] = 0;
-		tTimerStopBlindness(null, client);
-		tTimerStopCommon(null, client);
-		tTimerStopDrug(null, client);
-		tTimerStopFlash(null, client);
-		tTimerStopGravity(null, client);
-		tTimerStopHeal(null, client);
-		tTimerStopHypnosis(null, client);
-		tTimerStopIce(null, client);
-		tTimerStopInversion(null, client);
-		tTimerStopJump(null, client);
-		tTimerStopShake(null, client);
-		tTimerStopShove(null, client);
-		tTimerStopSmoker(null, client);
-		tTimerStopStun(null, client);
-		tTimerStopVision(null, client);
+		tTimerStopBlindness(null, GetClientUserId(client));
+		tTimerStopCommon(null, GetClientUserId(client));
+		tTimerStopDrug(null, GetClientUserId(client));
+		tTimerStopFlash(null, GetClientUserId(client));
+		tTimerStopGravity(null, GetClientUserId(client));
+		tTimerStopHeal(null, GetClientUserId(client));
+		tTimerStopHypnosis(null, GetClientUserId(client));
+		tTimerStopIce(null, GetClientUserId(client));
+		tTimerStopInversion(null, GetClientUserId(client));
+		tTimerStopJump(null, GetClientUserId(client));
+		tTimerStopShake(null, GetClientUserId(client));
+		tTimerStopShove(null, GetClientUserId(client));
+		tTimerStopSmoker(null, GetClientUserId(client));
+		tTimerStopStun(null, GetClientUserId(client));
+		tTimerStopVision(null, GetClientUserId(client));
 	}
 }
 

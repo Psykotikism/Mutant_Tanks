@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 8.5 (June 20, 2018)
+
+Bug fixes:
+
+1. Fixed the Tank's effects not going away right after the Tank dies.
+
 ## Version 8.4 (June 20, 2018)
 
 Bug fixes:
