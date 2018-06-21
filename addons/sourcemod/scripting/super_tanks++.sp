@@ -579,13 +579,13 @@ public void OnMapStart()
 		PrecacheSound("physics/glass/glass_impact_bullet4.wav", true);
 		if (g_bLateLoad)
 		{
-	        for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++ )
-	        {
-	            if (bIsValidClient(iPlayer))
-	            {
-	                SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-	            }
-	        }
+			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++ )
+			{
+				if (bIsValidClient(iPlayer))
+				{
+					SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+				}
+			}
 		}
 	}
 }
