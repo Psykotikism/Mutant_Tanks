@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.9 (June 25, 2018)
+## Version 8.9 (June 21, 2018)
 
 Changes:
 
