@@ -387,7 +387,7 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTRunSpeed[28], "stshield_runspeed", "1.0", "Shield Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTShieldDelay, "stshield_shielddelay", "7.5", "Shield Tank's shield reactivates after this many seconds.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTThrowInterval[28], "stshield_throwinterval", "5.0", "Shield Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[28], "stshove_attachprops", "4", "Attach props to Shove Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[29], "stshove_attachprops", "4", "Attach props to Shove Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
 	vCreateConVar(g_cvSTShoveDuration, "stshove_duration", "5.0", "Shove Tank's shove effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[29], "stshove_extrahealth", "0", "Extra health given to Shove Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[29], "stshove_fireimmunity", "0", "Give Shove Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
@@ -400,7 +400,7 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTRunSpeed[30], "stslug_runspeed", "0.5", "Slug Tank's run speed.", _, true, 0.1, true, 0.5);
 	vCreateConVar(g_cvSTSlugChance, "stslug_slugchance", "4", "Slug Tank has 1 out of this many chances to smite survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTThrowInterval[30], "stslug_throwinterval", "5.0", "Slug Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[22], "stsmoker_attachprops", "4", "Attach props to Smoker Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[31], "stsmoker_attachprops", "4", "Attach props to Smoker Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
 	vCreateConVar(g_cvSTExtraHealth[31], "stsmoker_extrahealth", "0", "Extra health given to Smoker Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[31], "stsmoker_fireimmunity", "0", "Give Smoker Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[31], "stsmoker_runspeed", "1.0", "Smoker Tank's run speed.", _, true, 0.1, true, 2.0);

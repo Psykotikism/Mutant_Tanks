@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 8.8 (June 21, 2018)
+
+Bug fixes:
+
+1. Fixed the Shove and Smoker Tanks' attachprops convars not working properly.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.7 (June 21, 2018)
 
 Bug fixes:
@@ -13,7 +23,7 @@ Changes:
 
 Files:
 
-1. Updated include file
+1. Updated include file.
 
 ## Version 8.6 (June 21, 2018)
 
