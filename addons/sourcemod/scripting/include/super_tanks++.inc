@@ -187,13 +187,13 @@ stock int iST_Append(const char[] name, const char[] defaultValue, const char[] 
 		}
 		else
 		{
-			char[][] newlineBuf = new char[iNewLines + 1][2048];
-			ExplodeString(description, "\n", newlineBuf, iNewLines + 1, 2048, false);
+			char[][] sNewLines = new char[iNewLines + 1][2048];
+			ExplodeString(description, "\n", sNewLines, iNewLines + 1, 2048, false);
 			for (int iLine; iLine <= iNewLines; iLine++)
 			{
-				if (strlen(newlineBuf[iLine]) > 0)
+				if (strlen(sNewLines[iLine]) > 0)
 				{
-					fFile.WriteLine("// %s", newlineBuf[iLine]);
+					fFile.WriteLine("// %s", sNewLines[iLine]);
 				}
 			}
 		}
@@ -835,9 +835,9 @@ stock void vSetPlayerLifeState(int client, bool ready)
 
 stock void vSpawnInfected(int client, int type, bool auto = true)
 {
-	bool[] bResetGhostState = new bool[MaxClients + 1];
-	bool[] bResetAlive = new bool[MaxClients + 1];
-	bool[] bResetLifeState = new bool[MaxClients + 1];
+	bool bResetGhostState[MAXPLAYERS + 1];
+	bool bResetAlive[MAXPLAYERS + 1];
+	bool bResetLifeState[MAXPLAYERS + 1];
 	ChangeClientTeam(client, 3);
 	char sInfectedTypes[10][10] = {"", "smoker", "boomer", "hunter", "spitter", "jockey", "charger", "witch", "tank", "survivor"};
 	char sOptions[32];

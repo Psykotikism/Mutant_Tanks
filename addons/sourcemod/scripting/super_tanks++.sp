@@ -173,16 +173,13 @@ UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	char sGameName[64];
-	GetGameFolderName(sGameName, sizeof(sGameName));
-	if (!StrEqual(sGameName, "left4dead", false) && !StrEqual(sGameName, "left4dead2", false))
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
+		strcopy(error, err_max, "Super Tanks++ only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
-	if (late)
-	{
-		g_bLateLoad = true;
-	}
+	g_bLateLoad = late;
 	return APLRes_Success;
 }
 
@@ -584,6 +581,7 @@ public void OnMapStart()
 				if (bIsValidClient(iPlayer))
 				{
 					SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+					SDKHook(iPlayer, SDKHook_TraceAttack, TraceAttack);
 				}
 			}
 		}
