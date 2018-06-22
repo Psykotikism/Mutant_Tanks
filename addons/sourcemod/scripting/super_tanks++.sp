@@ -2499,8 +2499,8 @@ void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode m
 			float flAngles[3];
 			GetClientEyePosition(client, flOrigin);
 			GetClientAbsAngles(client, flAngles);
-			int iEntity[3];
-			for (int iOzTank = 1; iOzTank <= 2; iOzTank++)
+			int iEntity[5];
+			for (int iOzTank = 1; iOzTank <= 4; iOzTank++)
 			{
 				iEntity[iOzTank] = CreateEntityByName("prop_dynamic_override");
 				if (IsValidEntity(iEntity[iOzTank]))
@@ -2528,6 +2528,16 @@ void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode m
 						case 2:
 						{
 							SetVariantString("lfoot");
+							vSetVector(flOrigin, 0.0, 30.0, -8.0);
+						}
+						case 3:
+						{
+							SetVariantString("rshoulder");
+							vSetVector(flOrigin, 0.0, 30.0, 8.0);
+						}
+						case 4:
+						{
+							SetVariantString("lshoulder");
 							vSetVector(flOrigin, 0.0, 30.0, -8.0);
 						}
 					}

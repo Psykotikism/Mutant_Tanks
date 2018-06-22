@@ -2486,6 +2486,10 @@ stconfig_timeoffset "-10" // Subtracts 10 hours to the server time.
 
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 
+**Mi.Cura** - For reporting issues and overall continuous support.
+
+**emsit** - For reporting issues and helping with parts of the code.
+
 **SourceMod Team** - For the beacon, blind, drug, and ice source codes.
 
 # Contact Me
