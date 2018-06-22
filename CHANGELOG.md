@@ -1,5 +1,20 @@
 # Changelog
 
+## Version 8.10 (June 22, 2018)
+
+Changes:
+
+1. Added the target filters "@smokers", "@boomers", "@hunters", "@spitters", "@jockeys", "@chargers", "@witches" for developers/testers to use.
+2. Added the sm_tank "type 1-36" command to spawn each Tank for developing/testing purposes.
+3. Added oxygen tank (jetpack) props to Tanks.
+4. Modified the attachprops convars to now support multiple number combinations.
+5. Removed unnecessary code.
+6. Optimized code a bit.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.9 (June 21, 2018)
 
 Changes:

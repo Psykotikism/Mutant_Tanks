@@ -12,46 +12,8 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-/* 36 Super Tanks
- * Acid
- * Ammo
- * Blind
- * Bomb
- * Boomer
- * Charger
- * Clone
- * Common
- * Drug
- * Fire
- * Flash
- * Fling
- * Ghost
- * Gravity
- * Heal
- * Hunter
- * Hypno
- * Ice
- * Idle
- * Invert
- * Jockey
- * Jumper
- * Meteor
- * Puke
- * Restart
- * Rocket
- * Shake
- * Shield
- * Shove
- * Slug
- * Smoker
- * Spitter
- * Stun
- * Vision
- * Warp
- * Witch
- */
-
 bool g_bAFK[MAXPLAYERS + 1];
+bool g_bCmdUsed;
 bool g_bFlash[MAXPLAYERS + 1];
 bool g_bHeadshot[MAXPLAYERS + 1];
 bool g_bHypno[MAXPLAYERS + 1];
@@ -66,6 +28,7 @@ char g_sConfigOption[6];
 ConVar g_cvSTAcidChance;
 ConVar g_cvSTAmmoChance;
 ConVar g_cvSTAmmoCount;
+ConVar g_cvSTAnnounceArrival;
 ConVar g_cvSTAttachProps[37];
 ConVar g_cvSTBlindChance;
 ConVar g_cvSTBlindDuration;
@@ -168,6 +131,7 @@ int g_iShockSprite = -1;
 int g_iTankType[MAXPLAYERS + 1];
 int g_iTankWave;
 int g_iThrower[MAXPLAYERS + 1];
+int g_iType;
 StringMap g_smConVars;
 UserMsg g_umFadeUserMsgId;
 
@@ -186,10 +150,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public void OnPluginStart()
 {
 	vMultiTargetTanks(1);
+	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
 	g_smConVars = new StringMap();
 	vST_CreateConfig(true);
 	vST_CreateDirectory(true);
 	bST_Config("super_tanks++");
+	vCreateConVar(g_cvSTAnnounceArrival, "st_announcearrival", "1", "Announce each Super Tank's arrival?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTDisabledGameModes, "st_disabledgamemodes", "", "Disable Super Tanks++ in these game modes.\nSeparate game modes with commas.\nGame mode limit: 64\nCharacter limit for each game mode: 32\n(Empty: None)\n(Not empty: Disabled only in these game modes.)");
 	vCreateConVar(g_cvSTDisplayHealth, "st_displayhealth", "3", "Display Tanks' names and health?\n(0: OFF)\n(1: ON, show names only.)\n(2: ON, show health only.)\n(3: ON, show both names and health.)", _, true, 0.0, true, 3.0);
 	vCreateConVar(g_cvSTEnable, "st_enable", "1", "Enable Super Tanks++?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
@@ -199,47 +165,47 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTTankTypes, "st_tanktypes", "0123456789abcdefghijklmnopqrstuvwxyz", "Which Super Tank types can be spawned?\nCombine letters and numbers in any order for different results.\nRepeat the same letter or number to increase its chance of being chosen.\nCharacter limit: 52\nView the README.md file for a list of options.");
 	vCreateConVar(g_cvSTTankWaves, "st_tankwaves", "2,3,4", "How many Tanks to spawn for each finale wave?\n(1st number = 1st wave)\n(2nd number = 2nd wave)\n(3rd number = 3rd wave)");
 	vCreateConVar(g_cvSTAcidChance, "stacid_acidchance", "4", "Acid Tank has 1 out of this many chances to spawn an acid puddle underneath survivors.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[1], "stacid_attachprops", "4", "Attach props to Acid Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[1], "stacid_attachprops", "1234", "Attach props to Acid Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[1], "stacid_extrahealth", "0", "Extra health given to Acid Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[1], "stacid_fireimmunity", "0", "Give Acid Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[1], "stacid_runspeed", "1.0", "Acid Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[1], "stacid_throwinterval", "5.0", "Acid Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAmmoChance, "stammo_ammochance", "4", "Ammo Tank has 1 out of this many chances to take away survivors' ammunition.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAmmoCount, "stammo_ammocount", "0", "Ammo Tanks can set survivors' ammunition count to this number.", _, true, 0.0, true, 100.0);
-	vCreateConVar(g_cvSTAttachProps[2], "stammo_attachprops", "4", "Attach props to Ammo Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[2], "stammo_attachprops", "1234", "Attach props to Ammo Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[2], "stammo_extrahealth", "0", "Extra health given to Ammo Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[2], "stammo_fireimmunity", "0", "Give Ammo Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[2], "stammo_runspeed", "1.0", "Ammo Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[2], "stammo_throwinterval", "5.0", "Ammo Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[3], "stblind_attachprops", "4", "Attach props to Blind Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[3], "stblind_attachprops", "1234", "Attach props to Blind Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTBlindChance, "stblind_blindchance", "4", "Blind Tank has 1 out of this many chances to make survivors blind.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTBlindDuration, "stblind_duration", "5.0", "Blind Tank's blind effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[3], "stblind_extrahealth", "0", "Extra health given to Blind Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[3], "stblind_fireimmunity", "0", "Give Blind Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[3], "stblind_runspeed", "1.0", "Blind Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[3], "stblind_throwinterval", "5.0", "Blind Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[4], "stbomb_attachprops", "4", "Attach props to Bomb Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[4], "stbomb_attachprops", "1234", "Attach props to Bomb Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTBombChance, "stbomb_bombchance", "4", "Bomb Tank has 1 out of this many chances to cause an explosion.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[4], "stbomb_extrahealth", "0", "Extra health given to Bomb Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[4], "stbomb_fireimmunity", "0", "Give Bomb Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[4], "stbomb_runspeed", "1.0", "Bomb Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[4], "stbomb_throwinterval", "5.0", "Bomb Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[5], "stboomer_attachprops", "4", "Attach props to Boomer Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[5], "stboomer_attachprops", "1234", "Attach props to Boomer Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[5], "stboomer_extrahealth", "0", "Extra health given to Boomer Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[5], "stboomer_fireimmunity", "0", "Give Boomer Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[5], "stboomer_runspeed", "1.0", "Boomer Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[5], "stboomer_throwinterval", "5.0", "Boomer Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[6], "stcharger_attachprops", "4", "Attach props to Charger Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[6], "stcharger_attachprops", "1234", "Attach props to Charger Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[6], "stcharger_extrahealth", "0", "Extra health given to Charger Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[6], "stcharger_fireimmunity", "0", "Give Charger Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[6], "stcharger_runspeed", "1.0", "Charger Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[6], "stcharger_throwinterval", "5.0", "Charger Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[7], "stclone_attachprops", "4", "Attach props to Clone Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[7], "stclone_attachprops", "1234", "Attach props to Clone Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[7], "stclone_extrahealth", "0", "Extra health given to Clone Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[7], "stclone_fireimmunity", "0", "Give Clone Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[7], "stclone_runspeed", "1.0", "Clone Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[7], "stclone_throwinterval", "5.0", "Clone Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[8], "stcommon_attachprops", "4", "Attach props to Common Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[8], "stcommon_attachprops", "1234", "Attach props to Common Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[8], "stcommon_extrahealth", "0", "Extra health given to Common Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[8], "stcommon_fireimmunity", "0", "Give Common Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[8], "stcommon_runspeed", "1.0", "Common Tank's run speed.", _, true, 0.1, true, 2.0);
@@ -253,47 +219,47 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTFireImmunity[0], "stdefault_fireimmunity", "0", "Give Default Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[0], "stdefault_runspeed", "1.0", "Default Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[0], "stdefault_throwinterval", "5.0", "Default Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[9], "stdrug_attachprops", "4", "Attach props to Drug Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[9], "stdrug_attachprops", "1234", "Attach props to Drug Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTDrugChance, "stdrug_drugchance", "4", "Drug Tank has 1 out of this many chances to drug survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTDrugDuration, "stdrug_duration", "5.0", "Drug Tank's drug effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[9], "stdrug_extrahealth", "0", "Extra health given to Drug Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[9], "stdrug_fireimmunity", "0", "Give Drug Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[9], "stdrug_runspeed", "1.0", "Drug Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[9], "stdrug_throwinterval", "5.0", "Drug Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[10], "stfire_attachprops", "4", "Attach props to Fire Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[10], "stfire_attachprops", "1234", "Attach props to Fire Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[10], "stfire_extrahealth", "0", "Extra health given to Fire Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireChance, "stfire_firechance", "4", "Fire Tank has 1 out of this many chances to cause a fire.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[10], "stfire_fireimmunity", "0", "Give Fire Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[10], "stfire_runspeed", "1.0", "Fire Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[10], "stfire_throwinterval", "5.0", "Fire Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[11], "stflash_attachprops", "4", "Attach props to Flash Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[11], "stflash_attachprops", "1234", "Attach props to Flash Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[11], "stflash_extrahealth", "0", "Extra health given to Flash Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[11], "stflash_fireimmunity", "0", "Give Flash Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTFlashChance, "stflash_flashchance", "3", "Flash Tank has 1 out of this many chances to use its special speed.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[11], "stflash_runspeed", "3.0", "Flash Tank's run speed.", _, true, 0.1, true, 3.0);
 	vCreateConVar(g_cvSTFlashSpeed, "stflash_specialspeed", "5.0", "Flash Tank's special speed.", _, true, 3.0, true, 5.0);
 	vCreateConVar(g_cvSTThrowInterval[11], "stflash_throwinterval", "5.0", "Flash Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[12], "stfling_attachprops", "4", "Attach props to Fling Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[12], "stfling_attachprops", "1234", "Attach props to Fling Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[12], "stfling_extrahealth", "0", "Extra health given to Fling Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[12], "stfling_fireimmunity", "0", "Give Fling Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTFlingChance, "stfling_flingchance", "4", "Fling Tank has 1 out of this many chances to fling survivors into the air.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[12], "stfling_runspeed", "1.0", "Fling Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[12], "stfling_throwinterval", "5.0", "Fling Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[13], "stghost_attachprops", "4", "Attach props to Ghost Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[13], "stghost_attachprops", "1234", "Attach props to Ghost Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[13], "stghost_extrahealth", "0", "Extra health given to Ghost Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[13], "stghost_fireimmunity", "0", "Give Ghost Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTGhostChance, "stghost_ghostchance", "4", "Ghost Tank has 1 out of this many chances to disarm survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[13], "stghost_runspeed", "1.0", "Ghost Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[13], "stghost_throwinterval", "5.0", "Ghost Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTGhostSlot, "stghost_weaponslot", "12345", "Which weapon slots can Ghost Tank disarm?\nCombine numbers in any order for different results.\nCharacter limit: 5\n(1: 1st slot only.)\n(2: 2nd slot only.)\n(3: 3rd slot only.)\n(4: 4th slot only.)\n(5: 5th slot only.)");
-	vCreateConVar(g_cvSTAttachProps[14], "stgravity_attachprops", "4", "Attach props to Gravity Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[14], "stgravity_attachprops", "1234", "Attach props to Gravity Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[14], "stgravity_extrahealth", "0", "Extra health given to Gravity Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[14], "stgravity_fireimmunity", "0", "Give Gravity Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTGravityChance, "stgravity_gravitychance", "4", "Gravity Tank has 1 out of this many chances to change survivors' gravity'.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTGravityForce, "stgravity_gravityforce", "-50.0", "Gravity Tank's force.\n(Positive numbers = Push back)\n(Negative numbers = Pull back)", _, true, -100.0, true, 100.0);
 	vCreateConVar(g_cvSTRunSpeed[14], "stgravity_runspeed", "1.0", "Gravity Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[14], "stgravity_throwinterval", "5.0", "Gravity Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[15], "stheal_attachprops", "4", "Attach props to Heal Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[15], "stheal_attachprops", "1234", "Attach props to Heal Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTHealCommon, "stheal_commonamount", "100", "Health absorbed from common infected.", _, true, 0.0, true, 1000.0);
 	vCreateConVar(g_cvSTExtraHealth[15], "stheal_extrahealth", "0", "Extra health given to Heal Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[15], "stheal_fireimmunity", "0", "Give Heal Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
@@ -303,113 +269,113 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTHealSpecial, "stheal_specialamount", "500", "Health absorbed from other special infected.", _, true, 0.0, true, 10000.0);
 	vCreateConVar(g_cvSTHealTank, "stheal_tankamount", "500", "Health absorbed from other Tanks.", _, true, 0.0, true, 100000.0);
 	vCreateConVar(g_cvSTThrowInterval[15], "stheal_throwinterval", "5.0", "Heal Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[16], "sthunter_attachprops", "4", "Attach props to Hunter Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[16], "sthunter_attachprops", "1234", "Attach props to Hunter Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[16], "sthunter_extrahealth", "0", "Extra health given to Hunter Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[16], "sthunter_fireimmunity", "0", "Give Hunter Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[16], "sthunter_runspeed", "1.0", "Hunter Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[16], "sthunter_throwinterval", "5.0", "Hunter Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[17], "sthypno_attachprops", "4", "Attach props to Hypno Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[17], "sthypno_attachprops", "1234", "Attach props to Hypno Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTHypnoDuration, "sthypno_duration", "5.0", "Hypno Tank's hypnosis effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[17], "sthypno_extrahealth", "0", "Extra health given to Hypno Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[17], "sthypno_fireimmunity", "0", "Give Hypno Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTHypnoChance, "sthypno_hypnochance", "4", "Hypno Tank has 1 out of this many chances to hypnotize survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[17], "sthypno_runspeed", "1.0", "Hypno Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[17], "sthypno_throwinterval", "5.0", "Hypno Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[18], "stice_attachprops", "4", "Attach props to Ice Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[18], "stice_attachprops", "1234", "Attach props to Ice Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[18], "stice_extrahealth", "0", "Extra health given to Ice Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[18], "stice_fireimmunity", "0", "Give Ice Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTIceChance, "stice_icechance", "4", "Ice Tank has 1 out of this many chances to freeze survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[18], "stice_runspeed", "1.0", "Ice Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[18], "stice_throwinterval", "5.0", "Ice Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[19], "stidle_attachprops", "4", "Attach props to Idle Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[19], "stidle_attachprops", "1234", "Attach props to Idle Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[19], "stidle_extrahealth", "0", "Extra health given to Idle Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[19], "stidle_fireimmunity", "0", "Give Idle Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTIdleChance, "stidle_idlechance", "4", "Idle Tank has 1 out of this many chances to make survivors go idle.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[19], "stidle_runspeed", "1.0", "Idle Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[19], "stidle_throwinterval", "5.0", "Idle Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[20], "stinvert_attachprops", "4", "Attach props to Invert Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[20], "stinvert_attachprops", "1234", "Attach props to Invert Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTInvertDuration, "stinvert_duration", "5.0", "Invert Tank's inversion effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[20], "stinvert_extrahealth", "0", "Extra health given to Invert Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[20], "stinvert_fireimmunity", "0", "Give Invert Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTInvertChance, "stinvert_invertchance", "4", "Invert Tank has 1 out of this many chances to invert survivors' movement keys.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[20], "stinvert_runspeed", "1.0", "Invert Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[20], "stinvert_throwinterval", "5.0", "Invert Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[21], "stjockey_attachprops", "4", "Attach props to Jockey Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[21], "stjockey_attachprops", "1234", "Attach props to Jockey Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[21], "stjockey_extrahealth", "0", "Extra health given to Jockey Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[21], "stjockey_fireimmunity", "0", "Give Jockey Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[21], "stjockey_runspeed", "1.0", "Jockey Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[21], "stjockey_throwinterval", "5.0", "Jockey Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[22], "stjumper_attachprops", "4", "Attach props to Jumper Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[22], "stjumper_attachprops", "1234", "Attach props to Jumper Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTJumperChance, "stjumper_jumpchance", "3", "Jumper Tank has 1 out of this many chances to jump into the air.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTJumperInterval, "stjumper_jumpinterval", "5.0", "Jumper Tank's jump interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[22], "stjumper_extrahealth", "0", "Extra health given to Jumper Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[22], "stjumper_fireimmunity", "0", "Give Jumper Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[22], "stjumper_runspeed", "1.0", "Jumper Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[22], "stjumper_throwinterval", "5.0", "Jumper Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[23], "stmeteor_attachprops", "4", "Attach props to Meteor Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[23], "stmeteor_attachprops", "1234", "Attach props to Meteor Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[23], "stmeteor_extrahealth", "0", "Extra health given to Meteor Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[23], "stmeteor_fireimmunity", "0", "Give Meteor Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTMeteorChance, "stmeteor_meteorchance", "4", "Meteor Tank has 1 out of this many chances to start a meteor shower.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTMeteorDamage, "stmeteor_meteordamage", "25.0", "Meteor Tank's meteor shower does this much damage.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[23], "stmeteor_runspeed", "1.0", "Meteor Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[23], "stmeteor_throwinterval", "5.0", "Meteor Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[24], "stpuke_attachprops", "4", "Attach props to Puke Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[24], "stpuke_attachprops", "1234", "Attach props to Puke Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[24], "stpuke_extrahealth", "0", "Extra health given to Puke Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[24], "stpuke_fireimmunity", "0", "Give Puke Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTPukeChance, "stpuke_pukechance", "4", "Puke Tank has 1 out of this many chances to puke on survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[24], "stpuke_runspeed", "1.0", "Puke Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[24], "stpuke_throwinterval", "5.0", "Puke Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[25], "strestart_attachprops", "4", "Attach props to Restart Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[25], "strestart_attachprops", "1234", "Attach props to Restart Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[25], "strestart_extrahealth", "0", "Extra health given to Restart Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[25], "strestart_fireimmunity", "0", "Give Restart Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRestartLoadout, "strestart_loadout", "smg,pistol,pain_pills", "Restart Tank makes survivors restart with this loadout.\nSeparate items with commas.\nItem limit: 5\nValid formats:\n1. \"rifle,smg,pistol,pain_pills,pipe_bomb\"\n2. \"pain_pills,molotov,first_aid_kit,autoshotgun\"\n3. \"hunting_rifle,rifle,smg\"\n4. \"autoshotgun,pistol\"\n5. \"molotov\"");
 	vCreateConVar(g_cvSTRestartChance, "strestart_restartchance", "4", "Restart Tank has 1 out of this many chances to make survivors restart.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[25], "strestart_runspeed", "1.0", "Restart Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[25], "strestart_throwinterval", "5.0", "Restart Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[26], "strocket_attachprops", "4", "Attach props to Rocket Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[26], "strocket_attachprops", "1234", "Attach props to Rocket Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[26], "strocket_extrahealth", "0", "Extra health given to Rocket Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[26], "strocket_fireimmunity", "0", "Give Rocket Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRocketChance, "strocket_rocketchance", "4", "Rocket Tank has 1 out of this many chances to send survivors into space.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[26], "strocket_runspeed", "1.0", "Rocket Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[26], "strocket_throwinterval", "5.0", "Rocket Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[27], "stshake_attachprops", "4", "Attach props to Shake Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[27], "stshake_attachprops", "1234", "Attach props to Shake Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTShakeDuration, "stshake_duration", "5.0", "Shake Tank's shake effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[27], "stshake_extrahealth", "0", "Extra health given to Shake Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[27], "stshake_fireimmunity", "0", "Give Shake Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[27], "stshake_runspeed", "1.0", "Shake Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTShakeChance, "stshake_shakechance", "4", "Shake Tank has 1 out of this many chances to shake survivors' screens.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTThrowInterval[27], "stshake_throwinterval", "5.0", "Shake Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[28], "stshield_attachprops", "4", "Attach props to Shield Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[28], "stshield_attachprops", "1234", "Attach props to Shield Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[28], "stshield_extrahealth", "0", "Extra health given to Shield Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[28], "stshield_fireimmunity", "0", "Give Shield Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[28], "stshield_runspeed", "1.0", "Shield Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTShieldDelay, "stshield_shielddelay", "7.5", "Shield Tank's shield reactivates after this many seconds.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTThrowInterval[28], "stshield_throwinterval", "5.0", "Shield Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[29], "stshove_attachprops", "4", "Attach props to Shove Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[29], "stshove_attachprops", "1234", "Attach props to Shove Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTShoveDuration, "stshove_duration", "5.0", "Shove Tank's shove effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[29], "stshove_extrahealth", "0", "Extra health given to Shove Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[29], "stshove_fireimmunity", "0", "Give Shove Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[29], "stshove_runspeed", "1.0", "Shove Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTShoveChance, "stshove_shovechance", "4", "Shove Tank has 1 out of this many chances to shove survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTThrowInterval[29], "stshove_throwinterval", "5.0", "Shove Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[30], "stslug_attachprops", "4", "Attach props to Slug Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[30], "stslug_attachprops", "1234", "Attach props to Slug Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[30], "stslug_extrahealth", "0", "Extra health given to Slug Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[30], "stslug_fireimmunity", "0", "Give Slug Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[30], "stslug_runspeed", "0.5", "Slug Tank's run speed.", _, true, 0.1, true, 0.5);
 	vCreateConVar(g_cvSTSlugChance, "stslug_slugchance", "4", "Slug Tank has 1 out of this many chances to smite survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTThrowInterval[30], "stslug_throwinterval", "5.0", "Slug Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[31], "stsmoker_attachprops", "4", "Attach props to Smoker Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[31], "stsmoker_attachprops", "1234", "Attach props to Smoker Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[31], "stsmoker_extrahealth", "0", "Extra health given to Smoker Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[31], "stsmoker_fireimmunity", "0", "Give Smoker Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[31], "stsmoker_runspeed", "1.0", "Smoker Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[31], "stsmoker_throwinterval", "5.0", "Smoker Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[32], "stspitter_attachprops", "4", "Attach props to Spitter Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[32], "stspitter_attachprops", "1234", "Attach props to Spitter Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[32], "stspitter_extrahealth", "0", "Extra health given to Spitter Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[32], "stspitter_fireimmunity", "0", "Give Spitter Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[32], "stspitter_runspeed", "1.0", "Spitter Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[32], "stspitter_throwinterval", "5.0", "Spitter Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTStunDuration, "ststun_duration", "5.0", "Stun Tank's stun effect lasts this long.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[33], "ststun_attachprops", "4", "Attach props to Stun Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[33], "ststun_attachprops", "1234", "Attach props to Stun Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[33], "ststun_extrahealth", "0", "Extra health given to Stun Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[33], "ststun_fireimmunity", "0", "Give Stun Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[33], "ststun_runspeed", "1.0", "Stun Tank's run speed.", _, true, 0.1, true, 2.0);
@@ -417,20 +383,20 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTStunSpeed, "ststun_stunspeed", "0.25", "Stun Tank can set survivors' run speed to this amount.", _, true, 0.1, true, 0.99);
 	vCreateConVar(g_cvSTThrowInterval[33], "ststun_throwinterval", "5.0", "Stun Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTVisualDuration, "stvisual_duration", "5.0", "Visual Tank's visual effect lasts this long.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[34], "stvisual_attachprops", "4", "Attach props to Visual Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[34], "stvisual_attachprops", "1234", "Attach props to Visual Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[34], "stvisual_extrahealth", "0", "Extra health given to Visual Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[34], "stvisual_fireimmunity", "0", "Give Visual Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTVisualFOV, "stvisual_fov", "160", "Visual Tank can set survivors' field of view to this amount.", _, true, 1.0, true, 160.0);
 	vCreateConVar(g_cvSTRunSpeed[34], "stvisual_runspeed", "1.0", "Visual Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[34], "stvisual_throwinterval", "5.0", "Visual Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTVisualChance, "stvisual_visualchance", "4", "Visual Tank has 1 out of this many chances to change survivors' field of views.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[35], "stwarp_attachprops", "4", "Attach props to Warp Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[35], "stwarp_attachprops", "1234", "Attach props to Warp Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[35], "stwarp_extrahealth", "0", "Extra health given to Warp Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[35], "stwarp_fireimmunity", "0", "Give Warp Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[35], "stwarp_runspeed", "1.0", "Warp Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[35], "stwarp_throwinterval", "5.0", "Warp Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTWarpInterval, "stwarp_warpinterval", "10", "Warp Tank's warp interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTAttachProps[36], "stwitch_attachprops", "4", "Attach props to Witch Tank?\n(0: OFF)\n(1: ON, attach lights only.)\n(2: ON, attach rocks only.)\n(3: ON, attach tires only.)\n(4: ON, all 3 props.)", _, true, 0.0, true, 4.0);
+	vCreateConVar(g_cvSTAttachProps[36], "stwitch_attachprops", "1234", "Attach props to Witch Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[36], "stwitch_extrahealth", "0", "Extra health given to Witch Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[36], "stwitch_fireimmunity", "0", "Give Witch Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[36], "stwitch_runspeed", "1.0", "Witch Tank's run speed.", _, true, 0.1, true, 2.0);
@@ -549,6 +515,7 @@ public void OnMapStart()
 {
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
 	{
+		g_bCmdUsed = false;
 		g_bRestartValid = false;
 		g_iInterval = 0;
 		CreateTimer(0.1, tTimerTankHealthUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -560,6 +527,7 @@ public void OnMapStart()
 		PrecacheModel("models/infected/witch_bride.mdl", true);
 		PrecacheModel("models/props_vehicles/tire001c_car.mdl", true);
 		PrecacheModel("models/props_unique/airport/atlas_break_ball.mdl", true);
+		PrecacheModel("models/props_equipment/oxygentank01.mdl", true);
 		g_iExplosionSprite = PrecacheModel("sprites/sprite_fire01.vmt", true);
 		g_iShockSprite = PrecacheModel("sprites/glow.vmt");
 		vPrecacheParticle("smoker_smokecloud");
@@ -605,6 +573,7 @@ public void OnClientDisconnect(int client)
 
 public void OnConfigsExecuted()
 {
+	g_bCmdUsed = false;
 	g_bRestartValid = false;
 	g_cvSTConfigCreate.GetString(g_sConfigOption, sizeof(g_sConfigOption));
 	if (StrContains(g_sConfigOption, "1", false) != -1)
@@ -771,6 +740,7 @@ public void OnConfigsExecuted()
 
 public void OnMapEnd()
 {
+	g_bCmdUsed = false;
 	g_bRestartValid = false;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -1338,92 +1308,139 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 	{
 		if (bIsValidClient(iTank))
 		{
-			g_iTankType[iTank] = 0;
-			if (!g_cvSTFinalesOnly.BoolValue || (g_cvSTFinalesOnly.BoolValue && (bIsFinaleMap() || g_iTankWave > 0)))
+			if (g_bCmdUsed)
 			{
-				char sTankType[73];
-				g_cvSTTankTypes.GetString(sTankType, sizeof(sTankType));
-				char sLetters = sTankType[GetRandomInt(0, strlen(sTankType) - 1)];
-				switch (sLetters)
+				switch (g_iType)
 				{
-					case '0': bIsL4D2Game() ? vSetColor(iTank, 1, 0, 255, 125) : vSetColor(iTank, 24, 170, 180, 45);
-					case '1': vSetColor(iTank, 2, 170, 200, 210);
-					case '2': vSetColor(iTank, 3, 5, 0, 105);
-					case '3': vSetColor(iTank, 4, 75, 0, 0);
-					case '4': vSetColor(iTank, 5, 65, 105, 0);
-					case '5': bIsL4D2Game() ? vSetColor(iTank, 6, 95, 140, 80) : vSetColor(iTank, 31, 150, 0, 150);
-					case '6': vSetColor(iTank, 7, 10, 25, 205);
-					case '7': vSetColor(iTank, 8, 165, 205, 175);
-					case '8': vSetColor(iTank, 9, 255, 245, 0);
-					case '9': vSetColor(iTank, 10, 150, 0, 0);
-					case 'A', 'a': vSetColor(iTank, 11, 255, 0, 0, 150, RENDER_TRANSTEXTURE);
-					case 'B', 'b': bIsL4D2Game() ? vSetColor(iTank, 12, 160, 225, 65) : vSetColor(iTank, 22, 225, 215, 0);
-					case 'C', 'c': vSetColor(iTank, 13, 50, 50, 50, 150, RENDER_TRANSTEXTURE);
-					case 'D', 'd': vSetColor(iTank, 14, 25, 25, 25);
-					case 'E', 'e': vSetColor(iTank, 15, 75, 200, 75);
-					case 'F', 'f': vSetColor(iTank, 16, 0, 80, 140);
-					case 'G', 'g': vSetColor(iTank, 17, 110, 0, 130);
-					case 'H', 'h': vSetColor(iTank, 18, 0, 155, 255, 200, RENDER_TRANSTEXTURE);
-					case 'I', 'i': vSetColor(iTank, 19, 225, 235, 255);
-					case 'J', 'j': vSetColor(iTank, 20, 0, 235, 220);
-					case 'K', 'k': bIsL4D2Game() ? vSetColor(iTank, 21, 255, 235, 235) : vSetColor(iTank, 16, 0, 80, 140);
-					case 'L', 'l': vSetColor(iTank, 22, 225, 215, 0);
-					case 'M', 'm': vSetColor(iTank, 23, 120, 20, 10);
-					case 'N', 'n': vSetColor(iTank, 24, 170, 180, 45);
-					case 'O', 'o': vSetColor(iTank, 25, 10, 40, 15);
-					case 'P', 'p': vSetColor(iTank, 26, 250, 110, 0);
-					case 'Q', 'q': vSetColor(iTank, 27, 100, 25, 25);
-					case 'R', 'r': vSetColor(iTank, 28, 135, 205);
-					case 'S', 's': vSetColor(iTank, 29, 10, 100, 0);
-					case 'T', 't': vSetColor(iTank, 30, 100, 165);
-					case 'U', 'u': vSetColor(iTank, 31, 150, 0, 150);
-					case 'V', 'v': bIsL4D2Game() ? vSetColor(iTank, 32, 0, 200, 0) : vSetColor(iTank, 5, 65, 105, 0);
-					case 'W', 'w': vSetColor(iTank, 33, 80, 130, 255);
-					case 'X', 'x': vSetColor(iTank, 34, 175, 25, 205);
-					case 'Y', 'y': vSetColor(iTank, 35, 130, 130);
-					case 'Z', 'z': vSetColor(iTank, 36, 255, 145);
+					case 1: bIsL4D2Game() ? vSetColor(iTank, 1, 0, 255, 125) : vSetColor(iTank, 24, 170, 180, 45);
+					case 2: vSetColor(iTank, 2, 170, 200, 210);
+					case 3: vSetColor(iTank, 3, 5, 0, 105);
+					case 4: vSetColor(iTank, 4, 75, 0, 0);
+					case 5: vSetColor(iTank, 5, 65, 105, 0);
+					case 6: bIsL4D2Game() ? vSetColor(iTank, 6, 95, 140, 80) : vSetColor(iTank, 31, 150, 0, 150);
+					case 7: vSetColor(iTank, 7, 10, 25, 205);
+					case 8: vSetColor(iTank, 8, 165, 205, 175);
+					case 9: vSetColor(iTank, 9, 255, 245, 0);
+					case 10: vSetColor(iTank, 10, 150, 0, 0);
+					case 11: vSetColor(iTank, 11, 255, 0, 0, 150, RENDER_TRANSTEXTURE);
+					case 12: bIsL4D2Game() ? vSetColor(iTank, 12, 160, 225, 65) : vSetColor(iTank, 22, 225, 215, 0);
+					case 13: vSetColor(iTank, 13, 50, 50, 50, 150, RENDER_TRANSTEXTURE);
+					case 14: vSetColor(iTank, 14, 25, 25, 25);
+					case 15: vSetColor(iTank, 15, 75, 200, 75);
+					case 16: vSetColor(iTank, 16, 0, 80, 140);
+					case 17: vSetColor(iTank, 17, 110, 0, 130);
+					case 18: vSetColor(iTank, 18, 0, 155, 255, 200, RENDER_TRANSTEXTURE);
+					case 19: vSetColor(iTank, 19, 225, 235, 255);
+					case 20: vSetColor(iTank, 20, 0, 235, 220);
+					case 21: bIsL4D2Game() ? vSetColor(iTank, 21, 255, 235, 235) : vSetColor(iTank, 16, 0, 80, 140);
+					case 22: vSetColor(iTank, 22, 225, 215, 0);
+					case 23: vSetColor(iTank, 23, 120, 20, 10);
+					case 24: vSetColor(iTank, 24, 170, 180, 45);
+					case 25: vSetColor(iTank, 25, 10, 40, 15);
+					case 26: vSetColor(iTank, 26, 250, 110, 0);
+					case 27: vSetColor(iTank, 27, 100, 25, 25);
+					case 28: vSetColor(iTank, 28, 135, 205);
+					case 29: vSetColor(iTank, 29, 10, 100, 0);
+					case 30: vSetColor(iTank, 30, 100, 165);
+					case 31: vSetColor(iTank, 31, 150, 0, 150);
+					case 32: bIsL4D2Game() ? vSetColor(iTank, 32, 0, 200, 0) : vSetColor(iTank, 5, 65, 105, 0);
+					case 33: vSetColor(iTank, 33, 80, 130, 255);
+					case 34: vSetColor(iTank, 34, 175, 25, 205);
+					case 35: vSetColor(iTank, 35, 130, 130);
+					case 36: vSetColor(iTank, 36, 255, 145);
 					default: vSetColor(iTank);
 				}
-				char sTankWave[12];
-				char sNumbers[3][4];
-				g_cvSTTankWaves.GetString(sTankWave, sizeof(sTankWave));
-				ExplodeString(sTankWave, ",", sNumbers, sizeof(sNumbers), sizeof(sNumbers[]));
-				int iWave1 = StringToInt(sNumbers[0]);
-				int iWave2 = StringToInt(sNumbers[1]);
-				int iWave3 = StringToInt(sNumbers[2]);
-				switch (g_iTankWave)
+				g_bCmdUsed = false;
+			}
+			else
+			{
+				g_iTankType[iTank] = 0;
+				if (!g_cvSTFinalesOnly.BoolValue || (g_cvSTFinalesOnly.BoolValue && (bIsFinaleMap() || g_iTankWave > 0)))
 				{
-					case 1:
+					char sTankType[73];
+					g_cvSTTankTypes.GetString(sTankType, sizeof(sTankType));
+					char sLetters = sTankType[GetRandomInt(0, strlen(sTankType) - 1)];
+					switch (sLetters)
 					{
-						if (iGetTankCount() < iWave1)
-						{
-							CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
-						}
-						else if (iGetTankCount() > iWave1 && bIsTank(iTank))
-						{
-							vKickFakeClient(iTank);
-						}
+						case '0': bIsL4D2Game() ? vSetColor(iTank, 1, 0, 255, 125) : vSetColor(iTank, 24, 170, 180, 45);
+						case '1': vSetColor(iTank, 2, 170, 200, 210);
+						case '2': vSetColor(iTank, 3, 5, 0, 105);
+						case '3': vSetColor(iTank, 4, 75, 0, 0);
+						case '4': vSetColor(iTank, 5, 65, 105, 0);
+						case '5': bIsL4D2Game() ? vSetColor(iTank, 6, 95, 140, 80) : vSetColor(iTank, 31, 150, 0, 150);
+						case '6': vSetColor(iTank, 7, 10, 25, 205);
+						case '7': vSetColor(iTank, 8, 165, 205, 175);
+						case '8': vSetColor(iTank, 9, 255, 245, 0);
+						case '9': vSetColor(iTank, 10, 150, 0, 0);
+						case 'A', 'a': vSetColor(iTank, 11, 255, 0, 0, 150, RENDER_TRANSTEXTURE);
+						case 'B', 'b': bIsL4D2Game() ? vSetColor(iTank, 12, 160, 225, 65) : vSetColor(iTank, 22, 225, 215, 0);
+						case 'C', 'c': vSetColor(iTank, 13, 50, 50, 50, 150, RENDER_TRANSTEXTURE);
+						case 'D', 'd': vSetColor(iTank, 14, 25, 25, 25);
+						case 'E', 'e': vSetColor(iTank, 15, 75, 200, 75);
+						case 'F', 'f': vSetColor(iTank, 16, 0, 80, 140);
+						case 'G', 'g': vSetColor(iTank, 17, 110, 0, 130);
+						case 'H', 'h': vSetColor(iTank, 18, 0, 155, 255, 200, RENDER_TRANSTEXTURE);
+						case 'I', 'i': vSetColor(iTank, 19, 225, 235, 255);
+						case 'J', 'j': vSetColor(iTank, 20, 0, 235, 220);
+						case 'K', 'k': bIsL4D2Game() ? vSetColor(iTank, 21, 255, 235, 235) : vSetColor(iTank, 16, 0, 80, 140);
+						case 'L', 'l': vSetColor(iTank, 22, 225, 215, 0);
+						case 'M', 'm': vSetColor(iTank, 23, 120, 20, 10);
+						case 'N', 'n': vSetColor(iTank, 24, 170, 180, 45);
+						case 'O', 'o': vSetColor(iTank, 25, 10, 40, 15);
+						case 'P', 'p': vSetColor(iTank, 26, 250, 110, 0);
+						case 'Q', 'q': vSetColor(iTank, 27, 100, 25, 25);
+						case 'R', 'r': vSetColor(iTank, 28, 135, 205);
+						case 'S', 's': vSetColor(iTank, 29, 10, 100, 0);
+						case 'T', 't': vSetColor(iTank, 30, 100, 165);
+						case 'U', 'u': vSetColor(iTank, 31, 150, 0, 150);
+						case 'V', 'v': bIsL4D2Game() ? vSetColor(iTank, 32, 0, 200, 0) : vSetColor(iTank, 5, 65, 105, 0);
+						case 'W', 'w': vSetColor(iTank, 33, 80, 130, 255);
+						case 'X', 'x': vSetColor(iTank, 34, 175, 25, 205);
+						case 'Y', 'y': vSetColor(iTank, 35, 130, 130);
+						case 'Z', 'z': vSetColor(iTank, 36, 255, 145);
+						default: vSetColor(iTank);
 					}
-					case 2:
+					char sTankWave[12];
+					char sNumbers[3][4];
+					g_cvSTTankWaves.GetString(sTankWave, sizeof(sTankWave));
+					ExplodeString(sTankWave, ",", sNumbers, sizeof(sNumbers), sizeof(sNumbers[]));
+					int iWave1 = StringToInt(sNumbers[0]);
+					int iWave2 = StringToInt(sNumbers[1]);
+					int iWave3 = StringToInt(sNumbers[2]);
+					switch (g_iTankWave)
 					{
-						if (iGetTankCount() < iWave2)
+						case 1:
 						{
-							CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
+							if (iGetTankCount() < iWave1)
+							{
+								CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
+							}
+							else if (iGetTankCount() > iWave1 && bIsTank(iTank))
+							{
+								vKickFakeClient(iTank);
+							}
 						}
-						else if (iGetTankCount() > iWave2 && bIsTank(iTank))
+						case 2:
 						{
-							vKickFakeClient(iTank);
+							if (iGetTankCount() < iWave2)
+							{
+								CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
+							}
+							else if (iGetTankCount() > iWave2 && bIsTank(iTank))
+							{
+								vKickFakeClient(iTank);
+							}
 						}
-					}
-					case 3:
-					{
-						if (iGetTankCount() < iWave3)
+						case 3:
 						{
-							CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
-						}
-						else if (iGetTankCount() > iWave3 && bIsTank(iTank))
-						{
-							vKickFakeClient(iTank);
+							if (iGetTankCount() < iWave3)
+							{
+								CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
+							}
+							else if (iGetTankCount() > iWave3 && bIsTank(iTank))
+							{
+								vKickFakeClient(iTank);
+							}
 						}
 					}
 				}
@@ -1431,6 +1448,144 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 			CreateTimer(0.1, tTimerTankSpawn, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
+}
+
+public Action cmdTank(int client, int args)
+{
+	if (!g_cvSTEnable.BoolValue)
+	{
+		ReplyToCommand(client, "\x04%s\x01 Super Tanks++ is disabled.", ST_PREFIX);
+		return Plugin_Handled;
+	}
+	if (!bIsValidHumanClient(client))
+	{
+		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_PREFIX);
+		return Plugin_Handled;
+	}
+	if (!bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	{
+		ReplyToCommand(client, "\x04%s\x01 Game mode not supported.", ST_PREFIX);
+		return Plugin_Handled;
+	}
+	char tank[32];
+	GetCmdArg(1, tank, sizeof(tank));
+	int type = StringToInt(tank);
+	if (args < 1)
+	{
+		IsVoteInProgress() ? ReplyToCommand(client, "\x04%s\x01 %t", ST_PREFIX, "Vote in Progress") : vTankMenu(client);
+		return Plugin_Handled;
+	}
+	else if (type > 36 || args > 1)
+	{
+		ReplyToCommand(client, "\x04%s\x01 Usage: sm_tank <type 1-36>", ST_PREFIX);
+		return Plugin_Handled;
+	}
+	vTank(client, type);
+	return Plugin_Handled;
+}
+
+public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: vTank(param1, 1);
+				case 1: vTank(param1, 2);
+				case 2: vTank(param1, 3);
+				case 3: vTank(param1, 4);
+				case 4: vTank(param1, 5);
+				case 5: vTank(param1, 6);
+				case 6: vTank(param1, 7);
+				case 7: vTank(param1, 8);
+				case 8: vTank(param1, 9);
+				case 9: vTank(param1, 10);
+				case 10: vTank(param1, 11);
+				case 11: vTank(param1, 12);
+				case 12: vTank(param1, 13);
+				case 13: vTank(param1, 14);
+				case 14: vTank(param1, 15);
+				case 15: vTank(param1, 16);
+				case 16: vTank(param1, 17);
+				case 17: vTank(param1, 18);
+				case 18: vTank(param1, 19);
+				case 19: vTank(param1, 20);
+				case 20: vTank(param1, 21);
+				case 21: vTank(param1, 22);
+				case 22: vTank(param1, 23);
+				case 23: vTank(param1, 24);
+				case 24: vTank(param1, 25);
+				case 25: vTank(param1, 26);
+				case 26: vTank(param1, 27);
+				case 27: vTank(param1, 28);
+				case 28: vTank(param1, 29);
+				case 29: vTank(param1, 30);
+				case 30: vTank(param1, 31);
+				case 31: vTank(param1, 32);
+				case 32: vTank(param1, 33);
+				case 33: vTank(param1, 34);
+				case 34: vTank(param1, 35);
+				case 35: vTank(param1, 36);
+			}
+			if (IsClientInGame(param1) && !IsClientInKickQueue(param1))
+			{
+				vTankMenu(param1);
+			}
+		}
+	}
+}
+
+void vTankMenu(int client)
+{
+	Menu mTankMenu = new Menu(iTankMenuHandler);
+	mTankMenu.SetTitle("Super Tanks++ Menu");
+	mTankMenu.AddItem("Acid Tank", "Acid Tank");
+	mTankMenu.AddItem("Ammo Tank", "Ammo Tank");
+	mTankMenu.AddItem("Blind Tank", "Blind Tank");
+	mTankMenu.AddItem("Bomb Tank", "Bomb Tank");
+	mTankMenu.AddItem("Boomer Tank", "Boomer Tank");
+	mTankMenu.AddItem("Charger Tank", "Charger Tank");
+	mTankMenu.AddItem("Clone Tank", "Clone Tank");
+	mTankMenu.AddItem("Common Tank", "Common Tank");
+	mTankMenu.AddItem("Drug Tank", "Drug Tank");
+	mTankMenu.AddItem("Fire Tank", "Fire Tank");
+	mTankMenu.AddItem("Flash Tank", "Flash Tank");
+	mTankMenu.AddItem("Fling Tank", "Fling Tank");
+	mTankMenu.AddItem("Ghost Tank", "Ghost Tank");
+	mTankMenu.AddItem("Gravity Tank", "Gravity Tank");
+	mTankMenu.AddItem("Heal Tank", "Heal Tank");
+	mTankMenu.AddItem("Hunter Tank", "Hunter Tank");
+	mTankMenu.AddItem("Hypno Tank", "Hypno Tank");
+	mTankMenu.AddItem("Ice Tank", "Ice Tank");
+	mTankMenu.AddItem("Idle Tank", "Idle Tank");
+	mTankMenu.AddItem("Invert Tank", "Invert Tank");
+	mTankMenu.AddItem("Jockey Tank", "Jockey Tank");
+	mTankMenu.AddItem("Jumper Tank", "Jumper Tank");
+	mTankMenu.AddItem("Meteor Tank", "Meteor Tank");
+	mTankMenu.AddItem("Puke Tank", "Puke Tank");
+	mTankMenu.AddItem("Restart Tank", "Restart Tank");
+	mTankMenu.AddItem("Rocket Tank", "Rocket Tank");
+	mTankMenu.AddItem("Shake Tank", "Shake Tank");
+	mTankMenu.AddItem("Shield Tank", "Shield Tank");
+	mTankMenu.AddItem("Shove Tank", "Shove Tank");
+	mTankMenu.AddItem("Slug Tank", "Slug Tank");
+	mTankMenu.AddItem("Smoker Tank", "Smoker Tank");
+	mTankMenu.AddItem("Spitter Tank", "Spitter Tank");
+	mTankMenu.AddItem("Stun Tank", "Stun Tank");
+	mTankMenu.AddItem("Visual Tank", "Visual Tank");
+	mTankMenu.AddItem("Warp Tank", "Warp Tank");
+	mTankMenu.AddItem("Witch Tank", "Witch Tank");
+	mTankMenu.Display(client, MENU_TIME_FOREVER);
+}
+
+void vTank(int client, int type)
+{
+	g_bCmdUsed = true;
+	g_iType = type;
+	bIsL4D2Game() ? vCheatCommand(client, "z_spawn_old", "tank") : vCheatCommand(client, "z_spawn", "tank");
 }
 
 void vAcidHit(int client)
@@ -2229,7 +2384,7 @@ void vRocketHit(int client)
 	{
 		char sFlameName[128];
 		char sTargetName[128];
-		Format(sFlameName, sizeof(sFlameName), "RocketFlame%i", client);
+		Format(sFlameName, sizeof(sFlameName), "RocketFlame%d", client);
 		int iFlame = CreateEntityByName("env_steam");
 		if (IsValidEntity(iFlame))
 		{
@@ -2240,7 +2395,7 @@ void vRocketHit(int client)
 			flAngles[0] = 90.0;
 			flAngles[1] = 0.0;
 			flAngles[2] = 0.0;
-			Format(sTargetName, sizeof(sTargetName), "target%i", client);
+			Format(sTargetName, sizeof(sTargetName), "target%d", client);
 			DispatchKeyValue(client, "targetname", sTargetName);
 			DispatchKeyValue(iFlame,"targetname", sFlameName);
 			DispatchKeyValue(iFlame, "parentname", sTargetName);
@@ -2253,8 +2408,7 @@ void vRocketHit(int client)
 			DispatchKeyValue(iFlame,"EndSize", "250");
 			DispatchKeyValue(iFlame,"Rate", "15");
 			DispatchKeyValue(iFlame,"JetLength", "400");
-			DispatchKeyValue(iFlame,"RenderColor", "180 71 8");
-			DispatchKeyValue(iFlame,"RenderAmt", "180");
+			SetEntityRenderColor(iFlame, 180, 71, 8, 180);
 			TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
 			DispatchSpawn(iFlame);
 			SetVariantString(sTargetName);
@@ -2281,22 +2435,108 @@ void vSetColor(int client, int value = 0, int red = 255, int green = 255, int bl
 	SetEntityRenderColor(client, red, green, blue, alpha);
 }
 
-void vSetName(int client, char[] name = "Default Tank", bool light = false, bool rocks = false, bool tires = false, int red = 255, int green = 255, int blue = 255, int alpha = 255, char[] color = "255 255 255", RenderMode mode = RENDER_NORMAL)
+void vSetName(int client, char[] name = "Default Tank", int red = 255, int green = 255, int blue = 255, int alpha = 255, RenderMode mode = RENDER_NORMAL)
 {
 	if (bIsBotInfected(client))
 	{
-		vSetProps(client, light, rocks, tires, red, green, blue, alpha, color, mode);
+		vSetProps(client, red, green, blue, alpha, mode);
 		SetClientInfo(client, "name", name);
-		PrintToChatAll("\x04%s\x05 %s\x01 has spawned!", ST_PREFIX, name);
+		if (g_cvSTAnnounceArrival.BoolValue)
+		{
+			PrintToChatAll("\x04%s\x05 %s\x01 has spawned!", ST_PREFIX, name);
+		}
 	}
 }
 
-void vSetProps(int client, bool light, bool rocks, bool tires, int red, int green, int blue, int alpha, char[] color, RenderMode mode)
+void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode mode)
 {
 	if (bIsValidClient(client))
 	{
-		int iRandom = GetRandomInt(1, 7);
-		if (light && (iRandom == 1 || iRandom == 4 || iRandom == 5 || iRandom == 7) && (g_cvSTAttachProps[g_iTankType[client]].IntValue == 1 || g_cvSTAttachProps[g_iTankType[client]].IntValue == 4))
+		char sProps[5];
+		g_cvSTAttachProps[g_iTankType[client]].GetString(sProps, sizeof(sProps));
+		if (GetRandomInt(1, 3) == 1 && StrContains(sProps, "1", false) != -1)
+		{
+			float flOrigin[3];
+			float flAngles[3];
+			GetClientEyePosition(client, flOrigin);
+			GetClientAbsAngles(client, flAngles);
+			int iEntity[3];
+			for (int iOzTank = 1; iOzTank <= 2; iOzTank++)
+			{
+				iEntity[iOzTank] = CreateEntityByName("prop_dynamic_override");
+				if (IsValidEntity(iEntity[iOzTank]))
+				{
+					char sTargetName[64];
+					Format(sTargetName, sizeof(sTargetName), "Tank%d", client);
+					DispatchKeyValue(client, "targetname", sTargetName);
+					GetEntPropString(client, Prop_Data, "m_iName", sTargetName, sizeof(sTargetName));
+					SetEntityModel(iEntity[iOzTank], "models/props_equipment/oxygentank01.mdl");
+					SetEntityRenderMode(iEntity[iOzTank], mode);
+					SetEntityRenderColor(iEntity[iOzTank], red, green, blue, alpha);
+					DispatchKeyValue(iEntity[iOzTank], "targetname", "OxygenTankEntity");
+					SetEntProp(iEntity[iOzTank], Prop_Data, "m_takedamage", 0, 1);
+					SetEntProp(iEntity[iOzTank], Prop_Data, "m_CollisionGroup", 2);
+					DispatchKeyValue(iEntity[iOzTank], "parentname", sTargetName);
+					SetVariantString(sTargetName);
+					AcceptEntityInput(iEntity[iOzTank], "SetParent", iEntity[iOzTank], iEntity[iOzTank]);
+					switch (iOzTank)
+					{
+						case 1:
+						{
+							SetVariantString("rfoot");
+							vSetVector(flOrigin, 0.0, 30.0, 8.0);
+						}
+						case 2:
+						{
+							SetVariantString("lfoot");
+							vSetVector(flOrigin, 0.0, 30.0, -8.0);
+						}
+					}
+					AcceptEntityInput(iEntity[iOzTank], "SetParentAttachment");
+					float flAngles2[3];
+					vSetVector(flAngles2, 0.0, 0.0, 1.0);
+					GetVectorAngles(flAngles2, flAngles2);
+					vCopyVector(flAngles, flAngles2);
+					flAngles2[2] += 90.0;
+					DispatchKeyValueVector(iEntity[iOzTank], "origin", flOrigin);
+					DispatchKeyValueVector(iEntity[iOzTank], "angles", flAngles2);
+					AcceptEntityInput(iEntity[iOzTank], "Enable");
+					AcceptEntityInput(iEntity[iOzTank], "DisableCollision");
+					SetEntPropEnt(iEntity[iOzTank], Prop_Send, "m_hOwnerEntity", client);
+					TeleportEntity(iEntity[iOzTank], flOrigin, NULL_VECTOR, flAngles2);
+					DispatchSpawn(iEntity[iOzTank]);
+					int iFlame = CreateEntityByName("env_steam");
+					if (IsValidEntity(iFlame))
+					{
+						char sFlameName[128];
+						Format(sFlameName, sizeof(sFlameName), "target%d", iEntity[iOzTank]);
+						DispatchKeyValue(iEntity[iOzTank],"targetname", sFlameName);
+						SetEntityRenderColor(iFlame, 10, 52, 99, 180);
+						DispatchKeyValue(iFlame,"parentname", sFlameName);
+						DispatchKeyValue(iFlame,"SpawnFlags", "1");
+						DispatchKeyValue(iFlame,"Type", "0");
+						DispatchKeyValue(iFlame,"InitialState", "1");
+						DispatchKeyValue(iFlame,"Spreadspeed", "1");
+						DispatchKeyValue(iFlame,"Speed", "250");
+						DispatchKeyValue(iFlame,"Startsize", "6");
+						DispatchKeyValue(iFlame,"EndSize", "8");
+						DispatchKeyValue(iFlame,"Rate", "555");
+						DispatchKeyValue(iFlame,"JetLength", "40");
+						SetVariantString(sFlameName);
+						AcceptEntityInput(iFlame, "SetParent", iFlame, iFlame, 0);
+						float flOrigin2[3];
+						float flAngles3[3];
+						vSetVector(flOrigin2, -2.0, 0.0, 26.0);
+						vSetVector(flAngles3, 0.0, 0.0, 1.0);
+						GetVectorAngles(flAngles3, flAngles3);
+						TeleportEntity(iFlame, flOrigin2, flAngles3, NULL_VECTOR);
+						DispatchSpawn(iFlame);
+						AcceptEntityInput(iFlame, "TurnOn");
+					}
+				}
+			}
+		}
+		if (GetRandomInt(1, 3) == 1 && StrContains(sProps, "2", false) != -1)
 		{
 			float flOrigin[3];
 			float flAngles[3];
@@ -2317,8 +2557,7 @@ void vSetProps(int client, bool light, bool rocks, bool tires, int red, int gree
 				DispatchKeyValue(iEntity, "spotlightwidth", "10");
 				DispatchKeyValue(iEntity, "spotlightlength", "60");
 				DispatchKeyValue(iEntity, "spawnflags", "3");
-				DispatchKeyValue(iEntity, "rendercolor", color);
-				DispatchKeyValue(iEntity, "renderamt", "125");
+				SetEntityRenderColor(iEntity, red, green, blue, 125);
 				DispatchKeyValue(iEntity, "maxspeed", "100");
 				DispatchKeyValue(iEntity, "HDRColorScale", "0.7");
 				DispatchKeyValue(iEntity, "fadescale", "1");
@@ -2334,7 +2573,7 @@ void vSetProps(int client, bool light, bool rocks, bool tires, int red, int gree
 				SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
 			}
 		}
-		if (rocks && (iRandom == 2 || iRandom == 4 || iRandom == 6 || iRandom == 7) && (g_cvSTAttachProps[g_iTankType[client]].IntValue == 2 || g_cvSTAttachProps[g_iTankType[client]].IntValue == 4))
+		if (GetRandomInt(1, 3) == 1 && StrContains(sProps, "3", false) != -1)
 		{
 			float flOrigin[3];
 			float flAngles[3];
@@ -2386,7 +2625,7 @@ void vSetProps(int client, bool light, bool rocks, bool tires, int red, int gree
 				}
 			}
 		}
-		if (tires && (iRandom == 3 || iRandom == 5 || iRandom == 6 || iRandom == 7) && (g_cvSTAttachProps[g_iTankType[client]].IntValue == 3 || g_cvSTAttachProps[g_iTankType[client]].IntValue == 4))
+		if (GetRandomInt(1, 3) == 1 && StrContains(sProps, "4", false) != -1)
 		{
 			float flOrigin[3];
 			float flAngles[3];
@@ -3642,57 +3881,57 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 		switch (g_iTankType[client])
 		{
 			case 0: vSetName(client);
-			case 1: vSetName(client, "Acidic Tank", true, true, true, 255, 0, 0, 255, "255 0 0");
-			case 2: vSetName(client, "Ammo Tank", true, true, true, 5, 20, 35, 255, "5 20 35");
-			case 3: vSetName(client, "Blind Tank", true, true, true, 30, 20, 0, 255, "30 20 0");
-			case 4: vSetName(client, "Bomber Tank", true, true, true, 15, 15, 15, 255, "15 15 15");
-			case 5: vSetName(client, "Boomer Tank", true, true, true, 0, 0, 65, 255, "0 0 65");
-			case 6: vSetName(client, "Charger Tank", true, true, true, 25, 255, 115, 255, "25 255 115");
-			case 7: vSetName(client, "Clone Tank", true, true, true, 140, 40, 255, 255, "140 40 255");
-			case 8: vSetName(client, "Common Tank", true, true, true, 190, 255, 250, 255, "190 255 250");
-			case 9: vSetName(client, "Drug Tank", true, true, true, 55, 205, 65, 255, "55 205 65");
-			case 10: vSetName(client, "Fire Tank", true, true, true, 255, 135, 0, 255, "255 135 0");
-			case 11: vSetName(client, "Flash Tank", true, true, true, 255, 255, 0, 150, "255 255 0", RENDER_TRANSTEXTURE);
-			case 12: vSetName(client, "Flinger Tank", true, true, true, 25, 40, 130, 255, "25 40 130");
-			case 13: vSetName(client, "Ghost Tank", true, true, true, 150, 150, 150, 150, "150 150 150", RENDER_TRANSTEXTURE);
-			case 14: vSetName(client, "Gravity Tank", true, true, true, 255, 0, 0, 255, "255 0 0");
-			case 15: vSetName(client, "Healer Tank", true, true, true, 255, 255, 255, 255, "255 255 255");
-			case 16: vSetName(client, "Hunter Tank", true, true, true, 200, 200, 200, 255, "200 200 200");
-			case 17: vSetName(client, "Hypnotizer Tank", true, true, true, 255, 250, 45, 255, "255 250 45");
-			case 18: vSetName(client, "Ice Tank", true, true, true, 170, 240, 255, 200, "170 240 255", RENDER_TRANSTEXTURE);
-			case 19: vSetName(client, "Idler Tank", true, true, true, 10, 40, 15, 255, "10 40 15");
-			case 20: vSetName(client, "Inverter Tank", true, true, true, 250, 65, 255, 255, "250 65 255");
-			case 21: vSetName(client, "Jockey Tank", true, true, true, 130, 0, 0, 255, "130 0 0");
+			case 1: vSetName(client, "Acidic Tank", 255, 0, 0, 255);
+			case 2: vSetName(client, "Ammo Tank", 5, 20, 35, 255);
+			case 3: vSetName(client, "Blind Tank", 30, 20, 0, 255);
+			case 4: vSetName(client, "Bomber Tank", 15, 15, 15, 255);
+			case 5: vSetName(client, "Boomer Tank", 0, 0, 65, 255);
+			case 6: vSetName(client, "Charger Tank", 25, 255, 115, 255);
+			case 7: vSetName(client, "Clone Tank", 140, 40, 255, 255);
+			case 8: vSetName(client, "Common Tank", 190, 255, 250, 255);
+			case 9: vSetName(client, "Drug Tank", 55, 205, 65, 255);
+			case 10: vSetName(client, "Fire Tank", 255, 135, 0, 255);
+			case 11: vSetName(client, "Flash Tank", 255, 255, 0, 150, RENDER_TRANSTEXTURE);
+			case 12: vSetName(client, "Flinger Tank", 25, 40, 130, 255);
+			case 13: vSetName(client, "Ghost Tank", 150, 150, 150, 150, RENDER_TRANSTEXTURE);
+			case 14: vSetName(client, "Gravity Tank", 255, 0, 0, 255);
+			case 15: vSetName(client, "Healer Tank", 255, 255, 255, 255);
+			case 16: vSetName(client, "Hunter Tank", 200, 200, 200, 255);
+			case 17: vSetName(client, "Hypnotizer Tank", 255, 250, 45, 255);
+			case 18: vSetName(client, "Ice Tank", 170, 240, 255, 200, RENDER_TRANSTEXTURE);
+			case 19: vSetName(client, "Idler Tank", 10, 40, 15, 255);
+			case 20: vSetName(client, "Inverter Tank", 250, 65, 255, 255);
+			case 21: vSetName(client, "Jockey Tank", 130, 0, 0, 255);
 			case 22:
 			{
 				vJumperEffect(client);
-				vSetName(client, "Jumper Tank", true, true, true, 225, 0, 205, 255, "225 0 205");
+				vSetName(client, "Jumper Tank", 225, 0, 205, 255);
 			}
-			case 23: vSetName(client, "Meteor Tank", true, true, true, 200, 200, 200, 255, "200 200 200");
-			case 24: vSetName(client, "Puke Tank", true, true, true, 140, 0, 0, 255, "140 0 0");
-			case 25: vSetName(client, "Restarter Tank", true, true, true, 225, 235, 0, 255, "225 235 0");
-			case 26: vSetName(client, "Rocketeer Tank", true, true, true, 255, 180, 50, 255, "255 180 50");
-			case 27: vSetName(client, "Shake Tank", true, true, true, 0, 170, 255, 255, "0 170 255");
+			case 23: vSetName(client, "Meteor Tank", 200, 200, 200, 255);
+			case 24: vSetName(client, "Puke Tank", 140, 0, 0, 255);
+			case 25: vSetName(client, "Restarter Tank", 225, 235, 0, 255);
+			case 26: vSetName(client, "Rocketeer Tank", 255, 180, 50, 255);
+			case 27: vSetName(client, "Shake Tank", 0, 170, 255, 255);
 			case 28:
 			{
 				if (!g_bShielded[client])
 				{
 					vShieldAbility(client, true);
 				}
-				vSetName(client, "Shield Tank", true, true, true, 25, 125, 125, 255, "25 125 125");
+				vSetName(client, "Shield Tank", 25, 125, 125, 255);
 			}
-			case 29: vSetName(client, "Shove Tank", true, true, true, 25, 10, 0, 255, "25 10 0");
-			case 30: vSetName(client, "Slugger Tank", true, true, true, 0, 0, 50, 255, "0 0 50");
+			case 29: vSetName(client, "Shove Tank", 25, 10, 0, 255);
+			case 30: vSetName(client, "Slugger Tank", 0, 0, 50, 255);
 			case 31:
 			{
 				vSmokerEffect(client);
-				vSetName(client, "Smoker Tank", true, true, true, 200, 100, 145, 255, "200 100 145");
+				vSetName(client, "Smoker Tank", 200, 100, 145, 255);
 			}
-			case 32: vSetName(client, "Spitter Tank", true, true, true, 255, 80, 150, 255, "255 80 150");
-			case 33: vSetName(client, "Stun Tank", true, true, true, 255, 185, 45, 255, "255 185 45");
-			case 34: vSetName(client, "Visual Tank", true, true, true, 255, 40, 10, 255, "255 40 10");
-			case 35: vSetName(client, "Warp Tank", true, true, true, 225, 100, 0, 255, "225 100 0");
-			case 36: vSetName(client, "Witch Tank", true, true, true, 255, 210, 80, 255, "255 210 80");
+			case 32: vSetName(client, "Spitter Tank", 255, 80, 150, 255);
+			case 33: vSetName(client, "Stun Tank", 255, 185, 45, 255);
+			case 34: vSetName(client, "Visual Tank", 255, 40, 10, 255);
+			case 35: vSetName(client, "Warp Tank", 225, 100, 0, 255);
+			case 36: vSetName(client, "Witch Tank", 255, 210, 80, 255);
 		}
 		if (g_cvSTExtraHealth[g_iTankType[client]].IntValue > 0)
 		{

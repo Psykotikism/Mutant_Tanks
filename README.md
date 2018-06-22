@@ -237,6 +237,15 @@ Throws Witches at survivors.
 
 ## Configuration Variables (ConVars/CVars)
 ```
+// Announce each Super Tank's arrival?
+// (0: OFF)
+// (1: ON)
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+st_announcearrival "1"
+
 // Disable Super Tanks++ in these game modes.
 // Separate game modes with commas.
 // Game mode limit: 64
@@ -311,16 +320,15 @@ st_tankwaves "2,3,4"
 stacid_acidchance "4"
 
 // Attach props to Acid Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stacid_attachprops "4"
+// Default: "1234"
+stacid_attachprops "1234"
 
 // Extra health given to Acid Tank.
 // -
@@ -367,16 +375,15 @@ stammo_ammochance "4"
 stammo_ammocount "0"
 
 // Attach props to Ammo Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stammo_attachprops "4"
+// Default: "1234"
+stammo_attachprops "1234"
 
 // Extra health given to Ammo Tank.
 // -
@@ -409,16 +416,15 @@ stammo_runspeed "1.0"
 stammo_throwinterval "5.0"
 
 // Attach props to Blind Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stblind_attachprops "4"
+// Default: "1234"
+stblind_attachprops "1234"
 
 // Blind Tank has 1 out of this many chances to make survivors blind.
 // -
@@ -465,16 +471,15 @@ stblind_runspeed "1.0"
 stblind_throwinterval "5.0"
 
 // Attach props to Bomb Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stbomb_attachprops "4"
+// Default: "1234"
+stbomb_attachprops "1234"
 
 // Bomb Tank has 1 out of this many chances to cause an explosion.
 // -
@@ -514,16 +519,15 @@ stbomb_runspeed "1.0"
 stbomb_throwinterval "5.0"
 
 // Attach props to Boomer Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stboomer_attachprops "4"
+// Default: "1234"
+stboomer_attachprops "1234"
 
 // Extra health given to Boomer Tank.
 // -
@@ -556,16 +560,15 @@ stboomer_runspeed "1.0"
 stboomer_throwinterval "5.0"
 
 // Attach props to Charger Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stcharger_attachprops "4"
+// Default: "1234"
+stcharger_attachprops "1234"
 
 // Extra health given to Charger Tank.
 // -
@@ -598,16 +601,15 @@ stcharger_runspeed "1.0"
 stcharger_throwinterval "5.0"
 
 // Attach props to Clone Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stclone_attachprops "4"
+// Default: "1234"
+stclone_attachprops "1234"
 
 // Extra health given to Clone Tank.
 // -
@@ -640,16 +642,15 @@ stclone_runspeed "1.0"
 stclone_throwinterval "5.0"
 
 // Attach props to Common Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stcommon_attachprops "4"
+// Default: "1234"
+stcommon_attachprops "1234"
 
 // Extra health given to Common Tank.
 // -
@@ -764,16 +765,15 @@ stdefault_runspeed "1.0"
 stdefault_throwinterval "5.0"
 
 // Attach props to Drug Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stdrug_attachprops "4"
+// Default: "1234"
+stdrug_attachprops "1234"
 
 // Drug Tank has 1 out of this many chances to drug survivors.
 // -
@@ -820,16 +820,15 @@ stdrug_runspeed "1.0"
 stdrug_throwinterval "5.0"
 
 // Attach props to Fire Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stfire_attachprops "4"
+// Default: "1234"
+stfire_attachprops "1234"
 
 // Extra health given to Fire Tank.
 // -
@@ -869,16 +868,15 @@ stfire_runspeed "1.0"
 stfire_throwinterval "5.0"
 
 // Attach props to Flash Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stflash_attachprops "4"
+// Default: "1234"
+stflash_attachprops "1234"
 
 // Extra health given to Flash Tank.
 // -
@@ -925,16 +923,15 @@ stflash_specialspeed "5.0"
 stflash_throwinterval "5.0"
 
 // Attach props to Fling Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stfling_attachprops "4"
+// Default: "1234"
+stfling_attachprops "1234"
 
 // Extra health given to Fling Tank.
 // -
@@ -974,16 +971,15 @@ stfling_runspeed "1.0"
 stfling_throwinterval "5.0"
 
 // Attach props to Ghost Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stghost_attachprops "4"
+// Default: "1234"
+stghost_attachprops "1234"
 
 // Extra health given to Ghost Tank.
 // -
@@ -1035,16 +1031,15 @@ stghost_throwinterval "5.0"
 stghost_weaponslot "12345"
 
 // Attach props to Gravity Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stgravity_attachprops "4"
+// Default: "1234"
+stgravity_attachprops "1234"
 
 // Extra health given to Gravity Tank.
 // -
@@ -1093,16 +1088,15 @@ stgravity_runspeed "1.0"
 stgravity_throwinterval "5.0"
 
 // Attach props to Heal Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stheal_attachprops "4"
+// Default: "1234"
+stheal_attachprops "1234"
 
 // Health absorbed from common infected.
 // -
@@ -1170,16 +1164,15 @@ stheal_tankamount "500"
 stheal_throwinterval "5.0"
 
 // Attach props to Hunter Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-sthunter_attachprops "4"
+// Default: "1234"
+sthunter_attachprops "1234"
 
 // Extra health given to Hunter Tank.
 // -
@@ -1212,16 +1205,15 @@ sthunter_runspeed "1.0"
 sthunter_throwinterval "5.0"
 
 // Attach props to Hypno Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-sthypno_attachprops "4"
+// Default: "1234"
+sthypno_attachprops "1234"
 
 // Hypno Tank's hypnosis effect lasts this long.
 // -
@@ -1268,16 +1260,15 @@ sthypno_runspeed "1.0"
 sthypno_throwinterval "5.0"
 
 // Attach props to Ice Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stice_attachprops "4"
+// Default: "1234"
+stice_attachprops "1234"
 
 // Extra health given to Ice Tank.
 // -
@@ -1317,16 +1308,15 @@ stice_runspeed "1.0"
 stice_throwinterval "5.0"
 
 // Attach props to Idle Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stidle_attachprops "4"
+// Default: "1234"
+stidle_attachprops "1234"
 
 // Extra health given to Idle Tank.
 // -
@@ -1366,16 +1356,15 @@ stidle_runspeed "1.0"
 stidle_throwinterval "5.0"
 
 // Attach props to Invert Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stinvert_attachprops "4"
+// Default: "1234"
+stinvert_attachprops "1234"
 
 // Invert Tank's inversion effect lasts this long.
 // -
@@ -1422,16 +1411,15 @@ stinvert_runspeed "1.0"
 stinvert_throwinterval "5.0"
 
 // Attach props to Jockey Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stjockey_attachprops "4"
+// Default: "1234"
+stjockey_attachprops "1234"
 
 // Extra health given to Jockey Tank.
 // -
@@ -1464,16 +1452,15 @@ stjockey_runspeed "1.0"
 stjockey_throwinterval "5.0"
 
 // Attach props to Jumper Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stjumper_attachprops "4"
+// Default: "1234"
+stjumper_attachprops "1234"
 
 // Jumper Tank has 1 out of this many chances to jump into the air.
 // -
@@ -1520,16 +1507,15 @@ stjumper_runspeed "1.0"
 stjumper_throwinterval "5.0"
 
 // Attach props to Meteor Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stmeteor_attachprops "4"
+// Default: "1234"
+stmeteor_attachprops "1234"
 
 // Extra health given to Meteor Tank.
 // -
@@ -1576,16 +1562,15 @@ stmeteor_runspeed "1.0"
 stmeteor_throwinterval "5.0"
 
 // Attach props to Puke Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stpuke_attachprops "4"
+// Default: "1234"
+stpuke_attachprops "1234"
 
 // Extra health given to Puke Tank.
 // -
@@ -1625,16 +1610,15 @@ stpuke_runspeed "1.0"
 stpuke_throwinterval "5.0"
 
 // Attach props to Restart Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-strestart_attachprops "4"
+// Default: "1234"
+strestart_attachprops "1234"
 
 // Extra health given to Restart Tank.
 // -
@@ -1687,16 +1671,15 @@ strestart_runspeed "1.0"
 strestart_throwinterval "5.0"
 
 // Attach props to Rocket Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-strocket_attachprops "4"
+// Default: "1234"
+strocket_attachprops "1234"
 
 // Extra health given to Rocket Tank.
 // -
@@ -1736,16 +1719,15 @@ strocket_runspeed "1.0"
 strocket_throwinterval "5.0"
 
 // Attach props to Shake Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stshake_attachprops "4"
+// Default: "1234"
+stshake_attachprops "1234"
 
 // Shake Tank's shake effect lasts this long.
 // -
@@ -1792,16 +1774,15 @@ stshake_shakechance "4"
 stshake_throwinterval "5.0"
 
 // Attach props to Shield Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stshield_attachprops "4"
+// Default: "1234"
+stshield_attachprops "1234"
 
 // Extra health given to Shield Tank.
 // -
@@ -1841,16 +1822,15 @@ stshield_shielddelay "7.5"
 stshield_throwinterval "5.0"
 
 // Attach props to Shove Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stshove_attachprops "4"
+// Default: "1234"
+stshove_attachprops "1234"
 
 // Shove Tank's shove effect lasts this long.
 // -
@@ -1897,16 +1877,15 @@ stshove_shovechance "4"
 stshove_throwinterval "5.0"
 
 // Attach props to Slug Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stslug_attachprops "4"
+// Default: "1234"
+stslug_attachprops "1234"
 
 // Extra health given to Slug Tank.
 // -
@@ -1946,16 +1925,15 @@ stslug_slugchance "4"
 stslug_throwinterval "5.0"
 
 // Attach props to Smoker Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stsmoker_attachprops "4"
+// Default: "1234"
+stsmoker_attachprops "1234"
 
 // Extra health given to Smoker Tank.
 // -
@@ -1988,16 +1966,15 @@ stsmoker_runspeed "1.0"
 stsmoker_throwinterval "5.0"
 
 // Attach props to Spitter Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stspitter_attachprops "4"
+// Default: "1234"
+stspitter_attachprops "1234"
 
 // Extra health given to Spitter Tank.
 // -
@@ -2037,16 +2014,15 @@ stspitter_throwinterval "5.0"
 ststun_duration "5.0"
 
 // Attach props to Stun Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-ststun_attachprops "4"
+// Default: "1234"
+ststun_attachprops "1234"
 
 // Extra health given to Stun Tank.
 // -
@@ -2100,16 +2076,15 @@ ststun_throwinterval "5.0"
 stvisual_duration "5.0"
 
 // Attach props to Visual Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stvisual_attachprops "4"
+// Default: "1234"
+stvisual_attachprops "1234"
 
 // Extra health given to Visual Tank.
 // -
@@ -2156,16 +2131,15 @@ stvisual_throwinterval "5.0"
 stvisual_visualchance "4"
 
 // Attach props to Warp Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stwarp_attachprops "4"
+// Default: "1234"
+stwarp_attachprops "1234"
 
 // Extra health given to Warp Tank.
 // -
@@ -2205,16 +2179,15 @@ stwarp_throwinterval "5.0"
 stwarp_warpinterval "10"
 
 // Attach props to Witch Tank?
-// (0: OFF)
-// (1: ON, attach lights only.)
-// (2: ON, attach rocks only.)
-// (3: ON, attach tires only.)
-// (4: ON, all 3 props.)
+// Combine numbers in any order for different results.
+// Character limit: 4
+// (1: attach lights only.)
+// (2: attach oxygen tanks only.)
+// (3: attach rocks only.)
+// (4: attach tires only.)
 // -
-// Default: "4"
-// Minimum: "0.000000"
-// Maximum: "4.000000"
-stwitch_attachprops "4"
+// Default: "1234"
+stwitch_attachprops "1234"
 
 // Extra health given to Witch Tank.
 // -

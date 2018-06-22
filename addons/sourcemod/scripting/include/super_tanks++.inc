@@ -9,7 +9,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.9"
+#define ST_VERSION "8.10"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_LOCK "=="
 #define ST_UNLOCK "!="
@@ -344,12 +344,62 @@ stock static int iST_GetCharCountInStr(int character, const char[] str)
 }
 
 // Checks
+public bool bBoomerFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsBoomer(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+public bool bChargerFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsCharger(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
 stock bool bHasIdlePlayer(int client)
 {
 	int iIdler = GetClientOfUserId(GetEntData(client, FindSendPropInfo("SurvivorBot", "m_humanSpectatorUserID")));
 	if (iIdler)
 	{
 		if (IsClientInGame(iIdler) && !IsFakeClient(iIdler) && (GetClientTeam(iIdler) != 2))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+public bool bHunterFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsHunter(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+stock bool bIsBoomer(int client, bool alive = true)
+{
+	char sClassname[32];
+	if (bIsInfected(client, alive))
+	{
+		GetEntityNetClass(client, sClassname, sizeof(sClassname));
+		if (StrEqual(sClassname, "Boomer", false))
 		{
 			return true;
 		}
@@ -377,6 +427,20 @@ stock bool bIsBotSurvivor(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && IsFakeClient(client);
 }
 
+stock bool bIsCharger(int client, bool alive = true)
+{
+	char sClassname[32];
+	if (bIsInfected(client, alive))
+	{
+		GetEntityNetClass(client, sClassname, sizeof(sClassname));
+		if (StrEqual(sClassname, "Charger", false))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 stock bool bIsFinaleMap()
 {
 	return FindEntityByClassname(-1, "trigger_finale") != -1;
@@ -387,6 +451,20 @@ stock bool bIsHumanSurvivor(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && !IsFakeClient(client) && !bHasIdlePlayer(client) && !bIsPlayerIdle(client);
 }
 
+stock bool bIsHunter(int client, bool alive = true)
+{
+	char sClassname[32];
+	if (bIsInfected(client, alive))
+	{
+		GetEntityNetClass(client, sClassname, sizeof(sClassname));
+		if (StrEqual(sClassname, "Hunter", false))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 stock bool bIsIdlePlayer(int bot, int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsFakeClient(client) && GetClientTeam(bot) == 2;
@@ -395,6 +473,20 @@ stock bool bIsIdlePlayer(int bot, int client)
 stock bool bIsInfected(int client, bool alive = true)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3 && (!alive || (alive && IsPlayerAlive(client))) && !IsClientInKickQueue(client);
+}
+
+stock bool bIsJockey(int client, bool alive = true)
+{
+	char sClassname[32];
+	if (bIsInfected(client, alive))
+	{
+		GetEntityNetClass(client, sClassname, sizeof(sClassname));
+		if (StrEqual(sClassname, "Jockey", false))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 stock bool bIsL4D2Game()
@@ -439,6 +531,20 @@ stock bool bIsPlayerIdle(int client)
 	return false;
 }
 
+stock bool bIsSmoker(int client, bool alive = true)
+{
+	char sClassname[32];
+	if (bIsInfected(client, alive))
+	{
+		GetEntityNetClass(client, sClassname, sizeof(sClassname));
+		if (StrEqual(sClassname, "Smoker", false))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 stock bool bIsSpecialInfected(int client)
 {
 	char sClassname[32];
@@ -446,6 +552,20 @@ stock bool bIsSpecialInfected(int client)
 	{
 		GetEntityNetClass(client, sClassname, sizeof(sClassname));
 		if (StrEqual(sClassname, "Smoker", false) || StrEqual(sClassname, "Boomer", false) || StrEqual(sClassname, "Hunter", false) || StrEqual(sClassname, "Spitter", false) || StrEqual(sClassname, "Jockey", false) || StrEqual(sClassname, "Charger", false))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+stock bool bIsSpitter(int client, bool alive = true)
+{
+	char sClassname[32];
+	if (bIsInfected(client, alive))
+	{
+		GetEntityNetClass(client, sClassname, sizeof(sClassname));
+		if (StrEqual(sClassname, "Spitter", false))
 		{
 			return true;
 		}
@@ -504,9 +624,64 @@ stock bool bIsValidClient(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
+stock bool bIsValidHumanClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client) && !IsFakeClient(client);
+}
+
 stock bool bIsValidEntRef(int entity)
 {
 	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
+}
+
+stock bool bIsWitch(int client)
+{
+	if (IsValidEntity(client))
+	{
+		char sClassname[32];
+		GetEntityClassname(client, sClassname, sizeof(sClassname));
+		if (StrEqual(sClassname, "Witch", false))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+public bool bJockeyFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsJockey(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+public bool bSmokerFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsSmoker(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+public bool bSpitterFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsSpitter(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
 }
 
 public bool bTankFilter(const char[] pattern, Handle clients)
@@ -532,6 +707,18 @@ public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 		if (IsClientInGame(entity))
 		{
 			return false;
+		}
+	}
+	return true;
+}
+
+public bool bWitchFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsWitch(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
 		}
 	}
 	return true;
@@ -799,6 +986,13 @@ stock void vCheatCommand(int client, char[] command, char[] arguments = "")
 	SetCommandFlags(command, iCmdFlags | FCVAR_CHEAT);
 }
 
+stock void vCopyVector(float source[3], float target[3])
+{
+	target[0] = source[0];
+	target[1] = source[1];
+	target[2] = source[2];
+}
+
 stock void vDeleteEntity(int entity, float time)
 {
 	if (bIsValidEntRef(entity))
@@ -834,8 +1028,28 @@ stock void vMultiTargetTanks(int toggle)
 {
 	switch (toggle)
 	{
-		case 0: RemoveMultiTargetFilter("@tanks", bTankFilter);
-		case 1: AddMultiTargetFilter("@tanks", bTankFilter, "all Tanks", false);
+		case 0:
+		{
+			RemoveMultiTargetFilter("@smokers", bSmokerFilter);
+			RemoveMultiTargetFilter("@boomers", bBoomerFilter);
+			RemoveMultiTargetFilter("@hunters", bHunterFilter);
+			RemoveMultiTargetFilter("@spitters", bSpitterFilter);
+			RemoveMultiTargetFilter("@jockeys", bJockeyFilter);
+			RemoveMultiTargetFilter("@chargers", bChargerFilter);
+			RemoveMultiTargetFilter("@witches", bWitchFilter);
+			RemoveMultiTargetFilter("@tanks", bTankFilter);
+		}
+		case 1:
+		{
+			AddMultiTargetFilter("@smokers", bSmokerFilter, "all Smokers", false);
+			AddMultiTargetFilter("@boomers", bBoomerFilter, "all Boomers", false);
+			AddMultiTargetFilter("@hunters", bHunterFilter, "all Hunters", false);
+			AddMultiTargetFilter("@spitters", bSpitterFilter, "all Spitters", false);
+			AddMultiTargetFilter("@jockeys", bJockeyFilter, "all Jockeys", false);
+			AddMultiTargetFilter("@chargers", bChargerFilter, "all Chargers", false);
+			AddMultiTargetFilter("@witches", bWitchFilter, "all Witches", false);
+			AddMultiTargetFilter("@tanks", bTankFilter, "all Tanks", false);
+		}
 	}
 }
 
@@ -852,6 +1066,13 @@ stock void vSetPlayerGhost(int client, bool ghost)
 stock void vSetPlayerLifeState(int client, bool ready)
 {
 	ready ? SetEntProp(client, Prop_Data, "m_lifeState", 1, 1) : SetEntProp(client, Prop_Data, "m_lifeState", 0, 1);
+}
+
+stock void vSetVector(float target[3], float x, float y, float z)
+{
+	target[0] = x;
+	target[1] = y;
+	target[2] = z;
 }
 
 stock void vSpawnInfected(int client, int type, bool auto = true)
