@@ -2006,13 +2006,6 @@ stspitter_runspeed "1.0"
 // Maximum: "99999.000000"
 stspitter_throwinterval "5.0"
 
-// Stun Tank's stun effect lasts this long.
-// -
-// Default: "5.0"
-// Minimum: "1.000000"
-// Maximum: "99999.000000"
-ststun_duration "5.0"
-
 // Attach props to Stun Tank?
 // Combine numbers in any order for different results.
 // Character limit: 4
@@ -2023,6 +2016,13 @@ ststun_duration "5.0"
 // -
 // Default: "1234"
 ststun_attachprops "1234"
+
+// Stun Tank's stun effect lasts this long.
+// -
+// Default: "5.0"
+// Minimum: "1.000000"
+// Maximum: "99999.000000"
+ststun_duration "5.0"
 
 // Extra health given to Stun Tank.
 // -
@@ -2068,13 +2068,6 @@ ststun_stunspeed "0.25"
 // Maximum: "99999.000000"
 ststun_throwinterval "5.0"
 
-// Visual Tank's visual effect lasts this long.
-// -
-// Default: "5.0"
-// Minimum: "1.000000"
-// Maximum: "99999.000000"
-stvisual_duration "5.0"
-
 // Attach props to Visual Tank?
 // Combine numbers in any order for different results.
 // Character limit: 4
@@ -2085,6 +2078,13 @@ stvisual_duration "5.0"
 // -
 // Default: "1234"
 stvisual_attachprops "1234"
+
+// Visual Tank's visual effect lasts this long.
+// -
+// Default: "5.0"
+// Minimum: "1.000000"
+// Maximum: "99999.000000"
+stvisual_duration "5.0"
 
 // Extra health given to Visual Tank.
 // -

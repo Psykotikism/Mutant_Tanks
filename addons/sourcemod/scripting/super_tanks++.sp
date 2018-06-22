@@ -413,16 +413,16 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTFireImmunity[32], "stspitter_fireimmunity", "0", "Give Spitter Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[32], "stspitter_runspeed", "1.0", "Spitter Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTThrowInterval[32], "stspitter_throwinterval", "5.0", "Spitter Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTStunDuration, "ststun_duration", "5.0", "Stun Tank's stun effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[33], "ststun_attachprops", "1234", "Attach props to Stun Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
+	vCreateConVar(g_cvSTStunDuration, "ststun_duration", "5.0", "Stun Tank's stun effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[33], "ststun_extrahealth", "0", "Extra health given to Stun Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[33], "ststun_fireimmunity", "0", "Give Stun Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[33], "ststun_runspeed", "1.0", "Stun Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTStunChance, "ststun_stunchance", "4", "Stun Tank has 1 out of this many chances to stun survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTStunSpeed, "ststun_stunspeed", "0.25", "Stun Tank can set survivors' run speed to this amount.", _, true, 0.1, true, 0.99);
 	vCreateConVar(g_cvSTThrowInterval[33], "ststun_throwinterval", "5.0", "Stun Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
-	vCreateConVar(g_cvSTVisualDuration, "stvisual_duration", "5.0", "Visual Tank's visual effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[34], "stvisual_attachprops", "1234", "Attach props to Visual Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
+	vCreateConVar(g_cvSTVisualDuration, "stvisual_duration", "5.0", "Visual Tank's visual effect lasts this long.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[34], "stvisual_extrahealth", "0", "Extra health given to Visual Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[34], "stvisual_fireimmunity", "0", "Give Visual Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTVisualFOV, "stvisual_fov", "160", "Visual Tank can set survivors' field of view to this amount.", _, true, 1.0, true, 160.0);
