@@ -2358,7 +2358,34 @@ stflash_throwinterval "8.0" // Add 3.0 to Flash Tank's throw interval. Default i
 
 Since v8.9, there's a randomizer that determines which props Tanks spawn with.
 
-10. What are the different Tank types?
+10. Why are the Tanks spawning with more than the extra health given to them?
+
+Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
+
+11. Are there any developer/tester features available in the plugin?
+
+Yes, there are target filters for each special infected and the sm_tank command that allows developers/testers to spawn each Super Tank.
+
+List of target filters:
+
+```
+@smokers
+@boomers
+@hunters
+@spitters
+@jockeys
+@chargers
+@witches
+@tanks
+```
+
+Command usage:
+
+```
+sm_tank <type 1-36>
+```
+
+12. What are the different Tank types?
 
 ```
 1. Acid // Add "0" to st_tanktypes to use.

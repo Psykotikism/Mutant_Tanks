@@ -4,12 +4,13 @@
 
 Changes:
 
-1. Added the target filters "@smokers", "@boomers", "@hunters", "@spitters", "@jockeys", "@chargers", "@witches" for developers/testers to use.
-2. Added the sm_tank "type 1-36" command to spawn each Tank for developing/testing purposes.
-3. Added oxygen tank (jetpack) props to Tanks.
-4. Modified the attachprops convars to now support multiple number combinations.
-5. Removed unnecessary code.
-6. Optimized code a bit.
+1. Any extra health given to a Super Tank is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
+2. Added the target filters "@smokers", "@boomers", "@hunters", "@spitters", "@jockeys", "@chargers", "@witches" for developers/testers to use.
+3. Added the sm_tank "type 1-36" command to spawn each Tank for developing/testing purposes.
+4. Added oxygen tank (jetpack) props to Tanks.
+5. Modified the attachprops convars to now support multiple number combinations.
+6. Removed unnecessary code.
+7. Optimized code a bit.
 
 Files:
 

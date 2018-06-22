@@ -12,6 +12,45 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+/* 36 Super Tanks
+ * Acid
+ * Ammo
+ * Blind
+ * Bomb
+ * Boomer
+ * Charger
+ * Clone
+ * Common
+ * Drug
+ * Fire
+ * Flash
+ * Fling
+ * Ghost
+ * Gravity
+ * Heal
+ * Hunter
+ * Hypno
+ * Ice
+ * Idle
+ * Invert
+ * Jockey
+ * Jumper
+ * Meteor
+ * Puke
+ * Restart
+ * Rocket
+ * Shake
+ * Shield
+ * Shove
+ * Slug
+ * Smoker
+ * Spitter
+ * Stun
+ * Vision
+ * Warp
+ * Witch
+ */
+
 bool g_bAFK[MAXPLAYERS + 1];
 bool g_bCmdUsed;
 bool g_bFlash[MAXPLAYERS + 1];
@@ -3936,7 +3975,8 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 		if (g_cvSTExtraHealth[g_iTankType[client]].IntValue > 0)
 		{
 			int iHealth = GetClientHealth(client);
-			SetEntityHealth(client, iHealth + g_cvSTExtraHealth[g_iTankType[client]].IntValue);
+			int iExtraHealth = (iGetHumanCount() > 1) ? ((g_cvSTExtraHealth[g_iTankType[client]].IntValue * iGetHumanCount()) + iHealth) : (g_cvSTExtraHealth[g_iTankType[client]].IntValue + iHealth);
+			SetEntityHealth(client, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
 		}
 		vThrowInterval(client, g_cvSTThrowInterval[g_iTankType[client]].FloatValue);
 	}

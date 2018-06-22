@@ -866,7 +866,7 @@ stock int iGetPlayerCount()
 	int iPlayerCount;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidHumanClient(iPlayer))
 		{
 			iPlayerCount++;
 		}
