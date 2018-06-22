@@ -1765,7 +1765,9 @@ void vAttachParticle(int client, char[] particlename, float time, float origin)
 			DispatchKeyValue(iParticle, "scale", "");
 			DispatchKeyValue(iParticle, "effect_name", particlename);
 			DispatchKeyValue(iParticle, "parentname", sTargetName);
-			DispatchKeyValue(iParticle, "targetname", "particle");
+			char sParticleName[64];
+			Format(sParticleName, sizeof(sParticleName), "particle%d", client);
+			DispatchKeyValue(iParticle, "targetname", sParticleName);
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
@@ -1855,7 +1857,7 @@ void vBombHit(int client, int owner)
 		iParticle2 = EntIndexToEntRef(iParticle2);
 		vDeleteEntity(iParticle2, 16.5);
 		iParticle3 = EntIndexToEntRef(iParticle3);
-		vDeleteEntity(iParticle, 16.5);
+		vDeleteEntity(iParticle3, 16.5);
 		iTrace = EntIndexToEntRef(iTrace);
 		vDeleteEntity(iTrace, 16.5);
 		vDeleteExplosion(iTrace, 15.0, "Stop");
@@ -1926,7 +1928,9 @@ void vCreateParticle(int client, char[] particlename, float time, float origin)
 			flPos[2] += origin;
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchKeyValue(iParticle, "effect_name", particlename);
-			DispatchKeyValue(iParticle, "targetname", "particle");
+			char sParticleName[64];
+			Format(sParticleName, sizeof(sParticleName), "particle%d", client);
+			DispatchKeyValue(iParticle, "targetname", sParticleName);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "start");
@@ -2328,7 +2332,7 @@ void vMeteor(int entity, int client)
 		SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", client);
 		DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
 		DispatchKeyValueFloat(iPointPush, "radius", 200.0 * 1.0);
-  		SetVariantString("spawnflags 24");
+  		DispatchKeyValue(iPointPush, "spawnflags", "8");
 		AcceptEntityInput(iPointPush, "AddOutput");
  		TeleportEntity(iPointPush, flPos, NULL_VECTOR, NULL_VECTOR);
  		DispatchSpawn(iPointPush);
@@ -2361,7 +2365,9 @@ void vPrecacheParticle(char[] particlename)
 	if (IsValidEntity(iParticle))
 	{
 		DispatchKeyValue(iParticle, "effect_name", particlename);
-		DispatchKeyValue(iParticle, "targetname", "particle");
+		char sParticleName[64];
+		Format(sParticleName, sizeof(sParticleName), "particle%d", iParticle);
+		DispatchKeyValue(iParticle, "targetname", sParticleName);
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
 		AcceptEntityInput(iParticle, "start");
