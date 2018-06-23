@@ -2050,10 +2050,10 @@ void vFlashAbility(int client)
 
 void vFlingHit(int client)
 {
-	if (GetRandomInt(1, g_cvSTFlingChance.IntValue) == 1 && bIsL4D2Game())
+	if (GetRandomInt(1, g_cvSTFlingChance.IntValue) == 1 && bIsSurvivor(client) && bIsL4D2Game())
 	{
 		int iCharger = CreateFakeClient("Charger");
-		if (bIsSurvivor(client) && iCharger > 0)
+		if (iCharger > 0)
 		{
 			float flTpos[3];
 			float flSpos[3];
@@ -2370,11 +2370,14 @@ void vPrecacheParticle(char[] particlename)
 
 void vPukeHit(int client)
 {
-	int iBoomer = CreateFakeClient("Boomer");
-	if (GetRandomInt(1, g_cvSTPukeChance.IntValue) == 1 && bIsSurvivor(client) && iBoomer > 0)
+	if (GetRandomInt(1, g_cvSTPukeChance.IntValue) == 1 && bIsSurvivor(client))
 	{
-		SDKCall(g_hSDKPukePlayer, client, iBoomer, true);
-		KickClient(iBoomer);
+		int iBoomer = CreateFakeClient("Boomer");
+		if (iBoomer > 0)
+		{
+			SDKCall(g_hSDKPukePlayer, client, iBoomer, true);
+			KickClient(iBoomer);
+		}
 	}
 }
 
