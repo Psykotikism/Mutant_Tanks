@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 8.12 (June 25, 2018)
+
+Changes:
+
+1. Optimized code a bit more.
+
 ## Version 8.11 (June 22, 2018)
 
 Bug fixes:

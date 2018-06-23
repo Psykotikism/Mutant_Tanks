@@ -3272,8 +3272,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	int iType = pack.ReadCell();
-	if (!IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (iRock = EntRefToEntIndex(iRock)) == INVALID_ENT_REFERENCE)
+	if ((g_iTankType[iTank] != 5 && g_iTankType[iTank] != 6 && g_iTankType[iTank] != 7 && g_iTankType[iTank] != 16 && g_iTankType[iTank] != 21 && g_iTankType[iTank] != 31 && g_iTankType[iTank] != 32 && g_iTankType[iTank] != 36) || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (iRock = EntRefToEntIndex(iRock)) == INVALID_ENT_REFERENCE)
 	{
 		return Plugin_Stop;
 	}
@@ -3289,7 +3288,17 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 				int iInfected = CreateFakeClient("Minion");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, iType, false);
+					switch (g_iTankType[iTank])
+					{
+						case 5: vSpawnInfected(iInfected, 2, false);
+						case 6: vSpawnInfected(iInfected, 6, false);
+						case 7: vSpawnInfected(iInfected, 8, false);
+						case 16: vSpawnInfected(iInfected, 3, false);
+						case 21: vSpawnInfected(iInfected, 5, false);
+						case 31: vSpawnInfected(iInfected, 1, false);
+						case 32: vSpawnInfected(iInfected, 4, false);
+						case 36: vSpawnInfected(iInfected, 7, false);
+					}
 					float flPos[3];
 					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iRock, "Kill");
@@ -3839,75 +3848,12 @@ public Action tTimerRockThrow(Handle timer, any entity)
 		return Plugin_Stop;
 	}
 	int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-	if (iThrower > 0 && iThrower < 37 && bIsTank(iThrower) && IsFakeClient(iThrower))
+	if (iThrower > 0 && bIsTank(iThrower) && IsFakeClient(iThrower))
 	{
-		switch (g_iTankType[iThrower])
-		{
-			case 5:
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpDataPack.WriteCell(GetClientUserId(iThrower));
-				dpDataPack.WriteCell(EntIndexToEntRef(entity));
-				dpDataPack.WriteCell(2);
-			}
-			case 6:
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpDataPack.WriteCell(GetClientUserId(iThrower));
-				dpDataPack.WriteCell(EntIndexToEntRef(entity));
-				dpDataPack.WriteCell(6);
-			}
-			case 7:
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpDataPack.WriteCell(GetClientUserId(iThrower));
-				dpDataPack.WriteCell(EntIndexToEntRef(entity));
-				dpDataPack.WriteCell(8);
-			}
-			case 16:
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpDataPack.WriteCell(GetClientUserId(iThrower));
-				dpDataPack.WriteCell(EntIndexToEntRef(entity));
-				dpDataPack.WriteCell(3);
-			}
-			case 21:
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpDataPack.WriteCell(GetClientUserId(iThrower));
-				dpDataPack.WriteCell(EntIndexToEntRef(entity));
-				dpDataPack.WriteCell(5);
-			}
-			case 31:
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpDataPack.WriteCell(GetClientUserId(iThrower));
-				dpDataPack.WriteCell(EntIndexToEntRef(entity));
-				dpDataPack.WriteCell(1);
-			}
-			case 32:
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpDataPack.WriteCell(GetClientUserId(iThrower));
-				dpDataPack.WriteCell(EntIndexToEntRef(entity));
-				dpDataPack.WriteCell(4);
-			}
-			case 36:
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpDataPack.WriteCell(GetClientUserId(iThrower));
-				dpDataPack.WriteCell(EntIndexToEntRef(entity));
-				dpDataPack.WriteCell(7);
-			}
-		}
+		DataPack dpDataPack;
+		CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpDataPack.WriteCell(GetClientUserId(iThrower));
+		dpDataPack.WriteCell(EntIndexToEntRef(entity));
 		if (g_iTankType[iThrower] == 28)
 		{
 			DataPack dpDataPack2;
