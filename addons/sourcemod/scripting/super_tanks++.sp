@@ -2472,7 +2472,7 @@ void vSetName(int client, char[] name = "Default Tank", int red = 255, int green
 		SetClientInfo(client, "name", name);
 		if (g_cvSTAnnounceArrival.BoolValue)
 		{
-			PrintToChatAll("\x04%s\x05 %s\x01 has spawned!", ST_PREFIX, name);
+			PrintToChatAll("\x04%s\x05 %s\x01 has appeared!", ST_PREFIX, name);
 		}
 	}
 }
@@ -3838,7 +3838,7 @@ public Action tTimerTankWave3(Handle timer)
 public Action tTimerTankLifeCheck(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
-	if (bIsBotInfected(client) && GetEntData(client, FindSendPropInfo("CTerrorPlayer", "m_lifeState")) == 0)
+	if (bIsBotInfected(client) && GetEntPropEnt(client, Prop_Send, "m_lifeState") == 0)
 	{
 		int iTank = CreateFakeClient("Tank");
 		if (iTank > 0)
