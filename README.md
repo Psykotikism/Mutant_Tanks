@@ -297,7 +297,7 @@ st_finalesonly "0"
 
 // Enable Super Tanks++ in these game mode types.
 // Add numbers up together.
-// (0: All 4 types)
+// (0: All 4 types.)
 // (1: Co-Op modes only.)
 // (2: Versus modes only.)
 // (4: Survival modes only.)
@@ -305,7 +305,7 @@ st_finalesonly "0"
 // -
 // Default: "0"
 // Minimum: "0.000000"
-// Maximum: "25.000000"
+// Maximum: "15.000000"
 st_gamemodetypes "0"
 
 // Which Super Tank types can be spawned?
