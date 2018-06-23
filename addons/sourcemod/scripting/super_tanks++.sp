@@ -51,6 +51,29 @@ public Plugin myinfo =
  * Witch
  */
 
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
+#define MODEL_WITCH "models/infected/witch.mdl"
+#define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl"
+#define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
+#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
+#define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
+#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
+#define SPRITE_GLOW "sprites/glow.vmt"
+#define PARTICLE_CLOUD "smoker_smokecloud"
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+#define PARTICLE_SPIT "spitter_projectile"
+#define SOUND_INFECTED "npc/infected/action/die/male/death_42.wav"
+#define SOUND_INFECTED2 "npc/infected/action/die/male/death_43.wav"
+#define SOUND_EXPLOSION "ambient/explosions/exp2.wav"
+#define SOUND_LAUNCH "npc/env_headcrabcanister/launch.wav"
+#define SOUND_FIRE "weapons/rpg/rocketfire1.wav"
+#define SOUND_EXPLOSION2 "ambient/explosions/explode_1.wav"
+#define SOUND_EXPLOSION3 "ambient/explosions/explode_2.wav"
+#define SOUND_EXPLOSION4 "ambient/explosions/explode_3.wav"
+#define ANIMATION_DEBRIS "animation/van_inside_debris.wav"
+#define PHYSICS_BULLET "physics/glass/glass_impact_bullet4.wav"
+
 bool g_bAFK[MAXPLAYERS + 1];
 bool g_bCmdUsed;
 bool g_bFlash[MAXPLAYERS + 1];
@@ -94,6 +117,7 @@ ConVar g_cvSTFlashSpeed;
 ConVar g_cvSTFlingChance;
 ConVar g_cvSTGameDifficulty;
 ConVar g_cvSTGameMode;
+ConVar g_cvSTGameModeTypes;
 ConVar g_cvSTGameTypes;
 ConVar g_cvSTGhostChance;
 ConVar g_cvSTGhostSlot;
@@ -169,7 +193,6 @@ int g_iRocket[MAXPLAYERS + 1];
 int g_iShockSprite = -1;
 int g_iTankType[MAXPLAYERS + 1];
 int g_iTankWave;
-int g_iThrower[MAXPLAYERS + 1];
 int g_iType;
 StringMap g_smConVars;
 UserMsg g_umFadeUserMsgId;
@@ -188,7 +211,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-	vMultiTargetTanks(1);
+	vMultiTargetFilters(1);
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
 	g_smConVars = new StringMap();
 	vST_CreateConfig(true);
@@ -200,6 +223,7 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTEnable, "st_enable", "1", "Enable Super Tanks++?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTEnabledGameModes, "st_enabledgamemodes", "", "Enable Super Tanks++ in these game modes.\nSeparate game modes with commas.\nGame mode limit: 64\nCharacter limit for each game mode: 32\n(Empty: All)\n(Not empty: Enabled only in these game modes.)");
 	vCreateConVar(g_cvSTFinalesOnly, "st_finalesonly", "0", "Enable Super Tanks++ in finales only?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
+	vCreateConVar(g_cvSTGameModeTypes, "st_gamemodetypes", "0", "Enable Super Tanks++ in these game mode types.\nAdd numbers up together.\n(0: All 4 types)\n(1: Co-Op modes only.)\n(2: Versus modes only.)\n(4: Survival modes only.)\n(8: Scavenge modes only.)", _, true, 0.0, true, 25.0);
 	cvST_ConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	vCreateConVar(g_cvSTTankTypes, "st_tanktypes", "0123456789abcdefghijklmnopqrstuvwxyz", "Which Super Tank types can be spawned?\nCombine letters and numbers in any order for different results.\nRepeat the same letter or number to increase its chance of being chosen.\nCharacter limit: 52\nView the README.md file for a list of options.");
 	vCreateConVar(g_cvSTTankWaves, "st_tankwaves", "2,3,4", "How many Tanks to spawn for each finale wave?\n(1st number = 1st wave)\n(2nd number = 2nd wave)\n(3rd number = 3rd wave)");
@@ -552,7 +576,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		g_bCmdUsed = false;
 		g_bRestartValid = false;
@@ -560,28 +584,28 @@ public void OnMapStart()
 		CreateTimer(0.1, tTimerTankHealthUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(1.0, tTimerTankTypeUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(1.0, tTimerUpdatePlayerCount, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		PrecacheModel("models/props_junk/gascan001a.mdl", true);
-		PrecacheModel("models/props_junk/propanecanister001a.mdl", true);
-		PrecacheModel("models/infected/witch.mdl", true);
-		PrecacheModel("models/infected/witch_bride.mdl", true);
-		PrecacheModel("models/props_vehicles/tire001c_car.mdl", true);
-		PrecacheModel("models/props_unique/airport/atlas_break_ball.mdl", true);
-		PrecacheModel("models/props_equipment/oxygentank01.mdl", true);
-		g_iExplosionSprite = PrecacheModel("sprites/sprite_fire01.vmt", true);
-		g_iShockSprite = PrecacheModel("sprites/glow.vmt");
-		vPrecacheParticle("smoker_smokecloud");
-		vPrecacheParticle("electrical_arc_01_system");
-		vPrecacheParticle("spitter_projectile");
-		PrecacheSound("npc/infected/action/die/male/death_42.wav", true);
-		PrecacheSound("npc/infected/action/die/male/death_43.wav", true);
-		PrecacheSound("ambient/explosions/exp2.wav", true);
-		PrecacheSound("npc/env_headcrabcanister/launch.wav", true);
-		PrecacheSound("weapons/rpg/rocketfire1.wav", true);
-		PrecacheSound("ambient/explosions/explode_1.wav", true);
-		PrecacheSound("ambient/explosions/explode_2.wav", true);
-		PrecacheSound("ambient/explosions/explode_3.wav", true);
-		PrecacheSound("animation/van_inside_debris.wav", true);
-		PrecacheSound("physics/glass/glass_impact_bullet4.wav", true);
+		PrecacheModel(MODEL_GASCAN, true);
+		PrecacheModel(MODEL_PROPANETANK, true);
+		PrecacheModel(MODEL_WITCH, true);
+		PrecacheModel(MODEL_WITCHBRIDE, true);
+		PrecacheModel(MODEL_TIRES, true);
+		PrecacheModel(MODEL_SHIELD, true);
+		PrecacheModel(MODEL_JETPACK, true);
+		g_iExplosionSprite = PrecacheModel(SPRITE_FIRE, true);
+		g_iShockSprite = PrecacheModel(SPRITE_GLOW);
+		vPrecacheParticle(PARTICLE_CLOUD);
+		vPrecacheParticle(PARTICLE_ELECTRICITY);
+		vPrecacheParticle(PARTICLE_SPIT);
+		PrecacheSound(SOUND_INFECTED, true);
+		PrecacheSound(SOUND_INFECTED2, true);
+		PrecacheSound(SOUND_EXPLOSION, true);
+		PrecacheSound(SOUND_LAUNCH, true);
+		PrecacheSound(SOUND_FIRE, true);
+		PrecacheSound(SOUND_EXPLOSION2, true);
+		PrecacheSound(SOUND_EXPLOSION3, true);
+		PrecacheSound(SOUND_EXPLOSION4, true);
+		PrecacheSound(ANIMATION_DEBRIS, true);
+		PrecacheSound(PHYSICS_BULLET, true);
 		if (g_bLateLoad)
 		{
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++ )
@@ -635,19 +659,20 @@ public void OnConfigsExecuted()
 	{
 		CreateDirectory((bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_map_configs/" : "cfg/sourcemod/super_tanks++/l4d_map_configs/"), 511);
 		char sMapNames[128];
-		Handle hADTMaps = CreateArray(16, 0);
+		ArrayList alADTMaps = new ArrayList(16, 0);
 		int iSerial = -1;
-		ReadMapList(hADTMaps, iSerial, "default", MAPLIST_FLAG_MAPSFOLDER);
-		ReadMapList(hADTMaps, iSerial, "allexistingmaps__", MAPLIST_FLAG_MAPSFOLDER|MAPLIST_FLAG_NO_DEFAULT);
-		int iMapCount = GetArraySize(hADTMaps);
+		ReadMapList(alADTMaps, iSerial, "default", MAPLIST_FLAG_MAPSFOLDER);
+		ReadMapList(alADTMaps, iSerial, "allexistingmaps__", MAPLIST_FLAG_MAPSFOLDER|MAPLIST_FLAG_NO_DEFAULT);
+		int iMapCount = GetArraySize(alADTMaps);
 		if (iMapCount > 0)
 		{
 			for (int iMap = 0; iMap < iMapCount; iMap++)
 			{
-				GetArrayString(hADTMaps, iMap, sMapNames, sizeof(sMapNames));
+				alADTMaps.GetString(iMap, sMapNames, sizeof(sMapNames));
 				vCreateConfigFile("cfg/sourcemod/super_tanks++/", (bIsL4D2Game() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapNames, sMapNames);
 			}
 		}
+		delete alADTMaps;
 	}
 	if (StrContains(g_sConfigOption, "3", false) != -1)
 	{
@@ -789,23 +814,23 @@ public void OnMapEnd()
 
 public void OnPluginEnd()
 {
-	vMultiTargetTanks(0);
+	vMultiTargetFilters(0);
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
 {
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		if (StrEqual(classname, "tank_rock", true))
 		{
-			CreateTimer(0.1, tTimerRockThrow, _, TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(0.1, tTimerRockThrow, EntIndexToEntRef(entity), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 }
 
 public void OnEntityDestroyed(int entity)
 {
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		if (entity > 36 && IsValidEntity(entity))
 		{
@@ -838,7 +863,7 @@ public void OnEntityDestroyed(int entity)
 							if (IsValidEntity(iProp))
 							{
 								DispatchKeyValue(iProp, "disableshadows", "1");
-								SetEntityModel(iProp, "models/props_junk/gascan001a.mdl");
+								SetEntityModel(iProp, MODEL_GASCAN);
 								float flPos[3];
 								GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 								flPos[2] += 10.0;
@@ -861,7 +886,7 @@ public void OnEntityDestroyed(int entity)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!g_cvSTEnable.BoolValue || !bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (!g_cvSTEnable.BoolValue || !bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		return Plugin_Continue;
 	}
@@ -896,7 +921,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		if (damage > 0.0 && bIsValidClient(victim))
 		{
@@ -1014,14 +1039,14 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 			int iDamage = RoundFloat(damage);
 			if (!IsClientConnected(attacker))
 			{
-				iDamage *= 0.0;
+				iDamage = 0;
 				return Plugin_Changed;
 			}
 			int iHealth = GetClientHealth(attacker);
 			if (iHealth > 0 && iHealth > iDamage)
 			{
 				SetEntityHealth(attacker, iHealth - iDamage);
-				iDamage *= 0.0;
+				iDamage = 0;
 				return Plugin_Changed;
 			}
 			else
@@ -1031,7 +1056,7 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 				{
 					ReplaceString(g_sWeapon, sizeof(g_sWeapon), "_projectile", "", false);
 					SetEntityHealth(attacker, 1);
-					iDamage *= 0.0;
+					iDamage = 0;
 					return Plugin_Changed;
 				}
 				else
@@ -1040,7 +1065,7 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 					ReplaceString(g_sWeapon, sizeof(g_sWeapon), "weapon_", "", false);
 					hitgroup == 1 ? (g_bHeadshot[attacker] = true) : (g_bHeadshot[attacker] = false);
 					SetEntityHealth(attacker, 1);
-					iDamage *= 0.0;
+					iDamage = 0;
 					return Plugin_Changed;
 				}
 			}
@@ -1053,7 +1078,7 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 {
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		vThrowInterval(iTank, g_cvSTThrowInterval[g_iTankType[iTank]].FloatValue);
 	}
@@ -1091,7 +1116,7 @@ public Action eEventPlayerBotReplace(Event event, const char[] name, bool dontBr
 	int iSurvivor = GetClientOfUserId(iSurvivorId);
 	int iBotId = event.GetInt("bot");
 	int iBot = GetClientOfUserId(iBotId);
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes) && bIsIdlePlayer(iBot, iSurvivor)) 
+	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes) && bIsIdlePlayer(iBot, iSurvivor)) 
 	{
 		DataPack dpDataPack;
 		CreateDataTimer(0.2, tTimerIdleFix, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
@@ -1111,7 +1136,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 	int iAttacker = GetClientOfUserId(iAttackerId);
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		if (bIsValidClient(iTank))
 		{
@@ -1247,7 +1272,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 							AcceptEntityInput(iEntity, "Kill");
 						}
 					}
-					else if (StrEqual(sModel, "models/props_vehicles/tire001c_car.mdl"))
+					else if (StrEqual(sModel, MODEL_TIRES))
 					{
 						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iTank)
@@ -1255,7 +1280,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 							AcceptEntityInput(iEntity, "Kill");
 						}
 					}
-					else if (StrEqual(sModel, "models/props_unique/airport/atlas_break_ball.mdl"))
+					else if (StrEqual(sModel, MODEL_SHIELD))
 					{
 						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iTank)
@@ -1300,7 +1325,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 
 public Action eEventRoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{
@@ -1314,7 +1339,7 @@ public Action eEventRoundEnd(Event event, const char[] name, bool dontBroadcast)
 
 public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		g_iTankWave = 0;
 		int iCvarFlags = g_cvSTMaxPlayerZombies.Flags;
@@ -1335,7 +1360,7 @@ public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcas
 			g_bHeadshot[iPlayer] = false;
 			g_bHypno[iPlayer] = false;
 		}
-		CreateTimer(10.0, tTimerRestartCoordinates);
+		CreateTimer(10.0, tTimerRestartCoordinates, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -1343,7 +1368,7 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 {
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		if (bIsValidClient(iTank))
 		{
@@ -1501,7 +1526,7 @@ public Action cmdTank(int client, int args)
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_PREFIX);
 		return Plugin_Handled;
 	}
-	if (!bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (!bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		ReplyToCommand(client, "\x04%s\x01 Game mode not supported.", ST_PREFIX);
 		return Plugin_Handled;
@@ -1629,24 +1654,16 @@ void vTank(int client, int type)
 
 void vAcidHit(int client)
 {
-	float flVecPos[3];
 	if (GetRandomInt(1, g_cvSTAcidChance.IntValue) == 1 && bIsSurvivor(client) && bIsL4D2Game())
 	{
-		GetClientAbsOrigin(client, flVecPos);
-		flVecPos[2] += 16.0;
-		int iAcid = CreateEntityByName("spitter_projectile");
-		for (int iSender = 1; iSender <= MaxClients; iSender++)
+		int iSpitter = CreateFakeClient("Spitter");
+		if (iSpitter > 0)
 		{
-			if (IsValidEntity(iAcid) && bIsSurvivor(iSender))
-			{
-				DispatchSpawn(iAcid);
-				SetEntPropFloat(iAcid, Prop_Send, "m_DmgRadius", 1024.0);
-				SetEntProp(iAcid, Prop_Send, "m_bIsLive", 1);
-				SetEntProp(iAcid, Prop_Send, "m_hThrower", iSender);
-				TeleportEntity(iAcid, flVecPos, NULL_VECTOR, NULL_VECTOR);
-				SDKCall(g_hSDKAcidPlayer, iAcid);
-				break;
-			}
+			float flPos[3];
+			GetClientAbsOrigin(client, flPos);
+			TeleportEntity(iSpitter, flPos, NULL_VECTOR, NULL_VECTOR);
+			SDKCall(g_hSDKAcidPlayer, iSpitter);
+			KickClient(iSpitter);
 		}
 	}
 }
@@ -1832,11 +1849,11 @@ void vBombHit(int client, int owner)
 		DispatchSpawn(iHurt);
 		switch (GetRandomInt(1, 3))
 		{
-			case 1: EmitSoundToAll("ambient/explosions/explode_1.wav", client);
-			case 2: EmitSoundToAll("ambient/explosions/explode_2.wav", client);
-			case 3: EmitSoundToAll("ambient/explosions/explode_3.wav", client);
+			case 1: EmitSoundToAll(SOUND_EXPLOSION2, client);
+			case 2: EmitSoundToAll(SOUND_EXPLOSION3, client);
+			case 3: EmitSoundToAll(SOUND_EXPLOSION4, client);
 		}
-		EmitSoundToAll("animation/van_inside_debris.wav", client);
+		EmitSoundToAll(ANIMATION_DEBRIS, client);
 		AcceptEntityInput(iParticle, "Start");
 		AcceptEntityInput(iParticle2, "Start");
 		AcceptEntityInput(iParticle3, "Start");
@@ -1977,7 +1994,7 @@ void vFakeJump(int client)
 	float flVelocity[3];
 	if (g_iTankType[client] == 22 && bIsValidClient(client))
 	{
-		GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
+		GetEntPropVector(client, Prop_Send, "m_vecVelocity", flVelocity);
 		if (flVelocity[0] > 0.0 && flVelocity[0] < 500.0)
 		{
 			flVelocity[0] += 500.0;
@@ -2007,7 +2024,7 @@ void vFireHit(int client, int owner)
 		if (IsValidEntity(iEntity))
 		{
 			DispatchKeyValue(iEntity, "disableshadows", "1");
-			SetEntityModel(iEntity, "models/props_junk/gascan001a.mdl");
+			SetEntityModel(iEntity, MODEL_GASCAN);
 			float flPos[3];
 			GetClientAbsOrigin(client, flPos);
 			flPos[2] += 10.0;
@@ -2056,23 +2073,21 @@ void vFlingHit(int client)
 		float flRatio[3];
 		float flAddVel[3];
 		float flTvec[3];
-		for (int iSender = 1; iSender <= MaxClients; iSender++)
+		int iCharger = CreateFakeClient("Charger");
+		if (bIsSurvivor(client) && iCharger > 0)
 		{
-			if (bIsSurvivor(client) && bIsSurvivor(iSender))
-			{
-				GetClientAbsOrigin(client, flTpos);
-				GetClientAbsOrigin(iSender, flSpos);
-				flDistance[0] = (flSpos[0] - flTpos[0]);
-				flDistance[1] = (flSpos[1] - flTpos[1]);
-				flDistance[2] = (flSpos[2] - flTpos[2]);
-				GetEntPropVector(client, Prop_Data, "m_vecVelocity", flTvec);
-				flRatio[0] =  FloatDiv(flDistance[0], SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
-				flRatio[1] =  FloatDiv(flDistance[1], SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
-				flAddVel[0] = FloatMul(flRatio[0] * -1, 500.0);
-				flAddVel[1] = FloatMul(flRatio[1] * -1, 500.0);
-				flAddVel[2] = 500.0;
-				SDKCall(g_hSDKFlingPlayer, client, flAddVel, 76, iSender, 7.0);
-			}
+			GetClientAbsOrigin(client, flTpos);
+			GetClientAbsOrigin(iCharger, flSpos);
+			flDistance[0] = (flSpos[0] - flTpos[0]);
+			flDistance[1] = (flSpos[1] - flTpos[1]);
+			flDistance[2] = (flSpos[2] - flTpos[2]);
+			GetEntPropVector(client, Prop_Send, "m_vecVelocity", flTvec);
+			flRatio[0] =  FloatDiv(flDistance[0], SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
+			flRatio[1] =  FloatDiv(flDistance[1], SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
+			flAddVel[0] = FloatMul(flRatio[0] * -1, 500.0);
+			flAddVel[1] = FloatMul(flRatio[1] * -1, 500.0);
+			flAddVel[2] = 500.0;
+			SDKCall(g_hSDKFlingPlayer, client, flAddVel, 76, iCharger, 7.0);
 		}
 	}
 }
@@ -2104,13 +2119,13 @@ void vGhostAbility(int client)
 	{
 		SetEntityRenderMode(client, RENDER_TRANSTEXTURE);
 		SetEntityRenderColor(client, 100, 100, 100, 50);
-		EmitSoundToAll("npc/infected/action/die/male/death_43.wav", client);
+		EmitSoundToAll(SOUND_INFECTED2, client);
 	}
 	else
 	{
 		SetEntityRenderMode(client, RENDER_TRANSTEXTURE);
 		SetEntityRenderColor(client, 100, 100, 100, 150);
-		EmitSoundToAll("npc/infected/action/die/male/death_42.wav", client);
+		EmitSoundToAll(SOUND_INFECTED, client);
 	}
 }
 
@@ -2140,7 +2155,7 @@ void vGhostHit(int target, int client)
 		{
 			vDropWeapon(target, 4);
 		}
-		EmitSoundToClient(target, "npc/infected/action/die/male/death_42.wav", client);
+		EmitSoundToClient(target, SOUND_INFECTED, client);
 	}
 }
 
@@ -2220,7 +2235,7 @@ void vIceHit(int client)
 		{
 			SetEntityMoveType(client, MOVETYPE_NONE);
 			SetEntityRenderColor(client, 0, 128, 255, 192);
-			EmitAmbientSound("physics/glass/glass_impact_bullet4.wav", g_flIce, client, SNDLEVEL_RAIDSIREN);
+			EmitAmbientSound(PHYSICS_BULLET, g_flIce, client, SNDLEVEL_RAIDSIREN);
 		}
 		CreateTimer(5.0, tTimerStopIce, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
@@ -2293,7 +2308,7 @@ void vMeteor(int entity, int client)
 		}
 		AcceptEntityInput(entity, "Kill");
 		int iEntity = CreateEntityByName("prop_physics");
-		SetEntityModel(iEntity, "models/props_junk/propanecanister001a.mdl");
+		SetEntityModel(iEntity, MODEL_PROPANETANK);
 		float flPos[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 		flPos[2] += 50.0;
@@ -2369,12 +2384,10 @@ void vPrecacheParticle(char[] particlename)
 
 void vPukeHit(int client)
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	int iBoomer = CreateFakeClient("Boomer");
+	if (GetRandomInt(1, g_cvSTPukeChance.IntValue) == 1 && bIsSurvivor(client) && iBoomer > 0)
 	{
-		if (GetRandomInt(1, g_cvSTPukeChance.IntValue) == 1 && bIsSurvivor(client) && bIsSurvivor(iPlayer) && client != iPlayer)
-		{
-			SDKCall(g_hSDKPukePlayer, client, iPlayer, true);
-		}
+		SDKCall(g_hSDKPukePlayer, client, iBoomer, true);
 	}
 }
 
@@ -2446,9 +2459,9 @@ void vRocketHit(int client)
 			vDeleteEntity(iFlame, 3.0);
 			g_iRocket[client] = iFlame;
 		}
-		EmitSoundToAll("weapons/rpg/rocketfire1.wav", client, _, _, _, 0.8);
-		CreateTimer(2.0, tTimerRocketLaunch, GetClientUserId(client));
-		CreateTimer(3.5, tTimerRocketDetonate, GetClientUserId(client));
+		EmitSoundToAll(SOUND_FIRE, client, _, _, _, 0.8);
+		CreateTimer(2.0, tTimerRocketLaunch, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(3.5, tTimerRocketDetonate, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -2495,7 +2508,7 @@ void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode m
 				iEntity[iOzTank] = CreateEntityByName("prop_dynamic_override");
 				if (IsValidEntity(iEntity[iOzTank]))
 				{
-					SetEntityModel(iEntity[iOzTank], "models/props_equipment/oxygentank01.mdl");
+					SetEntityModel(iEntity[iOzTank], MODEL_JETPACK);
 					SetEntityRenderMode(iEntity[iOzTank], mode);
 					SetEntityRenderColor(iEntity[iOzTank], red, green, blue, alpha);
 					SetEntProp(iEntity[iOzTank], Prop_Data, "m_takedamage", 0, 1);
@@ -2654,7 +2667,7 @@ void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode m
 				iEntity[iTire] = CreateEntityByName("prop_dynamic_override");
 				if (IsValidEntity(iEntity[iTire]))
 				{
-					SetEntityModel(iEntity[iTire], "models/props_vehicles/tire001c_car.mdl");
+					SetEntityModel(iEntity[iTire], MODEL_TIRES);
 					SetEntityRenderMode(iEntity[iTire], mode);
 					SetEntityRenderColor(iEntity[iTire], red, green, blue, alpha);
 					DispatchKeyValueVector(iEntity[iTire], "origin", flOrigin);
@@ -2702,7 +2715,7 @@ void vShieldAbility(int client, bool shield)
 			int iEntity = CreateEntityByName("prop_dynamic");
 			if (IsValidEntity(iEntity))
 			{
-				SetEntityModel(iEntity, "models/props_unique/airport/atlas_break_ball.mdl");
+				SetEntityModel(iEntity, MODEL_SHIELD);
 				DispatchKeyValueVector(iEntity, "origin", flOrigin);
 				DispatchSpawn(iEntity);
 				SetVariantString("!activator");
@@ -2721,7 +2734,7 @@ void vShieldAbility(int client, bool shield)
 			{
 				char sModel[128];
 				GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (StrEqual(sModel, "models/props_unique/airport/atlas_break_ball.mdl"))
+				if (StrEqual(sModel, MODEL_SHIELD))
 				{
 					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == client)
@@ -2767,7 +2780,7 @@ void vSlugHit(int client)
 		TE_SendToAll();
 		TE_SetupEnergySplash(flPosition, flDirection, false);
 		TE_SendToAll();
-		EmitAmbientSound("ambient/explosions/explode_2.wav", flStartPosition, client, SNDLEVEL_RAIDSIREN);
+		EmitAmbientSound(SOUND_EXPLOSION3, flStartPosition, client, SNDLEVEL_RAIDSIREN);
 		ForcePlayerSuicide(client);
 	}
 }
@@ -2911,7 +2924,7 @@ void vWarpAbility(int client)
 			float flAngles[3];
 			GetClientAbsOrigin(iTarget, flOrigin);
 			GetClientAbsAngles(iTarget, flAngles);
-			vCreateParticle(client, "electrical_arc_01_system", 1.0, 0.0);
+			vCreateParticle(client, PARTICLE_ELECTRICITY, 1.0, 0.0);
 			TeleportEntity(client, flOrigin, flAngles, NULL_VECTOR);
 		}
 	}
@@ -2967,105 +2980,6 @@ public Action tTimerStopBlindness(Handle timer, any userid)
 	{
 		vApplyBlindness(client, 0);
 	}
-}
-
-public Action tTimerBoomerThrow(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (g_iTankType[client] == 5 && bIsValidClient(client))
-	{
-		float flVelocity[3];
-		int iEntity = g_iThrower[client];
-		if (IsValidEntity(iEntity))
-		{
-			int iVelocity = FindSendPropInfo("CBasePlayer", "m_vecVelocity[0]");
-			GetEntDataVector(iEntity, iVelocity, flVelocity);
-			float flVector = GetVectorLength(flVelocity);
-			if (flVector > 500.0)
-			{
-				int iInfected = CreateFakeClient("Boomer");
-				if (iInfected > 0)
-				{
-					vSpawnInfected(iInfected, 2, false);
-					float flPos[3];
-					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
-					AcceptEntityInput(iEntity, "Kill");
-					NormalizeVector(flVelocity, flVelocity);
-					float flSpeed = g_cvSTTankThrowForce.FloatValue;
-					ScaleVector(flVelocity, flSpeed * 1.4);
-					TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
-				}
-				return Plugin_Stop;
-			}
-		}
-	}
-	return Plugin_Continue;
-}
-
-public Action tTimerChargerThrow(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (g_iTankType[client] == 6 && bIsValidClient(client))
-	{
-		float flVelocity[3];
-		int iEntity = g_iThrower[client];
-		if (IsValidEntity(iEntity))
-		{
-			int iVelocity = FindSendPropInfo("CBasePlayer", "m_vecVelocity[0]");
-			GetEntDataVector(iEntity, iVelocity, flVelocity);
-			float flVector = GetVectorLength(flVelocity);
-			if (flVector > 500.0)
-			{
-				int iInfected = CreateFakeClient("Charger");
-				if (iInfected > 0)
-				{
-					vSpawnInfected(iInfected, 6, false);
-					float flPos[3];
-					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
-					AcceptEntityInput(iEntity, "Kill");
-					NormalizeVector(flVelocity, flVelocity);
-					float flSpeed = g_cvSTTankThrowForce.FloatValue;
-					ScaleVector(flVelocity, flSpeed * 1.4);
-					TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
-				}
-				return Plugin_Stop;
-			}
-		}
-	}
-	return Plugin_Continue;
-}
-
-public Action tTimerCloneThrow(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (g_iTankType[client] == 7 && bIsValidClient(client))
-	{
-		float flVelocity[3];
-		int iEntity = g_iThrower[client];
-		if (IsValidEntity(iEntity))
-		{
-			int iVelocity = FindSendPropInfo("CBasePlayer", "m_vecVelocity[0]");
-			GetEntDataVector(iEntity, iVelocity, flVelocity);
-			float flVector = GetVectorLength(flVelocity);
-			if (flVector > 500.0)
-			{
-				int iInfected = CreateFakeClient("Clone");
-				if (iInfected > 0)
-				{
-					vSpawnInfected(iInfected, 8, false);
-					float flPos[3];
-					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
-					AcceptEntityInput(iEntity, "Kill");
-					NormalizeVector(flVelocity, flVelocity);
-					float flSpeed = g_cvSTTankThrowForce.FloatValue;
-					ScaleVector(flVelocity, flSpeed * 1.4);
-					TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
-				}
-				return Plugin_Stop;
-			}
-		}
-	}
-	return Plugin_Continue;
 }
 
 public Action tTimerDrug(Handle timer, any userid)
@@ -3271,39 +3185,6 @@ public Action tTimerHeal(Handle timer, any userid)
 	}
 }
 
-public Action tTimerHunterThrow(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (g_iTankType[client] == 16 && bIsValidClient(client))
-	{
-		float flVelocity[3];
-		int iEntity = g_iThrower[client];
-		if (IsValidEntity(iEntity))
-		{
-			int iVelocity = FindSendPropInfo("CBasePlayer", "m_vecVelocity[0]");
-			GetEntDataVector(iEntity, iVelocity, flVelocity);
-			float flVector = GetVectorLength(flVelocity);
-			if (flVector > 500.0)
-			{
-				int iInfected = CreateFakeClient("Hunter");
-				if (iInfected > 0)
-				{
-					vSpawnInfected(iInfected, 3, false);
-					float flPos[3];
-					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
-					AcceptEntityInput(iEntity, "Kill");
-					NormalizeVector(flVelocity, flVelocity);
-					float flSpeed = g_cvSTTankThrowForce.FloatValue;
-					ScaleVector(flVelocity, flSpeed * 1.4);
-					TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
-				}
-				return Plugin_Stop;
-			}
-		}
-	}
-	return Plugin_Continue;
-}
-
 public Action tTimerStopHypnosis(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
@@ -3323,7 +3204,7 @@ public Action tTimerStopIce(Handle timer, any userid)
 		{
 			SetEntityMoveType(client, MOVETYPE_WALK);
 			SetEntityRenderColor(client, 255, 255, 255, 255);
-			EmitAmbientSound("physics/glass/glass_impact_bullet4.wav", g_flIce, client, SNDLEVEL_RAIDSIREN);
+			EmitAmbientSound(PHYSICS_BULLET, g_flIce, client, SNDLEVEL_RAIDSIREN);
 		}
 	}
 }
@@ -3353,36 +3234,28 @@ public Action tTimerIdleFix(Handle timer, DataPack pack)
 	}
 }
 
-public Action tTimerStopInversion(Handle timer, any userid)
+public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 {
-	int client = GetClientOfUserId(userid);
-	if (bIsSurvivor(client))
-	{
-		g_bInvert[client] = false;
-	}
-}
-
-public Action tTimerJockeyThrow(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (g_iTankType[client] == 21 && bIsValidClient(client))
+	pack.Reset();
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iRock = EntRefToEntIndex(pack.ReadCell());
+	int iType = pack.ReadCell();
+	if (bIsValidClient(iTank))
 	{
 		float flVelocity[3];
-		int iEntity = g_iThrower[client];
-		if (IsValidEntity(iEntity))
+		if (IsValidEntity(iRock))
 		{
-			int iVelocity = FindSendPropInfo("CBasePlayer", "m_vecVelocity[0]");
-			GetEntDataVector(iEntity, iVelocity, flVelocity);
+			GetEntPropVector(iRock, Prop_Send, "m_vecVelocity", flVelocity);
 			float flVector = GetVectorLength(flVelocity);
 			if (flVector > 500.0)
 			{
-				int iInfected = CreateFakeClient("Jockey");
+				int iInfected = CreateFakeClient("Minion");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, 5, false);
+					vSpawnInfected(iInfected, iType, false);
 					float flPos[3];
-					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
-					AcceptEntityInput(iEntity, "Kill");
+					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+					AcceptEntityInput(iRock, "Kill");
 					NormalizeVector(flVelocity, flVelocity);
 					float flSpeed = g_cvSTTankThrowForce.FloatValue;
 					ScaleVector(flVelocity, flSpeed * 1.4);
@@ -3393,6 +3266,15 @@ public Action tTimerJockeyThrow(Handle timer, any userid)
 		}
 	}
 	return Plugin_Continue;
+}
+
+public Action tTimerStopInversion(Handle timer, any userid)
+{
+	int client = GetClientOfUserId(userid);
+	if (bIsSurvivor(client))
+	{
+		g_bInvert[client] = false;
+	}
 }
 
 public Action tTimerJump(Handle timer, any userid)
@@ -3516,8 +3398,8 @@ public Action tTimerRocketLaunch(Handle timer, any userid)
 		flVelocity[0] = 0.0;
 		flVelocity[1] = 0.0;
 		flVelocity[2] = 800.0;
-		EmitSoundToAll("ambient/explosions/exp2.wav", client, _, _, _, 1.0);
-		EmitSoundToAll("npc/env_headcrabcanister/launch.wav", client, _, _, _, 1.0);
+		EmitSoundToAll(SOUND_EXPLOSION, client, _, _, _, 1.0);
+		EmitSoundToAll(SOUND_LAUNCH, client, _, _, _, 1.0);
 		TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
 		SetEntityGravity(client, 0.1);
 	}
@@ -3576,32 +3458,32 @@ public Action tTimerShield(Handle timer, any userid)
 	}
 }
 
-public Action tTimerPropaneThrow(Handle timer, any userid)
+public Action tTimerPropaneThrow(Handle timer, DataPack pack)
 {
-	int client = GetClientOfUserId(userid);
-	if (g_iTankType[client] == 28 && bIsValidClient(client))
+	pack.Reset();
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iRock = EntRefToEntIndex(pack.ReadCell());
+	if (g_iTankType[iTank] == 28 && bIsValidClient(iTank))
 	{
 		float flVelocity[3];
-		int iEntity = g_iThrower[client];
-		if (IsValidEntity(iEntity))
+		if (IsValidEntity(iRock))
 		{
-			int iVelocity = FindSendPropInfo("CBasePlayer", "m_vecVelocity[0]");
-			GetEntDataVector(iEntity, iVelocity, flVelocity);
+			GetEntPropVector(iRock, Prop_Send, "m_vecVelocity", flVelocity);
 			float flVector = GetVectorLength(flVelocity);
 			if (flVector > 500.0)
 			{
 				int iPropane = CreateEntityByName("prop_physics");
 				if (IsValidEntity(iPropane))
 				{
-					SetEntityModel(iPropane, "models/props_junk/propanecanister001a.mdl");
+					SetEntityModel(iPropane, MODEL_PROPANETANK);
 					float flPos[3];
-					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
-					AcceptEntityInput(iEntity, "Kill");
+					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+					AcceptEntityInput(iRock, "Kill");
 					NormalizeVector(flVelocity, flVelocity);
 					float flSpeed = g_cvSTTankThrowForce.FloatValue;
 					ScaleVector(flVelocity, flSpeed * 1.4);
-					TeleportEntity(iPropane, flPos, NULL_VECTOR, flVelocity);
 					DispatchSpawn(iPropane);
+					TeleportEntity(iPropane, flPos, NULL_VECTOR, flVelocity);
 				}
 				return Plugin_Stop;
 			}
@@ -3613,14 +3495,12 @@ public Action tTimerPropaneThrow(Handle timer, any userid)
 public Action tTimerShove(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
-	float flVecOrigin[3];
-	for (int iSender = 1; iSender <= MaxClients; iSender++)
+	float flOrigin[3];
+	int iShover = CreateFakeClient("Shover");
+	if (bIsSurvivor(client) && iShover > 0)
 	{
-		if (bIsSurvivor(client) && bIsSurvivor(iSender) && client != iSender)
-		{
-			GetClientAbsOrigin(iSender, flVecOrigin);
-			SDKCall(g_hSDKShovePlayer, client, iSender, flVecOrigin);
-		}
+		GetClientAbsOrigin(iShover, flOrigin);
+		SDKCall(g_hSDKShovePlayer, client, iShover, flOrigin);
 	}
 }
 
@@ -3638,74 +3518,8 @@ public Action tTimerSmoker(Handle timer, any userid)
 	int client = GetClientOfUserId(userid);
 	if (g_iTankType[client] == 31 && bIsValidClient(client))
 	{
-		vAttachParticle(client, "smoker_smokecloud", 1.2, 0.0);
+		vAttachParticle(client, PARTICLE_CLOUD, 1.2, 0.0);
 	}
-}
-
-public Action tTimerSmokerThrow(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (g_iTankType[client] == 31 && bIsValidClient(client))
-	{
-		float flVelocity[3];
-		int iEntity = g_iThrower[client];
-		if (IsValidEntity(iEntity))
-		{
-			int iVelocity = FindSendPropInfo("CBasePlayer", "m_vecVelocity[0]");
-			GetEntDataVector(iEntity, iVelocity, flVelocity);
-			float flVector = GetVectorLength(flVelocity);
-			if (flVector > 500.0)
-			{
-				int iInfected = CreateFakeClient("Smoker");
-				if (iInfected > 0)
-				{
-					vSpawnInfected(iInfected, 1, false);
-					float flPos[3];
-					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
-					AcceptEntityInput(iEntity, "Kill");
-					NormalizeVector(flVelocity, flVelocity);
-					float flSpeed = g_cvSTTankThrowForce.FloatValue;
-					ScaleVector(flVelocity, flSpeed * 1.4);
-					TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
-				}
-				return Plugin_Stop;
-			}
-		}
-	}
-	return Plugin_Continue;
-}
-
-public Action tTimerSpitterThrow(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (g_iTankType[client] == 32 && bIsValidClient(client))
-	{
-		float flVelocity[3];
-		int iEntity = g_iThrower[client];
-		if (IsValidEntity(iEntity))
-		{
-			int iVelocity = FindSendPropInfo("CBasePlayer", "m_vecVelocity[0]");
-			GetEntDataVector(iEntity, iVelocity, flVelocity);
-			float flVector = GetVectorLength(flVelocity);
-			if (flVector > 500.0)
-			{
-				int iInfected = CreateFakeClient("Spitter");
-				if (iInfected > 0)
-				{
-					vSpawnInfected(iInfected, 4, false);
-					float flPos[3];
-					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
-					AcceptEntityInput(iEntity, "Kill");
-					NormalizeVector(flVelocity, flVelocity);
-					float flSpeed = g_cvSTTankThrowForce.FloatValue;
-					ScaleVector(flVelocity, flSpeed * 1.4);
-					TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
-				}
-				return Plugin_Stop;
-			}
-		}
-	}
-	return Plugin_Continue;
 }
 
 public Action tTimerStopStun(Handle timer, any userid)
@@ -3722,8 +3536,8 @@ public Action tTimerVision(Handle timer, any userid)
 	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
-		SetEntData(client, FindSendPropInfo("CBasePlayer", "m_iFOV"), g_cvSTVisualFOV.IntValue, 4, true);
-		SetEntData(client, FindSendPropInfo("CBasePlayer", "m_iDefaultFOV"), g_cvSTVisualFOV.IntValue, 4, true);
+		SetEntProp(client, Prop_Send, "m_iFOV", g_cvSTVisualFOV.IntValue);
+		SetEntProp(client, Prop_Send, "m_iDefaultFOV", g_cvSTVisualFOV.IntValue);
 	}
 }
 
@@ -3732,49 +3546,16 @@ public Action tTimerStopVision(Handle timer, any userid)
 	int client = GetClientOfUserId(userid);
 	if (bIsSurvivor(client))
 	{
-		SetEntData(client, FindSendPropInfo("CBasePlayer", "m_iFOV"), 90, 4, true);
-		SetEntData(client, FindSendPropInfo("CBasePlayer", "m_iDefaultFOV"), 90, 4, true);
+		SetEntProp(client, Prop_Send, "m_iFOV", 90);
+		SetEntProp(client, Prop_Send, "m_iDefaultFOV", 90);
 		delete g_hVisionTimer[client];
 	}
-}
-
-public Action tTimerWitchThrow(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (g_iTankType[client] == 36 && bIsValidClient(client))
-	{
-		float flVelocity[3];
-		int iEntity = g_iThrower[client];
-		if (IsValidEntity(iEntity))
-		{
-			int iVelocity = FindSendPropInfo("CBasePlayer", "m_vecVelocity[0]");
-			GetEntDataVector(iEntity, iVelocity, flVelocity);
-			float flVector = GetVectorLength(flVelocity);
-			if (flVector > 500.0)
-			{
-				int iInfected = CreateFakeClient("Witch");
-				if (iInfected > 0)
-				{
-					vSpawnInfected(iInfected, 7, false);
-					float flPos[3];
-					GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flPos);
-					AcceptEntityInput(iEntity, "Kill");
-					NormalizeVector(flVelocity, flVelocity);
-					float flSpeed = g_cvSTTankThrowForce.FloatValue;
-					ScaleVector(flVelocity, flSpeed * 1.4);
-					TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
-				}
-				return Plugin_Stop;
-			}
-		}
-	}
-	return Plugin_Continue;
 }
 
 public Action tTimerUpdatePlayerCount(Handle timer)
 {
 	g_cvSTConfigExecute.GetString(g_sConfigOption, sizeof(g_sConfigOption));
-	if (!g_cvSTEnable.BoolValue || !bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes) || StrContains(g_sConfigOption, "5", false) == -1)
+	if (!g_cvSTEnable.BoolValue || !bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes) || StrContains(g_sConfigOption, "5", false) == -1)
 	{
 		return Plugin_Continue;
 	}
@@ -3790,7 +3571,7 @@ public Action tTimerUpdatePlayerCount(Handle timer)
 
 public Action tTimerTankHealthUpdate(Handle timer)
 {
-	if (!g_cvSTEnable.BoolValue || !bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (!g_cvSTEnable.BoolValue || !bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		return Plugin_Continue;
 	}
@@ -3834,7 +3615,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 
 public Action tTimerTankTypeUpdate(Handle timer)
 {
-	if (!g_cvSTEnable.BoolValue || !bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes))
+	if (!g_cvSTEnable.BoolValue || !bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		return Plugin_Continue;
 	}
@@ -3845,7 +3626,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 		{
 			if (bIsBotInfected(iTank))
 			{
-				int iInfectedType = GetEntData(iTank, FindSendPropInfo("CTerrorPlayer", "m_zombieClass"));
+				int iInfectedType = GetEntProp(iTank, Prop_Send, "m_zombieClass");
 				if ((bIsL4D2Game() && iInfectedType == 8) || (!bIsL4D2Game() && iInfectedType == 5))
 				{
 					CreateTimer(3.0, tTimerTankLifeCheck, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
@@ -3945,64 +3726,91 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 	}
 }
 
-public Action tTimerRockThrow(Handle timer)
+public Action tTimerRockThrow(Handle timer, any entity)
 {
-	int iEntity = -1;
-	while ((iEntity = FindEntityByClassname(iEntity, "tank_rock")) != INVALID_ENT_REFERENCE)
+	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
 	{
-		int iThrower = GetEntPropEnt(iEntity, Prop_Data, "m_hThrower");
-		if (iThrower > 0 && iThrower < 36 && bIsBotInfected(iThrower) && bIsTank(iThrower))
+		return Plugin_Stop;
+	}
+	int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
+	if (iThrower > 0 && iThrower < 37 && bIsBotInfected(iThrower) && bIsTank(iThrower))
+	{
+		switch (g_iTankType[iThrower])
 		{
-			switch (g_iTankType[iThrower])
+			case 5:
 			{
-				case 5:
-				{
-					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerBoomerThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
-				case 6:
-				{
-					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerChargerThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
-				case 7:
-				{
-					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerCloneThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
-				case 16:
-				{
-					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerHunterThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
-				case 21:
-				{
-					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerJockeyThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
-				case 28:
-				{
-					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerPropaneThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
-				case 31:
-				{
-					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerSmokerThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
-				case 32:
-				{
-					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerSpitterThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
-				case 36:
-				{
-					g_iThrower[iThrower] = iEntity;
-					CreateTimer(0.1, tTimerWitchThrow, GetClientUserId(iThrower), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				}
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpDataPack.WriteCell(GetClientUserId(iThrower));
+				dpDataPack.WriteCell(EntIndexToEntRef(entity));
+				dpDataPack.WriteCell(2);
+			}
+			case 6:
+			{
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpDataPack.WriteCell(GetClientUserId(iThrower));
+				dpDataPack.WriteCell(EntIndexToEntRef(entity));
+				dpDataPack.WriteCell(6);
+			}
+			case 7:
+			{
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpDataPack.WriteCell(GetClientUserId(iThrower));
+				dpDataPack.WriteCell(EntIndexToEntRef(entity));
+				dpDataPack.WriteCell(8);
+			}
+			case 16:
+			{
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpDataPack.WriteCell(GetClientUserId(iThrower));
+				dpDataPack.WriteCell(EntIndexToEntRef(entity));
+				dpDataPack.WriteCell(3);
+			}
+			case 21:
+			{
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpDataPack.WriteCell(GetClientUserId(iThrower));
+				dpDataPack.WriteCell(EntIndexToEntRef(entity));
+				dpDataPack.WriteCell(5);
+			}
+			case 31:
+			{
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpDataPack.WriteCell(GetClientUserId(iThrower));
+				dpDataPack.WriteCell(EntIndexToEntRef(entity));
+				dpDataPack.WriteCell(1);
+			}
+			case 32:
+			{
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpDataPack.WriteCell(GetClientUserId(iThrower));
+				dpDataPack.WriteCell(EntIndexToEntRef(entity));
+				dpDataPack.WriteCell(4);
+			}
+			case 36:
+			{
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpDataPack.WriteCell(GetClientUserId(iThrower));
+				dpDataPack.WriteCell(EntIndexToEntRef(entity));
+				dpDataPack.WriteCell(7);
 			}
 		}
+		if (g_iTankType[iThrower] == 28)
+		{
+			DataPack dpDataPack2;
+			CreateDataTimer(0.1, tTimerPropaneThrow, dpDataPack2, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			dpDataPack2.WriteCell(GetClientUserId(iThrower));
+			dpDataPack2.WriteCell(EntIndexToEntRef(entity));
+		}
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerSpawnTanks(Handle timer)

@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 8.11 (June 22, 2018)
+
+Bug fixes:
+
+1. Fixed the Witch Tank not spawning Witches.
+2. Fixed the Shield Tank not propelling its propane tanks forward.
+
+Changes:
+
+1. Removed the "@witches" target filter for not working properly.
+2. Optimized code a bit more.
+
 ## Version 8.10 (June 22, 2018)
 
 Changes:

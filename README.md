@@ -295,6 +295,19 @@ st_enabledgamemodes ""
 // Maximum: "1.000000"
 st_finalesonly "0"
 
+// Enable Super Tanks++ in these game mode types.
+// Add numbers up together.
+// (0: All 4 types)
+// (1: Co-Op modes only.)
+// (2: Versus modes only.)
+// (4: Survival modes only.)
+// (8: Scavenge modes only.)
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "25.000000"
+st_gamemodetypes "0"
+
 // Which Super Tank types can be spawned?
 // Combine letters and numbers in any order for different results.
 // Repeat the same letter or number to increase its chance of being chosen.
@@ -2278,26 +2291,40 @@ By default, Super Tanks++ can create and execute the following types of configur
 ### Main Features
 1. How do I enable/disable the plugin in certain game modes?
 
+You have 2 options:
+
+- Enable/disable in certain game mode types.
+- Enable/disable in specific game modes.
+
+For option 1:
+
+You must add numbers up together.
+
+For option 2:
+
 You must specify the game modes in the das_enabledgamemodes and das_disabledgamemodes convars.
 
 Here are some scenarios and their outcomes:
 
 - Scenario 1
 ```
+st_gamemodetypes "1" // The plugin is enabled for all Campaign modes only (coop, mutation1, etc.).
 st_enabledgamemodes "" // The plugin is enabled in all game modes.
 st_disabledgamemodes "coop" // The plugin is disabled in Campaign mode.
 
-Outcome: The plugin works in every game mode except in Campaign mode.
+Outcome: The plugin works in every Campaign-based game mode like "mutation1" except "coop" mode.
 ```
 - Scenario 2
 ```
+st_gamemodetypes "8" // The plugin is enabled for all Scavenge modes only (teamscavenge, scavenge, etc.)
 st_enabledgamemodes "coop" // The plugin is enabled in only Campaign mode.
 st_disabledgamemodes "" // The plugin is not disabled at all.
 
-Outcome: The plugin works only in Campaign mode.
+Outcome: The plugin works in every Scavenge-based game mode like "teamscavenge" and "scavenge" modes.
 ```
 - Scenario 3
 ```
+st_gamemodetypes "0" // The plugin is enabled for all game mode types.
 st_enabledgamemodes "coop,versus" // The plugin is enabled in only Campaign and Versus modes.
 st_disabledgamemodes "coop" // The plugin is disabled in Campaign mode.
 
@@ -2478,7 +2505,7 @@ stconfig_timeoffset "-10" // Subtracts 10 hours to the server time.
 
 **Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?p=2402076) plugin.
 
-**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, and the code to prevent Tanks from damaging themselves and other infected with their own abilities.
+**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and help with optimizing/fixing various parts of the code.
 
 **Milo|** - For the code that automatically generates config files for each day and each map installed on a server.
 
@@ -2489,6 +2516,8 @@ stconfig_timeoffset "-10" // Subtracts 10 hours to the server time.
 **Mi.Cura** - For reporting issues and overall continuous support.
 
 **emsit** - For reporting issues and helping with parts of the code.
+
+**ReCreator** - For reporting issues.
 
 **SourceMod Team** - For the beacon, blind, drug, and ice source codes.
 

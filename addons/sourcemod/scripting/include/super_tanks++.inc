@@ -9,7 +9,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.10"
+#define ST_VERSION "8.11"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_LOCK "=="
 #define ST_UNLOCK "!="
@@ -30,65 +30,66 @@
 #define ST_FORMAT_SUCCESS 41
 
 // Configs
-static bool bCreateDirectory;
-static bool bCreateFile;
-static char sConfigFile[PLATFORM_MAX_PATH];
-static char sRawFileName[PLATFORM_MAX_PATH];
-static char sFolderPath[PLATFORM_MAX_PATH];
-static Handle hPluginHandle;
-static int iCreateDirectoryMode;
-static int iLastFindResult;
-static int iLastAppendResult;
+static bool g_bCreateDirectory;
+static bool g_bCreateFile;
+static char g_sConfigFile[PLATFORM_MAX_PATH];
+static char g_sRawFileName[PLATFORM_MAX_PATH];
+static char g_sFolderPath[PLATFORM_MAX_PATH];
+static Handle g_hPluginHandle;
+static int g_iCreateDirectoryMode;
+static int g_iCurrentMode;
+static int g_iLastFindResult;
+static int g_iLastAppendResult;
 
 stock int iST_GetFindResult()
 {
-	return iLastFindResult;
+	return g_iLastFindResult;
 }
 
 stock int iST_GetAppendResult()
 {
-	return iLastAppendResult;
+	return g_iLastAppendResult;
 }
 
 stock void vST_CreateConfig(bool create)
 {
-	bCreateFile = create;
+	g_bCreateFile = create;
 }
 
 stock void vST_CreateDirectory(bool create, int mode = 511)
 {
-	bCreateDirectory = create;
-	iCreateDirectoryMode = mode;
+	g_bCreateDirectory = create;
+	g_iCreateDirectoryMode = mode;
 }
 
 stock bool bST_GetCreateFile()
 {
-	return bCreateFile;
+	return g_bCreateFile;
 }
 
 stock void vST_SetPlugin(Handle plugin)
 {
-	hPluginHandle = plugin;
+	g_hPluginHandle = plugin;
 }
 
 stock Handle hST_GetPlugin()
 {
-	return hPluginHandle;
+	return g_hPluginHandle;
 }
 
 stock bool bST_Config(char[] file, char[] folder = "sourcemod/super_tanks++")
 {
-	Format(sConfigFile, sizeof(sConfigFile), "%s", file);
-	strcopy(sRawFileName, sizeof(sRawFileName), file);
-	strcopy(sFolderPath, sizeof(sFolderPath), folder);
-	return iST_FormatConfig(sConfigFile, sizeof(sConfigFile), folder) == ST_FORMAT_SUCCESS;
+	Format(g_sConfigFile, sizeof(g_sConfigFile), "%s", file);
+	strcopy(g_sRawFileName, sizeof(g_sRawFileName), file);
+	strcopy(g_sFolderPath, sizeof(g_sFolderPath), folder);
+	return iST_FormatConfig(g_sConfigFile, sizeof(g_sConfigFile), folder) == ST_FORMAT_SUCCESS;
 }
 
 stock bool bST_GetConfig(char[] buffer, int size)
 {
-	if (strlen(sConfigFile) > 0)
+	if (strlen(g_sConfigFile) > 0)
 	{
-		strcopy(buffer, size, sConfigFile);
+		strcopy(buffer, size, g_sConfigFile);
 		return true;
 	}
 	buffer[0] = '\0';
@@ -97,15 +98,15 @@ stock bool bST_GetConfig(char[] buffer, int size)
 
 stock ConVar cvST_ConVar(const char[] name, const char[] defaultValue, const char[] description = "", int flags = 0, bool hasMin = false, float min = 0.0, bool hasMax = false, float max = 0.0)
 {
-	if (!(flags & FCVAR_DONTRECORD) && strlen(sConfigFile) > 0)
+	if (!(flags & FCVAR_DONTRECORD) && strlen(g_sConfigFile) > 0)
 	{
-		iLastFindResult = -1;
-		iLastAppendResult = -1;
+		g_iLastFindResult = -1;
+		g_iLastAppendResult = -1;
 		char sValue[64];
-		iLastFindResult = iST_FindValue(name, sValue, sizeof(sValue), true);
-		if (iLastFindResult == ST_FIND_NOT_FOUND || (iLastFindResult == ST_FIND_FILE_NOT_FOUND && bCreateFile))
+		g_iLastFindResult = iST_FindValue(name, sValue, sizeof(sValue), true);
+		if (g_iLastFindResult == ST_FIND_NOT_FOUND || (g_iLastFindResult == ST_FIND_FILE_NOT_FOUND && g_bCreateFile))
 		{
-			iLastAppendResult = iST_Append(name, defaultValue, description, flags, hasMin, min, hasMax, max);
+			g_iLastAppendResult = iST_Append(name, defaultValue, description, flags, hasMin, min, hasMax, max);
 		}
 	}
 	return CreateConVar(name, defaultValue, description, flags, hasMin, min, hasMax, max);
@@ -113,16 +114,16 @@ stock ConVar cvST_ConVar(const char[] name, const char[] defaultValue, const cha
 
 stock void vST_ExecConfig()
 {
-	AutoExecConfig(!bCreateFile, sRawFileName, sFolderPath);
+	AutoExecConfig(!g_bCreateFile, g_sRawFileName, g_sFolderPath);
 }
 
 stock static int iST_FormatConfig(char[] buffer, int size, char[] folder = "sourcemod/super_tanks++")
 {
-	if (strlen(sConfigFile) < 1)
+	if (strlen(g_sConfigFile) < 1)
 	{
 		return ST_NO_CONFIG;
 	}
-	if (StrContains(sConfigFile, ".cfg") != -1 && strlen(sConfigFile) < 4)
+	if (StrContains(g_sConfigFile, ".cfg") != -1 && strlen(g_sConfigFile) < 4)
 	{
 		return ST_FORMAT_BAD_FILENAME;
 	}
@@ -130,9 +131,9 @@ stock static int iST_FormatConfig(char[] buffer, int size, char[] folder = "sour
 	if (strlen(folder) > 0)
 	{
 		Format(sPathPrefix, sizeof(sPathPrefix), "cfg/%s/", folder);
-		if (bCreateDirectory && !DirExists(sPathPrefix))
+		if (g_bCreateDirectory && !DirExists(sPathPrefix))
 		{
-			CreateDirectory(sPathPrefix, iCreateDirectoryMode);
+			CreateDirectory(sPathPrefix, g_iCreateDirectoryMode);
 		}
 	}
 	else
@@ -145,7 +146,7 @@ stock static int iST_FormatConfig(char[] buffer, int size, char[] folder = "sour
 	{
 		StrCat(sFile, sizeof(sFile), sPathPrefix);
 	}
-	StrCat(sFile, sizeof(sFile), sConfigFile);
+	StrCat(sFile, sizeof(sFile), g_sConfigFile);
 	if (StrContains(sFile[strlen(sFile) - 4], ".cfg") != 0)
 	{
 		StrCat(sFile, sizeof(sFile), ".cfg");
@@ -156,14 +157,14 @@ stock static int iST_FormatConfig(char[] buffer, int size, char[] folder = "sour
 
 stock int iST_Append(const char[] name, const char[] defaultValue, const char[] description, int flags, bool hasMin, float min, bool hasMax, float max)
 {
-	if (strlen(sConfigFile) < 1)
+	if (strlen(g_sConfigFile) < 1)
 	{
 		return ST_NO_CONFIG;
 	}
 	char sFile[PLATFORM_MAX_PATH];
-	strcopy(sFile, sizeof(sFile), sConfigFile);
+	strcopy(sFile, sizeof(sFile), g_sConfigFile);
 	bool bFileExists = FileExists(sFile);
-	if (bCreateFile || bFileExists)
+	if (g_bCreateFile || bFileExists)
 	{
 		File fFile = OpenFile(sFile, (bFileExists ? "a" : "w"));
 		char sWrite[2048];
@@ -171,10 +172,10 @@ stock int iST_Append(const char[] name, const char[] defaultValue, const char[] 
 		{
 			return ST_APPEND_BAD_HANDLE;
 		}
-		if (bCreateFile && !bFileExists)
+		if (g_bCreateFile && !bFileExists)
 		{
 			fFile.WriteLine("// This file was auto-generated by Super Tanks++ v%s (%s)", ST_VERSION, ST_URL);
-			GetPluginFilename(hPluginHandle, sWrite, sizeof(sWrite));
+			GetPluginFilename(g_hPluginHandle, sWrite, sizeof(sWrite));
 			Format(sWrite, sizeof(sWrite), "// ConVars for plugin \"%s\"", sWrite);
 			fFile.WriteLine(sWrite);
 		}
@@ -221,14 +222,14 @@ stock int iST_Append(const char[] name, const char[] defaultValue, const char[] 
 stock int iST_FindValue(const char[] cvar, char[] value, int size, bool caseSensitive = false)
 {
 	value[0] = '\0';
-	if (strlen(sConfigFile) < 1)
+	if (strlen(g_sConfigFile) < 1)
 	{
 		return ST_NO_CONFIG;
 	}
 	char sFile[PLATFORM_MAX_PATH];
-	strcopy(sFile, sizeof(sFile), sConfigFile);
+	strcopy(sFile, sizeof(sFile), g_sConfigFile);
 	bool bFileExists = FileExists(sFile);
-	if (bCreateFile && !bFileExists)
+	if (g_bCreateFile && !bFileExists)
 	{
 		return ST_FIND_FILE_NOT_FOUND;
 	}
@@ -273,12 +274,12 @@ stock int iST_FindValue(const char[] cvar, char[] value, int size, bool caseSens
 
 stock int iST_Clean()
 {
-	if (strlen(sConfigFile) < 1)
+	if (strlen(g_sConfigFile) < 1)
 	{
 		return ST_NO_CONFIG;
 	}
 	char sFile[PLATFORM_MAX_PATH];
-	strcopy(sFile, sizeof(sFile), sConfigFile);
+	strcopy(sFile, sizeof(sFile), g_sConfigFile);
 	if (!FileExists(sFile))
 	{
 		return ST_CLEAN_FILE_NOT_FOUND;
@@ -395,11 +396,9 @@ public bool bHunterFilter(const char[] pattern, Handle clients)
 
 stock bool bIsBoomer(int client, bool alive = true)
 {
-	char sClassname[32];
 	if (bIsInfected(client, alive))
 	{
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "Boomer", false))
+		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 2)
 		{
 			return true;
 		}
@@ -429,11 +428,9 @@ stock bool bIsBotSurvivor(int client)
 
 stock bool bIsCharger(int client, bool alive = true)
 {
-	char sClassname[32];
 	if (bIsInfected(client, alive))
 	{
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "Charger", false))
+		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 6)
 		{
 			return true;
 		}
@@ -453,11 +450,9 @@ stock bool bIsHumanSurvivor(int client)
 
 stock bool bIsHunter(int client, bool alive = true)
 {
-	char sClassname[32];
 	if (bIsInfected(client, alive))
 	{
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "Hunter", false))
+		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 3)
 		{
 			return true;
 		}
@@ -477,11 +472,9 @@ stock bool bIsInfected(int client, bool alive = true)
 
 stock bool bIsJockey(int client, bool alive = true)
 {
-	char sClassname[32];
 	if (bIsInfected(client, alive))
 	{
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "Jockey", false))
+		if (bIsL4D2Game() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5)
 		{
 			return true;
 		}
@@ -491,8 +484,7 @@ stock bool bIsJockey(int client, bool alive = true)
 
 stock bool bIsL4D2Game()
 {
-	EngineVersion evEngine = GetEngineVersion();
-	return evEngine == Engine_Left4Dead2;
+	return GetEngineVersion() == Engine_Left4Dead2;
 }
 
 stock bool bIsPlayerBurning(int client)
@@ -533,11 +525,9 @@ stock bool bIsPlayerIdle(int client)
 
 stock bool bIsSmoker(int client, bool alive = true)
 {
-	char sClassname[32];
 	if (bIsInfected(client, alive))
 	{
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "Smoker", false))
+		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 1)
 		{
 			return true;
 		}
@@ -547,11 +537,10 @@ stock bool bIsSmoker(int client, bool alive = true)
 
 stock bool bIsSpecialInfected(int client)
 {
-	char sClassname[32];
 	if (bIsInfected(client))
 	{
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "Smoker", false) || StrEqual(sClassname, "Boomer", false) || StrEqual(sClassname, "Hunter", false) || StrEqual(sClassname, "Spitter", false) || StrEqual(sClassname, "Jockey", false) || StrEqual(sClassname, "Charger", false))
+		int iClass = GetEntProp(client, Prop_Send, "m_zombieClass");
+		if (iClass == 1 || iClass == 2 || iClass == 3 || iClass == 4 || (bIsL4D2Game() && iClass == 5) || iClass == 6)
 		{
 			return true;
 		}
@@ -561,11 +550,9 @@ stock bool bIsSpecialInfected(int client)
 
 stock bool bIsSpitter(int client, bool alive = true)
 {
-	char sClassname[32];
 	if (bIsInfected(client, alive))
 	{
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "Spitter", false))
+		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 4)
 		{
 			return true;
 		}
@@ -578,8 +565,33 @@ stock bool bIsSurvivor(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client);
 }
 
-stock bool bIsSystemValid(ConVar convar, ConVar convar2, ConVar convar3)
+stock bool bIsSystemValid(ConVar convar, ConVar convar2, ConVar convar3, ConVar convar4)
 {
+	if (convar == null)
+	{
+		return false;
+	}
+	if (convar4.IntValue != 0)
+	{
+		g_iCurrentMode = 0;
+		int iMode = CreateEntityByName("info_gamemode");
+		DispatchSpawn(iMode);
+		HookSingleEntityOutput(iMode, "OnCoop", vGamemode, true);
+		HookSingleEntityOutput(iMode, "OnSurvival", vGamemode, true);
+		HookSingleEntityOutput(iMode, "OnVersus", vGamemode, true);
+		HookSingleEntityOutput(iMode, "OnScavenge", vGamemode, true);
+		ActivateEntity(iMode);
+		AcceptEntityInput(iMode, "PostSpawnActivate");
+		AcceptEntityInput(iMode, "Kill");
+		if (g_iCurrentMode == 0)
+		{
+			return false;
+		}
+		if (!(convar4.IntValue & g_iCurrentMode))
+		{
+			return false;
+		}
+	}
 	char sGameMode[32];
 	char sConVarModes[32];
 	convar.GetString(sGameMode, sizeof(sGameMode));
@@ -607,11 +619,10 @@ stock bool bIsSystemValid(ConVar convar, ConVar convar2, ConVar convar3)
 
 stock bool bIsTank(int client, bool alive = true)
 {
-	char sClassname[32];
 	if (bIsInfected(client, alive))
 	{
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "Tank", false))
+		int iClass = GetEntProp(client, Prop_Send, "m_zombieClass");
+		if ((bIsL4D2Game() && iClass == 8) || (!bIsL4D2Game() && iClass == 5))
 		{
 			return true;
 		}
@@ -632,20 +643,6 @@ stock bool bIsValidHumanClient(int client)
 stock bool bIsValidEntRef(int entity)
 {
 	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
-}
-
-stock bool bIsWitch(int client)
-{
-	if (IsValidEntity(client))
-	{
-		char sClassname[32];
-		GetEntityClassname(client, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "Witch", false))
-		{
-			return true;
-		}
-	}
-	return false;
 }
 
 public bool bJockeyFilter(const char[] pattern, Handle clients)
@@ -707,18 +704,6 @@ public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 		if (IsClientInGame(entity))
 		{
 			return false;
-		}
-	}
-	return true;
-}
-
-public bool bWitchFilter(const char[] pattern, Handle clients)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsWitch(iPlayer))
-		{
-			PushArrayCell(clients, iPlayer);
 		}
 	}
 	return true;
@@ -1016,6 +1001,26 @@ stock void vDeleteExplosion(int entity, float time, char[] input)
 	}
 }
 
+public void vGamemode(const char[] output, int caller, int activator, float delay)
+{
+	if (strcmp(output, "OnCoop") == 0)
+	{
+		g_iCurrentMode = 1;
+	}
+	else if (strcmp(output, "OnSurvival") == 0)
+	{
+		g_iCurrentMode = 2;
+	}
+	else if (strcmp(output, "OnVersus") == 0)
+	{
+		g_iCurrentMode = 4;
+	}
+	else if (strcmp(output, "OnScavenge") == 0)
+	{
+		g_iCurrentMode = 8;
+	}
+}
+
 stock void vKickFakeClient(int client)
 {
 	if (IsFakeClient(client))
@@ -1024,7 +1029,7 @@ stock void vKickFakeClient(int client)
 	}
 }
 
-stock void vMultiTargetTanks(int toggle)
+stock void vMultiTargetFilters(int toggle)
 {
 	switch (toggle)
 	{
@@ -1036,7 +1041,6 @@ stock void vMultiTargetTanks(int toggle)
 			RemoveMultiTargetFilter("@spitters", bSpitterFilter);
 			RemoveMultiTargetFilter("@jockeys", bJockeyFilter);
 			RemoveMultiTargetFilter("@chargers", bChargerFilter);
-			RemoveMultiTargetFilter("@witches", bWitchFilter);
 			RemoveMultiTargetFilter("@tanks", bTankFilter);
 		}
 		case 1:
@@ -1047,7 +1051,6 @@ stock void vMultiTargetTanks(int toggle)
 			AddMultiTargetFilter("@spitters", bSpitterFilter, "all Spitters", false);
 			AddMultiTargetFilter("@jockeys", bJockeyFilter, "all Jockeys", false);
 			AddMultiTargetFilter("@chargers", bChargerFilter, "all Chargers", false);
-			AddMultiTargetFilter("@witches", bWitchFilter, "all Witches", false);
 			AddMultiTargetFilter("@tanks", bTankFilter, "all Tanks", false);
 		}
 	}
