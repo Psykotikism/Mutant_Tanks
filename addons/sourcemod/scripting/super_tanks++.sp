@@ -1548,6 +1548,56 @@ public Action cmdTank(int client, int args)
 	return Plugin_Handled;
 }
 
+void vTank(int client, int type)
+{
+	g_bCmdUsed = true;
+	g_iType = type;
+	bIsL4D2Game() ? vCheatCommand(client, "z_spawn_old", "tank") : vCheatCommand(client, "z_spawn", "tank");
+}
+
+void vTankMenu(int client)
+{
+	Menu mTankMenu = new Menu(iTankMenuHandler);
+	mTankMenu.SetTitle("Super Tanks++ Menu");
+	mTankMenu.AddItem("Acid Tank", "Acid Tank");
+	mTankMenu.AddItem("Ammo Tank", "Ammo Tank");
+	mTankMenu.AddItem("Blind Tank", "Blind Tank");
+	mTankMenu.AddItem("Bomb Tank", "Bomb Tank");
+	mTankMenu.AddItem("Boomer Tank", "Boomer Tank");
+	mTankMenu.AddItem("Charger Tank", "Charger Tank");
+	mTankMenu.AddItem("Clone Tank", "Clone Tank");
+	mTankMenu.AddItem("Common Tank", "Common Tank");
+	mTankMenu.AddItem("Drug Tank", "Drug Tank");
+	mTankMenu.AddItem("Fire Tank", "Fire Tank");
+	mTankMenu.AddItem("Flash Tank", "Flash Tank");
+	mTankMenu.AddItem("Fling Tank", "Fling Tank");
+	mTankMenu.AddItem("Ghost Tank", "Ghost Tank");
+	mTankMenu.AddItem("Gravity Tank", "Gravity Tank");
+	mTankMenu.AddItem("Heal Tank", "Heal Tank");
+	mTankMenu.AddItem("Hunter Tank", "Hunter Tank");
+	mTankMenu.AddItem("Hypno Tank", "Hypno Tank");
+	mTankMenu.AddItem("Ice Tank", "Ice Tank");
+	mTankMenu.AddItem("Idle Tank", "Idle Tank");
+	mTankMenu.AddItem("Invert Tank", "Invert Tank");
+	mTankMenu.AddItem("Jockey Tank", "Jockey Tank");
+	mTankMenu.AddItem("Jumper Tank", "Jumper Tank");
+	mTankMenu.AddItem("Meteor Tank", "Meteor Tank");
+	mTankMenu.AddItem("Puke Tank", "Puke Tank");
+	mTankMenu.AddItem("Restart Tank", "Restart Tank");
+	mTankMenu.AddItem("Rocket Tank", "Rocket Tank");
+	mTankMenu.AddItem("Shake Tank", "Shake Tank");
+	mTankMenu.AddItem("Shield Tank", "Shield Tank");
+	mTankMenu.AddItem("Shove Tank", "Shove Tank");
+	mTankMenu.AddItem("Slug Tank", "Slug Tank");
+	mTankMenu.AddItem("Smoker Tank", "Smoker Tank");
+	mTankMenu.AddItem("Spitter Tank", "Spitter Tank");
+	mTankMenu.AddItem("Stun Tank", "Stun Tank");
+	mTankMenu.AddItem("Visual Tank", "Visual Tank");
+	mTankMenu.AddItem("Warp Tank", "Warp Tank");
+	mTankMenu.AddItem("Witch Tank", "Witch Tank");
+	mTankMenu.Display(client, MENU_TIME_FOREVER);
+}
+
 public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
@@ -1600,56 +1650,6 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			}
 		}
 	}
-}
-
-void vTankMenu(int client)
-{
-	Menu mTankMenu = new Menu(iTankMenuHandler);
-	mTankMenu.SetTitle("Super Tanks++ Menu");
-	mTankMenu.AddItem("Acid Tank", "Acid Tank");
-	mTankMenu.AddItem("Ammo Tank", "Ammo Tank");
-	mTankMenu.AddItem("Blind Tank", "Blind Tank");
-	mTankMenu.AddItem("Bomb Tank", "Bomb Tank");
-	mTankMenu.AddItem("Boomer Tank", "Boomer Tank");
-	mTankMenu.AddItem("Charger Tank", "Charger Tank");
-	mTankMenu.AddItem("Clone Tank", "Clone Tank");
-	mTankMenu.AddItem("Common Tank", "Common Tank");
-	mTankMenu.AddItem("Drug Tank", "Drug Tank");
-	mTankMenu.AddItem("Fire Tank", "Fire Tank");
-	mTankMenu.AddItem("Flash Tank", "Flash Tank");
-	mTankMenu.AddItem("Fling Tank", "Fling Tank");
-	mTankMenu.AddItem("Ghost Tank", "Ghost Tank");
-	mTankMenu.AddItem("Gravity Tank", "Gravity Tank");
-	mTankMenu.AddItem("Heal Tank", "Heal Tank");
-	mTankMenu.AddItem("Hunter Tank", "Hunter Tank");
-	mTankMenu.AddItem("Hypno Tank", "Hypno Tank");
-	mTankMenu.AddItem("Ice Tank", "Ice Tank");
-	mTankMenu.AddItem("Idle Tank", "Idle Tank");
-	mTankMenu.AddItem("Invert Tank", "Invert Tank");
-	mTankMenu.AddItem("Jockey Tank", "Jockey Tank");
-	mTankMenu.AddItem("Jumper Tank", "Jumper Tank");
-	mTankMenu.AddItem("Meteor Tank", "Meteor Tank");
-	mTankMenu.AddItem("Puke Tank", "Puke Tank");
-	mTankMenu.AddItem("Restart Tank", "Restart Tank");
-	mTankMenu.AddItem("Rocket Tank", "Rocket Tank");
-	mTankMenu.AddItem("Shake Tank", "Shake Tank");
-	mTankMenu.AddItem("Shield Tank", "Shield Tank");
-	mTankMenu.AddItem("Shove Tank", "Shove Tank");
-	mTankMenu.AddItem("Slug Tank", "Slug Tank");
-	mTankMenu.AddItem("Smoker Tank", "Smoker Tank");
-	mTankMenu.AddItem("Spitter Tank", "Spitter Tank");
-	mTankMenu.AddItem("Stun Tank", "Stun Tank");
-	mTankMenu.AddItem("Visual Tank", "Visual Tank");
-	mTankMenu.AddItem("Warp Tank", "Warp Tank");
-	mTankMenu.AddItem("Witch Tank", "Witch Tank");
-	mTankMenu.Display(client, MENU_TIME_FOREVER);
-}
-
-void vTank(int client, int type)
-{
-	g_bCmdUsed = true;
-	g_iType = type;
-	bIsL4D2Game() ? vCheatCommand(client, "z_spawn_old", "tank") : vCheatCommand(client, "z_spawn", "tank");
 }
 
 void vAcidHit(int client)
