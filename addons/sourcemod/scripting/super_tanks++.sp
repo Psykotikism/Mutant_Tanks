@@ -2556,7 +2556,7 @@ void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode m
 					int iFlame = CreateEntityByName("env_steam");
 					if (IsValidEntity(iFlame))
 					{
-						SetEntityRenderColor(iFlame, 10, 52, 99, 180);
+						SetEntityRenderColor(iFlame, red, green, blue, 180);
 						DispatchKeyValue(iFlame,"SpawnFlags", "1");
 						DispatchKeyValue(iFlame,"Type", "0");
 						DispatchKeyValue(iFlame,"InitialState", "1");
