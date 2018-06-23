@@ -490,7 +490,6 @@ public void OnPluginStart()
 	HookEvent("player_afk", eEventPlayerAFK, EventHookMode_Pre);
 	HookEvent("player_bot_replace", eEventPlayerBotReplace);
 	HookEvent("player_death", eEventPlayerDeath);
-	HookEvent("round_end", eEventRoundEnd);
 	HookEvent("round_start", eEventRoundStart);
 	HookEvent("tank_spawn", eEventTankSpawn);
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
@@ -929,7 +928,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (bIsSurvivor(victim))
 			{
-				if (bIsBotInfected(attacker) && bIsTank(attacker) && damagetype != 2)
+				if (bIsTank(attacker) && IsFakeClient(attacker) && damagetype != 2)
 				{
 					if (StrEqual(sClassname, "weapon_tank_claw", false) || StrEqual(sClassname, "tank_rock", false))
 					{
@@ -1318,20 +1317,6 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 					case 1: CreateTimer(5.0, tTimerTankWave2, _, TIMER_FLAG_NO_MAPCHANGE);
 					case 2: CreateTimer(5.0, tTimerTankWave3, _, TIMER_FLAG_NO_MAPCHANGE);
 				}
-			}
-		}
-	}
-}
-
-public Action eEventRoundEnd(Event event, const char[] name, bool dontBroadcast)
-{
-	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
-	{
-		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
-		{
-			if (bIsInfected(iInfected) && !bIsTank(iInfected))
-			{
-				vKickFakeClient(iInfected);
 			}
 		}
 	}
@@ -3591,7 +3576,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
 					if (StrEqual(sClassname, "player", false))
 					{
-						if (bIsValidClient(iTarget) && bIsTank(iTarget))
+						if (bIsTank(iTarget))
 						{
 							if (g_cvSTDisplayHealth.IntValue == 3)
 							{
@@ -3629,13 +3614,9 @@ public Action tTimerTankTypeUpdate(Handle timer)
 		{
 			if (bIsBotInfected(iTank))
 			{
-				int iInfectedType = GetEntProp(iTank, Prop_Send, "m_zombieClass");
-				if ((bIsL4D2Game() && iInfectedType == 8) || (!bIsL4D2Game() && iInfectedType == 5))
-				{
-					CreateTimer(3.0, tTimerTankLifeCheck, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
-				}
 				if (bIsTank(iTank))
 				{
+					CreateTimer(3.0, tTimerTankLifeCheck, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 					switch (g_iTankType[iTank])
 					{
 						case 8: vCommonAbility(iTank);
@@ -3662,7 +3643,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 public Action tTimerTankSpawn(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
-	if (bIsBotInfected(client) && bIsTank(client))
+	if (bIsTank(client) && IsFakeClient(client))
 	{
 		switch (g_iTankType[client])
 		{
@@ -3736,7 +3717,7 @@ public Action tTimerRockThrow(Handle timer, any entity)
 		return Plugin_Stop;
 	}
 	int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-	if (iThrower > 0 && iThrower < 37 && bIsBotInfected(iThrower) && bIsTank(iThrower))
+	if (iThrower > 0 && iThrower < 37 && bIsTank(iThrower) && IsFakeClient(iThrower))
 	{
 		switch (g_iTankType[iThrower])
 		{
