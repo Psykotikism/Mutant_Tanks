@@ -4,19 +4,24 @@
 
 Bug fixes:
 
-1. Fixed the Witch Tank not spawning Witches.
-2. Fixed the Shield Tank not propelling its propane tanks forward.
+1. Fixed the Witch Tank not spawning Witches. (Thanks ReCreator!)
+2. Fixed the Shield Tank not propelling its propane tanks forward. (Thanks ReCreator!)
 
 Changes:
 
-1. Removed the "@witches" target filter for not working properly.
-2. Optimized code a bit more.
+1. Added the convar st_gamemodetypes to determine what game mode types to enable/disable the plugin in. (0: All, 1: coop modes only, 2: versus modes only, 4: survival modes only, 8: scavenge modes only.)
+2. Removed the "@witches" target filter for not working properly.
+3. Optimized code a bit more.
+
+Files:
+
+1. Updated include file.
 
 ## Version 8.10 (June 22, 2018)
 
 Changes:
 
-1. Any extra health given to a Super Tank is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
+1. Any extra health given to a Super Tank is now multiplied by the number of alive non-idle human survivors present when the Tank spawns. (Thanks emsit!)
 2. Added the target filters "@smokers", "@boomers", "@hunters", "@spitters", "@jockeys", "@chargers", "@witches" for developers/testers to use.
 3. Added the sm_tank "type 1-36" command to spawn each Tank for developing/testing purposes.
 4. Added oxygen tank (jetpack) props to Tanks.

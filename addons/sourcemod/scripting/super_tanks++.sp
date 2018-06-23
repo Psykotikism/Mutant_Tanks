@@ -2067,15 +2067,15 @@ void vFlingHit(int client)
 {
 	if (GetRandomInt(1, g_cvSTFlingChance.IntValue) == 1 && bIsL4D2Game())
 	{
-		float flTpos[3];
-		float flSpos[3];
-		float flDistance[3];
-		float flRatio[3];
-		float flAddVel[3];
-		float flTvec[3];
 		int iCharger = CreateFakeClient("Charger");
 		if (bIsSurvivor(client) && iCharger > 0)
 		{
+			float flTpos[3];
+			float flSpos[3];
+			float flDistance[3];
+			float flRatio[3];
+			float flAddVel[3];
+			float flTvec[3];
 			GetClientAbsOrigin(client, flTpos);
 			GetClientAbsOrigin(iCharger, flSpos);
 			flDistance[0] = (flSpos[0] - flTpos[0]);
@@ -2088,6 +2088,7 @@ void vFlingHit(int client)
 			flAddVel[1] = FloatMul(flRatio[1] * -1, 500.0);
 			flAddVel[2] = 500.0;
 			SDKCall(g_hSDKFlingPlayer, client, flAddVel, 76, iCharger, 7.0);
+			KickClient(iCharger);
 		}
 	}
 }
@@ -2388,6 +2389,7 @@ void vPukeHit(int client)
 	if (GetRandomInt(1, g_cvSTPukeChance.IntValue) == 1 && bIsSurvivor(client) && iBoomer > 0)
 	{
 		SDKCall(g_hSDKPukePlayer, client, iBoomer, true);
+		KickClient(iBoomer);
 	}
 }
 
@@ -3495,12 +3497,13 @@ public Action tTimerPropaneThrow(Handle timer, DataPack pack)
 public Action tTimerShove(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
-	float flOrigin[3];
 	int iShover = CreateFakeClient("Shover");
 	if (bIsSurvivor(client) && iShover > 0)
 	{
+		float flOrigin[3];
 		GetClientAbsOrigin(iShover, flOrigin);
 		SDKCall(g_hSDKShovePlayer, client, iShover, flOrigin);
+		KickClient(iShover);
 	}
 }
 
