@@ -3612,28 +3612,24 @@ public Action tTimerTankTypeUpdate(Handle timer)
 	{
 		for (int iTank = 1; iTank <= MaxClients; iTank++)
 		{
-			if (bIsBotInfected(iTank))
+			if (bIsTank(iTank) && IsFakeClient(iTank))
 			{
-				if (bIsTank(iTank))
+				switch (g_iTankType[iTank])
 				{
-					CreateTimer(3.0, tTimerTankLifeCheck, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
-					switch (g_iTankType[iTank])
-					{
-						case 8: vCommonAbility(iTank);
-						case 11: vFlashAbility(iTank);
-						case 13: vGhostAbility(iTank);
-						case 14: vGravityAbility(iTank);
-						case 15: vHealAbility(iTank);
-						case 23: vMeteorAbility(iTank);
-						case 35: vWarpAbility(iTank);
-					}
-					if (g_cvSTFireImmunity[g_iTankType[iTank]].BoolValue && bIsPlayerBurning(iTank))
-					{
-						ExtinguishEntity(iTank);
-						SetEntPropFloat(iTank, Prop_Send, "m_burnPercent", 1.0);
-					}
-					SetEntPropFloat(iTank, Prop_Data, "m_flLaggedMovementValue", g_cvSTRunSpeed[g_iTankType[iTank]].FloatValue);
+					case 8: vCommonAbility(iTank);
+					case 11: vFlashAbility(iTank);
+					case 13: vGhostAbility(iTank);
+					case 14: vGravityAbility(iTank);
+					case 15: vHealAbility(iTank);
+					case 23: vMeteorAbility(iTank);
+					case 35: vWarpAbility(iTank);
 				}
+				if (g_cvSTFireImmunity[g_iTankType[iTank]].BoolValue && bIsPlayerBurning(iTank))
+				{
+					ExtinguishEntity(iTank);
+					SetEntPropFloat(iTank, Prop_Send, "m_burnPercent", 1.0);
+				}
+				SetEntPropFloat(iTank, Prop_Data, "m_flLaggedMovementValue", g_cvSTRunSpeed[g_iTankType[iTank]].FloatValue);
 			}
 		}
 	}
@@ -3832,24 +3828,5 @@ public Action tTimerTankWave3(Handle timer)
 	if (iGetTankCount() == 0)
 	{
 		g_iTankWave = 3;
-	}
-}
-
-public Action tTimerTankLifeCheck(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (bIsBotInfected(client) && GetEntPropEnt(client, Prop_Send, "m_lifeState") == 0)
-	{
-		int iTank = CreateFakeClient("Tank");
-		if (iTank > 0)
-		{
-			float flOrigin[3];
-			float flAngles[3];
-			GetClientAbsOrigin(client, flOrigin);
-			GetClientAbsAngles(client, flAngles);
-			KickClient(client);
-			TeleportEntity(iTank, flOrigin, flAngles, NULL_VECTOR);
-			vSpawnInfected(iTank, 8, true);
-		}
 	}
 }
