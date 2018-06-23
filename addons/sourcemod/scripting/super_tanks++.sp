@@ -1979,7 +1979,7 @@ void vFakeJump(int client)
 	float flVelocity[3];
 	if (g_iTankType[client] == 22 && bIsValidClient(client))
 	{
-		GetEntPropVector(client, Prop_Send, "m_vecVelocity", flVelocity);
+		GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
 		if (flVelocity[0] > 0.0 && flVelocity[0] < 500.0)
 		{
 			flVelocity[0] += 500.0;
@@ -2066,7 +2066,7 @@ void vFlingHit(int client)
 			flDistance[0] = (flSpos[0] - flTpos[0]);
 			flDistance[1] = (flSpos[1] - flTpos[1]);
 			flDistance[2] = (flSpos[2] - flTpos[2]);
-			GetEntPropVector(client, Prop_Send, "m_vecVelocity", flTvec);
+			GetEntPropVector(client, Prop_Data, "m_vecVelocity", flTvec);
 			flRatio[0] =  FloatDiv(flDistance[0], SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
 			flRatio[1] =  FloatDiv(flDistance[1], SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
 			flAddVel[0] = FloatMul(flRatio[0] * -1, 500.0);
@@ -3232,7 +3232,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 		float flVelocity[3];
 		if (IsValidEntity(iRock))
 		{
-			GetEntPropVector(iRock, Prop_Send, "m_vecVelocity", flVelocity);
+			GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
 			float flVector = GetVectorLength(flVelocity);
 			if (flVector > 500.0)
 			{
@@ -3455,7 +3455,7 @@ public Action tTimerPropaneThrow(Handle timer, DataPack pack)
 		float flVelocity[3];
 		if (IsValidEntity(iRock))
 		{
-			GetEntPropVector(iRock, Prop_Send, "m_vecVelocity", flVelocity);
+			GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
 			float flVector = GetVectorLength(flVelocity);
 			if (flVector > 500.0)
 			{
