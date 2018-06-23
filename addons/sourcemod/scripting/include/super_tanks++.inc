@@ -583,11 +583,7 @@ stock bool bIsSystemValid(ConVar convar, ConVar convar2, ConVar convar3, ConVar 
 		ActivateEntity(iMode);
 		AcceptEntityInput(iMode, "PostSpawnActivate");
 		AcceptEntityInput(iMode, "Kill");
-		if (g_iCurrentMode == 0)
-		{
-			return false;
-		}
-		if (!(convar4.IntValue & g_iCurrentMode))
+		if (g_iCurrentMode == 0 || !(convar4.IntValue & g_iCurrentMode))
 		{
 			return false;
 		}
