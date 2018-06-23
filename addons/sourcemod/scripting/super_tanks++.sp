@@ -2326,8 +2326,7 @@ void vMeteor(int entity, int client)
 		DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
 		DispatchKeyValueFloat(iPointPush, "radius", 200.0 * 1.0);
   		DispatchKeyValue(iPointPush, "spawnflags", "8");
-		AcceptEntityInput(iPointPush, "AddOutput");
- 		TeleportEntity(iPointPush, flPos, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iPointPush, flPos, NULL_VECTOR, NULL_VECTOR);
  		DispatchSpawn(iPointPush);
 		AcceptEntityInput(iPointPush, "Enable", -1, -1);
 		iPointPush = EntIndexToEntRef(iPointPush);
@@ -2431,15 +2430,15 @@ void vRocketHit(int client)
 			flAngles[0] = 90.0;
 			flAngles[1] = 0.0;
 			flAngles[2] = 0.0;
-			DispatchKeyValue(iFlame,"SpawnFlags", "1");
-			DispatchKeyValue(iFlame,"Type", "0");
-			DispatchKeyValue(iFlame,"InitialState", "1");
-			DispatchKeyValue(iFlame,"Spreadspeed", "10");
-			DispatchKeyValue(iFlame,"Speed", "800");
-			DispatchKeyValue(iFlame,"Startsize", "10");
-			DispatchKeyValue(iFlame,"EndSize", "250");
-			DispatchKeyValue(iFlame,"Rate", "15");
-			DispatchKeyValue(iFlame,"JetLength", "400");
+			DispatchKeyValue(iFlame, "spawnflags", "1");
+			DispatchKeyValue(iFlame, "Type", "0");
+			DispatchKeyValue(iFlame, "InitialState", "1");
+			DispatchKeyValue(iFlame, "Spreadspeed", "10");
+			DispatchKeyValue(iFlame, "Speed", "800");
+			DispatchKeyValue(iFlame, "Startsize", "10");
+			DispatchKeyValue(iFlame, "EndSize", "250");
+			DispatchKeyValue(iFlame, "Rate", "15");
+			DispatchKeyValue(iFlame, "JetLength", "400");
 			SetEntityRenderColor(iFlame, 180, 71, 8, 180);
 			TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
 			DispatchSpawn(iFlame);
@@ -2545,15 +2544,15 @@ void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode m
 					if (IsValidEntity(iFlame))
 					{
 						SetEntityRenderColor(iFlame, red, green, blue, 180);
-						DispatchKeyValue(iFlame,"SpawnFlags", "1");
-						DispatchKeyValue(iFlame,"Type", "0");
-						DispatchKeyValue(iFlame,"InitialState", "1");
-						DispatchKeyValue(iFlame,"Spreadspeed", "1");
-						DispatchKeyValue(iFlame,"Speed", "250");
-						DispatchKeyValue(iFlame,"Startsize", "6");
-						DispatchKeyValue(iFlame,"EndSize", "8");
-						DispatchKeyValue(iFlame,"Rate", "555");
-						DispatchKeyValue(iFlame,"JetLength", "40");
+						DispatchKeyValue(iFlame, "spawnflags", "1");
+						DispatchKeyValue(iFlame, "Type", "0");
+						DispatchKeyValue(iFlame, "InitialState", "1");
+						DispatchKeyValue(iFlame, "Spreadspeed", "1");
+						DispatchKeyValue(iFlame, "Speed", "250");
+						DispatchKeyValue(iFlame, "Startsize", "6");
+						DispatchKeyValue(iFlame, "EndSize", "8");
+						DispatchKeyValue(iFlame, "Rate", "555");
+						DispatchKeyValue(iFlame, "JetLength", "40");
 						SetVariantString("!activator");
 						AcceptEntityInput(iFlame, "SetParent", iEntity[iOzTank]);
 						float flOrigin2[3];
@@ -2966,15 +2965,24 @@ public void vSwitchCvars(ConVar convar, const char[] oldValue, const char[] newV
 public Action tTimerStopBlindness(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		vApplyBlindness(client, 0);
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerDrug(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		float flAngles[3];
@@ -3016,6 +3024,10 @@ public Action tTimerDrug(Handle timer, any userid)
 public Action tTimerStopDrug(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		float flAngles[3];
@@ -3049,11 +3061,16 @@ public Action tTimerStopDrug(Handle timer, any userid)
 		EndMessage();
 		delete g_hDrugTimer[client];
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerFlashEffect(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (g_iTankType[client] == 11 && bIsValidClient(client))
 	{
 		float flTankPos[3];
@@ -3076,20 +3093,30 @@ public Action tTimerFlashEffect(Handle timer, any userid)
 			vDeleteEntity(iEntity, 0.3);
 		}		
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerStopGravity(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		SetEntityGravity(client, 1.0);
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerHeal(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (g_iTankType[client] == 15 && bIsValidClient(client))
 	{
 		int iType;
@@ -3173,20 +3200,30 @@ public Action tTimerHeal(Handle timer, any userid)
 			SetEntProp(client, Prop_Send, "m_bFlashing", 0);
 		}
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerStopHypnosis(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		g_bHypno[client] = false;
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerStopIce(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		GetClientEyePosition(client, g_flIce);
@@ -3197,6 +3234,7 @@ public Action tTimerStopIce(Handle timer, any userid)
 			EmitAmbientSound(PHYSICS_BULLET, g_flIce, client, SNDLEVEL_RAIDSIREN);
 		}
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerIdleFix(Handle timer, DataPack pack)
@@ -3204,6 +3242,10 @@ public Action tTimerIdleFix(Handle timer, DataPack pack)
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iBot = GetClientOfUserId(pack.ReadCell());
+	if (iSurvivor == 0 || iBot == 0 || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iSurvivor) || !IsClientInGame(iBot) || !IsPlayerAlive(iSurvivor))
+	{
+		return Plugin_Stop;
+	}
 	if (!IsClientInGame(iSurvivor) || GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor) || IsFakeClient(iSurvivor))
 	{
 		g_bAFK[iSurvivor] = false;
@@ -3222,6 +3264,7 @@ public Action tTimerIdleFix(Handle timer, DataPack pack)
 		SDKCall(g_hSDKSpecPlayer, iBot, iSurvivor);
 		SetEntProp(iSurvivor, Prop_Send, "m_iObserverMode", 5);
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerInfectedThrow(Handle timer, DataPack pack)
@@ -3230,6 +3273,10 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
 	int iType = pack.ReadCell();
+	if (!IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (iRock = EntRefToEntIndex(iRock)) == INVALID_ENT_REFERENCE)
+	{
+		return Plugin_Stop;
+	}
 	if (bIsValidClient(iTank))
 	{
 		float flVelocity[3];
@@ -3261,15 +3308,24 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 public Action tTimerStopInversion(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		g_bInvert[client] = false;
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerJump(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (g_iTankType[client] == 22 && GetRandomInt(1, g_cvSTJumperChance.IntValue) == 1 && bIsValidClient(client))
 	{
 		if (iGetNearestSurvivor(client) > 200 && iGetNearestSurvivor(client) < 2000)
@@ -3277,6 +3333,7 @@ public Action tTimerJump(Handle timer, any userid)
 			vFakeJump(client);
 		}
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerUpdateMeteor(Handle timer, DataPack pack)
@@ -3288,6 +3345,10 @@ public Action tTimerUpdateMeteor(Handle timer, DataPack pack)
 	flPos[1] = pack.ReadFloat();
 	flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
+	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	{
+		return Plugin_Stop;
+	}
 	if (g_iTankType[iTank] == 23 && bIsValidClient(iTank))
 	{
 		if ((GetEngineTime() - flTime) > 5.0)
@@ -3382,6 +3443,10 @@ public Action tTimerRestartCoordinates(Handle timer)
 public Action tTimerRocketLaunch(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		float flVelocity[3];
@@ -3399,6 +3464,10 @@ public Action tTimerRocketLaunch(Handle timer, any userid)
 public Action tTimerRocketDetonate(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		float flPosition[3];
@@ -3415,6 +3484,10 @@ public Action tTimerRocketDetonate(Handle timer, any userid)
 public Action tTimerShake(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		Handle hShakeTarget = StartMessageOne("Shake", client);
@@ -3428,24 +3501,35 @@ public Action tTimerShake(Handle timer, any userid)
 			EndMessage();
 		}
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerStopShake(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		delete g_hShakeTimer[client];
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerShield(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (g_iTankType[client] == 28 && bIsValidClient(client) && !g_bShielded[client])
 	{
 		vShieldAbility(client, true);
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerPropaneThrow(Handle timer, DataPack pack)
@@ -3453,6 +3537,10 @@ public Action tTimerPropaneThrow(Handle timer, DataPack pack)
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
+	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (iRock = EntRefToEntIndex(iRock)) == INVALID_ENT_REFERENCE)
+	{
+		return Plugin_Stop;
+	}
 	if (g_iTankType[iTank] == 28 && bIsValidClient(iTank))
 	{
 		float flVelocity[3];
@@ -3485,6 +3573,10 @@ public Action tTimerPropaneThrow(Handle timer, DataPack pack)
 public Action tTimerShove(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	int iShover = CreateFakeClient("Shover");
 	if (bIsSurvivor(client) && iShover > 0)
 	{
@@ -3493,54 +3585,80 @@ public Action tTimerShove(Handle timer, any userid)
 		SDKCall(g_hSDKShovePlayer, client, iShover, flOrigin);
 		KickClient(iShover);
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerStopShove(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		delete g_hShoveTimer[client];
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerSmoker(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (g_iTankType[client] == 31 && bIsValidClient(client))
 	{
 		vAttachParticle(client, PARTICLE_CLOUD, 1.2, 0.0);
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerStopStun(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerVision(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		SetEntProp(client, Prop_Send, "m_iFOV", g_cvSTVisualFOV.IntValue);
 		SetEntProp(client, Prop_Send, "m_iDefaultFOV", g_cvSTVisualFOV.IntValue);
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerStopVision(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsSurvivor(client))
 	{
 		SetEntProp(client, Prop_Send, "m_iFOV", 90);
 		SetEntProp(client, Prop_Send, "m_iDefaultFOV", 90);
 		delete g_hVisionTimer[client];
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerUpdatePlayerCount(Handle timer)
@@ -3642,6 +3760,10 @@ public Action tTimerTankTypeUpdate(Handle timer)
 public Action tTimerTankSpawn(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
 	if (bIsTank(client) && IsFakeClient(client))
 	{
 		switch (g_iTankType[client])
@@ -3707,6 +3829,7 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 		}
 		vThrowInterval(client, g_cvSTThrowInterval[g_iTankType[client]].FloatValue);
 	}
+	return Plugin_Continue;
 }
 
 public Action tTimerRockThrow(Handle timer, any entity)
