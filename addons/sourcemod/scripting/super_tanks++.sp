@@ -1458,39 +1458,9 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 					int iWave3 = StringToInt(sNumbers[2]);
 					switch (g_iTankWave)
 					{
-						case 1:
-						{
-							if (iGetTankCount() < iWave1)
-							{
-								CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
-							}
-							else if (iGetTankCount() > iWave1 && bIsTank(iTank))
-							{
-								vKickFakeClient(iTank);
-							}
-						}
-						case 2:
-						{
-							if (iGetTankCount() < iWave2)
-							{
-								CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
-							}
-							else if (iGetTankCount() > iWave2 && bIsTank(iTank))
-							{
-								vKickFakeClient(iTank);
-							}
-						}
-						case 3:
-						{
-							if (iGetTankCount() < iWave3)
-							{
-								CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
-							}
-							else if (iGetTankCount() > iWave3 && bIsTank(iTank))
-							{
-								vKickFakeClient(iTank);
-							}
-						}
+						case 1: vTankCountCheck(iTank, iWave1);
+						case 2: vTankCountCheck(iTank, iWave2);
+						case 3: vTankCountCheck(iTank, iWave3);
 					}
 				}
 			}
@@ -2877,6 +2847,18 @@ void vStunHit(int client)
 	}
 }
 
+void vTankCountCheck(int client, int wave)
+{
+	if (iGetTankCount() < wave)
+	{
+		CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
+	}
+	else if (iGetTankCount() > wave && bIsTank(client))
+	{
+		vKickFakeClient(client);
+	}
+}
+
 void vThrowInterval(int client, float time)
 {
 	if (bIsBotInfected(client))
@@ -3874,17 +3856,11 @@ public Action tTimerSpawnTanks(Handle timer)
 	int iWave1 = StringToInt(sNumbers[0]);
 	int iWave2 = StringToInt(sNumbers[1]);
 	int iWave3 = StringToInt(sNumbers[2]);
-	if (g_iTankWave == 1)
+	switch (g_iTankWave)
 	{
-		vSpawnTank(iWave1);
-	}
-	else if (g_iTankWave == 2)
-	{
-		vSpawnTank(iWave2);
-	}
-	else if (g_iTankWave == 3)
-	{
-		vSpawnTank(iWave3);
+		case 1: vSpawnTank(iWave1);
+		case 2: vSpawnTank(iWave2);
+		case 3: vSpawnTank(iWave3);
 	}
 }
 
