@@ -3199,8 +3199,8 @@ public Action tTimerHeal(Handle timer, any userid)
 					SetEntityHealth(client, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
 					if (bIsL4D2Game())
 					{
-						SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 185, 0));
 						SetEntProp(client, Prop_Send, "m_iGlowType", 3);
+						SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 185, 0));
 						SetEntProp(client, Prop_Send, "m_bFlashing", 1);
 					}
 					iType = 1;
@@ -3225,8 +3225,8 @@ public Action tTimerHeal(Handle timer, any userid)
 						SetEntityHealth(client, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
 						if (iType < 2 && bIsL4D2Game())
 						{
-							SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 220, 0));
 							SetEntProp(client, Prop_Send, "m_iGlowType", 3);
+							SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 220, 0));
 							SetEntProp(client, Prop_Send, "m_bFlashing", 1);
 							iType = 1;
 						}
@@ -3249,8 +3249,8 @@ public Action tTimerHeal(Handle timer, any userid)
 						SetEntityHealth(client, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
 						if (bIsL4D2Game())
 						{
-							SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 255, 0));
 							SetEntProp(client, Prop_Send, "m_iGlowType", 3);
+							SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 255, 0));
 							SetEntProp(client, Prop_Send, "m_bFlashing", 1);
 							iType = 2;
 						}
@@ -3260,8 +3260,17 @@ public Action tTimerHeal(Handle timer, any userid)
 		}
 		if (iType == 0 && bIsL4D2Game())
 		{
-			SetEntProp(client, Prop_Send, "m_glowColorOverride", 0);
-			SetEntProp(client, Prop_Send, "m_iGlowType", 0);
+			char sColors[64];
+			char sSet[3][12];
+			g_cvSTTankColors[g_iTankType[client]].GetString(sColors, sizeof(sColors));
+			ExplodeString(sColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+			char sGlow[3][4];
+			ExplodeString(sSet[2], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
+			int iRed = StringToInt(sGlow[0]);
+			int iGreen = StringToInt(sGlow[1]);
+			int iBlue = StringToInt(sGlow[2]);
+			SetEntProp(client, Prop_Send, "m_iGlowType", 3);
+			SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));
 			SetEntProp(client, Prop_Send, "m_bFlashing", 0);
 		}
 	}
