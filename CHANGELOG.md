@@ -2,6 +2,10 @@
 
 ## Version 8.12 (TBA)
 
+Bug fixes:
+
+1. Fixed the st_gamemodetypes returning Survival for 2 and Versus for 4, instead of vice-versa.
+
 Changes:
 
 1. Optimized code a bit more.

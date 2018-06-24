@@ -1003,11 +1003,11 @@ public void vGamemode(const char[] output, int caller, int activator, float dela
 	{
 		g_iCurrentMode = 1;
 	}
-	else if (strcmp(output, "OnSurvival") == 0)
+	else if (strcmp(output, "OnVersus") == 0)
 	{
 		g_iCurrentMode = 2;
 	}
-	else if (strcmp(output, "OnVersus") == 0)
+	else if (strcmp(output, "OnSurvival") == 0)
 	{
 		g_iCurrentMode = 4;
 	}
