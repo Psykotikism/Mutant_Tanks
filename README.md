@@ -2310,25 +2310,25 @@ Here are some scenarios and their outcomes:
 ```
 st_gamemodetypes "1" // The plugin is enabled for all Campaign modes only (coop, mutation1, etc.).
 st_enabledgamemodes "" // The plugin is enabled in all game modes.
-st_disabledgamemodes "coop" // The plugin is disabled in Campaign mode.
+st_disabledgamemodes "coop" // The plugin is disabled in "coop" mode.
 
 Outcome: The plugin works in every Campaign-based game mode like "mutation1" except "coop" mode.
 ```
 - Scenario 2
 ```
 st_gamemodetypes "8" // The plugin is enabled for all Scavenge modes only (teamscavenge, scavenge, etc.)
-st_enabledgamemodes "coop" // The plugin is enabled in only Campaign mode.
-st_disabledgamemodes "" // The plugin is not disabled at all.
+st_enabledgamemodes "coop" // The plugin is enabled in only "coop" mode.
+st_disabledgamemodes "" // The plugin is not disabled in any game modes.
 
 Outcome: The plugin works in every Scavenge-based game mode like "teamscavenge" and "scavenge" modes.
 ```
 - Scenario 3
 ```
 st_gamemodetypes "0" // The plugin is enabled for all game mode types.
-st_enabledgamemodes "coop,versus" // The plugin is enabled in only Campaign and Versus modes.
-st_disabledgamemodes "coop" // The plugin is disabled in Campaign mode.
+st_enabledgamemodes "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
+st_disabledgamemodes "coop" // The plugin is disabled in "coop" mode.
 
-Outcome: The plugin works only in Versus mode.
+Outcome: The plugin works only in "versus" mode.
 ```
 
 2. How do I make the plugin to work on only finale maps?

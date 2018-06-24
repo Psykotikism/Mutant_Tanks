@@ -6,6 +6,11 @@ Changes:
 
 1. Optimized code a bit more.
 
+Files:
+
+1. Updated gamedata file.
+2. Updated include file.
+
 ## Version 8.11 (June 22, 2018)
 
 Bug fixes:
