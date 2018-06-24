@@ -7,6 +7,7 @@ Bug fixes:
 1. Fixed the st_gamemodetypes returning Survival for 2 and Versus for 4, instead of vice-versa.
 2. Fixed the attachprops convars returning lights for 2 and jetpacks/oxygen tanks for 1, instead of vice-versa.
 3. Fixed non-Fire Tanks sometimes throwing fiery rocks.
+4. Fixed the tire props staying under the Tank's feet instead of on the sides like the jetpack props.
 
 Changes:
 
