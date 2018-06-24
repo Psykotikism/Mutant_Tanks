@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.12 (June 25, 2018)
+## Version 8.12 (TBA)
 
 Changes:
 
