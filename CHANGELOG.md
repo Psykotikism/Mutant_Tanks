@@ -8,6 +8,7 @@ Bug fixes:
 2. Fixed the attachprops convars returning lights for 2 and jetpacks/oxygen tanks for 1, instead of vice-versa.
 3. Fixed non-Fire Tanks sometimes throwing fiery rocks.
 4. Fixed the tire props staying under the Tank's feet instead of on the sides like the jetpack props.
+5. Fixed the Heal Tank's HP bugging out when it goes over 62,400.
 
 Changes:
 
