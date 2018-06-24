@@ -308,6 +308,15 @@ st_finalesonly "0"
 // Maximum: "15.000000"
 st_gamemodetypes "0"
 
+// Enable Super Tanks++ for human-controlled Tanks?
+// (0: OFF)
+// (1: ON)
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+st_humansupport "0"
+
 // Which Super Tank types can be spawned?
 // Combine letters and numbers in any order for different results.
 // Repeat the same letter or number to increase its chance of being chosen.
@@ -366,6 +375,14 @@ stacid_fireimmunity "0"
 // Maximum: "2.000000"
 stacid_runspeed "1.0"
 
+// These are Acid Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "0,255,125|255,0,0|0,255,125"
+stacid_tankcolors "0,255,125|255,0,0|0,255,125"
+
 // Acid Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -420,6 +437,14 @@ stammo_fireimmunity "0"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stammo_runspeed "1.0"
+
+// These are Ammo Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "170,200,210|5,20,35|170,200,210"
+stammo_tankcolors "170,200,210|5,20,35|170,200,210"
 
 // Ammo Tank's rock throw interval.
 // -
@@ -476,6 +501,14 @@ stblind_fireimmunity "0"
 // Maximum: "2.000000"
 stblind_runspeed "1.0"
 
+// These are Blind Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "5,0,105|30,20,0|5,0,105"
+stblind_tankcolors "5,0,105|30,20,0|5,0,105"
+
 // Blind Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -524,6 +557,14 @@ stbomb_fireimmunity "0"
 // Maximum: "2.000000"
 stbomb_runspeed "1.0"
 
+// These are Bomb Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "75,0,0|15,15,15|75,0,0"
+stbomb_tankcolors "75,0,0|15,15,15|75,0,0"
+
 // Bomb Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -564,6 +605,14 @@ stboomer_fireimmunity "0"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stboomer_runspeed "1.0"
+
+// These are Boomer Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "65,105,0|0,0,65|65,105,0"
+stboomer_tankcolors "65,105,0|0,0,65|65,105,0"
 
 // Boomer Tank's rock throw interval.
 // -
@@ -606,6 +655,14 @@ stcharger_fireimmunity "0"
 // Maximum: "2.000000"
 stcharger_runspeed "1.0"
 
+// These are Charger Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "95,140,80|25,255,115|95,140,80"
+stcharger_tankcolors "95,140,80|25,255,115|95,140,80"
+
 // Charger Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -646,6 +703,14 @@ stclone_fireimmunity "0"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stclone_runspeed "1.0"
+
+// These are Clone Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "10,25,205|140,40,255|10,25,205"
+stclone_tankcolors "10,25,205|140,40,255|10,25,205"
 
 // Clone Tank's rock throw interval.
 // -
@@ -694,6 +759,14 @@ stcommon_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stcommon_spawninterval "15.0"
+
+// These are Common Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "165,205,175|190,255,250|165,205,175"
+stcommon_tankcolors "165,205,175|190,255,250|165,205,175"
 
 // Common Tank's rock throw interval.
 // -
@@ -825,6 +898,14 @@ stdrug_fireimmunity "0"
 // Maximum: "2.000000"
 stdrug_runspeed "1.0"
 
+// These are Drug Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "255,245,0|55,205,65|255,245,0"
+stdrug_tankcolors "255,245,0|55,205,65|255,245,0"
+
 // Drug Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -872,6 +953,14 @@ stfire_fireimmunity "0"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stfire_runspeed "1.0"
+
+// These are Fire Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "150,0,0|255,135,0|150,0,0"
+stfire_tankcolors "150,0,0|255,135,0|150,0,0"
 
 // Fire Tank's rock throw interval.
 // -
@@ -928,6 +1017,14 @@ stflash_runspeed "3.0"
 // Maximum: "5.000000"
 stflash_specialspeed "5.0"
 
+// These are Flash Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "255,0,0|255,255,0|255,0,0"
+stflash_tankcolors "255,0,0|255,255,0|255,0,0"
+
 // Flash Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -976,6 +1073,14 @@ stfling_flingchance "4"
 // Maximum: "2.000000"
 stfling_runspeed "1.0"
 
+// These are Fling Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "160,225,65|25,40,130|160,225,65"
+stfling_tankcolors "160,225,65|25,40,130|160,225,65"
+
 // Fling Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1023,6 +1128,14 @@ stghost_ghostchance "4"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stghost_runspeed "1.0"
+
+// These are Ghost Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "50,50,50|150,150,150|50,50,50"
+stghost_tankcolors "50,50,50|150,150,150|50,50,50"
 
 // Ghost Tank's rock throw interval.
 // -
@@ -1092,6 +1205,14 @@ stgravity_gravityforce "-50.0"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stgravity_runspeed "1.0"
+
+// These are Gravity Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "25,25,25|255,0,0|25,25,25"
+stgravity_tankcolors "25,25,25|255,0,0|25,25,25"
 
 // Gravity Tank's rock throw interval.
 // -
@@ -1169,6 +1290,14 @@ stheal_specialamount "500"
 // Maximum: "100000.000000"
 stheal_tankamount "500"
 
+// These are Heal Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "75,200,75|255,255,255|75,200,75"
+stheal_tankcolors "75,200,75|255,255,255|75,200,75"
+
 // Heal Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1209,6 +1338,14 @@ sthunter_fireimmunity "0"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 sthunter_runspeed "1.0"
+
+// These are Hunter Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "0,80,140|200,200,200|0,80,140"
+sthunter_tankcolors "0,80,140|200,200,200|0,80,140"
 
 // Hunter Tank's rock throw interval.
 // -
@@ -1265,6 +1402,14 @@ sthypno_hypnochance "4"
 // Maximum: "2.000000"
 sthypno_runspeed "1.0"
 
+// These are Hypno Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "110,0,130|255,250,45|110,0,130"
+sthypno_tankcolors "110,0,130|255,250,45|110,0,130"
+
 // Hypno Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1313,6 +1458,14 @@ stice_icechance "4"
 // Maximum: "2.000000"
 stice_runspeed "1.0"
 
+// These are Ice Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "0,155,255|170,240,255|0,155,255"
+stice_tankcolors "0,155,255|170,240,255|0,155,255"
+
 // Ice Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1360,6 +1513,14 @@ stidle_idlechance "4"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stidle_runspeed "1.0"
+
+// These are Idle Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "225,235,255|10,40,15|225,235,255"
+stidle_tankcolors "225,235,255|10,40,15|225,235,255"
 
 // Idle Tank's rock throw interval.
 // -
@@ -1416,6 +1577,14 @@ stinvert_invertchance "4"
 // Maximum: "2.000000"
 stinvert_runspeed "1.0"
 
+// These are Invert Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "0,235,220|250,65,255|0,235,220"
+stinvert_tankcolors "0,235,220|250,65,255|0,235,220"
+
 // Invert Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1456,6 +1625,14 @@ stjockey_fireimmunity "0"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stjockey_runspeed "1.0"
+
+// These are Jockey Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "255,235,235|130,0,0|255,235,235"
+stjockey_tankcolors "255,235,235|130,0,0|255,235,235"
 
 // Jockey Tank's rock throw interval.
 // -
@@ -1512,6 +1689,14 @@ stjumper_fireimmunity "0"
 // Maximum: "2.000000"
 stjumper_runspeed "1.0"
 
+// These are Jumper Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "225,215,0|225,0,205|225,215,0"
+stjumper_tankcolors "225,215,0|225,0,205|225,215,0"
+
 // Jumper Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1567,6 +1752,14 @@ stmeteor_meteordamage "25.0"
 // Maximum: "2.000000"
 stmeteor_runspeed "1.0"
 
+// These are Meteor Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "120,20,10|200,200,200|120,20,10"
+stmeteor_tankcolors "120,20,10|200,200,200|120,20,10"
+
 // Meteor Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1614,6 +1807,14 @@ stpuke_pukechance "4"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stpuke_runspeed "1.0"
+
+// These are Puke Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "170,180,45|140,0,0|170,180,45"
+stpuke_tankcolors "170,180,45|140,0,0|170,180,45"
 
 // Puke Tank's rock throw interval.
 // -
@@ -1676,6 +1877,14 @@ strestart_restartchance "4"
 // Maximum: "2.000000"
 strestart_runspeed "1.0"
 
+// These are Restart Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "10,40,15|225,235,0|10,40,15"
+strestart_tankcolors "10,40,15|225,235,0|10,40,15"
+
 // Restart Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1723,6 +1932,14 @@ strocket_rocketchance "4"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 strocket_runspeed "1.0"
+
+// These are Rocket Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "250,110,0|255,180,50|250,110,0"
+strocket_tankcolors "250,110,0|255,180,50|250,110,0"
 
 // Rocket Tank's rock throw interval.
 // -
@@ -1779,6 +1996,14 @@ stshake_runspeed "1.0"
 // Maximum: "99999.000000"
 stshake_shakechance "4"
 
+// These are Shake Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "100,25,25|0,170,255|100,25,25"
+stshake_tankcolors "100,25,25|0,170,255|100,25,25"
+
 // Shake Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1826,6 +2051,14 @@ stshield_runspeed "1.0"
 // Minimum: "1.000000"
 // Maximum: "99999.000000"
 stshield_shielddelay "7.5"
+
+// These are Shield Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "135,205,255|25,125,125|135,205,255"
+stshield_tankcolors "135,205,255|25,125,125|135,205,255"
 
 // Shield Tank's rock throw interval.
 // -
@@ -1882,6 +2115,14 @@ stshove_runspeed "1.0"
 // Maximum: "99999.000000"
 stshove_shovechance "4"
 
+// These are Shove Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "10,100,0|25,10,0|10,100,0"
+stshove_tankcolors "10,100,0|25,10,0|10,100,0"
+
 // Shove Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1930,6 +2171,14 @@ stslug_runspeed "0.5"
 // Maximum: "99999.000000"
 stslug_slugchance "4"
 
+// These are Slug Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "100,165,255|0,0,50|100,165,255"
+stslug_tankcolors "100,165,255|0,0,50|100,165,255"
+
 // Slug Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -1971,6 +2220,14 @@ stsmoker_fireimmunity "0"
 // Maximum: "2.000000"
 stsmoker_runspeed "1.0"
 
+// These are Smoker Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "150,0,150|200,100,145|150,0,150"
+stsmoker_tankcolors "150,0,150|200,100,145|150,0,150"
+
 // Smoker Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -2011,6 +2268,14 @@ stspitter_fireimmunity "0"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stspitter_runspeed "1.0"
+
+// These are Spitter Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "0,200,0|255,80,150|0,200,0"
+stspitter_tankcolors "0,200,0|255,80,150|0,200,0"
 
 // Spitter Tank's rock throw interval.
 // -
@@ -2074,6 +2339,14 @@ ststun_stunchance "4"
 // Maximum: "0.990000"
 ststun_stunspeed "0.25"
 
+// These are Stun Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "80,130,255|255,185,45|80,130,255"
+ststun_tankcolors "80,130,255|255,185,45|80,130,255"
+
 // Stun Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -2129,6 +2402,14 @@ stvisual_fov "160"
 // Maximum: "2.000000"
 stvisual_runspeed "1.0"
 
+// These are Visual Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "175,25,205|255,40,10|175,25,205"
+stvisual_tankcolors "175,25,205|255,40,10|175,25,205"
+
 // Visual Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -2177,6 +2458,14 @@ stwarp_fireimmunity "0"
 // Maximum: "2.000000"
 stwarp_runspeed "1.0"
 
+// These are Warp Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "130,130,255|225,100,0|130,130,255"
+stwarp_tankcolors "130,130,255|225,100,0|130,130,255"
+
 // Warp Tank's rock throw interval.
 // -
 // Default: "5.0"
@@ -2224,6 +2513,14 @@ stwitch_fireimmunity "0"
 // Minimum: "0.100000"
 // Maximum: "2.000000"
 stwitch_runspeed "1.0"
+
+// These are Witch Tank's colors.
+// 1st set = skin color
+// 2nd set = prop color
+// 3rd set = glow color
+// -
+// Default: "255,145,255|255,210,80|255,145,255"
+stwitch_tankcolors "255,145,255|255,210,80|255,145,255"
 
 // Witch Tank's rock throw interval.
 // -
@@ -2513,11 +2810,15 @@ stconfig_timeoffset "-10" // Subtracts 10 hours to the server time.
 
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 
-**Mi.Cura** - For reporting issues and overall continuous support.
+**Mi.Cura** - For reporting issues, giving me ideas, and overall continuous support.
 
 **emsit** - For reporting issues and helping with parts of the code.
 
 **ReCreator** - For reporting issues.
+
+**AngelAce113** - For the default colors, testing each Tank type, and giving me ideas.
+
+**Sipow** - For the default colors.
 
 **SourceMod Team** - For the beacon, blind, drug, and ice source codes.
 

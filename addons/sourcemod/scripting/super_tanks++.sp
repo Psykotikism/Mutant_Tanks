@@ -13,42 +13,42 @@ public Plugin myinfo =
 };
 
 /* 36 Super Tanks
- * Acid
- * Ammo
- * Blind
- * Bomb
- * Boomer
- * Charger
- * Clone
- * Common
- * Drug
- * Fire
- * Flash
- * Fling
- * Ghost
- * Gravity
- * Heal
- * Hunter
- * Hypno
- * Ice
- * Idle
- * Invert
- * Jockey
- * Jumper
- * Meteor
- * Puke
- * Restart
- * Rocket
- * Shake
- * Shield
- * Shove
- * Slug
- * Smoker
- * Spitter
- * Stun
- * Vision
- * Warp
- * Witch
+ * Acid "0,255,125|255,0,0|0,255,125"
+ * Ammo "170,200,210|5,20,35|170,200,210"
+ * Blind "5,0,105|30,20,0|5,0,105"
+ * Bomb "75,0,0|15,15,15|75,0,0"
+ * Boomer "65,105,0|0,0,65|65,105,0"
+ * Charger "95,140,80|25,255,115|95,140,80"
+ * Clone "10,25,205|140,40,255|10,25,205"
+ * Common "165,205,175|190,255,250|165,205,175"
+ * Drug "255,245,0|55,205,65|255,245,0"
+ * Fire "150,0,0|255,135,0|150,0,0"
+ * Flash "255,0,0|255,255,0|255,0,0"
+ * Fling "160,225,65|25,40,130|160,225,65"
+ * Ghost "50,50,50|150,150,150|50,50,50"
+ * Gravity "25,25,25|255,0,0|25,25,25"
+ * Heal "75,200,75|255,255,255|75,200,75"
+ * Hunter "0,80,140|200,200,200|0,80,140"
+ * Hypno "110,0,130|255,250,45|110,0,130"
+ * Ice "0,155,255|170,240,255|0,155,255"
+ * Idle "225,235,255|10,40,15|225,235,255"
+ * Invert "0,235,220|250,65,255|0,235,220"
+ * Jockey "255,235,235|130,0,0|255,235,235"
+ * Jumper "225,215,0|225,0,205|225,215,0"
+ * Meteor "120,20,10|200,200,200|120,20,10"
+ * Puke "170,180,45|140,0,0|170,180,45"
+ * Restart "10,40,15|225,235,0|10,40,15"
+ * Rocket "250,110,0|255,180,50|250,110,0"
+ * Shake "100,25,25|0,170,255|100,25,25"
+ * Shield "135,205,255|25,125,125|135,205,255"
+ * Shove "10,100,0|25,10,0|10,100,0"
+ * Slug "100,165,255|0,0,50|100,165,255"
+ * Smoker "150,0,150|200,100,145|150,0,150"
+ * Spitter "0,200,0|255,80,150|0,200,0"
+ * Stun "80,130,255|255,185,45|80,130,255"
+ * Vision "175,25,205|255,40,10|175,25,205"
+ * Warp "130,130,255|225,100,0|130,130,255"
+ * Witch "255,145,255|255,210,80|255,145,255"
  */
 
 #define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
@@ -58,6 +58,7 @@ public Plugin myinfo =
 #define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
 #define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
 #define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
+#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
 #define SPRITE_FIRE "sprites/sprite_fire01.vmt"
 #define SPRITE_GLOW "sprites/glow.vmt"
 #define PARTICLE_CLOUD "smoker_smokecloud"
@@ -95,8 +96,6 @@ ConVar g_cvSTAttachProps[37];
 ConVar g_cvSTBlindChance;
 ConVar g_cvSTBlindDuration;
 ConVar g_cvSTBombChance;
-ConVar g_cvSTBoomerLimit;
-ConVar g_cvSTChargerLimit;
 ConVar g_cvSTCommonInterval;
 ConVar g_cvSTConfigCreate;
 ConVar g_cvSTConfigEnable;
@@ -129,17 +128,15 @@ ConVar g_cvSTHealIncapCount;
 ConVar g_cvSTHealInterval;
 ConVar g_cvSTHealSpecial;
 ConVar g_cvSTHealTank;
-ConVar g_cvSTHunterLimit;
+ConVar g_cvSTHumanSupport;
 ConVar g_cvSTHypnoChance;
 ConVar g_cvSTHypnoDuration;
 ConVar g_cvSTIceChance;
 ConVar g_cvSTIdleChance;
 ConVar g_cvSTInvertChance;
 ConVar g_cvSTInvertDuration;
-ConVar g_cvSTJockeyLimit;
 ConVar g_cvSTJumperChance;
 ConVar g_cvSTJumperInterval;
-ConVar g_cvSTMaxPlayerZombies;
 ConVar g_cvSTMeteorChance;
 ConVar g_cvSTMeteorDamage;
 ConVar g_cvSTPukeChance;
@@ -153,11 +150,10 @@ ConVar g_cvSTShieldDelay;
 ConVar g_cvSTShoveChance;
 ConVar g_cvSTShoveDuration;
 ConVar g_cvSTSlugChance;
-ConVar g_cvSTSmokerLimit;
-ConVar g_cvSTSpitterLimit;
 ConVar g_cvSTStunChance;
 ConVar g_cvSTStunDuration;
 ConVar g_cvSTStunSpeed;
+ConVar g_cvSTTankColors[37];
 ConVar g_cvSTTankThrowForce;
 ConVar g_cvSTTankTypes;
 ConVar g_cvSTTankWaves;
@@ -224,6 +220,7 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTEnabledGameModes, "st_enabledgamemodes", "", "Enable Super Tanks++ in these game modes.\nSeparate game modes with commas.\nGame mode limit: 64\nCharacter limit for each game mode: 32\n(Empty: All)\n(Not empty: Enabled only in these game modes.)");
 	vCreateConVar(g_cvSTFinalesOnly, "st_finalesonly", "0", "Enable Super Tanks++ in finales only?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTGameModeTypes, "st_gamemodetypes", "0", "Enable Super Tanks++ in these game mode types.\nAdd numbers up together.\n(0: All 4 types.)\n(1: Co-Op modes only.)\n(2: Versus modes only.)\n(4: Survival modes only.)\n(8: Scavenge modes only.)", _, true, 0.0, true, 15.0);
+	vCreateConVar(g_cvSTHumanSupport, "st_humansupport", "0", "Enable Super Tanks++ for human-controlled Tanks?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	cvST_ConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	vCreateConVar(g_cvSTTankTypes, "st_tanktypes", "0123456789abcdefghijklmnopqrstuvwxyz", "Which Super Tank types can be spawned?\nCombine letters and numbers in any order for different results.\nRepeat the same letter or number to increase its chance of being chosen.\nCharacter limit: 52\nView the README.md file for a list of options.");
 	vCreateConVar(g_cvSTTankWaves, "st_tankwaves", "2,3,4", "How many Tanks to spawn for each finale wave?\n(1st number = 1st wave)\n(2nd number = 2nd wave)\n(3rd number = 3rd wave)");
@@ -232,6 +229,7 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTExtraHealth[1], "stacid_extrahealth", "0", "Extra health given to Acid Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[1], "stacid_fireimmunity", "0", "Give Acid Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[1], "stacid_runspeed", "1.0", "Acid Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[1], "stacid_tankcolors", "0,255,125|255,0,0|0,255,125", "These are Acid Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[1], "stacid_throwinterval", "5.0", "Acid Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAmmoChance, "stammo_ammochance", "4", "Ammo Tank has 1 out of this many chances to take away survivors' ammunition.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAmmoCount, "stammo_ammocount", "0", "Ammo Tanks can set survivors' ammunition count to this number.", _, true, 0.0, true, 100.0);
@@ -239,6 +237,7 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTExtraHealth[2], "stammo_extrahealth", "0", "Extra health given to Ammo Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[2], "stammo_fireimmunity", "0", "Give Ammo Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[2], "stammo_runspeed", "1.0", "Ammo Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[2], "stammo_tankcolors", "170,200,210|5,20,35|170,200,210", "These are Ammo Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[2], "stammo_throwinterval", "5.0", "Ammo Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[3], "stblind_attachprops", "1234", "Attach props to Blind Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTBlindChance, "stblind_blindchance", "4", "Blind Tank has 1 out of this many chances to make survivors blind.", _, true, 1.0, true, 99999.0);
@@ -246,33 +245,39 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTExtraHealth[3], "stblind_extrahealth", "0", "Extra health given to Blind Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[3], "stblind_fireimmunity", "0", "Give Blind Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[3], "stblind_runspeed", "1.0", "Blind Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[3], "stblind_tankcolors", "5,0,105|30,20,0|5,0,105", "These are Blind Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[3], "stblind_throwinterval", "5.0", "Blind Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[4], "stbomb_attachprops", "1234", "Attach props to Bomb Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTBombChance, "stbomb_bombchance", "4", "Bomb Tank has 1 out of this many chances to cause an explosion.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTExtraHealth[4], "stbomb_extrahealth", "0", "Extra health given to Bomb Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[4], "stbomb_fireimmunity", "0", "Give Bomb Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[4], "stbomb_runspeed", "1.0", "Bomb Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[4], "stbomb_tankcolors", "75,0,0|15,15,15|75,0,0", "These are Bomb Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[4], "stbomb_throwinterval", "5.0", "Bomb Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[5], "stboomer_attachprops", "1234", "Attach props to Boomer Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[5], "stboomer_extrahealth", "0", "Extra health given to Boomer Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[5], "stboomer_fireimmunity", "0", "Give Boomer Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[5], "stboomer_runspeed", "1.0", "Boomer Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[5], "stboomer_tankcolors", "65,105,0|0,0,65|65,105,0", "These are Boomer Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[5], "stboomer_throwinterval", "5.0", "Boomer Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[6], "stcharger_attachprops", "1234", "Attach props to Charger Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[6], "stcharger_extrahealth", "0", "Extra health given to Charger Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[6], "stcharger_fireimmunity", "0", "Give Charger Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[6], "stcharger_runspeed", "1.0", "Charger Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[6], "stcharger_tankcolors", "95,140,80|25,255,115|95,140,80", "These are Charger Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[6], "stcharger_throwinterval", "5.0", "Charger Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[7], "stclone_attachprops", "1234", "Attach props to Clone Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[7], "stclone_extrahealth", "0", "Extra health given to Clone Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[7], "stclone_fireimmunity", "0", "Give Clone Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[7], "stclone_runspeed", "1.0", "Clone Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[7], "stclone_tankcolors", "10,25,205|140,40,255|10,25,205", "These are Clone Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[7], "stclone_throwinterval", "5.0", "Clone Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[8], "stcommon_attachprops", "1234", "Attach props to Common Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[8], "stcommon_extrahealth", "0", "Extra health given to Common Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[8], "stcommon_fireimmunity", "0", "Give Common Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[8], "stcommon_runspeed", "1.0", "Common Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTCommonInterval, "stcommon_spawninterval", "15.0", "Common Tank's common infected mob spawn interval.", _, true, 1.0, true, 99999.0);
+	vCreateConVar(g_cvSTTankColors[8], "stcommon_tankcolors", "165,205,175|190,255,250|165,205,175", "These are Common Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[8], "stcommon_throwinterval", "5.0", "Common Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTConfigCreate, "stconfig_createtype", "31425", "Which type of custom config should Super Tanks++ create?\nCombine numbers in any order for different results.\nCharacter limit: 5\n(1: Difficulties)\n(2: Maps)\n(3: Game modes)\n(4: Days)\n(5: Player count)");
 	vCreateConVar(g_cvSTConfigEnable, "stconfig_enable", "1", "Enable Super Tanks++ custom configuration?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
@@ -288,12 +293,14 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTExtraHealth[9], "stdrug_extrahealth", "0", "Extra health given to Drug Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[9], "stdrug_fireimmunity", "0", "Give Drug Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[9], "stdrug_runspeed", "1.0", "Drug Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[9], "stdrug_tankcolors", "255,245,0|55,205,65|255,245,0", "These are Drug Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[9], "stdrug_throwinterval", "5.0", "Drug Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[10], "stfire_attachprops", "1234", "Attach props to Fire Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[10], "stfire_extrahealth", "0", "Extra health given to Fire Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireChance, "stfire_firechance", "4", "Fire Tank has 1 out of this many chances to cause a fire.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[10], "stfire_fireimmunity", "0", "Give Fire Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[10], "stfire_runspeed", "1.0", "Fire Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[10], "stfire_tankcolors", "150,0,0|255,135,0|150,0,0", "These are Fire Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[10], "stfire_throwinterval", "5.0", "Fire Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[11], "stflash_attachprops", "1234", "Attach props to Flash Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[11], "stflash_extrahealth", "0", "Extra health given to Flash Tank.", _, true, 0.0, true, 99999.0);
@@ -301,18 +308,21 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTFlashChance, "stflash_flashchance", "3", "Flash Tank has 1 out of this many chances to use its special speed.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[11], "stflash_runspeed", "3.0", "Flash Tank's run speed.", _, true, 0.1, true, 3.0);
 	vCreateConVar(g_cvSTFlashSpeed, "stflash_specialspeed", "5.0", "Flash Tank's special speed.", _, true, 3.0, true, 5.0);
+	vCreateConVar(g_cvSTTankColors[11], "stflash_tankcolors", "255,0,0|255,255,0|255,0,0", "These are Flash Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[11], "stflash_throwinterval", "5.0", "Flash Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[12], "stfling_attachprops", "1234", "Attach props to Fling Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[12], "stfling_extrahealth", "0", "Extra health given to Fling Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[12], "stfling_fireimmunity", "0", "Give Fling Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTFlingChance, "stfling_flingchance", "4", "Fling Tank has 1 out of this many chances to fling survivors into the air.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[12], "stfling_runspeed", "1.0", "Fling Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[12], "stfling_tankcolors", "160,225,65|25,40,130|160,225,65", "These are Fling Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[12], "stfling_throwinterval", "5.0", "Fling Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[13], "stghost_attachprops", "1234", "Attach props to Ghost Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[13], "stghost_extrahealth", "0", "Extra health given to Ghost Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[13], "stghost_fireimmunity", "0", "Give Ghost Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTGhostChance, "stghost_ghostchance", "4", "Ghost Tank has 1 out of this many chances to disarm survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[13], "stghost_runspeed", "1.0", "Ghost Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[13], "stghost_tankcolors", "50,50,50|150,150,150|50,50,50", "These are Ghost Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[13], "stghost_throwinterval", "5.0", "Ghost Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTGhostSlot, "stghost_weaponslot", "12345", "Which weapon slots can Ghost Tank disarm?\nCombine numbers in any order for different results.\nCharacter limit: 5\n(1: 1st slot only.)\n(2: 2nd slot only.)\n(3: 3rd slot only.)\n(4: 4th slot only.)\n(5: 5th slot only.)");
 	vCreateConVar(g_cvSTAttachProps[14], "stgravity_attachprops", "1234", "Attach props to Gravity Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
@@ -321,6 +331,7 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTGravityChance, "stgravity_gravitychance", "4", "Gravity Tank has 1 out of this many chances to change survivors' gravity'.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTGravityForce, "stgravity_gravityforce", "-50.0", "Gravity Tank's force.\n(Positive numbers = Push back)\n(Negative numbers = Pull back)", _, true, -100.0, true, 100.0);
 	vCreateConVar(g_cvSTRunSpeed[14], "stgravity_runspeed", "1.0", "Gravity Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[14], "stgravity_tankcolors", "25,25,25|255,0,0|25,25,25", "These are Gravity Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[14], "stgravity_throwinterval", "5.0", "Gravity Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[15], "stheal_attachprops", "1234", "Attach props to Heal Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTHealCommon, "stheal_commonamount", "100", "Health absorbed from common infected.", _, true, 0.0, true, 1000.0);
@@ -331,11 +342,13 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTRunSpeed[15], "stheal_runspeed", "1.0", "Heal Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTHealSpecial, "stheal_specialamount", "500", "Health absorbed from other special infected.", _, true, 0.0, true, 10000.0);
 	vCreateConVar(g_cvSTHealTank, "stheal_tankamount", "500", "Health absorbed from other Tanks.", _, true, 0.0, true, 100000.0);
+	vCreateConVar(g_cvSTTankColors[15], "stheal_tankcolors", "75,200,75|255,255,255|75,200,75", "These are Heal Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[15], "stheal_throwinterval", "5.0", "Heal Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[16], "sthunter_attachprops", "1234", "Attach props to Hunter Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[16], "sthunter_extrahealth", "0", "Extra health given to Hunter Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[16], "sthunter_fireimmunity", "0", "Give Hunter Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[16], "sthunter_runspeed", "1.0", "Hunter Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[16], "sthunter_tankcolors", "0,80,140|200,200,200|0,80,140", "These are Hunter Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[16], "sthunter_throwinterval", "5.0", "Hunter Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[17], "sthypno_attachprops", "1234", "Attach props to Hypno Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTHypnoDuration, "sthypno_duration", "5.0", "Hypno Tank's hypnosis effect lasts this long.", _, true, 1.0, true, 99999.0);
@@ -343,18 +356,21 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTFireImmunity[17], "sthypno_fireimmunity", "0", "Give Hypno Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTHypnoChance, "sthypno_hypnochance", "4", "Hypno Tank has 1 out of this many chances to hypnotize survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[17], "sthypno_runspeed", "1.0", "Hypno Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[17], "sthypno_tankcolors", "110,0,130|255,250,45|110,0,130", "These are Hypno Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[17], "sthypno_throwinterval", "5.0", "Hypno Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[18], "stice_attachprops", "1234", "Attach props to Ice Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[18], "stice_extrahealth", "0", "Extra health given to Ice Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[18], "stice_fireimmunity", "0", "Give Ice Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTIceChance, "stice_icechance", "4", "Ice Tank has 1 out of this many chances to freeze survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[18], "stice_runspeed", "1.0", "Ice Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[18], "stice_tankcolors", "0,155,255|170,240,255|0,155,255", "These are Ice Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[18], "stice_throwinterval", "5.0", "Ice Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[19], "stidle_attachprops", "1234", "Attach props to Idle Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[19], "stidle_extrahealth", "0", "Extra health given to Idle Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[19], "stidle_fireimmunity", "0", "Give Idle Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTIdleChance, "stidle_idlechance", "4", "Idle Tank has 1 out of this many chances to make survivors go idle.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[19], "stidle_runspeed", "1.0", "Idle Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[19], "stidle_tankcolors", "225,235,255|10,40,15|225,235,255", "These are Idle Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[19], "stidle_throwinterval", "5.0", "Idle Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[20], "stinvert_attachprops", "1234", "Attach props to Invert Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTInvertDuration, "stinvert_duration", "5.0", "Invert Tank's inversion effect lasts this long.", _, true, 1.0, true, 99999.0);
@@ -362,11 +378,13 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTFireImmunity[20], "stinvert_fireimmunity", "0", "Give Invert Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTInvertChance, "stinvert_invertchance", "4", "Invert Tank has 1 out of this many chances to invert survivors' movement keys.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[20], "stinvert_runspeed", "1.0", "Invert Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[20], "stinvert_tankcolors", "0,235,220|250,65,255|0,235,220", "These are Invert Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[20], "stinvert_throwinterval", "5.0", "Invert Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[21], "stjockey_attachprops", "1234", "Attach props to Jockey Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[21], "stjockey_extrahealth", "0", "Extra health given to Jockey Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[21], "stjockey_fireimmunity", "0", "Give Jockey Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[21], "stjockey_runspeed", "1.0", "Jockey Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[21], "stjockey_tankcolors", "255,235,235|130,0,0|255,235,235", "These are Jockey Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[21], "stjockey_throwinterval", "5.0", "Jockey Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[22], "stjumper_attachprops", "1234", "Attach props to Jumper Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTJumperChance, "stjumper_jumpchance", "3", "Jumper Tank has 1 out of this many chances to jump into the air.", _, true, 1.0, true, 99999.0);
@@ -374,6 +392,7 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTExtraHealth[22], "stjumper_extrahealth", "0", "Extra health given to Jumper Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[22], "stjumper_fireimmunity", "0", "Give Jumper Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[22], "stjumper_runspeed", "1.0", "Jumper Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[22], "stjumper_tankcolors", "225,215,0|225,0,205|225,215,0", "These are Jumper Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[22], "stjumper_throwinterval", "5.0", "Jumper Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[23], "stmeteor_attachprops", "1234", "Attach props to Meteor Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[23], "stmeteor_extrahealth", "0", "Extra health given to Meteor Tank.", _, true, 0.0, true, 99999.0);
@@ -381,12 +400,14 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTMeteorChance, "stmeteor_meteorchance", "4", "Meteor Tank has 1 out of this many chances to start a meteor shower.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTMeteorDamage, "stmeteor_meteordamage", "25.0", "Meteor Tank's meteor shower does this much damage.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[23], "stmeteor_runspeed", "1.0", "Meteor Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[23], "stmeteor_tankcolors", "120,20,10|200,200,200|120,20,10", "These are Meteor Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[23], "stmeteor_throwinterval", "5.0", "Meteor Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[24], "stpuke_attachprops", "1234", "Attach props to Puke Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[24], "stpuke_extrahealth", "0", "Extra health given to Puke Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[24], "stpuke_fireimmunity", "0", "Give Puke Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTPukeChance, "stpuke_pukechance", "4", "Puke Tank has 1 out of this many chances to puke on survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[24], "stpuke_runspeed", "1.0", "Puke Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[24], "stpuke_tankcolors", "170,180,45|140,0,0|170,180,45", "These are Puke Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[24], "stpuke_throwinterval", "5.0", "Puke Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[25], "strestart_attachprops", "1234", "Attach props to Restart Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[25], "strestart_extrahealth", "0", "Extra health given to Restart Tank.", _, true, 0.0, true, 99999.0);
@@ -394,12 +415,14 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTRestartLoadout, "strestart_loadout", "smg,pistol,pain_pills", "Restart Tank makes survivors restart with this loadout.\nSeparate items with commas.\nItem limit: 5\nValid formats:\n1. \"rifle,smg,pistol,pain_pills,pipe_bomb\"\n2. \"pain_pills,molotov,first_aid_kit,autoshotgun\"\n3. \"hunting_rifle,rifle,smg\"\n4. \"autoshotgun,pistol\"\n5. \"molotov\"");
 	vCreateConVar(g_cvSTRestartChance, "strestart_restartchance", "4", "Restart Tank has 1 out of this many chances to make survivors restart.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[25], "strestart_runspeed", "1.0", "Restart Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[25], "strestart_tankcolors", "10,40,15|225,235,0|10,40,15", "These are Restart Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[25], "strestart_throwinterval", "5.0", "Restart Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[26], "strocket_attachprops", "1234", "Attach props to Rocket Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[26], "strocket_extrahealth", "0", "Extra health given to Rocket Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[26], "strocket_fireimmunity", "0", "Give Rocket Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRocketChance, "strocket_rocketchance", "4", "Rocket Tank has 1 out of this many chances to send survivors into space.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTRunSpeed[26], "strocket_runspeed", "1.0", "Rocket Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[26], "strocket_tankcolors", "250,110,0|255,180,50|250,110,0", "These are Rocket Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[26], "strocket_throwinterval", "5.0", "Rocket Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[27], "stshake_attachprops", "1234", "Attach props to Shake Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTShakeDuration, "stshake_duration", "5.0", "Shake Tank's shake effect lasts this long.", _, true, 1.0, true, 99999.0);
@@ -407,12 +430,14 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTFireImmunity[27], "stshake_fireimmunity", "0", "Give Shake Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[27], "stshake_runspeed", "1.0", "Shake Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTShakeChance, "stshake_shakechance", "4", "Shake Tank has 1 out of this many chances to shake survivors' screens.", _, true, 1.0, true, 99999.0);
+	vCreateConVar(g_cvSTTankColors[27], "stshake_tankcolors", "100,25,25|0,170,255|100,25,25", "These are Shake Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[27], "stshake_throwinterval", "5.0", "Shake Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[28], "stshield_attachprops", "1234", "Attach props to Shield Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[28], "stshield_extrahealth", "0", "Extra health given to Shield Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[28], "stshield_fireimmunity", "0", "Give Shield Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[28], "stshield_runspeed", "1.0", "Shield Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTShieldDelay, "stshield_shielddelay", "7.5", "Shield Tank's shield reactivates after this many seconds.", _, true, 1.0, true, 99999.0);
+	vCreateConVar(g_cvSTTankColors[28], "stshield_tankcolors", "135,205,255|25,125,125|135,205,255", "These are Shield Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[28], "stshield_throwinterval", "5.0", "Shield Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[29], "stshove_attachprops", "1234", "Attach props to Shove Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTShoveDuration, "stshove_duration", "5.0", "Shove Tank's shove effect lasts this long.", _, true, 1.0, true, 99999.0);
@@ -420,22 +445,26 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTFireImmunity[29], "stshove_fireimmunity", "0", "Give Shove Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[29], "stshove_runspeed", "1.0", "Shove Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTShoveChance, "stshove_shovechance", "4", "Shove Tank has 1 out of this many chances to shove survivors.", _, true, 1.0, true, 99999.0);
+	vCreateConVar(g_cvSTTankColors[29], "stshove_tankcolors", "10,100,0|25,10,0|10,100,0", "These are Shove Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[29], "stshove_throwinterval", "5.0", "Shove Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[30], "stslug_attachprops", "1234", "Attach props to Slug Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[30], "stslug_extrahealth", "0", "Extra health given to Slug Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[30], "stslug_fireimmunity", "0", "Give Slug Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[30], "stslug_runspeed", "0.5", "Slug Tank's run speed.", _, true, 0.1, true, 0.5);
 	vCreateConVar(g_cvSTSlugChance, "stslug_slugchance", "4", "Slug Tank has 1 out of this many chances to smite survivors.", _, true, 1.0, true, 99999.0);
+	vCreateConVar(g_cvSTTankColors[30], "stslug_tankcolors", "100,165,255|0,0,50|100,165,255", "These are Slug Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[30], "stslug_throwinterval", "5.0", "Slug Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[31], "stsmoker_attachprops", "1234", "Attach props to Smoker Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[31], "stsmoker_extrahealth", "0", "Extra health given to Smoker Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[31], "stsmoker_fireimmunity", "0", "Give Smoker Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[31], "stsmoker_runspeed", "1.0", "Smoker Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[31], "stsmoker_tankcolors", "150,0,150|200,100,145|150,0,150", "These are Smoker Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[31], "stsmoker_throwinterval", "5.0", "Smoker Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[32], "stspitter_attachprops", "1234", "Attach props to Spitter Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[32], "stspitter_extrahealth", "0", "Extra health given to Spitter Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[32], "stspitter_fireimmunity", "0", "Give Spitter Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[32], "stspitter_runspeed", "1.0", "Spitter Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[32], "stspitter_tankcolors", "0,200,0|255,80,150|0,200,0", "These are Spitter Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[32], "stspitter_throwinterval", "5.0", "Spitter Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[33], "ststun_attachprops", "1234", "Attach props to Stun Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTStunDuration, "ststun_duration", "5.0", "Stun Tank's stun effect lasts this long.", _, true, 1.0, true, 99999.0);
@@ -444,6 +473,7 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTRunSpeed[33], "ststun_runspeed", "1.0", "Stun Tank's run speed.", _, true, 0.1, true, 2.0);
 	vCreateConVar(g_cvSTStunChance, "ststun_stunchance", "4", "Stun Tank has 1 out of this many chances to stun survivors.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTStunSpeed, "ststun_stunspeed", "0.25", "Stun Tank can set survivors' run speed to this amount.", _, true, 0.1, true, 0.99);
+	vCreateConVar(g_cvSTTankColors[33], "ststun_tankcolors", "80,130,255|255,185,45|80,130,255", "These are Stun Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[33], "ststun_throwinterval", "5.0", "Stun Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[34], "stvisual_attachprops", "1234", "Attach props to Visual Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTVisualDuration, "stvisual_duration", "5.0", "Visual Tank's visual effect lasts this long.", _, true, 1.0, true, 99999.0);
@@ -451,18 +481,21 @@ public void OnPluginStart()
 	vCreateConVar(g_cvSTFireImmunity[34], "stvisual_fireimmunity", "0", "Give Visual Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTVisualFOV, "stvisual_fov", "160", "Visual Tank can set survivors' field of view to this amount.", _, true, 1.0, true, 160.0);
 	vCreateConVar(g_cvSTRunSpeed[34], "stvisual_runspeed", "1.0", "Visual Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[34], "stvisual_tankcolors", "175,25,205|255,40,10|175,25,205", "These are Visual Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[34], "stvisual_throwinterval", "5.0", "Visual Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTVisualChance, "stvisual_visualchance", "4", "Visual Tank has 1 out of this many chances to change survivors' field of views.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[35], "stwarp_attachprops", "1234", "Attach props to Warp Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[35], "stwarp_extrahealth", "0", "Extra health given to Warp Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[35], "stwarp_fireimmunity", "0", "Give Warp Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[35], "stwarp_runspeed", "1.0", "Warp Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[35], "stwarp_tankcolors", "130,130,255|225,100,0|130,130,255", "These are Warp Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[35], "stwarp_throwinterval", "5.0", "Warp Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTWarpInterval, "stwarp_warpinterval", "10", "Warp Tank's warp interval.", _, true, 1.0, true, 99999.0);
 	vCreateConVar(g_cvSTAttachProps[36], "stwitch_attachprops", "1234", "Attach props to Witch Tank?\nCombine numbers in any order for different results.\nCharacter limit: 4\n(1: attach lights only.)\n(2: attach oxygen tanks only.)\n(3: attach rocks only.)\n(4: attach tires only.)");
 	vCreateConVar(g_cvSTExtraHealth[36], "stwitch_extrahealth", "0", "Extra health given to Witch Tank.", _, true, 0.0, true, 99999.0);
 	vCreateConVar(g_cvSTFireImmunity[36], "stwitch_fireimmunity", "0", "Give Witch Tank fire immunity?\n(0: OFF)\n(1: ON)", _, true, 0.0, true, 1.0);
 	vCreateConVar(g_cvSTRunSpeed[36], "stwitch_runspeed", "1.0", "Witch Tank's run speed.", _, true, 0.1, true, 2.0);
+	vCreateConVar(g_cvSTTankColors[36], "stwitch_tankcolors", "255,145,255|255,210,80|255,145,255", "These are Witch Tank's colors.\n1st set = skin color\n2nd set = prop color\n3rd set = glow color");
 	vCreateConVar(g_cvSTThrowInterval[36], "stwitch_throwinterval", "5.0", "Witch Tank's rock throw interval.", _, true, 1.0, true, 99999.0);
 	vST_ExecConfig();
 	iST_Clean();
@@ -470,17 +503,7 @@ public void OnPluginStart()
 	g_cvSTGameMode = FindConVar("mp_gamemode");
 	g_cvSTGameTypes = FindConVar("sv_gametypes");
 	g_cvSTHealIncapCount = FindConVar("survivor_max_incapacitated_count");
-	g_cvSTMaxPlayerZombies = FindConVar("z_max_player_zombies");
 	g_cvSTTankThrowForce = FindConVar("z_tank_throw_force");
-	bIsL4D2Game() ? (g_cvSTBoomerLimit = FindConVar("z_boomer_limit")) : (g_cvSTBoomerLimit = FindConVar("z_exploding_limit"));
-	g_cvSTHunterLimit = FindConVar("z_hunter_limit");
-	bIsL4D2Game() ? (g_cvSTSmokerLimit = FindConVar("z_smoker_limit")) : (g_cvSTSmokerLimit = FindConVar("z_gas_limit"));
-	if (bIsL4D2Game())
-	{
-		g_cvSTChargerLimit = FindConVar("z_charger_limit");
-		g_cvSTJockeyLimit = FindConVar("z_jockey_limit");
-		g_cvSTSpitterLimit = FindConVar("z_spitter_limit");
-	}
 	g_cvSTGameDifficulty.AddChangeHook(vSTGameDifficultyCvar);
 	HookEvent("ability_use", eEventAbilityUse);
 	HookEvent("finale_escape_start", eEventFinaleEscapeStart);
@@ -597,6 +620,7 @@ public void OnMapStart()
 		PrecacheModel(MODEL_TIRES, true);
 		PrecacheModel(MODEL_SHIELD, true);
 		PrecacheModel(MODEL_JETPACK, true);
+		PrecacheModel(MODEL_CONCRETE, true);
 		g_iExplosionSprite = PrecacheModel(SPRITE_FIRE, true);
 		g_iShockSprite = PrecacheModel(SPRITE_GLOW);
 		vPrecacheParticle(PARTICLE_CLOUD);
@@ -838,15 +862,16 @@ public void OnEntityDestroyed(int entity)
 {
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
-		if (entity > 36 && IsValidEntity(entity))
+		if (IsValidEntity(entity))
 		{
 			char sClassname[32];
 			GetEntityClassname(entity, sClassname, sizeof(sClassname));
 			if (StrEqual(sClassname, "tank_rock", true))
 			{
-				for (int iTank = 1; iTank <= MaxClients; iTank++)
+				int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
+				if (iThrower > 0 && bIsTank(iThrower) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(iThrower))))
 				{
-					switch (g_iTankType[iTank])
+					switch (g_iTankType[iThrower])
 					{
 						case 1:
 						{
@@ -856,7 +881,7 @@ public void OnEntityDestroyed(int entity)
 								float flAngles[3];
 								GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flVector);
 								flVector[2] += 40.0;
-								SDKCall(g_hSDKAcidPlayer, flVector, flAngles, flAngles, flAngles, iTank, 2.0);
+								SDKCall(g_hSDKAcidPlayer, flVector, flAngles, flAngles, flAngles, iThrower, 2.0);
 							}
 						}
 						case 10:
@@ -871,7 +896,7 @@ public void OnEntityDestroyed(int entity)
 								flPos[2] += 10.0;
 								TeleportEntity(iProp, flPos, NULL_VECTOR, NULL_VECTOR);
 								DispatchSpawn(iProp);
-								SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", iTank);
+								SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", iThrower);
 								SetEntPropFloat(iProp, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
 								SetEntProp(iProp, Prop_Send, "m_CollisionGroup", 1);
 								SetEntityRenderMode(entity, RENDER_TRANSCOLOR);
@@ -931,7 +956,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (bIsSurvivor(victim))
 			{
-				if (bIsTank(attacker) && IsFakeClient(attacker) && damagetype != 2)
+				if (bIsTank(attacker) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(attacker))) && damagetype != 2)
 				{
 					if (StrEqual(sClassname, "weapon_tank_claw", false) || StrEqual(sClassname, "tank_rock", false))
 					{
@@ -964,9 +989,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					}
 				}
 			}
-			else if (bIsBotInfected(victim))
+			else if (bIsInfected(victim))
 			{
-				if (bIsTank(victim))
+				if (bIsTank(victim) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(victim))))
 				{
 					if (damagetype & DMG_BURN)
 					{
@@ -1032,6 +1057,16 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
+public Action SetTransmit(int entity, int client)
+{
+	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+	if (iOwner == client)
+	{
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
+}
+
 public Action TraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
 	if (bIsSurvivor(attacker))
@@ -1082,8 +1117,75 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 	int iTank = GetClientOfUserId(iUserId);
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
-		vThrowInterval(iTank, g_cvSTThrowInterval[g_iTankType[iTank]].FloatValue);
+		if (bIsTank(iTank))
+		{
+			int iEntity = -1;
+			while ((iEntity = FindEntityByClassname(iEntity, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+			{
+				char sModel[128];
+				GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+				if (StrEqual(sModel, MODEL_CONCRETE))
+				{
+					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+					if (iOwner == iTank)
+					{
+						SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
+						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
+					}
+				}
+				else if (StrEqual(sModel, MODEL_JETPACK))
+				{
+					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+					if (iOwner == iTank)
+					{
+						SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
+						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
+					}
+				}
+				else if (StrEqual(sModel, MODEL_SHIELD))
+				{
+					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+					if (iOwner == iTank)
+					{
+						SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
+						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
+					}
+				}
+				else if (StrEqual(sModel, MODEL_TIRES))
+				{
+					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+					if (iOwner == iTank)
+					{
+						SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
+						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
+					}
+				}
+			}
+			while ((iEntity = FindEntityByClassname(iEntity, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+			{
+				int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+				if (iOwner == iTank)
+				{
+					SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
+					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
+				}
+			}
+			vThrowInterval(iTank, g_cvSTThrowInterval[g_iTankType[iTank]].FloatValue);
+		}
 	}
+}
+
+public Action tTimerSetTransmit(Handle timer, any entity)
+{
+	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
+	{
+		return Plugin_Stop;
+	}
+	if (IsValidEntity(entity))
+	{
+		SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
+	}
+	return Plugin_Continue;
 }
 
 public Action eEventFinaleEscapeStart(Event event, const char[] name, bool dontBroadcast)
@@ -1148,7 +1250,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
 				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
 			}
-			if (bIsTank(iTank, false))
+			if (bIsTank(iTank, false) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(iTank))))
 			{
 				if (g_bHypno[iAttacker] && iTank > 0 && iAttacker != iTank)
 				{
@@ -1266,20 +1368,22 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 				{
 					char sModel[128];
 					GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-					if (StrEqual(sModel, "models/props_debris/concrete_chunk01a.mdl"))
+					if (StrEqual(sModel, MODEL_CONCRETE))
 					{
 						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iTank)
 						{
 							AcceptEntityInput(iEntity, "Kill");
+							SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
 						}
 					}
-					else if (StrEqual(sModel, MODEL_TIRES))
+					else if (StrEqual(sModel, MODEL_JETPACK))
 					{
 						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iTank)
 						{
 							AcceptEntityInput(iEntity, "Kill");
+							SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
 						}
 					}
 					else if (StrEqual(sModel, MODEL_SHIELD))
@@ -1288,6 +1392,16 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						if (iOwner == iTank)
 						{
 							AcceptEntityInput(iEntity, "Kill");
+							SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
+						}
+					}
+					else if (StrEqual(sModel, MODEL_TIRES))
+					{
+						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+						if (iOwner == iTank)
+						{
+							AcceptEntityInput(iEntity, "Kill");
+							SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
 						}
 					}
 				}
@@ -1297,6 +1411,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 					if (iOwner == iTank)
 					{
 						AcceptEntityInput(iEntity, "Kill");
+						SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
 					}
 				}
 				while ((iEntity = FindEntityByClassname(iEntity, "point_push")) != INVALID_ENT_REFERENCE)
@@ -1330,18 +1445,6 @@ public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcas
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
 		g_iTankWave = 0;
-		int iCvarFlags = g_cvSTMaxPlayerZombies.Flags;
-		g_cvSTMaxPlayerZombies.SetBounds(ConVarBound_Upper, false);
-		g_cvSTMaxPlayerZombies.Flags = iCvarFlags & ~FCVAR_NOTIFY;
-		g_cvSTSmokerLimit.SetInt(32);
-		g_cvSTBoomerLimit.SetInt(32);
-		g_cvSTHunterLimit.SetInt(32);
-		if (bIsL4D2Game())
-		{
-			g_cvSTSpitterLimit.SetInt(32);
-			g_cvSTJockeyLimit.SetInt(32);
-			g_cvSTChargerLimit.SetInt(32);
-		}
 		g_sWeapon[0] = '\0';
 		for (int iPlayer= 1; iPlayer <= MaxClients; iPlayer++)
 		{
@@ -1358,48 +1461,48 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 	int iTank = GetClientOfUserId(iUserId);
 	if (g_cvSTEnable.BoolValue && bIsSystemValid(g_cvSTGameMode, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes, g_cvSTGameModeTypes))
 	{
-		if (bIsTank(iTank))
+		if (bIsTank(iTank) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(iTank))))
 		{
 			if (g_bCmdUsed)
 			{
 				switch (g_iType)
 				{
-					case 1: bIsL4D2Game() ? vSetColor(iTank, 1, 0, 255, 125) : vSetColor(iTank, 24, 170, 180, 45);
-					case 2: vSetColor(iTank, 2, 170, 200, 210);
-					case 3: vSetColor(iTank, 3, 5, 0, 105);
-					case 4: vSetColor(iTank, 4, 75, 0, 0);
-					case 5: vSetColor(iTank, 5, 65, 105, 0);
-					case 6: bIsL4D2Game() ? vSetColor(iTank, 6, 95, 140, 80) : vSetColor(iTank, 31, 150, 0, 150);
-					case 7: vSetColor(iTank, 7, 10, 25, 205);
-					case 8: vSetColor(iTank, 8, 165, 205, 175);
-					case 9: vSetColor(iTank, 9, 255, 245, 0);
-					case 10: vSetColor(iTank, 10, 150, 0, 0);
-					case 11: vSetColor(iTank, 11, 255, 0, 0, 150, RENDER_TRANSTEXTURE);
-					case 12: bIsL4D2Game() ? vSetColor(iTank, 12, 160, 225, 65) : vSetColor(iTank, 22, 225, 215, 0);
-					case 13: vSetColor(iTank, 13, 50, 50, 50, 150, RENDER_TRANSTEXTURE);
-					case 14: vSetColor(iTank, 14, 25, 25, 25);
-					case 15: vSetColor(iTank, 15, 75, 200, 75);
-					case 16: vSetColor(iTank, 16, 0, 80, 140);
-					case 17: vSetColor(iTank, 17, 110, 0, 130);
-					case 18: vSetColor(iTank, 18, 0, 155, 255, 200, RENDER_TRANSTEXTURE);
-					case 19: vSetColor(iTank, 19, 225, 235, 255);
-					case 20: vSetColor(iTank, 20, 0, 235, 220);
-					case 21: bIsL4D2Game() ? vSetColor(iTank, 21, 255, 235, 235) : vSetColor(iTank, 16, 0, 80, 140);
-					case 22: vSetColor(iTank, 22, 225, 215, 0);
-					case 23: vSetColor(iTank, 23, 120, 20, 10);
-					case 24: vSetColor(iTank, 24, 170, 180, 45);
-					case 25: vSetColor(iTank, 25, 10, 40, 15);
-					case 26: vSetColor(iTank, 26, 250, 110, 0);
-					case 27: vSetColor(iTank, 27, 100, 25, 25);
-					case 28: vSetColor(iTank, 28, 135, 205);
-					case 29: vSetColor(iTank, 29, 10, 100, 0);
-					case 30: vSetColor(iTank, 30, 100, 165);
-					case 31: vSetColor(iTank, 31, 150, 0, 150);
-					case 32: bIsL4D2Game() ? vSetColor(iTank, 32, 0, 200, 0) : vSetColor(iTank, 5, 65, 105, 0);
-					case 33: vSetColor(iTank, 33, 80, 130, 255);
-					case 34: vSetColor(iTank, 34, 175, 25, 205);
-					case 35: vSetColor(iTank, 35, 130, 130);
-					case 36: vSetColor(iTank, 36, 255, 145);
+					case 1: bIsL4D2Game() ? vSetColor(iTank, 1) : vSetColor(iTank, 24);
+					case 2: vSetColor(iTank, 2);
+					case 3: vSetColor(iTank, 3);
+					case 4: vSetColor(iTank, 4);
+					case 5: vSetColor(iTank, 5);
+					case 6: bIsL4D2Game() ? vSetColor(iTank, 6) : vSetColor(iTank, 31);
+					case 7: vSetColor(iTank, 7);
+					case 8: vSetColor(iTank, 8);
+					case 9: vSetColor(iTank, 9);
+					case 10: vSetColor(iTank, 10);
+					case 11: vSetColor(iTank, 11, 150, RENDER_TRANSTEXTURE);
+					case 12: bIsL4D2Game() ? vSetColor(iTank, 12) : vSetColor(iTank, 22);
+					case 13: vSetColor(iTank, 13, 150, RENDER_TRANSTEXTURE);
+					case 14: vSetColor(iTank, 14);
+					case 15: vSetColor(iTank, 15);
+					case 16: vSetColor(iTank, 16);
+					case 17: vSetColor(iTank, 17);
+					case 18: vSetColor(iTank, 18, 200, RENDER_TRANSTEXTURE);
+					case 19: vSetColor(iTank, 19);
+					case 20: vSetColor(iTank, 20);
+					case 21: bIsL4D2Game() ? vSetColor(iTank, 21) : vSetColor(iTank, 16);
+					case 22: vSetColor(iTank, 22);
+					case 23: vSetColor(iTank, 23);
+					case 24: vSetColor(iTank, 24);
+					case 25: vSetColor(iTank, 25);
+					case 26: vSetColor(iTank, 26);
+					case 27: vSetColor(iTank, 27);
+					case 28: vSetColor(iTank, 28);
+					case 29: vSetColor(iTank, 29);
+					case 30: vSetColor(iTank, 30);
+					case 31: vSetColor(iTank, 31);
+					case 32: bIsL4D2Game() ? vSetColor(iTank, 32) : vSetColor(iTank, 5);
+					case 33: vSetColor(iTank, 33);
+					case 34: vSetColor(iTank, 34);
+					case 35: vSetColor(iTank, 35);
+					case 36: vSetColor(iTank, 36);
 					default: vSetColor(iTank);
 				}
 				g_bCmdUsed = false;
@@ -1414,42 +1517,42 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 					char sLetters = sTankType[GetRandomInt(0, strlen(sTankType) - 1)];
 					switch (sLetters)
 					{
-						case '0': bIsL4D2Game() ? vSetColor(iTank, 1, 0, 255, 125) : vSetColor(iTank, 24, 170, 180, 45);
-						case '1': vSetColor(iTank, 2, 170, 200, 210);
-						case '2': vSetColor(iTank, 3, 5, 0, 105);
-						case '3': vSetColor(iTank, 4, 75, 0, 0);
-						case '4': vSetColor(iTank, 5, 65, 105, 0);
-						case '5': bIsL4D2Game() ? vSetColor(iTank, 6, 95, 140, 80) : vSetColor(iTank, 31, 150, 0, 150);
-						case '6': vSetColor(iTank, 7, 10, 25, 205);
-						case '7': vSetColor(iTank, 8, 165, 205, 175);
-						case '8': vSetColor(iTank, 9, 255, 245, 0);
-						case '9': vSetColor(iTank, 10, 150, 0, 0);
-						case 'A', 'a': vSetColor(iTank, 11, 255, 0, 0, 150, RENDER_TRANSTEXTURE);
-						case 'B', 'b': bIsL4D2Game() ? vSetColor(iTank, 12, 160, 225, 65) : vSetColor(iTank, 22, 225, 215, 0);
-						case 'C', 'c': vSetColor(iTank, 13, 50, 50, 50, 150, RENDER_TRANSTEXTURE);
-						case 'D', 'd': vSetColor(iTank, 14, 25, 25, 25);
-						case 'E', 'e': vSetColor(iTank, 15, 75, 200, 75);
-						case 'F', 'f': vSetColor(iTank, 16, 0, 80, 140);
-						case 'G', 'g': vSetColor(iTank, 17, 110, 0, 130);
-						case 'H', 'h': vSetColor(iTank, 18, 0, 155, 255, 200, RENDER_TRANSTEXTURE);
-						case 'I', 'i': vSetColor(iTank, 19, 225, 235, 255);
-						case 'J', 'j': vSetColor(iTank, 20, 0, 235, 220);
-						case 'K', 'k': bIsL4D2Game() ? vSetColor(iTank, 21, 255, 235, 235) : vSetColor(iTank, 16, 0, 80, 140);
-						case 'L', 'l': vSetColor(iTank, 22, 225, 215, 0);
-						case 'M', 'm': vSetColor(iTank, 23, 120, 20, 10);
-						case 'N', 'n': vSetColor(iTank, 24, 170, 180, 45);
-						case 'O', 'o': vSetColor(iTank, 25, 10, 40, 15);
-						case 'P', 'p': vSetColor(iTank, 26, 250, 110, 0);
-						case 'Q', 'q': vSetColor(iTank, 27, 100, 25, 25);
-						case 'R', 'r': vSetColor(iTank, 28, 135, 205);
-						case 'S', 's': vSetColor(iTank, 29, 10, 100, 0);
-						case 'T', 't': vSetColor(iTank, 30, 100, 165);
-						case 'U', 'u': vSetColor(iTank, 31, 150, 0, 150);
-						case 'V', 'v': bIsL4D2Game() ? vSetColor(iTank, 32, 0, 200, 0) : vSetColor(iTank, 5, 65, 105, 0);
-						case 'W', 'w': vSetColor(iTank, 33, 80, 130, 255);
-						case 'X', 'x': vSetColor(iTank, 34, 175, 25, 205);
-						case 'Y', 'y': vSetColor(iTank, 35, 130, 130);
-						case 'Z', 'z': vSetColor(iTank, 36, 255, 145);
+						case '0': bIsL4D2Game() ? vSetColor(iTank, 1) : vSetColor(iTank, 24);
+						case '1': vSetColor(iTank, 2);
+						case '2': vSetColor(iTank, 3);
+						case '3': vSetColor(iTank, 4);
+						case '4': vSetColor(iTank, 5);
+						case '5': bIsL4D2Game() ? vSetColor(iTank, 6) : vSetColor(iTank, 31);
+						case '6': vSetColor(iTank, 7);
+						case '7': vSetColor(iTank, 8);
+						case '8': vSetColor(iTank, 9);
+						case '9': vSetColor(iTank, 10);
+						case 'A', 'a': vSetColor(iTank, 11, 150, RENDER_TRANSTEXTURE);
+						case 'B', 'b': bIsL4D2Game() ? vSetColor(iTank, 12) : vSetColor(iTank, 22);
+						case 'C', 'c': vSetColor(iTank, 13, 150, RENDER_TRANSTEXTURE);
+						case 'D', 'd': vSetColor(iTank, 14);
+						case 'E', 'e': vSetColor(iTank, 15);
+						case 'F', 'f': vSetColor(iTank, 16);
+						case 'G', 'g': vSetColor(iTank, 17);
+						case 'H', 'h': vSetColor(iTank, 18, 200, RENDER_TRANSTEXTURE);
+						case 'I', 'i': vSetColor(iTank, 19);
+						case 'J', 'j': vSetColor(iTank, 20);
+						case 'K', 'k': bIsL4D2Game() ? vSetColor(iTank, 21) : vSetColor(iTank, 16);
+						case 'L', 'l': vSetColor(iTank, 22);
+						case 'M', 'm': vSetColor(iTank, 23);
+						case 'N', 'n': vSetColor(iTank, 24);
+						case 'O', 'o': vSetColor(iTank, 25);
+						case 'P', 'p': vSetColor(iTank, 26);
+						case 'Q', 'q': vSetColor(iTank, 27);
+						case 'R', 'r': vSetColor(iTank, 28);
+						case 'S', 's': vSetColor(iTank, 29);
+						case 'T', 't': vSetColor(iTank, 30);
+						case 'U', 'u': vSetColor(iTank, 31);
+						case 'V', 'v': bIsL4D2Game() ? vSetColor(iTank, 32) : vSetColor(iTank, 5);
+						case 'W', 'w': vSetColor(iTank, 33);
+						case 'X', 'x': vSetColor(iTank, 34);
+						case 'Y', 'y': vSetColor(iTank, 35);
+						case 'Z', 'z': vSetColor(iTank, 36);
 						default: vSetColor(iTank);
 					}
 					char sTankWave[12];
@@ -1798,7 +1901,7 @@ void vBombHit(int client, int owner)
 
 void vCommonAbility(int client)
 {
-	if (g_iTankType[client] == 8 && bIsTank(client))
+	if (g_iTankType[client] == 8 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		vCommonHit(client);
 	}
@@ -1806,7 +1909,7 @@ void vCommonAbility(int client)
 
 void vCommonHit(int client)
 {
-	if (g_iTankType[client] == 8 && bIsTank(client))
+	if (g_iTankType[client] == 8 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		g_iInterval++;
 		if (g_iInterval >= g_cvSTCommonInterval.IntValue)
@@ -1907,7 +2010,7 @@ void vExecConfigFile(const char[] filepath, const char[] folder, const char[] fi
 
 void vFakeJump(int client)
 {
-	if (g_iTankType[client] == 22 && bIsTank(client))
+	if (g_iTankType[client] == 22 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		float flVelocity[3];
 		GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
@@ -1958,7 +2061,7 @@ void vFireHit(int client, int owner)
 
 void vFlashAbility(int client)
 {
-	if (g_iTankType[client] == 11 && bIsTank(client))
+	if (g_iTankType[client] == 11 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		if (!g_bFlash[client])
 		{
@@ -2008,7 +2111,7 @@ void vGhostAbility(int client)
 {
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
-		if (g_iTankType[client] == 13 && bIsTank(client) && bIsSpecialInfected(iInfected))
+		if (g_iTankType[client] == 13 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))) && bIsSpecialInfected(iInfected))
 		{
 			float flTankPos[3];
 			float flInfectedPos[3];
@@ -2043,7 +2146,7 @@ void vGhostAbility(int client)
 
 void vGhostHit(int target, int client)
 {
-	if (g_iTankType[client] == 13 && GetRandomInt(1, g_cvSTGhostChance.IntValue) && bIsSurvivor(target) && bIsTank(client))
+	if (g_iTankType[client] == 13 && GetRandomInt(1, g_cvSTGhostChance.IntValue) && bIsSurvivor(target) && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		char sWeapon[6];
 		g_cvSTGhostSlot.GetString(sWeapon, sizeof(sWeapon));
@@ -2074,7 +2177,7 @@ void vGhostHit(int target, int client)
 void vGravityAbility(int client)
 {
 	int iBlackhole = CreateEntityByName("point_push");
-	if (g_iTankType[client] == 14 && bIsTank(client) && IsValidEntity(iBlackhole))
+	if (g_iTankType[client] == 14 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))) && IsValidEntity(iBlackhole))
 	{
 		float flOrigin[3];
 		float flAngles[3];
@@ -2108,7 +2211,7 @@ void vGravityHit(int client)
 
 void vHealAbility(int client)
 {
-	if (g_iTankType[client] == 15 && bIsTank(client))
+	if (g_iTankType[client] == 15 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		if (g_hHealTimer[client] == null)
 		{
@@ -2202,7 +2305,7 @@ void vInvertHit(int client)
 
 void vJumperEffect(int client)
 {
-	if (g_iTankType[client] == 22 && bIsTank(client))
+	if (g_iTankType[client] == 22 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		CreateTimer(1.0, tTimerJump, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
@@ -2241,7 +2344,7 @@ void vMeteor(int entity, int client)
 		DispatchKeyValueFloat(iPointHurt, "DamageRadius", 200.0);
 		TeleportEntity(iPointHurt, flPos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iPointHurt);
-		if (IsValidEntity(client) && bIsTank(client))
+		if (IsValidEntity(client) && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 		{
 			AcceptEntityInput(iPointHurt, "Hurt", client);
 		}
@@ -2254,7 +2357,7 @@ void vMeteor(int entity, int client)
   		DispatchKeyValue(iPointPush, "spawnflags", "8");
 		TeleportEntity(iPointPush, flPos, NULL_VECTOR, NULL_VECTOR);
  		DispatchSpawn(iPointPush);
-		AcceptEntityInput(iPointPush, "Enable", -1, -1);
+ 		AcceptEntityInput(iPointPush, "Enable", -1, -1);
 		iPointPush = EntIndexToEntRef(iPointPush);
 		vDeleteEntity(iPointPush, 0.5);
 	}
@@ -2262,7 +2365,7 @@ void vMeteor(int entity, int client)
 
 void vMeteorAbility(int client)
 {
-	if (g_iTankType[client] == 23 && GetRandomInt(1, g_cvSTMeteorChance.IntValue) == 1 && bIsTank(client) && !g_bMeteor[client])
+	if (g_iTankType[client] == 23 && GetRandomInt(1, g_cvSTMeteorChance.IntValue) == 1 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))) && !g_bMeteor[client])
 	{
 		g_bMeteor[client] = true;
 		float flPos[3];
@@ -2375,38 +2478,96 @@ void vRocketHit(int client)
 	}
 }
 
-void vSetColor(int client, int value = 0, int red = 255, int green = 255, int blue = 255, int alpha = 255, RenderMode mode = RENDER_NORMAL)
+void vSetColor(int client, int value = 0, int alpha = 255, RenderMode mode = RENDER_NORMAL)
 {
+	char sColors[64];
+	char sSet[3][12];
+	g_cvSTTankColors[value].GetString(sColors, sizeof(sColors));
+	ExplodeString(sColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+	char sRGB[3][4];
+	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+	int iRed = StringToInt(sRGB[0]);
+	int iGreen = StringToInt(sRGB[1]);
+	int iBlue = StringToInt(sRGB[2]);
+	char sGlow[3][4];
+	ExplodeString(sSet[2], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
+	int iRed2 = StringToInt(sGlow[0]);
+	int iGreen2 = StringToInt(sGlow[1]);
+	int iBlue2 = StringToInt(sGlow[2]);
 	g_iTankType[client] = value;
 	if (bIsL4D2Game())
 	{
 		SetEntProp(client, Prop_Send, "m_iGlowType", 3);
-		SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(red, green, blue));
+		SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
 	}
 	SetEntityRenderMode(client, mode);
-	SetEntityRenderColor(client, red, green, blue, alpha);
+	SetEntityRenderColor(client, iRed, iGreen, iBlue, alpha);
 }
 
-void vSetName(int client, char[] name = "Default Tank", int red = 255, int green = 255, int blue = 255, int alpha = 255, RenderMode mode = RENDER_NORMAL)
+void vSetName(int client, char[] name = "Default Tank", int alpha = 255, RenderMode mode = RENDER_NORMAL)
 {
-	if (bIsBotInfected(client))
+	char sColors[64];
+	char sSet[3][12];
+	g_cvSTTankColors[g_iTankType[client]].GetString(sColors, sizeof(sColors));
+	ExplodeString(sColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+	char sRGB[3][4];
+	ExplodeString(sSet[1], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+	int iRed = StringToInt(sRGB[0]);
+	int iGreen = StringToInt(sRGB[1]);
+	int iBlue = StringToInt(sRGB[2]);
+	if (bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
-		vSetProps(client, red, green, blue, alpha, mode);
-		SetClientInfo(client, "name", name);
-		if (g_cvSTAnnounceArrival.BoolValue)
+		vSetProps(client, iRed, iGreen, iBlue, alpha, mode);
+		if (IsFakeClient(client))
 		{
-			PrintToChatAll("\x04%s\x05 %s\x01 has appeared!", ST_PREFIX, name);
+			SetClientInfo(client, "name", name);
+			if (g_cvSTAnnounceArrival.BoolValue)
+			{
+				PrintToChatAll("\x04%s\x05 %s\x01 has appeared!", ST_PREFIX, name);
+			}
 		}
 	}
 }
 
 void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode mode)
 {
-	if (bIsTank(client))
+	if (bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		char sProps[5];
 		g_cvSTAttachProps[g_iTankType[client]].GetString(sProps, sizeof(sProps));
 		if (GetRandomInt(1, 3) == 1 && StrContains(sProps, "1", false) != -1)
+		{
+			float flOrigin[3];
+			float flAngles[3];
+			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+			GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+			flAngles[0] += -90.0;
+			int iEntity = CreateEntityByName("beam_spotlight");
+			if (IsValidEntity(iEntity))
+			{
+				DispatchKeyValueVector(iEntity, "origin", flOrigin);
+				DispatchKeyValueVector(iEntity, "angles", flAngles);
+				DispatchKeyValue(iEntity, "spotlightwidth", "10");
+				DispatchKeyValue(iEntity, "spotlightlength", "60");
+				DispatchKeyValue(iEntity, "spawnflags", "3");
+				SetEntityRenderColor(iEntity, red, green, blue, 125);
+				DispatchKeyValue(iEntity, "maxspeed", "100");
+				DispatchKeyValue(iEntity, "HDRColorScale", "0.7");
+				DispatchKeyValue(iEntity, "fadescale", "1");
+				DispatchKeyValue(iEntity, "fademindist", "-1");
+				TeleportEntity(iEntity, NULL_VECTOR, flAngles, NULL_VECTOR);
+				DispatchSpawn(iEntity);
+				SetVariantString("!activator");
+				AcceptEntityInput(iEntity, "SetParent", client);
+				SetVariantString("mouth");
+				AcceptEntityInput(iEntity, "SetParentAttachment");
+				AcceptEntityInput(iEntity, "Enable");
+				AcceptEntityInput(iEntity, "DisableCollision");
+				SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
+				SDKHook(iEntity, SDKHook_SetTransmit, SetTransmit);
+			}
+		}
+		if (GetRandomInt(1, 3) == 1 && StrContains(sProps, "2", false) != -1)
 		{
 			float flOrigin[3];
 			float flAngles[3];
@@ -2484,39 +2645,10 @@ void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode m
 						TeleportEntity(iFlame, flOrigin2, flAngles3, NULL_VECTOR);
 						DispatchSpawn(iFlame);
 						AcceptEntityInput(iFlame, "TurnOn");
+						SDKHook(iFlame, SDKHook_SetTransmit, SetTransmit);
 					}
+					SDKHook(iEntity[iOzTank], SDKHook_SetTransmit, SetTransmit);
 				}
-			}
-		}
-		if (GetRandomInt(1, 3) == 1 && StrContains(sProps, "2", false) != -1)
-		{
-			float flOrigin[3];
-			float flAngles[3];
-			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-			GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
-			flAngles[0] += -90.0;
-			int iEntity = CreateEntityByName("beam_spotlight");
-			if (IsValidEntity(iEntity))
-			{
-				DispatchKeyValueVector(iEntity, "origin", flOrigin);
-				DispatchKeyValueVector(iEntity, "angles", flAngles);
-				DispatchKeyValue(iEntity, "spotlightwidth", "10");
-				DispatchKeyValue(iEntity, "spotlightlength", "60");
-				DispatchKeyValue(iEntity, "spawnflags", "3");
-				SetEntityRenderColor(iEntity, red, green, blue, 125);
-				DispatchKeyValue(iEntity, "maxspeed", "100");
-				DispatchKeyValue(iEntity, "HDRColorScale", "0.7");
-				DispatchKeyValue(iEntity, "fadescale", "1");
-				DispatchKeyValue(iEntity, "fademindist", "-1");
-				TeleportEntity(iEntity, NULL_VECTOR, flAngles, NULL_VECTOR);
-				DispatchSpawn(iEntity);
-				SetVariantString("!activator");
-				AcceptEntityInput(iEntity, "SetParent", client);
-				SetVariantString("mouth");
-				AcceptEntityInput(iEntity, "SetParentAttachment");
-				AcceptEntityInput(iEntity, "Enable");
-				AcceptEntityInput(iEntity, "DisableCollision");
-				SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
 			}
 		}
 		if (GetRandomInt(1, 3) == 1 && StrContains(sProps, "3", false) != -1)
@@ -2526,42 +2658,43 @@ void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode m
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 			GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
 			int iEntity[5];
-			for (int iSpike = 1; iSpike <= 4; iSpike++)
+			for (int iRock = 1; iRock <= 4; iRock++)
 			{
-				iEntity[iSpike] = CreateEntityByName("prop_dynamic_override");
-				if (IsValidEntity(iEntity[iSpike]))
+				iEntity[iRock] = CreateEntityByName("prop_dynamic_override");
+				if (IsValidEntity(iEntity[iRock]))
 				{
-					SetEntityModel(iEntity[iSpike], "models/props_debris/concrete_chunk01a.mdl");
-					SetEntityRenderMode(iEntity[iSpike], mode);
-					SetEntityRenderColor(iEntity[iSpike], red, green, blue, alpha);
-					DispatchKeyValueVector(iEntity[iSpike], "origin", flOrigin);
-					DispatchKeyValueVector(iEntity[iSpike], "angles", flAngles);
+					SetEntityModel(iEntity[iRock], MODEL_CONCRETE);
+					SetEntityRenderMode(iEntity[iRock], mode);
+					SetEntityRenderColor(iEntity[iRock], red, green, blue, alpha);
+					DispatchKeyValueVector(iEntity[iRock], "origin", flOrigin);
+					DispatchKeyValueVector(iEntity[iRock], "angles", flAngles);
 					SetVariantString("!activator");
-					AcceptEntityInput(iEntity[iSpike], "SetParent", client);
-					switch (iSpike)
+					AcceptEntityInput(iEntity[iRock], "SetParent", client);
+					switch (iRock)
 					{
 						case 1: SetVariantString("relbow");
 						case 2: SetVariantString("lelbow");
 						case 3: SetVariantString("rshoulder");
 						case 4: SetVariantString("lshoulder");
 					}
-					AcceptEntityInput(iEntity[iSpike], "SetParentAttachment");
-					AcceptEntityInput(iEntity[iSpike], "Enable");
-					AcceptEntityInput(iEntity[iSpike], "DisableCollision");
+					AcceptEntityInput(iEntity[iRock], "SetParentAttachment");
+					AcceptEntityInput(iEntity[iRock], "Enable");
+					AcceptEntityInput(iEntity[iRock], "DisableCollision");
 					if (bIsL4D2Game())
 					{
-						switch (iSpike)
+						switch (iRock)
 						{
-							case 1, 2: SetEntPropFloat(iEntity[iSpike], Prop_Data, "m_flModelScale", 0.4);
-							case 3, 4: SetEntPropFloat(iEntity[iSpike], Prop_Data, "m_flModelScale", 0.5);
+							case 1, 2: SetEntPropFloat(iEntity[iRock], Prop_Data, "m_flModelScale", 0.4);
+							case 3, 4: SetEntPropFloat(iEntity[iRock], Prop_Data, "m_flModelScale", 0.5);
 						}
 					}
-					SetEntPropEnt(iEntity[iSpike], Prop_Send, "m_hOwnerEntity", client);
+					SetEntPropEnt(iEntity[iRock], Prop_Send, "m_hOwnerEntity", client);
 					flAngles[0] = flAngles[0] + GetRandomFloat(-90.0, 90.0);
 					flAngles[1] = flAngles[1] + GetRandomFloat(-90.0, 90.0);
 					flAngles[2] = flAngles[2] + GetRandomFloat(-90.0, 90.0);
-					TeleportEntity(iEntity[iSpike], NULL_VECTOR, flAngles, NULL_VECTOR);
-					DispatchSpawn(iEntity[iSpike]);
+					TeleportEntity(iEntity[iRock], NULL_VECTOR, flAngles, NULL_VECTOR);
+					DispatchSpawn(iEntity[iRock]);
+					SDKHook(iEntity[iRock], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
 		}
@@ -2571,6 +2704,7 @@ void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode m
 			float flAngles[3];
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 			GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+			flAngles[0] += 90.0;
 			int iEntity[3];
 			for (int iTire = 1; iTire <= 2; iTire++)
 			{
@@ -2592,9 +2726,14 @@ void vSetProps(int client, int red, int green, int blue, int alpha, RenderMode m
 					AcceptEntityInput(iEntity[iTire], "SetParentAttachment");
 					AcceptEntityInput(iEntity[iTire], "Enable");
 					AcceptEntityInput(iEntity[iTire], "DisableCollision");
+					if (bIsL4D2Game())
+					{
+						SetEntPropFloat(iEntity[iTire], Prop_Data, "m_flModelScale", 1.5);
+					}
 					SetEntPropEnt(iEntity[iTire], Prop_Send, "m_hOwnerEntity", client);
 					TeleportEntity(iEntity[iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
 					DispatchSpawn(iEntity[iTire]);
+					SDKHook(iEntity[iTire], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
 		}
@@ -2615,7 +2754,7 @@ void vShakeHit(int client)
 
 void vShieldAbility(int client, bool shield)
 {
-	if (g_iTankType[client] == 28 && bIsTank(client))
+	if (g_iTankType[client] == 28 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		if (shield)
 		{
@@ -2697,7 +2836,7 @@ void vSlugHit(int client)
 
 void vSmokerEffect(int client)
 {
-	if (g_iTankType[client] == 31 && bIsTank(client))
+	if (g_iTankType[client] == 31 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		if (g_hSmokerTimer[client] == null)
 		{
@@ -2720,7 +2859,7 @@ void vSpawnTank(int wave)
 
 void vStopCommon(int client)
 {
-	if (g_iTankType[client] == 8 && bIsTank(client))
+	if (g_iTankType[client] == 8 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		delete g_hCommonTimer[client];
 	}
@@ -2728,7 +2867,7 @@ void vStopCommon(int client)
 
 void vStopFlash(int client)
 {
-	if (g_iTankType[client] == 11 && bIsTank(client))
+	if (g_iTankType[client] == 11 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		delete g_hFlashTimer[client];
 	}
@@ -2736,7 +2875,7 @@ void vStopFlash(int client)
 
 void vStopHeal(int client)
 {
-	if (g_iTankType[client] == 15 && bIsTank(client))
+	if (g_iTankType[client] == 15 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		delete g_hHealTimer[client];
 	}
@@ -2744,7 +2883,7 @@ void vStopHeal(int client)
 
 void vStopJump(int client)
 {
-	if (g_iTankType[client] == 22 && bIsTank(client))
+	if (g_iTankType[client] == 22 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		delete g_hJumpTimer[client];
 	}
@@ -2752,7 +2891,7 @@ void vStopJump(int client)
 
 void vStopSmoker(int client)
 {
-	if (g_iTankType[client] == 31 && bIsTank(client))
+	if (g_iTankType[client] == 31 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		delete g_hSmokerTimer[client];
 	}
@@ -2771,16 +2910,6 @@ void vStopTimers(int client)
 		g_bMeteor[client] = false;
 		g_bShielded[client] = false;
 		g_iTankType[client] = 0;
-		tTimerStopBlindness(null, GetClientUserId(client));
-		tTimerStopDrug(null, GetClientUserId(client));
-		tTimerStopGravity(null, GetClientUserId(client));
-		tTimerStopHypnosis(null, GetClientUserId(client));
-		tTimerStopIce(null, GetClientUserId(client));
-		tTimerStopInversion(null, GetClientUserId(client));
-		tTimerStopShake(null, GetClientUserId(client));
-		tTimerStopShove(null, GetClientUserId(client));
-		tTimerStopStun(null, GetClientUserId(client));
-		tTimerStopVision(null, GetClientUserId(client));
 		vStopCommon(client);
 		vStopFlash(client);
 		vStopHeal(client);
@@ -2804,7 +2933,7 @@ void vTankCountCheck(int client, int wave)
 	{
 		CreateTimer(5.0, tTimerSpawnTanks, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
-	else if (iGetTankCount() > wave && bIsTank(client))
+	else if (iGetTankCount() > wave && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		vKickFakeClient(client);
 	}
@@ -2812,7 +2941,7 @@ void vTankCountCheck(int client, int wave)
 
 void vThrowInterval(int client, float time)
 {
-	if (bIsBotInfected(client))
+	if (bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		int iAbility = GetEntPropEnt(client, Prop_Send, "m_customAbility");
 		if (iAbility > 0)
@@ -2837,7 +2966,7 @@ void vVisualHit(int client)
 
 void vWarpAbility(int client)
 {
-	if (g_iTankType[client] == 35 && GetRandomInt(1, g_cvSTWarpInterval.IntValue) == 1 && bIsTank(client))
+	if (g_iTankType[client] == 35 && GetRandomInt(1, g_cvSTWarpInterval.IntValue) == 1 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		int iTarget = iGetRandomSurvivor();
 		if (iTarget > 0)
@@ -3004,7 +3133,7 @@ public Action tTimerFlashEffect(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (g_iTankType[client] == 11 && bIsTank(client))
+	if (g_iTankType[client] == 11 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		float flTankPos[3];
 		float flTankAng[3];
@@ -3050,7 +3179,7 @@ public Action tTimerHeal(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (g_iTankType[client] == 15 && bIsTank(client))
+	if (g_iTankType[client] == 15 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		int iType;
 		int iEntity = -1;
@@ -3064,9 +3193,10 @@ public Action tTimerHeal(Handle timer, any userid)
 			if (flDistance < 500)
 			{
 				int iHealth = GetClientHealth(client);
+				int iExtraHealth = iHealth + g_cvSTHealCommon.IntValue;
 				if (iHealth > 500)
 				{
-					SetEntityHealth(client, iHealth + g_cvSTHealCommon.IntValue);
+					SetEntityHealth(client, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
 					if (bIsL4D2Game())
 					{
 						SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 185, 0));
@@ -3089,9 +3219,10 @@ public Action tTimerHeal(Handle timer, any userid)
 				if (flDistance < 500)
 				{
 					int iHealth = GetClientHealth(client);
+					int iExtraHealth = iHealth + g_cvSTHealSpecial.IntValue;
 					if (iHealth > 500)
 					{
-						SetEntityHealth(client, iHealth + g_cvSTHealSpecial.IntValue);
+						SetEntityHealth(client, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
 						if (iType < 2 && bIsL4D2Game())
 						{
 							SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 220, 0));
@@ -3112,9 +3243,10 @@ public Action tTimerHeal(Handle timer, any userid)
 				if (flDistance < 500)
 				{
 					int iHealth = GetClientHealth(client);
+					int iExtraHealth = iHealth + g_cvSTHealTank.IntValue;
 					if (iHealth > 500)
 					{
-						SetEntityHealth(client, iHealth + g_cvSTHealTank.IntValue);
+						SetEntityHealth(client, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
 						if (bIsL4D2Game())
 						{
 							SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 255, 0));
@@ -3179,7 +3311,7 @@ public Action tTimerIdleFix(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	if (!IsClientInGame(iSurvivor) || GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor) || IsFakeClient(iSurvivor))
+	if (GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor) || IsFakeClient(iSurvivor))
 	{
 		g_bAFK[iSurvivor] = false;
 	}
@@ -3209,7 +3341,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (bIsTank(iTank) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(iTank))))
 	{
 		float flVelocity[3];
 		if (IsValidEntity(iRock))
@@ -3268,7 +3400,7 @@ public Action tTimerJump(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (g_iTankType[client] == 22 && GetRandomInt(1, g_cvSTJumperChance.IntValue) == 1 && bIsTank(client))
+	if (g_iTankType[client] == 22 && GetRandomInt(1, g_cvSTJumperChance.IntValue) == 1 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		if (iGetNearestSurvivor(client) > 200 && iGetNearestSurvivor(client) < 2000)
 		{
@@ -3291,14 +3423,14 @@ public Action tTimerUpdateMeteor(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	if (g_iTankType[iTank] == 23 && bIsTank(iTank))
+	if (g_iTankType[iTank] == 23 && bIsTank(iTank) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(iTank))))
 	{
 		if ((GetEngineTime() - flTime) > 5.0)
 		{
 			g_bMeteor[iTank] = false;
 		}
 		int iEntity = -1;
-		if (bIsTank(iTank) && g_bMeteor[iTank])
+		if (g_bMeteor[iTank])
 		{
 			float flAngle[3];
 			float flVelocity[3];
@@ -3323,7 +3455,7 @@ public Action tTimerUpdateMeteor(Handle timer, DataPack pack)
 				int iRock = CreateEntityByName("tank_rock");
 				if (iRock > 0)
 				{
-					SetEntityModel(iRock, "models/props_debris/concrete_chunk01a.mdl");
+					SetEntityModel(iRock, MODEL_CONCRETE);
 					float flAngle2[3];
 					flAngle2[0] = GetRandomFloat(-180.0, 180.0);
 					flAngle2[1] = GetRandomFloat(-180.0, 180.0);
@@ -3467,7 +3599,7 @@ public Action tTimerShield(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (g_iTankType[client] == 28 && bIsTank(client) && !g_bShielded[client])
+	if (g_iTankType[client] == 28 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))) && !g_bShielded[client])
 	{
 		vShieldAbility(client, true);
 	}
@@ -3483,7 +3615,7 @@ public Action tTimerPropaneThrow(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	if (g_iTankType[iTank] == 28 && bIsTank(iTank))
+	if (g_iTankType[iTank] == 28 && bIsTank(iTank) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(iTank))))
 	{
 		float flVelocity[3];
 		if (IsValidEntity(iRock))
@@ -3549,7 +3681,7 @@ public Action tTimerSmoker(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (g_iTankType[client] == 31 && bIsTank(client))
+	if (g_iTankType[client] == 31 && bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (IsValidEntity(iParticle))
@@ -3654,7 +3786,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
 					if (StrEqual(sClassname, "player", false))
 					{
-						if (bIsTank(iTarget))
+						if (bIsTank(iTarget) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(iTarget))))
 						{
 							int iHealth = GetClientHealth(iTarget);
 							switch (g_cvSTDisplayHealth.IntValue)
@@ -3678,12 +3810,11 @@ public Action tTimerTankTypeUpdate(Handle timer)
 	{
 		return Plugin_Continue;
 	}
-	g_cvSTMaxPlayerZombies.SetInt(32);
 	if (iGetTankCount() > 0)
 	{
 		for (int iTank = 1; iTank <= MaxClients; iTank++)
 		{
-			if (bIsTank(iTank) && IsFakeClient(iTank))
+			if (bIsTank(iTank) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(iTank))))
 			{
 				switch (g_iTankType[iTank])
 				{
@@ -3714,62 +3845,62 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTank(client) && IsFakeClient(client))
+	if (bIsTank(client) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(client))))
 	{
 		switch (g_iTankType[client])
 		{
 			case 0: vSetName(client);
-			case 1: vSetName(client, "Acidic Tank", 255, 0, 0, 255);
-			case 2: vSetName(client, "Ammo Tank", 5, 20, 35, 255);
-			case 3: vSetName(client, "Blind Tank", 30, 20, 0, 255);
-			case 4: vSetName(client, "Bomber Tank", 15, 15, 15, 255);
-			case 5: vSetName(client, "Boomer Tank", 0, 0, 65, 255);
-			case 6: vSetName(client, "Charger Tank", 25, 255, 115, 255);
-			case 7: vSetName(client, "Clone Tank", 140, 40, 255, 255);
-			case 8: vSetName(client, "Common Tank", 190, 255, 250, 255);
-			case 9: vSetName(client, "Drug Tank", 55, 205, 65, 255);
-			case 10: vSetName(client, "Fire Tank", 255, 135, 0, 255);
-			case 11: vSetName(client, "Flash Tank", 255, 255, 0, 150, RENDER_TRANSTEXTURE);
-			case 12: vSetName(client, "Flinger Tank", 25, 40, 130, 255);
-			case 13: vSetName(client, "Ghost Tank", 150, 150, 150, 150, RENDER_TRANSTEXTURE);
-			case 14: vSetName(client, "Gravity Tank", 255, 0, 0, 255);
-			case 15: vSetName(client, "Healer Tank", 255, 255, 255, 255);
-			case 16: vSetName(client, "Hunter Tank", 200, 200, 200, 255);
-			case 17: vSetName(client, "Hypnotizer Tank", 255, 250, 45, 255);
-			case 18: vSetName(client, "Ice Tank", 170, 240, 255, 200, RENDER_TRANSTEXTURE);
-			case 19: vSetName(client, "Idler Tank", 10, 40, 15, 255);
-			case 20: vSetName(client, "Inverter Tank", 250, 65, 255, 255);
-			case 21: vSetName(client, "Jockey Tank", 130, 0, 0, 255);
+			case 1: vSetName(client, "Acidic Tank");
+			case 2: vSetName(client, "Ammo Tank");
+			case 3: vSetName(client, "Blind Tank");
+			case 4: vSetName(client, "Bomber Tank");
+			case 5: vSetName(client, "Boomer Tank");
+			case 6: vSetName(client, "Charger Tank");
+			case 7: vSetName(client, "Clone Tank");
+			case 8: vSetName(client, "Common Tank");
+			case 9: vSetName(client, "Drug Tank");
+			case 10: vSetName(client, "Fire Tank");
+			case 11: vSetName(client, "Flash Tank", 150, RENDER_TRANSTEXTURE);
+			case 12: vSetName(client, "Flinger Tank");
+			case 13: vSetName(client, "Ghost Tank", 150, RENDER_TRANSTEXTURE);
+			case 14: vSetName(client, "Gravity Tank");
+			case 15: vSetName(client, "Healer Tank");
+			case 16: vSetName(client, "Hunter Tank");
+			case 17: vSetName(client, "Hypnotizer Tank");
+			case 18: vSetName(client, "Ice Tank", 200, RENDER_TRANSTEXTURE);
+			case 19: vSetName(client, "Idler Tank");
+			case 20: vSetName(client, "Inverter Tank");
+			case 21: vSetName(client, "Jockey Tank");
 			case 22:
 			{
 				vJumperEffect(client);
-				vSetName(client, "Jumper Tank", 225, 0, 205, 255);
+				vSetName(client, "Jumper Tank");
 			}
-			case 23: vSetName(client, "Meteor Tank", 200, 200, 200, 255);
-			case 24: vSetName(client, "Puke Tank", 140, 0, 0, 255);
-			case 25: vSetName(client, "Restarter Tank", 225, 235, 0, 255);
-			case 26: vSetName(client, "Rocketeer Tank", 255, 180, 50, 255);
-			case 27: vSetName(client, "Shake Tank", 0, 170, 255, 255);
+			case 23: vSetName(client, "Meteor Tank");
+			case 24: vSetName(client, "Puke Tank");
+			case 25: vSetName(client, "Restarter Tank");
+			case 26: vSetName(client, "Rocketeer Tank");
+			case 27: vSetName(client, "Shake Tank");
 			case 28:
 			{
 				if (!g_bShielded[client])
 				{
 					vShieldAbility(client, true);
 				}
-				vSetName(client, "Shield Tank", 25, 125, 125, 255);
+				vSetName(client, "Shield Tank");
 			}
-			case 29: vSetName(client, "Shove Tank", 25, 10, 0, 255);
-			case 30: vSetName(client, "Slugger Tank", 0, 0, 50, 255);
+			case 29: vSetName(client, "Shove Tank");
+			case 30: vSetName(client, "Slugger Tank");
 			case 31:
 			{
 				vSmokerEffect(client);
-				vSetName(client, "Smoker Tank", 200, 100, 145, 255);
+				vSetName(client, "Smoker Tank");
 			}
-			case 32: vSetName(client, "Spitter Tank", 255, 80, 150, 255);
-			case 33: vSetName(client, "Stun Tank", 255, 185, 45, 255);
-			case 34: vSetName(client, "Visual Tank", 255, 40, 10, 255);
-			case 35: vSetName(client, "Warp Tank", 225, 100, 0, 255);
-			case 36: vSetName(client, "Witch Tank", 255, 210, 80, 255);
+			case 32: vSetName(client, "Spitter Tank");
+			case 33: vSetName(client, "Stun Tank");
+			case 34: vSetName(client, "Visual Tank");
+			case 35: vSetName(client, "Warp Tank");
+			case 36: vSetName(client, "Witch Tank");
 		}
 		if (g_cvSTExtraHealth[g_iTankType[client]].IntValue > 0)
 		{
@@ -3789,7 +3920,7 @@ public Action tTimerRockThrow(Handle timer, any entity)
 		return Plugin_Stop;
 	}
 	int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-	if (iThrower > 0 && bIsTank(iThrower) && IsFakeClient(iThrower))
+	if (iThrower > 0 && bIsTank(iThrower) && (g_cvSTHumanSupport.BoolValue || (!g_cvSTHumanSupport.BoolValue && IsFakeClient(iThrower))))
 	{
 		DataPack dpDataPack;
 		CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);

@@ -5,10 +5,15 @@
 Bug fixes:
 
 1. Fixed the st_gamemodetypes returning Survival for 2 and Versus for 4, instead of vice-versa.
+2. Fixed the attachprops convars returning lights for 2 and jetpacks/oxygen tanks for 1, instead of vice-versa.
+3. Fixed non-Fire Tanks sometimes throwing fiery rocks.
 
 Changes:
 
-1. Optimized code a bit more.
+1. Added the convar st_humansupport to determine if human-controlled Tanks are affected by the plugin.
+2. Added a convar for each Tank type to determine what its colors are. (1st set = skin color, 2nd set = prop color, 3rd set = glow color)
+3. Added a hook for SetTransmit to hide the props from human-controlled Tanks' screens.
+4. Optimized code a bit more.
 
 Files:
 
