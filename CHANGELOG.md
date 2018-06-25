@@ -9,6 +9,7 @@ Bug fixes:
 3. Fixed non-Fire Tanks sometimes throwing fiery rocks.
 4. Fixed the tire props staying under the Tank's feet instead of on the sides like the jetpack props.
 5. Fixed the Heal Tank's HP bugging out when it goes over 62,400.
+6. Fixed the Ammo Tank using the wrong ammo offset for weapon_sniper_scout.
 
 Changes:
 
