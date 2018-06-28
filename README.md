@@ -943,16 +943,6 @@ Examples:
 "Execute Config Types" "12345" // Executes the config file for the current difficulty, map, game mode, day, and player count.
 ```
 
-4. How can I make the Daily configs execute during a certain time of the day?
-
-Set the time offset value in the "Config Time Offset" KeyValue.
-
-Examples:
-```
-"Config Time Offset" "+10" // Adds 10 hours to the server time.
-"Config Time Offset" "-10" // Subtracts 10 hours to the server time.
-```
-
 ## Credits
 **NgBUCKWANGS** - For the mapname.cfg code in his [ABM](https://forums.alliedmods.net/showthread.php?t=291562) plugin.
 
