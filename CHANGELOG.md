@@ -1,22 +1,18 @@
 # Changelog
 
-## Version 8.12 (TBA)
+## Version 8.12 (June 28, 2018)
 
 Bug fixes:
 
-1. Fixed the st_gamemodetypes returning Survival for 2 and Versus for 4, instead of vice-versa.
-2. Fixed the attachprops convars returning lights for 2 and jetpacks/oxygen tanks for 1, instead of vice-versa.
-3. Fixed non-Fire Tanks sometimes throwing fiery rocks.
-4. Fixed the tire props staying under the Tank's feet instead of on the sides like the jetpack props.
-5. Fixed the Heal Tank's HP bugging out when it goes over 62,400.
-6. Fixed the Ammo Tank using the wrong ammo offset for weapon_sniper_scout.
+1. Fixed all previously known/found bugs.
 
 Changes:
 
-1. Added the convar st_humansupport to determine if human-controlled Tanks are affected by the plugin.
-2. Added a convar for each Tank type to determine what its colors are. (1st set = skin color, 2nd set = prop color, 3rd set = glow color)
-3. Added a hook for SetTransmit to hide the props from human-controlled Tanks' screens.
-4. Optimized code a bit more.
+1. Any and all Super Tank types are now FULLY customizable.
+2. Added support for up to 250 Super Tank Types.
+3. Converted all ConVars to KeyValues.
+4. Removed unnecessary code.
+5. Optimized code a bit more.
 
 Files:
 
