@@ -1,5 +1,5 @@
 # Super Tanks++
-Originally created by Machine, Super Tanks++ takes the original Super Tanks to the next level by enabling full customization of Super Tanks to make gameplay more interesting.
+Super Tanks++ takes the original [Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752) to the next level by enabling full customization of Super Tanks to make gameplay more interesting.
 
 ## License
 Super Tanks++: a L4D/L4D2 SourceMod Plugin
