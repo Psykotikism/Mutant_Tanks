@@ -30,7 +30,7 @@ Super Tanks++ was developed against SourceMod 1.8+.
 5. Load up Super Tanks++.
   - Type ```sm_rcon sm plugins load super_tanks++``` in console.
   - OR restart the server.
-6. Customize Super Tanks++ (Config file generated on first load).
+6. Customize Super Tanks++ in super_tanks++.cfg.
 
 ### Uninstalling/Upgrading to Newer Versions
 1. Delete super_tanks++.smx from addons/sourcemod/plugins folder.
