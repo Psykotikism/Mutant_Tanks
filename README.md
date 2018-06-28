@@ -812,7 +812,7 @@ Set the KeyValue of "Finales Only" to 1.
 Here's an example:
 
 ```
-"Tank Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave
+"Tank Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
 ```
 
 4. How can I decide whether to display each Tank's health?
@@ -872,7 +872,7 @@ Example:
 {
 	"General"
 	{
-		"Tank Types"		"ad" // Only pick Super Tanks with either the character "a" or "d"
+		"Tank Types"		"ad" // Only pick Super Tanks with either the character "a" or "d".
 	}
 	"Tank 1"
 	{
