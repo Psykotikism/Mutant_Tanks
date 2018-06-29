@@ -12,7 +12,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define MAX_TYPES 250
+#define MAXTYPES 250
 #define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_WITCH "models/infected/witch.mdl"
@@ -36,12 +36,13 @@ public Plugin myinfo =
 #define SOUND_EXPLOSION4 "ambient/explosions/explode_3.wav"
 #define ANIMATION_DEBRIS "animation/van_inside_debris.wav"
 #define PHYSICS_BULLET "physics/glass/glass_impact_bullet4.wav"
+
 bool g_bAFK[MAXPLAYERS + 1];
 bool g_bBlind[MAXPLAYERS + 1];
 bool g_bCmdUsed;
-bool g_bFlash[MAX_TYPES + 1];
-bool g_bGhost[MAX_TYPES + 1];
-bool g_bGravity[MAX_TYPES + 1];
+bool g_bFlash[MAXTYPES + 1];
+bool g_bGhost[MAXTYPES + 1];
+bool g_bGravity[MAXTYPES + 1];
 bool g_bHeadshot[MAXPLAYERS + 1];
 bool g_bHurt[MAXPLAYERS + 1];
 bool g_bHypno[MAXPLAYERS + 1];
@@ -49,54 +50,54 @@ bool g_bIce[MAXPLAYERS + 1];
 bool g_bIdle[MAXPLAYERS + 1];
 bool g_bInvert[MAXPLAYERS + 1];
 bool g_bLateLoad;
-bool g_bMeteor[MAX_TYPES + 1];
+bool g_bMeteor[MAXTYPES + 1];
 bool g_bRestartValid;
-bool g_bShielded[MAX_TYPES + 1];
+bool g_bShielded[MAXTYPES + 1];
 bool g_bStun[MAXPLAYERS + 1];
 char g_sConfigCreate[6];
 char g_sConfigExecute[6];
-char g_sCustomName[MAX_TYPES + 1][33];
+char g_sCustomName[MAXTYPES + 1][33];
 char g_sDisabledGameModes[64];
 char g_sEnabledGameModes[64];
-char g_sLoadout[MAX_TYPES + 1][325];
-char g_sPropsAttached[MAX_TYPES + 1][5];
-char g_sPropsChance[MAX_TYPES + 1][5];
+char g_sLoadout[MAXTYPES + 1][325];
+char g_sPropsAttached[MAXTYPES + 1][5];
+char g_sPropsChance[MAXTYPES + 1][5];
 char g_sSavePath[255];
-char g_sShieldColor[MAX_TYPES + 1][12];
-char g_sTankCharacter[MAX_TYPES + 1][2];
-char g_sTankColors[MAX_TYPES + 1][64];
+char g_sShieldColor[MAXTYPES + 1][12];
+char g_sTankCharacter[MAXTYPES + 1][2];
+char g_sTankColors[MAXTYPES + 1][64];
 char g_sTankTypes[65];
 char g_sTankWaves[12];
 char g_sWeapon[32];
-char g_sWeaponSlot[MAX_TYPES + 1][6];
+char g_sWeaponSlot[MAXTYPES + 1][6];
 ConVar g_cvSTFindConVar[12];
-float g_flBlindDuration[MAX_TYPES + 1];
+float g_flBlindDuration[MAXTYPES + 1];
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0};
-float g_flDrugDuration[MAX_TYPES + 1];
-float g_flFlashSpeed[MAX_TYPES + 1];
-float g_flGravityDuration[MAX_TYPES + 1];
-float g_flGravityForce[MAX_TYPES + 1];
-float g_flGravityValue[MAX_TYPES + 1];
-float g_flHealInterval[MAX_TYPES + 1];
-float g_flHurtDuration[MAX_TYPES + 1];
-float g_flHypnoDuration[MAX_TYPES + 1];
+float g_flDrugDuration[MAXTYPES + 1];
+float g_flFlashSpeed[MAXTYPES + 1];
+float g_flGravityDuration[MAXTYPES + 1];
+float g_flGravityForce[MAXTYPES + 1];
+float g_flGravityValue[MAXTYPES + 1];
+float g_flHealInterval[MAXTYPES + 1];
+float g_flHurtDuration[MAXTYPES + 1];
+float g_flHypnoDuration[MAXTYPES + 1];
 float g_flIce[3];
-float g_flInvertDuration[MAX_TYPES + 1];
-float g_flMeteorDamage[MAX_TYPES + 1];
-float g_flRunSpeed[MAX_TYPES + 1];
-float g_flShakeDuration[MAX_TYPES + 1];
-float g_flShieldDelay[MAX_TYPES + 1];
-float g_flShoveDuration[MAX_TYPES + 1];
-float g_flSpamInterval[MAX_TYPES + 1];
+float g_flInvertDuration[MAXTYPES + 1];
+float g_flMeteorDamage[MAXTYPES + 1];
+float g_flRunSpeed[MAXTYPES + 1];
+float g_flShakeDuration[MAXTYPES + 1];
+float g_flShieldDelay[MAXTYPES + 1];
+float g_flShoveDuration[MAXTYPES + 1];
+float g_flSpamInterval[MAXTYPES + 1];
 float g_flSpawnPosition[3];
-float g_flStunDuration[MAX_TYPES + 1];
-float g_flStunSpeed[MAX_TYPES + 1];
-float g_flThrowInterval[MAX_TYPES + 1];
-float g_flVisionDuration[MAX_TYPES + 1];
-float g_flWitchDamage[MAX_TYPES + 1];
+float g_flStunDuration[MAXTYPES + 1];
+float g_flStunSpeed[MAXTYPES + 1];
+float g_flThrowInterval[MAXTYPES + 1];
+float g_flVisionDuration[MAXTYPES + 1];
+float g_flWitchDamage[MAXTYPES + 1];
 Handle g_hDrugTimer[MAXPLAYERS + 1];
-Handle g_hFlashTimer[MAX_TYPES + 1];
-Handle g_hHealTimer[MAX_TYPES + 1];
+Handle g_hFlashTimer[MAXTYPES + 1];
+Handle g_hHealTimer[MAXTYPES + 1];
 Handle g_hSDKAcidPlayer;
 Handle g_hSDKFlingPlayer;
 Handle g_hSDKHealPlayer;
@@ -111,106 +112,109 @@ Handle g_hShoveTimer[MAXPLAYERS + 1];
 Handle g_hSmokerTimer[MAXPLAYERS + 1];
 Handle g_hSpamTimer[MAXPLAYERS + 1];
 Handle g_hVisionTimer[MAXPLAYERS + 1];
-int g_iAcidChance[MAX_TYPES + 1];
-int g_iAcidHit[MAX_TYPES + 1];
-int g_iAcidRock[MAX_TYPES + 1];
-int g_iAmmoChance[MAX_TYPES + 1];
-int g_iAmmoCount[MAX_TYPES + 1];
-int g_iAmmoHit[MAX_TYPES + 1];
+int g_iAcidChance[MAXTYPES + 1];
+int g_iAcidHit[MAXTYPES + 1];
+int g_iAcidRock[MAXTYPES + 1];
+int g_iAlpha[MAXPLAYERS + 1];
+int g_iAmmoChance[MAXTYPES + 1];
+int g_iAmmoCount[MAXTYPES + 1];
+int g_iAmmoHit[MAXTYPES + 1];
 int g_iAnnounceArrival;
-int g_iBlindChance[MAX_TYPES + 1];
-int g_iBlindHit[MAX_TYPES + 1];
-int g_iBlindIntensity[MAX_TYPES + 1];
-int g_iBombChance[MAX_TYPES + 1];
-int g_iBombHit[MAX_TYPES + 1];
-int g_iBoomerThrow[MAX_TYPES + 1];
-int g_iChargerThrow[MAX_TYPES + 1];
-int g_iCloneThrow[MAX_TYPES + 1];
-int g_iCommonAbility[MAX_TYPES + 1];
-int g_iCommonAmount[MAX_TYPES + 1];
+int g_iBlindChance[MAXTYPES + 1];
+int g_iBlindHit[MAXTYPES + 1];
+int g_iBlindIntensity[MAXTYPES + 1];
+int g_iBombChance[MAXTYPES + 1];
+int g_iBombHit[MAXTYPES + 1];
+int g_iBoomerThrow[MAXTYPES + 1];
+int g_iChargerThrow[MAXTYPES + 1];
+int g_iCloneThrow[MAXTYPES + 1];
+int g_iCommonAbility[MAXTYPES + 1];
+int g_iCommonAmount[MAXTYPES + 1];
 int g_iConfigEnable;
 int g_iDisplayHealth;
-int g_iDrugChance[MAX_TYPES + 1];
-int g_iDrugHit[MAX_TYPES + 1];
+int g_iDrugChance[MAXTYPES + 1];
+int g_iDrugHit[MAXTYPES + 1];
 int g_iEnable;
 int g_iExplosionSprite = -1;
-int g_iExtraHealth[MAX_TYPES + 1];
+int g_iExtraHealth[MAXTYPES + 1];
 int g_iFinalesOnly;
-int g_iFireChance[MAX_TYPES + 1];
-int g_iFireHit[MAX_TYPES + 1];
-int g_iFireImmunity[MAX_TYPES + 1];
-int g_iFireRock[MAX_TYPES + 1];
-int g_iFlashAbility[MAX_TYPES + 1];
-int g_iFlashChance[MAX_TYPES + 1];
-int g_iFlingChance[MAX_TYPES + 1];
-int g_iFlingHit[MAX_TYPES + 1];
-int g_iGhostAbility[MAX_TYPES + 1];
-int g_iGhostChance[MAX_TYPES + 1];
-int g_iGhostHit[MAX_TYPES + 1];
-int g_iGravityAbility[MAX_TYPES + 1];
-int g_iGravityChance[MAX_TYPES + 1];
-int g_iGravityHit[MAX_TYPES + 1];
-int g_iHealAbility[MAX_TYPES + 1];
-int g_iHealChance[MAX_TYPES + 1];
-int g_iHealCommon[MAX_TYPES + 1];
-int g_iHealHit[MAX_TYPES + 1];
-int g_iHealSpecial[MAX_TYPES + 1];
-int g_iHealTank[MAX_TYPES + 1];
+int g_iFireChance[MAXTYPES + 1];
+int g_iFireHit[MAXTYPES + 1];
+int g_iFireImmunity[MAXTYPES + 1];
+int g_iFireRock[MAXTYPES + 1];
+int g_iFlashAbility[MAXTYPES + 1];
+int g_iFlashChance[MAXTYPES + 1];
+int g_iFlingChance[MAXTYPES + 1];
+int g_iFlingHit[MAXTYPES + 1];
+int g_iGhostAbility[MAXTYPES + 1];
+int g_iGhostChance[MAXTYPES + 1];
+int g_iGhostFade[MAXTYPES + 1];
+int g_iGhostHit[MAXTYPES + 1];
+int g_iGlowEffect[MAXTYPES + 1];
+int g_iGravityAbility[MAXTYPES + 1];
+int g_iGravityChance[MAXTYPES + 1];
+int g_iGravityHit[MAXTYPES + 1];
+int g_iHealAbility[MAXTYPES + 1];
+int g_iHealChance[MAXTYPES + 1];
+int g_iHealCommon[MAXTYPES + 1];
+int g_iHealHit[MAXTYPES + 1];
+int g_iHealSpecial[MAXTYPES + 1];
+int g_iHealTank[MAXTYPES + 1];
 int g_iHumanSupport;
-int g_iHunterThrow[MAX_TYPES + 1];
-int g_iHurtAbility[MAX_TYPES + 1];
-int g_iHurtChance[MAX_TYPES + 1];
-int g_iHurtDamage[MAX_TYPES + 1];
-int g_iHypnoChance[MAX_TYPES + 1];
-int g_iHypnoHit[MAX_TYPES + 1];
-int g_iIceChance[MAX_TYPES + 1];
-int g_iIceHit[MAX_TYPES + 1];
-int g_iIdleChance[MAX_TYPES + 1];
-int g_iIdleHit[MAX_TYPES + 1];
-int g_iInfectedThrow[MAX_TYPES + 1];
-int g_iInvertChance[MAX_TYPES + 1];
-int g_iInvertHit[MAX_TYPES + 1];
-int g_iJockeyThrow[MAX_TYPES + 1];
-int g_iJumperAbility[MAX_TYPES + 1];
-int g_iJumperChance[MAX_TYPES + 1];
+int g_iHunterThrow[MAXTYPES + 1];
+int g_iHurtAbility[MAXTYPES + 1];
+int g_iHurtChance[MAXTYPES + 1];
+int g_iHurtDamage[MAXTYPES + 1];
+int g_iHypnoChance[MAXTYPES + 1];
+int g_iHypnoHit[MAXTYPES + 1];
+int g_iIceChance[MAXTYPES + 1];
+int g_iIceHit[MAXTYPES + 1];
+int g_iIdleChance[MAXTYPES + 1];
+int g_iIdleHit[MAXTYPES + 1];
+int g_iInfectedThrow[MAXTYPES + 1];
+int g_iInvertChance[MAXTYPES + 1];
+int g_iInvertHit[MAXTYPES + 1];
+int g_iJockeyThrow[MAXTYPES + 1];
+int g_iJumperAbility[MAXTYPES + 1];
+int g_iJumperChance[MAXTYPES + 1];
 int g_iMaxTypes;
-int g_iMeteorAbility[MAX_TYPES + 1];
-int g_iMeteorChance[MAX_TYPES + 1];
-int g_iPukeChance[MAX_TYPES + 1];
-int g_iPukeHit[MAX_TYPES + 1];
-int g_iRestartChance[MAX_TYPES + 1];
-int g_iRestartHit[MAX_TYPES + 1];
-int g_iRocket[MAX_TYPES + 1];
-int g_iRocketChance[MAX_TYPES + 1];
-int g_iRocketHit[MAX_TYPES + 1];
-int g_iShakeChance[MAX_TYPES + 1];
-int g_iShakeHit[MAX_TYPES + 1];
-int g_iShieldAbility[MAX_TYPES + 1];
-int g_iShoveChance[MAX_TYPES + 1];
-int g_iShoveHit[MAX_TYPES + 1];
-int g_iSlugChance[MAX_TYPES + 1];
-int g_iSlugHit[MAX_TYPES + 1];
+int g_iMeteorAbility[MAXTYPES + 1];
+int g_iMeteorChance[MAXTYPES + 1];
+int g_iPukeChance[MAXTYPES + 1];
+int g_iPukeHit[MAXTYPES + 1];
+int g_iRestartChance[MAXTYPES + 1];
+int g_iRestartHit[MAXTYPES + 1];
+int g_iRocket[MAXTYPES + 1];
+int g_iRocketChance[MAXTYPES + 1];
+int g_iRocketHit[MAXTYPES + 1];
+int g_iShakeChance[MAXTYPES + 1];
+int g_iShakeHit[MAXTYPES + 1];
+int g_iShieldAbility[MAXTYPES + 1];
+int g_iShoveChance[MAXTYPES + 1];
+int g_iShoveHit[MAXTYPES + 1];
+int g_iSlugChance[MAXTYPES + 1];
+int g_iSlugHit[MAXTYPES + 1];
 int g_iSlugSprite = -1;
-int g_iSmokeEffect[MAX_TYPES + 1];
-int g_iSmokerThrow[MAX_TYPES + 1];
-int g_iSpamAbility[MAX_TYPES + 1];
-int g_iSpamAmount[MAX_TYPES + 1];
+int g_iSmokeEffect[MAXTYPES + 1];
+int g_iSmokerThrow[MAXTYPES + 1];
+int g_iSpamAbility[MAXTYPES + 1];
+int g_iSpamAmount[MAXTYPES + 1];
 int g_iSpamCount[MAXPLAYERS + 1];
-int g_iSpamDamage[MAX_TYPES + 1];
+int g_iSpamDamage[MAXTYPES + 1];
 int g_iSpawnInterval[MAXPLAYERS + 1];
-int g_iSpitterThrow[MAX_TYPES + 1];
-int g_iStunChance[MAX_TYPES + 1];
-int g_iStunHit[MAX_TYPES + 1];
-int g_iTankType[MAX_TYPES + 1];
+int g_iSpitterThrow[MAXTYPES + 1];
+int g_iStunChance[MAXTYPES + 1];
+int g_iStunHit[MAXTYPES + 1];
+int g_iTankType[MAXTYPES + 1];
 int g_iTankWave;
 int g_iType;
-int g_iVisionChance[MAX_TYPES + 1];
-int g_iVisionFOV[MAX_TYPES + 1];
-int g_iVisionHit[MAX_TYPES + 1];
-int g_iWarpAbility[MAX_TYPES + 1];
-int g_iWarpInterval[MAX_TYPES + 1];
-int g_iWitchAbility[MAX_TYPES + 1];
-int g_iWitchAmount[MAX_TYPES + 1];
+int g_iVisionChance[MAXTYPES + 1];
+int g_iVisionFOV[MAXTYPES + 1];
+int g_iVisionHit[MAXTYPES + 1];
+int g_iWarpAbility[MAXTYPES + 1];
+int g_iWarpInterval[MAXTYPES + 1];
+int g_iWitchAbility[MAXTYPES + 1];
+int g_iWitchAmount[MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -800,34 +804,7 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 			{
 				char sModel[128];
 				GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (strcmp(sModel, MODEL_CONCRETE) == 0)
-				{
-					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iTank)
-					{
-						SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
-					}
-				}
-				else if (strcmp(sModel, MODEL_JETPACK) == 0)
-				{
-					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iTank)
-					{
-						SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
-					}
-				}
-				else if (strcmp(sModel, MODEL_SHIELD) == 0)
-				{
-					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iTank)
-					{
-						SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
-					}
-				}
-				else if (strcmp(sModel, MODEL_TIRES) == 0)
+				if (strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0)
 				{
 					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == iTank)
@@ -921,7 +898,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 		if (bIsValidClient(iTank))
 		{
 			SetEntityGravity(iTank, 1.0);
-			if (bIsL4D2Game())
+			if (g_iGlowEffect[g_iTankType[iTank]] == 1 && bIsL4D2Game())
 			{
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
 				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
@@ -972,6 +949,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						}
 					}
 				}
+				g_iAlpha[iTank] = 255;
 				vStopHeal(iTank, 1);
 				if (g_iHypnoHit[g_iTankType[iTank]])
 				{
@@ -1053,34 +1031,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 				{
 					char sModel[128];
 					GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-					if (strcmp(sModel, MODEL_CONCRETE) == 0)
-					{
-						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
-						if (iOwner == iTank)
-						{
-							AcceptEntityInput(iEntity, "Kill");
-							SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-						}
-					}
-					else if (strcmp(sModel, MODEL_JETPACK) == 0)
-					{
-						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
-						if (iOwner == iTank)
-						{
-							AcceptEntityInput(iEntity, "Kill");
-							SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-						}
-					}
-					else if (strcmp(sModel, MODEL_SHIELD) == 0)
-					{
-						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
-						if (iOwner == iTank)
-						{
-							AcceptEntityInput(iEntity, "Kill");
-							SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-						}
-					}
-					else if (strcmp(sModel, MODEL_TIRES) == 0)
+					if (strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0)
 					{
 						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iTank)
@@ -1345,8 +1296,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 		g_iFinalesOnly = iSetCellLimit(g_iFinalesOnly, 0, 1);
 		g_iHumanSupport = kvSuperTanks.GetNum("Human Super Tanks", 1);
 		g_iHumanSupport = iSetCellLimit(g_iHumanSupport, 0, 1);
-		g_iMaxTypes = kvSuperTanks.GetNum("Maximum Types", MAX_TYPES);
-		g_iMaxTypes = iSetCellLimit(g_iMaxTypes, 1, MAX_TYPES);
+		g_iMaxTypes = kvSuperTanks.GetNum("Maximum Types", MAXTYPES);
+		g_iMaxTypes = iSetCellLimit(g_iMaxTypes, 1, MAXTYPES);
 		kvSuperTanks.GetString("Tank Types", g_sTankTypes, sizeof(g_sTankTypes), "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
 		kvSuperTanks.GetString("Tank Waves", g_sTankWaves, sizeof(g_sTankWaves), "1,2,3");
 		kvSuperTanks.Rewind();
@@ -1362,6 +1313,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			kvSuperTanks.GetString("Skin-Prop-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255,255|255,255,255");
 			kvSuperTanks.GetString("Props Attached", g_sPropsAttached[iIndex], sizeof(g_sPropsAttached[]), "1234");
 			kvSuperTanks.GetString("Props Chance", g_sPropsChance[iIndex], sizeof(g_sPropsChance[]), "3,3,3,3");
+			g_iGlowEffect[iIndex] = kvSuperTanks.GetNum("Glow Effect", 1);
+			g_iGlowEffect[iIndex] = iSetCellLimit(g_iGlowEffect[iIndex], 0, 1);
 			g_iAcidChance[iIndex] = kvSuperTanks.GetNum("Acid Chance", 4);
 			g_iAcidChance[iIndex] = iSetCellLimit(g_iAcidChance[iIndex], 1, 99999);
 			g_iAcidHit[iIndex] = kvSuperTanks.GetNum("Acid Claw-Rock", 0);
@@ -1426,6 +1379,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			g_iGhostAbility[iIndex] = iSetCellLimit(g_iGhostAbility[iIndex], 0, 1);
 			g_iGhostChance[iIndex] = kvSuperTanks.GetNum("Ghost Chance", 4);
 			g_iGhostChance[iIndex] = iSetCellLimit(g_iGhostChance[iIndex], 1, 99999);
+			g_iGhostFade[iIndex] = kvSuperTanks.GetNum("Ghost Fade Limit", 255);
+			g_iGhostFade[iIndex] = iSetCellLimit(g_iGhostFade[iIndex], 0, 255);
 			g_iGhostHit[iIndex] = kvSuperTanks.GetNum("Ghost Claw-Rock", 0);
 			g_iGhostHit[iIndex] = iSetCellLimit(g_iGhostHit[iIndex], 0, 1);
 			kvSuperTanks.GetString("Ghost Weapon Slots", g_sWeaponSlot[iIndex], sizeof(g_sWeaponSlot[]), "12345");
@@ -2010,18 +1965,19 @@ void vGhostAbility(int client, int enabled)
 				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
 				if (flDistance < 500.0)
 				{
-					SetEntityRenderMode(iInfected, RENDER_TRANSTEXTURE);
+					SetEntityRenderMode(iInfected, RENDER_TRANSCOLOR);
 					SetEntityRenderColor(iInfected, 255, 255, 255, 50);
 				}
 				else
 				{
-					SetEntityRenderMode(iInfected, RENDER_TRANSTEXTURE);
+					SetEntityRenderMode(iInfected, RENDER_TRANSCOLOR);
 					SetEntityRenderColor(iInfected, 255, 255, 255, 255);
 				}
 			}
 		}
 		if (!g_bGhost[client])
 		{
+			g_iAlpha[client] = 255;
 			g_bGhost[client] = true;
 			DataPack dpDataPack;
 			CreateDataTimer(0.1, tTimerGhost, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -2029,7 +1985,6 @@ void vGhostAbility(int client, int enabled)
 			dpDataPack.WriteCell(iRed);
 			dpDataPack.WriteCell(iGreen);
 			dpDataPack.WriteCell(iBlue);
-			dpDataPack.WriteCell(255);
 			SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		}
 	}
@@ -2652,7 +2607,7 @@ void vSetColor(int client, int value = 0)
 	int iRed2 = StringToInt(sGlow[0]);
 	int iGreen2 = StringToInt(sGlow[1]);
 	int iBlue2 = StringToInt(sGlow[2]);
-	if (bIsL4D2Game())
+	if (g_iGlowEffect[value] == 1 && bIsL4D2Game())
 	{
 		SetEntProp(client, Prop_Send, "m_iGlowType", 3);
 		SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
@@ -2899,6 +2854,7 @@ void vStopTimers(int client)
 		g_bMeteor[client] = false;
 		g_bShielded[client] = false;
 		g_bStun[client] = false;
+		g_iAlpha[client] = 255;
 		g_iSpawnInterval[client] = 0;
 		g_iTankType[client] = 0;
 		vStopFlash(client, 1);
@@ -3169,7 +3125,6 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	int iRed = pack.ReadCell();
 	int iGreen = pack.ReadCell();
 	int iBlue = pack.ReadCell();
-	int iAlpha = pack.ReadCell();
 	if (g_iGhostAbility[g_iTankType[iTank]] == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bGhost[iTank] = false;
@@ -3177,13 +3132,28 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	}
 	if (bIsTank(iTank) && (g_iHumanSupport == 1 || (g_iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
-		iAlpha -= 2;
-		if (iAlpha < 0)
+		g_iAlpha[iTank] -= 2;
+		if (g_iAlpha[iTank] <= g_iGhostFade[g_iTankType[iTank]])
 		{
-			iAlpha = 0;
+			g_iAlpha[iTank] = g_iGhostFade[g_iTankType[iTank]];
+		}
+		int iEntity = -1;
+		while ((iEntity = FindEntityByClassname(iEntity, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+		{
+			char sModel[128];
+			GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+			if (strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0)
+			{
+				int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+				if (iOwner == iTank)
+				{
+					SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
+					SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, g_iAlpha[iTank]);
+				}
+			}
 		}
 		SetEntityRenderMode(iTank, RENDER_TRANSCOLOR);
-		SetEntityRenderColor(iTank, iRed, iGreen, iBlue, iAlpha);
+		SetEntityRenderColor(iTank, iRed, iGreen, iBlue, g_iAlpha[iTank]);
 	}
 	return Plugin_Continue;
 }
@@ -3221,7 +3191,7 @@ public Action tTimerHeal(Handle timer, any userid)
 			GetClientAbsOrigin(client, flTankPos);
 			GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flInfectedPos);
 			float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
-			if (flDistance < 500)
+			if (flDistance < 500.0)
 			{
 				int iHealth = GetClientHealth(client);
 				int iExtraHealth = iHealth + g_iHealCommon[g_iTankType[client]];
@@ -3247,7 +3217,7 @@ public Action tTimerHeal(Handle timer, any userid)
 				GetClientAbsOrigin(client, flTankPos);
 				GetClientAbsOrigin(iInfected, flInfectedPos);
 				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-				if (flDistance < 500)
+				if (flDistance < 500.0)
 				{
 					int iHealth = GetClientHealth(client);
 					int iExtraHealth = iHealth + g_iHealSpecial[g_iTankType[client]];
@@ -3271,7 +3241,7 @@ public Action tTimerHeal(Handle timer, any userid)
 				GetClientAbsOrigin(client, flTankPos);
 				GetClientAbsOrigin(iInfected, flInfectedPos);
 				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-				if (flDistance < 500)
+				if (flDistance < 500.0)
 				{
 					int iHealth = GetClientHealth(client);
 					int iExtraHealth = iHealth + g_iHealTank[g_iTankType[client]];
@@ -3773,7 +3743,7 @@ public Action tTimerSpamThrow(Handle timer, any userid)
 			float flAng[3];
 			GetClientEyePosition(client, flPos);
 			GetClientEyeAngles(client, flAng);
-			flPos[2] += 80.0;
+			flPos[2] += 75.0;
 			int iSpammer = CreateEntityByName("env_rock_launcher");
 			if (IsValidEntity(iSpammer))
 			{

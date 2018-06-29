@@ -184,6 +184,12 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 4th number = Chance for tires to appear.
 		"Props Chance"					"3,3,3,3"
 
+		// The Super Tank will have a glow outline.
+		// Only available in Left 4 Dead 2.
+		// 0: OFF
+		// 1: ON
+		"Glow Effect"					"1"
+
 		// The Super Tank has 1 out of this many chances to spawn acid puddles underneath survivors.
 		// Only available in Left 4 Dead 2.
 		// Minimum: "1"
@@ -350,6 +356,11 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Minimum: "1"
 		// Maximum: "99999"
 		"Ghost Chance"					"4"
+
+		// The limit of the Super Tank's ghost fade effect.
+		// Minimum: 0 (Fully faded)
+		// Maximum: 255 (No effect)
+		"Ghost Fade Limit"				"0"
 
 		// The Super Tank can disarm survivors.
 		// 0: OFF

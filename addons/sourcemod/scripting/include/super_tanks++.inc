@@ -9,7 +9,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.12"
+#define ST_VERSION "8.13"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 // Checks

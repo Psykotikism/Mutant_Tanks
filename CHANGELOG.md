@@ -1,5 +1,22 @@
 # Changelog
 
+## Version 8.13 (June 28, 2018)
+
+Bug fixes:
+
+1. Fixed the Ghost ability not letting Super Tanks fade out to full invisibility.
+
+Changes:
+
+1. Lowered the spawn point of the rocks for the Spam ability.
+2. Added the "Ghost Intensity" KeyValue setting to adjust the intensity of the Ghost Fade ability (0: No effect, 255: Fully faded).
+3. Added the "Glow Effect" KeyValue setting to determine whether or not Super Tanks will have a glow outline (0: OFF, 1: ON).
+
+Files:
+
+1. Updated include file.
+2. Updated Boss and Meme Tank's settings in the config file.
+
 ## Version 8.12 (June 28, 2018)
 
 Bug fixes:
