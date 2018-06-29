@@ -36,7 +36,6 @@ public Plugin myinfo =
 #define SOUND_EXPLOSION4 "ambient/explosions/explode_3.wav"
 #define ANIMATION_DEBRIS "animation/van_inside_debris.wav"
 #define PHYSICS_BULLET "physics/glass/glass_impact_bullet4.wav"
-
 bool g_bAFK[MAXPLAYERS + 1];
 bool g_bBlind[MAXPLAYERS + 1];
 bool g_bCmdUsed;
@@ -2612,6 +2611,7 @@ void vSetColor(int client, int value = 0)
 		SetEntProp(client, Prop_Send, "m_iGlowType", 3);
 		SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
 	}
+	SetEntityRenderMode(client, RENDER_NORMAL);
 	SetEntityRenderColor(client, iRed, iGreen, iBlue, iAlpha);
 	g_iTankType[client] = value;
 }
