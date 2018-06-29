@@ -17,6 +17,7 @@ public Plugin myinfo =
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_WITCH "models/infected/witch.mdl"
 #define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl"
+#define MODEL_TANK "models/infected/hulk.mdl"
 #define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
 #define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
 #define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
@@ -36,6 +37,7 @@ public Plugin myinfo =
 #define SOUND_EXPLOSION4 "ambient/explosions/explode_3.wav"
 #define ANIMATION_DEBRIS "animation/van_inside_debris.wav"
 #define PHYSICS_BULLET "physics/glass/glass_impact_bullet4.wav"
+
 bool g_bAFK[MAXPLAYERS + 1];
 bool g_bBlind[MAXPLAYERS + 1];
 bool g_bCmdUsed;
@@ -803,7 +805,7 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 			{
 				char sModel[128];
 				GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0)
+				if (strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0 || strcmp(sModel, MODEL_TANK) == 0)
 				{
 					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == iTank)
@@ -814,6 +816,15 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 				}
 			}
 			while ((iEntity = FindEntityByClassname(iEntity, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+			{
+				int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+				if (iOwner == iTank)
+				{
+					SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
+					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
+				}
+			}
+			while ((iEntity = FindEntityByClassname(iEntity, "env_steam")) != INVALID_ENT_REFERENCE)
 			{
 				int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == iTank)
@@ -948,6 +959,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						}
 					}
 				}
+				g_bGhost[iTank] = false;
 				g_iAlpha[iTank] = 255;
 				vStopHeal(iTank, 1);
 				if (g_iHypnoHit[g_iTankType[iTank]])
@@ -1030,7 +1042,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 				{
 					char sModel[128];
 					GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-					if (strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0)
+					if (strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0 || strcmp(sModel, MODEL_TANK) == 0)
 					{
 						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iTank)
@@ -2399,7 +2411,7 @@ void vProps(int client, int red, int green, int blue, int alpha)
 				int iFlame = CreateEntityByName("env_steam");
 				if (IsValidEntity(iFlame))
 				{
-					SetEntityRenderColor(iFlame, red, green, blue, 180);
+					SetEntityRenderColor(iFlame, red, green, blue, g_iAlpha[client]);
 					DispatchKeyValue(iFlame, "spawnflags", "1");
 					DispatchKeyValue(iFlame, "Type", "0");
 					DispatchKeyValue(iFlame, "InitialState", "1");
@@ -2411,6 +2423,7 @@ void vProps(int client, int red, int green, int blue, int alpha)
 					DispatchKeyValue(iFlame, "JetLength", "40");
 					SetVariantString("!activator");
 					AcceptEntityInput(iFlame, "SetParent", iEntity[iOzTank]);
+					SetEntPropEnt(iFlame, Prop_Send, "m_hOwnerEntity", client);
 					float flOrigin2[3];
 					float flAngles3[3];
 					vSetVector(flOrigin2, -2.0, 0.0, 26.0);
@@ -3103,17 +3116,18 @@ public Action tTimerFlashEffect(Handle timer, any userid)
 		int iEntity = CreateEntityByName("prop_dynamic");
 		if (IsValidEntity(iEntity))
 		{
-			SetEntityModel(iEntity, "models/infected/hulk.mdl");
+			SetEntityModel(iEntity, MODEL_TANK);
+			SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
 			DispatchKeyValue(iEntity, "solid", "6");
 			TeleportEntity(iEntity, flTankPos, flTankAng, NULL_VECTOR);
 			DispatchSpawn(iEntity);
 			AcceptEntityInput(iEntity, "DisableCollision");
-			SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, 50);
+			SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, g_iAlpha[client]);
 			SetEntProp(iEntity, Prop_Send, "m_nSequence", iAnim);
 			SetEntPropFloat(iEntity, Prop_Send, "m_flPlaybackRate", 5.0);
 			iEntity = EntIndexToEntRef(iEntity);
 			vDeleteEntity(iEntity, 0.3);
-		}		
+		}
 	}
 	return Plugin_Continue;
 }
@@ -3133,7 +3147,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	if (bIsTank(iTank) && (g_iHumanSupport == 1 || (g_iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		g_iAlpha[iTank] -= 2;
-		if (g_iAlpha[iTank] <= g_iGhostFade[g_iTankType[iTank]])
+		if (g_iAlpha[iTank] < g_iGhostFade[g_iTankType[iTank]])
 		{
 			g_iAlpha[iTank] = g_iGhostFade[g_iTankType[iTank]];
 		}
@@ -3142,7 +3156,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 		{
 			char sModel[128];
 			GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-			if (strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0)
+			if (strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0 || strcmp(sModel, MODEL_TANK) == 0)
 			{
 				int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == iTank)
@@ -3150,6 +3164,24 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 					SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
 					SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, g_iAlpha[iTank]);
 				}
+			}
+		}
+		while ((iEntity = FindEntityByClassname(iEntity, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+		{
+			int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+			if (iOwner == iTank)
+			{
+				SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
+				SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, g_iAlpha[iTank]);
+			}
+		}
+		while ((iEntity = FindEntityByClassname(iEntity, "env_steam")) != INVALID_ENT_REFERENCE)
+		{
+			int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+			if (iOwner == iTank)
+			{
+				SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
+				SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, g_iAlpha[iTank]);
 			}
 		}
 		SetEntityRenderMode(iTank, RENDER_TRANSCOLOR);
@@ -3743,7 +3775,7 @@ public Action tTimerSpamThrow(Handle timer, any userid)
 			float flAng[3];
 			GetClientEyePosition(client, flPos);
 			GetClientEyeAngles(client, flAng);
-			flPos[2] += 75.0;
+			flPos[2] += 80.0;
 			int iSpammer = CreateEntityByName("env_rock_launcher");
 			if (IsValidEntity(iSpammer))
 			{
