@@ -838,19 +838,6 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 	}
 }
 
-public Action tTimerSetTransmit(Handle timer, any entity)
-{
-	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-	if (IsValidEntity(entity))
-	{
-		SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
-	}
-	return Plugin_Continue;
-}
-
 public Action eEventFinaleEscapeStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_iTankWave = 3;
@@ -1963,6 +1950,11 @@ void vGhostAbility(int client, int enabled)
 	int iRed = StringToInt(sRGB[0]);
 	int iGreen = StringToInt(sRGB[1]);
 	int iBlue = StringToInt(sRGB[2]);
+	char sProps[4][4];
+	ExplodeString(sSet[1], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+	int iRed2 = StringToInt(sProps[0]);
+	int iGreen2 = StringToInt(sProps[1]);
+	int iBlue2 = StringToInt(sProps[2]);
 	if (enabled == 1 && bIsTank(client) && (g_iHumanSupport == 1 || (g_iHumanSupport == 0 && IsFakeClient(client))))
 	{
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
@@ -1996,6 +1988,9 @@ void vGhostAbility(int client, int enabled)
 			dpDataPack.WriteCell(iRed);
 			dpDataPack.WriteCell(iGreen);
 			dpDataPack.WriteCell(iBlue);
+			dpDataPack.WriteCell(iRed2);
+			dpDataPack.WriteCell(iGreen2);
+			dpDataPack.WriteCell(iBlue2);
 			SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		}
 	}
@@ -2108,37 +2103,6 @@ void vHurtHit(int client, int owner, int enabled)
 			dpDataPack.WriteFloat(GetEngineTime());
 		}
 	}
-}
-
-public Action tTimerHurt(Handle timer, DataPack pack)
-{
-	pack.Reset();
-	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	float flTime = pack.ReadFloat();
-	if (g_iHurtAbility[g_iTankType[iTank]] == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || flTime + g_flHurtDuration[g_iTankType[iTank]] < GetEngineTime())
-	{
-		g_bHurt[iSurvivor] = false;
-		return Plugin_Stop;
-	}
-	if (bIsTank(iTank) && (g_iHumanSupport == 1 || (g_iHumanSupport == 0 && IsFakeClient(iTank))) && bIsSurvivor(iSurvivor))
-	{
-		char sDamage[16];
-		IntToString(g_iHurtDamage[g_iTankType[iTank]], sDamage, sizeof(sDamage));
-		int iPointHurt = CreateEntityByName("point_hurt");
-		if (iPointHurt > 0)
-		{
-			DispatchKeyValue(iSurvivor, "targetname", "hurtme");
-			DispatchKeyValue(iPointHurt, "Damage", sDamage);
-			DispatchKeyValue(iPointHurt, "DamageTarget", "hurtme");
-			DispatchKeyValue(iPointHurt, "DamageType", "2");
-			DispatchSpawn(iPointHurt);
-			AcceptEntityInput(iPointHurt, "Hurt", iTank);
-			AcceptEntityInput(iPointHurt, "Kill");
-			DispatchKeyValue(iSurvivor, "targetname", "donthurtme");
-		}
-	}
-	return Plugin_Continue;
 }
 
 void vHypnoHit(int client, int owner, int enabled)
@@ -3139,6 +3103,9 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	int iRed = pack.ReadCell();
 	int iGreen = pack.ReadCell();
 	int iBlue = pack.ReadCell();
+	int iRed2 = pack.ReadCell();
+	int iGreen2 = pack.ReadCell();
+	int iBlue2 = pack.ReadCell();
 	if (g_iGhostAbility[g_iTankType[iTank]] == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bGhost[iTank] = false;
@@ -3162,7 +3129,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 				if (iOwner == iTank)
 				{
 					SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-					SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, g_iAlpha[iTank]);
+					SetEntityRenderColor(iEntity, iRed2, iGreen2, iBlue2, g_iAlpha[iTank]);
 				}
 			}
 		}
@@ -3172,7 +3139,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 			if (iOwner == iTank)
 			{
 				SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, g_iAlpha[iTank]);
+				SetEntityRenderColor(iEntity, iRed2, iGreen2, iBlue2, g_iAlpha[iTank]);
 			}
 		}
 		while ((iEntity = FindEntityByClassname(iEntity, "env_steam")) != INVALID_ENT_REFERENCE)
@@ -3181,7 +3148,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 			if (iOwner == iTank)
 			{
 				SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, g_iAlpha[iTank]);
+				SetEntityRenderColor(iEntity, iRed2, iGreen2, iBlue2, g_iAlpha[iTank]);
 			}
 		}
 		SetEntityRenderMode(iTank, RENDER_TRANSCOLOR);
@@ -3303,6 +3270,37 @@ public Action tTimerHeal(Handle timer, any userid)
 			SetEntProp(client, Prop_Send, "m_iGlowType", 3);
 			SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));
 			SetEntProp(client, Prop_Send, "m_bFlashing", 0);
+		}
+	}
+	return Plugin_Continue;
+}
+
+public Action tTimerHurt(Handle timer, DataPack pack)
+{
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	float flTime = pack.ReadFloat();
+	if (g_iHurtAbility[g_iTankType[iTank]] == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || flTime + g_flHurtDuration[g_iTankType[iTank]] < GetEngineTime())
+	{
+		g_bHurt[iSurvivor] = false;
+		return Plugin_Stop;
+	}
+	if (bIsTank(iTank) && (g_iHumanSupport == 1 || (g_iHumanSupport == 0 && IsFakeClient(iTank))) && bIsSurvivor(iSurvivor))
+	{
+		char sDamage[16];
+		IntToString(g_iHurtDamage[g_iTankType[iTank]], sDamage, sizeof(sDamage));
+		int iPointHurt = CreateEntityByName("point_hurt");
+		if (iPointHurt > 0)
+		{
+			DispatchKeyValue(iSurvivor, "targetname", "hurtme");
+			DispatchKeyValue(iPointHurt, "Damage", sDamage);
+			DispatchKeyValue(iPointHurt, "DamageTarget", "hurtme");
+			DispatchKeyValue(iPointHurt, "DamageType", "2");
+			DispatchSpawn(iPointHurt);
+			AcceptEntityInput(iPointHurt, "Hurt", iTank);
+			AcceptEntityInput(iPointHurt, "Kill");
+			DispatchKeyValue(iSurvivor, "targetname", "donthurtme");
 		}
 	}
 	return Plugin_Continue;
@@ -3834,6 +3832,19 @@ public Action tTimerStopVision(Handle timer, any userid)
 		SetEntProp(client, Prop_Send, "m_iDefaultFOV", 90);
 		KillTimer(g_hVisionTimer[client]);
 		g_hVisionTimer[client] = null;
+	}
+	return Plugin_Continue;
+}
+
+public Action tTimerSetTransmit(Handle timer, any entity)
+{
+	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
+	{
+		return Plugin_Stop;
+	}
+	if (IsValidEntity(entity))
+	{
+		SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
 	}
 	return Plugin_Continue;
 }
