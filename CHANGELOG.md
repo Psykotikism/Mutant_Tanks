@@ -1,5 +1,29 @@
 # Changelog
 
+## Version 8.15 (June 30, 2018)
+
+Bug fixes:
+
+1. Fixed the shield color being overridden when the Super Tank has the Ghost Ability enabled.
+2. Fixed custom configs not respecting the settings from the main config when KeyValues aren't found inside the custom configs.
+3. Fixed the player_death event callback returning the victim's user ID for the attacker.
+
+Changes:
+
+1. Users can now choose different colors for each prop (Change "Skin-Prop-Glow Colors" to "Skin-Glow Colors" and add "Props Colors"). Format: "Skin-Glow Colors" "255,255,255,255|255,255,255", "Props Colors" "255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255"
+2. Added the "Multiply Health" KeyValue to determine how the Super Tank's health should be handled (0: No changes to health, 1: Multiply original health only, 2: Multiply extra health only, 3: Multiply both). Format: "Multiply Health" "3"
+3. Added the "Bomb Rock Break" KeyValue which makes the Super Tank's rocks explode. Format: "Bomb Rock Break" "1"
+4. Added the "Car Throw Ability" KeyValue which lets the Super Tank throw cars. Format: "Car Throw Ability" "1"
+5. Added the "Vampire Claw-Rock" KeyValue which lets the Super Tank steal health from survivors. Format: "Vampire Claw-Rock" "1"
+6. Added the "Vampire Health" KeyValue to determine how much health the Super Tank receives from hitting survivors. Format: "Vampire Health" "100"
+7. Added the "Vampire Chance" KeyValue to determine the chances of the Super Tank stealing health from survivors. Format: "Bomb Rock Break" "4"
+8. The config file is now automatically created if it doesn't exist already.
+9. Optimized code even more.
+
+Files:
+
+1. Moved various stock functions to the include file.
+
 ## Version 8.14 (June 28, 2018)
 
 Changes:

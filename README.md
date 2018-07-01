@@ -55,6 +55,13 @@ Super Tanks++ was developed against SourceMod 1.8+.
 ```
 "Super Tanks++"
 {
+	// These are the general settings.
+	// Note: The following settings will not work in custom config files:
+	// "Enabled Game Modes"
+	// "Disabled Game Modes"
+	// "Enable Custom Configs"
+	// "Create Config Types"
+	// "Execute Config Types"
 	"General"
 	{
 		// Enable Super Tanks++.
@@ -128,14 +135,21 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Maximum types of Super Tanks allowed.
 		// Minimum: 1
 		// Maximum: 250
-		"Maximum Types"					"54"
+		"Maximum Types"					"56"
+
+		// Multiply the Super Tank's health.
+		// 0: No changes to health.
+		// 1: Multiply original health only.
+		// 2: Multiply extra health only.
+		// 3: Multiply both.
+		"Multiply Health"				"0"
 
 		// Spawn these Super Tank types.
 		// Combine letters and numbers in any order for different results.
 		// Repeat the same letter or number to increase its chance of being chosen.
 		// Character limit: 64
 		// Valid characters: Any number, letter, and symbol except for these: ' and "
-		"Tank Types"					"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqr"
+		"Tank Types"					"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst"
 
 		// Amount of Tanks to spawn for each finale wave.
 		// Separate waves with commas.
@@ -146,6 +160,9 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 3rd number = 3rd wave
 		"Tank Waves"					"2,3,4"
 	}
+	// This is just an example that contains information for each setting or ability.
+	// This section is not used by the plugin in any way at all.
+	// Feel free to add your own notes here if you wish.
 	"Example"
 	{
 		// Name of the Super Tank.
@@ -157,13 +174,12 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Character limit: 1
 		"Tank Character"				"0"
 
-		// These are the Super Tank's colors.
+		// These are the Super Tank's skin and glow outline colors.
 		// Separate colors with "|".
 		// Separate RGBAs with commas.
 		// 1st set = skin color (RGBA)
-		// 2nd set = prop color (RGBA)
-		// 3rd set = glow color (RGB)
-		"Skin-Prop-Glow Colors"			"255,255,255,255|255,255,255,255|255,255,255"
+		// 2nd set = glow color (RGB)
+		"Skin-Glow Colors"				"255,255,255,255|255,255,255"
 
 		// Props that the Super Tank can spawn with.
 		// Combine numbers in any order for different results.
@@ -183,6 +199,15 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 3rd number = Chance for rocks to appear.
 		// 4th number = Chance for tires to appear.
 		"Props Chance"					"3,3,3,3"
+
+		// The Super Tank's prop colors.
+		// Separate colors with "|".
+		// Separate RGBAs with commas.
+		// 1st set = lights color (RGBA)
+		// 2nd set = oxygen tanks color (RGBA)
+		// 3rd set = rocks color (RGBA)
+		// 4th set = tires color (RGBA)
+		"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255"
 
 		// The Super Tank will have a glow outline.
 		// Only available in Left 4 Dead 2.
@@ -253,10 +278,20 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 1: ON
 		"Bomb Claw-Rock"				"0"
 
+		// The Super Tank's rock explodes when it breaks.
+		// 0: OFF
+		// 1: ON
+		"Bomb Rock Break"				"0"
+
 		// The Super Tank can throw Boomers.
 		// 0: OFF
 		// 1: ON
 		"Boomer Throw"					"0"
+
+		// The Super Tank can throw cars at survivors.
+		// 0: OFF
+		// 1: ON
+		"Car Throw Ability"				"0"
 
 		// The Super Tank can throw Chargers.
 		// Only available in Left 4 Dead 2.
@@ -296,6 +331,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 
 		// Extra health given to the Super Tank.
 		// Note: Tank's health limit on any difficulty is 62,400.
+		// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
+		// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
 		// Minimum: 0
 		// Maximum: 62400
 		"Extra Health"					"0"
@@ -505,7 +542,7 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 1: ON
 		"Idle Claw-Rock"				"0"
 
-		// The Super Tank can throw Special Infected.
+		// The Super Tank can throw special infected.
 		// 0: OFF
 		// 1: ON
 		"Infected Throw Ability"		"0"
@@ -715,6 +752,22 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Maximum: 99999.0
 		"Throw Interval"				"5.0"
 
+		// The Super Tank has 1 out of this many chances to steal survivors' health.
+		// Minimum: "1"
+		// Maximum: "99999"
+		"Vampire Chance"				"4"
+
+		// The Super Tank receives this much health from hitting survivors.
+		// Note: Tank's health limit on any difficulty is 62,400.
+		// Minimum: 0
+		// Maximum: 62400
+		"Vampire Health"				"100"
+
+		// The Super Tank can steal survivors' health.
+		// 0: OFF
+		// 1: ON
+		"Vampire Claw-Rock"				"0"
+
 		// The Super Tank has 1 out of this many chances to change survivors' fields of view.
 		// Minimum: "1"
 		// Maximum: "99999"
@@ -759,6 +812,10 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Minimum: 1.0
 		// Maximum: 99999.0
 		"Witch Minion Damage"			"10.0"
+	}
+	// Create your own Super Tanks below.
+	"Tank 1"
+	{
 	}
 }
 ```
