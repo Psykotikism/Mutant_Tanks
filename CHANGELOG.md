@@ -1,5 +1,25 @@
 # Changelog
 
+## Version 8.16 (July 4, 2018)
+
+Changes:
+
+1. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
+
+```
+"Boomer Throw"
+"Charger Throw"
+"Clone Throw"
+"Hunter Throw"
+"Jockey Throw"
+"Smoker Throw"
+"Spitter Throw"
+```
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.15 (June 30, 2018)
 
 Bug fixes:

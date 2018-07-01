@@ -283,26 +283,10 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 1: ON
 		"Bomb Rock Break"				"0"
 
-		// The Super Tank can throw Boomers.
-		// 0: OFF
-		// 1: ON
-		"Boomer Throw"					"0"
-
 		// The Super Tank can throw cars at survivors.
 		// 0: OFF
 		// 1: ON
 		"Car Throw Ability"				"0"
-
-		// The Super Tank can throw Chargers.
-		// Only available in Left 4 Dead 2.
-		// 0: OFF
-		// 1: ON
-		"Charger Throw"					"0"
-
-		// The Super Tank can throw Tanks.
-		// 0: OFF
-		// 1: ON
-		"Clone Throw"					"0"
 
 		// The Super Tank can spawn common infected.
 		// 0: OFF
@@ -407,7 +391,6 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// The Super Tank disarms the following weapon slots.
 		// Combine numbers in any order for different results.
 		// Character limit: 5
-		// 0: Random
 		// 1: 1st slot only.
 		// 2: 2nd slot only.
 		// 3: 3rd slot only.
@@ -482,11 +465,6 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Maximum: 62400
 		"Health From Tanks"				"500"
 
-		// The Super Tank can throw Hunters.
-		// 0: OFF
-		// 1: ON
-		"Hunter Throw"					"0"
-
 		// The Super Tank can constantly hurt survivors.
 		// 0: OFF
 		// 1: ON
@@ -542,6 +520,19 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 1: ON
 		"Idle Claw-Rock"				"0"
 
+		// The Super Tank can throw these special infected.
+		// Combine numbers in any order for different results.
+		// Repeat the same number to increase its chance of being chosen.
+		// Character limit: 14
+		// 1: Smoker
+		// 2: Boomer
+		// 3: Hunter
+		// 4: Spitter (Switches to Boomer in L4D1.)
+		// 5: Jockey (Switches to Hunter in L4D1.)
+		// 6: Charger (Switches to Smoker in L4D1.)
+		// 7: Tank
+		"Infected Options"				"1234567"
+
 		// The Super Tank can throw special infected.
 		// 0: OFF
 		// 1: ON
@@ -561,12 +552,6 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 0: OFF
 		// 1: ON
 		"Invert Claw-Rock"				"0"
-
-		// The Super Tank can throw Jockeys.
-		// Only available in Left 4 Dead 2.
-		// 0: OFF
-		// 1: ON
-		"Jockey Throw"					"0"
 
 		// The Super Tank can jump high into the air.
 		// 0: OFF
@@ -695,11 +680,6 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 1: ON
 		"Smoke Effect"					"0"
 
-		// The Super Tank can throw Smokers.
-		// 0: OFF
-		// 1: ON
-		"Smoker Throw"					"0"
-
 		// The Super Tank can spam rocks at survivors.
 		// 0: OFF
 		// 1: ON
@@ -719,12 +699,6 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Minimum: 1
 		// Maximum: 99999
 		"Spam Interval"					"5.0"
-
-		// The Super Tank can throw Spitters.
-		// Only available in Left 4 Dead 2.
-		// 0: OFF
-		// 1: ON
-		"Spitter Throw"					"0"
 
 		// The Super Tank has 1 out of this many chances to stun survivors.
 		// Minimum: "1"

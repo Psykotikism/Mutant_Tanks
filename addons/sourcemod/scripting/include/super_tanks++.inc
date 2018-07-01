@@ -9,7 +9,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.15"
+#define ST_VERSION "8.16"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MAXTYPES 250
 #define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
@@ -1026,26 +1026,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Bomb Rock Break\"				\"0\"");
 			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can throw Boomers.");
-			fFilename.WriteLine("		// 0: OFF");
-			fFilename.WriteLine("		// 1: ON");
-			fFilename.WriteLine("		\"Boomer Throw\"					\"0\"");
-			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can throw cars at survivors.");
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Car Throw Ability\"				\"0\"");
-			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can throw Chargers.");
-			fFilename.WriteLine("		// Only available in Left 4 Dead 2.");
-			fFilename.WriteLine("		// 0: OFF");
-			fFilename.WriteLine("		// 1: ON");
-			fFilename.WriteLine("		\"Charger Throw\"					\"0\"");
-			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can throw Tanks.");
-			fFilename.WriteLine("		// 0: OFF");
-			fFilename.WriteLine("		// 1: ON");
-			fFilename.WriteLine("		\"Clone Throw\"					\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can spawn common infected.");
 			fFilename.WriteLine("		// 0: OFF");
@@ -1150,7 +1134,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank disarms the following weapon slots.");
 			fFilename.WriteLine("		// Combine numbers in any order for different results.");
 			fFilename.WriteLine("		// Character limit: 5");
-			fFilename.WriteLine("		// 0: Random");
 			fFilename.WriteLine("		// 1: 1st slot only.");
 			fFilename.WriteLine("		// 2: 2nd slot only.");
 			fFilename.WriteLine("		// 3: 3rd slot only.");
@@ -1225,11 +1208,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// Maximum: 62400");
 			fFilename.WriteLine("		\"Health From Tanks\"				\"500\"");
 			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can throw Hunters.");
-			fFilename.WriteLine("		// 0: OFF");
-			fFilename.WriteLine("		// 1: ON");
-			fFilename.WriteLine("		\"Hunter Throw\"					\"0\"");
-			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can constantly hurt survivors.");
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
@@ -1285,6 +1263,19 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Idle Claw-Rock\"				\"0\"");
 			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The Super Tank can throw these special infected.");
+			fFilename.WriteLine("		// Combine numbers in any order for different results.");
+			fFilename.WriteLine("		// Repeat the same number to increase its chance of being chosen.");
+			fFilename.WriteLine("		// Character limit: 14");
+			fFilename.WriteLine("		// 1: Smoker");
+			fFilename.WriteLine("		// 2: Boomer");
+			fFilename.WriteLine("		// 3: Hunter");
+			fFilename.WriteLine("		// 4: Spitter (Switches to Boomer in L4D1.)");
+			fFilename.WriteLine("		// 5: Jockey (Switches to Hunter in L4D1.)");
+			fFilename.WriteLine("		// 6: Charger (Switches to Smoker in L4D1.)");
+			fFilename.WriteLine("		// 7: Tank");
+			fFilename.WriteLine("		\"Infected Options\"				\"1234567\"");
+			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can throw special infected.");
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
@@ -1304,12 +1295,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Invert Claw-Rock\"				\"0\"");
-			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can throw Jockeys.");
-			fFilename.WriteLine("		// Only available in Left 4 Dead 2.");
-			fFilename.WriteLine("		// 0: OFF");
-			fFilename.WriteLine("		// 1: ON");
-			fFilename.WriteLine("		\"Jockey Throw\"					\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can jump high into the air.");
 			fFilename.WriteLine("		// 0: OFF");
@@ -1438,11 +1423,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Smoke Effect\"					\"0\"");
 			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can throw Smokers.");
-			fFilename.WriteLine("		// 0: OFF");
-			fFilename.WriteLine("		// 1: ON");
-			fFilename.WriteLine("		\"Smoker Throw\"					\"0\"");
-			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can spam rocks at survivors.");
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
@@ -1462,12 +1442,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// Minimum: 1");
 			fFilename.WriteLine("		// Maximum: 99999");
 			fFilename.WriteLine("		\"Spam Interval\"					\"5.0\"");
-			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can throw Spitters.");
-			fFilename.WriteLine("		// Only available in Left 4 Dead 2.");
-			fFilename.WriteLine("		// 0: OFF");
-			fFilename.WriteLine("		// 1: ON");
-			fFilename.WriteLine("		\"Spitter Throw\"					\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to stun survivors.");
 			fFilename.WriteLine("		// Minimum: \"1\"");
@@ -1612,8 +1586,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"4\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"65,105,0,255|65,105,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"0,0,65,255|0,0,65,255|0,0,65,255|0,0,65,255\"");
-			fFilename.WriteLine("		\"Boomer Throw\"				\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
+			fFilename.WriteLine("		\"Infected Options\"			\"2\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 6\"");
@@ -1632,8 +1606,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"6\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"95,140,80,255|95,140,80\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"25,255,115,255|25,255,115,255|25,255,115,255|25,255,115,255\"");
-			fFilename.WriteLine("		\"Charger Throw\"				\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
+			fFilename.WriteLine("		\"Infected Options\"			\"6\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 8\"");
@@ -1642,8 +1616,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"7\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"10,25,205,255|10,25,205\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"140,40,255,255|140,40,255,255|140,40,255,255|140,40,255,255\"");
-			fFilename.WriteLine("		\"Clone Throw\"				\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
+			fFilename.WriteLine("		\"Infected Options\"			\"7\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 9\"");
@@ -1753,7 +1727,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"0,80,140,255|0,80,140\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"200,200,200,255|200,200,200,255|200,200,200,255|200,200,200,255\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
-			fFilename.WriteLine("		\"Hunter Throw\"				\"1\"");
+			fFilename.WriteLine("		\"Infected Options\"			\"3\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 18\"");
@@ -1817,8 +1791,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,235,235,255|255,235,235\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"130,0,0,255|130,0,0,255|130,0,0,255|130,0,0,255\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
+			fFilename.WriteLine("		\"Infected Options\"			\"5\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
-			fFilename.WriteLine("		\"Jockey Throw\"				\"1\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 24\"");
 			fFilename.WriteLine("	{");
@@ -1924,9 +1898,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"150,0,150,255|150,0,150\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"200,100,145,255|200,100,145,255|200,100,145,255|200,100,145,255\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
+			fFilename.WriteLine("		\"Infected Options\"			\"1\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("		\"Smoke Effect\"				\"1\"");
-			fFilename.WriteLine("		\"Smoker Throw\"				\"1\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 34\"");
 			fFilename.WriteLine("	{");
@@ -1947,8 +1921,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"0,200,0,255|0,200,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,80,150,255|255,80,150,255|255,80,150,255|255,80,150,255\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
+			fFilename.WriteLine("		\"Infected Options\"			\"4\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
-			fFilename.WriteLine("		\"Spitter Throw\"				\"1\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 36\"");
 			fFilename.WriteLine("	{");
@@ -2004,7 +1978,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,145,255,255|255,145,255\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,210,80,255|255,210,80,255|255,210,80,255|255,210,80,255\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
-			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("		\"Witch Ability\"				\"1\"");
 			fFilename.WriteLine("		\"Witch Amount\"				\"3\"");
 			fFilename.WriteLine("		\"Witch Minion Damage\"		\"10.0\"");
@@ -2477,7 +2450,7 @@ stock void vSetVector(float target[3], float x, float y, float z)
 	target[2] = z;
 }
 
-stock void vSpawnInfected(int client, int type, bool auto = true, int enabled = 1)
+stock void vSpawnInfected(int client, int type, bool auto = true)
 {
 	bool bResetGhostState[MAXPLAYERS + 1];
 	bool bResetAlive[MAXPLAYERS + 1];
@@ -2485,7 +2458,7 @@ stock void vSpawnInfected(int client, int type, bool auto = true, int enabled = 
 	ChangeClientTeam(client, 3);
 	char sInfectedTypes[10][10] = {"", "smoker", "boomer", "hunter", "spitter", "jockey", "charger", "witch", "tank", "survivor"};
 	char sOptions[32];
-	if (enabled == 0 || type < 1 || type > 8 || !IsClientInGame(client) || GetClientTeam(client) != 3 || IsPlayerAlive(client))
+	if (type < 1 || type > 8 || !IsClientInGame(client) || GetClientTeam(client) != 3 || IsPlayerAlive(client))
 	{
 		return;
 	}
@@ -2535,7 +2508,7 @@ stock void vSpawnTank(int wave)
 		int iTank = CreateFakeClient("Tank");
 		if (iTank > 0)
 		{
-			vSpawnInfected(iTank, 8, true, 1);
+			vSpawnInfected(iTank, 8, true);
 		}
 	}
 }

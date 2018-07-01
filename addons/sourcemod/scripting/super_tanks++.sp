@@ -42,10 +42,12 @@ char g_sCustomName[MAXTYPES + 1][33];
 char g_sCustomName2[MAXTYPES + 1][33];
 char g_sDisabledGameModes[64];
 char g_sEnabledGameModes[64];
+char g_sInfectedOptions[MAXTYPES + 1][15];
 char g_sLoadout[MAXTYPES + 1][325];
 char g_sPropsAttached[MAXTYPES + 1][5];
 char g_sPropsChance[MAXTYPES + 1][5];
 char g_sPropsColors[MAXTYPES + 1][64];
+char g_sInfectedOptions2[MAXTYPES + 1][15];
 char g_sLoadout2[MAXTYPES + 1][325];
 char g_sPropsAttached2[MAXTYPES + 1][5];
 char g_sPropsChance2[MAXTYPES + 1][5];
@@ -133,10 +135,7 @@ int g_iBlindIntensity[MAXTYPES + 1];
 int g_iBombChance[MAXTYPES + 1];
 int g_iBombHit[MAXTYPES + 1];
 int g_iBombRock[MAXTYPES + 1];
-int g_iBoomerThrow[MAXTYPES + 1];
 int g_iCarThrow[MAXTYPES + 1];
-int g_iChargerThrow[MAXTYPES + 1];
-int g_iCloneThrow[MAXTYPES + 1];
 int g_iCommonAbility[MAXTYPES + 1];
 int g_iCommonAmount[MAXTYPES + 1];
 int g_iAcidChance2[MAXTYPES + 1];
@@ -152,10 +151,7 @@ int g_iBlindIntensity2[MAXTYPES + 1];
 int g_iBombChance2[MAXTYPES + 1];
 int g_iBombHit2[MAXTYPES + 1];
 int g_iBombRock2[MAXTYPES + 1];
-int g_iBoomerThrow2[MAXTYPES + 1];
 int g_iCarThrow2[MAXTYPES + 1];
-int g_iChargerThrow2[MAXTYPES + 1];
-int g_iCloneThrow2[MAXTYPES + 1];
 int g_iCommonAbility2[MAXTYPES + 1];
 int g_iCommonAmount2[MAXTYPES + 1];
 int g_iConfigEnable;
@@ -193,7 +189,6 @@ int g_iHealHit[MAXTYPES + 1];
 int g_iHealSpecial[MAXTYPES + 1];
 int g_iHealTank[MAXTYPES + 1];
 int g_iHumanSupport;
-int g_iHunterThrow[MAXTYPES + 1];
 int g_iHurtAbility[MAXTYPES + 1];
 int g_iHurtChance[MAXTYPES + 1];
 int g_iHurtDamage[MAXTYPES + 1];
@@ -206,7 +201,6 @@ int g_iIdleHit[MAXTYPES + 1];
 int g_iInfectedThrow[MAXTYPES + 1];
 int g_iInvertChance[MAXTYPES + 1];
 int g_iInvertHit[MAXTYPES + 1];
-int g_iJockeyThrow[MAXTYPES + 1];
 int g_iJumperAbility[MAXTYPES + 1];
 int g_iJumperChance[MAXTYPES + 1];
 int g_iMaxTypes;
@@ -252,7 +246,6 @@ int g_iHealHit2[MAXTYPES + 1];
 int g_iHealSpecial2[MAXTYPES + 1];
 int g_iHealTank2[MAXTYPES + 1];
 int g_iHumanSupport2;
-int g_iHunterThrow2[MAXTYPES + 1];
 int g_iHurtAbility2[MAXTYPES + 1];
 int g_iHurtChance2[MAXTYPES + 1];
 int g_iHurtDamage2[MAXTYPES + 1];
@@ -265,7 +258,6 @@ int g_iIdleHit2[MAXTYPES + 1];
 int g_iInfectedThrow2[MAXTYPES + 1];
 int g_iInvertChance2[MAXTYPES + 1];
 int g_iInvertHit2[MAXTYPES + 1];
-int g_iJockeyThrow2[MAXTYPES + 1];
 int g_iJumperAbility2[MAXTYPES + 1];
 int g_iJumperChance2[MAXTYPES + 1];
 int g_iMaxTypes2;
@@ -287,22 +279,18 @@ int g_iSlugChance2[MAXTYPES + 1];
 int g_iSlugHit2[MAXTYPES + 1];
 int g_iSlugSprite = -1;
 int g_iSmokeEffect[MAXTYPES + 1];
-int g_iSmokerThrow[MAXTYPES + 1];
 int g_iSpamAbility[MAXTYPES + 1];
 int g_iSpamAmount[MAXTYPES + 1];
 int g_iSpamCount[MAXPLAYERS + 1];
 int g_iSpamDamage[MAXTYPES + 1];
 int g_iSpawnInterval[MAXPLAYERS + 1];
-int g_iSpitterThrow[MAXTYPES + 1];
 int g_iStunChance[MAXTYPES + 1];
 int g_iStunHit[MAXTYPES + 1];
 int g_iTankType[MAXTYPES + 1];
 int g_iSmokeEffect2[MAXTYPES + 1];
-int g_iSmokerThrow2[MAXTYPES + 1];
 int g_iSpamAbility2[MAXTYPES + 1];
 int g_iSpamAmount2[MAXTYPES + 1];
 int g_iSpamDamage2[MAXTYPES + 1];
-int g_iSpitterThrow2[MAXTYPES + 1];
 int g_iStunChance2[MAXTYPES + 1];
 int g_iStunHit2[MAXTYPES + 1];
 int g_iTankWave;
@@ -1378,14 +1366,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iBombHit[iIndex] = iSetCellLimit(g_iBombHit[iIndex], 0, 1)) : (g_iBombHit2[iIndex] = iSetCellLimit(g_iBombHit2[iIndex], 0, 1));
 			main ? (g_iBombRock[iIndex] = kvSuperTanks.GetNum("Bomb Rock Break", 0)) : (g_iBombRock2[iIndex] = kvSuperTanks.GetNum("Bomb Rock Break", g_iBombRock[iIndex]));
 			main ? (g_iBombRock[iIndex] = iSetCellLimit(g_iBombRock[iIndex], 0, 1)) : (g_iBombRock2[iIndex] = iSetCellLimit(g_iBombRock2[iIndex], 0, 1));
-			main ? (g_iBoomerThrow[iIndex] = kvSuperTanks.GetNum("Boomer Throw", 0)) : (g_iBoomerThrow2[iIndex] = kvSuperTanks.GetNum("Boomer Throw", g_iBoomerThrow[iIndex]));
-			main ? (g_iBoomerThrow[iIndex] = iSetCellLimit(g_iBoomerThrow[iIndex], 0, 1)) : (g_iBoomerThrow2[iIndex] = iSetCellLimit(g_iBoomerThrow2[iIndex], 0, 1));
 			main ? (g_iCarThrow[iIndex] = kvSuperTanks.GetNum("Car Throw Ability", 0)) : (g_iCarThrow2[iIndex] = kvSuperTanks.GetNum("Car Throw Ability", g_iCarThrow[iIndex]));
 			main ? (g_iCarThrow[iIndex] = iSetCellLimit(g_iCarThrow[iIndex], 0, 1)) : (g_iCarThrow2[iIndex] = iSetCellLimit(g_iCarThrow2[iIndex], 0, 1));
-			main ? (g_iChargerThrow[iIndex] = kvSuperTanks.GetNum("Charger Throw", 0)) : (g_iChargerThrow2[iIndex] = kvSuperTanks.GetNum("Charger Throw", g_iChargerThrow[iIndex]));
-			main ? (g_iChargerThrow[iIndex] = iSetCellLimit(g_iChargerThrow[iIndex], 0, 1)) : (g_iChargerThrow2[iIndex] = iSetCellLimit(g_iChargerThrow2[iIndex], 0, 1));
-			main ? (g_iCloneThrow[iIndex] = kvSuperTanks.GetNum("Clone Throw", 0)) : (g_iCloneThrow2[iIndex] = kvSuperTanks.GetNum("Clone Throw", g_iCloneThrow[iIndex]));
-			main ? (g_iCloneThrow[iIndex] = iSetCellLimit(g_iCloneThrow[iIndex], 0, 1)) : (g_iCloneThrow2[iIndex] = iSetCellLimit(g_iCloneThrow2[iIndex], 0, 1));
 			main ? (g_iCommonAbility[iIndex] = kvSuperTanks.GetNum("Common Ability", 0)) : (g_iCommonAbility2[iIndex] = kvSuperTanks.GetNum("Common Ability", g_iCommonAbility[iIndex]));
 			main ? (g_iCommonAbility[iIndex] = iSetCellLimit(g_iCommonAbility[iIndex], 0, 1)) : (g_iCommonAbility2[iIndex] = iSetCellLimit(g_iCommonAbility2[iIndex], 0, 1));
 			main ? (g_iCommonAmount[iIndex] = kvSuperTanks.GetNum("Common Amount", 10)) : (g_iCommonAmount2[iIndex] = kvSuperTanks.GetNum("Common Amount", g_iCommonAmount[iIndex]));
@@ -1451,8 +1433,6 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iHealSpecial[iIndex] = iSetCellLimit(g_iHealSpecial[iIndex], 0, 62400)) : (g_iHealSpecial2[iIndex] = iSetCellLimit(g_iHealSpecial2[iIndex], 0, 62400));
 			main ? (g_iHealTank[iIndex] = kvSuperTanks.GetNum("Health From Tanks", 500)) : (g_iHealTank2[iIndex] = kvSuperTanks.GetNum("Health From Tanks", g_iHealTank[iIndex]));
 			main ? (g_iHealTank[iIndex] = iSetCellLimit(g_iHealTank[iIndex], 0, 62400)) : (g_iHealTank2[iIndex] = iSetCellLimit(g_iHealTank2[iIndex], 0, 62400));
-			main ? (g_iHunterThrow[iIndex] = kvSuperTanks.GetNum("Hunter Throw", 0)) : (g_iHunterThrow2[iIndex] = kvSuperTanks.GetNum("Hunter Throw", g_iHunterThrow[iIndex]));
-			main ? (g_iHunterThrow[iIndex] = iSetCellLimit(g_iHunterThrow[iIndex], 0, 1)) : (g_iHunterThrow2[iIndex] = iSetCellLimit(g_iHunterThrow2[iIndex], 0, 1));
 			main ? (g_iHurtAbility[iIndex] = kvSuperTanks.GetNum("Hurt Ability", 0)) : (g_iHurtAbility2[iIndex] = kvSuperTanks.GetNum("Hurt Ability", g_iHurtAbility[iIndex]));
 			main ? (g_iHurtAbility[iIndex] = iSetCellLimit(g_iHurtAbility[iIndex], 0, 1)) : (g_iHurtAbility2[iIndex] = iSetCellLimit(g_iHurtAbility2[iIndex], 0, 1));
 			main ? (g_iHurtChance[iIndex] = kvSuperTanks.GetNum("Hurt Chance", 4)) : (g_iHurtChance2[iIndex] = kvSuperTanks.GetNum("Hurt Chance", g_iHurtChance[iIndex]));
@@ -1475,6 +1455,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iIdleChance[iIndex] = iSetCellLimit(g_iIdleChance[iIndex], 1, 99999)) : (g_iIdleChance2[iIndex] = iSetCellLimit(g_iIdleChance2[iIndex], 1, 99999));
 			main ? (g_iIdleHit[iIndex] = kvSuperTanks.GetNum("Idle Claw-Rock", 0)) : (g_iIdleHit2[iIndex] = kvSuperTanks.GetNum("Idle Claw-Rock", g_iIdleHit[iIndex]));
 			main ? (g_iIdleHit[iIndex] = iSetCellLimit(g_iIdleHit[iIndex], 0, 1)) : (g_iIdleHit2[iIndex] = iSetCellLimit(g_iIdleHit2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Infected Options", g_sInfectedOptions[iIndex], sizeof(g_sInfectedOptions[]), "1234567")) : (kvSuperTanks.GetString("Infected Options", g_sInfectedOptions2[iIndex], sizeof(g_sInfectedOptions2[]), g_sInfectedOptions[iIndex]));
 			main ? (g_iInfectedThrow[iIndex] = kvSuperTanks.GetNum("Infected Throw Ability", 0)) : (g_iInfectedThrow2[iIndex] = kvSuperTanks.GetNum("Infected Throw Ability", g_iInfectedThrow[iIndex]));
 			main ? (g_iInfectedThrow[iIndex] = iSetCellLimit(g_iInfectedThrow[iIndex], 0, 1)) : (g_iInfectedThrow2[iIndex] = iSetCellLimit(g_iInfectedThrow2[iIndex], 0, 1));
 			main ? (g_iInvertChance[iIndex] = kvSuperTanks.GetNum("Invert Chance", 4)) : (g_iInvertChance2[iIndex] = kvSuperTanks.GetNum("Invert Chance", g_iInvertChance[iIndex]));
@@ -1483,8 +1464,6 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_flInvertDuration[iIndex] = flSetFloatLimit(g_flInvertDuration[iIndex], 0.1, 99999.0)) : (g_flInvertDuration2[iIndex] = flSetFloatLimit(g_flInvertDuration2[iIndex], 0.1, 99999.0));
 			main ? (g_iInvertHit[iIndex] = kvSuperTanks.GetNum("Invert Claw-Rock", 0)) : (g_iInvertHit2[iIndex] = kvSuperTanks.GetNum("Invert Claw-Rock", g_iInvertHit[iIndex]));
 			main ? (g_iInvertHit[iIndex] = iSetCellLimit(g_iInvertHit[iIndex], 0, 1)) : (g_iInvertHit2[iIndex] = iSetCellLimit(g_iInvertHit2[iIndex], 0, 1));
-			main ? (g_iJockeyThrow[iIndex] = kvSuperTanks.GetNum("Jockey Throw", 0)) : (g_iJockeyThrow2[iIndex] = kvSuperTanks.GetNum("Jockey Throw", g_iJockeyThrow[iIndex]));
-			main ? (g_iJockeyThrow[iIndex] = iSetCellLimit(g_iJockeyThrow[iIndex], 0, 1)) : (g_iJockeyThrow2[iIndex] = iSetCellLimit(g_iJockeyThrow2[iIndex], 0, 1));
 			main ? (g_iJumperAbility[iIndex] = kvSuperTanks.GetNum("Jump Ability", 0)) : (g_iJumperAbility2[iIndex] = kvSuperTanks.GetNum("Jump Ability", g_iJumperAbility[iIndex]));
 			main ? (g_iJumperAbility[iIndex] = iSetCellLimit(g_iJumperAbility[iIndex], 0, 1)) : (g_iJumperAbility2[iIndex] = iSetCellLimit(g_iJumperAbility2[iIndex], 0, 1));
 			main ? (g_iJumperChance[iIndex] = kvSuperTanks.GetNum("Jump Chance", 4)) : (g_iJumperChance2[iIndex] = kvSuperTanks.GetNum("Jump Chance", g_iJumperChance[iIndex]));
@@ -1533,8 +1512,6 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iSlugHit[iIndex] = iSetCellLimit(g_iSlugHit[iIndex], 0, 1)) : (g_iSlugHit2[iIndex] = iSetCellLimit(g_iSlugHit2[iIndex], 0, 1));
 			main ? (g_iSmokeEffect[iIndex] = kvSuperTanks.GetNum("Smoke Effect", 0)) : (g_iSmokeEffect2[iIndex] = kvSuperTanks.GetNum("Smoke Effect", g_iSmokeEffect[iIndex]));
 			main ? (g_iSmokeEffect[iIndex] = iSetCellLimit(g_iSmokeEffect[iIndex], 0, 1)) : (g_iSmokeEffect2[iIndex] = iSetCellLimit(g_iSmokeEffect2[iIndex], 0, 1));
-			main ? (g_iSmokerThrow[iIndex] = kvSuperTanks.GetNum("Smoker Throw", 0)) : (g_iSmokerThrow2[iIndex] = kvSuperTanks.GetNum("Smoker Throw", g_iSmokerThrow[iIndex]));
-			main ? (g_iSmokerThrow[iIndex] = iSetCellLimit(g_iSmokerThrow[iIndex], 0, 1)) : (g_iSmokerThrow2[iIndex] = iSetCellLimit(g_iSmokerThrow2[iIndex], 0, 1));
 			main ? (g_iSpamAbility[iIndex] = kvSuperTanks.GetNum("Spam Ability", 0)) : (g_iSpamAbility2[iIndex] = kvSuperTanks.GetNum("Spam Ability", g_iSpamAbility[iIndex]));
 			main ? (g_iSpamAbility[iIndex] = iSetCellLimit(g_iSpamAbility[iIndex], 0, 1)) : (g_iSpamAbility2[iIndex] = iSetCellLimit(g_iSpamAbility2[iIndex], 0, 1));
 			main ? (g_iSpamAmount[iIndex] = kvSuperTanks.GetNum("Spam Amount", 5)) : (g_iSpamAmount2[iIndex] = kvSuperTanks.GetNum("Spam Amount", g_iSpamAmount[iIndex]));
@@ -1543,8 +1520,6 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iSpamDamage[iIndex] = iSetCellLimit(g_iSpamDamage[iIndex], 1, 99999)) : (g_iSpamDamage2[iIndex] = iSetCellLimit(g_iSpamDamage2[iIndex], 1, 99999));
 			main ? (g_flSpamInterval[iIndex] = kvSuperTanks.GetFloat("Spam Interval", 5.0)) : (g_flSpamInterval2[iIndex] = kvSuperTanks.GetFloat("Spam Interval", g_flSpamInterval[iIndex]));
 			main ? (g_flSpamInterval[iIndex] = flSetFloatLimit(g_flSpamInterval[iIndex], 0.1, 99999.0)) : (g_flSpamInterval2[iIndex] = flSetFloatLimit(g_flSpamInterval2[iIndex], 0.1, 99999.0));
-			main ? (g_iSpitterThrow[iIndex] = kvSuperTanks.GetNum("Spitter Throw", 0)) : (g_iSpitterThrow2[iIndex] = kvSuperTanks.GetNum("Spitter Throw", g_iSpitterThrow[iIndex]));
-			main ? (g_iSpitterThrow[iIndex] = iSetCellLimit(g_iSpitterThrow[iIndex], 0, 1)) : (g_iSpitterThrow2[iIndex] = iSetCellLimit(g_iSpitterThrow2[iIndex], 0, 1));
 			main ? (g_iStunChance[iIndex] = kvSuperTanks.GetNum("Stun Chance", 4)) : (g_iStunChance2[iIndex] = kvSuperTanks.GetNum("Stun Chance", g_iStunChance[iIndex]));
 			main ? (g_iStunChance[iIndex] = iSetCellLimit(g_iStunChance[iIndex], 1, 99999)) : (g_iStunChance2[iIndex] = iSetCellLimit(g_iStunChance2[iIndex], 1, 99999));
 			main ? (g_flStunDuration[iIndex] = kvSuperTanks.GetFloat("Stun Duration", 5.0)) : (g_flStunDuration2[iIndex] = kvSuperTanks.GetFloat("Stun Duration", g_flStunDuration[iIndex]));
@@ -2812,7 +2787,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if ((!g_bTankConfig[g_iTankType[iTank]] && g_iCarThrow[g_iTankType[iTank]] == 0) || (g_bTankConfig[g_iTankType[iTank]] && g_iCarThrow2[g_iTankType[iTank]] == 0) || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (iRock = EntRefToEntIndex(iRock)) == INVALID_ENT_REFERENCE)
+	if ((!g_bTankConfig[g_iTankType[iTank]] && g_iCarThrow[g_iTankType[iTank]] == 0) || (g_bTankConfig[g_iTankType[iTank]] && g_iCarThrow2[g_iTankType[iTank]] == 0) || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
 	{
 		return Plugin_Stop;
 	}
@@ -3231,7 +3206,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if ((g_iInfectedThrow[g_iTankType[iTank]] == 0) || (g_iInfectedThrow2[g_iTankType[iTank]] == 0) || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (iRock = EntRefToEntIndex(iRock)) == INVALID_ENT_REFERENCE)
+	if ((g_iInfectedThrow[g_iTankType[iTank]] == 0) || (g_iInfectedThrow2[g_iTankType[iTank]] == 0) || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
 	{
 		return Plugin_Stop;
 	}
@@ -3247,13 +3222,18 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 				int iInfected = CreateFakeClient("Infected");
 				if (iInfected > 0)
 				{
-					vSpawnInfected(iInfected, 1, false, !g_bTankConfig[g_iTankType[iTank]] ? g_iSmokerThrow[g_iTankType[iTank]] : g_iSmokerThrow2[g_iTankType[iTank]]);
-					vSpawnInfected(iInfected, 2, false, !g_bTankConfig[g_iTankType[iTank]] ? g_iBoomerThrow[g_iTankType[iTank]] : g_iBoomerThrow2[g_iTankType[iTank]]);
-					vSpawnInfected(iInfected, 3, false, !g_bTankConfig[g_iTankType[iTank]] ? g_iHunterThrow[g_iTankType[iTank]] : g_iHunterThrow2[g_iTankType[iTank]]);
-					vSpawnInfected(iInfected, 4, false, !g_bTankConfig[g_iTankType[iTank]] ? g_iSpitterThrow[g_iTankType[iTank]] : g_iSpitterThrow2[g_iTankType[iTank]]);
-					vSpawnInfected(iInfected, 5, false, !g_bTankConfig[g_iTankType[iTank]] ? g_iJockeyThrow[g_iTankType[iTank]] : g_iJockeyThrow2[g_iTankType[iTank]]);
-					vSpawnInfected(iInfected, 6, false, !g_bTankConfig[g_iTankType[iTank]] ? g_iChargerThrow[g_iTankType[iTank]] : g_iChargerThrow2[g_iTankType[iTank]]);
-					vSpawnInfected(iInfected, 8, false, !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneThrow[g_iTankType[iTank]] : g_iCloneThrow2[g_iTankType[iTank]]);
+					char sNumbers = g_sInfectedOptions[g_iTankType[iTank]][GetRandomInt(0, strlen(g_sInfectedOptions[g_iTankType[iTank]]) - 1)];
+					char sNumbers2 = g_sInfectedOptions2[g_iTankType[iTank]][GetRandomInt(0, strlen(g_sInfectedOptions2[g_iTankType[iTank]]) - 1)];
+					switch (g_bTankConfig[g_iTankType[iTank]] ? sNumbers : sNumbers2)
+					{
+						case '1': vSpawnInfected(iInfected, 1, false);
+						case '2': vSpawnInfected(iInfected, 2, false);
+						case '3': vSpawnInfected(iInfected, 3, false);
+						case '4': bIsL4D2Game() ? vSpawnInfected(iInfected, 4, false) : vSpawnInfected(iInfected, 2, false);
+						case '5': bIsL4D2Game() ? vSpawnInfected(iInfected, 5, false) : vSpawnInfected(iInfected, 3, false);
+						case '6': bIsL4D2Game() ? vSpawnInfected(iInfected, 6, false) : vSpawnInfected(iInfected, 1, false);
+						case '7': vSpawnInfected(iInfected, 8, false);
+					}
 					float flPos[3];
 					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 					AcceptEntityInput(iRock, "Kill");
@@ -3492,7 +3472,7 @@ public Action tTimerPropaneThrow(Handle timer, DataPack pack)
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if ((!g_bTankConfig[g_iTankType[iTank]] && g_iShieldAbility[g_iTankType[iTank]] == 0) || (g_bTankConfig[g_iTankType[iTank]] && g_iShieldAbility2[g_iTankType[iTank]] == 0) || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (iRock = EntRefToEntIndex(iRock)) == INVALID_ENT_REFERENCE)
+	if ((!g_bTankConfig[g_iTankType[iTank]] && g_iShieldAbility[g_iTankType[iTank]] == 0) || (g_bTankConfig[g_iTankType[iTank]] && g_iShieldAbility2[g_iTankType[iTank]] == 0) || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
 	{
 		return Plugin_Stop;
 	}
@@ -3658,15 +3638,15 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSetTransmit(Handle timer, any entity)
+public Action tTimerSetTransmit(Handle timer, any ref)
 {
-	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
+	if (!bIsValidEntRef(ref))
 	{
 		return Plugin_Stop;
 	}
-	if (IsValidEntity(entity))
+	if (IsValidEntity(ref))
 	{
-		SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
+		SDKHook(ref, SDKHook_SetTransmit, SetTransmit);
 	}
 	return Plugin_Continue;
 }
@@ -3800,13 +3780,13 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerRockThrow(Handle timer, any entity)
+public Action tTimerRockThrow(Handle timer, any ref)
 {
-	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
+	if (!bIsValidEntRef(ref))
 	{
 		return Plugin_Stop;
 	}
-	int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
+	int iThrower = GetEntPropEnt(ref, Prop_Data, "m_hThrower");
 	if (iThrower > 0 && bIsTank(iThrower) && ((!g_bGeneralConfig && g_iHumanSupport == 1) || (g_bGeneralConfig && g_iHumanSupport2 == 1) || (((!g_bGeneralConfig && g_iHumanSupport == 0) || (g_bGeneralConfig && g_iHumanSupport2 == 0)) && IsFakeClient(iThrower))))
 	{
 		if ((!g_bTankConfig[g_iTankType[iThrower]] && g_iCarThrow[g_iTankType[iThrower]] == 1) || (g_bTankConfig[g_iTankType[iThrower]] && g_iCarThrow2[g_iTankType[iThrower]] == 1))
@@ -3814,21 +3794,21 @@ public Action tTimerRockThrow(Handle timer, any entity)
 			DataPack dpDataPack;
 			CreateDataTimer(0.1, tTimerCarThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpDataPack.WriteCell(GetClientUserId(iThrower));
-			dpDataPack.WriteCell(EntIndexToEntRef(entity));
+			dpDataPack.WriteCell(EntIndexToEntRef(ref));
 		}
 		if ((!g_bTankConfig[g_iTankType[iThrower]] && g_iInfectedThrow[g_iTankType[iThrower]] == 1) || (g_bTankConfig[g_iTankType[iThrower]] && g_iInfectedThrow2[g_iTankType[iThrower]] == 1))
 		{
 			DataPack dpDataPack;
 			CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpDataPack.WriteCell(GetClientUserId(iThrower));
-			dpDataPack.WriteCell(EntIndexToEntRef(entity));
+			dpDataPack.WriteCell(EntIndexToEntRef(ref));
 		}
 		if ((!g_bTankConfig[g_iTankType[iThrower]] && g_iShieldAbility[g_iTankType[iThrower]] == 1) || (g_bTankConfig[g_iTankType[iThrower]] && g_iShieldAbility2[g_iTankType[iThrower]] == 1))
 		{
 			DataPack dpDataPack;
 			CreateDataTimer(0.1, tTimerPropaneThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpDataPack.WriteCell(GetClientUserId(iThrower));
-			dpDataPack.WriteCell(EntIndexToEntRef(entity));
+			dpDataPack.WriteCell(EntIndexToEntRef(ref));
 		}
 	}
 	return Plugin_Continue;
