@@ -40,8 +40,8 @@ char g_sConfigCreate[6];
 char g_sConfigExecute[6];
 char g_sCustomName[MAXTYPES + 1][33];
 char g_sCustomName2[MAXTYPES + 1][33];
-char g_sDisabledGameModes[64];
-char g_sEnabledGameModes[64];
+char g_sDisabledGameModes[2112];
+char g_sEnabledGameModes[2112];
 char g_sInfectedOptions[MAXTYPES + 1][15];
 char g_sLoadout[MAXTYPES + 1][325];
 char g_sPropsAttached[MAXTYPES + 1][5];
@@ -56,12 +56,12 @@ char g_sSavePath[255];
 char g_sShieldColor[MAXTYPES + 1][12];
 char g_sTankCharacter[MAXTYPES + 1][2];
 char g_sTankColors[MAXTYPES + 1][28];
-char g_sTankTypes[65];
+char g_sTankTypes[MAXTYPES + 1];
 char g_sTankWaves[12];
 char g_sShieldColor2[MAXTYPES + 1][12];
 char g_sTankCharacter2[MAXTYPES + 1][2];
 char g_sTankColors2[MAXTYPES + 1][28];
-char g_sTankTypes2[65];
+char g_sTankTypes2[MAXTYPES + 1];
 char g_sTankWaves2[12];
 char g_sWeapon[32];
 char g_sWeaponSlot[MAXTYPES + 1][6];
@@ -3224,7 +3224,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 				{
 					char sNumbers = g_sInfectedOptions[g_iTankType[iTank]][GetRandomInt(0, strlen(g_sInfectedOptions[g_iTankType[iTank]]) - 1)];
 					char sNumbers2 = g_sInfectedOptions2[g_iTankType[iTank]][GetRandomInt(0, strlen(g_sInfectedOptions2[g_iTankType[iTank]]) - 1)];
-					switch (g_bTankConfig[g_iTankType[iTank]] ? sNumbers : sNumbers2)
+					switch (!g_bTankConfig[g_iTankType[iTank]] ? sNumbers : sNumbers2)
 					{
 						case '1': vSpawnInfected(iInfected, 1, false);
 						case '2': vSpawnInfected(iInfected, 2, false);
