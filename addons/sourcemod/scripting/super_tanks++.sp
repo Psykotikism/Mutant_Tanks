@@ -1171,7 +1171,8 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 				{
 					char sCharacters = g_sTankTypes[GetRandomInt(0, strlen(g_sTankTypes) - 1)];
 					char sCharacters2 = g_sTankTypes2[GetRandomInt(0, strlen(g_sTankTypes2) - 1)];
-					for (int iIndex = 1; !g_bGeneralConfig ? (iIndex <= g_iMaxTypes) : (iIndex <= g_iMaxTypes2); iIndex++)
+					int iLimit = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
+					for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 					{
 						if ((!g_bTankConfig[iIndex] && sCharacters == g_sTankCharacter[iIndex][0]) || (g_bTankConfig[iIndex] && sCharacters2 == g_sTankCharacter2[iIndex][0]))
 						{
@@ -1246,7 +1247,8 @@ void vTankMenu(int client, int item)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler);
 	mTankMenu.SetTitle("Super Tanks++ Menu");
-	for (int iIndex = 1; !g_bGeneralConfig ? (iIndex <= g_iMaxTypes) : (iIndex <= g_iMaxTypes2); iIndex++)
+	int iLimit = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
+	for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 	{
 		if ((!g_bTankConfig[iIndex] && StrContains(g_sTankTypes, g_sTankCharacter[iIndex]) == -1) || (g_bTankConfig[iIndex] && StrContains(g_sTankTypes2, g_sTankCharacter2[iIndex]) == -1))
 		{
@@ -1266,7 +1268,8 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			for (int iIndex = 1; !g_bGeneralConfig ? (iIndex <= g_iMaxTypes) : (iIndex <= g_iMaxTypes2); iIndex++)
+			int iLimit = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
+			for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 			{
 				if ((!g_bTankConfig[iIndex] && strcmp(sInfo, g_sCustomName[iIndex]) == 0) || (g_bTankConfig[iIndex] && strcmp(sInfo, g_sCustomName2[iIndex]) == 0))
 				{
@@ -1325,7 +1328,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 		main ? (kvSuperTanks.GetString("Tank Waves", g_sTankWaves, sizeof(g_sTankWaves), "1,2,3")) : (kvSuperTanks.GetString("Tank Waves", g_sTankWaves2, sizeof(g_sTankWaves2), g_sTankWaves));
 		kvSuperTanks.Rewind();
 	}
-	for (int iIndex = 1; main ? (iIndex <= g_iMaxTypes) : (iIndex <= g_iMaxTypes2); iIndex++)
+	int iLimit = main ? g_iMaxTypes : g_iMaxTypes2;
+	for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 	{
 		char sName[33];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
