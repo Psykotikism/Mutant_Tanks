@@ -1171,7 +1171,7 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 				{
 					char sCharacters = g_sTankTypes[GetRandomInt(0, strlen(g_sTankTypes) - 1)];
 					char sCharacters2 = g_sTankTypes2[GetRandomInt(0, strlen(g_sTankTypes2) - 1)];
-					for (int iIndex = 1; !g_bGeneralConfig ? iIndex <= g_iMaxTypes : iIndex <= g_iMaxTypes2; iIndex++)
+					for (int iIndex = 1; !g_bGeneralConfig ? (iIndex <= g_iMaxTypes) : (iIndex <= g_iMaxTypes2); iIndex++)
 					{
 						if ((!g_bTankConfig[iIndex] && sCharacters == g_sTankCharacter[iIndex][0]) || (g_bTankConfig[iIndex] && sCharacters2 == g_sTankCharacter2[iIndex][0]))
 						{
@@ -1246,7 +1246,7 @@ void vTankMenu(int client, int item)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler);
 	mTankMenu.SetTitle("Super Tanks++ Menu");
-	for (int iIndex = 1; !g_bGeneralConfig ? iIndex <= g_iMaxTypes : iIndex <= g_iMaxTypes2; iIndex++)
+	for (int iIndex = 1; !g_bGeneralConfig ? (iIndex <= g_iMaxTypes) : (iIndex <= g_iMaxTypes2); iIndex++)
 	{
 		if ((!g_bTankConfig[iIndex] && StrContains(g_sTankTypes, g_sTankCharacter[iIndex]) == -1) || (g_bTankConfig[iIndex] && StrContains(g_sTankTypes2, g_sTankCharacter2[iIndex]) == -1))
 		{
@@ -1266,7 +1266,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			for (int iIndex = 1; !g_bGeneralConfig ? iIndex <= g_iMaxTypes : iIndex <= g_iMaxTypes2; iIndex++)
+			for (int iIndex = 1; !g_bGeneralConfig ? (iIndex <= g_iMaxTypes) : (iIndex <= g_iMaxTypes2); iIndex++)
 			{
 				if ((!g_bTankConfig[iIndex] && strcmp(sInfo, g_sCustomName[iIndex]) == 0) || (g_bTankConfig[iIndex] && strcmp(sInfo, g_sCustomName2[iIndex]) == 0))
 				{
@@ -1325,7 +1325,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 		main ? (kvSuperTanks.GetString("Tank Waves", g_sTankWaves, sizeof(g_sTankWaves), "1,2,3")) : (kvSuperTanks.GetString("Tank Waves", g_sTankWaves2, sizeof(g_sTankWaves2), g_sTankWaves));
 		kvSuperTanks.Rewind();
 	}
-	for (int iIndex = 1; main ? iIndex <= g_iMaxTypes : iIndex <= g_iMaxTypes2; iIndex++)
+	for (int iIndex = 1; main ? (iIndex <= g_iMaxTypes) : (iIndex <= g_iMaxTypes2); iIndex++)
 	{
 		char sName[33];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
@@ -3638,9 +3638,12 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSetTransmit(Handle timer, any ref)
+public Action tTimerSetTransmit(Handle timer, any entity)
 {
-	int entity = EntRefToEntIndex(ref);
+	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
+	{
+		return Plugin_Stop;
+	}
 	if (IsValidEntity(entity))
 	{
 		SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
@@ -3777,9 +3780,12 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerRockThrow(Handle timer, any ref)
+public Action tTimerRockThrow(Handle timer, any entity)
 {
-	int entity = EntRefToEntIndex(ref);
+	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
+	{
+		return Plugin_Stop;
+	}
 	int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
 	if (iThrower > 0 && bIsTank(iThrower) && ((!g_bGeneralConfig && g_iHumanSupport == 1) || (g_bGeneralConfig && g_iHumanSupport2 == 1) || (((!g_bGeneralConfig && g_iHumanSupport == 0) || (g_bGeneralConfig && g_iHumanSupport2 == 0)) && IsFakeClient(iThrower))))
 	{
