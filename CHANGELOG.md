@@ -2,6 +2,10 @@
 
 ## Version 8.16 (July 4, 2018)
 
+Bug fixes:
+
+1. Fixed the Car Throw Ability, Infected Throw Ability, and Shield Ability's propane throw not working.
+
 Changes:
 
 1. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.

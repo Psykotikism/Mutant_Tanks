@@ -3206,7 +3206,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if ((g_iInfectedThrow[g_iTankType[iTank]] == 0) || (g_iInfectedThrow2[g_iTankType[iTank]] == 0) || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
+	if ((!g_bTankConfig[g_iTankType[iTank]] && g_iInfectedThrow[g_iTankType[iTank]] == 0) || (g_bTankConfig[g_iTankType[iTank]] && g_iInfectedThrow2[g_iTankType[iTank]] == 0) || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
 	{
 		return Plugin_Stop;
 	}
@@ -3640,13 +3640,10 @@ public Action tTimerVision(Handle timer, DataPack pack)
 
 public Action tTimerSetTransmit(Handle timer, any ref)
 {
-	if (!bIsValidEntRef(ref))
+	int entity = EntRefToEntIndex(ref);
+	if (IsValidEntity(entity))
 	{
-		return Plugin_Stop;
-	}
-	if (IsValidEntity(ref))
-	{
-		SDKHook(ref, SDKHook_SetTransmit, SetTransmit);
+		SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
 	}
 	return Plugin_Continue;
 }
@@ -3782,11 +3779,8 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 
 public Action tTimerRockThrow(Handle timer, any ref)
 {
-	if (!bIsValidEntRef(ref))
-	{
-		return Plugin_Stop;
-	}
-	int iThrower = GetEntPropEnt(ref, Prop_Data, "m_hThrower");
+	int entity = EntRefToEntIndex(ref);
+	int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
 	if (iThrower > 0 && bIsTank(iThrower) && ((!g_bGeneralConfig && g_iHumanSupport == 1) || (g_bGeneralConfig && g_iHumanSupport2 == 1) || (((!g_bGeneralConfig && g_iHumanSupport == 0) || (g_bGeneralConfig && g_iHumanSupport2 == 0)) && IsFakeClient(iThrower))))
 	{
 		if ((!g_bTankConfig[g_iTankType[iThrower]] && g_iCarThrow[g_iTankType[iThrower]] == 1) || (g_bTankConfig[g_iTankType[iThrower]] && g_iCarThrow2[g_iTankType[iThrower]] == 1))
@@ -3794,21 +3788,21 @@ public Action tTimerRockThrow(Handle timer, any ref)
 			DataPack dpDataPack;
 			CreateDataTimer(0.1, tTimerCarThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpDataPack.WriteCell(GetClientUserId(iThrower));
-			dpDataPack.WriteCell(EntIndexToEntRef(ref));
+			dpDataPack.WriteCell(EntIndexToEntRef(entity));
 		}
 		if ((!g_bTankConfig[g_iTankType[iThrower]] && g_iInfectedThrow[g_iTankType[iThrower]] == 1) || (g_bTankConfig[g_iTankType[iThrower]] && g_iInfectedThrow2[g_iTankType[iThrower]] == 1))
 		{
 			DataPack dpDataPack;
 			CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpDataPack.WriteCell(GetClientUserId(iThrower));
-			dpDataPack.WriteCell(EntIndexToEntRef(ref));
+			dpDataPack.WriteCell(EntIndexToEntRef(entity));
 		}
 		if ((!g_bTankConfig[g_iTankType[iThrower]] && g_iShieldAbility[g_iTankType[iThrower]] == 1) || (g_bTankConfig[g_iTankType[iThrower]] && g_iShieldAbility2[g_iTankType[iThrower]] == 1))
 		{
 			DataPack dpDataPack;
 			CreateDataTimer(0.1, tTimerPropaneThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpDataPack.WriteCell(GetClientUserId(iThrower));
-			dpDataPack.WriteCell(EntIndexToEntRef(ref));
+			dpDataPack.WriteCell(EntIndexToEntRef(entity));
 		}
 	}
 	return Plugin_Continue;
