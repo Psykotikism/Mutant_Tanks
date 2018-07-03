@@ -215,6 +215,23 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 1: ON
 		"Glow Effect"					"1"
 
+		// The Super Tank will spawn with a particle effect.
+		// 0: OFF
+		// 1: ON
+		"Particle Effect"				"0"
+
+		// The particle effects for the Super Tank.
+		// Combine numbers in any order for different results.
+		// Character limit: 7
+		// 1: Blood Explosion
+		// 2: Electric Jolt
+		// 3: Fire Trail
+		// 4: Ice Steam
+		// 5: Meteor Smoke
+		// 6: Smoker Cloud
+		// 7: Spit Puddle (Only available in Left 4 Dead 2.)
+		"Particle Effects"				"1234567"
+
 		// The Super Tank has 1 out of this many chances to spawn acid puddles underneath survivors.
 		// Only available in Left 4 Dead 2.
 		// Minimum: "1"
@@ -674,11 +691,6 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 0: OFF
 		// 1: ON
 		"Slug Claw-Rock"				"0"
-
-		// The Super Tank can emit smoke clouds like Smokers.
-		// 0: OFF
-		// 1: ON
-		"Smoke Effect"					"0"
 
 		// The Super Tank can spam rocks at survivors.
 		// 0: OFF

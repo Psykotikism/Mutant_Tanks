@@ -26,8 +26,12 @@
 #define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
 #define SPRITE_FIRE "sprites/sprite_fire01.vmt"
 #define SPRITE_GLOW "sprites/glow.vmt"
-#define PARTICLE_CLOUD "smoker_smokecloud"
+#define PARTICLE_BLOOD "boomer_explode_D"
 #define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+#define PARTICLE_FIRE "aircraft_destroy_fastFireTrail"
+#define PARTICLE_ICE "steam_manhole"
+#define PARTICLE_METEOR "smoke_medium_01"
+#define PARTICLE_SMOKE "smoker_smokecloud"
 #define PARTICLE_SPIT "spitter_projectile"
 #define SOUND_INFECTED "npc/infected/action/die/male/death_42.wav"
 #define SOUND_INFECTED2 "npc/infected/action/die/male/death_43.wav"
@@ -39,6 +43,27 @@
 #define SOUND_EXPLOSION4 "ambient/explosions/explode_3.wav"
 #define SOUND_DEBRIS "animation/van_inside_debris.wav"
 #define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
+#define SOUND_ARRIVAL "player/tank/voice/yell/tank__01.wav"
+#define SOUND_ARRIVAL2 "player/tank/voice/yell/tank__02.wav"
+#define SOUND_ARRIVAL3 "player/tank/voice/yell/tank__03.wav"
+#define SOUND_ARRIVAL4 "player/tank/voice/yell/tank__04.wav"
+#define SOUND_ARRIVAL5 "player/tank/voice/yell/tank__05.wav"
+#define SOUND_ARRIVAL6 "player/tank/voice/yell/tank__06.wav"
+#define SOUND_ARRIVAL7 "player/tank/voice/yell/tank__09.wav"
+#define SOUND_ARRIVAL8 "player/tank/voice/yell/tank__10.wav"
+#define SOUND_ARRIVAL9 "player/tank/voice/yell/tank__11.wav"
+#define SOUND_ARRIVAL10 "player/tank/voice/yell/tank__01.wav"
+#define SOUND_ARRIVAL11 "player/tank/voice/yell/tank__02.wav"
+#define SOUND_ARRIVAL12 "player/tank/voice/yell/tank__03.wav"
+#define SOUND_ARRIVAL13 "player/tank/voice/yell/tank__04.wav"
+#define SOUND_ARRIVAL14 "player/tank/voice/yell/tank__05.wav"
+#define SOUND_ARRIVAL15 "player/tank/voice/yell/tank__06.wav"
+#define SOUND_ARRIVAL16 "player/tank/voice/yell/tank__07.wav"
+#define SOUND_ARRIVAL17 "player/tank/voice/yell/tank__08.wav"
+#define SOUND_ARRIVAL18 "player/tank/voice/yell/tank__09.wav"
+#define SOUND_ARRIVAL19 "player/tank/voice/yell/tank__10.wav"
+#define SOUND_ARRIVAL20 "player/tank/voice/yell/tank__12.wav"
+#define SOUND_ARRIVAL21 "player/tank/voice/yell/tank__16.wav"
 
 // Checks
 public bool bBoomerFilter(const char[] pattern, Handle clients)
@@ -689,6 +714,30 @@ stock void vApplyDrug(int client, bool toggle, UserMsg message, float angles[20]
 	EndMessage();
 }
 
+stock void vAttachParticle(int client, char[] particlename, float time, float origin)
+{
+	if (bIsValidClient(client))
+	{
+		int iParticle = CreateEntityByName("info_particle_system");
+		if (IsValidEntity(iParticle))
+		{
+			float flPos[3];
+			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
+			DispatchKeyValue(iParticle, "scale", "");
+			DispatchKeyValue(iParticle, "effect_name", particlename);
+			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
+			DispatchSpawn(iParticle);
+			ActivateEntity(iParticle);
+			AcceptEntityInput(iParticle, "Enable");
+			AcceptEntityInput(iParticle, "start");
+			SetVariantString("!activator");
+			AcceptEntityInput(iParticle, "SetParent", client);
+			iParticle = EntIndexToEntRef(iParticle);
+			vDeleteEntity(iParticle, time);
+		}
+	}
+}
+
 stock void vBomb(int client, float pos[3])
 {
 	int iParticle = CreateEntityByName("info_particle_system");
@@ -957,6 +1006,23 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Glow Effect\"					\"1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The Super Tank will spawn with a particle effect.");
+			fFilename.WriteLine("		// 0: OFF");
+			fFilename.WriteLine("		// 1: ON");
+			fFilename.WriteLine("		\"Particle Effect\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The particle effects for the Super Tank.");
+			fFilename.WriteLine("		// Combine numbers in any order for different results.");
+			fFilename.WriteLine("		// Character limit: 7");
+			fFilename.WriteLine("		// 1: Blood Explosion");
+			fFilename.WriteLine("		// 2: Electric Jolt");
+			fFilename.WriteLine("		// 3: Fire Trail");
+			fFilename.WriteLine("		// 4: Ice Steam");
+			fFilename.WriteLine("		// 5: Meteor Smoke");
+			fFilename.WriteLine("		// 6: Smoker Cloud");
+			fFilename.WriteLine("		// 7: Spit Puddle (Only available in Left 4 Dead 2.)");
+			fFilename.WriteLine("		\"Particle Effects\"				\"1234567\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to spawn acid puddles underneath survivors.");
 			fFilename.WriteLine("		// Only available in Left 4 Dead 2.");
@@ -1418,11 +1484,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Slug Claw-Rock\"				\"0\"");
 			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can emit smoke clouds like Smokers.");
-			fFilename.WriteLine("		// 0: OFF");
-			fFilename.WriteLine("		// 1: ON");
-			fFilename.WriteLine("		\"Smoke Effect\"					\"0\"");
-			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can spam rocks at survivors.");
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
@@ -1540,6 +1601,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"0\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"0,255,125,255|0,255,125\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,0,0,255|255,0,0,255|255,0,0,255|255,0,0,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"7\"");
 			fFilename.WriteLine("		\"Acid Chance\"				\"4\"");
 			fFilename.WriteLine("		\"Acid Claw-Rock\"			\"1\"");
 			fFilename.WriteLine("		\"Acid Rock Break\"			\"1\"");
@@ -1586,6 +1649,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"4\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"65,105,0,255|65,105,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"0,0,65,255|0,0,65,255|0,0,65,255|0,0,65,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Infected Options\"			\"2\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
@@ -1647,6 +1712,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"A\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"150,0,0,255|150,0,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,135,0,255|255,135,0,255|255,135,0,255|255,135,0,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"3\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Chance\"				\"4\"");
 			fFilename.WriteLine("		\"Fire Claw-Rock\"			\"1\"");
@@ -1659,6 +1726,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"B\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,0,0,150|255,255,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,255,0,150|255,255,0,150|255,255,0,150|255,255,0,150\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"2\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Flash Ability\"				\"1\"");
@@ -1759,6 +1828,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"J\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"0,155,255,200|0,155,255\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"170,240,255,200|170,240,255,200|170,240,255,200|170,240,255,200\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"4\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Ice Chance\"				\"4\"");
 			fFilename.WriteLine("		\"Ice Claw-Rock\"				\"1\"");
@@ -1810,6 +1881,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"O\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"120,20,10,255|120,20,10\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"200,200,200,255|200,200,200,255|200,200,200,255|200,200,200,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"5\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Meteor Ability\"			\"1\"");
@@ -1822,6 +1895,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"P\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"170,180,45,255|170,180,45\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"140,0,0,255|140,0,0,255|140,0,0,255|140,0,0,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Puke Chance\"				\"4\"");
 			fFilename.WriteLine("		\"Puke Claw-Rock\"			\"1\"");
@@ -1897,10 +1972,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"W\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"150,0,150,255|150,0,150\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"200,100,145,255|200,100,145,255|200,100,145,255|200,100,145,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"6\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Infected Options\"			\"1\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
-			fFilename.WriteLine("		\"Smoke Effect\"				\"1\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 34\"");
 			fFilename.WriteLine("	{");
@@ -1920,6 +1996,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"Y\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"0,200,0,255|0,200,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,80,150,255|255,80,150,255|255,80,150,255|255,80,150,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"7\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Infected Options\"			\"4\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
@@ -1942,6 +2020,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"a\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"180,0,70,255|180,0,70\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"70,210,70,255|70,210,70,255|70,210,70,255|70,210,70,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Vampire Chance\"			\"4\"");
 			fFilename.WriteLine("		\"Vampire Health\"			\"100\"");
@@ -1965,6 +2045,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"c\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"130,130,255,255|130,130,255\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"225,100,0,255|225,100,0,255|225,100,0,255|225,100,0,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"2\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Throw Interval\"			\"99999.0\"");
@@ -1977,6 +2059,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"d\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,145,255,255|255,145,255\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,210,80,255|255,210,80,255|255,210,80,255|255,210,80,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Witch Ability\"				\"1\"");
 			fFilename.WriteLine("		\"Witch Amount\"				\"3\"");
@@ -2002,6 +2086,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"f\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"0,0,50,255|0,0,50\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"30,30,30,255|30,30,30,255|30,30,30,255|30,30,30,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"1234567\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Common Ability\"			\"1\"");
@@ -2056,6 +2142,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"h\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"90,60,90,255|90,60,90\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"90,90,60,255|90,90,60,255|90,90,60,255|90,90,60,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"2\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Gravity Ability\"			\"1\"");
 			fFilename.WriteLine("		\"Gravity Force\"				\"50.0\"");
@@ -2103,6 +2191,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"k\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"0,255,0,255|0,255,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"225,0,255|225,0,255|225,0,255|225,0,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"1234567\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Common Ability\"			\"1\"");
@@ -2179,6 +2269,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"n\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"0,0,0,255|255,0,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,0,0,255|255,0,0,255|255,0,0,255|255,0,0,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"12\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Heal Ability\"				\"1\"");
 			fFilename.WriteLine("		\"Heal Interval\"				\"5.0\"");
@@ -2201,6 +2293,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"o\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,255,0,150|255,0,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,0,0,150|255,0,0,150|255,0,0,150|255,0,0,150\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"2\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Flash Ability\"				\"1\"");
@@ -2226,10 +2320,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"q\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"75,95,105,255|75,95,105\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"100,100,100,255|100,100,100,255|100,100,100,255|100,100,100,255\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"6\"");
 			fFilename.WriteLine("		\"Common Ability\"			\"1\"");
 			fFilename.WriteLine("		\"Common Amount\"				\"25\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
-			fFilename.WriteLine("		\"Smoke Effect\"				\"1\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 54\"");
 			fFilename.WriteLine("	{");
@@ -2237,6 +2332,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Character\"			\"r\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"45,45,45,150|65,135,245\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"65,135,245,150|65,135,245,150|65,135,245,150|65,135,245,150\"");
+			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
+			fFilename.WriteLine("		\"Particle Effects\"			\"2\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Flash Ability\"				\"1\"");
@@ -2292,7 +2389,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 
 stock void vCreateParticle(int client, char[] particlename, float time, float origin)
 {
-	if (client > 0)
+	if (bIsValidClient(client))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (IsValidEntity(iParticle))

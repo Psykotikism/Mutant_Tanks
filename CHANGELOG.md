@@ -5,10 +5,15 @@
 Bug fixes:
 
 1. Fixed the Car Throw Ability, Infected Throw Ability, and Shield Ability's propane throw not working.
+2. Fixed the "Enabled Game Modes" and "Disabled Game Modes" KeyValues not having enough space for more than 2-4 game modes.
+3. Fixed the issue with default "unnamed" Tanks appearing when certain Super Tanks are disabled.
 
 Changes:
 
-1. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
+1. Raised the character limit of the "Tank Types" KeyValue from 64 to 250.
+2. Added the "Particle Effect" and "Particle Effects" KeyValues to let users decide which particle effects to attach to Super Tanks.
+3. Removed the "Smoke Effect" KeyValue.
+4. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
 
 ```
 "Boomer Throw"
