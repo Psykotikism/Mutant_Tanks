@@ -13,7 +13,10 @@ Changes:
 1. Raised the character limit of the "Tank Types" KeyValue from 64 to 250.
 2. Added the "Particle Effect" and "Particle Effects" KeyValues to let users decide which particle effects to attach to Super Tanks.
 3. Removed the "Smoke Effect" KeyValue.
-4. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
+4. Modified the "Props Attached" KeyValue to support the oxygen tank flames. New format: "Props Attached" "12345"
+5. Modified the "Props Chance" KeyValue to support the oxygen tank flames. New format: "Props Chance" "3,3,3,3,3"
+6. Modified the "Props Colors" KeyValue to support the oxygen tank flames. New format: "Props Colors" "255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255"
+7. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
 
 ```
 "Boomer Throw"

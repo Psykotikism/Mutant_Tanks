@@ -186,9 +186,10 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Character limit: 4
 		// 1: attach lights only.
 		// 2: attach oxygen tanks only.
-		// 3: attach rocks only.
-		// 4: attach tires only.
-		"Props Attached"				"1234"
+		// 3: attach flames to oxygen tanks.
+		// 4: attach rocks only.
+		// 5: attach tires only.
+		"Props Attached"				"12345"
 
 		// Each prop has 1 of this many chances to appear when the Super Tank appears.
 		// Separate chances with commas.
@@ -196,18 +197,20 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Character limit for each chance: 3
 		// 1st number = Chance for lights to appear.
 		// 2nd number = Chance for oxygen tanks to appear.
-		// 3rd number = Chance for rocks to appear.
-		// 4th number = Chance for tires to appear.
-		"Props Chance"					"3,3,3,3"
+		// 3rd number = Chance for oxygen tank flames to appear.
+		// 4th number = Chance for rocks to appear.
+		// 5th number = Chance for tires to appear.
+		"Props Chance"					"3,3,3,3,3"
 
 		// The Super Tank's prop colors.
 		// Separate colors with "|".
 		// Separate RGBAs with commas.
 		// 1st set = lights color (RGBA)
 		// 2nd set = oxygen tanks color (RGBA)
-		// 3rd set = rocks color (RGBA)
-		// 4th set = tires color (RGBA)
-		"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255"
+		// 3rd set = oxygen tank flames color (RGBA)
+		// 4th set = rocks color (RGBA)
+		// 5th set = tires color (RGBA)
+		"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255"
 
 		// The Super Tank will have a glow outline.
 		// Only available in Left 4 Dead 2.

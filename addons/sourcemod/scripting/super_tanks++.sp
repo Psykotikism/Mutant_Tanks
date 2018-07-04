@@ -45,15 +45,15 @@ char g_sEnabledGameModes[2112];
 char g_sInfectedOptions[MAXTYPES + 1][15];
 char g_sLoadout[MAXTYPES + 1][325];
 char g_sParticleEffects[MAXTYPES + 1][8];
-char g_sPropsAttached[MAXTYPES + 1][5];
-char g_sPropsChance[MAXTYPES + 1][5];
-char g_sPropsColors[MAXTYPES + 1][64];
+char g_sPropsAttached[MAXTYPES + 1][6];
+char g_sPropsChance[MAXTYPES + 1][10];
+char g_sPropsColors[MAXTYPES + 1][80];
 char g_sInfectedOptions2[MAXTYPES + 1][15];
 char g_sLoadout2[MAXTYPES + 1][325];
 char g_sParticleEffects2[MAXTYPES + 1][8];
-char g_sPropsAttached2[MAXTYPES + 1][5];
-char g_sPropsChance2[MAXTYPES + 1][5];
-char g_sPropsColors2[MAXTYPES + 1][64];
+char g_sPropsAttached2[MAXTYPES + 1][6];
+char g_sPropsChance2[MAXTYPES + 1][10];
+char g_sPropsColors2[MAXTYPES + 1][80];
 char g_sSavePath[255];
 char g_sShieldColor[MAXTYPES + 1][12];
 char g_sTankCharacter[MAXTYPES + 1][2];
@@ -1255,16 +1255,13 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 				int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
 				if (iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
 				{
-					char sCharacters = g_sTankTypes[GetRandomInt(0, strlen(g_sTankTypes) - 1)];
-					char sCharacters2 = g_sTankTypes2[GetRandomInt(0, strlen(g_sTankTypes2) - 1)];
+					char sCharacters = !g_bGeneralConfig ? g_sTankTypes[GetRandomInt(0, strlen(g_sTankTypes) - 1)] : g_sTankTypes2[GetRandomInt(0, strlen(g_sTankTypes2) - 1)];
 					int iLimit = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
 					for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 					{
-						char sString1[2];
-						sString1[0] = !g_bTankConfig[iIndex] ? sCharacters : sCharacters2;
 						char sString2[2];
 						sString2[0] = !g_bTankConfig[iIndex] ? g_sTankCharacter[iIndex][0] : g_sTankCharacter2[iIndex][0];
-						if (sString1[0] == sString2[0])
+						if (sCharacters == sString2[0])
 						{
 							vSetColor(iTank, iIndex);
 						}
@@ -1444,9 +1441,9 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (kvSuperTanks.GetString("Tank Name", g_sCustomName[iIndex], sizeof(g_sCustomName[]), sName)) : (kvSuperTanks.GetString("Tank Name", g_sCustomName2[iIndex], sizeof(g_sCustomName2[]), g_sCustomName[iIndex]));
 			main ? (kvSuperTanks.GetString("Tank Character", g_sTankCharacter[iIndex], sizeof(g_sTankCharacter[]), "NULL")) : (kvSuperTanks.GetString("Tank Character", g_sTankCharacter2[iIndex], sizeof(g_sTankCharacter2[]), g_sTankCharacter[iIndex]));
 			main ? (kvSuperTanks.GetString("Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
-			main ? (kvSuperTanks.GetString("Props Attached", g_sPropsAttached[iIndex], sizeof(g_sPropsAttached[]), "1234")) : (kvSuperTanks.GetString("Props Attached", g_sPropsAttached2[iIndex], sizeof(g_sPropsAttached2[]), g_sPropsAttached[iIndex]));
-			main ? (kvSuperTanks.GetString("Props Chance", g_sPropsChance[iIndex], sizeof(g_sPropsChance[]), "3,3,3,3")) : (kvSuperTanks.GetString("Props Chance", g_sPropsChance2[iIndex], sizeof(g_sPropsChance2[]), g_sPropsChance[iIndex]));
-			main ? (kvSuperTanks.GetString("Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255")) : (kvSuperTanks.GetString("Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]));
+			main ? (kvSuperTanks.GetString("Props Attached", g_sPropsAttached[iIndex], sizeof(g_sPropsAttached[]), "12345")) : (kvSuperTanks.GetString("Props Attached", g_sPropsAttached2[iIndex], sizeof(g_sPropsAttached2[]), g_sPropsAttached[iIndex]));
+			main ? (kvSuperTanks.GetString("Props Chance", g_sPropsChance[iIndex], sizeof(g_sPropsChance[]), "3,3,3,3,3")) : (kvSuperTanks.GetString("Props Chance", g_sPropsChance2[iIndex], sizeof(g_sPropsChance2[]), g_sPropsChance[iIndex]));
+			main ? (kvSuperTanks.GetString("Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255")) : (kvSuperTanks.GetString("Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]));
 			main ? (g_iGlowEffect[iIndex] = kvSuperTanks.GetNum("Glow Effect", 1)) : (g_iGlowEffect2[iIndex] = kvSuperTanks.GetNum("Glow Effect", g_iGlowEffect[iIndex]));
 			main ? (g_iGlowEffect[iIndex] = iSetCellLimit(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iSetCellLimit(g_iGlowEffect2[iIndex], 0, 1));
 			main ? (g_iParticleEffect[iIndex] = kvSuperTanks.GetNum("Particle Effect", 0)) : (g_iParticleEffect2[iIndex] = kvSuperTanks.GetNum("Particle Effect", g_iParticleEffect[iIndex]));
@@ -1919,14 +1916,14 @@ void vFlingHit(int client, int owner, int enabled)
 
 void vGhostAbility(int client, int enabled)
 {
-	char sSet[2][12];
+	char sSet[2][16];
 	!g_bTankConfig[g_iTankType[client]] ? ExplodeString(g_sTankColors[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[])) : ExplodeString(g_sTankColors2[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[]));
 	char sRGB[4][4];
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 	int iRed = StringToInt(sRGB[0]);
 	int iGreen = StringToInt(sRGB[1]);
 	int iBlue = StringToInt(sRGB[2]);
-	char sSet2[4][16];
+	char sSet2[5][16];
 	ExplodeString(g_sPropsColors[g_iTankType[client]], "|", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 	char sProps[4][4];
 	ExplodeString(sSet2[0], ",", sProps, sizeof(sProps), sizeof(sProps[]));
@@ -1948,6 +1945,11 @@ void vGhostAbility(int client, int enabled)
 	int iRed5 = StringToInt(sProps4[0]);
 	int iGreen5 = StringToInt(sProps4[1]);
 	int iBlue5 = StringToInt(sProps4[2]);
+	char sProps5[4][4];
+	ExplodeString(sSet2[4], ",", sProps5, sizeof(sProps5), sizeof(sProps5[]));
+	int iRed6 = StringToInt(sProps5[0]);
+	int iGreen6 = StringToInt(sProps5[1]);
+	int iBlue6 = StringToInt(sProps5[2]);
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
@@ -1994,6 +1996,9 @@ void vGhostAbility(int client, int enabled)
 			dpDataPack.WriteCell(iRed5);
 			dpDataPack.WriteCell(iGreen5);
 			dpDataPack.WriteCell(iBlue5);
+			dpDataPack.WriteCell(iRed6);
+			dpDataPack.WriteCell(iGreen6);
+			dpDataPack.WriteCell(iBlue6);
 			SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		}
 	}
@@ -2307,15 +2312,16 @@ void vParticleEffects(int client, int enabled)
 	}
 }
 
-void vProps(int client, int red, int green, int blue, int alpha, int red2, int green2, int blue2, int alpha2, int red3, int green3, int blue3, int alpha3, int red4, int green4, int blue4, int alpha4)
+void vProps(int client, int red, int green, int blue, int alpha, int red2, int green2, int blue2, int alpha2, int red3, int green3, int blue3, int alpha3, int red4, int green4, int blue4, int alpha4, int red5, int green5, int blue5, int alpha5)
 {
-	char sSet[4][4];
+	char sSet[5][4];
 	!g_bTankConfig[g_iTankType[client]] ? ExplodeString(g_sPropsChance[g_iTankType[client]], ",", sSet, sizeof(sSet), sizeof(sSet[])) : ExplodeString(g_sPropsChance2[g_iTankType[client]], ",", sSet, sizeof(sSet), sizeof(sSet[]));
 	int iChance1 = StringToInt(sSet[0]);
 	int iChance2 = StringToInt(sSet[1]);
 	int iChance3 = StringToInt(sSet[2]);
 	int iChance4 = StringToInt(sSet[3]);
-	char sPropsAttached[5];
+	int iChance5 = StringToInt(sSet[4]);
+	char sPropsAttached[6];
 	sPropsAttached = !g_bTankConfig[g_iTankType[client]] ? g_sPropsAttached[g_iTankType[client]] : g_sPropsAttached2[g_iTankType[client]];
 	if (GetRandomInt(1, iChance1) == 1 && StrContains(sPropsAttached, "1") != -1)
 	{
@@ -2403,37 +2409,40 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 				SetEntPropEnt(iEntity[iOzTank], Prop_Send, "m_hOwnerEntity", client);
 				TeleportEntity(iEntity[iOzTank], flOrigin, NULL_VECTOR, flAngles2);
 				DispatchSpawn(iEntity[iOzTank]);
-				int iFlame = CreateEntityByName("env_steam");
-				if (IsValidEntity(iFlame))
+				if (GetRandomInt(1, iChance3) == 1 && StrContains(sPropsAttached, "3") != -1)
 				{
-					SetEntityRenderColor(iFlame, red2, green2, blue2, alpha2);
-					DispatchKeyValue(iFlame, "spawnflags", "1");
-					DispatchKeyValue(iFlame, "Type", "0");
-					DispatchKeyValue(iFlame, "InitialState", "1");
-					DispatchKeyValue(iFlame, "Spreadspeed", "1");
-					DispatchKeyValue(iFlame, "Speed", "250");
-					DispatchKeyValue(iFlame, "Startsize", "6");
-					DispatchKeyValue(iFlame, "EndSize", "8");
-					DispatchKeyValue(iFlame, "Rate", "555");
-					DispatchKeyValue(iFlame, "JetLength", "40");
-					SetVariantString("!activator");
-					AcceptEntityInput(iFlame, "SetParent", iEntity[iOzTank]);
-					SetEntPropEnt(iFlame, Prop_Send, "m_hOwnerEntity", client);
-					float flOrigin2[3];
-					float flAngles3[3];
-					vSetVector(flOrigin2, -2.0, 0.0, 26.0);
-					vSetVector(flAngles3, 0.0, 0.0, 1.0);
-					GetVectorAngles(flAngles3, flAngles3);
-					TeleportEntity(iFlame, flOrigin2, flAngles3, NULL_VECTOR);
-					DispatchSpawn(iFlame);
-					AcceptEntityInput(iFlame, "TurnOn");
-					SDKHook(iFlame, SDKHook_SetTransmit, SetTransmit);
+					int iFlame = CreateEntityByName("env_steam");
+					if (IsValidEntity(iFlame))
+					{
+						SetEntityRenderColor(iFlame, red3, green3, blue3, alpha3);
+						DispatchKeyValue(iFlame, "spawnflags", "1");
+						DispatchKeyValue(iFlame, "Type", "0");
+						DispatchKeyValue(iFlame, "InitialState", "1");
+						DispatchKeyValue(iFlame, "Spreadspeed", "1");
+						DispatchKeyValue(iFlame, "Speed", "250");
+						DispatchKeyValue(iFlame, "Startsize", "6");
+						DispatchKeyValue(iFlame, "EndSize", "8");
+						DispatchKeyValue(iFlame, "Rate", "555");
+						DispatchKeyValue(iFlame, "JetLength", "40");
+						SetVariantString("!activator");
+						AcceptEntityInput(iFlame, "SetParent", iEntity[iOzTank]);
+						SetEntPropEnt(iFlame, Prop_Send, "m_hOwnerEntity", client);
+						float flOrigin2[3];
+						float flAngles3[3];
+						vSetVector(flOrigin2, -2.0, 0.0, 26.0);
+						vSetVector(flAngles3, 0.0, 0.0, 1.0);
+						GetVectorAngles(flAngles3, flAngles3);
+						TeleportEntity(iFlame, flOrigin2, flAngles3, NULL_VECTOR);
+						DispatchSpawn(iFlame);
+						AcceptEntityInput(iFlame, "TurnOn");
+						SDKHook(iFlame, SDKHook_SetTransmit, SetTransmit);
+					}
+					SDKHook(iEntity[iOzTank], SDKHook_SetTransmit, SetTransmit);
 				}
-				SDKHook(iEntity[iOzTank], SDKHook_SetTransmit, SetTransmit);
 			}
 		}
 	}
-	if (GetRandomInt(1, iChance3) == 1 && StrContains(sPropsAttached, "3") != -1)
+	if (GetRandomInt(1, iChance4) == 1 && StrContains(sPropsAttached, "4") != -1)
 	{
 		float flOrigin[3];
 		float flAngles[3];
@@ -2446,7 +2455,7 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 			if (IsValidEntity(iEntity[iRock]))
 			{
 				SetEntityModel(iEntity[iRock], MODEL_CONCRETE);
-				SetEntityRenderColor(iEntity[iRock], red3, green3, blue3, alpha3);
+				SetEntityRenderColor(iEntity[iRock], red4, green4, blue4, alpha4);
 				DispatchKeyValueVector(iEntity[iRock], "origin", flOrigin);
 				DispatchKeyValueVector(iEntity[iRock], "angles", flAngles);
 				SetVariantString("!activator");
@@ -2479,7 +2488,7 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 			}
 		}
 	}
-	if (GetRandomInt(1, iChance4) == 1 && StrContains(sPropsAttached, "4") != -1)
+	if (GetRandomInt(1, iChance5) == 1 && StrContains(sPropsAttached, "5") != -1)
 	{
 		float flOrigin[3];
 		float flAngles[3];
@@ -2493,7 +2502,7 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 			if (IsValidEntity(iEntity[iTire]))
 			{
 				SetEntityModel(iEntity[iTire], MODEL_TIRES);
-				SetEntityRenderColor(iEntity[iTire], red4, green4, blue4, alpha4);
+				SetEntityRenderColor(iEntity[iTire], red5, green5, blue5, alpha5);
 				DispatchKeyValueVector(iEntity[iTire], "origin", flOrigin);
 				DispatchKeyValueVector(iEntity[iTire], "angles", flAngles);
 				SetVariantString("!activator");
@@ -2606,7 +2615,7 @@ void vRocketHit(int client, int owner, int enabled)
 
 void vSetColor(int client, int value)
 {
-	char sSet[2][12];
+	char sSet[2][16];
 	!g_bTankConfig[value] ? ExplodeString(g_sTankColors[value], "|", sSet, sizeof(sSet), sizeof(sSet[])) : ExplodeString(g_sTankColors2[value], "|", sSet, sizeof(sSet), sizeof(sSet[]));
 	char sRGB[4][4];
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
@@ -2632,7 +2641,7 @@ void vSetColor(int client, int value)
 
 void vSetName(int client, char[] name = "Default Tank")
 {
-	char sSet[4][12];
+	char sSet[5][16];
 	!g_bTankConfig[g_iTankType[client]] ? ExplodeString(g_sPropsColors[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[])) : ExplodeString(g_sPropsColors2[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[]));
 	char sRGB[4][4];
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
@@ -2658,10 +2667,16 @@ void vSetName(int client, char[] name = "Default Tank")
 	int iGreen4 = StringToInt(sRGB4[1]);
 	int iBlue4 = StringToInt(sRGB4[2]);
 	int iAlpha4 = StringToInt(sRGB4[3]);
+	char sRGB5[4][4];
+	ExplodeString(sSet[4], ",", sRGB5, sizeof(sRGB5), sizeof(sRGB5[]));
+	int iRed5 = StringToInt(sRGB5[0]);
+	int iGreen5 = StringToInt(sRGB5[1]);
+	int iBlue5 = StringToInt(sRGB5[2]);
+	int iAlpha5 = StringToInt(sRGB5[3]);
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		vSetProps(client, iRed, iGreen, iBlue, iAlpha, iRed2, iGreen2, iBlue2, iAlpha2, iRed3, iGreen3, iBlue3, iAlpha3, iRed4, iGreen4, iBlue4, iAlpha4);
+		vSetProps(client, iRed, iGreen, iBlue, iAlpha, iRed2, iGreen2, iBlue2, iAlpha2, iRed3, iGreen3, iBlue3, iAlpha3, iRed4, iGreen4, iBlue4, iAlpha4, iRed5, iGreen5, iBlue5, iAlpha5);
 		if (IsFakeClient(client))
 		{
 			SetClientInfo(client, "name", name);
@@ -2705,12 +2720,12 @@ void vSetName(int client, char[] name = "Default Tank")
 	}
 }
 
-void vSetProps(int client, int red, int green, int blue, int alpha, int red2, int green2, int blue2, int alpha2, int red3, int green3, int blue3, int alpha3, int red4, int green4, int blue4, int alpha4)
+void vSetProps(int client, int red, int green, int blue, int alpha, int red2, int green2, int blue2, int alpha2, int red3, int green3, int blue3, int alpha3, int red4, int green4, int blue4, int alpha4, int red5, int green5, int blue5, int alpha5)
 {
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		vProps(client, red, green, blue, alpha, red2, green2, blue2, alpha2, red3, green3, blue3, alpha3, red4, green4, blue4, alpha4);
+		vProps(client, red, green, blue, alpha, red2, green2, blue2, alpha2, red3, green3, blue3, alpha3, red4, green4, blue4, alpha4, red5, green5, blue5, alpha5);
 	}
 }
 
@@ -3152,7 +3167,7 @@ public Action tTimerFlashEffect(Handle timer, any userid)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		char sSet[2][12];
+		char sSet[2][16];
 		!g_bTankConfig[g_iTankType[client]] ? ExplodeString(g_sTankColors[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[])) : ExplodeString(g_sTankColors2[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[]));
 		char sRGB[4][4];
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
@@ -3202,6 +3217,9 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	int iRed5 = pack.ReadCell();
 	int iGreen5 = pack.ReadCell();
 	int iBlue5 = pack.ReadCell();
+	int iRed6 = pack.ReadCell();
+	int iGreen6 = pack.ReadCell();
+	int iBlue6 = pack.ReadCell();
 	int iGhostAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iGhostAbility[g_iTankType[iTank]] : g_iGhostAbility2[g_iTankType[iTank]];
 	if (iGhostAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
@@ -3230,17 +3248,17 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 					if (strcmp(sModel, MODEL_JETPACK) == 0)
 					{
 						SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iEntity, iRed3, iGreen3, iBlue3, g_iAlpha[iTank]);
+						SetEntityRenderColor(iEntity, iRed4, iGreen4, iBlue4, g_iAlpha[iTank]);
 					}
 					if (strcmp(sModel, MODEL_CONCRETE) == 0)
 					{
 						SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iEntity, iRed4, iGreen4, iBlue4, g_iAlpha[iTank]);
+						SetEntityRenderColor(iEntity, iRed5, iGreen5, iBlue5, g_iAlpha[iTank]);
 					}
 					if (strcmp(sModel, MODEL_TIRES) == 0)
 					{
 						SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iEntity, iRed5, iGreen5, iBlue5, g_iAlpha[iTank]);
+						SetEntityRenderColor(iEntity, iRed6, iGreen6, iBlue6, g_iAlpha[iTank]);
 					}
 					if (strcmp(sModel, MODEL_TANK) == 0)
 					{
@@ -3380,7 +3398,7 @@ public Action tTimerHeal(Handle timer, any userid)
 		}
 		if (iType == 0 && bIsL4D2Game())
 		{
-			char sSet[2][12];
+			char sSet[2][16];
 			!g_bTankConfig[g_iTankType[client]] ? ExplodeString(g_sTankColors[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[])) : ExplodeString(g_sTankColors2[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[]));
 			char sGlow[3][4];
 			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
