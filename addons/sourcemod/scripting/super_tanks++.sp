@@ -4127,35 +4127,27 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 		sName = !g_bTankConfig[g_iTankType[client]] ? g_sCustomName[g_iTankType[client]] : g_sCustomName2[g_iTankType[client]];
 		vSetName(client, sName);
 		int iHealth = GetClientHealth(client);
-		int iExtraHealthX = !g_bGeneralConfig ? g_iMultiHealth : g_iMultiHealth2;
-		int iExtraHealthY = iHealth + g_iExtraHealth[g_iTankType[client]];
-		int iExtraHealthZ = iHealth + g_iExtraHealth2[g_iTankType[client]];
+		int iMultiHealth = !g_bGeneralConfig ? g_iMultiHealth : g_iMultiHealth2;
 		int iExtraHealth = !g_bTankConfig[g_iTankType[client]] ? g_iExtraHealth[g_iTankType[client]] : g_iExtraHealth2[g_iTankType[client]];
-		int iExtraHealth1 = (iGetHumanCount() > 1) ? ((iHealth * iGetHumanCount()) + g_iExtraHealth[g_iTankType[client]]) : iExtraHealthX;
-		int iExtraHealth2 = (iGetHumanCount() > 1) ? ((g_iExtraHealth[g_iTankType[client]] * iGetHumanCount()) + iHealth) : iExtraHealthX;
-		int iExtraHealth3 = (iGetHumanCount() > 1) ? iExtraHealthY * iGetHumanCount() : iExtraHealthY;
-		int iExtraHealth4 = (iGetHumanCount() > 1) ? ((iHealth * iGetHumanCount()) + g_iExtraHealth2[g_iTankType[client]]) : iExtraHealthZ;
-		int iExtraHealth5 = (iGetHumanCount() > 1) ? ((g_iExtraHealth2[g_iTankType[client]] * iGetHumanCount()) + iHealth) : iExtraHealthZ;
-		int iExtraHealth6 = (iGetHumanCount() > 1) ? iExtraHealthZ * iGetHumanCount() : iExtraHealthZ;
-		if (iExtraHealthX == 0 && iExtraHealth > 0)
+		int iExtraHealthNormal = !g_bTankConfig[g_iTankType[client]] ? (iHealth + g_iExtraHealth[g_iTankType[client]]) : (iHealth + g_iExtraHealth2[g_iTankType[client]]);
+		int iExtraHealthBoost = (iGetHumanCount() > 1) ? ((iHealth * iGetHumanCount()) + iExtraHealth) : (iExtraHealthNormal);
+		int iExtraHealthBoost2 = (iGetHumanCount() > 1) ? (iHealth + (iGetHumanCount() * iExtraHealth)) : (iExtraHealthNormal);
+		int iExtraHealthBoost3 = (iGetHumanCount() > 1) ? (iGetHumanCount() * (iHealth + iExtraHealth)) : (iExtraHealthNormal);
+		if (iMultiHealth == 0 && iExtraHealth > 0)
 		{
-			int iMultiHealth0 = !g_bTankConfig[g_iTankType[client]] ? ((iExtraHealthY > 62400) ? 62400 : iExtraHealthY) : ((iExtraHealthZ > 62400) ? 62400 : iExtraHealthZ);
-			SetEntityHealth(client, iMultiHealth0);
+			SetEntityHealth(client, iExtraHealthNormal);
 		}
-		else if (iExtraHealthX == 1 && iExtraHealth > 0)
+		else if (iMultiHealth == 1 && iExtraHealth > 0)
 		{
-			int iMultiHealth1 = !g_bTankConfig[g_iTankType[client]] ? ((iExtraHealth1 > 62400) ? 62400 : iExtraHealth1) : ((iExtraHealth4 > 62400) ? 62400 : iExtraHealth4);
-			SetEntityHealth(client, iMultiHealth1);
+			SetEntityHealth(client, iExtraHealthBoost);
 		}
-		else if (iExtraHealthX == 2 && iExtraHealth > 0)
+		else if (iMultiHealth == 2 && iExtraHealth > 0)
 		{
-			int iMultiHealth2 = !g_bTankConfig[g_iTankType[client]] ? ((iExtraHealth2 > 62400) ? 62400 : iExtraHealth2) : ((iExtraHealth5 > 62400) ? 62400 : iExtraHealth5);
-			SetEntityHealth(client, iMultiHealth2);
+			SetEntityHealth(client, iExtraHealthBoost2);
 		}
-		else if (iExtraHealthX == 3 && iExtraHealth > 0)
+		else if (iMultiHealth == 3 && iExtraHealth > 0)
 		{
-			int iMultiHealth3 = !g_bTankConfig[g_iTankType[client]] ? ((iExtraHealth3 > 62400) ? 62400 : iExtraHealth3) : ((iExtraHealth6 > 62400) ? 62400 : iExtraHealth6);
-			SetEntityHealth(client, iMultiHealth3);
+			SetEntityHealth(client, iExtraHealthBoost3);
 		}
 		float flThrowInterval = !g_bTankConfig[g_iTankType[client]] ? g_flThrowInterval[g_iTankType[client]] : g_flThrowInterval2[g_iTankType[client]];
 		vThrowInterval(client, flThrowInterval);
