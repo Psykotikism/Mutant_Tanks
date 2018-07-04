@@ -16,7 +16,12 @@ Changes:
 4. Modified the "Props Attached" KeyValue to support the oxygen tank flames. New format: "Props Attached" "12345"
 5. Modified the "Props Chance" KeyValue to support the oxygen tank flames. New format: "Props Chance" "3,3,3,3,3"
 6. Modified the "Props Colors" KeyValue to support the oxygen tank flames. New format: "Props Colors" "255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255"
-7. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
+7. Added the "Panic Claw-Rock" KeyValue which lets the Super Tank start panic events.
+8. Added the "Panic Chance" KeyValue which decides how often the Super Tank can start panic events.
+9. Added the "Airborne Ability" KeyValue which lets the Super Tank fly.
+10. Added the "Airborne Chance" KeyValue which decides how often the Super Tank flies.
+11. Added the "Airborne Duration" KeyValue which decides how long the Super Tank can fly.
+12. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
 
 ```
 "Boomer Throw"

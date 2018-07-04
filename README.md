@@ -237,8 +237,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 
 		// The Super Tank has 1 out of this many chances to spawn acid puddles underneath survivors.
 		// Only available in Left 4 Dead 2.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Acid Chance"					"4"
 
 		// The Super Tank can spawn acid puddles underneath survivors.
@@ -253,14 +253,29 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 1: ON
 		"Acid Rock Break"				"0"
 
+		// The Super Tank can fly.
+		// 0: OFF
+		// 1: ON
+		"Airborne Ability"				"0"
+
+		// The Super Tank has 1 out of this many chances to fly.
+		// Minimum: 1
+		// Maximum: 99999
+		"Airborne Chance"				"4"
+
+		// The Super Tank flies for this long.
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"Airborne Duration"				"5.0"
+
 		// The Super Tank has 1 out of this many chances to take away survivors' ammunition.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Ammo Chance"					"4"
 
 		// The Super Tank sets survivors' ammunition to this amount.
-		// Minimum: "0"
-		// Maximum: "25"
+		// Minimum: 0
+		// Maximum: 25
 		"Ammo Count"					"0"
 
 		// The Super Tank can take away survivors' ammunition.
@@ -269,8 +284,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Ammo Claw-Rock"				"0"
 
 		// The Super Tank has 1 out of this many chances to blind survivors.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Blind Chance"					"4"
 
 		// The Super Tank's blinding effects last this long.
@@ -289,8 +304,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Blind Intensity"				"255"
 
 		// The Super Tank has 1 out of this many chances to start explosions.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Bomb Chance"					"4"
 
 		// The Super Tank can start explosions.
@@ -319,8 +334,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Common Amount"					"10"
 
 		// The Super Tank has 1 out of this many chances to drug survivors.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Drug Chance"					"4"
 
 		// The Super Tank's drug effects last this long.
@@ -342,8 +357,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Extra Health"					"0"
 
 		// The Super Tank has 1 out of this many chances to start fires.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Fire Chance"					"4"
 
 		// The Super Tank can start fires.
@@ -367,8 +382,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Flash Ability"					"0"
 
 		// The Super Tank has 1 out of this many chances to run really fast.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Flash Chance"					"4"
 
 		// The Super Tank's special speed.
@@ -378,8 +393,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 
 		// The Super Tank has 1 out of this many chances to fling survivors into the air.
 		// Only available in Left 4 Dead 2.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Fling Chance"					"4"
 
 		// The Super Tank can fling survivors into the air.
@@ -394,8 +409,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Ghost Ability"					"0"
 
 		// The Super Tank has 1 out of this many chances to disarm survivors.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Ghost Chance"					"4"
 
 		// The limit of the Super Tank's ghost fade effect.
@@ -424,8 +439,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Gravity Ability"				"0"
 
 		// The Super Tank has 1 out of this many chances to lower survivors' gravity.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Gravity Chance"				"4"
 
 		// The Super Tank's gravity effects last this long.
@@ -456,8 +471,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Heal Ability"					"0"
 
 		// The Super Tank has 1 out of this many chances to set survivors to black and white with temporary health.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Heal Chance"					"4"
 
 		// The Super Tank receives this much health from nearby common infected.
@@ -506,8 +521,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Hurt Duration"					"5.0"
 
 		// The Super Tank has 1 out of this many chances to hypnotize survivors.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Hypno Chance"					"4"
 
 		// The Super Tank's hypnosis effects last this long.
@@ -521,8 +536,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Hypno Claw-Rock"				"0"
 
 		// The Super Tank has 1 out of this many chances to freeze survivors.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Ice Chance"					"4"
 
 		// The Super Tank can freeze survivors.
@@ -531,8 +546,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Ice Claw-Rock"					"0"
 
 		// The Super Tank has 1 out of this many chances to make survivors go idle.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Idle Chance"					"4"
 
 		// The Super Tank can make survivors go idle.
@@ -559,8 +574,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Infected Throw Ability"		"0"
 
 		// The Super Tank has 1 out of this many chances to invert survivors' movement keys.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Invert Chance"					"4"
 
 		// The Super Tank's inverted effects last this long.
@@ -579,8 +594,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Jump Ability"					"0"
 
 		// The Super Tank has 1 out of this many chances to jump high into the air.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Jump Chance"					"4"
 
 		// The Super Tank can start meteor showers.
@@ -589,8 +604,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Meteor Ability"				"0"
 
 		// The Super Tank has 1 out of this many chances to start meteor showers.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Meteor Chance"					"4"
 
 		// The Super Tank's meteorites do this much damage.
@@ -598,9 +613,19 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Maximum: 99999.0
 		"Meteor Damage"					"25.0"
 
+		// The Super Tank has 1 out of this many chances to start panic events.
+		// Minimum: 1
+		// Maximum: 99999
+		"Panic Chance"					"4"
+
+		// The Super Tank can start panic events.
+		// 0: OFF
+		// 1: ON
+		"Panic Claw-Rock"				"0"
+
 		// The Super Tank has 1 out of this many chances to puke on survivors.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Puke Chance"					"4"
 
 		// The Super Tank can puke on survivors.
@@ -609,8 +634,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Puke Claw-Rock"				"0"
 
 		// The Super Tank has 1 out of this many chances to make survivors restart at the spawn area.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Restart Chance"				"4"
 
 		// The Super Tank can make survivors restart at the spawn area.
@@ -624,8 +649,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Restart Loadout"				"smg,pistol,pain_pills"
 
 		// The Super Tank has 1 out of this many chances to send survivors into space.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Rocket Chance"					"4"
 
 		// The Super Tank can send survivors into space.
@@ -640,8 +665,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Run Speed"						"1.0"
 
 		// The Super Tank has 1 out of this many chances to shake survivors' screens.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Shake Chance"					"4"
 
 		// The Super Tank's shake effects last this long.
@@ -671,8 +696,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Shield Delay"					"5.0"
 
 		// The Super Tank has 1 out of this many chances to shove survivors.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Shove Chance"					"4"
 
 		// The Super Tank's shove effects last this long.
@@ -686,8 +711,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Shove Claw-Rock"				"0"
 
 		// The Super Tank has 1 out of this many chances to instantly kill survivors.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Slug Chance"					"4"
 
 		// The Super Tank can instantly kill survivors.
@@ -716,8 +741,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Spam Interval"					"5.0"
 
 		// The Super Tank has 1 out of this many chances to stun survivors.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Stun Chance"					"4"
 
 		// The Super Tank's stun effects last this long.
@@ -742,8 +767,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Throw Interval"				"5.0"
 
 		// The Super Tank has 1 out of this many chances to steal survivors' health.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Vampire Chance"				"4"
 
 		// The Super Tank receives this much health from hitting survivors.
@@ -758,8 +783,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Vampire Claw-Rock"				"0"
 
 		// The Super Tank has 1 out of this many chances to change survivors' fields of view.
-		// Minimum: "1"
-		// Maximum: "99999"
+		// Minimum: 1
+		// Maximum: 99999
 		"Vision Chance"					"4"
 
 		// The Super Tank's visual effects last this long.
@@ -1005,7 +1030,7 @@ Examples:
 
 **Spirit_12** - For the L4D signatures for the gamedata file.
 
-**honorcode** - For the L4D2 signatures for the gamedata file found in the L4D2 New Custom Commands' gamedata file and the codes to spawn spitter acid puddles, to charge at players, to cause explosions, to ignite players, to set players to black and white, to puke on players, to shake players' screens, and to shove players.
+**honorcode** - For the [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?p=1251446) plugin.
 
 **strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?p=702913), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?p=702918).
 
@@ -1016,6 +1041,8 @@ Examples:
 **Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?p=2402076) plugin.
 
 **Uncle Jessie** - For the Tremor Tank in his [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
+
+**thetwistedpanda** - For the [Fly Command](https://forums.alliedmods.net/showthread.php?p=1687851) plugin.
 
 **Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and help with optimizing/fixing various parts of the code.
 
