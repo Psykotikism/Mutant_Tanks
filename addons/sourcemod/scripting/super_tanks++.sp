@@ -1717,17 +1717,10 @@ void vAcidRock(int entity, int client, int enabled)
 
 void vAirborneAbility(int client, int enabled)
 {
-	int iAirborneChance = !g_bTankConfig[g_iTankType[client]] ? g_iAirborneChance[g_iTankType[client]] : g_iAirborneChance2[g_iTankType[client]];
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (enabled == 1 && GetRandomInt(1, iAirborneChance) == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
+	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		if (!g_bAirborne[client])
-		{
-			g_bAirborne[client] = true;
-			SetEntityMoveType(client, MOVETYPE_FLY);
-			float flAirborneDuration = !g_bTankConfig[g_iTankType[client]] ? g_flAirborneDuration[g_iTankType[client]] : g_flAirborneDuration2[g_iTankType[client]];
-			CreateTimer(flAirborneDuration, tTimerStopAirborne, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-		}
+		CreateTimer(1.0, tTimerAirborne, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 }
 
@@ -1851,6 +1844,22 @@ void vDrugHit(int client, int owner, int enabled)
 			dpDataPack.WriteCell(GetClientUserId(client));
 			dpDataPack.WriteCell(GetClientUserId(owner));
 			dpDataPack.WriteFloat(GetEngineTime());
+		}
+	}
+}
+
+void vFakeAirborne(int client, int enabled)
+{
+	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
+	{
+		if (!g_bAirborne[client])
+		{
+			g_bAirborne[client] = true;
+			SetEntityMoveType(client, MOVETYPE_FLYGRAVITY);
+			SetEntityGravity(client, -0.2);
+			float flAirborneDuration = !g_bTankConfig[g_iTankType[client]] ? g_flAirborneDuration[g_iTankType[client]] : g_flAirborneDuration2[g_iTankType[client]];
+			CreateTimer(flAirborneDuration, tTimerStopAirborne, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 }
@@ -3067,6 +3076,23 @@ public void vSTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 	}
 }
 
+public Action tTimerAirborne(Handle timer, any userid)
+{
+	int client = GetClientOfUserId(userid);
+	int iAirborneAbility = !g_bTankConfig[g_iTankType[client]] ? g_iAirborneAbility[g_iTankType[client]] : g_iAirborneAbility2[g_iTankType[client]];
+	if (iAirborneAbility == 0 || client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
+	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+	int iAirborneChance = !g_bTankConfig[g_iTankType[client]] ? g_iAirborneChance[g_iTankType[client]] : g_iAirborneChance2[g_iTankType[client]];
+	if (GetRandomInt(1, iAirborneChance) == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
+	{
+		vFakeAirborne(client, iAirborneAbility);
+	}
+	return Plugin_Continue;
+}
+
 public Action tTimerStopAirborne(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
@@ -3080,6 +3106,7 @@ public Action tTimerStopAirborne(Handle timer, any userid)
 		float flVelocity[3];
 		TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
 		SetEntityMoveType(client, MOVETYPE_WALK);
+		SetEntityGravity(client, 1.0);
 	}
 	return Plugin_Continue;
 }
