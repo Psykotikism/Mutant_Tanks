@@ -4133,21 +4133,24 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 		int iExtraHealthBoost = (iGetHumanCount() > 1) ? ((iHealth * iGetHumanCount()) + iExtraHealth) : (iExtraHealthNormal);
 		int iExtraHealthBoost2 = (iGetHumanCount() > 1) ? (iHealth + (iGetHumanCount() * iExtraHealth)) : (iExtraHealthNormal);
 		int iExtraHealthBoost3 = (iGetHumanCount() > 1) ? (iGetHumanCount() * (iHealth + iExtraHealth)) : (iExtraHealthNormal);
-		if (iMultiHealth == 0 && iExtraHealth > 0)
+		int iBoost = (iExtraHealthBoost > 62400) ? 62400 : iExtraHealthBoost;
+		int iBoost2 = (iExtraHealthBoost2 > 62400) ? 62400 : iExtraHealthBoost2;
+		int iBoost3 = (iExtraHealthBoost3 > 62400) ? 62400 : iExtraHealthBoost3;
+		if (iMultiHealth == 0)
 		{
 			SetEntityHealth(client, iExtraHealthNormal);
 		}
-		else if (iMultiHealth == 1 && iExtraHealth > 0)
+		else if (iMultiHealth == 1)
 		{
-			SetEntityHealth(client, iExtraHealthBoost);
+			SetEntityHealth(client, iBoost);
 		}
-		else if (iMultiHealth == 2 && iExtraHealth > 0)
+		else if (iMultiHealth == 2)
 		{
-			SetEntityHealth(client, iExtraHealthBoost2);
+			SetEntityHealth(client, iBoost2);
 		}
-		else if (iMultiHealth == 3 && iExtraHealth > 0)
+		else if (iMultiHealth == 3)
 		{
-			SetEntityHealth(client, iExtraHealthBoost3);
+			SetEntityHealth(client, iBoost3);
 		}
 		float flThrowInterval = !g_bTankConfig[g_iTankType[client]] ? g_flThrowInterval[g_iTankType[client]] : g_flThrowInterval2[g_iTankType[client]];
 		vThrowInterval(client, flThrowInterval);
