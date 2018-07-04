@@ -4133,7 +4133,7 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 		int iExtraHealth = !g_bTankConfig[g_iTankType[client]] ? g_iExtraHealth[g_iTankType[client]] : g_iExtraHealth2[g_iTankType[client]];
 		int iExtraHealth1 = (iGetHumanCount() > 1) ? ((iHealth * iGetHumanCount()) + g_iExtraHealth[g_iTankType[client]]) : iExtraHealthX;
 		int iExtraHealth2 = (iGetHumanCount() > 1) ? ((g_iExtraHealth[g_iTankType[client]] * iGetHumanCount()) + iHealth) : iExtraHealthX;
-		int iExtraHealth3 = (iGetHumanCount() > 1) ? iExtraHealthX * iGetHumanCount() : iExtraHealthX;
+		int iExtraHealth3 = (iGetHumanCount() > 1) ? iExtraHealthY * iGetHumanCount() : iExtraHealthY;
 		int iExtraHealth4 = (iGetHumanCount() > 1) ? ((iHealth * iGetHumanCount()) + g_iExtraHealth2[g_iTankType[client]]) : iExtraHealthZ;
 		int iExtraHealth5 = (iGetHumanCount() > 1) ? ((g_iExtraHealth2[g_iTankType[client]] * iGetHumanCount()) + iHealth) : iExtraHealthZ;
 		int iExtraHealth6 = (iGetHumanCount() > 1) ? iExtraHealthZ * iGetHumanCount() : iExtraHealthZ;
