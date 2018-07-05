@@ -808,9 +808,9 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		"Warp Ability"					"0"
 
 		// The Super Tank warps to a random survivor every time this many seconds passes.
-		// Minimum: 1
-		// Maximum: 99999
-		"Warp Interval"					"5"
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"Warp Interval"					"5.0"
 
 		// The Super Tank can spawn Witch minions.
 		// 0: OFF

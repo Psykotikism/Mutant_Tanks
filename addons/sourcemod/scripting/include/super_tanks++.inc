@@ -1588,9 +1588,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Warp Ability\"					\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank warps to a random survivor every time this many seconds passes.");
-			fFilename.WriteLine("		// Minimum: 1");
-			fFilename.WriteLine("		// Maximum: 99999");
-			fFilename.WriteLine("		\"Warp Interval\"					\"5\"");
+			fFilename.WriteLine("		// Minimum: 0.1");
+			fFilename.WriteLine("		// Maximum: 99999.0");
+			fFilename.WriteLine("		\"Warp Interval\"					\"5.0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can spawn Witch minions.");
 			fFilename.WriteLine("		// 0: OFF");
@@ -2088,7 +2088,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Throw Interval\"			\"99999.0\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"8\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"8.0\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 42\"");
 			fFilename.WriteLine("	{");
@@ -2156,7 +2156,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Spam Damage\"				\"10\"");
 			fFilename.WriteLine("		\"Spam Interval\"				\"7.5\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"5\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"5.0\"");
 			fFilename.WriteLine("		\"Witch Ability\"				\"1\"");
 			fFilename.WriteLine("		\"Witch Amount\"				\"10\"");
 			fFilename.WriteLine("		\"Witch Minion Damage\"		\"25.0\"");
@@ -2171,7 +2171,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Jump Ability\"				\"1\"");
 			fFilename.WriteLine("		\"Jump Interval\"				\"3\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"3\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"3.0\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 46\"");
 			fFilename.WriteLine("	{");
@@ -2220,7 +2220,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Ghost Claw-Rock\"			\"1\"");
 			fFilename.WriteLine("		\"Ghost Weapon Slots\"		\"123\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"3\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"3.0\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 49\"");
 			fFilename.WriteLine("	{");
@@ -2258,7 +2258,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Spam Damage\"				\"1\"");
 			fFilename.WriteLine("		\"Spam Interval\"				\"1.0\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"3\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"3.0\"");
 			fFilename.WriteLine("		\"Witch Ability\"				\"1\"");
 			fFilename.WriteLine("		\"Witch Amount\"				\"5\"");
 			fFilename.WriteLine("		\"Witch Minion Damage\"		\"1.0\"");
@@ -2277,7 +2277,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Run Speed\"					\"3.0\"");
 			fFilename.WriteLine("		\"Throw Interval\"			\"99999.0\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"3\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"3.0\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 51\"");
 			fFilename.WriteLine("	{");
@@ -2298,7 +2298,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Run Speed\"					\"3.0\"");
 			fFilename.WriteLine("		\"Throw Interval\"			\"99999.0\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"3\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"3.0\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 52\"");
 			fFilename.WriteLine("	{");
@@ -2322,7 +2322,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Shield Color\"				\"255,0,0\"");
 			fFilename.WriteLine("		\"Shield Delay\"				\"8.0\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"8\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"8.0\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 53\"");
 			fFilename.WriteLine("	{");
@@ -2340,7 +2340,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Run Speed\"					\"3.0\"");
 			fFilename.WriteLine("		\"Throw Interval\"			\"99999.0\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"5\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"5.0\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 54\"");
 			fFilename.WriteLine("	{");
@@ -2381,7 +2381,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Run Speed\"					\"3.0\"");
 			fFilename.WriteLine("		\"Throw Interval\"			\"99999.0\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"3\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"3.0\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	// Last Boss Extended Tanks");
 			fFilename.WriteLine("	// Most of the Tanks from LBE are already recreated above.");
