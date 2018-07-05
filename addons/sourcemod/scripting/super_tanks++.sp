@@ -514,10 +514,6 @@ public void OnMapStart()
 	PrecacheSound(SOUND_ARRIVAL15, true);
 	PrecacheSound(SOUND_ARRIVAL16, true);
 	PrecacheSound(SOUND_ARRIVAL17, true);
-	PrecacheSound(SOUND_ARRIVAL18, true);
-	PrecacheSound(SOUND_ARRIVAL19, true);
-	PrecacheSound(SOUND_ARRIVAL20, true);
-	PrecacheSound(SOUND_ARRIVAL21, true);
 	if (g_bLateLoad)
 	{
 		vLoadConfigs(g_sSavePath, true);
@@ -1456,7 +1452,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (kvSuperTanks.GetString("Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
 			main ? (kvSuperTanks.GetString("Props Attached", g_sPropsAttached[iIndex], sizeof(g_sPropsAttached[]), "12345")) : (kvSuperTanks.GetString("Props Attached", g_sPropsAttached2[iIndex], sizeof(g_sPropsAttached2[]), g_sPropsAttached[iIndex]));
 			main ? (kvSuperTanks.GetString("Props Chance", g_sPropsChance[iIndex], sizeof(g_sPropsChance[]), "3,3,3,3,3")) : (kvSuperTanks.GetString("Props Chance", g_sPropsChance2[iIndex], sizeof(g_sPropsChance2[]), g_sPropsChance[iIndex]));
-			main ? (kvSuperTanks.GetString("Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255")) : (kvSuperTanks.GetString("Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]));
+			main ? (kvSuperTanks.GetString("Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,125|255,255,255,255|255,255,255,255")) : (kvSuperTanks.GetString("Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]));
 			main ? (g_iGlowEffect[iIndex] = kvSuperTanks.GetNum("Glow Effect", 1)) : (g_iGlowEffect2[iIndex] = kvSuperTanks.GetNum("Glow Effect", g_iGlowEffect[iIndex]));
 			main ? (g_iGlowEffect[iIndex] = iSetCellLimit(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iSetCellLimit(g_iGlowEffect2[iIndex], 0, 1));
 			main ? (g_iParticleEffect[iIndex] = kvSuperTanks.GetNum("Particle Effect", 0)) : (g_iParticleEffect2[iIndex] = kvSuperTanks.GetNum("Particle Effect", g_iParticleEffect[iIndex]));
@@ -1856,8 +1852,7 @@ void vFakeAirborne(int client, int enabled)
 		if (!g_bAirborne[client])
 		{
 			g_bAirborne[client] = true;
-			SetEntityMoveType(client, MOVETYPE_FLYGRAVITY);
-			SetEntityGravity(client, -0.2);
+			SetEntityMoveType(client, MOVETYPE_FLY);
 			float flAirborneDuration = !g_bTankConfig[g_iTankType[client]] ? g_flAirborneDuration[g_iTankType[client]] : g_flAirborneDuration2[g_iTankType[client]];
 			CreateTimer(flAirborneDuration, tTimerStopAirborne, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -2752,7 +2747,7 @@ void vSetName(int client, char[] name = "Default Tank")
 					case 4: PrintToChatAll("\x04%s\x05 %s\x01 is here!", ST_PREFIX, name);
 					case 5: PrintToChatAll("\x04%s\x05 %s\x01 joined the game!", ST_PREFIX, name);
 				}
-				switch (GetRandomInt(1, 21))
+				switch (GetRandomInt(1, 17))
 				{
 					case 1: EmitSoundToAll(SOUND_ARRIVAL);
 					case 2: EmitSoundToAll(SOUND_ARRIVAL2);
@@ -2771,10 +2766,6 @@ void vSetName(int client, char[] name = "Default Tank")
 					case 15: EmitSoundToAll(SOUND_ARRIVAL15);
 					case 16: EmitSoundToAll(SOUND_ARRIVAL16);
 					case 17: EmitSoundToAll(SOUND_ARRIVAL17);
-					case 18: EmitSoundToAll(SOUND_ARRIVAL18);
-					case 19: EmitSoundToAll(SOUND_ARRIVAL19);
-					case 20: EmitSoundToAll(SOUND_ARRIVAL20);
-					case 21: EmitSoundToAll(SOUND_ARRIVAL21);
 				}
 			}
 		}
@@ -3100,13 +3091,12 @@ public Action tTimerStopAirborne(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(client))
+	if (bIsTank(client))
 	{
 		g_bAirborne[client] = false;
 		float flVelocity[3];
 		TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
 		SetEntityMoveType(client, MOVETYPE_WALK);
-		SetEntityGravity(client, 1.0);
 	}
 	return Plugin_Continue;
 }

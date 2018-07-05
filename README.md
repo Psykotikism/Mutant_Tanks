@@ -210,7 +210,7 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 3rd set = oxygen tank flames color (RGBA)
 		// 4th set = rocks color (RGBA)
 		// 5th set = tires color (RGBA)
-		"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255"
+		"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,125|255,255,255,255|255,255,255,255"
 
 		// The Super Tank will have a glow outline.
 		// Only available in Left 4 Dead 2.
