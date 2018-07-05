@@ -253,26 +253,6 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 1: ON
 		"Acid Rock Break"				"0"
 
-		// The Super Tank can fly.
-		// 0: OFF
-		// 1: ON
-		"Airborne Ability"				"0"
-
-		// The Super Tank has 1 out of this many chances to fly.
-		// Minimum: 1
-		// Maximum: 99999
-		"Airborne Chance"				"4"
-
-		// The Super Tank flies for this long.
-		// Minimum: 0.1
-		// Maximum: 99999.0
-		"Airborne Duration"				"5.0"
-
-		// The Super Tank can fly this high.
-		// Minimum: 0.1
-		// Maximum: 99999.0
-		"Airborne Height"				"750.0"
-
 		// The Super Tank has 1 out of this many chances to take away survivors' ammunition.
 		// Minimum: 1
 		// Maximum: 99999
@@ -322,6 +302,21 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 0: OFF
 		// 1: ON
 		"Bomb Rock Break"				"0"
+
+		// The Super Tank has 1 out of this many chances to bury survivors.
+		// Minimum: 1
+		// Maximum: 99999
+		"Bury Chance"					"4"
+
+		// The Super Tank's buries lasts this long.
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"Bury Duration"					"5.0"
+
+		// The Super Tank can bury survivors.
+		// 0: OFF
+		// 1: ON
+		"Bury Claw-Rock"				"0"
 
 		// The Super Tank can throw cars at survivors.
 		// 0: OFF
@@ -1047,7 +1042,7 @@ Examples:
 
 **Uncle Jessie** - For the Tremor Tank in his [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
 
-**cravenge** - For the [Flying Tanks](https://forums.alliedmods.net/showpost.php?p=2415676&postcount=14) plugin.
+**pRED** - For the [SM Super Commands](https://forums.alliedmods.net/showthread.php?p=498802) plugin.
 
 **Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and help with optimizing/fixing various parts of the code.
 

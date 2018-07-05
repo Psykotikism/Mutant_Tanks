@@ -13,8 +13,8 @@ public Plugin myinfo =
 };
 
 bool g_bAFK[MAXPLAYERS + 1];
-bool g_bAirborne[MAXPLAYERS + 1];
 bool g_bBlind[MAXPLAYERS + 1];
+bool g_bBury[MAXPLAYERS + 1];
 bool g_bCmdUsed;
 bool g_bDrug[MAXPLAYERS + 1];
 bool g_bFlash[MAXPLAYERS + 1];
@@ -70,12 +70,10 @@ char g_sWeapon[32];
 char g_sWeaponSlot[MAXTYPES + 1][6];
 char g_sWeaponSlot2[MAXTYPES + 1][6];
 ConVar g_cvSTFindConVar[12];
-float g_flAirborneDuration[MAXTYPES + 1];
-float g_flAirborneHeight[MAXTYPES + 1];
-float g_flAirborneDuration2[MAXTYPES + 1];
-float g_flAirborneHeight2[MAXTYPES + 1];
 float g_flBlindDuration[MAXTYPES + 1];
+float g_flBuryDuration[MAXTYPES + 1];
 float g_flBlindDuration2[MAXTYPES + 1];
+float g_flBuryDuration2[MAXTYPES + 1];
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0};
 float g_flDrugDuration[MAXTYPES + 1];
 float g_flFlashSpeed[MAXTYPES + 1];
@@ -112,11 +110,13 @@ float g_flStunDuration[MAXTYPES + 1];
 float g_flStunSpeed[MAXTYPES + 1];
 float g_flThrowInterval[MAXTYPES + 1];
 float g_flVisionDuration[MAXTYPES + 1];
+float g_flWarpInterval[MAXTYPES + 1];
 float g_flWitchDamage[MAXTYPES + 1];
 float g_flStunDuration2[MAXTYPES + 1];
 float g_flStunSpeed2[MAXTYPES + 1];
 float g_flThrowInterval2[MAXTYPES + 1];
 float g_flVisionDuration2[MAXTYPES + 1];
+float g_flWarpInterval2[MAXTYPES + 1];
 float g_flWitchDamage2[MAXTYPES + 1];
 Handle g_hSDKAcidPlayer;
 Handle g_hSDKFlingPlayer;
@@ -131,8 +131,6 @@ int g_iAcidChance[MAXTYPES + 1];
 int g_iAcidHit[MAXTYPES + 1];
 int g_iAcidRock[MAXTYPES + 1];
 int g_iAlpha[MAXPLAYERS + 1];
-int g_iAirborneAbility[MAXTYPES + 1];
-int g_iAirborneChance[MAXTYPES + 1];
 int g_iAmmoChance[MAXTYPES + 1];
 int g_iAmmoCount[MAXTYPES + 1];
 int g_iAmmoHit[MAXTYPES + 1];
@@ -143,14 +141,14 @@ int g_iBlindIntensity[MAXTYPES + 1];
 int g_iBombChance[MAXTYPES + 1];
 int g_iBombHit[MAXTYPES + 1];
 int g_iBombRock[MAXTYPES + 1];
+int g_iBuryChance[MAXTYPES + 1];
+int g_iBuryHit[MAXTYPES + 1];
 int g_iCarThrow[MAXTYPES + 1];
 int g_iCommonAbility[MAXTYPES + 1];
 int g_iCommonAmount[MAXTYPES + 1];
 int g_iAcidChance2[MAXTYPES + 1];
 int g_iAcidHit2[MAXTYPES + 1];
 int g_iAcidRock2[MAXTYPES + 1];
-int g_iAirborneAbility2[MAXTYPES + 1];
-int g_iAirborneChance2[MAXTYPES + 1];
 int g_iAmmoChance2[MAXTYPES + 1];
 int g_iAmmoCount2[MAXTYPES + 1];
 int g_iAmmoHit2[MAXTYPES + 1];
@@ -161,6 +159,8 @@ int g_iBlindIntensity2[MAXTYPES + 1];
 int g_iBombChance2[MAXTYPES + 1];
 int g_iBombHit2[MAXTYPES + 1];
 int g_iBombRock2[MAXTYPES + 1];
+int g_iBuryChance2[MAXTYPES + 1];
+int g_iBuryHit2[MAXTYPES + 1];
 int g_iCarThrow2[MAXTYPES + 1];
 int g_iCommonAbility2[MAXTYPES + 1];
 int g_iCommonAmount2[MAXTYPES + 1];
@@ -316,7 +316,6 @@ int g_iVisionChance[MAXTYPES + 1];
 int g_iVisionFOV[MAXTYPES + 1];
 int g_iVisionHit[MAXTYPES + 1];
 int g_iWarpAbility[MAXTYPES + 1];
-int g_iWarpInterval[MAXTYPES + 1];
 int g_iWitchAbility[MAXTYPES + 1];
 int g_iWitchAmount[MAXTYPES + 1];
 int g_iVampireChance2[MAXTYPES + 1];
@@ -326,7 +325,6 @@ int g_iVisionChance2[MAXTYPES + 1];
 int g_iVisionFOV2[MAXTYPES + 1];
 int g_iVisionHit2[MAXTYPES + 1];
 int g_iWarpAbility2[MAXTYPES + 1];
-int g_iWarpInterval2[MAXTYPES + 1];
 int g_iWitchAbility2[MAXTYPES + 1];
 int g_iWitchAmount2[MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
@@ -801,6 +799,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						int iAmmoHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iAmmoHit[g_iTankType[attacker]] : g_iAmmoHit2[g_iTankType[attacker]];
 						int iBlindHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iBlindHit[g_iTankType[attacker]] : g_iBlindHit2[g_iTankType[attacker]];
 						int iBombHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iBombHit[g_iTankType[attacker]] : g_iBombHit2[g_iTankType[attacker]];
+						int iBuryHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iBuryHit[g_iTankType[attacker]] : g_iBuryHit2[g_iTankType[attacker]];
 						int iCommonAbility = !g_bTankConfig[g_iTankType[attacker]] ? g_iCommonAbility[g_iTankType[attacker]] : g_iCommonAbility2[g_iTankType[attacker]];
 						int iDrugHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iDrugHit[g_iTankType[attacker]] : g_iDrugHit2[g_iTankType[attacker]];
 						int iFireHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iFireHit[g_iTankType[attacker]] : g_iFireHit2[g_iTankType[attacker]];
@@ -827,6 +826,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						vAmmoHit(victim, attacker, iAmmoHit);
 						vBlindHit(victim, attacker, iBlindHit);
 						vBombHit(victim, attacker, iBombHit);
+						vBuryHit(victim, attacker, iBuryHit);
 						vCommonAbility(attacker, iCommonAbility);
 						vDrugHit(victim, attacker, iDrugHit);
 						vFireHit(victim, attacker, iFireHit);
@@ -886,21 +886,21 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 							vHurtAbility(attacker, victim, iHurtAbility);
 							vMeteorAbility(victim, iMeteorAbility);
 						}
-						if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-						{
-							if (g_bShielded[victim])
-							{
-								int iShieldAbility = !g_bTankConfig[g_iTankType[victim]] ? g_iShieldAbility[g_iTankType[victim]] : g_iShieldAbility2[g_iTankType[victim]];
-								vShieldAbility(victim, false, iShieldAbility);
-							}
-						}
-						else
-						{
-							if (g_bShielded[victim])
-							{
-								return Plugin_Handled;
-							}
-						}
+					}
+				}
+				if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
+				{
+					if (g_bShielded[victim])
+					{
+						int iShieldAbility = !g_bTankConfig[g_iTankType[victim]] ? g_iShieldAbility[g_iTankType[victim]] : g_iShieldAbility2[g_iTankType[victim]];
+						vShieldAbility(victim, false, iShieldAbility);
+					}
+				}
+				else
+				{
+					if (g_bShielded[victim])
+					{
+						return Plugin_Handled;
 					}
 				}
 				if ((damagetype & DMG_BURN || damagetype & DMG_BLAST) && (attacker == victim || bIsInfected(attacker)))
@@ -1116,6 +1116,17 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						}
 					}
 				}
+				int iBuryHit = !g_bTankConfig[g_iTankType[iTank]] ? g_iBuryHit[g_iTankType[iTank]] : g_iBuryHit2[g_iTankType[iTank]];
+				if (iBuryHit == 1)
+				{
+					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+					{
+						if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
+						{
+							tTimerStopBury(null, GetClientUserId(iSurvivor));
+						}
+					}
+				}
 				int iGravityHit = !g_bTankConfig[g_iTankType[iTank]] ? g_iGravityHit[g_iTankType[iTank]] : g_iGravityHit2[g_iTankType[iTank]];
 				if (iGravityHit == 1)
 				{
@@ -1321,7 +1332,7 @@ public Action cmdTank(int client, int args)
 		IsVoteInProgress() ? ReplyToCommand(client, "\x04%s\x01 %t", ST_PREFIX, "Vote in Progress") : vTankMenu(client, 0);
 		return Plugin_Handled;
 	}
-	else if (iType > iMaxTypes || args > 1)
+	else if (iType < 1 || iType > iMaxTypes || args > 1)
 	{
 		int iLimit = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
 		ReplyToCommand(client, "\x04%s\x01 Usage: sm_tank <type 1-%d>", ST_PREFIX, iLimit);
@@ -1465,14 +1476,6 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iAcidHit[iIndex] = iSetCellLimit(g_iAcidHit[iIndex], 0, 1)) : (g_iAcidHit2[iIndex] = iSetCellLimit(g_iAcidHit2[iIndex], 0, 1));
 			main ? (g_iAcidRock[iIndex] = kvSuperTanks.GetNum("Acid Rock Break", 0)) : (g_iAcidRock2[iIndex] = kvSuperTanks.GetNum("Acid Rock Break", g_iAcidRock[iIndex]));
 			main ? (g_iAcidRock[iIndex] = iSetCellLimit(g_iAcidRock[iIndex], 0, 1)) : (g_iAcidRock2[iIndex] = iSetCellLimit(g_iAcidRock2[iIndex], 0, 1));
-			main ? (g_iAirborneAbility[iIndex] = kvSuperTanks.GetNum("Airborne Ability", 0)) : (g_iAirborneAbility2[iIndex] = kvSuperTanks.GetNum("Airborne Ability", g_iAirborneAbility[iIndex]));
-			main ? (g_iAirborneAbility[iIndex] = iSetCellLimit(g_iAirborneAbility[iIndex], 0, 1)) : (g_iAirborneAbility2[iIndex] = iSetCellLimit(g_iAirborneAbility2[iIndex], 0, 1));
-			main ? (g_iAirborneChance[iIndex] = kvSuperTanks.GetNum("Airborne Chance", 4)) : (g_iAirborneChance2[iIndex] = kvSuperTanks.GetNum("Airborne Chance", g_iAirborneChance[iIndex]));
-			main ? (g_iAirborneChance[iIndex] = iSetCellLimit(g_iAirborneChance[iIndex], 1, 99999)) : (g_iAirborneChance2[iIndex] = iSetCellLimit(g_iAirborneChance2[iIndex], 1, 99999));
-			main ? (g_flAirborneDuration[iIndex] = kvSuperTanks.GetFloat("Airborne Duration", 5.0)) : (g_flAirborneDuration2[iIndex] = kvSuperTanks.GetFloat("Airborne Duration", g_flAirborneDuration[iIndex]));
-			main ? (g_flAirborneDuration[iIndex] = flSetFloatLimit(g_flAirborneDuration[iIndex], 0.1, 99999.0)) : (g_flAirborneDuration2[iIndex] = flSetFloatLimit(g_flAirborneDuration2[iIndex], 0.1, 99999.0));
-			main ? (g_flAirborneHeight[iIndex] = kvSuperTanks.GetFloat("Airborne Height", 750.0)) : (g_flAirborneHeight2[iIndex] = kvSuperTanks.GetFloat("Airborne Height", g_flAirborneHeight[iIndex]));
-			main ? (g_flAirborneHeight[iIndex] = flSetFloatLimit(g_flAirborneHeight[iIndex], 0.1, 99999.0)) : (g_flAirborneHeight2[iIndex] = flSetFloatLimit(g_flAirborneHeight2[iIndex], 0.1, 99999.0));
 			main ? (g_iAmmoChance[iIndex] = kvSuperTanks.GetNum("Ammo Chance", 4)) : (g_iAmmoChance2[iIndex] = kvSuperTanks.GetNum("Ammo Chance", g_iAmmoChance[iIndex]));
 			main ? (g_iAmmoChance[iIndex] = iSetCellLimit(g_iAmmoChance[iIndex], 1, 99999)) : (g_iAmmoChance2[iIndex] = iSetCellLimit(g_iAmmoChance2[iIndex], 1, 99999));
 			main ? (g_iAmmoCount[iIndex] = kvSuperTanks.GetNum("Ammo Count", 0)) : (g_iAmmoCount2[iIndex] = kvSuperTanks.GetNum("Ammo Count", g_iAmmoCount[iIndex]));
@@ -1493,6 +1496,12 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iBombHit[iIndex] = iSetCellLimit(g_iBombHit[iIndex], 0, 1)) : (g_iBombHit2[iIndex] = iSetCellLimit(g_iBombHit2[iIndex], 0, 1));
 			main ? (g_iBombRock[iIndex] = kvSuperTanks.GetNum("Bomb Rock Break", 0)) : (g_iBombRock2[iIndex] = kvSuperTanks.GetNum("Bomb Rock Break", g_iBombRock[iIndex]));
 			main ? (g_iBombRock[iIndex] = iSetCellLimit(g_iBombRock[iIndex], 0, 1)) : (g_iBombRock2[iIndex] = iSetCellLimit(g_iBombRock2[iIndex], 0, 1));
+			main ? (g_iBuryChance[iIndex] = kvSuperTanks.GetNum("Bury Chance", 4)) : (g_iBuryChance2[iIndex] = kvSuperTanks.GetNum("Bury Chance", g_iBuryChance[iIndex]));
+			main ? (g_iBuryChance[iIndex] = iSetCellLimit(g_iBuryChance[iIndex], 1, 99999)) : (g_iBuryChance2[iIndex] = iSetCellLimit(g_iBuryChance2[iIndex], 1, 99999));
+			main ? (g_flBuryDuration[iIndex] = kvSuperTanks.GetFloat("Bury Duration", 5.0)) : (g_flBuryDuration2[iIndex] = kvSuperTanks.GetFloat("Bury Duration", g_flBuryDuration[iIndex]));
+			main ? (g_flBuryDuration[iIndex] = flSetFloatLimit(g_flBuryDuration[iIndex], 0.1, 99999.0)) : (g_flBuryDuration2[iIndex] = flSetFloatLimit(g_flBuryDuration2[iIndex], 0.1, 99999.0));
+			main ? (g_iBuryHit[iIndex] = kvSuperTanks.GetNum("Bury Claw-Rock", 0)) : (g_iBuryHit2[iIndex] = kvSuperTanks.GetNum("Bury Claw-Rock", g_iBuryHit[iIndex]));
+			main ? (g_iBuryHit[iIndex] = iSetCellLimit(g_iBuryHit[iIndex], 0, 1)) : (g_iBuryHit2[iIndex] = iSetCellLimit(g_iBuryHit2[iIndex], 0, 1));
 			main ? (g_iCarThrow[iIndex] = kvSuperTanks.GetNum("Car Throw Ability", 0)) : (g_iCarThrow2[iIndex] = kvSuperTanks.GetNum("Car Throw Ability", g_iCarThrow[iIndex]));
 			main ? (g_iCarThrow[iIndex] = iSetCellLimit(g_iCarThrow[iIndex], 0, 1)) : (g_iCarThrow2[iIndex] = iSetCellLimit(g_iCarThrow2[iIndex], 0, 1));
 			main ? (g_iCommonAbility[iIndex] = kvSuperTanks.GetNum("Common Ability", 0)) : (g_iCommonAbility2[iIndex] = kvSuperTanks.GetNum("Common Ability", g_iCommonAbility[iIndex]));
@@ -1675,8 +1684,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iVisionHit[iIndex] = iSetCellLimit(g_iVisionHit[iIndex], 0, 1)) : (g_iVisionHit2[iIndex] = iSetCellLimit(g_iVisionHit2[iIndex], 0, 1));
 			main ? (g_iWarpAbility[iIndex] = kvSuperTanks.GetNum("Warp Ability", 0)) : (g_iWarpAbility2[iIndex] = kvSuperTanks.GetNum("Warp Ability", g_iWarpAbility[iIndex]));
 			main ? (g_iWarpAbility[iIndex] = iSetCellLimit(g_iWarpAbility[iIndex], 0, 1)) : (g_iWarpAbility2[iIndex] = iSetCellLimit(g_iWarpAbility2[iIndex], 0, 1));
-			main ? (g_iWarpInterval[iIndex] = kvSuperTanks.GetNum("Warp Interval", 5)) : (g_iWarpInterval2[iIndex] = kvSuperTanks.GetNum("Warp Interval", g_iWarpInterval[iIndex]));
-			main ? (g_iWarpInterval[iIndex] = iSetCellLimit(g_iWarpInterval[iIndex], 0, 99999)) : (g_iWarpInterval2[iIndex] = iSetCellLimit(g_iWarpInterval2[iIndex], 0, 99999));
+			main ? (g_flWarpInterval[iIndex] = kvSuperTanks.GetFloat("Warp Interval", 5.0)) : (g_flWarpInterval2[iIndex] = kvSuperTanks.GetFloat("Warp Interval", g_flWarpInterval[iIndex]));
+			main ? (g_flWarpInterval[iIndex] = flSetFloatLimit(g_flWarpInterval[iIndex], 0.1, 99999.0)) : (g_flWarpInterval2[iIndex] = flSetFloatLimit(g_flWarpInterval2[iIndex], 0.1, 99999.0));
 			main ? (g_iWitchAbility[iIndex] = kvSuperTanks.GetNum("Witch Ability", 0)) : (g_iWitchAbility2[iIndex] = kvSuperTanks.GetNum("Witch Ability", g_iWitchAbility[iIndex]));
 			main ? (g_iWitchAbility[iIndex] = iSetCellLimit(g_iWitchAbility[iIndex], 0, 1)) : (g_iWitchAbility2[iIndex] = iSetCellLimit(g_iWitchAbility2[iIndex], 0, 1));
 			main ? (g_iWitchAmount[iIndex] = kvSuperTanks.GetNum("Witch Amount", 3)) : (g_iWitchAmount2[iIndex] = kvSuperTanks.GetNum("Witch Amount", g_iWitchAmount[iIndex]));
@@ -1711,15 +1720,6 @@ void vAcidRock(int entity, int client, int enabled)
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] += 40.0;
 		SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, client, 2.0);
-	}
-}
-
-void vAirborneAbility(int client, int enabled)
-{
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
-	{
-		CreateTimer(1.0, tTimerAirborne, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 }
 
@@ -1812,6 +1812,28 @@ void vBombRock(int entity, int client, int enabled)
 	}
 }
 
+void vBuryHit(int client, int owner, int enabled)
+{
+	int iBuryChance = !g_bTankConfig[g_iTankType[owner]] ? g_iBuryChance[g_iTankType[owner]] : g_iBuryChance2[g_iTankType[owner]];
+	if (enabled == 1 && GetRandomInt(1, iBuryChance) == 1 && bIsSurvivor(client))
+	{
+		if (!g_bBury[client])
+		{
+			g_bBury[client] = true;
+			float flOrigin[3];
+			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+			flOrigin[2] = flOrigin[2] - 50.0;
+			SetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+			if (!bIsPlayerIncapacitated(client))
+			{
+				SetEntProp(client, Prop_Send, "m_isIncapacitated", 1);
+			}
+			float flBuryDuration = !g_bTankConfig[g_iTankType[owner]] ? g_flBuryDuration[g_iTankType[owner]] : g_flBuryDuration2[g_iTankType[owner]];
+			CreateTimer(flBuryDuration, tTimerStopBury, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+}
+
 void vCommonAbility(int client, int enabled)
 {
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
@@ -1843,27 +1865,6 @@ void vDrugHit(int client, int owner, int enabled)
 			dpDataPack.WriteCell(GetClientUserId(client));
 			dpDataPack.WriteCell(GetClientUserId(owner));
 			dpDataPack.WriteFloat(GetEngineTime());
-		}
-	}
-}
-
-void vFakeAirborne(int client, int enabled)
-{
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
-	{
-		if (!g_bAirborne[client] && bIsPlayerGrounded(client))
-		{
-			g_bAirborne[client] = true;
-			float flVelocity[3];
-			float flAirborneHeight = !g_bTankConfig[g_iTankType[client]] ? g_flAirborneHeight[g_iTankType[client]] : g_flAirborneHeight2[g_iTankType[client]];
-			flVelocity[0] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[0]");
-			flVelocity[1] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[1]");
-			flVelocity[2] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[2]") + flAirborneHeight;
-			TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
-			SetEntityGravity(client, 0.25);
-			float flAirborneDuration = !g_bTankConfig[g_iTankType[client]] ? g_flAirborneDuration[g_iTankType[client]] : g_flAirborneDuration2[g_iTankType[client]];
-			CreateTimer(flAirborneDuration, tTimerStopAirborne, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 }
@@ -2705,7 +2706,7 @@ void vSetColor(int client, int value)
 	g_iTankType[client] = value;
 }
 
-void vSetName(int client, char[] name = "Default Tank")
+void vSetName(int client, char[] name)
 {
 	char sSet[5][16];
 	!g_bTankConfig[g_iTankType[client]] ? ExplodeString(g_sPropsColors[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[])) : ExplodeString(g_sPropsColors2[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -2918,8 +2919,8 @@ void vStopTimers(int client)
 	if (bIsValidClient(client))
 	{
 		g_bAFK[client] = false;
-		g_bAirborne[client] = false;
 		g_bBlind[client] = false;
+		g_bBury[client] = false;
 		g_bFlash[client] = false;
 		g_bGhost[client] = false;
 		g_bGravity[client] = false;
@@ -3016,19 +3017,10 @@ void vVisualHit(int client, int owner, int enabled)
 void vWarpAbility(int client, int enabled)
 {
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	int iWarpInterval = !g_bTankConfig[g_iTankType[client]] ? g_iWarpInterval[g_iTankType[client]] : g_iWarpInterval2[g_iTankType[client]];
-	if (enabled == 1 && GetRandomInt(1, iWarpInterval) == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
+	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		int iTarget = iGetRandomSurvivor();
-		if (iTarget > 0)
-		{
-			float flOrigin[3];
-			float flAngles[3];
-			GetClientAbsOrigin(iTarget, flOrigin);
-			GetClientAbsAngles(iTarget, flAngles);
-			vCreateParticle(client, PARTICLE_ELECTRICITY, 1.0, 0.0);
-			TeleportEntity(client, flOrigin, flAngles, NULL_VECTOR);
-		}
+		float flWarpInterval = !g_bTankConfig[g_iTankType[client]] ? g_flWarpInterval[g_iTankType[client]] : g_flWarpInterval2[g_iTankType[client]];
+		CreateTimer(flWarpInterval, tTimerWarp, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 }
 
@@ -3077,38 +3069,6 @@ public void vSTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 	}
 }
 
-public Action tTimerAirborne(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	int iAirborneAbility = !g_bTankConfig[g_iTankType[client]] ? g_iAirborneAbility[g_iTankType[client]] : g_iAirborneAbility2[g_iTankType[client]];
-	if (iAirborneAbility == 0 || client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
-	{
-		return Plugin_Stop;
-	}
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	int iAirborneChance = !g_bTankConfig[g_iTankType[client]] ? g_iAirborneChance[g_iTankType[client]] : g_iAirborneChance2[g_iTankType[client]];
-	if (GetRandomInt(1, iAirborneChance) == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
-	{
-		vFakeAirborne(client, iAirborneAbility);
-	}
-	return Plugin_Continue;
-}
-
-public Action tTimerStopAirborne(Handle timer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
-	{
-		return Plugin_Stop;
-	}
-	if (bIsTank(client))
-	{
-		g_bAirborne[client] = false;
-		SetEntityGravity(client, 1.0);
-	}
-	return Plugin_Continue;
-}
-
 public Action tTimerStopBlindness(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
@@ -3137,6 +3097,28 @@ public Action tTimerBloodEffect(Handle timer, any userid)
 	if (bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
 		vAttachParticle(client, PARTICLE_BLOOD, 0.75, 30.0);
+	}
+	return Plugin_Continue;
+}
+
+public Action tTimerStopBury(Handle timer, any userid)
+{
+	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
+	if (bIsSurvivor(client))
+	{
+		g_bBury[client] = false;
+		float flOrigin[3];
+		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+		flOrigin[2] = flOrigin[2] + 50.0;
+		SetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+		if (bIsPlayerIncapacitated(client))
+		{
+			SDKCall(g_hSDKRevivePlayer, client);
+		}
 	}
 	return Plugin_Continue;
 }
@@ -4104,6 +4086,31 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
+public Action tTimerWarp(Handle timer, any userid)
+{
+	int client = GetClientOfUserId(userid);
+	int iWarpAbility = !g_bTankConfig[g_iTankType[client]] ? g_iWarpAbility[g_iTankType[client]] : g_iWarpAbility2[g_iTankType[client]];
+	if (iWarpAbility == 0 || client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	{
+		return Plugin_Stop;
+	}
+	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+	if (bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
+	{
+		int iTarget = iGetRandomSurvivor();
+		if (iTarget > 0)
+		{
+			float flOrigin[3];
+			float flAngles[3];
+			GetClientAbsOrigin(iTarget, flOrigin);
+			GetClientAbsAngles(iTarget, flAngles);
+			vCreateParticle(client, PARTICLE_ELECTRICITY, 1.0, 0.0);
+			TeleportEntity(client, flOrigin, flAngles, NULL_VECTOR);
+		}
+	}
+	return Plugin_Continue;
+}
+
 public Action tTimerSetTransmit(Handle timer, any entity)
 {
 	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
@@ -4228,10 +4235,8 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		int iAirborneAbility = !g_bTankConfig[g_iTankType[client]] ? g_iAirborneAbility[g_iTankType[client]] : g_iAirborneAbility2[g_iTankType[client]];
 		int iJumperAbility = !g_bTankConfig[g_iTankType[client]] ? g_iJumperAbility[g_iTankType[client]] : g_iJumperAbility2[g_iTankType[client]];
 		int iParticleEffect = !g_bTankConfig[g_iTankType[client]] ? g_iParticleEffect[g_iTankType[client]] : g_iParticleEffect2[g_iTankType[client]];
-		vAirborneAbility(client, iAirborneAbility);
 		vJumperAbility(client, iJumperAbility);
 		vParticleEffects(client, iParticleEffect);
 		if (!g_bShielded[client])

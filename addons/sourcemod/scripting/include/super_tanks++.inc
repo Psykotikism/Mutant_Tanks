@@ -223,15 +223,6 @@ stock bool bIsPlayerGhost(int client)
 	return false;
 }
 
-stock bool bIsPlayerGrounded(int client)
-{
-	if (GetEntProp(client, Prop_Send, "m_fFlags") & FL_ONGROUND)
-	{
-		return true;
-	}
-	return false;
-}
-
 stock bool bIsPlayerIdle(int client)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -245,6 +236,15 @@ stock bool bIsPlayerIdle(int client)
 		{
 			return true;
 		}
+	}
+	return false;
+}
+
+stock bool bIsPlayerIncapacitated(int client)
+{
+	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
+	{
+		return true;
 	}
 	return false;
 }
@@ -1050,26 +1050,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Acid Rock Break\"				\"0\"");
 			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can fly.");
-			fFilename.WriteLine("		// 0: OFF");
-			fFilename.WriteLine("		// 1: ON");
-			fFilename.WriteLine("		\"Airborne Ability\"				\"0\"");
-			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to fly.");
-			fFilename.WriteLine("		// Minimum: 1");
-			fFilename.WriteLine("		// Maximum: 99999");
-			fFilename.WriteLine("		\"Airborne Chance\"				\"4\"");
-			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank flies for this long.");
-			fFilename.WriteLine("		// Minimum: 0.1");
-			fFilename.WriteLine("		// Maximum: 99999.0");
-			fFilename.WriteLine("		\"Airborne Duration\"				\"5.0\"");
-			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can fly this high.");
-			fFilename.WriteLine("		// Minimum: 0.1");
-			fFilename.WriteLine("		// Maximum: 99999.0");
-			fFilename.WriteLine("		\"Airborne Height\"				\"750.0\"");
-			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to take away survivors' ammunition.");
 			fFilename.WriteLine("		// Minimum: 1");
 			fFilename.WriteLine("		// Maximum: 99999");
@@ -1119,6 +1099,21 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Bomb Rock Break\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to bury survivors.");
+			fFilename.WriteLine("		// Minimum: 1");
+			fFilename.WriteLine("		// Maximum: 99999");
+			fFilename.WriteLine("		\"Bury Chance\"					\"4\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The Super Tank's buries lasts this long.");
+			fFilename.WriteLine("		// Minimum: 0.1");
+			fFilename.WriteLine("		// Maximum: 99999.0");
+			fFilename.WriteLine("		\"Bury Duration\"					\"5.0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The Super Tank can bury survivors.");
+			fFilename.WriteLine("		// 0: OFF");
+			fFilename.WriteLine("		// 1: ON");
+			fFilename.WriteLine("		\"Bury Claw-Rock\"				\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can throw cars at survivors.");
 			fFilename.WriteLine("		// 0: OFF");
@@ -1648,21 +1643,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 2\"");
 			fFilename.WriteLine("	{");
-			fFilename.WriteLine("		\"Tank Name\"					\"Airborne Tank\"");
-			fFilename.WriteLine("		\"Tank Character\"			\"1\"");
-			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,170,0,255|255,170,0\"");
-			fFilename.WriteLine("		\"Props Colors\"				\"0,170,255,255|0,170,255,255|0,170,255,125|0,170,255,255|0,170,255,255\"");
-			fFilename.WriteLine("		\"Airborne Ability\"			\"1\"");
-			fFilename.WriteLine("		\"Airborne Chance\"			\"4\"");
-			fFilename.WriteLine("		\"Airborne Duration\"			\"5.0\"");
-			fFilename.WriteLine("		\"Airborne Height\"			\"750.0\"");
-			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
-			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
-			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 3\"");
-			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Ammo Tank\"");
-			fFilename.WriteLine("		\"Tank Character\"			\"2\"");
+			fFilename.WriteLine("		\"Tank Character\"			\"1\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"170,200,210,255|170,200,210\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"5,20,35,255|5,20,35,255|5,20,35,125|5,20,35,255|5,20,35,255\"");
 			fFilename.WriteLine("		\"Ammo Chance\"				\"4\"");
@@ -1670,10 +1652,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Ammo Claw-Rock\"			\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 4\"");
+			fFilename.WriteLine("	\"Tank 3\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Blind Tank\"");
-			fFilename.WriteLine("		\"Tank Character\"			\"3\"");
+			fFilename.WriteLine("		\"Tank Character\"			\"2\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"5,0,105,255|5,0,105\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"30,20,0,255|30,20,0,255|30,20,0,125|30,20,0,255|30,20,0,255\"");
 			fFilename.WriteLine("		\"Blind Chance\"				\"4\"");
@@ -1682,10 +1664,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Blind Intensity\"			\"255\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 5\"");
+			fFilename.WriteLine("	\"Tank 4\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Bomber Tank\"");
-			fFilename.WriteLine("		\"Tank Character\"			\"4\"");
+			fFilename.WriteLine("		\"Tank Character\"			\"3\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"100,0,0,255|100,0,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"15,15,15,255|15,15,15,255|15,15,15,125|15,15,15,255|15,15,15,255\"");
 			fFilename.WriteLine("		\"Bomb Chance\"				\"4\"");
@@ -1694,10 +1676,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 6\"");
+			fFilename.WriteLine("	\"Tank 5\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Boomer Tank\"");
-			fFilename.WriteLine("		\"Tank Character\"			\"5\"");
+			fFilename.WriteLine("		\"Tank Character\"			\"4\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"65,105,0,255|65,105,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"0,0,65,255|0,0,65,255|0,0,65,125|0,0,65,255|0,0,65,255\"");
 			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
@@ -1705,6 +1687,17 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Infected Options\"			\"2\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
+			fFilename.WriteLine("	}");
+			fFilename.WriteLine("	\"Tank 6\"");
+			fFilename.WriteLine("	{");
+			fFilename.WriteLine("		\"Tank Name\"					\"Burier Tank\"");
+			fFilename.WriteLine("		\"Tank Character\"			\"5\"");
+			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,170,0,255|255,170,0\"");
+			fFilename.WriteLine("		\"Props Colors\"				\"0,170,255,255|0,170,255,255|0,170,255,125|0,170,255,255|0,170,255,255\"");
+			fFilename.WriteLine("		\"Bury Chance\"				\"4\"");
+			fFilename.WriteLine("		\"Bury Duration\"				\"5.0\"");
+			fFilename.WriteLine("		\"Bury Claw-Rock\"			\"1\"");
+			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 7\"");
 			fFilename.WriteLine("	{");

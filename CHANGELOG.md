@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.16 (July 4, 2018)
+## Version 8.16 (July 5, 2018)
 
 Bug fixes:
 
@@ -18,11 +18,10 @@ Changes:
 6. Modified the "Props Colors" KeyValue to support the oxygen tank flames. New format: "Props Colors" "255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255|255,255,255,255"
 7. Added the "Panic Claw-Rock" KeyValue which lets the Super Tank start panic events.
 8. Added the "Panic Chance" KeyValue which decides how often the Super Tank can start panic events.
-9. Added the "Airborne Ability" KeyValue which lets the Super Tank fly.
-10. Added the "Airborne Chance" KeyValue which decides how often the Super Tank flies.
-11. Added the "Airborne Duration" KeyValue which decides how long the Super Tank can fly.
-12. Added the "Airborne Height" KeyValue which decides how high the Super Tank can fly.
-13. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
+9. Added the "Bury Claw-Rock" KeyValue which lets the Super Tank bury survivors.
+10. Added the "Bury Chance" KeyValue which decides how often the Super Tank can bury survivors.
+11. Added the "Bury Duration" KeyValue which decides how long the Super Tank can bury survivors.
+12. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
 
 ```
 "Boomer Throw"
