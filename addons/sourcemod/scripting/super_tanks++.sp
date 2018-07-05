@@ -21,6 +21,7 @@ bool g_bFlash[MAXPLAYERS + 1];
 bool g_bGeneralConfig;
 bool g_bGhost[MAXPLAYERS + 1];
 bool g_bGravity[MAXPLAYERS + 1];
+bool g_bGravity2[MAXPLAYERS + 1];
 bool g_bHeadshot[MAXPLAYERS + 1];
 bool g_bHeal[MAXPLAYERS + 1];
 bool g_bHurt[MAXPLAYERS + 1];
@@ -1115,7 +1116,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 				{
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
-						if (bIsSurvivor(iSurvivor) && g_bGravity[iSurvivor])
+						if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
 						{
 							tTimerStopGravity(null, GetClientUserId(iSurvivor));
 						}
@@ -1852,34 +1853,6 @@ void vDrugHit(int client, int owner, int enabled)
 	}
 }
 
-void vFakeJump(int client, int enabled)
-{
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
-	{
-		float flVelocity[3];
-		GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
-		if (flVelocity[0] > 0.0 && flVelocity[0] < 500.0)
-		{
-			flVelocity[0] += 500.0;
-		}
-		else if (flVelocity[0] < 0.0 && flVelocity[0] > -500.0)
-		{
-			flVelocity[0] += -500.0;
-		}
-		if (flVelocity[1] > 0.0 && flVelocity[1] < 500.0)
-		{
-			flVelocity[1] += 500.0;
-		}
-		else if (flVelocity[1] < 0.0 && flVelocity[1] > -500.0)
-		{
-			flVelocity[1] += -500.0;
-		}
-		flVelocity[2] += 750.0;
-		TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
-	}
-}
-
 void vFireHit(int client, int owner, int enabled)
 {
 	int iFireChance = !g_bTankConfig[g_iTankType[owner]] ? g_iFireChance[g_iTankType[owner]] : g_iFireChance2[g_iTankType[owner]];
@@ -2070,27 +2043,31 @@ void vGravityAbility(int client, int enabled)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		int iBlackhole = CreateEntityByName("point_push");
-		float flGravityForce = !g_bTankConfig[g_iTankType[client]] ? g_flGravityForce[g_iTankType[client]] : g_flGravityForce2[g_iTankType[client]];
-		if (IsValidEntity(iBlackhole))
+		if (!g_bGravity[client])
 		{
-			float flOrigin[3];
-			float flAngles[3];
-			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-			GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
-			flAngles[0] += -90.0;
-			DispatchKeyValueVector(iBlackhole, "origin", flOrigin);
-			DispatchKeyValueVector(iBlackhole, "angles", flAngles);
-			DispatchKeyValue(iBlackhole, "radius", "750");
-			DispatchKeyValueFloat(iBlackhole, "magnitude", flGravityForce);
-			DispatchKeyValue(iBlackhole, "spawnflags", "8");
-			SetVariantString("!activator");
-			AcceptEntityInput(iBlackhole, "SetParent", client);
-			AcceptEntityInput(iBlackhole, "Enable");
-			SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
-			if (bIsL4D2Game())
+			g_bGravity[client] = true;
+			int iBlackhole = CreateEntityByName("point_push");
+			float flGravityForce = !g_bTankConfig[g_iTankType[client]] ? g_flGravityForce[g_iTankType[client]] : g_flGravityForce2[g_iTankType[client]];
+			if (IsValidEntity(iBlackhole))
 			{
-				SetEntProp(iBlackhole, Prop_Send, "m_glowColorOverride", client);
+				float flOrigin[3];
+				float flAngles[3];
+				GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+				GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+				flAngles[0] += -90.0;
+				DispatchKeyValueVector(iBlackhole, "origin", flOrigin);
+				DispatchKeyValueVector(iBlackhole, "angles", flAngles);
+				DispatchKeyValue(iBlackhole, "radius", "750");
+				DispatchKeyValueFloat(iBlackhole, "magnitude", flGravityForce);
+				DispatchKeyValue(iBlackhole, "spawnflags", "8");
+				SetVariantString("!activator");
+				AcceptEntityInput(iBlackhole, "SetParent", client);
+				AcceptEntityInput(iBlackhole, "Enable");
+				SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
+				if (bIsL4D2Game())
+				{
+					SetEntProp(iBlackhole, Prop_Send, "m_glowColorOverride", client);
+				}
 			}
 		}
 	}
@@ -2101,9 +2078,9 @@ void vGravityHit(int client, int owner, int enabled)
 	int iGravityChance = !g_bTankConfig[g_iTankType[owner]] ? g_iGravityChance[g_iTankType[owner]] : g_iGravityChance2[g_iTankType[owner]];
 	if (enabled == 1 && GetRandomInt(1, iGravityChance) == 1 && bIsSurvivor(client))
 	{
-		if (!g_bGravity[client])
+		if (!g_bGravity2[client])
 		{
-			g_bGravity[client] = true;
+			g_bGravity2[client] = true;
 			float flGravityValue = !g_bTankConfig[g_iTankType[owner]] ? g_flGravityValue[g_iTankType[owner]] : g_flGravityValue2[g_iTankType[owner]];
 			SetEntityGravity(client, flGravityValue);
 			float flGravityDuration = !g_bTankConfig[g_iTankType[owner]] ? g_flGravityDuration[g_iTankType[owner]] : g_flGravityDuration2[g_iTankType[owner]];
@@ -2887,6 +2864,7 @@ void vStopTimers(int client)
 		g_bFlash[client] = false;
 		g_bGhost[client] = false;
 		g_bGravity[client] = false;
+		g_bGravity2[client] = false;
 		g_bHeadshot[client] = false;
 		g_bHeal[client] = false;
 		g_bHurt[client] = false;
@@ -3341,7 +3319,7 @@ public Action tTimerStopGravity(Handle timer, any userid)
 	}
 	if (bIsSurvivor(client))
 	{
-		g_bGravity[client] = false;
+		g_bGravity2[client] = false;
 		SetEntityGravity(client, 1.0);
 	}
 	return Plugin_Continue;
@@ -3647,7 +3625,26 @@ public Action tTimerJump(Handle timer, any userid)
 	{
 		if (iGetNearestSurvivor(client) > 200 && iGetNearestSurvivor(client) < 2000)
 		{
-			vFakeJump(client, iJumperAbility);
+			float flVelocity[3];
+			GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
+			if (flVelocity[0] > 0.0 && flVelocity[0] < 500.0)
+			{
+				flVelocity[0] += 500.0;
+			}
+			else if (flVelocity[0] < 0.0 && flVelocity[0] > -500.0)
+			{
+				flVelocity[0] += -500.0;
+			}
+			if (flVelocity[1] > 0.0 && flVelocity[1] < 500.0)
+			{
+				flVelocity[1] += 500.0;
+			}
+			else if (flVelocity[1] < 0.0 && flVelocity[1] > -500.0)
+			{
+				flVelocity[1] += -500.0;
+			}
+			flVelocity[2] += 750.0;
+			TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
 		}
 	}
 	return Plugin_Continue;
