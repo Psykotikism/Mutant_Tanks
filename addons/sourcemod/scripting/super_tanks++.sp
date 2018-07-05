@@ -496,23 +496,6 @@ public void OnMapStart()
 	PrecacheSound(SOUND_EXPLOSION4, true);
 	PrecacheSound(SOUND_DEBRIS, true);
 	PrecacheSound(SOUND_BULLET, true);
-	PrecacheSound(SOUND_ARRIVAL, true);
-	PrecacheSound(SOUND_ARRIVAL2, true);
-	PrecacheSound(SOUND_ARRIVAL3, true);
-	PrecacheSound(SOUND_ARRIVAL4, true);
-	PrecacheSound(SOUND_ARRIVAL5, true);
-	PrecacheSound(SOUND_ARRIVAL6, true);
-	PrecacheSound(SOUND_ARRIVAL7, true);
-	PrecacheSound(SOUND_ARRIVAL8, true);
-	PrecacheSound(SOUND_ARRIVAL9, true);
-	PrecacheSound(SOUND_ARRIVAL10, true);
-	PrecacheSound(SOUND_ARRIVAL11, true);
-	PrecacheSound(SOUND_ARRIVAL12, true);
-	PrecacheSound(SOUND_ARRIVAL13, true);
-	PrecacheSound(SOUND_ARRIVAL14, true);
-	PrecacheSound(SOUND_ARRIVAL15, true);
-	PrecacheSound(SOUND_ARRIVAL16, true);
-	PrecacheSound(SOUND_ARRIVAL17, true);
 	if (g_bLateLoad)
 	{
 		vLoadConfigs(g_sSavePath, true);
@@ -2757,26 +2740,6 @@ void vSetName(int client, char[] name)
 					case 3: PrintToChatAll("\x04%s\x05 %s\x01 came for a challenge!", ST_PREFIX, name);
 					case 4: PrintToChatAll("\x04%s\x05 %s\x01 is here!", ST_PREFIX, name);
 					case 5: PrintToChatAll("\x04%s\x05 %s\x01 joined the game!", ST_PREFIX, name);
-				}
-				switch (GetRandomInt(1, 17))
-				{
-					case 1: EmitSoundToAll(SOUND_ARRIVAL);
-					case 2: EmitSoundToAll(SOUND_ARRIVAL2);
-					case 3: EmitSoundToAll(SOUND_ARRIVAL3);
-					case 4: EmitSoundToAll(SOUND_ARRIVAL4);
-					case 5: EmitSoundToAll(SOUND_ARRIVAL5);
-					case 6: EmitSoundToAll(SOUND_ARRIVAL6);
-					case 7: EmitSoundToAll(SOUND_ARRIVAL7);
-					case 8: EmitSoundToAll(SOUND_ARRIVAL8);
-					case 9: EmitSoundToAll(SOUND_ARRIVAL9);
-					case 10: EmitSoundToAll(SOUND_ARRIVAL10);
-					case 11: EmitSoundToAll(SOUND_ARRIVAL11);
-					case 12: EmitSoundToAll(SOUND_ARRIVAL12);
-					case 13: EmitSoundToAll(SOUND_ARRIVAL13);
-					case 14: EmitSoundToAll(SOUND_ARRIVAL14);
-					case 15: EmitSoundToAll(SOUND_ARRIVAL15);
-					case 16: EmitSoundToAll(SOUND_ARRIVAL16);
-					case 17: EmitSoundToAll(SOUND_ARRIVAL17);
 				}
 			}
 		}

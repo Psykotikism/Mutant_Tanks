@@ -43,23 +43,6 @@
 #define SOUND_EXPLOSION4 "ambient/explosions/explode_3.wav"
 #define SOUND_DEBRIS "animation/van_inside_debris.wav"
 #define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
-#define SOUND_ARRIVAL "player/tank/voice/pain/tank_fire_01.wav"
-#define SOUND_ARRIVAL2 "player/tank/voice/pain/tank_fire_02.wav"
-#define SOUND_ARRIVAL3 "player/tank/voice/pain/tank_fire_03.wav"
-#define SOUND_ARRIVAL4 "player/tank/voice/pain/tank_fire_04.wav"
-#define SOUND_ARRIVAL5 "player/tank/voice/pain/tank_fire_05.wav"
-#define SOUND_ARRIVAL6 "player/tank/voice/pain/tank_fire_06.wav"
-#define SOUND_ARRIVAL7 "player/tank/voice/yell/tank_yell_01.wav"
-#define SOUND_ARRIVAL8 "player/tank/voice/yell/tank_yell_02.wav"
-#define SOUND_ARRIVAL9 "player/tank/voice/yell/tank_yell_03.wav"
-#define SOUND_ARRIVAL10 "player/tank/voice/yell/tank_yell_04.wav"
-#define SOUND_ARRIVAL11 "player/tank/voice/yell/tank_yell_05.wav"
-#define SOUND_ARRIVAL12 "player/tank/voice/yell/tank_yell_06.wav"
-#define SOUND_ARRIVAL13 "player/tank/voice/yell/tank_yell_07.wav"
-#define SOUND_ARRIVAL14 "player/tank/voice/yell/tank_yell_08.wav"
-#define SOUND_ARRIVAL15 "player/tank/voice/yell/tank_yell_09.wav"
-#define SOUND_ARRIVAL16 "player/tank/voice/yell/tank_yell_10.wav"
-#define SOUND_ARRIVAL17 "player/tank/voice/yell/tank_yell_12.wav"
 
 // Checks
 public bool bBoomerFilter(const char[] pattern, Handle clients)
