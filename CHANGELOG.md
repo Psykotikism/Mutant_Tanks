@@ -7,6 +7,8 @@ Bug fixes:
 1. Fixed the Car Throw Ability, Infected Throw Ability, and Shield Ability's propane throw not working.
 2. Fixed the "Enabled Game Modes" and "Disabled Game Modes" KeyValues not having enough space for more than 2-4 game modes.
 3. Fixed the issue with default "unnamed" Tanks appearing when certain Super Tanks are disabled.
+4. Fixed the Warp ability's interval glitching out.
+5. Fixed the Gravity ability creating more than 1 point_push entity per Tank.
 
 Changes:
 

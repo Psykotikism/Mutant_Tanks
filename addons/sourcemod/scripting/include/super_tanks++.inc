@@ -2084,7 +2084,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Props Colors\"				\"225,100,0,255|225,100,0,255|225,100,0,125|225,100,0,255|225,100,0,255\"");
 			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
 			fFilename.WriteLine("		\"Particle Effects\"			\"2\"");
-			fFilename.WriteLine("		\"Extra Health\"				\"1\"");
+			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Throw Interval\"			\"99999.0\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");

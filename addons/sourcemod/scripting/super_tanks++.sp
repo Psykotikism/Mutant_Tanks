@@ -1,4 +1,5 @@
 // Super Tanks++
+// Current Version: 8.16
 #include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
@@ -38,6 +39,7 @@ bool g_bShove[MAXPLAYERS + 1];
 bool g_bStun[MAXPLAYERS + 1];
 bool g_bTankConfig[MAXTYPES + 1];
 bool g_bVision[MAXPLAYERS + 1];
+bool g_bWarp[MAXPLAYERS + 1];
 char g_sConfigCreate[6];
 char g_sConfigExecute[6];
 char g_sCustomName[MAXTYPES + 1][33];
@@ -2878,6 +2880,7 @@ void vStopTimers(int client)
 		g_bShove[client] = false;
 		g_bStun[client] = false;
 		g_bVision[client] = false;
+		g_bWarp[client] = false;
 		g_iAlpha[client] = 255;
 		g_iSpawnInterval[client] = 0;
 		g_iTankType[client] = 0;
@@ -2960,8 +2963,12 @@ void vWarpAbility(int client, int enabled)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		float flWarpInterval = !g_bTankConfig[g_iTankType[client]] ? g_flWarpInterval[g_iTankType[client]] : g_flWarpInterval2[g_iTankType[client]];
-		CreateTimer(flWarpInterval, tTimerWarp, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		if (!g_bWarp[client])
+		{
+			g_bWarp[client] = true;
+			float flWarpInterval = !g_bTankConfig[g_iTankType[client]] ? g_flWarpInterval[g_iTankType[client]] : g_flWarpInterval2[g_iTankType[client]];
+			CreateTimer(flWarpInterval, tTimerWarp, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		}
 	}
 }
 
