@@ -1637,8 +1637,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Name\"					\"Airborne Tank\"");
 			fFilename.WriteLine("		\"Tank Character\"			\"1\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,170,0,255|255,170,0\"");
-			fFilename.WriteLine("		\"Props Attached\"			\"23\"");
-			fFilename.WriteLine("		\"Props Chance\"				\"1,1,1,1,1\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"0,170,255,255|0,170,255,255|0,170,255,125|0,170,255,255|0,170,255,255\"");
 			fFilename.WriteLine("		\"Airborne Ability\"			\"1\"");
 			fFilename.WriteLine("		\"Airborne Duration\"			\"5.0\"");
