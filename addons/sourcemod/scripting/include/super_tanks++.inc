@@ -223,6 +223,15 @@ stock bool bIsPlayerGhost(int client)
 	return false;
 }
 
+stock bool bIsPlayerGrounded(int client)
+{
+	if (GetEntProp(client, Prop_Send, "m_fFlags") & FL_ONGROUND)
+	{
+		return true;
+	}
+	return false;
+}
+
 stock bool bIsPlayerIdle(int client)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -1056,6 +1065,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// Maximum: 99999.0");
 			fFilename.WriteLine("		\"Airborne Duration\"				\"5.0\"");
 			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The Super Tank can fly this high.");
+			fFilename.WriteLine("		// Minimum: 0.1");
+			fFilename.WriteLine("		// Maximum: 99999.0");
+			fFilename.WriteLine("		\"Airborne Height\"				\"750.0\"");
+			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to take away survivors' ammunition.");
 			fFilename.WriteLine("		// Minimum: 1");
 			fFilename.WriteLine("		// Maximum: 99999");
@@ -1639,8 +1653,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,170,0,255|255,170,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"0,170,255,255|0,170,255,255|0,170,255,125|0,170,255,255|0,170,255,255\"");
 			fFilename.WriteLine("		\"Airborne Ability\"			\"1\"");
+			fFilename.WriteLine("		\"Airborne Chance\"			\"4\"");
 			fFilename.WriteLine("		\"Airborne Duration\"			\"5.0\"");
-			fFilename.WriteLine("		\"Airborne Interval\"			\"10.0\"");
+			fFilename.WriteLine("		\"Airborne Height\"			\"750.0\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("	}");

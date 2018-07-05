@@ -268,6 +268,11 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Maximum: 99999.0
 		"Airborne Duration"				"5.0"
 
+		// The Super Tank can fly this high.
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"Airborne Height"				"750.0"
+
 		// The Super Tank has 1 out of this many chances to take away survivors' ammunition.
 		// Minimum: 1
 		// Maximum: 99999
@@ -1042,7 +1047,7 @@ Examples:
 
 **Uncle Jessie** - For the Tremor Tank in his [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
 
-**thetwistedpanda** - For the [Fly Command](https://forums.alliedmods.net/showthread.php?p=1687851) plugin.
+**cravenge** - For the [Flying Tanks](https://forums.alliedmods.net/showpost.php?p=2415676&postcount=14) plugin.
 
 **Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and help with optimizing/fixing various parts of the code.
 

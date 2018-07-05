@@ -71,7 +71,9 @@ char g_sWeaponSlot[MAXTYPES + 1][6];
 char g_sWeaponSlot2[MAXTYPES + 1][6];
 ConVar g_cvSTFindConVar[12];
 float g_flAirborneDuration[MAXTYPES + 1];
+float g_flAirborneHeight[MAXTYPES + 1];
 float g_flAirborneDuration2[MAXTYPES + 1];
+float g_flAirborneHeight2[MAXTYPES + 1];
 float g_flBlindDuration[MAXTYPES + 1];
 float g_flBlindDuration2[MAXTYPES + 1];
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0};
@@ -91,7 +93,6 @@ float g_flGravityValue2[MAXTYPES + 1];
 float g_flHealInterval2[MAXTYPES + 1];
 float g_flHurtDuration2[MAXTYPES + 1];
 float g_flHypnoDuration2[MAXTYPES + 1];
-float g_flIce[3];
 float g_flInvertDuration[MAXTYPES + 1];
 float g_flMeteorDamage[MAXTYPES + 1];
 float g_flRunSpeed[MAXTYPES + 1];
@@ -1470,6 +1471,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iAirborneChance[iIndex] = iSetCellLimit(g_iAirborneChance[iIndex], 1, 99999)) : (g_iAirborneChance2[iIndex] = iSetCellLimit(g_iAirborneChance2[iIndex], 1, 99999));
 			main ? (g_flAirborneDuration[iIndex] = kvSuperTanks.GetFloat("Airborne Duration", 5.0)) : (g_flAirborneDuration2[iIndex] = kvSuperTanks.GetFloat("Airborne Duration", g_flAirborneDuration[iIndex]));
 			main ? (g_flAirborneDuration[iIndex] = flSetFloatLimit(g_flAirborneDuration[iIndex], 0.1, 99999.0)) : (g_flAirborneDuration2[iIndex] = flSetFloatLimit(g_flAirborneDuration2[iIndex], 0.1, 99999.0));
+			main ? (g_flAirborneHeight[iIndex] = kvSuperTanks.GetFloat("Airborne Height", 750.0)) : (g_flAirborneHeight2[iIndex] = kvSuperTanks.GetFloat("Airborne Height", g_flAirborneHeight[iIndex]));
+			main ? (g_flAirborneHeight[iIndex] = flSetFloatLimit(g_flAirborneHeight[iIndex], 0.1, 99999.0)) : (g_flAirborneHeight2[iIndex] = flSetFloatLimit(g_flAirborneHeight2[iIndex], 0.1, 99999.0));
 			main ? (g_iAmmoChance[iIndex] = kvSuperTanks.GetNum("Ammo Chance", 4)) : (g_iAmmoChance2[iIndex] = kvSuperTanks.GetNum("Ammo Chance", g_iAmmoChance[iIndex]));
 			main ? (g_iAmmoChance[iIndex] = iSetCellLimit(g_iAmmoChance[iIndex], 1, 99999)) : (g_iAmmoChance2[iIndex] = iSetCellLimit(g_iAmmoChance2[iIndex], 1, 99999));
 			main ? (g_iAmmoCount[iIndex] = kvSuperTanks.GetNum("Ammo Count", 0)) : (g_iAmmoCount2[iIndex] = kvSuperTanks.GetNum("Ammo Count", g_iAmmoCount[iIndex]));
@@ -1849,10 +1852,16 @@ void vFakeAirborne(int client, int enabled)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		if (!g_bAirborne[client])
+		if (!g_bAirborne[client] && bIsPlayerGrounded(client))
 		{
 			g_bAirborne[client] = true;
-			SetEntityMoveType(client, MOVETYPE_FLY);
+			float flVelocity[3];
+			float flAirborneHeight = !g_bTankConfig[g_iTankType[client]] ? g_flAirborneHeight[g_iTankType[client]] : g_flAirborneHeight2[g_iTankType[client]];
+			flVelocity[0] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[0]");
+			flVelocity[1] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[1]");
+			flVelocity[2] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[2]") + flAirborneHeight;
+			TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
+			SetEntityGravity(client, 0.25);
 			float flAirborneDuration = !g_bTankConfig[g_iTankType[client]] ? g_flAirborneDuration[g_iTankType[client]] : g_flAirborneDuration2[g_iTankType[client]];
 			CreateTimer(flAirborneDuration, tTimerStopAirborne, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -2185,12 +2194,13 @@ void vIceHit(int client, int owner, int enabled)
 		if (!g_bIce[client])
 		{
 			g_bIce[client] = true;
-			GetClientEyePosition(client, g_flIce);
+			float flPos[3];
+			GetClientEyePosition(client, flPos);
 			if (GetEntityMoveType(client) != MOVETYPE_NONE)
 			{
 				SetEntityMoveType(client, MOVETYPE_NONE);
 				SetEntityRenderColor(client, 0, 130, 255, 190);
-				EmitAmbientSound(SOUND_BULLET, g_flIce, client, SNDLEVEL_RAIDSIREN);
+				EmitAmbientSound(SOUND_BULLET, flPos, client, SNDLEVEL_RAIDSIREN);
 			}
 			CreateTimer(5.0, tTimerStopIce, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -3094,9 +3104,7 @@ public Action tTimerStopAirborne(Handle timer, any userid)
 	if (bIsTank(client))
 	{
 		g_bAirborne[client] = false;
-		float flVelocity[3];
-		TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
-		SetEntityMoveType(client, MOVETYPE_WALK);
+		SetEntityGravity(client, 1.0);
 	}
 	return Plugin_Continue;
 }
@@ -3575,12 +3583,13 @@ public Action tTimerStopIce(Handle timer, any userid)
 	if (bIsSurvivor(client))
 	{
 		g_bIce[client] = false;
-		GetClientEyePosition(client, g_flIce);
+		float flPos[3];
+		GetClientEyePosition(client, flPos);
 		if (GetEntityMoveType(client) == MOVETYPE_NONE)
 		{
 			SetEntityMoveType(client, MOVETYPE_WALK);
 			SetEntityRenderColor(client, 255, 255, 255, 255);
-			EmitAmbientSound(SOUND_BULLET, g_flIce, client, SNDLEVEL_RAIDSIREN);
+			EmitAmbientSound(SOUND_BULLET, flPos, client, SNDLEVEL_RAIDSIREN);
 		}
 	}
 	return Plugin_Continue;

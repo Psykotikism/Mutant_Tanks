@@ -21,7 +21,8 @@ Changes:
 9. Added the "Airborne Ability" KeyValue which lets the Super Tank fly.
 10. Added the "Airborne Chance" KeyValue which decides how often the Super Tank flies.
 11. Added the "Airborne Duration" KeyValue which decides how long the Super Tank can fly.
-12. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
+12. Added the "Airborne Height" KeyValue which decides how high the Super Tank can fly.
+13. Replaced the following KeyValues with the "Infected Options" KeyValue for more infected throw variety.
 
 ```
 "Boomer Throw"
