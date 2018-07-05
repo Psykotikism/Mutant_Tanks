@@ -2088,7 +2088,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Throw Interval\"			\"99999.0\"");
 			fFilename.WriteLine("		\"Warp Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Warp Interval\"				\"8.0\"");
+			fFilename.WriteLine("		\"Warp Interval\"				\"5.0\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 42\"");
 			fFilename.WriteLine("	{");
