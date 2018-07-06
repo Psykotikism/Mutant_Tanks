@@ -503,7 +503,7 @@ public void OnMapStart()
 	if (g_bLateLoad)
 	{
 		vLoadConfigs(g_sSavePath, true);
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++ )
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
 			{
@@ -884,7 +884,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 							}
 							else if (damagetype & DMG_SLASH)
 							{
-								int iDamage = RoundFloat(damage) / 100;
+								int iDamage = RoundFloat(damage) / 1000;
 								damage = 0.0;
 								int iHealth = GetClientHealth(attacker);
 								int iTarget = iGetRandomSurvivor();
