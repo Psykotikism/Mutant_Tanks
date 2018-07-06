@@ -1,5 +1,4 @@
 // Super Tanks++
-// Current Version: 8.17
 #include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
@@ -23,7 +22,6 @@ bool g_bGeneralConfig;
 bool g_bGhost[MAXPLAYERS + 1];
 bool g_bGravity[MAXPLAYERS + 1];
 bool g_bGravity2[MAXPLAYERS + 1];
-bool g_bHeadshot[MAXPLAYERS + 1];
 bool g_bHeal[MAXPLAYERS + 1];
 bool g_bHurt[MAXPLAYERS + 1];
 bool g_bHypno[MAXPLAYERS + 1];
@@ -69,7 +67,6 @@ char g_sTankCharacter2[MAXTYPES + 1][2];
 char g_sTankColors2[MAXTYPES + 1][28];
 char g_sTankTypes2[MAXTYPES + 1];
 char g_sTankWaves2[12];
-char g_sWeapon[32];
 char g_sWeaponSlot[MAXTYPES + 1][6];
 char g_sWeaponSlot2[MAXTYPES + 1][6];
 ConVar g_cvSTFindConVar[12];
@@ -511,7 +508,6 @@ public void OnMapStart()
 			if (bIsValidClient(iPlayer))
 			{
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-				SDKHook(iPlayer, SDKHook_TraceAttack, TraceAttack);
 			}
 		}
 	}
@@ -520,14 +516,12 @@ public void OnMapStart()
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	SDKHook(client, SDKHook_TraceAttack, TraceAttack);
 	vStopTimers(client);
 }
 
 public void OnClientDisconnect(int client)
 {
 	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	SDKUnhook(client, SDKHook_TraceAttack, TraceAttack);
 	vStopTimers(client);
 }
 
@@ -781,7 +775,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						damage = flWitchDamage;
 					}
 				}
-				else if (bIsTank(attacker) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(attacker))) && damagetype != 2)
+				else if (bIsTank(attacker) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(attacker))))
 				{
 					if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 					{
@@ -876,6 +870,28 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 							vHurtAbility(attacker, victim, iHurtAbility);
 							vMeteorAbility(victim, iMeteorAbility);
 						}
+						if (g_bHypno[attacker])
+						{
+							int iHypnoMode = !g_bTankConfig[g_iTankType[victim]] ? g_iHypnoMode[g_iTankType[victim]] : g_iHypnoMode2[g_iTankType[victim]];
+							if (damagetype & DMG_BULLET)
+							{
+								int iDamage = RoundFloat(damage) / 10;
+								damage = 0.0;
+								int iHealth = GetClientHealth(attacker);
+								int iTarget = iGetRandomSurvivor();
+								(iHealth > iDamage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - iDamage) : SetEntityHealth(attacker, iHealth - iDamage)) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, 1) : SetEntityHealth(attacker, 1));
+								return Plugin_Changed;
+							}
+							else if (damagetype & DMG_SLASH)
+							{
+								int iDamage = RoundFloat(damage) / 100;
+								damage = 0.0;
+								int iHealth = GetClientHealth(attacker);
+								int iTarget = iGetRandomSurvivor();
+								(iHealth > iDamage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - iDamage) : SetEntityHealth(attacker, iHealth - iDamage)) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, 1) : SetEntityHealth(attacker, 1));
+								return Plugin_Changed;
+							}
+						}
 					}
 				}
 				if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
@@ -919,51 +935,6 @@ public Action SetTransmit(int entity, int client)
 	if (iOwner == client)
 	{
 		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
-
-public Action TraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
-{
-	if (g_bHypno[attacker] && bIsSurvivor(attacker) && bIsTank(victim))
-	{
-		int iHypnoMode = !g_bTankConfig[g_iTankType[victim]] ? g_iHypnoMode[g_iTankType[victim]] : g_iHypnoMode2[g_iTankType[victim]];
-		int iDamage = RoundFloat(damage);
-		if (!IsClientConnected(attacker))
-		{
-			iDamage = 0;
-			return Plugin_Changed;
-		}
-		int iHealth = GetClientHealth(attacker);
-		if (iHealth > 0 && iHealth > iDamage)
-		{
-			int iTarget = iGetRandomSurvivor();
-			(iTarget > 0 || iHypnoMode == 1) ? SetEntityHealth(iTarget, iHealth - iDamage) : SetEntityHealth(attacker, iHealth - iDamage);
-			iDamage = 0;
-			return Plugin_Changed;
-		}
-		else
-		{
-			GetEntityClassname(inflictor, g_sWeapon, sizeof(g_sWeapon));
-			if (StrContains(g_sWeapon, "_projectile") > 0)
-			{
-				ReplaceString(g_sWeapon, sizeof(g_sWeapon), "_projectile", "", false);
-				int iTarget = iGetRandomSurvivor();
-				(iTarget > 0 || iHypnoMode == 1) ? SetEntityHealth(iTarget, 1) : SetEntityHealth(attacker, 1);
-				iDamage = 0;
-				return Plugin_Changed;
-			}
-			else
-			{
-				GetClientWeapon(attacker, g_sWeapon, sizeof(g_sWeapon));
-				ReplaceString(g_sWeapon, sizeof(g_sWeapon), "weapon_", "", false);
-				hitgroup == 1 ? (g_bHeadshot[attacker] = true) : (g_bHeadshot[attacker] = false);
-				int iTarget = iGetRandomSurvivor();
-				(iTarget > 0 || iHypnoMode == 1) ? SetEntityHealth(iTarget, 1) : SetEntityHealth(attacker, 1);
-				iDamage = 0;
-				return Plugin_Changed;
-			}
-		}
 	}
 	return Plugin_Continue;
 }
@@ -1065,8 +1036,6 @@ public Action eEventPlayerBotReplace(Event event, const char[] name, bool dontBr
 
 public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	int iAttackerId = event.GetInt("attacker");
-	int iAttacker = GetClientOfUserId(iAttackerId);
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
 	int iEnable = !g_bGeneralConfig ? g_iEnable : g_iEnable2;
@@ -1084,18 +1053,6 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 			if (bIsTank(iTank, false) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 			{
-				if (g_bHypno[iAttacker] && iTank > 0 && iAttacker != iTank)
-				{
-					event.SetInt("attacker", GetClientOfUserId(iTank));
-					event.SetString("weapon", g_sWeapon);
-					event.SetInt("userid", GetClientOfUserId(iAttacker));
-					if (g_bHeadshot[iAttacker])
-					{
-						event.SetBool("headshot", true);
-					}
-					SetEntProp(iTank, Prop_Data, "m_iFrags", GetClientFrags(iTank) + 1);
-					SetEntProp(iAttacker, Prop_Data, "m_iFrags", GetClientFrags(iAttacker) + 1);
-				}
 				int iBlindHit = !g_bTankConfig[g_iTankType[iTank]] ? g_iBlindHit[g_iTankType[iTank]] : g_iBlindHit2[g_iTankType[iTank]];
 				if (iBlindHit == 1)
 				{
@@ -1230,12 +1187,6 @@ public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcas
 	if (iEnable == 1 && bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
 	{
 		g_iTankWave = 0;
-		g_sWeapon[0] = '\0';
-		for (int iPlayer= 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			g_bHeadshot[iPlayer] = false;
-			g_bHypno[iPlayer] = false;
-		}
 		CreateTimer(10.0, tTimerRestartCoordinates, _, TIMER_FLAG_NO_MAPCHANGE);
 		g_cvSTFindConVar[4].SetString("32");
 		g_cvSTFindConVar[5].SetString("32");
@@ -2883,7 +2834,6 @@ void vStopTimers(int client)
 		g_bGhost[client] = false;
 		g_bGravity[client] = false;
 		g_bGravity2[client] = false;
-		g_bHeadshot[client] = false;
 		g_bHeal[client] = false;
 		g_bHurt[client] = false;
 		g_bHypno[client] = false;

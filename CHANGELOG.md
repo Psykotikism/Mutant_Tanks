@@ -5,9 +5,13 @@
 Changes:
 
 1. Added the "Hypno Mode" KeyValue to decide whether hypnotized survivors can only hurt themselves or other teammates.
-2. The Hypno ability's effect only activates when hypnotized survivors hurts/kills the Super Tank that hypnotized them.
-3. Added the "Bury Height" KeyValue to decide how deep survivors are buried.
-4. Added a check for only burying survivors that are on the ground to avoid bugs.
+2. The Hypno ability now uses OnTakeDamage instead of TraceAttack and supports multiple damage types.
+3. The Hypno ability's effect only activates when hypnotized survivors hurts/kills the Super Tank that hypnotized them.
+4. The Hypno ability no longer kills hypnotized survivors when they kill the Super Tank that hypnotized them.
+5. The bullet (gunshot) damage done onto a Super Tank by its hypnotized victim will now have 1/10 of it inflicted upon the hypnotized victim.
+6. The slash (melee) damage done onto a Super Tank by its hypnotized victim will now have 1/100 of it inflicted upon the hypnotized victim. 
+7. Added the "Bury Height" KeyValue to decide how deep survivors are buried.
+8. Added a check for only burying survivors that are on the ground to avoid bugs.
 
 Files:
 
