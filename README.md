@@ -313,6 +313,11 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Maximum: 99999.0
 		"Bury Duration"					"5.0"
 
+		// The Super Tank buries survivors this deep into the ground.
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"Bury Height"					"50.0"
+
 		// The Super Tank can bury survivors.
 		// 0: OFF
 		// 1: ON
@@ -534,6 +539,11 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 0: OFF
 		// 1: ON
 		"Hypno Claw-Rock"				"0"
+
+		// The mode of the Super Tank's hypno ability.
+		// 0: Hypnotized survivors hurt themselves.
+		// 1: Hypnotized survivors can hurt their teammates.
+		"Hypno Mode"					"0"
 
 		// The Super Tank has 1 out of this many chances to freeze survivors.
 		// Minimum: 1

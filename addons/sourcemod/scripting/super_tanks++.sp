@@ -1,5 +1,5 @@
 // Super Tanks++
-// Current Version: 8.16
+// Current Version: 8.17
 #include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
@@ -75,8 +75,10 @@ char g_sWeaponSlot2[MAXTYPES + 1][6];
 ConVar g_cvSTFindConVar[12];
 float g_flBlindDuration[MAXTYPES + 1];
 float g_flBuryDuration[MAXTYPES + 1];
+float g_flBuryHeight[MAXTYPES + 1];
 float g_flBlindDuration2[MAXTYPES + 1];
 float g_flBuryDuration2[MAXTYPES + 1];
+float g_flBuryHeight2[MAXTYPES + 1];
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0};
 float g_flDrugDuration[MAXTYPES + 1];
 float g_flFlashSpeed[MAXTYPES + 1];
@@ -207,6 +209,7 @@ int g_iHurtChance[MAXTYPES + 1];
 int g_iHurtDamage[MAXTYPES + 1];
 int g_iHypnoChance[MAXTYPES + 1];
 int g_iHypnoHit[MAXTYPES + 1];
+int g_iHypnoMode[MAXTYPES + 1];
 int g_iIceChance[MAXTYPES + 1];
 int g_iIceHit[MAXTYPES + 1];
 int g_iIdleChance[MAXTYPES + 1];
@@ -267,6 +270,7 @@ int g_iHurtChance2[MAXTYPES + 1];
 int g_iHurtDamage2[MAXTYPES + 1];
 int g_iHypnoChance2[MAXTYPES + 1];
 int g_iHypnoHit2[MAXTYPES + 1];
+int g_iHypnoMode2[MAXTYPES + 1];
 int g_iIceChance2[MAXTYPES + 1];
 int g_iIceHit2[MAXTYPES + 1];
 int g_iIdleChance2[MAXTYPES + 1];
@@ -921,42 +925,43 @@ public Action SetTransmit(int entity, int client)
 
 public Action TraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
-	if (bIsSurvivor(attacker))
+	if (g_bHypno[attacker] && bIsSurvivor(attacker) && bIsTank(victim))
 	{
-		if (g_bHypno[attacker] && attacker != victim)
+		int iHypnoMode = !g_bTankConfig[g_iTankType[victim]] ? g_iHypnoMode[g_iTankType[victim]] : g_iHypnoMode2[g_iTankType[victim]];
+		int iDamage = RoundFloat(damage);
+		if (!IsClientConnected(attacker))
 		{
-			int iDamage = RoundFloat(damage);
-			if (!IsClientConnected(attacker))
+			iDamage = 0;
+			return Plugin_Changed;
+		}
+		int iHealth = GetClientHealth(attacker);
+		if (iHealth > 0 && iHealth > iDamage)
+		{
+			int iTarget = iGetRandomSurvivor();
+			(iTarget > 0 || iHypnoMode == 1) ? SetEntityHealth(iTarget, iHealth - iDamage) : SetEntityHealth(attacker, iHealth - iDamage);
+			iDamage = 0;
+			return Plugin_Changed;
+		}
+		else
+		{
+			GetEntityClassname(inflictor, g_sWeapon, sizeof(g_sWeapon));
+			if (StrContains(g_sWeapon, "_projectile") > 0)
 			{
-				iDamage = 0;
-				return Plugin_Changed;
-			}
-			int iHealth = GetClientHealth(attacker);
-			if (iHealth > 0 && iHealth > iDamage)
-			{
-				SetEntityHealth(attacker, iHealth - iDamage);
+				ReplaceString(g_sWeapon, sizeof(g_sWeapon), "_projectile", "", false);
+				int iTarget = iGetRandomSurvivor();
+				(iTarget > 0 || iHypnoMode == 1) ? SetEntityHealth(iTarget, 1) : SetEntityHealth(attacker, 1);
 				iDamage = 0;
 				return Plugin_Changed;
 			}
 			else
 			{
-				GetEntityClassname(inflictor, g_sWeapon, sizeof(g_sWeapon));
-				if (StrContains(g_sWeapon, "_projectile") > 0)
-				{
-					ReplaceString(g_sWeapon, sizeof(g_sWeapon), "_projectile", "", false);
-					SetEntityHealth(attacker, 1);
-					iDamage = 0;
-					return Plugin_Changed;
-				}
-				else
-				{
-					GetClientWeapon(attacker, g_sWeapon, sizeof(g_sWeapon));
-					ReplaceString(g_sWeapon, sizeof(g_sWeapon), "weapon_", "", false);
-					hitgroup == 1 ? (g_bHeadshot[attacker] = true) : (g_bHeadshot[attacker] = false);
-					SetEntityHealth(attacker, 1);
-					iDamage = 0;
-					return Plugin_Changed;
-				}
+				GetClientWeapon(attacker, g_sWeapon, sizeof(g_sWeapon));
+				ReplaceString(g_sWeapon, sizeof(g_sWeapon), "weapon_", "", false);
+				hitgroup == 1 ? (g_bHeadshot[attacker] = true) : (g_bHeadshot[attacker] = false);
+				int iTarget = iGetRandomSurvivor();
+				(iTarget > 0 || iHypnoMode == 1) ? SetEntityHealth(iTarget, 1) : SetEntityHealth(attacker, 1);
+				iDamage = 0;
+				return Plugin_Changed;
 			}
 		}
 	}
@@ -1109,7 +1114,10 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 					{
 						if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
 						{
-							tTimerStopBury(null, GetClientUserId(iSurvivor));
+							DataPack dpDataPack;
+							tTimerStopBury(null, dpDataPack);
+							dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+							dpDataPack.WriteCell(GetClientUserId(iTank));
 						}
 					}
 				}
@@ -1486,6 +1494,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iBuryChance[iIndex] = iSetCellLimit(g_iBuryChance[iIndex], 1, 99999)) : (g_iBuryChance2[iIndex] = iSetCellLimit(g_iBuryChance2[iIndex], 1, 99999));
 			main ? (g_flBuryDuration[iIndex] = kvSuperTanks.GetFloat("Bury Duration", 5.0)) : (g_flBuryDuration2[iIndex] = kvSuperTanks.GetFloat("Bury Duration", g_flBuryDuration[iIndex]));
 			main ? (g_flBuryDuration[iIndex] = flSetFloatLimit(g_flBuryDuration[iIndex], 0.1, 99999.0)) : (g_flBuryDuration2[iIndex] = flSetFloatLimit(g_flBuryDuration2[iIndex], 0.1, 99999.0));
+			main ? (g_flBuryHeight[iIndex] = kvSuperTanks.GetFloat("Bury Height", 50.0)) : (g_flBuryHeight2[iIndex] = kvSuperTanks.GetFloat("Bury Height", g_flBuryHeight[iIndex]));
+			main ? (g_flBuryHeight[iIndex] = flSetFloatLimit(g_flBuryHeight[iIndex], 0.1, 99999.0)) : (g_flBuryHeight2[iIndex] = flSetFloatLimit(g_flBuryHeight2[iIndex], 0.1, 99999.0));
 			main ? (g_iBuryHit[iIndex] = kvSuperTanks.GetNum("Bury Claw-Rock", 0)) : (g_iBuryHit2[iIndex] = kvSuperTanks.GetNum("Bury Claw-Rock", g_iBuryHit[iIndex]));
 			main ? (g_iBuryHit[iIndex] = iSetCellLimit(g_iBuryHit[iIndex], 0, 1)) : (g_iBuryHit2[iIndex] = iSetCellLimit(g_iBuryHit2[iIndex], 0, 1));
 			main ? (g_iCarThrow[iIndex] = kvSuperTanks.GetNum("Car Throw Ability", 0)) : (g_iCarThrow2[iIndex] = kvSuperTanks.GetNum("Car Throw Ability", g_iCarThrow[iIndex]));
@@ -1569,6 +1579,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_flHypnoDuration[iIndex] = flSetFloatLimit(g_flHypnoDuration[iIndex], 0.1, 99999.0)) : (g_flHypnoDuration2[iIndex] = flSetFloatLimit(g_flHypnoDuration2[iIndex], 0.1, 99999.0));
 			main ? (g_iHypnoHit[iIndex] = kvSuperTanks.GetNum("Hypno Claw-Rock", 0)) : (g_iHypnoHit2[iIndex] = kvSuperTanks.GetNum("Hypno Claw-Rock", g_iHypnoHit[iIndex]));
 			main ? (g_iHypnoHit[iIndex] = iSetCellLimit(g_iHypnoHit[iIndex], 0, 1)) : (g_iHypnoHit2[iIndex] = iSetCellLimit(g_iHypnoHit2[iIndex], 0, 1));
+			main ? (g_iHypnoMode[iIndex] = kvSuperTanks.GetNum("Hypno Mode", 0)) : (g_iHypnoMode2[iIndex] = kvSuperTanks.GetNum("Hypno Mode", g_iHypnoMode[iIndex]));
+			main ? (g_iHypnoMode[iIndex] = iSetCellLimit(g_iHypnoMode[iIndex], 0, 1)) : (g_iHypnoMode2[iIndex] = iSetCellLimit(g_iHypnoMode2[iIndex], 0, 1));
 			main ? (g_iIceChance[iIndex] = kvSuperTanks.GetNum("Ice Chance", 4)) : (g_iIceChance2[iIndex] = kvSuperTanks.GetNum("Ice Chance", g_iIceChance[iIndex]));
 			main ? (g_iIceChance[iIndex] = iSetCellLimit(g_iIceChance[iIndex], 1, 99999)) : (g_iIceChance2[iIndex] = iSetCellLimit(g_iIceChance2[iIndex], 1, 99999));
 			main ? (g_iIceHit[iIndex] = kvSuperTanks.GetNum("Ice Claw-Rock", 0)) : (g_iIceHit2[iIndex] = kvSuperTanks.GetNum("Ice Claw-Rock", g_iIceHit[iIndex]));
@@ -1801,21 +1813,25 @@ void vBombRock(int entity, int client, int enabled)
 void vBuryHit(int client, int owner, int enabled)
 {
 	int iBuryChance = !g_bTankConfig[g_iTankType[owner]] ? g_iBuryChance[g_iTankType[owner]] : g_iBuryChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iBuryChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iBuryChance) == 1 && bIsSurvivor(client) && bIsPlayerGrounded(client))
 	{
 		if (!g_bBury[client])
 		{
 			g_bBury[client] = true;
 			float flOrigin[3];
+			float flBuryHeight = !g_bTankConfig[g_iTankType[owner]] ? g_flBuryHeight[g_iTankType[owner]] : g_flBuryHeight2[g_iTankType[owner]];
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-			flOrigin[2] = flOrigin[2] - 50.0;
+			flOrigin[2] = flOrigin[2] - flBuryHeight;
 			SetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 			if (!bIsPlayerIncapacitated(client))
 			{
 				SetEntProp(client, Prop_Send, "m_isIncapacitated", 1);
 			}
 			float flBuryDuration = !g_bTankConfig[g_iTankType[owner]] ? g_flBuryDuration[g_iTankType[owner]] : g_flBuryDuration2[g_iTankType[owner]];
-			CreateTimer(flBuryDuration, tTimerStopBury, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+			DataPack dpDataPack;
+			CreateDataTimer(flBuryDuration, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+			dpDataPack.WriteCell(GetClientUserId(client));
+			dpDataPack.WriteCell(GetClientUserId(owner));
 		}
 	}
 }
@@ -3049,23 +3065,27 @@ public Action tTimerBloodEffect(Handle timer, any userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopBury(Handle timer, any userid)
+public Action tTimerStopBury(Handle timer, DataPack pack)
 {
-	int client = GetClientOfUserId(userid);
-	if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iBuryHit = !g_bTankConfig[g_iTankType[iTank]] ? g_iBuryHit[g_iTankType[iTank]] : g_iBuryHit2[g_iTankType[iTank]];
+	if (iBuryHit == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(client))
+	if (bIsSurvivor(iSurvivor))
 	{
-		g_bBury[client] = false;
+		g_bBury[iSurvivor] = false;
 		float flOrigin[3];
-		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-		flOrigin[2] = flOrigin[2] + 50.0;
-		SetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-		if (bIsPlayerIncapacitated(client))
+		float flBuryHeight = !g_bTankConfig[g_iTankType[iTank]] ? g_flBuryHeight[g_iTankType[iTank]] : g_flBuryHeight2[g_iTankType[iTank]];
+		GetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
+		flOrigin[2] = flOrigin[2] + flBuryHeight;
+		SetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
+		if (bIsPlayerIncapacitated(iSurvivor))
 		{
-			SDKCall(g_hSDKRevivePlayer, client);
+			SDKCall(g_hSDKRevivePlayer, iSurvivor);
 		}
 	}
 	return Plugin_Continue;

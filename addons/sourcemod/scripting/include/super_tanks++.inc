@@ -9,7 +9,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.16"
+#define ST_VERSION "8.17"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MAXTYPES 250
 #define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
@@ -200,6 +200,15 @@ stock bool bIsPlayerBurning(int client)
 stock bool bIsPlayerGhost(int client)
 {
 	if (GetEntProp(client, Prop_Send, "m_isGhost", 1))
+	{
+		return true;
+	}
+	return false;
+}
+
+stock bool bIsPlayerGrounded(int client)
+{
+	if (GetEntProp(client, Prop_Send, "m_fFlags") & FL_ONGROUND)
 	{
 		return true;
 	}
@@ -1088,10 +1097,15 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// Maximum: 99999");
 			fFilename.WriteLine("		\"Bury Chance\"					\"4\"");
 			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank's buries lasts this long.");
+			fFilename.WriteLine("		// The Super Tank's buries last this long.");
 			fFilename.WriteLine("		// Minimum: 0.1");
 			fFilename.WriteLine("		// Maximum: 99999.0");
 			fFilename.WriteLine("		\"Bury Duration\"					\"5.0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The Super Tank buries survivors this deep into the ground.");
+			fFilename.WriteLine("		// Minimum: 0.1");
+			fFilename.WriteLine("		// Maximum: 99999.0");
+			fFilename.WriteLine("		\"Bury Height\"					\"50.0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can bury survivors.");
 			fFilename.WriteLine("		// 0: OFF");
@@ -1314,6 +1328,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Hypno Claw-Rock\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The mode of the Super Tank's hypno ability.");
+			fFilename.WriteLine("		// 0: Hypnotized survivors hurt themselves.");
+			fFilename.WriteLine("		// 1: Hypnotized survivors can hurt their teammates.");
+			fFilename.WriteLine("		\"Hypno Mode\"					\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to freeze survivors.");
 			fFilename.WriteLine("		// Minimum: 1");
@@ -1679,6 +1698,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Props Colors\"				\"0,170,255,255|0,170,255,255|0,170,255,125|0,170,255,255|0,170,255,255\"");
 			fFilename.WriteLine("		\"Bury Chance\"				\"4\"");
 			fFilename.WriteLine("		\"Bury Duration\"				\"5.0\"");
+			fFilename.WriteLine("		\"Bury Height\"				\"50.0\"");
 			fFilename.WriteLine("		\"Bury Claw-Rock\"			\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("	}");
@@ -1848,6 +1868,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Hypno Chance\"				\"4\"");
 			fFilename.WriteLine("		\"Hypno Duration\"			\"5.0\"");
 			fFilename.WriteLine("		\"Hypno Claw-Rock\"			\"1\"");
+			fFilename.WriteLine("		\"Hypno Mode\"				\"0\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 21\"");
 			fFilename.WriteLine("	{");

@@ -1,5 +1,18 @@
 # Changelog
 
+## Version 8.17 (June 6, 2018)
+
+Changes:
+
+1. Added the "Hypno Mode" KeyValue to decide whether hypnotized survivors can only hurt themselves or other teammates.
+2. The Hypno ability's effect only activates when hypnotized survivors hurts/kills the Super Tank that hypnotized them.
+3. Added the "Bury Height" KeyValue to decide how deep survivors are buried.
+4. Added a check for only burying survivors that are on the ground to avoid bugs.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.16 (July 5, 2018)
 
 Bug fixes:
