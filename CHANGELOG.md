@@ -1,6 +1,10 @@
 # Changelog
 
-## Version 8.18 (July 10, 2018)
+## Version 8.18 (July 8, 2018)
+
+Bug fixes:
+
+1. Fixed the Spam ability creating multiple timers.
 
 Changes:
 

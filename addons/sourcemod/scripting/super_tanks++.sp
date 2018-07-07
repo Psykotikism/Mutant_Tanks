@@ -1,4 +1,3 @@
-// Super Tanks++
 #include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
@@ -36,6 +35,7 @@ bool g_bRestartValid;
 bool g_bShake[MAXPLAYERS + 1];
 bool g_bShielded[MAXPLAYERS + 1];
 bool g_bShove[MAXPLAYERS + 1];
+bool g_bSpam[MAXPLAYERS + 1];
 bool g_bStun[MAXPLAYERS + 1];
 bool g_bTankConfig[MAXTYPES + 1];
 bool g_bVision[MAXPLAYERS + 1];
@@ -2893,8 +2893,12 @@ void vSpamAbility(int client, int enabled)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		float flSpamInterval = !g_bTankConfig[g_iTankType[client]] ? g_flSpamInterval[g_iTankType[client]] : g_flSpamInterval2[g_iTankType[client]];
-		CreateTimer(flSpamInterval, tTimerSpam, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		if (!g_bSpam[client])
+		{
+			g_bSpam[client] = true;
+			float flSpamInterval = !g_bTankConfig[g_iTankType[client]] ? g_flSpamInterval[g_iTankType[client]] : g_flSpamInterval2[g_iTankType[client]];
+			CreateTimer(flSpamInterval, tTimerSpam, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		}
 	}
 }
 
@@ -2921,6 +2925,7 @@ void vStopTimers(int client)
 		g_bShake[client] = false;
 		g_bShielded[client] = false;
 		g_bShove[client] = false;
+		g_bSpam[client] = false;
 		g_bStun[client] = false;
 		g_bVision[client] = false;
 		g_bWarp[client] = false;
@@ -4084,6 +4089,7 @@ public Action tTimerSpam(Handle timer, any userid)
 	int iSpamAbility = !g_bTankConfig[g_iTankType[client]] ? g_iSpamAbility[g_iTankType[client]] : g_iSpamAbility2[g_iTankType[client]];
 	if (iSpamAbility == 0 || client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
 	{
+		g_bSpam[client] = false;
 		return Plugin_Stop;
 	}
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
