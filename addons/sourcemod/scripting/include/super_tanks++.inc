@@ -1675,7 +1675,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"50,90,150,255|50,90,150\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"10,10,10,255|10,10,10,255|10,10,10,125|10,10,10,255|10,10,10,255\"");
 			fFilename.WriteLine("		\"Absorb Ability\"			\"1\"");
-			fFilename.WriteLine("		\"Extra Health\"				\"1\"");
+			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 2\"");

@@ -4416,7 +4416,7 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 		}
 		float flThrowInterval = !g_bTankConfig[g_iTankType[client]] ? g_flThrowInterval[g_iTankType[client]] : g_flThrowInterval2[g_iTankType[client]];
 		vThrowInterval(client, flThrowInterval);
-		CreateTimer(1.0, tTimerPyro, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		CreateTimer(1.0, tTimerPyro, userid, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 	return Plugin_Continue;
 }
