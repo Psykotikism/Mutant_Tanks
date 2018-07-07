@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 8.18 (TBA)
+
+Changes:
+
+1. Added the "Absorb Ability" KeyValue which lets the Super Tank absorb most of the damage it receives, so they take less damage.
+2. Added the "Pyro Ability" KeyValue which lets the Super Tank gain a speed boost when on fire.
+3. Added the "Pyro Boost" KeyValue which lets users decide how much speed boost the Super Tank gains when on fire.
+4. Buried survivors are now frozen in place.
+5. Buried survivors are now teleported to nearby teammates to avoid falling through the map after being unburied.
+
 ## Version 8.17 (June 6, 2018)
 
 Changes:

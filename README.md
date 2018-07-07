@@ -135,7 +135,7 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Maximum types of Super Tanks allowed.
 		// Minimum: 1
 		// Maximum: 250
-		"Maximum Types"					"56"
+		"Maximum Types"					"60"
 
 		// Multiply the Super Tank's health.
 		// 0: No changes to health.
@@ -147,9 +147,9 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Spawn these Super Tank types.
 		// Combine letters and numbers in any order for different results.
 		// Repeat the same letter or number to increase its chance of being chosen.
-		// Character limit: 64
+		// Character limit: 250
 		// Valid characters: Any number, letter, and symbol except for these: ' and "
-		"Tank Types"					"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrst"
+		"Tank Types"					"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx"
 
 		// Amount of Tanks to spawn for each finale wave.
 		// Separate waves with commas.
@@ -234,6 +234,11 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 6: Smoker Cloud
 		// 7: Spit Puddle (Only available in Left 4 Dead 2.)
 		"Particle Effects"				"1234567"
+
+		// The Super Tank absorbs most of the damage it receives.
+		// 0: OFF
+		// 1: ON
+		"Absorb Ability"				"0"
 
 		// The Super Tank has 1 out of this many chances to spawn acid puddles underneath survivors.
 		// Only available in Left 4 Dead 2.
@@ -642,6 +647,17 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 0: OFF
 		// 1: ON
 		"Puke Claw-Rock"				"0"
+
+		// The Super Tank gains a speed boost when on fire.
+		// 0: OFF
+		// 1: ON
+		"Pyro Ability"					"0"
+
+		// The Super Tank's speed boost value when on fire.
+		// Note: This is a speed boost, not the overall speed. (Current speed + Pyro boost)
+		// Minimum: 0.1
+		// Maximum: 3.0
+		"Pyro Boost"					"1.0"
 
 		// The Super Tank has 1 out of this many chances to make survivors restart at the spawn area.
 		// Minimum: 1
