@@ -2242,6 +2242,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Props Colors\"				\"30,30,30,255|30,30,30,255|30,30,30,125|30,30,30,255|30,30,30,255\"");
 			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
 			fFilename.WriteLine("		\"Particle Effects\"			\"1234567\"");
+			fFilename.WriteLine("		\"Absorb Ability\"			\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Common Ability\"			\"1\"");
@@ -2347,6 +2348,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Props Colors\"				\"225,0,255,255|225,0,255,255|225,0,255,125|225,0,255,255|225,0,255,255\"");
 			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
 			fFilename.WriteLine("		\"Particle Effects\"			\"1234567\"");
+			fFilename.WriteLine("		\"Absorb Ability\"			\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Common Ability\"			\"1\"");
