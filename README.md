@@ -3,7 +3,7 @@ Super Tanks++ takes the original [Super Tanks](https://forums.alliedmods.net/sho
 
 ## License
 Super Tanks++: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2017 Alfred "Crasher_3637/Psyk0tik" Llagas
+Copyright (C) 2018 Alfred "Crasher_3637/Psyk0tik" Llagas
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -20,7 +20,7 @@ Super Tanks++ makes fighting Tanks great again!
 Super Tanks++ enhances the experience and fun that players get from Tank fights by 1000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
-Super Tanks++ was developed against SourceMod 1.8+.
+SourceMod 1.9.0.6225 or higher
 
 ### Installation
 1. Delete files from old versions of the plugin.
