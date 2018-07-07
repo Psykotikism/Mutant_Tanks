@@ -13,9 +13,11 @@ Changes:
 7. Added the "Nullify Duration" KeyValue which decides how long the Super Tank can nullify all of a survivor's damage.
 8. Buried survivors are now frozen in place.
 9. Buried survivors are now teleported to nearby teammates to avoid falling through the map after being unburied.
-10. Removed the "Tank Types" KeyValue.
-11. Replaced the "Tank Character" KeyValue with "Tank Enabled". (Now users can simply enable/disable each Tank without using a letter, number, or symbol.)
-12. Increased the maximum amount of possible Super Tank types from 250 to 1000.
+10. The Hypno ability no longer sets survivors' HP to 1 when the inflicted damage is higher than their health, but rather incapacitates them.
+11. Removed the "Tank Types" KeyValue.
+12. Replaced the "Tank Character" KeyValue with "Tank Enabled". (Now users can simply enable/disable each Tank without using a letter, number, or symbol.)
+13. Increased the maximum amount of possible Super Tank types from 250 to 1000.
+14. The plugin now uses the RemoveEntity(int entity) native that was introduced in SM 1.9.0.6225.
 
 Files:
 
