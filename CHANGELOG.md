@@ -5,24 +5,28 @@
 Bug fixes:
 
 1. Fixed the Spam ability creating multiple timers.
+2. Fixed the Super Tanks not taking any type of explosive damage.
 
 Changes:
 
-1. Added the "Absorb Ability" KeyValue which lets the Super Tank absorb most of the damage it receives, so they take less damage.
-2. Added the "Pyro Ability" KeyValue which lets the Super Tank gain a speed boost when on fire.
-3. Added the "Pyro Boost" KeyValue which lets users decide how much speed boost the Super Tank gains when on fire.
-4. Added the "Self Throw Ability" KeyValue which lets the Super Tank throw itself.
-5. Added the "Nullify Claw-Rock" KeyValue which lets the Super Tank nullify all of a survivor's damage.
-6. Added the "Nullify Chance" KeyValue which decides how often the Super Tank can nullify all of a survivor's damage.
-7. Added the "Nullify Duration" KeyValue which decides how long the Super Tank can nullify all of a survivor's damage.
-8. Buried survivors are now frozen in place.
-9. Buried survivors are now teleported to nearby teammates to avoid falling through the map after being unburied.
-10. The Hypno ability no longer sets survivors' HP to 1 when the inflicted damage is higher than their health, but rather incapacitates them.
-11. Removed the "Tank Types" KeyValue.
-12. Replaced the "Tank Character" KeyValue with "Tank Enabled". (Now users can simply enable/disable each Tank without using a letter, number, or symbol.)
-13. Increased the maximum amount of possible Super Tank types from 250 to 1000.
-14. Added the Super Tanks menu to the admin menu.
-15. The plugin now uses the RemoveEntity(int entity) native that was introduced in SM 1.9.0.6225.
+1. Added the "Explosive Immunity" KeyValue which gives the Super Tank immunity to blast damage.
+2. Added the "Bullet Immunity" KeyValue which gives the Super Tank immunity to bullet damage.
+3. Added the "Melee Immunity" KeyValue which gives the Super Tank immunity to melee damage.
+4. Added the "Absorb Ability" KeyValue which lets the Super Tank absorb most of the damage it receives, so they take less damage.
+5. Added the "Pyro Ability" KeyValue which lets the Super Tank gain a speed boost when on fire.
+6. Added the "Pyro Boost" KeyValue which lets users decide how much speed boost the Super Tank gains when on fire.
+7. Added the "Self Throw Ability" KeyValue which lets the Super Tank throw itself.
+8. Added the "Nullify Claw-Rock" KeyValue which lets the Super Tank nullify all of a survivor's damage.
+9. Added the "Nullify Chance" KeyValue which decides how often the Super Tank can nullify all of a survivor's damage.
+10. Added the "Nullify Duration" KeyValue which decides how long the Super Tank can nullify all of a survivor's damage.
+11. Buried survivors are now frozen in place.
+12. Buried survivors are now teleported to nearby teammates to avoid falling through the map after being unburied.
+13. The Hypno ability no longer sets survivors' HP to 1 when the inflicted damage is higher than their health, but rather incapacitates them.
+14. Removed the "Tank Types" KeyValue.
+15. Replaced the "Tank Character" KeyValue with "Tank Enabled". (Now users can simply enable/disable each Tank without using a letter, number, or symbol.)
+16. Increased the maximum amount of possible Super Tank types from 250 to 1000.
+17. Added the Super Tanks menu to the admin menu.
+18. The plugin now uses the RemoveEntity(int entity) native that was introduced in SM 1.9.0.6225.
 
 Files:
 

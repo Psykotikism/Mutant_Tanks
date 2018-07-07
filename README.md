@@ -301,6 +301,11 @@ SourceMod 1.9.0.6225 or higher
 		// 1: ON
 		"Bomb Rock Break"				"0"
 
+		// Give the Super Tank bullet immunity.
+		// 0: OFF
+		// 1: ON
+		"Bullet Immunity"				"0"
+
 		// The Super Tank has 1 out of this many chances to bury survivors.
 		// Minimum: 1
 		// Maximum: 99999
@@ -350,6 +355,11 @@ SourceMod 1.9.0.6225 or higher
 		// 0: OFF
 		// 1: ON
 		"Drug Claw-Rock"				"0"
+
+		// Give the Super Tank explosive immunity.
+		// 0: OFF
+		// 1: ON
+		"Explosive Immunity"			"0"
 
 		// Extra health given to the Super Tank.
 		// Note: Tank's health limit on any difficulty is 62,400.
@@ -605,6 +615,11 @@ SourceMod 1.9.0.6225 or higher
 		// Minimum: 1
 		// Maximum: 99999
 		"Jump Chance"					"4"
+
+		// Give the Super Tank melee immunity.
+		// 0: OFF
+		// 1: ON
+		"Melee Immunity"				"0"
 
 		// The Super Tank can start meteor showers.
 		// 0: OFF
@@ -960,11 +975,23 @@ Example:
 "Run Speed" "3.0" // Add 2.0 to the Super Tank's run speed. Default run speed is 1.0.
 ```
 
-7. How can I give each Tank fire immunity?
+7. How can I give each Tank bullet immunity?
+
+Set the value of the "Bullet Immunity" KeyValue to 1.
+
+8. How can I give each Tank explosive immunity?
+
+Set the value of the "Explosive Immunity" KeyValue to 1.
+
+9. How can I give each Tank fire immunity?
 
 Set the value of the "Fire Immunity" KeyValue to 1.
 
-8. How can I delay the throw interval of each Tank?
+10. How can I give each Tank melee immunity?
+
+Set the value of the "Melee Immunity" KeyValue to 1.
+
+11. How can I delay the throw interval of each Tank?
 
 Set the value in the "Throw Interval" KeyValue.
 
@@ -974,15 +1001,15 @@ Example:
 "Throw Interval" "8.0" // Add 3.0 to the Super Tank's throw interval. Default throw interval is 5.0.
 ```
 
-9. Why do some Tanks spawn with different props?
+12. Why do some Tanks spawn with different props?
 
 Each prop has 1 out of X chances to appear on Super Tanks when they spawn. Configure the chances for each prop in the "Props Chance" KeyValue.
 
-10. Why are the Tanks spawning with more than the extra health given to them?
+13. Why are the Tanks spawning with more than the extra health given to them?
 
 Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
-11. How do I filter out certain Super Tanks that I made without deleting them?
+14. How do I filter out certain Super Tanks that I made without deleting them?
 
 Enable/disable them with the "Tank Enabled" KeyValue.
 
@@ -1010,7 +1037,7 @@ Example:
 }
 ```
 
-12. Are there any developer/tester features available in the plugin?
+15. Are there any developer/tester features available in the plugin?
 
 Yes, there are target filters for each special infected and the sm_tank command that allows developers/testers to spawn each Super Tank.
 

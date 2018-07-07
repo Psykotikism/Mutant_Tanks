@@ -146,6 +146,7 @@ int g_iBlindIntensity[MAXTYPES + 1];
 int g_iBombChance[MAXTYPES + 1];
 int g_iBombHit[MAXTYPES + 1];
 int g_iBombRock[MAXTYPES + 1];
+int g_iBulletImmunity[MAXTYPES + 1];
 int g_iBuryChance[MAXTYPES + 1];
 int g_iBuryHit[MAXTYPES + 1];
 int g_iCarThrow[MAXTYPES + 1];
@@ -165,6 +166,7 @@ int g_iBlindIntensity2[MAXTYPES + 1];
 int g_iBombChance2[MAXTYPES + 1];
 int g_iBombHit2[MAXTYPES + 1];
 int g_iBombRock2[MAXTYPES + 1];
+int g_iBulletImmunity2[MAXTYPES + 1];
 int g_iBuryChance2[MAXTYPES + 1];
 int g_iBuryHit2[MAXTYPES + 1];
 int g_iCarThrow2[MAXTYPES + 1];
@@ -178,6 +180,7 @@ int g_iDisplayHealth2;
 int g_iDrugChance2[MAXTYPES + 1];
 int g_iDrugHit2[MAXTYPES + 1];
 int g_iExplosionSprite = -1;
+int g_iExplosiveImmunity[MAXTYPES + 1];
 int g_iExtraHealth[MAXTYPES + 1];
 int g_iFinalesOnly;
 int g_iFireChance[MAXTYPES + 1];
@@ -219,6 +222,7 @@ int g_iInvertHit[MAXTYPES + 1];
 int g_iJumperAbility[MAXTYPES + 1];
 int g_iJumperChance[MAXTYPES + 1];
 int g_iMaxTypes;
+int g_iMeleeImmunity[MAXTYPES + 1];
 int g_iMeteorAbility[MAXTYPES + 1];
 int g_iMeteorChance[MAXTYPES + 1];
 int g_iMultiHealth;
@@ -244,6 +248,7 @@ int g_iShoveChance[MAXTYPES + 1];
 int g_iShoveHit[MAXTYPES + 1];
 int g_iSlugChance[MAXTYPES + 1];
 int g_iSlugHit[MAXTYPES + 1];
+int g_iExplosiveImmunity2[MAXTYPES + 1];
 int g_iExtraHealth2[MAXTYPES + 1];
 int g_iFinalesOnly2;
 int g_iFireChance2[MAXTYPES + 1];
@@ -285,6 +290,7 @@ int g_iInvertHit2[MAXTYPES + 1];
 int g_iJumperAbility2[MAXTYPES + 1];
 int g_iJumperChance2[MAXTYPES + 1];
 int g_iMaxTypes2;
+int g_iMeleeImmunity2[MAXTYPES + 1];
 int g_iMeteorAbility2[MAXTYPES + 1];
 int g_iMeteorChance2[MAXTYPES + 1];
 int g_iMultiHealth2;
@@ -902,8 +908,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 				if (bIsTank(victim) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(victim))))
 				{
+					int iBulletImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iBulletImmunity[g_iTankType[victim]] : g_iBulletImmunity2[g_iTankType[victim]];
+					int iExplosiveImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iExplosiveImmunity[g_iTankType[victim]] : g_iExplosiveImmunity2[g_iTankType[victim]];
 					int iFireImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iFireImmunity[g_iTankType[victim]] : g_iFireImmunity2[g_iTankType[victim]];
-					if ((damagetype & DMG_BURN && iFireImmunity == 1) || damagetype & DMG_BLAST || victim == attacker)
+					int iMeleeImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iMeleeImmunity[g_iTankType[victim]] : g_iMeleeImmunity2[g_iTankType[victim]];
+					if ((damagetype & DMG_BULLET && iBulletImmunity == 1) || ((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && iExplosiveImmunity == 1) || (damagetype & DMG_BURN && iFireImmunity == 1) || ((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && iMeleeImmunity == 1))
 					{
 						damage = 0.0;
 						return Plugin_Handled;
@@ -932,24 +941,23 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						if (iAbsorbAbility == 1)
 						{
 							int iDamage;
-							if (damagetype & DMG_BULLET)
+							if (damagetype & DMG_BULLET || damagetype & DMG_BURN || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 							{
 								iDamage = RoundFloat(damage) / 10;
 							}
-							else if (damagetype & DMG_SLASH)
+							else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
 							{
 								iDamage = RoundFloat(damage) / 1000;
 							}
-							damage = 0.0;
 							int iHealth = GetClientHealth(victim);
 							SetEntityHealth(victim, iHealth - iDamage);
+							damage = 0.0;
 							return Plugin_Changed;
 						}
 						if (g_bHypno[attacker])
 						{
 							int iHypnoMode = !g_bTankConfig[g_iTankType[victim]] ? g_iHypnoMode[g_iTankType[victim]] : g_iHypnoMode2[g_iTankType[victim]];
 							int iDamage;
-							damage = 0.0;
 							int iHealth = GetClientHealth(attacker);
 							int iTarget = iGetRandomSurvivor(attacker, false);
 							if (damagetype & DMG_BULLET)
@@ -962,6 +970,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 								iDamage = RoundFloat(damage) / 1000;
 								(iHealth > iDamage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - iDamage) : SetEntityHealth(attacker, iHealth - iDamage)) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntProp(iTarget, Prop_Send, "m_isIncapacitated", 1) : SetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1));
 							}
+							damage = 0.0;
 							return Plugin_Changed;
 						}
 					}
@@ -1525,6 +1534,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iBombHit[iIndex] = iSetCellLimit(g_iBombHit[iIndex], 0, 1)) : (g_iBombHit2[iIndex] = iSetCellLimit(g_iBombHit2[iIndex], 0, 1));
 			main ? (g_iBombRock[iIndex] = kvSuperTanks.GetNum("Bomb Rock Break", 0)) : (g_iBombRock2[iIndex] = kvSuperTanks.GetNum("Bomb Rock Break", g_iBombRock[iIndex]));
 			main ? (g_iBombRock[iIndex] = iSetCellLimit(g_iBombRock[iIndex], 0, 1)) : (g_iBombRock2[iIndex] = iSetCellLimit(g_iBombRock2[iIndex], 0, 1));
+			main ? (g_iBulletImmunity[iIndex] = kvSuperTanks.GetNum("Bullet Immunity", 0)) : (g_iBulletImmunity2[iIndex] = kvSuperTanks.GetNum("Bullet Immunity", g_iBulletImmunity[iIndex]));
+			main ? (g_iBulletImmunity[iIndex] = iSetCellLimit(g_iBulletImmunity[iIndex], 0, 1)) : (g_iBulletImmunity2[iIndex] = iSetCellLimit(g_iBulletImmunity2[iIndex], 0, 1));
 			main ? (g_iBuryChance[iIndex] = kvSuperTanks.GetNum("Bury Chance", 4)) : (g_iBuryChance2[iIndex] = kvSuperTanks.GetNum("Bury Chance", g_iBuryChance[iIndex]));
 			main ? (g_iBuryChance[iIndex] = iSetCellLimit(g_iBuryChance[iIndex], 1, 99999)) : (g_iBuryChance2[iIndex] = iSetCellLimit(g_iBuryChance2[iIndex], 1, 99999));
 			main ? (g_flBuryDuration[iIndex] = kvSuperTanks.GetFloat("Bury Duration", 5.0)) : (g_flBuryDuration2[iIndex] = kvSuperTanks.GetFloat("Bury Duration", g_flBuryDuration[iIndex]));
@@ -1545,6 +1556,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_flDrugDuration[iIndex] = flSetFloatLimit(g_flDrugDuration[iIndex], 0.1, 99999.0)) : (g_flDrugDuration2[iIndex] = flSetFloatLimit(g_flDrugDuration2[iIndex], 0.1, 99999.0));
 			main ? (g_iDrugHit[iIndex] = kvSuperTanks.GetNum("Drug Claw-Rock", 0)) : (g_iDrugHit2[iIndex] = kvSuperTanks.GetNum("Drug Claw-Rock", g_iDrugHit[iIndex]));
 			main ? (g_iDrugHit[iIndex] = iSetCellLimit(g_iDrugHit[iIndex], 0, 1)) : (g_iDrugHit2[iIndex] = iSetCellLimit(g_iDrugHit2[iIndex], 0, 1));
+			main ? (g_iExplosiveImmunity[iIndex] = kvSuperTanks.GetNum("Explosive Immunity", 0)) : (g_iExplosiveImmunity2[iIndex] = kvSuperTanks.GetNum("Explosive Immunity", g_iExplosiveImmunity[iIndex]));
+			main ? (g_iExplosiveImmunity[iIndex] = iSetCellLimit(g_iExplosiveImmunity[iIndex], 0, 1)) : (g_iExplosiveImmunity2[iIndex] = iSetCellLimit(g_iExplosiveImmunity2[iIndex], 0, 1));
 			main ? (g_iExtraHealth[iIndex] = kvSuperTanks.GetNum("Extra Health", 0)) : (g_iExtraHealth2[iIndex] = kvSuperTanks.GetNum("Extra Health", g_iExtraHealth[iIndex]));
 			main ? (g_iExtraHealth[iIndex] = iSetCellLimit(g_iExtraHealth[iIndex], 0, 62400)) : (g_iExtraHealth2[iIndex] = iSetCellLimit(g_iExtraHealth2[iIndex], 0, 62400));
 			main ? (g_iFireChance[iIndex] = kvSuperTanks.GetNum("Fire Chance", 4)) : (g_iFireChance2[iIndex] = kvSuperTanks.GetNum("Fire Chance", g_iFireChance[iIndex]));
@@ -1637,6 +1650,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iJumperAbility[iIndex] = iSetCellLimit(g_iJumperAbility[iIndex], 0, 1)) : (g_iJumperAbility2[iIndex] = iSetCellLimit(g_iJumperAbility2[iIndex], 0, 1));
 			main ? (g_iJumperChance[iIndex] = kvSuperTanks.GetNum("Jump Chance", 4)) : (g_iJumperChance2[iIndex] = kvSuperTanks.GetNum("Jump Chance", g_iJumperChance[iIndex]));
 			main ? (g_iJumperChance[iIndex] = iSetCellLimit(g_iJumperChance[iIndex], 1, 99999)) : (g_iJumperChance2[iIndex] = iSetCellLimit(g_iJumperChance2[iIndex], 1, 99999));
+			main ? (g_iMeleeImmunity[iIndex] = kvSuperTanks.GetNum("Melee Immunity", 0)) : (g_iMeleeImmunity2[iIndex] = kvSuperTanks.GetNum("Melee Immunity", g_iMeleeImmunity[iIndex]));
+			main ? (g_iMeleeImmunity[iIndex] = iSetCellLimit(g_iMeleeImmunity[iIndex], 0, 1)) : (g_iMeleeImmunity2[iIndex] = iSetCellLimit(g_iMeleeImmunity2[iIndex], 0, 1));
 			main ? (g_iMeteorAbility[iIndex] = kvSuperTanks.GetNum("Meteor Ability", 0)) : (g_iMeteorAbility2[iIndex] = kvSuperTanks.GetNum("Meteor Ability", g_iMeteorAbility[iIndex]));
 			main ? (g_iMeteorAbility[iIndex] = iSetCellLimit(g_iMeteorAbility[iIndex], 0, 1)) : (g_iMeteorAbility2[iIndex] = iSetCellLimit(g_iMeteorAbility2[iIndex], 0, 1));
 			main ? (g_iMeteorChance[iIndex] = kvSuperTanks.GetNum("Meteor Chance", 4)) : (g_iMeteorChance2[iIndex] = kvSuperTanks.GetNum("Meteor Chance", g_iMeteorChance[iIndex]));

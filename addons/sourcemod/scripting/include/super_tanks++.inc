@@ -1099,6 +1099,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Bomb Rock Break\"				\"0\"");
 			fFilename.WriteLine("");
+			fFilename.WriteLine("		// Give the Super Tank bullet immunity.");
+			fFilename.WriteLine("		// 0: OFF");
+			fFilename.WriteLine("		// 1: ON");
+			fFilename.WriteLine("		\"Bullet Immunity\"				\"0\"");
+			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to bury survivors.");
 			fFilename.WriteLine("		// Minimum: 1");
 			fFilename.WriteLine("		// Maximum: 99999");
@@ -1148,6 +1153,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Drug Claw-Rock\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// Give the Super Tank explosive immunity.");
+			fFilename.WriteLine("		// 0: OFF");
+			fFilename.WriteLine("		// 1: ON");
+			fFilename.WriteLine("		\"Explosive Immunity\"			\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// Extra health given to the Super Tank.");
 			fFilename.WriteLine("		// Note: Tank's health limit on any difficulty is 62,400.");
@@ -1403,6 +1413,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// Minimum: 1");
 			fFilename.WriteLine("		// Maximum: 99999");
 			fFilename.WriteLine("		\"Jump Chance\"					\"4\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// Give the Super Tank melee immunity.");
+			fFilename.WriteLine("		// 0: OFF");
+			fFilename.WriteLine("		// 1: ON");
+			fFilename.WriteLine("		\"Melee Immunity\"				\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank can start meteor showers.");
 			fFilename.WriteLine("		// 0: OFF");
