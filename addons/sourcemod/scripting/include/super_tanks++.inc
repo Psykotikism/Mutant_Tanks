@@ -5,6 +5,7 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
+#include <adminmenu>
 #define ST_PREFIX "[ST++]"
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"

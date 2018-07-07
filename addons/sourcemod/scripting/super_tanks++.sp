@@ -345,6 +345,7 @@ int g_iVisionHit2[MAXTYPES + 1];
 int g_iWarpAbility2[MAXTYPES + 1];
 int g_iWitchAbility2[MAXTYPES + 1];
 int g_iWitchAmount2[MAXTYPES + 1];
+TopMenu g_tmSTMenu;
 UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -479,6 +480,11 @@ public void OnPluginStart()
 		PrintToServer("%s Your \"CTerrorPlayer_OnStaggered\" signature is outdated.", ST_PREFIX);
 	}
 	delete hGameData;
+	TopMenu tmAdminMenu;
+	if (LibraryExists("adminmenu") && ((tmAdminMenu = GetAdminTopMenu()) != null))
+	{
+		OnAdminMenuReady(tmAdminMenu);
+	}
 	g_umFadeUserMsgId = GetUserMessageId("Fade");
 }
 
@@ -691,6 +697,45 @@ public void OnMapEnd()
 public void OnPluginEnd()
 {
 	vMultiTargetFilters(0);
+}
+
+public void OnAdminMenuReady(Handle topmenu)
+{
+	if (topmenu == g_tmSTMenu)
+	{
+		return;
+	}
+	g_tmSTMenu = view_as<TopMenu>(topmenu);
+	TopMenuObject st_commands = g_tmSTMenu.AddCategory("SuperTanks++", iAdminMenuHandler);
+	if (st_commands != INVALID_TOPMENUOBJECT)
+	{
+		g_tmSTMenu.AddItem("sm_tank", vSuperTankMenu, st_commands, "sm_tank", ADMFLAG_ROOT);
+	}
+}
+
+public int iAdminMenuHandler(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
+{
+	switch (action)
+	{
+		case TopMenuAction_DisplayTitle, TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tanks++");
+	}
+}
+
+public void vSuperTankMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
+{
+	switch (action)
+	{
+		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tank Menu");
+		case TopMenuAction_SelectOption: vTankMenu(param, 0);
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "adminmenu", false))
+	{
+		g_tmSTMenu = null;
+	}
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
