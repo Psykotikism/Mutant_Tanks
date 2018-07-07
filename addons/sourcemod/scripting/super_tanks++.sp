@@ -2505,8 +2505,8 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 						AcceptEntityInput(iFlame, "TurnOn");
 						SDKHook(iFlame, SDKHook_SetTransmit, SetTransmit);
 					}
-					SDKHook(iEntity[iOzTank], SDKHook_SetTransmit, SetTransmit);
 				}
+				SDKHook(iEntity[iOzTank], SDKHook_SetTransmit, SetTransmit);
 			}
 		}
 	}
