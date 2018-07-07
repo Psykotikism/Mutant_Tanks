@@ -1267,7 +1267,8 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 						int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
 						if (iTankEnabled == 1)
 						{
-							iTankTypes[iTypeCount++] = iIndex;
+							iTankTypes[iTypeCount + 1] = iIndex;
+							iTypeCount++;
 						}
 					}
 					if (iTypeCount > 0)
@@ -4116,7 +4117,7 @@ public Action tTimerSpamThrow(Handle timer, any userid)
 				TeleportEntity(iSpammer, flPos, flAng, NULL_VECTOR);
 				DispatchSpawn(iSpammer);
 				AcceptEntityInput(iSpammer, "LaunchRock");
-				AcceptEntityInput(iSpammer, "kill");
+				AcceptEntityInput(iSpammer, "Kill");
 				g_iSpamCount[client]++;
 			}
 		}
