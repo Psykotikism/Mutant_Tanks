@@ -1,14 +1,25 @@
 # Changelog
 
-## Version 8.18 (TBA)
+## Version 8.18 (July 10, 2018)
 
 Changes:
 
 1. Added the "Absorb Ability" KeyValue which lets the Super Tank absorb most of the damage it receives, so they take less damage.
 2. Added the "Pyro Ability" KeyValue which lets the Super Tank gain a speed boost when on fire.
 3. Added the "Pyro Boost" KeyValue which lets users decide how much speed boost the Super Tank gains when on fire.
-4. Buried survivors are now frozen in place.
-5. Buried survivors are now teleported to nearby teammates to avoid falling through the map after being unburied.
+4. Added the "Self Throw Ability" KeyValue which lets the Super Tank throw itself.
+5. Added the "Nullify Claw-Rock" KeyValue which lets the Super Tank nullify all of a survivor's damage.
+6. Added the "Nullify Chance" KeyValue which decides how often the Super Tank can nullify all of a survivor's damage.
+7. Added the "Nullify Duration" KeyValue which decides how long the Super Tank can nullify all of a survivor's damage.
+8. Buried survivors are now frozen in place.
+9. Buried survivors are now teleported to nearby teammates to avoid falling through the map after being unburied.
+10. Removed the "Tank Types" KeyValue.
+11. Replaced the "Tank Character" KeyValue with "Tank Enabled". (Now users can simply enable/disable each Tank without using a letter, number, or symbol.)
+12. Increased the maximum amount of possible Super Tank types from 250 to 1000.
+
+Files:
+
+1. Updated include file.
 
 ## Version 8.17 (June 6, 2018)
 

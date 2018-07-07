@@ -134,8 +134,8 @@ Super Tanks++ was developed against SourceMod 1.8+.
 
 		// Maximum types of Super Tanks allowed.
 		// Minimum: 1
-		// Maximum: 250
-		"Maximum Types"					"60"
+		// Maximum: 1000
+		"Maximum Types"					"1000"
 
 		// Multiply the Super Tank's health.
 		// 0: No changes to health.
@@ -143,13 +143,6 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// 2: Multiply extra health only.
 		// 3: Multiply both.
 		"Multiply Health"				"0"
-
-		// Spawn these Super Tank types.
-		// Combine letters and numbers in any order for different results.
-		// Repeat the same letter or number to increase its chance of being chosen.
-		// Character limit: 250
-		// Valid characters: Any number, letter, and symbol except for these: ' and "
-		"Tank Types"					"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx"
 
 		// Amount of Tanks to spawn for each finale wave.
 		// Separate waves with commas.
@@ -169,10 +162,10 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Character limit: 32
 		"Tank Name"						"Tank 1"
 
-		// Character assigned to the Super Tank.
-		// Valid characters: Any number, letter, and symbol except for these: ' and "
-		// Character limit: 1
-		"Tank Character"				"0"
+		// Enable the Super Tank.
+		// 0: OFF
+		// 1: ON
+		"Tank Enabled"					"0"
 
 		// These are the Super Tank's skin and glow outline colors.
 		// Separate colors with "|".
@@ -628,6 +621,21 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Maximum: 99999.0
 		"Meteor Damage"					"25.0"
 
+		// The Super Tank has 1 out of this many chances to nullify survivors' damage.
+		// Minimum: 1
+		// Maximum: 99999
+		"Nullify Chance"				"4"
+
+		// The Super Tank's nullifier effects last this long.
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"Nullify Duration"				"5.0"
+
+		// The Super Tank can nullify survivors' damage.
+		// 0: OFF
+		// 1: ON
+		"Nullify Claw-Rock"				"0"
+
 		// The Super Tank has 1 out of this many chances to start panic events.
 		// Minimum: 1
 		// Maximum: 99999
@@ -689,6 +697,11 @@ Super Tanks++ was developed against SourceMod 1.8+.
 		// Minimum: 0.1
 		// Maximum: 3.0
 		"Run Speed"						"1.0"
+
+		// The Super Tank can throw itself.
+		// 0: OFF
+		// 1: ON
+		"Self Throw Ability"			"0"
 
 		// The Super Tank has 1 out of this many chances to shake survivors' screens.
 		// Minimum: 1
@@ -971,32 +984,28 @@ Since v8.10, extra health given to Tanks is now multiplied by the number of aliv
 
 11. How do I filter out certain Super Tanks that I made without deleting them?
 
-Add/remove the character of each Super Tank in the "Tank Types" KeyValue.
+Enable/disable them with the "Tank Enabled" KeyValue.
 
 Example:
 
 ```
 "Super Tanks++"
 {
-	"General"
-	{
-		"Tank Types"		"ad" // Only pick Super Tanks with either the character "a" or "d".
-	}
 	"Tank 1"
 	{
-		"Tank Character"	"a" // Tank 1 can be chosen.
+		"Tank Enabled"		"1" // Tank 1 can be chosen.
 	}
 	"Tank 2"
 	{
-		"Tank Character"	"b" // Tank 2 cannot be chosen.
+		"Tank Enabled"		"0" // Tank 2 cannot be chosen.
 	}
 	"Tank 3"
 	{
-		"Tank Character"	"c" // Tank 3 cannot be chosen.
+		"Tank Enabled"		"0" // Tank 3 cannot be chosen.
 	}
 	"Tank 4"
 	{
-		"Tank Character"	"d" // Tank 4 can be chosen.
+		"Tank Enabled"		"1" // Tank 4 can be chosen.
 	}
 }
 ```
@@ -1021,7 +1030,7 @@ List of target filters:
 Command usage:
 
 ```
-sm_tank <type 1-*> *The maximum value is determined by the value of the "Maximum Types" KeyValue. (The highest value you can set is 250 though.)
+sm_tank <type 1-*> *The maximum value is determined by the value of the "Maximum Types" KeyValue. (The highest value you can set is 1000 though.)
 ```
 
 ### Configuration
