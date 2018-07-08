@@ -24,9 +24,9 @@ Changes:
 13. The Hypno ability no longer sets survivors' HP to 1 when the inflicted damage is higher than their health, but rather incapacitates them.
 14. Removed the "Tank Types" KeyValue.
 15. Replaced the "Tank Character" KeyValue with "Tank Enabled". (Now users can simply enable/disable each Tank without using a letter, number, or symbol.)
-16. Increased the maximum amount of possible Super Tank types from 250 to 1000.
-17. Added the Super Tanks menu to the admin menu.
-18. The plugin now uses the RemoveEntity(int entity) native that was introduced in SM 1.9.0.6225.
+16. Added Tank death announcement messages.
+17. Increased the maximum amount of possible Super Tank types from 250 to 1000.
+18. Added a Super Tanks++ menu to the admin menu.
 
 Files:
 

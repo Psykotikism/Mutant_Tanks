@@ -1,3 +1,4 @@
+// Super Tanks++
 #if defined _supertanks_included
 	#endinput
 #endif
@@ -2727,21 +2728,6 @@ stock void vPrecacheParticle(char[] particlename)
 	}
 }
 
-stock void vSetPlayerAlive(int client, bool alive)
-{
-	alive ? SetEntData(client, FindSendPropInfo("CTransitioningPlayer", "m_isAlive"), 1, 1, true) : SetEntData(client, FindSendPropInfo("CTransitioningPlayer", "m_isAlive"), 0, 1, true);
-}
-
-stock void vSetPlayerGhost(int client, bool ghost)
-{
-	ghost ? SetEntProp(client, Prop_Send, "m_isGhost", 1, 1) : SetEntProp(client, Prop_Send, "m_isGhost", 0, 1);
-}
-
-stock void vSetPlayerLifeState(int client, bool ready)
-{
-	ready ? SetEntProp(client, Prop_Data, "m_lifeState", 1, 1) : SetEntProp(client, Prop_Data, "m_lifeState", 0, 1);
-}
-
 stock void vSetVector(float target[3], float x, float y, float z)
 {
 	target[0] = x;
@@ -2751,52 +2737,11 @@ stock void vSetVector(float target[3], float x, float y, float z)
 
 stock void vSpawnInfected(int client, char[] infected, bool auto = true)
 {
-	bool bResetGhostState[MAXPLAYERS + 1];
-	bool bResetAlive[MAXPLAYERS + 1];
-	bool bResetLifeState[MAXPLAYERS + 1];
 	ChangeClientTeam(client, 3);
 	char sOptions[32];
-	if (!IsClientInGame(client) || GetClientTeam(client) != 3 || IsPlayerAlive(client))
-	{
-		return;
-	}
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{ 
-		if (iPlayer == client || !IsClientInGame(iPlayer) || GetClientTeam(iPlayer) != 3 || IsFakeClient(iPlayer))
-		{
-			continue;
-		}
-		if (bIsPlayerGhost(iPlayer))
-		{
-			bResetGhostState[iPlayer] = true;
-			vSetPlayerGhost(iPlayer, false);
-			bResetAlive[iPlayer] = true; 
-			vSetPlayerAlive(iPlayer, true);
-		}
-		else if (!IsPlayerAlive(iPlayer))
-		{
-			bResetLifeState[iPlayer] = true;
-			vSetPlayerLifeState(iPlayer, false);
-		}
-	}
 	Format(sOptions, sizeof(sOptions), "%s%s", infected, (auto ? " auto" : ""));
 	bIsL4D2Game() ? vCheatCommand(client, "z_spawn_old", sOptions) : vCheatCommand(client, "z_spawn", sOptions);
 	vKickFakeClient(client);
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bResetGhostState[iPlayer])
-		{
-			vSetPlayerGhost(iPlayer, true);
-		}
-		if (bResetAlive[iPlayer])
-		{
-			vSetPlayerAlive(iPlayer, false);
-		}
-		if (bResetLifeState[iPlayer])
-		{
-			vSetPlayerLifeState(iPlayer, true);
-		}
-	}
 }
 
 stock void vSpawnTank(int wave)
