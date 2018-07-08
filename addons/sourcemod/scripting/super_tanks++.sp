@@ -2925,7 +2925,7 @@ void vShieldAbility(int client, bool shield, int enabled)
 	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
 		int iHealth = GetClientHealth(client);
-		if (shield && iHealth > 500.0)
+		if (shield && iHealth > 100)
 		{
 			char sSet[3][4];
 			char sShieldColor[12];

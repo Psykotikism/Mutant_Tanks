@@ -1732,7 +1732,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 5\"");
 			fFilename.WriteLine("	{");
-			fFilename.WriteLine("		\"Tank Name\"					\"Bomb Shelter Tank\"");
+			fFilename.WriteLine("		\"Tank Name\"					\"Bombshell Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,100,0,255|255,100,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,100,125,255|255,100,125,255|255,100,125,125|255,100,125,255|255,100,125,255\"");
