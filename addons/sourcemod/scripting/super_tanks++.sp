@@ -703,6 +703,18 @@ public void OnMapEnd()
 public void OnPluginEnd()
 {
 	vMultiTargetFilters(0);
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank))
+		{
+			int iGlowEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_iGlowEffect[g_iTankType[iTank]] : g_iGlowEffect2[g_iTankType[iTank]];
+			if (iGlowEffect == 1 && bIsL4D2Game())
+			{
+				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
+				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
+			}
+		}
+	}
 }
 
 public void OnAdminMenuReady(Handle topmenu)
@@ -2313,7 +2325,7 @@ void vMeteor(int entity, int client)
 		GetEntityClassname(entity, sClassname, sizeof(sClassname));
 		if (strcmp(sClassname, "tank_rock") == 0)
 		{
-			RemoveEntity(entity);
+			vDeleteEntity(entity);
 			int iPropane = CreateEntityByName("prop_physics");
 			float flMeteorDamage = !g_bTankConfig[g_iTankType[client]] ? g_flMeteorDamage[g_iTankType[client]] : g_flMeteorDamage2[g_iTankType[client]];
 			SetEntityModel(iPropane, MODEL_PROPANETANK);
@@ -2343,7 +2355,7 @@ void vMeteor(int entity, int client)
 				AcceptEntityInput(iPointHurt, "Hurt", client);
 			}
 			iPointHurt = EntIndexToEntRef(iPointHurt);
-			vDeleteEntity(iPointHurt, 0.1);
+			vDeleteEntity(iPointHurt);
 			int iPointPush = CreateEntityByName("point_push");
 			SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", client);
 			DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
@@ -2402,7 +2414,7 @@ void vPanicHit(int client, int enabled)
 		{
 			DispatchSpawn(iDirector);
 			AcceptEntityInput(iDirector, "ForcePanicEvent");
-			RemoveEntity(iDirector);
+			vDeleteEntity(iDirector);
 		}
 	}
 }
@@ -3119,7 +3131,7 @@ void vWitchAbility(int client, int enabled)
 				float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
 				if (flDistance < 100.0)
 				{
-					RemoveEntity(iInfected);
+					vDeleteEntity(iInfected);
 					int iWitch = CreateEntityByName("witch");
 					if (IsValidEntity(iWitch))
 					{
@@ -3196,7 +3208,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 		GetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] = flOrigin[2] + flBuryHeight;
 		SetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
-		vWarpPlayer(iSurvivor, true);
+		vWarpEntity(iSurvivor, true);
 		if (bIsPlayerIncapacitated(iSurvivor))
 		{
 			SDKCall(g_hSDKRevivePlayer, iSurvivor);
@@ -3244,7 +3256,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 					SetEntityRenderColor(iCar, iRed, iGreen, iBlue, 255);
 					float flPos[3];
 					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-					RemoveEntity(iRock);
+					vDeleteEntity(iRock);
 					NormalizeVector(flVelocity, flVelocity);
 					float flSpeed = g_cvSTFindConVar[11].FloatValue;
 					ScaleVector(flVelocity, flSpeed * 1.4);
@@ -3603,7 +3615,7 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 			DispatchKeyValue(iPointHurt, "DamageType", "2");
 			DispatchSpawn(iPointHurt);
 			AcceptEntityInput(iPointHurt, "Hurt", iTank);
-			RemoveEntity(iPointHurt);
+			vDeleteEntity(iPointHurt);
 			DispatchKeyValue(iSurvivor, "targetname", "donthurtme");
 		}
 	}
@@ -3729,7 +3741,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 					}
 					float flPos[3];
 					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-					RemoveEntity(iRock);
+					vDeleteEntity(iRock);
 					NormalizeVector(flVelocity, flVelocity);
 					float flSpeed = g_cvSTFindConVar[11].FloatValue;
 					ScaleVector(flVelocity, flSpeed * 1.4);
@@ -3996,7 +4008,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 			{
 				float flPos[3];
 				GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-				RemoveEntity(iRock);
+				vDeleteEntity(iRock);
 				NormalizeVector(flVelocity, flVelocity);
 				float flSpeed = g_cvSTFindConVar[11].FloatValue;
 				ScaleVector(flVelocity, flSpeed * 1.4);
@@ -4079,7 +4091,7 @@ public Action tTimerPropaneThrow(Handle timer, DataPack pack)
 					SetEntityModel(iPropane, MODEL_PROPANETANK);
 					float flPos[3];
 					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-					RemoveEntity(iRock);
+					vDeleteEntity(iRock);
 					NormalizeVector(flVelocity, flVelocity);
 					float flSpeed = g_cvSTFindConVar[11].FloatValue;
 					ScaleVector(flVelocity, flSpeed * 1.4);
@@ -4207,7 +4219,7 @@ public Action tTimerSpamThrow(Handle timer, any userid)
 				TeleportEntity(iSpammer, flPos, flAng, NULL_VECTOR);
 				DispatchSpawn(iSpammer);
 				AcceptEntityInput(iSpammer, "LaunchRock");
-				RemoveEntity(iSpammer);
+				vDeleteEntity(iSpammer);
 				g_iSpamCount[client]++;
 			}
 		}
@@ -4280,7 +4292,7 @@ public Action tTimerWarp(Handle timer, any userid)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		vWarpPlayer(client, false, true);
+		vWarpEntity(client, false, true);
 	}
 	return Plugin_Continue;
 }

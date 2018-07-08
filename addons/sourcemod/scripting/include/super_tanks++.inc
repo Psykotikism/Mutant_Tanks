@@ -735,7 +735,7 @@ stock void vAttachParticle(int client, char[] particlename, float time, float or
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "Enable");
-			AcceptEntityInput(iParticle, "start");
+			AcceptEntityInput(iParticle, "Start");
 			SetVariantString("!activator");
 			AcceptEntityInput(iParticle, "SetParent", client);
 			iParticle = EntIndexToEntRef(iParticle);
@@ -810,14 +810,12 @@ stock void vBomb(int client, float pos[3])
 	vDeleteEntity(iParticle3, 16.5);
 	iTrace = EntIndexToEntRef(iTrace);
 	vDeleteEntity(iTrace, 16.5);
-	vDeleteExplosion(iTrace, 15.0, "Stop");
 	iExplosion = EntIndexToEntRef(iExplosion);
 	vDeleteEntity(iExplosion, 16.5);
 	iPhysics = EntIndexToEntRef(iPhysics);
 	vDeleteEntity(iPhysics, 16.5);
 	iHurt = EntIndexToEntRef(iHurt);
 	vDeleteEntity(iHurt, 16.5);
-	vDeleteExplosion(iHurt, 15.0, "TurnOff");
 }
 
 stock void vCheatCommand(int client, char[] command, char[] arguments = "")
@@ -2610,26 +2608,18 @@ stock void vCreateParticle(int client, char[] particlename, float time, float or
 	}
 }
 
-stock void vDeleteEntity(int entity, float time)
+stock void vDeleteEntity(int entity, float time = 0.1)
 {
 	if (bIsValidEntRef(entity))
 	{
 		char sVariant[64];
 		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		AcceptEntityInput(entity, "ClearParent");
+		AcceptEntityInput(entity, "TurnOff");
+		AcceptEntityInput(entity, "Stop");
 		SetVariantString(sVariant);
 		AcceptEntityInput(entity, "AddOutput");
 		AcceptEntityInput(entity, "FireUser1");
-	}
-}
-
-stock void vDeleteExplosion(int entity, float time, char[] input)
-{
-	if (bIsValidEntRef(entity))
-	{
-		char sVariant[64];
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		SetVariantString(sVariant);
-		AcceptEntityInput(entity, input);
 	}
 }
 
@@ -2717,7 +2707,7 @@ stock void vPrecacheParticle(char[] particlename)
 		DispatchKeyValue(iParticle, "effect_name", particlename);
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
-		AcceptEntityInput(iParticle, "start");
+		AcceptEntityInput(iParticle, "Start");
 		SetVariantString("!activator");
 		AcceptEntityInput(iParticle, "SetParent", iParticle);
 		iParticle = EntIndexToEntRef(iParticle);
@@ -2809,7 +2799,7 @@ stock void vSpawnTank(int wave)
 	}
 }
 
-stock void vWarpPlayer(int client, bool different = false, bool effect = false)
+stock void vWarpEntity(int client, bool different = false, bool effect = false)
 {
 	int iTarget = iGetRandomSurvivor(client, different);
 	if (iTarget > 0)

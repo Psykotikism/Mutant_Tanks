@@ -26,7 +26,7 @@ Changes:
 15. Replaced the "Tank Character" KeyValue with "Tank Enabled". (Now users can simply enable/disable each Tank without using a letter, number, or symbol.)
 16. Increased the maximum amount of possible Super Tank types from 250 to 1000.
 17. Added the Super Tanks menu to the admin menu.
-18. The plugin now uses the RemoveEntity(int entity) native that was introduced in SM 1.9.0.6225.
+18. Optimized code a bit more.
 
 Files:
 
