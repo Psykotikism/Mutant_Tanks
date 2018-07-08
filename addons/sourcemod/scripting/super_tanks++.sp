@@ -743,7 +743,7 @@ public void vSuperTankMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 {
 	switch (action)
 	{
-		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tank Menu");
+		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tanks++ Menu");
 		case TopMenuAction_SelectOption: vTankMenu(param, 0);
 	}
 }
