@@ -49,7 +49,9 @@ SourceMod 1.9.0.6225 or higher
 ## Features
 1. Supports multiple game modes - Provides the option to enable/disable the plugin in certain game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
-3. Fully customizable Super Tank types.
+3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the auto-generated KeyValue config file and user-made Super Tanks.
+4. Create and save up to 1000 Super Tank types - Provides the ability to store up to 1000 Super Tank types that users can enable/disable.
+5. Easy-to-use config file - Provides a user-friendly KeyValues config file that users can easily understand and edit.
 
 ## KeyValues Settings
 ```
