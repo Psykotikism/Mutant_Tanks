@@ -1,3 +1,4 @@
+// Super Tanks++
 #include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
@@ -2923,7 +2924,8 @@ void vShieldAbility(int client, bool shield, int enabled)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
-		if (shield)
+		int iHealth = GetClientHealth(client);
+		if (shield && iHealth > 500.0)
 		{
 			char sSet[3][4];
 			char sShieldColor[12];
