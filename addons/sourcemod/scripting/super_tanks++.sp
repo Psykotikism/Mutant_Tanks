@@ -42,8 +42,8 @@ bool g_bVision[MAXPLAYERS + 1];
 bool g_bWarp[MAXPLAYERS + 1];
 char g_sConfigCreate[6];
 char g_sConfigExecute[6];
-char g_sCustomName[MAXTYPES + 1][33];
-char g_sCustomName2[MAXTYPES + 1][33];
+char g_sCustomName[MAXTYPES + 1][MAX_NAME_LENGTH + 1];
+char g_sCustomName2[MAXTYPES + 1][MAX_NAME_LENGTH + 1];
 char g_sDisabledGameModes[2112];
 char g_sEnabledGameModes[2112];
 char g_sInfectedOptions[MAXTYPES + 1][15];
@@ -1384,7 +1384,7 @@ public Action cmdTank(int client, int args)
 	int iTankEnabled = !g_bTankConfig[iType] ? g_iTankEnabled[iType] : g_iTankEnabled2[iType];
 	if (iTankEnabled == 0)
 	{
-		char sName[33];
+		char sName[MAX_NAME_LENGTH + 1];
 		sName = !g_bTankConfig[iType] ? g_sCustomName[iType] : g_sCustomName2[iType];
 		ReplyToCommand(client, "\x04%s\x05 %s\x04 (Tank #%d)\x01 is disabled.", ST_PREFIX, sName, iType);
 		return Plugin_Handled;
@@ -1410,7 +1410,9 @@ void vTankMenu(int client, int item)
 		int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
 		if (iTankEnabled == 1)
 		{
-			!g_bTankConfig[iIndex] ? mTankMenu.AddItem(g_sCustomName[iIndex], g_sCustomName[iIndex]) : mTankMenu.AddItem(g_sCustomName2[iIndex], g_sCustomName2[iIndex]);
+			char sName[MAX_NAME_LENGTH + 1];
+			sName = !g_bTankConfig[iIndex] ? g_sCustomName[iIndex] : g_sCustomName2[iIndex];
+			mTankMenu.AddItem(sName, sName);
 		}
 	}
 	mTankMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
@@ -1423,12 +1425,12 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		case MenuAction_End: delete menu;
 		case MenuAction_Select:
 		{
-			char sInfo[33];
+			char sInfo[MAX_NAME_LENGTH + 1];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
 			int iLimit = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
 			for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 			{
-				char sName[33];
+				char sName[MAX_NAME_LENGTH + 1];
 				sName = !g_bTankConfig[iIndex] ? g_sCustomName[iIndex] : g_sCustomName2[iIndex];
 				if (strcmp(sInfo, sName) == 0)
 				{
@@ -1489,7 +1491,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 	int iLimit = main ? g_iMaxTypes : g_iMaxTypes2;
 	for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 	{
-		char sName[33];
+		char sName[MAX_NAME_LENGTH + 1];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
@@ -2770,7 +2772,7 @@ void vSetColor(int client, int value)
 	g_iTankType[client] = value;
 }
 
-void vSetName(int client, char[] name)
+void vSetName(int client, char[] name = "Tank")
 {
 	char sSet[5][16];
 	!g_bTankConfig[g_iTankType[client]] ? ExplodeString(g_sPropsColors[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[])) : ExplodeString(g_sPropsColors2[g_iTankType[client]], "|", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -4400,7 +4402,7 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 			int iShieldAbility = !g_bTankConfig[g_iTankType[client]] ? g_iShieldAbility[g_iTankType[client]] : g_iShieldAbility2[g_iTankType[client]];
 			vShieldAbility(client, true, iShieldAbility);
 		}
-		char sName[33];
+		char sName[MAX_NAME_LENGTH + 1];
 		sName = !g_bTankConfig[g_iTankType[client]] ? g_sCustomName[g_iTankType[client]] : g_sCustomName2[g_iTankType[client]];
 		vSetName(client, sName);
 		int iHealth = GetClientHealth(client);
