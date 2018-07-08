@@ -739,7 +739,7 @@ stock void vAttachParticle(int client, char[] particlename, float time, float or
 			SetVariantString("!activator");
 			AcceptEntityInput(iParticle, "SetParent", client);
 			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteEntity(iParticle, time);
+			vDeleteParticle(iParticle, time, "Stop");
 		}
 	}
 }
@@ -810,12 +810,14 @@ stock void vBomb(int client, float pos[3])
 	vDeleteEntity(iParticle3, 16.5);
 	iTrace = EntIndexToEntRef(iTrace);
 	vDeleteEntity(iTrace, 16.5);
+	vDeleteParticle(iTrace, 16.5, "Stop");
 	iExplosion = EntIndexToEntRef(iExplosion);
 	vDeleteEntity(iExplosion, 16.5);
 	iPhysics = EntIndexToEntRef(iPhysics);
 	vDeleteEntity(iPhysics, 16.5);
 	iHurt = EntIndexToEntRef(iHurt);
 	vDeleteEntity(iHurt, 16.5);
+	vDeleteParticle(iHurt, 15.0, "TurnOff");
 }
 
 stock void vCheatCommand(int client, char[] command, char[] arguments = "")
@@ -2599,11 +2601,11 @@ stock void vCreateParticle(int client, char[] particlename, float time, float or
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
-			AcceptEntityInput(iParticle, "start");
+			AcceptEntityInput(iParticle, "Start");
 			SetVariantString("!activator");
 			AcceptEntityInput(iParticle, "SetParent", client);
 			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteEntity(iParticle, time);
+			vDeleteParticle(iParticle, time, "Stop");
 		}
 	}
 }
@@ -2615,11 +2617,21 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 		char sVariant[64];
 		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
 		AcceptEntityInput(entity, "ClearParent");
-		AcceptEntityInput(entity, "TurnOff");
-		AcceptEntityInput(entity, "Stop");
 		SetVariantString(sVariant);
 		AcceptEntityInput(entity, "AddOutput");
 		AcceptEntityInput(entity, "FireUser1");
+	}
+}
+
+stock void vDeleteParticle(int entity, float time, char[] input)
+{
+	if (bIsValidEntRef(entity))
+	{
+		char sVariant[64];
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		AcceptEntityInput(entity, "ClearParent");
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, input);
 	}
 }
 
@@ -2711,7 +2723,7 @@ stock void vPrecacheParticle(char[] particlename)
 		SetVariantString("!activator");
 		AcceptEntityInput(iParticle, "SetParent", iParticle);
 		iParticle = EntIndexToEntRef(iParticle);
-		vDeleteEntity(iParticle, 0.1);
+		vDeleteParticle(iParticle, 0.1, "Stop");
 	}
 }
 
