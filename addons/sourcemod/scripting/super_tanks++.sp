@@ -3395,7 +3395,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 					if (strcmp(sModel, MODEL_JETPACK) == 0)
 					{
 						SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iEntity, iRed4, iGreen4, iBlue4, g_iAlpha[iTank]);
+						SetEntityRenderColor(iEntity, iRed3, iGreen3, iBlue3, g_iAlpha[iTank]);
 					}
 					if (strcmp(sModel, MODEL_CONCRETE) == 0)
 					{
@@ -3430,7 +3430,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 			if (iOwner == iTank)
 			{
 				SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(iEntity, iRed3, iGreen3, iBlue3, g_iAlpha[iTank]);
+				SetEntityRenderColor(iEntity, iRed4, iGreen4, iBlue4, g_iAlpha[iTank]);
 			}
 		}
 		SetEntityRenderMode(iTank, RENDER_TRANSCOLOR);
