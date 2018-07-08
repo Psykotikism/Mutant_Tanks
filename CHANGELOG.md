@@ -6,7 +6,7 @@ Bug fixes:
 
 1. Fixed the Spam ability creating multiple timers.
 2. Fixed the Super Tanks not taking any type of explosive damage.
-3. Fixed the Shield ability preventing Super Tanks with less than 100 HP dying.
+3. Fixed the Shield ability preventing Super Tanks with less than 100 HP from dying.
 
 Changes:
 
