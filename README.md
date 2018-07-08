@@ -1114,7 +1114,7 @@ Examples:
 
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 
-**Mi.Cura** - For reporting issues, giving me ideas, and overall continuous support.
+**Mi.Cura** - For reporting issues, giving me ideas, and overall support.
 
 **emsit** - For reporting issues and helping with parts of the code.
 
