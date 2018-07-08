@@ -1731,6 +1731,15 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 5\"");
 			fFilename.WriteLine("	{");
+			fFilename.WriteLine("		\"Tank Name\"					\"Bomb Shelter Tank\"");
+			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
+			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,100,0,255|255,100,0\"");
+			fFilename.WriteLine("		\"Props Colors\"				\"255,100,125,255|255,100,125,255|255,100,125,125|255,100,125,255|255,100,125,255\"");
+			fFilename.WriteLine("		\"Explosive Immunity\"		\"1\"");
+			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
+			fFilename.WriteLine("	}");
+			fFilename.WriteLine("	\"Tank 6\"");
+			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Bomber Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"100,0,0,255|100,0,0\"");
@@ -1738,10 +1747,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Bomb Chance\"				\"4\"");
 			fFilename.WriteLine("		\"Bomb Claw-Rock\"			\"1\"");
 			fFilename.WriteLine("		\"Bomb Rock Break\"			\"1\"");
+			fFilename.WriteLine("		\"Explosive Immunity\"		\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 6\"");
+			fFilename.WriteLine("	\"Tank 7\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Boomer Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
@@ -1753,7 +1763,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Infected Options\"			\"2\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 7\"");
+			fFilename.WriteLine("	\"Tank 8\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Bulletproof Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
@@ -1762,7 +1772,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Bullet Immunity\"			\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 8\"");
+			fFilename.WriteLine("	\"Tank 9\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Burier Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
@@ -1774,7 +1784,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Bury Claw-Rock\"			\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 9\"");
+			fFilename.WriteLine("	\"Tank 10\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Car Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
@@ -1784,7 +1794,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Throw Interval\"			\"10.0\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 10\"");
+			fFilename.WriteLine("	\"Tank 11\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Charger Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
@@ -1794,7 +1804,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Infected Options\"			\"6\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 11\"");
+			fFilename.WriteLine("	\"Tank 12\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Clone Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
@@ -1804,7 +1814,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Infected Options\"			\"7\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 12\"");
+			fFilename.WriteLine("	\"Tank 13\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Common Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
@@ -1814,7 +1824,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Common Amount\"				\"10\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 13\"");
+			fFilename.WriteLine("	\"Tank 14\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Drug Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
@@ -1823,15 +1833,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Drug Chance\"				\"4\"");
 			fFilename.WriteLine("		\"Drug Duration\"				\"5.0\"");
 			fFilename.WriteLine("		\"Drug Claw-Rock\"			\"1\"");
-			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
-			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 14\"");
-			fFilename.WriteLine("	{");
-			fFilename.WriteLine("		\"Tank Name\"					\"Bomb Shelter Tank\"");
-			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
-			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,100,0,255|255,100,0\"");
-			fFilename.WriteLine("		\"Props Colors\"				\"255,100,125,255|255,100,125,255|255,100,125,125|255,100,125,255|255,100,125,255\"");
-			fFilename.WriteLine("		\"Explosive Immunity\"		\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 15\"");
@@ -2012,6 +2013,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Props Colors\"				\"200,200,200,255|200,200,200,255|200,200,200,125|200,200,200,255|200,200,200,255\"");
 			fFilename.WriteLine("		\"Particle Effect\"			\"1\"");
 			fFilename.WriteLine("		\"Particle Effects\"			\"5\"");
+			fFilename.WriteLine("		\"Explosive Immunity\"		\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
 			fFilename.WriteLine("		\"Meteor Ability\"			\"1\"");
@@ -2265,6 +2267,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"75,0,0,255|75,0,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"35,35,35,255|35,35,35,255|35,35,35,125|35,35,35,255|35,35,35,255\"");
+			fFilename.WriteLine("		\"Explosive Immunity\"		\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Gravity Ability\"			\"1\"");
 			fFilename.WriteLine("		\"Gravity Force\"				\"-50.0\"");
