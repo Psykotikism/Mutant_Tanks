@@ -1029,37 +1029,37 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 	{
 		if (bIsTank(iTank))
 		{
-			int iEntity = -1;
-			while ((iEntity = FindEntityByClassname(iEntity, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+			int iProp = -1;
+			while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 			{
 				char sModel[128];
-				GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+				GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 				if (strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0 || strcmp(sModel, MODEL_TANK) == 0)
 				{
-					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == iTank)
 					{
-						SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
+						SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
 					}
 				}
 			}
-			while ((iEntity = FindEntityByClassname(iEntity, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+			while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
 			{
-				int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == iTank)
 				{
-					SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
+					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
 				}
 			}
-			while ((iEntity = FindEntityByClassname(iEntity, "env_steam")) != INVALID_ENT_REFERENCE)
+			while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
 			{
-				int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == iTank)
 				{
-					SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iEntity), TIMER_FLAG_NO_MAPCHANGE);
+					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
 				}
 			}
 			float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
@@ -1227,44 +1227,44 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						}
 					}
 				}
-				int iEntity = -1;
-				while ((iEntity = FindEntityByClassname(iEntity, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+				int iProp = -1;
+				while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 				{
 					char sModel[128];
-					GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+					GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 					if (strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_SHIELD) == 0 || strcmp(sModel, MODEL_TIRES) == 0 || strcmp(sModel, MODEL_TANK) == 0)
 					{
-						int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+						int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iTank)
 						{
-							AcceptEntityInput(iEntity, "Kill");
-							SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
+							AcceptEntityInput(iProp, "Kill");
+							SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
 						}
 					}
 				}
-				while ((iEntity = FindEntityByClassname(iEntity, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+				while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
 				{
-					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == iTank)
 					{
-						AcceptEntityInput(iEntity, "Kill");
-						SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
+						AcceptEntityInput(iProp, "Kill");
+						SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
 					}
 				}
-				while ((iEntity = FindEntityByClassname(iEntity, "point_push")) != INVALID_ENT_REFERENCE)
+				while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
 				{
 					if (bIsL4D2Game())
 					{
-						int iOwner = GetEntProp(iEntity, Prop_Send, "m_glowColorOverride");
+						int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
 						if (iOwner == iTank)
 						{
-							AcceptEntityInput(iEntity, "Kill");
+							AcceptEntityInput(iProp, "Kill");
 						}
 					}
-					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == iTank)
 					{
-						AcceptEntityInput(iEntity, "Kill");
+						AcceptEntityInput(iProp, "Kill");
 					}
 				}
 				CreateTimer(5.0, tTimerTankWave, g_iTankWave, TIMER_FLAG_NO_MAPCHANGE);
@@ -2314,21 +2314,21 @@ void vMeteor(int entity, int client)
 		if (strcmp(sClassname, "tank_rock") == 0)
 		{
 			RemoveEntity(entity);
-			int iEntity = CreateEntityByName("prop_physics");
+			int iPropane = CreateEntityByName("prop_physics");
 			float flMeteorDamage = !g_bTankConfig[g_iTankType[client]] ? g_flMeteorDamage[g_iTankType[client]] : g_flMeteorDamage2[g_iTankType[client]];
-			SetEntityModel(iEntity, MODEL_PROPANETANK);
+			SetEntityModel(iPropane, MODEL_PROPANETANK);
 			float flPos[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 			flPos[2] += 50.0;
-			TeleportEntity(iEntity, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iEntity);
-			ActivateEntity(iEntity);
-			SetEntPropEnt(iEntity, Prop_Data, "m_hPhysicsAttacker", client);
-			SetEntPropFloat(iEntity, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
-			SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 1);
-			SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-			SetEntityRenderColor(iEntity, 0, 0, 0, 0);
-			AcceptEntityInput(iEntity, "Break");
+			TeleportEntity(iPropane, flPos, NULL_VECTOR, NULL_VECTOR);
+			DispatchSpawn(iPropane);
+			ActivateEntity(iPropane);
+			SetEntPropEnt(iPropane, Prop_Data, "m_hPhysicsAttacker", client);
+			SetEntPropFloat(iPropane, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
+			SetEntProp(iPropane, Prop_Send, "m_CollisionGroup", 1);
+			SetEntityRenderMode(iPropane, RENDER_TRANSCOLOR);
+			SetEntityRenderColor(iPropane, 0, 0, 0, 0);
+			AcceptEntityInput(iPropane, "Break");
 			int iPointHurt = CreateEntityByName("point_hurt");
 			SetEntPropEnt(iPointHurt, Prop_Send, "m_hOwnerEntity", client);
 			DispatchKeyValueFloat(iPointHurt, "Damage", flMeteorDamage);
@@ -2463,29 +2463,29 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
 		flAngles[0] += -90.0;
-		int iEntity = CreateEntityByName("beam_spotlight");
-		if (IsValidEntity(iEntity))
+		int iLight = CreateEntityByName("beam_spotlight");
+		if (IsValidEntity(iLight))
 		{
-			DispatchKeyValueVector(iEntity, "origin", flOrigin);
-			DispatchKeyValueVector(iEntity, "angles", flAngles);
-			DispatchKeyValue(iEntity, "spotlightwidth", "10");
-			DispatchKeyValue(iEntity, "spotlightlength", "60");
-			DispatchKeyValue(iEntity, "spawnflags", "3");
-			SetEntityRenderColor(iEntity, red, green, blue, alpha);
-			DispatchKeyValue(iEntity, "maxspeed", "100");
-			DispatchKeyValue(iEntity, "HDRColorScale", "0.7");
-			DispatchKeyValue(iEntity, "fadescale", "1");
-			DispatchKeyValue(iEntity, "fademindist", "-1");
+			DispatchKeyValueVector(iLight, "origin", flOrigin);
+			DispatchKeyValueVector(iLight, "angles", flAngles);
+			DispatchKeyValue(iLight, "spotlightwidth", "10");
+			DispatchKeyValue(iLight, "spotlightlength", "60");
+			DispatchKeyValue(iLight, "spawnflags", "3");
+			SetEntityRenderColor(iLight, red, green, blue, alpha);
+			DispatchKeyValue(iLight, "maxspeed", "100");
+			DispatchKeyValue(iLight, "HDRColorScale", "0.7");
+			DispatchKeyValue(iLight, "fadescale", "1");
+			DispatchKeyValue(iLight, "fademindist", "-1");
 			SetVariantString("!activator");
-			AcceptEntityInput(iEntity, "SetParent", client);
+			AcceptEntityInput(iLight, "SetParent", client);
 			SetVariantString("mouth");
-			AcceptEntityInput(iEntity, "SetParentAttachment");
-			AcceptEntityInput(iEntity, "Enable");
-			AcceptEntityInput(iEntity, "DisableCollision");
-			SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
-			TeleportEntity(iEntity, NULL_VECTOR, flAngles, NULL_VECTOR);
-			DispatchSpawn(iEntity);
-			SDKHook(iEntity, SDKHook_SetTransmit, SetTransmit);
+			AcceptEntityInput(iLight, "SetParentAttachment");
+			AcceptEntityInput(iLight, "Enable");
+			AcceptEntityInput(iLight, "DisableCollision");
+			SetEntPropEnt(iLight, Prop_Send, "m_hOwnerEntity", client);
+			TeleportEntity(iLight, NULL_VECTOR, flAngles, NULL_VECTOR);
+			DispatchSpawn(iLight);
+			SDKHook(iLight, SDKHook_SetTransmit, SetTransmit);
 		}
 	}
 	if (GetRandomInt(1, iChance2) == 1 && StrContains(sPropsAttached, "2") != -1)
@@ -2494,18 +2494,18 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 		float flAngles[3];
 		GetClientEyePosition(client, flOrigin);
 		GetClientAbsAngles(client, flAngles);
-		int iEntity[5];
+		int iJetpack[5];
 		for (int iOzTank = 1; iOzTank <= 4; iOzTank++)
 		{
-			iEntity[iOzTank] = CreateEntityByName("prop_dynamic_override");
-			if (IsValidEntity(iEntity[iOzTank]))
+			iJetpack[iOzTank] = CreateEntityByName("prop_dynamic_override");
+			if (IsValidEntity(iJetpack[iOzTank]))
 			{
-				SetEntityModel(iEntity[iOzTank], MODEL_JETPACK);
-				SetEntityRenderColor(iEntity[iOzTank], red2, green2, blue2, alpha2);
-				SetEntProp(iEntity[iOzTank], Prop_Data, "m_takedamage", 0, 1);
-				SetEntProp(iEntity[iOzTank], Prop_Data, "m_CollisionGroup", 2);
+				SetEntityModel(iJetpack[iOzTank], MODEL_JETPACK);
+				SetEntityRenderColor(iJetpack[iOzTank], red2, green2, blue2, alpha2);
+				SetEntProp(iJetpack[iOzTank], Prop_Data, "m_takedamage", 0, 1);
+				SetEntProp(iJetpack[iOzTank], Prop_Data, "m_CollisionGroup", 2);
 				SetVariantString("!activator");
-				AcceptEntityInput(iEntity[iOzTank], "SetParent", client);
+				AcceptEntityInput(iJetpack[iOzTank], "SetParent", client);
 				switch (iOzTank)
 				{
 					case 1:
@@ -2529,19 +2529,19 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 						vSetVector(flOrigin, 0.0, 30.0, -8.0);
 					}
 				}
-				AcceptEntityInput(iEntity[iOzTank], "SetParentAttachment");
+				AcceptEntityInput(iJetpack[iOzTank], "SetParentAttachment");
 				float flAngles2[3];
 				vSetVector(flAngles2, 0.0, 0.0, 1.0);
 				GetVectorAngles(flAngles2, flAngles2);
 				vCopyVector(flAngles, flAngles2);
 				flAngles2[2] += 90.0;
-				DispatchKeyValueVector(iEntity[iOzTank], "origin", flOrigin);
-				DispatchKeyValueVector(iEntity[iOzTank], "angles", flAngles2);
-				AcceptEntityInput(iEntity[iOzTank], "Enable");
-				AcceptEntityInput(iEntity[iOzTank], "DisableCollision");
-				SetEntPropEnt(iEntity[iOzTank], Prop_Send, "m_hOwnerEntity", client);
-				TeleportEntity(iEntity[iOzTank], flOrigin, NULL_VECTOR, flAngles2);
-				DispatchSpawn(iEntity[iOzTank]);
+				DispatchKeyValueVector(iJetpack[iOzTank], "origin", flOrigin);
+				DispatchKeyValueVector(iJetpack[iOzTank], "angles", flAngles2);
+				AcceptEntityInput(iJetpack[iOzTank], "Enable");
+				AcceptEntityInput(iJetpack[iOzTank], "DisableCollision");
+				SetEntPropEnt(iJetpack[iOzTank], Prop_Send, "m_hOwnerEntity", client);
+				TeleportEntity(iJetpack[iOzTank], flOrigin, NULL_VECTOR, flAngles2);
+				DispatchSpawn(iJetpack[iOzTank]);
 				if (GetRandomInt(1, iChance3) == 1 && StrContains(sPropsAttached, "3") != -1)
 				{
 					int iFlame = CreateEntityByName("env_steam");
@@ -2558,7 +2558,7 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 						DispatchKeyValue(iFlame, "Rate", "555");
 						DispatchKeyValue(iFlame, "JetLength", "40");
 						SetVariantString("!activator");
-						AcceptEntityInput(iFlame, "SetParent", iEntity[iOzTank]);
+						AcceptEntityInput(iFlame, "SetParent", iJetpack[iOzTank]);
 						SetEntPropEnt(iFlame, Prop_Send, "m_hOwnerEntity", client);
 						float flOrigin2[3];
 						float flAngles3[3];
@@ -2571,7 +2571,7 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 						SDKHook(iFlame, SDKHook_SetTransmit, SetTransmit);
 					}
 				}
-				SDKHook(iEntity[iOzTank], SDKHook_SetTransmit, SetTransmit);
+				SDKHook(iJetpack[iOzTank], SDKHook_SetTransmit, SetTransmit);
 			}
 		}
 	}
@@ -2581,18 +2581,18 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 		float flAngles[3];
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
-		int iEntity[5];
+		int iConcrete[5];
 		for (int iRock = 1; iRock <= 4; iRock++)
 		{
-			iEntity[iRock] = CreateEntityByName("prop_dynamic_override");
-			if (IsValidEntity(iEntity[iRock]))
+			iConcrete[iRock] = CreateEntityByName("prop_dynamic_override");
+			if (IsValidEntity(iConcrete[iRock]))
 			{
-				SetEntityModel(iEntity[iRock], MODEL_CONCRETE);
-				SetEntityRenderColor(iEntity[iRock], red4, green4, blue4, alpha4);
-				DispatchKeyValueVector(iEntity[iRock], "origin", flOrigin);
-				DispatchKeyValueVector(iEntity[iRock], "angles", flAngles);
+				SetEntityModel(iConcrete[iRock], MODEL_CONCRETE);
+				SetEntityRenderColor(iConcrete[iRock], red4, green4, blue4, alpha4);
+				DispatchKeyValueVector(iConcrete[iRock], "origin", flOrigin);
+				DispatchKeyValueVector(iConcrete[iRock], "angles", flAngles);
 				SetVariantString("!activator");
-				AcceptEntityInput(iEntity[iRock], "SetParent", client);
+				AcceptEntityInput(iConcrete[iRock], "SetParent", client);
 				switch (iRock)
 				{
 					case 1: SetVariantString("relbow");
@@ -2600,24 +2600,24 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 					case 3: SetVariantString("rshoulder");
 					case 4: SetVariantString("lshoulder");
 				}
-				AcceptEntityInput(iEntity[iRock], "SetParentAttachment");
-				AcceptEntityInput(iEntity[iRock], "Enable");
-				AcceptEntityInput(iEntity[iRock], "DisableCollision");
+				AcceptEntityInput(iConcrete[iRock], "SetParentAttachment");
+				AcceptEntityInput(iConcrete[iRock], "Enable");
+				AcceptEntityInput(iConcrete[iRock], "DisableCollision");
 				if (bIsL4D2Game())
 				{
 					switch (iRock)
 					{
-						case 1, 2: SetEntPropFloat(iEntity[iRock], Prop_Data, "m_flModelScale", 0.4);
-						case 3, 4: SetEntPropFloat(iEntity[iRock], Prop_Data, "m_flModelScale", 0.5);
+						case 1, 2: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.4);
+						case 3, 4: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.5);
 					}
 				}
-				SetEntPropEnt(iEntity[iRock], Prop_Send, "m_hOwnerEntity", client);
+				SetEntPropEnt(iConcrete[iRock], Prop_Send, "m_hOwnerEntity", client);
 				flAngles[0] = flAngles[0] + GetRandomFloat(-90.0, 90.0);
 				flAngles[1] = flAngles[1] + GetRandomFloat(-90.0, 90.0);
 				flAngles[2] = flAngles[2] + GetRandomFloat(-90.0, 90.0);
-				TeleportEntity(iEntity[iRock], NULL_VECTOR, flAngles, NULL_VECTOR);
-				DispatchSpawn(iEntity[iRock]);
-				SDKHook(iEntity[iRock], SDKHook_SetTransmit, SetTransmit);
+				TeleportEntity(iConcrete[iRock], NULL_VECTOR, flAngles, NULL_VECTOR);
+				DispatchSpawn(iConcrete[iRock]);
+				SDKHook(iConcrete[iRock], SDKHook_SetTransmit, SetTransmit);
 			}
 		}
 	}
@@ -2628,34 +2628,34 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
 		flAngles[0] += 90.0;
-		int iEntity[3];
+		int iWheel[3];
 		for (int iTire = 1; iTire <= 2; iTire++)
 		{
-			iEntity[iTire] = CreateEntityByName("prop_dynamic_override");
-			if (IsValidEntity(iEntity[iTire]))
+			iWheel[iTire] = CreateEntityByName("prop_dynamic_override");
+			if (IsValidEntity(iWheel[iTire]))
 			{
-				SetEntityModel(iEntity[iTire], MODEL_TIRES);
-				SetEntityRenderColor(iEntity[iTire], red5, green5, blue5, alpha5);
-				DispatchKeyValueVector(iEntity[iTire], "origin", flOrigin);
-				DispatchKeyValueVector(iEntity[iTire], "angles", flAngles);
+				SetEntityModel(iWheel[iTire], MODEL_TIRES);
+				SetEntityRenderColor(iWheel[iTire], red5, green5, blue5, alpha5);
+				DispatchKeyValueVector(iWheel[iTire], "origin", flOrigin);
+				DispatchKeyValueVector(iWheel[iTire], "angles", flAngles);
 				SetVariantString("!activator");
-				AcceptEntityInput(iEntity[iTire], "SetParent", client);
+				AcceptEntityInput(iWheel[iTire], "SetParent", client);
 				switch (iTire)
 				{
 					case 1: SetVariantString("rfoot");
 					case 2: SetVariantString("lfoot");
 				}
-				AcceptEntityInput(iEntity[iTire], "SetParentAttachment");
-				AcceptEntityInput(iEntity[iTire], "Enable");
-				AcceptEntityInput(iEntity[iTire], "DisableCollision");
+				AcceptEntityInput(iWheel[iTire], "SetParentAttachment");
+				AcceptEntityInput(iWheel[iTire], "Enable");
+				AcceptEntityInput(iWheel[iTire], "DisableCollision");
 				if (bIsL4D2Game())
 				{
-					SetEntPropFloat(iEntity[iTire], Prop_Data, "m_flModelScale", 1.5);
+					SetEntPropFloat(iWheel[iTire], Prop_Data, "m_flModelScale", 1.5);
 				}
-				SetEntPropEnt(iEntity[iTire], Prop_Send, "m_hOwnerEntity", client);
-				TeleportEntity(iEntity[iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
-				DispatchSpawn(iEntity[iTire]);
-				SDKHook(iEntity[iTire], SDKHook_SetTransmit, SetTransmit);
+				SetEntPropEnt(iWheel[iTire], Prop_Send, "m_hOwnerEntity", client);
+				TeleportEntity(iWheel[iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
+				DispatchSpawn(iWheel[iTire]);
+				SDKHook(iWheel[iTire], SDKHook_SetTransmit, SetTransmit);
 			}
 		}
 	}
@@ -2870,34 +2870,34 @@ void vShieldAbility(int client, bool shield, int enabled)
 			float flOrigin[3];
 			GetClientAbsOrigin(client, flOrigin);
 			flOrigin[2] -= 120.0;
-			int iEntity = CreateEntityByName("prop_dynamic");
-			if (IsValidEntity(iEntity))
+			int iShield = CreateEntityByName("prop_dynamic");
+			if (IsValidEntity(iShield))
 			{
-				SetEntityModel(iEntity, MODEL_SHIELD);
-				DispatchKeyValueVector(iEntity, "origin", flOrigin);
-				DispatchSpawn(iEntity);
+				SetEntityModel(iShield, MODEL_SHIELD);
+				DispatchKeyValueVector(iShield, "origin", flOrigin);
+				DispatchSpawn(iShield);
 				SetVariantString("!activator");
-				AcceptEntityInput(iEntity, "SetParent", client);
-				SetEntityRenderMode(iEntity, RENDER_TRANSTEXTURE);
-				SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, 50);
-				SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 1);
-				SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
+				AcceptEntityInput(iShield, "SetParent", client);
+				SetEntityRenderMode(iShield, RENDER_TRANSTEXTURE);
+				SetEntityRenderColor(iShield, iRed, iGreen, iBlue, 50);
+				SetEntProp(iShield, Prop_Send, "m_CollisionGroup", 1);
+				SetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity", client);
 			}
 			g_bShielded[client] = true;
 		}
 		else
 		{
-			int iEntity = -1;
-			while ((iEntity = FindEntityByClassname(iEntity, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+			int iShield = -1;
+			while ((iShield = FindEntityByClassname(iShield, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 			{
 				char sModel[128];
-				GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+				GetEntPropString(iShield, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 				if (strcmp(sModel, MODEL_SHIELD) == 0)
 				{
-					int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+					int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == client)
 					{
-						AcceptEntityInput(iEntity, "Kill");
+						AcceptEntityInput(iShield, "Kill");
 					}
 				}
 			}
@@ -3088,8 +3088,8 @@ void vWitchAbility(int client, int enabled)
 	if (enabled == 1 && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
 		int iWitchCount;
-		int iEntity = -1;
-		while ((iEntity = FindEntityByClassname(iEntity, "infected")) != INVALID_ENT_REFERENCE)
+		int iInfected = -1;
+		while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
 		{
 			int iWitchAmount = !g_bTankConfig[g_iTankType[client]] ? g_iWitchAmount[g_iTankType[client]] : g_iWitchAmount2[g_iTankType[client]];
 			if (iWitchCount < 4 && iGetWitchCount() < iWitchAmount)
@@ -3098,12 +3098,12 @@ void vWitchAbility(int client, int enabled)
 				float flInfectedPos[3];
 				float flInfectedAng[3];
 				GetClientAbsOrigin(client, flTankPos);
-				GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flInfectedPos);
-				GetEntPropVector(iEntity, Prop_Send, "m_angRotation", flInfectedAng);
+				GetEntPropVector(iInfected, Prop_Send, "m_vecOrigin", flInfectedPos);
+				GetEntPropVector(iInfected, Prop_Send, "m_angRotation", flInfectedAng);
 				float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
 				if (flDistance < 100.0)
 				{
-					RemoveEntity(iEntity);
+					RemoveEntity(iInfected);
 					int iWitch = CreateEntityByName("witch");
 					if (IsValidEntity(iWitch))
 					{
@@ -3326,20 +3326,20 @@ public Action tTimerFlashEffect(Handle timer, any userid)
 		GetClientAbsOrigin(client, flTankPos);
 		GetClientAbsAngles(client, flTankAng);
 		int iAnim = GetEntProp(client, Prop_Send, "m_nSequence");
-		int iEntity = CreateEntityByName("prop_dynamic");
-		if (IsValidEntity(iEntity))
+		int iTank = CreateEntityByName("prop_dynamic");
+		if (IsValidEntity(iTank))
 		{
-			SetEntityModel(iEntity, MODEL_TANK);
-			SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
-			DispatchKeyValue(iEntity, "solid", "6");
-			TeleportEntity(iEntity, flTankPos, flTankAng, NULL_VECTOR);
-			DispatchSpawn(iEntity);
-			AcceptEntityInput(iEntity, "DisableCollision");
-			SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, g_iAlpha[client]);
-			SetEntProp(iEntity, Prop_Send, "m_nSequence", iAnim);
-			SetEntPropFloat(iEntity, Prop_Send, "m_flPlaybackRate", 5.0);
-			iEntity = EntIndexToEntRef(iEntity);
-			vDeleteEntity(iEntity, 0.3);
+			SetEntityModel(iTank, MODEL_TANK);
+			SetEntPropEnt(iTank, Prop_Send, "m_hOwnerEntity", client);
+			DispatchKeyValue(iTank, "solid", "6");
+			TeleportEntity(iTank, flTankPos, flTankAng, NULL_VECTOR);
+			DispatchSpawn(iTank);
+			AcceptEntityInput(iTank, "DisableCollision");
+			SetEntityRenderColor(iTank, iRed, iGreen, iBlue, g_iAlpha[client]);
+			SetEntProp(iTank, Prop_Send, "m_nSequence", iAnim);
+			SetEntPropFloat(iTank, Prop_Send, "m_flPlaybackRate", 5.0);
+			iTank = EntIndexToEntRef(iTank);
+			vDeleteEntity(iTank, 0.3);
 		}
 	}
 	return Plugin_Continue;
@@ -3382,55 +3382,55 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 		{
 			g_iAlpha[iTank] = iGhostFade;
 		}
-		int iEntity = -1;
-		while ((iEntity = FindEntityByClassname(iEntity, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+		int iProp = -1;
+		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 		{
 			char sModel[128];
-			GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+			GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 			if (strcmp(sModel, MODEL_JETPACK) == 0 || strcmp(sModel, MODEL_CONCRETE) == 0 || strcmp(sModel, MODEL_TIRES) == 0 || strcmp(sModel, MODEL_TANK) == 0)
 			{
-				int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == iTank)
 				{
 					if (strcmp(sModel, MODEL_JETPACK) == 0)
 					{
-						SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iEntity, iRed3, iGreen3, iBlue3, g_iAlpha[iTank]);
+						SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+						SetEntityRenderColor(iProp, iRed3, iGreen3, iBlue3, g_iAlpha[iTank]);
 					}
 					if (strcmp(sModel, MODEL_CONCRETE) == 0)
 					{
-						SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iEntity, iRed5, iGreen5, iBlue5, g_iAlpha[iTank]);
+						SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+						SetEntityRenderColor(iProp, iRed5, iGreen5, iBlue5, g_iAlpha[iTank]);
 					}
 					if (strcmp(sModel, MODEL_TIRES) == 0)
 					{
-						SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iEntity, iRed6, iGreen6, iBlue6, g_iAlpha[iTank]);
+						SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+						SetEntityRenderColor(iProp, iRed6, iGreen6, iBlue6, g_iAlpha[iTank]);
 					}
 					if (strcmp(sModel, MODEL_TANK) == 0)
 					{
-						SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iEntity, iRed, iGreen, iBlue, g_iAlpha[iTank]);
+						SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+						SetEntityRenderColor(iProp, iRed, iGreen, iBlue, g_iAlpha[iTank]);
 					}
 				}
 			}
 		}
-		while ((iEntity = FindEntityByClassname(iEntity, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+		while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
 		{
-			int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 			if (iOwner == iTank)
 			{
-				SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(iEntity, iRed2, iGreen2, iBlue2, g_iAlpha[iTank]);
+				SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+				SetEntityRenderColor(iProp, iRed2, iGreen2, iBlue2, g_iAlpha[iTank]);
 			}
 		}
-		while ((iEntity = FindEntityByClassname(iEntity, "env_steam")) != INVALID_ENT_REFERENCE)
+		while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
 		{
-			int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 			if (iOwner == iTank)
 			{
-				SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(iEntity, iRed4, iGreen4, iBlue4, g_iAlpha[iTank]);
+				SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+				SetEntityRenderColor(iProp, iRed4, iGreen4, iBlue4, g_iAlpha[iTank]);
 			}
 		}
 		SetEntityRenderMode(iTank, RENDER_TRANSCOLOR);
@@ -3467,13 +3467,13 @@ public Action tTimerHeal(Handle timer, any userid)
 	if (bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
 		int iType;
-		int iEntity = -1;
-		while ((iEntity = FindEntityByClassname(iEntity, "infected")) != INVALID_ENT_REFERENCE)
+		int iSpecial = -1;
+		while ((iSpecial = FindEntityByClassname(iSpecial, "infected")) != INVALID_ENT_REFERENCE)
 		{
 			float flTankPos[3];
 			float flInfectedPos[3];
 			GetClientAbsOrigin(client, flTankPos);
-			GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", flInfectedPos);
+			GetEntPropVector(iSpecial, Prop_Send, "m_vecOrigin", flInfectedPos);
 			float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
 			if (flDistance < 500.0)
 			{
@@ -3818,7 +3818,7 @@ public Action tTimerMeteorEffectUpdate(Handle timer, DataPack pack)
 		{
 			g_bMeteor[iTank] = false;
 		}
-		int iEntity = -1;
+		int iMeteor = -1;
 		if (g_bMeteor[iTank])
 		{
 			float flAngle[3];
@@ -3862,24 +3862,24 @@ public Action tTimerMeteorEffectUpdate(Handle timer, DataPack pack)
 		}
 		else if (!g_bMeteor[iTank])
 		{
-			while ((iEntity = FindEntityByClassname(iEntity, "tank_rock")) != INVALID_ENT_REFERENCE)
+			while ((iMeteor = FindEntityByClassname(iMeteor, "tank_rock")) != INVALID_ENT_REFERENCE)
 			{
-				int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+				int iOwner = GetEntPropEnt(iMeteor, Prop_Send, "m_hOwnerEntity");
 				if (iTank == iOwner)
 				{
-					vMeteor(iEntity, iOwner);
+					vMeteor(iMeteor, iOwner);
 				}
 			}
 			return Plugin_Stop;
 		}
-		while ((iEntity = FindEntityByClassname(iEntity, "tank_rock")) != INVALID_ENT_REFERENCE)
+		while ((iMeteor = FindEntityByClassname(iMeteor, "tank_rock")) != INVALID_ENT_REFERENCE)
 		{
-			int iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+			int iOwner = GetEntPropEnt(iMeteor, Prop_Send, "m_hOwnerEntity");
 			if (iTank == iOwner)
 			{
-				if (flGetGroundUnits(iEntity) < 200.0)
+				if (flGetGroundUnits(iMeteor) < 200.0)
 				{
-					vMeteor(iEntity, iOwner);
+					vMeteor(iMeteor, iOwner);
 				}
 			}
 		}

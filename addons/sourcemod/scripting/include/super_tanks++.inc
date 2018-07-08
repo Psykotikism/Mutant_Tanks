@@ -625,8 +625,8 @@ stock int iGetTankCount()
 stock int iGetWitchCount()
 {
 	int iWitchCount;
-	int iEntity = -1;
-	while ((iEntity = FindEntityByClassname(iEntity, "witch")) != INVALID_ENT_REFERENCE)
+	int iWitch = -1;
+	while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
 	{
 		iWitchCount++;
 	}
@@ -752,7 +752,7 @@ stock void vBomb(int client, float pos[3])
 	int iTrace = CreateEntityByName("info_particle_system");
 	int iPhysics = CreateEntityByName("env_physexplosion");
 	int iHurt = CreateEntityByName("point_hurt");
-	int iEntity = CreateEntityByName("env_explosion");
+	int iExplosion = CreateEntityByName("env_explosion");
 	DispatchKeyValue(iParticle, "effect_name", "FluidExplosion_fps");
 	TeleportEntity(iParticle, pos, NULL_VECTOR, NULL_VECTOR);
 	DispatchSpawn(iParticle);
@@ -769,13 +769,13 @@ stock void vBomb(int client, float pos[3])
 	TeleportEntity(iTrace, pos, NULL_VECTOR, NULL_VECTOR);
 	DispatchSpawn(iTrace);
 	ActivateEntity(iTrace);
-	SetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity", client);
-	DispatchKeyValue(iEntity, "fireballsprite", "sprites/muzzleflash4.vmt");
-	DispatchKeyValue(iEntity, "iMagnitude", "150");
-	DispatchKeyValue(iEntity, "iRadiusOverride", "150");
-	DispatchKeyValue(iEntity, "spawnflags", "828");
-	TeleportEntity(iEntity, pos, NULL_VECTOR, NULL_VECTOR);
-	DispatchSpawn(iEntity);
+	SetEntPropEnt(iExplosion, Prop_Send, "m_hOwnerEntity", client);
+	DispatchKeyValue(iExplosion, "fireballsprite", "sprites/muzzleflash4.vmt");
+	DispatchKeyValue(iExplosion, "iMagnitude", "150");
+	DispatchKeyValue(iExplosion, "iRadiusOverride", "150");
+	DispatchKeyValue(iExplosion, "spawnflags", "828");
+	TeleportEntity(iExplosion, pos, NULL_VECTOR, NULL_VECTOR);
+	DispatchSpawn(iExplosion);
 	SetEntPropEnt(iPhysics, Prop_Send, "m_hOwnerEntity", client);
 	DispatchKeyValue(iPhysics, "radius", "150");
 	DispatchKeyValue(iPhysics, "magnitude", "150");
@@ -799,7 +799,7 @@ stock void vBomb(int client, float pos[3])
 	AcceptEntityInput(iParticle2, "Start");
 	AcceptEntityInput(iParticle3, "Start");
 	AcceptEntityInput(iTrace, "Start");
-	AcceptEntityInput(iEntity, "Explode");
+	AcceptEntityInput(iExplosion, "Explode");
 	AcceptEntityInput(iPhysics, "Explode");
 	AcceptEntityInput(iHurt, "TurnOn");
 	iParticle = EntIndexToEntRef(iParticle);
@@ -811,8 +811,8 @@ stock void vBomb(int client, float pos[3])
 	iTrace = EntIndexToEntRef(iTrace);
 	vDeleteEntity(iTrace, 16.5);
 	vDeleteExplosion(iTrace, 15.0, "Stop");
-	iEntity = EntIndexToEntRef(iEntity);
-	vDeleteEntity(iEntity, 16.5);
+	iExplosion = EntIndexToEntRef(iExplosion);
+	vDeleteEntity(iExplosion, 16.5);
 	iPhysics = EntIndexToEntRef(iPhysics);
 	vDeleteEntity(iPhysics, 16.5);
 	iHurt = EntIndexToEntRef(iHurt);
@@ -2643,20 +2643,20 @@ stock void vDropWeapon(int client, int slot)
 
 stock void vFire(int client, float pos[3])
 {
-	int iEntity = CreateEntityByName("prop_physics");
-	if (IsValidEntity(iEntity))
+	int iFire = CreateEntityByName("prop_physics");
+	if (IsValidEntity(iFire))
 	{
-		DispatchKeyValue(iEntity, "disableshadows", "1");
-		SetEntityModel(iEntity, MODEL_GASCAN);
+		DispatchKeyValue(iFire, "disableshadows", "1");
+		SetEntityModel(iFire, MODEL_GASCAN);
 		pos[2] += 10.0;
-		TeleportEntity(iEntity, pos, NULL_VECTOR, NULL_VECTOR);
-		DispatchSpawn(iEntity);
-		SetEntPropEnt(iEntity, Prop_Data, "m_hPhysicsAttacker", client);
-		SetEntPropFloat(iEntity, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
-		SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 1);
-		SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-		SetEntityRenderColor(iEntity, 0, 0, 0, 0);
-		AcceptEntityInput(iEntity, "Break");
+		TeleportEntity(iFire, pos, NULL_VECTOR, NULL_VECTOR);
+		DispatchSpawn(iFire);
+		SetEntPropEnt(iFire, Prop_Data, "m_hPhysicsAttacker", client);
+		SetEntPropFloat(iFire, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
+		SetEntProp(iFire, Prop_Send, "m_CollisionGroup", 1);
+		SetEntityRenderMode(iFire, RENDER_TRANSCOLOR);
+		SetEntityRenderColor(iFire, 0, 0, 0, 0);
+		AcceptEntityInput(iFire, "Break");
 	}
 }
 
