@@ -2456,46 +2456,64 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 	int iChance5 = StringToInt(sSet[4]);
 	char sPropsAttached[6];
 	sPropsAttached = !g_bTankConfig[g_iTankType[client]] ? g_sPropsAttached[g_iTankType[client]] : g_sPropsAttached2[g_iTankType[client]];
-	if (GetRandomInt(1, iChance1) == 1 && StrContains(sPropsAttached, "1") != -1)
+	float flOrigin[3];
+	float flAngles[3];
+	GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+	GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+	int iBeam[4];
+	for (int iLight = 1; iLight <= 3; iLight++)
 	{
-		float flOrigin[3];
-		float flAngles[3];
-		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
-		flAngles[0] += -90.0;
-		int iLight = CreateEntityByName("beam_spotlight");
-		if (IsValidEntity(iLight))
+		if (GetRandomInt(1, iChance1) == 1 && StrContains(sPropsAttached, "1") != -1)
 		{
-			DispatchKeyValueVector(iLight, "origin", flOrigin);
-			DispatchKeyValueVector(iLight, "angles", flAngles);
-			DispatchKeyValue(iLight, "spotlightwidth", "10");
-			DispatchKeyValue(iLight, "spotlightlength", "60");
-			DispatchKeyValue(iLight, "spawnflags", "3");
-			SetEntityRenderColor(iLight, red, green, blue, alpha);
-			DispatchKeyValue(iLight, "maxspeed", "100");
-			DispatchKeyValue(iLight, "HDRColorScale", "0.7");
-			DispatchKeyValue(iLight, "fadescale", "1");
-			DispatchKeyValue(iLight, "fademindist", "-1");
-			SetVariantString("!activator");
-			AcceptEntityInput(iLight, "SetParent", client);
-			SetVariantString("mouth");
-			AcceptEntityInput(iLight, "SetParentAttachment");
-			AcceptEntityInput(iLight, "Enable");
-			AcceptEntityInput(iLight, "DisableCollision");
-			SetEntPropEnt(iLight, Prop_Send, "m_hOwnerEntity", client);
-			TeleportEntity(iLight, NULL_VECTOR, flAngles, NULL_VECTOR);
-			DispatchSpawn(iLight);
-			SDKHook(iLight, SDKHook_SetTransmit, SetTransmit);
+			iBeam[iLight] = CreateEntityByName("beam_spotlight");
+			if (IsValidEntity(iBeam[iLight]))
+			{
+				DispatchKeyValueVector(iBeam[iLight], "origin", flOrigin);
+				DispatchKeyValueVector(iBeam[iLight], "angles", flAngles);
+				DispatchKeyValue(iBeam[iLight], "spotlightwidth", "10");
+				DispatchKeyValue(iBeam[iLight], "spotlightlength", "60");
+				DispatchKeyValue(iBeam[iLight], "spawnflags", "3");
+				SetEntityRenderColor(iBeam[iLight], red, green, blue, alpha);
+				DispatchKeyValue(iBeam[iLight], "maxspeed", "100");
+				DispatchKeyValue(iBeam[iLight], "HDRColorScale", "0.7");
+				DispatchKeyValue(iBeam[iLight], "fadescale", "1");
+				DispatchKeyValue(iBeam[iLight], "fademindist", "-1");
+				SetVariantString("!activator");
+				AcceptEntityInput(iBeam[iLight], "SetParent", client);
+				switch (iLight)
+				{
+					case 1:
+					{
+						SetVariantString("mouth");
+						vSetVector(flAngles, -90.0, 0.0, 0.0);
+					}
+					case 2:
+					{
+						SetVariantString("rhand");
+						vSetVector(flAngles, 90.0, 0.0, 0.0);
+					}
+					case 3:
+					{
+						SetVariantString("lhand");
+						vSetVector(flAngles, -90.0, 0.0, 0.0);
+					}
+				}
+				AcceptEntityInput(iBeam[iLight], "SetParentAttachment");
+				AcceptEntityInput(iBeam[iLight], "Enable");
+				AcceptEntityInput(iBeam[iLight], "DisableCollision");
+				SetEntPropEnt(iBeam[iLight], Prop_Send, "m_hOwnerEntity", client);
+				TeleportEntity(iBeam[iLight], NULL_VECTOR, flAngles, NULL_VECTOR);
+				DispatchSpawn(iBeam[iLight]);
+				SDKHook(iBeam[iLight], SDKHook_SetTransmit, SetTransmit);
+			}
 		}
 	}
-	if (GetRandomInt(1, iChance2) == 1 && StrContains(sPropsAttached, "2") != -1)
+	GetClientEyePosition(client, flOrigin);
+	GetClientAbsAngles(client, flAngles);
+	int iJetpack[5];
+	for (int iOzTank = 1; iOzTank <= 4; iOzTank++)
 	{
-		float flOrigin[3];
-		float flAngles[3];
-		GetClientEyePosition(client, flOrigin);
-		GetClientAbsAngles(client, flAngles);
-		int iJetpack[5];
-		for (int iOzTank = 1; iOzTank <= 4; iOzTank++)
+		if (GetRandomInt(1, iChance2) == 1 && StrContains(sPropsAttached, "2") != -1)
 		{
 			iJetpack[iOzTank] = CreateEntityByName("prop_dynamic_override");
 			if (IsValidEntity(iJetpack[iOzTank]))
@@ -2510,22 +2528,22 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 				{
 					case 1:
 					{
-						SetVariantString("rfoot");
+						SetVariantString("rshoulder");
 						vSetVector(flOrigin, 0.0, 30.0, 8.0);
 					}
 					case 2:
 					{
-						SetVariantString("lfoot");
+						SetVariantString("lshoulder");
 						vSetVector(flOrigin, 0.0, 30.0, -8.0);
 					}
 					case 3:
 					{
-						SetVariantString("rshoulder");
+						SetVariantString("rfoot");
 						vSetVector(flOrigin, 0.0, 30.0, 8.0);
 					}
 					case 4:
 					{
-						SetVariantString("lshoulder");
+						SetVariantString("lfoot");
 						vSetVector(flOrigin, 0.0, 30.0, -8.0);
 					}
 				}
@@ -2575,14 +2593,12 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 			}
 		}
 	}
-	if (GetRandomInt(1, iChance4) == 1 && StrContains(sPropsAttached, "4") != -1)
+	GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+	GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+	int iConcrete[5];
+	for (int iRock = 1; iRock <= 4; iRock++)
 	{
-		float flOrigin[3];
-		float flAngles[3];
-		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
-		int iConcrete[5];
-		for (int iRock = 1; iRock <= 4; iRock++)
+		if (GetRandomInt(1, iChance4) == 1 && StrContains(sPropsAttached, "4") != -1)
 		{
 			iConcrete[iRock] = CreateEntityByName("prop_dynamic_override");
 			if (IsValidEntity(iConcrete[iRock]))
@@ -2595,10 +2611,10 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 				AcceptEntityInput(iConcrete[iRock], "SetParent", client);
 				switch (iRock)
 				{
-					case 1: SetVariantString("relbow");
-					case 2: SetVariantString("lelbow");
-					case 3: SetVariantString("rshoulder");
-					case 4: SetVariantString("lshoulder");
+					case 1: SetVariantString("rshoulder");
+					case 2: SetVariantString("lshoulder");
+					case 3: SetVariantString("relbow");
+					case 4: SetVariantString("lelbow");
 				}
 				AcceptEntityInput(iConcrete[iRock], "SetParentAttachment");
 				AcceptEntityInput(iConcrete[iRock], "Enable");
@@ -2621,15 +2637,13 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 			}
 		}
 	}
-	if (GetRandomInt(1, iChance5) == 1 && StrContains(sPropsAttached, "5") != -1)
+	GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+	GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+	flAngles[0] += 90.0;
+	int iWheel[5];
+	for (int iTire = 1; iTire <= 4; iTire++)
 	{
-		float flOrigin[3];
-		float flAngles[3];
-		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
-		flAngles[0] += 90.0;
-		int iWheel[3];
-		for (int iTire = 1; iTire <= 2; iTire++)
+		if (GetRandomInt(1, iChance5) == 1 && StrContains(sPropsAttached, "5") != -1)
 		{
 			iWheel[iTire] = CreateEntityByName("prop_dynamic_override");
 			if (IsValidEntity(iWheel[iTire]))
@@ -2642,8 +2656,10 @@ void vProps(int client, int red, int green, int blue, int alpha, int red2, int g
 				AcceptEntityInput(iWheel[iTire], "SetParent", client);
 				switch (iTire)
 				{
-					case 1: SetVariantString("rfoot");
-					case 2: SetVariantString("lfoot");
+					case 1: SetVariantString("relbow");
+					case 2: SetVariantString("lelbow");
+					case 3: SetVariantString("rfoot");
+					case 4: SetVariantString("lfoot");
 				}
 				AcceptEntityInput(iWheel[iTire], "SetParentAttachment");
 				AcceptEntityInput(iWheel[iTire], "Enable");
