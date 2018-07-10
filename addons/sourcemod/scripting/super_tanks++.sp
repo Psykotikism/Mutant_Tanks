@@ -1,7 +1,7 @@
 // Super Tanks++
-#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
+#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -542,7 +542,12 @@ public void OnClientDisconnect(int client)
 public void OnConfigsExecuted()
 {
 	vLoadConfigs(g_sSavePath, true);
-	vIsPluginAllowed();
+	char sMapName[128];
+	GetCurrentMap(sMapName, sizeof(sMapName));
+	if (IsMapValid(sMapName))
+	{
+		vIsPluginAllowed();
+	}
 	g_bCmdUsed = false;
 	g_bRestartValid = false;
 	CreateTimer(0.1, tTimerTankHealthUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -1388,9 +1393,9 @@ public Action cmdTank(int client, int args)
 		ReplyToCommand(client, "\x04%s\x01 Game mode not supported.", ST_PREFIX);
 		return Plugin_Handled;
 	}
-	char sTank[32];
-	GetCmdArg(1, sTank, sizeof(sTank));
-	int iType = StringToInt(sTank);
+	char sType[32];
+	GetCmdArg(1, sType, sizeof(sType));
+	int iType = StringToInt(sType);
 	int iMaxTypes = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
 	if (args < 1)
 	{
@@ -1473,15 +1478,24 @@ void vIsPluginAllowed()
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
 	if (iPluginEnabled == 1)
 	{
-		bIsPluginAllowed ? vHookEvents(true) : vHookEvents(false);
-		bIsPluginAllowed ? vLateLoad(true) : vLateLoad(false);
-		bIsPluginAllowed ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
+		if (bIsPluginAllowed)
+		{
+			vHookEvents(true);
+			vLateLoad(true);
+			g_bPluginEnabled = true;
+		}
+		else
+		{
+			vHookEvents(false);
+			vLateLoad(false);
+			g_bPluginEnabled = false;
+		}
 	}
 }
 
 void vHookEvents(bool hook)
 {
-	bool hooked;
+	static bool hooked;
 	if (hook && !hooked)
 	{
 		HookEvent("ability_use", eEventAbilityUse);
