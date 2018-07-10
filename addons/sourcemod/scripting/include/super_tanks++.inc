@@ -872,6 +872,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 	{
 		if (main)
 		{
+			fFilename.WriteLine("// Super Tanks++ KeyValue Settings");
 			fFilename.WriteLine("\"Super Tanks++\"");
 			fFilename.WriteLine("{");
 			fFilename.WriteLine("	// These are the general settings.");

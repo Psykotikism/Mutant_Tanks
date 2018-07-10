@@ -55,6 +55,7 @@ SourceMod 1.8+
 
 ## KeyValues Settings
 ```
+// Super Tanks++ KeyValue Settings
 "Super Tanks++"
 {
 	// These are the general settings.
