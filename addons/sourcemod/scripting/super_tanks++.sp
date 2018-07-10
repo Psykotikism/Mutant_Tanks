@@ -1457,6 +1457,11 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			int iLimit = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
 			for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 			{
+				int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
+				if (iTankEnabled == 0)
+				{
+					continue;
+				}
 				char sName[MAX_NAME_LENGTH + 1];
 				sName = !g_bTankConfig[iIndex] ? g_sCustomName[iIndex] : g_sCustomName2[iIndex];
 				if (strcmp(sInfo, sName) == 0)
