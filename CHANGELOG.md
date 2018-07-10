@@ -1,5 +1,22 @@
 # Changelog
 
+## Version 8.19 (July 10, 2018)
+
+Bug fixes:
+
+1. Fixed the "Enabled Game Modes" and "Disabled Game Modes" KeyValues not working properly.
+2. Fixed the particle effects for Super Tanks not appearing. (Thanks Mi.Cura!)
+
+Changes:
+
+1. Raised the character limit of the "Enabled Game Modes" and "Disabled Game Modes" KeyValues from 32 to 64.
+2. Added the "Game Mode Types" KeyValue to enable/disable the plugin in certain game mode types. (1: Co-Op, 2: Versus, 4: Survival, 8: Scavenge)
+3. Changed the permissions for the config file directories.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.18 (July 8, 2018)
 
 Bug fixes:

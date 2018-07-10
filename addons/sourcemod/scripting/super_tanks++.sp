@@ -31,6 +31,7 @@ bool g_bInvert[MAXPLAYERS + 1];
 bool g_bLateLoad;
 bool g_bMeteor[MAXPLAYERS + 1];
 bool g_bNullify[MAXPLAYERS + 1];
+bool g_bPluginEnabled;
 bool g_bPyro[MAXPLAYERS + 1];
 bool g_bRestartValid;
 bool g_bShake[MAXPLAYERS + 1];
@@ -192,6 +193,7 @@ int g_iFlashAbility[MAXTYPES + 1];
 int g_iFlashChance[MAXTYPES + 1];
 int g_iFlingChance[MAXTYPES + 1];
 int g_iFlingHit[MAXTYPES + 1];
+int g_iGameModeTypes;
 int g_iGhostAbility[MAXTYPES + 1];
 int g_iGhostChance[MAXTYPES + 1];
 int g_iGhostFade[MAXTYPES + 1];
@@ -369,7 +371,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-	CreateDirectory("cfg/sourcemod/super_tanks++/", 511);
+	CreateDirectory("cfg/sourcemod/super_tanks++/", FPERM_U_READ|FPERM_U_WRITE|FPERM_U_EXEC|FPERM_G_READ|FPERM_G_EXEC|FPERM_O_READ|FPERM_O_EXEC);
 	vCreateConfigFile("cfg/sourcemod/", "super_tanks++/", "super_tanks++", "super_tanks++", true);
 	Format(g_sSavePath, sizeof(g_sSavePath), "cfg/sourcemod/super_tanks++/super_tanks++.cfg");
 	vLoadConfigs(g_sSavePath, true);
@@ -392,16 +394,6 @@ public void OnPluginStart()
 	g_cvSTFindConVar[10] = FindConVar("z_max_player_zombies");
 	g_cvSTFindConVar[11] = FindConVar("z_tank_throw_force");
 	g_cvSTFindConVar[0].AddChangeHook(vSTGameDifficultyCvar);
-	HookEvent("ability_use", eEventAbilityUse);
-	HookEvent("finale_escape_start", eEventFinaleEscapeStart);
-	HookEvent("finale_start", eEventFinaleStart, EventHookMode_Pre);
-	HookEvent("finale_vehicle_leaving", eEventFinaleVehicleLeaving);
-	HookEvent("finale_vehicle_ready", eEventFinaleVehicleReady);
-	HookEvent("player_afk", eEventPlayerAFK, EventHookMode_Pre);
-	HookEvent("player_bot_replace", eEventPlayerBotReplace);
-	HookEvent("player_death", eEventPlayerDeath);
-	HookEvent("round_start", eEventRoundStart);
-	HookEvent("tank_spawn", eEventTankSpawn);
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	if (bIsL4D2Game())
 	{
@@ -530,13 +522,8 @@ public void OnMapStart()
 	if (g_bLateLoad)
 	{
 		vLoadConfigs(g_sSavePath, true);
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
+		vLateLoad(true);
+		g_bLateLoad = false;
 	}
 }
 
@@ -555,6 +542,7 @@ public void OnClientDisconnect(int client)
 public void OnConfigsExecuted()
 {
 	vLoadConfigs(g_sSavePath, true);
+	vIsPluginAllowed();
 	g_bCmdUsed = false;
 	g_bRestartValid = false;
 	CreateTimer(0.1, tTimerTankHealthUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -562,7 +550,7 @@ public void OnConfigsExecuted()
 	CreateTimer(1.0, tTimerUpdatePlayerCount, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	if (StrContains(g_sConfigCreate, "1") != -1 && g_iConfigEnable == 1)
 	{
-		CreateDirectory("cfg/sourcemod/super_tanks++/difficulty_configs/", 511);
+		CreateDirectory("cfg/sourcemod/super_tanks++/difficulty_configs/", FPERM_U_READ|FPERM_U_WRITE|FPERM_U_EXEC|FPERM_G_READ|FPERM_G_EXEC|FPERM_O_READ|FPERM_O_EXEC);
 		char sDifficulty[32];
 		for (int iDifficulty = 0; iDifficulty <= 3; iDifficulty++)
 		{
@@ -578,7 +566,7 @@ public void OnConfigsExecuted()
 	}
 	if (StrContains(g_sConfigCreate, "2") != -1 && g_iConfigEnable == 1)
 	{
-		CreateDirectory((bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_map_configs/" : "cfg/sourcemod/super_tanks++/l4d_map_configs/"), 511);
+		CreateDirectory((bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_map_configs/" : "cfg/sourcemod/super_tanks++/l4d_map_configs/"), FPERM_U_READ|FPERM_U_WRITE|FPERM_U_EXEC|FPERM_G_READ|FPERM_G_EXEC|FPERM_O_READ|FPERM_O_EXEC);
 		char sMapNames[128];
 		ArrayList alADTMaps = new ArrayList(16, 0);
 		int iSerial = -1;
@@ -597,7 +585,7 @@ public void OnConfigsExecuted()
 	}
 	if (StrContains(g_sConfigCreate, "3") != -1 && g_iConfigEnable == 1)
 	{
-		CreateDirectory((bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/"), 511);
+		CreateDirectory((bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/"), FPERM_U_READ|FPERM_U_WRITE|FPERM_U_EXEC|FPERM_G_READ|FPERM_G_EXEC|FPERM_O_READ|FPERM_O_EXEC);
 		char sGameType[2049];
 		char sTypes[64][32];
 		g_cvSTFindConVar[2].GetString(sGameType, sizeof(sGameType));
@@ -612,7 +600,7 @@ public void OnConfigsExecuted()
 	}
 	if (StrContains(g_sConfigCreate, "4") != -1 && g_iConfigEnable == 1)
 	{
-		CreateDirectory("cfg/sourcemod/super_tanks++/daily_configs/", 511);
+		CreateDirectory("cfg/sourcemod/super_tanks++/daily_configs/", FPERM_U_READ|FPERM_U_WRITE|FPERM_U_EXEC|FPERM_G_READ|FPERM_G_EXEC|FPERM_O_READ|FPERM_O_EXEC);
 		char sWeekday[32];
 		for (int iDay = 0; iDay <= 6; iDay++)
 		{
@@ -631,7 +619,7 @@ public void OnConfigsExecuted()
 	}
 	if (StrContains(g_sConfigCreate, "5") != -1 && g_iConfigEnable == 1)
 	{
-		CreateDirectory("cfg/sourcemod/super_tanks++/playercount_configs/", 511);
+		CreateDirectory("cfg/sourcemod/super_tanks++/playercount_configs/", FPERM_U_READ|FPERM_U_WRITE|FPERM_U_EXEC|FPERM_G_READ|FPERM_G_EXEC|FPERM_O_READ|FPERM_O_EXEC);
 		char sPlayerCount[32];
 		for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
 		{
@@ -760,7 +748,7 @@ public void OnLibraryRemoved(const char[] name)
 public void OnEntityCreated(int entity, const char[] classname)
 {
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (iPluginEnabled == 1 && g_bPluginEnabled)
 	{
 		if (strcmp(classname, "tank_rock") == 0)
 		{
@@ -772,7 +760,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 public void OnEntityDestroyed(int entity)
 {
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (iPluginEnabled == 1 && g_bPluginEnabled)
 	{
 		if (IsValidEntity(entity))
 		{
@@ -799,7 +787,7 @@ public void OnEntityDestroyed(int entity)
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 0 || !bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (iPluginEnabled == 0 || !g_bPluginEnabled)
 	{
 		return Plugin_Continue;
 	}
@@ -835,7 +823,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (iPluginEnabled == 1 && g_bPluginEnabled)
 	{
 		if (damage > 0.0 && bIsValidClient(victim))
 		{
@@ -1038,7 +1026,7 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (iPluginEnabled == 1 && g_bPluginEnabled)
 	{
 		if (bIsTank(iTank))
 		{
@@ -1114,7 +1102,7 @@ public Action eEventPlayerBotReplace(Event event, const char[] name, bool dontBr
 	int iBotId = event.GetInt("bot");
 	int iBot = GetClientOfUserId(iBotId);
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes) && bIsIdlePlayer(iBot, iSurvivor)) 
+	if (iPluginEnabled == 1 && g_bPluginEnabled && bIsIdlePlayer(iBot, iSurvivor)) 
 	{
 		DataPack dpDataPack;
 		CreateDataTimer(0.2, tTimerIdleFix, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
@@ -1133,7 +1121,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (iPluginEnabled == 1 && g_bPluginEnabled)
 	{
 		if (bIsValidClient(iTank))
 		{
@@ -1308,7 +1296,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (iPluginEnabled == 1 && g_bPluginEnabled)
 	{
 		g_iTankWave = 0;
 		CreateTimer(10.0, tTimerRestartCoordinates, _, TIMER_FLAG_NO_MAPCHANGE);
@@ -1329,7 +1317,7 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (iPluginEnabled == 1 && g_bPluginEnabled)
 	{
 		int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 		if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
@@ -1395,7 +1383,7 @@ public Action cmdTank(int client, int args)
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_PREFIX);
 		return Plugin_Handled;
 	}
-	if (!bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (!g_bPluginEnabled)
 	{
 		ReplyToCommand(client, "\x04%s\x01 Game mode not supported.", ST_PREFIX);
 		return Plugin_Handled;
@@ -1479,6 +1467,51 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	}
 }
 
+void vIsPluginAllowed()
+{
+	bool bIsPluginAllowed = bIsPluginEnabled(g_cvSTFindConVar[1], g_iGameModeTypes, g_sEnabledGameModes, g_sDisabledGameModes);
+	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
+	if (iPluginEnabled == 1)
+	{
+		bIsPluginAllowed ? vHookEvents(true) : vHookEvents(false);
+		bIsPluginAllowed ? vLateLoad(true) : vLateLoad(false);
+		bIsPluginAllowed ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
+	}
+}
+
+void vHookEvents(bool hook)
+{
+	bool hooked;
+	if (hook && !hooked)
+	{
+		HookEvent("ability_use", eEventAbilityUse);
+		HookEvent("finale_escape_start", eEventFinaleEscapeStart);
+		HookEvent("finale_start", eEventFinaleStart, EventHookMode_Pre);
+		HookEvent("finale_vehicle_leaving", eEventFinaleVehicleLeaving);
+		HookEvent("finale_vehicle_ready", eEventFinaleVehicleReady);
+		HookEvent("player_afk", eEventPlayerAFK, EventHookMode_Pre);
+		HookEvent("player_bot_replace", eEventPlayerBotReplace);
+		HookEvent("player_death", eEventPlayerDeath);
+		HookEvent("round_start", eEventRoundStart);
+		HookEvent("tank_spawn", eEventTankSpawn);
+		hooked = true;
+	}
+	else if (!hook && hooked)
+	{
+		UnhookEvent("ability_use", eEventAbilityUse);
+		UnhookEvent("finale_escape_start", eEventFinaleEscapeStart);
+		UnhookEvent("finale_start", eEventFinaleStart);
+		UnhookEvent("finale_vehicle_leaving", eEventFinaleVehicleLeaving);
+		UnhookEvent("finale_vehicle_ready", eEventFinaleVehicleReady);
+		UnhookEvent("player_afk", eEventPlayerAFK);
+		UnhookEvent("player_bot_replace", eEventPlayerBotReplace);
+		UnhookEvent("player_death", eEventPlayerDeath);
+		UnhookEvent("round_start", eEventRoundStart);
+		UnhookEvent("tank_spawn", eEventTankSpawn);
+		hooked = false;
+	}
+}
+
 void vLoadConfigs(char[] savepath, bool main = false)
 {
 	if (!FileExists(savepath))
@@ -1500,6 +1533,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 		main ? (g_iPluginEnabled = iSetCellLimit(g_iPluginEnabled, 0, 1)) : (g_iPluginEnabled2 = iSetCellLimit(g_iPluginEnabled2, 0, 1));
 		if (main)
 		{
+			g_iGameModeTypes = kvSuperTanks.GetNum("Game Mode Types", 0);
+			g_iGameModeTypes = iSetCellLimit(g_iGameModeTypes, 0, 15);
 			kvSuperTanks.GetString("Enabled Game Modes", g_sEnabledGameModes, sizeof(g_sEnabledGameModes), "coop");
 			kvSuperTanks.GetString("Disabled Game Modes", g_sDisabledGameModes, sizeof(g_sDisabledGameModes), "mutation1");
 			g_iConfigEnable = kvSuperTanks.GetNum("Enable Custom Configs", 0);
@@ -1792,6 +1827,20 @@ void vLoadConfigs(char[] savepath, bool main = false)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+void vLateLoad(bool late)
+{
+	if (late)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
+	}
 }
 
 void vAcidHit(int client, int owner, int enabled)
@@ -4357,7 +4406,7 @@ public Action tTimerSetTransmit(Handle timer, any entity)
 public Action tTimerUpdatePlayerCount(Handle timer)
 {
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 0 || !bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes) || StrContains(g_sConfigExecute, "5") == -1)
+	if (iPluginEnabled == 0 || !g_bPluginEnabled || StrContains(g_sConfigExecute, "5") == -1)
 	{
 		return Plugin_Continue;
 	}
@@ -4370,7 +4419,7 @@ public Action tTimerUpdatePlayerCount(Handle timer)
 public Action tTimerTankHealthUpdate(Handle timer)
 {
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 0 || !bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (iPluginEnabled == 0 || !g_bPluginEnabled)
 	{
 		return Plugin_Continue;
 	}
@@ -4411,7 +4460,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 public Action tTimerTankTypeUpdate(Handle timer)
 {
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 0 || !bIsSystemValid(g_cvSTFindConVar[1], g_sEnabledGameModes, g_sDisabledGameModes))
+	if (iPluginEnabled == 0 || !g_bPluginEnabled)
 	{
 		return Plugin_Continue;
 	}

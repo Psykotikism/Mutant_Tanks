@@ -11,7 +11,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.18"
+#define ST_VERSION "8.19"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define MAXTYPES 1000
 #define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
@@ -45,6 +45,8 @@
 #define SOUND_EXPLOSION4 "ambient/explosions/explode_3.wav"
 #define SOUND_DEBRIS "animation/van_inside_debris.wav"
 #define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
+
+int g_iCurrentMode;
 
 // Checks
 public bool bBoomerFilter(const char[] pattern, Handle clients)
@@ -251,6 +253,52 @@ stock bool bIsPlayerIncapacitated(int client)
 	return false;
 }
 
+stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disabled)
+{
+	if (convar == null)
+	{
+		return false;
+	}
+	if (mode != 0)
+	{
+		g_iCurrentMode = 0;
+		int iGameMode = CreateEntityByName("info_gamemode");
+		DispatchSpawn(iGameMode);
+		HookSingleEntityOutput(iGameMode, "OnCoop", vGamemode, true);
+		HookSingleEntityOutput(iGameMode, "OnSurvival", vGamemode, true);
+		HookSingleEntityOutput(iGameMode, "OnVersus", vGamemode, true);
+		HookSingleEntityOutput(iGameMode, "OnScavenge", vGamemode, true);
+		ActivateEntity(iGameMode);
+		AcceptEntityInput(iGameMode, "PostSpawnActivate");
+		AcceptEntityInput(iGameMode, "Kill");
+		if (g_iCurrentMode == 0 || !(mode & g_iCurrentMode))
+		{
+			return false;
+		}
+	}
+	char sGameMode[64];
+	char sGameModes[64];
+	convar.GetString(sGameMode, sizeof(sGameMode));
+	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
+	if (strcmp(enabled, ""))
+	{
+		Format(sGameModes, sizeof(sGameModes), ",%s,", enabled);
+		if (StrContains(sGameModes, sGameMode, false) == -1)
+		{
+			return false;
+		}
+	}
+	if (strcmp(disabled, ""))
+	{
+		Format(sGameModes, sizeof(sGameModes), ",%s,", disabled);
+		if (StrContains(sGameModes, sGameMode, false) != -1)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 stock bool bIsSmoker(int client, bool alive = true)
 {
 	if (bIsInfected(client, alive))
@@ -291,34 +339,6 @@ stock bool bIsSpitter(int client, bool alive = true)
 stock bool bIsSurvivor(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client);
-}
-
-stock bool bIsSystemValid(ConVar convar, char[] enabled, char[] disabled)
-{
-	if (convar == null)
-	{
-		return false;
-	}
-	char sGameMode[32];
-	convar.GetString(sGameMode, sizeof(sGameMode));
-	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
-	if (strcmp(enabled, ""))
-	{
-		Format(enabled, strlen(enabled), ",%s,", enabled);
-		if (StrContains(enabled, sGameMode, false) == -1)
-		{
-			return false;
-		}
-	}
-	if (strcmp(disabled, ""))
-	{
-		Format(disabled, strlen(disabled), ",%s,", disabled);
-		if (StrContains(disabled, sGameMode, false) != -1)
-		{
-			return false;
-		}
-	}
-	return true;
 }
 
 stock bool bIsTank(int client, bool alive = true)
@@ -740,7 +760,7 @@ stock void vAttachParticle(int client, char[] particlename, float time, float or
 			SetVariantString("!activator");
 			AcceptEntityInput(iParticle, "SetParent", client);
 			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteParticle(iParticle, time, "Stop");
+			vDeleteEntity(iParticle, time);
 		}
 	}
 }
@@ -856,6 +876,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("{");
 			fFilename.WriteLine("	// These are the general settings.");
 			fFilename.WriteLine("	// Note: The following settings will not work in custom config files:");
+			fFilename.WriteLine("	// \"Game Mode Types\"");
 			fFilename.WriteLine("	// \"Enabled Game Modes\"");
 			fFilename.WriteLine("	// \"Disabled Game Modes\"");
 			fFilename.WriteLine("	// \"Enable Custom Configs\"");
@@ -868,21 +889,30 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Plugin Enabled\"				\"1\"");
 			fFilename.WriteLine("");
+			fFilename.WriteLine("		// Enable Super Tanks++ in these game mode types.");
+			fFilename.WriteLine("		// Add up numbers together for different results.");
+			fFilename.WriteLine("		// 0: All game mode types.");
+			fFilename.WriteLine("		// 1: Co-Op modes only.");
+			fFilename.WriteLine("		// 2: Versus modes only.");
+			fFilename.WriteLine("		// 4: Survival modes only.");
+			fFilename.WriteLine("		// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)");
+			fFilename.WriteLine("		\"Game Mode Types\"				\"0\"");
+			fFilename.WriteLine("");
 			fFilename.WriteLine("		// Enable Super Tanks++ in these game modes.");
 			fFilename.WriteLine("		// Separate game modes with commas.");
 			fFilename.WriteLine("		// Game mode limit: 64");
-			fFilename.WriteLine("		// Character limit for each game mode: 32");
+			fFilename.WriteLine("		// Character limit for each game mode: 64");
 			fFilename.WriteLine("		// Empty: All");
 			fFilename.WriteLine("		// Not empty: Enabled only in these game modes.");
-			fFilename.WriteLine("		\"Enabled Game Modes\"			\"coop\"");
+			fFilename.WriteLine("		\"Enabled Game Modes\"			\"\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// Disable Super Tanks++ in these game modes.");
 			fFilename.WriteLine("		// Separate game modes with commas.");
 			fFilename.WriteLine("		// Game mode limit: 64");
-			fFilename.WriteLine("		// Character limit for each game mode: 32");
+			fFilename.WriteLine("		// Character limit for each game mode: 64");
 			fFilename.WriteLine("		// Empty: None");
 			fFilename.WriteLine("		// Not empty: Disabled only in these game modes.");
-			fFilename.WriteLine("		\"Disabled Game Modes\"			\"mutation1\"");
+			fFilename.WriteLine("		\"Disabled Game Modes\"			\"\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// Enable Super Tanks++ custom configuration.");
 			fFilename.WriteLine("		// 0: OFF");
@@ -1732,15 +1762,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 5\"");
 			fFilename.WriteLine("	{");
-			fFilename.WriteLine("		\"Tank Name\"					\"Bombshell Tank\"");
-			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
-			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,100,0,255|255,100,0\"");
-			fFilename.WriteLine("		\"Props Colors\"				\"255,100,125,255|255,100,125,255|255,100,125,125|255,100,125,255|255,100,125,255\"");
-			fFilename.WriteLine("		\"Explosive Immunity\"		\"1\"");
-			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
-			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 6\"");
-			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"Tank Name\"					\"Bomber Tank\"");
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"100,0,0,255|100,0,0\"");
@@ -1751,6 +1772,15 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Explosive Immunity\"		\"1\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Fire Immunity\"				\"1\"");
+			fFilename.WriteLine("	}");
+			fFilename.WriteLine("	\"Tank 6\"");
+			fFilename.WriteLine("	{");
+			fFilename.WriteLine("		\"Tank Name\"					\"Bombshell Tank\"");
+			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
+			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,100,0,255|255,100,0\"");
+			fFilename.WriteLine("		\"Props Colors\"				\"255,100,125,255|255,100,125,255|255,100,125,125|255,100,125,255|255,100,125,255\"");
+			fFilename.WriteLine("		\"Explosive Immunity\"		\"1\"");
+			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 7\"");
 			fFilename.WriteLine("	{");
@@ -2606,7 +2636,7 @@ stock void vCreateParticle(int client, char[] particlename, float time, float or
 			SetVariantString("!activator");
 			AcceptEntityInput(iParticle, "SetParent", client);
 			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteParticle(iParticle, time, "Stop");
+			vDeleteEntity(iParticle, time);
 		}
 	}
 }
@@ -2660,6 +2690,26 @@ stock void vFire(int client, float pos[3])
 		SetEntityRenderMode(iFire, RENDER_TRANSCOLOR);
 		SetEntityRenderColor(iFire, 0, 0, 0, 0);
 		AcceptEntityInput(iFire, "Break");
+	}
+}
+
+public void vGamemode(const char[] output, int caller, int activator, float delay)
+{
+	if (strcmp(output, "OnCoop") == 0)
+	{
+		g_iCurrentMode = 1;
+	}
+	else if (strcmp(output, "OnVersus") == 0)
+	{
+		g_iCurrentMode = 2;
+	}
+	else if (strcmp(output, "OnSurvival") == 0)
+	{
+		g_iCurrentMode = 4;
+	}
+	else if (strcmp(output, "OnScavenge") == 0)
+	{
+		g_iCurrentMode = 8;
 	}
 }
 
@@ -2724,7 +2774,7 @@ stock void vPrecacheParticle(char[] particlename)
 		SetVariantString("!activator");
 		AcceptEntityInput(iParticle, "SetParent", iParticle);
 		iParticle = EntIndexToEntRef(iParticle);
-		vDeleteParticle(iParticle, 0.1, "Stop");
+		vDeleteEntity(iParticle);
 	}
 }
 

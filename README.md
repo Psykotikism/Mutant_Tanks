@@ -71,21 +71,30 @@ SourceMod 1.8+
 		// 1: ON
 		"Plugin Enabled"				"1"
 
+		// Enable Super Tanks++ in these game mode types.
+		// Add up numbers together for different results.
+		// 0: All game mode types.
+		// 1: Co-Op modes only.
+		// 2: Versus modes only.
+		// 4: Survival modes only.
+		// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
+		"Game Mode Types"				"0"
+
 		// Enable Super Tanks++ in these game modes.
 		// Separate game modes with commas.
 		// Game mode limit: 64
-		// Character limit for each game mode: 32
+		// Character limit for each game mode: 64
 		// Empty: All
 		// Not empty: Enabled only in these game modes.
-		"Enabled Game Modes"			"coop"
+		"Enabled Game Modes"			""
 
 		// Disable Super Tanks++ in these game modes.
 		// Separate game modes with commas.
 		// Game mode limit: 64
-		// Character limit for each game mode: 32
+		// Character limit for each game mode: 64
 		// Empty: None
 		// Not empty: Disabled only in these game modes.
-		"Disabled Game Modes"			"mutation1"
+		"Disabled Game Modes"			""
 
 		// Enable Super Tanks++ custom configuration.
 		// 0: OFF
@@ -915,12 +924,24 @@ By default, Super Tanks++ can create and execute the following types of configur
 ### Main Features
 1. How do I enable/disable the plugin in certain game modes?
 
+You have 2 options:
+
+- Enable/disable in certain game mode types.
+- Enable/disable in specific game modes.
+
+For option 1:
+
+You must add numbers up together in the "Game Mode Types" KeyValues.
+
+For option 2:
+
 You must specify the game modes in the "Enabled Game Modes" and "Disabled Game Modes" KeyValues.
 
 Here are some scenarios and their outcomes:
 
 - Scenario 1
 ```
+"Game Mode Types" "0" // The plugin is enabled in all game mode types.
 "Enabled Game Modes" "" // The plugin is enabled in all game modes.
 "Disabled Game Modes" "coop" // The plugin is disabled in "coop" mode.
 
@@ -928,6 +949,7 @@ Outcome: The plugin works in every game mode except "coop" mode.
 ```
 - Scenario 2
 ```
+"Game Mode Types" "1" // The plugin is enabled in every Campaign-based game mode.
 "Enabled Game Modes" "coop" // The plugin is enabled in only "coop" mode.
 "Disabled Game Modes" "" // The plugin is not disabled in any game modes.
 
@@ -935,10 +957,11 @@ Outcome: The plugin works only in "coop" mode.
 ```
 - Scenario 3
 ```
+"Game Mode Types" "5" // The plugin is enabled in every Campaign-based and Survival-based game mode.
 "Enabled Game Modes" "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
 "Disabled Game Modes" "coop" // The plugin is disabled in "coop" mode.
 
-Outcome: The plugin works only in "versus" mode.
+Outcome: The plugin works in every Campaign-based and Survival-based game mode except "coop" mode.
 ```
 
 2. How do I make the plugin work on only finale maps?
