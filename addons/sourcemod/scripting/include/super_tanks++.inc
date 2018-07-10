@@ -1005,7 +1005,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// Props that the Super Tank can spawn with.");
 			fFilename.WriteLine("		// Combine numbers in any order for different results.");
-			fFilename.WriteLine("		// Character limit: 4");
+			fFilename.WriteLine("		// Character limit: 5");
 			fFilename.WriteLine("		// 1: attach lights only.");
 			fFilename.WriteLine("		// 2: attach oxygen tanks only.");
 			fFilename.WriteLine("		// 3: attach flames to oxygen tanks.");
@@ -1015,7 +1015,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// Each prop has 1 of this many chances to appear when the Super Tank appears.");
 			fFilename.WriteLine("		// Separate chances with commas.");
-			fFilename.WriteLine("		// Chances limit: 4");
+			fFilename.WriteLine("		// Chances limit: 5");
 			fFilename.WriteLine("		// Character limit for each chance: 3");
 			fFilename.WriteLine("		// 1st number = Chance for lights to appear.");
 			fFilename.WriteLine("		// 2nd number = Chance for oxygen tanks to appear.");
