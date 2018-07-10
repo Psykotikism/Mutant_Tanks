@@ -967,7 +967,7 @@ Outcome: The plugin works in every Campaign-based and Survival-based game mode e
 
 2. How do I make the plugin work on only finale maps?
 
-Set the KeyValue of "Finales Only" to 1.
+Set the value of the "Finales Only" KeyValue to 1.
 
 3. How can I change the amount of Tanks that spawn on each finale wave?
 
