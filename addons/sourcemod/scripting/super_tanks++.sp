@@ -1535,8 +1535,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 		{
 			g_iGameModeTypes = kvSuperTanks.GetNum("Game Mode Types", 0);
 			g_iGameModeTypes = iSetCellLimit(g_iGameModeTypes, 0, 15);
-			kvSuperTanks.GetString("Enabled Game Modes", g_sEnabledGameModes, sizeof(g_sEnabledGameModes), "coop");
-			kvSuperTanks.GetString("Disabled Game Modes", g_sDisabledGameModes, sizeof(g_sDisabledGameModes), "mutation1");
+			kvSuperTanks.GetString("Enabled Game Modes", g_sEnabledGameModes, sizeof(g_sEnabledGameModes), "");
+			kvSuperTanks.GetString("Disabled Game Modes", g_sDisabledGameModes, sizeof(g_sDisabledGameModes), "");
 			g_iConfigEnable = kvSuperTanks.GetNum("Enable Custom Configs", 0);
 			g_iConfigEnable = iSetCellLimit(g_iConfigEnable, 0, 1);
 			kvSuperTanks.GetString("Create Config Types", g_sConfigCreate, sizeof(g_sConfigCreate), "12345");
