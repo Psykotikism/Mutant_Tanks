@@ -6,6 +6,7 @@ Bug fixes:
 
 1. Fixed the "Enabled Game Modes" and "Disabled Game Modes" KeyValues not working properly.
 2. Fixed the particle effects for Super Tanks not appearing. (Thanks Mi.Cura!)
+3. Fixed the wrong Super Tanks spawning when they are spawned through the Super Tanks++ Menu. (Thanks Mi.Cura!)
 
 Changes:
 
