@@ -1344,11 +1344,12 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 					for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 					{
 						int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
-						if (iTankEnabled == 1)
+						if (iTankEnabled == 0)
 						{
-							iTankTypes[iTypeCount + 1] = iIndex;
-							iTypeCount++;
+							continue;
 						}
+						iTankTypes[iTypeCount + 1] = iIndex;
+						iTypeCount++;
 					}
 					if (iTypeCount > 0)
 					{
@@ -1435,12 +1436,13 @@ void vTankMenu(int client, int item)
 	for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 	{
 		int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
-		if (iTankEnabled == 1)
+		char sName[MAX_NAME_LENGTH + 1];
+		sName = !g_bTankConfig[iIndex] ? g_sCustomName[iIndex] : g_sCustomName2[iIndex];
+		if (iTankEnabled == 0 || sName[0] == '\0')
 		{
-			char sName[MAX_NAME_LENGTH + 1];
-			sName = !g_bTankConfig[iIndex] ? g_sCustomName[iIndex] : g_sCustomName2[iIndex];
-			mTankMenu.AddItem(sName, sName);
+			continue;
 		}
+		mTankMenu.AddItem(sName, sName);
 	}
 	mTankMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
@@ -1460,7 +1462,11 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
 				char sName[MAX_NAME_LENGTH + 1];
 				sName = !g_bTankConfig[iIndex] ? g_sCustomName[iIndex] : g_sCustomName2[iIndex];
-				if (iTankEnabled == 1 && strcmp(sInfo, sName) == 0)
+				if (iTankEnabled == 0 || sName[0] == '\0')
+				{
+					continue;
+				}
+				if (strcmp(sInfo, sName) == 0)
 				{
 					vTank(param1, iIndex);
 				}
