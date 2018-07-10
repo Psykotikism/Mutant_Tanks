@@ -59,6 +59,7 @@ SourceMod 1.8+
 {
 	// These are the general settings.
 	// Note: The following settings will not work in custom config files:
+	// "Game Mode Types"
 	// "Enabled Game Modes"
 	// "Disabled Game Modes"
 	// "Enable Custom Configs"
