@@ -12,6 +12,8 @@ Changes:
 6. Added the "God Ability" KeyValue which lets the Super Tank have temporary god mode.
 7. Added the "God Chance" KeyValue which determines how often the Super Tank gets temporary god mode.
 8. Added the "God Duration" KeyValue which decides how long the Super Tank's temporary god mode lasts.
+9. Used a better method for preventing Tanks from getting stuck in the dying animation.
+10. Removed unnecessary checks and other stuff.
 
 Files:
 
