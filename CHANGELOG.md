@@ -1,5 +1,22 @@
 # Changelog
 
+## Version 8.20 (July 12, 2018)
+
+Changes:
+
+1. Renamed the "Common Ability" and "Common Amount" KeyValues to "Zombie Ability" and "Zombie Amount".
+2. The "Acid Claw-Rock" and "Fling Claw-Rock" abilities are now replaced with the "Puke Claw-Rock" ability on L4D1, even if the Super Tank does not have the "Puke Claw-Rock" ability enabled for it.
+3. Added the "Minion Ability" KeyValue which lets the Super Tank spawn special infected behind survivors.
+4. Added the "Minion Chance" KeyValue which determines how often the Super Tank spawns special infected behind survivors.
+5. Added the "Minion Types" KeyValue which decides what special infected the Super Tank can spawn behind survivors.
+6. Added the "God Ability" KeyValue which lets the Super Tank have temporary god mode.
+7. Added the "God Chance" KeyValue which determines how often the Super Tank gets temporary god mode.
+8. Added the "God Duration" KeyValue which decides how long the Super Tank's temporary god mode lasts.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.19 (July 10, 2018)
 
 Bug fixes:

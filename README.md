@@ -344,16 +344,6 @@ SourceMod 1.8+
 		// 1: ON
 		"Car Throw Ability"				"0"
 
-		// The Super Tank can spawn common infected.
-		// 0: OFF
-		// 1: ON
-		"Common Ability"				"0"
-
-		// The Super Tank spawns this many common infected at once.
-		// Minimum: 1
-		// Maximum: 100
-		"Common Amount"					"10"
-
 		// The Super Tank has 1 out of this many chances to drug survivors.
 		// Minimum: 1
 		// Maximum: 99999
@@ -458,6 +448,21 @@ SourceMod 1.8+
 		// 4: 4th slot only.
 		// 5: 5th slot only.
 		"Ghost Weapon Slots"			"12345"
+
+		// The Super Tank can have temporary god mode.
+		// 0: OFF
+		// 1: ON
+		"God Ability"					"0"
+
+		// The Super Tank has 1 out of this many chances to have temporary god mode.
+		// Minimum: 1
+		// Maximum: 99999
+		"God Chance"					"4"
+
+		// The Super Tank's god mode lasts this long.
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"God Duration"					"5.0"
 
 		// The Super Tank can pull in or push away survivors and infected.
 		// 0: OFF
@@ -648,6 +653,28 @@ SourceMod 1.8+
 		// Minimum: 1.0
 		// Maximum: 99999.0
 		"Meteor Damage"					"25.0"
+
+		// The Super Tank can spawn minions to attack survivors from behind.
+		// 0: OFF
+		// 1: ON
+		"Minion Ability"				"0"
+
+		// The Super Tank has 1 out of this many chances to spawn minions to attack survivors from behind.
+		// Minimum: 1
+		// Maximum: 99999
+		"Minion Chance"					"4"
+
+		// The Super Tank can spawn these minions.
+		// Combine numbers in any order for different results.
+		// Repeat the same number to increase its chance of being chosen.
+		// Character limit: 12
+		// 1: Smoker
+		// 2: Boomer
+		// 3: Hunter
+		// 4: Spitter (Switches to Boomer in L4D1.)
+		// 5: Jockey (Switches to Hunter in L4D1.)
+		// 6: Charger (Switches to Smoker in L4D1.)
+		"Minion Types"					"123456"
 
 		// The Super Tank has 1 out of this many chances to nullify survivors' damage.
 		// Minimum: 1
@@ -893,6 +920,16 @@ SourceMod 1.8+
 		// Minimum: 1.0
 		// Maximum: 99999.0
 		"Witch Minion Damage"			"10.0"
+
+		// The Super Tank can spawn common infected.
+		// 0: OFF
+		// 1: ON
+		"Zombie Ability"				"0"
+
+		// The Super Tank spawns this many common infected at once.
+		// Minimum: 1
+		// Maximum: 100
+		"Zombie Amount"					"10"
 	}
 	// Create your own Super Tanks below.
 	"Tank 1"
