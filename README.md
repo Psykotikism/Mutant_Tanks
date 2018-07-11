@@ -1170,6 +1170,8 @@ Examples:
 
 **pRED** - For the [SM Super Commands](https://forums.alliedmods.net/showthread.php?p=498802) plugin.
 
+**sheo** - For the [Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?p=2133193) plugin.
+
 **Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and help with optimizing/fixing various parts of the code.
 
 **Milo|** - For the code that automatically generates config files for each day and each map installed on a server.
