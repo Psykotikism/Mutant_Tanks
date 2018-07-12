@@ -55,7 +55,7 @@ SourceMod 1.8+
 
 ## KeyValues Settings
 ```
-// Super Tanks++ KeyValue Settings
+// Super Tanks++ KeyValues Settings
 "Super Tanks++"
 {
 	// These are the general settings.
@@ -726,6 +726,26 @@ SourceMod 1.8+
 		// 1: ON
 		"Panic Claw-Rock"				"0"
 
+		// The amount of pimp slaps the Super Tank can give to survivors.
+		// Minimum: 1
+		// Maximum: 99999
+		"Pimp Amount"					"5"
+
+		// The Super Tank has 1 out of this many chances to pimp slap survivors.
+		// Minimum: 1
+		// Maximum: 99999
+		"Pimp Chance"					"4"
+
+		// The Super Tank's pimp slaps do this much damage.
+		// Minimum: 1
+		// Maximum: 99999
+		"Pimp Damage"					"1"
+
+		// The Super Tank can pimp slap survivors.
+		// 0: OFF
+		// 1: ON
+		"Pimp Claw-Rock"				"0"
+
 		// The Super Tank has 1 out of this many chances to puke on survivors.
 		// Minimum: 1
 		// Maximum: 99999
@@ -1028,11 +1048,22 @@ Outcome: The plugin works only in "coop" mode.
 Outcome: The plugin works in every Campaign-based and Survival-based game mode except "coop" mode.
 ```
 
-2. How do I make the plugin work on only finale maps?
+2. How come some Super Tanks aren't showing up?
+
+It may be due to one or more of the following:
+
+- The "Tank Enabled" KeyValue for that Super Tank may be set to 0 or doesn't exists at all which defaults to 0.
+- You have created a new Super Tank and didn't raise the value of the "Maximum Types" KeyValue.
+- You have misspelled one of the KeyValues settings.
+- You are still using the "Tank Character" KeyValue which is no longer used since v8.16.
+- You didn't set up the Super Tank properly.
+- You have more than 1000 Super Tanks in your config file.
+
+3. How do I make the plugin work on only finale maps?
 
 Set the value of the "Finales Only" KeyValue to 1.
 
-3. How can I change the amount of Tanks that spawn on each finale wave?
+4. How can I change the amount of Tanks that spawn on each finale wave?
 
 Here's an example:
 
@@ -1040,11 +1071,11 @@ Here's an example:
 "Tank Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
 ```
 
-4. How can I decide whether to display each Tank's health?
+5. How can I decide whether to display each Tank's health?
 
 Set the value in the "Display Health" KeyValue.
 
-5. How do I give each Tank more health?
+6. How do I give each Tank more health?
 
 Set the value in the "Extra Health" KeyValue.
 
@@ -1054,7 +1085,7 @@ Example:
 "Extra Health" "5000" // Add 5000 to the Super Tank's health.
 ```
 
-6. How do I adjust each Tank's run speed?
+7. How do I adjust each Tank's run speed?
 
 Set the value in the "Run Speed" KeyValue.
 
@@ -1064,23 +1095,23 @@ Example:
 "Run Speed" "3.0" // Add 2.0 to the Super Tank's run speed. Default run speed is 1.0.
 ```
 
-7. How can I give each Tank bullet immunity?
+8. How can I give each Tank bullet immunity?
 
 Set the value of the "Bullet Immunity" KeyValue to 1.
 
-8. How can I give each Tank explosive immunity?
+9. How can I give each Tank explosive immunity?
 
 Set the value of the "Explosive Immunity" KeyValue to 1.
 
-9. How can I give each Tank fire immunity?
+10. How can I give each Tank fire immunity?
 
 Set the value of the "Fire Immunity" KeyValue to 1.
 
-10. How can I give each Tank melee immunity?
+11. How can I give each Tank melee immunity?
 
 Set the value of the "Melee Immunity" KeyValue to 1.
 
-11. How can I delay the throw interval of each Tank?
+12. How can I delay the throw interval of each Tank?
 
 Set the value in the "Throw Interval" KeyValue.
 
@@ -1090,15 +1121,15 @@ Example:
 "Throw Interval" "8.0" // Add 3.0 to the Super Tank's throw interval. Default throw interval is 5.0.
 ```
 
-12. Why do some Tanks spawn with different props?
+13. Why do some Tanks spawn with different props?
 
 Each prop has 1 out of X chances to appear on Super Tanks when they spawn. Configure the chances for each prop in the "Props Chance" KeyValue.
 
-13. Why are the Tanks spawning with more than the extra health given to them?
+14. Why are the Tanks spawning with more than the extra health given to them?
 
 Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
-14. How do I filter out certain Super Tanks that I made without deleting them?
+15. How do I filter out certain Super Tanks that I made without deleting them?
 
 Enable/disable them with the "Tank Enabled" KeyValue.
 
@@ -1126,7 +1157,7 @@ Example:
 }
 ```
 
-15. Are there any developer/tester features available in the plugin?
+16. Are there any developer/tester features available in the plugin?
 
 Yes, there are target filters for each special infected and the sm_tank command that allows developers/testers to spawn each Super Tank.
 
@@ -1183,7 +1214,9 @@ Examples:
 
 **honorcode** - For the [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?p=1251446) plugin.
 
-**strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?p=702913), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?p=702918).
+**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389) plugin.
+
+**strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?p=702913), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?p=702914), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?p=702918).
 
 **Marcus101RR** - For the code to set a player's weapon's ammo.
 

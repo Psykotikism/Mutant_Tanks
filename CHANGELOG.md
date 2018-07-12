@@ -6,19 +6,22 @@ Changes:
 
 1. Renamed the "Common Ability" and "Common Amount" KeyValues to "Zombie Ability" and "Zombie Amount".
 2. The "Acid Claw-Rock" and "Fling Claw-Rock" abilities are now replaced with the "Puke Claw-Rock" ability on L4D1, even if the Super Tank does not have the "Puke Claw-Rock" ability enabled for it.
-3. Added the "Minion Ability" KeyValue which lets the Super Tank spawn special infected behind itself.
-4. Added the "Minion Amount" KeyValue which determines how many minions the Super Tank can spawn.
-5. Added the "Minion Chance" KeyValue which determines how often the Super Tank spawns special infected behind itself.
-6. Added the "Minion Types" KeyValue which decides what special infected the Super Tank can spawn behind itself.
-7. Added the "God Ability" KeyValue which lets the Super Tank have temporary god mode.
-8. Added the "God Chance" KeyValue which determines how often the Super Tank gets temporary god mode.
-9. Added the "God Duration" KeyValue which decides how long the Super Tank's temporary god mode lasts.
-10. Added the "Clone Ability" KeyValue which lets the Super Tank spawn clones of itself.
-11. Added the "Clone Amount" KeyValue which determines how many clones the Super Tank can spawn.
-12. Added the "Clone Chance" KeyValue which determines how often the Super Tank can spawn clones of itself.
-13. Added the "Clone Health" KeyValue which decides how much health each clone of the Super Tank gets.
-14. Used a better method for preventing Tanks from getting stuck in the dying animation.
-15. Removed unnecessary checks and other stuff.
+3. Added the "Pimp Claw-Rock" KeyValue which lets the Super Tank pimp slap survivors.
+4. Added the "Pimp Amount" KeyValue which determines how many times the Super Tank can pimp slap survivors in a row.
+5. Added the "Pimp Chance" KeyValue which determines how often the Super Tank pimp slaps survivors.
+6. Added the "Pimp Damage" KeyValue which determines the damage of the Super Tank's pimp slaps.
+7. Added the "Minion Ability" KeyValue which lets the Super Tank spawn special infected behind itself.
+8. Added the "Minion Amount" KeyValue which determines how many minions the Super Tank can spawn.
+9. Added the "Minion Chance" KeyValue which determines how often the Super Tank spawns special infected behind itself.
+10. Added the "Minion Types" KeyValue which decides what special infected the Super Tank can spawn behind itself.
+11. Added the "God Ability" KeyValue which lets the Super Tank have temporary god mode.
+12. Added the "God Chance" KeyValue which determines how often the Super Tank gets temporary god mode.
+13. Added the "God Duration" KeyValue which decides how long the Super Tank's temporary god mode lasts.
+14. Added the "Clone Ability" KeyValue which lets the Super Tank spawn clones of itself.
+15. Added the "Clone Amount" KeyValue which determines how many clones the Super Tank can spawn.
+16. Added the "Clone Chance" KeyValue which determines how often the Super Tank can spawn clones of itself.
+17. Added the "Clone Health" KeyValue which decides how much health each clone of the Super Tank gets.
+18. Used a better method for preventing Tanks from getting stuck in the dying animation.
 
 Files:
 

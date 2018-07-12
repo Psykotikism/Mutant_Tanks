@@ -34,6 +34,7 @@ bool g_bLateLoad;
 bool g_bMeteor[MAXPLAYERS + 1];
 bool g_bMinion[MAXPLAYERS + 1];
 bool g_bNullify[MAXPLAYERS + 1];
+bool g_bPimp[MAXPLAYERS + 1];
 bool g_bPluginEnabled;
 bool g_bPyro[MAXPLAYERS + 1];
 bool g_bRestartValid;
@@ -162,7 +163,7 @@ int g_iCarThrow[MAXTYPES + 1];
 int g_iCloneAbility[MAXTYPES + 1];
 int g_iCloneAmount[MAXTYPES + 1];
 int g_iCloneChance[MAXTYPES + 1];
-int g_iCloneCount;
+int g_iCloneCount[MAXPLAYERS + 1];
 int g_iCloneHealth[MAXTYPES + 1];
 int g_iAbsorbAbility2[MAXTYPES + 1];
 int g_iAcidChance2[MAXTYPES + 1];
@@ -245,13 +246,18 @@ int g_iMeteorChance[MAXTYPES + 1];
 int g_iMinionAbility[MAXTYPES + 1];
 int g_iMinionAmount[MAXTYPES + 1];
 int g_iMinionChance[MAXTYPES + 1];
-int g_iMinionCount;
+int g_iMinionCount[MAXPLAYERS + 1];
 int g_iMultiHealth;
 int g_iNullifyChance[MAXTYPES + 1];
 int g_iNullifyHit[MAXTYPES + 1];
 int g_iPanicChance[MAXTYPES + 1];
 int g_iPanicHit[MAXTYPES + 1];
 int g_iParticleEffect[MAXTYPES + 1];
+int g_iPimpAmount[MAXTYPES + 1];
+int g_iPimpChance[MAXTYPES + 1];
+int g_iPimpCount[MAXPLAYERS + 1];
+int g_iPimpDamage[MAXTYPES + 1];
+int g_iPimpHit[MAXTYPES + 1];
 int g_iPluginEnabled;
 int g_iPukeChance[MAXTYPES + 1];
 int g_iPukeHit[MAXTYPES + 1];
@@ -325,6 +331,10 @@ int g_iNullifyHit2[MAXTYPES + 1];
 int g_iPanicChance2[MAXTYPES + 1];
 int g_iPanicHit2[MAXTYPES + 1];
 int g_iParticleEffect2[MAXTYPES + 1];
+int g_iPimpAmount2[MAXTYPES + 1];
+int g_iPimpChance2[MAXTYPES + 1];
+int g_iPimpDamage2[MAXTYPES + 1];
+int g_iPimpHit2[MAXTYPES + 1];
 int g_iPluginEnabled2;
 int g_iPukeChance2[MAXTYPES + 1];
 int g_iPukeHit2[MAXTYPES + 1];
@@ -580,8 +590,6 @@ public void OnConfigsExecuted()
 	}
 	g_bCmdUsed = false;
 	g_bRestartValid = false;
-	g_iCloneCount = 0;
-	g_iMinionCount = 0;
 	if (StrContains(g_sConfigCreate, "1") != -1 && g_iConfigEnable == 1)
 	{
 		CreateDirectory("cfg/sourcemod/super_tanks++/difficulty_configs/", FPERM_U_READ|FPERM_U_WRITE|FPERM_U_EXEC|FPERM_G_READ|FPERM_G_EXEC|FPERM_O_READ|FPERM_O_EXEC);
@@ -717,8 +725,6 @@ public void OnMapEnd()
 {
 	g_bCmdUsed = false;
 	g_bRestartValid = false;
-	g_iCloneCount = 0;
-	g_iMinionCount = 0;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		vStopTimers(iPlayer);
@@ -899,6 +905,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						int iInvertHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iInvertHit[g_iTankType[attacker]] : g_iInvertHit2[g_iTankType[attacker]];
 						int iNullifyHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iNullifyHit[g_iTankType[attacker]] : g_iNullifyHit2[g_iTankType[attacker]];
 						int iPanicHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iPanicHit[g_iTankType[attacker]] : g_iPanicHit2[g_iTankType[attacker]];
+						int iPimpHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iPimpHit[g_iTankType[attacker]] : g_iPimpHit2[g_iTankType[attacker]];
 						int iPukeHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iPukeHit[g_iTankType[attacker]] : g_iPukeHit2[g_iTankType[attacker]];
 						int iRestartHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iRestartHit[g_iTankType[attacker]] : g_iRestartHit2[g_iTankType[attacker]];
 						int iRocketHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iRocketHit[g_iTankType[attacker]] : g_iRocketHit2[g_iTankType[attacker]];
@@ -927,6 +934,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						vInvertHit(victim, attacker, iInvertHit);
 						vNullifyHit(victim, attacker, iNullifyHit);
 						vPanicHit(attacker, iPanicHit);
+						vPimpHit(victim, attacker, iPimpHit);
 						vPukeHit(victim, attacker, iPukeHit);
 						vRestartHit(victim, attacker, iRestartHit);
 						vRocketHit(victim, attacker, iRocketHit);
@@ -1217,12 +1225,25 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 					}
 				}
 				int iCloneAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneAbility[g_iTankType[iTank]] : g_iCloneAbility2[g_iTankType[iTank]];
-				if (iCloneAbility == 1 && g_bCloned[iTank])
+				if (iCloneAbility == 1)
 				{
-					g_bCloned[iTank] = false;
-					if (iGetCloneCount() == 0)
+					if (g_bCloned[iTank])
 					{
-						g_iCloneCount = 0;
+						g_bCloned[iTank] = false;
+						if (iGetCloneCount() == 0)
+						{
+							for (int iCloner = 1; iCloner <= MaxClients; iCloner++)
+							{
+								if (!g_bCloned[iCloner] && bIsTank(iCloner))
+								{
+									g_iCloneCount[iCloner] = 0;
+								}
+							}
+						}
+					}
+					else
+					{
+						g_iCloneCount[iTank] = 0;
 					}
 				}
 				g_bGhost[iTank] = false;
@@ -1271,21 +1292,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						}
 					}
 				}
-				int iMinionAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iMinionAbility[g_iTankType[iTank]] : g_iMinionAbility2[g_iTankType[iTank]];
-				if (iMinionAbility == 1)
-				{
-					for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
-					{
-						if (g_bMinion[iInfected] && bIsSpecialInfected(iInfected))
-						{
-							g_bMinion[iInfected] = false;
-						}
-					}
-					if (iGetMinionCount() == 0)
-					{
-						g_iMinionCount = 0;
-					}
-				}
+				g_iMinionCount[iTank] = 0;
 				int iNullifyHit = !g_bTankConfig[g_iTankType[iTank]] ? g_iNullifyHit[g_iTankType[iTank]] : g_iNullifyHit2[g_iTankType[iTank]];
 				if (iNullifyHit == 1)
 				{
@@ -1849,6 +1856,14 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iPanicChance[iIndex] = iSetCellLimit(g_iPanicChance[iIndex], 1, 99999)) : (g_iPanicChance2[iIndex] = iSetCellLimit(g_iPanicChance2[iIndex], 1, 99999));
 			main ? (g_iPanicHit[iIndex] = kvSuperTanks.GetNum("Panic Claw-Rock", 0)) : (g_iPanicHit2[iIndex] = kvSuperTanks.GetNum("Panic Claw-Rock", g_iPanicHit[iIndex]));
 			main ? (g_iPanicHit[iIndex] = iSetCellLimit(g_iPanicHit[iIndex], 0, 1)) : (g_iPanicHit2[iIndex] = iSetCellLimit(g_iPanicHit2[iIndex], 0, 1));
+			main ? (g_iPimpAmount[iIndex] = kvSuperTanks.GetNum("Pimp Amount", 5)) : (g_iPimpAmount2[iIndex] = kvSuperTanks.GetNum("Pimp Amount", g_iPimpAmount[iIndex]));
+			main ? (g_iPimpAmount[iIndex] = iSetCellLimit(g_iPimpAmount[iIndex], 1, 99999)) : (g_iPimpAmount2[iIndex] = iSetCellLimit(g_iPimpAmount2[iIndex], 1, 99999));
+			main ? (g_iPimpChance[iIndex] = kvSuperTanks.GetNum("Pimp Chance", 4)) : (g_iPimpChance2[iIndex] = kvSuperTanks.GetNum("Pimp Chance", g_iPimpChance[iIndex]));
+			main ? (g_iPimpChance[iIndex] = iSetCellLimit(g_iPimpChance[iIndex], 1, 99999)) : (g_iPimpChance2[iIndex] = iSetCellLimit(g_iPimpChance2[iIndex], 1, 99999));
+			main ? (g_iPimpDamage[iIndex] = kvSuperTanks.GetNum("Pimp Damage", 1)) : (g_iPimpDamage2[iIndex] = kvSuperTanks.GetNum("Pimp Damage", g_iPimpDamage[iIndex]));
+			main ? (g_iPimpDamage[iIndex] = iSetCellLimit(g_iPimpDamage[iIndex], 1, 99999)) : (g_iPimpDamage2[iIndex] = iSetCellLimit(g_iPimpDamage2[iIndex], 1, 99999));
+			main ? (g_iPimpHit[iIndex] = kvSuperTanks.GetNum("Pimp Claw-Rock", 0)) : (g_iPimpHit2[iIndex] = kvSuperTanks.GetNum("Pimp Claw-Rock", g_iPimpHit[iIndex]));
+			main ? (g_iPimpHit[iIndex] = iSetCellLimit(g_iPimpHit[iIndex], 0, 1)) : (g_iPimpHit2[iIndex] = iSetCellLimit(g_iPimpHit2[iIndex], 0, 1));
 			main ? (g_iPukeChance[iIndex] = kvSuperTanks.GetNum("Puke Chance", 4)) : (g_iPukeChance2[iIndex] = kvSuperTanks.GetNum("Puke Chance", g_iPukeChance[iIndex]));
 			main ? (g_iPukeChance[iIndex] = iSetCellLimit(g_iPukeChance[iIndex], 1, 99999)) : (g_iPukeChance2[iIndex] = iSetCellLimit(g_iPukeChance2[iIndex], 1, 99999));
 			main ? (g_iPukeHit[iIndex] = kvSuperTanks.GetNum("Puke Claw-Rock", 0)) : (g_iPukeHit2[iIndex] = kvSuperTanks.GetNum("Puke Claw-Rock", g_iPukeHit[iIndex]));
@@ -2350,10 +2365,10 @@ void vCloneAbility(int client, int enabled)
 	if (enabled == 1 && GetRandomInt(1, iCloneChance) == 1 && !g_bCloned[client] && bIsTank(client))
 	{
 		int iCloneAmount = !g_bTankConfig[g_iTankType[client]] ? g_iCloneAmount[g_iTankType[client]] : g_iCloneAmount2[g_iTankType[client]];
-		if (g_iCloneCount < iCloneAmount)
+		if (g_iCloneCount[client] < iCloneAmount)
 		{
 			vMinionSpawner(client, "tank", enabled, true);
-			g_iCloneCount++;
+			g_iCloneCount[client]++;
 		}
 	}
 }
@@ -2883,7 +2898,7 @@ void vMinionAbility(int client, int enabled)
 	if (enabled == 1 && GetRandomInt(1, iMinionChance) == 1 && !g_bCloned[client] && bIsTank(client))
 	{
 		int iMinionAmount = !g_bTankConfig[g_iTankType[client]] ? g_iMinionAmount[g_iTankType[client]] : g_iMinionAmount2[g_iTankType[client]];
-		if (g_iMinionCount < iMinionAmount)
+		if (g_iMinionCount[client] < iMinionAmount)
 		{
 			char sInfectedName[MAX_NAME_LENGTH + 1];
 			char sNumbers = !g_bTankConfig[g_iTankType[client]] ? g_sMinionTypes[g_iTankType[client]][GetRandomInt(0, strlen(g_sMinionTypes[g_iTankType[client]]) - 1)] : g_sMinionTypes2[g_iTankType[client]][GetRandomInt(0, strlen(g_sMinionTypes2[g_iTankType[client]]) - 1)];
@@ -2898,7 +2913,7 @@ void vMinionAbility(int client, int enabled)
 				default: sInfectedName = "hunter";
 			}
 			vMinionSpawner(client, sInfectedName, enabled);
-			g_iMinionCount++;
+			g_iMinionCount[client]++;
 		}
 	}
 }
@@ -2998,6 +3013,23 @@ void vParticleEffects(int client, int enabled)
 		if (StrContains(sEffect, "7") != -1 && bIsL4D2Game())
 		{
 			CreateTimer(2.0, tTimerSpitEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		}
+	}
+}
+
+void vPimpHit(int client, int owner, int enabled)
+{
+	int iPimpChance = !g_bTankConfig[g_iTankType[owner]] ? g_iPimpChance[g_iTankType[owner]] : g_iPimpChance2[g_iTankType[owner]];
+	if (enabled == 1 && GetRandomInt(1, iPimpChance) == 1 && bIsSurvivor(client))
+	{
+		if (!g_bPimp[client])
+		{
+			g_bPimp[client] = true;
+			DataPack dpDataPack;
+			CreateDataTimer(1.0, tTimerPimp, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			dpDataPack.WriteCell(GetClientUserId(client));
+			dpDataPack.WriteCell(GetClientUserId(owner));
+			dpDataPack.WriteCell(g_iPimpCount[client]);
 		}
 	}
 }
@@ -3344,6 +3376,9 @@ void vStopTimers(int client)
 		g_bVision[client] = false;
 		g_bWarp[client] = false;
 		g_iAlpha[client] = 255;
+		g_iCloneCount[client] = 0;
+		g_iMinionCount[client] = 0;
+		g_iPimpCount[client] = 0;
 		g_iSpawnInterval[client] = 0;
 		g_iSpamCount[client] = 0;
 		g_iTankType[client] = 0;
@@ -3509,19 +3544,6 @@ int iGetCloneCount()
 		}
 	}
 	return iCloneCount;
-}
-
-int iGetMinionCount()
-{
-	int iMinionCount;
-	for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
-	{
-		if (g_bMinion[iMinion] && bIsSpecialInfected(iMinion))
-		{
-			iMinionCount++;
-		}
-	}
-	return iMinionCount;
 }
 
 public Action tTimerStopBlindness(Handle timer, any userid)
@@ -4333,6 +4355,29 @@ public Action tTimerStopNullify(Handle timer, any userid)
 	if (bIsSurvivor(iSurvivor))
 	{
 		g_bNullify[iSurvivor] = false;
+	}
+	return Plugin_Continue;
+}
+
+public Action tTimerPimp(Handle timer, DataPack pack)
+{
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iPimpCount = pack.ReadCell();
+	int iPimpAmount = !g_bTankConfig[g_iTankType[iTank]] ? g_iPimpAmount[g_iTankType[iTank]] : g_iPimpAmount2[g_iTankType[iTank]];
+	int iPimpDamage = !g_bTankConfig[g_iTankType[iTank]] ? g_iPimpDamage[g_iTankType[iTank]] : g_iPimpDamage2[g_iTankType[iTank]];
+	int iPimpHit = !g_bTankConfig[g_iTankType[iTank]] ? g_iPimpHit[g_iTankType[iTank]] : g_iPimpHit2[g_iTankType[iTank]];
+	if (iPimpHit == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || iPimpCount >= iPimpAmount)
+	{
+		g_bPimp[iSurvivor] = false;
+		g_iPimpCount[iSurvivor] = 0;
+		return Plugin_Stop;
+	}
+	if (bIsSurvivor(iSurvivor) && iPimpCount < iPimpAmount)
+	{
+		SlapPlayer(iSurvivor, iPimpDamage, true);
+		iPimpCount++;
 	}
 	return Plugin_Continue;
 }
