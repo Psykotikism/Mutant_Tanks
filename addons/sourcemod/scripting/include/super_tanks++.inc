@@ -1535,7 +1535,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The amount of pimp slaps the Super Tank can give to survivors.");
 			fFilename.WriteLine("		// Minimum: 1");
 			fFilename.WriteLine("		// Maximum: 99999");
-			fFilename.WriteLine("		\"Pimp Amount\"					\"5\"");
+			fFilename.WriteLine("		\"Pimp Amount\"					\"10\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to pimp slap survivors.");
 			fFilename.WriteLine("		// Minimum: 1");
@@ -2173,7 +2173,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"255,0,255,255|0,255,0\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"0,255,0,255|0,255,0,255|0,255,0,125|0,255,0,255|0,255,0,255\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
-			fFilename.WriteLine("		\"Pimp Amount\"				\"5\"");
+			fFilename.WriteLine("		\"Pimp Amount\"				\"10\"");
 			fFilename.WriteLine("		\"Pimp Chance\"				\"4\"");
 			fFilename.WriteLine("		\"Pimp Damage\"				\"1\"");
 			fFilename.WriteLine("		\"Pimp Claw-Rock\"			\"1\"");
