@@ -4079,11 +4079,14 @@ public Action tTimerJump(Handle timer, any userid)
 public Action tTimerKillStuckTank(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || !bIsPlayerIncapacitated(iTank))
+	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
-	ForcePlayerSuicide(iTank);
+	if (bIsTank(iTank) && bIsPlayerIncapacitated(iTank))
+	{
+		ForcePlayerSuicide(iTank);
+	}
 	return Plugin_Continue;
 }
 
