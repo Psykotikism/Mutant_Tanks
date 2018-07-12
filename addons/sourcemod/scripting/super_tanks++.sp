@@ -755,14 +755,14 @@ public void OnAdminMenuReady(Handle topmenu)
 		return;
 	}
 	g_tmSTMenu = view_as<TopMenu>(topmenu);
-	TopMenuObject st_commands = g_tmSTMenu.AddCategory("SuperTanks++", iAdminMenuHandler);
+	TopMenuObject st_commands = g_tmSTMenu.AddCategory("SuperTanks++", iSTAdminMenuHandler);
 	if (st_commands != INVALID_TOPMENUOBJECT)
 	{
 		g_tmSTMenu.AddItem("sm_tank", vSuperTankMenu, st_commands, "sm_tank", ADMFLAG_ROOT);
 	}
 }
 
-public int iAdminMenuHandler(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
+public int iSTAdminMenuHandler(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
 {
 	switch (action)
 	{
