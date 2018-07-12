@@ -729,7 +729,7 @@ SourceMod 1.8+
 		// The amount of pimp slaps the Super Tank can give to survivors.
 		// Minimum: 1
 		// Maximum: 99999
-		"Pimp Amount"					"10"
+		"Pimp Amount"					"5"
 
 		// The Super Tank has 1 out of this many chances to pimp slap survivors.
 		// Minimum: 1

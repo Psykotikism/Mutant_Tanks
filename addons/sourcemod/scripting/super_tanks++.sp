@@ -1856,7 +1856,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iPanicChance[iIndex] = iSetCellLimit(g_iPanicChance[iIndex], 1, 99999)) : (g_iPanicChance2[iIndex] = iSetCellLimit(g_iPanicChance2[iIndex], 1, 99999));
 			main ? (g_iPanicHit[iIndex] = kvSuperTanks.GetNum("Panic Claw-Rock", 0)) : (g_iPanicHit2[iIndex] = kvSuperTanks.GetNum("Panic Claw-Rock", g_iPanicHit[iIndex]));
 			main ? (g_iPanicHit[iIndex] = iSetCellLimit(g_iPanicHit[iIndex], 0, 1)) : (g_iPanicHit2[iIndex] = iSetCellLimit(g_iPanicHit2[iIndex], 0, 1));
-			main ? (g_iPimpAmount[iIndex] = kvSuperTanks.GetNum("Pimp Amount", 10)) : (g_iPimpAmount2[iIndex] = kvSuperTanks.GetNum("Pimp Amount", g_iPimpAmount[iIndex]));
+			main ? (g_iPimpAmount[iIndex] = kvSuperTanks.GetNum("Pimp Amount", 5)) : (g_iPimpAmount2[iIndex] = kvSuperTanks.GetNum("Pimp Amount", g_iPimpAmount[iIndex]));
 			main ? (g_iPimpAmount[iIndex] = iSetCellLimit(g_iPimpAmount[iIndex], 1, 99999)) : (g_iPimpAmount2[iIndex] = iSetCellLimit(g_iPimpAmount2[iIndex], 1, 99999));
 			main ? (g_iPimpChance[iIndex] = kvSuperTanks.GetNum("Pimp Chance", 4)) : (g_iPimpChance2[iIndex] = kvSuperTanks.GetNum("Pimp Chance", g_iPimpChance[iIndex]));
 			main ? (g_iPimpChance[iIndex] = iSetCellLimit(g_iPimpChance[iIndex], 1, 99999)) : (g_iPimpChance2[iIndex] = iSetCellLimit(g_iPimpChance2[iIndex], 1, 99999));
@@ -3026,7 +3026,7 @@ void vPimpHit(int client, int owner, int enabled)
 		{
 			g_bPimp[client] = true;
 			DataPack dpDataPack;
-			CreateDataTimer(0.2, tTimerPimp, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateDataTimer(0.5, tTimerPimp, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpDataPack.WriteCell(GetClientUserId(client));
 			dpDataPack.WriteCell(GetClientUserId(owner));
 		}
