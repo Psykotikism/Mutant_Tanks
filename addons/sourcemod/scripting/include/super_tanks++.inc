@@ -431,20 +431,9 @@ public bool bTankFilter(const char[] pattern, Handle clients)
 	return true;
 }
 
-public bool bTraceRayDontHitSelf(int entity, int mask, any data)
+stock bool bTraceRayDontHitSelf(int entity, any data)
 {
-	if (entity == data) 
-	{
-		return false; 
-	}
-	else if (entity > 0 && entity <= MaxClients)
-	{
-		if (IsClientInGame(entity))
-		{
-			return false;
-		}
-	}
-	return true;
+	return entity == data;
 }
 
 // Functions
@@ -1161,6 +1150,26 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Car Throw Ability\"				\"0\"");
 			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The Super Tank can spawn clones of itself.");
+			fFilename.WriteLine("		// 0: OFF");
+			fFilename.WriteLine("		// 1: ON");
+			fFilename.WriteLine("		\"Clone Ability\"					\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The amount of clones the Super Tank can spawn.");
+			fFilename.WriteLine("		// Minimum: 1");
+			fFilename.WriteLine("		// Maximum: 25");
+			fFilename.WriteLine("		\"Clone Amount\"					\"2\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to spawn clones of itself.");
+			fFilename.WriteLine("		// Minimum: 1");
+			fFilename.WriteLine("		// Maximum: 99999");
+			fFilename.WriteLine("		\"Clone Chance\"					\"4\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The Super Tank's clones' health.");
+			fFilename.WriteLine("		// Minimum: 1");
+			fFilename.WriteLine("		// Maximum: 62400");
+			fFilename.WriteLine("		\"Clone Health\"					\"1000\"");
+			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to drug survivors.");
 			fFilename.WriteLine("		// Minimum: 1");
 			fFilename.WriteLine("		// Maximum: 99999");
@@ -1475,6 +1484,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Minion Ability\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("		// The amount of minions the Super Tank can spawn.");
+			fFilename.WriteLine("		// Minimum: 1");
+			fFilename.WriteLine("		// Maximum: 25");
+			fFilename.WriteLine("		\"Minion Amount\"					\"5\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to spawn minions behind itself.");
 			fFilename.WriteLine("		// Minimum: 1");
@@ -1834,6 +1848,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Infected Options\"			\"2\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("		\"Minion Ability\"			\"1\"");
+			fFilename.WriteLine("		\"Minion Amount\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Chance\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Types\"				\"2\"");
 			fFilename.WriteLine("	}");
@@ -1878,6 +1893,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Infected Options\"			\"6\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("		\"Minion Ability\"			\"1\"");
+			fFilename.WriteLine("		\"Minion Amount\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Chance\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Types\"				\"6\"");
 			fFilename.WriteLine("	}");
@@ -1887,6 +1903,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Tank Enabled\"				\"1\"");
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"10,25,205,255|10,25,205\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"140,40,255,255|140,40,255,255|140,40,255,125|140,40,255,255|140,40,255,255\"");
+			fFilename.WriteLine("		\"Clone Ability\"				\"1\"");
+			fFilename.WriteLine("		\"Clone Amount\"				\"2\"");
+			fFilename.WriteLine("		\"Clone Chance\"				\"4\"");
+			fFilename.WriteLine("		\"Clone Health\"				\"1000\"");		
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Infected Options\"			\"7\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
@@ -1998,6 +2018,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Infected Options\"			\"3\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("		\"Minion Ability\"			\"1\"");
+			fFilename.WriteLine("		\"Minion Amount\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Chance\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Types\"				\"3\"");
 			fFilename.WriteLine("	}");
@@ -2068,6 +2089,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Infected Options\"			\"5\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("		\"Minion Ability\"			\"1\"");
+			fFilename.WriteLine("		\"Minion Amount\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Chance\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Types\"				\"5\"");
 			fFilename.WriteLine("	}");
@@ -2237,6 +2259,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Infected Options\"			\"1\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("		\"Minion Ability\"			\"1\"");
+			fFilename.WriteLine("		\"Minion Amount\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Chance\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Types\"				\"1\"");
 			fFilename.WriteLine("	}");
@@ -2262,6 +2285,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Infected Options\"			\"123456\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("		\"Minion Ability\"			\"1\"");
+			fFilename.WriteLine("		\"Minion Amount\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Chance\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Types\"				\"123456\"");
 			fFilename.WriteLine("	}");
@@ -2277,6 +2301,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Infected Options\"			\"4\"");
 			fFilename.WriteLine("		\"Infected Throw Ability\"	\"1\"");
 			fFilename.WriteLine("		\"Minion Ability\"			\"1\"");
+			fFilename.WriteLine("		\"Minion Amount\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Chance\"				\"5\"");
 			fFilename.WriteLine("		\"Minion Types\"				\"4\"");
 			fFilename.WriteLine("	}");

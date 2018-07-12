@@ -344,6 +344,26 @@ SourceMod 1.8+
 		// 1: ON
 		"Car Throw Ability"				"0"
 
+		// The Super Tank can spawn clones of itself.
+		// 0: OFF
+		// 1: ON
+		"Clone Ability"					"0"
+
+		// The amount of clones the Super Tank can spawn.
+		// Minimum: 1
+		// Maximum: 25
+		"Clone Amount"					"2"
+
+		// The Super Tank has 1 out of this many chances to spawn clones of itself.
+		// Minimum: 1
+		// Maximum: 99999
+		"Clone Chance"					"4"
+
+		// The Super Tank's clones' health.
+		// Minimum: 1
+		// Maximum: 62400
+		"Clone Health"					"1000"
+
 		// The Super Tank has 1 out of this many chances to drug survivors.
 		// Minimum: 1
 		// Maximum: 99999
@@ -658,6 +678,11 @@ SourceMod 1.8+
 		// 0: OFF
 		// 1: ON
 		"Minion Ability"				"0"
+
+		// The amount of minions the Super Tank can spawn.
+		// Minimum: 1
+		// Maximum: 25
+		"Minion Amount"					"5"
 
 		// The Super Tank has 1 out of this many chances to spawn minions behind itself.
 		// Minimum: 1

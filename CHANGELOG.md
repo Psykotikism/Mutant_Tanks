@@ -7,13 +7,18 @@ Changes:
 1. Renamed the "Common Ability" and "Common Amount" KeyValues to "Zombie Ability" and "Zombie Amount".
 2. The "Acid Claw-Rock" and "Fling Claw-Rock" abilities are now replaced with the "Puke Claw-Rock" ability on L4D1, even if the Super Tank does not have the "Puke Claw-Rock" ability enabled for it.
 3. Added the "Minion Ability" KeyValue which lets the Super Tank spawn special infected behind itself.
-4. Added the "Minion Chance" KeyValue which determines how often the Super Tank spawns special infected behind itself.
-5. Added the "Minion Types" KeyValue which decides what special infected the Super Tank can spawn behind itself.
-6. Added the "God Ability" KeyValue which lets the Super Tank have temporary god mode.
-7. Added the "God Chance" KeyValue which determines how often the Super Tank gets temporary god mode.
-8. Added the "God Duration" KeyValue which decides how long the Super Tank's temporary god mode lasts.
-9. Used a better method for preventing Tanks from getting stuck in the dying animation.
-10. Removed unnecessary checks and other stuff.
+4. Added the "Minion Amount" KeyValue which determines how many minions the Super Tank can spawn.
+5. Added the "Minion Chance" KeyValue which determines how often the Super Tank spawns special infected behind itself.
+6. Added the "Minion Types" KeyValue which decides what special infected the Super Tank can spawn behind itself.
+7. Added the "God Ability" KeyValue which lets the Super Tank have temporary god mode.
+8. Added the "God Chance" KeyValue which determines how often the Super Tank gets temporary god mode.
+9. Added the "God Duration" KeyValue which decides how long the Super Tank's temporary god mode lasts.
+10. Added the "Clone Ability" KeyValue which lets the Super Tank spawn clones of itself.
+11. Added the "Clone Amount" KeyValue which determines how many clones the Super Tank can spawn.
+12. Added the "Clone Chance" KeyValue which determines how often the Super Tank can spawn clones of itself.
+13. Added the "Clone Health" KeyValue which decides how much health each clone of the Super Tank gets.
+14. Used a better method for preventing Tanks from getting stuck in the dying animation.
+15. Removed unnecessary checks and other stuff.
 
 Files:
 
