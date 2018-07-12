@@ -1471,12 +1471,12 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// Maximum: 99999.0");
 			fFilename.WriteLine("		\"Meteor Damage\"					\"25.0\"");
 			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can spawn minions to attack survivors from behind.");
+			fFilename.WriteLine("		// The Super Tank can spawn minions behind itself.");
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Minion Ability\"				\"0\"");
 			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to spawn minions to attack survivors from behind.");
+			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to spawn minions behind itself.");
 			fFilename.WriteLine("		// Minimum: 1");
 			fFilename.WriteLine("		// Maximum: 99999");
 			fFilename.WriteLine("		\"Minion Chance\"					\"4\"");
