@@ -15,37 +15,37 @@ public Plugin myinfo =
 bool g_bAFK[MAXPLAYERS + 1];
 bool g_bBlind[MAXPLAYERS + 1];
 bool g_bBury[MAXPLAYERS + 1];
-bool g_bCloned[MAXTYPES + 1];
+bool g_bCloned[MAXPLAYERS + 1];
 bool g_bCmdUsed;
 bool g_bDrug[MAXPLAYERS + 1];
-bool g_bFlash[MAXTYPES + 1];
+bool g_bFlash[MAXPLAYERS + 1];
 bool g_bGeneralConfig;
-bool g_bGhost[MAXTYPES + 1];
-bool g_bGod[MAXTYPES + 1];
-bool g_bGravity[MAXTYPES + 1];
+bool g_bGhost[MAXPLAYERS + 1];
+bool g_bGod[MAXPLAYERS + 1];
+bool g_bGravity[MAXPLAYERS + 1];
 bool g_bGravity2[MAXPLAYERS + 1];
-bool g_bHeal[MAXTYPES + 1];
+bool g_bHeal[MAXPLAYERS + 1];
 bool g_bHurt[MAXPLAYERS + 1];
 bool g_bHypno[MAXPLAYERS + 1];
 bool g_bIce[MAXPLAYERS + 1];
 bool g_bIdle[MAXPLAYERS + 1];
 bool g_bInvert[MAXPLAYERS + 1];
 bool g_bLateLoad;
-bool g_bMeteor[MAXTYPES + 1];
-bool g_bMinion[MAXTYPES + 1];
+bool g_bMeteor[MAXPLAYERS + 1];
+bool g_bMinion[MAXPLAYERS + 1];
 bool g_bNullify[MAXPLAYERS + 1];
 bool g_bPimp[MAXPLAYERS + 1];
 bool g_bPluginEnabled;
-bool g_bPyro[MAXTYPES + 1];
+bool g_bPyro[MAXPLAYERS + 1];
 bool g_bRestartValid;
 bool g_bShake[MAXPLAYERS + 1];
-bool g_bShielded[MAXTYPES + 1];
+bool g_bShielded[MAXPLAYERS + 1];
 bool g_bShove[MAXPLAYERS + 1];
-bool g_bSpam[MAXTYPES + 1];
+bool g_bSpam[MAXPLAYERS + 1];
 bool g_bStun[MAXPLAYERS + 1];
 bool g_bTankConfig[MAXTYPES + 1];
 bool g_bVision[MAXPLAYERS + 1];
-bool g_bWarp[MAXTYPES + 1];
+bool g_bWarp[MAXPLAYERS + 1];
 char g_sConfigCreate[6];
 char g_sConfigExecute[6];
 char g_sCustomName[MAXTYPES + 1][MAX_NAME_LENGTH + 1];
@@ -883,7 +883,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						damage = flWitchDamage;
 					}
 				}
-				else if (!g_bCloned[attacker] && bIsTank(attacker) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(attacker))))
+				else if (bIsTank(attacker) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(attacker))))
 				{
 					if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 					{
@@ -951,7 +951,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			else if (bIsInfected(victim))
 			{
 				int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-				if (!g_bCloned[victim] && bIsTank(victim) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(victim))))
+				if (bIsTank(victim) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(victim))))
 				{
 					int iBulletImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iBulletImmunity[g_iTankType[victim]] : g_iBulletImmunity2[g_iTankType[victim]];
 					int iExplosiveImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iExplosiveImmunity[g_iTankType[victim]] : g_iExplosiveImmunity2[g_iTankType[victim]];
@@ -1460,9 +1460,9 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 					int iWave3 = StringToInt(sNumbers[2]);
 					switch (g_iTankWave)
 					{
-						case 1: vTankCountCheck(iTank, iWave1);
-						case 2: vTankCountCheck(iTank, iWave2);
-						case 3: vTankCountCheck(iTank, iWave3);
+						case 1: vTankCountCheck(iWave1);
+						case 2: vTankCountCheck(iWave2);
+						case 3: vTankCountCheck(iWave3);
 					}
 				}
 			}
@@ -1995,7 +1995,7 @@ void vLateLoad(bool late)
 void vAcidHit(int client, int owner, int enabled)
 {
 	int iAcidChance = !g_bTankConfig[g_iTankType[owner]] ? g_iAcidChance[g_iTankType[owner]] : g_iAcidChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iAcidChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iAcidChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (bIsL4D2Game())
 		{
@@ -2027,7 +2027,7 @@ void vAcidRock(int entity, int client, int enabled)
 void vAmmoHit(int client, int owner, int enabled)
 {
 	int iAmmoChance = !g_bTankConfig[g_iTankType[owner]] ? g_iAmmoChance[g_iTankType[owner]] : g_iAmmoChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iAmmoChance) == 1 && bIsSurvivor(client) && GetPlayerWeaponSlot(client, 0) > 0)
+	if (enabled == 1 && GetRandomInt(1, iAmmoChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client) && GetPlayerWeaponSlot(client, 0) > 0)
 	{
 		char sWeapon[32];
 		int iActiveWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
@@ -2313,7 +2313,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 void vBlindHit(int client, int owner, int enabled)
 {
 	int iBlindChance = !g_bTankConfig[g_iTankType[owner]] ? g_iBlindChance[g_iTankType[owner]] : g_iBlindChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iBlindChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iBlindChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bBlind[client])
 		{
@@ -2329,7 +2329,7 @@ void vBlindHit(int client, int owner, int enabled)
 void vBombHit(int client, int owner, int enabled)
 {
 	int iBombChance = !g_bTankConfig[g_iTankType[owner]] ? g_iBombChance[g_iTankType[owner]] : g_iBombChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iBombChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iBombChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		float flPosition[3];
 		GetClientAbsOrigin(client, flPosition);
@@ -2350,7 +2350,7 @@ void vBombRock(int entity, int client, int enabled)
 void vBuryHit(int client, int owner, int enabled)
 {
 	int iBuryChance = !g_bTankConfig[g_iTankType[owner]] ? g_iBuryChance[g_iTankType[owner]] : g_iBuryChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iBuryChance) == 1 && bIsSurvivor(client) && bIsPlayerGrounded(client))
+	if (enabled == 1 && GetRandomInt(1, iBuryChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client) && bIsPlayerGrounded(client))
 	{
 		if (!g_bBury[client])
 		{
@@ -2396,7 +2396,7 @@ void vCloneAbility(int client, int enabled)
 void vDrugHit(int client, int owner, int enabled)
 {
 	int iDrugChance = !g_bTankConfig[g_iTankType[owner]] ? g_iDrugChance[g_iTankType[owner]] : g_iDrugChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iDrugChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iDrugChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bDrug[client])
 		{
@@ -2413,7 +2413,7 @@ void vDrugHit(int client, int owner, int enabled)
 void vFireHit(int client, int owner, int enabled)
 {
 	int iFireChance = !g_bTankConfig[g_iTankType[owner]] ? g_iFireChance[g_iTankType[owner]] : g_iFireChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iFireChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iFireChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		float flPos[3];
 		GetClientAbsOrigin(client, flPos);
@@ -2457,7 +2457,7 @@ void vFlashAbility(int client, int enabled)
 void vFlingHit(int client, int owner, int enabled)
 {
 	int iFlingChance = !g_bTankConfig[g_iTankType[owner]] ? g_iFlingChance[g_iTankType[owner]] : g_iFlingChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iFlingChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iFlingChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (bIsL4D2Game())
 		{
@@ -2593,7 +2593,7 @@ void vGhostDrop(int client, int owner, char[] number, int slot)
 void vGhostHit(int client, int owner, int enabled)
 {
 	int iGhostChance = !g_bTankConfig[g_iTankType[owner]] ? g_iGhostChance[g_iTankType[owner]] : g_iGhostChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iGhostChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iGhostChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		vGhostDrop(client, owner, "1", 0);
 		vGhostDrop(client, owner, "2", 1);
@@ -2656,7 +2656,7 @@ void vGravityAbility(int client, int enabled)
 void vGravityHit(int client, int owner, int enabled)
 {
 	int iGravityChance = !g_bTankConfig[g_iTankType[owner]] ? g_iGravityChance[g_iTankType[owner]] : g_iGravityChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iGravityChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iGravityChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bGravity2[client])
 		{
@@ -2685,7 +2685,7 @@ void vHealAbility(int client, int enabled)
 void vHealHit(int client, int owner, int enabled)
 {
 	int iHealChance = !g_bTankConfig[g_iTankType[owner]] ? g_iHealChance[g_iTankType[owner]] : g_iHealChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iHealChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iHealChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTFindConVar[3].IntValue - 1);
 		SetEntProp(client, Prop_Send, "m_isIncapacitated", 1);
@@ -2698,7 +2698,7 @@ void vHealHit(int client, int owner, int enabled)
 void vHurtAbility(int client, int owner, int enabled)
 {
 	int iHurtChance = !g_bTankConfig[g_iTankType[owner]] ? g_iHurtChance[g_iTankType[owner]] : g_iHurtChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iHurtChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iHurtChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bHurt[client])
 		{
@@ -2715,7 +2715,7 @@ void vHurtAbility(int client, int owner, int enabled)
 void vHypnoHit(int client, int owner, int enabled)
 {
 	int iHypnoChance = !g_bTankConfig[g_iTankType[owner]] ? g_iHypnoChance[g_iTankType[owner]] : g_iHypnoChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iHypnoChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iHypnoChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bHypno[client])
 		{
@@ -2729,7 +2729,7 @@ void vHypnoHit(int client, int owner, int enabled)
 void vIceHit(int client, int owner, int enabled)
 {
 	int iIceChance = !g_bTankConfig[g_iTankType[owner]] ? g_iIceChance[g_iTankType[owner]] : g_iIceChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iIceChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iIceChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bIce[client])
 		{
@@ -2750,7 +2750,7 @@ void vIceHit(int client, int owner, int enabled)
 void vIdleHit(int client, int owner, int enabled)
 {
 	int iIdleChance = !g_bTankConfig[g_iTankType[owner]] ? g_iIdleChance[g_iTankType[owner]] : g_iIdleChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iIdleChance) == 1 && bIsHumanSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iIdleChance) == 1 && !g_bCloned[owner] && bIsHumanSurvivor(client))
 	{
 		if (!g_bIdle[client])
 		{
@@ -2775,7 +2775,7 @@ void vIdleHit(int client, int owner, int enabled)
 void vInvertHit(int client, int owner, int enabled)
 {
 	int iInvertChance = !g_bTankConfig[g_iTankType[owner]] ? g_iInvertChance[g_iTankType[owner]] : g_iInvertChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iInvertChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iInvertChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bInvert[client])
 		{
@@ -2974,7 +2974,7 @@ void vMinionSpawner(int client, char[] type, int enabled, bool boss = false)
 void vNullifyHit(int client, int owner, int enabled)
 {
 	int iNullifyChance = !g_bTankConfig[g_iTankType[owner]] ? g_iNullifyChance[g_iTankType[owner]] : g_iNullifyChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iNullifyChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iNullifyChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bNullify[client])
 		{
@@ -3040,7 +3040,7 @@ void vParticleEffects(int client, int enabled)
 void vPimpHit(int client, int owner, int enabled)
 {
 	int iPimpChance = !g_bTankConfig[g_iTankType[owner]] ? g_iPimpChance[g_iTankType[owner]] : g_iPimpChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iPimpChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iPimpChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bPimp[client])
 		{
@@ -3056,7 +3056,7 @@ void vPimpHit(int client, int owner, int enabled)
 void vPukeHit(int client, int owner, int enabled)
 {
 	int iPukeChance = !g_bTankConfig[g_iTankType[owner]] ? g_iPukeChance[g_iTankType[owner]] : g_iPukeChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iPukeChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iPukeChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		SDKCall(g_hSDKPukePlayer, client, owner, true);
 	}
@@ -3065,7 +3065,7 @@ void vPukeHit(int client, int owner, int enabled)
 void vRestartHit(int client, int owner, int enabled)
 {
 	int iRestartChance = !g_bTankConfig[g_iTankType[owner]] ? g_iRestartChance[g_iTankType[owner]] : g_iRestartChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iRestartChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iRestartChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		SDKCall(g_hSDKRespawnPlayer, client);
 		char sItems[5][64];
@@ -3102,7 +3102,7 @@ void vRestartHit(int client, int owner, int enabled)
 void vRocketHit(int client, int owner, int enabled)
 {
 	int iRocketChance = !g_bTankConfig[g_iTankType[owner]] ? g_iRocketChance[g_iTankType[owner]] : g_iRocketChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iRocketChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iRocketChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		int iFlame = CreateEntityByName("env_steam");
 		if (IsValidEntity(iFlame))
@@ -3240,7 +3240,7 @@ void vSetProps(int client, int red, int green, int blue, int alpha, int red2, in
 void vShakeHit(int client, int owner, int enabled)
 {
 	int iShakeChance = !g_bTankConfig[g_iTankType[owner]] ? g_iShakeChance[g_iTankType[owner]] : g_iShakeChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iShakeChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iShakeChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bShake[client])
 		{
@@ -3311,7 +3311,7 @@ void vShieldAbility(int client, bool shield, int enabled)
 void vShoveHit(int client, int owner, int enabled)
 {
 	int iShoveChance = !g_bTankConfig[g_iTankType[owner]] ? g_iShoveChance[g_iTankType[owner]] : g_iShoveChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iShoveChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iShoveChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bShove[client])
 		{
@@ -3328,7 +3328,7 @@ void vShoveHit(int client, int owner, int enabled)
 void vSlugHit(int client, int owner, int enabled)
 {
 	int iSlugChance = !g_bTankConfig[g_iTankType[owner]] ? g_iSlugChance[g_iTankType[owner]] : g_iSlugChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iSlugChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iSlugChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		float flPosition[3];
 		GetClientAbsOrigin(client, flPosition);
@@ -3407,7 +3407,7 @@ void vStopTimers(int client)
 void vStunHit(int client, int owner, int enabled)
 {
 	int iStunChance = !g_bTankConfig[g_iTankType[owner]] ? g_iStunChance[g_iTankType[owner]] : g_iStunChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iStunChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iStunChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bStun[client])
 		{
@@ -3420,16 +3420,11 @@ void vStunHit(int client, int owner, int enabled)
 	}
 }
 
-void vTankCountCheck(int client, int wave)
+void vTankCountCheck(int wave)
 {
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (iGetTankCount() < wave)
 	{
 		CreateTimer(5.0, tTimerSpawnTanks, wave, TIMER_FLAG_NO_MAPCHANGE);
-	}
-	else if (iGetTankCount() > wave && !g_bCloned[client] && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
-	{
-		vKickFakeClient(client);
 	}
 }
 
@@ -3461,7 +3456,7 @@ void vVampireHit(int client, int enabled)
 void vVisualHit(int client, int owner, int enabled)
 {
 	int iVisionChance = !g_bTankConfig[g_iTankType[owner]] ? g_iVisionChance[g_iTankType[owner]] : g_iVisionChance2[g_iTankType[owner]];
-	if (enabled == 1 && GetRandomInt(1, iVisionChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, iVisionChance) == 1 && !g_bCloned[owner] && bIsSurvivor(client))
 	{
 		if (!g_bVision[client])
 		{
@@ -4925,21 +4920,12 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 		int iBoost = (iExtraHealthBoost > 62400) ? 62400 : iExtraHealthBoost;
 		int iBoost2 = (iExtraHealthBoost2 > 62400) ? 62400 : iExtraHealthBoost2;
 		int iBoost3 = (iExtraHealthBoost3 > 62400) ? 62400 : iExtraHealthBoost3;
-		if (iMultiHealth == 0)
+		switch (iMultiHealth)
 		{
-			SetEntityHealth(iTank, iExtraHealthNormal);
-		}
-		else if (iMultiHealth == 1)
-		{
-			SetEntityHealth(iTank, iBoost);
-		}
-		else if (iMultiHealth == 2)
-		{
-			SetEntityHealth(iTank, iBoost2);
-		}
-		else if (iMultiHealth == 3)
-		{
-			SetEntityHealth(iTank, iBoost3);
+			case 0: SetEntityHealth(iTank, iExtraHealthNormal);
+			case 1: SetEntityHealth(iTank, iBoost);
+			case 2: SetEntityHealth(iTank, iBoost2);
+			case 3: SetEntityHealth(iTank, iBoost3);
 		}
 		float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
 		vThrowInterval(iTank, flThrowInterval);

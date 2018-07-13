@@ -1,4 +1,3 @@
-// Super Tanks++
 #if defined _supertanks_included
 	#endinput
 #endif
