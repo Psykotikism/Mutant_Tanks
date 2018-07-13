@@ -2055,7 +2055,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Props Colors\"				\"150,150,150,255|150,150,150,255|150,150,150,125|150,150,150,255|150,150,150,255\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
 			fFilename.WriteLine("		\"Hurt Ability\"				\"1\"");
-			fFilename.WriteLine("		\"Hurt Chance\"				\"1\"");
+			fFilename.WriteLine("		\"Hurt Chance\"				\"4\"");
 			fFilename.WriteLine("		\"Hurt Damage\"				\"5\"");
 			fFilename.WriteLine("		\"Hurt Duration\"				\"5.0\"");
 			fFilename.WriteLine("	}");
@@ -2066,8 +2066,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Skin-Glow Colors\"			\"110,0,130,255|110,0,130\"");
 			fFilename.WriteLine("		\"Props Colors\"				\"255,250,45,255|255,250,45,255|255,250,45,125|255,250,45,255|255,250,45,255\"");
 			fFilename.WriteLine("		\"Extra Health\"				\"1000\"");
-			fFilename.WriteLine("		\"Hypno Chance\"				\"1\"");
-			fFilename.WriteLine("		\"Hypno Duration\"			\"99999.0\"");
+			fFilename.WriteLine("		\"Hypno Chance\"				\"4\"");
+			fFilename.WriteLine("		\"Hypno Duration\"			\"5.0\"");
 			fFilename.WriteLine("		\"Hypno Claw-Rock\"			\"1\"");
 			fFilename.WriteLine("		\"Hypno Mode\"				\"1\"");
 			fFilename.WriteLine("	}");
