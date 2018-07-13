@@ -1245,7 +1245,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Fling Claw-Rock\"				\"0\"");
 			fFilename.WriteLine("");
-			fFilename.WriteLine("		// The Super Tank can cloak itself and other infected.");
+			fFilename.WriteLine("		// The Super Tank can cloak itself.");
 			fFilename.WriteLine("		// 0: OFF");
 			fFilename.WriteLine("		// 1: ON");
 			fFilename.WriteLine("		\"Ghost Ability\"					\"0\"");
