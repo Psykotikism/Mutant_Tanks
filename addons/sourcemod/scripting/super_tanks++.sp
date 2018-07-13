@@ -985,57 +985,35 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						int iAbsorbAbility = !g_bTankConfig[g_iTankType[victim]] ? g_iAbsorbAbility[g_iTankType[victim]] : g_iAbsorbAbility2[g_iTankType[victim]];
 						if (iAbsorbAbility == 1)
 						{
-							if (damagetype & DMG_BURN)
+							int iHealth = GetClientHealth(victim);
+							if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 							{
-								if (GetRandomInt(1, 5) == 1)
-								{
-									damage = 0.0;
-									return Plugin_Handled;
-								}
+								damage = damage / 10;
 							}
-							else
+							else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
 							{
-								int iHealth = GetClientHealth(victim);
-								if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-								{
-									damage = damage / 10;
-								}
-								else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
-								{
-									damage = damage / 1000;
-								}
-								(iHealth > damage) ? SetEntityHealth(victim, iHealth - RoundFloat(damage)) : SetEntProp(victim, Prop_Send, "m_isIncapacitated", 1);
-								damage = 0.0;
-								return Plugin_Changed;
+								damage = damage / 1000;
 							}
+							(iHealth > damage) ? SetEntityHealth(victim, iHealth - RoundFloat(damage)) : SetEntProp(victim, Prop_Send, "m_isIncapacitated", 1);
+							damage = 0.0;
+							return Plugin_Changed;
 						}
 						if (g_bHypno[attacker])
 						{
-							if (damagetype & DMG_BURN)
+							int iHypnoMode = !g_bTankConfig[g_iTankType[victim]] ? g_iHypnoMode[g_iTankType[victim]] : g_iHypnoMode2[g_iTankType[victim]];
+							int iHealth = GetClientHealth(attacker);
+							int iTarget = iGetRandomSurvivor(attacker, false);
+							if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 							{
-								if (GetRandomInt(1, 5) == 1)
-								{
-									damage = 0.0;
-									return Plugin_Handled;
-								}
+								damage = damage / 10;
 							}
-							else
+							else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
 							{
-								int iHypnoMode = !g_bTankConfig[g_iTankType[victim]] ? g_iHypnoMode[g_iTankType[victim]] : g_iHypnoMode2[g_iTankType[victim]];
-								int iHealth = GetClientHealth(attacker);
-								int iTarget = iGetRandomSurvivor(attacker, false);
-								if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-								{
-									damage = damage / 10;
-								}
-								else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
-								{
-									damage = damage / 1000;
-								}
-								(iHealth > damage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - RoundFloat(damage)) : SetEntityHealth(attacker, iHealth - RoundFloat(damage))) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntProp(iTarget, Prop_Send, "m_isIncapacitated", 1) : SetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1));
-								damage = 0.0;
-								return Plugin_Changed;
+								damage = damage / 1000;
 							}
+							(iHealth > damage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - RoundFloat(damage)) : SetEntityHealth(attacker, iHealth - RoundFloat(damage))) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntProp(iTarget, Prop_Send, "m_isIncapacitated", 1) : SetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1));
+							damage = 0.0;
+							return Plugin_Changed;
 						}
 					}
 					if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
