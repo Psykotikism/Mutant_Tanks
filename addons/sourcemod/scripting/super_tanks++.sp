@@ -5035,7 +5035,7 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerRockEffect(Handle timer, DataPack pack)
+public Action tTimerRockEffects(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
@@ -5091,7 +5091,7 @@ public Action tTimerRockThrow(Handle timer, any entity)
 		if (iRockEffect == 1 && sEffect[0] != '\0')
 		{
 			DataPack dpDataPack;
-			CreateDataTimer(0.75, tTimerRockEffect, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateDataTimer(0.75, tTimerRockEffects, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpDataPack.WriteCell(GetClientUserId(iThrower));
 			dpDataPack.WriteCell(EntIndexToEntRef(entity));
 			dpDataPack.WriteString(sEffect);
