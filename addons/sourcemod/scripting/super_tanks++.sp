@@ -2256,8 +2256,8 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 	}
 	GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 	GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
-	int iConcrete[5];
-	for (int iRock = 1; iRock <= 4; iRock++)
+	int iConcrete[17];
+	for (int iRock = 1; iRock <= 16; iRock++)
 	{
 		if (GetRandomInt(1, iChance5) == 1 && StrContains(sPropsAttached, "5") != -1)
 		{
@@ -2272,10 +2272,10 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 				AcceptEntityInput(iConcrete[iRock], "SetParent", client);
 				switch (iRock)
 				{
-					case 1: SetVariantString("rshoulder");
-					case 2: SetVariantString("lshoulder");
-					case 3: SetVariantString("relbow");
-					case 4: SetVariantString("lelbow");
+					case 1, 5, 9, 13: SetVariantString("rshoulder");
+					case 2, 6, 10, 14: SetVariantString("lshoulder");
+					case 3, 7, 11, 15: SetVariantString("relbow");
+					case 4, 8, 12, 16: SetVariantString("lelbow");
 				}
 				AcceptEntityInput(iConcrete[iRock], "SetParentAttachment");
 				AcceptEntityInput(iConcrete[iRock], "Enable");
@@ -2284,8 +2284,8 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 				{
 					switch (iRock)
 					{
-						case 1, 2: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.4);
-						case 3, 4: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.5);
+						case 1, 2, 5, 6, 9, 10, 13, 14: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.4);
+						case 3, 4, 7, 8, 11, 12, 15, 16: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.5);
 					}
 				}
 				SetEntPropEnt(iConcrete[iRock], Prop_Send, "m_hOwnerEntity", client);
