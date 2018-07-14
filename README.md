@@ -189,24 +189,26 @@ SourceMod 1.8+
 
 		// Props that the Super Tank can spawn with.
 		// Combine numbers in any order for different results.
-		// Character limit: 5
-		// 1: attach lights only.
-		// 2: attach oxygen tanks only.
-		// 3: attach flames to oxygen tanks.
-		// 4: attach rocks only.
-		// 5: attach tires only.
-		"Props Attached"				"12345"
+		// Character limit: 6
+		// 1: Attach a blur effect only.
+		// 2: Attach lights only.
+		// 3: Attach oxygen tanks only.
+		// 4: Attach flames to oxygen tanks.
+		// 5: Attach rocks only.
+		// 6: Attach tires only.
+		"Props Attached"				"23456"
 
 		// Each prop has 1 of this many chances to appear when the Super Tank appears.
 		// Separate chances with commas.
-		// Chances limit: 5
+		// Chances limit: 6
 		// Character limit for each chance: 3
-		// 1st number = Chance for lights to appear.
-		// 2nd number = Chance for oxygen tanks to appear.
-		// 3rd number = Chance for oxygen tank flames to appear.
-		// 4th number = Chance for rocks to appear.
-		// 5th number = Chance for tires to appear.
-		"Props Chance"					"3,3,3,3,3"
+		// 1st number = Chance for a blur effect to appear.
+		// 2nd number = Chance for lights to appear.
+		// 3rd number = Chance for oxygen tanks to appear.
+		// 4th number = Chance for oxygen tank flames to appear.
+		// 5th number = Chance for rocks to appear.
+		// 6th number = Chance for tires to appear.
+		"Props Chance"					"3,3,3,3,3,3"
 
 		// The Super Tank's prop colors.
 		// Separate colors with "|".
@@ -216,7 +218,7 @@ SourceMod 1.8+
 		// 3rd set = oxygen tank flames color (RGBA)
 		// 4th set = rocks color (RGBA)
 		// 5th set = tires color (RGBA)
-		"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,125|255,255,255,255|255,255,255,255"
+		"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255"
 
 		// The Super Tank will have a glow outline.
 		// Only available in Left 4 Dead 2.
@@ -238,8 +240,22 @@ SourceMod 1.8+
 		// 4: Ice Steam
 		// 5: Meteor Smoke
 		// 6: Smoker Cloud
-		// 7: Spit Puddle (Only available in Left 4 Dead 2.)
+		// 7: Acid Trail (Only available in Left 4 Dead 2.)
 		"Particle Effects"				"1234567"
+
+		// The Super Tank's rock will have a particle effect.
+		// 0: OFF
+		// 1: ON
+		"Rock Effect"					"0"
+
+		// The particle effects for the Super Tank's rock.
+		// Combine numbers in any order for different results.
+		// Character limit: 4
+		// 1: Blood Explosion
+		// 2: Electric Jolt
+		// 3: Fire Trail
+		// 4: Acid Trail (Only available in Left 4 Dead 2.)
+		"Rock Effects"					"1234"
 
 		// The Super Tank absorbs most of the damage it receives.
 		// 0: OFF
@@ -421,6 +437,11 @@ SourceMod 1.8+
 		// Minimum: 1
 		// Maximum: 99999
 		"Flash Chance"					"4"
+
+		// The Super Tank's special speed lasts this long.
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"Flash Duration"				"5.0"
 
 		// The Super Tank's special speed.
 		// Minimum: 3.0
@@ -670,9 +691,18 @@ SourceMod 1.8+
 		"Meteor Chance"					"4"
 
 		// The Super Tank's meteorites do this much damage.
-		// Minimum: 1.0
-		// Maximum: 99999.0
-		"Meteor Damage"					"25.0"
+		// Minimum: 1
+		// Maximum: 99999
+		"Meteor Damage"					"25"
+
+		// The radius of the Super Tank's meteor shower.
+		// 1st number = Minimum radius
+		// Minimum: -200.0
+		// Maximum: 0.0
+		// 2nd number = Maximum radius
+		// Minimum: 0.0
+		// Maximum: 200.0
+		"Meteor Radius"					"-180.0,180.0"
 
 		// The Super Tank can spawn minions behind itself.
 		// 0: OFF
@@ -767,6 +797,21 @@ SourceMod 1.8+
 		// Maximum: 3.0
 		"Pyro Boost"					"1.0"
 
+		// The Super Tank can regenerate health.
+		// 0: OFF
+		// 1: ON
+		"Regenerate Ability"			"0"
+
+		// The Super Tank regenerates this much health each time.
+		// Minimum: 1
+		// Maximum: 62400
+		"Regenerate Health"				"1"
+
+		// The Super Tank regenerates health every time this many seconds passes.
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"Regenerate Interval"			"1.0"
+
 		// The Super Tank has 1 out of this many chances to make survivors restart at the spawn area.
 		// Minimum: 1
 		// Maximum: 99999
@@ -781,6 +826,35 @@ SourceMod 1.8+
 		// Item limit: 5
 		// Character limit for each item: 64
 		"Restart Loadout"				"smg,pistol,pain_pills"
+
+		// The Super Tank can start rock showers.
+		// 0: OFF
+		// 1: ON
+		"Rock Ability"					"0"
+
+		// The Super Tank has 1 out of this many chances to start rock showers.
+		// Minimum: 1
+		// Maximum: 99999
+		"Rock Chance"					"4"
+
+		// The Super Tank's rocks do this much damage.
+		// Minimum: 1
+		// Maximum: 99999
+		"Rock Damage"					"5"
+
+		// The Super Tank's rock shower lasts this long.
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"Rock Duration"					"5.0"
+
+		// The radius of the Super Tank's rock shower.
+		// 1st number = Minimum radius
+		// Minimum: -5.0
+		// Maximum: 0.0
+		// 2nd number = Maximum radius
+		// Minimum: 0.0
+		// Maximum: 5.0
+		"Rock Radius"					"-1.25,1.25"
 
 		// The Super Tank has 1 out of this many chances to send survivors into space.
 		// Minimum: 1
@@ -864,20 +938,20 @@ SourceMod 1.8+
 		// 1: ON
 		"Spam Ability"					"0"
 
-		// The Super Tank spams this many rocks at survivors.
+		// The Super Tank has 1 out of this many chances to spam rocks at survivors.
 		// Minimum: 1
-		// Maximum: 100
-		"Spam Amount"					"5"
+		// Maximum: 99999
+		"Spam Chance"					"5"
 
 		// The Super Tank's rocks do this much damage.
 		// Minimum: 1
 		// Maximum: 99999
 		"Spam Damage"					"5"
 
-		// The Super Tank spams rocks at survivors every time this many seconds passes.
-		// Minimum: 1
-		// Maximum: 99999
-		"Spam Interval"					"5.0"
+		// The Super Tank's rock spam lasts this long.
+		// Minimum: 0.1
+		// Maximum: 99999.0
+		"Spam Duration"					"5.0"
 
 		// The Super Tank has 1 out of this many chances to stun survivors.
 		// Minimum: 1
@@ -1359,6 +1433,10 @@ Examples:
 **AtomicStryker** - For the code and gamedata signatures to respawn survivors.
 
 **Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?p=2402076) plugin.
+
+**ztar** - For the [Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
+
+**IxAvnoMonvAxI** - For the [Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2) plugin.
 
 **Uncle Jessie** - For the Tremor Tank in his [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
 

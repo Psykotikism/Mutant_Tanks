@@ -1,5 +1,40 @@
 # Changelog
 
+## Version 8.21 (July 14, 2018)
+
+Bug fixes:
+
+1. Fixed the error coming from OnTakeDamage.
+2. Fixed the error regarding a missing translation phrase when a vote is in progress.
+
+Changes:
+
+1. Added the "Regenerate Ability" KeyValue which lets the Super Tank regenerate health.
+2. Added the "Regenerate Health" Keyvalue which determines how much health the Super Tank regenerates.
+3. Added the "Regenerate Interval" KeyValue which decides how often the Super Tank regenerates health.
+4. Added the "Rock Ability" KeyValue which lets the Super Tank start rock showers.
+5. Added the "Rock Chance" KeyValue which decides how often the Super Tank can start rock showers.
+6. Added the "Rock Damage" KeyValue which determines how much damage the Super Tank's rocks do.
+7. Added the "Rock Duration" KeyValue which determines how long the Super Tank's rock shower lasts.
+8. Added the "Rock Radius" KeyValue which determines the radius of the Super Tank's rock shower.
+9. Added the "Meteor Radius" KeyValue which determines the radius of the Super Tank's meteor shower.
+10. Added the "Rock Effect" KeyValue which lets users attach particle effects to the Super Tank's rocks.
+11. Added the "Rock Effects" KeyValue which decides what particle effects are attached to the Super Tank's rocks.
+12. Replaced the "Spam Amount" KeyValue with "Spam Chance" which decides how often the Super Tank can spam rocks at survivors.
+13. Replaced the "Spam Interval" KeyValue with "Spam Duration" which determines how long the Super Tank's rock spam lasts.
+14. Added the "Flash Duration" KeyValue which determines how long the Super Tank's special speed lasts.
+15. The blur effect from the Flash ability is now treated as a prop.
+
+New formats:
+
+"Props Attached" "123456"
+"Props Chance" "3,3,3,3,3,3"
+
+Files:
+
+1. Updated config file with new presets.
+2. Updated include file.
+
 ## Version 8.20 (July 12, 2018)
 
 Changes:
