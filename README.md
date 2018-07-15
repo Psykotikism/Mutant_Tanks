@@ -445,7 +445,7 @@ SourceMod 1.8+
 
 		// The Super Tank's special speed.
 		// Minimum: 3.0
-		// Maximum: 8.0
+		// Maximum: 10.0
 		"Flash Speed"					"5.0"
 
 		// The Super Tank has 1 out of this many chances to fling survivors into the air.

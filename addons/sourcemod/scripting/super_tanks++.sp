@@ -1775,7 +1775,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_flFlashDuration[iIndex] = kvSuperTanks.GetFloat("Flash Duration", 5.0)) : (g_flFlashDuration2[iIndex] = kvSuperTanks.GetFloat("Flash Duration", g_flFlashDuration[iIndex]));
 			main ? (g_flFlashDuration[iIndex] = flSetFloatLimit(g_flFlashDuration[iIndex], 0.1, 99999.0)) : (g_flFlashDuration2[iIndex] = flSetFloatLimit(g_flFlashDuration2[iIndex], 0.1, 99999.0));
 			main ? (g_flFlashSpeed[iIndex] = kvSuperTanks.GetFloat("Flash Speed", 5.0)) : (g_flFlashSpeed2[iIndex] = kvSuperTanks.GetFloat("Flash Speed", g_flFlashSpeed[iIndex]));
-			main ? (g_flFlashSpeed[iIndex] = flSetFloatLimit(g_flFlashSpeed[iIndex], 3.0, 8.0)) : (g_flFlashSpeed2[iIndex] = flSetFloatLimit(g_flFlashSpeed2[iIndex], 3.0, 8.0));
+			main ? (g_flFlashSpeed[iIndex] = flSetFloatLimit(g_flFlashSpeed[iIndex], 3.0, 10.0)) : (g_flFlashSpeed2[iIndex] = flSetFloatLimit(g_flFlashSpeed2[iIndex], 3.0, 10.0));
 			main ? (g_iFlingChance[iIndex] = kvSuperTanks.GetNum("Fling Chance", 4)) : (g_iFlingChance2[iIndex] = kvSuperTanks.GetNum("Fling Chance", g_iFlingChance[iIndex]));
 			main ? (g_iFlingChance[iIndex] = iSetCellLimit(g_iFlingChance[iIndex], 1, 99999)) : (g_iFlingChance2[iIndex] = iSetCellLimit(g_iFlingChance2[iIndex], 1, 99999));
 			main ? (g_iFlingHit[iIndex] = kvSuperTanks.GetNum("Fling Claw-Rock", 0)) : (g_iFlingHit2[iIndex] = kvSuperTanks.GetNum("Fling Claw-Rock", g_iFlingHit[iIndex]));

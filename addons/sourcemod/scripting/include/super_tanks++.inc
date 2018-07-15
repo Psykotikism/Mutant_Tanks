@@ -1250,7 +1250,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank's special speed.");
 			fFilename.WriteLine("		// Minimum: 3.0");
-			fFilename.WriteLine("		// Maximum: 8.0");
+			fFilename.WriteLine("		// Maximum: 10.0");
 			fFilename.WriteLine("		\"Flash Speed\"					\"5.0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("		// The Super Tank has 1 out of this many chances to fling survivors into the air.");
