@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 8.22 (TBA)
+
+Bug fixes:
+
+1. Fixed the issue with some KeyValue settings not working properly.
+
+Changes:
+
+1. Restructured the config file.
+2. Added a ton of new KeyValues for many abilities.
+
+Files:
+
+1. Updated config file with the new settings.
+2. Updated include file.
+
 ## Version 8.21 (July 14, 2018)
 
 Bug fixes:
