@@ -1830,7 +1830,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (kvSuperTanks.GetString("General/Rock Effects", g_sRockEffects[iIndex], sizeof(g_sRockEffects[]), "1234")) : (kvSuperTanks.GetString("General/Rock Effects", g_sRockEffects2[iIndex], sizeof(g_sRockEffects2[]), g_sRockEffects[iIndex]));
 
 			main ? (g_iExtraHealth[iIndex] = kvSuperTanks.GetNum("General/Extra Health", 0)) : (g_iExtraHealth2[iIndex] = kvSuperTanks.GetNum("General/Extra Health", g_iExtraHealth[iIndex]));
-			main ? (g_iExtraHealth[iIndex] = iSetCellLimit(g_iExtraHealth[iIndex], 0, 62400)) : (g_iExtraHealth2[iIndex] = iSetCellLimit(g_iExtraHealth2[iIndex], 0, 62400));
+			main ? (g_iExtraHealth[iIndex] = iSetCellLimit(g_iExtraHealth[iIndex], 0, 65535)) : (g_iExtraHealth2[iIndex] = iSetCellLimit(g_iExtraHealth2[iIndex], 0, 65535));
 			main ? (g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("General/Run Speed", 1.0)) : (g_flRunSpeed2[iIndex] = kvSuperTanks.GetFloat("General/Run Speed", g_flRunSpeed[iIndex]));
 			main ? (g_flRunSpeed[iIndex] = flSetFloatLimit(g_flRunSpeed[iIndex], 0.1, 3.0)) : (g_flRunSpeed2[iIndex] = flSetFloatLimit(g_flRunSpeed2[iIndex], 0.1, 3.0));
 			main ? (g_flThrowInterval[iIndex] = kvSuperTanks.GetFloat("General/Throw Interval", 5.0)) : (g_flThrowInterval2[iIndex] = kvSuperTanks.GetFloat("General/Throw Interval", g_flThrowInterval[iIndex]));
@@ -1917,7 +1917,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iCloneChance[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Chance", 4)) : (g_iCloneChance2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Chance", g_iCloneChance[iIndex]));
 			main ? (g_iCloneChance[iIndex] = iSetCellLimit(g_iCloneChance[iIndex], 1, 99999)) : (g_iCloneChance2[iIndex] = iSetCellLimit(g_iCloneChance2[iIndex], 1, 99999));
 			main ? (g_iCloneHealth[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", 1000)) : (g_iCloneHealth2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", g_iCloneHealth[iIndex]));
-			main ? (g_iCloneHealth[iIndex] = iSetCellLimit(g_iCloneHealth[iIndex], 1, 62400)) : (g_iCloneHealth2[iIndex] = iSetCellLimit(g_iCloneHealth2[iIndex], 0, 62400));
+			main ? (g_iCloneHealth[iIndex] = iSetCellLimit(g_iCloneHealth[iIndex], 1, 65535)) : (g_iCloneHealth2[iIndex] = iSetCellLimit(g_iCloneHealth2[iIndex], 0, 65535));
 			main ? (g_iCloneMode[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", 0)) : (g_iCloneMode2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", g_iCloneMode[iIndex]));
 			main ? (g_iCloneMode[iIndex] = iSetCellLimit(g_iCloneMode[iIndex], 0, 1)) : (g_iCloneMode2[iIndex] = iSetCellLimit(g_iCloneMode2[iIndex], 0, 1));
 
@@ -2000,7 +2000,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iHealChance[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Chance", 4)) : (g_iHealChance2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Chance", g_iHealChance[iIndex]));
 			main ? (g_iHealChance[iIndex] = iSetCellLimit(g_iHealChance[iIndex], 1, 99999)) : (g_iHealChance2[iIndex] = iSetCellLimit(g_iHealChance2[iIndex], 1, 99999));
 			main ? (g_iHealCommon[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Zombies", 50)) : (g_iHealCommon2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Zombies", g_iHealCommon[iIndex]));
-			main ? (g_iHealCommon[iIndex] = iSetCellLimit(g_iHealCommon[iIndex], 0, 62400)) : (g_iHealCommon2[iIndex] = iSetCellLimit(g_iHealCommon2[iIndex], 0, 62400));
+			main ? (g_iHealCommon[iIndex] = iSetCellLimit(g_iHealCommon[iIndex], 0, 65535)) : (g_iHealCommon2[iIndex] = iSetCellLimit(g_iHealCommon2[iIndex], 0, 65535));
 			main ? (g_iHealHit[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Hit", 0)) : (g_iHealHit2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Hit", g_iHealHit[iIndex]));
 			main ? (g_iHealHit[iIndex] = iSetCellLimit(g_iHealHit[iIndex], 0, 1)) : (g_iHealHit2[iIndex] = iSetCellLimit(g_iHealHit2[iIndex], 0, 1));
 			main ? (g_flHealInterval[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Interval", 5.0)) : (g_flHealInterval2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Interval", g_flHealInterval[iIndex]));
@@ -2008,9 +2008,9 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_flHealRange[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Range", 500.0)) : (g_flHealRange2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Range", g_flHealRange[iIndex]));
 			main ? (g_flHealRange[iIndex] = flSetFloatLimit(g_flHealRange[iIndex], 1.0, 99999.0)) : (g_flHealRange2[iIndex] = flSetFloatLimit(g_flHealRange2[iIndex], 1.0, 99999.0));
 			main ? (g_iHealSpecial[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Specials", 100)) : (g_iHealSpecial2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Specials", g_iHealSpecial[iIndex]));
-			main ? (g_iHealSpecial[iIndex] = iSetCellLimit(g_iHealSpecial[iIndex], 0, 62400)) : (g_iHealSpecial2[iIndex] = iSetCellLimit(g_iHealSpecial2[iIndex], 0, 62400));
+			main ? (g_iHealSpecial[iIndex] = iSetCellLimit(g_iHealSpecial[iIndex], 0, 65535)) : (g_iHealSpecial2[iIndex] = iSetCellLimit(g_iHealSpecial2[iIndex], 0, 65535));
 			main ? (g_iHealTank[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Tanks", 500)) : (g_iHealTank2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Tanks", g_iHealTank[iIndex]));
-			main ? (g_iHealTank[iIndex] = iSetCellLimit(g_iHealTank[iIndex], 0, 62400)) : (g_iHealTank2[iIndex] = iSetCellLimit(g_iHealTank2[iIndex], 0, 62400));
+			main ? (g_iHealTank[iIndex] = iSetCellLimit(g_iHealTank[iIndex], 0, 65535)) : (g_iHealTank2[iIndex] = iSetCellLimit(g_iHealTank2[iIndex], 0, 65535));
 
 			main ? (g_iHurtAbility[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", 0)) : (g_iHurtAbility2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", g_iHurtAbility[iIndex]));
 			main ? (g_iHurtAbility[iIndex] = iSetCellLimit(g_iHurtAbility[iIndex], 0, 1)) : (g_iHurtAbility2[iIndex] = iSetCellLimit(g_iHurtAbility2[iIndex], 0, 1));
@@ -2140,7 +2140,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iRegenAbility[iIndex] = kvSuperTanks.GetNum("Regenerate Ability/Ability Enabled", 0)) : (g_iRegenAbility2[iIndex] = kvSuperTanks.GetNum("Regenerate Ability/Ability Enabled", g_iRegenAbility[iIndex]));
 			main ? (g_iRegenAbility[iIndex] = iSetCellLimit(g_iRegenAbility[iIndex], 0, 1)) : (g_iRegenAbility2[iIndex] = iSetCellLimit(g_iRegenAbility2[iIndex], 0, 1));
 			main ? (g_iRegenHealth[iIndex] = kvSuperTanks.GetNum("Regenerate Ability/Regenerate Health", 1)) : (g_iRegenHealth2[iIndex] = kvSuperTanks.GetNum("Regenerate Ability/Regen Healtherate", g_iRegenHealth[iIndex]));
-			main ? (g_iRegenHealth[iIndex] = iSetCellLimit(g_iRegenHealth[iIndex], 1, 62400)) : (g_iRegenHealth2[iIndex] = iSetCellLimit(g_iRegenHealth2[iIndex], 0, 62400));
+			main ? (g_iRegenHealth[iIndex] = iSetCellLimit(g_iRegenHealth[iIndex], 1, 65535)) : (g_iRegenHealth2[iIndex] = iSetCellLimit(g_iRegenHealth2[iIndex], 0, 65535));
 			main ? (g_flRegenInterval[iIndex] = kvSuperTanks.GetFloat("Regenerate Ability/Regenerate Interval", 1.0)) : (g_flRegenInterval2[iIndex] = kvSuperTanks.GetFloat("Regenerate Ability/Regenerate Duration", g_flRegenInterval[iIndex]));
 			main ? (g_flRegenInterval[iIndex] = flSetFloatLimit(g_flRegenInterval[iIndex], 0.1, 99999.0)) : (g_flRegenInterval2[iIndex] = flSetFloatLimit(g_flRegenInterval2[iIndex], 0.1, 99999.0));
 
@@ -2242,7 +2242,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iVampireChance[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Chance", 4)) : (g_iVampireChance2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Chance", g_iVampireChance[iIndex]));
 			main ? (g_iVampireChance[iIndex] = iSetCellLimit(g_iVampireChance[iIndex], 1, 99999)) : (g_iVampireChance2[iIndex] = iSetCellLimit(g_iVampireChance2[iIndex], 1, 99999));
 			main ? (g_iVampireHealth[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Health", 100)) : (g_iVampireHealth2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Health", g_iVampireHealth[iIndex]));
-			main ? (g_iVampireHealth[iIndex] = iSetCellLimit(g_iVampireHealth[iIndex], 0, 62400)) : (g_iVampireHealth2[iIndex] = iSetCellLimit(g_iVampireHealth2[iIndex], 0, 62400));
+			main ? (g_iVampireHealth[iIndex] = iSetCellLimit(g_iVampireHealth[iIndex], 0, 65535)) : (g_iVampireHealth2[iIndex] = iSetCellLimit(g_iVampireHealth2[iIndex], 0, 65535));
 			main ? (g_iVampireHit[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Hit", 0)) : (g_iVampireHit2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Hit", g_iVampireHit[iIndex]));
 			main ? (g_iVampireHit[iIndex] = iSetCellLimit(g_iVampireHit[iIndex], 0, 1)) : (g_iVampireHit2[iIndex] = iSetCellLimit(g_iVampireHit2[iIndex], 0, 1));
 			main ? (g_flVampireRange[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range", 500.0)) : (g_flVampireRange2[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range", g_flVampireRange[iIndex]));
@@ -3266,7 +3266,8 @@ void vMinion(int client, char[] type, float pos[3], bool boss = false)
 		{
 			g_bCloned[iSelectedType] = true;
 			int iCloneHealth = !g_bTankConfig[g_iTankType[client]] ? g_iCloneHealth[g_iTankType[client]] : g_iCloneHealth2[g_iTankType[client]];
-			SetEntityHealth(iSelectedType, iCloneHealth);
+			int iNewHealth = (iCloneHealth > 65535) ? 65535 : iCloneHealth;
+			SetEntityHealth(iSelectedType, iNewHealth);
 		}
 		else if (!boss)
 		{
@@ -3903,8 +3904,9 @@ void vVampireHit(int client, int enabled)
 	if (enabled == 1 && GetRandomInt(1, iVampireChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client))
 	{
 		int iHealth = GetClientHealth(client);
-		int iExtraHealth = !g_bTankConfig[g_iTankType[client]] ? (iHealth + g_iVampireHealth[g_iTankType[client]]) : (iHealth + g_iVampireHealth2[g_iTankType[client]]);
-		SetEntityHealth(client, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
+		int iVampireHealth = !g_bTankConfig[g_iTankType[client]] ? (iHealth + g_iVampireHealth[g_iTankType[client]]) : (iHealth + g_iVampireHealth2[g_iTankType[client]]);
+		int iExtraHealth = (iVampireHealth > 65535) ? 65535 : iVampireHealth;
+		SetEntityHealth(client, iExtraHealth);
 	}
 }
 
@@ -4420,10 +4422,11 @@ public Action tTimerHeal(Handle timer, any userid)
 			if (flDistance < flHealRange)
 			{
 				int iHealth = GetClientHealth(iTank);
-				int iExtraHealth = !g_bTankConfig[g_iTankType[iTank]] ? (iHealth + g_iHealCommon[g_iTankType[iTank]]) : (iHealth + g_iHealCommon2[g_iTankType[iTank]]);
+				int iCommonHealth = !g_bTankConfig[g_iTankType[iTank]] ? (iHealth + g_iHealCommon[g_iTankType[iTank]]) : (iHealth + g_iHealCommon2[g_iTankType[iTank]]);
+				int iExtraHealth = (iCommonHealth > 65535) ? 65535 : iCommonHealth;
 				if (iHealth > 500)
 				{
-					SetEntityHealth(iTank, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
+					SetEntityHealth(iTank, iExtraHealth);
 					if (bIsL4D2Game())
 					{
 						SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
@@ -4446,10 +4449,11 @@ public Action tTimerHeal(Handle timer, any userid)
 				if (flDistance < flHealRange)
 				{
 					int iHealth = GetClientHealth(iTank);
-					int iExtraHealth = !g_bTankConfig[g_iTankType[iTank]] ? (iHealth + g_iHealSpecial[g_iTankType[iTank]]) : (iHealth + g_iHealSpecial2[g_iTankType[iTank]]);
+					int iSpecialHealth = !g_bTankConfig[g_iTankType[iTank]] ? (iHealth + g_iHealSpecial[g_iTankType[iTank]]) : (iHealth + g_iHealSpecial2[g_iTankType[iTank]]);
+					int iExtraHealth = (iSpecialHealth > 65535) ? 65535 : iSpecialHealth;
 					if (iHealth > 500)
 					{
-						SetEntityHealth(iTank, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
+						SetEntityHealth(iTank, iExtraHealth);
 						if (iType < 2 && bIsL4D2Game())
 						{
 							SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
@@ -4470,10 +4474,11 @@ public Action tTimerHeal(Handle timer, any userid)
 				if (flDistance < flHealRange)
 				{
 					int iHealth = GetClientHealth(iTank);
-					int iExtraHealth = !g_bTankConfig[g_iTankType[iTank]] ? (iHealth + g_iHealTank[g_iTankType[iTank]]) : (iHealth + g_iHealTank2[g_iTankType[iTank]]);
+					int iTankHealth = !g_bTankConfig[g_iTankType[iTank]] ? (iHealth + g_iHealTank[g_iTankType[iTank]]) : (iHealth + g_iHealTank2[g_iTankType[iTank]]);
+					int iExtraHealth = (iTankHealth > 65535) ? 65535 : iTankHealth;
 					if (iHealth > 500)
 					{
-						SetEntityHealth(iTank, (iExtraHealth > 62400) ? 62400 : iExtraHealth);
+						SetEntityHealth(iTank, iExtraHealth);
 						if (bIsL4D2Game())
 						{
 							SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
@@ -4955,7 +4960,8 @@ public Action tTimerRegenerate(Handle timer, any userid)
 	{
 		int iHealth = GetClientHealth(iTank);
 		int iRegenHealth = !g_bTankConfig[g_iTankType[iTank]] ? g_iRegenHealth[g_iTankType[iTank]] : g_iRegenHealth2[g_iTankType[iTank]];
-		SetEntityHealth(iTank, iHealth + iRegenHealth);
+		int iExtraHealth = (iRegenHealth + iHealth > 65535) ? 65535 : iRegenHealth + iHealth;
+		SetEntityHealth(iTank, iExtraHealth);
 	}
 	return Plugin_Continue;
 }
@@ -5586,9 +5592,9 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 		int iExtraHealthBoost = (iGetHumanCount() > 1) ? ((iHealth * iGetHumanCount()) + iExtraHealth) : (iExtraHealthNormal);
 		int iExtraHealthBoost2 = (iGetHumanCount() > 1) ? (iHealth + (iGetHumanCount() * iExtraHealth)) : (iExtraHealthNormal);
 		int iExtraHealthBoost3 = (iGetHumanCount() > 1) ? (iGetHumanCount() * (iHealth + iExtraHealth)) : (iExtraHealthNormal);
-		int iBoost = (iExtraHealthBoost > 62400) ? 62400 : iExtraHealthBoost;
-		int iBoost2 = (iExtraHealthBoost2 > 62400) ? 62400 : iExtraHealthBoost2;
-		int iBoost3 = (iExtraHealthBoost3 > 62400) ? 62400 : iExtraHealthBoost3;
+		int iBoost = (iExtraHealthBoost > 65535) ? 65535 : iExtraHealthBoost;
+		int iBoost2 = (iExtraHealthBoost2 > 65535) ? 65535 : iExtraHealthBoost2;
+		int iBoost3 = (iExtraHealthBoost3 > 65535) ? 65535 : iExtraHealthBoost3;
 		switch (iMultiHealth)
 		{
 			case 0: SetEntityHealth(iTank, iExtraHealthNormal);

@@ -262,7 +262,7 @@ SourceMod 1.8+
 			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
 			// Minimum: 0
-			// Maximum: 62400
+			// Maximum: 65535
 			"Extra Health"					"0"
 
 			// Set the Super Tank's run speed.
@@ -496,7 +496,7 @@ SourceMod 1.8+
 
 			// The Super Tank's clones' health.
 			// Minimum: 1
-			// Maximum: 62400
+			// Maximum: 65535
 			"Clone Health"					"1000"
 
 			// The mode of the Super Tank's clone ability.
@@ -744,17 +744,17 @@ SourceMod 1.8+
 
 			// The Super Tank receives this much health from nearby common infected.
 			// Minimum: 0
-			// Maximum: 62400
+			// Maximum: 65535
 			"Health From Commons"			"50"
 
 			// The Super Tank receives this much health from other nearby special infected.
 			// Minimum: 0
-			// Maximum: 62400
+			// Maximum: 65535
 			"Health From Specials"			"100"
 
 			// The Super Tank receives this much health from other nearby Tanks.
 			// Minimum: 0
-			// Maximum: 62400
+			// Maximum: 65535
 			"Health From Tanks"				"500"
 		}
 		// The Super Tank hurts survivors.
@@ -1119,7 +1119,7 @@ SourceMod 1.8+
 
 			// The Super Tank regenerates this much health each time.
 			// Minimum: 1
-			// Maximum: 62400
+			// Maximum: 65535
 			"Regenerate Health"				"1"
 
 			// The Super Tank regenerates health every time this many seconds passes.
@@ -1424,7 +1424,7 @@ SourceMod 1.8+
 			// The Super Tank receives this much health from survivors.
 			// Note: Tank's health limit on any difficulty is 62,400.
 			// Minimum: 0
-			// Maximum: 62400
+			// Maximum: 65535
 			"Vampire Health"				"100"
 
 			// Enable the Super Tank's claw/rock attack.

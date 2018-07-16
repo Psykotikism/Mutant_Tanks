@@ -1068,7 +1068,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// Note: Depending on the setting for \"Multiply Health,\" the Super Tank's health will be multiplied based on player count.");
 			fFilename.WriteLine("			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.");
 			fFilename.WriteLine("			// Minimum: 0");
-			fFilename.WriteLine("			// Maximum: 62400");
+			fFilename.WriteLine("			// Maximum: 65535");
 			fFilename.WriteLine("			\"Extra Health\"					\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// Set the Super Tank's run speed.");
@@ -1302,7 +1302,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank's clones' health.");
 			fFilename.WriteLine("			// Minimum: 1");
-			fFilename.WriteLine("			// Maximum: 62400");
+			fFilename.WriteLine("			// Maximum: 65535");
 			fFilename.WriteLine("			\"Clone Health\"					\"1000\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The mode of the Super Tank's clone ability.");
@@ -1550,17 +1550,17 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank receives this much health from nearby common infected.");
 			fFilename.WriteLine("			// Minimum: 0");
-			fFilename.WriteLine("			// Maximum: 62400");
+			fFilename.WriteLine("			// Maximum: 65535");
 			fFilename.WriteLine("			\"Health From Commons\"			\"50\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank receives this much health from other nearby special infected.");
 			fFilename.WriteLine("			// Minimum: 0");
-			fFilename.WriteLine("			// Maximum: 62400");
+			fFilename.WriteLine("			// Maximum: 65535");
 			fFilename.WriteLine("			\"Health From Specials\"			\"100\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank receives this much health from other nearby Tanks.");
 			fFilename.WriteLine("			// Minimum: 0");
-			fFilename.WriteLine("			// Maximum: 62400");
+			fFilename.WriteLine("			// Maximum: 65535");
 			fFilename.WriteLine("			\"Health From Tanks\"				\"500\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank hurts survivors.");
@@ -1925,7 +1925,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank regenerates this much health each time.");
 			fFilename.WriteLine("			// Minimum: 1");
-			fFilename.WriteLine("			// Maximum: 62400");
+			fFilename.WriteLine("			// Maximum: 65535");
 			fFilename.WriteLine("			\"Regenerate Health\"				\"1\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank regenerates health every time this many seconds passes.");
@@ -2230,7 +2230,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The Super Tank receives this much health from survivors.");
 			fFilename.WriteLine("			// Note: Tank's health limit on any difficulty is 62,400.");
 			fFilename.WriteLine("			// Minimum: 0");
-			fFilename.WriteLine("			// Maximum: 62400");
+			fFilename.WriteLine("			// Maximum: 65535");
 			fFilename.WriteLine("			\"Vampire Health\"				\"100\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
