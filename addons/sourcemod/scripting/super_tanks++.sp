@@ -1599,114 +1599,6 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 	}
 }
 
-public void eEventSurvivorThirdperson(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("victim");
-	int iSurvivor = GetClientOfUserId(iUserId);
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
-	{
-		if (g_bShield[iSurvivor])
-		{
-			int iShield = -1;
-			while ((iShield = FindEntityByClassname(iShield, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-			{
-				char sModel[128];
-				GetEntPropString(iShield, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (strcmp(sModel, MODEL_SHIELD, false) == 0)
-				{
-					int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iSurvivor)
-					{
-						SDKUnhook(iShield, SDKHook_SetTransmit, SetTransmit);
-					}
-				}
-			}
-		}
-	}
-}
-
-public void eEventSurvivorThirdperson2(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iSurvivor = GetClientOfUserId(iUserId);
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
-	{
-		if (g_bShield[iSurvivor])
-		{
-			int iShield = -1;
-			while ((iShield = FindEntityByClassname(iShield, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-			{
-				char sModel[128];
-				GetEntPropString(iShield, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (strcmp(sModel, MODEL_SHIELD, false) == 0)
-				{
-					int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iSurvivor)
-					{
-						SDKUnhook(iShield, SDKHook_SetTransmit, SetTransmit);
-					}
-				}
-			}
-		}
-	}
-}
-
-public void eEventSurvivorFirstperson(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("victim");
-	int iSurvivor = GetClientOfUserId(iUserId);
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
-	{
-		if (g_bShield[iSurvivor])
-		{
-			int iShield = -1;
-			while ((iShield = FindEntityByClassname(iShield, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-			{
-				char sModel[128];
-				GetEntPropString(iShield, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (strcmp(sModel, MODEL_SHIELD, false) == 0)
-				{
-					int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iSurvivor)
-					{
-						SDKHook(iShield, SDKHook_SetTransmit, SetTransmit);
-					}
-				}
-			}
-		}
-	}
-}
-
-public void eEventSurvivorFirstperson2(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("subject");
-	int iSurvivor = GetClientOfUserId(iUserId);
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
-	{
-		if (g_bShield[iSurvivor])
-		{
-			int iShield = -1;
-			while ((iShield = FindEntityByClassname(iShield, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-			{
-				char sModel[128];
-				GetEntPropString(iShield, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (strcmp(sModel, MODEL_SHIELD, false) == 0)
-				{
-					int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iSurvivor)
-					{
-						SDKHook(iShield, SDKHook_SetTransmit, SetTransmit);
-					}
-				}
-			}
-		}
-	}
-}
-
 public Action cmdTank(int client, int args)
 {
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
@@ -1849,21 +1741,6 @@ void vHookEvents(bool hook)
 		HookEvent("player_incapacitated", eEventPlayerIncapacitated);
 		HookEvent("round_start", eEventRoundStart);
 		HookEvent("tank_spawn", eEventTankSpawn);
-		if (bIsL4D2Game())
-		{
-			HookEvent("charger_carry_start", eEventSurvivorThirdperson);
-			HookEvent("charger_pummel_start", eEventSurvivorThirdperson);
-			HookEvent("charger_carry_end", eEventSurvivorFirstperson);
-			HookEvent("charger_pummel_end", eEventSurvivorFirstperson);
-		}
-		HookEvent("lunge_pounce", eEventSurvivorThirdperson);
-		HookEvent("player_ledge_grab", eEventSurvivorThirdperson2);
-		HookEvent("revive_begin", eEventSurvivorThirdperson2);
-		HookEvent("tongue_grab", eEventSurvivorThirdperson);
-		HookEvent("pounce_end", eEventSurvivorFirstperson);
-		HookEvent("revive_end", eEventSurvivorFirstperson2);
-		HookEvent("revive_success", eEventSurvivorFirstperson2);
-		HookEvent("tongue_release", eEventSurvivorFirstperson);
 		hooked = true;
 	}
 	else if (!hook && hooked)
@@ -1879,21 +1756,6 @@ void vHookEvents(bool hook)
 		UnhookEvent("player_incapacitated", eEventPlayerIncapacitated);
 		UnhookEvent("round_start", eEventRoundStart);
 		UnhookEvent("tank_spawn", eEventTankSpawn);
-		if (bIsL4D2Game())
-		{
-			UnhookEvent("charger_carry_start", eEventSurvivorThirdperson);
-			UnhookEvent("charger_pummel_start", eEventSurvivorThirdperson);
-			UnhookEvent("charger_carry_end", eEventSurvivorFirstperson);
-			UnhookEvent("charger_pummel_end", eEventSurvivorFirstperson);
-		}
-		UnhookEvent("lunge_pounce", eEventSurvivorThirdperson);
-		UnhookEvent("player_ledge_grab", eEventSurvivorThirdperson2);
-		UnhookEvent("revive_begin", eEventSurvivorThirdperson2);
-		UnhookEvent("tongue_grab", eEventSurvivorThirdperson);
-		UnhookEvent("pounce_end", eEventSurvivorFirstperson);
-		UnhookEvent("revive_end", eEventSurvivorFirstperson2);
-		UnhookEvent("revive_success", eEventSurvivorFirstperson2);
-		UnhookEvent("tongue_release", eEventSurvivorFirstperson);
 		hooked = false;
 	}
 }
