@@ -638,6 +638,7 @@ SourceMod 1.8+
 			"Fling Range"					"500.0"
 		}
 		// The Super Tank makes itself and any other nearby infected invisible, and disarms survivors.
+		// "Ability Enabled" - Any nearby infected turns invisible.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is disarmed.
 		// "Ghost Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is disarmed.
 		"Ghost Ability"

@@ -1444,6 +1444,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Fling Range\"					\"500.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank makes itself and any other nearby infected invisible, and disarms survivors.");
+			fFilename.WriteLine("		// \"Ability Enabled\" - Any nearby infected turns invisible.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is disarmed.");
 			fFilename.WriteLine("		// \"Ghost Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is disarmed.");
 			fFilename.WriteLine("		\"Ghost Ability\"");
