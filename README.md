@@ -66,106 +66,111 @@ SourceMod 1.8+
 	// "Enable Custom Configs"
 	// "Create Config Types"
 	// "Execute Config Types"
-	"General"
+	"Plugin Settings"
 	{
-		// Enable Super Tanks++.
-		// 0: OFF
-		// 1: ON
-		"Plugin Enabled"				"1"
+		"General"
+		{
+			// Enable Super Tanks++.
+			// 0: OFF
+			// 1: ON
+			"Plugin Enabled"				"1"
 
-		// Enable Super Tanks++ in these game mode types.
-		// Add up numbers together for different results.
-		// 0: All game mode types.
-		// 1: Co-Op modes only.
-		// 2: Versus modes only.
-		// 4: Survival modes only.
-		// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
-		"Game Mode Types"				"0"
+			// Enable Super Tanks++ in these game mode types.
+			// Add up numbers together for different results.
+			// 0: All game mode types.
+			// 1: Co-Op modes only.
+			// 2: Versus modes only.
+			// 4: Survival modes only.
+			// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
+			"Game Mode Types"				"0"
 
-		// Enable Super Tanks++ in these game modes.
-		// Separate game modes with commas.
-		// Game mode limit: 64
-		// Character limit for each game mode: 64
-		// Empty: All
-		// Not empty: Enabled only in these game modes.
-		"Enabled Game Modes"			""
+			// Enable Super Tanks++ in these game modes.
+			// Separate game modes with commas.
+			// Game mode limit: 64
+			// Character limit for each game mode: 64
+			// Empty: All
+			// Not empty: Enabled only in these game modes.
+			"Enabled Game Modes"			""
 
-		// Disable Super Tanks++ in these game modes.
-		// Separate game modes with commas.
-		// Game mode limit: 64
-		// Character limit for each game mode: 64
-		// Empty: None
-		// Not empty: Disabled only in these game modes.
-		"Disabled Game Modes"			""
+			// Disable Super Tanks++ in these game modes.
+			// Separate game modes with commas.
+			// Game mode limit: 64
+			// Character limit for each game mode: 64
+			// Empty: None
+			// Not empty: Disabled only in these game modes.
+			"Disabled Game Modes"			""
 
-		// Enable Super Tanks++ custom configuration.
-		// 0: OFF
-		// 1: ON
-		"Enable Custom Configs"			"0"
+			// Announce each Super Tank's arrival.
+			// 0: OFF
+			// 1: ON
+			"Announce Arrival"				"1"
 
-		// The type of custom config that Super Tanks++ creates.
-		// Combine numbers in any order for different results.
-		// Character limit: 5
-		// 1: Difficulties
-		// 2: Maps
-		// 3: Game modes
-		// 4: Days
-		// 5: Player count
-		"Create Config Types"			"12345"
+			// Display Tanks' names and health.
+			// 0: OFF
+			// 1: ON, show names only.
+			// 2: ON, show health only.
+			// 3: ON, show both names and health.
+			"Display Health"				"3"
 
-		// The type of custom config that Super Tanks++ executes.
-		// Combine numbers in any order for different results.
-		// Character limit: 5
-		// 1: Difficulties
-		// 2: Maps
-		// 3: Game modes
-		// 4: Days
-		// 5: Player count
-		"Execute Config Types"			"1"
+			// Enable Super Tanks++ in finales only.
+			// 0: OFF
+			// 1: ON
+			"Finales Only"					"0"
 
-		// Announce each Super Tank's arrival.
-		// 0: OFF
-		// 1: ON
-		"Announce Arrival"				"1"
+			// Enable Super Tanks++ for human-controlled Tanks.
+			// Note: Some Super Tank abilities may be too overpowered to use in a competitive game mode.
+			// 0: OFF
+			// 1: ON
+			"Human Super Tanks"				"1"
 
-		// Display Tanks' names and health.
-		// 0: OFF
-		// 1: ON, show names only.
-		// 2: ON, show health only.
-		// 3: ON, show both names and health.
-		"Display Health"				"3"
+			// Maximum types of Super Tanks allowed.
+			// Minimum: 1
+			// Maximum: 1000
+			"Maximum Types"					"72"
 
-		// Enable Super Tanks++ in finales only.
-		// 0: OFF
-		// 1: ON
-		"Finales Only"					"0"
+			// Multiply the Super Tank's health.
+			// 0: No changes to health.
+			// 1: Multiply original health only.
+			// 2: Multiply extra health only.
+			// 3: Multiply both.
+			"Multiply Health"				"0"
 
-		// Enable Super Tanks++ for human-controlled Tanks.
-		// Note: Some Super Tank abilities may be too overpowered to use in a competitive game mode.
-		// 0: OFF
-		// 1: ON
-		"Human Super Tanks"				"1"
+			// Amount of Tanks to spawn for each finale wave.
+			// Separate waves with commas.
+			// Wave limit: 3
+			// Character limit for each wave: 3
+			// 1st number = 1st wave
+			// 2nd number = 2nd wave
+			// 3rd number = 3rd wave
+			"Tank Waves"					"2,3,4"
+		}
+		"Custom"
+		{
+			// Enable Super Tanks++ custom configuration.
+			// 0: OFF
+			// 1: ON
+			"Enable Custom Configs"			"0"
 
-		// Maximum types of Super Tanks allowed.
-		// Minimum: 1
-		// Maximum: 1000
-		"Maximum Types"					"73"
+			// The type of custom config that Super Tanks++ creates.
+			// Combine numbers in any order for different results.
+			// Character limit: 5
+			// 1: Difficulties
+			// 2: Maps
+			// 3: Game modes
+			// 4: Days
+			// 5: Player count
+			"Create Config Types"			"12345"
 
-		// Multiply the Super Tank's health.
-		// 0: No changes to health.
-		// 1: Multiply original health only.
-		// 2: Multiply extra health only.
-		// 3: Multiply both.
-		"Multiply Health"				"0"
-
-		// Amount of Tanks to spawn for each finale wave.
-		// Separate waves with commas.
-		// Wave limit: 3
-		// Character limit for each wave: 3
-		// 1st number = 1st wave
-		// 2nd number = 2nd wave
-		// 3rd number = 3rd wave
-		"Tank Waves"					"2,3,4"
+			// The type of custom config that Super Tanks++ executes.
+			// Combine numbers in any order for different results.
+			// Character limit: 5
+			// 1: Difficulties
+			// 2: Maps
+			// 3: Game modes
+			// 4: Days
+			// 5: Player count
+			"Execute Config Types"			"1"
+		}
 	}
 	"Example"
 	{
@@ -256,7 +261,9 @@ SourceMod 1.8+
 			// 3: Fire Trail
 			// 4: Acid Trail (Only available in Left 4 Dead 2.)
 			"Rock Effects"					"1234"
-
+		}
+		"Enhancements"
+		{
 			// Extra health given to the Super Tank.
 			// Note: Tank's health limit on any difficulty is 62,400.
 			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
@@ -276,7 +283,9 @@ SourceMod 1.8+
 			// Minimum: 0.1
 			// Maximum: 99999.0
 			"Throw Interval"				"5.0"
-
+		}
+		"Immunities"
+		{
 			// Give the Super Tank bullet immunity.
 			// 0: OFF
 			// 1: ON
@@ -316,6 +325,8 @@ SourceMod 1.8+
 			"Absorb Duration"				"5.0"
 		}
 		// The Super Tank creates acid puddles.
+		// "Ability Enabled" - When a survivor is within range of the Tank, an acid puddle is created underneath the survivor.
+		// "Acid Hit" - When a survivor is hit by a Tank's claw or rock, an acid puddle is created underneath the survivor.
 		"Acid Ability"
 		{
 			// Enable this ability.
@@ -347,6 +358,8 @@ SourceMod 1.8+
 			"Acid Rock Break"				"0"
 		}
 		// The Super Tank takes away survivors' ammunition.
+		// "Ability Enabled" - When a survivor is within range of the Tank, their ammunition is taken away.
+		// "Ammo Hit" - When a survivor is hit by a Tank's claw or rock, their ammunition is taken away.
 		"Ammo Ability"
 		{
 			// Enable this ability.
@@ -377,6 +390,8 @@ SourceMod 1.8+
 			"Ammo Range"					"500.0"
 		}
 		// The Super Tank blinds survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is blinded.
+		// "Blind Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is blinded.
 		"Blind Ability"
 		{
 			// Enable this ability.
@@ -412,6 +427,8 @@ SourceMod 1.8+
 			"Blind Range"					"500.0"
 		}
 		// The Super Tank creates explosions.
+		// "Ability Enabled" - When a survivor is within range of the Tank, an explosion is created around the survivor.
+		// "Bomb Hit" - When a survivor is hit by a Tank's claw or rock, an explosion is created around the survivor.
 		"Bomb Ability"
 		{
 			// Enable this ability.
@@ -442,6 +459,8 @@ SourceMod 1.8+
 			"Bomb Rock Break"				"0"
 		}
 		// The Super Tank buries survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is buried.
+		// "Bury Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is buried.
 		"Bury Ability"
 		{
 			// Enable this ability.
@@ -505,6 +524,8 @@ SourceMod 1.8+
 			"Clone Mode"					"0"
 		}
 		// The Super Tank drugs survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is drugged.
+		// "Drug Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is drugged.
 		"Drug Ability"
 		{
 			// Enable this ability.
@@ -535,6 +556,8 @@ SourceMod 1.8+
 			"Drug Range"					"500.0"
 		}
 		// The Super Tank creates fires.
+		// "Ability Enabled" - When a survivor is within range of the Tank, a fire is created around the survivor.
+		// "Fire Hit" - When a survivor is hit by a Tank's claw or rock, a fire is created around the survivor.
 		"Fire Ability"
 		{
 			// Enable this ability.
@@ -588,6 +611,8 @@ SourceMod 1.8+
 			"Flash Speed"					"5.0"
 		}
 		// The Super Tank flings survivors high into the air.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is flung into the air.
+		// "Fling Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is flung into the air.
 		"Fling Ability"
 		{
 			// Enable this ability.
@@ -613,6 +638,8 @@ SourceMod 1.8+
 			"Fling Range"					"500.0"
 		}
 		// The Super Tank makes itself and any other nearby infected invisible, and disarms survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is disarmed.
+		// "Ghost Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is disarmed.
 		"Ghost Ability"
 		{
 			// Enable this ability.
@@ -671,6 +698,9 @@ SourceMod 1.8+
 			"God Duration"					"5.0"
 		}
 		// The Super Tank pulls in or pushes away survivors and any other nearby infected, and changes the survivors' gravity.
+		// "Ability Enabled" - Any nearby infected and survivors are pulled in or pushed away.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's gravity changes.
+		// "Gravity Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's gravity changes.
 		"Gravity Ability"
 		{
 			// Enable this ability.
@@ -713,6 +743,9 @@ SourceMod 1.8+
 			"Gravity Value"					"0.3"
 		}
 		// The Super Tank gains health from other nearby infected and sets survivors to black and white with temporary health.
+		// "Ability Enabled" - Any nearby infected can give the Tank some health.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor can go black and white and have temporary health.
+		// "Heal Hit" - When a survivor is hit by a Tank's claw or rock, the survivor can go black and white and have temporary health.
 		"Heal Ability"
 		{
 			// Enable this ability.
@@ -758,6 +791,8 @@ SourceMod 1.8+
 			"Health From Tanks"				"500"
 		}
 		// The Super Tank hurts survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor gets hurt repeatedly.
+		// "Hurt Hit" - When a survivor is hit by a Tank's claw or rock, the survivor gets hurt repeatedly.
 		"Hurt Ability"
 		{
 			// Enable this ability.
@@ -793,6 +828,8 @@ SourceMod 1.8+
 			"Hurt Range"					"500.0"
 		}
 		// The Super Tank hypnotizes survivors to damage themselves or teammates.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is hypnotized.
+		// "Hypno Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is hypnotized.
 		"Hypno Ability"
 		{
 			// Enable this ability.
@@ -828,6 +865,8 @@ SourceMod 1.8+
 			"Hypno Range"					"500.0"
 		}
 		// The Super Tank freezes survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is frozen in place.
+		// "Ice Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is frozen in place.
 		"Ice Ability"
 		{
 			// Enable this ability.
@@ -858,6 +897,8 @@ SourceMod 1.8+
 			"Ice Range"						"500.0"
 		}
 		// The Super Tank forces survivors to go idle.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor goes idle.
+		// "Idle Hit" - When a survivor is hit by a Tank's claw or rock, the survivor goes idle.
 		"Idle Ability"
 		{
 			// Enable this ability.
@@ -883,6 +924,8 @@ SourceMod 1.8+
 			"Idle Range"					"500.0"
 		}
 		// The Super Tank inverts the survivors' movement keys.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's movement keys are inverted.
+		// "Invert Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's movement keys are inverted.
 		"Invert Ability"
 		{
 			// Enable this ability.
@@ -982,6 +1025,8 @@ SourceMod 1.8+
 			"Minion Types"					"123456"
 		}
 		// The Super Tank nullifies all of the survivors' damage.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor does not do any damage.
+		// "Nullify Hit" - When a survivor is hit by a Tank's claw or rock, the survivor does not do any damage.
 		"Nullify Ability"
 		{
 			// Enable this ability.
@@ -1011,6 +1056,8 @@ SourceMod 1.8+
 			"Nullify Range"					"500.0"
 		}
 		// The Super Tank starts panic events.
+		// "Ability Enabled" - The Tank starts a panic event periodically.
+		// "Panic Hit" - When a survivor is hit by a Tank's claw or rock, a panic event starts.
 		"Panic Ability"
 		{
 			// Enable this ability.
@@ -1036,6 +1083,8 @@ SourceMod 1.8+
 			"Panic Interval"				"5.0"
 		}
 		// The Super Tank pimp slaps survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is repeatedly pimp slapped.
+		// "Pimp Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is repeatedly pimp slapped.
 		"Pimp Ability"
 		{
 			// Enable this ability.
@@ -1071,6 +1120,8 @@ SourceMod 1.8+
 			"Pimp Range"					"500.0"
 		}
 		// The Super Tank pukes on survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank pukes on the survivor.
+		// "Puke Hit" - When a survivor is hit by a Tank's claw or rock, the Tank pukes on the survivor.
 		"Puke Ability"
 		{
 			// Enable this ability.
@@ -1128,6 +1179,8 @@ SourceMod 1.8+
 			"Regenerate Interval"			"1.0"
 		}
 		// The Super Tank forces survivors to restart at the beginning of the map with a new loadout.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor respawns at the start of the map or near a teammate.
+		// "Restart Hit" - When a survivor is hit by a Tank's claw or rock, the survivor respawns at the start of the map or near a teammate.
 		"Restart Ability"
 		{
 			// Enable this ability.
@@ -1189,6 +1242,8 @@ SourceMod 1.8+
 			"Rock Radius"					"-1.25,1.25"
 		}
 		// The Super Tank sends survivors into space.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is sent into space.
+		// "Rocket Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is sent into space.
 		"Rocket Ability"
 		{
 			// Enable this ability.
@@ -1213,6 +1268,8 @@ SourceMod 1.8+
 			"Rocket Range"					"500.0"
 		}
 		// The Super Tank shakes the survivors' screens.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's screen is shaken.
+		// "Shake Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's screen is shaken.
 		"Shake Ability"
 		{
 			// Enable this ability.
@@ -1246,7 +1303,6 @@ SourceMod 1.8+
 		"Shield Ability"
 		{
 			// Enable this ability.
-			// Note: This setting does not affect the "Shield Hit" setting.
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
@@ -1263,6 +1319,8 @@ SourceMod 1.8+
 			"Shield Delay"					"5.0"
 		}
 		// The Super Tank shoves survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is shoved repeatedly.
+		// "Shove Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is shoved repeatedly.
 		"Shove Ability"
 		{
 			// Enable this ability.
@@ -1293,6 +1351,8 @@ SourceMod 1.8+
 			"Shove Range"					"500.0"
 		}
 		// The Super Tank smites survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is smitten.
+		// "Smite Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is smitten.
 		"Smite Ability"
 		{
 			// Enable this ability.
@@ -1341,6 +1401,8 @@ SourceMod 1.8+
 			"Spam Duration"					"5.0"
 		}
 		// The Super Tank slows survivors down.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is slowed down.
+		// "Stun Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is slowed down.
 		"Stun Ability"
 		{
 			// Enable this ability.
@@ -1408,6 +1470,8 @@ SourceMod 1.8+
 			"Infected Options"				"1234567"
 		}
 		// The Super Tank gains health from hurting survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank gains health.
+		// "Vampire Hit" - When a survivor is hit by a Tank's claw or rock, the Tank gains health.
 		"Vampire Ability"
 		{
 			// Enable this ability.
@@ -1439,6 +1503,8 @@ SourceMod 1.8+
 			"Vampire Range"					"500.0"
 		}
 		// The Super Tank changes the survivors' field of views.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's vision changes.
+		// "Vision Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's vision changes.
 		"Vision Ability"
 		{
 			// Enable this ability.
