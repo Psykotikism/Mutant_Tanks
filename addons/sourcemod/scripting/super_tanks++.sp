@@ -593,7 +593,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public void OnPluginStart()
 {
 	CreateDirectory("cfg/sourcemod/super_tanks++/", 511);
+	CreateDirectory("cfg/sourcemod/super_tanks++/backup_config/", 511);
 	vCreateConfigFile("cfg/sourcemod/", "super_tanks++/", "super_tanks++", "super_tanks++", true);
+	vCreateConfigFile("cfg/sourcemod/super_tanks++/", "backup_config/", "super_tanks++", "super_tanks++", true);
 	Format(g_sSavePath, sizeof(g_sSavePath), "cfg/sourcemod/super_tanks++/super_tanks++.cfg");
 	vLoadConfigs(g_sSavePath, true);
 	vMultiTargetFilters(1);
@@ -2954,6 +2956,7 @@ void vBuryHit(int client, int owner, int enabled)
 		if (!bIsPlayerIncapacitated(client))
 		{
 			SetEntProp(client, Prop_Send, "m_isIncapacitated", 1);
+			SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 		}
 		float flPos[3];
 		GetClientEyePosition(client, flPos);
@@ -3252,8 +3255,8 @@ void vGravityAbility(int client, int enabled)
 	if (enabled == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client) && !g_bGravity[client])
 	{
 		g_bGravity[client] = true;
-		int iBlackhole = CreateEntityByName("point_push");
 		float flGravityForce = !g_bTankConfig[g_iTankType[client]] ? g_flGravityForce[g_iTankType[client]] : g_flGravityForce2[g_iTankType[client]];
+		int iBlackhole = CreateEntityByName("point_push");
 		if (IsValidEntity(iBlackhole))
 		{
 			float flOrigin[3];
@@ -3419,42 +3422,51 @@ void vMeteor(int entity, int client)
 		if (strcmp(sClassname, "tank_rock") == 0)
 		{
 			AcceptEntityInput(entity, "Kill");
-			int iPropane = CreateEntityByName("prop_physics");
 			char sDamage[6];
 			!g_bTankConfig[g_iTankType[client]] ? IntToString(g_iMeteorDamage[g_iTankType[client]], sDamage, sizeof(sDamage)) : IntToString(g_iMeteorDamage2[g_iTankType[client]], sDamage, sizeof(sDamage));
-			SetEntityModel(iPropane, MODEL_PROPANETANK);
 			float flPos[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
-			flPos[2] += 50.0;
-			TeleportEntity(iPropane, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iPropane);
-			ActivateEntity(iPropane);
-			SetEntPropEnt(iPropane, Prop_Data, "m_hPhysicsAttacker", client);
-			SetEntPropFloat(iPropane, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
-			SetEntProp(iPropane, Prop_Send, "m_CollisionGroup", 1);
-			SetEntityRenderMode(iPropane, RENDER_TRANSCOLOR);
-			SetEntityRenderColor(iPropane, 0, 0, 0, 0);
-			AcceptEntityInput(iPropane, "Break");
+			int iPropane = CreateEntityByName("prop_physics");
+			if (IsValidEntity(iPropane))
+			{
+				SetEntityModel(iPropane, MODEL_PROPANETANK);
+				flPos[2] += 50.0;
+				TeleportEntity(iPropane, flPos, NULL_VECTOR, NULL_VECTOR);
+				DispatchSpawn(iPropane);
+				ActivateEntity(iPropane);
+				SetEntPropEnt(iPropane, Prop_Data, "m_hPhysicsAttacker", client);
+				SetEntPropFloat(iPropane, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
+				SetEntProp(iPropane, Prop_Send, "m_CollisionGroup", 1);
+				SetEntityRenderMode(iPropane, RENDER_TRANSCOLOR);
+				SetEntityRenderColor(iPropane, 0, 0, 0, 0);
+				AcceptEntityInput(iPropane, "Break");
+			}
 			int iPointHurt = CreateEntityByName("point_hurt");
-			SetEntPropEnt(iPointHurt, Prop_Send, "m_hOwnerEntity", client);
-			DispatchKeyValue(iPointHurt, "Damage", sDamage);
-			DispatchKeyValue(iPointHurt, "DamageType", "2");
-			DispatchKeyValue(iPointHurt, "DamageDelay", "0.0");
-			DispatchKeyValueFloat(iPointHurt, "DamageRadius", 200.0);
-			TeleportEntity(iPointHurt, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iPointHurt);
-			AcceptEntityInput(iPointHurt, "Hurt", client);
-			AcceptEntityInput(iPointHurt, "Kill");
+			if (IsValidEntity(iPointHurt))
+			{
+				SetEntPropEnt(iPointHurt, Prop_Send, "m_hOwnerEntity", client);
+				DispatchKeyValue(iPointHurt, "Damage", sDamage);
+				DispatchKeyValue(iPointHurt, "DamageType", "2");
+				DispatchKeyValue(iPointHurt, "DamageDelay", "0.0");
+				DispatchKeyValueFloat(iPointHurt, "DamageRadius", 200.0);
+				TeleportEntity(iPointHurt, flPos, NULL_VECTOR, NULL_VECTOR);
+				DispatchSpawn(iPointHurt);
+				AcceptEntityInput(iPointHurt, "Hurt", client);
+				AcceptEntityInput(iPointHurt, "Kill");
+			}
 			int iPointPush = CreateEntityByName("point_push");
-			SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", client);
-			DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
-			DispatchKeyValueFloat(iPointPush, "radius", 200.0 * 1.0);
-	  		DispatchKeyValue(iPointPush, "spawnflags", "8");
-			TeleportEntity(iPointPush, flPos, NULL_VECTOR, NULL_VECTOR);
-	 		DispatchSpawn(iPointPush);
-	 		AcceptEntityInput(iPointPush, "Enable");
-			iPointPush = EntIndexToEntRef(iPointPush);
-			vDeleteEntity(iPointPush, 0.5);
+			if (IsValidEntity(iPointPush))
+			{
+				SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", client);
+				DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
+				DispatchKeyValueFloat(iPointPush, "radius", 200.0 * 1.0);
+		  		DispatchKeyValue(iPointPush, "spawnflags", "8");
+				TeleportEntity(iPointPush, flPos, NULL_VECTOR, NULL_VECTOR);
+		 		DispatchSpawn(iPointPush);
+		 		AcceptEntityInput(iPointPush, "Enable");
+				iPointPush = EntIndexToEntRef(iPointPush);
+				vDeleteEntity(iPointPush, 0.5);
+			}
 		}
 	}
 }
@@ -4398,6 +4410,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 		if (bIsPlayerIncapacitated(iSurvivor))
 		{
 			SDKCall(g_hSDKRevivePlayer, iSurvivor);
+			SetEntProp(iSurvivor, Prop_Data, "m_takedamage", 2, 1);
 		}
 		if (GetEntityMoveType(iSurvivor) == MOVETYPE_NONE)
 		{
@@ -5125,7 +5138,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 			if (flDistance > 100.0)
 			{
 				int iRock = CreateEntityByName("tank_rock");
-				if (iRock > 0)
+				if (IsValidEntity(iRock))
 				{
 					SetEntityModel(iRock, MODEL_CONCRETE);
 					float flAngle2[3];
