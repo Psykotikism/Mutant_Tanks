@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.22 (TBA)
+## Version 8.22 (July 20, 2018)
 
 Bug fixes:
 
@@ -10,10 +10,12 @@ Changes:
 
 1. Restructured the config file.
 2. Added a ton of new KeyValues for many abilities.
+3. Added new abilities.
+4. Increased the maximum amount of possible Super Tank types from 1000 to 2500.
 
 Files:
 
-1. Updated config file with the new settings.
+1. Updated config file with the new settings and new presets.
 2. Updated include file.
 
 ## Version 8.21 (July 14, 2018)

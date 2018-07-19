@@ -17,7 +17,7 @@ Super Tanks++ makes fighting Tanks great again!
 > Super Tanks++ will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
 ### What makes Super Tanks++ viable in Left 4 Dead/Left 4 Dead 2?
-Super Tanks++ enhances the experience and fun that players get from Tank fights by 1000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
+Super Tanks++ enhances the experience and fun that players get from Tank fights by 2500. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
 SourceMod 1.8+
@@ -50,7 +50,7 @@ SourceMod 1.8+
 1. Supports multiple game modes - Provides the option to enable/disable the plugin in certain game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
 3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the auto-generated KeyValue config file and user-made Super Tanks.
-4. Create and save up to 1000 Super Tank types - Provides the ability to store up to 1000 Super Tank types that users can enable/disable.
+4. Create and save up to 2500 Super Tank types - Provides the ability to store up to 2500 Super Tank types that users can enable/disable.
 5. Easy-to-use config file - Provides a user-friendly KeyValues config file that users can easily understand and edit.
 
 ## KeyValues Settings
@@ -125,10 +125,11 @@ SourceMod 1.8+
 
 			// Maximum types of Super Tanks allowed.
 			// Minimum: 1
-			// Maximum: 1000
-			"Maximum Types"					"72"
+			// Maximum: 2500
+			"Maximum Types"					"76"
 
 			// Multiply the Super Tank's health.
+			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
 			// 0: No changes to health.
 			// 1: Multiply original health only.
 			// 2: Multiply extra health only.
@@ -265,10 +266,11 @@ SourceMod 1.8+
 		"Enhancements"
 		{
 			// Extra health given to the Super Tank.
-			// Note: Tank's health limit on any difficulty is 62,400.
+			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
-			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
-			// Minimum: 0
+			// Positive numbers: Current health + Extra health
+			// Negative numbers: Current health - Extra health
+			// Minimum: -65535
 			// Maximum: 65535
 			"Extra Health"					"0"
 
@@ -351,7 +353,7 @@ SourceMod 1.8+
 			// Maximum: 99999.0 (Farthest)
 			"Acid Range"					"500.0"
 
-			// The Super Tank's rock spawns acid puddles when it breaks.
+			// The Super Tank's rock creates an acid puddle when it breaks.
 			// Only available in Left 4 Dead 2.
 			// 0: OFF
 			// 1: ON
@@ -448,12 +450,17 @@ SourceMod 1.8+
 			// 1: ON
 			"Bomb Hit"						"0"
 
+			// The power of the Super Tank's explosions.
+			// Minimum: 1 (Smallest and least painful explosion)
+			// Maximum: 99999 (Biggest and most painful explosion)
+			"Bomb Power"					"75"
+
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 99999.0 (Farthest)
 			"Bomb Range"					"500.0"
 
-			// The Super Tank's rock explodes when it breaks.
+			// The Super Tank's rock creates an explosion when it breaks.
 			// 0: OFF
 			// 1: ON
 			"Bomb Rock Break"				"0"
@@ -555,6 +562,48 @@ SourceMod 1.8+
 			// Maximum: 99999.0 (Farthest)
 			"Drug Range"					"500.0"
 		}
+		// The Super Tank forces survivors to only use a certain weapon slot.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor will be forced to only use a certain weapon slot.
+		// "Enforce Hit" - When a survivor is hit by a Tank's claw or rock, the survivor will be forced to only use a certain weapon slot.
+		"Enforce Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Enforce Hit" setting.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 99999 (Less chance)
+			"Enforce Chance"				"4"
+
+			// The Super Tank's ability effects last this long.
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			"Enforce Duration"				"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// 0: OFF
+			// 1: ON
+			"Enforce Hit"					"0"
+
+			// The distance between a survivor and the Super Tank to trigger the ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 99999.0 (Farthest)
+			"Enforce Range"					"500.0"
+
+			// The Super Tank forces survivors to only use one of the following weapon slots.
+			// Combine numbers in any order for different results.
+			// Character limit: 5
+			// 1: 1st slot only.
+			// 2: 2nd slot only.
+			// 3: 3rd slot only.
+			// 4: 4th slot only.
+			// 5: 5th slot only.
+			"Enforce Weapon Slots"			"12345"
+		}
 		// The Super Tank creates fires.
 		// "Ability Enabled" - When a survivor is within range of the Tank, a fire is created around the survivor.
 		// "Fire Hit" - When a survivor is hit by a Tank's claw or rock, a fire is created around the survivor.
@@ -582,7 +631,7 @@ SourceMod 1.8+
 			// Maximum: 99999.0 (Farthest)
 			"Fire Range"					"500.0"
 
-			// The Super Tank's rock starts fires when it breaks.
+			// The Super Tank's rock creates a fire when it breaks.
 			// 0: OFF
 			// 1: ON
 			"Fire Rock Break"				"0"
@@ -636,6 +685,24 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 99999.0 (Farthest)
 			"Fling Range"					"500.0"
+		}
+		// The Super Tank receives more damage from bullets and explosions than usual.
+		"Fragile Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 99999 (Less chance)
+			"Fragile Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// Minimum: 0.1
+			// Maximum: 99999.0
+			"Fragile Duration"				"5.0"
 		}
 		// The Super Tank makes itself and any other nearby infected invisible, and disarms survivors.
 		// "Ability Enabled" - Any nearby infected turns invisible.
@@ -777,17 +844,23 @@ SourceMod 1.8+
 			"Heal Range"					"500.0"
 
 			// The Super Tank receives this much health from nearby common infected.
-			// Minimum: 0
+			// Positive numbers: Current health + Health from commons
+			// Negative numbers: Current health - Health from commons
+			// Minimum: -65535
 			// Maximum: 65535
 			"Health From Commons"			"50"
 
 			// The Super Tank receives this much health from other nearby special infected.
-			// Minimum: 0
+			// Positive numbers: Current health + Health from specials
+			// Negative numbers: Current health - Health from specials
+			// Minimum: -65535
 			// Maximum: 65535
 			"Health From Specials"			"100"
 
 			// The Super Tank receives this much health from other nearby Tanks.
-			// Minimum: 0
+			// Positive numbers: Current health + Health from Tanks
+			// Negative numbers: Current health - Health from Tanks
+			// Minimum: -65535
 			// Maximum: 65535
 			"Health From Tanks"				"500"
 		}
@@ -955,6 +1028,29 @@ SourceMod 1.8+
 			// Maximum: 99999.0 (Farthest)
 			"Invert Range"					"500.0"
 		}
+		// The Super Tank gives survivors items upon death.
+		"Item Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"1"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 99999 (Less chance)
+			"Item Chance"					"4"
+
+			// The Super Tank gives survivors this loadout.
+			// Item limit: 5
+			// Character limit for each item: 64
+			"Item Loadout"					"rifle,pistol,first_aid_kit,pain_pills"
+
+			// The mode of the Super Tank's item ability.
+			// 0: Survivors get a random item.
+			// 1: Survivors get all items.
+			"Item Mode"						"0"
+		}
 		// The Super Tank jumps really high.
 		"Jump Ability"
 		{
@@ -967,6 +1063,49 @@ SourceMod 1.8+
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 99999 (Less chance)
 			"Jump Chance"					"4"
+		}
+		// The Super Tank heals special infected upon death.
+		"Medic Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 99999 (Less chance)
+			"Medic Chance"					"4"
+
+			// The Super Tank gives special infected this much health each time.
+			// 1st number = Health given to Smokers.
+			// 2nd number = Health given to Boomers.
+			// 3rd number = Health given to Hunters.
+			// 4th number = Health given to Spitters.
+			// 5th number = Health given to Jockeys.
+			// 6th number = Health given to Chargers.
+			// Positive numbers: Current health + Medic health
+			// Negative numbers: Current health - Medic health
+			// Minimum: -65535
+			// Maximum: 65535
+			"Medic Health"					"25,25,25,25,25,25"
+
+			// The special infected's max health.
+			// The Super Tank will not heal special infected if they already have this much health.
+			// 1st number = Smoker's maximum health.
+			// 2nd number = Boomer's maximum health.
+			// 3rd number = Hunter's maximum health.
+			// 4th number = Spitter's maximum health.
+			// 5th number = Jockey's maximum health.
+			// 6th number = Charger's maximum health.
+			// Minimum: 1
+			// Maximum: 65535
+			"Medic Max Health"				"250,50,250,100,325,600"
+
+			// The distance between a survivor and the Super Tank to trigger the ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 99999.0 (Farthest)
+			"Medic Range"					"500.0"
 		}
 		// The Super Tank creates meteor showers.
 		"Meteor Ability"
@@ -1170,7 +1309,9 @@ SourceMod 1.8+
 			"Ability Enabled"				"0"
 
 			// The Super Tank regenerates this much health each time.
-			// Minimum: 1
+			// Positive numbers: Current health + Regenerate health
+			// Negative numbers: Current health - Regenerate health
+			// Minimum: -65535
 			// Maximum: 65535
 			"Regenerate Health"				"1"
 
@@ -1487,8 +1628,10 @@ SourceMod 1.8+
 			"Vampire Chance"				"4"
 
 			// The Super Tank receives this much health from survivors.
-			// Note: Tank's health limit on any difficulty is 62,400.
-			// Minimum: 0
+			// Note: Tank's health limit on any difficulty is 65,535.
+			// Positive numbers: Current health + Vampire health
+			// Negative numbers: Current health - Vampire health
+			// Minimum: -65535
 			// Maximum: 65535
 			"Vampire Health"				"100"
 
@@ -1540,13 +1683,26 @@ SourceMod 1.8+
 			// Maximum: 99999.0 (Farthest)
 			"Vision Range"					"500.0"
 		}
-		// The Super Tank warps to survivors.
+		// The Super Tank warps to survivors and warps survivors back to teammates.
+		// "Ability Enabled" - The Tank warps to a random survivor.
+		// "Warp Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is warped to a random teammate.
 		"Warp Ability"
 		{
 			// Enable this ability.
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 99999 (Less chance)
+			"Warp Chance"					"4"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// 0: OFF
+			// 1: ON
+			"Warp Hit"						"0"
 
 			// The Super Tank warps to a random survivor every time this many seconds passes.
 			// Minimum: 0.1
@@ -1667,7 +1823,7 @@ It may be due to one or more of the following:
 - You are still using the "Tank Character" KeyValue which is no longer used since v8.16.
 - You didn't set up the Super Tank properly.
 - You are missing quotation marks.
-- You have more than 1000 Super Tanks in your config file.
+- You have more than 2500 Super Tanks in your config file.
 
 3. How do I kill the Tanks depending on what abilities they have?
 
@@ -1922,7 +2078,7 @@ List of target filters:
 Command usage:
 
 ```
-sm_tank <type 1-*> *The maximum value is determined by the value of the "Maximum Types" KeyValue. (The highest value you can set is 1000 though.)
+sm_tank <type 1-*> *The maximum value is determined by the value of the "Maximum Types" KeyValue. (The highest value you can set is 2500 though.)
 ```
 
 ### Configuration
