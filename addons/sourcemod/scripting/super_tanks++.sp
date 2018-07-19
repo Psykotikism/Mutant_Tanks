@@ -967,41 +967,33 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnEntityCreated(int entity, const char[] classname)
 {
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
+	if (g_bPluginEnabled && strcmp(classname, "tank_rock") == 0)
 	{
-		if (strcmp(classname, "tank_rock") == 0)
-		{
-			CreateTimer(0.1, tTimerRockThrow, EntIndexToEntRef(entity), TIMER_FLAG_NO_MAPCHANGE);
-		}
+		CreateTimer(0.1, tTimerRockThrow, EntIndexToEntRef(entity), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
 public void OnEntityDestroyed(int entity)
 {
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
+	if (g_bPluginEnabled && bIsValidEntity(entity))
 	{
-		if (IsValidEntity(entity))
+		char sClassname[32];
+		GetEntityClassname(entity, sClassname, sizeof(sClassname));
+		if (strcmp(sClassname, "tank_rock") == 0)
 		{
-			char sClassname[32];
-			GetEntityClassname(entity, sClassname, sizeof(sClassname));
-			if (strcmp(sClassname, "tank_rock") == 0)
+			int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
+			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+			if (iThrower > 0 && bIsTank(iThrower) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iThrower))))
 			{
-				int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-				int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-				if (iThrower > 0 && bIsTank(iThrower) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iThrower))))
+				int iCloneMode = !g_bTankConfig[g_iTankType[iThrower]] ? g_iCloneMode[g_iTankType[iThrower]] : g_iCloneMode2[g_iTankType[iThrower]];
+				if (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iThrower]))
 				{
-					int iCloneMode = !g_bTankConfig[g_iTankType[iThrower]] ? g_iCloneMode[g_iTankType[iThrower]] : g_iCloneMode2[g_iTankType[iThrower]];
-					if (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iThrower]))
-					{
-						int iAcidToggle = !g_bTankConfig[g_iTankType[iThrower]] ? g_iAcidRock[g_iTankType[iThrower]] : g_iAcidRock2[g_iTankType[iThrower]];
-						int iBombToggle = !g_bTankConfig[g_iTankType[iThrower]] ? g_iBombRock[g_iTankType[iThrower]] : g_iBombRock2[g_iTankType[iThrower]];
-						int iFireToggle = !g_bTankConfig[g_iTankType[iThrower]] ? g_iFireRock[g_iTankType[iThrower]] : g_iFireRock2[g_iTankType[iThrower]];
-						vAcidRock(entity, iThrower, iAcidToggle);
-						vBombRock(entity, iThrower, iBombToggle);
-						vFireRock(entity, iThrower, iFireToggle);
-					}
+					int iAcidToggle = !g_bTankConfig[g_iTankType[iThrower]] ? g_iAcidRock[g_iTankType[iThrower]] : g_iAcidRock2[g_iTankType[iThrower]];
+					int iBombToggle = !g_bTankConfig[g_iTankType[iThrower]] ? g_iBombRock[g_iTankType[iThrower]] : g_iBombRock2[g_iTankType[iThrower]];
+					int iFireToggle = !g_bTankConfig[g_iTankType[iThrower]] ? g_iFireRock[g_iTankType[iThrower]] : g_iFireRock2[g_iTankType[iThrower]];
+					vAcidRock(entity, iThrower, iAcidToggle);
+					vBombRock(entity, iThrower, iBombToggle);
+					vFireRock(entity, iThrower, iFireToggle);
 				}
 			}
 		}
@@ -1010,8 +1002,7 @@ public void OnEntityDestroyed(int entity)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 0 || !g_bPluginEnabled)
+	if (!g_bPluginEnabled)
 	{
 		return Plugin_Continue;
 	}
@@ -1051,125 +1042,157 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
+	if (g_bPluginEnabled && damage > 0.0 && bIsValidClient(victim))
 	{
-		if (damage > 0.0 && bIsValidClient(victim))
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		if (bIsSurvivor(victim))
 		{
-			char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-			if (bIsSurvivor(victim))
+			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+			if (bIsWitch(attacker))
 			{
-				int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-				if (bIsWitch(attacker))
+				int iOwner = GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity");
+				if (bIsTank(iOwner))
 				{
-					int iOwner = GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity");
-					if (bIsTank(iOwner))
-					{
-						float flWitchDamage = !g_bTankConfig[g_iTankType[iOwner]] ? g_flWitchDamage[g_iTankType[iOwner]] : g_flWitchDamage2[g_iTankType[iOwner]];
-						damage = flWitchDamage;
-					}
-				}
-				else if (bIsTank(attacker) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(attacker))))
-				{
-					if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
-					{
-						int iAcidHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iAcidHit[g_iTankType[attacker]] : g_iAcidHit2[g_iTankType[attacker]];
-						int iAmmoHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iAmmoHit[g_iTankType[attacker]] : g_iAmmoHit2[g_iTankType[attacker]];
-						int iBlindHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iBlindHit[g_iTankType[attacker]] : g_iBlindHit2[g_iTankType[attacker]];
-						int iBombHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iBombHit[g_iTankType[attacker]] : g_iBombHit2[g_iTankType[attacker]];
-						int iBuryHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iBuryHit[g_iTankType[attacker]] : g_iBuryHit2[g_iTankType[attacker]];
-						int iDrugHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iDrugHit[g_iTankType[attacker]] : g_iDrugHit2[g_iTankType[attacker]];
-						int iEnforceHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iEnforceHit[g_iTankType[attacker]] : g_iEnforceHit2[g_iTankType[attacker]];
-						int iFireHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iFireHit[g_iTankType[attacker]] : g_iFireHit2[g_iTankType[attacker]];
-						int iFlingHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iFlingHit[g_iTankType[attacker]] : g_iFlingHit2[g_iTankType[attacker]];
-						int iGhostHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iGhostHit[g_iTankType[attacker]] : g_iGhostHit2[g_iTankType[attacker]];
-						int iGravityHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iGravityHit[g_iTankType[attacker]] : g_iGravityHit2[g_iTankType[attacker]];
-						int iHealHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iHealHit[g_iTankType[attacker]] : g_iHealHit2[g_iTankType[attacker]];
-						int iHurtHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iHurtHit[g_iTankType[attacker]] : g_iHurtHit2[g_iTankType[attacker]];
-						int iHypnoHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iHypnoHit[g_iTankType[attacker]] : g_iHypnoHit2[g_iTankType[attacker]];
-						int iIceHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iIceHit[g_iTankType[attacker]] : g_iIceHit2[g_iTankType[attacker]];
-						int iIdleHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iIdleHit[g_iTankType[attacker]] : g_iIdleHit2[g_iTankType[attacker]];
-						int iInvertHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iInvertHit[g_iTankType[attacker]] : g_iInvertHit2[g_iTankType[attacker]];
-						int iNullifyHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iNullifyHit[g_iTankType[attacker]] : g_iNullifyHit2[g_iTankType[attacker]];
-						int iPanicHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iPanicHit[g_iTankType[attacker]] : g_iPanicHit2[g_iTankType[attacker]];
-						int iPimpHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iPimpHit[g_iTankType[attacker]] : g_iPimpHit2[g_iTankType[attacker]];
-						int iPukeHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iPukeHit[g_iTankType[attacker]] : g_iPukeHit2[g_iTankType[attacker]];
-						int iRestartHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iRestartHit[g_iTankType[attacker]] : g_iRestartHit2[g_iTankType[attacker]];
-						int iRocketHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iRocketHit[g_iTankType[attacker]] : g_iRocketHit2[g_iTankType[attacker]];
-						int iShakeHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iShakeHit[g_iTankType[attacker]] : g_iShakeHit2[g_iTankType[attacker]];
-						int iShoveHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iShoveHit[g_iTankType[attacker]] : g_iShoveHit2[g_iTankType[attacker]];
-						int iSmiteHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iSmiteHit[g_iTankType[attacker]] : g_iSmiteHit2[g_iTankType[attacker]];
-						int iStunHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iStunHit[g_iTankType[attacker]] : g_iStunHit2[g_iTankType[attacker]];
-						int iVampireHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iVampireHit[g_iTankType[attacker]] : g_iVampireHit2[g_iTankType[attacker]];
-						int iVisionHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iVisionHit[g_iTankType[attacker]] : g_iVisionHit2[g_iTankType[attacker]];
-						int iWarpHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iWarpHit[g_iTankType[attacker]] : g_iWarpHit2[g_iTankType[attacker]];
-						vAcidHit(victim, attacker, iAcidHit);
-						vAmmoHit(victim, attacker, iAmmoHit);
-						vBlindHit(victim, attacker, iBlindHit);
-						vBombHit(victim, attacker, iBombHit);
-						vBuryHit(victim, attacker, iBuryHit);
-						vDrugHit(victim, attacker, iDrugHit);
-						vEnforceHit(victim, attacker, iEnforceHit);
-						vFireHit(victim, attacker, iFireHit);
-						vFlingHit(victim, attacker, iFlingHit);
-						vGhostHit(victim, attacker, iGhostHit);
-						vGravityHit(victim, attacker, iGravityHit);
-						vHealHit(victim, attacker, iHealHit);
-						vHurtHit(victim, attacker, iHurtHit);
-						vHypnoHit(victim, attacker, iHypnoHit);
-						vIceHit(victim, attacker, iIceHit);
-						vIdleHit(victim, attacker, iIdleHit);
-						vInvertHit(victim, attacker, iInvertHit);
-						vNullifyHit(victim, attacker, iNullifyHit);
-						vPanicHit(attacker, iPanicHit);
-						vPimpHit(victim, attacker, iPimpHit);
-						vPukeHit(victim, attacker, iPukeHit);
-						vRestartHit(victim, attacker, iRestartHit);
-						vRocketHit(victim, attacker, iRocketHit);
-						vShakeHit(victim, attacker, iShakeHit);
-						vShoveHit(victim, attacker, iShoveHit);
-						vSmiteHit(victim, attacker, iSmiteHit);
-						vStunHit(victim, attacker, iStunHit);
-						vVampireHit(attacker, iVampireHit);
-						vVisionHit(victim, attacker, iVisionHit);
-						vWarpHit(victim, attacker, iWarpHit);
-					}
+					float flWitchDamage = !g_bTankConfig[g_iTankType[iOwner]] ? g_flWitchDamage[g_iTankType[iOwner]] : g_flWitchDamage2[g_iTankType[iOwner]];
+					damage = flWitchDamage;
 				}
 			}
-			else if (bIsInfected(victim))
+			else if (bIsTank(attacker) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(attacker))))
 			{
-				int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-				if (bIsTank(victim) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(victim))))
+				if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 				{
-					int iBulletImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iBulletImmunity[g_iTankType[victim]] : g_iBulletImmunity2[g_iTankType[victim]];
-					int iExplosiveImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iExplosiveImmunity[g_iTankType[victim]] : g_iExplosiveImmunity2[g_iTankType[victim]];
-					int iFireImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iFireImmunity[g_iTankType[victim]] : g_iFireImmunity2[g_iTankType[victim]];
-					int iMeleeImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iMeleeImmunity[g_iTankType[victim]] : g_iMeleeImmunity2[g_iTankType[victim]];
-					if ((damagetype & DMG_BULLET && iBulletImmunity == 1) || ((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && iExplosiveImmunity == 1) || (damagetype & DMG_BURN && iFireImmunity == 1) || ((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && iMeleeImmunity == 1))
+					int iAcidHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iAcidHit[g_iTankType[attacker]] : g_iAcidHit2[g_iTankType[attacker]];
+					int iAmmoHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iAmmoHit[g_iTankType[attacker]] : g_iAmmoHit2[g_iTankType[attacker]];
+					int iBlindHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iBlindHit[g_iTankType[attacker]] : g_iBlindHit2[g_iTankType[attacker]];
+					int iBombHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iBombHit[g_iTankType[attacker]] : g_iBombHit2[g_iTankType[attacker]];
+					int iBuryHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iBuryHit[g_iTankType[attacker]] : g_iBuryHit2[g_iTankType[attacker]];
+					int iDrugHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iDrugHit[g_iTankType[attacker]] : g_iDrugHit2[g_iTankType[attacker]];
+					int iEnforceHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iEnforceHit[g_iTankType[attacker]] : g_iEnforceHit2[g_iTankType[attacker]];
+					int iFireHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iFireHit[g_iTankType[attacker]] : g_iFireHit2[g_iTankType[attacker]];
+					int iFlingHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iFlingHit[g_iTankType[attacker]] : g_iFlingHit2[g_iTankType[attacker]];
+					int iGhostHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iGhostHit[g_iTankType[attacker]] : g_iGhostHit2[g_iTankType[attacker]];
+					int iGravityHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iGravityHit[g_iTankType[attacker]] : g_iGravityHit2[g_iTankType[attacker]];
+					int iHealHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iHealHit[g_iTankType[attacker]] : g_iHealHit2[g_iTankType[attacker]];
+					int iHurtHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iHurtHit[g_iTankType[attacker]] : g_iHurtHit2[g_iTankType[attacker]];
+					int iHypnoHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iHypnoHit[g_iTankType[attacker]] : g_iHypnoHit2[g_iTankType[attacker]];
+					int iIceHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iIceHit[g_iTankType[attacker]] : g_iIceHit2[g_iTankType[attacker]];
+					int iIdleHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iIdleHit[g_iTankType[attacker]] : g_iIdleHit2[g_iTankType[attacker]];
+					int iInvertHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iInvertHit[g_iTankType[attacker]] : g_iInvertHit2[g_iTankType[attacker]];
+					int iNullifyHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iNullifyHit[g_iTankType[attacker]] : g_iNullifyHit2[g_iTankType[attacker]];
+					int iPanicHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iPanicHit[g_iTankType[attacker]] : g_iPanicHit2[g_iTankType[attacker]];
+					int iPimpHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iPimpHit[g_iTankType[attacker]] : g_iPimpHit2[g_iTankType[attacker]];
+					int iPukeHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iPukeHit[g_iTankType[attacker]] : g_iPukeHit2[g_iTankType[attacker]];
+					int iRestartHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iRestartHit[g_iTankType[attacker]] : g_iRestartHit2[g_iTankType[attacker]];
+					int iRocketHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iRocketHit[g_iTankType[attacker]] : g_iRocketHit2[g_iTankType[attacker]];
+					int iShakeHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iShakeHit[g_iTankType[attacker]] : g_iShakeHit2[g_iTankType[attacker]];
+					int iShoveHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iShoveHit[g_iTankType[attacker]] : g_iShoveHit2[g_iTankType[attacker]];
+					int iSmiteHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iSmiteHit[g_iTankType[attacker]] : g_iSmiteHit2[g_iTankType[attacker]];
+					int iStunHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iStunHit[g_iTankType[attacker]] : g_iStunHit2[g_iTankType[attacker]];
+					int iVampireHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iVampireHit[g_iTankType[attacker]] : g_iVampireHit2[g_iTankType[attacker]];
+					int iVisionHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iVisionHit[g_iTankType[attacker]] : g_iVisionHit2[g_iTankType[attacker]];
+					int iWarpHit = !g_bTankConfig[g_iTankType[attacker]] ? g_iWarpHit[g_iTankType[attacker]] : g_iWarpHit2[g_iTankType[attacker]];
+					vAcidHit(victim, attacker, iAcidHit);
+					vAmmoHit(victim, attacker, iAmmoHit);
+					vBlindHit(victim, attacker, iBlindHit);
+					vBombHit(victim, attacker, iBombHit);
+					vBuryHit(victim, attacker, iBuryHit);
+					vDrugHit(victim, attacker, iDrugHit);
+					vEnforceHit(victim, attacker, iEnforceHit);
+					vFireHit(victim, attacker, iFireHit);
+					vFlingHit(victim, attacker, iFlingHit);
+					vGhostHit(victim, attacker, iGhostHit);
+					vGravityHit(victim, attacker, iGravityHit);
+					vHealHit(victim, attacker, iHealHit);
+					vHurtHit(victim, attacker, iHurtHit);
+					vHypnoHit(victim, attacker, iHypnoHit);
+					vIceHit(victim, attacker, iIceHit);
+					vIdleHit(victim, attacker, iIdleHit);
+					vInvertHit(victim, attacker, iInvertHit);
+					vNullifyHit(victim, attacker, iNullifyHit);
+					vPanicHit(attacker, iPanicHit);
+					vPimpHit(victim, attacker, iPimpHit);
+					vPukeHit(victim, attacker, iPukeHit);
+					vRestartHit(victim, attacker, iRestartHit);
+					vRocketHit(victim, attacker, iRocketHit);
+					vShakeHit(victim, attacker, iShakeHit);
+					vShoveHit(victim, attacker, iShoveHit);
+					vSmiteHit(victim, attacker, iSmiteHit);
+					vStunHit(victim, attacker, iStunHit);
+					vVampireHit(attacker, iVampireHit);
+					vVisionHit(victim, attacker, iVisionHit);
+					vWarpHit(victim, attacker, iWarpHit);
+				}
+			}
+		}
+		else if (bIsInfected(victim))
+		{
+			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+			if (bIsTank(victim) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(victim))))
+			{
+				int iBulletImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iBulletImmunity[g_iTankType[victim]] : g_iBulletImmunity2[g_iTankType[victim]];
+				int iExplosiveImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iExplosiveImmunity[g_iTankType[victim]] : g_iExplosiveImmunity2[g_iTankType[victim]];
+				int iFireImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iFireImmunity[g_iTankType[victim]] : g_iFireImmunity2[g_iTankType[victim]];
+				int iMeleeImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iMeleeImmunity[g_iTankType[victim]] : g_iMeleeImmunity2[g_iTankType[victim]];
+				if ((damagetype & DMG_BULLET && iBulletImmunity == 1) || ((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && iExplosiveImmunity == 1) || (damagetype & DMG_BURN && iFireImmunity == 1) || ((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && iMeleeImmunity == 1))
+				{
+					damage = 0.0;
+					return Plugin_Handled;
+				}
+				if (bIsSurvivor(attacker))
+				{
+					if (g_bNullify[attacker])
 					{
 						damage = 0.0;
 						return Plugin_Handled;
 					}
-					if (bIsSurvivor(attacker))
+					if (strcmp(sClassname, "weapon_melee") == 0)
 					{
-						if (g_bNullify[attacker])
+						int iAcidHit = !g_bTankConfig[g_iTankType[victim]] ? g_iAcidHit[g_iTankType[victim]] : g_iAcidHit2[g_iTankType[victim]];
+						int iFireHit = !g_bTankConfig[g_iTankType[victim]] ? g_iFireHit[g_iTankType[victim]] : g_iFireHit2[g_iTankType[victim]];
+						int iGhostHit = !g_bTankConfig[g_iTankType[victim]] ? g_iGhostHit[g_iTankType[victim]] : g_iGhostHit2[g_iTankType[victim]];
+						vAcidHit(attacker, victim, iAcidHit);
+						vFireHit(attacker, victim, iFireHit);
+						vGhostHit(attacker, victim, iGhostHit);
+					}
+					if (g_bAbsorb[victim])
+					{
+						int iHealth = GetClientHealth(victim);
+						if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
+						{
+							damage = damage / 10;
+						}
+						else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
+						{
+							damage = damage / 1000;
+						}
+						(iHealth > damage) ? SetEntityHealth(victim, iHealth - RoundFloat(damage)) : SetEntProp(victim, Prop_Send, "m_isIncapacitated", 1);
+						damage = 0.0;
+						return Plugin_Changed;
+					}
+					if (g_bFragile[victim])
+					{
+						int iHealth = GetClientHealth(victim);
+						if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
+						{
+							damage = damage * 5;
+						}
+						(iHealth > damage) ? SetEntityHealth(victim, iHealth - RoundFloat(damage)) : SetEntProp(victim, Prop_Send, "m_isIncapacitated", 1);
+						damage = 0.0;
+						return Plugin_Changed;
+					}
+					if (g_bHypno[attacker])
+					{
+						if (damagetype & DMG_BURN)
 						{
 							damage = 0.0;
 							return Plugin_Handled;
 						}
-						if (strcmp(sClassname, "weapon_melee") == 0)
+						else
 						{
-							int iAcidHit = !g_bTankConfig[g_iTankType[victim]] ? g_iAcidHit[g_iTankType[victim]] : g_iAcidHit2[g_iTankType[victim]];
-							int iFireHit = !g_bTankConfig[g_iTankType[victim]] ? g_iFireHit[g_iTankType[victim]] : g_iFireHit2[g_iTankType[victim]];
-							int iGhostHit = !g_bTankConfig[g_iTankType[victim]] ? g_iGhostHit[g_iTankType[victim]] : g_iGhostHit2[g_iTankType[victim]];
-							vAcidHit(attacker, victim, iAcidHit);
-							vFireHit(attacker, victim, iFireHit);
-							vGhostHit(attacker, victim, iGhostHit);
-						}
-						if (g_bAbsorb[victim])
-						{
-							int iHealth = GetClientHealth(victim);
+							int iHypnoMode = !g_bTankConfig[g_iTankType[victim]] ? g_iHypnoMode[g_iTankType[victim]] : g_iHypnoMode2[g_iTankType[victim]];
+							int iHealth = GetClientHealth(attacker);
+							int iTarget = iGetRandomSurvivor(attacker, false);
 							if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 							{
 								damage = damage / 10;
@@ -1178,74 +1201,38 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 							{
 								damage = damage / 1000;
 							}
-							(iHealth > damage) ? SetEntityHealth(victim, iHealth - RoundFloat(damage)) : SetEntProp(victim, Prop_Send, "m_isIncapacitated", 1);
+							(iHealth > damage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - RoundFloat(damage)) : SetEntityHealth(attacker, iHealth - RoundFloat(damage))) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntProp(iTarget, Prop_Send, "m_isIncapacitated", 1) : SetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1));
 							damage = 0.0;
 							return Plugin_Changed;
-						}
-						if (g_bFragile[victim])
-						{
-							int iHealth = GetClientHealth(victim);
-							if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-							{
-								damage = damage * 5;
-							}
-							(iHealth > damage) ? SetEntityHealth(victim, iHealth - RoundFloat(damage)) : SetEntProp(victim, Prop_Send, "m_isIncapacitated", 1);
-							damage = 0.0;
-							return Plugin_Changed;
-						}
-						if (g_bHypno[attacker])
-						{
-							if (damagetype & DMG_BURN)
-							{
-								damage = 0.0;
-								return Plugin_Handled;
-							}
-							else
-							{
-								int iHypnoMode = !g_bTankConfig[g_iTankType[victim]] ? g_iHypnoMode[g_iTankType[victim]] : g_iHypnoMode2[g_iTankType[victim]];
-								int iHealth = GetClientHealth(attacker);
-								int iTarget = iGetRandomSurvivor(attacker, false);
-								if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-								{
-									damage = damage / 10;
-								}
-								else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
-								{
-									damage = damage / 1000;
-								}
-								(iHealth > damage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - RoundFloat(damage)) : SetEntityHealth(attacker, iHealth - RoundFloat(damage))) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntProp(iTarget, Prop_Send, "m_isIncapacitated", 1) : SetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1));
-								damage = 0.0;
-								return Plugin_Changed;
-							}
 						}
 					}
-					if (g_bShield[victim])
+				}
+				if (g_bShield[victim])
+				{
+					if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 					{
-						if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-						{
-							int iShieldAbility = !g_bTankConfig[g_iTankType[victim]] ? g_iShieldAbility[g_iTankType[victim]] : g_iShieldAbility2[g_iTankType[victim]];
-							vShieldAbility(victim, false, iShieldAbility);
-						}
-						else
-						{
-							damage = 0.0;
-							return Plugin_Handled;
-						}
+						int iShieldAbility = !g_bTankConfig[g_iTankType[victim]] ? g_iShieldAbility[g_iTankType[victim]] : g_iShieldAbility2[g_iTankType[victim]];
+						vShieldAbility(victim, false, iShieldAbility);
 					}
-				}
-				if ((damagetype & DMG_BURN || damagetype & DMG_BLAST) && (attacker == victim || bIsInfected(attacker)))
-				{
-					damage = 0.0;
-					return Plugin_Handled;
-				}
-				if (inflictor != -1)
-				{
-					int iOwner = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == victim || bIsTank(iOwner) || strcmp(sClassname, "tank_rock") == 0)
+					else
 					{
 						damage = 0.0;
-						return Plugin_Changed;
+						return Plugin_Handled;
 					}
+				}
+			}
+			if ((damagetype & DMG_BURN || damagetype & DMG_BLAST) && (attacker == victim || bIsInfected(attacker)))
+			{
+				damage = 0.0;
+				return Plugin_Handled;
+			}
+			if (inflictor != -1)
+			{
+				int iOwner = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
+				if (iOwner == victim || bIsTank(iOwner) || strcmp(sClassname, "tank_rock") == 0)
+				{
+					damage = 0.0;
+					return Plugin_Changed;
 				}
 			}
 		}
@@ -1267,27 +1254,14 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 {
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
+	if (g_bPluginEnabled && bIsTank(iTank))
 	{
-		if (bIsTank(iTank))
+		int iProp = -1;
+		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 		{
-			int iProp = -1;
-			while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-			{
-				char sModel[128];
-				GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_SHIELD, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
-				{
-					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iTank)
-					{
-						SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
-					}
-				}
-			}
-			while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+			char sModel[128];
+			GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+			if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_SHIELD, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
 			{
 				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == iTank)
@@ -1296,18 +1270,27 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
 				}
 			}
-			while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
-			{
-				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == iTank)
-				{
-					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
-				}
-			}
-			float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
-			vThrowInterval(iTank, flThrowInterval);
 		}
+		while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+		{
+			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+			if (iOwner == iTank)
+			{
+				SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+				CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
+			}
+		}
+		while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
+		{
+			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+			if (iOwner == iTank)
+			{
+				SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+				CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
+			}
+		}
+		float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
+		vThrowInterval(iTank, flThrowInterval);
 	}
 }
 
@@ -1344,8 +1327,7 @@ public Action eEventPlayerBotReplace(Event event, const char[] name, bool dontBr
 	int iSurvivor = GetClientOfUserId(iSurvivorId);
 	int iBotId = event.GetInt("bot");
 	int iBot = GetClientOfUserId(iBotId);
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled && bIsIdlePlayer(iBot, iSurvivor)) 
+	if (g_bPluginEnabled && bIsIdlePlayer(iBot, iSurvivor)) 
 	{
 		DataPack dpDataPack;
 		CreateDataTimer(0.2, tTimerIdleFix, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
@@ -1363,8 +1345,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 {
 	int iUserId = event.GetInt("userid");
 	int iPlayer = GetClientOfUserId(iUserId);
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
+	if (g_bPluginEnabled)
 	{
 		if (bIsValidClient(iPlayer))
 		{
@@ -1694,9 +1675,8 @@ public Action eEventPlayerIncapacitated(Event event, const char[] name, bool don
 {
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	if (g_bPluginEnabled && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		CreateTimer(3.0, tTimerKillStuckTank, iUserId, TIMER_FLAG_NO_MAPCHANGE);
 	}
@@ -1704,8 +1684,7 @@ public Action eEventPlayerIncapacitated(Event event, const char[] name, bool don
 
 public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
+	if (g_bPluginEnabled)
 	{
 		g_iTankWave = 0;
 		CreateTimer(10.0, tTimerRestartCoordinates, _, TIMER_FLAG_NO_MAPCHANGE);
@@ -1716,65 +1695,60 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 {
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 1 && g_bPluginEnabled)
+	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+	if (g_bPluginEnabled && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
-		int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-		if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+		if (g_bCmdUsed)
 		{
-			if (g_bCmdUsed)
+			vSetColor(iTank, g_iType);
+			g_bCmdUsed = false;
+		}
+		else
+		{
+			g_iTankType[iTank] = 0;
+			int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
+			if (iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
 			{
-				vSetColor(iTank, g_iType);
-				g_bCmdUsed = false;
-			}
-			else
-			{
-				g_iTankType[iTank] = 0;
-				int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
-				if (iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
+				int iTypeCount;
+				int iLimit = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
+				int iTankTypes[ST_MAXTYPES + 1];
+				for (int iIndex = 1; iIndex <= iLimit; iIndex++)
 				{
-					int iTypeCount;
-					int iLimit = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
-					int iTankTypes[ST_MAXTYPES + 1];
-					for (int iIndex = 1; iIndex <= iLimit; iIndex++)
+					int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
+					if (iTankEnabled == 0)
 					{
-						int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
-						if (iTankEnabled == 0)
-						{
-							continue;
-						}
-						iTankTypes[iTypeCount + 1] = iIndex;
-						iTypeCount++;
+						continue;
 					}
-					if (iTypeCount > 0)
-					{
-						int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
-						vSetColor(iTank, iChosen);
-					}
-					char sNumbers[3][4];
-					char sTankWaves[12];
-					sTankWaves = !g_bGeneralConfig ? g_sTankWaves : g_sTankWaves2;
-					ExplodeString(sTankWaves, ",", sNumbers, sizeof(sNumbers), sizeof(sNumbers[]));
-					int iWave1 = StringToInt(sNumbers[0]);
-					int iWave2 = StringToInt(sNumbers[1]);
-					int iWave3 = StringToInt(sNumbers[2]);
-					switch (g_iTankWave)
-					{
-						case 1: vTankCountCheck(iWave1);
-						case 2: vTankCountCheck(iWave2);
-						case 3: vTankCountCheck(iWave3);
-					}
+					iTankTypes[iTypeCount + 1] = iIndex;
+					iTypeCount++;
+				}
+				if (iTypeCount > 0)
+				{
+					int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
+					vSetColor(iTank, iChosen);
+				}
+				char sNumbers[3][4];
+				char sTankWaves[12];
+				sTankWaves = !g_bGeneralConfig ? g_sTankWaves : g_sTankWaves2;
+				ExplodeString(sTankWaves, ",", sNumbers, sizeof(sNumbers), sizeof(sNumbers[]));
+				int iWave1 = StringToInt(sNumbers[0]);
+				int iWave2 = StringToInt(sNumbers[1]);
+				int iWave3 = StringToInt(sNumbers[2]);
+				switch (g_iTankWave)
+				{
+					case 1: vTankCountCheck(iWave1);
+					case 2: vTankCountCheck(iWave2);
+					case 3: vTankCountCheck(iWave3);
 				}
 			}
-			CreateTimer(0.1, tTimerTankSpawn, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
+		CreateTimer(0.1, tTimerTankSpawn, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
 public Action cmdTank(int client, int args)
 {
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 0)
+	if (!g_bPluginEnabled)
 	{
 		ReplyToCommand(client, "\x04%s\x01 Super Tanks++ is disabled.", ST_PREFIX);
 		return Plugin_Handled;
@@ -1782,11 +1756,6 @@ public Action cmdTank(int client, int args)
 	if (!bIsValidHumanClient(client))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_PREFIX);
-		return Plugin_Handled;
-	}
-	if (!g_bPluginEnabled)
-	{
-		ReplyToCommand(client, "\x04%s\x01 Game mode not supported.", ST_PREFIX);
 		return Plugin_Handled;
 	}
 	char sType[32];
@@ -2620,7 +2589,7 @@ void vAmmoHit(int client, int owner, int enabled)
 		int iActiveWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
 		int iAmmo = !g_bTankConfig[g_iTankType[owner]] ? g_iAmmoCount[g_iTankType[owner]] : g_iAmmoCount2[g_iTankType[owner]];
 		GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
-		if (IsValidEntity(iActiveWeapon))
+		if (bIsValidEntity(iActiveWeapon))
 		{
 			if (strcmp(sWeapon, "weapon_rifle") == 0 || strcmp(sWeapon, "weapon_rifle_desert") == 0 || strcmp(sWeapon, "weapon_rifle_ak47") == 0 || strcmp(sWeapon, "weapon_rifle_sg552") == 0)
 			{
@@ -2691,7 +2660,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 		if (GetRandomInt(1, iChance2) == 1 && StrContains(sPropsAttached, "2") != -1)
 		{
 			iBeam[iLight] = CreateEntityByName("beam_spotlight");
-			if (IsValidEntity(iBeam[iLight]))
+			if (bIsValidEntity(iBeam[iLight]))
 			{
 				DispatchKeyValueVector(iBeam[iLight], "origin", flOrigin);
 				DispatchKeyValueVector(iBeam[iLight], "angles", flAngles);
@@ -2741,7 +2710,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 		if (GetRandomInt(1, iChance3) == 1 && StrContains(sPropsAttached, "3") != -1)
 		{
 			iJetpack[iOzTank] = CreateEntityByName("prop_dynamic_override");
-			if (IsValidEntity(iJetpack[iOzTank]))
+			if (bIsValidEntity(iJetpack[iOzTank]))
 			{
 				SetEntityModel(iJetpack[iOzTank], MODEL_JETPACK);
 				SetEntityRenderColor(iJetpack[iOzTank], red2, green2, blue2, alpha2);
@@ -2788,7 +2757,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 				if (GetRandomInt(1, iChance4) == 1 && StrContains(sPropsAttached, "4") != -1)
 				{
 					int iFlame = CreateEntityByName("env_steam");
-					if (IsValidEntity(iFlame))
+					if (bIsValidEntity(iFlame))
 					{
 						SetEntityRenderColor(iFlame, red3, green3, blue3, alpha3);
 						DispatchKeyValue(iFlame, "spawnflags", "1");
@@ -2826,7 +2795,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 		if (GetRandomInt(1, iChance5) == 1 && StrContains(sPropsAttached, "5") != -1)
 		{
 			iConcrete[iRock] = CreateEntityByName("prop_dynamic_override");
-			if (IsValidEntity(iConcrete[iRock]))
+			if (bIsValidEntity(iConcrete[iRock]))
 			{
 				SetEntityModel(iConcrete[iRock], MODEL_CONCRETE);
 				SetEntityRenderColor(iConcrete[iRock], red4, green4, blue4, alpha4);
@@ -2871,7 +2840,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 		if (GetRandomInt(1, iChance6) == 1 && StrContains(sPropsAttached, "6") != -1)
 		{
 			iWheel[iTire] = CreateEntityByName("prop_dynamic_override");
-			if (IsValidEntity(iWheel[iTire]))
+			if (bIsValidEntity(iWheel[iTire]))
 			{
 				SetEntityModel(iWheel[iTire], MODEL_TIRES);
 				SetEntityRenderColor(iWheel[iTire], red5, green5, blue5, alpha5);
@@ -3211,27 +3180,19 @@ void vGhostAbility(int client, int enabled)
 	}
 }
 
-void vGhostDrop(int client, int owner, char[] number, int slot)
-{
-	char sSlot[6];
-	sSlot = !g_bTankConfig[g_iTankType[owner]] ? g_sGhostSlot[g_iTankType[owner]] : g_sGhostSlot2[g_iTankType[owner]];
-	if (StrContains(sSlot, number) != -1)
-	{
-		vDropWeapon(client, slot);
-	}
-}
-
 void vGhostHit(int client, int owner, int enabled)
 {
 	int iGhostChance = !g_bTankConfig[g_iTankType[owner]] ? g_iGhostChance[g_iTankType[owner]] : g_iGhostChance2[g_iTankType[owner]];
 	int iCloneMode = !g_bTankConfig[g_iTankType[owner]] ? g_iCloneMode[g_iTankType[owner]] : g_iCloneMode2[g_iTankType[owner]];
+	char sGhostSlot[6];
+	sGhostSlot = !g_bTankConfig[g_iTankType[owner]] ? g_sGhostSlot[g_iTankType[owner]] : g_sGhostSlot2[g_iTankType[owner]];
 	if (enabled == 1 && GetRandomInt(1, iGhostChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[owner])) && bIsSurvivor(client))
 	{
-		vGhostDrop(client, owner, "1", 0);
-		vGhostDrop(client, owner, "2", 1);
-		vGhostDrop(client, owner, "3", 2);
-		vGhostDrop(client, owner, "4", 3);
-		vGhostDrop(client, owner, "5", 4);
+		vGhostDrop(client, owner, sGhostSlot, "1", 0);
+		vGhostDrop(client, owner, sGhostSlot, "2", 1);
+		vGhostDrop(client, owner, sGhostSlot, "3", 2);
+		vGhostDrop(client, owner, sGhostSlot, "4", 3);
+		vGhostDrop(client, owner, sGhostSlot, "5", 4);
 		EmitSoundToClient(client, SOUND_INFECTED, owner);
 	}
 }
@@ -3257,7 +3218,7 @@ void vGravityAbility(int client, int enabled)
 		g_bGravity[client] = true;
 		float flGravityForce = !g_bTankConfig[g_iTankType[client]] ? g_flGravityForce[g_iTankType[client]] : g_flGravityForce2[g_iTankType[client]];
 		int iBlackhole = CreateEntityByName("point_push");
-		if (IsValidEntity(iBlackhole))
+		if (bIsValidEntity(iBlackhole))
 		{
 			float flOrigin[3];
 			float flAngles[3];
@@ -3415,7 +3376,7 @@ void vMeteor(int entity, int client)
 {
 	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (IsValidEntity(entity) && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
+	if (bIsValidEntity(entity) && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
 	{
 		char sClassname[16];
 		GetEntityClassname(entity, sClassname, sizeof(sClassname));
@@ -3423,11 +3384,12 @@ void vMeteor(int entity, int client)
 		{
 			AcceptEntityInput(entity, "Kill");
 			char sDamage[6];
-			!g_bTankConfig[g_iTankType[client]] ? IntToString(g_iMeteorDamage[g_iTankType[client]], sDamage, sizeof(sDamage)) : IntToString(g_iMeteorDamage2[g_iTankType[client]], sDamage, sizeof(sDamage));
+			int iMeteorDamage = !g_bTankConfig[g_iTankType[client]] ? g_iMeteorDamage[g_iTankType[client]] : g_iMeteorDamage2[g_iTankType[client]];
+			IntToString(iMeteorDamage, sDamage, sizeof(sDamage));
 			float flPos[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 			int iPropane = CreateEntityByName("prop_physics");
-			if (IsValidEntity(iPropane))
+			if (bIsValidEntity(iPropane))
 			{
 				SetEntityModel(iPropane, MODEL_PROPANETANK);
 				flPos[2] += 50.0;
@@ -3442,7 +3404,7 @@ void vMeteor(int entity, int client)
 				AcceptEntityInput(iPropane, "Break");
 			}
 			int iPointHurt = CreateEntityByName("point_hurt");
-			if (IsValidEntity(iPointHurt))
+			if (bIsValidEntity(iPointHurt))
 			{
 				SetEntPropEnt(iPointHurt, Prop_Send, "m_hOwnerEntity", client);
 				DispatchKeyValue(iPointHurt, "Damage", sDamage);
@@ -3455,7 +3417,7 @@ void vMeteor(int entity, int client)
 				AcceptEntityInput(iPointHurt, "Kill");
 			}
 			int iPointPush = CreateEntityByName("point_push");
-			if (IsValidEntity(iPointPush))
+			if (bIsValidEntity(iPointPush))
 			{
 				SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", client);
 				DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
@@ -3569,8 +3531,7 @@ void vMinionAbility(int client, int enabled)
 void vMinionSpawner(int client, char[] type, int enabled, bool boss = false)
 {
 	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (enabled == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
+	if (enabled == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client))
 	{
 		float flHitPosition[3];
 		float flPosition[3];
@@ -3615,7 +3576,7 @@ void vNullifyHit(int client, int owner, int enabled)
 void vPanic()
 {
 	int iDirector = CreateEntityByName("info_director");
-	if (IsValidEntity(iDirector))
+	if (bIsValidEntity(iDirector))
 	{
 		DispatchSpawn(iDirector);
 		AcceptEntityInput(iDirector, "ForcePanicEvent");
@@ -3760,7 +3721,7 @@ void vRockAbility(int client, int enabled)
 		int iRockDamage = !g_bTankConfig[g_iTankType[client]] ? g_iRockDamage[g_iTankType[client]] : g_iRockDamage2[g_iTankType[client]];
 		IntToString(iRockDamage, sDamage, sizeof(sDamage));
 		int iRock = CreateEntityByName("env_rock_launcher");
-		if (IsValidEntity(iRock))
+		if (bIsValidEntity(iRock))
 		{
 			DispatchSpawn(iRock); 
 			DispatchKeyValue(iRock, "rockdamageoverride", sDamage);
@@ -3783,7 +3744,7 @@ void vRocketHit(int client, int owner, int enabled)
 	if (enabled == 1 && GetRandomInt(1, iRocketChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[owner])) && bIsSurvivor(client))
 	{
 		int iFlame = CreateEntityByName("env_steam");
-		if (IsValidEntity(iFlame))
+		if (bIsValidEntity(iFlame))
 		{
 			float flPosition[3];
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPosition);
@@ -3949,7 +3910,7 @@ void vShieldAbility(int client, bool shield, int enabled)
 			GetClientAbsOrigin(client, flOrigin);
 			flOrigin[2] -= 120.0;
 			int iShield = CreateEntityByName("prop_dynamic");
-			if (IsValidEntity(iShield))
+			if (bIsValidEntity(iShield))
 			{
 				SetEntityModel(iShield, MODEL_SHIELD);
 				DispatchKeyValueVector(iShield, "origin", flOrigin);
@@ -4238,7 +4199,7 @@ void vWitchAbility(int client, int enabled)
 				{
 					AcceptEntityInput(iInfected, "Kill");
 					int iWitch = CreateEntityByName("witch");
-					if (IsValidEntity(iWitch))
+					if (bIsValidEntity(iWitch))
 					{
 						TeleportEntity(iWitch, flInfectedPos, flInfectedAng, NULL_VECTOR);
 						DispatchSpawn(iWitch);
@@ -4303,7 +4264,8 @@ public Action tTimerStopAbsorb(Handle timer, any userid)
 		return Plugin_Stop;
 	}
 	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
-	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank))
+	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		g_bAbsorb[iTank] = false;
 	}
@@ -4370,7 +4332,7 @@ public Action tTimerBlurEffect(Handle timer, any userid)
 		GetClientAbsAngles(iTank, flTankAng);
 		int iAnim = GetEntProp(iTank, Prop_Send, "m_nSequence");
 		int iTankModel = CreateEntityByName("prop_dynamic");
-		if (IsValidEntity(iTankModel))
+		if (bIsValidEntity(iTankModel))
 		{
 			SetEntityModel(iTankModel, MODEL_TANK);
 			SetEntPropEnt(iTankModel, Prop_Send, "m_hOwnerEntity", iTank);
@@ -4435,14 +4397,14 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		float flVelocity[3];
-		if (IsValidEntity(iRock))
+		if (bIsValidEntity(iRock))
 		{
 			GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
 			float flVector = GetVectorLength(flVelocity);
 			if (flVector > 500.0)
 			{
 				int iCar = CreateEntityByName("prop_physics");
-				if (IsValidEntity(iCar))
+				if (bIsValidEntity(iCar))
 				{
 					char sNumbers = !g_bTankConfig[g_iTankType[iTank]] ? g_sCarOptions[g_iTankType[iTank]][GetRandomInt(0, strlen(g_sCarOptions[g_iTankType[iTank]]) - 1)] : g_sCarOptions2[g_iTankType[iTank]][GetRandomInt(0, strlen(g_sCarOptions2[g_iTankType[iTank]]) - 1)];
 					switch (sNumbers)
@@ -4555,8 +4517,9 @@ public Action tTimerStopFlash(Handle timer, any userid)
 		g_bFlash[iTank] = false;
 		return Plugin_Stop;
 	}
+	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		g_bFlash[iTank] = false;
 	}
@@ -4572,7 +4535,8 @@ public Action tTimerStopFragile(Handle timer, any userid)
 		return Plugin_Stop;
 	}
 	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
-	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank))
+	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		g_bFragile[iTank] = false;
 	}
@@ -4683,7 +4647,8 @@ public Action tTimerStopGod(Handle timer, any userid)
 		return Plugin_Stop;
 	}
 	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
-	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank))
+	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		g_bGod[iTank] = false;
 		SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
@@ -4843,9 +4808,10 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))) && bIsSurvivor(iSurvivor))
 	{
 		char sDamage[6];
-		!g_bTankConfig[g_iTankType[iTank]] ? IntToString(g_iHurtDamage[g_iTankType[iTank]], sDamage, sizeof(sDamage)) : IntToString(g_iHurtDamage2[g_iTankType[iTank]], sDamage, sizeof(sDamage));
+		int iHurtDamage = !g_bTankConfig[g_iTankType[iTank]] ? g_iHurtDamage[g_iTankType[iTank]] : g_iHurtDamage2[g_iTankType[iTank]];
+		IntToString(iHurtDamage, sDamage, sizeof(sDamage));
 		int iPointHurt = CreateEntityByName("point_hurt");
-		if (IsValidEntity(iPointHurt))
+		if (bIsValidEntity(iPointHurt))
 		{
 			DispatchKeyValue(iSurvivor, "targetname", "hurtme");
 			DispatchKeyValue(iPointHurt, "Damage", sDamage);
@@ -4960,7 +4926,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		float flVelocity[3];
-		if (IsValidEntity(iRock))
+		if (bIsValidEntity(iRock))
 		{
 			GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
 			float flVector = GetVectorLength(flVelocity);
@@ -5117,14 +5083,14 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 		int iMeteor = -1;
 		if (g_bMeteor[iTank])
 		{
-			float flAngle[3];
+			float flAngles[3];
 			float flVelocity[3];
 			float flHitpos[3];
-			flAngle[0] = GetRandomFloat(-20.0, 20.0);
-			flAngle[1] = GetRandomFloat(-20.0, 20.0);
-			flAngle[2] = 60.0;
-			GetVectorAngles(flAngle, flAngle);
-			iGetRayHitPos(flPos, flAngle, flHitpos, iTank, true);
+			flAngles[0] = GetRandomFloat(-20.0, 20.0);
+			flAngles[1] = GetRandomFloat(-20.0, 20.0);
+			flAngles[2] = 60.0;
+			GetVectorAngles(flAngles, flAngles);
+			iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true);
 			float flDistance = GetVectorDistance(flPos, flHitpos);
 			if (flDistance > 1600.0)
 			{
@@ -5138,17 +5104,17 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 			if (flDistance > 100.0)
 			{
 				int iRock = CreateEntityByName("tank_rock");
-				if (IsValidEntity(iRock))
+				if (bIsValidEntity(iRock))
 				{
 					SetEntityModel(iRock, MODEL_CONCRETE);
-					float flAngle2[3];
-					flAngle2[0] = GetRandomFloat(flMin, flMax);
-					flAngle2[1] = GetRandomFloat(flMin, flMax);
-					flAngle2[2] = GetRandomFloat(flMin, flMax);
+					float flAngles2[3];
+					flAngles2[0] = GetRandomFloat(flMin, flMax);
+					flAngles2[1] = GetRandomFloat(flMin, flMax);
+					flAngles2[2] = GetRandomFloat(flMin, flMax);
 					flVelocity[0] = GetRandomFloat(0.0, 350.0);
 					flVelocity[1] = GetRandomFloat(0.0, 350.0);
 					flVelocity[2] = GetRandomFloat(0.0, 30.0);
-					TeleportEntity(iRock, flHitpos, flAngle2, flVelocity);
+					TeleportEntity(iRock, flHitpos, flAngles2, flVelocity);
 					DispatchSpawn(iRock);
 					ActivateEntity(iRock);
 					AcceptEntityInput(iRock, "Ignite");
@@ -5206,8 +5172,9 @@ public Action tTimerPanic(Handle timer, any userid)
 		g_bPanic[iTank] = false;
 		return Plugin_Stop;
 	}
+	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		vPanic();
 	}
@@ -5273,8 +5240,9 @@ public Action tTimerRegenerate(Handle timer, any userid)
 		g_bRegen[iTank] = false;
 		return Plugin_Stop;
 	}
+	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		int iHealth = GetClientHealth(iTank);
 		int iRegenHealth = !g_bTankConfig[g_iTankType[iTank]] ? (iHealth + g_iRegenHealth[g_iTankType[iTank]]) : (iHealth + g_iRegenHealth2[g_iTankType[iTank]]);
@@ -5332,7 +5300,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
-		if (IsValidEntity(iRock))
+		if (bIsValidEntity(iRock))
 		{
 			float flAngles[3];
 			float flHitPos[3];
@@ -5422,7 +5390,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		float flVelocity[3];
-		if (IsValidEntity(iRock))
+		if (bIsValidEntity(iRock))
 		{
 			GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
 			float flVector = GetVectorLength(flVelocity);
@@ -5502,14 +5470,14 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		float flVelocity[3];
-		if (IsValidEntity(iRock))
+		if (bIsValidEntity(iRock))
 		{
 			GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
 			float flVector = GetVectorLength(flVelocity);
 			if (flVector > 500.0)
 			{
 				int iPropane = CreateEntityByName("prop_physics");
-				if (IsValidEntity(iPropane))
+				if (bIsValidEntity(iPropane))
 				{
 					SetEntityModel(iPropane, MODEL_PROPANETANK);
 					float flPos[3];
@@ -5591,7 +5559,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 		GetClientEyeAngles(iTank, flAng);
 		flPos[2] += 80.0;
 		int iSpammer = CreateEntityByName("env_rock_launcher");
-		if (IsValidEntity(iSpammer))
+		if (bIsValidEntity(iSpammer))
 		{
 			DispatchKeyValue(iSpammer, "rockdamageoverride", sDamage);
 			TeleportEntity(iSpammer, flPos, flAng, NULL_VECTOR);
@@ -5683,7 +5651,7 @@ public Action tTimerSetTransmit(Handle timer, any entity)
 	{
 		return Plugin_Stop;
 	}
-	if (IsValidEntity(entity))
+	if (bIsValidEntity(entity))
 	{
 		SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
 	}
@@ -5692,8 +5660,7 @@ public Action tTimerSetTransmit(Handle timer, any entity)
 
 public Action tTimerUpdatePlayerCount(Handle timer)
 {
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 0 || !g_bPluginEnabled || StrContains(g_sConfigExecute, "5") == -1)
+	if (!g_bPluginEnabled || StrContains(g_sConfigExecute, "5") == -1)
 	{
 		return Plugin_Continue;
 	}
@@ -5705,8 +5672,7 @@ public Action tTimerUpdatePlayerCount(Handle timer)
 
 public Action tTimerTankHealthUpdate(Handle timer)
 {
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 0 || !g_bPluginEnabled)
+	if (!g_bPluginEnabled)
 	{
 		return Plugin_Continue;
 	}
@@ -5718,7 +5684,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 			if (bIsHumanSurvivor(iSurvivor))
 			{
 				int iTarget = GetClientAimTarget(iSurvivor, false);
-				if (IsValidEntity(iTarget))
+				if (bIsValidEntity(iTarget))
 				{
 					char sClassname[32];
 					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
@@ -5746,8 +5712,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 
 public Action tTimerTankTypeUpdate(Handle timer)
 {
-	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-	if (iPluginEnabled == 0 || !g_bPluginEnabled)
+	if (!g_bPluginEnabled)
 	{
 		return Plugin_Continue;
 	}
@@ -5955,7 +5920,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	if (IsValidEntity(iRock))
+	if (bIsValidEntity(iRock))
 	{
 		char sClassname[32];
 		GetEntityClassname(iRock, sClassname, sizeof(sClassname));

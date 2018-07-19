@@ -357,6 +357,11 @@ stock bool bIsValidClient(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
+stock bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity < 2048 && IsValidEntity(entity);
+}
+
 stock bool bIsValidHumanClient(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client) && !IsFakeClient(client);
@@ -431,7 +436,7 @@ public bool bTankFilter(const char[] pattern, Handle clients)
 
 stock bool bTraceRayDontHitSelf(int entity, any data)
 {
-	return entity != data;
+	return entity == data;
 }
 
 // Functions
@@ -4613,7 +4618,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Clone Amount\"					\"10\"");
 			fFilename.WriteLine("			\"Clone Chance\"					\"1\"");
 			fFilename.WriteLine("			\"Clone Health\"					\"250\"");
-			fFilename.WriteLine("			\"Clone Mode\"					\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Fire Ability\"");
 			fFilename.WriteLine("		{");
@@ -4755,7 +4759,15 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 	}
 }
 
-void vGiveHealth(int client, int health, int extrahealth, int maxhealth)
+stock void vGhostDrop(int client, int owner, char[] slots, char[] number, int slot)
+{
+	if (StrContains(slots, number) != -1)
+	{
+		vDropWeapon(client, slot);
+	}
+}
+
+stock void vGiveHealth(int client, int health, int extrahealth, int maxhealth)
 {
 	maxhealth = iSetCellLimit(maxhealth, 1, ST_MAXHEALTH);
 	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth;
