@@ -2113,7 +2113,7 @@ Examples:
 
 **Spirit_12** - For the L4D signatures for the gamedata file.
 
-**honorcode** - For the [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?p=1251446) plugin.
+**honorcode** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?p=1251446) plugin.
 
 **panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389) plugin.
 
@@ -2130,6 +2130,8 @@ Examples:
 **IxAvnoMonvAxI** - For the [Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2) plugin.
 
 **Uncle Jessie** - For the Tremor Tank in his [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
+
+**Drixevel** - For the [Force Active Weapon](https://forums.alliedmods.net/showthread.php?p=2493284) plugin.
 
 **pRED** - For the [SM Super Commands](https://forums.alliedmods.net/showthread.php?p=498802) plugin.
 
