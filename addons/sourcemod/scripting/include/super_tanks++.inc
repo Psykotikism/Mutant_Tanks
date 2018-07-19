@@ -15,9 +15,7 @@
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 2500
 #define ST_MAXHEALTH 65535
-#define ST_MAXHEALTH_SI 2500
 #define ST_MAX_HEALTH_REDUCTION -65535
-#define ST_MAX_HEALTH_REDUCTION_SI -2500
 #define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
 #define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
 #define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
@@ -1894,8 +1892,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// 6th number = Health given to Chargers.");
 			fFilename.WriteLine("			// Positive numbers: Current health + Medic health");
 			fFilename.WriteLine("			// Negative numbers: Current health - Medic health");
-			fFilename.WriteLine("			// Minimum: -2500");
-			fFilename.WriteLine("			// Maximum: 2500");
+			fFilename.WriteLine("			// Minimum: -65535");
+			fFilename.WriteLine("			// Maximum: 65535");
 			fFilename.WriteLine("			\"Medic Health\"					\"25,25,25,25,25,25\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The special infected's max health.");
@@ -1907,7 +1905,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// 5th number = Jockey's maximum health.");
 			fFilename.WriteLine("			// 6th number = Charger's maximum health.");
 			fFilename.WriteLine("			// Minimum: 1");
-			fFilename.WriteLine("			// Maximum: 2500");
+			fFilename.WriteLine("			// Maximum: 65535");
 			fFilename.WriteLine("			\"Medic Max Health\"				\"250,50,250,100,325,600\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank to trigger the ability.");
@@ -4759,7 +4757,7 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 
 void vGiveHealth(int client, int health, int extrahealth, int maxhealth)
 {
-	maxhealth = iSetCellLimit(maxhealth, 1, ST_MAXHEALTH_SI);
+	maxhealth = iSetCellLimit(maxhealth, 1, ST_MAXHEALTH);
 	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth;
 	int iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth;
 	int iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;

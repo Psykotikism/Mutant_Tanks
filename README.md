@@ -1086,8 +1086,8 @@ SourceMod 1.8+
 			// 6th number = Health given to Chargers.
 			// Positive numbers: Current health + Medic health
 			// Negative numbers: Current health - Medic health
-			// Minimum: -2500
-			// Maximum: 2500
+			// Minimum: -65535
+			// Maximum: 65535
 			"Medic Health"					"25,25,25,25,25,25"
 
 			// The special infected's max health.
@@ -1099,7 +1099,7 @@ SourceMod 1.8+
 			// 5th number = Jockey's maximum health.
 			// 6th number = Charger's maximum health.
 			// Minimum: 1
-			// Maximum: 2500
+			// Maximum: 65535
 			"Medic Max Health"				"250,50,250,100,325,600"
 
 			// The distance between a survivor and the Super Tank to trigger the ability.

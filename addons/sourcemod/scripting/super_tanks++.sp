@@ -1572,22 +1572,22 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 								ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
 								int iHealth = GetClientHealth(iInfected);
 								int iSmokerHealth = StringToInt(sHealth[0]);
-								iSmokerHealth = iSetCellLimit(iSmokerHealth, ST_MAX_HEALTH_REDUCTION_SI, ST_MAXHEALTH_SI);
+								iSmokerHealth = iSetCellLimit(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 								int iSmokerMaxHealth = StringToInt(sMaxHealth[0]);
 								int iBoomerHealth = StringToInt(sHealth[1]);
-								iBoomerHealth = iSetCellLimit(iBoomerHealth, ST_MAX_HEALTH_REDUCTION_SI, ST_MAXHEALTH_SI);
+								iBoomerHealth = iSetCellLimit(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 								int iBoomerMaxHealth = StringToInt(sMaxHealth[1]);
 								int iHunterHealth = StringToInt(sHealth[2]);
-								iHunterHealth = iSetCellLimit(iHunterHealth, ST_MAX_HEALTH_REDUCTION_SI, ST_MAXHEALTH_SI);
+								iHunterHealth = iSetCellLimit(iHunterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 								int iHunterMaxHealth = StringToInt(sMaxHealth[2]);
 								int iSpitterHealth = StringToInt(sHealth[3]);
-								iSpitterHealth = iSetCellLimit(iSpitterHealth, ST_MAX_HEALTH_REDUCTION_SI, ST_MAXHEALTH_SI);
+								iSpitterHealth = iSetCellLimit(iSpitterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 								int iSpitterMaxHealth = StringToInt(sMaxHealth[3]);
 								int iJockeyHealth = StringToInt(sHealth[4]);
-								iJockeyHealth = iSetCellLimit(iJockeyHealth, ST_MAX_HEALTH_REDUCTION_SI, ST_MAXHEALTH_SI);
+								iJockeyHealth = iSetCellLimit(iJockeyHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 								int iJockeyMaxHealth = StringToInt(sMaxHealth[4]);
 								int iChargerHealth = StringToInt(sHealth[5]);
-								iChargerHealth = iSetCellLimit(iChargerHealth, ST_MAX_HEALTH_REDUCTION_SI, ST_MAXHEALTH_SI);
+								iChargerHealth = iSetCellLimit(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 								int iChargerMaxHealth = StringToInt(sMaxHealth[5]);
 								if (bIsSmoker(iInfected))
 								{
