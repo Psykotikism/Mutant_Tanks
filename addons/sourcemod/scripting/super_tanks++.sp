@@ -258,6 +258,8 @@ int g_iAmmoHit[ST_MAXTYPES + 1];
 int g_iAmmoHit2[ST_MAXTYPES + 1];
 int g_iAnnounceArrival;
 int g_iAnnounceArrival2;
+int g_iAnnounceDeath;
+int g_iAnnounceDeath2;
 int g_iBlindAbility[ST_MAXTYPES + 1];
 int g_iBlindAbility2[ST_MAXTYPES + 1];
 int g_iBlindChance[ST_MAXTYPES + 1];
@@ -296,6 +298,7 @@ int g_iCloneHealth2[ST_MAXTYPES + 1];
 int g_iCloneMode[ST_MAXTYPES + 1];
 int g_iCloneMode2[ST_MAXTYPES + 1];
 int g_iConfigEnable;
+int g_iCreateBackup;
 int g_iDisplayHealth;
 int g_iDisplayHealth2;
 int g_iDrugAbility[ST_MAXTYPES + 1];
@@ -593,9 +596,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public void OnPluginStart()
 {
 	CreateDirectory("cfg/sourcemod/super_tanks++/", 511);
-	CreateDirectory("cfg/sourcemod/super_tanks++/backup_config/", 511);
 	vCreateConfigFile("cfg/sourcemod/", "super_tanks++/", "super_tanks++", "super_tanks++", true);
-	vCreateConfigFile("cfg/sourcemod/super_tanks++/", "backup_config/", "super_tanks++", "super_tanks++", true);
 	Format(g_sSavePath, sizeof(g_sSavePath), "cfg/sourcemod/super_tanks++/super_tanks++.cfg");
 	vLoadConfigs(g_sSavePath, true);
 	vMultiTargetFilters(1);
@@ -768,6 +769,11 @@ public void OnConfigsExecuted()
 	}
 	g_bCmdUsed = false;
 	g_bRestartValid = false;
+	if (g_iCreateBackup == 1)
+	{
+		CreateDirectory("cfg/sourcemod/super_tanks++/backup_config/", 511);
+		vCreateConfigFile("cfg/sourcemod/super_tanks++/", "backup_config/", "super_tanks++", "super_tanks++", true);
+	}
 	if (StrContains(g_sConfigCreate, "1") != -1 && g_iConfigEnable == 1)
 	{
 		CreateDirectory("cfg/sourcemod/super_tanks++/difficulty_configs/", 511);
@@ -1376,9 +1382,9 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 			{
 				char sName[MAX_NAME_LENGTH + 1];
 				sName = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sCustomName[g_iTankType[iPlayer]] : g_sCustomName2[g_iTankType[iPlayer]];
-				int iAnnounceArrival = !g_bGeneralConfig ? g_iAnnounceArrival : g_iAnnounceArrival2;
+				int iAnnounceDeath = !g_bGeneralConfig ? g_iAnnounceDeath : g_iAnnounceDeath2;
 				int iCloneMode = !g_bTankConfig[g_iTankType[iPlayer]] ? g_iCloneMode[g_iTankType[iPlayer]] : g_iCloneMode2[g_iTankType[iPlayer]];
-				if (iAnnounceArrival == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iPlayer])))
+				if (iAnnounceDeath == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iPlayer])))
 				{
 					switch (GetRandomInt(1, 10))
 					{
@@ -1922,6 +1928,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 		main ? (g_iPluginEnabled = iSetCellLimit(g_iPluginEnabled, 0, 1)) : (g_iPluginEnabled2 = iSetCellLimit(g_iPluginEnabled2, 0, 1));
 		if (main)
 		{
+			g_iCreateBackup = kvSuperTanks.GetNum("General/Create Backup", 0);
+			g_iCreateBackup = iSetCellLimit(g_iCreateBackup, 0, 1);
 			g_iGameModeTypes = kvSuperTanks.GetNum("General/Game Mode Types", 0);
 			g_iGameModeTypes = iSetCellLimit(g_iGameModeTypes, 0, 15);
 			kvSuperTanks.GetString("General/Enabled Game Modes", g_sEnabledGameModes, sizeof(g_sEnabledGameModes), "");
@@ -1929,6 +1937,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 		}
 		main ? (g_iAnnounceArrival = kvSuperTanks.GetNum("General/Announce Arrival", 1)) : (g_iAnnounceArrival2 = kvSuperTanks.GetNum("General/Announce Arrival", g_iAnnounceArrival));
 		main ? (g_iAnnounceArrival = iSetCellLimit(g_iAnnounceArrival, 0, 1)) : (g_iAnnounceArrival2 = iSetCellLimit(g_iAnnounceArrival2, 0, 1));
+		main ? (g_iAnnounceDeath = kvSuperTanks.GetNum("General/Announce Death", 1)) : (g_iAnnounceDeath2 = kvSuperTanks.GetNum("General/Announce Death", g_iAnnounceDeath));
+		main ? (g_iAnnounceDeath = iSetCellLimit(g_iAnnounceDeath, 0, 1)) : (g_iAnnounceDeath2 = iSetCellLimit(g_iAnnounceDeath2, 0, 1));
 		main ? (g_iDisplayHealth = kvSuperTanks.GetNum("General/Display Health", 3)) : (g_iDisplayHealth2 = kvSuperTanks.GetNum("General/Display Health", g_iDisplayHealth));
 		main ? (g_iDisplayHealth = iSetCellLimit(g_iDisplayHealth, 0, 3)) : (g_iDisplayHealth2 = iSetCellLimit(g_iDisplayHealth2, 0, 3));
 		main ? (g_iFinalesOnly = kvSuperTanks.GetNum("General/Finales Only", 0)) : (g_iFinalesOnly2 = kvSuperTanks.GetNum("General/Finales Only", g_iFinalesOnly));
@@ -5119,6 +5129,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 					ActivateEntity(iRock);
 					AcceptEntityInput(iRock, "Ignite");
 					SetEntPropEnt(iRock, Prop_Send, "m_hOwnerEntity", iTank);
+					vDeleteEntity(iRock, 30.0);
 				}
 			}
 		}

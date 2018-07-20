@@ -871,6 +871,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("{");
 			fFilename.WriteLine("	// These are the general settings.");
 			fFilename.WriteLine("	// Note: The following settings will not work in custom config files:");
+			fFilename.WriteLine("	// \"Create Backup\"");
 			fFilename.WriteLine("	// \"Game Mode Types\"");
 			fFilename.WriteLine("	// \"Enabled Game Modes\"");
 			fFilename.WriteLine("	// \"Disabled Game Modes\"");
@@ -885,6 +886,12 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// 0: OFF");
 			fFilename.WriteLine("			// 1: ON");
 			fFilename.WriteLine("			\"Plugin Enabled\"				\"1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Super Tanks++ will create a backup config file.");
+			fFilename.WriteLine("			// The file will be located in cfg/sourcemod/super_tanks++/backup_config.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Create Backup\"					\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// Enable Super Tanks++ in these game mode types.");
 			fFilename.WriteLine("			// Add up numbers together for different results.");
@@ -915,6 +922,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// 0: OFF");
 			fFilename.WriteLine("			// 1: ON");
 			fFilename.WriteLine("			\"Announce Arrival\"				\"1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Announce each Super Tank's death.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Announce Death\"				\"1\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// Display Tanks' names and health.");
 			fFilename.WriteLine("			// 0: OFF");

@@ -60,6 +60,7 @@ SourceMod 1.8+
 {
 	// These are the general settings.
 	// Note: The following settings will not work in custom config files:
+	// "Create Backup"
 	// "Game Mode Types"
 	// "Enabled Game Modes"
 	// "Disabled Game Modes"
@@ -74,6 +75,12 @@ SourceMod 1.8+
 			// 0: OFF
 			// 1: ON
 			"Plugin Enabled"				"1"
+
+			// Super Tanks++ will create a backup config file.
+			// The file will be located in cfg/sourcemod/super_tanks++/backup_config.
+			// 0: OFF
+			// 1: ON
+			"Create Backup"					"0"
 
 			// Enable Super Tanks++ in these game mode types.
 			// Add up numbers together for different results.
@@ -104,6 +111,11 @@ SourceMod 1.8+
 			// 0: OFF
 			// 1: ON
 			"Announce Arrival"				"1"
+
+			// Announce each Super Tank's death.
+			// 0: OFF
+			// 1: ON
+			"Announce Death"				"1"
 
 			// Display Tanks' names and health.
 			// 0: OFF
