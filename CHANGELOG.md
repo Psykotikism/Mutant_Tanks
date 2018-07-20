@@ -5,6 +5,7 @@
 Bug fixes:
 
 1. Fixed the issue with some KeyValue settings not working properly.
+2. Fixed various bugs.
 
 Changes:
 
@@ -12,6 +13,7 @@ Changes:
 2. Added a ton of new KeyValues for many abilities.
 3. Added new abilities.
 4. Increased the maximum amount of possible Super Tank types from 1000 to 2500.
+5. The plugin now creates a folder inside cfg/sourcemod/super_tanks++ called "backup_config" which contains a copy of the config file in case users need it.
 
 Files:
 

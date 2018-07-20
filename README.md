@@ -1771,7 +1771,196 @@ By default, Super Tanks++ can create and execute the following types of configur
 > If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140).
 
 ### Main Features
-1. How do I enable/disable the plugin in certain game modes?
+1. How do I make my own Super Tank?
+
+- Create an entry.
+
+Examples:
+
+This is okay:
+```
+"Super Tanks++"
+{
+	"Tank 25"
+	{
+		"General"
+		{
+			"Tank Name"				"Test Tank" // Tank has a name.
+			"Tank Enabled"			"1" // Tank is enabled.
+			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+		}
+	}
+}
+```
+
+This is not okay:
+```
+"Super Tanks++"
+{
+	"Tank 25"
+	{
+		"General"
+		{
+			// "Tank Enabled" is missing so this entry is disabled.
+			"Tank Name"				"Test Tank" // Tank has a name.
+			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+		}
+	}
+}
+```
+
+This is okay:
+```
+"Super Tanks++"
+{
+	"Tank 25"
+	{
+		"General"
+		{
+			// Since "Tank Name" is missing, the default name for this entry will be "Tank"
+			"Tank Enabled"			"1" // Tank is enabled.
+			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+		}
+	}
+}
+```
+
+This is not okay:
+```
+"Super Tanks++"
+{
+	"Tank 25"
+	{
+		"General"
+		{
+			"Tank Name"				"Test Tank" // Tank has a name.
+			"Tank Enabled"			"1" // Tank is enabled.
+			"Skin-Glow Colors"		"255, 0, 0, 255 | 255, 255, 0" // The string should not contain any spaces.
+		}
+	}
+}
+```
+
+- Adding the entry to the roster.
+
+Here's our final entry:
+```
+"Super Tanks++"
+{
+	"Tank 25"
+	{
+		"General"
+		{
+			"Tank Name"				"Test Tank" // Named "Test Tank".
+			"Tank Enabled"			"1" // Entry is enabled.
+			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Has red/yellow color scheme.
+		}
+		"Immunities"
+		{
+			"Fire Immunity"			"1" // Immune to fire.
+		}
+	}
+}
+```
+
+To make sure that this entry can be chosen, we must go to the "Plugin Settings" section and look for the "Maximum Types" setting in the "General" subsection.
+
+```
+"Super Tanks++"
+{
+	"Plugin Settings"
+	{
+		"General"
+		{
+			"Maximum Types"			"24" // Determines what entry to stop at when reading the entire config file.
+		}
+	}
+}
+```
+
+Now, assuming that "Tank 25" is our highest entry, we just raise the value of "Maximum Types" by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to "Tank 25" it will stop reading the rest.
+
+- Advanced Entry Examples
+
+```
+"Super Tanks++"
+{
+	"Plugin Settings"
+	{
+		"General"
+		{
+			"Maximum Types"			"5" // Check "Tank 1" to "Tank 5"
+		}
+	}
+	"Tank 5" // Checked by the plugin.
+	{
+		"General"
+		{
+			"Tank Name"				"Airborne Tank"
+			"Tank Enabled"			"1"
+			"Skin-Glow Colors"		"255,255,0,255|255,255,0"
+		}
+		"Enhancements"
+		{
+			"Extra Health"			"50" // Tank's base health + 50
+		}
+		"Jump Ability"
+		{
+			"Ability Enabled"		"1"
+			"Jump Chance"			"1"
+		}
+	}
+}
+
+"Super Tanks++"
+{
+	"Plugin Settings"
+	{
+		"General"
+		{
+			"Maximum Types"			"11" // Only check for the first 11 Tank types. ("Tank 1" to "Tank 11")
+		}
+	}
+	"Tank 13" // This will not be checked by the plugin.
+	{
+		"General"
+		{
+			"Tank Name"				"Invisible Tank"
+			"Tank Enabled"			"1"
+			"Skin-Glow Colors"		"255,255,255,255|255,255,255"
+			"Glow Effect"			"0" // No glow outline.
+		}
+		"Immunities"
+		{
+			"Fire Immunity"			"1" // Immune to fire.
+		}
+		"Ghost Ability"
+		{
+			"Ability Enabled"		"1"
+			"Fade Limit"			"0"
+		}
+	}
+	"Tank 10" // Checked by the plugin.
+	{
+		"General"
+		{
+			"Tank Enabled"			"1"
+		}
+		"Enhancements"
+		{
+			"Run Speed"				"1.5" // How fast the Tank moves.
+		}
+	}
+}
+```
+
+2. Can you add more abilities?
+
+- That depends on whether it's doable/possible or not, and if I want to add it.
+- If it's from another plugin, it would depend on whether the code is too long or not, and if it is, I most likely won't go through all that effort for just 1 ability.
+- Post on the AM thread or PM me.
+
+3. How do I enable/disable the plugin in certain game modes?
 
 You have 2 options:
 
@@ -1788,7 +1977,8 @@ You must specify the game modes in the "Enabled Game Modes" and "Disabled Game M
 
 Here are some scenarios and their outcomes:
 
-- Scenario 1
+Scenario 1:
+
 ```
 "Game Mode Types" "0" // The plugin is enabled in all game mode types.
 "Enabled Game Modes" "" // The plugin is enabled in all game modes.
@@ -1796,7 +1986,9 @@ Here are some scenarios and their outcomes:
 
 Outcome: The plugin works in every game mode except "coop" mode.
 ```
-- Scenario 2
+
+Scenario 2:
+
 ```
 "Game Mode Types" "1" // The plugin is enabled in every Campaign-based game mode.
 "Enabled Game Modes" "coop" // The plugin is enabled in only "coop" mode.
@@ -1804,7 +1996,9 @@ Outcome: The plugin works in every game mode except "coop" mode.
 
 Outcome: The plugin works only in "coop" mode.
 ```
-- Scenario 3
+
+Scenario 3"
+
 ```
 "Game Mode Types" "5" // The plugin is enabled in every Campaign-based and Survival-based game mode.
 "Enabled Game Modes" "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
@@ -1813,7 +2007,7 @@ Outcome: The plugin works only in "coop" mode.
 Outcome: The plugin works in every Campaign-based and Survival-based game mode except "coop" mode.
 ```
 
-2. How come some Super Tanks aren't showing up?
+4. How come some Super Tanks aren't showing up?
 
 It may be due to one or more of the following:
 
@@ -1824,8 +2018,9 @@ It may be due to one or more of the following:
 - You didn't set up the Super Tank properly.
 - You are missing quotation marks.
 - You have more than 2500 Super Tanks in your config file.
+- You didn't format your config file properly.
 
-3. How do I kill the Tanks depending on what abilities they have?
+5. How do I kill the Tanks depending on what abilities they have?
 
 The following abilities require different strategies:
 
@@ -1838,11 +2033,11 @@ The following abilities require different strategies:
 - Nullify Hit: The Super Tank can mark players as useless, which means as long as that player is nullified, they will not do any damage.
 - Shield Ability: Wait for the Tank to throw propane tanks at you and then throw it back at the Tank. Then shoot the propane tank to deactivate the Tank's shield.
 
-4. How do I make the plugin work on only finale maps?
+6. How do I make the plugin work on only finale maps?
 
 Set the value of the "Finales Only" KeyValue to 1.
 
-5. How can I change the amount of Tanks that spawn on each finale wave?
+7. How can I change the amount of Tanks that spawn on each finale wave?
 
 Here's an example:
 
@@ -1850,11 +2045,11 @@ Here's an example:
 "Tank Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
 ```
 
-6. How can I decide whether to display each Tank's health?
+8. How can I decide whether to display each Tank's health?
 
 Set the value in the "Display Health" KeyValue.
 
-7. How do I give each Tank more health?
+9. How do I give each Tank more health?
 
 Set the value in the "Extra Health" KeyValue.
 
@@ -1864,7 +2059,7 @@ Example:
 "Extra Health" "5000" // Add 5000 to the Super Tank's health.
 ```
 
-8. How do I adjust each Tank's run speed?
+10. How do I adjust each Tank's run speed?
 
 Set the value in the "Run Speed" KeyValue.
 
@@ -1874,23 +2069,23 @@ Example:
 "Run Speed" "3.0" // Add 2.0 to the Super Tank's run speed. Default run speed is 1.0.
 ```
 
-9. How can I give each Tank bullet immunity?
+11. How can I give each Tank bullet immunity?
 
 Set the value of the "Bullet Immunity" KeyValue to 1.
 
-10. How can I give each Tank explosive immunity?
+12. How can I give each Tank explosive immunity?
 
 Set the value of the "Explosive Immunity" KeyValue to 1.
 
-11. How can I give each Tank fire immunity?
+13. How can I give each Tank fire immunity?
 
 Set the value of the "Fire Immunity" KeyValue to 1.
 
-12. How can I give each Tank melee immunity?
+14. How can I give each Tank melee immunity?
 
 Set the value of the "Melee Immunity" KeyValue to 1.
 
-13. How can I delay the throw interval of each Tank?
+15. How can I delay the throw interval of each Tank?
 
 Set the value in the "Throw Interval" KeyValue.
 
@@ -1900,15 +2095,15 @@ Example:
 "Throw Interval" "8.0" // Add 3.0 to the Super Tank's throw interval. Default throw interval is 5.0.
 ```
 
-14. Why do some Tanks spawn with different props?
+16. Why do some Tanks spawn with different props?
 
 Each prop has 1 out of X chances to appear on Super Tanks when they spawn. Configure the chances for each prop in the "Props Chance" KeyValue.
 
-15. Why are the Tanks spawning with more than the extra health given to them?
+17. Why are the Tanks spawning with more than the extra health given to them?
 
 Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
-16. How do I add more Super Tanks?
+18. How do I add more Super Tanks?
 
 - Add a new entry in the config file.
 - Raise the value of the "Maximum Types" KeyValue.
@@ -1918,18 +2113,24 @@ Example:
 ```
 "Super Tanks++"
 {
-	"General"
+	"Plugin Settings"
 	{
-		"Maximum Types"		"69" // The plugin will check for 69 entries when loading the config file.
+		"General"
+		{
+			"Maximum Types"		"69" // The plugin will check for 69 entries when loading the config file.
+		}
 	}
 	"Tank 69"
 	{
-		"Tank Enabled"		"1" // Tank 69 is enabled and can be chosen.
+		"General"
+		{
+			"Tank Enabled"		"1" // Tank 69 is enabled and can be chosen.
+		}
 	}
 }
 ```
 
-17. How do I filter out certain Super Tanks that I made without deleting them?
+19. How do I filter out certain Super Tanks that I made without deleting them?
 
 Enable/disable them with the "Tank Enabled" KeyValue.
 
@@ -1940,24 +2141,36 @@ Example:
 {
 	"Tank 1"
 	{
-		"Tank Enabled"		"1" // Tank 1 can be chosen.
+		"General"
+		{
+			"Tank Enabled"		"1" // Tank 1 can be chosen.
+		}
 	}
 	"Tank 2"
 	{
-		"Tank Enabled"		"0" // Tank 2 cannot be chosen.
+		"General"
+		{
+			"Tank Enabled"		"0" // Tank 2 cannot be chosen.
+		}
 	}
 	"Tank 3"
 	{
-		"Tank Enabled"		"0" // Tank 3 cannot be chosen.
+		"General"
+		{
+			"Tank Enabled"		"0" // Tank 3 cannot be chosen.
+		}
 	}
 	"Tank 4"
 	{
-		"Tank Enabled"		"1" // Tank 4 can be chosen.
+		"General"
+		{
+			"Tank Enabled"		"1" // Tank 4 can be chosen.
+		}
 	}
 }
 ```
 
-18. Can I create temporary Tanks without removing or replacing them?
+20. Can I create temporary Tanks without removing or replacing them?
 
 Yes, you can do that with custom configs.
 
@@ -1967,18 +2180,30 @@ Example:
 // Settings for cfg/sourcemod/super_tanks++/super_tanks++.cfg
 "Super Tanks++"
 {
-	"General"
+	"Plugin Settings"
 	{
-		"Enable Custom Configs"			"1" // Enable custom configs
-		"Execute Config Types"			"1" // 1: Difficulty configs (easy, normal, hard, impossible)
+		"General"
+		{
+			"Enable Custom Configs"			"1" // Enable custom configs
+			"Execute Config Types"			"1" // 1: Difficulty configs (easy, normal, hard, impossible)
+		}
 	}
 	"Tank 69"
 	{
-		"Tank Name"				"Psyk0tik Tank"
-		"Tank Enabled"			"1"
-		"Skin-Glow Colors"		"0,170,255,255|0,170,255"
-		"Extra Health"			"250"
-		"Fire Immunity"			"1"
+		"General"
+		{
+			"Tank Name"						"Psyk0tik Tank"
+			"Tank Enabled"					"1"
+			"Skin-Glow Colors"				"0,170,255,255|0,170,255"
+		}
+		"Enhancements"
+		{
+			"Extra Health"					"250"
+		}
+		"Immunities"
+		{
+			"Fire Immunity"					"1"
+		}
 	}
 }
 
@@ -1987,10 +2212,20 @@ Example:
 {
 	"Tank 69"
 	{
-		"Tank Name"				"Idiot Tank"
-		"Tank Enabled"			"1"
-		"Skin-Glow Colors"		"1,1,1,255|1,1,1"
-		"Extra Health"			"1"
+		"General"
+		{
+			"Tank Name"						"Idiot Tank"
+			"Tank Enabled"					"1"
+			"Skin-Glow Colors"				"1,1,1,255|1,1,1"
+		}
+		"Enhancements"
+		{
+			"Extra Health"					"1"
+		}
+		"Immunities"
+		{
+			"Fire Immunity"					"0"
+		}
 	}
 }
 
@@ -1999,7 +2234,7 @@ Output: When the current difficulty is Expert mode (impossible), the Idiot Tank 
 These are basically temporary Tanks that you guys can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
 
-19. How can I move the Super Tanks++ category around on the admin menu?
+21. How can I move the Super Tanks++ category around on the admin menu?
 
 - You have to open up addons/sourcemod/configs/adminmenu_sorting.txt.
 - Enter the "SuperTanks++" category.
@@ -2011,12 +2246,10 @@ Example:
 {
 	"PlayerCommands"
 	{
-		"item"		"sm_respawn"
 		"item"		"sm_slay"
 		"item"		"sm_slap"
 		"item"		"sm_kick"
 		"item"		"sm_ban"
-		"item"		"sm_bandisconnected"
 		"item"		"sm_gag"
 		"item"		"sm_burn"		
 		"item"		"sm_beacon"
@@ -2058,7 +2291,7 @@ Example:
 }
 ```
 
-20. Are there any developer/tester features available in the plugin?
+22. Are there any developer/tester features available in the plugin?
 
 Yes, there are target filters for each special infected and the sm_tank command that allows developers/testers to spawn each Super Tank.
 
@@ -2091,6 +2324,7 @@ Set the value of the "Enable Custom Configs" KeyValue to 1.
 Set the values in the "Create Config Types" KeyValue.
 
 Examples:
+
 ```
 "Create Config Types" "123" // Creates the folders and config files for each difficulty, map, and game mode.
 "Create Config Types" "4" // Creates the folder and config files for each day.
@@ -2102,6 +2336,7 @@ Examples:
 Set the values in the "Execute Config Types" KeyValue.
 
 Examples:
+
 ```
 "Execute Config Types" "123" // Executes the config file for the current difficulty, map, and game mode.
 "Execute Config Types" "4" // Executes the config file for the current day.
