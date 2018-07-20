@@ -297,7 +297,7 @@ SourceMod 1.8+
 			// The Super Tank's rock throw interval.
 			// Note: Default throw interval is 5.0 seconds.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Throw Interval"				"5.0"
 		}
 		"Immunities"
@@ -332,12 +332,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Absorb Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Absorb Duration"				"5.0"
 		}
 		// The Super Tank creates acid puddles.
@@ -353,7 +353,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Acid Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -364,7 +364,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Acid Range"					"500.0"
 
 			// The Super Tank's rock creates an acid puddle when it breaks.
@@ -386,7 +386,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Ammo Chance"					"4"
 
 			// The Super Tank sets survivors' ammunition to this amount.
@@ -402,7 +402,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Ammo Range"					"500.0"
 		}
 		// The Super Tank blinds survivors.
@@ -418,12 +418,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Blind Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Blind Duration"				"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -439,7 +439,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Blind Range"					"500.0"
 		}
 		// The Super Tank creates explosions.
@@ -455,7 +455,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Bomb Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -466,12 +466,12 @@ SourceMod 1.8+
 
 			// The power of the Super Tank's explosions.
 			// Minimum: 1 (Smallest and least painful explosion)
-			// Maximum: 99999 (Biggest and most painful explosion)
+			// Maximum: 9999999999 (Biggest and most painful explosion)
 			"Bomb Power"					"75"
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Bomb Range"					"500.0"
 
 			// The Super Tank's rock creates an explosion when it breaks.
@@ -492,17 +492,17 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Bury Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Bury Duration"					"5.0"
 
 			// The Super Tank buries survivors this deep into the ground.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Bury Height"					"50.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -513,7 +513,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Bury Range"					"500.0"
 		}
 		// The Super Tank creates clones of itself.
@@ -531,7 +531,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Clone Chance"					"4"
 
 			// The Super Tank's clones' health.
@@ -557,12 +557,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Drug Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Drug Duration"					"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -573,7 +573,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Drug Range"					"500.0"
 		}
 		// The Super Tank forces survivors to only use a certain weapon slot.
@@ -589,12 +589,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Enforce Chance"				"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Enforce Duration"				"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -605,7 +605,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Enforce Range"					"500.0"
 
 			// The Super Tank forces survivors to only use one of the following weapon slots.
@@ -631,7 +631,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Fire Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -642,7 +642,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Fire Range"					"500.0"
 
 			// The Super Tank's rock creates a fire when it breaks.
@@ -660,12 +660,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Flash Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Flash Duration"				"5.0"
 
 			// The Super Tank's special speed.
@@ -686,7 +686,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Fling Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -697,7 +697,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Fling Range"					"500.0"
 		}
 		// The Super Tank receives more damage from bullets and explosions than usual.
@@ -710,12 +710,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Fragile Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Fragile Duration"				"5.0"
 		}
 		// The Super Tank makes itself and any other nearby infected invisible, and disarms survivors.
@@ -732,7 +732,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Ghost Chance"					"4"
 
 			// The limit of the Super Tank's ghost fade effect.
@@ -748,7 +748,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Ghost Range"					"500.0"
 
 			// The Super Tank disarms the following weapon slots.
@@ -771,12 +771,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"God Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"God Duration"					"5.0"
 		}
 		// The Super Tank pulls in or pushes away survivors and any other nearby infected, and changes the survivors' gravity.
@@ -793,12 +793,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Gravity Chance"				"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Gravity Duration"				"5.0"
 
 			// The Super Tank's gravity force.
@@ -816,7 +816,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Gravity Range"					"500.0"
 
 			// The Super Tank sets the survivors' gravity to this value.
@@ -838,7 +838,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Heal Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -849,12 +849,12 @@ SourceMod 1.8+
 
 			// The Super Tank receives health from nearby infected every time this many seconds passes.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Heal Interval"					"5.0"
 
 			// The distance between an infected and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Heal Range"					"500.0"
 
 			// The Super Tank receives this much health from nearby common infected.
@@ -891,17 +891,17 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Hurt Chance"					"4"
 
 			// The Super Tank's pain infliction does this much damage.
 			// Minimum: 1
-			// Maximum: 99999
+			// Maximum: 9999999999
 			"Hurt Damage"					"1"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Hurt Duration"					"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -912,7 +912,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Hurt Range"					"500.0"
 		}
 		// The Super Tank hypnotizes survivors to damage themselves or teammates.
@@ -928,12 +928,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Hypno Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Hypno Duration"				"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -949,7 +949,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Hypno Range"					"500.0"
 		}
 		// The Super Tank freezes survivors.
@@ -965,12 +965,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Ice Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Ice Duration"					"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -981,7 +981,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Ice Range"						"500.0"
 		}
 		// The Super Tank forces survivors to go idle.
@@ -997,7 +997,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Idle Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1008,7 +1008,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Idle Range"					"500.0"
 		}
 		// The Super Tank inverts the survivors' movement keys.
@@ -1024,12 +1024,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Invert Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Invert Duration"				"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1039,7 +1039,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Invert Range"					"500.0"
 		}
 		// The Super Tank gives survivors items upon death.
@@ -1052,7 +1052,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Item Chance"					"4"
 
 			// The Super Tank gives survivors this loadout.
@@ -1075,7 +1075,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Jump Chance"					"4"
 		}
 		// The Super Tank heals special infected upon death.
@@ -1088,7 +1088,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Medic Chance"					"4"
 
 			// The Super Tank gives special infected this much health each time.
@@ -1118,7 +1118,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Medic Range"					"500.0"
 		}
 		// The Super Tank creates meteor showers.
@@ -1131,12 +1131,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Meteor Chance"					"4"
 
 			// The Super Tank's meteorites do this much damage.
 			// Minimum: 1
-			// Maximum: 99999
+			// Maximum: 9999999999
 			"Meteor Damage"					"25"
 
 			// The radius of the Super Tank's meteor shower.
@@ -1163,7 +1163,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Minion Chance"					"4"
 
 			// The Super Tank can spawn these minions.
@@ -1191,12 +1191,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Nullify Chance"				"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Nullify Duration"				"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1206,7 +1206,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Nullify Range"					"500.0"
 		}
 		// The Super Tank starts panic events.
@@ -1222,7 +1222,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Panic Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1233,7 +1233,7 @@ SourceMod 1.8+
 
 			// The Super Tank starts a panic event every time this many seconds passes.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Panic Interval"				"5.0"
 		}
 		// The Super Tank pimp slaps survivors.
@@ -1249,17 +1249,17 @@ SourceMod 1.8+
 
 			// The amount of pimp slaps the Super Tank can give to survivors.
 			// Minimum: 1
-			// Maximum: 99999
+			// Maximum: 9999999999
 			"Pimp Amount"					"5"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Pimp Chance"					"4"
 
 			// The Super Tank's pimp slaps do this much damage.
 			// Minimum: 1
-			// Maximum: 99999
+			// Maximum: 9999999999
 			"Pimp Damage"					"1"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1270,7 +1270,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Pimp Range"					"500.0"
 		}
 		// The Super Tank pukes on survivors.
@@ -1286,7 +1286,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Puke Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1297,7 +1297,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Puke Range"					"500.0"
 		}
 		// The Super Tank gains speed when on fire.
@@ -1331,7 +1331,7 @@ SourceMod 1.8+
 
 			// The Super Tank regenerates health every time this many seconds passes.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Regenerate Interval"			"1.0"
 		}
 		// The Super Tank forces survivors to restart at the beginning of the map with a new loadout.
@@ -1347,7 +1347,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Restart Chance"				"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1362,7 +1362,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Restart Range"					"500.0"
 		}
 		// The Super Tank creates rock showers.
@@ -1375,17 +1375,17 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Rock Chance"					"4"
 
 			// The Super Tank's rocks do this much damage.
 			// Minimum: 1
-			// Maximum: 99999
+			// Maximum: 9999999999
 			"Rock Damage"					"5"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Rock Duration"					"5.0"
 
 			// The radius of the Super Tank's rock shower.
@@ -1410,7 +1410,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Rocket Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1420,7 +1420,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Rocket Range"					"500.0"
 		}
 		// The Super Tank shakes the survivors' screens.
@@ -1436,12 +1436,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Shake Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Shake Duration"				"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1452,7 +1452,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Shake Range"					"500.0"
 		}
 		// The Super Tank protects itself with a shield and traps survivors inside their own shields.
@@ -1471,7 +1471,7 @@ SourceMod 1.8+
 
 			// The Super Tank's shield reactivates after this many seconds passes.
 			// Minimum: 1.0
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Shield Delay"					"5.0"
 		}
 		// The Super Tank shoves survivors.
@@ -1487,12 +1487,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Shove Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Shove Duration"				"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1503,7 +1503,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Shove Range"					"500.0"
 		}
 		// The Super Tank smites survivors.
@@ -1519,7 +1519,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Smite Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1530,7 +1530,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Smite Range"					"500.0"
 		}
 		// The Super Tank spams rocks at survivors.
@@ -1543,17 +1543,17 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Spam Chance"					"4"
 
 			// The Super Tank's rocks do this much damage.
 			// Minimum: 1
-			// Maximum: 99999
+			// Maximum: 9999999999
 			"Spam Damage"					"5"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Spam Duration"					"5.0"
 		}
 		// The Super Tank slows survivors down.
@@ -1569,12 +1569,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Stun Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Stun Duration"					"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1585,7 +1585,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Stun Range"					"500.0"
 
 			// The Super Tank sets the survivors' run speed to this value.
@@ -1638,7 +1638,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Vampire Chance"				"4"
 
 			// The Super Tank receives this much health from survivors.
@@ -1657,7 +1657,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Vampire Range"					"500.0"
 		}
 		// The Super Tank changes the survivors' field of views.
@@ -1673,12 +1673,12 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Vision Chance"					"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Vision Duration"				"5.0"
 
 			// The Super Tank sets survivors' fields of view to this value.
@@ -1694,7 +1694,7 @@ SourceMod 1.8+
 
 			// The distance between a survivor and the Super Tank to trigger the ability.
 			// Minimum: 1.0 (Closest)
-			// Maximum: 99999.0 (Farthest)
+			// Maximum: 9999999999.0 (Farthest)
 			"Vision Range"					"500.0"
 		}
 		// The Super Tank warps to survivors and warps survivors back to teammates.
@@ -1709,7 +1709,7 @@ SourceMod 1.8+
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
-			// Maximum: 99999 (Less chance)
+			// Maximum: 9999999999 (Less chance)
 			"Warp Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1720,7 +1720,7 @@ SourceMod 1.8+
 
 			// The Super Tank warps to a random survivor every time this many seconds passes.
 			// Minimum: 0.1
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Warp Interval"					"5.0"
 		}
 		// The Super Tank spawns Witch minions.
@@ -1738,7 +1738,7 @@ SourceMod 1.8+
 
 			// The Super Tank's Witch minion causes this much damage per hit.
 			// Minimum: 1.0
-			// Maximum: 99999.0
+			// Maximum: 9999999999.0
 			"Witch Minion Damage"			"10.0"
 		}
 		// The Super Tank spawns common infected.
