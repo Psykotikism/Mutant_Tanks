@@ -1754,7 +1754,6 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 					case 1: vTankCountCheck(iWave1);
 					case 2: vTankCountCheck(iWave2);
 					case 3: vTankCountCheck(iWave3);
-					default: vTankCountCheck(iWave1);
 				}
 			}
 		}
@@ -2992,7 +2991,6 @@ void vEnforceHit(int client, int owner, int enabled)
 			case '3': g_iEnforceSlot[client] = 2;
 			case '4': g_iEnforceSlot[client] = 3;
 			case '5': g_iEnforceSlot[client] = 4;
-			default: g_iEnforceSlot[client] = 4;
 		}
 		float flEnforceDuration = !g_bTankConfig[g_iTankType[owner]] ? g_flEnforceDuration[g_iTankType[owner]] : g_flEnforceDuration2[g_iTankType[owner]];
 		CreateTimer(flEnforceDuration, tTimerStopEnforce, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
@@ -5787,7 +5785,6 @@ public Action tTimerTankHealthUpdate(Handle timer)
 								case 1: PrintHintText(iSurvivor, "%s %N", ST_PREFIX, iTarget);
 								case 2: PrintHintText(iSurvivor, "%s %d HP", ST_PREFIX, iHealth);
 								case 3: PrintHintText(iSurvivor, "%s %N (%d HP)", ST_PREFIX, iTarget, iHealth);
-								default: PrintHintText(iSurvivor, "%s %N (%d HP)", ST_PREFIX, iTarget, iHealth);
 							}
 						}
 					}
@@ -5988,7 +5985,6 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 			case 1: SetEntityHealth(iTank, iFinalHealth);
 			case 2: SetEntityHealth(iTank, iFinalHealth2);
 			case 3: SetEntityHealth(iTank, iFinalHealth3);
-			default: SetEntityHealth(iTank, iFinalNoHealth);
 		}
 		float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
 		vThrowInterval(iTank, flThrowInterval);
