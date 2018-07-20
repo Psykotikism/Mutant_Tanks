@@ -1966,10 +1966,10 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the value of "M
 }
 ```
 
-2. Can you add more abilities?
+2. Can you add more abilities or features?
 
-- That depends on whether it's doable/possible or not, and if I want to add it.
-- If it's from another plugin, it would depend on whether the code is too long or not, and if it is, I most likely won't go through all that effort for just 1 ability.
+- That depends on whether it's doable/possible and if I want to add it.
+- If it's from another plugin, it would depend on whether the code is too long, and if it is, I most likely won't go through all that effort for just 1 ability.
 - Post on the AM thread or PM me.
 
 3. How do I enable/disable the plugin in certain game modes?
@@ -2325,6 +2325,8 @@ Command usage:
 ```
 sm_tank <type 1-*> *The maximum value is determined by the value of the "Maximum Types" KeyValue. (The highest value you can set is 2500 though.)
 ```
+
+Additionally, there is also a setting called "Create Backup" which users can use to create a backup copy of the main config file in case they want to test or mess around with the settings.
 
 ### Configuration
 1. How do I enable the custom configurations features?
