@@ -138,7 +138,7 @@ SourceMod 1.8+
 			// Maximum types of Super Tanks allowed.
 			// Minimum: 1
 			// Maximum: 2500
-			"Maximum Types"					"76"
+			"Maximum Types"					"2500"
 
 			// Multiply the Super Tank's health.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
@@ -191,6 +191,8 @@ SourceMod 1.8+
 		{
 			// Name of the Super Tank.
 			// Character limit: 32
+			// Empty: "Tank"
+			// Not Empty: Tank's custom name
 			"Tank Name"						"Tank 1"
 
 			// Enable the Super Tank.

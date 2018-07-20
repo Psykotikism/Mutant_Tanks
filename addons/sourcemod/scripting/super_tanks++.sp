@@ -815,6 +815,7 @@ public void OnConfigsExecuted()
 		char sGameType[2049];
 		char sTypes[64][32];
 		g_cvSTFindConVar[2].GetString(sGameType, sizeof(sGameType));
+		TrimString(sGameType);
 		ExplodeString(sGameType, ",", sTypes, sizeof(sTypes), sizeof(sTypes[]));
 		for (int iMode = 0; iMode < sizeof(sTypes); iMode++)
 		{
@@ -1515,6 +1516,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 									char sItems[5][64];
 									char sItemLoadout[325];
 									sItemLoadout = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sItemLoadout[g_iTankType[iPlayer]] : g_sItemLoadout2[g_iTankType[iPlayer]];
+									TrimString(sItemLoadout);
 									ExplodeString(sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
 									switch (GetRandomInt(1, 5))
 									{
@@ -1529,6 +1531,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 								{
 									char sItemLoadout[325];
 									sItemLoadout = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sItemLoadout[g_iTankType[iPlayer]] : g_sItemLoadout2[g_iTankType[iPlayer]];
+									TrimString(sItemLoadout);
 									vGiveItem(iSurvivor, sItemLoadout);
 								}
 							}
@@ -1554,30 +1557,32 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 								char sHealth[6][6];
 								char sMedicHealth[36];
 								sMedicHealth = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sMedicHealth[g_iTankType[iPlayer]] : g_sMedicHealth2[g_iTankType[iPlayer]];
+								TrimString(sMedicHealth);
 								ExplodeString(sMedicHealth, ",", sHealth, sizeof(sHealth), sizeof(sHealth[]));
 								char sMaxHealth[6][6];
 								char sMedicMaxHealth[36];
 								sMedicMaxHealth = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sMedicMaxHealth[g_iTankType[iPlayer]] : g_sMedicMaxHealth2[g_iTankType[iPlayer]];
+								TrimString(sMedicMaxHealth);
 								ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
 								int iHealth = GetClientHealth(iInfected);
-								int iSmokerHealth = StringToInt(sHealth[0]);
+								int iSmokerHealth = (sHealth[0][0] != '\0') ? StringToInt(sHealth[0]) : 25;
 								iSmokerHealth = iSetCellLimit(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-								int iSmokerMaxHealth = StringToInt(sMaxHealth[0]);
-								int iBoomerHealth = StringToInt(sHealth[1]);
+								int iSmokerMaxHealth = (sMaxHealth[0][0] != '\0') ? StringToInt(sMaxHealth[0]) : 250;
+								int iBoomerHealth = (sHealth[1][0] != '\0') ? StringToInt(sHealth[1]) : 25;
 								iBoomerHealth = iSetCellLimit(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-								int iBoomerMaxHealth = StringToInt(sMaxHealth[1]);
-								int iHunterHealth = StringToInt(sHealth[2]);
+								int iBoomerMaxHealth = (sMaxHealth[1][0] != '\0') ? StringToInt(sMaxHealth[1]) : 50;
+								int iHunterHealth = (sHealth[2][0] != '\0') ? StringToInt(sHealth[2]) : 25;
 								iHunterHealth = iSetCellLimit(iHunterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-								int iHunterMaxHealth = StringToInt(sMaxHealth[2]);
-								int iSpitterHealth = StringToInt(sHealth[3]);
+								int iHunterMaxHealth = (sMaxHealth[2][0] != '\0') ? StringToInt(sMaxHealth[2]) : 250;
+								int iSpitterHealth = (sHealth[3][0] != '\0') ? StringToInt(sHealth[3]) : 25;
 								iSpitterHealth = iSetCellLimit(iSpitterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-								int iSpitterMaxHealth = StringToInt(sMaxHealth[3]);
-								int iJockeyHealth = StringToInt(sHealth[4]);
+								int iSpitterMaxHealth = (sMaxHealth[3][0] != '\0') ? StringToInt(sMaxHealth[3]) : 100;
+								int iJockeyHealth = (sHealth[4][0] != '\0') ? StringToInt(sHealth[4]) : 25;
 								iJockeyHealth = iSetCellLimit(iJockeyHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-								int iJockeyMaxHealth = StringToInt(sMaxHealth[4]);
-								int iChargerHealth = StringToInt(sHealth[5]);
+								int iJockeyMaxHealth = (sMaxHealth[4][0] != '\0') ? StringToInt(sMaxHealth[4]) : 325;
+								int iChargerHealth = (sHealth[5][0] != '\0') ? StringToInt(sHealth[5]) : 25;
 								iChargerHealth = iSetCellLimit(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-								int iChargerMaxHealth = StringToInt(sMaxHealth[5]);
+								int iChargerMaxHealth = (sMaxHealth[5][0] != '\0') ? StringToInt(sMaxHealth[5]) : 600;
 								if (bIsSmoker(iInfected))
 								{
 									vGiveHealth(iInfected, iHealth, iHealth + iSmokerHealth, iSmokerMaxHealth);
@@ -1736,10 +1741,14 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 				char sNumbers[3][4];
 				char sTankWaves[12];
 				sTankWaves = !g_bGeneralConfig ? g_sTankWaves : g_sTankWaves2;
+				TrimString(sTankWaves);
 				ExplodeString(sTankWaves, ",", sNumbers, sizeof(sNumbers), sizeof(sNumbers[]));
-				int iWave1 = StringToInt(sNumbers[0]);
-				int iWave2 = StringToInt(sNumbers[1]);
-				int iWave3 = StringToInt(sNumbers[2]);
+				TrimString(sNumbers[0]);
+				int iWave1 = (sNumbers[0][0] != '\0') ? StringToInt(sNumbers[0]) : 1;
+				TrimString(sNumbers[1]);
+				int iWave2 = (sNumbers[1][0] != '\0') ? StringToInt(sNumbers[1]) : 2;
+				TrimString(sNumbers[2]);
+				int iWave3 = (sNumbers[2][0] != '\0') ? StringToInt(sNumbers[2]) : 3;
 				switch (g_iTankWave)
 				{
 					case 1: vTankCountCheck(iWave1);
@@ -2647,13 +2656,20 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 	char sSet[6][4];
 	char sPropsChance[12];
 	sPropsChance = !g_bTankConfig[g_iTankType[client]] ? g_sPropsChance[g_iTankType[client]] : g_sPropsChance2[g_iTankType[client]];
+	TrimString(sPropsChance);
 	ExplodeString(sPropsChance, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-	int iChance1 = StringToInt(sSet[0]);
-	int iChance2 = StringToInt(sSet[1]);
-	int iChance3 = StringToInt(sSet[2]);
-	int iChance4 = StringToInt(sSet[3]);
-	int iChance5 = StringToInt(sSet[4]);
-	int iChance6 = StringToInt(sSet[5]);
+	TrimString(sSet[0]);
+	int iChance1 = (sSet[0][0] != '\0') ? StringToInt(sSet[0]) : 3;
+	TrimString(sSet[1]);
+	int iChance2 = (sSet[1][0] != '\0') ? StringToInt(sSet[1]) : 3;
+	TrimString(sSet[2]);
+	int iChance3 = (sSet[2][0] != '\0') ? StringToInt(sSet[2]) : 3;
+	TrimString(sSet[3]);
+	int iChance4 = (sSet[3][0] != '\0') ? StringToInt(sSet[3]) : 3;
+	TrimString(sSet[4]);
+	int iChance5 = (sSet[4][0] != '\0') ? StringToInt(sSet[4]) : 3;
+	TrimString(sSet[5]);
+	int iChance6 = (sSet[5][0] != '\0') ? StringToInt(sSet[5]) : 3;
 	char sPropsAttached[7];
 	sPropsAttached = !g_bTankConfig[g_iTankType[client]] ? g_sPropsAttached[g_iTankType[client]] : g_sPropsAttached2[g_iTankType[client]];
 	if (GetRandomInt(1, iChance1) == 1 && StrContains(sPropsAttached, "1") != -1)
@@ -2682,8 +2698,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 				DispatchKeyValue(iBeam[iLight], "HDRColorScale", "0.7");
 				DispatchKeyValue(iBeam[iLight], "fadescale", "1");
 				DispatchKeyValue(iBeam[iLight], "fademindist", "-1");
-				SetVariantString("!activator");
-				AcceptEntityInput(iBeam[iLight], "SetParent", client);
+				vSetEntityParent(iBeam[iLight], client);
 				switch (iLight)
 				{
 					case 1:
@@ -2726,8 +2741,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 				SetEntityRenderColor(iJetpack[iOzTank], red2, green2, blue2, alpha2);
 				SetEntProp(iJetpack[iOzTank], Prop_Data, "m_takedamage", 0, 1);
 				SetEntProp(iJetpack[iOzTank], Prop_Data, "m_CollisionGroup", 2);
-				SetVariantString("!activator");
-				AcceptEntityInput(iJetpack[iOzTank], "SetParent", client);
+				vSetEntityParent(iJetpack[iOzTank], client);
 				switch (iOzTank)
 				{
 					case 1:
@@ -2779,8 +2793,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 						DispatchKeyValue(iFlame, "EndSize", "8");
 						DispatchKeyValue(iFlame, "Rate", "555");
 						DispatchKeyValue(iFlame, "JetLength", "40");
-						SetVariantString("!activator");
-						AcceptEntityInput(iFlame, "SetParent", iJetpack[iOzTank]);
+						vSetEntityParent(iFlame, iJetpack[iOzTank]);
 						SetEntPropEnt(iFlame, Prop_Send, "m_hOwnerEntity", client);
 						float flOrigin2[3];
 						float flAngles3[3];
@@ -2811,8 +2824,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 				SetEntityRenderColor(iConcrete[iRock], red4, green4, blue4, alpha4);
 				DispatchKeyValueVector(iConcrete[iRock], "origin", flOrigin);
 				DispatchKeyValueVector(iConcrete[iRock], "angles", flAngles);
-				SetVariantString("!activator");
-				AcceptEntityInput(iConcrete[iRock], "SetParent", client);
+				vSetEntityParent(iConcrete[iRock], client);
 				switch (iRock)
 				{
 					case 1, 5, 9, 13, 17: SetVariantString("rshoulder");
@@ -2856,8 +2868,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 				SetEntityRenderColor(iWheel[iTire], red5, green5, blue5, alpha5);
 				DispatchKeyValueVector(iWheel[iTire], "origin", flOrigin);
 				DispatchKeyValueVector(iWheel[iTire], "angles", flAngles);
-				SetVariantString("!activator");
-				AcceptEntityInput(iWheel[iTire], "SetParent", client);
+				vSetEntityParent(iWheel[iTire], client);
 				switch (iTire)
 				{
 					case 1: SetVariantString("relbow");
@@ -3100,41 +3111,61 @@ void vGhostAbility(int client, int enabled)
 	char sSet[2][16];
 	char sTankColors[28];
 	sTankColors = !g_bTankConfig[g_iTankType[client]] ? g_sTankColors[g_iTankType[client]] : g_sTankColors2[g_iTankType[client]];
+	TrimString(sTankColors);
 	ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 	char sRGB[4][4];
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
-	int iRed = StringToInt(sRGB[0]);
-	int iGreen = StringToInt(sRGB[1]);
-	int iBlue = StringToInt(sRGB[2]);
+	TrimString(sRGB[0]);
+	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+	TrimString(sRGB[1]);
+	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+	TrimString(sRGB[2]);
+	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
 	char sSet2[5][16];
 	char sPropsColors[80];
 	sPropsColors = !g_bTankConfig[g_iTankType[client]] ? g_sPropsColors[g_iTankType[client]] : g_sPropsColors2[g_iTankType[client]];
+	TrimString(sPropsColors);
 	ExplodeString(sPropsColors, "|", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 	char sProps[4][4];
 	ExplodeString(sSet2[0], ",", sProps, sizeof(sProps), sizeof(sProps[]));
-	int iRed2 = StringToInt(sProps[0]);
-	int iGreen2 = StringToInt(sProps[1]);
-	int iBlue2 = StringToInt(sProps[2]);
+	TrimString(sProps[0]);
+	int iRed2 = (sProps[0][0] != '\0') ? StringToInt(sProps[0]) : 255;
+	TrimString(sProps[1]);
+	int iGreen2 = (sProps[1][0] != '\0') ? StringToInt(sProps[1]) : 255;
+	TrimString(sProps[2]);
+	int iBlue2 = (sProps[2][0] != '\0') ? StringToInt(sProps[2]) : 255;
 	char sProps2[4][4];
 	ExplodeString(sSet2[1], ",", sProps2, sizeof(sProps2), sizeof(sProps2[]));
-	int iRed3 = StringToInt(sProps2[0]);
-	int iGreen3 = StringToInt(sProps2[1]);
-	int iBlue3 = StringToInt(sProps2[2]);
+	TrimString(sProps2[0]);
+	int iRed3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[0]) : 255;
+	TrimString(sProps2[1]);
+	int iGreen3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[1]) : 255;
+	TrimString(sProps2[2]);
+	int iBlue3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[2]) : 255;
 	char sProps3[4][4];
 	ExplodeString(sSet2[2], ",", sProps3, sizeof(sProps3), sizeof(sProps3[]));
-	int iRed4 = StringToInt(sProps3[0]);
-	int iGreen4 = StringToInt(sProps3[1]);
-	int iBlue4 = StringToInt(sProps3[2]);
+	TrimString(sProps3[0]);
+	int iRed4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[0]) : 255;
+	TrimString(sProps3[1]);
+	int iGreen4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[1]) : 255;
+	TrimString(sProps3[2]);
+	int iBlue4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[2]) : 255;
 	char sProps4[4][4];
 	ExplodeString(sSet2[3], ",", sProps4, sizeof(sProps4), sizeof(sProps4[]));
-	int iRed5 = StringToInt(sProps4[0]);
-	int iGreen5 = StringToInt(sProps4[1]);
-	int iBlue5 = StringToInt(sProps4[2]);
+	TrimString(sProps4[0]);
+	int iRed5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[0]) : 255;
+	TrimString(sProps4[1]);
+	int iGreen5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[1]) : 255;
+	TrimString(sProps4[2]);
+	int iBlue5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[2]) : 255;
 	char sProps5[4][4];
 	ExplodeString(sSet2[4], ",", sProps5, sizeof(sProps5), sizeof(sProps5[]));
-	int iRed6 = StringToInt(sProps5[0]);
-	int iGreen6 = StringToInt(sProps5[1]);
-	int iBlue6 = StringToInt(sProps5[2]);
+	TrimString(sProps5[0]);
+	int iRed6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[0]) : 255;
+	TrimString(sProps5[1]);
+	int iGreen6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[1]) : 255;
+	TrimString(sProps5[2]);
+	int iBlue6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[2]) : 255;
 	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
 	if (enabled == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client))
 	{
@@ -3240,8 +3271,7 @@ void vGravityAbility(int client, int enabled)
 			DispatchKeyValue(iBlackhole, "radius", "750");
 			DispatchKeyValueFloat(iBlackhole, "magnitude", flGravityForce);
 			DispatchKeyValue(iBlackhole, "spawnflags", "8");
-			SetVariantString("!activator");
-			AcceptEntityInput(iBlackhole, "SetParent", client);
+			vSetEntityParent(iBlackhole, client);
 			AcceptEntityInput(iBlackhole, "Enable");
 			SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
 			if (bIsL4D2Game())
@@ -3495,7 +3525,6 @@ void vMinion(int client, char[] type, float pos[3], bool boss = false)
 	}
 	if (iSelectedType > 0)
 	{
-		vAttachParticle(client, PARTICLE_SMOKE, 1.5);
 		TeleportEntity(iSelectedType, pos, NULL_VECTOR, NULL_VECTOR);
 		if (boss && strcmp(type, "tank") == 0)
 		{
@@ -3775,8 +3804,7 @@ void vRocketHit(int client, int owner, int enabled)
 			SetEntityRenderColor(iFlame, 180, 70, 10, 180);
 			TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
 			DispatchSpawn(iFlame);
-			SetVariantString("!activator");
-			AcceptEntityInput(iFlame, "SetParent", client);
+			vSetEntityParent(iFlame, client);
 			iFlame = EntIndexToEntRef(iFlame);
 			vDeleteEntity(iFlame, 3.0);
 			g_iRocket[client] = iFlame;
@@ -3792,18 +3820,26 @@ void vSetColor(int client, int value)
 	char sSet[2][16];
 	char sTankColors[28];
 	sTankColors = !g_bTankConfig[value] ? g_sTankColors[value] : g_sTankColors2[value];
+	TrimString(sTankColors);
 	ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 	char sRGB[4][4];
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
-	int iRed = StringToInt(sRGB[0]);
-	int iGreen = StringToInt(sRGB[1]);
-	int iBlue = StringToInt(sRGB[2]);
-	int iAlpha = StringToInt(sRGB[3]);
+	TrimString(sRGB[0]);
+	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+	TrimString(sRGB[1]);
+	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+	TrimString(sRGB[2]);
+	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+	TrimString(sRGB[3]);
+	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
 	char sGlow[3][4];
 	ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
-	int iRed2 = StringToInt(sGlow[0]);
-	int iGreen2 = StringToInt(sGlow[1]);
-	int iBlue2 = StringToInt(sGlow[2]);
+	TrimString(sGlow[0]);
+	int iRed2 = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
+	TrimString(sGlow[1]);
+	int iGreen2 = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
+	TrimString(sGlow[2]);
+	int iBlue2 = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
 	int iGlowEffect = !g_bTankConfig[value] ? g_iGlowEffect[value] : g_iGlowEffect2[value];
 	if (iGlowEffect == 1 && bIsL4D2Game())
 	{
@@ -3820,37 +3856,58 @@ void vSetName(int client, char[] name = "Tank")
 	char sSet[5][16];
 	char sPropsColors[80];
 	sPropsColors = !g_bTankConfig[g_iTankType[client]] ? g_sPropsColors[g_iTankType[client]] : g_sPropsColors2[g_iTankType[client]];
+	TrimString(sPropsColors);
 	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 	char sRGB[4][4];
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
-	int iRed = StringToInt(sRGB[0]);
-	int iGreen = StringToInt(sRGB[1]);
-	int iBlue = StringToInt(sRGB[2]);
-	int iAlpha = StringToInt(sRGB[3]);
+	TrimString(sRGB[0]);
+	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+	TrimString(sRGB[1]);
+	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+	TrimString(sRGB[2]);
+	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+	TrimString(sRGB[3]);
+	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
 	char sRGB2[4][4];
 	ExplodeString(sSet[1], ",", sRGB2, sizeof(sRGB2), sizeof(sRGB2[]));
-	int iRed2 = StringToInt(sRGB2[0]);
-	int iGreen2 = StringToInt(sRGB2[1]);
-	int iBlue2 = StringToInt(sRGB2[2]);
-	int iAlpha2 = StringToInt(sRGB2[3]);
+	TrimString(sRGB2[0]);
+	int iRed2 = (sRGB2[0][0] != '\0') ? StringToInt(sRGB2[0]) : 255;
+	TrimString(sRGB2[1]);
+	int iGreen2 = (sRGB2[1][0] != '\0') ? StringToInt(sRGB2[1]) : 255;
+	TrimString(sRGB2[2]);
+	int iBlue2 = (sRGB2[2][0] != '\0') ? StringToInt(sRGB2[2]) : 255;
+	TrimString(sRGB2[3]);
+	int iAlpha2 = (sRGB2[3][0] != '\0') ? StringToInt(sRGB2[3]) : 255;
 	char sRGB3[4][4];
 	ExplodeString(sSet[2], ",", sRGB3, sizeof(sRGB3), sizeof(sRGB3[]));
-	int iRed3 = StringToInt(sRGB3[0]);
-	int iGreen3 = StringToInt(sRGB3[1]);
-	int iBlue3 = StringToInt(sRGB3[2]);
-	int iAlpha3 = StringToInt(sRGB3[3]);
+	TrimString(sRGB3[0]);
+	int iRed3 = (sRGB3[0][0] != '\0') ? StringToInt(sRGB3[0]) : 255;
+	TrimString(sRGB3[1]);
+	int iGreen3 = (sRGB3[1][0] != '\0') ? StringToInt(sRGB3[1]) : 255;
+	TrimString(sRGB3[2]);
+	int iBlue3 = (sRGB3[2][0] != '\0') ? StringToInt(sRGB3[2]) : 255;
+	TrimString(sRGB3[3]);
+	int iAlpha3 = (sRGB3[3][0] != '\0') ? StringToInt(sRGB3[3]) : 255;
 	char sRGB4[4][4];
 	ExplodeString(sSet[3], ",", sRGB4, sizeof(sRGB4), sizeof(sRGB4[]));
-	int iRed4 = StringToInt(sRGB4[0]);
-	int iGreen4 = StringToInt(sRGB4[1]);
-	int iBlue4 = StringToInt(sRGB4[2]);
-	int iAlpha4 = StringToInt(sRGB4[3]);
+	TrimString(sRGB4[0]);
+	int iRed4 = (sRGB4[0][0] != '\0') ? StringToInt(sRGB4[0]) : 255;
+	TrimString(sRGB4[1]);
+	int iGreen4 = (sRGB4[1][0] != '\0') ? StringToInt(sRGB4[1]) : 255;
+	TrimString(sRGB4[2]);
+	int iBlue4 = (sRGB4[2][0] != '\0') ? StringToInt(sRGB4[2]) : 255;
+	TrimString(sRGB4[3]);
+	int iAlpha4 = (sRGB4[3][0] != '\0') ? StringToInt(sRGB4[3]) : 255;
 	char sRGB5[4][4];
 	ExplodeString(sSet[4], ",", sRGB5, sizeof(sRGB5), sizeof(sRGB5[]));
-	int iRed5 = StringToInt(sRGB5[0]);
-	int iGreen5 = StringToInt(sRGB5[1]);
-	int iBlue5 = StringToInt(sRGB5[2]);
-	int iAlpha5 = StringToInt(sRGB5[3]);
+	TrimString(sRGB5[0]);
+	int iRed5 = (sRGB5[0][0] != '\0') ? StringToInt(sRGB5[0]) : 255;
+	TrimString(sRGB5[1]);
+	int iGreen5 = (sRGB5[1][0] != '\0') ? StringToInt(sRGB5[1]) : 255;
+	TrimString(sRGB5[2]);
+	int iBlue5 = (sRGB5[2][0] != '\0') ? StringToInt(sRGB5[2]) : 255;
+	TrimString(sRGB5[3]);
+	int iAlpha5 = (sRGB5[3][0] != '\0') ? StringToInt(sRGB5[3]) : 255;
 	if (bIsTank(client))
 	{
 		vSetProps(client, iRed, iGreen, iBlue, iAlpha, iRed2, iGreen2, iBlue2, iAlpha2, iRed3, iGreen3, iBlue3, iAlpha3, iRed4, iGreen4, iBlue4, iAlpha4, iRed5, iGreen5, iBlue5, iAlpha5);
@@ -3912,10 +3969,14 @@ void vShieldAbility(int client, bool shield, int enabled)
 			char sSet[3][4];
 			char sShieldColor[12];
 			sShieldColor = !g_bTankConfig[g_iTankType[client]] ? g_sShieldColor[g_iTankType[client]] : g_sShieldColor2[g_iTankType[client]];
+			TrimString(sShieldColor);
 			ExplodeString(sShieldColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-			int iRed = StringToInt(sSet[0]);
-			int iGreen = StringToInt(sSet[1]);
-			int iBlue = StringToInt(sSet[2]);
+			TrimString(sSet[0]);
+			int iRed = (sSet[0][0] != '\0') ? StringToInt(sSet[0]) : 255;
+			TrimString(sSet[1]);
+			int iGreen = (sSet[1][0] != '\0') ? StringToInt(sSet[1]) : 255;
+			TrimString(sSet[2]);
+			int iBlue = (sSet[2][0] != '\0') ? StringToInt(sSet[2]) : 255;
 			float flOrigin[3];
 			GetClientAbsOrigin(client, flOrigin);
 			flOrigin[2] -= 120.0;
@@ -3925,8 +3986,7 @@ void vShieldAbility(int client, bool shield, int enabled)
 				SetEntityModel(iShield, MODEL_SHIELD);
 				DispatchKeyValueVector(iShield, "origin", flOrigin);
 				DispatchSpawn(iShield);
-				SetVariantString("!activator");
-				AcceptEntityInput(iShield, "SetParent", client);
+				vSetEntityParent(iShield, client);
 				SetEntityRenderMode(iShield, RENDER_TRANSTEXTURE);
 				SetEntityRenderColor(iShield, iRed, iGreen, iBlue, 50);
 				SetEntProp(iShield, Prop_Send, "m_CollisionGroup", 1);
@@ -4330,12 +4390,16 @@ public Action tTimerBlurEffect(Handle timer, any userid)
 		char sSet[2][16];
 		char sTankColors[28];
 		sTankColors = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankColors[g_iTankType[iTank]] : g_sTankColors2[g_iTankType[iTank]];
+		TrimString(sTankColors);
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 		char sRGB[4][4];
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
-		int iRed = StringToInt(sRGB[0]);
-		int iGreen = StringToInt(sRGB[1]);
-		int iBlue = StringToInt(sRGB[2]);
+		TrimString(sRGB[0]);
+		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+		TrimString(sRGB[1]);
+		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+		TrimString(sRGB[2]);
+		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
 		float flTankPos[3];
 		float flTankAng[3];
 		GetClientAbsOrigin(iTank, flTankPos);
@@ -4787,12 +4851,16 @@ public Action tTimerHeal(Handle timer, any userid)
 			char sSet[2][16];
 			char sTankColors[28];
 			sTankColors = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankColors[g_iTankType[iTank]] : g_sTankColors2[g_iTankType[iTank]];
+			TrimString(sTankColors);
 			ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 			char sGlow[3][4];
 			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
-			int iRed = StringToInt(sGlow[0]);
-			int iGreen = StringToInt(sGlow[1]);
-			int iBlue = StringToInt(sGlow[2]);
+			TrimString(sGlow[0]);
+			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
+			TrimString(sGlow[1]);
+			int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
+			TrimString(sGlow[2]);
+			int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
 			SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 			SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));
 			SetEntProp(iTank, Prop_Send, "m_bFlashing", 0);
@@ -5072,9 +5140,12 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	char sRadius[2][7];
 	char sMeteorRadius[13];
 	sMeteorRadius = !g_bTankConfig[g_iTankType[iTank]] ? g_sMeteorRadius[g_iTankType[iTank]] : g_sMeteorRadius2[g_iTankType[iTank]];
+	TrimString(sMeteorRadius);
 	ExplodeString(sMeteorRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
-	float flMin = StringToFloat(sRadius[0]);
-	float flMax = StringToFloat(sRadius[1]);
+	TrimString(sRadius[0]);
+	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -200.0;
+	TrimString(sRadius[1]);
+	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
 	flMin = flSetFloatLimit(flMin, -200.0, 0.0);
 	flMax = flSetFloatLimit(flMax, 0.0, 200.0);
 	if (iMeteorAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
@@ -5296,9 +5367,12 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	char sRadius[2][6];
 	char sRockRadius[12];
 	sRockRadius = !g_bTankConfig[g_iTankType[iTank]] ? g_sRockRadius[g_iTankType[iTank]] : g_sRockRadius2[g_iTankType[iTank]];
+	TrimString(sRockRadius);
 	ExplodeString(sRockRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
-	float flMin = StringToFloat(sRadius[0]);
-	float flMax = StringToFloat(sRadius[1]);
+	TrimString(sRadius[0]);
+	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -5.0;
+	TrimString(sRadius[1]);
+	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 5.0;
 	flMin = flSetFloatLimit(flMin, -5.0, 0.0);
 	flMax = flSetFloatLimit(flMax, 0.0, 5.0);
 	if (iRockAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (flTime + flRockDuration) < GetEngineTime())
