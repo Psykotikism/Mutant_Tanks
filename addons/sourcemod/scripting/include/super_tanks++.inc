@@ -521,7 +521,7 @@ stock int iGetIdlePlayer(int client)
 		GetEntityNetClass(client, sClassname, sizeof(sClassname));
 		if (strcmp(sClassname, "SurvivorBot") == 0)
 		{
-			int iIdler = GetClientOfUserId(GetEntProp(client, Prop_Send, "m_humanSpectatorUserID"));			
+			int iIdler = GetClientOfUserId(GetEntProp(client, Prop_Send, "m_humanSpectatorUserID"));
 			if (iIdler > 0 && IsClientInGame(iIdler) && GetClientTeam(iIdler) == 1)
 			{
 				return iIdler;
@@ -590,7 +590,7 @@ stock int iGetRandomSurvivor(int client, bool different = false)
     {
         if (bIsSurvivor(iSurvivor) || (bIsSurvivor(iSurvivor) && different && iSurvivor != client))
         {
-            iSurvivors[iSurvivorCount++] = iSurvivor; 
+            iSurvivors[iSurvivorCount++] = iSurvivor;
         }
     }
     return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
