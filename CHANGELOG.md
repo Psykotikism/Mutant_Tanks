@@ -14,6 +14,8 @@ Changes:
 3. Added new abilities.
 4. Increased the maximum amount of possible Super Tank types from 1000 to 2500.
 5. The plugin now creates a folder inside cfg/sourcemod/super_tanks++ called "backup_config" which contains a copy of the config file in case users need it.
+6. Added checks to trim all string-related settings to get rid of any white spaces.
+7. Raised the value limits of various settings.
 
 Files:
 
