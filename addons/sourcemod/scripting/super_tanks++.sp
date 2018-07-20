@@ -420,10 +420,10 @@ int g_iItemChance[ST_MAXTYPES + 1];
 int g_iItemChance2[ST_MAXTYPES + 1];
 int g_iItemMode[ST_MAXTYPES + 1];
 int g_iItemMode2[ST_MAXTYPES + 1];
-int g_iJumperAbility[ST_MAXTYPES + 1];
-int g_iJumperAbility2[ST_MAXTYPES + 1];
-int g_iJumperChance[ST_MAXTYPES + 1];
-int g_iJumperChance2[ST_MAXTYPES + 1];
+int g_iJumpAbility[ST_MAXTYPES + 1];
+int g_iJumpAbility2[ST_MAXTYPES + 1];
+int g_iJumpChance[ST_MAXTYPES + 1];
+int g_iJumpChance2[ST_MAXTYPES + 1];
 int g_iMaxTypes;
 int g_iMaxTypes2;
 int g_iMedicAbility[ST_MAXTYPES + 1];
@@ -2261,10 +2261,10 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iItemMode[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Mode", 0)) : (g_iItemMode2[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Mode", g_iItemMode[iIndex]));
 			main ? (g_iItemMode[iIndex] = iSetCellLimit(g_iItemMode[iIndex], 0, 1)) : (g_iItemMode2[iIndex] = iSetCellLimit(g_iItemMode2[iIndex], 0, 1));
 
-			main ? (g_iJumperAbility[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Enabled", 0)) : (g_iJumperAbility2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Enabled", g_iJumperAbility[iIndex]));
-			main ? (g_iJumperAbility[iIndex] = iSetCellLimit(g_iJumperAbility[iIndex], 0, 1)) : (g_iJumperAbility2[iIndex] = iSetCellLimit(g_iJumperAbility2[iIndex], 0, 1));
-			main ? (g_iJumperChance[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", 4)) : (g_iJumperChance2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", g_iJumperChance[iIndex]));
-			main ? (g_iJumperChance[iIndex] = iSetCellLimit(g_iJumperChance[iIndex], 1, 9999999999)) : (g_iJumperChance2[iIndex] = iSetCellLimit(g_iJumperChance2[iIndex], 1, 9999999999));
+			main ? (g_iJumpAbility[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Enabled", 0)) : (g_iJumpAbility2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Enabled", g_iJumpAbility[iIndex]));
+			main ? (g_iJumpAbility[iIndex] = iSetCellLimit(g_iJumpAbility[iIndex], 0, 1)) : (g_iJumpAbility2[iIndex] = iSetCellLimit(g_iJumpAbility2[iIndex], 0, 1));
+			main ? (g_iJumpChance[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", 4)) : (g_iJumpChance2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", g_iJumpChance[iIndex]));
+			main ? (g_iJumpChance[iIndex] = iSetCellLimit(g_iJumpChance[iIndex], 1, 9999999999)) : (g_iJumpChance2[iIndex] = iSetCellLimit(g_iJumpChance2[iIndex], 1, 9999999999));
 
 			main ? (g_iMedicAbility[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", 0)) : (g_iMedicAbility2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", g_iMedicAbility[iIndex]));
 			main ? (g_iMedicAbility[iIndex] = iSetCellLimit(g_iMedicAbility[iIndex], 0, 1)) : (g_iMedicAbility2[iIndex] = iSetCellLimit(g_iMedicAbility2[iIndex], 0, 1));
@@ -3403,7 +3403,7 @@ void vInvertHit(int client, int owner, int enabled)
 	}
 }
 
-void vJumperAbility(int client, int enabled)
+void vJumpAbility(int client, int enabled)
 {
 	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
 	if (enabled == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client))
@@ -5058,15 +5058,15 @@ public Action tTimerStopInversion(Handle timer, any userid)
 public Action tTimerJump(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iJumperAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iJumperAbility[g_iTankType[iTank]] : g_iJumperAbility2[g_iTankType[iTank]];
-	if (iJumperAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	int iJumpAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iJumpAbility[g_iTankType[iTank]] : g_iJumpAbility2[g_iTankType[iTank]];
+	if (iJumpAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
 	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	int iJumperChance = !g_bTankConfig[g_iTankType[iTank]] ? g_iJumperChance[g_iTankType[iTank]] : g_iJumperChance2[g_iTankType[iTank]];
-	if (GetRandomInt(1, iJumperChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	int iJumpChance = !g_bTankConfig[g_iTankType[iTank]] ? g_iJumpChance[g_iTankType[iTank]] : g_iJumpChance2[g_iTankType[iTank]];
+	if (GetRandomInt(1, iJumpChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		int iNearestSurvivor = iGetNearestSurvivor(iTank);
 		if (iNearestSurvivor > 200 && iNearestSurvivor < 2000)
@@ -5947,9 +5947,9 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 	{
 		if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])))
 		{
-			int iJumperAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iJumperAbility[g_iTankType[iTank]] : g_iJumperAbility2[g_iTankType[iTank]];
+			int iJumpAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iJumpAbility[g_iTankType[iTank]] : g_iJumpAbility2[g_iTankType[iTank]];
 			int iParticleEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_iParticleEffect[g_iTankType[iTank]] : g_iParticleEffect2[g_iTankType[iTank]];
-			vJumperAbility(iTank, iJumperAbility);
+			vJumpAbility(iTank, iJumpAbility);
 			vParticleEffects(iTank, iParticleEffect);
 			if (!g_bShield[iTank])
 			{
