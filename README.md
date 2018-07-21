@@ -52,6 +52,7 @@ SourceMod 1.8+
 3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the auto-generated KeyValue config file and user-made Super Tanks.
 4. Create and save up to 2500 Super Tank types - Provides the ability to store up to 2500 Super Tank types that users can enable/disable.
 5. Easy-to-use config file - Provides a user-friendly KeyValues config file that users can easily understand and edit.
+6. Config Auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
 
 ## KeyValues Settings
 ```
