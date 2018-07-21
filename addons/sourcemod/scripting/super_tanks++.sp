@@ -1907,18 +1907,8 @@ void vHookEvents(bool hook)
 
 void vLoadConfigs(char[] savepath, bool main = false)
 {
-	if (!FileExists(savepath))
-	{
-		main ? SetFailState("Missing \"%s\" config file.", savepath) : PrintToServer("Missing \"%s\" config file.", savepath);
-		return;
-	}
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	if (!kvSuperTanks.ImportFromFile(savepath))
-	{
-		main ? SetFailState("Error reading from \"%s\" config file.", savepath) : PrintToServer("Error reading from \"%s\" config file.", savepath);
-		delete kvSuperTanks;
-		return;
-	}
+	kvSuperTanks.ImportFromFile(savepath);
 	if (kvSuperTanks.JumpToKey("Plugin Settings"))
 	{
 		main ? (g_bGeneralConfig = false) : (g_bGeneralConfig = true);
