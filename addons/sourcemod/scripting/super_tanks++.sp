@@ -319,6 +319,8 @@ int g_iExplosiveImmunity[ST_MAXTYPES + 1];
 int g_iExplosiveImmunity2[ST_MAXTYPES + 1];
 int g_iExtraHealth[ST_MAXTYPES + 1];
 int g_iExtraHealth2[ST_MAXTYPES + 1];
+int g_iFileTimeOld[7];
+int g_iFileTimeNew[7];
 int g_iFinalesOnly;
 int g_iFinalesOnly2;
 int g_iFireAbility[ST_MAXTYPES + 1];
@@ -599,6 +601,7 @@ public void OnPluginStart()
 	vCreateConfigFile("cfg/sourcemod/", "super_tanks++/", "super_tanks++", "super_tanks++", true);
 	Format(g_sSavePath, sizeof(g_sSavePath), "cfg/sourcemod/super_tanks++/super_tanks++.cfg");
 	vLoadConfigs(g_sSavePath, true);
+	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 	vMultiTargetFilters(1);
 	LoadTranslations("common.phrases");
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
@@ -763,6 +766,7 @@ public void OnConfigsExecuted()
 	if (IsMapValid(sMapName))
 	{
 		vIsPluginAllowed();
+		CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(0.1, tTimerTankHealthUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(1.0, tTimerTankTypeUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(1.0, tTimerUpdatePlayerCount, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -856,53 +860,38 @@ public void OnConfigsExecuted()
 	}
 	if (StrContains(g_sConfigExecute, "1") != -1 && g_iConfigEnable == 1 && g_cvSTFindConVar[0] != null)
 	{
-		char sDifficulty[11];
 		char sDifficultyConfig[512];
-		g_cvSTFindConVar[0].GetString(sDifficulty, sizeof(sDifficulty));
-		Format(sDifficultyConfig, sizeof(sDifficultyConfig), "cfg/sourcemod/super_tanks++/difficulty_configs/%s.cfg", sDifficulty);
+		vGetCurrentDifficulty(g_cvSTFindConVar[0], sDifficultyConfig);
 		vLoadConfigs(sDifficultyConfig);
+		g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 	}
 	if (StrContains(g_sConfigExecute, "2") != -1 && g_iConfigEnable == 1)
 	{
-		char sMap[64];
 		char sMapConfig[512];
-		GetCurrentMap(sMap, sizeof(sMap));
-		Format(sMapConfig, sizeof(sMapConfig), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_map_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
+		vGetCurrentMap(sMapConfig);
 		vLoadConfigs(sMapConfig);
+		g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 	}
 	if (StrContains(g_sConfigExecute, "3") != -1 && g_iConfigEnable == 1)
 	{
-		char sMode[64];
 		char sModeConfig[512];
-		g_cvSTFindConVar[1].GetString(sMode, sizeof(sMode));
-		Format(sModeConfig, sizeof(sModeConfig), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
+		vGetCurrentMode(g_cvSTFindConVar[1], sModeConfig);
 		vLoadConfigs(sModeConfig);
+		g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 	}
 	if (StrContains(g_sConfigExecute, "4") != -1 && g_iConfigEnable == 1)
 	{
-		char sDay[9];
 		char sDayConfig[512];
-		char sDayNumber[2];
-		FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
-		int iDayNumber = StringToInt(sDayNumber);
-		switch (iDayNumber)
-		{
-			case 6: sDay = "saturday";
-			case 5: sDay = "friday";
-			case 4: sDay = "thursday";
-			case 3: sDay = "wednesday";
-			case 2: sDay = "tuesday";
-			case 1: sDay = "monday";
-			default: sDay = "sunday";
-		}
-		Format(sDayConfig, sizeof(sDayConfig), "cfg/sourcemod/super_tanks++/daily_configs/%s.cfg", sDay);
+		vGetCurrentDay(sDayConfig);
 		vLoadConfigs(sDayConfig);
+		g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
 	}
 	if (StrContains(g_sConfigExecute, "5") != -1 && g_iConfigEnable == 1)
 	{
 		char sCountConfig[512];
-		Format(sCountConfig, sizeof(sCountConfig), "cfg/sourcemod/super_tanks++/playercount_configs/%d.cfg", iGetPlayerCount());
+		vGetCurrentCount(sCountConfig);
 		vLoadConfigs(sCountConfig);
+		g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
 	}
 }
 
@@ -1422,7 +1411,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
 						{
 							DataPack dpDataPack;
-							tTimerStopBury(null, dpDataPack);
+							CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 							dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 							dpDataPack.WriteCell(GetClientUserId(iPlayer));
 						}
@@ -2962,6 +2951,25 @@ void vBuryHit(int client, int owner, int enabled)
 	}
 }
 
+void vStopBury(int client, int owner)
+{
+	float flOrigin[3];
+	float flBuryHeight = !g_bTankConfig[g_iTankType[owner]] ? g_flBuryHeight[g_iTankType[owner]] : g_flBuryHeight2[g_iTankType[owner]];
+	GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+	flOrigin[2] = flOrigin[2] + flBuryHeight;
+	SetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+	vWarpEntity(client, true);
+	if (bIsPlayerIncapacitated(client))
+	{
+		SDKCall(g_hSDKRevivePlayer, client);
+		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+	}
+	if (GetEntityMoveType(client) == MOVETYPE_NONE)
+	{
+		SetEntityMoveType(client, MOVETYPE_WALK);
+	}
+}
+
 void vCloneAbility(int client, int enabled)
 {
 	int iCloneChance = !g_bTankConfig[g_iTankType[client]] ? g_iCloneChance[g_iTankType[client]] : g_iCloneChance2[g_iTankType[client]];
@@ -4306,8 +4314,7 @@ public void vSTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 	if (StrContains(g_sConfigExecute, "1") != -1)
 	{
 		char sDifficultyConfig[512];
-		g_cvSTFindConVar[0].GetString(sDifficultyConfig, sizeof(sDifficultyConfig));
-		Format(sDifficultyConfig, sizeof(sDifficultyConfig), "cfg/sourcemod/super_tanks++/difficulty_configs/%s.cfg", sDifficultyConfig);
+		vGetCurrentDifficulty(g_cvSTFindConVar[0], sDifficultyConfig);
 		vLoadConfigs(sDifficultyConfig);
 	}
 }
@@ -4432,26 +4439,16 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		g_bBury[iSurvivor] = false;
+		if (bIsSurvivor(iSurvivor))
+		{
+			vStopBury(iSurvivor, iTank);
+		}
 		return Plugin_Stop;
 	}
 	if (bIsSurvivor(iSurvivor))
 	{
 		g_bBury[iSurvivor] = false;
-		float flOrigin[3];
-		float flBuryHeight = !g_bTankConfig[g_iTankType[iTank]] ? g_flBuryHeight[g_iTankType[iTank]] : g_flBuryHeight2[g_iTankType[iTank]];
-		GetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
-		flOrigin[2] = flOrigin[2] + flBuryHeight;
-		SetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
-		vWarpEntity(iSurvivor, true);
-		if (bIsPlayerIncapacitated(iSurvivor))
-		{
-			SDKCall(g_hSDKRevivePlayer, iSurvivor);
-			SetEntProp(iSurvivor, Prop_Data, "m_takedamage", 2, 1);
-		}
-		if (GetEntityMoveType(iSurvivor) == MOVETYPE_NONE)
-		{
-			SetEntityMoveType(iSurvivor, MOVETYPE_WALK);
-		}
+		vStopBury(iSurvivor, iTank);
 	}
 	return Plugin_Continue;
 }
@@ -4519,11 +4516,11 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 	float flDrugDuration = !g_bTankConfig[g_iTankType[iTank]] ? g_flDrugDuration[g_iTankType[iTank]] : g_flDrugDuration2[g_iTankType[iTank]];
 	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flDrugDuration) < GetEngineTime())
 	{
+		g_bDrug[iSurvivor] = false;
 		if (bIsSurvivor(iSurvivor))
 		{
 			vApplyDrug(iSurvivor, false, g_umFadeUserMsgId, g_flDrugAngles);
 		}
-		g_bDrug[iSurvivor] = false;
 		return Plugin_Stop;
 	}
 	if (bIsSurvivor(iSurvivor))
@@ -5679,7 +5676,6 @@ public Action tTimerStopStun(Handle timer, any userid)
 	if (iSurvivor == 0 || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iSurvivor))
 	{
 		g_bStun[iSurvivor] = false;
-		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		return Plugin_Stop;
 	}
 	if (bIsSurvivor(iSurvivor))
@@ -5700,8 +5696,11 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flVisionDuration) < GetEngineTime())
 	{
 		g_bVision[iSurvivor] = false;
-		SetEntProp(iSurvivor, Prop_Send, "m_iFOV", 90);
-		SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", 90);
+		if (bIsSurvivor(iSurvivor))
+		{
+			SetEntProp(iSurvivor, Prop_Send, "m_iFOV", 90);
+			SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", 90);
+		}
 		return Plugin_Stop;
 	}
 	if (bIsSurvivor(iSurvivor))
@@ -5750,7 +5749,7 @@ public Action tTimerUpdatePlayerCount(Handle timer)
 		return Plugin_Continue;
 	}
 	char sCountConfig[512];
-	Format(sCountConfig, sizeof(sCountConfig), "cfg/sourcemod/super_tanks++/playercount_configs/%d.cfg", iGetPlayerCount());
+	vGetCurrentCount(sCountConfig);
 	vLoadConfigs(sCountConfig);
 	return Plugin_Continue;
 }
@@ -6105,6 +6104,71 @@ public Action tTimerTankWave(Handle timer, any wave)
 		{
 			case 1: g_iTankWave = 2;
 			case 2: g_iTankWave = 3;
+		}
+	}
+}
+
+public Action tTimerReloadConfigs(Handle timer)
+{
+	g_iFileTimeNew[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
+	if (g_iFileTimeOld[0] != g_iFileTimeNew[0])
+	{
+		vLoadConfigs(g_sSavePath, true);
+		g_iFileTimeOld[0] = g_iFileTimeNew[0];
+	}
+	if (StrContains(g_sConfigExecute, "1") != -1 && g_iConfigEnable == 1 && g_cvSTFindConVar[0] != null)
+	{
+		char sDifficultyConfig[512];
+		vGetCurrentDifficulty(g_cvSTFindConVar[0], sDifficultyConfig);
+		g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+		if (g_iFileTimeOld[1] != g_iFileTimeNew[1])
+		{
+			vLoadConfigs(sDifficultyConfig);
+			g_iFileTimeOld[1] = g_iFileTimeNew[1];
+		}
+	}
+	if (StrContains(g_sConfigExecute, "2") != -1 && g_iConfigEnable == 1)
+	{
+		char sMapConfig[512];
+		vGetCurrentMap(sMapConfig);
+		g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+		if (g_iFileTimeOld[2] != g_iFileTimeNew[2])
+		{
+			vLoadConfigs(sMapConfig);
+			g_iFileTimeOld[2] = g_iFileTimeNew[2];
+		}
+	}
+	if (StrContains(g_sConfigExecute, "3") != -1 && g_iConfigEnable == 1)
+	{
+		char sModeConfig[512];
+		vGetCurrentMode(g_cvSTFindConVar[1], sModeConfig);
+		g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+		if (g_iFileTimeOld[3] != g_iFileTimeNew[3])
+		{
+			vLoadConfigs(sModeConfig);
+			g_iFileTimeOld[3] = g_iFileTimeNew[3];
+		}
+	}
+	if (StrContains(g_sConfigExecute, "4") != -1 && g_iConfigEnable == 1)
+	{
+		char sDayConfig[512];
+		vGetCurrentDay(sDayConfig);
+		g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+		if (g_iFileTimeOld[4] != g_iFileTimeNew[4])
+		{
+			vLoadConfigs(sDayConfig);
+			g_iFileTimeOld[4] = g_iFileTimeNew[4];
+		}
+	}
+	if (StrContains(g_sConfigExecute, "5") != -1 && g_iConfigEnable == 1)
+	{
+		char sCountConfig[512];
+		vGetCurrentCount(sCountConfig);
+		g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+		if (g_iFileTimeOld[5] != g_iFileTimeNew[5])
+		{
+			vLoadConfigs(sCountConfig);
+			g_iFileTimeOld[5] = g_iFileTimeNew[5];
 		}
 	}
 }

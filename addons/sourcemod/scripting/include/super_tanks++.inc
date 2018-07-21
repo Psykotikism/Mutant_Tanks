@@ -1,3 +1,4 @@
+// Super Tanks++
 #if defined _supertanks_included
 	#endinput
 #endif
@@ -10,7 +11,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.22"
+#define ST_VERSION "8.23"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 2500
 #define ST_MAXHEALTH 65535
@@ -4870,7 +4871,6 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 	{
 		char sVariant[64];
 		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		AcceptEntityInput(entity, "ClearParent");
 		SetVariantString(sVariant);
 		AcceptEntityInput(entity, "AddOutput");
 		AcceptEntityInput(entity, "FireUser1");
@@ -4934,6 +4934,52 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 	{
 		g_iCurrentMode = 8;
 	}
+}
+
+stock void vGetCurrentCount(char[] config)
+{
+	int iPlayerCount = iGetPlayerCount();
+	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/playercount_configs/%d.cfg", iPlayerCount);
+}
+
+stock void vGetCurrentDay(char[] config)
+{
+	char sDay[9];
+	char sDayNumber[2];
+	FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
+	int iDayNumber = StringToInt(sDayNumber);
+	switch (iDayNumber)
+	{
+		case 6: sDay = "saturday";
+		case 5: sDay = "friday";
+		case 4: sDay = "thursday";
+		case 3: sDay = "wednesday";
+		case 2: sDay = "tuesday";
+		case 1: sDay = "monday";
+		default: sDay = "sunday";
+	}
+	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/daily_configs/%s.cfg", sDay);
+}
+
+stock void vGetCurrentDifficulty(ConVar convar, char[] config)
+{
+	char sDifficulty[11];
+	convar.GetString(sDifficulty, sizeof(sDifficulty));
+	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/difficulty_configs/%s.cfg", sDifficulty);
+}
+
+stock void vGetCurrentMap(char[] config)
+{
+	char sMap[64];
+	GetCurrentMap(sMap, sizeof(sMap));
+	Format(config, strlen(config), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_map_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
+}
+
+stock void vGetCurrentMode(ConVar convar, char[] config)
+{
+	char sMode[64];
+	convar.GetString(sMode, sizeof(sMode));
+	Format(config, strlen(config), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
 }
 
 stock void vGhostDrop(int client, int owner, char[] slots, char[] number, int slot)

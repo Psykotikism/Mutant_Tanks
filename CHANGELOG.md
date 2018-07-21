@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 8.23 (July 20, 2018)
+
+Bug fixes:
+
+1. Fixed various errors reported by Princess LadyRain.
+
+Changes:
+
+1. Users can now change settings inside the config file mid-game without having to reload the plugin or restart the server. (Basically the counterpart of Convar.AddChangeHook for cvars.)
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.22 (July 20, 2018)
 
 Bug fixes:
