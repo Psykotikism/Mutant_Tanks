@@ -11,25 +11,47 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.23"
+#define ST_VERSION "8.24"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 2500
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
+#define MELEE_AXE_V "models/weapons/melee/v_fireaxe.mdl"
+#define MELEE_AXE_W "models/weapons/melee/w_fireaxe.mdl"
+#define MELEE_BAT_V "models/weapons/melee/v_bat.mdl"
+#define MELEE_BAT_W "models/weapons/melee/w_bat.mdl"
+#define MELEE_CHAINSAW_V "models/weapons/melee/v_chainsaw.mdl"
+#define MELEE_CHAINSAW_W "models/weapons/melee/w_chainsaw.mdl"
+#define MELEE_CRICKET_V "models/weapons/melee/v_cricket_bat.mdl"
+#define MELEE_CRICKET_W "models/weapons/melee/w_cricket_bat.mdl"
+#define MELEE_CROWBAR_V "models/weapons/melee/v_crowbar.mdl"
+#define MELEE_CROWBAR_W "models/weapons/melee/w_crowbar.mdl"
+#define MELEE_GOLFCLUB_V "models/weapons/melee/v_golfclub.mdl"
+#define MELEE_GOLFCLUB_W "models/weapons/melee/w_golfclub.mdl"
+#define MELEE_GUITAR_V "models/weapons/melee/v_electric_guitar.mdl"
+#define MELEE_GUITAR_W "models/weapons/melee/w_electric_guitar.mdl"
+#define MELEE_KATANA_V "models/weapons/melee/v_katana.mdl"
+#define MELEE_KATANA_W "models/weapons/melee/w_katana.mdl"
+#define MELEE_KNIFE_V "models/v_models/v_knife_t.mdl"
+#define MELEE_KNIFE_W "models/w_models/weapons/w_knife_t.mdl"
+#define MELEE_MACHETE_V "models/weapons/melee/v_machete.mdl"
+#define MELEE_MACHETE_W "models/weapons/melee/w_machete.mdl"
+#define MELEE_PAN_V "models/weapons/melee/v_frying_pan.mdl"
+#define MELEE_PAN_W "models/weapons/melee/w_frying_pan.mdl"
+#define MELEE_TONFA_V "models/weapons/melee/v_tonfa.mdl"
+#define MELEE_TONFA_W "models/weapons/melee/w_tonfa.mdl"
 #define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
 #define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
 #define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
+#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
 #define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
+#define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
-#define MODEL_WITCH "models/infected/witch.mdl"
-#define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl"
+#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
 #define MODEL_TANK "models/infected/hulk.mdl"
 #define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
-#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
-#define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
-#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
-#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
-#define SPRITE_GLOW "sprites/glow.vmt"
+#define MODEL_WITCH "models/infected/witch.mdl"
+#define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl"
 #define PARTICLE_BLOOD "boomer_explode_D"
 #define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 #define PARTICLE_FIRE "aircraft_destroy_fastFireTrail"
@@ -37,16 +59,80 @@
 #define PARTICLE_METEOR "smoke_medium_01"
 #define PARTICLE_SMOKE "smoker_smokecloud"
 #define PARTICLE_SPIT "spitter_projectile"
-#define SOUND_INFECTED "npc/infected/action/die/male/death_42.wav"
-#define SOUND_INFECTED2 "npc/infected/action/die/male/death_43.wav"
+#define SCRIPT_AXE "scripts/melee/fireaxe.txt"
+#define SCRIPT_BAT "scripts/melee/baseball_bat.txt"
+#define SCRIPT_CRICKET "scripts/melee/cricket_bat.txt"
+#define SCRIPT_CROWBAR "scripts/melee/crowbar.txt"
+#define SCRIPT_GOLFCLUB "scripts/melee/golfclub.txt"
+#define SCRIPT_GUITAR "scripts/melee/electric_guitar.txt"
+#define SCRIPT_KATANA "scripts/melee/katana.txt"
+#define SCRIPT_KNIFE "scripts/melee/knife.txt"
+#define SCRIPT_MACHETE "scripts/melee/machete.txt"
+#define SCRIPT_PAN "scripts/melee/frying_pan.txt"
+#define SCRIPT_TONFA "scripts/melee/tonfa.txt"
+#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
+#define SPRITE_GLOW "sprites/glow.vmt"
+#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
+#define SOUND_DEBRIS "animation/van_inside_debris.wav"
+#define SOUND_ELECTRICITY "ambient/energy/zap1.wav"
 #define SOUND_EXPLOSION "ambient/explosions/exp2.wav"
-#define SOUND_LAUNCH "npc/env_headcrabcanister/launch.wav"
-#define SOUND_FIRE "weapons/rpg/rocketfire1.wav"
 #define SOUND_EXPLOSION2 "ambient/explosions/explode_1.wav"
 #define SOUND_EXPLOSION3 "ambient/explosions/explode_2.wav"
 #define SOUND_EXPLOSION4 "ambient/explosions/explode_3.wav"
-#define SOUND_DEBRIS "animation/van_inside_debris.wav"
-#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
+#define SOUND_FIRE "weapons/rpg/rocketfire1.wav"
+#define SOUND_INFECTED "npc/infected/action/die/male/death_42.wav"
+#define SOUND_INFECTED2 "npc/infected/action/die/male/death_43.wav"
+#define SOUND_LAUNCH "npc/env_headcrabcanister/launch.wav"
+#define WEAPON_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
+#define WEAPON_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
+#define WEAPON_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
+#define WEAPON_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
+#define WEAPON_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
+#define WEAPON_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
+#define WEAPON_PISTOL_V "models/v_models/weapons/v_pistol_1911.mdl"
+#define WEAPON_PISTOL_W "models/w_models/weapons/w_pistol_1911.mdl"
+#define WEAPON_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
+#define WEAPON_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
+#define WEAPON_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
+#define WEAPON_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
+#define WEAPON2_AK47_V "models/v_models/weapons/v_rifle_ak47.mdl"
+#define WEAPON2_AK47_W "models/w_models/weapons/w_rifle_ak47.mdl"
+#define WEAPON2_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
+#define WEAPON2_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
+#define WEAPON2_AWP_V "models/v_models/weapons/v_sniper_awp.mdl"
+#define WEAPON2_AWP_W "models/w_models/weapons/w_sniper_awp.mdl"
+#define WEAPON2_CHROME_V "models/v_models/weapons/v_shotgun.mdl"
+#define WEAPON2_CHROME_W "models/w_models/weapons/w_shotgun.mdl"
+#define WEAPON2_DESERT_V "models/v_models/weapons/v_desert_rifle.mdl"
+#define WEAPON2_DESERT_W "models/w_models/weapons/w_desert_rifle.mdl"
+#define WEAPON2_GRENADE_V "models/v_models/weapons/v_grenade_launcher.mdl"
+#define WEAPON2_GRENADE_W "models/w_models/weapons/w_grenade_launcher.mdl"
+#define WEAPON2_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
+#define WEAPON2_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
+#define WEAPON2_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
+#define WEAPON2_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
+#define WEAPON2_M60_V "models/v_models/weapons/v_m60.mdl"
+#define WEAPON2_M60_W "models/w_models/weapons/w_m60.mdl"
+#define WEAPON2_MAGNUM_V "models/v_models/weapons/v_desert_eagle.mdl"
+#define WEAPON2_MAGNUM_W "models/w_models/weapons/w_desert_eagle.mdl"
+#define WEAPON2_MILITARY_V "models/v_models/weapons/v_sniper_military.mdl"
+#define WEAPON2_MILITARY_W "models/w_models/weapons/w_sniper_military.mdl"
+#define WEAPON2_MP5_V "models/v_models/weapons/v_smg_mp5.mdl"
+#define WEAPON2_MP5_W "models/w_models/weapons/w_smg_mp5.mdl"
+#define WEAPON2_PISTOL_V "models/v_models/weapons/v_pistol_a.mdl"
+#define WEAPON2_PISTOL_W "models/w_models/weapons/w_pistol_a.mdl"
+#define WEAPON2_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
+#define WEAPON2_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
+#define WEAPON2_SCOUT_V "models/v_models/weapons/v_sniper_scout.mdl"
+#define WEAPON2_SCOUT_W "models/w_models/weapons/w_sniper_scout.mdl"
+#define WEAPON2_SG552_V "models/v_models/weapons/v_rifle_sg552.mdl"
+#define WEAPON2_SG552_W "models/w_models/weapons/w_rifle_sg552.mdl"
+#define WEAPON2_SILENCED_V "models/v_models/weapons/v_smg_a.mdl"
+#define WEAPON2_SILENCED_W "models/w_models/weapons/w_smg_a.mdl"
+#define WEAPON2_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
+#define WEAPON2_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
+#define WEAPON2_SPAS_V "models/v_models/weapons/v_shotgun_spas.mdl"
+#define WEAPON2_SPAS_W "models/w_models/weapons/w_shotgun_spas.mdl"
 
 int g_iCurrentMode;
 
@@ -359,7 +445,7 @@ stock bool bIsValidClient(int client)
 
 stock bool bIsValidEntity(int entity)
 {
-	return entity > 0 && entity < 2048 && IsValidEntity(entity);
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }
 
 stock bool bIsValidHumanClient(int client)
@@ -434,12 +520,55 @@ public bool bTankFilter(const char[] pattern, Handle clients)
 	return true;
 }
 
-stock bool bTraceRayDontHitSelf(int entity, any data)
+public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 {
-	return entity == data;
+	if (entity == data)
+	{
+		return false;
+	}
+	return true;
+}
+
+public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
+{
+	if (entity == data || bIsValidClient(entity))
+	{
+		return false;
+	}
+	return true;
+}
+
+public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
+{
+	if (entity == data || bIsSurvivor(entity))
+	{
+		return false;
+	}
+	return true;
+}
+
+stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int flag)
+{
+	Handle hTrace;
+	switch (flag)
+	{
+		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
+		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
+	}
+	if (TR_DidHit(hTrace))
+	{
+		return false;
+	}
+	delete hTrace;
+	return true;
 }
 
 // Functions
+stock float flGetAngle(float angle1[3], float angle2[3])
+{
+	return ArcCosine(GetVectorDotProduct(angle1, angle2) / (GetVectorLength(angle1) * GetVectorLength(angle2)));
+}
+
 public float flGetGroundUnits(int entity)
 {
 	if (!(GetEntityFlags(entity) & FL_ONGROUND))
@@ -463,6 +592,24 @@ public float flGetGroundUnits(int entity)
 	return 0.0;
 }
 
+stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int flag = 0) 
+{
+	float flAngle[3];
+	vCopyVector(angle, flAngle);
+	flAngle[0] += offset1;
+	flAngle[1] += offset2;
+	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
+	float flDistance = flGetRayDistance(pos, flAngle, entity, flag);
+	return flDistance;
+}
+
+stock float flGetRayDistance(float pos[3], float angle[3], int entity, int flag)
+{
+	float flHitPos[3];
+	iGetRayHitPos(pos, angle, flHitPos, entity, flag);
+	return GetVectorDistance(pos, flHitPos);
+}
+
 stock float flSetFloatLimit(float value, float min, float max)
 {
 	if (value < min)
@@ -476,18 +623,6 @@ stock float flSetFloatLimit(float value, float min, float max)
 	return value;
 }
 
-stock int iGetBotSurvivor()
-{
-	for (int iBot = MaxClients; iBot >= 1; iBot--)
-	{
-		if (bIsBotSurvivor(iBot))
-		{
-			return iBot;
-		}
-	}
-	return -1;
-}
-
 stock int iGetHumanCount()
 {
 	int iHumanCount;
@@ -499,36 +634,6 @@ stock int iGetHumanCount()
 		}
 	}
 	return iHumanCount;
-}
-
-stock int iGetIdleBot(int client)
-{
-	for (int iBot = 1; iBot <= MaxClients; iBot++)
-	{
-		if (iGetIdlePlayer(iBot) == client)
-		{
-			return iBot;
-		}
-	}
-	return 0;
-}
-
-stock int iGetIdlePlayer(int client)
-{
-	if (bIsBotSurvivor(client))
-	{
-		char sClassname[12];
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "SurvivorBot") == 0)
-		{
-			int iIdler = GetClientOfUserId(GetEntProp(client, Prop_Send, "m_humanSpectatorUserID"));
-			if (iIdler > 0 && IsClientInGame(iIdler) && GetClientTeam(iIdler) == 1)
-			{
-				return iIdler;
-			}
-		}
-	}
-	return 0;
 }
 
 stock int iGetInfectedCount()
@@ -596,10 +701,39 @@ stock int iGetRandomSurvivor(int client, bool different = false)
     return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
 }
 
-stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false)
+stock int iGetRandomTarget(float pos[3], float angle[3])
+{
+	float flMin = 4.0;
+	float flPos[3];
+	float flAngle;
+	int iTarget;
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor))
+		{
+			GetClientEyePosition(iSurvivor, flPos);
+			MakeVectorFromPoints(pos, flPos, flPos);
+			flAngle = flGetAngle(angle, flPos);
+			if (flAngle <= flMin)
+			{
+				flMin = flAngle;
+				iTarget = iSurvivor;
+			}
+		}
+	}
+	return iTarget;
+}
+
+stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, int flag = 1, bool offset = false)
 {
 	int iHit = 0;
-	Handle hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, entity);
+	Handle hTrace;
+	switch (flag)
+	{
+		case 1: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, entity);
+		case 2: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, entity);
+		case 3: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, entity);
+	}
 	if (TR_DidHit(hTrace))
 	{
 		TR_GetEndPosition(hitpos, hTrace);
@@ -635,17 +769,6 @@ stock int iGetTankCount()
 	return iTankCount;
 }
 
-stock int iGetWitchCount()
-{
-	int iWitchCount;
-	int iWitch = -1;
-	while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
-	{
-		iWitchCount++;
-	}
-	return iWitchCount;
-}
-
 stock int iSetCellLimit(int value, int min, int max)
 {
 	if (value < min)
@@ -657,80 +780,6 @@ stock int iSetCellLimit(int value, int min, int max)
 		value = max;
 	}
 	return value;
-}
-
-stock void vApplyBlindness(int client, int amount, UserMsg message)
-{
-	int iTargets[2];
-	iTargets[0] = client;
-	int iFlags;
-	if (bIsSurvivor(client))
-	{
-		amount == 0 ? (iFlags = (0x0001|0x0010)) : (iFlags = (0x0002|0x0008));
-		int iColor[4] = {0, 0, 0, 0};
-		iColor[3] = amount;
-		Handle hBlindTarget = StartMessageEx(message, iTargets, 1);
-		if (GetUserMessageType() == UM_Protobuf)
-		{
-			Protobuf pbSet = UserMessageToProtobuf(hBlindTarget);
-			pbSet.SetInt("duration", 1536);
-			pbSet.SetInt("hold_time", 1536);
-			pbSet.SetInt("flags", iFlags);
-			pbSet.SetColor("clr", iColor);
-		}
-		else
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hBlindTarget);
-			bfWrite.WriteShort(1536);
-			bfWrite.WriteShort(1536);
-			bfWrite.WriteShort(iFlags);
-			bfWrite.WriteByte(iColor[0]);
-			bfWrite.WriteByte(iColor[1]);
-			bfWrite.WriteByte(iColor[2]);
-			bfWrite.WriteByte(iColor[3]);
-		}
-		EndMessage();
-	}
-}
-
-stock void vApplyDrug(int client, bool toggle, UserMsg message, float angles[20])
-{
-	float flAngles[3];
-	GetClientEyeAngles(client, flAngles);
-	flAngles[2] = toggle ? angles[GetRandomInt(0, 100) % 20] : 0.0;
-	TeleportEntity(client, NULL_VECTOR, flAngles, NULL_VECTOR);
-	int iClients[2];
-	iClients[0] = client;
-	int iFlags = toggle ? 0x0002 : (0x0001|0x0010);
-	int iColor[4] = {0, 0, 0, 128};
-	int iColor2[4] = {0, 0, 0, 0};
-	if (toggle)
-	{
-		iColor[0] = GetRandomInt(0, 255);
-		iColor[1] = GetRandomInt(0, 255);
-		iColor[2] = GetRandomInt(0, 255);
-	}
-	Handle hDrugTarget = StartMessageEx(message, iClients, 1);
-	if (GetUserMessageType() == UM_Protobuf)
-	{
-		Protobuf pbSet = UserMessageToProtobuf(hDrugTarget);
-		pbSet.SetInt("duration", toggle ? 255: 1536);
-		pbSet.SetInt("hold_time", toggle ? 255 : 1536);
-		pbSet.SetInt("flags", iFlags);
-		pbSet.SetColor("clr", toggle ? iColor : iColor2);
-	}
-	else
-	{
-		BfWrite bfWrite = UserMessageToBfWrite(hDrugTarget);
-		bfWrite.WriteShort(toggle ? 255 : 1536);
-		bfWrite.WriteShort(toggle ? 255 : 1536);
-		bfWrite.WriteShort(iFlags);
-		bfWrite.WriteByte(toggle ? iColor[0] : iColor2[0]);
-		bfWrite.WriteByte(toggle ? iColor[1] : iColor2[1]);
-		bfWrite.WriteByte(toggle ? iColor[2] : iColor2[2]);
-		bfWrite.WriteByte(toggle ? iColor[3] : iColor2[3]);
-	}
-	EndMessage();
 }
 
 stock void vAttachParticle(int client, char[] particlename, float time = 0.0, float origin = 0.0)
@@ -756,85 +805,7 @@ stock void vAttachParticle(int client, char[] particlename, float time = 0.0, fl
 	}
 }
 
-stock void vBomb(int client, float pos[3], int damage)
-{
-	char sDamage[6];
-	IntToString(damage, sDamage, sizeof(sDamage));
-	int iParticle = CreateEntityByName("info_particle_system");
-	int iParticle2 = CreateEntityByName("info_particle_system");
-	int iParticle3 = CreateEntityByName("info_particle_system");
-	int iTrace = CreateEntityByName("info_particle_system");
-	int iPhysics = CreateEntityByName("env_physexplosion");
-	int iHurt = CreateEntityByName("point_hurt");
-	int iExplosion = CreateEntityByName("env_explosion");
-	DispatchKeyValue(iParticle, "effect_name", "FluidExplosion_fps");
-	TeleportEntity(iParticle, pos, NULL_VECTOR, NULL_VECTOR);
-	DispatchSpawn(iParticle);
-	ActivateEntity(iParticle);
-	DispatchKeyValue(iParticle2, "effect_name", "weapon_grenade_explosion");
-	TeleportEntity(iParticle2, pos, NULL_VECTOR, NULL_VECTOR);
-	DispatchSpawn(iParticle2);
-	ActivateEntity(iParticle2);
-	DispatchKeyValue(iParticle3, "effect_name", "explosion_huge_b");
-	TeleportEntity(iParticle3, pos, NULL_VECTOR, NULL_VECTOR);
-	DispatchSpawn(iParticle3);
-	ActivateEntity(iParticle3);
-	DispatchKeyValue(iTrace, "effect_name", "gas_explosion_ground_fire");
-	TeleportEntity(iTrace, pos, NULL_VECTOR, NULL_VECTOR);
-	DispatchSpawn(iTrace);
-	ActivateEntity(iTrace);
-	SetEntPropEnt(iExplosion, Prop_Send, "m_hOwnerEntity", client);
-	DispatchKeyValue(iExplosion, "fireballsprite", "sprites/muzzleflash4.vmt");
-	DispatchKeyValue(iExplosion, "iMagnitude", sDamage);
-	DispatchKeyValue(iExplosion, "iRadiusOverride", sDamage);
-	DispatchKeyValue(iExplosion, "spawnflags", "828");
-	TeleportEntity(iExplosion, pos, NULL_VECTOR, NULL_VECTOR);
-	DispatchSpawn(iExplosion);
-	SetEntPropEnt(iPhysics, Prop_Send, "m_hOwnerEntity", client);
-	DispatchKeyValue(iPhysics, "radius", sDamage);
-	DispatchKeyValue(iPhysics, "magnitude", sDamage);
-	TeleportEntity(iPhysics, pos, NULL_VECTOR, NULL_VECTOR);
-	DispatchSpawn(iPhysics);
-	SetEntPropEnt(iHurt, Prop_Send, "m_hOwnerEntity", client);
-	DispatchKeyValue(iHurt, "DamageRadius", sDamage);
-	DispatchKeyValue(iHurt, "DamageDelay", "0.5");
-	DispatchKeyValue(iHurt, "Damage", "5");
-	DispatchKeyValue(iHurt, "DamageType", "8");
-	TeleportEntity(iHurt, pos, NULL_VECTOR, NULL_VECTOR);
-	DispatchSpawn(iHurt);
-	switch (GetRandomInt(1, 3))
-	{
-		case 1: EmitSoundToAll(SOUND_EXPLOSION2, client);
-		case 2: EmitSoundToAll(SOUND_EXPLOSION3, client);
-		case 3: EmitSoundToAll(SOUND_EXPLOSION4, client);
-	}
-	EmitSoundToAll(SOUND_DEBRIS, client);
-	AcceptEntityInput(iParticle, "Start");
-	AcceptEntityInput(iParticle2, "Start");
-	AcceptEntityInput(iParticle3, "Start");
-	AcceptEntityInput(iTrace, "Start");
-	AcceptEntityInput(iExplosion, "Explode");
-	AcceptEntityInput(iPhysics, "Explode");
-	AcceptEntityInput(iHurt, "TurnOn");
-	iParticle = EntIndexToEntRef(iParticle);
-	vDeleteEntity(iParticle, 16.5);
-	iParticle2 = EntIndexToEntRef(iParticle2);
-	vDeleteEntity(iParticle2, 16.5);
-	iParticle3 = EntIndexToEntRef(iParticle3);
-	vDeleteEntity(iParticle3, 16.5);
-	iTrace = EntIndexToEntRef(iTrace);
-	vDeleteEntity(iTrace, 16.5);
-	vDeleteParticle(iTrace, 16.5, "Stop");
-	iExplosion = EntIndexToEntRef(iExplosion);
-	vDeleteEntity(iExplosion, 16.5);
-	iPhysics = EntIndexToEntRef(iPhysics);
-	vDeleteEntity(iPhysics, 16.5);
-	iHurt = EntIndexToEntRef(iHurt);
-	vDeleteEntity(iHurt, 16.5);
-	vDeleteParticle(iHurt, 15.0, "TurnOff");
-}
-
-stock void vCheatCommand(int client, char[] command, char[] arguments = "")
+stock void vCheatCommand(int client, char[] command, char[] arguments = "", any ...)
 {
 	int iCmdFlags = GetCommandFlags(command);
 	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
@@ -866,6 +837,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 		if (main)
 		{
 			fFilename.WriteLine("// Super Tanks++ KeyValues Settings");
+			fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
 			fFilename.WriteLine("\"Super Tanks++\"");
 			fFilename.WriteLine("{");
 			fFilename.WriteLine("	// These are the general settings.");
@@ -948,7 +920,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// Maximum types of Super Tanks allowed.");
 			fFilename.WriteLine("			// Minimum: 1");
 			fFilename.WriteLine("			// Maximum: 2500");
-			fFilename.WriteLine("			\"Maximum Types\"					\"80\"");
+			fFilename.WriteLine("			\"Maximum Types\"					\"84\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// Multiply the Super Tank's health.");
 			fFilename.WriteLine("			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.");
@@ -1175,7 +1147,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Acid Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Acid Range\"					\"150.0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank's rock creates an acid puddle when it breaks.");
 			fFilename.WriteLine("			// Only available in Left 4 Dead 2.");
@@ -1183,6 +1155,30 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// 1: ON");
 			fFilename.WriteLine("			\"Acid Rock Break\"				\"0\"");
 			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		// The Super Tank flies.");
+			fFilename.WriteLine("		\"Airborne Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			// Enable this ability.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+			fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+			fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+			fFilename.WriteLine("			\"Airborne Chance\"				\"4\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank's ability effects last this long.");
+			fFilename.WriteLine("			// Minimum: 0.1");
+			fFilename.WriteLine("			// Maximum: 9999999999.0");
+			fFilename.WriteLine("			\"Airborne Duration\"				\"5.0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank flies this fast.");
+			fFilename.WriteLine("			// Minimum: 100.0");
+			fFilename.WriteLine("			// Maximum: 500.0");
+			fFilename.WriteLine("			\"Airborne Speed\"				\"300.0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		// The Super Tank receives more damage from bullets and explosions than usual.");
 			fFilename.WriteLine("		// The Super Tank takes away survivors' ammunition.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, their ammunition is taken away.");
 			fFilename.WriteLine("		// \"Ammo Hit\" - When a survivor is hit by a Tank's claw or rock, their ammunition is taken away.");
@@ -1213,7 +1209,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Ammo Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Ammo Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank blinds survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is blinded.");
@@ -1250,7 +1246,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Blind Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Blind Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank creates explosions.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, an explosion is created around the survivor.");
@@ -1282,7 +1278,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Bomb Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Bomb Range\"					\"150.0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank's rock creates an explosion when it breaks.");
 			fFilename.WriteLine("			// 0: OFF");
@@ -1324,7 +1320,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Bury Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Bury Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank creates clones of itself.");
 			fFilename.WriteLine("		\"Clone Ability\"");
@@ -1353,6 +1349,30 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// 0: Clones will not have access to the same abilities as the original Super Tank.");
 			fFilename.WriteLine("			// 1: Clones will have access to the same abilities as the original Super Tank.");
 			fFilename.WriteLine("			\"Clone Mode\"					\"0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		// The Super Tank drops weapons upon death.");
+			fFilename.WriteLine("		\"Drop Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			// Enable this ability.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+			fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+			fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+			fFilename.WriteLine("			\"Drop Chance\"					\"4\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to drop guns with a full clip.");
+			fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+			fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+			fFilename.WriteLine("			\"Drop Clip Chance\"				\"4\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank's weapon size is multiplied by this value.");
+			fFilename.WriteLine("			// Note: Default weapon size x Drop weapon scale");
+			fFilename.WriteLine("			// Minimum: 1.0");
+			fFilename.WriteLine("			// Maximum: 2.0");
+			fFilename.WriteLine("			\"Drop Weapon Scale\"				\"1.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank drugs survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is drugged.");
@@ -1384,7 +1404,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Drug Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Drug Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank forces survivors to only use a certain weapon slot.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor will be forced to only use a certain weapon slot.");
@@ -1416,7 +1436,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Enforce Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Enforce Range\"					\"150.0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank forces survivors to only use one of the following weapon slots.");
 			fFilename.WriteLine("			// Combine numbers in any order for different results.");
@@ -1453,7 +1473,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Fire Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Fire Range\"					\"150.0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank's rock creates a fire when it breaks.");
 			fFilename.WriteLine("			// 0: OFF");
@@ -1508,9 +1528,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Fling Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Fling Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
-			fFilename.WriteLine("		// The Super Tank receives more damage from bullets and explosions than usual.");
+			fFilename.WriteLine("		// The Super Tank takes more damage.");
 			fFilename.WriteLine("		\"Fragile Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1521,7 +1541,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
 			fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-			fFilename.WriteLine("			\"Fragile Chance\"					\"4\"");
+			fFilename.WriteLine("			\"Fragile Chance\"				\"4\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank's ability effects last this long.");
 			fFilename.WriteLine("			// Minimum: 0.1");
@@ -1559,7 +1579,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Ghost Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank disarms the following weapon slots.");
 			fFilename.WriteLine("			// Combine numbers in any order for different results.");
@@ -1627,7 +1647,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Gravity Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Gravity Range\"					\"150.0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank sets the survivors' gravity to this value.");
 			fFilename.WriteLine("			// Minimum: 0.1");
@@ -1723,7 +1743,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Hurt Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Hurt Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank hypnotizes survivors to damage themselves or teammates.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is hypnotized.");
@@ -1760,7 +1780,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Hypno Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Hypno Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank freezes survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is frozen in place.");
@@ -1792,7 +1812,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Ice Range\"						\"500.0\"");
+			fFilename.WriteLine("			\"Ice Range\"						\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank forces survivors to go idle.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor goes idle.");
@@ -1819,7 +1839,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Idle Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Idle Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank inverts the survivors' movement keys.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor's movement keys are inverted.");
@@ -1850,7 +1870,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Invert Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Invert Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank gives survivors items upon death.");
 			fFilename.WriteLine("		\"Item Ability\"");
@@ -2017,7 +2037,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Nullify Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Nullify Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank starts panic events.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - The Tank starts a panic event periodically.");
@@ -2081,7 +2101,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Pimp Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Pimp Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank pukes on survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the Tank pukes on the survivor.");
@@ -2108,7 +2128,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Puke Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Puke Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank gains speed when on fire.");
 			fFilename.WriteLine("		\"Pyro Ability\"");
@@ -2125,7 +2145,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Pyro Boost\"					\"1.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank regenerates health.");
-			fFilename.WriteLine("		\"Regenerate Ability\"");
+			fFilename.WriteLine("		\"Regen Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
 			fFilename.WriteLine("			// 0: OFF");
@@ -2133,16 +2153,39 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank regenerates this much health each time.");
-			fFilename.WriteLine("			// Positive numbers: Current health + Regenerate health");
-			fFilename.WriteLine("			// Negative numbers: Current health - Regenerate health");
+			fFilename.WriteLine("			// Positive numbers: Current health + Regen health");
+			fFilename.WriteLine("			// Negative numbers: Current health - Regen health");
 			fFilename.WriteLine("			// Minimum: -65535");
 			fFilename.WriteLine("			// Maximum: 65535");
-			fFilename.WriteLine("			\"Regenerate Health\"				\"1\"");
+			fFilename.WriteLine("			\"Regen Health\"					\"1\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank regenerates health every time this many seconds passes.");
 			fFilename.WriteLine("			// Minimum: 0.1");
 			fFilename.WriteLine("			// Maximum: 9999999999.0");
-			fFilename.WriteLine("			\"Regenerate Interval\"			\"1.0\"");
+			fFilename.WriteLine("			\"Regen Interval\"				\"1.0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		// The Super Tank respawns.");
+			fFilename.WriteLine("		\"Respawn Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			// Enable this ability.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank respawns up to this many times.");
+			fFilename.WriteLine("			// Minimum: 1");
+			fFilename.WriteLine("			// Maximum: 9999999999");
+			fFilename.WriteLine("			\"Respawn Amount\"				\"1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+			fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+			fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+			fFilename.WriteLine("			\"Respawn Chance\"				\"4\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank respawns as a random Super Tank.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Respawn Random\"				\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank forces survivors to restart at the beginning of the map with a new loadout.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor respawns at the start of the map or near a teammate.");
@@ -2173,7 +2216,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Restart Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Restart Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank creates rock showers.");
 			fFilename.WriteLine("		\"Rock Ability\"");
@@ -2231,7 +2274,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Rocket Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Rocket Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank shakes the survivors' screens.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor's screen is shaken.");
@@ -2263,7 +2306,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Shake Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Shake Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank protects itself with a shield and traps survivors inside their own shields.");
 			fFilename.WriteLine("		\"Shield Ability\"");
@@ -2314,7 +2357,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Shove Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Shove Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank smites survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is smitten.");
@@ -2341,7 +2384,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Smite Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Smite Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank spams rocks at survivors.");
 			fFilename.WriteLine("		\"Spam Ability\"");
@@ -2396,7 +2439,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Stun Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Stun Range\"					\"150.0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank sets the survivors' run speed to this value.");
 			fFilename.WriteLine("			// Minimum: 0.1");
@@ -2420,7 +2463,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// 1: Small car with a big hatchback.");
 			fFilename.WriteLine("			// 2: Car that looks like a Chevrolet Impala SS.");
 			fFilename.WriteLine("			// 3: Car that looks like a Sixth Generation Chevrolet Impala.");
-			fFilename.WriteLine("			\"Car Options\"					\"123\"");
+			fFilename.WriteLine("			\"Throw Car Options\"				\"123\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank can throw these special infected.");
 			fFilename.WriteLine("			// Combine numbers in any order for different results.");
@@ -2433,7 +2476,31 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// 5: Jockey (Switches to Hunter in L4D1.)");
 			fFilename.WriteLine("			// 6: Charger (Switches to Smoker in L4D1.)");
 			fFilename.WriteLine("			// 7: Tank");
-			fFilename.WriteLine("			\"Infected Options\"				\"1234567\"");
+			fFilename.WriteLine("			\"Throw Infected Options\"		\"1234567\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		// The Super Tank throws a heat-seeking rock that will track down the nearest survivor.");
+			fFilename.WriteLine("		\"Track Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			// Enable this ability.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+			fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+			fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+			fFilename.WriteLine("			\"Track Chance\"					\"4\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The mode of the Super Tank's track ability.");
+			fFilename.WriteLine("			// 0: The Super Tank's rock will only start tracking when it's near a survivor.");
+			fFilename.WriteLine("			// 1: The Super Tank's rock will track the nearest survivor.");
+			fFilename.WriteLine("			\"Track Mode\"					\"1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank's track ability is this fast.");
+			fFilename.WriteLine("			// Note: This setting only applies if the \"Track Mode\" setting is set to 1.");
+			fFilename.WriteLine("			// Minimum: 100.0");
+			fFilename.WriteLine("			// Maximum: 500.0");
+			fFilename.WriteLine("			\"Track Speed\"					\"300.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank gains health from hurting survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the Tank gains health.");
@@ -2505,7 +2572,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
 			fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-			fFilename.WriteLine("			\"Vision Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Vision Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank warps to survivors and warps survivors back to teammates.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - The Tank warps to a random survivor.");
@@ -2611,11 +2678,37 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Acid Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Acid Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Acid Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Acid Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Acid Rock Break\"				\"1\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 3\"");
+			fFilename.WriteLine("	{");
+			fFilename.WriteLine("		\"General\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Tank Name\"						\"Airborne Tank\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
+			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"0,230,230,255|0,230,230\"");
+			fFilename.WriteLine("			\"Props Colors\"					\"230,230,0,255|230,230,0,255|230,230,0,180|230,230,0,255|230,230,0,255\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Enhancements\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
+			fFilename.WriteLine("			\"Throw Interval\"				\"9999999999.0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Immunities\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Fire Immunity\"					\"1\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Airborne Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
+			fFilename.WriteLine("			\"Airborne Chance\"				\"4\"");
+			fFilename.WriteLine("			\"Airborne Duration\"				\"5.0\"");
+			fFilename.WriteLine("			\"Airborne Speed\"				\"300.0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("	}");
+			fFilename.WriteLine("	\"Tank 4\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2634,10 +2727,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ammo Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Ammo Count\"					\"0\"");
 			fFilename.WriteLine("			\"Ammo Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Ammo Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Ammo Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 4\"");
+			fFilename.WriteLine("	\"Tank 5\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2657,10 +2750,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Blind Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Blind Hit\"						\"1\"");
 			fFilename.WriteLine("			\"Blind Intensity\"				\"255\"");
-			fFilename.WriteLine("			\"Blind Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Blind Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 5\"");
+			fFilename.WriteLine("	\"Tank 6\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2685,10 +2778,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Bomb Hit\"						\"1\"");
 			fFilename.WriteLine("			\"Bomb Power\"					\"75\"");
 			fFilename.WriteLine("			\"Bomb Rock Break\"				\"1\"");
-			fFilename.WriteLine("			\"Bomb Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Bomb Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 6\"");
+			fFilename.WriteLine("	\"Tank 7\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2706,7 +2799,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Explosive Immunity\"			\"1\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 7\"");
+			fFilename.WriteLine("	\"Tank 8\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2723,11 +2816,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
 			fFilename.WriteLine("		}");
-			fFilename.WriteLine("		\"Throw Ability\"");
-			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
-			fFilename.WriteLine("			\"Infected Options\"				\"2\"");
-			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Minion Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
@@ -2735,8 +2823,13 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Minion Chance\"					\"5\"");
 			fFilename.WriteLine("			\"Minion Types\"					\"2\"");
 			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Throw Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
+			fFilename.WriteLine("			\"Throw Infected Options\"		\"2\"");
+			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 8\"");
+			fFilename.WriteLine("	\"Tank 9\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2754,7 +2847,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Bullet Immunity\"				\"1\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 9\"");
+			fFilename.WriteLine("	\"Tank 10\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2774,10 +2867,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Bury Duration\"					\"5.0\"");
 			fFilename.WriteLine("			\"Bury Height\"					\"50.0\"");
 			fFilename.WriteLine("			\"Bury Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Bury Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Bury Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 10\"");
+			fFilename.WriteLine("	\"Tank 11\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2794,10 +2887,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Throw Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
-			fFilename.WriteLine("			\"Car Options\"					\"123\"");
+			fFilename.WriteLine("			\"Throw Car Options\"				\"123\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 11\"");
+			fFilename.WriteLine("	\"Tank 12\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2810,11 +2903,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
 			fFilename.WriteLine("		}");
-			fFilename.WriteLine("		\"Throw Ability\"");
-			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
-			fFilename.WriteLine("			\"Infected Options\"				\"6\"");
-			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Minion Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
@@ -2822,8 +2910,13 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Minion Chance\"					\"5\"");
 			fFilename.WriteLine("			\"Minion Types\"					\"6\"");
 			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Throw Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
+			fFilename.WriteLine("			\"Throw Infected Options\"		\"6\"");
+			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 12\"");
+			fFilename.WriteLine("	\"Tank 13\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2847,14 +2940,35 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Throw Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
-			fFilename.WriteLine("			\"Infected Options\"				\"7\"");
+			fFilename.WriteLine("			\"Throw Infected Options\"		\"7\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 13\"");
+			fFilename.WriteLine("	\"Tank 14\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Tank Name\"						\"Drug Tank\"");
+			fFilename.WriteLine("			\"Tank Name\"						\"Dropper Tank\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
+			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"200,100,0,255|200,100,0\"");
+			fFilename.WriteLine("			\"Props Colors\"					\"0,100,200,255|0,100,200,255|0,100,200,180|0,100,200,255|0,100,200,255\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Enhancements\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Drop Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
+			fFilename.WriteLine("			\"Drop Chance\"					\"4\"");
+			fFilename.WriteLine("			\"Drop Clip Chance\"				\"4\"");
+			fFilename.WriteLine("			\"Drop Weapon Scale\"				\"1.0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("	}");
+			fFilename.WriteLine("	\"Tank 15\"");
+			fFilename.WriteLine("	{");
+			fFilename.WriteLine("		\"General\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Tank Name\"						\"Drugger Tank\"");
 			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"255,245,0,255|255,245,0\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"55,205,65,255|55,205,65,255|55,205,65,180|55,205,65,255|55,205,65,255\"");
@@ -2869,10 +2983,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Drug Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Drug Duration\"					\"5.0\"");
 			fFilename.WriteLine("			\"Drug Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Drug Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Drug Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 14\"");
+			fFilename.WriteLine("	\"Tank 16\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2891,11 +3005,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Enforce Chance\"				\"4\"");
 			fFilename.WriteLine("			\"Enforce Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Enforce Hit\"					\"1\"");
-			fFilename.WriteLine("			\"Enforce Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Enforce Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Enforce Weapon Slots\"			\"12345\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 15\"");
+			fFilename.WriteLine("	\"Tank 17\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2922,10 +3036,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Fire Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Fire Hit\"						\"1\"");
 			fFilename.WriteLine("			\"Fire Rock Break\"				\"1\"");
-			fFilename.WriteLine("			\"Fire Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Fire Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 16\"");
+			fFilename.WriteLine("	\"Tank 18\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2958,7 +3072,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Flash Speed\"					\"5.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 17\"");
+			fFilename.WriteLine("	\"Tank 19\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2976,10 +3090,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Fling Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Fling Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Fling Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Fling Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 18\"");
+			fFilename.WriteLine("	\"Tank 20\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -2999,7 +3113,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Fragile Duration\"				\"5.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 19\"");
+			fFilename.WriteLine("	\"Tank 21\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3022,11 +3136,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ghost Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
 			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Ghost Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"12345\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 20\"");
+			fFilename.WriteLine("	\"Tank 22\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3046,7 +3160,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"God Duration\"					\"5.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 21\"");
+			fFilename.WriteLine("	\"Tank 23\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3066,11 +3180,11 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Gravity Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Gravity Force\"					\"-50.0\"");
 			fFilename.WriteLine("			\"Gravity Hit\"					\"0\"");
-			fFilename.WriteLine("			\"Gravity Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Gravity Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Gravity Value\"					\"0.3\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 22\"");
+			fFilename.WriteLine("	\"Tank 24\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3095,7 +3209,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Health From Tanks\"				\"500\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 23\"");
+			fFilename.WriteLine("	\"Tank 25\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3108,11 +3222,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
 			fFilename.WriteLine("		}");
-			fFilename.WriteLine("		\"Throw Ability\"");
-			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
-			fFilename.WriteLine("			\"Infected Options\"				\"3\"");
-			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Minion Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
@@ -3120,8 +3229,13 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Minion Chance\"					\"5\"");
 			fFilename.WriteLine("			\"Minion Types\"					\"3\"");
 			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Throw Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
+			fFilename.WriteLine("			\"Throw Infected Options\"		\"3\"");
+			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 24\"");
+			fFilename.WriteLine("	\"Tank 26\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3141,10 +3255,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Hurt Damage\"					\"5\"");
 			fFilename.WriteLine("			\"Hurt Duration\"					\"5.0\"");
 			fFilename.WriteLine("			\"Hurt Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Hurt Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Hurt Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 25\"");
+			fFilename.WriteLine("	\"Tank 27\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3164,10 +3278,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Hypno Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Hypno Hit\"						\"1\"");
 			fFilename.WriteLine("			\"Hypno Mode\"					\"1\"");
-			fFilename.WriteLine("			\"Hypno Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Hypno Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 26\"");
+			fFilename.WriteLine("	\"Tank 28\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3188,10 +3302,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ice Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Ice Duration\"					\"5.0\"");
 			fFilename.WriteLine("			\"Ice Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Ice Range\"						\"500.0\"");
+			fFilename.WriteLine("			\"Ice Range\"						\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 27\"");
+			fFilename.WriteLine("	\"Tank 29\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3209,10 +3323,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Idle Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Idle Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Idle Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Idle Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 28\"");
+			fFilename.WriteLine("	\"Tank 30\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3231,10 +3345,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Invert Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Invert Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Invert Hit\"					\"1\"");
-			fFilename.WriteLine("			\"Invert Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Invert Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 29\"");
+			fFilename.WriteLine("	\"Tank 31\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3255,7 +3369,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Item Mode\"						\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 30\"");
+			fFilename.WriteLine("	\"Tank 32\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3268,11 +3382,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
 			fFilename.WriteLine("		}");
-			fFilename.WriteLine("		\"Throw Ability\"");
-			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
-			fFilename.WriteLine("			\"Infected Options\"				\"5\"");
-			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Minion Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
@@ -3280,8 +3389,13 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Minion Chance\"					\"5\"");
 			fFilename.WriteLine("			\"Minion Types\"					\"5\"");
 			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Throw Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
+			fFilename.WriteLine("			\"Throw Infected Options\"		\"5\"");
+			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 31\"");
+			fFilename.WriteLine("	\"Tank 33\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3300,7 +3414,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Jump Chance\"					\"4\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 32\"");
+			fFilename.WriteLine("	\"Tank 34\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3322,7 +3436,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Medic Range\"					\"500.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 33\"");
+			fFilename.WriteLine("	\"Tank 35\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3350,7 +3464,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Meteor Radius\"					\"-180.0,180.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 34\"");
+			fFilename.WriteLine("	\"Tank 36\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3373,10 +3487,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Nullify Chance\"				\"4\"");
 			fFilename.WriteLine("			\"Nullify Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Nullify Hit\"					\"1\"");
-			fFilename.WriteLine("			\"Nullify Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Nullify Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 35\"");
+			fFilename.WriteLine("	\"Tank 37\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3397,7 +3511,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Panic Interval\"				\"50.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 36\"");
+			fFilename.WriteLine("	\"Tank 38\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3417,10 +3531,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Pimp Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Pimp Damage\"					\"1\"");
 			fFilename.WriteLine("			\"Pimp Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Pimp Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Pimp Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 37\"");
+			fFilename.WriteLine("	\"Tank 39\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3438,7 +3552,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Melee Immunity\"				\"1\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 38\"");
+			fFilename.WriteLine("	\"Tank 40\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3460,10 +3574,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Puke Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Puke Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Puke Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Puke Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 39\"");
+			fFilename.WriteLine("	\"Tank 41\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3486,7 +3600,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Pyro Boost\"					\"1.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 40\"");
+			fFilename.WriteLine("	\"Tank 42\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3499,14 +3613,35 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
 			fFilename.WriteLine("		}");
-			fFilename.WriteLine("		\"Regenerate Ability\"");
+			fFilename.WriteLine("		\"Regen Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
-			fFilename.WriteLine("			\"Regenerate Health\"				\"1\"");
-			fFilename.WriteLine("			\"Regenerate Interval\"			\"1.0\"");
+			fFilename.WriteLine("			\"Regen Health\"					\"1\"");
+			fFilename.WriteLine("			\"Regen Interval\"				\"1.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 41\"");
+			fFilename.WriteLine("	\"Tank 43\"");
+			fFilename.WriteLine("	{");
+			fFilename.WriteLine("		\"General\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Tank Name\"						\"Respawner Tank\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
+			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"55,125,70,255|55,125,70\"");
+			fFilename.WriteLine("			\"Props Colors\"					\"150,100,50,255|150,100,50,255|150,100,50,180|150,100,50,255|150,100,50,255\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Enhancements\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Respawn Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
+			fFilename.WriteLine("			\"Respawn Amount\"				\"1\"");
+			fFilename.WriteLine("			\"Respawn Chance\"				\"4\"");
+			fFilename.WriteLine("			\"Respawn Random\"				\"0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("	}");
+			fFilename.WriteLine("	\"Tank 44\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3525,10 +3660,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Restart Chance\"				\"4\"");
 			fFilename.WriteLine("			\"Restart Hit\"					\"1\"");
 			fFilename.WriteLine("			\"Restart Loadout\"				\"smg,pistol,pain_pills\"");
-			fFilename.WriteLine("			\"Restart Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Restart Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 42\"");
+			fFilename.WriteLine("	\"Tank 45\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3550,7 +3685,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Rock Radius\"					\"-1.25,1.25\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 43\"");
+			fFilename.WriteLine("	\"Tank 46\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3568,10 +3703,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Rocket Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Rocket Hit\"					\"1\"");
-			fFilename.WriteLine("			\"Rocket Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Rocket Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 44\"");
+			fFilename.WriteLine("	\"Tank 47\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3589,7 +3724,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"3\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 45\"");
+			fFilename.WriteLine("	\"Tank 48\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3608,10 +3743,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Shake Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Shake Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Shake Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Shake Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Shake Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 46\"");
+			fFilename.WriteLine("	\"Tank 49\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3631,7 +3766,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Shield Delay\"					\"7.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 47\"");
+			fFilename.WriteLine("	\"Tank 50\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3650,10 +3785,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Shove Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Shove Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Shove Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Shove Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Shove Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 48\"");
+			fFilename.WriteLine("	\"Tank 51\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3672,10 +3807,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Smite Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Smite Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Smite Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Smite Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 49\"");
+			fFilename.WriteLine("	\"Tank 52\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3690,11 +3825,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
 			fFilename.WriteLine("		}");
-			fFilename.WriteLine("		\"Throw Ability\"");
-			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
-			fFilename.WriteLine("			\"Infected Options\"				\"1\"");
-			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Minion Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
@@ -3702,8 +3832,13 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Minion Chance\"					\"5\"");
 			fFilename.WriteLine("			\"Minion Types\"					\"1\"");
 			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Throw Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
+			fFilename.WriteLine("			\"Throw Infected Options\"		\"1\"");
+			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 50\"");
+			fFilename.WriteLine("	\"Tank 53\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3724,7 +3859,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Spam Duration\"					\"5.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 51\"");
+			fFilename.WriteLine("	\"Tank 54\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3737,11 +3872,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
 			fFilename.WriteLine("		}");
-			fFilename.WriteLine("		\"Throw Ability\"");
-			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
-			fFilename.WriteLine("			\"Infected Options\"				\"123456\"");
-			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Minion Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
@@ -3749,8 +3879,13 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Minion Chance\"					\"5\"");
 			fFilename.WriteLine("			\"Minion Types\"					\"123456\"");
 			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Throw Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
+			fFilename.WriteLine("			\"Throw Infected Options\"		\"123456\"");
+			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 52\"");
+			fFilename.WriteLine("	\"Tank 55\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3767,11 +3902,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
 			fFilename.WriteLine("		}");
-			fFilename.WriteLine("		\"Throw Ability\"");
-			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
-			fFilename.WriteLine("			\"Infected Options\"				\"4\"");
-			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Minion Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
@@ -3779,8 +3909,13 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Minion Chance\"					\"5\"");
 			fFilename.WriteLine("			\"Minion Types\"					\"4\"");
 			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Throw Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"2\"");
+			fFilename.WriteLine("			\"Throw Infected Options\"		\"4\"");
+			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 53\"");
+			fFilename.WriteLine("	\"Tank 56\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3799,11 +3934,37 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Stun Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Stun Duration\"					\"5.0\"");
 			fFilename.WriteLine("			\"Stun Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Stun Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Stun Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Stun Speed\"					\"0.25\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 54\"");
+			fFilename.WriteLine("	\"Tank 57\"");
+			fFilename.WriteLine("	{");
+			fFilename.WriteLine("		\"General\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Tank Name\"						\"Tracker Tank\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
+			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"150,50,0,255|150,50,0\"");
+			fFilename.WriteLine("			\"Props Colors\"					\"0,100,0,255|0,100,0,255|0,100,0,180|0,100,0,255|0,100,0,255\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Enhancements\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
+			fFilename.WriteLine("			\"Throw Interval\"				\"1.0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Immunities\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Fire Immunity\"					\"1\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Track Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
+			fFilename.WriteLine("			\"Track Chance\"					\"4\"");
+			fFilename.WriteLine("			\"Track Mode\"					\"1\"");
+			fFilename.WriteLine("			\"Track Speed\"					\"300.0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("	}");
+			fFilename.WriteLine("	\"Tank 58\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3829,7 +3990,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Vampire Range\"					\"500.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 55\"");
+			fFilename.WriteLine("	\"Tank 59\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3849,10 +4010,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Vision Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Vision FOV\"					\"160\"");
 			fFilename.WriteLine("			\"Vision Hit\"					\"1\"");
-			fFilename.WriteLine("			\"Vision Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Vision Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 56\"");
+			fFilename.WriteLine("	\"Tank 60\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3882,7 +4043,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Warp Interval\"					\"5.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 57\"");
+			fFilename.WriteLine("	\"Tank 61\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3906,7 +4067,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Witch Minion Damage\"			\"10.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 58\"");
+			fFilename.WriteLine("	\"Tank 62\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3927,7 +4088,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	// Super Tanks and Super Tanks+ Tanks");
 			fFilename.WriteLine("	// Most of the Tank combos from ST+ are already recreated above.");
-			fFilename.WriteLine("	\"Tank 59\"");
+			fFilename.WriteLine("	\"Tank 63\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3957,7 +4118,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Meteor Radius\"					\"-180.0,180.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 60\"");
+			fFilename.WriteLine("	\"Tank 64\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -3993,7 +4154,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ghost Chance\"					\"3\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
 			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Ghost Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"123\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Gravity Ability\"");
@@ -4003,7 +4164,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Gravity Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Gravity Force\"					\"-75.0\"");
 			fFilename.WriteLine("			\"Gravity Hit\"					\"1\"");
-			fFilename.WriteLine("			\"Gravity Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Gravity Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Gravity Value\"					\"0.4\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Jump Ability\"");
@@ -4046,7 +4207,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Zombie Amount\"					\"50\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 61\"");
+			fFilename.WriteLine("	\"Tank 65\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4070,7 +4231,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Warp Interval\"					\"3.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 62\"");
+			fFilename.WriteLine("	\"Tank 66\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4093,7 +4254,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Gravity Force\"					\"50.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 63\"");
+			fFilename.WriteLine("	\"Tank 67\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4134,7 +4295,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Smite Hit\"						\"1\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 64\"");
+			fFilename.WriteLine("	\"Tank 68\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4157,7 +4318,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ghost Chance\"					\"3\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
 			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Ghost Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"123\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Warp Ability\"");
@@ -4166,7 +4327,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Warp Interval\"					\"3.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 65\"");
+			fFilename.WriteLine("	\"Tank 69\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4208,7 +4369,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ghost Chance\"					\"3\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
 			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Ghost Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"123\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Gravity Ability\"");
@@ -4218,7 +4379,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Gravity Duration\"				\"5.0\"");
 			fFilename.WriteLine("			\"Gravity Force\"					\"-25.0\"");
 			fFilename.WriteLine("			\"Gravity Hit\"					\"1\"");
-			fFilename.WriteLine("			\"Gravity Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Gravity Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Gravity Value\"					\"0.4\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Jump Ability\"");
@@ -4262,7 +4423,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Zombie Amount\"					\"50\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 66\"");
+			fFilename.WriteLine("	\"Tank 70\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4296,7 +4457,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Warp Interval\"					\"3.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 67\"");
+			fFilename.WriteLine("	\"Tank 71\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4330,7 +4491,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ghost Chance\"					\"3\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
 			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Ghost Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"123\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Warp Ability\"");
@@ -4339,7 +4500,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Warp Interval\"					\"3.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 68\"");
+			fFilename.WriteLine("	\"Tank 72\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4391,7 +4552,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Warp Interval\"					\"8.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 69\"");
+			fFilename.WriteLine("	\"Tank 73\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4429,7 +4590,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Warp Interval\"					\"5.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 70\"");
+			fFilename.WriteLine("	\"Tank 74\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4449,7 +4610,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Smite Hit\"						\"1\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 71\"");
+			fFilename.WriteLine("	\"Tank 75\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4470,7 +4631,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Zombie Amount\"					\"25\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 72\"");
+			fFilename.WriteLine("	\"Tank 76\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4510,7 +4671,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	// Last Boss Extended Tanks");
 			fFilename.WriteLine("	// Most of the Tanks from LBE are already recreated above.");
-			fFilename.WriteLine("	\"Tank 73\"");
+			fFilename.WriteLine("	\"Tank 77\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4537,7 +4698,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Drug Hit\"						\"1\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 74\"");
+			fFilename.WriteLine("	\"Tank 78\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4563,10 +4724,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Hurt Damage\"					\"5\"");
 			fFilename.WriteLine("			\"Hurt Duration\"					\"5.0\"");
 			fFilename.WriteLine("			\"Hurt Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Hurt Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Hurt Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 75\"");
+			fFilename.WriteLine("	\"Tank 79\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4597,7 +4758,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	// This is the plugin developer's personal Tank.");
 			fFilename.WriteLine("	// It has all the abilities that the plugin developer likes the most.");
-			fFilename.WriteLine("	\"Tank 76\"");
+			fFilename.WriteLine("	\"Tank 80\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4631,6 +4792,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Clone Amount\"					\"10\"");
 			fFilename.WriteLine("			\"Clone Chance\"					\"1\"");
 			fFilename.WriteLine("			\"Clone Health\"					\"250\"");
+			fFilename.WriteLine("			\"Clone Mode\"					\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Fire Ability\"");
 			fFilename.WriteLine("		{");
@@ -4666,7 +4828,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	// Here are some miscellaneous Tanks.");
 			fFilename.WriteLine("	// These Tanks are just random combinations that the plugin developer put together.");
-			fFilename.WriteLine("	\"Tank 77\"");
+			fFilename.WriteLine("	\"Tank 81\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4709,7 +4871,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Rock Radius\"					\"-5.0,5.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 78\"");
+			fFilename.WriteLine("	\"Tank 82\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4754,7 +4916,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Zombie Amount\"					\"10\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 79\"");
+			fFilename.WriteLine("	\"Tank 83\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4790,7 +4952,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Warp Interval\"					\"5.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
-			fFilename.WriteLine("	\"Tank 80\"");
+			fFilename.WriteLine("	\"Tank 84\"");
 			fFilename.WriteLine("	{");
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
@@ -4871,6 +5033,7 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 	{
 		char sVariant[64];
 		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		AcceptEntityInput(entity, "ClearParent");
 		SetVariantString(sVariant);
 		AcceptEntityInput(entity, "AddOutput");
 		AcceptEntityInput(entity, "FireUser1");
@@ -4886,33 +5049,6 @@ stock void vDeleteParticle(int entity, float time, char[] input)
 		AcceptEntityInput(entity, "ClearParent");
 		SetVariantString(sVariant);
 		AcceptEntityInput(entity, input);
-	}
-}
-
-stock void vDropWeapon(int client, int slot)
-{
-	if (bIsSurvivor(client) && GetPlayerWeaponSlot(client, slot) > 0)
-	{
-		SDKHooks_DropWeapon(client, GetPlayerWeaponSlot(client, slot), NULL_VECTOR, NULL_VECTOR);
-	}
-}
-
-stock void vFire(int client, float pos[3])
-{
-	int iFire = CreateEntityByName("prop_physics");
-	if (IsValidEntity(iFire))
-	{
-		DispatchKeyValue(iFire, "disableshadows", "1");
-		SetEntityModel(iFire, MODEL_GASCAN);
-		pos[2] += 10.0;
-		TeleportEntity(iFire, pos, NULL_VECTOR, NULL_VECTOR);
-		DispatchSpawn(iFire);
-		SetEntPropEnt(iFire, Prop_Data, "m_hPhysicsAttacker", client);
-		SetEntPropFloat(iFire, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
-		SetEntProp(iFire, Prop_Send, "m_CollisionGroup", 1);
-		SetEntityRenderMode(iFire, RENDER_TRANSCOLOR);
-		SetEntityRenderColor(iFire, 0, 0, 0, 0);
-		AcceptEntityInput(iFire, "Break");
 	}
 }
 
@@ -4982,23 +5118,6 @@ stock void vGetCurrentMode(ConVar convar, char[] config)
 	Format(config, strlen(config), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
 }
 
-stock void vGhostDrop(int client, int owner, char[] slots, char[] number, int slot)
-{
-	if (StrContains(slots, number) != -1)
-	{
-		vDropWeapon(client, slot);
-	}
-}
-
-stock void vGiveHealth(int client, int health, int extrahealth, int maxhealth)
-{
-	maxhealth = iSetCellLimit(maxhealth, 1, ST_MAXHEALTH);
-	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth;
-	int iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth;
-	int iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
-	SetEntityHealth(client, iRealHealth);
-}
-
 stock void vGiveItem(int client, char[] loadout)
 {
 	char sItems[5][64];
@@ -5009,28 +5128,6 @@ stock void vGiveItem(int client, char[] loadout)
 		{
 			vCheatCommand(client, "give", sItems[iItem]);
 		}
-	}
-}
-
-stock void vIdleWarp(int client)
-{
-	float flCurrentOrigin[3] = {0.0, 0.0, 0.0};
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (!bIsSurvivor(iPlayer) || iPlayer == client)
-		{
-			continue;
-		}
-		GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-		TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
-	}
-}
-
-stock void vKickFakeClient(int client)
-{
-	if (IsFakeClient(client))
-	{
-		KickClient(client);
 	}
 }
 
@@ -5095,7 +5192,10 @@ stock void vSpawnInfected(int client, char[] infected, bool auto = false)
 	char sOptions[32];
 	Format(sOptions, sizeof(sOptions), "%s%s", infected, (auto ? " auto" : ""));
 	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", sOptions);
-	vKickFakeClient(client);
+	if (IsFakeClient(client))
+	{
+		KickClient(client);
+	}
 }
 
 stock void vSpawnTank(int wave)

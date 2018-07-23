@@ -52,11 +52,12 @@ SourceMod 1.8+
 3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the auto-generated KeyValue config file and user-made Super Tanks.
 4. Create and save up to 2500 Super Tank types - Provides the ability to store up to 2500 Super Tank types that users can enable/disable.
 5. Easy-to-use config file - Provides a user-friendly KeyValues config file that users can easily understand and edit.
-6. Config Auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
+6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
 
 ## KeyValues Settings
 ```
 // Super Tanks++ KeyValues Settings
+// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.
 "Super Tanks++"
 {
 	// These are the general settings.
@@ -363,7 +364,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Acid Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Acid Range"					"500.0"
@@ -374,6 +375,30 @@ SourceMod 1.8+
 			// 1: ON
 			"Acid Rock Break"				"0"
 		}
+		// The Super Tank flies.
+		"Airborne Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Airborne Chance"				"4"
+
+			// The Super Tank's ability effects last this long.
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Airborne Duration"				"5.0"
+
+			// The Super Tank flies this fast.
+			// Minimum: 100.0
+			// Maximum: 500.0
+			"Airborne Speed"				"300.0"
+		}
+		// The Super Tank receives more damage from bullets and explosions than usual.
 		// The Super Tank takes away survivors' ammunition.
 		// "Ability Enabled" - When a survivor is within range of the Tank, their ammunition is taken away.
 		// "Ammo Hit" - When a survivor is hit by a Tank's claw or rock, their ammunition is taken away.
@@ -401,7 +426,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Ammo Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Ammo Range"					"500.0"
@@ -438,7 +463,7 @@ SourceMod 1.8+
 			// Maximum: 255 (Fully blind)
 			"Blind Intensity"				"255"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Blind Range"					"500.0"
@@ -470,7 +495,7 @@ SourceMod 1.8+
 			// Maximum: 9999999999 (Biggest and most painful explosion)
 			"Bomb Power"					"75"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Bomb Range"					"500.0"
@@ -512,7 +537,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Bury Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Bury Range"					"500.0"
@@ -545,6 +570,30 @@ SourceMod 1.8+
 			// 1: Clones will have access to the same abilities as the original Super Tank.
 			"Clone Mode"					"0"
 		}
+		// The Super Tank drops weapons upon death.
+		"Drop Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Drop Chance"					"4"
+
+			// The Super Tank has 1 out of this many chances to drop guns with a full clip.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Drop Clip Chance"				"4"
+
+			// The Super Tank's weapon size is multiplied by this value.
+			// Note: Default weapon size x Drop weapon scale
+			// Minimum: 1.0
+			// Maximum: 2.0
+			"Drop Weapon Scale"				"1.0"
+		}
 		// The Super Tank drugs survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is drugged.
 		// "Drug Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is drugged.
@@ -572,7 +621,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Drug Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Drug Range"					"500.0"
@@ -604,7 +653,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Enforce Hit"					"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Enforce Range"					"500.0"
@@ -641,7 +690,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Fire Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Fire Range"					"500.0"
@@ -696,12 +745,12 @@ SourceMod 1.8+
 			// 1: ON
 			"Fling Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Fling Range"					"500.0"
 		}
-		// The Super Tank receives more damage from bullets and explosions than usual.
+		// The Super Tank takes more damage.
 		"Fragile Ability"
 		{
 			// Enable this ability.
@@ -712,7 +761,7 @@ SourceMod 1.8+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
-			"Fragile Chance"					"4"
+			"Fragile Chance"				"4"
 
 			// The Super Tank's ability effects last this long.
 			// Minimum: 0.1
@@ -747,7 +796,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Ghost Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Ghost Range"					"500.0"
@@ -815,7 +864,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Gravity Hit"					"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Gravity Range"					"500.0"
@@ -853,7 +902,7 @@ SourceMod 1.8+
 			// Maximum: 9999999999.0
 			"Heal Interval"					"5.0"
 
-			// The distance between an infected and the Super Tank to trigger the ability.
+			// The distance between an infected and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Heal Range"					"500.0"
@@ -911,7 +960,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Hurt Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Hurt Range"					"500.0"
@@ -948,7 +997,7 @@ SourceMod 1.8+
 			// 1: Hypnotized survivors can hurt their teammates.
 			"Hypno Mode"					"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Hypno Range"					"500.0"
@@ -980,7 +1029,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Ice Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Ice Range"						"500.0"
@@ -1007,7 +1056,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Idle Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Idle Range"					"500.0"
@@ -1038,7 +1087,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Invert Hit"					"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Invert Range"					"500.0"
@@ -1117,7 +1166,7 @@ SourceMod 1.8+
 			// Maximum: 65535
 			"Medic Max Health"				"250,50,250,100,325,600"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Medic Range"					"500.0"
@@ -1205,7 +1254,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Nullify Hit"					"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Nullify Range"					"500.0"
@@ -1269,7 +1318,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Pimp Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Pimp Range"					"500.0"
@@ -1296,7 +1345,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Puke Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Puke Range"					"500.0"
@@ -1316,7 +1365,7 @@ SourceMod 1.8+
 			"Pyro Boost"					"1.0"
 		}
 		// The Super Tank regenerates health.
-		"Regenerate Ability"
+		"Regen Ability"
 		{
 			// Enable this ability.
 			// 0: OFF
@@ -1324,16 +1373,34 @@ SourceMod 1.8+
 			"Ability Enabled"				"0"
 
 			// The Super Tank regenerates this much health each time.
-			// Positive numbers: Current health + Regenerate health
-			// Negative numbers: Current health - Regenerate health
+			// Positive numbers: Current health + Regen health
+			// Negative numbers: Current health - Regen health
 			// Minimum: -65535
 			// Maximum: 65535
-			"Regenerate Health"				"1"
+			"Regen Health"					"1"
 
 			// The Super Tank regenerates health every time this many seconds passes.
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Regenerate Interval"			"1.0"
+			"Regen Interval"				"1.0"
+		}
+		// The Super Tank respawns.
+		"Respawn Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Respawn Chance"				"4"
+
+			// The Super Tank respawns as a random Super Tank.
+			// 0: OFF
+			// 1: ON
+			"Respawn Random"				"0"
 		}
 		// The Super Tank forces survivors to restart at the beginning of the map with a new loadout.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor respawns at the start of the map or near a teammate.
@@ -1361,7 +1428,7 @@ SourceMod 1.8+
 			// Character limit for each item: 64
 			"Restart Loadout"				"smg,pistol,pain_pills"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Restart Range"					"500.0"
@@ -1419,7 +1486,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Rocket Hit"					"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Rocket Range"					"500.0"
@@ -1451,7 +1518,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Shake Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Shake Range"					"500.0"
@@ -1502,7 +1569,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Shove Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Shove Range"					"500.0"
@@ -1529,7 +1596,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Smite Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Smite Range"					"500.0"
@@ -1584,7 +1651,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Stun Hit"						"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Stun Range"					"500.0"
@@ -1611,7 +1678,7 @@ SourceMod 1.8+
 			// 1: Small car with a big hatchback.
 			// 2: Car that looks like a Chevrolet Impala SS.
 			// 3: Car that looks like a Sixth Generation Chevrolet Impala.
-			"Car Options"					"123"
+			"Throw Car Options"				"123"
 
 			// The Super Tank can throw these special infected.
 			// Combine numbers in any order for different results.
@@ -1624,7 +1691,31 @@ SourceMod 1.8+
 			// 5: Jockey (Switches to Hunter in L4D1.)
 			// 6: Charger (Switches to Smoker in L4D1.)
 			// 7: Tank
-			"Infected Options"				"1234567"
+			"Throw Infected Options"		"1234567"
+		}
+		// The Super Tank throws a heat-seeking rock that will track down the nearest survivor.
+		"Track Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Track Chance"					"4"
+
+			// The mode of the Super Tank's track ability.
+			// 0: The Super Tank's rock will only start tracking when it's near a survivor.
+			// 1: The Super Tank's rock will track the nearest survivor.
+			"Track Mode"					"1"
+
+			// The Super Tank's track ability is this fast.
+			// Note: This setting only applies if the "Track Mode" setting is set to 1.
+			// Minimum: 100.0
+			// Maximum: 500.0
+			"Track Speed"					"300.0"
 		}
 		// The Super Tank gains health from hurting survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank gains health.
@@ -1656,7 +1747,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Vampire Hit"					"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Vampire Range"					"500.0"
@@ -1693,7 +1784,7 @@ SourceMod 1.8+
 			// 1: ON
 			"Vision Hit"					"0"
 
-			// The distance between a survivor and the Super Tank to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Vision Range"					"500.0"
@@ -1757,9 +1848,6 @@ SourceMod 1.8+
 		}
 	}
 	// Create your own Super Tanks below.
-	"Tank 1"
-	{
-	}
 }
 ```
 
@@ -2367,9 +2455,9 @@ Examples:
 
 **honorcode** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?p=1251446) plugin.
 
-**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389) plugin.
+**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Flying Tank](https://forums.alliedmods.net/showthread.php?p=1544648), and [Tank's Power](https://forums.alliedmods.net/showthread.php?p=1262968) plugins.
 
-**strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?p=702913), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?p=702914), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?p=702918).
+**strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?p=702913), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?p=702914), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?p=702918) plugins.
 
 **Marcus101RR** - For the code to set a player's weapon's ammo.
 

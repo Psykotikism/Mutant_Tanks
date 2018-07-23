@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 8.24 (TBA)
+
+Bug fixes:
+
+1. Fixed various errors reported by Princess LadyRain.
+
+Changes:
+
+1. Divided the plugin into multiple files to avoid slow compilation time, to make it easier to add new abilities, and to make it easier to identify problems within the code.
+2. Added new abilities and renamed some settings.
+
+Files:
+
+1. Updated include file to remove unnecessary code and transfer some of it to other files.
+2. Updated config file with new settings and presets.
+
 ## Version 8.23 (July 20, 2018)
 
 Bug fixes:
@@ -8,7 +24,7 @@ Bug fixes:
 
 Changes:
 
-1. Users can now change settings inside the config file mid-game without having to reload the plugin or restart the server. (Basically the counterpart of Convar.AddChangeHook for cvars.)
+1. Users can now change settings inside the config file mid-game without having to reload the plugin or restart the server. (Basically the counterpart of ConVar.AddChangeHook for cvars.)
 
 Files:
 
