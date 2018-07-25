@@ -38,13 +38,18 @@ char g_sTankColors[ST_MAXTYPES + 1][28];
 char g_sTankColors2[ST_MAXTYPES + 1][28];
 char g_sTankWaves[12];
 char g_sTankWaves2[12];
-ConVar g_cvSTFindConVar[13];
+ConVar g_cvSTFindConVar[4];
 float g_flRunSpeed[ST_MAXTYPES + 1];
 float g_flRunSpeed2[ST_MAXTYPES + 1];
 float g_flThrowInterval[ST_MAXTYPES + 1];
 float g_flThrowInterval2[ST_MAXTYPES + 1];
-Handle g_hSDKPukePlayer;
-Handle g_hSDKRevivePlayer;
+
+Handle g_hAbility;
+Handle g_hConfigs;
+Handle g_hRockBreak;
+Handle g_hRockThrow;
+Handle g_hSpawn;
+
 int g_iAnnounceArrival;
 int g_iAnnounceArrival2;
 int g_iAnnounceDeath;
@@ -55,7 +60,6 @@ int g_iConfigEnable;
 int g_iCreateBackup;
 int g_iDisplayHealth;
 int g_iDisplayHealth2;
-int g_iExplosionSprite = -1;
 int g_iExplosiveImmunity[ST_MAXTYPES + 1];
 int g_iExplosiveImmunity2[ST_MAXTYPES + 1];
 int g_iExtraHealth[ST_MAXTYPES + 1];
@@ -89,60 +93,6 @@ int g_iTankType[ST_MAXTYPES + 1];
 int g_iTankWave;
 int g_iType;
 TopMenu g_tmSTMenu;
-UserMsg g_umFadeUserMsgId;
-
-#include "super_tanks++/st_clone.sp"
-#include "super_tanks++/st_absorb.sp"
-#include "super_tanks++/st_acid.sp"
-#include "super_tanks++/st_airborne.sp"
-#include "super_tanks++/st_ammo.sp"
-#include "super_tanks++/st_blind.sp"
-#include "super_tanks++/st_bomb.sp"
-#include "super_tanks++/st_bury.sp"
-#include "super_tanks++/st_drop.sp"
-#include "super_tanks++/st_drug.sp"
-#include "super_tanks++/st_enforce.sp"
-#include "super_tanks++/st_fire.sp"
-#include "super_tanks++/st_flash.sp"
-#include "super_tanks++/st_fling.sp"
-#include "super_tanks++/st_fragile.sp"
-#include "super_tanks++/st_ghost.sp"
-#include "super_tanks++/st_god.sp"
-#include "super_tanks++/st_gravity.sp"
-#include "super_tanks++/st_heal.sp"
-#include "super_tanks++/st_hurt.sp"
-#include "super_tanks++/st_hypno.sp"
-#include "super_tanks++/st_ice.sp"
-#include "super_tanks++/st_idle.sp"
-#include "super_tanks++/st_invert.sp"
-#include "super_tanks++/st_item.sp"
-#include "super_tanks++/st_jump.sp"
-#include "super_tanks++/st_medic.sp"
-#include "super_tanks++/st_meteor.sp"
-#include "super_tanks++/st_minion.sp"
-#include "super_tanks++/st_nullify.sp"
-#include "super_tanks++/st_panic.sp"
-#include "super_tanks++/st_pimp.sp"
-#include "super_tanks++/st_puke.sp"
-#include "super_tanks++/st_pyro.sp"
-#include "super_tanks++/st_regen.sp"
-#include "super_tanks++/st_respawn.sp"
-#include "super_tanks++/st_restart.sp"
-#include "super_tanks++/st_rock.sp"
-#include "super_tanks++/st_rocket.sp"
-#include "super_tanks++/st_shake.sp"
-#include "super_tanks++/st_shield.sp"
-#include "super_tanks++/st_shove.sp"
-#include "super_tanks++/st_smite.sp"
-#include "super_tanks++/st_spam.sp"
-#include "super_tanks++/st_stun.sp"
-#include "super_tanks++/st_throw.sp"
-#include "super_tanks++/st_track.sp"
-#include "super_tanks++/st_vampire.sp"
-#include "super_tanks++/st_vision.sp"
-#include "super_tanks++/st_warp.sp"
-#include "super_tanks++/st_witch.sp"
-#include "super_tanks++/st_zombie.sp"
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -152,12 +102,51 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		strcopy(error, err_max, "Super Tanks++ only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
+	CreateNative("ST_PluginEnabled", iNative_PluginEnabled);
+	CreateNative("ST_SpawnTank", iNative_SpawnTank);
+	CreateNative("ST_TankType", iNative_TankType);
+	RegPluginLibrary("super_tanks++");
 	g_bLateLoad = late;
 	return APLRes_Success;
 }
 
+public int iNative_PluginEnabled(Handle plugin, int numParams)
+{
+	if (g_bPluginEnabled)
+	{
+		return true;
+	}
+	return false;
+}
+
+public int iNative_SpawnTank(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	int iType = GetNativeCell(2);
+	if (bIsTank(iTank))
+	{
+		vTank(iTank, iType);
+	}
+}
+
+public int iNative_TankType(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	int iType;
+	if (bIsTank(iTank))
+	{
+		iType = ST_TankType(iTank);
+	}
+	return iType;
+}
+
 public void OnPluginStart()
 {
+	g_hAbility = CreateGlobalForward("ST_Ability", ET_Ignore, Param_Cell);
+	g_hConfigs = CreateGlobalForward("ST_Configs", ET_Ignore, Param_String, Param_Cell, Param_Cell);
+	g_hRockBreak = CreateGlobalForward("ST_RockBreak", ET_Ignore, Param_Cell, Param_Cell);
+	g_hRockThrow = CreateGlobalForward("ST_RockThrow", ET_Ignore, Param_Cell, Param_Cell);
+	g_hSpawn = CreateGlobalForward("ST_Spawn", ET_Ignore, Param_Cell);
 	CreateDirectory("cfg/sourcemod/super_tanks++/", 511);
 	vCreateConfigFile("cfg/sourcemod/", "super_tanks++/", "super_tanks++", "super_tanks++", true);
 	Format(g_sSavePath, sizeof(g_sSavePath), "cfg/sourcemod/super_tanks++/super_tanks++.cfg");
@@ -170,69 +159,19 @@ public void OnPluginStart()
 	g_cvSTFindConVar[0] = FindConVar("z_difficulty");
 	g_cvSTFindConVar[1] = FindConVar("mp_gamemode");
 	g_cvSTFindConVar[2] = FindConVar("sv_gametypes");
-	g_cvSTFindConVar[3] = FindConVar("survivor_max_incapacitated_count");
-	g_cvSTFindConVar[4] = FindConVar("z_max_player_zombies");
-	g_cvSTFindConVar[5] = FindConVar("z_tank_throw_force");
-	g_cvSTFindConVar[6] = bIsL4D2Game() ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
-	g_cvSTFindConVar[7] = bIsL4D2Game() ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
-	g_cvSTFindConVar[8] = FindConVar("ammo_huntingrifle_max");
-	g_cvSTFindConVar[9] = FindConVar("ammo_assaultrifle_max");
-	g_cvSTFindConVar[10] = FindConVar("ammo_grenadelauncher_max");
-	g_cvSTFindConVar[11] = FindConVar("ammo_smg_max");
-	g_cvSTFindConVar[12] = FindConVar("ammo_sniperrifle_max");
+	g_cvSTFindConVar[3] = FindConVar("z_max_player_zombies");
 	g_cvSTFindConVar[0].AddChangeHook(vSTGameDifficultyCvar);
-	Handle hGameData = LoadGameConfigFile("super_tanks++");
-	if (bIsL4D2Game())
-	{
-		vAcidSDKCall(hGameData);
-		vFlingSDKCall(hGameData);
-	}
-	vHealSDKCalls(hGameData);
-	vIdleSDKCalls(hGameData);
-	vPukeSDKCall(hGameData);
-	vRestartSDKCall(hGameData);
-	vShoveSDKCall(hGameData);
-	delete hGameData;
 	TopMenu tmAdminMenu;
 	if (LibraryExists("adminmenu") && ((tmAdminMenu = GetAdminTopMenu()) != null))
 	{
 		OnAdminMenuReady(tmAdminMenu);
 	}
-	g_umFadeUserMsgId = GetUserMessageId("Fade");
 }
 
 public void OnMapStart()
 {
-	PrecacheModel(MELEE_AXE_V, true);
-	PrecacheModel(MELEE_AXE_W, true);
-	PrecacheModel(MELEE_CHAINSAW_V, true);
-	PrecacheModel(MELEE_CHAINSAW_W, true);
-	PrecacheModel(MELEE_CRICKET_V, true);
-	PrecacheModel(MELEE_CRICKET_W, true);
-	PrecacheModel(MELEE_CROWBAR_V, true);
-	PrecacheModel(MELEE_CROWBAR_W, true);
-	PrecacheModel(MELEE_GOLFCLUB_V, true);
-	PrecacheModel(MELEE_GOLFCLUB_W, true);
-	PrecacheModel(MELEE_GUITAR_V, true);
-	PrecacheModel(MELEE_GUITAR_W, true);
-	PrecacheModel(MELEE_KATANA_V, true);
-	PrecacheModel(MELEE_KATANA_W, true);
-	PrecacheModel(MELEE_KNIFE_V, true);
-	PrecacheModel(MELEE_KNIFE_W, true);
-	PrecacheModel(MELEE_MACHETE_V, true);
-	PrecacheModel(MELEE_MACHETE_W, true);
-	PrecacheModel(MELEE_PAN_V, true);
-	PrecacheModel(MELEE_PAN_W, true);
-	PrecacheModel(MELEE_TONFA_V, true);
-	PrecacheModel(MELEE_TONFA_W, true);
-	PrecacheModel(MODEL_CAR, true);
-	PrecacheModel(MODEL_CAR2, true);
-	PrecacheModel(MODEL_CAR3, true);
 	PrecacheModel(MODEL_CONCRETE, true);
-	PrecacheModel(MODEL_GASCAN, true);
 	PrecacheModel(MODEL_JETPACK, true);
-	PrecacheModel(MODEL_PROPANETANK, true);
-	PrecacheModel(MODEL_SHIELD, true);
 	PrecacheModel(MODEL_TIRES, true);
 	PrecacheModel(MODEL_WITCH, true);
 	PrecacheModel(MODEL_WITCHBRIDE, true);
@@ -243,43 +182,6 @@ public void OnMapStart()
 	vPrecacheParticle(PARTICLE_METEOR);
 	vPrecacheParticle(PARTICLE_SMOKE);
 	vPrecacheParticle(PARTICLE_SPIT);
-	PrecacheGeneric(SCRIPT_AXE, true);
-	PrecacheGeneric(SCRIPT_BAT, true);
-	PrecacheGeneric(SCRIPT_CRICKET, true);
-	PrecacheGeneric(SCRIPT_CROWBAR, true);
-	PrecacheGeneric(SCRIPT_GOLFCLUB, true);
-	PrecacheGeneric(SCRIPT_GUITAR, true);
-	PrecacheGeneric(SCRIPT_KATANA, true);
-	PrecacheGeneric(SCRIPT_KNIFE, true);
-	PrecacheGeneric(SCRIPT_MACHETE, true);
-	PrecacheGeneric(SCRIPT_PAN, true);
-	PrecacheGeneric(SCRIPT_TONFA, true);
-	g_iExplosionSprite = PrecacheModel(SPRITE_FIRE, true);
-	g_iSmiteSprite = PrecacheModel(SPRITE_GLOW, true);
-	PrecacheSound(SOUND_BULLET, true);
-	PrecacheSound(SOUND_DEBRIS, true);
-	PrecacheSound(SOUND_ELECTRICITY, true);
-	PrecacheSound(SOUND_EXPLOSION, true);
-	PrecacheSound(SOUND_EXPLOSION2, true);
-	PrecacheSound(SOUND_EXPLOSION3, true);
-	PrecacheSound(SOUND_EXPLOSION4, true);
-	PrecacheSound(SOUND_FIRE, true);
-	PrecacheSound(SOUND_INFECTED, true);
-	PrecacheSound(SOUND_INFECTED2, true);
-	PrecacheSound(SOUND_LAUNCH, true);
-	PrecacheModel(WEAPON2_AWP_V, true);
-	PrecacheModel(WEAPON2_AWP_W, true);
-	PrecacheModel(WEAPON2_GRENADE_V, true);
-	PrecacheModel(WEAPON2_GRENADE_W, true);
-	PrecacheModel(WEAPON2_M60_V, true);
-	PrecacheModel(WEAPON2_M60_W, true);
-	PrecacheModel(WEAPON2_MP5_V, true);
-	PrecacheModel(WEAPON2_MP5_W, true);
-	PrecacheModel(WEAPON2_SCOUT_V, true);
-	PrecacheModel(WEAPON2_SCOUT_W, true);
-	PrecacheModel(WEAPON2_SG552_V, true);
-	PrecacheModel(WEAPON2_SG552_W, true);
-	vDrop();
 	if (g_bLateLoad)
 	{
 		vLoadConfigs(g_sSavePath, true);
@@ -291,13 +193,13 @@ public void OnMapStart()
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	vResetEverything(client);
+	g_iTankType[client] = 0;
 }
 
 public void OnClientDisconnect(int client)
 {
 	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	vResetEverything(client);
+	g_iTankType[client] = 0;
 }
 
 public void OnConfigsExecuted()
@@ -314,7 +216,6 @@ public void OnConfigsExecuted()
 		CreateTimer(1.0, tTimerUpdatePlayerCount, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 	g_bCmdUsed = false;
-	g_bRestartValid = false;
 	if (g_iCreateBackup == 1)
 	{
 		CreateDirectory("cfg/sourcemod/super_tanks++/backup_config/", 511);
@@ -440,10 +341,12 @@ public void OnConfigsExecuted()
 public void OnMapEnd()
 {
 	g_bCmdUsed = false;
-	g_bRestartValid = false;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		vResetEverything(iPlayer);
+		if (bIsValidClient(iPlayer))
+		{
+			g_iTankType[iPlayer] = 0;
+		}
 	}
 }
 
@@ -523,56 +426,13 @@ public void OnEntityDestroyed(int entity)
 			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 			if (iThrower > 0 && bIsTank(iThrower) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iThrower))))
 			{
-				int iCloneMode = !g_bTankConfig[g_iTankType[iThrower]] ? g_iCloneMode[g_iTankType[iThrower]] : g_iCloneMode2[g_iTankType[iThrower]];
-				if (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iThrower]))
-				{
-					vAcidRock(entity, iThrower);
-					vBombRock(entity, iThrower);
-					vFireRock(entity, iThrower);
-				}
+				Call_StartForward(g_hRockBreak);
+				Call_PushCell(iThrower);
+				Call_PushCell(entity);
+				Call_Finish();
 			}
 		}
 	}
-}
-
-public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
-{
-	if (!g_bPluginEnabled)
-	{
-		return Plugin_Continue;
-	}
-	if (bIsSurvivor(client) && g_bEnforce[client])
-	{
-		int iActiveWeapon = GetPlayerWeaponSlot(client, g_iEnforceSlot[client]);
-		weapon = iActiveWeapon;
-	}
-	if (bIsSurvivor(client) && g_bInvert[client])
-	{
-		vel[0] = -vel[0];
-		if (buttons & IN_FORWARD)
-		{
-			buttons &= ~IN_FORWARD;
-			buttons |= IN_BACK;
-		}
-		else if (buttons & IN_BACK)
-		{
-			buttons &= ~IN_BACK;
-			buttons |= IN_FORWARD;
-		}
-		vel[1] = -vel[1];
-		if (buttons & IN_MOVELEFT)
-		{
-			buttons &= ~IN_MOVELEFT;
-			buttons |= IN_MOVERIGHT;
-		}
-		else if (buttons & IN_MOVERIGHT)
-		{
-			buttons &= ~IN_MOVERIGHT;
-			buttons |= IN_MOVELEFT;
-		}
-		return Plugin_Changed;
-	}
-	return Plugin_Continue;
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -581,60 +441,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (bIsSurvivor(victim))
-		{
-			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-			if (bIsWitch(attacker))
-			{
-				int iOwner = GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity");
-				if (bIsTank(iOwner))
-				{
-					float flWitchDamage = !g_bTankConfig[g_iTankType[iOwner]] ? g_flWitchDamage[g_iTankType[iOwner]] : g_flWitchDamage2[g_iTankType[iOwner]];
-					damage = flWitchDamage;
-				}
-			}
-			else if (bIsTank(attacker) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(attacker))))
-			{
-				if (g_bAirborne[attacker])
-				{
-					vStopAirborne(attacker);
-				}
-				if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
-				{
-					vAcidHit(victim, attacker, 2);
-					vAmmoHit(victim, attacker, 2);
-					vBlindHit(victim, attacker, 2);
-					vBombHit(victim, attacker, 2);
-					vBuryHit(victim, attacker, 2);
-					vDrugHit(victim, attacker, 2);
-					vEnforceHit(victim, attacker, 2);
-					vFireHit(victim, attacker, 2);
-					vFlingHit(victim, attacker, 2);
-					vGhostHit(victim, attacker, 2);
-					vGravityHit(victim, attacker, 2);
-					vHealHit(victim, attacker);
-					vHurtHit(victim, attacker, 2);
-					vHypnoHit(victim, attacker, 2);
-					vIceHit(victim, attacker, 2);
-					vIdleHit(victim, attacker, 2);
-					vInvertHit(victim, attacker, 2);
-					vNullifyHit(victim, attacker, 2);
-					vPanicHit(attacker);
-					vPimpHit(victim, attacker, 2);
-					vPukeHit(victim, attacker, 2);
-					vRestartHit(victim, attacker, 2);
-					vRocketHit(victim, attacker, 2);
-					vShakeHit(victim, attacker, 2);
-					vShoveHit(victim, attacker, 2);
-					vSmiteHit(victim, attacker, 2);
-					vStunHit(victim, attacker, 2);
-					vVampireHit(attacker);
-					vVisionHit(victim, attacker, 2);
-					vWarpHit(victim, attacker);
-				}
-			}
-		}
-		else if (bIsInfected(victim))
+		if (bIsInfected(victim))
 		{
 			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 			if (bIsTank(victim) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(victim))))
@@ -647,86 +454,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					damage = 0.0;
 					return Plugin_Handled;
-				}
-				if (bIsSurvivor(attacker))
-				{
-					if (g_bNullify[attacker])
-					{
-						damage = 0.0;
-						return Plugin_Handled;
-					}
-					if (strcmp(sClassname, "weapon_melee") == 0)
-					{
-						int iAcidHit = !g_bTankConfig[g_iTankType[victim]] ? g_iAcidHit[g_iTankType[victim]] : g_iAcidHit2[g_iTankType[victim]];
-						int iFireHit = !g_bTankConfig[g_iTankType[victim]] ? g_iFireHit[g_iTankType[victim]] : g_iFireHit2[g_iTankType[victim]];
-						int iGhostHit = !g_bTankConfig[g_iTankType[victim]] ? g_iGhostHit[g_iTankType[victim]] : g_iGhostHit2[g_iTankType[victim]];
-						vAcidHit(attacker, victim, iAcidHit);
-						vFireHit(attacker, victim, iFireHit);
-						vGhostHit(attacker, victim, iGhostHit);
-					}
-					if (g_bAbsorb[victim])
-					{
-						int iHealth = GetClientHealth(victim);
-						if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-						{
-							damage = damage / 10;
-						}
-						else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
-						{
-							damage = damage / 1000;
-						}
-						(iHealth > damage) ? SetEntityHealth(victim, iHealth - RoundFloat(damage)) : SetEntProp(victim, Prop_Send, "m_isIncapacitated", 1);
-						damage = 0.0;
-						return Plugin_Changed;
-					}
-					if (g_bFragile[victim])
-					{
-						int iHealth = GetClientHealth(victim);
-						if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-						{
-							damage = damage * 5;
-						}
-						(iHealth > damage) ? SetEntityHealth(victim, iHealth - RoundFloat(damage)) : SetEntProp(victim, Prop_Send, "m_isIncapacitated", 1);
-						damage = 0.0;
-						return Plugin_Changed;
-					}
-					if (g_bHypno[attacker])
-					{
-						if (damagetype & DMG_BURN)
-						{
-							damage = 0.0;
-							return Plugin_Handled;
-						}
-						else
-						{
-							int iHypnoMode = !g_bTankConfig[g_iTankType[victim]] ? g_iHypnoMode[g_iTankType[victim]] : g_iHypnoMode2[g_iTankType[victim]];
-							int iHealth = GetClientHealth(attacker);
-							int iTarget = iGetRandomSurvivor(attacker, false);
-							if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-							{
-								damage = damage / 10;
-							}
-							else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
-							{
-								damage = damage / 1000;
-							}
-							(iHealth > damage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - RoundFloat(damage)) : SetEntityHealth(attacker, iHealth - RoundFloat(damage))) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntProp(iTarget, Prop_Send, "m_isIncapacitated", 1) : SetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1));
-							damage = 0.0;
-							return Plugin_Changed;
-						}
-					}
-				}
-				if (g_bShield[victim])
-				{
-					if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-					{
-						vShieldAbility(victim, false);
-					}
-					else
-					{
-						damage = 0.0;
-						return Plugin_Handled;
-					}
 				}
 			}
 			if ((damagetype & DMG_BURN || damagetype & DMG_BLAST) && (attacker == victim || bIsInfected(attacker)))
@@ -748,7 +475,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public Action ModelSetTransmit(int entity, int client)
+public Action SetTransmit(int entity, int client)
 {
 	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
 	if (iOwner == client)
@@ -769,13 +496,13 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 		{
 			char sModel[128];
 			GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-			if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_SHIELD, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
+			if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
 			{
 				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == iTank)
 				{
-					SDKUnhook(iProp, SDKHook_SetTransmit, ModelSetTransmit);
-					CreateTimer(3.5, tTimerModelSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
+					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
 				}
 			}
 		}
@@ -784,8 +511,8 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 			if (iOwner == iTank)
 			{
-				SDKUnhook(iProp, SDKHook_SetTransmit, ModelSetTransmit);
-				CreateTimer(3.5, tTimerModelSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
+				SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+				CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
 		while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
@@ -793,8 +520,8 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 			if (iOwner == iTank)
 			{
-				SDKUnhook(iProp, SDKHook_SetTransmit, ModelSetTransmit);
-				CreateTimer(3.5, tTimerModelSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
+				SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+				CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
 		float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
@@ -822,25 +549,6 @@ public Action eEventFinaleVehicleReady(Event event, const char[] name, bool dont
 	g_iTankWave = 3;
 }
 
-public Action eEventPlayerIdled(Event event, const char[] name, bool dontBroadcast)
-{
-	int iPlayerId = event.GetInt("player");
-	int iIdler = GetClientOfUserId(iPlayerId);
-	g_bIdled[iIdler] = true;
-}
-
-public Action eEventPlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
-{
-	int iSurvivorId = event.GetInt("player");
-	int iSurvivor = GetClientOfUserId(iSurvivorId);
-	int iBotId = event.GetInt("bot");
-	int iBot = GetClientOfUserId(iBotId);
-	if (g_bPluginEnabled && bIsIdlePlayer(iBot, iSurvivor)) 
-	{
-		vIdle(iSurvivor, iBot);
-	}
-}
-
 public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int iUserId = event.GetInt("userid");
@@ -849,7 +557,6 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 	{
 		if (bIsValidClient(iPlayer))
 		{
-			SetEntityGravity(iPlayer, 1.0);
 			int iGlowEffect = !g_bTankConfig[g_iTankType[iPlayer]] ? g_iGlowEffect[g_iTankType[iPlayer]] : g_iGlowEffect2[g_iTankType[iPlayer]];
 			if (iGlowEffect == 1 && bIsL4D2Game())
 			{
@@ -862,8 +569,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 				char sName[MAX_NAME_LENGTH + 1];
 				sName = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sCustomName[g_iTankType[iPlayer]] : g_sCustomName2[g_iTankType[iPlayer]];
 				int iAnnounceDeath = !g_bGeneralConfig ? g_iAnnounceDeath : g_iAnnounceDeath2;
-				int iCloneMode = !g_bTankConfig[g_iTankType[iPlayer]] ? g_iCloneMode[g_iTankType[iPlayer]] : g_iCloneMode2[g_iTankType[iPlayer]];
-				if (iAnnounceDeath == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iPlayer])))
+				if (iAnnounceDeath == 1)
 				{
 					switch (GetRandomInt(1, 10))
 					{
@@ -879,32 +585,17 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						case 10: PrintToChatAll("\x04%s\x01 It seems\x05 %s\x01 could not beat the survivors after all...", ST_PREFIX, sName);
 					}
 				}
-				vBlindDeath(iPlayer);
-				vBuryDeath(iPlayer);
-				vCloneDeath(iPlayer);
-				vDropDeath(iPlayer);
-				vEnforceDeath();
-				vResetGhost(iPlayer);
-				vGravityDeath(iPlayer);
-				vHypnoDeath();
-				vIceDeath(iPlayer);
-				vInvertDeath();
-				vItemDeath(iPlayer);
-				vMedicDeath(iPlayer);
-				vResetMinion(iPlayer);
-				vNullifyDeath();
-				vStunDeath(iPlayer);
 				int iProp = -1;
 				while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 				{
 					char sModel[128];
 					GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-					if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_SHIELD, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
+					if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
 					{
 						int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 						if (iOwner == iPlayer)
 						{
-							SDKUnhook(iProp, SDKHook_SetTransmit, ModelSetTransmit);
+							SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
 							AcceptEntityInput(iProp, "Kill");
 						}
 					}
@@ -914,23 +605,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == iPlayer)
 					{
-						SDKUnhook(iProp, SDKHook_SetTransmit, ModelSetTransmit);
-						AcceptEntityInput(iProp, "Kill");
-					}
-				}
-				while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
-				{
-					if (bIsL4D2Game())
-					{
-						int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
-						if (iOwner == iPlayer)
-						{
-							AcceptEntityInput(iProp, "Kill");
-						}
-					}
-					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iPlayer)
-					{
+						SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
 						AcceptEntityInput(iProp, "Kill");
 					}
 				}
@@ -947,7 +622,7 @@ public Action eEventPlayerIncapacitated(Event event, const char[] name, bool don
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (g_bPluginEnabled && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
-		vRespawnDeath(iTank);
+		CreateTimer(3.0, tTimerKillStuckTank, iUserId, TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -956,7 +631,6 @@ public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcas
 	if (g_bPluginEnabled)
 	{
 		g_iTankWave = 0;
-		CreateTimer(10.0, tTimerRestartCoordinates, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -1058,13 +732,16 @@ public Action cmdTank(int client, int args)
 	return Plugin_Handled;
 }
 
-void vTank(int client, int type, bool auto = false)
+void vTank(int client, int type)
 {
 	g_bCmdUsed = true;
 	g_iType = type;
-	char sType[MAX_NAME_LENGTH + 1];
-	sType = auto ? "tank auto" : "tank";
-	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", sType);
+	char sCommand[32];
+	sCommand = bIsL4D2Game() ? "z_spawn_old" : "z_spawn";
+	int iCmdFlags = GetCommandFlags(sCommand);
+	SetCommandFlags(sCommand, iCmdFlags & ~FCVAR_CHEAT);
+	FakeClientCommand(client, "%s tank", sCommand);
+	SetCommandFlags(sCommand, iCmdFlags|FCVAR_CHEAT);
 }
 
 void vTankMenu(int client, int item)
@@ -1149,8 +826,6 @@ void vHookEvents(bool hook)
 		HookEvent("finale_start", eEventFinaleStart, EventHookMode_Pre);
 		HookEvent("finale_vehicle_leaving", eEventFinaleVehicleLeaving);
 		HookEvent("finale_vehicle_ready", eEventFinaleVehicleReady);
-		HookEvent("player_afk", eEventPlayerIdled, EventHookMode_Pre);
-		HookEvent("player_bot_replace", eEventPlayerBotReplace);
 		HookEvent("player_death", eEventPlayerDeath);
 		HookEvent("player_incapacitated", eEventPlayerIncapacitated);
 		HookEvent("round_start", eEventRoundStart);
@@ -1164,8 +839,6 @@ void vHookEvents(bool hook)
 		UnhookEvent("finale_start", eEventFinaleStart);
 		UnhookEvent("finale_vehicle_leaving", eEventFinaleVehicleLeaving);
 		UnhookEvent("finale_vehicle_ready", eEventFinaleVehicleReady);
-		UnhookEvent("player_afk", eEventPlayerIdled);
-		UnhookEvent("player_bot_replace", eEventPlayerBotReplace);
 		UnhookEvent("player_death", eEventPlayerDeath);
 		UnhookEvent("player_incapacitated", eEventPlayerIncapacitated);
 		UnhookEvent("round_start", eEventRoundStart);
@@ -1253,62 +926,15 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_iFireImmunity[iIndex] = iSetCellLimit(g_iFireImmunity[iIndex], 0, 1)) : (g_iFireImmunity2[iIndex] = iSetCellLimit(g_iFireImmunity2[iIndex], 0, 1));
 			main ? (g_iMeleeImmunity[iIndex] = kvSuperTanks.GetNum("Immunities/Melee Immunity", 0)) : (g_iMeleeImmunity2[iIndex] = kvSuperTanks.GetNum("Immunities/Melee Immunity", g_iMeleeImmunity[iIndex]));
 			main ? (g_iMeleeImmunity[iIndex] = iSetCellLimit(g_iMeleeImmunity[iIndex], 0, 1)) : (g_iMeleeImmunity2[iIndex] = iSetCellLimit(g_iMeleeImmunity2[iIndex], 0, 1));
-			vAbsorbConfigs(kvSuperTanks, iIndex, main);
-			vAcidConfigs(kvSuperTanks, iIndex, main);
-			vAirborneConfigs(kvSuperTanks, iIndex, main);
-			vAmmoConfigs(kvSuperTanks, iIndex, main);
-			vBlindConfigs(kvSuperTanks, iIndex, main);
-			vBombConfigs(kvSuperTanks, iIndex, main);
-			vBuryConfigs(kvSuperTanks, iIndex, main);
-			vCloneConfigs(kvSuperTanks, iIndex, main);
-			vDropConfigs(kvSuperTanks, iIndex, main);
-			vDrugConfigs(kvSuperTanks, iIndex, main);
-			vEnforceConfigs(kvSuperTanks, iIndex, main);
-			vFireConfigs(kvSuperTanks, iIndex, main);
-			vFlashConfigs(kvSuperTanks, iIndex, main);
-			vFlingConfigs(kvSuperTanks, iIndex, main);
-			vFragileConfigs(kvSuperTanks, iIndex, main);
-			vGhostConfigs(kvSuperTanks, iIndex, main);
-			vGodConfigs(kvSuperTanks, iIndex, main);
-			vGravityConfigs(kvSuperTanks, iIndex, main);
-			vHealConfigs(kvSuperTanks, iIndex, main);
-			vHurtConfigs(kvSuperTanks, iIndex, main);
-			vHypnoConfigs(kvSuperTanks, iIndex, main);
-			vIceConfigs(kvSuperTanks, iIndex, main);
-			vIdleConfigs(kvSuperTanks, iIndex, main);
-			vInvertConfigs(kvSuperTanks, iIndex, main);
-			vItemConfigs(kvSuperTanks, iIndex, main);
-			vJumpConfigs(kvSuperTanks, iIndex, main);
-			vMedicConfigs(kvSuperTanks, iIndex, main);
-			vMeteorConfigs(kvSuperTanks, iIndex, main);
-			vMinionConfigs(kvSuperTanks, iIndex, main);
-			vNullifyConfigs(kvSuperTanks, iIndex, main);
-			vPanicConfigs(kvSuperTanks, iIndex, main);
-			vPimpConfigs(kvSuperTanks, iIndex, main);
-			vPukeConfigs(kvSuperTanks, iIndex, main);
-			vPyroConfigs(kvSuperTanks, iIndex, main);
-			vRegenConfigs(kvSuperTanks, iIndex, main);
-			vRespawnConfigs(kvSuperTanks, iIndex, main);
-			vRestartConfigs(kvSuperTanks, iIndex, main);
-			vRockConfigs(kvSuperTanks, iIndex, main);
-			vRocketConfigs(kvSuperTanks, iIndex, main);
-			vShakeConfigs(kvSuperTanks, iIndex, main);
-			vShieldConfigs(kvSuperTanks, iIndex, main);
-			vShoveConfigs(kvSuperTanks, iIndex, main);
-			vSmiteConfigs(kvSuperTanks, iIndex, main);
-			vSpamConfigs(kvSuperTanks, iIndex, main);
-			vStunConfigs(kvSuperTanks, iIndex, main);
-			vThrowConfigs(kvSuperTanks, iIndex, main);
-			vTrackConfigs(kvSuperTanks, iIndex, main);
-			vVampireConfigs(kvSuperTanks, iIndex, main);
-			vVisionConfigs(kvSuperTanks, iIndex, main);
-			vWarpConfigs(kvSuperTanks, iIndex, main);
-			vWitchConfigs(kvSuperTanks, iIndex, main);
-			vZombieConfigs(kvSuperTanks, iIndex, main);
 			kvSuperTanks.Rewind();
 		}
 	}
 	delete kvSuperTanks;
+	Call_StartForward(g_hConfigs);
+	Call_PushString(savepath);
+	Call_PushCell(iLimit);
+	Call_PushCell(main);
+	Call_Finish();
 }
 
 void vLateLoad(bool late)
@@ -1320,53 +946,6 @@ void vLateLoad(bool late)
 			if (bIsValidClient(iPlayer))
 			{
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
-}
-
-void vHitAbility(int client, int type)
-{
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client))
-	{
-		float flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor))
-			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				switch (type)
-				{
-					case 1: vAcidHit(iSurvivor, client, 1, flDistance);
-					case 2: vAmmoHit(iSurvivor, client, 1, flDistance);
-					case 3: vBlindHit(iSurvivor, client, 1, flDistance);
-					case 4: vBombHit(iSurvivor, client, 1, flDistance);
-					case 5: vBuryHit(iSurvivor, client, 1, flDistance);
-					case 6: vDrugHit(iSurvivor, client, 1, flDistance);
-					case 7: vEnforceHit(iSurvivor, client, 1, flDistance);
-					case 8: vFireHit(iSurvivor, client, 1, flDistance);
-					case 9: vFlingHit(iSurvivor, client, 1, flDistance);
-					case 10: vGravityHit(iSurvivor, client, 1, flDistance);
-					case 11: vHurtHit(iSurvivor, client, 1, flDistance);
-					case 12: vHypnoHit(iSurvivor, client, 1, flDistance);
-					case 13: vIceHit(iSurvivor, client, 1, flDistance);
-					case 14: vIdleHit(iSurvivor, client, 1, flDistance);
-					case 15: vInvertHit(iSurvivor, client, 1, flDistance);
-					case 16: vNullifyHit(iSurvivor, client, 1, flDistance);
-					case 17: vPimpHit(iSurvivor, client, 1, flDistance);
-					case 18: vPukeHit(iSurvivor, client, 1, flDistance);
-					case 19: vRestartHit(iSurvivor, client, 1, flDistance);
-					case 20: vRocketHit(iSurvivor, client, 1, flDistance);
-					case 21: vShakeHit(iSurvivor, client, 1, flDistance);
-					case 22: vShoveHit(iSurvivor, client, 1, flDistance);
-					case 23: vSmiteHit(iSurvivor, client, 1, flDistance);
-					case 24: vStunHit(iSurvivor, client, 1, flDistance);
-					case 25: vVisionHit(iSurvivor, client, 1, flDistance);
-				}
 			}
 		}
 	}
@@ -1445,7 +1024,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 				SetEntPropEnt(iBeam[iLight], Prop_Send, "m_hOwnerEntity", client);
 				TeleportEntity(iBeam[iLight], NULL_VECTOR, flAngles, NULL_VECTOR);
 				DispatchSpawn(iBeam[iLight]);
-				SDKHook(iBeam[iLight], SDKHook_SetTransmit, ModelSetTransmit);
+				SDKHook(iBeam[iLight], SDKHook_SetTransmit, SetTransmit);
 			}
 		}
 	}
@@ -1526,10 +1105,10 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 						TeleportEntity(iFlame, flOrigin2, flAngles3, NULL_VECTOR);
 						DispatchSpawn(iFlame);
 						AcceptEntityInput(iFlame, "TurnOn");
-						SDKHook(iFlame, SDKHook_SetTransmit, ModelSetTransmit);
+						SDKHook(iFlame, SDKHook_SetTransmit, SetTransmit);
 					}
 				}
-				SDKHook(iJetpack[iOzTank], SDKHook_SetTransmit, ModelSetTransmit);
+				SDKHook(iJetpack[iOzTank], SDKHook_SetTransmit, SetTransmit);
 			}
 		}
 	}
@@ -1573,7 +1152,7 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 				flAngles[2] = flAngles[2] + GetRandomFloat(-90.0, 90.0);
 				TeleportEntity(iConcrete[iRock], NULL_VECTOR, flAngles, NULL_VECTOR);
 				DispatchSpawn(iConcrete[iRock]);
-				SDKHook(iConcrete[iRock], SDKHook_SetTransmit, ModelSetTransmit);
+				SDKHook(iConcrete[iRock], SDKHook_SetTransmit, SetTransmit);
 			}
 		}
 	}
@@ -1611,43 +1190,17 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 				SetEntPropEnt(iWheel[iTire], Prop_Send, "m_hOwnerEntity", client);
 				TeleportEntity(iWheel[iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
 				DispatchSpawn(iWheel[iTire]);
-				SDKHook(iWheel[iTire], SDKHook_SetTransmit, ModelSetTransmit);
+				SDKHook(iWheel[iTire], SDKHook_SetTransmit, SetTransmit);
 			}
 		}
 	}
 }
 
-void vMinionSpawner(int client, char[] type, int enabled, bool boss = false)
+void vCopyVector(float source[3], float target[3])
 {
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if (enabled == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client))
-	{
-		float flHitPosition[3];
-		float flPosition[3];
-		float flAngle[3];
-		float flVector[3];
-		GetClientEyePosition(client, flPosition);
-		GetClientEyeAngles(client, flAngle);
-		flAngle[0] = -25.0;
-		GetAngleVectors(flAngle, flAngle, NULL_VECTOR, NULL_VECTOR);
-		NormalizeVector(flAngle, flAngle);
-		ScaleVector(flAngle, -1.0);
-		vCopyVector(flAngle, flVector);
-		GetVectorAngles(flAngle, flAngle);
-		Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, client);
-		if (TR_DidHit(hTrace))
-		{
-			TR_GetEndPosition(flHitPosition, hTrace);
-			NormalizeVector(flVector, flVector);
-			ScaleVector(flVector, -40.0);
-			AddVectors(flHitPosition, flVector, flHitPosition);
-			if (GetVectorDistance(flHitPosition, flPosition) < 200.0 && GetVectorDistance(flHitPosition, flPosition) > 40.0)
-			{
-				vMinion(client, type, flHitPosition, boss);
-			}
-		}
-		delete hTrace;
-	}
+	target[0] = source[0];
+	target[1] = source[1];
+	target[2] = source[2];
 }
 
 void vParticleEffects(int client)
@@ -1685,49 +1238,6 @@ void vParticleEffects(int client)
 		{
 			CreateTimer(2.0, tTimerSpitEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
-	}
-}
-
-void vResetEverything(int client)
-{
-	if (bIsValidClient(client))
-	{
-		g_iTankType[client] = 0;
-		vResetAbsorb(client);
-		vResetAirborne(client);
-		vResetBlind(client);
-		vResetBury(client);
-		vResetClone(client);
-		vResetDrop(client);
-		vResetDrug(client);
-		vResetEnforce(client);
-		vResetFlash(client);
-		vResetFragile(client);
-		vResetGhost(client);
-		vResetGod(client);
-		vResetGravity(client);
-		vResetHeal(client);
-		vResetHurt(client);
-		vResetHypno(client);
-		vResetIce(client);
-		vResetIdle(client);
-		vResetInvert(client);
-		vResetMeteor(client);
-		vResetMinion(client);
-		vResetNullify(client);
-		vResetPanic(client);
-		vResetPimp(client);
-		vResetPyro(client);
-		vResetRegen(client);
-		vResetRock(client);
-		vResetShake(client);
-		vResetShield(client);
-		vResetShove(client);
-		vResetSpam(client);
-		vResetStun(client);
-		vResetVision(client);
-		vResetWarp(client);
-		vResetZombie(client);
 	}
 }
 
@@ -1831,8 +1341,7 @@ void vSetName(int client, char[] name = "Tank")
 		{
 			SetClientInfo(client, "name", name);
 			int iAnnounceArrival = !g_bGeneralConfig ? g_iAnnounceArrival : g_iAnnounceArrival2;
-			int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-			if (iAnnounceArrival == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])))
+			if (iAnnounceArrival == 1)
 			{
 				switch (GetRandomInt(1, 10))
 				{
@@ -1857,6 +1366,32 @@ void vSetProps(int client, int red, int green, int blue, int alpha, int red2, in
 	if (bIsTank(client))
 	{
 		vAttachProps(client, red, green, blue, alpha, red2, green2, blue2, alpha2, red3, green3, blue3, alpha3, red4, green4, blue4, alpha4, red5, green5, blue5, alpha5);
+	}
+}
+
+void vSetVector(float target[3], float x, float y, float z)
+{
+	target[0] = x;
+	target[1] = y;
+	target[2] = z;
+}
+
+void vSpawnTank(int wave)
+{
+	if (iGetTankCount() < wave)
+	{
+		int iTank = CreateFakeClient("Tank");
+		if (iTank > 0)
+		{
+			ChangeClientTeam(iTank, 3);
+			char sCommand[32];
+			sCommand = bIsL4D2Game() ? "z_spawn_old" : "z_spawn";
+			int iCmdFlags = GetCommandFlags(sCommand);
+			SetCommandFlags(sCommand, iCmdFlags & ~FCVAR_CHEAT);
+			FakeClientCommand(iTank, "%s tank auto", sCommand);
+			SetCommandFlags(sCommand, iCmdFlags|FCVAR_CHEAT);
+			KickClient(iTank);
+		}
 	}
 }
 
@@ -1934,6 +1469,8 @@ public Action tTimerBlurEffect(Handle timer, any userid)
 		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
 		TrimString(sRGB[2]);
 		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+		TrimString(sRGB[3]);
+		int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
 		float flTankPos[3];
 		float flTankAng[3];
 		GetClientAbsOrigin(iTank, flTankPos);
@@ -1948,7 +1485,7 @@ public Action tTimerBlurEffect(Handle timer, any userid)
 			TeleportEntity(iTankModel, flTankPos, flTankAng, NULL_VECTOR);
 			DispatchSpawn(iTankModel);
 			AcceptEntityInput(iTankModel, "DisableCollision");
-			SetEntityRenderColor(iTankModel, iRed, iGreen, iBlue, g_iGhostAlpha[iTank]);
+			SetEntityRenderColor(iTankModel, iRed, iGreen, iBlue, iAlpha);
 			SetEntProp(iTankModel, Prop_Send, "m_nSequence", iAnim);
 			SetEntPropFloat(iTankModel, Prop_Send, "m_flPlaybackRate", 5.0);
 			iTankModel = EntIndexToEntRef(iTankModel);
@@ -2009,6 +1546,20 @@ public Action tTimerIceEffect(Handle timer, any userid)
 	return Plugin_Continue;
 }
 
+public Action tTimerKillStuckTank(Handle timer, any userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	{
+		return Plugin_Stop;
+	}
+	if (bIsTank(iTank) && bIsPlayerIncapacitated(iTank))
+	{
+		ForcePlayerSuicide(iTank);
+	}
+	return Plugin_Continue;
+}
+
 public Action tTimerMeteorEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -2060,7 +1611,7 @@ public Action tTimerSpitEffect(Handle timer, any userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerModelSetTransmit(Handle timer, any entity)
+public Action tTimerSetTransmit(Handle timer, any entity)
 {
 	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
 	{
@@ -2068,7 +1619,7 @@ public Action tTimerModelSetTransmit(Handle timer, any entity)
 	}
 	if (bIsValidEntity(entity))
 	{
-		SDKHook(entity, SDKHook_SetTransmit, ModelSetTransmit);
+		SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
 	}
 	return Plugin_Continue;
 }
@@ -2131,61 +1682,19 @@ public Action tTimerTankTypeUpdate(Handle timer)
 	{
 		return Plugin_Continue;
 	}
-	g_cvSTFindConVar[4].SetString("32");
+	g_cvSTFindConVar[3].SetString("32");
 	if (iGetTankCount() > 0)
 	{
 		for (int iTank = 1; iTank <= MaxClients; iTank++)
 		{
-			int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
 			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-			if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+			if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 			{
-				vAbsorbAbility(iTank);
-				vHitAbility(iTank, 1);
-				vAirborneAbility(iTank);
-				vHitAbility(iTank, 2);
-				vHitAbility(iTank, 3);
-				vHitAbility(iTank, 4);
-				vHitAbility(iTank, 5);
-				vCloneAbility(iTank);
-				vHitAbility(iTank, 6);
-				vHitAbility(iTank, 7);
-				vHitAbility(iTank, 8);
-				vFlashAbility(iTank);
-				vHitAbility(iTank, 9);
-				vFragileAbility(iTank);
-				vGhostAbility(iTank);
-				vGodAbility(iTank);
-				vGravityAbility(iTank);
-				vHitAbility(iTank, 10);
-				vHealAbility(iTank);
-				vHitAbility(iTank, 11);
-				vHitAbility(iTank, 12);
-				vHitAbility(iTank, 13);
-				vHitAbility(iTank, 14);
-				vHitAbility(iTank, 15);
-				vMeteorAbility(iTank);
-				vMinionAbility(iTank);
-				vHitAbility(iTank, 16);
-				vPanicAbility(iTank);
-				vHitAbility(iTank, 17);
-				vHitAbility(iTank, 18);
-				vRegenAbility(iTank);
-				vHitAbility(iTank, 19);
-				vRockAbility(iTank);
-				vHitAbility(iTank, 20);
-				vHitAbility(iTank, 21);
-				vHitAbility(iTank, 22);
-				vHitAbility(iTank, 23);
-				vSpamAbility(iTank);
-				vHitAbility(iTank, 24);
-				vVampireAbility(iTank);
-				vHitAbility(iTank, 25);
-				vWarpAbility(iTank);
-				vWitchAbility(iTank);
-				vZombieAbility(iTank);
+				Call_StartForward(g_hAbility);
+				Call_PushCell(iTank);
+				Call_Finish();
 				int iFireImmunity = !g_bTankConfig[g_iTankType[iTank]] ? g_iFireImmunity[g_iTankType[iTank]] : g_iFireImmunity2[g_iTankType[iTank]];
-				if (iFireImmunity == 1 && !g_bPyro[iTank] && bIsPlayerBurning(iTank))
+				if (iFireImmunity == 1 && bIsPlayerBurning(iTank))
 				{
 					ExtinguishEntity(iTank);
 					SetEntPropFloat(iTank, Prop_Send, "m_burnPercent", 1.0);
@@ -2205,23 +1714,15 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
-		if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])))
-		{
-			vDropAbility(iTank);
-			vJumpAbility(iTank);
-			vParticleEffects(iTank);
-			if (!g_bShield[iTank])
-			{
-				vShieldAbility(iTank, true);
-			}
-			float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
-			vThrowInterval(iTank, flThrowInterval);
-			CreateTimer(1.0, tTimerPyro, userid, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		}
+		Call_StartForward(g_hSpawn);
+		Call_PushCell(iTank);
+		Call_Finish();
+		vParticleEffects(iTank);
+		float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
+		vThrowInterval(iTank, flThrowInterval);
 		char sName[MAX_NAME_LENGTH + 1];
 		sName = !g_bTankConfig[g_iTankType[iTank]] ? g_sCustomName[g_iTankType[iTank]] : g_sCustomName2[g_iTankType[iTank]];
 		vSetName(iTank, sName);
@@ -2305,24 +1806,21 @@ public Action tTimerRockThrow(Handle timer, any entity)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (iThrower > 0 && bIsTank(iThrower) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iThrower))))
 	{
-		int iCloneMode = !g_bTankConfig[g_iTankType[iThrower]] ? g_iCloneMode[g_iTankType[iThrower]] : g_iCloneMode2[g_iTankType[iThrower]];
-		if (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iThrower]))
+		char sEffect[5];
+		sEffect = !g_bTankConfig[g_iTankType[iThrower]] ? g_sRockEffects[g_iTankType[iThrower]] : g_sRockEffects2[g_iTankType[iThrower]];
+		int iRockEffect = !g_bTankConfig[g_iTankType[iThrower]] ? g_iRockEffect[g_iTankType[iThrower]] : g_iRockEffect2[g_iTankType[iThrower]];
+		if (iRockEffect == 1 && sEffect[0] != '\0')
 		{
-			char sEffect[5];
-			sEffect = !g_bTankConfig[g_iTankType[iThrower]] ? g_sRockEffects[g_iTankType[iThrower]] : g_sRockEffects2[g_iTankType[iThrower]];
-			int iRockEffect = !g_bTankConfig[g_iTankType[iThrower]] ? g_iRockEffect[g_iTankType[iThrower]] : g_iRockEffect2[g_iTankType[iThrower]];
-			if (iRockEffect == 1 && sEffect[0] != '\0')
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.75, tTimerRockEffects, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpDataPack.WriteCell(GetClientUserId(iThrower));
-				dpDataPack.WriteCell(EntIndexToEntRef(entity));
-				dpDataPack.WriteString(sEffect);
-			}
-			vShield(iThrower, entity);
-			vThrow(iThrower, entity);
-			vTrack(iThrower, entity);
+			DataPack dpDataPack;
+			CreateDataTimer(0.75, tTimerRockEffects, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			dpDataPack.WriteCell(GetClientUserId(iThrower));
+			dpDataPack.WriteCell(EntIndexToEntRef(entity));
+			dpDataPack.WriteString(sEffect);
 		}
+		Call_StartForward(g_hRockThrow);
+		Call_PushCell(iThrower);
+		Call_PushCell(entity);
+		Call_Finish();
 	}
 	return Plugin_Continue;
 }

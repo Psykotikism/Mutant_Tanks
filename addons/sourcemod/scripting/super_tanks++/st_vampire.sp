@@ -1,4 +1,19 @@
 // Super Tanks++: Vampire Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Vampire Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
+bool g_bLateLoad;
+bool g_bTankConfig[ST_MAXTYPES + 1];
 float g_flVampireRange[ST_MAXTYPES + 1];
 float g_flVampireRange2[ST_MAXTYPES + 1];
 int g_iVampireAbility[ST_MAXTYPES + 1];
@@ -10,30 +25,112 @@ int g_iVampireHealth2[ST_MAXTYPES + 1];
 int g_iVampireHit[ST_MAXTYPES + 1];
 int g_iVampireHit2[ST_MAXTYPES + 1];
 
-void vVampireConfigs(KeyValues keyvalues, int index, bool main)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	main ? (g_iVampireAbility[index] = keyvalues.GetNum("Vampire Ability/Ability Enabled", 0)) : (g_iVampireAbility2[index] = keyvalues.GetNum("Vampire Ability/Ability Enabled", g_iVampireAbility[index]));
-	main ? (g_iVampireAbility[index] = iSetCellLimit(g_iVampireAbility[index], 0, 1)) : (g_iVampireAbility2[index] = iSetCellLimit(g_iVampireAbility2[index], 0, 1));
-	main ? (g_iVampireChance[index] = keyvalues.GetNum("Vampire Ability/Vampire Chance", 4)) : (g_iVampireChance2[index] = keyvalues.GetNum("Vampire Ability/Vampire Chance", g_iVampireChance[index]));
-	main ? (g_iVampireChance[index] = iSetCellLimit(g_iVampireChance[index], 1, 9999999999)) : (g_iVampireChance2[index] = iSetCellLimit(g_iVampireChance2[index], 1, 9999999999));
-	main ? (g_iVampireHealth[index] = keyvalues.GetNum("Vampire Ability/Vampire Health", 100)) : (g_iVampireHealth2[index] = keyvalues.GetNum("Vampire Ability/Vampire Health", g_iVampireHealth[index]));
-	main ? (g_iVampireHealth[index] = iSetCellLimit(g_iVampireHealth[index], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH)) : (g_iVampireHealth2[index] = iSetCellLimit(g_iVampireHealth2[index], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH));
-	main ? (g_iVampireHit[index] = keyvalues.GetNum("Vampire Ability/Vampire Hit", 0)) : (g_iVampireHit2[index] = keyvalues.GetNum("Vampire Ability/Vampire Hit", g_iVampireHit[index]));
-	main ? (g_iVampireHit[index] = iSetCellLimit(g_iVampireHit[index], 0, 1)) : (g_iVampireHit2[index] = iSetCellLimit(g_iVampireHit2[index], 0, 1));
-	main ? (g_flVampireRange[index] = keyvalues.GetFloat("Vampire Ability/Vampire Range", 500.0)) : (g_flVampireRange2[index] = keyvalues.GetFloat("Vampire Ability/Vampire Range", g_flVampireRange[index]));
-	main ? (g_flVampireRange[index] = flSetFloatLimit(g_flVampireRange[index], 1.0, 9999999999.0)) : (g_flVampireRange2[index] = flSetFloatLimit(g_flVampireRange2[index], 1.0, 9999999999.0));
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "[ST++] Vampire Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	g_bLateLoad = late;
+	return APLRes_Success;
 }
 
-void vVampireAbility(int client)
+public void OnAllPluginsLoaded()
 {
-	int iVampireAbility = !g_bTankConfig[g_iTankType[client]] ? g_iVampireAbility[g_iTankType[client]] : g_iVampireAbility2[g_iTankType[client]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if (iVampireAbility == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client))
+	if (!LibraryExists("super_tanks++"))
+	{
+		SetFailState("No Super Tanks++ library found.");
+	}
+}
+
+public void OnMapStart()
+{
+	if (g_bLateLoad)
+	{
+		vLateLoad(true);
+		g_bLateLoad = false;
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+}
+
+public void OnClientDisconnect(int client)
+{
+	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+}
+
+void vLateLoad(bool late)
+{
+	if (late)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
+	}
+}
+
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (ST_PluginEnabled() && damage > 0.0)
+	{
+		if (bIsTank(attacker) && bIsSurvivor(victim))
+		{
+			char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			{
+				int iVampireHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iVampireHit[ST_TankType(attacker)] : g_iVampireHit2[ST_TankType(attacker)];
+				vVampireHit(attacker, iVampireHit);
+			}
+		}
+	}
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iVampireAbility[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Enabled", 0)) : (g_iVampireAbility2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Enabled", g_iVampireAbility[iIndex]));
+			main ? (g_iVampireAbility[iIndex] = iSetCellLimit(g_iVampireAbility[iIndex], 0, 1)) : (g_iVampireAbility2[iIndex] = iSetCellLimit(g_iVampireAbility2[iIndex], 0, 1));
+			main ? (g_iVampireChance[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Chance", 4)) : (g_iVampireChance2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Chance", g_iVampireChance[iIndex]));
+			main ? (g_iVampireChance[iIndex] = iSetCellLimit(g_iVampireChance[iIndex], 1, 9999999999)) : (g_iVampireChance2[iIndex] = iSetCellLimit(g_iVampireChance2[iIndex], 1, 9999999999));
+			main ? (g_iVampireHealth[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Health", 100)) : (g_iVampireHealth2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Health", g_iVampireHealth[iIndex]));
+			main ? (g_iVampireHealth[iIndex] = iSetCellLimit(g_iVampireHealth[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH)) : (g_iVampireHealth2[iIndex] = iSetCellLimit(g_iVampireHealth2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH));
+			main ? (g_iVampireHit[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Hit", 0)) : (g_iVampireHit2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Hit", g_iVampireHit[iIndex]));
+			main ? (g_iVampireHit[iIndex] = iSetCellLimit(g_iVampireHit[iIndex], 0, 1)) : (g_iVampireHit2[iIndex] = iSetCellLimit(g_iVampireHit2[iIndex], 0, 1));
+			main ? (g_flVampireRange[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range", 500.0)) : (g_flVampireRange2[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range", g_flVampireRange[iIndex]));
+			main ? (g_flVampireRange[iIndex] = flSetFloatLimit(g_flVampireRange[iIndex], 1.0, 9999999999.0)) : (g_flVampireRange2[iIndex] = flSetFloatLimit(g_flVampireRange2[iIndex], 1.0, 9999999999.0));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public void ST_Ability(int client)
+{
+	int iVampireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iVampireAbility[ST_TankType(client)] : g_iVampireAbility2[ST_TankType(client)];
+	if (iVampireAbility == 1 && bIsTank(client))
 	{
 		int iVampireCount;
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
-		float flVampireRange = !g_bTankConfig[g_iTankType[client]] ? g_flVampireRange[g_iTankType[client]] : g_flVampireRange2[g_iTankType[client]];
+		float flVampireRange = !g_bTankConfig[ST_TankType(client)] ? g_flVampireRange[ST_TankType(client)] : g_flVampireRange2[ST_TankType(client)];
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -49,21 +146,18 @@ void vVampireAbility(int client)
 		}
 		if (iVampireCount > 0)
 		{
-			vVampireHit(client, 1);
+			vVampireHit(client, iVampireAbility);
 		}
 	}
 }
 
-void vVampireHit(int client, int toggle = 2)
+void vVampireHit(int client, int enabled)
 {
-	int iVampireAbility = !g_bTankConfig[g_iTankType[client]] ? g_iVampireAbility[g_iTankType[client]] : g_iVampireAbility2[g_iTankType[client]];
-	int iVampireChance = !g_bTankConfig[g_iTankType[client]] ? g_iVampireChance[g_iTankType[client]] : g_iVampireChance2[g_iTankType[client]];
-	int iVampireHit = !g_bTankConfig[g_iTankType[client]] ? g_iVampireHit[g_iTankType[client]] : g_iVampireHit2[g_iTankType[client]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if (((toggle == 1 && iVampireAbility == 1) || (toggle == 2 && iVampireHit == 1)) && GetRandomInt(1, iVampireChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client))
+	int iVampireChance = !g_bTankConfig[ST_TankType(client)] ? g_iVampireChance[ST_TankType(client)] : g_iVampireChance2[ST_TankType(client)];
+	if (enabled == 1 && GetRandomInt(1, iVampireChance) == 1 && bIsTank(client))
 	{
 		int iHealth = GetClientHealth(client);
-		int iVampireHealth = !g_bTankConfig[g_iTankType[client]] ? (iHealth + g_iVampireHealth[g_iTankType[client]]) : (iHealth + g_iVampireHealth2[g_iTankType[client]]);
+		int iVampireHealth = !g_bTankConfig[ST_TankType(client)] ? (iHealth + g_iVampireHealth[ST_TankType(client)]) : (iHealth + g_iVampireHealth2[ST_TankType(client)]);
 		int iExtraHealth = (iVampireHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iVampireHealth;
 		int iExtraHealth2 = (iVampireHealth < iHealth) ? 1 : iVampireHealth;
 		int iRealHealth = (iVampireHealth >= 0) ? iExtraHealth : iExtraHealth2;

@@ -1,6 +1,24 @@
 // Super Tanks++: Track Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Track Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
+bool g_bTankConfig[ST_MAXTYPES + 1];
+char g_sTankColors[ST_MAXTYPES + 1][28];
+char g_sTankColors2[ST_MAXTYPES + 1][28];
 float g_flTrackSpeed[ST_MAXTYPES + 1];
 float g_flTrackSpeed2[ST_MAXTYPES + 1];
+int g_iGlowEffect[ST_MAXTYPES + 1];
+int g_iGlowEffect2[ST_MAXTYPES + 1];
 int g_iTrackAbility[ST_MAXTYPES + 1];
 int g_iTrackAbility2[ST_MAXTYPES + 1];
 int g_iTrackChance[ST_MAXTYPES + 1];
@@ -8,28 +26,63 @@ int g_iTrackChance2[ST_MAXTYPES + 1];
 int g_iTrackMode[ST_MAXTYPES + 1];
 int g_iTrackMode2[ST_MAXTYPES + 1];
 
-public void TrackThink(int entity)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	bIsValidEntity(entity) ? vTrackAbility(entity) : SDKUnhook(entity, SDKHook_Think, TrackThink);
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "[ST++] Track Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	return APLRes_Success;
 }
 
-void vTrackConfigs(KeyValues keyvalues, int index, bool main)
+public void OnAllPluginsLoaded()
 {
-	main ? (g_iTrackAbility[index] = keyvalues.GetNum("Track Ability/Ability Enabled", 0)) : (g_iTrackAbility2[index] = keyvalues.GetNum("Track Ability/Ability Enabled", g_iTrackAbility[index]));
-	main ? (g_iTrackAbility[index] = iSetCellLimit(g_iTrackAbility[index], 0, 1)) : (g_iTrackAbility2[index] = iSetCellLimit(g_iTrackAbility2[index], 0, 1));
-	main ? (g_iTrackChance[index] = keyvalues.GetNum("Track Ability/Track Chance", 4)) : (g_iTrackChance2[index] = keyvalues.GetNum("Track Ability/Track Chance", g_iTrackChance[index]));
-	main ? (g_iTrackChance[index] = iSetCellLimit(g_iTrackChance[index], 1, 9999999999)) : (g_iTrackChance2[index] = iSetCellLimit(g_iTrackChance2[index], 1, 9999999999));
-	main ? (g_iTrackMode[index] = keyvalues.GetNum("Track Ability/Track Mode", 1)) : (g_iTrackMode2[index] = keyvalues.GetNum("Track Ability/Track Mode", g_iTrackMode[index]));
-	main ? (g_iTrackMode[index] = iSetCellLimit(g_iTrackMode[index], 0, 1)) : (g_iTrackMode2[index] = iSetCellLimit(g_iTrackMode2[index], 0, 1));
-	main ? (g_flTrackSpeed[index] = keyvalues.GetFloat("Track Ability/Track Speed", 300.0)) : (g_flTrackSpeed2[index] = keyvalues.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[index]));
-	main ? (g_flTrackSpeed[index] = flSetFloatLimit(g_flTrackSpeed[index], 100.0, 500.0)) : (g_flTrackSpeed2[index] = flSetFloatLimit(g_flTrackSpeed2[index], 100.0, 500.0));
+	if (!LibraryExists("super_tanks++"))
+	{
+		SetFailState("No Super Tanks++ library found.");
+	}
 }
 
-void vTrack(int client, int entity)
+public void Think(int entity)
 {
-	int iTrackAbility = !g_bTankConfig[g_iTankType[client]] ? g_iTrackAbility[g_iTankType[client]] : g_iTrackAbility2[g_iTankType[client]];
-	int iTrackChance = !g_bTankConfig[g_iTankType[client]] ? g_iTrackChance[g_iTankType[client]] : g_iTrackChance2[g_iTankType[client]];
-	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1)
+	bIsValidEntity(entity) ? vTrack(entity) : SDKUnhook(entity, SDKHook_Think, Think);
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
+			main ? (g_iGlowEffect[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", 1)) : (g_iGlowEffect2[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", g_iGlowEffect[iIndex]));
+			main ? (g_iGlowEffect[iIndex] = iSetCellLimit(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iSetCellLimit(g_iGlowEffect2[iIndex], 0, 1));
+			main ? (g_iTrackAbility[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", 0)) : (g_iTrackAbility2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", g_iTrackAbility[iIndex]));
+			main ? (g_iTrackAbility[iIndex] = iSetCellLimit(g_iTrackAbility[iIndex], 0, 1)) : (g_iTrackAbility2[iIndex] = iSetCellLimit(g_iTrackAbility2[iIndex], 0, 1));
+			main ? (g_iTrackChance[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Chance", 4)) : (g_iTrackChance2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Chance", g_iTrackChance[iIndex]));
+			main ? (g_iTrackChance[iIndex] = iSetCellLimit(g_iTrackChance[iIndex], 1, 9999999999)) : (g_iTrackChance2[iIndex] = iSetCellLimit(g_iTrackChance2[iIndex], 1, 9999999999));
+			main ? (g_iTrackMode[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", 1)) : (g_iTrackMode2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", g_iTrackMode[iIndex]));
+			main ? (g_iTrackMode[iIndex] = iSetCellLimit(g_iTrackMode[iIndex], 0, 1)) : (g_iTrackMode2[iIndex] = iSetCellLimit(g_iTrackMode2[iIndex], 0, 1));
+			main ? (g_flTrackSpeed[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", 300.0)) : (g_flTrackSpeed2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[iIndex]));
+			main ? (g_flTrackSpeed[iIndex] = flSetFloatLimit(g_flTrackSpeed[iIndex], 100.0, 500.0)) : (g_flTrackSpeed2[iIndex] = flSetFloatLimit(g_flTrackSpeed2[iIndex], 100.0, 500.0));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public void ST_RockThrow(int client, int entity)
+{
+	int iTrackAbility = !g_bTankConfig[ST_TankType(client)] ? g_iTrackAbility[ST_TankType(client)] : g_iTrackAbility2[ST_TankType(client)];
+	int iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
+	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && bIsTank(client))
 	{
 		DataPack dpDataPack;
 		CreateDataTimer(0.5, tTimerTrack, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
@@ -38,11 +91,11 @@ void vTrack(int client, int entity)
 	}
 }
 
-void vTrackAbility(int entity)
+void vTrack(int entity)
 {
-	int client = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-	int iTrackMode = !g_bTankConfig[g_iTankType[client]] ? g_iTrackMode[g_iTankType[client]] : g_iTrackMode2[g_iTankType[client]];
-	float flTrackSpeed = !g_bTankConfig[g_iTankType[client]] ? g_flTrackSpeed[g_iTankType[client]] : g_flTrackSpeed2[g_iTankType[client]];
+	int iTank = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
+	int iTrackMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackMode[ST_TankType(iTank)] : g_iTrackMode2[ST_TankType(iTank)];
+	float flTrackSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flTrackSpeed[ST_TankType(iTank)] : g_flTrackSpeed2[ST_TankType(iTank)];
 	switch (iTrackMode)
 	{
 		case 0:
@@ -268,7 +321,7 @@ void vTrackAbility(int entity)
 			TeleportEntity(entity, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 			char sSet[2][16];
 			char sTankColors[28];
-			sTankColors = !g_bTankConfig[g_iTankType[client]] ? g_sTankColors[g_iTankType[client]] : g_sTankColors2[g_iTankType[client]];
+			sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
 			TrimString(sTankColors);
 			ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 			char sGlow[3][4];
@@ -279,7 +332,7 @@ void vTrackAbility(int entity)
 			int iGreen2 = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
 			TrimString(sGlow[2]);
 			int iBlue2 = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
-			int iGlowEffect = !g_bTankConfig[g_iTankType[client]] ? g_iGlowEffect[g_iTankType[client]] : g_iGlowEffect2[g_iTankType[client]];
+			int iGlowEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEffect[ST_TankType(iTank)] : g_iGlowEffect2[ST_TankType(iTank)];
 			if (iGlowEffect == 1 && bIsL4D2Game())
 			{
 				SetEntProp(entity, Prop_Send, "m_iGlowType", 3);
@@ -290,24 +343,29 @@ void vTrackAbility(int entity)
 	}
 }
 
+void vCopyVector(float source[3], float target[3])
+{
+	target[0] = source[0];
+	target[1] = source[1];
+	target[2] = source[2];
+}
+
 public Action tTimerTrack(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	int iTrackAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iTrackAbility[g_iTankType[iTank]] : g_iTrackAbility2[g_iTankType[iTank]];
+	int iTrackAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackAbility[ST_TankType(iTank)] : g_iTrackAbility2[ST_TankType(iTank)];
 	if (iTrackAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
 	{
 		return Plugin_Stop;
 	}
-	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	if (bIsTank(iTank))
 	{
 		if (bIsValidEntity(iRock))
 		{
-			SDKUnhook(iRock, SDKHook_Think, TrackThink);
-			SDKHook(iRock, SDKHook_Think, TrackThink);
+			SDKUnhook(iRock, SDKHook_Think, Think);
+			SDKHook(iRock, SDKHook_Think, Think);
 		}
 	}
 	return Plugin_Continue;

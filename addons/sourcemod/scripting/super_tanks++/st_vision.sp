@@ -1,4 +1,19 @@
 // Super Tanks++: Vision Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Vision Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
+bool g_bLateLoad;
+bool g_bTankConfig[ST_MAXTYPES + 1];
 bool g_bVision[MAXPLAYERS + 1];
 float g_flVisionDuration[ST_MAXTYPES + 1];
 float g_flVisionDuration2[ST_MAXTYPES + 1];
@@ -13,35 +28,153 @@ int g_iVisionFOV2[ST_MAXTYPES + 1];
 int g_iVisionHit[ST_MAXTYPES + 1];
 int g_iVisionHit2[ST_MAXTYPES + 1];
 
-void vVisionConfigs(KeyValues keyvalues, int index, bool main)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	main ? (g_iVisionAbility[index] = keyvalues.GetNum("Vision Ability/Ability Enabled", 0)) : (g_iVisionAbility2[index] = keyvalues.GetNum("Vision Ability/Ability Enabled", g_iVisionAbility[index]));
-	main ? (g_iVisionAbility[index] = iSetCellLimit(g_iVisionAbility[index], 0, 1)) : (g_iVisionAbility2[index] = iSetCellLimit(g_iVisionAbility2[index], 0, 1));
-	main ? (g_iVisionChance[index] = keyvalues.GetNum("Vision Ability/Vision Chance", 4)) : (g_iVisionChance2[index] = keyvalues.GetNum("Vision Ability/Vision Chance", g_iVisionChance[index]));
-	main ? (g_iVisionChance[index] = iSetCellLimit(g_iVisionChance[index], 1, 9999999999)) : (g_iVisionChance2[index] = iSetCellLimit(g_iVisionChance2[index], 1, 9999999999));
-	main ? (g_flVisionDuration[index] = keyvalues.GetFloat("Vision Ability/Vision Duration", 5.0)) : (g_flVisionDuration2[index] = keyvalues.GetFloat("Vision Ability/Vision Duration", g_flVisionDuration[index]));
-	main ? (g_flVisionDuration[index] = flSetFloatLimit(g_flVisionDuration[index], 0.1, 9999999999.0)) : (g_flVisionDuration2[index] = flSetFloatLimit(g_flVisionDuration2[index], 0.1, 9999999999.0));
-	main ? (g_iVisionFOV[index] = keyvalues.GetNum("Vision Ability/Vision FOV", 160)) : (g_iVisionFOV2[index] = keyvalues.GetNum("Vision Ability/Vision FOV", g_iVisionFOV[index]));
-	main ? (g_iVisionFOV[index] = iSetCellLimit(g_iVisionFOV[index], 1, 160)) : (g_iVisionFOV2[index] = iSetCellLimit(g_iVisionFOV2[index], 1, 160));
-	main ? (g_iVisionHit[index] = keyvalues.GetNum("Vision Ability/Vision Hit", 0)) : (g_iVisionHit2[index] = keyvalues.GetNum("Vision Ability/Vision Hit", g_iVisionHit[index]));
-	main ? (g_iVisionHit[index] = iSetCellLimit(g_iVisionHit[index], 0, 1)) : (g_iVisionHit2[index] = iSetCellLimit(g_iVisionHit2[index], 0, 1));
-	main ? (g_flVisionRange[index] = keyvalues.GetFloat("Vision Ability/Vision Range", 150.0)) : (g_flVisionRange2[index] = keyvalues.GetFloat("Vision Ability/Vision Range", g_flVisionRange[index]));
-	main ? (g_flVisionRange[index] = flSetFloatLimit(g_flVisionRange[index], 1.0, 9999999999.0)) : (g_flVisionRange2[index] = flSetFloatLimit(g_flVisionRange2[index], 1.0, 9999999999.0));
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "[ST++] Vision Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	g_bLateLoad = late;
+	return APLRes_Success;
 }
 
-void vResetVision(int client)
+public void OnAllPluginsLoaded()
 {
+	if (!LibraryExists("super_tanks++"))
+	{
+		SetFailState("No Super Tanks++ library found.");
+	}
+}
+
+public void OnMapStart()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bVision[iPlayer] = false;
+		}
+	}
+	if (g_bLateLoad)
+	{
+		vLateLoad(true);
+		g_bLateLoad = false;
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bVision[client] = false;
 }
 
-void vVisionHit(int client, int owner, int toggle, float distance = 0.0)
+public void OnClientDisconnect(int client)
 {
-	int iVisionAbility = !g_bTankConfig[g_iTankType[owner]] ? g_iVisionAbility[g_iTankType[owner]] : g_iVisionAbility2[g_iTankType[owner]];
-	int iVisionChance = !g_bTankConfig[g_iTankType[owner]] ? g_iVisionChance[g_iTankType[owner]] : g_iVisionChance2[g_iTankType[owner]];
-	int iVisionHit = !g_bTankConfig[g_iTankType[owner]] ? g_iVisionHit[g_iTankType[owner]] : g_iVisionHit2[g_iTankType[owner]];
-	float flVisionRange = !g_bTankConfig[g_iTankType[owner]] ? g_flVisionRange[g_iTankType[owner]] : g_flVisionRange2[g_iTankType[owner]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[owner]] ? g_iCloneMode[g_iTankType[owner]] : g_iCloneMode2[g_iTankType[owner]];
-	if (((toggle == 1 && distance <= flVisionRange) || toggle == 2) && ((toggle == 1 && iVisionAbility == 1) || (toggle == 2 && iVisionHit == 1)) && GetRandomInt(1, iVisionChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[owner])) && bIsSurvivor(client) && !g_bVision[client])
+	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	g_bVision[client] = false;
+}
+
+public void OnMapEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bVision[iPlayer] = false;
+		}
+	}
+}
+
+void vLateLoad(bool late)
+{
+	if (late)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
+	}
+}
+
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (ST_PluginEnabled() && damage > 0.0)
+	{
+		if (bIsTank(attacker) && bIsSurvivor(victim))
+		{
+			char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			{
+				int iVisionHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iVisionHit[ST_TankType(attacker)] : g_iVisionHit2[ST_TankType(attacker)];
+				vVisionHit(victim, attacker, iVisionHit);
+			}
+		}
+	}
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iVisionAbility[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Enabled", 0)) : (g_iVisionAbility2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Enabled", g_iVisionAbility[iIndex]));
+			main ? (g_iVisionAbility[iIndex] = iSetCellLimit(g_iVisionAbility[iIndex], 0, 1)) : (g_iVisionAbility2[iIndex] = iSetCellLimit(g_iVisionAbility2[iIndex], 0, 1));
+			main ? (g_iVisionChance[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Chance", 4)) : (g_iVisionChance2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Chance", g_iVisionChance[iIndex]));
+			main ? (g_iVisionChance[iIndex] = iSetCellLimit(g_iVisionChance[iIndex], 1, 9999999999)) : (g_iVisionChance2[iIndex] = iSetCellLimit(g_iVisionChance2[iIndex], 1, 9999999999));
+			main ? (g_flVisionDuration[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", 5.0)) : (g_flVisionDuration2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", g_flVisionDuration[iIndex]));
+			main ? (g_flVisionDuration[iIndex] = flSetFloatLimit(g_flVisionDuration[iIndex], 0.1, 9999999999.0)) : (g_flVisionDuration2[iIndex] = flSetFloatLimit(g_flVisionDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_iVisionFOV[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision FOV", 160)) : (g_iVisionFOV2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision FOV", g_iVisionFOV[iIndex]));
+			main ? (g_iVisionFOV[iIndex] = iSetCellLimit(g_iVisionFOV[iIndex], 1, 160)) : (g_iVisionFOV2[iIndex] = iSetCellLimit(g_iVisionFOV2[iIndex], 1, 160));
+			main ? (g_iVisionHit[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Hit", 0)) : (g_iVisionHit2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Hit", g_iVisionHit[iIndex]));
+			main ? (g_iVisionHit[iIndex] = iSetCellLimit(g_iVisionHit[iIndex], 0, 1)) : (g_iVisionHit2[iIndex] = iSetCellLimit(g_iVisionHit2[iIndex], 0, 1));
+			main ? (g_flVisionRange[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range", 150.0)) : (g_flVisionRange2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range", g_flVisionRange[iIndex]));
+			main ? (g_flVisionRange[iIndex] = flSetFloatLimit(g_flVisionRange[iIndex], 1.0, 9999999999.0)) : (g_flVisionRange2[iIndex] = flSetFloatLimit(g_flVisionRange2[iIndex], 1.0, 9999999999.0));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public void ST_Ability(int client)
+{
+	if (bIsTank(client))
+	{
+		int iVisionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iVisionAbility[ST_TankType(client)] : g_iVisionAbility2[ST_TankType(client)];
+		float flVisionRange = !g_bTankConfig[ST_TankType(client)] ? g_flVisionRange[ST_TankType(client)] : g_flVisionRange2[ST_TankType(client)];
+		float flTankPos[3];
+		GetClientAbsOrigin(client, flTankPos);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flVisionRange)
+				{
+					vVisionHit(iSurvivor, client, iVisionAbility);
+				}
+			}
+		}
+	}
+}
+
+void vVisionHit(int client, int owner, int enabled)
+{
+	int iVisionChance = !g_bTankConfig[ST_TankType(owner)] ? g_iVisionChance[ST_TankType(owner)] : g_iVisionChance2[ST_TankType(owner)];
+	if (enabled == 1 && GetRandomInt(1, iVisionChance) == 1 && bIsSurvivor(client) && !g_bVision[client])
 	{
 		g_bVision[client] = true;
 		DataPack dpDataPack;
@@ -58,7 +191,7 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	float flTime = pack.ReadFloat();
-	float flVisionDuration = !g_bTankConfig[g_iTankType[iTank]] ? g_flVisionDuration[g_iTankType[iTank]] : g_flVisionDuration2[g_iTankType[iTank]];
+	float flVisionDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flVisionDuration[ST_TankType(iTank)] : g_flVisionDuration2[ST_TankType(iTank)];
 	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flVisionDuration) < GetEngineTime())
 	{
 		g_bVision[iSurvivor] = false;
@@ -71,7 +204,7 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	}
 	if (bIsSurvivor(iSurvivor))
 	{
-		int iFov = !g_bTankConfig[g_iTankType[iTank]] ? g_iVisionFOV[g_iTankType[iTank]] : g_iVisionFOV2[g_iTankType[iTank]];
+		int iFov = !g_bTankConfig[ST_TankType(iTank)] ? g_iVisionFOV[ST_TankType(iTank)] : g_iVisionFOV2[ST_TankType(iTank)];
 		SetEntProp(iSurvivor, Prop_Send, "m_iFOV", iFov);
 		SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", iFov);
 	}
