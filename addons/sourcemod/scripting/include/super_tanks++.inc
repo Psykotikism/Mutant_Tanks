@@ -3,6 +3,27 @@
 	#endinput
 #endif
 #define _supertanks_included
+
+public SharedPlugin __pl_supertanks = 
+{
+	name = "super_tanks++",
+	file = "super_tanks++.smx",
+#if defined REQUIRE_PLUGIN
+	required = 1,
+#else
+	required = 0,
+#endif
+};
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_supertanks_SetNTVOptional()
+{
+	MarkNativeAsOptional("ST_PluginEnabled");
+	MarkNativeAsOptional("ST_SpawnTank");
+	MarkNativeAsOptional("ST_TankType");
+}
+#endif
+
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
@@ -16,38 +37,8 @@
 #define ST_MAXTYPES 2500
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
-#define MELEE_AXE_V "models/weapons/melee/v_fireaxe.mdl"
-#define MELEE_AXE_W "models/weapons/melee/w_fireaxe.mdl"
-#define MELEE_BAT_V "models/weapons/melee/v_bat.mdl"
-#define MELEE_BAT_W "models/weapons/melee/w_bat.mdl"
-#define MELEE_CHAINSAW_V "models/weapons/melee/v_chainsaw.mdl"
-#define MELEE_CHAINSAW_W "models/weapons/melee/w_chainsaw.mdl"
-#define MELEE_CRICKET_V "models/weapons/melee/v_cricket_bat.mdl"
-#define MELEE_CRICKET_W "models/weapons/melee/w_cricket_bat.mdl"
-#define MELEE_CROWBAR_V "models/weapons/melee/v_crowbar.mdl"
-#define MELEE_CROWBAR_W "models/weapons/melee/w_crowbar.mdl"
-#define MELEE_GOLFCLUB_V "models/weapons/melee/v_golfclub.mdl"
-#define MELEE_GOLFCLUB_W "models/weapons/melee/w_golfclub.mdl"
-#define MELEE_GUITAR_V "models/weapons/melee/v_electric_guitar.mdl"
-#define MELEE_GUITAR_W "models/weapons/melee/w_electric_guitar.mdl"
-#define MELEE_KATANA_V "models/weapons/melee/v_katana.mdl"
-#define MELEE_KATANA_W "models/weapons/melee/w_katana.mdl"
-#define MELEE_KNIFE_V "models/v_models/v_knife_t.mdl"
-#define MELEE_KNIFE_W "models/w_models/weapons/w_knife_t.mdl"
-#define MELEE_MACHETE_V "models/weapons/melee/v_machete.mdl"
-#define MELEE_MACHETE_W "models/weapons/melee/w_machete.mdl"
-#define MELEE_PAN_V "models/weapons/melee/v_frying_pan.mdl"
-#define MELEE_PAN_W "models/weapons/melee/w_frying_pan.mdl"
-#define MELEE_TONFA_V "models/weapons/melee/v_tonfa.mdl"
-#define MELEE_TONFA_W "models/weapons/melee/w_tonfa.mdl"
-#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
-#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
-#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
 #define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
-#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
-#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
-#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
 #define MODEL_TANK "models/infected/hulk.mdl"
 #define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
 #define MODEL_WITCH "models/infected/witch.mdl"
@@ -59,82 +50,73 @@
 #define PARTICLE_METEOR "smoke_medium_01"
 #define PARTICLE_SMOKE "smoker_smokecloud"
 #define PARTICLE_SPIT "spitter_projectile"
-#define SCRIPT_AXE "scripts/melee/fireaxe.txt"
-#define SCRIPT_BAT "scripts/melee/baseball_bat.txt"
-#define SCRIPT_CRICKET "scripts/melee/cricket_bat.txt"
-#define SCRIPT_CROWBAR "scripts/melee/crowbar.txt"
-#define SCRIPT_GOLFCLUB "scripts/melee/golfclub.txt"
-#define SCRIPT_GUITAR "scripts/melee/electric_guitar.txt"
-#define SCRIPT_KATANA "scripts/melee/katana.txt"
-#define SCRIPT_KNIFE "scripts/melee/knife.txt"
-#define SCRIPT_MACHETE "scripts/melee/machete.txt"
-#define SCRIPT_PAN "scripts/melee/frying_pan.txt"
-#define SCRIPT_TONFA "scripts/melee/tonfa.txt"
-#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
-#define SPRITE_GLOW "sprites/glow.vmt"
-#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
-#define SOUND_DEBRIS "animation/van_inside_debris.wav"
-#define SOUND_ELECTRICITY "ambient/energy/zap1.wav"
-#define SOUND_EXPLOSION "ambient/explosions/exp2.wav"
-#define SOUND_EXPLOSION2 "ambient/explosions/explode_1.wav"
-#define SOUND_EXPLOSION3 "ambient/explosions/explode_2.wav"
-#define SOUND_EXPLOSION4 "ambient/explosions/explode_3.wav"
-#define SOUND_FIRE "weapons/rpg/rocketfire1.wav"
-#define SOUND_INFECTED "npc/infected/action/die/male/death_42.wav"
-#define SOUND_INFECTED2 "npc/infected/action/die/male/death_43.wav"
-#define SOUND_LAUNCH "npc/env_headcrabcanister/launch.wav"
-#define WEAPON_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
-#define WEAPON_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
-#define WEAPON_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
-#define WEAPON_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
-#define WEAPON_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
-#define WEAPON_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
-#define WEAPON_PISTOL_V "models/v_models/weapons/v_pistol_1911.mdl"
-#define WEAPON_PISTOL_W "models/w_models/weapons/w_pistol_1911.mdl"
-#define WEAPON_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
-#define WEAPON_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
-#define WEAPON_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
-#define WEAPON_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
-#define WEAPON2_AK47_V "models/v_models/weapons/v_rifle_ak47.mdl"
-#define WEAPON2_AK47_W "models/w_models/weapons/w_rifle_ak47.mdl"
-#define WEAPON2_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
-#define WEAPON2_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
-#define WEAPON2_AWP_V "models/v_models/weapons/v_sniper_awp.mdl"
-#define WEAPON2_AWP_W "models/w_models/weapons/w_sniper_awp.mdl"
-#define WEAPON2_CHROME_V "models/v_models/weapons/v_shotgun.mdl"
-#define WEAPON2_CHROME_W "models/w_models/weapons/w_shotgun.mdl"
-#define WEAPON2_DESERT_V "models/v_models/weapons/v_desert_rifle.mdl"
-#define WEAPON2_DESERT_W "models/w_models/weapons/w_desert_rifle.mdl"
-#define WEAPON2_GRENADE_V "models/v_models/weapons/v_grenade_launcher.mdl"
-#define WEAPON2_GRENADE_W "models/w_models/weapons/w_grenade_launcher.mdl"
-#define WEAPON2_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
-#define WEAPON2_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
-#define WEAPON2_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
-#define WEAPON2_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
-#define WEAPON2_M60_V "models/v_models/weapons/v_m60.mdl"
-#define WEAPON2_M60_W "models/w_models/weapons/w_m60.mdl"
-#define WEAPON2_MAGNUM_V "models/v_models/weapons/v_desert_eagle.mdl"
-#define WEAPON2_MAGNUM_W "models/w_models/weapons/w_desert_eagle.mdl"
-#define WEAPON2_MILITARY_V "models/v_models/weapons/v_sniper_military.mdl"
-#define WEAPON2_MILITARY_W "models/w_models/weapons/w_sniper_military.mdl"
-#define WEAPON2_MP5_V "models/v_models/weapons/v_smg_mp5.mdl"
-#define WEAPON2_MP5_W "models/w_models/weapons/w_smg_mp5.mdl"
-#define WEAPON2_PISTOL_V "models/v_models/weapons/v_pistol_a.mdl"
-#define WEAPON2_PISTOL_W "models/w_models/weapons/w_pistol_a.mdl"
-#define WEAPON2_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
-#define WEAPON2_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
-#define WEAPON2_SCOUT_V "models/v_models/weapons/v_sniper_scout.mdl"
-#define WEAPON2_SCOUT_W "models/w_models/weapons/w_sniper_scout.mdl"
-#define WEAPON2_SG552_V "models/v_models/weapons/v_rifle_sg552.mdl"
-#define WEAPON2_SG552_W "models/w_models/weapons/w_rifle_sg552.mdl"
-#define WEAPON2_SILENCED_V "models/v_models/weapons/v_smg_a.mdl"
-#define WEAPON2_SILENCED_W "models/w_models/weapons/w_smg_a.mdl"
-#define WEAPON2_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
-#define WEAPON2_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
-#define WEAPON2_SPAS_V "models/v_models/weapons/v_shotgun_spas.mdl"
-#define WEAPON2_SPAS_W "models/w_models/weapons/w_shotgun_spas.mdl"
 
 int g_iCurrentMode;
+
+// Forwards
+/* Called every second to trigger the Super Tank's ability.
+ * Use this forward for any passive abilities.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_Ability(int client);
+
+/* Called when the config file is loaded.
+ * Use this forward to load settings for the plugin.
+ *
+ * @param savepath		The savepath of the config.
+ * @param limit			The limit for how many Super Tank type
+ *							settings to check for.
+ * @param main			Checks whether the main config or a
+ *							custom config is being used.
+ */
+forward void ST_Configs(char[] savepath, int limit, bool main);
+
+/* Called when the Tank's rock breaks.
+ * Use this forward for any after-effects.
+ *
+ * @param client		Client index of the Tank.
+ * @param entity		Entity index of the rock.
+ */
+forward void ST_RockBreak(int client, int entity);
+
+/* Called when the Tank throws a rock.
+ * Use this forward for any throwing abilities.
+ *
+ * @param client		Client index of the Tank.
+ * @param entity		Entity index of the rock.
+ */
+forward void ST_RockThrow(int client, int entity);
+
+/* Called when the Tank spawns.
+ * Use this forward for any one-time abilities
+ * or on-spawn presets.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_Spawn(int client);
+
+// Natives
+/* Returns the status of the core plugin.
+ *
+ * @return				True on success, false if core plugin is disabled.
+ */
+native bool ST_PluginEnabled();
+
+/* Spawns a Tank with the specified Super Tank type.
+ *
+ * @param client		Client index of the Tank.
+ * @param type			Type of Super Tank.
+ */
+native void ST_SpawnTank(int client, int type);
+
+/* Returns the Super Tank type of the Tank.
+ *
+ * @param client		Client index of the Tank.
+ *
+ * @return				The Tank's Super Tank type.
+ */
+native int ST_TankType(int client);
 
 // Checks
 public bool bBoomerFilter(const char[] pattern, Handle clients)
@@ -687,20 +669,6 @@ stock int iGetPlayerCount()
 	return iPlayerCount;
 }
 
-stock int iGetRandomSurvivor(int client, bool different = false)
-{
-    int iSurvivorCount;
-    int iSurvivors[MAXPLAYERS + 1];
-    for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-    {
-        if (bIsSurvivor(iSurvivor) || (bIsSurvivor(iSurvivor) && different && iSurvivor != client))
-        {
-            iSurvivors[iSurvivorCount++] = iSurvivor;
-        }
-    }
-    return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
-}
-
 stock int iGetRandomTarget(float pos[3], float angle[3])
 {
 	float flMin = 4.0;
@@ -803,21 +771,6 @@ stock void vAttachParticle(int client, char[] particlename, float time = 0.0, fl
 			vDeleteEntity(iParticle, time);
 		}
 	}
-}
-
-stock void vCheatCommand(int client, char[] command, char[] arguments = "", any ...)
-{
-	int iCmdFlags = GetCommandFlags(command);
-	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
-	FakeClientCommand(client, "%s %s", command, arguments);
-	SetCommandFlags(command, iCmdFlags | FCVAR_CHEAT);
-}
-
-stock void vCopyVector(float source[3], float target[3])
-{
-	target[0] = source[0];
-	target[1] = source[1];
-	target[2] = source[2];
 }
 
 stock void vCreateConfigFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "", bool main = false)
@@ -1105,6 +1058,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Melee Immunity\"				\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank absorbs most of the damage it receives.");
+			fFilename.WriteLine("		// Requires \"st_absorb.smx\" to be installed.");
 			fFilename.WriteLine("		\"Absorb Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1125,6 +1079,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank creates acid puddles.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, an acid puddle is created underneath the survivor.");
 			fFilename.WriteLine("		// \"Acid Hit\" - When a survivor is hit by a Tank's claw or rock, an acid puddle is created underneath the survivor.");
+			fFilename.WriteLine("		// Requires \"st_acid.smx\" to be installed.");
 			fFilename.WriteLine("		\"Acid Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1156,6 +1111,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Acid Rock Break\"				\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank flies.");
+			fFilename.WriteLine("		// Requires \"st_airborne.smx\" to be installed.");
 			fFilename.WriteLine("		\"Airborne Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1182,6 +1138,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank takes away survivors' ammunition.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, their ammunition is taken away.");
 			fFilename.WriteLine("		// \"Ammo Hit\" - When a survivor is hit by a Tank's claw or rock, their ammunition is taken away.");
+			fFilename.WriteLine("		// Requires \"st_ammo.smx\" to be installed.");
 			fFilename.WriteLine("		\"Ammo Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1214,6 +1171,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank blinds survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is blinded.");
 			fFilename.WriteLine("		// \"Blind Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is blinded.");
+			fFilename.WriteLine("		// Requires \"st_blind.smx\" to be installed.");
 			fFilename.WriteLine("		\"Blind Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1251,6 +1209,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank creates explosions.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, an explosion is created around the survivor.");
 			fFilename.WriteLine("		// \"Bomb Hit\" - When a survivor is hit by a Tank's claw or rock, an explosion is created around the survivor.");
+			fFilename.WriteLine("		// Requires \"st_bomb.smx\" to be installed.");
 			fFilename.WriteLine("		\"Bomb Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1288,6 +1247,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank buries survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is buried.");
 			fFilename.WriteLine("		// \"Bury Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is buried.");
+			fFilename.WriteLine("		// Requires \"st_bury.smx\" to be installed.");
 			fFilename.WriteLine("		\"Bury Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1323,6 +1283,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Bury Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank creates clones of itself.");
+			fFilename.WriteLine("		// Requires \"st_clone.smx\" to be installed.");
 			fFilename.WriteLine("		\"Clone Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1344,13 +1305,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// Minimum: 1");
 			fFilename.WriteLine("			// Maximum: 65535");
 			fFilename.WriteLine("			\"Clone Health\"					\"1000\"");
-			fFilename.WriteLine("");
-			fFilename.WriteLine("			// The mode of the Super Tank's clone ability.");
-			fFilename.WriteLine("			// 0: Clones will not have access to the same abilities as the original Super Tank.");
-			fFilename.WriteLine("			// 1: Clones will have access to the same abilities as the original Super Tank.");
-			fFilename.WriteLine("			\"Clone Mode\"					\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank drops weapons upon death.");
+			fFilename.WriteLine("		// Requires \"st_drop.smx\" to be installed.");
 			fFilename.WriteLine("		\"Drop Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1377,6 +1334,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank drugs survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is drugged.");
 			fFilename.WriteLine("		// \"Drug Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is drugged.");
+			fFilename.WriteLine("		// Requires \"st_drug.smx\" to be installed.");
 			fFilename.WriteLine("		\"Drug Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1409,6 +1367,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank forces survivors to only use a certain weapon slot.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor will be forced to only use a certain weapon slot.");
 			fFilename.WriteLine("		// \"Enforce Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor will be forced to only use a certain weapon slot.");
+			fFilename.WriteLine("		// Requires \"st_enforce.smx\" to be installed.");
 			fFilename.WriteLine("		\"Enforce Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1451,6 +1410,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank creates fires.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, a fire is created around the survivor.");
 			fFilename.WriteLine("		// \"Fire Hit\" - When a survivor is hit by a Tank's claw or rock, a fire is created around the survivor.");
+			fFilename.WriteLine("		// Requires \"st_fire.smx\" to be installed.");
 			fFilename.WriteLine("		\"Fire Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1481,6 +1441,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Fire Rock Break\"				\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank runs really fast like the Flash.");
+			fFilename.WriteLine("		// Requires \"st_flash.smx\" to be installed.");
 			fFilename.WriteLine("		\"Flash Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1506,6 +1467,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank flings survivors high into the air.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is flung into the air.");
 			fFilename.WriteLine("		// \"Fling Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is flung into the air.");
+			fFilename.WriteLine("		// Requires \"st_fling.smx\" to be installed.");
 			fFilename.WriteLine("		\"Fling Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1531,6 +1493,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Fling Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank takes more damage.");
+			fFilename.WriteLine("		// Requires \"st_fragile.smx\" to be installed.");
 			fFilename.WriteLine("		\"Fragile Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1552,6 +1515,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// \"Ability Enabled\" - Any nearby infected turns invisible.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is disarmed.");
 			fFilename.WriteLine("		// \"Ghost Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is disarmed.");
+			fFilename.WriteLine("		// Requires \"st_ghost.smx\" to be installed.");
 			fFilename.WriteLine("		\"Ghost Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1592,6 +1556,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"12345\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank gains temporary immunity to all damage.");
+			fFilename.WriteLine("		// Requires \"st_god.smx\" to be installed.");
 			fFilename.WriteLine("		\"God Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1613,6 +1578,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// \"Ability Enabled\" - Any nearby infected and survivors are pulled in or pushed away.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor's gravity changes.");
 			fFilename.WriteLine("		// \"Gravity Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor's gravity changes.");
+			fFilename.WriteLine("		// Requires \"st_gravity.smx\" to be installed.");
 			fFilename.WriteLine("		\"Gravity Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1658,6 +1624,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// \"Ability Enabled\" - Any nearby infected can give the Tank some health.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor can go black and white and have temporary health.");
 			fFilename.WriteLine("		// \"Heal Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor can go black and white and have temporary health.");
+			fFilename.WriteLine("		// Requires \"st_heal.smx\" to be installed.");
 			fFilename.WriteLine("		\"Heal Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1711,6 +1678,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank hurts survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor gets hurt repeatedly.");
 			fFilename.WriteLine("		// \"Hurt Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor gets hurt repeatedly.");
+			fFilename.WriteLine("		// Requires \"st_hurt.smx\" to be installed.");
 			fFilename.WriteLine("		\"Hurt Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1748,6 +1716,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank hypnotizes survivors to damage themselves or teammates.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is hypnotized.");
 			fFilename.WriteLine("		// \"Hypno Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is hypnotized.");
+			fFilename.WriteLine("		// Requires \"st_hypno.smx\" to be installed.");
 			fFilename.WriteLine("		\"Hypno Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1785,6 +1754,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank freezes survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is frozen in place.");
 			fFilename.WriteLine("		// \"Ice Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is frozen in place.");
+			fFilename.WriteLine("		// Requires \"st_ice.smx\" to be installed.");
 			fFilename.WriteLine("		\"Ice Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1817,6 +1787,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank forces survivors to go idle.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor goes idle.");
 			fFilename.WriteLine("		// \"Idle Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor goes idle.");
+			fFilename.WriteLine("		// Requires \"st_idle.smx\" to be installed.");
 			fFilename.WriteLine("		\"Idle Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1844,6 +1815,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank inverts the survivors' movement keys.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor's movement keys are inverted.");
 			fFilename.WriteLine("		// \"Invert Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor's movement keys are inverted.");
+			fFilename.WriteLine("		// Requires \"st_invert.smx\" to be installed.");
 			fFilename.WriteLine("		\"Invert Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1873,6 +1845,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Invert Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank gives survivors items upon death.");
+			fFilename.WriteLine("		// Requires \"st_item.smx\" to be installed.");
 			fFilename.WriteLine("		\"Item Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1896,6 +1869,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Item Mode\"						\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank jumps really high.");
+			fFilename.WriteLine("		// Requires \"st_jump.smx\" to be installed.");
 			fFilename.WriteLine("		\"Jump Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1909,6 +1883,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Jump Chance\"					\"4\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank heals special infected upon death.");
+			fFilename.WriteLine("		// Requires \"st_medic.smx\" to be installed.");
 			fFilename.WriteLine("		\"Medic Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1952,6 +1927,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Medic Range\"					\"500.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank creates meteor showers.");
+			fFilename.WriteLine("		// Requires \"st_meteor.smx\" to be installed.");
 			fFilename.WriteLine("		\"Meteor Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -1979,6 +1955,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Meteor Radius\"					\"-180.0,180.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank spawns minions.");
+			fFilename.WriteLine("		// Requires \"st_minion.smx\" to be installed.");
 			fFilename.WriteLine("		\"Minion Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2011,6 +1988,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank nullifies all of the survivors' damage.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor does not do any damage.");
 			fFilename.WriteLine("		// \"Nullify Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor does not do any damage.");
+			fFilename.WriteLine("		// Requires \"st_nullify.smx\" to be installed.");
 			fFilename.WriteLine("		\"Nullify Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2042,6 +2020,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank starts panic events.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - The Tank starts a panic event periodically.");
 			fFilename.WriteLine("		// \"Panic Hit\" - When a survivor is hit by a Tank's claw or rock, a panic event starts.");
+			fFilename.WriteLine("		// Requires \"st_panic.smx\" to be installed.");
 			fFilename.WriteLine("		\"Panic Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2069,6 +2048,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank pimp slaps survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is repeatedly pimp slapped.");
 			fFilename.WriteLine("		// \"Pimp Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is repeatedly pimp slapped.");
+			fFilename.WriteLine("		// Requires \"st_pimp.smx\" to be installed.");
 			fFilename.WriteLine("		\"Pimp Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2106,6 +2086,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank pukes on survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the Tank pukes on the survivor.");
 			fFilename.WriteLine("		// \"Puke Hit\" - When a survivor is hit by a Tank's claw or rock, the Tank pukes on the survivor.");
+			fFilename.WriteLine("		// Requires \"st_puke.smx\" to be installed.");
 			fFilename.WriteLine("		\"Puke Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2131,6 +2112,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Puke Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank gains speed when on fire.");
+			fFilename.WriteLine("		// Requires \"st_pyro.smx\" to be installed.");
 			fFilename.WriteLine("		\"Pyro Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2145,6 +2127,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Pyro Boost\"					\"1.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank regenerates health.");
+			fFilename.WriteLine("		// Requires \"st_regen.smx\" to be installed.");
 			fFilename.WriteLine("		\"Regen Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2165,6 +2148,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Regen Interval\"				\"1.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank respawns.");
+			fFilename.WriteLine("		// Requires \"st_respawn.smx\" to be installed.");
 			fFilename.WriteLine("		\"Respawn Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2190,6 +2174,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank forces survivors to restart at the beginning of the map with a new loadout.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor respawns at the start of the map or near a teammate.");
 			fFilename.WriteLine("		// \"Restart Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor respawns at the start of the map or near a teammate.");
+			fFilename.WriteLine("		// Requires \"st_restart.smx\" to be installed.");
 			fFilename.WriteLine("		\"Restart Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2219,6 +2204,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Restart Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank creates rock showers.");
+			fFilename.WriteLine("		// Requires \"st_rock.smx\" to be installed.");
 			fFilename.WriteLine("		\"Rock Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2253,6 +2239,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank sends survivors into space.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is sent into space.");
 			fFilename.WriteLine("		// \"Rocket Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is sent into space.");
+			fFilename.WriteLine("		// Requires \"st_rocket.smx\" to be installed.");
 			fFilename.WriteLine("		\"Rocket Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2279,6 +2266,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank shakes the survivors' screens.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor's screen is shaken.");
 			fFilename.WriteLine("		// \"Shake Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor's screen is shaken.");
+			fFilename.WriteLine("		// Requires \"st_shake.smx\" to be installed.");
 			fFilename.WriteLine("		\"Shake Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2309,6 +2297,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Shake Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank protects itself with a shield and traps survivors inside their own shields.");
+			fFilename.WriteLine("		// Requires \"st_shield.smx\" to be installed.");
 			fFilename.WriteLine("		\"Shield Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2330,6 +2319,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank shoves survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is shoved repeatedly.");
 			fFilename.WriteLine("		// \"Shove Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is shoved repeatedly.");
+			fFilename.WriteLine("		// Requires \"st_shove.smx\" to be installed.");
 			fFilename.WriteLine("		\"Shove Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2362,6 +2352,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank smites survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is smitten.");
 			fFilename.WriteLine("		// \"Smite Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is smitten.");
+			fFilename.WriteLine("		// Requires \"st_smite.smx\" to be installed.");
 			fFilename.WriteLine("		\"Smite Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2387,6 +2378,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Smite Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank spams rocks at survivors.");
+			fFilename.WriteLine("		// Requires \"st_spam.smx\" to be installed.");
 			fFilename.WriteLine("		\"Spam Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2412,6 +2404,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank slows survivors down.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is slowed down.");
 			fFilename.WriteLine("		// \"Stun Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is slowed down.");
+			fFilename.WriteLine("		// Requires \"st_stun.smx\" to be installed.");
 			fFilename.WriteLine("		\"Stun Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2447,6 +2440,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Stun Speed\"					\"0.25\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank throws things.");
+			fFilename.WriteLine("		// Requires \"st_throw.smx\" to be installed.");
 			fFilename.WriteLine("		\"Throw Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2479,6 +2473,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Throw Infected Options\"		\"1234567\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank throws a heat-seeking rock that will track down the nearest survivor.");
+			fFilename.WriteLine("		// Requires \"st_track.smx\" to be installed.");
 			fFilename.WriteLine("		\"Track Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2505,6 +2500,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank gains health from hurting survivors.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the Tank gains health.");
 			fFilename.WriteLine("		// \"Vampire Hit\" - When a survivor is hit by a Tank's claw or rock, the Tank gains health.");
+			fFilename.WriteLine("		// Requires \"st_vampire.smx\" to be installed.");
 			fFilename.WriteLine("		\"Vampire Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2540,6 +2536,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank changes the survivors' field of views.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor's vision changes.");
 			fFilename.WriteLine("		// \"Vision Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor's vision changes.");
+			fFilename.WriteLine("		// Requires \"st_vision.smx\" to be installed.");
 			fFilename.WriteLine("		\"Vision Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2577,6 +2574,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		// The Super Tank warps to survivors and warps survivors back to teammates.");
 			fFilename.WriteLine("		// \"Ability Enabled\" - The Tank warps to a random survivor.");
 			fFilename.WriteLine("		// \"Warp Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is warped to a random teammate.");
+			fFilename.WriteLine("		// Requires \"st_warp.smx\" to be installed.");
 			fFilename.WriteLine("		\"Warp Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2601,6 +2599,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Warp Interval\"					\"5.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank spawns Witch minions.");
+			fFilename.WriteLine("		// Requires \"st_witch.smx\" to be installed.");
 			fFilename.WriteLine("		\"Witch Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2619,6 +2618,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Witch Minion Damage\"			\"10.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank spawns common infected.");
+			fFilename.WriteLine("		// Requires \"st_zombie.smx\" to be installed.");
 			fFilename.WriteLine("		\"Zombie Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			// Enable this ability.");
@@ -2935,7 +2935,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Clone Amount\"					\"2\"");
 			fFilename.WriteLine("			\"Clone Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Clone Health\"					\"1000\"");
-			fFilename.WriteLine("			\"Clone Mode\"					\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Throw Ability\"");
 			fFilename.WriteLine("		{");
@@ -4792,7 +4791,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Clone Amount\"					\"10\"");
 			fFilename.WriteLine("			\"Clone Chance\"					\"1\"");
 			fFilename.WriteLine("			\"Clone Health\"					\"250\"");
-			fFilename.WriteLine("			\"Clone Mode\"					\"0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Fire Ability\"");
 			fFilename.WriteLine("		{");
@@ -4982,7 +4980,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Clone Amount\"					\"5\"");
 			fFilename.WriteLine("			\"Clone Chance\"					\"1\"");
 			fFilename.WriteLine("			\"Clone Health\"					\"250\"");
-			fFilename.WriteLine("			\"Clone Mode\"					\"1\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Flash Ability\"");
 			fFilename.WriteLine("		{");
@@ -5118,19 +5115,6 @@ stock void vGetCurrentMode(ConVar convar, char[] config)
 	Format(config, strlen(config), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
 }
 
-stock void vGiveItem(int client, char[] loadout)
-{
-	char sItems[5][64];
-	ExplodeString(loadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-	for (int iItem = 0; iItem < sizeof(sItems); iItem++)
-	{
-		if (StrContains(loadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
-		{
-			vCheatCommand(client, "give", sItems[iItem]);
-		}
-	}
-}
-
 stock void vMultiTargetFilters(int toggle)
 {
 	switch (toggle)
@@ -5177,52 +5161,4 @@ stock void vSetEntityParent(int entity, int parent)
 {
 	SetVariantString("!activator");
 	AcceptEntityInput(entity, "SetParent", parent);
-}
-
-stock void vSetVector(float target[3], float x, float y, float z)
-{
-	target[0] = x;
-	target[1] = y;
-	target[2] = z;
-}
-
-stock void vSpawnInfected(int client, char[] infected, bool auto = false)
-{
-	ChangeClientTeam(client, 3);
-	char sOptions[32];
-	Format(sOptions, sizeof(sOptions), "%s%s", infected, (auto ? " auto" : ""));
-	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", sOptions);
-	if (IsFakeClient(client))
-	{
-		KickClient(client);
-	}
-}
-
-stock void vSpawnTank(int wave)
-{
-	if (iGetTankCount() < wave)
-	{
-		int iTank = CreateFakeClient("Tank");
-		if (iTank > 0)
-		{
-			vSpawnInfected(iTank, "tank", true);
-		}
-	}
-}
-
-stock void vWarpEntity(int client, bool different = false, bool effect = false)
-{
-	int iTarget = iGetRandomSurvivor(client, different);
-	if (iTarget > 0)
-	{
-		float flOrigin[3];
-		float flAngles[3];
-		GetClientAbsOrigin(iTarget, flOrigin);
-		GetClientAbsAngles(iTarget, flAngles);
-		if (effect)
-		{
-			vCreateParticle(client, PARTICLE_ELECTRICITY, 1.0, 0.0);
-		}
-		TeleportEntity(client, flOrigin, flAngles, NULL_VECTOR);
-	}
 }

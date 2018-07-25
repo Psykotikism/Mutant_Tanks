@@ -1,22 +1,66 @@
 // Super Tanks++: Jump Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Jump Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
+bool g_bTankConfig[ST_MAXTYPES + 1];
 int g_iJumpAbility[ST_MAXTYPES + 1];
 int g_iJumpAbility2[ST_MAXTYPES + 1];
 int g_iJumpChance[ST_MAXTYPES + 1];
 int g_iJumpChance2[ST_MAXTYPES + 1];
 
-void vJumpConfigs(KeyValues keyvalues, int index, bool main)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	main ? (g_iJumpAbility[index] = keyvalues.GetNum("Jump Ability/Ability Enabled", 0)) : (g_iJumpAbility2[index] = keyvalues.GetNum("Jump Ability/Ability Enabled", g_iJumpAbility[index]));
-	main ? (g_iJumpAbility[index] = iSetCellLimit(g_iJumpAbility[index], 0, 1)) : (g_iJumpAbility2[index] = iSetCellLimit(g_iJumpAbility2[index], 0, 1));
-	main ? (g_iJumpChance[index] = keyvalues.GetNum("Jump Ability/Jump Chance", 4)) : (g_iJumpChance2[index] = keyvalues.GetNum("Jump Ability/Jump Chance", g_iJumpChance[index]));
-	main ? (g_iJumpChance[index] = iSetCellLimit(g_iJumpChance[index], 1, 9999999999)) : (g_iJumpChance2[index] = iSetCellLimit(g_iJumpChance2[index], 1, 9999999999));
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "[ST++] Jump Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	return APLRes_Success;
 }
 
-void vJumpAbility(int client)
+public void OnAllPluginsLoaded()
 {
-	int iJumpAbility = !g_bTankConfig[g_iTankType[client]] ? g_iJumpAbility[g_iTankType[client]] : g_iJumpAbility2[g_iTankType[client]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if (iJumpAbility == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client))
+	if (!LibraryExists("super_tanks++"))
+	{
+		SetFailState("No Super Tanks++ library found.");
+	}
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iJumpAbility[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Enabled", 0)) : (g_iJumpAbility2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Enabled", g_iJumpAbility[iIndex]));
+			main ? (g_iJumpAbility[iIndex] = iSetCellLimit(g_iJumpAbility[iIndex], 0, 1)) : (g_iJumpAbility2[iIndex] = iSetCellLimit(g_iJumpAbility2[iIndex], 0, 1));
+			main ? (g_iJumpChance[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", 4)) : (g_iJumpChance2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", g_iJumpChance[iIndex]));
+			main ? (g_iJumpChance[iIndex] = iSetCellLimit(g_iJumpChance[iIndex], 1, 9999999999)) : (g_iJumpChance2[iIndex] = iSetCellLimit(g_iJumpChance2[iIndex], 1, 9999999999));
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public void ST_Spawn(int client)
+{
+	int iJumpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iJumpAbility[ST_TankType(client)] : g_iJumpAbility2[ST_TankType(client)];
+	if (iJumpAbility == 1 && bIsTank(client))
 	{
 		CreateTimer(1.0, tTimerJump, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
@@ -25,15 +69,13 @@ void vJumpAbility(int client)
 public Action tTimerJump(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iJumpAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iJumpAbility[g_iTankType[iTank]] : g_iJumpAbility2[g_iTankType[iTank]];
+	int iJumpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iJumpAbility[ST_TankType(iTank)] : g_iJumpAbility2[ST_TankType(iTank)];
 	if (iJumpAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
-	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	int iJumpChance = !g_bTankConfig[g_iTankType[iTank]] ? g_iJumpChance[g_iTankType[iTank]] : g_iJumpChance2[g_iTankType[iTank]];
-	if (GetRandomInt(1, iJumpChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	int iJumpChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iJumpChance[ST_TankType(iTank)] : g_iJumpChance2[ST_TankType(iTank)];
+	if (GetRandomInt(1, iJumpChance) == 1 && bIsTank(iTank))
 	{
 		int iNearestSurvivor = iGetNearestSurvivor(iTank);
 		if (iNearestSurvivor > 200 && iNearestSurvivor < 2000)
