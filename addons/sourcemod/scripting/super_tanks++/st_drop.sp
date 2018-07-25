@@ -1,7 +1,108 @@
 // Super Tanks++: Drop Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Drop Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
+#define MELEE_AXE_V "models/weapons/melee/v_fireaxe.mdl"
+#define MELEE_AXE_W "models/weapons/melee/w_fireaxe.mdl"
+#define MELEE_BAT_V "models/weapons/melee/v_bat.mdl"
+#define MELEE_BAT_W "models/weapons/melee/w_bat.mdl"
+#define MELEE_CHAINSAW_V "models/weapons/melee/v_chainsaw.mdl"
+#define MELEE_CHAINSAW_W "models/weapons/melee/w_chainsaw.mdl"
+#define MELEE_CRICKET_V "models/weapons/melee/v_cricket_bat.mdl"
+#define MELEE_CRICKET_W "models/weapons/melee/w_cricket_bat.mdl"
+#define MELEE_CROWBAR_V "models/weapons/melee/v_crowbar.mdl"
+#define MELEE_CROWBAR_W "models/weapons/melee/w_crowbar.mdl"
+#define MELEE_GOLFCLUB_V "models/weapons/melee/v_golfclub.mdl"
+#define MELEE_GOLFCLUB_W "models/weapons/melee/w_golfclub.mdl"
+#define MELEE_GUITAR_V "models/weapons/melee/v_electric_guitar.mdl"
+#define MELEE_GUITAR_W "models/weapons/melee/w_electric_guitar.mdl"
+#define MELEE_KATANA_V "models/weapons/melee/v_katana.mdl"
+#define MELEE_KATANA_W "models/weapons/melee/w_katana.mdl"
+#define MELEE_KNIFE_V "models/v_models/v_knife_t.mdl"
+#define MELEE_KNIFE_W "models/w_models/weapons/w_knife_t.mdl"
+#define MELEE_MACHETE_V "models/weapons/melee/v_machete.mdl"
+#define MELEE_MACHETE_W "models/weapons/melee/w_machete.mdl"
+#define MELEE_PAN_V "models/weapons/melee/v_frying_pan.mdl"
+#define MELEE_PAN_W "models/weapons/melee/w_frying_pan.mdl"
+#define MELEE_TONFA_V "models/weapons/melee/v_tonfa.mdl"
+#define MELEE_TONFA_W "models/weapons/melee/w_tonfa.mdl"
+#define SCRIPT_AXE "scripts/melee/fireaxe.txt"
+#define SCRIPT_BAT "scripts/melee/baseball_bat.txt"
+#define SCRIPT_CRICKET "scripts/melee/cricket_bat.txt"
+#define SCRIPT_CROWBAR "scripts/melee/crowbar.txt"
+#define SCRIPT_GOLFCLUB "scripts/melee/golfclub.txt"
+#define SCRIPT_GUITAR "scripts/melee/electric_guitar.txt"
+#define SCRIPT_KATANA "scripts/melee/katana.txt"
+#define SCRIPT_KNIFE "scripts/melee/knife.txt"
+#define SCRIPT_MACHETE "scripts/melee/machete.txt"
+#define SCRIPT_PAN "scripts/melee/frying_pan.txt"
+#define SCRIPT_TONFA "scripts/melee/tonfa.txt"
+#define WEAPON_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
+#define WEAPON_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
+#define WEAPON_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
+#define WEAPON_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
+#define WEAPON_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
+#define WEAPON_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
+#define WEAPON_PISTOL_V "models/v_models/weapons/v_pistol_1911.mdl"
+#define WEAPON_PISTOL_W "models/w_models/weapons/w_pistol_1911.mdl"
+#define WEAPON_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
+#define WEAPON_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
+#define WEAPON_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
+#define WEAPON_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
+#define WEAPON2_AK47_V "models/v_models/weapons/v_rifle_ak47.mdl"
+#define WEAPON2_AK47_W "models/w_models/weapons/w_rifle_ak47.mdl"
+#define WEAPON2_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
+#define WEAPON2_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
+#define WEAPON2_AWP_V "models/v_models/weapons/v_sniper_awp.mdl"
+#define WEAPON2_AWP_W "models/w_models/weapons/w_sniper_awp.mdl"
+#define WEAPON2_CHROME_V "models/v_models/weapons/v_shotgun.mdl"
+#define WEAPON2_CHROME_W "models/w_models/weapons/w_shotgun.mdl"
+#define WEAPON2_DESERT_V "models/v_models/weapons/v_desert_rifle.mdl"
+#define WEAPON2_DESERT_W "models/w_models/weapons/w_desert_rifle.mdl"
+#define WEAPON2_GRENADE_V "models/v_models/weapons/v_grenade_launcher.mdl"
+#define WEAPON2_GRENADE_W "models/w_models/weapons/w_grenade_launcher.mdl"
+#define WEAPON2_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
+#define WEAPON2_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
+#define WEAPON2_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
+#define WEAPON2_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
+#define WEAPON2_M60_V "models/v_models/weapons/v_m60.mdl"
+#define WEAPON2_M60_W "models/w_models/weapons/w_m60.mdl"
+#define WEAPON2_MAGNUM_V "models/v_models/weapons/v_desert_eagle.mdl"
+#define WEAPON2_MAGNUM_W "models/w_models/weapons/w_desert_eagle.mdl"
+#define WEAPON2_MILITARY_V "models/v_models/weapons/v_sniper_military.mdl"
+#define WEAPON2_MILITARY_W "models/w_models/weapons/w_sniper_military.mdl"
+#define WEAPON2_MP5_V "models/v_models/weapons/v_smg_mp5.mdl"
+#define WEAPON2_MP5_W "models/w_models/weapons/w_smg_mp5.mdl"
+#define WEAPON2_PISTOL_V "models/v_models/weapons/v_pistol_a.mdl"
+#define WEAPON2_PISTOL_W "models/w_models/weapons/w_pistol_a.mdl"
+#define WEAPON2_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
+#define WEAPON2_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
+#define WEAPON2_SCOUT_V "models/v_models/weapons/v_sniper_scout.mdl"
+#define WEAPON2_SCOUT_W "models/w_models/weapons/w_sniper_scout.mdl"
+#define WEAPON2_SG552_V "models/v_models/weapons/v_rifle_sg552.mdl"
+#define WEAPON2_SG552_W "models/w_models/weapons/w_rifle_sg552.mdl"
+#define WEAPON2_SILENCED_V "models/v_models/weapons/v_smg_a.mdl"
+#define WEAPON2_SILENCED_W "models/w_models/weapons/w_smg_a.mdl"
+#define WEAPON2_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
+#define WEAPON2_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
+#define WEAPON2_SPAS_V "models/v_models/weapons/v_shotgun_spas.mdl"
+#define WEAPON2_SPAS_W "models/w_models/weapons/w_shotgun_spas.mdl"
+
 bool g_bDrop[MAXPLAYERS + 1];
+bool g_bTankConfig[ST_MAXTYPES + 1];
 char g_sWeaponClass[32][128];
 char g_sWeaponModel[32][128];
+ConVar g_cvSTFindConVar[7];
 float g_flDropWeaponScale[ST_MAXTYPES + 1];
 float g_flDropWeaponScale2[ST_MAXTYPES + 1];
 int g_iDrop[MAXPLAYERS + 1];
@@ -13,104 +114,90 @@ int g_iDropClipChance[ST_MAXTYPES + 1];
 int g_iDropClipChance2[ST_MAXTYPES + 1];
 int g_iDropWeapon[MAXPLAYERS + 1];
 
-void vDropConfigs(KeyValues keyvalues, int index, bool main)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	main ? (g_iDropAbility[index] = keyvalues.GetNum("Drop Ability/Ability Enabled", 0)) : (g_iDropAbility2[index] = keyvalues.GetNum("Drop Ability/Ability Enabled", g_iDropAbility[index]));
-	main ? (g_iDropAbility[index] = iSetCellLimit(g_iDropAbility[index], 0, 1)) : (g_iDropAbility2[index] = iSetCellLimit(g_iDropAbility2[index], 0, 1));
-	main ? (g_iDropChance[index] = keyvalues.GetNum("Drop Ability/Drop Chance", 4)) : (g_iDropChance2[index] = keyvalues.GetNum("Drop Ability/Drop Chance", g_iDropChance[index]));
-	main ? (g_iDropChance[index] = iSetCellLimit(g_iDropChance[index], 1, 9999999999)) : (g_iDropChance2[index] = iSetCellLimit(g_iDropChance2[index], 1, 9999999999));
-	main ? (g_iDropClipChance[index] = keyvalues.GetNum("Drop Ability/Drop Clip Chance", 4)) : (g_iDropClipChance2[index] = keyvalues.GetNum("Drop Ability/Drop Clip Chance", g_iDropClipChance[index]));
-	main ? (g_iDropClipChance[index] = iSetCellLimit(g_iDropClipChance[index], 1, 9999999999)) : (g_iDropClipChance2[index] = iSetCellLimit(g_iDropClipChance2[index], 1, 9999999999));
-	main ? (g_flDropWeaponScale[index] = keyvalues.GetFloat("Drop Ability/Drop Weapon Scale", 1.0)) : (g_flDropWeaponScale2[index] = keyvalues.GetFloat("Drop Ability/Drop Weapon Scale", g_flDropWeaponScale[index]));
-	main ? (g_flDropWeaponScale[index] = flSetFloatLimit(g_flDropWeaponScale[index], 1.0, 2.0)) : (g_flDropWeaponScale2[index] = flSetFloatLimit(g_flDropWeaponScale2[index], 1.0, 2.0));
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "[ST++] Drop Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	return APLRes_Success;
 }
 
-void vDropDeath(int client)
+public void OnAllPluginsLoaded()
 {
-	int iDropChance = !g_bTankConfig[g_iTankType[client]] ? g_iDropChance[g_iTankType[client]] : g_iDropChance2[g_iTankType[client]];
-	if (bIsValidEntity(g_iDrop[client]) && GetRandomInt(1, iDropChance) == 1)
+	if (!LibraryExists("super_tanks++"))
 	{
-		float flDropWeaponScale = !g_bTankConfig[g_iTankType[client]] ? g_flDropWeaponScale[g_iTankType[client]] : g_flDropWeaponScale[g_iTankType[client]];
-		float flPos[3];
-		float flAngle[3];
-		GetClientEyePosition(client, flPos);
-		GetClientAbsAngles(client, flAngle);
-		if (StrContains(g_sWeaponClass[g_iDropWeapon[client]], "weapon") != -1)
+		SetFailState("No Super Tanks++ library found.");
+	}
+}
+
+public void OnPluginStart()
+{
+	g_cvSTFindConVar[0] = bIsL4D2Game() ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
+	g_cvSTFindConVar[1] = bIsL4D2Game() ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
+	g_cvSTFindConVar[2] = FindConVar("ammo_huntingrifle_max");
+	g_cvSTFindConVar[3] = FindConVar("ammo_assaultrifle_max");
+	g_cvSTFindConVar[4] = FindConVar("ammo_grenadelauncher_max");
+	g_cvSTFindConVar[5] = FindConVar("ammo_smg_max");
+	g_cvSTFindConVar[6] = FindConVar("ammo_sniperrifle_max");
+}
+
+public void OnMapStart()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
 		{
-			int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[client]]);
-			if (bIsValidEntity(iDrop))
-			{
-				TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
-				DispatchSpawn(iDrop);
-				if (bIsL4D2Game())
-				{
-					SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale);
-				}
-			}
-			int iAmmo;
-			int iClip;
-			if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_autoshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_shotgun_spas") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[6].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_pumpshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_shotgun_chrome") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[7].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_hunting_rifle") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[8].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle_ak47") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle_desert") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle_sg552") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[9].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_grenade_launcher") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[10].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_smg") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_smg_silenced") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_smg_mp5") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[11].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_sniper_scout") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_sniper_military") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_sniper_awp") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[12].IntValue;
-			}
-			int iDropClipChance = !g_bTankConfig[g_iTankType[client]] ? g_iDropClipChance[g_iTankType[client]] : g_iDropClipChance2[g_iTankType[client]];
-			if (GetRandomInt(1, iDropClipChance) == 1)
-			{
-				iClip = iAmmo; 
-			}
-			if (iClip > 0)
-			{
-				SetEntProp(iDrop, Prop_Send, "m_iClip1", iClip);
-			}
-			if (iAmmo > 0)
-			{
-				SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
-			}
-		}
-		else
-		{
-			int iDrop = CreateEntityByName("weapon_melee");
-			if (bIsValidEntity(iDrop))
-			{
-				DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[client]]);
-				TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
-				DispatchSpawn(iDrop);
-				if (bIsL4D2Game())
-				{
-					SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale);
-				}
-			}
+			vReset(iPlayer);
 		}
 	}
-	vDeleteDrop(client);
-}
-
-void vDrop()
-{
+	PrecacheModel(MELEE_AXE_V, true);
+	PrecacheModel(MELEE_AXE_W, true);
+	PrecacheModel(MELEE_CHAINSAW_V, true);
+	PrecacheModel(MELEE_CHAINSAW_W, true);
+	PrecacheModel(MELEE_CRICKET_V, true);
+	PrecacheModel(MELEE_CRICKET_W, true);
+	PrecacheModel(MELEE_CROWBAR_V, true);
+	PrecacheModel(MELEE_CROWBAR_W, true);
+	PrecacheModel(MELEE_GOLFCLUB_V, true);
+	PrecacheModel(MELEE_GOLFCLUB_W, true);
+	PrecacheModel(MELEE_GUITAR_V, true);
+	PrecacheModel(MELEE_GUITAR_W, true);
+	PrecacheModel(MELEE_KATANA_V, true);
+	PrecacheModel(MELEE_KATANA_W, true);
+	PrecacheModel(MELEE_KNIFE_V, true);
+	PrecacheModel(MELEE_KNIFE_W, true);
+	PrecacheModel(MELEE_MACHETE_V, true);
+	PrecacheModel(MELEE_MACHETE_W, true);
+	PrecacheModel(MELEE_PAN_V, true);
+	PrecacheModel(MELEE_PAN_W, true);
+	PrecacheModel(MELEE_TONFA_V, true);
+	PrecacheModel(MELEE_TONFA_W, true);
+	PrecacheGeneric(SCRIPT_AXE, true);
+	PrecacheGeneric(SCRIPT_BAT, true);
+	PrecacheGeneric(SCRIPT_CRICKET, true);
+	PrecacheGeneric(SCRIPT_CROWBAR, true);
+	PrecacheGeneric(SCRIPT_GOLFCLUB, true);
+	PrecacheGeneric(SCRIPT_GUITAR, true);
+	PrecacheGeneric(SCRIPT_KATANA, true);
+	PrecacheGeneric(SCRIPT_KNIFE, true);
+	PrecacheGeneric(SCRIPT_MACHETE, true);
+	PrecacheGeneric(SCRIPT_PAN, true);
+	PrecacheGeneric(SCRIPT_TONFA, true);
+	PrecacheModel(WEAPON2_AWP_V, true);
+	PrecacheModel(WEAPON2_AWP_W, true);
+	PrecacheModel(WEAPON2_GRENADE_V, true);
+	PrecacheModel(WEAPON2_GRENADE_W, true);
+	PrecacheModel(WEAPON2_M60_V, true);
+	PrecacheModel(WEAPON2_M60_W, true);
+	PrecacheModel(WEAPON2_MP5_V, true);
+	PrecacheModel(WEAPON2_MP5_W, true);
+	PrecacheModel(WEAPON2_SCOUT_V, true);
+	PrecacheModel(WEAPON2_SCOUT_W, true);
+	PrecacheModel(WEAPON2_SG552_V, true);
+	PrecacheModel(WEAPON2_SG552_W, true);
 	if (bIsL4D2Game())
 	{
 		g_sWeaponModel[1] = WEAPON2_AK47_W;
@@ -193,15 +280,193 @@ void vDrop()
 	}
 }
 
-void vDropAbility(int client)
+public void OnConfigsExecuted()
 {
-	int iDropAbility = !g_bTankConfig[g_iTankType[client]] ? g_iDropAbility[g_iTankType[client]] : g_iDropAbility2[g_iTankType[client]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if (iDropAbility == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client) && !g_bDrop[client])
+	char sMapName[128];
+	GetCurrentMap(sMapName, sizeof(sMapName));
+	if (IsMapValid(sMapName))
+	{
+		vIsPluginAllowed();
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	vReset(client);
+}
+
+public void OnClientDisconnect(int client)
+{
+	vReset(client);
+}
+
+public void OnMapEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			vReset(iPlayer);
+		}
+	}
+}
+
+void vIsPluginAllowed()
+{
+	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
+}
+
+void vHookEvent(bool hook)
+{
+	static bool hooked;
+	if (hook && !hooked)
+	{
+		HookEvent("player_death", eEventPlayerDeath);
+		hooked = true;
+	}
+	else if (!hook && hooked)
+	{
+		UnhookEvent("player_death", eEventPlayerDeath);
+		hooked = false;
+	}
+}
+
+public Action SetTransmit(int entity, int client)
+{
+	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+	if (iOwner == client)
+	{
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iDropAbility[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Enabled", 0)) : (g_iDropAbility2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Enabled", g_iDropAbility[iIndex]));
+			main ? (g_iDropAbility[iIndex] = iSetCellLimit(g_iDropAbility[iIndex], 0, 1)) : (g_iDropAbility2[iIndex] = iSetCellLimit(g_iDropAbility2[iIndex], 0, 1));
+			main ? (g_iDropChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Chance", 4)) : (g_iDropChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Chance", g_iDropChance[iIndex]));
+			main ? (g_iDropChance[iIndex] = iSetCellLimit(g_iDropChance[iIndex], 1, 9999999999)) : (g_iDropChance2[iIndex] = iSetCellLimit(g_iDropChance2[iIndex], 1, 9999999999));
+			main ? (g_iDropClipChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", 4)) : (g_iDropClipChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", g_iDropClipChance[iIndex]));
+			main ? (g_iDropClipChance[iIndex] = iSetCellLimit(g_iDropClipChance[iIndex], 1, 9999999999)) : (g_iDropClipChance2[iIndex] = iSetCellLimit(g_iDropClipChance2[iIndex], 1, 9999999999));
+			main ? (g_flDropWeaponScale[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", 1.0)) : (g_flDropWeaponScale2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", g_flDropWeaponScale[iIndex]));
+			main ? (g_flDropWeaponScale[iIndex] = flSetFloatLimit(g_flDropWeaponScale[iIndex], 1.0, 2.0)) : (g_flDropWeaponScale2[iIndex] = flSetFloatLimit(g_flDropWeaponScale2[iIndex], 1.0, 2.0));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int iUserId = event.GetInt("userid");
+	int iPlayer = GetClientOfUserId(iUserId);
+	int iDropChance = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iDropChance[ST_TankType(iPlayer)] : g_iDropChance2[ST_TankType(iPlayer)];
+	if (bIsTank(iPlayer) && bIsValidEntity(g_iDrop[iPlayer]) && GetRandomInt(1, iDropChance) == 1)
+	{
+		float flDropWeaponScale = !g_bTankConfig[ST_TankType(iPlayer)] ? g_flDropWeaponScale[ST_TankType(iPlayer)] : g_flDropWeaponScale[ST_TankType(iPlayer)];
+		float flPos[3];
+		float flAngle[3];
+		GetClientEyePosition(iPlayer, flPos);
+		GetClientAbsAngles(iPlayer, flAngle);
+		if (StrContains(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon") != -1)
+		{
+			int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[iPlayer]]);
+			if (bIsValidEntity(iDrop))
+			{
+				TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
+				DispatchSpawn(iDrop);
+				if (bIsL4D2Game())
+				{
+					SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale);
+				}
+			}
+			int iAmmo;
+			int iClip;
+			if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_autoshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_shotgun_spas") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[0].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_pumpshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_shotgun_chrome") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[1].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_hunting_rifle") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[2].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_rifle") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_rifle_ak47") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_rifle_desert") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_rifle_sg552") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[3].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_grenade_launcher") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[4].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_smg") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_smg_silenced") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_smg_mp5") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[5].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_sniper_scout") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_sniper_military") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_sniper_awp") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[6].IntValue;
+			}
+			int iDropClipChance = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iDropClipChance[ST_TankType(iPlayer)] : g_iDropClipChance2[ST_TankType(iPlayer)];
+			if (GetRandomInt(1, iDropClipChance) == 1)
+			{
+				iClip = iAmmo; 
+			}
+			if (iClip > 0)
+			{
+				SetEntProp(iDrop, Prop_Send, "m_iClip1", iClip);
+			}
+			if (iAmmo > 0)
+			{
+				SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
+			}
+		}
+		else
+		{
+			int iDrop = CreateEntityByName("weapon_melee");
+			if (bIsValidEntity(iDrop))
+			{
+				DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[iPlayer]]);
+				TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
+				DispatchSpawn(iDrop);
+				if (bIsL4D2Game())
+				{
+					SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale);
+				}
+			}
+		}
+	}
+	vDeleteDrop(iPlayer);
+}
+
+public void ST_Spawn(int client)
+{
+	int iDropAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
+	if (iDropAbility == 1 && bIsTank(client) && !g_bDrop[client])
 	{
 		g_bDrop[client] = true;
 		CreateTimer(1.0, tTimerDrop, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
+}
+
+void vReset(int client)
+{
+	g_bDrop[client] = false;
+	g_iDrop[client] = 0;
+	g_iDropWeapon[client] = 0;
 }
 
 void vDeleteDrop(int client)
@@ -209,7 +474,7 @@ void vDeleteDrop(int client)
 	if (bIsValidEntity(g_iDrop[client]))
 	{
 		vDeleteEntity(g_iDrop[client]);
-		SDKUnhook(g_iDrop[client], SDKHook_SetTransmit, ModelSetTransmit);
+		SDKUnhook(g_iDrop[client], SDKHook_SetTransmit, SetTransmit);
 	}
 	g_iDrop[client] = 0;
 }
@@ -291,15 +556,15 @@ void vGetPosAng2(int client, int weapon, float pos[3], float angle[3], int posit
 		case 29: scale = 4.0;
 		case 30: scale = 3.5;
 	}
-	float flDropWeaponScale = !g_bTankConfig[g_iTankType[client]] ? g_flDropWeaponScale[g_iTankType[client]] : g_flDropWeaponScale2[g_iTankType[client]];
+	float flDropWeaponScale = !g_bTankConfig[ST_TankType(client)] ? g_flDropWeaponScale[ST_TankType(client)] : g_flDropWeaponScale2[ST_TankType(client)];
 	scale = scale * flDropWeaponScale;
 }
 
-void vResetDrop(int client)
+void vSetVector(float target[3], float x, float y, float z)
 {
-	g_bDrop[client] = false;
-	g_iDrop[client] = 0;
-	g_iDropWeapon[client] = 0;
+	target[0] = x;
+	target[1] = y;
+	target[2] = z;
 }
 
 public Action tTimerDrop(Handle timer, any userid)
@@ -307,6 +572,7 @@ public Action tTimerDrop(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
+		g_bDrop[iTank] = false;
 		return Plugin_Stop;
 	}
 	if (bIsTank(iTank))
@@ -345,7 +611,7 @@ public Action tTimerDrop(Handle timer, any userid)
 			}
 			g_iDrop[iTank] = iDrop;
 			g_iDropWeapon[iTank] = iWeapon;
-			SDKHook(g_iDrop[iTank], SDKHook_SetTransmit, ModelSetTransmit);
+			SDKHook(g_iDrop[iTank], SDKHook_SetTransmit, SetTransmit);
 		}
 	}
 	return Plugin_Continue;

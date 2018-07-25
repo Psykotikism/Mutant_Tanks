@@ -8,7 +8,13 @@ Bug fixes:
 
 Changes:
 
-1. Divided the plugin into multiple files to avoid slow compilation time, to make it easier to add new abilities, and to make it easier to identify problems within the code.
+1. Divided the plugin into multiple files for the following reasons:
+
+- To avoid slow compilation time.
+- To make it easier to add new abilities.
+- To make it easier to identify problems within the code.
+- To make each ability optional.
+
 2. Added new abilities and renamed some settings.
 
 Files:

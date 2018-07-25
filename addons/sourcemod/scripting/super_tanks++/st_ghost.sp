@@ -1,7 +1,29 @@
 // Super Tanks++: Ghost Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Ghost Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
+#define SOUND_INFECTED "npc/infected/action/die/male/death_42.wav"
+#define SOUND_INFECTED2 "npc/infected/action/die/male/death_43.wav"
+
 bool g_bGhost[MAXPLAYERS + 1];
+bool g_bLateLoad;
+bool g_bTankConfig[ST_MAXTYPES + 1];
 char g_sGhostSlot[ST_MAXTYPES + 1][6];
 char g_sGhostSlot2[ST_MAXTYPES + 1][6];
+char g_sPropsColors[ST_MAXTYPES + 1][80];
+char g_sPropsColors2[ST_MAXTYPES + 1][80];
+char g_sTankColors[ST_MAXTYPES + 1][28];
+char g_sTankColors2[ST_MAXTYPES + 1][28];
 float g_flGhostRange[ST_MAXTYPES + 1];
 float g_flGhostRange2[ST_MAXTYPES + 1];
 int g_iGhostAbility[ST_MAXTYPES + 1];
@@ -14,26 +36,145 @@ int g_iGhostFade2[ST_MAXTYPES + 1];
 int g_iGhostHit[ST_MAXTYPES + 1];
 int g_iGhostHit2[ST_MAXTYPES + 1];
 
-void vGhostConfigs(KeyValues keyvalues, int index, bool main)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	main ? (g_iGhostAbility[index] = keyvalues.GetNum("Ghost Ability/Ability Enabled", 0)) : (g_iGhostAbility2[index] = keyvalues.GetNum("Ghost Ability/Ability Enabled", g_iGhostAbility[index]));
-	main ? (g_iGhostAbility[index] = iSetCellLimit(g_iGhostAbility[index], 0, 1)) : (g_iGhostAbility2[index] = iSetCellLimit(g_iGhostAbility2[index], 0, 1));
-	main ? (g_iGhostChance[index] = keyvalues.GetNum("Ghost Ability/Ghost Chance", 4)) : (g_iGhostChance2[index] = keyvalues.GetNum("Ghost Ability/Ghost Chance", g_iGhostChance[index]));
-	main ? (g_iGhostChance[index] = iSetCellLimit(g_iGhostChance[index], 1, 9999999999)) : (g_iGhostChance2[index] = iSetCellLimit(g_iGhostChance2[index], 1, 9999999999));
-	main ? (g_iGhostFade[index] = keyvalues.GetNum("Ghost Ability/Ghost Fade Limit", 255)) : (g_iGhostFade2[index] = keyvalues.GetNum("Ghost Ability/Ghost Fade Limit", g_iGhostFade[index]));
-	main ? (g_iGhostFade[index] = iSetCellLimit(g_iGhostFade[index], 0, 255)) : (g_iGhostFade2[index] = iSetCellLimit(g_iGhostFade2[index], 0, 255));
-	main ? (g_iGhostHit[index] = keyvalues.GetNum("Ghost Ability/Ghost Hit", 0)) : (g_iGhostHit2[index] = keyvalues.GetNum("Ghost Ability/Ghost Hit", g_iGhostHit[index]));
-	main ? (g_iGhostHit[index] = iSetCellLimit(g_iGhostHit[index], 0, 1)) : (g_iGhostHit2[index] = iSetCellLimit(g_iGhostHit2[index], 0, 1));
-	main ? (g_flGhostRange[index] = keyvalues.GetFloat("Ghost Ability/Ghost Range", 150.0)) : (g_flGhostRange2[index] = keyvalues.GetFloat("Ghost Ability/Ghost Range", g_flGhostRange[index]));
-	main ? (g_flGhostRange[index] = flSetFloatLimit(g_flGhostRange[index], 1.0, 9999999999.0)) : (g_flGhostRange2[index] = flSetFloatLimit(g_flGhostRange2[index], 1.0, 9999999999.0));
-	main ? (keyvalues.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostSlot[index], sizeof(g_sGhostSlot[]), "12345")) : (keyvalues.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostSlot2[index], sizeof(g_sGhostSlot2[]), g_sGhostSlot[index]));
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "[ST++] Heal Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	g_bLateLoad = late;
+	return APLRes_Success;
 }
 
-void vGhostAbility(int client)
+public void OnAllPluginsLoaded()
+{
+	if (!LibraryExists("super_tanks++"))
+	{
+		SetFailState("No Super Tanks++ library found.");
+	}
+}
+
+public void OnMapStart()
+{
+	PrecacheSound(SOUND_INFECTED, true);
+	PrecacheSound(SOUND_INFECTED2, true);
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bGhost[iPlayer] = false;
+			g_iGhostAlpha[iPlayer] = 255;
+		}
+	}
+	if (g_bLateLoad)
+	{
+		vLateLoad(true);
+		g_bLateLoad = false;
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	g_bGhost[client] = false;
+	g_iGhostAlpha[client] = 255;
+}
+
+public void OnClientDisconnect(int client)
+{
+	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	g_bGhost[client] = false;
+	g_iGhostAlpha[client] = 255;
+}
+
+public void OnMapEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bGhost[iPlayer] = false;
+			g_iGhostAlpha[iPlayer] = 255;
+		}
+	}
+}
+
+void vLateLoad(bool late)
+{
+	if (late)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
+	}
+}
+
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (ST_PluginEnabled() && damage > 0.0)
+	{
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		if (bIsTank(attacker) && bIsSurvivor(victim))
+		{
+			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			{
+				int iGhostHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iGhostHit[ST_TankType(attacker)] : g_iGhostHit2[ST_TankType(attacker)];
+				vGhostHit(victim, attacker, iGhostHit);
+			}
+		}
+		else if (bIsSurvivor(attacker) && bIsTank(victim))
+		{
+			if (strcmp(sClassname, "weapon_melee") == 0)
+			{
+				int iGhostHit = !g_bTankConfig[ST_TankType(victim)] ? g_iGhostHit[ST_TankType(victim)] : g_iGhostHit2[ST_TankType(victim)];
+				vGhostHit(attacker, victim, iGhostHit);
+			}
+		}
+	}
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
+			main ? (kvSuperTanks.GetString("General/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255")) : (kvSuperTanks.GetString("General/Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]));
+			main ? (g_iGhostAbility[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", 0)) : (g_iGhostAbility2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", g_iGhostAbility[iIndex]));
+			main ? (g_iGhostAbility[iIndex] = iSetCellLimit(g_iGhostAbility[iIndex], 0, 1)) : (g_iGhostAbility2[iIndex] = iSetCellLimit(g_iGhostAbility2[iIndex], 0, 1));
+			main ? (g_iGhostChance[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Chance", 4)) : (g_iGhostChance2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Chance", g_iGhostChance[iIndex]));
+			main ? (g_iGhostChance[iIndex] = iSetCellLimit(g_iGhostChance[iIndex], 1, 9999999999)) : (g_iGhostChance2[iIndex] = iSetCellLimit(g_iGhostChance2[iIndex], 1, 9999999999));
+			main ? (g_iGhostFade[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", 255)) : (g_iGhostFade2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", g_iGhostFade[iIndex]));
+			main ? (g_iGhostFade[iIndex] = iSetCellLimit(g_iGhostFade[iIndex], 0, 255)) : (g_iGhostFade2[iIndex] = iSetCellLimit(g_iGhostFade2[iIndex], 0, 255));
+			main ? (g_iGhostHit[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Hit", 0)) : (g_iGhostHit2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Hit", g_iGhostHit[iIndex]));
+			main ? (g_iGhostHit[iIndex] = iSetCellLimit(g_iGhostHit[iIndex], 0, 1)) : (g_iGhostHit2[iIndex] = iSetCellLimit(g_iGhostHit2[iIndex], 0, 1));
+			main ? (g_flGhostRange[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Range", 150.0)) : (g_flGhostRange2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Range", g_flGhostRange[iIndex]));
+			main ? (g_flGhostRange[iIndex] = flSetFloatLimit(g_flGhostRange[iIndex], 1.0, 9999999999.0)) : (g_flGhostRange2[iIndex] = flSetFloatLimit(g_flGhostRange2[iIndex], 1.0, 9999999999.0));
+			main ? (kvSuperTanks.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostSlot[iIndex], sizeof(g_sGhostSlot[]), "12345")) : (kvSuperTanks.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostSlot2[iIndex], sizeof(g_sGhostSlot2[]), g_sGhostSlot[iIndex]));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public void ST_Ability(int client)
 {
 	char sSet[2][16];
 	char sTankColors[28];
-	sTankColors = !g_bTankConfig[g_iTankType[client]] ? g_sTankColors[g_iTankType[client]] : g_sTankColors2[g_iTankType[client]];
+	sTankColors = !g_bTankConfig[ST_TankType(client)] ? g_sTankColors[ST_TankType(client)] : g_sTankColors2[ST_TankType(client)];
 	TrimString(sTankColors);
 	ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 	char sRGB[4][4];
@@ -46,7 +187,7 @@ void vGhostAbility(int client)
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
 	char sSet2[5][16];
 	char sPropsColors[80];
-	sPropsColors = !g_bTankConfig[g_iTankType[client]] ? g_sPropsColors[g_iTankType[client]] : g_sPropsColors2[g_iTankType[client]];
+	sPropsColors = !g_bTankConfig[ST_TankType(client)] ? g_sPropsColors[ST_TankType(client)] : g_sPropsColors2[ST_TankType(client)];
 	TrimString(sPropsColors);
 	ExplodeString(sPropsColors, "|", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 	char sProps[4][4];
@@ -89,9 +230,8 @@ void vGhostAbility(int client)
 	int iGreen6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[1]) : 255;
 	TrimString(sProps5[2]);
 	int iBlue6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[2]) : 255;
-	int iGhostAbility = !g_bTankConfig[g_iTankType[client]] ? g_iGhostAbility[g_iTankType[client]] : g_iGhostAbility2[g_iTankType[client]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if (iGhostAbility == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client))
+	int iGhostAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGhostAbility[ST_TankType(client)] : g_iGhostAbility2[ST_TankType(client)];
+	if (iGhostAbility == 1 && bIsTank(client))
 	{
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{
@@ -101,7 +241,7 @@ void vGhostAbility(int client)
 				float flInfectedPos[3];
 				GetClientAbsOrigin(client, flTankPos);
 				GetClientAbsOrigin(iInfected, flInfectedPos);
-				float flGhostRange = !g_bTankConfig[g_iTankType[client]] ? g_flGhostRange[g_iTankType[client]] : g_flGhostRange2[g_iTankType[client]];
+				float flGhostRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostRange[ST_TankType(client)] : g_flGhostRange2[ST_TankType(client)];
 				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
 				if (flDistance <= flGhostRange)
 				{
@@ -161,30 +301,24 @@ void vDropWeapon(int client, int slot)
 	}
 }
 
-void vGhostHit(int client, int owner, int toggle, float distance = 0.0)
+void vGhostHit(int client, int owner, int enabled)
 {
-	int iGhostAbility = !g_bTankConfig[g_iTankType[owner]] ? g_iGhostAbility[g_iTankType[owner]] : g_iGhostAbility2[g_iTankType[owner]];
-	int iGhostChance = !g_bTankConfig[g_iTankType[owner]] ? g_iGhostChance[g_iTankType[owner]] : g_iGhostChance2[g_iTankType[owner]];
-	int iGhostHit = !g_bTankConfig[g_iTankType[owner]] ? g_iGhostHit[g_iTankType[owner]] : g_iGhostHit2[g_iTankType[owner]];
-	float flGhostRange = !g_bTankConfig[g_iTankType[owner]] ? g_flGhostRange[g_iTankType[owner]] : g_flGhostRange2[g_iTankType[owner]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[owner]] ? g_iCloneMode[g_iTankType[owner]] : g_iCloneMode2[g_iTankType[owner]];
-	if (((toggle == 1 && distance <= flGhostRange) || toggle == 2) && ((toggle == 1 && iGhostAbility == 1) || (toggle == 2 && iGhostHit == 1)) && GetRandomInt(1, iGhostChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[owner])) && bIsSurvivor(client))
+	int iGhostChance = !g_bTankConfig[ST_TankType(owner)] ? g_iGhostChance[ST_TankType(owner)] : g_iGhostChance2[ST_TankType(owner)];
+	if (enabled == 1 && GetRandomInt(1, iGhostChance) == 1 && bIsSurvivor(client))
 	{
 		char sGhostSlot[6];
-		sGhostSlot = !g_bTankConfig[g_iTankType[owner]] ? g_sGhostSlot[g_iTankType[owner]] : g_sGhostSlot2[g_iTankType[owner]];
+		sGhostSlot = !g_bTankConfig[ST_TankType(owner)] ? g_sGhostSlot[ST_TankType(owner)] : g_sGhostSlot2[ST_TankType(owner)];
 		vGhostDrop(client, sGhostSlot, "1", 0);
 		vGhostDrop(client, sGhostSlot, "2", 1);
 		vGhostDrop(client, sGhostSlot, "3", 2);
 		vGhostDrop(client, sGhostSlot, "4", 3);
 		vGhostDrop(client, sGhostSlot, "5", 4);
-		EmitSoundToClient(client, SOUND_INFECTED, owner);
+		switch (GetRandomInt(1, 2))
+		{
+			case 1: EmitSoundToClient(client, SOUND_INFECTED, owner);
+			case 2: EmitSoundToClient(client, SOUND_INFECTED2, owner);
+		}
 	}
-}
-
-void vResetGhost(int client)
-{
-	g_bGhost[client] = false;
-	g_iGhostAlpha[client] = 255;
 }
 
 public Action tTimerGhost(Handle timer, DataPack pack)
@@ -209,18 +343,16 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	int iRed6 = pack.ReadCell();
 	int iGreen6 = pack.ReadCell();
 	int iBlue6 = pack.ReadCell();
-	int iGhostAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iGhostAbility[g_iTankType[iTank]] : g_iGhostAbility2[g_iTankType[iTank]];
+	int iGhostAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostAbility[ST_TankType(iTank)] : g_iGhostAbility2[ST_TankType(iTank)];
 	if (iGhostAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bGhost[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	if (bIsTank(iTank))
 	{
 		g_iGhostAlpha[iTank] -= 2;
-		int iGhostFade = !g_bTankConfig[g_iTankType[iTank]] ? g_iGhostFade[g_iTankType[iTank]] : g_iGhostFade2[g_iTankType[iTank]];
+		int iGhostFade = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFade[ST_TankType(iTank)] : g_iGhostFade2[ST_TankType(iTank)];
 		if (g_iGhostAlpha[iTank] < iGhostFade)
 		{
 			g_iGhostAlpha[iTank] = iGhostFade;

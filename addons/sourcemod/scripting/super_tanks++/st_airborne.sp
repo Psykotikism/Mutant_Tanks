@@ -1,5 +1,20 @@
 // Super Tanks++: Airborne Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Airborne Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
 bool g_bAirborne[MAXPLAYERS + 1];
+bool g_bLateLoad;
+bool g_bTankConfig[ST_MAXTYPES + 1];
 float g_flAirborneDuration[ST_MAXTYPES + 1];
 float g_flAirborneDuration2[ST_MAXTYPES + 1];
 float g_flAirborneSpeed[ST_MAXTYPES + 1];
@@ -13,7 +28,139 @@ int g_iAirborneChance[ST_MAXTYPES + 1];
 int g_iAirborneChance2[ST_MAXTYPES + 1];
 int g_iAirborneTarget[MAXPLAYERS + 1];
 
-public void AirborneThink(int client)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "[ST++] Airborne Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	g_bLateLoad = late;
+	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	if (!LibraryExists("super_tanks++"))
+	{
+		SetFailState("No Super Tanks++ library found.");
+	}
+}
+
+public void OnMapStart()
+{
+	if (g_bLateLoad)
+	{
+		vLateLoad(true);
+		g_bLateLoad = false;
+	}
+}
+
+public void OnConfigsExecuted()
+{
+	char sMapName[128];
+	GetCurrentMap(sMapName, sizeof(sMapName));
+	if (IsMapValid(sMapName))
+	{
+		vIsPluginAllowed();
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	vReset(client);
+}
+
+public void OnClientDisconnect(int client)
+{
+	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	vReset(client);
+}
+
+public void OnMapEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		vReset(iPlayer);
+	}
+}
+
+void vIsPluginAllowed()
+{
+	ST_PluginEnabled() ? vHookEvents(true) : vHookEvents(false);
+}
+
+void vHookEvents(bool hook)
+{
+	static bool hooked;
+	if (hook && !hooked)
+	{
+		HookEvent("player_death", eEventPlayerDeath);
+		HookEvent("player_jump", eEventPlayerJump);
+		hooked = true;
+	}
+	else if (!hook && hooked)
+	{
+		UnhookEvent("player_death", eEventPlayerDeath);
+		UnhookEvent("player_jump", eEventPlayerJump);
+		hooked = false;
+	}
+}
+
+void vLateLoad(bool late)
+{
+	if (late)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
+	}
+}
+
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (ST_PluginEnabled() && damage > 0.0 && bIsValidClient(victim))
+	{
+		if (bIsTank(attacker) && g_bAirborne[attacker])
+		{
+			vStopAirborne(attacker);
+		}
+	}
+}
+
+public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int iUserId = event.GetInt("userid");
+	int iPlayer = GetClientOfUserId(iUserId);
+	if (bIsTank(iPlayer) && g_bAirborne[iPlayer])
+	{
+		vStopAirborne(iPlayer);
+	}
+}
+
+public Action eEventPlayerJump(Event event, const char[] name, bool dontBroadcast)
+{
+	int iUserId = event.GetInt("userid");
+	int iPlayer = GetClientOfUserId(iUserId);
+	int iAirborneAbility = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iAirborneAbility[ST_TankType(iPlayer)] : g_iAirborneAbility2[ST_TankType(iPlayer)];
+	int iAirborneChance = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iAirborneChance[ST_TankType(iPlayer)] : g_iAirborneChance2[ST_TankType(iPlayer)];
+	if (iAirborneAbility == 1 && GetRandomInt(1, iAirborneChance) == 1 && bIsTank(iPlayer) && !g_bAirborne[iPlayer])
+	{
+		g_bAirborne[iPlayer] = true;
+		DataPack dpDataPack;
+		CreateDataTimer(3.0, tTimerAirborne, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+		dpDataPack.WriteCell(GetClientUserId(iPlayer));
+		dpDataPack.WriteFloat(GetEngineTime());
+	}
+}
+
+public void PreThink(int client)
 {
 	if (bIsTank(client))
 	{
@@ -24,71 +171,98 @@ public void AirborneThink(int client)
 	}
 	else
 	{
-		SDKUnhook(client, SDKHook_PreThink, AirborneThink);
+		SDKUnhook(client, SDKHook_PreThink, PreThink);
 	}
 }
 
-public void AirborneTouch(int entity, int other)
+public void StartTouch(int entity, int other)
 {
 	vStopAirborne(entity);
 }
 
-void vAirborneConfigs(KeyValues keyvalues, int index, bool main)
+public void ST_Configs(char[] savepath, int limit, bool main)
 {
-	main ? (g_iAirborneAbility[index] = keyvalues.GetNum("Airborne Ability/Ability Enabled", 0)) : (g_iAirborneAbility2[index] = keyvalues.GetNum("Airborne Ability/Ability Enabled", g_iAirborneAbility[index]));
-	main ? (g_iAirborneAbility[index] = iSetCellLimit(g_iAirborneAbility[index], 0, 1)) : (g_iAirborneAbility2[index] = iSetCellLimit(g_iAirborneAbility2[index], 0, 1));
-	main ? (g_iAirborneChance[index] = keyvalues.GetNum("Airborne Ability/Airborne Chance", 4)) : (g_iAirborneChance2[index] = keyvalues.GetNum("Airborne Ability/Airborne Chance", g_iAirborneChance[index]));
-	main ? (g_iAirborneChance[index] = iSetCellLimit(g_iAirborneChance[index], 1, 9999999999)) : (g_iAirborneChance2[index] = iSetCellLimit(g_iAirborneChance2[index], 1, 9999999999));
-	main ? (g_flAirborneDuration[index] = keyvalues.GetFloat("Airborne Ability/Airborne Duration", 5.0)) : (g_flAirborneDuration2[index] = keyvalues.GetFloat("Airborne Ability/Airborne Duration", g_flAirborneDuration[index]));
-	main ? (g_flAirborneDuration[index] = flSetFloatLimit(g_flAirborneDuration[index], 0.1, 9999999999.0)) : (g_flAirborneDuration2[index] = flSetFloatLimit(g_flAirborneDuration2[index], 0.1, 9999999999.0));
-	main ? (g_flAirborneSpeed[index] = keyvalues.GetFloat("Airborne Ability/Airborne Speed", 300.0)) : (g_flAirborneSpeed2[index] = keyvalues.GetFloat("Airborne Ability/Airborne Speed", g_flAirborneSpeed[index]));
-	main ? (g_flAirborneSpeed[index] = flSetFloatLimit(g_flAirborneSpeed[index], 100.0, 500.0)) : (g_flAirborneSpeed2[index] = flSetFloatLimit(g_flAirborneSpeed2[index], 100.0, 500.0));
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iAirborneAbility[iIndex] = kvSuperTanks.GetNum("Airborne Ability/Ability Enabled", 0)) : (g_iAirborneAbility2[iIndex] = kvSuperTanks.GetNum("Airborne Ability/Ability Enabled", g_iAirborneAbility[iIndex]));
+			main ? (g_iAirborneAbility[iIndex] = iSetCellLimit(g_iAirborneAbility[iIndex], 0, 1)) : (g_iAirborneAbility2[iIndex] = iSetCellLimit(g_iAirborneAbility2[iIndex], 0, 1));
+			main ? (g_iAirborneChance[iIndex] = kvSuperTanks.GetNum("Airborne Ability/Airborne Chance", 4)) : (g_iAirborneChance2[iIndex] = kvSuperTanks.GetNum("Airborne Ability/Airborne Chance", g_iAirborneChance[iIndex]));
+			main ? (g_iAirborneChance[iIndex] = iSetCellLimit(g_iAirborneChance[iIndex], 1, 9999999999)) : (g_iAirborneChance2[iIndex] = iSetCellLimit(g_iAirborneChance2[iIndex], 1, 9999999999));
+			main ? (g_flAirborneDuration[iIndex] = kvSuperTanks.GetFloat("Airborne Ability/Airborne Duration", 5.0)) : (g_flAirborneDuration2[iIndex] = kvSuperTanks.GetFloat("Airborne Ability/Airborne Duration", g_flAirborneDuration[iIndex]));
+			main ? (g_flAirborneDuration[iIndex] = flSetFloatLimit(g_flAirborneDuration[iIndex], 0.1, 9999999999.0)) : (g_flAirborneDuration2[iIndex] = flSetFloatLimit(g_flAirborneDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flAirborneSpeed[iIndex] = kvSuperTanks.GetFloat("Airborne Ability/Airborne Speed", 300.0)) : (g_flAirborneSpeed2[iIndex] = kvSuperTanks.GetFloat("Airborne Ability/Airborne Speed", g_flAirborneSpeed[iIndex]));
+			main ? (g_flAirborneSpeed[iIndex] = flSetFloatLimit(g_flAirborneSpeed[iIndex], 100.0, 500.0)) : (g_flAirborneSpeed2[iIndex] = flSetFloatLimit(g_flAirborneSpeed2[iIndex], 100.0, 500.0));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
 }
 
-void vAirborne(int entity, int button, float time)
+public void ST_Ability(int client)
 {
-	float flAirborneSpeed = !g_bTankConfig[g_iTankType[entity]] ? g_flAirborneSpeed[g_iTankType[entity]] : g_flAirborneSpeed2[g_iTankType[entity]];
+	int iAirborneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAirborneAbility[ST_TankType(client)] : g_iAirborneAbility2[ST_TankType(client)];
+	int iAirborneChance = !g_bTankConfig[ST_TankType(client)] ? g_iAirborneChance[ST_TankType(client)] : g_iAirborneChance2[ST_TankType(client)];
+	if (iAirborneAbility == 1 && GetRandomInt(1, iAirborneChance) == 1 && bIsTank(client) && !g_bAirborne[client])
+	{
+		g_bAirborne[client] = true;
+		DataPack dpDataPack;
+		CreateDataTimer(3.0, tTimerAirborne, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+		dpDataPack.WriteCell(GetClientUserId(client));
+		dpDataPack.WriteFloat(GetEngineTime());
+	}
+}
+
+void vAirborne(int client, int button, float time)
+{
+	float flAirborneSpeed = !g_bTankConfig[ST_TankType(client)] ? g_flAirborneSpeed[ST_TankType(client)] : g_flAirborneSpeed2[ST_TankType(client)];
 	float flPos[3];
 	float flVelocity[3];
-	GetClientAbsOrigin(entity, flPos);
-	flPos[2]+=30.0;
-	GetEntPropVector(entity, Prop_Data, "m_vecVelocity", flVelocity);
-	if (!IsFakeClient(entity) && (button & IN_JUMP) && !(g_iAirborneButton[entity] & IN_JUMP))
+	GetClientAbsOrigin(client, flPos);
+	flPos[2] += 30.0;
+	GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
+	if (!IsFakeClient(client) && (button & IN_JUMP) && !(g_iAirborneButton[client] & IN_JUMP))
 	{
-		GetClientEyeAngles(entity, flVelocity);
+		GetClientEyeAngles(client, flVelocity);
 		GetAngleVectors(flVelocity, flVelocity, NULL_VECTOR, NULL_VECTOR);
 		flVelocity[2] = 0.0;
 		NormalizeVector(flVelocity, flVelocity);
 		ScaleVector(flVelocity, 310.0);
 		flVelocity[2] = 150.0;
-		TeleportEntity(entity, NULL_VECTOR, NULL_VECTOR, flVelocity);
-		vStopAirborne(entity);
+		TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
+		vStopAirborne(client);
 		return;
 	}
-	vCopyVector(g_flAirborneVelocity[entity], flVelocity);
+	vCopyVector(g_flAirborneVelocity[client], flVelocity);
 	if (GetVectorLength(flVelocity) < 10.0)
 	{
 		return ;
 	}
 	NormalizeVector(flVelocity, flVelocity);
-	int iTarget = g_iAirborneTarget[entity];
-	if (g_flAirborneTime[entity] + 1.0 <= time)
+	int iTarget = g_iAirborneTarget[client];
+	if (g_flAirborneTime[client] + 1.0 <= time)
 	{
-		g_flAirborneTime[entity] = time;
-		if (IsFakeClient(entity))
+		g_flAirborneTime[client] = time;
+		if (IsFakeClient(client))
 		{
 			iTarget = iGetRandomTarget(flPos, flVelocity);
 		}
 		else 
 		{
 			float flDirection[3];
-			GetClientEyeAngles(entity, flDirection);
+			GetClientEyeAngles(client, flDirection);
 			GetAngleVectors(flDirection, flDirection, NULL_VECTOR, NULL_VECTOR);
 			NormalizeVector(flDirection, flDirection);
 			iTarget = iGetRandomTarget(flPos, flDirection);
 		}
 	}
-	bIsValidClient(iTarget) ? (g_iAirborneTarget[entity] = iTarget) : (g_iAirborneTarget[entity] = 0);
+	bIsValidClient(iTarget) ? (g_iAirborneTarget[client] = iTarget) : (g_iAirborneTarget[client] = 0);
 	iTarget = iGetRandomTarget(flPos, flVelocity);
 	float flVelocity2[3];
 	float flVector[3];
@@ -101,7 +275,7 @@ void vAirborne(int entity, int button, float time)
 		float flPos2[3];
 		GetClientEyePosition(iTarget, flPos2);
 		flDistance = GetVectorDistance(flPos, flPos2);
-		bVisible = bVisiblePosition(flPos, flPos2, entity, 1);
+		bVisible = bVisiblePosition(flPos, flPos2, client, 1);
 		GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
 		AddVectors(flPos2, flVelocity2, flPos2);
 		MakeVectorFromPoints(flPos, flPos2, flVector);
@@ -128,19 +302,19 @@ void vAirborne(int entity, int button, float time)
 	if (bVisible)
 	{
 		flBase = 80.0;
-		float flFront2 = flGetDistance(flPos, flAngle, 0.0, 0.0, flFront, entity, 3);
-		float flDown2 = flGetDistance(flPos, flAngle, 90.0, 0.0, flDown, entity, 3);
-		float flUp2 = flGetDistance(flPos, flAngle, -90.0, 0.0, flUp, entity, 3);
-		float flLeft2 = flGetDistance(flPos, flAngle, 0.0, 90.0, flLeft, entity, 3);
-		float flRight2 = flGetDistance(flPos, flAngle, 0.0, -90.0, flRight, entity, 3);
-		float flDistance2 = flGetDistance(flPos, flAngle, 30.0, 0.0, flVector1, entity, 3);
-		float flDistance3 = flGetDistance(flPos, flAngle, 30.0, 45.0, flVector2, entity, 3);
-		float flDistance4 = flGetDistance(flPos, flAngle, 0.0, 45.0, flVector3, entity, 3);
-		float flDistance5 = flGetDistance(flPos, flAngle, -30.0, 45.0, flVector4, entity, 3);
-		float flDistance6 = flGetDistance(flPos, flAngle, -30.0, 0.0, flVector5, entity, 3);
-		float flDistance7 = flGetDistance(flPos, flAngle, -30.0, -45.0, flVector6, entity, 3);
-		float flDistance8 = flGetDistance(flPos, flAngle, 0.0, -45.0, flVector7, entity, 3);
-		float flDistance9 = flGetDistance(flPos, flAngle, 30.0, -45.0, flVector8, entity, 3);
+		float flFront2 = flGetDistance(flPos, flAngle, 0.0, 0.0, flFront, client, 3);
+		float flDown2 = flGetDistance(flPos, flAngle, 90.0, 0.0, flDown, client, 3);
+		float flUp2 = flGetDistance(flPos, flAngle, -90.0, 0.0, flUp, client, 3);
+		float flLeft2 = flGetDistance(flPos, flAngle, 0.0, 90.0, flLeft, client, 3);
+		float flRight2 = flGetDistance(flPos, flAngle, 0.0, -90.0, flRight, client, 3);
+		float flDistance2 = flGetDistance(flPos, flAngle, 30.0, 0.0, flVector1, client, 3);
+		float flDistance3 = flGetDistance(flPos, flAngle, 30.0, 45.0, flVector2, client, 3);
+		float flDistance4 = flGetDistance(flPos, flAngle, 0.0, 45.0, flVector3, client, 3);
+		float flDistance5 = flGetDistance(flPos, flAngle, -30.0, 45.0, flVector4, client, 3);
+		float flDistance6 = flGetDistance(flPos, flAngle, -30.0, 0.0, flVector5, client, 3);
+		float flDistance7 = flGetDistance(flPos, flAngle, -30.0, -45.0, flVector6, client, 3);
+		float flDistance8 = flGetDistance(flPos, flAngle, 0.0, -45.0, flVector7, client, 3);
+		float flDistance9 = flGetDistance(flPos, flAngle, 30.0, -45.0, flVector8, client, 3);
 		NormalizeVector(flFront, flFront);
 		NormalizeVector(flUp, flUp);
 		NormalizeVector(flDown, flDown);
@@ -313,24 +487,9 @@ void vAirborne(int entity, int button, float time)
 	AddVectors(flVelocity, flFront, flVelocity3);
 	NormalizeVector(flVelocity3, flVelocity3);
 	ScaleVector(flVelocity3, flAirborneSpeed);
-	SetEntityGravity(entity, 0.01);
-	TeleportEntity(entity, NULL_VECTOR, NULL_VECTOR, flVelocity3);
-	vCopyVector(flVelocity3, g_flAirborneVelocity[entity]);
-}
-
-void vAirborneAbility(int client)
-{
-	int iAirborneAbility = !g_bTankConfig[g_iTankType[client]] ? g_iAirborneAbility[g_iTankType[client]] : g_iAirborneAbility2[g_iTankType[client]];
-	int iAirborneChance = !g_bTankConfig[g_iTankType[client]] ? g_iAirborneChance[g_iTankType[client]] : g_iAirborneChance2[g_iTankType[client]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if (iAirborneAbility == 1 && GetRandomInt(1, iAirborneChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client) && !g_bAirborne[client])
-	{
-		g_bAirborne[client] = true;
-		DataPack dpDataPack;
-		CreateDataTimer(3.0, tTimerAirborne, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-		dpDataPack.WriteCell(GetClientUserId(client));
-		dpDataPack.WriteFloat(GetEngineTime());
-	}
+	SetEntityGravity(client, 0.01);
+	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity3);
+	vCopyVector(flVelocity3, g_flAirborneVelocity[client]);
 }
 
 void vStopAirborne(int client)
@@ -338,13 +497,20 @@ void vStopAirborne(int client)
 	if (bIsTank(client) && g_bAirborne[client])
 	{
 		g_bAirborne[client] = false;
-		SDKUnhook(client, SDKHook_PreThink, AirborneThink);
-		SDKUnhook(client, SDKHook_StartTouch, AirborneTouch);
+		SDKUnhook(client, SDKHook_PreThink, PreThink);
+		SDKUnhook(client, SDKHook_StartTouch, StartTouch);
 		SetEntityGravity(client, 1.0);
 	}
 }
 
-void vResetAirborne(int client)
+void vCopyVector(float source[3], float target[3])
+{
+	target[0] = source[0];
+	target[1] = source[1];
+	target[2] = source[2];
+}
+
+void vReset(int client)
 {
 	g_bAirborne[client] = false;
 	g_flAirborneTime[client] = 0.0;
@@ -353,8 +519,8 @@ void vResetAirborne(int client)
 	g_flAirborneVelocity[client][2] = 0.0;
 	g_iAirborneButton[client] = 0;
 	g_iAirborneTarget[client] = 0;
-	SDKUnhook(client, SDKHook_PreThink, AirborneThink);
-	SDKUnhook(client, SDKHook_StartTouch, AirborneTouch);
+	SDKUnhook(client, SDKHook_PreThink, PreThink);
+	SDKUnhook(client, SDKHook_StartTouch, StartTouch);
 }
 
 public Action tTimerAirborne(Handle timer, DataPack pack)
@@ -362,16 +528,14 @@ public Action tTimerAirborne(Handle timer, DataPack pack)
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	float flTime = pack.ReadFloat();
-	int iAirborneAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iAirborneAbility[g_iTankType[iTank]] : g_iAirborneAbility2[g_iTankType[iTank]];
-	float flAirborneDuration = !g_bTankConfig[g_iTankType[iTank]] ? g_flAirborneDuration[g_iTankType[iTank]] : g_flAirborneDuration2[g_iTankType[iTank]];
+	int iAirborneAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iAirborneAbility[ST_TankType(iTank)] : g_iAirborneAbility2[ST_TankType(iTank)];
+	float flAirborneDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flAirborneDuration[ST_TankType(iTank)] : g_flAirborneDuration2[ST_TankType(iTank)];
 	if (iAirborneAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (flTime + flAirborneDuration) < GetEngineTime())
 	{
 		vStopAirborne(iTank);
 		return Plugin_Stop;
 	}
-	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	if (bIsTank(iTank))
 	{
 		float flPos[3];
 		float flHitPos[3];
@@ -407,10 +571,10 @@ public Action tTimerAirborne(Handle timer, DataPack pack)
 		g_flAirborneTime[iTank] = GetEngineTime() - 0.0;
 		g_iAirborneButton[iTank] = IN_JUMP;
 		g_iAirborneTarget[iTank] = 0;
-		SDKUnhook(iTank, SDKHook_PreThink, AirborneThink);
-		SDKHook(iTank, SDKHook_PreThink, AirborneThink);
-		SDKUnhook(iTank, SDKHook_StartTouch, AirborneTouch);
-		SDKHook(iTank, SDKHook_StartTouch, AirborneTouch);
+		SDKUnhook(iTank, SDKHook_PreThink, PreThink);
+		SDKHook(iTank, SDKHook_PreThink, PreThink);
+		SDKUnhook(iTank, SDKHook_StartTouch, StartTouch);
+		SDKHook(iTank, SDKHook_StartTouch, StartTouch);
 	}
 	return Plugin_Continue;
 }

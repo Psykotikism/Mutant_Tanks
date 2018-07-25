@@ -1,7 +1,23 @@
 // Super Tanks++: Acid Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Acid Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
+bool g_bLateLoad;
+bool g_bTankConfig[ST_MAXTYPES + 1];
 float g_flAcidRange[ST_MAXTYPES + 1];
 float g_flAcidRange2[ST_MAXTYPES + 1];
 Handle g_hSDKAcidPlayer;
+Handle g_hSDKPukePlayer;
 int g_iAcidAbility[ST_MAXTYPES + 1];
 int g_iAcidAbility2[ST_MAXTYPES + 1];
 int g_iAcidChance[ST_MAXTYPES + 1];
@@ -11,46 +27,230 @@ int g_iAcidHit2[ST_MAXTYPES + 1];
 int g_iAcidRock[ST_MAXTYPES + 1];
 int g_iAcidRock2[ST_MAXTYPES + 1];
 
-void vAcidSDKCall(Handle gamedata)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	StartPrepSDKCall(SDKCall_Static);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Signature, "CSpitterProjectile_Create");
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-	PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
-	g_hSDKAcidPlayer = EndPrepSDKCall();
-	if (g_hSDKAcidPlayer == null)
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		PrintToServer("%s Your \"CSpitterProjectile_Create\" signature is outdated.", ST_PREFIX);
+		strcopy(error, err_max, "[ST++] Acid Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	g_bLateLoad = late;
+	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	if (!LibraryExists("super_tanks++"))
+	{
+		SetFailState("No Super Tanks++ library found.");
 	}
 }
 
-void vAcidConfigs(KeyValues keyvalues, int index, bool main)
+public void OnPluginStart()
 {
-	main ? (g_iAcidAbility[index] = keyvalues.GetNum("Acid Ability/Ability Enabled", 0)) : (g_iAcidAbility2[index] = keyvalues.GetNum("Acid Ability/Ability Enabled", g_iAcidAbility[index]));
-	main ? (g_iAcidAbility[index] = iSetCellLimit(g_iAcidAbility[index], 0, 1)) : (g_iAcidAbility2[index] = iSetCellLimit(g_iAcidAbility2[index], 0, 1));
-	main ? (g_iAcidChance[index] = keyvalues.GetNum("Acid Ability/Acid Chance", 4)) : (g_iAcidChance2[index] = keyvalues.GetNum("Acid Ability/Acid Chance", g_iAcidChance[index]));
-	main ? (g_iAcidChance[index] = iSetCellLimit(g_iAcidChance[index], 1, 9999999999)) : (g_iAcidChance2[index] = iSetCellLimit(g_iAcidChance2[index], 1, 9999999999));
-	main ? (g_iAcidHit[index] = keyvalues.GetNum("Acid Ability/Acid Hit", 0)) : (g_iAcidHit2[index] = keyvalues.GetNum("Acid Ability/Acid Hit", g_iAcidHit[index]));
-	main ? (g_iAcidHit[index] = iSetCellLimit(g_iAcidHit[index], 0, 1)) : (g_iAcidHit2[index] = iSetCellLimit(g_iAcidHit2[index], 0, 1));
-	main ? (g_flAcidRange[index] = keyvalues.GetFloat("Acid Ability/Acid Range", 150.0)) : (g_flAcidRange2[index] = keyvalues.GetFloat("Acid Ability/Acid Range", g_flAcidRange[index]));
-	main ? (g_flAcidRange[index] = flSetFloatLimit(g_flAcidRange[index], 1.0, 9999999999.0)) : (g_flAcidRange2[index] = flSetFloatLimit(g_flAcidRange2[index], 1.0, 9999999999.0));
-	main ? (g_iAcidRock[index] = keyvalues.GetNum("Acid Ability/Acid Rock Break", 0)) : (g_iAcidRock2[index] = keyvalues.GetNum("Acid Ability/Acid Rock Break", g_iAcidRock[index]));
-	main ? (g_iAcidRock[index] = iSetCellLimit(g_iAcidRock[index], 0, 1)) : (g_iAcidRock2[index] = iSetCellLimit(g_iAcidRock2[index], 0, 1));
+	Handle hGameData = LoadGameConfigFile("super_tanks++");
+	if (bIsL4D2Game())
+	{
+		StartPrepSDKCall(SDKCall_Static);
+		PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CSpitterProjectile_Create");
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
+		g_hSDKAcidPlayer = EndPrepSDKCall();
+		if (g_hSDKAcidPlayer == null)
+		{
+			PrintToServer("%s Your \"CSpitterProjectile_Create\" signature is outdated.", ST_PREFIX);
+		}
+	}
+	else
+	{
+		StartPrepSDKCall(SDKCall_Player);
+		PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon");
+		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		g_hSDKPukePlayer = EndPrepSDKCall();
+		if (g_hSDKPukePlayer == null)
+		{
+			PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", ST_PREFIX);
+		}
+	}
 }
 
-void vAcidHit(int client, int owner, int toggle, float distance = 0.0)
+public void OnMapStart()
 {
-	int iAcidAbility = !g_bTankConfig[g_iTankType[owner]] ? g_iAcidAbility[g_iTankType[owner]] : g_iAcidAbility2[g_iTankType[owner]];
-	int iAcidChance = !g_bTankConfig[g_iTankType[owner]] ? g_iAcidChance[g_iTankType[owner]] : g_iAcidChance2[g_iTankType[owner]];
-	int iAcidHit = !g_bTankConfig[g_iTankType[owner]] ? g_iAcidHit[g_iTankType[owner]] : g_iAcidHit2[g_iTankType[owner]];
-	float flAcidRange = !g_bTankConfig[g_iTankType[owner]] ? g_flAcidRange[g_iTankType[owner]] : g_flAcidRange2[g_iTankType[owner]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[owner]] ? g_iCloneMode[g_iTankType[owner]] : g_iCloneMode2[g_iTankType[owner]];
-	if (((toggle == 1 && distance <= flAcidRange) || toggle == 2) && ((toggle == 1 && iAcidAbility == 1) || (toggle == 2 && iAcidHit == 1)) && GetRandomInt(1, iAcidChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[owner])) && bIsSurvivor(client))
+	if (g_bLateLoad)
+	{
+		vLateLoad(true);
+		g_bLateLoad = false;
+	}
+}
+
+public void OnConfigsExecuted()
+{
+	char sMapName[128];
+	GetCurrentMap(sMapName, sizeof(sMapName));
+	if (IsMapValid(sMapName))
+	{
+		vIsPluginAllowed();
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+}
+
+public void OnClientDisconnect(int client)
+{
+	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+}
+
+void vIsPluginAllowed()
+{
+	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
+}
+
+void vHookEvent(bool hook)
+{
+	static bool hooked;
+	if (hook && !hooked)
+	{
+		HookEvent("player_death", eEventPlayerDeath);
+		hooked = true;
+	}
+	else if (!hook && hooked)
+	{
+		UnhookEvent("player_death", eEventPlayerDeath);
+		hooked = false;
+	}
+}
+
+void vLateLoad(bool late)
+{
+	if (late)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
+	}
+}
+
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (ST_PluginEnabled() && damage > 0.0)
+	{
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		if (bIsTank(attacker) && bIsSurvivor(victim))
+		{
+			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			{
+				int iAcidHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iAcidHit[ST_TankType(attacker)] : g_iAcidHit2[ST_TankType(attacker)];
+				vAcidHit(victim, attacker, iAcidHit);
+			}
+		}
+		else if (bIsSurvivor(attacker) && bIsTank(victim))
+		{
+			if (strcmp(sClassname, "weapon_melee") == 0)
+			{
+				int iAcidHit = !g_bTankConfig[ST_TankType(victim)] ? g_iAcidHit[ST_TankType(victim)] : g_iAcidHit2[ST_TankType(victim)];
+				vAcidHit(attacker, victim, iAcidHit);
+			}
+		}
+	}
+}
+
+public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int iUserId = event.GetInt("userid");
+	int iPlayer = GetClientOfUserId(iUserId);
+	if (bIsTank(iPlayer) && bIsL4D2Game())
+	{
+		float flOrigin[3];
+		float flAngles[3];
+		GetClientAbsOrigin(iPlayer, flOrigin);
+		GetClientAbsAngles(iPlayer, flAngles);
+		SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, iPlayer, 2.0);
+	}
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iAcidAbility[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", 0)) : (g_iAcidAbility2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", g_iAcidAbility[iIndex]));
+			main ? (g_iAcidAbility[iIndex] = iSetCellLimit(g_iAcidAbility[iIndex], 0, 1)) : (g_iAcidAbility2[iIndex] = iSetCellLimit(g_iAcidAbility2[iIndex], 0, 1));
+			main ? (g_iAcidChance[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", 4)) : (g_iAcidChance2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", g_iAcidChance[iIndex]));
+			main ? (g_iAcidChance[iIndex] = iSetCellLimit(g_iAcidChance[iIndex], 1, 9999999999)) : (g_iAcidChance2[iIndex] = iSetCellLimit(g_iAcidChance2[iIndex], 1, 9999999999));
+			main ? (g_iAcidHit[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", 0)) : (g_iAcidHit2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", g_iAcidHit[iIndex]));
+			main ? (g_iAcidHit[iIndex] = iSetCellLimit(g_iAcidHit[iIndex], 0, 1)) : (g_iAcidHit2[iIndex] = iSetCellLimit(g_iAcidHit2[iIndex], 0, 1));
+			main ? (g_flAcidRange[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", 150.0)) : (g_flAcidRange2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", g_flAcidRange[iIndex]));
+			main ? (g_flAcidRange[iIndex] = flSetFloatLimit(g_flAcidRange[iIndex], 1.0, 9999999999.0)) : (g_flAcidRange2[iIndex] = flSetFloatLimit(g_flAcidRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iAcidRock[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", 0)) : (g_iAcidRock2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", g_iAcidRock[iIndex]));
+			main ? (g_iAcidRock[iIndex] = iSetCellLimit(g_iAcidRock[iIndex], 0, 1)) : (g_iAcidRock2[iIndex] = iSetCellLimit(g_iAcidRock2[iIndex], 0, 1));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public void ST_Ability(int client)
+{
+	if (bIsTank(client))
+	{
+		int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)];
+		float flAcidRange = !g_bTankConfig[ST_TankType(client)] ? g_flAcidRange[ST_TankType(client)] : g_flAcidRange2[ST_TankType(client)];
+		float flTankPos[3];
+		GetClientAbsOrigin(client, flTankPos);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flAcidRange)
+				{
+					vAcidHit(iSurvivor, client, iAcidAbility);
+				}
+			}
+		}
+	}
+}
+
+public void ST_RockBreak(int client, int entity)
+{
+	int iAcidRock = !g_bTankConfig[ST_TankType(client)] ? g_iAcidRock[ST_TankType(client)] : g_iAcidRock2[ST_TankType(client)];
+	if (iAcidRock == 1 && bIsTank(client) && bIsL4D2Game())
+	{
+		float flOrigin[3];
+		float flAngles[3];
+		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
+		flOrigin[2] += 40.0;
+		SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, client, 2.0);
+	}
+}
+
+void vAcidHit(int client, int owner, int enabled)
+{
+	int iAcidChance = !g_bTankConfig[ST_TankType(owner)] ? g_iAcidChance[ST_TankType(owner)] : g_iAcidChance2[ST_TankType(owner)];
+	if (enabled == 1 && GetRandomInt(1, iAcidChance) == 1 && bIsSurvivor(client))
 	{
 		if (bIsL4D2Game())
 		{
@@ -64,19 +264,5 @@ void vAcidHit(int client, int owner, int toggle, float distance = 0.0)
 		{
 			SDKCall(g_hSDKPukePlayer, client, owner, true);
 		}
-	}
-}
-
-void vAcidRock(int entity, int client)
-{
-	int iAcidRock = !g_bTankConfig[g_iTankType[client]] ? g_iAcidRock[g_iTankType[client]] : g_iAcidRock2[g_iTankType[client]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if (iAcidRock == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client) && bIsL4D2Game())
-	{
-		float flOrigin[3];
-		float flAngles[3];
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
-		flOrigin[2] += 40.0;
-		SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, client, 2.0);
 	}
 }

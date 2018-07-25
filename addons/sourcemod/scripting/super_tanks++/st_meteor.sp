@@ -1,5 +1,21 @@
 // Super Tanks++: Meteor Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Meteor Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
+
 bool g_bMeteor[MAXPLAYERS + 1];
+bool g_bTankConfig[ST_MAXTYPES + 1];
 char g_sMeteorRadius[ST_MAXTYPES + 1][13];
 char g_sMeteorRadius2[ST_MAXTYPES + 1][13];
 int g_iMeteorAbility[ST_MAXTYPES + 1];
@@ -9,22 +25,103 @@ int g_iMeteorChance2[ST_MAXTYPES + 1];
 int g_iMeteorDamage[ST_MAXTYPES + 1];
 int g_iMeteorDamage2[ST_MAXTYPES + 1];
 
-void vMeteorConfigs(KeyValues keyvalues, int index, bool main)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	main ? (g_iMeteorAbility[index] = keyvalues.GetNum("Meteor Ability/Ability Enabled", 0)) : (g_iMeteorAbility2[index] = keyvalues.GetNum("Meteor Ability/Ability Enabled", g_iMeteorAbility[index]));
-	main ? (g_iMeteorAbility[index] = iSetCellLimit(g_iMeteorAbility[index], 0, 1)) : (g_iMeteorAbility2[index] = iSetCellLimit(g_iMeteorAbility2[index], 0, 1));
-	main ? (g_iMeteorChance[index] = keyvalues.GetNum("Meteor Ability/Meteor Chance", 4)) : (g_iMeteorChance2[index] = keyvalues.GetNum("Meteor Ability/Meteor Chance", g_iMeteorChance[index]));
-	main ? (g_iMeteorChance[index] = iSetCellLimit(g_iMeteorChance[index], 1, 9999999999)) : (g_iMeteorChance2[index] = iSetCellLimit(g_iMeteorChance2[index], 1, 9999999999));
-	main ? (g_iMeteorDamage[index] = keyvalues.GetNum("Meteor Ability/Meteor Damage", 25)) : (g_iMeteorDamage2[index] = keyvalues.GetNum("Meteor Ability/Meteor Damage", g_iMeteorDamage[index]));
-	main ? (g_iMeteorDamage[index] = iSetCellLimit(g_iMeteorDamage[index], 1, 9999999999)) : (g_iMeteorDamage2[index] = iSetCellLimit(g_iMeteorDamage2[index], 1, 9999999999));
-	main ? (keyvalues.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius[index], sizeof(g_sMeteorRadius[]), "-180.0,180.0")) : (keyvalues.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius2[index], sizeof(g_sMeteorRadius2[]), g_sMeteorRadius[index]));
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "[ST++] Meteor Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	return APLRes_Success;
 }
 
-void vMeteor(int entity, int client)
+public void OnAllPluginsLoaded()
 {
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (bIsValidEntity(entity) && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(client))))
+	if (!LibraryExists("super_tanks++"))
+	{
+		SetFailState("No Super Tanks++ library found.");
+	}
+}
+
+public void OnMapStart()
+{
+	PrecacheModel(MODEL_PROPANETANK, true);
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bMeteor[iPlayer] = false;
+		}
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	g_bMeteor[client] = false;
+}
+
+public void OnClientDisconnect(int client)
+{
+	g_bMeteor[client] = false;
+}
+
+public void OnMapEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bMeteor[iPlayer] = false;
+		}
+	}
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_iMeteorAbility[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", 0)) : (g_iMeteorAbility2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", g_iMeteorAbility[iIndex]));
+			main ? (g_iMeteorAbility[iIndex] = iSetCellLimit(g_iMeteorAbility[iIndex], 0, 1)) : (g_iMeteorAbility2[iIndex] = iSetCellLimit(g_iMeteorAbility2[iIndex], 0, 1));
+			main ? (g_iMeteorChance[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", 4)) : (g_iMeteorChance2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", g_iMeteorChance[iIndex]));
+			main ? (g_iMeteorChance[iIndex] = iSetCellLimit(g_iMeteorChance[iIndex], 1, 9999999999)) : (g_iMeteorChance2[iIndex] = iSetCellLimit(g_iMeteorChance2[iIndex], 1, 9999999999));
+			main ? (g_iMeteorDamage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Damage", 25)) : (g_iMeteorDamage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Damage", g_iMeteorDamage[iIndex]));
+			main ? (g_iMeteorDamage[iIndex] = iSetCellLimit(g_iMeteorDamage[iIndex], 1, 9999999999)) : (g_iMeteorDamage2[iIndex] = iSetCellLimit(g_iMeteorDamage2[iIndex], 1, 9999999999));
+			main ? (kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius[iIndex], sizeof(g_sMeteorRadius[]), "-180.0,180.0")) : (kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius2[iIndex], sizeof(g_sMeteorRadius2[]), g_sMeteorRadius[iIndex]));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public void ST_Ability(int client)
+{
+	int iMeteorAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorAbility[ST_TankType(client)] : g_iMeteorAbility2[ST_TankType(client)];
+	int iMeteorChance = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorChance[ST_TankType(client)] : g_iMeteorChance2[ST_TankType(client)];
+	if (iMeteorAbility == 1 && GetRandomInt(1, iMeteorChance) == 1 && bIsTank(client) && !g_bMeteor[client])
+	{
+		g_bMeteor[client] = true;
+		float flPos[3];
+		GetClientEyePosition(client, flPos);
+		DataPack dpDataPack;
+		CreateDataTimer(0.6, tTimerMeteorUpdate, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpDataPack.WriteCell(GetClientUserId(client));
+		dpDataPack.WriteFloat(flPos[0]);
+		dpDataPack.WriteFloat(flPos[1]);
+		dpDataPack.WriteFloat(flPos[2]);
+		dpDataPack.WriteFloat(GetEngineTime());
+	}
+}
+
+void vMeteor(int client, int entity)
+{
+	if (bIsTank(client) && bIsValidEntity(entity))
 	{
 		char sClassname[16];
 		GetEntityClassname(entity, sClassname, sizeof(sClassname));
@@ -32,7 +129,7 @@ void vMeteor(int entity, int client)
 		{
 			AcceptEntityInput(entity, "Kill");
 			char sDamage[6];
-			int iMeteorDamage = !g_bTankConfig[g_iTankType[client]] ? g_iMeteorDamage[g_iTankType[client]] : g_iMeteorDamage2[g_iTankType[client]];
+			int iMeteorDamage = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorDamage[ST_TankType(client)] : g_iMeteorDamage2[ST_TankType(client)];
 			IntToString(iMeteorDamage, sDamage, sizeof(sDamage));
 			float flPos[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
@@ -81,31 +178,6 @@ void vMeteor(int entity, int client)
 	}
 }
 
-void vMeteorAbility(int client)
-{
-	int iMeteorAbility = !g_bTankConfig[g_iTankType[client]] ? g_iMeteorAbility[g_iTankType[client]] : g_iMeteorAbility2[g_iTankType[client]];
-	int iMeteorChance = !g_bTankConfig[g_iTankType[client]] ? g_iMeteorChance[g_iTankType[client]] : g_iMeteorChance2[g_iTankType[client]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if (iMeteorAbility == 1 && GetRandomInt(1, iMeteorChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client) && !g_bMeteor[client])
-	{
-		g_bMeteor[client] = true;
-		float flPos[3];
-		GetClientEyePosition(client, flPos);
-		DataPack dpDataPack;
-		CreateDataTimer(0.6, tTimerMeteorUpdate, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDataPack.WriteCell(GetClientUserId(client));
-		dpDataPack.WriteFloat(flPos[0]);
-		dpDataPack.WriteFloat(flPos[1]);
-		dpDataPack.WriteFloat(flPos[2]);
-		dpDataPack.WriteFloat(GetEngineTime());
-	}
-}
-
-void vResetMeteor(int client)
-{
-	g_bMeteor[client] = false;
-}
-
 public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -115,10 +187,10 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	flPos[1] = pack.ReadFloat();
 	flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
-	int iMeteorAbility = !g_bTankConfig[g_iTankType[iTank]] ? g_iMeteorAbility[g_iTankType[iTank]] : g_iMeteorAbility2[g_iTankType[iTank]];
+	int iMeteorAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iMeteorAbility[ST_TankType(iTank)] : g_iMeteorAbility2[ST_TankType(iTank)];
 	char sRadius[2][7];
 	char sMeteorRadius[13];
-	sMeteorRadius = !g_bTankConfig[g_iTankType[iTank]] ? g_sMeteorRadius[g_iTankType[iTank]] : g_sMeteorRadius2[g_iTankType[iTank]];
+	sMeteorRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sMeteorRadius[ST_TankType(iTank)] : g_sMeteorRadius2[ST_TankType(iTank)];
 	TrimString(sMeteorRadius);
 	ExplodeString(sMeteorRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
 	TrimString(sRadius[0]);
@@ -132,9 +204,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 		g_bMeteor[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iCloneMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iCloneMode[g_iTankType[iTank]] : g_iCloneMode2[g_iTankType[iTank]];
-	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if ((iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[iTank])) && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	if (bIsTank(iTank))
 	{
 		if ((GetEngineTime() - flTime) > 5.0)
 		{
@@ -190,7 +260,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 				int iOwner = GetEntPropEnt(iMeteor, Prop_Send, "m_hOwnerEntity");
 				if (iTank == iOwner)
 				{
-					vMeteor(iMeteor, iOwner);
+					vMeteor(iOwner, iMeteor);
 				}
 			}
 			return Plugin_Stop;
@@ -202,7 +272,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 			{
 				if (flGetGroundUnits(iMeteor) < 200.0)
 				{
-					vMeteor(iMeteor, iOwner);
+					vMeteor(iOwner, iMeteor);
 				}
 			}
 		}

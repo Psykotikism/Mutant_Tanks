@@ -1,11 +1,27 @@
 // Super Tanks++: Bury Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Bury Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
 bool g_bBury[MAXPLAYERS + 1];
+bool g_bLateLoad;
+bool g_bTankConfig[ST_MAXTYPES + 1];
 float g_flBuryDuration[ST_MAXTYPES + 1];
 float g_flBuryDuration2[ST_MAXTYPES + 1];
 float g_flBuryHeight[ST_MAXTYPES + 1];
 float g_flBuryHeight2[ST_MAXTYPES + 1];
 float g_flBuryRange[ST_MAXTYPES + 1];
 float g_flBuryRange2[ST_MAXTYPES + 1];
+Handle g_hSDKRevivePlayer;
 int g_iBuryAbility[ST_MAXTYPES + 1];
 int g_iBuryAbility2[ST_MAXTYPES + 1];
 int g_iBuryChance[ST_MAXTYPES + 1];
@@ -13,48 +29,218 @@ int g_iBuryChance2[ST_MAXTYPES + 1];
 int g_iBuryHit[ST_MAXTYPES + 1];
 int g_iBuryHit2[ST_MAXTYPES + 1];
 
-void vBuryConfigs(KeyValues keyvalues, int index, bool main)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	main ? (g_iBuryAbility[index] = keyvalues.GetNum("Bury Ability/Ability Enabled", 0)) : (g_iBuryAbility2[index] = keyvalues.GetNum("Bury Ability/Ability Enabled", g_iBuryAbility[index]));
-	main ? (g_iBuryAbility[index] = iSetCellLimit(g_iBuryAbility[index], 0, 1)) : (g_iBuryAbility2[index] = iSetCellLimit(g_iBuryAbility2[index], 0, 1));
-	main ? (g_iBuryChance[index] = keyvalues.GetNum("Bury Ability/Bury Chance", 4)) : (g_iBuryChance2[index] = keyvalues.GetNum("Bury Ability/Bury Chance", g_iBuryChance[index]));
-	main ? (g_iBuryChance[index] = iSetCellLimit(g_iBuryChance[index], 1, 9999999999)) : (g_iBuryChance2[index] = iSetCellLimit(g_iBuryChance2[index], 1, 9999999999));
-	main ? (g_flBuryDuration[index] = keyvalues.GetFloat("Bury Ability/Bury Duration", 5.0)) : (g_flBuryDuration2[index] = keyvalues.GetFloat("Bury Ability/Bury Duration", g_flBuryDuration[index]));
-	main ? (g_flBuryDuration[index] = flSetFloatLimit(g_flBuryDuration[index], 0.1, 9999999999.0)) : (g_flBuryDuration2[index] = flSetFloatLimit(g_flBuryDuration2[index], 0.1, 9999999999.0));
-	main ? (g_flBuryHeight[index] = keyvalues.GetFloat("Bury Ability/Bury Height", 50.0)) : (g_flBuryHeight2[index] = keyvalues.GetFloat("Bury Ability/Bury Height", g_flBuryHeight[index]));
-	main ? (g_flBuryHeight[index] = flSetFloatLimit(g_flBuryHeight[index], 0.1, 9999999999.0)) : (g_flBuryHeight2[index] = flSetFloatLimit(g_flBuryHeight2[index], 0.1, 9999999999.0));
-	main ? (g_iBuryHit[index] = keyvalues.GetNum("Bury Ability/Bury Hit", 0)) : (g_iBuryHit2[index] = keyvalues.GetNum("Bury Ability/Bury Hit", g_iBuryHit[index]));
-	main ? (g_iBuryHit[index] = iSetCellLimit(g_iBuryHit[index], 0, 1)) : (g_iBuryHit2[index] = iSetCellLimit(g_iBuryHit2[index], 0, 1));
-	main ? (g_flBuryRange[index] = keyvalues.GetFloat("Bury Ability/Bury Range", 150.0)) : (g_flBuryRange2[index] = keyvalues.GetFloat("Bury Ability/Bury Range", g_flBuryRange[index]));
-	main ? (g_flBuryRange[index] = flSetFloatLimit(g_flBuryRange[index], 1.0, 9999999999.0)) : (g_flBuryRange2[index] = flSetFloatLimit(g_flBuryRange2[index], 1.0, 9999999999.0));
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "[ST++] Bury Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	g_bLateLoad = late;
+	return APLRes_Success;
 }
 
-void vBuryDeath(int client)
+public void OnAllPluginsLoaded()
 {
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	if (!LibraryExists("super_tanks++"))
 	{
-		if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
+		SetFailState("No Super Tanks++ library found.");
+	}
+}
+
+public void OnPluginStart()
+{
+	Handle hGameData = LoadGameConfigFile("super_tanks++");
+	StartPrepSDKCall(SDKCall_Player);
+	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnRevived");
+	g_hSDKRevivePlayer = EndPrepSDKCall();
+	if (g_hSDKRevivePlayer == null)
+	{
+		PrintToServer("%s Your \"CTerrorPlayer_OnRevived\" signature is outdated.", ST_PREFIX);
+	}
+}
+
+public void OnMapStart()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
 		{
-			DataPack dpDataPack;
-			CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-			dpDataPack.WriteCell(GetClientUserId(client));
+			g_bBury[iPlayer] = false;
+		}
+	}
+	if (g_bLateLoad)
+	{
+		vLateLoad(true);
+		g_bLateLoad = false;
+	}
+}
+
+public void OnConfigsExecuted()
+{
+	char sMapName[128];
+	GetCurrentMap(sMapName, sizeof(sMapName));
+	if (IsMapValid(sMapName))
+	{
+		vIsPluginAllowed();
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	g_bBury[client] = false;
+}
+
+public void OnClientDisconnect(int client)
+{
+	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	g_bBury[client] = false;
+}
+
+public void OnMapEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bBury[iPlayer] = false;
 		}
 	}
 }
 
-void vBuryHit(int client, int owner, int toggle, float distance = 0.0)
+void vIsPluginAllowed()
 {
-	int iBuryAbility = !g_bTankConfig[g_iTankType[owner]] ? g_iBuryAbility[g_iTankType[owner]] : g_iBuryAbility2[g_iTankType[owner]];
-	int iBuryChance = !g_bTankConfig[g_iTankType[owner]] ? g_iBuryChance[g_iTankType[owner]] : g_iBuryChance2[g_iTankType[owner]];
-	int iBuryHit = !g_bTankConfig[g_iTankType[owner]] ? g_iBuryHit[g_iTankType[owner]] : g_iBuryHit2[g_iTankType[owner]];
-	float flBuryRange = !g_bTankConfig[g_iTankType[owner]] ? g_flBuryRange[g_iTankType[owner]] : g_flBuryRange2[g_iTankType[owner]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[owner]] ? g_iCloneMode[g_iTankType[owner]] : g_iCloneMode2[g_iTankType[owner]];
-	if (((toggle == 1 && distance <= flBuryRange) || toggle == 2) && ((toggle == 1 && iBuryAbility == 1) || (toggle == 2 && iBuryHit == 1)) && GetRandomInt(1, iBuryChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[owner])) && bIsSurvivor(client) && !g_bBury[client] && bIsPlayerGrounded(client))
+	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
+}
+
+void vHookEvent(bool hook)
+{
+	static bool hooked;
+	if (hook && !hooked)
+	{
+		HookEvent("player_death", eEventPlayerDeath);
+		hooked = true;
+	}
+	else if (!hook && hooked)
+	{
+		UnhookEvent("player_death", eEventPlayerDeath);
+		hooked = false;
+	}
+}
+
+void vLateLoad(bool late)
+{
+	if (late)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
+	}
+}
+
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (ST_PluginEnabled() && damage > 0.0)
+	{
+		if (bIsTank(attacker) && bIsSurvivor(victim))
+		{
+			char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			{
+				int iBuryHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iBuryHit[ST_TankType(attacker)] : g_iBuryHit2[ST_TankType(attacker)];
+				vBuryHit(victim, attacker, iBuryHit);
+			}
+		}
+	}
+}
+
+public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int iUserId = event.GetInt("userid");
+	int iPlayer = GetClientOfUserId(iUserId);
+	if (bIsTank(iPlayer))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
+			{
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+				dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+				dpDataPack.WriteCell(GetClientUserId(iPlayer));
+			}
+		}
+	}
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iBuryAbility[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", 0)) : (g_iBuryAbility2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", g_iBuryAbility[iIndex]));
+			main ? (g_iBuryAbility[iIndex] = iSetCellLimit(g_iBuryAbility[iIndex], 0, 1)) : (g_iBuryAbility2[iIndex] = iSetCellLimit(g_iBuryAbility2[iIndex], 0, 1));
+			main ? (g_iBuryChance[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Chance", 4)) : (g_iBuryChance2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Chance", g_iBuryChance[iIndex]));
+			main ? (g_iBuryChance[iIndex] = iSetCellLimit(g_iBuryChance[iIndex], 1, 9999999999)) : (g_iBuryChance2[iIndex] = iSetCellLimit(g_iBuryChance2[iIndex], 1, 9999999999));
+			main ? (g_flBuryDuration[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Duration", 5.0)) : (g_flBuryDuration2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Duration", g_flBuryDuration[iIndex]));
+			main ? (g_flBuryDuration[iIndex] = flSetFloatLimit(g_flBuryDuration[iIndex], 0.1, 9999999999.0)) : (g_flBuryDuration2[iIndex] = flSetFloatLimit(g_flBuryDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flBuryHeight[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Height", 50.0)) : (g_flBuryHeight2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Height", g_flBuryHeight[iIndex]));
+			main ? (g_flBuryHeight[iIndex] = flSetFloatLimit(g_flBuryHeight[iIndex], 0.1, 9999999999.0)) : (g_flBuryHeight2[iIndex] = flSetFloatLimit(g_flBuryHeight2[iIndex], 0.1, 9999999999.0));
+			main ? (g_iBuryHit[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Hit", 0)) : (g_iBuryHit2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Hit", g_iBuryHit[iIndex]));
+			main ? (g_iBuryHit[iIndex] = iSetCellLimit(g_iBuryHit[iIndex], 0, 1)) : (g_iBuryHit2[iIndex] = iSetCellLimit(g_iBuryHit2[iIndex], 0, 1));
+			main ? (g_flBuryRange[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Range", 150.0)) : (g_flBuryRange2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Range", g_flBuryRange[iIndex]));
+			main ? (g_flBuryRange[iIndex] = flSetFloatLimit(g_flBuryRange[iIndex], 1.0, 9999999999.0)) : (g_flBuryRange2[iIndex] = flSetFloatLimit(g_flBuryRange2[iIndex], 1.0, 9999999999.0));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public void ST_Ability(int client)
+{
+	if (bIsTank(client))
+	{
+		int iBuryAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBuryAbility[ST_TankType(client)] : g_iBuryAbility2[ST_TankType(client)];
+		float flBuryRange = !g_bTankConfig[ST_TankType(client)] ? g_flBuryRange[ST_TankType(client)] : g_flBuryRange2[ST_TankType(client)];
+		float flTankPos[3];
+		GetClientAbsOrigin(client, flTankPos);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flBuryRange)
+				{
+					vBuryHit(iSurvivor, client, iBuryAbility);
+				}
+			}
+		}
+	}
+}
+
+void vBuryHit(int client, int owner, int enabled)
+{
+	int iBuryChance = !g_bTankConfig[ST_TankType(owner)] ? g_iBuryChance[ST_TankType(owner)] : g_iBuryChance2[ST_TankType(owner)];
+	if (enabled == 1 && GetRandomInt(1, iBuryChance) == 1 && bIsSurvivor(client) && !g_bBury[client] && bIsPlayerGrounded(client))
 	{
 		g_bBury[client] = true;
 		float flOrigin[3];
-		float flBuryHeight = !g_bTankConfig[g_iTankType[owner]] ? g_flBuryHeight[g_iTankType[owner]] : g_flBuryHeight2[g_iTankType[owner]];
+		float flBuryHeight = !g_bTankConfig[ST_TankType(owner)] ? g_flBuryHeight[ST_TankType(owner)] : g_flBuryHeight2[ST_TankType(owner)];
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] = flOrigin[2] - flBuryHeight;
 		SetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
@@ -69,7 +255,7 @@ void vBuryHit(int client, int owner, int toggle, float distance = 0.0)
 		{
 			SetEntityMoveType(client, MOVETYPE_NONE);
 		}
-		float flBuryDuration = !g_bTankConfig[g_iTankType[owner]] ? g_flBuryDuration[g_iTankType[owner]] : g_flBuryDuration2[g_iTankType[owner]];
+		float flBuryDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flBuryDuration[ST_TankType(owner)] : g_flBuryDuration2[ST_TankType(owner)];
 		DataPack dpDataPack;
 		CreateDataTimer(flBuryDuration, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
@@ -83,11 +269,20 @@ void vStopBury(int client, int owner)
 	{
 		g_bBury[client] = false;
 		float flOrigin[3];
-		float flBuryHeight = !g_bTankConfig[g_iTankType[owner]] ? g_flBuryHeight[g_iTankType[owner]] : g_flBuryHeight2[g_iTankType[owner]];
+		float flBuryHeight = !g_bTankConfig[ST_TankType(owner)] ? g_flBuryHeight[ST_TankType(owner)] : g_flBuryHeight2[ST_TankType(owner)];
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] = flOrigin[2] + flBuryHeight;
 		SetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-		vWarpEntity(client, true);
+		float flCurrentOrigin[3];
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsSurvivor(iPlayer) && iPlayer != client)
+			{
+				GetClientAbsOrigin(iPlayer, flCurrentOrigin);
+				TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
+				break;
+			}
+		}
 		if (bIsPlayerIncapacitated(client))
 		{
 			SDKCall(g_hSDKRevivePlayer, client);
@@ -98,11 +293,6 @@ void vStopBury(int client, int owner)
 			SetEntityMoveType(client, MOVETYPE_WALK);
 		}
 	}
-}
-
-void vResetBury(int client)
-{
-	g_bBury[client] = false;
 }
 
 public Action tTimerStopBury(Handle timer, DataPack pack)

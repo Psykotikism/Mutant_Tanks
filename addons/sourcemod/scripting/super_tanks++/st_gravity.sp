@@ -1,6 +1,21 @@
 // Super Tanks++: Gravity Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Gravity Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
 bool g_bGravity[MAXPLAYERS + 1];
 bool g_bGravity2[MAXPLAYERS + 1];
+bool g_bLateLoad;
+bool g_bTankConfig[ST_MAXTYPES + 1];
 float g_flGravityDuration[ST_MAXTYPES + 1];
 float g_flGravityDuration2[ST_MAXTYPES + 1];
 float g_flGravityForce[ST_MAXTYPES + 1];
@@ -16,94 +31,261 @@ int g_iGravityChance2[ST_MAXTYPES + 1];
 int g_iGravityHit[ST_MAXTYPES + 1];
 int g_iGravityHit2[ST_MAXTYPES + 1];
 
-void vGravityConfigs(KeyValues keyvalues, int index, bool main)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	main ? (g_iGravityAbility[index] = keyvalues.GetNum("Gravity Ability/Ability Enabled", 0)) : (g_iGravityAbility2[index] = keyvalues.GetNum("Gravity Ability/Ability Enabled", g_iGravityAbility[index]));
-	main ? (g_iGravityAbility[index] = iSetCellLimit(g_iGravityAbility[index], 0, 1)) : (g_iGravityAbility2[index] = iSetCellLimit(g_iGravityAbility2[index], 0, 1));
-	main ? (g_iGravityChance[index] = keyvalues.GetNum("Gravity Ability/Gravity Chance", 4)) : (g_iGravityChance2[index] = keyvalues.GetNum("Gravity Ability/Gravity Chance", g_iGravityChance[index]));
-	main ? (g_iGravityChance[index] = iSetCellLimit(g_iGravityChance[index], 1, 9999999999)) : (g_iGravityChance2[index] = iSetCellLimit(g_iGravityChance2[index], 1, 9999999999));
-	main ? (g_flGravityDuration[index] = keyvalues.GetFloat("Gravity Ability/Gravity Duration", 5.0)) : (g_flGravityDuration2[index] = keyvalues.GetFloat("Gravity Ability/Gravity Duration", g_flGravityDuration[index]));
-	main ? (g_flGravityDuration[index] = flSetFloatLimit(g_flGravityDuration[index], 0.1, 9999999999.0)) : (g_flGravityDuration2[index] = flSetFloatLimit(g_flGravityDuration2[index], 0.1, 9999999999.0));
-	main ? (g_flGravityForce[index] = keyvalues.GetFloat("Gravity Ability/Gravity Force", -50.0)) : (g_flGravityForce2[index] = keyvalues.GetFloat("Gravity Ability/Gravity Force", g_flGravityForce[index]));
-	main ? (g_flGravityForce[index] = flSetFloatLimit(g_flGravityForce[index], -100.0, 100.0)) : (g_flGravityForce2[index] = flSetFloatLimit(g_flGravityForce2[index], -100.0, 100.0));
-	main ? (g_iGravityHit[index] = keyvalues.GetNum("Gravity Ability/Gravity Hit", 0)) : (g_iGravityHit2[index] = keyvalues.GetNum("Gravity Ability/Gravity Hit", g_iGravityHit[index]));
-	main ? (g_iGravityHit[index] = iSetCellLimit(g_iGravityHit[index], 0, 1)) : (g_iGravityHit2[index] = iSetCellLimit(g_iGravityHit2[index], 0, 1));
-	main ? (g_flGravityRange[index] = keyvalues.GetFloat("Gravity Ability/Gravity Range", 150.0)) : (g_flGravityRange2[index] = keyvalues.GetFloat("Gravity Ability/Gravity Range", g_flGravityRange[index]));
-	main ? (g_flGravityRange[index] = flSetFloatLimit(g_flGravityRange[index], 1.0, 9999999999.0)) : (g_flGravityRange2[index] = flSetFloatLimit(g_flGravityRange2[index], 1.0, 9999999999.0));
-	main ? (g_flGravityValue[index] = keyvalues.GetFloat("Gravity Ability/Gravity Value", 0.3)) : (g_flGravityValue2[index] = keyvalues.GetFloat("Gravity Ability/Gravity Value", g_flGravityValue[index]));
-	main ? (g_flGravityValue[index] = flSetFloatLimit(g_flGravityValue[index], 0.1, 0.99)) : (g_flGravityValue2[index] = flSetFloatLimit(g_flGravityValue2[index], 0.1, 0.99));
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "[ST++] Gravity Ability only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
+	}
+	g_bLateLoad = late;
+	return APLRes_Success;
 }
 
-void vGravityDeath(int client)
+public void OnAllPluginsLoaded()
 {
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	if (!LibraryExists("super_tanks++"))
 	{
-		if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
+		SetFailState("No Super Tanks++ library found.");
+	}
+}
+
+public void OnMapStart()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
 		{
-			DataPack dpDataPack;
-			CreateDataTimer(0.1, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-			dpDataPack.WriteCell(GetClientUserId(client));
+			g_bGravity[iPlayer] = false;
+			g_bGravity2[iPlayer] = false;
+		}
+	}
+	if (g_bLateLoad)
+	{
+		vLateLoad(true);
+		g_bLateLoad = false;
+	}
+}
+
+public void OnConfigsExecuted()
+{
+	char sMapName[128];
+	GetCurrentMap(sMapName, sizeof(sMapName));
+	if (IsMapValid(sMapName))
+	{
+		vIsPluginAllowed();
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	g_bGravity[client] = false;
+	g_bGravity2[client] = false;
+}
+
+public void OnClientDisconnect(int client)
+{
+	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	g_bGravity[client] = false;
+	g_bGravity2[client] = false;
+}
+
+public void OnMapEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bGravity[iPlayer] = false;
+			g_bGravity2[iPlayer] = false;
 		}
 	}
 }
 
-void vGravityAbility(int client)
+void vIsPluginAllowed()
 {
-	int iGravityAbility = !g_bTankConfig[g_iTankType[client]] ? g_iGravityAbility[g_iTankType[client]] : g_iGravityAbility2[g_iTankType[client]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[client]] ? g_iCloneMode[g_iTankType[client]] : g_iCloneMode2[g_iTankType[client]];
-	if (iGravityAbility == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[client])) && bIsTank(client) && !g_bGravity[client])
+	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
+}
+
+void vHookEvent(bool hook)
+{
+	static bool hooked;
+	if (hook && !hooked)
 	{
-		g_bGravity[client] = true;
-		float flGravityForce = !g_bTankConfig[g_iTankType[client]] ? g_flGravityForce[g_iTankType[client]] : g_flGravityForce2[g_iTankType[client]];
-		int iBlackhole = CreateEntityByName("point_push");
-		if (bIsValidEntity(iBlackhole))
+		HookEvent("player_death", eEventPlayerDeath);
+		hooked = true;
+	}
+	else if (!hook && hooked)
+	{
+		UnhookEvent("player_death", eEventPlayerDeath);
+		hooked = false;
+	}
+}
+
+void vLateLoad(bool late)
+{
+	if (late)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			float flOrigin[3];
-			float flAngles[3];
-			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-			GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
-			flAngles[0] += -90.0;
-			DispatchKeyValueVector(iBlackhole, "origin", flOrigin);
-			DispatchKeyValueVector(iBlackhole, "angles", flAngles);
-			DispatchKeyValue(iBlackhole, "radius", "750");
-			DispatchKeyValueFloat(iBlackhole, "magnitude", flGravityForce);
-			DispatchKeyValue(iBlackhole, "spawnflags", "8");
-			vSetEntityParent(iBlackhole, client);
-			AcceptEntityInput(iBlackhole, "Enable");
-			SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
-			if (bIsL4D2Game())
+			if (bIsValidClient(iPlayer))
 			{
-				SetEntProp(iBlackhole, Prop_Send, "m_glowColorOverride", client);
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
 			}
 		}
 	}
 }
 
-void vGravityHit(int client, int owner, int toggle, float distance = 0.0)
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	int iGravityAbility = !g_bTankConfig[g_iTankType[owner]] ? g_iGravityAbility[g_iTankType[owner]] : g_iGravityAbility2[g_iTankType[owner]];
-	int iGravityChance = !g_bTankConfig[g_iTankType[owner]] ? g_iGravityChance[g_iTankType[owner]] : g_iGravityChance2[g_iTankType[owner]];
-	int iGravityHit = !g_bTankConfig[g_iTankType[owner]] ? g_iGravityHit[g_iTankType[owner]] : g_iGravityHit2[g_iTankType[owner]];
-	float flGravityRange = !g_bTankConfig[g_iTankType[owner]] ? g_flGravityRange[g_iTankType[owner]] : g_flGravityRange2[g_iTankType[owner]];
-	int iCloneMode = !g_bTankConfig[g_iTankType[owner]] ? g_iCloneMode[g_iTankType[owner]] : g_iCloneMode2[g_iTankType[owner]];
-	if (((toggle == 1 && distance <= flGravityRange) || toggle == 2) && ((toggle == 1 && iGravityAbility == 1) || (toggle == 2 && iGravityHit == 1)) && GetRandomInt(1, iGravityChance) == 1 && (iCloneMode == 1 || (iCloneMode == 0 && !g_bCloned[owner])) && bIsSurvivor(client) && !g_bGravity2[client])
+	if (ST_PluginEnabled() && damage > 0.0)
+	{
+		if (bIsTank(attacker) && bIsSurvivor(victim))
+		{
+			char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			{
+				int iGravityHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iGravityHit[ST_TankType(attacker)] : g_iGravityHit2[ST_TankType(attacker)];
+				vGravityHit(victim, attacker, iGravityHit);
+			}
+		}
+	}
+}
+
+public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int iUserId = event.GetInt("userid");
+	int iPlayer = GetClientOfUserId(iUserId);
+	if (bIsTank(iPlayer))
+	{
+		int iProp = -1;
+		while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
+		{
+			if (bIsL4D2Game())
+			{
+				int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
+				if (iOwner == iPlayer)
+				{
+					AcceptEntityInput(iProp, "Kill");
+				}
+			}
+			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+			if (iOwner == iPlayer)
+			{
+				AcceptEntityInput(iProp, "Kill");
+			}
+		}
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
+			{
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+				dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+				dpDataPack.WriteCell(GetClientUserId(iPlayer));
+			}
+		}
+	}
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iGravityAbility[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Enabled", 0)) : (g_iGravityAbility2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Enabled", g_iGravityAbility[iIndex]));
+			main ? (g_iGravityAbility[iIndex] = iSetCellLimit(g_iGravityAbility[iIndex], 0, 1)) : (g_iGravityAbility2[iIndex] = iSetCellLimit(g_iGravityAbility2[iIndex], 0, 1));
+			main ? (g_iGravityChance[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Chance", 4)) : (g_iGravityChance2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Chance", g_iGravityChance[iIndex]));
+			main ? (g_iGravityChance[iIndex] = iSetCellLimit(g_iGravityChance[iIndex], 1, 9999999999)) : (g_iGravityChance2[iIndex] = iSetCellLimit(g_iGravityChance2[iIndex], 1, 9999999999));
+			main ? (g_flGravityDuration[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", 5.0)) : (g_flGravityDuration2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", g_flGravityDuration[iIndex]));
+			main ? (g_flGravityDuration[iIndex] = flSetFloatLimit(g_flGravityDuration[iIndex], 0.1, 9999999999.0)) : (g_flGravityDuration2[iIndex] = flSetFloatLimit(g_flGravityDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flGravityForce[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", -50.0)) : (g_flGravityForce2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", g_flGravityForce[iIndex]));
+			main ? (g_flGravityForce[iIndex] = flSetFloatLimit(g_flGravityForce[iIndex], -100.0, 100.0)) : (g_flGravityForce2[iIndex] = flSetFloatLimit(g_flGravityForce2[iIndex], -100.0, 100.0));
+			main ? (g_iGravityHit[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Hit", 0)) : (g_iGravityHit2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Hit", g_iGravityHit[iIndex]));
+			main ? (g_iGravityHit[iIndex] = iSetCellLimit(g_iGravityHit[iIndex], 0, 1)) : (g_iGravityHit2[iIndex] = iSetCellLimit(g_iGravityHit2[iIndex], 0, 1));
+			main ? (g_flGravityRange[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", 150.0)) : (g_flGravityRange2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", g_flGravityRange[iIndex]));
+			main ? (g_flGravityRange[iIndex] = flSetFloatLimit(g_flGravityRange[iIndex], 1.0, 9999999999.0)) : (g_flGravityRange2[iIndex] = flSetFloatLimit(g_flGravityRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flGravityValue[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", 0.3)) : (g_flGravityValue2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", g_flGravityValue[iIndex]));
+			main ? (g_flGravityValue[iIndex] = flSetFloatLimit(g_flGravityValue[iIndex], 0.1, 0.99)) : (g_flGravityValue2[iIndex] = flSetFloatLimit(g_flGravityValue2[iIndex], 0.1, 0.99));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public void ST_Ability(int client)
+{
+	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
+	if (iGravityAbility == 1 && bIsTank(client))
+	{
+		if (!g_bGravity[client])
+		{
+			g_bGravity[client] = true;
+			float flGravityForce = !g_bTankConfig[ST_TankType(client)] ? g_flGravityForce[ST_TankType(client)] : g_flGravityForce2[ST_TankType(client)];
+			int iBlackhole = CreateEntityByName("point_push");
+			if (bIsValidEntity(iBlackhole))
+			{
+				float flOrigin[3];
+				float flAngles[3];
+				GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
+				GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+				flAngles[0] += -90.0;
+				DispatchKeyValueVector(iBlackhole, "origin", flOrigin);
+				DispatchKeyValueVector(iBlackhole, "angles", flAngles);
+				DispatchKeyValue(iBlackhole, "radius", "750");
+				DispatchKeyValueFloat(iBlackhole, "magnitude", flGravityForce);
+				DispatchKeyValue(iBlackhole, "spawnflags", "8");
+				vSetEntityParent(iBlackhole, client);
+				AcceptEntityInput(iBlackhole, "Enable");
+				SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
+				if (bIsL4D2Game())
+				{
+					SetEntProp(iBlackhole, Prop_Send, "m_glowColorOverride", client);
+				}
+			}
+		}
+		float flGravityRange = !g_bTankConfig[ST_TankType(client)] ? g_flGravityRange[ST_TankType(client)] : g_flGravityRange2[ST_TankType(client)];
+		float flTankPos[3];
+		GetClientAbsOrigin(client, flTankPos);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flGravityRange)
+				{
+					vGravityHit(iSurvivor, client, iGravityAbility);
+				}
+			}
+		}
+	}
+}
+
+void vGravityHit(int client, int owner, int enabled)
+{
+	int iGravityChance = !g_bTankConfig[ST_TankType(owner)] ? g_iGravityChance[ST_TankType(owner)] : g_iGravityChance2[ST_TankType(owner)];
+	if (enabled == 1 && GetRandomInt(1, iGravityChance) == 1 && bIsSurvivor(client) && !g_bGravity2[client])
 	{
 		g_bGravity2[client] = true;
-		float flGravityValue = !g_bTankConfig[g_iTankType[owner]] ? g_flGravityValue[g_iTankType[owner]] : g_flGravityValue2[g_iTankType[owner]];
+		float flGravityValue = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityValue[ST_TankType(owner)] : g_flGravityValue2[ST_TankType(owner)];
 		SetEntityGravity(client, flGravityValue);
-		float flGravityDuration = !g_bTankConfig[g_iTankType[owner]] ? g_flGravityDuration[g_iTankType[owner]] : g_flGravityDuration2[g_iTankType[owner]];
+		float flGravityDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityDuration[ST_TankType(owner)] : g_flGravityDuration2[ST_TankType(owner)];
 		DataPack dpDataPack;
 		CreateDataTimer(flGravityDuration, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
-}
-
-void vResetGravity(int client)
-{
-	g_bGravity[client] = false;
-	g_bGravity2[client] = false;
 }
 
 public Action tTimerStopGravity(Handle timer, DataPack pack)
