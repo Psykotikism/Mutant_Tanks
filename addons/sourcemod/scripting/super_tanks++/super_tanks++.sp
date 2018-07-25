@@ -135,7 +135,7 @@ public int iNative_TankType(Handle plugin, int numParams)
 	int iType;
 	if (bIsTank(iTank))
 	{
-		iType = ST_TankType(iTank);
+		iType = g_iTankType[iTank];
 	}
 	return iType;
 }
