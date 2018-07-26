@@ -182,6 +182,7 @@ public void OnPluginStart()
 	g_cvSTFindConVar[2] = FindConVar("sv_gametypes");
 	g_cvSTFindConVar[3] = FindConVar("z_max_player_zombies");
 	g_cvSTFindConVar[0].AddChangeHook(vSTGameDifficultyCvar);
+	HookEvent("round_start", eEventRoundStart);
 	TopMenu tmAdminMenu;
 	if (LibraryExists("adminmenu") && ((tmAdminMenu = GetAdminTopMenu()) != null))
 	{
@@ -854,7 +855,6 @@ void vHookEvents(bool hook)
 		HookEvent("finale_vehicle_ready", eEventFinaleVehicleReady);
 		HookEvent("player_death", eEventPlayerDeath);
 		HookEvent("player_incapacitated", eEventPlayerIncapacitated);
-		HookEvent("round_start", eEventRoundStart);
 		HookEvent("tank_spawn", eEventTankSpawn);
 		hooked = true;
 	}
@@ -867,7 +867,6 @@ void vHookEvents(bool hook)
 		UnhookEvent("finale_vehicle_ready", eEventFinaleVehicleReady);
 		UnhookEvent("player_death", eEventPlayerDeath);
 		UnhookEvent("player_incapacitated", eEventPlayerIncapacitated);
-		UnhookEvent("round_start", eEventRoundStart);
 		UnhookEvent("tank_spawn", eEventTankSpawn);
 		hooked = false;
 	}
