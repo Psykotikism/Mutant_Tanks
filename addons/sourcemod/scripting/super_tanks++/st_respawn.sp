@@ -161,9 +161,18 @@ int iRespawn(int client, int count)
 				break;
 			}
 		}
-	}	 
+	}
 	return iTank;
-} 
+}
+
+bool bIsPlayerIncapacitated(int client)
+{
+	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
+	{
+		return true;
+	}
+	return false;
+}
 
 public Action tTimerRespawn(Handle timer, DataPack pack)
 {

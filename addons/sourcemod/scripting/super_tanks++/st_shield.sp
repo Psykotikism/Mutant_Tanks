@@ -286,7 +286,8 @@ void vShield(int client, bool shield)
 			SetEntityModel(iShield, MODEL_SHIELD);
 			DispatchKeyValueVector(iShield, "origin", flOrigin);
 			DispatchSpawn(iShield);
-			vSetEntityParent(iShield, client);
+			SetVariantString("!activator");
+			AcceptEntityInput(iShield, "SetParent", client);
 			SetEntityRenderMode(iShield, RENDER_TRANSTEXTURE);
 			SetEntityRenderColor(iShield, iRed, iGreen, iBlue, 50);
 			SetEntProp(iShield, Prop_Send, "m_CollisionGroup", 1);
@@ -316,6 +317,16 @@ void vShield(int client, bool shield)
 		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		g_bShield[client] = false;
 	}
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }
 
 public Action tTimerShield(Handle timer, any userid)

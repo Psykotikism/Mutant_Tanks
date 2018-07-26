@@ -12,6 +12,20 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
+#define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
+#define MODEL_TANK "models/infected/hulk.mdl"
+#define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
+#define MODEL_WITCH "models/infected/witch.mdl"
+#define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl"
+#define PARTICLE_BLOOD "boomer_explode_D"
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+#define PARTICLE_FIRE "aircraft_destroy_fastFireTrail"
+#define PARTICLE_ICE "steam_manhole"
+#define PARTICLE_METEOR "smoke_medium_01"
+#define PARTICLE_SMOKE "smoker_smokecloud"
+#define PARTICLE_SPIT "spitter_projectile"
+
 bool g_bCmdUsed;
 bool g_bGeneralConfig;
 bool g_bLateLoad;
@@ -43,13 +57,11 @@ float g_flRunSpeed[ST_MAXTYPES + 1];
 float g_flRunSpeed2[ST_MAXTYPES + 1];
 float g_flThrowInterval[ST_MAXTYPES + 1];
 float g_flThrowInterval2[ST_MAXTYPES + 1];
-
 Handle g_hAbility;
 Handle g_hConfigs;
 Handle g_hRockBreak;
 Handle g_hRockThrow;
 Handle g_hSpawn;
-
 int g_iAnnounceArrival;
 int g_iAnnounceArrival2;
 int g_iAnnounceDeath;
@@ -58,6 +70,7 @@ int g_iBulletImmunity[ST_MAXTYPES + 1];
 int g_iBulletImmunity2[ST_MAXTYPES + 1];
 int g_iConfigEnable;
 int g_iCreateBackup;
+int g_iCurrentMode;
 int g_iDisplayHealth;
 int g_iDisplayHealth2;
 int g_iExplosiveImmunity[ST_MAXTYPES + 1];
@@ -489,7 +502,7 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 {
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
-	if (g_bPluginEnabled && bIsTank(iTank))
+	if (bIsTank(iTank))
 	{
 		int iProp = -1;
 		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
@@ -553,54 +566,42 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 {
 	int iUserId = event.GetInt("userid");
 	int iPlayer = GetClientOfUserId(iUserId);
-	if (g_bPluginEnabled)
+	if (bIsValidClient(iPlayer))
 	{
-		if (bIsValidClient(iPlayer))
+		int iGlowEffect = !g_bTankConfig[g_iTankType[iPlayer]] ? g_iGlowEffect[g_iTankType[iPlayer]] : g_iGlowEffect2[g_iTankType[iPlayer]];
+		if (iGlowEffect == 1 && bIsL4D2Game())
 		{
-			int iGlowEffect = !g_bTankConfig[g_iTankType[iPlayer]] ? g_iGlowEffect[g_iTankType[iPlayer]] : g_iGlowEffect2[g_iTankType[iPlayer]];
-			if (iGlowEffect == 1 && bIsL4D2Game())
+			SetEntProp(iPlayer, Prop_Send, "m_iGlowType", 0);
+			SetEntProp(iPlayer, Prop_Send, "m_glowColorOverride", 0);
+		}
+		int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
+		if (bIsTank(iPlayer, false) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iPlayer))))
+		{
+			char sName[MAX_NAME_LENGTH + 1];
+			sName = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sCustomName[g_iTankType[iPlayer]] : g_sCustomName2[g_iTankType[iPlayer]];
+			int iAnnounceDeath = !g_bGeneralConfig ? g_iAnnounceDeath : g_iAnnounceDeath2;
+			if (iAnnounceDeath == 1)
 			{
-				SetEntProp(iPlayer, Prop_Send, "m_iGlowType", 0);
-				SetEntProp(iPlayer, Prop_Send, "m_glowColorOverride", 0);
+				switch (GetRandomInt(1, 10))
+				{
+					case 1: PrintToChatAll("\x04%s\x05 %s\x01 is defeated!", ST_PREFIX, sName);
+					case 2: PrintToChatAll("\x04%s\x01 The survivors defeated\x05 %s\x01!", ST_PREFIX, sName);
+					case 3: PrintToChatAll("\x04%s\x05 %s\x01 goes to hell!", ST_PREFIX, sName);
+					case 4: PrintToChatAll("\x04%s\x01 Is\x05 %s\x01 really dead...?", ST_PREFIX, sName);
+					case 5: PrintToChatAll("\x04%s\x05 %s\x01 lost the challenge against the survivors!", ST_PREFIX, sName);
+					case 6: PrintToChatAll("\x04%s\x01 The\x05 %s\x01 failed to kill the survivors!", ST_PREFIX, sName);
+					case 7: PrintToChatAll("\x04%s\x05 %s\x01 has met their demise!", ST_PREFIX, sName);
+					case 8: PrintToChatAll("\x04%s\x01 Yay!\x05 %s\x01 is dead!", ST_PREFIX, sName);
+					case 9: PrintToChatAll("\x04%s\x05 %s\x01 left the game...", ST_PREFIX, sName);
+					case 10: PrintToChatAll("\x04%s\x01 It seems\x05 %s\x01 could not beat the survivors after all...", ST_PREFIX, sName);
+				}
 			}
-			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-			if (bIsTank(iPlayer, false) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iPlayer))))
+			int iProp = -1;
+			while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 			{
-				char sName[MAX_NAME_LENGTH + 1];
-				sName = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sCustomName[g_iTankType[iPlayer]] : g_sCustomName2[g_iTankType[iPlayer]];
-				int iAnnounceDeath = !g_bGeneralConfig ? g_iAnnounceDeath : g_iAnnounceDeath2;
-				if (iAnnounceDeath == 1)
-				{
-					switch (GetRandomInt(1, 10))
-					{
-						case 1: PrintToChatAll("\x04%s\x05 %s\x01 is defeated!", ST_PREFIX, sName);
-						case 2: PrintToChatAll("\x04%s\x01 The survivors defeated\x05 %s\x01!", ST_PREFIX, sName);
-						case 3: PrintToChatAll("\x04%s\x05 %s\x01 goes to hell!", ST_PREFIX, sName);
-						case 4: PrintToChatAll("\x04%s\x01 Is\x05 %s\x01 really dead...?", ST_PREFIX, sName);
-						case 5: PrintToChatAll("\x04%s\x05 %s\x01 lost the challenge against the survivors!", ST_PREFIX, sName);
-						case 6: PrintToChatAll("\x04%s\x01 The\x05 %s\x01 failed to kill the survivors!", ST_PREFIX, sName);
-						case 7: PrintToChatAll("\x04%s\x05 %s\x01 has met their demise!", ST_PREFIX, sName);
-						case 8: PrintToChatAll("\x04%s\x01 Yay!\x05 %s\x01 is dead!", ST_PREFIX, sName);
-						case 9: PrintToChatAll("\x04%s\x05 %s\x01 left the game...", ST_PREFIX, sName);
-						case 10: PrintToChatAll("\x04%s\x01 It seems\x05 %s\x01 could not beat the survivors after all...", ST_PREFIX, sName);
-					}
-				}
-				int iProp = -1;
-				while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-				{
-					char sModel[128];
-					GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-					if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
-					{
-						int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-						if (iOwner == iPlayer)
-						{
-							SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-							AcceptEntityInput(iProp, "Kill");
-						}
-					}
-				}
-				while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+				char sModel[128];
+				GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+				if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
 				{
 					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 					if (iOwner == iPlayer)
@@ -609,8 +610,17 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 						AcceptEntityInput(iProp, "Kill");
 					}
 				}
-				CreateTimer(5.0, tTimerTankWave, g_iTankWave, TIMER_FLAG_NO_MAPCHANGE);
 			}
+			while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+			{
+				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+				if (iOwner == iPlayer)
+				{
+					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+					AcceptEntityInput(iProp, "Kill");
+				}
+			}
+			CreateTimer(5.0, tTimerTankWave, g_iTankWave, TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 }
@@ -620,7 +630,7 @@ public Action eEventPlayerIncapacitated(Event event, const char[] name, bool don
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (g_bPluginEnabled && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		CreateTimer(3.0, tTimerKillStuckTank, iUserId, TIMER_FLAG_NO_MAPCHANGE);
 	}
@@ -628,10 +638,7 @@ public Action eEventPlayerIncapacitated(Event event, const char[] name, bool don
 
 public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (g_bPluginEnabled)
-	{
-		g_iTankWave = 0;
-	}
+	g_iTankWave = 0;
 }
 
 public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast)
@@ -639,7 +646,7 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
-	if (g_bPluginEnabled && bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
+	if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
 		if (g_bCmdUsed)
 		{
@@ -951,6 +958,30 @@ void vLateLoad(bool late)
 	}
 }
 
+void vAttachParticle(int client, char[] particlename, float time = 0.0, float origin = 0.0)
+{
+	if (bIsValidClient(client))
+	{
+		int iParticle = CreateEntityByName("info_particle_system");
+		if (IsValidEntity(iParticle))
+		{
+			float flPos[3];
+			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
+			flPos[2] += origin;
+			DispatchKeyValue(iParticle, "scale", "");
+			DispatchKeyValue(iParticle, "effect_name", particlename);
+			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
+			DispatchSpawn(iParticle);
+			ActivateEntity(iParticle);
+			AcceptEntityInput(iParticle, "Enable");
+			AcceptEntityInput(iParticle, "Start");
+			vSetEntityParent(iParticle, client);
+			iParticle = EntIndexToEntRef(iParticle);
+			vDeleteEntity(iParticle, time);
+		}
+	}
+}
+
 void vAttachProps(int client, int red, int green, int blue, int alpha, int red2, int green2, int blue2, int alpha2, int red3, int green3, int blue3, int alpha3, int red4, int green4, int blue4, int alpha4, int red5, int green5, int blue5, int alpha5)
 {
 	char sSet[6][4];
@@ -1203,6 +1234,92 @@ void vCopyVector(float source[3], float target[3])
 	target[2] = source[2];
 }
 
+void vDeleteEntity(int entity, float time = 0.1)
+{
+	if (bIsValidEntRef(entity))
+	{
+		char sVariant[64];
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		AcceptEntityInput(entity, "ClearParent");
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, "AddOutput");
+		AcceptEntityInput(entity, "FireUser1");
+	}
+}
+
+void vGetCurrentCount(char[] config)
+{
+	int iPlayerCount = iGetPlayerCount();
+	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/playercount_configs/%d.cfg", iPlayerCount);
+}
+
+void vGetCurrentDay(char[] config)
+{
+	char sDay[9];
+	char sDayNumber[2];
+	FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
+	int iDayNumber = StringToInt(sDayNumber);
+	switch (iDayNumber)
+	{
+		case 6: sDay = "saturday";
+		case 5: sDay = "friday";
+		case 4: sDay = "thursday";
+		case 3: sDay = "wednesday";
+		case 2: sDay = "tuesday";
+		case 1: sDay = "monday";
+		default: sDay = "sunday";
+	}
+	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/daily_configs/%s.cfg", sDay);
+}
+
+void vGetCurrentDifficulty(ConVar convar, char[] config)
+{
+	char sDifficulty[11];
+	convar.GetString(sDifficulty, sizeof(sDifficulty));
+	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/difficulty_configs/%s.cfg", sDifficulty);
+}
+
+void vGetCurrentMap(char[] config)
+{
+	char sMap[64];
+	GetCurrentMap(sMap, sizeof(sMap));
+	Format(config, strlen(config), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_map_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
+}
+
+void vGetCurrentMode(ConVar convar, char[] config)
+{
+	char sMode[64];
+	convar.GetString(sMode, sizeof(sMode));
+	Format(config, strlen(config), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
+}
+
+void vMultiTargetFilters(int toggle)
+{
+	switch (toggle)
+	{
+		case 0:
+		{
+			RemoveMultiTargetFilter("@smokers", bSmokerFilter);
+			RemoveMultiTargetFilter("@boomers", bBoomerFilter);
+			RemoveMultiTargetFilter("@hunters", bHunterFilter);
+			RemoveMultiTargetFilter("@spitters", bSpitterFilter);
+			RemoveMultiTargetFilter("@jockeys", bJockeyFilter);
+			RemoveMultiTargetFilter("@chargers", bChargerFilter);
+			RemoveMultiTargetFilter("@tanks", bTankFilter);
+		}
+		case 1:
+		{
+			AddMultiTargetFilter("@smokers", bSmokerFilter, "all Smokers", false);
+			AddMultiTargetFilter("@boomers", bBoomerFilter, "all Boomers", false);
+			AddMultiTargetFilter("@hunters", bHunterFilter, "all Hunters", false);
+			AddMultiTargetFilter("@spitters", bSpitterFilter, "all Spitters", false);
+			AddMultiTargetFilter("@jockeys", bJockeyFilter, "all Jockeys", false);
+			AddMultiTargetFilter("@chargers", bChargerFilter, "all Chargers", false);
+			AddMultiTargetFilter("@tanks", bTankFilter, "all Tanks", false);
+		}
+	}
+}
+
 void vParticleEffects(int client)
 {
 	int iParticleEffect = !g_bTankConfig[g_iTankType[client]] ? g_iParticleEffect[g_iTankType[client]] : g_iParticleEffect2[g_iTankType[client]];
@@ -1241,6 +1358,21 @@ void vParticleEffects(int client)
 	}
 }
 
+void vPrecacheParticle(char[] particlename)
+{
+	int iParticle = CreateEntityByName("info_particle_system");
+	if (IsValidEntity(iParticle))
+	{
+		DispatchKeyValue(iParticle, "effect_name", particlename);
+		DispatchSpawn(iParticle);
+		ActivateEntity(iParticle);
+		AcceptEntityInput(iParticle, "Start");
+		vSetEntityParent(iParticle, iParticle);
+		iParticle = EntIndexToEntRef(iParticle);
+		vDeleteEntity(iParticle);
+	}
+}
+
 void vSetColor(int client, int value)
 {
 	char sSet[2][16];
@@ -1275,6 +1407,12 @@ void vSetColor(int client, int value)
 	SetEntityRenderMode(client, RENDER_NORMAL);
 	SetEntityRenderColor(client, iRed, iGreen, iBlue, iAlpha);
 	g_iTankType[client] = value;
+}
+
+void vSetEntityParent(int entity, int parent)
+{
+	SetVariantString("!activator");
+	AcceptEntityInput(entity, "SetParent", parent);
 }
 
 void vSetName(int client, char[] name = "Tank")
@@ -1414,6 +1552,278 @@ void vThrowInterval(int client, float time)
 			SetEntPropFloat(iAbility, Prop_Send, "m_duration", time);
 			SetEntPropFloat(iAbility, Prop_Send, "m_timestamp", GetGameTime() + time);
 		}
+	}
+}
+
+int iGetHumanCount()
+{
+	int iHumanCount;
+	for (int iHuman = 1; iHuman <= MaxClients; iHuman++)
+	{
+		if (bIsHumanSurvivor(iHuman))
+		{
+			iHumanCount++;
+		}
+	}
+	return iHumanCount;
+}
+
+int iGetPlayerCount()
+{
+	int iPlayerCount;
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidHumanClient(iPlayer))
+		{
+			iPlayerCount++;
+		}
+	}
+	return iPlayerCount;
+}
+
+int iGetRGBColor(int red, int green, int blue) 
+{
+	return (blue * 65536) + (green * 256) + red;
+}
+
+int iGetTankCount()
+{
+	int iTankCount;
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank))
+		{
+			iTankCount++;
+		}
+	}
+	return iTankCount;
+}
+
+bool bHasIdlePlayer(int client)
+{
+	int iIdler = GetClientOfUserId(GetEntData(client, FindSendPropInfo("SurvivorBot", "m_humanSpectatorUserID")));
+	if (iIdler)
+	{
+		if (IsClientInGame(iIdler) && !IsFakeClient(iIdler) && (GetClientTeam(iIdler) != 2))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool bIsFinaleMap()
+{
+	return FindEntityByClassname(-1, "trigger_finale") != -1;
+}
+
+bool bIsHumanSurvivor(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && !IsFakeClient(client) && !bHasIdlePlayer(client) && !bIsPlayerIdle(client);
+}
+
+bool bIsPlayerBurning(int client)
+{
+	if (GetEntPropFloat(client, Prop_Send, "m_burnPercent") > 0)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool bIsPlayerIdle(int client)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (!IsClientInGame(iPlayer) || GetClientTeam(iPlayer) != 2 || !IsFakeClient(iPlayer) || !bHasIdlePlayer(iPlayer))
+		{
+			continue;
+		}
+		int iIdler = GetClientOfUserId(GetEntData(iPlayer, FindSendPropInfo("SurvivorBot", "m_humanSpectatorUserID")));
+		if (iIdler == client)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool bIsPlayerIncapacitated(int client)
+{
+	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disabled)
+{
+	if (convar == null)
+	{
+		return false;
+	}
+	if (mode != 0)
+	{
+		g_iCurrentMode = 0;
+		int iGameMode = CreateEntityByName("info_gamemode");
+		DispatchSpawn(iGameMode);
+		HookSingleEntityOutput(iGameMode, "OnCoop", vGameMode, true);
+		HookSingleEntityOutput(iGameMode, "OnSurvival", vGameMode, true);
+		HookSingleEntityOutput(iGameMode, "OnVersus", vGameMode, true);
+		HookSingleEntityOutput(iGameMode, "OnScavenge", vGameMode, true);
+		ActivateEntity(iGameMode);
+		AcceptEntityInput(iGameMode, "PostSpawnActivate");
+		AcceptEntityInput(iGameMode, "Kill");
+		if (g_iCurrentMode == 0 || !(mode & g_iCurrentMode))
+		{
+			return false;
+		}
+	}
+	char sGameMode[64];
+	char sGameModes[64];
+	convar.GetString(sGameMode, sizeof(sGameMode));
+	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
+	if (strcmp(enabled, ""))
+	{
+		Format(sGameModes, sizeof(sGameModes), ",%s,", enabled);
+		if (StrContains(sGameModes, sGameMode, false) == -1)
+		{
+			return false;
+		}
+	}
+	if (strcmp(disabled, ""))
+	{
+		Format(sGameModes, sizeof(sGameModes), ",%s,", disabled);
+		if (StrContains(sGameModes, sGameMode, false) != -1)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
+}
+
+bool bIsValidEntRef(int entity)
+{
+	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
+}
+
+bool bIsValidHumanClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client) && !IsFakeClient(client);
+}
+
+public bool bBoomerFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsBoomer(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+public bool bChargerFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsCharger(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+public bool bHunterFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsHunter(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+public bool bJockeyFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsJockey(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+public bool bSmokerFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsSmoker(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+public bool bSpitterFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsSpitter(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+public bool bTankFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsTank(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+	return true;
+}
+
+public void vGameMode(const char[] output, int caller, int activator, float delay)
+{
+	if (strcmp(output, "OnCoop") == 0)
+	{
+		g_iCurrentMode = 1;
+	}
+	else if (strcmp(output, "OnVersus") == 0)
+	{
+		g_iCurrentMode = 2;
+	}
+	else if (strcmp(output, "OnSurvival") == 0)
+	{
+		g_iCurrentMode = 4;
+	}
+	else if (strcmp(output, "OnScavenge") == 0)
+	{
+		g_iCurrentMode = 8;
 	}
 }
 

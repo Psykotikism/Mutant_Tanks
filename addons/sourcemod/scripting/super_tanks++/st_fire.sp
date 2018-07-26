@@ -239,3 +239,8 @@ void vFireHit(int client, int owner, int enabled)
 		vFire(owner, flPos);
 	}
 }
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}

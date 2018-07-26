@@ -257,6 +257,11 @@ void vStopIce(int client)
 	}
 }
 
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
 public Action tTimerStopIce(Handle timer, DataPack pack)
 {
 	pack.Reset();

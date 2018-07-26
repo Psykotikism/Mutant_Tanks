@@ -309,3 +309,38 @@ void vBombHit(int client, int owner, int enabled)
 		vBomb(owner, flPosition);
 	}
 }
+
+void vDeleteEntity(int entity, float time = 0.1)
+{
+	if (bIsValidEntRef(entity))
+	{
+		char sVariant[64];
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		AcceptEntityInput(entity, "ClearParent");
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, "AddOutput");
+		AcceptEntityInput(entity, "FireUser1");
+	}
+}
+
+void vDeleteParticle(int entity, float time, char[] input)
+{
+	if (bIsValidEntRef(entity))
+	{
+		char sVariant[64];
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		AcceptEntityInput(entity, "ClearParent");
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, input);
+	}
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntRef(int entity)
+{
+	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
+}

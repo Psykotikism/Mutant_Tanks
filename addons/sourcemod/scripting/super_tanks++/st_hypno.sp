@@ -268,6 +268,11 @@ int iGetRandomSurvivor(int client)
 	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
 }
 
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
 public Action tTimerStopHypno(Handle timer, any userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);

@@ -162,3 +162,27 @@ int iGetWitchCount()
 	}
 	return iWitchCount;
 }
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
+}
+
+bool bIsWitch(int client)
+{
+	if (IsValidEntity(client))
+	{
+		char sClassname[32];
+		GetEntityClassname(client, sClassname, sizeof(sClassname));
+		if (strcmp(sClassname, "witch") == 0)
+		{
+			return true;
+		}
+	}
+	return false;
+}

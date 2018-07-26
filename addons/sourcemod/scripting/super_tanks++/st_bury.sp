@@ -295,6 +295,29 @@ void vStopBury(int client, int owner)
 	}
 }
 
+bool bIsPlayerGrounded(int client)
+{
+	if (GetEntProp(client, Prop_Send, "m_fFlags") & FL_ONGROUND)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool bIsPlayerIncapacitated(int client)
+{
+	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
 public Action tTimerStopBury(Handle timer, DataPack pack)
 {
 	pack.Reset();

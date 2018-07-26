@@ -195,6 +195,30 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_Ability(int client)
+{
+	if (bIsTank(client))
+	{
+		int iStunAbility = !g_bTankConfig[ST_TankType(client)] ? g_iStunAbility[ST_TankType(client)] : g_iStunAbility2[ST_TankType(client)];
+		float flStunRange = !g_bTankConfig[ST_TankType(client)] ? g_flStunRange[ST_TankType(client)] : g_flStunRange2[ST_TankType(client)];
+		float flTankPos[3];
+		GetClientAbsOrigin(client, flTankPos);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flStunRange)
+				{
+					vStunHit(iSurvivor, client, iStunAbility);
+				}
+			}
+		}
+	}
+}
+
 void vStunHit(int client, int owner, int enabled)
 {
 	int iStunChance = !g_bTankConfig[ST_TankType(owner)] ? g_iStunChance[ST_TankType(owner)] : g_iStunChance2[ST_TankType(owner)];
@@ -209,6 +233,11 @@ void vStunHit(int client, int owner, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerStopStun(Handle timer, DataPack pack)

@@ -341,31 +341,6 @@ public Action SetTransmit(int entity, int client)
 	return Plugin_Continue;
 }
 
-public void ST_Configs(char[] savepath, int limit, bool main)
-{
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
-	{
-		char sName[MAX_NAME_LENGTH + 1];
-		Format(sName, sizeof(sName), "Tank %d", iIndex);
-		if (kvSuperTanks.JumpToKey(sName))
-		{
-			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
-			main ? (g_iDropAbility[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Enabled", 0)) : (g_iDropAbility2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Enabled", g_iDropAbility[iIndex]));
-			main ? (g_iDropAbility[iIndex] = iSetCellLimit(g_iDropAbility[iIndex], 0, 1)) : (g_iDropAbility2[iIndex] = iSetCellLimit(g_iDropAbility2[iIndex], 0, 1));
-			main ? (g_iDropChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Chance", 4)) : (g_iDropChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Chance", g_iDropChance[iIndex]));
-			main ? (g_iDropChance[iIndex] = iSetCellLimit(g_iDropChance[iIndex], 1, 9999999999)) : (g_iDropChance2[iIndex] = iSetCellLimit(g_iDropChance2[iIndex], 1, 9999999999));
-			main ? (g_iDropClipChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", 4)) : (g_iDropClipChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", g_iDropClipChance[iIndex]));
-			main ? (g_iDropClipChance[iIndex] = iSetCellLimit(g_iDropClipChance[iIndex], 1, 9999999999)) : (g_iDropClipChance2[iIndex] = iSetCellLimit(g_iDropClipChance2[iIndex], 1, 9999999999));
-			main ? (g_flDropWeaponScale[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", 1.0)) : (g_flDropWeaponScale2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", g_flDropWeaponScale[iIndex]));
-			main ? (g_flDropWeaponScale[iIndex] = flSetFloatLimit(g_flDropWeaponScale[iIndex], 1.0, 2.0)) : (g_flDropWeaponScale2[iIndex] = flSetFloatLimit(g_flDropWeaponScale2[iIndex], 1.0, 2.0));
-			kvSuperTanks.Rewind();
-		}
-	}
-	delete kvSuperTanks;
-}
-
 public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int iUserId = event.GetInt("userid");
@@ -452,6 +427,31 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 	vDeleteDrop(iPlayer);
 }
 
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iDropAbility[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Enabled", 0)) : (g_iDropAbility2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Enabled", g_iDropAbility[iIndex]));
+			main ? (g_iDropAbility[iIndex] = iSetCellLimit(g_iDropAbility[iIndex], 0, 1)) : (g_iDropAbility2[iIndex] = iSetCellLimit(g_iDropAbility2[iIndex], 0, 1));
+			main ? (g_iDropChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Chance", 4)) : (g_iDropChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Chance", g_iDropChance[iIndex]));
+			main ? (g_iDropChance[iIndex] = iSetCellLimit(g_iDropChance[iIndex], 1, 9999999999)) : (g_iDropChance2[iIndex] = iSetCellLimit(g_iDropChance2[iIndex], 1, 9999999999));
+			main ? (g_iDropClipChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", 4)) : (g_iDropClipChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", g_iDropClipChance[iIndex]));
+			main ? (g_iDropClipChance[iIndex] = iSetCellLimit(g_iDropClipChance[iIndex], 1, 9999999999)) : (g_iDropClipChance2[iIndex] = iSetCellLimit(g_iDropClipChance2[iIndex], 1, 9999999999));
+			main ? (g_flDropWeaponScale[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", 1.0)) : (g_flDropWeaponScale2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", g_flDropWeaponScale[iIndex]));
+			main ? (g_flDropWeaponScale[iIndex] = flSetFloatLimit(g_flDropWeaponScale[iIndex], 1.0, 2.0)) : (g_flDropWeaponScale2[iIndex] = flSetFloatLimit(g_flDropWeaponScale2[iIndex], 1.0, 2.0));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
 public void ST_Spawn(int client)
 {
 	int iDropAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
@@ -460,13 +460,6 @@ public void ST_Spawn(int client)
 		g_bDrop[client] = true;
 		CreateTimer(1.0, tTimerDrop, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
-}
-
-void vReset(int client)
-{
-	g_bDrop[client] = false;
-	g_iDrop[client] = 0;
-	g_iDropWeapon[client] = 0;
 }
 
 void vDeleteDrop(int client)
@@ -560,11 +553,46 @@ void vGetPosAng2(int client, int weapon, float pos[3], float angle[3], int posit
 	scale = scale * flDropWeaponScale;
 }
 
+void vReset(int client)
+{
+	g_bDrop[client] = false;
+	g_iDrop[client] = 0;
+	g_iDropWeapon[client] = 0;
+}
+
+void vDeleteEntity(int entity, float time = 0.1)
+{
+	if (bIsValidEntRef(entity))
+	{
+		char sVariant[64];
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		AcceptEntityInput(entity, "ClearParent");
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, "AddOutput");
+		AcceptEntityInput(entity, "FireUser1");
+	}
+}
+
 void vSetVector(float target[3], float x, float y, float z)
 {
 	target[0] = x;
 	target[1] = y;
 	target[2] = z;
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
+}
+
+bool bIsValidEntRef(int entity)
+{
+	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
 public Action tTimerDrop(Handle timer, any userid)
@@ -595,7 +623,8 @@ public Action tTimerDrop(Handle timer, any userid)
 			SetEntityModel(iDrop, g_sWeaponModel[iWeapon]);
 			TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
 			DispatchSpawn(iDrop);
-			vSetEntityParent(iDrop, iTank);
+			SetVariantString("!activator");
+			AcceptEntityInput(iDrop, "SetParent", iTank);
 			switch (iPosition)
 			{
 				case 1: sPosition = "rhand";

@@ -276,6 +276,11 @@ void vBlindHit(int client, int owner, int enabled)
 	}
 }
 
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
 public Action tTimerStopBlindness(Handle timer, DataPack pack)
 {
 	pack.Reset();

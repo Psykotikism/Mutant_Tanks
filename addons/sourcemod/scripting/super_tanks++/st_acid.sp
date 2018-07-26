@@ -266,3 +266,8 @@ void vAcidHit(int client, int owner, int enabled)
 		}
 	}
 }
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}

@@ -155,7 +155,8 @@ void vRocketHit(int client, int owner, int enabled)
 			SetEntityRenderColor(iFlame, 180, 70, 10, 180);
 			TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
 			DispatchSpawn(iFlame);
-			vSetEntityParent(iFlame, client);
+			SetVariantString("!activator");
+			AcceptEntityInput(iFlame, "SetParent", client);
 			iFlame = EntIndexToEntRef(iFlame);
 			vDeleteEntity(iFlame, 3.0);
 			g_iRocket[client] = iFlame;
@@ -164,6 +165,34 @@ void vRocketHit(int client, int owner, int enabled)
 		CreateTimer(2.0, tTimerRocketLaunch, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		CreateTimer(3.5, tTimerRocketDetonate, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
+}
+
+void vDeleteEntity(int entity, float time = 0.1)
+{
+	if (bIsValidEntRef(entity))
+	{
+		char sVariant[64];
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		AcceptEntityInput(entity, "ClearParent");
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, "AddOutput");
+		AcceptEntityInput(entity, "FireUser1");
+	}
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
+}
+
+bool bIsValidEntRef(int entity)
+{
+	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
 public Action tTimerRocketLaunch(Handle timer, any userid)

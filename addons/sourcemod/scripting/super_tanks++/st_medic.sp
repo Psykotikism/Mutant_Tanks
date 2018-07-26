@@ -79,7 +79,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 	int iPlayer = GetClientOfUserId(iUserId);
 	int iMedicAbility = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iMedicAbility[ST_TankType(iPlayer)] : g_iMedicAbility2[ST_TankType(iPlayer)];
 	int iMedicChance = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iMedicChance[ST_TankType(iPlayer)] : g_iMedicChance2[ST_TankType(iPlayer)];
-	if (iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1)
+	if (iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1 && bIsTank(iPlayer))
 	{
 		float flMedicRange = !g_bTankConfig[ST_TankType(iPlayer)] ? g_flMedicRange[ST_TankType(iPlayer)] : g_flMedicRange2[ST_TankType(iPlayer)];
 		float flTankPos[3];
