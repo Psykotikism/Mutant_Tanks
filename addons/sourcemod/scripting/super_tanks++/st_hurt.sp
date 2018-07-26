@@ -185,6 +185,16 @@ void vHurtHit(int client, int owner, int enabled)
 	}
 }
 
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
+}
+
 public Action tTimerHurt(Handle timer, DataPack pack)
 {
 	pack.Reset();

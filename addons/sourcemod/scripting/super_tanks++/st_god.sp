@@ -108,6 +108,11 @@ public void ST_Ability(int client)
 	}
 }
 
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
 public Action tTimerStopGod(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);

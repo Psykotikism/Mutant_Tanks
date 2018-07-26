@@ -172,3 +172,8 @@ void vSmiteHit(int client, int owner, int enabled)
 		ForcePlayerSuicide(client);
 	}
 }
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}

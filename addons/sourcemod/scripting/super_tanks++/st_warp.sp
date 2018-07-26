@@ -12,6 +12,8 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+
 bool g_bLateLoad;
 bool g_bTankConfig[ST_MAXTYPES + 1];
 bool g_bWarp[MAXPLAYERS + 1];
@@ -46,6 +48,7 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
+	vPrecacheParticle(PARTICLE_ELECTRICITY);
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer))
@@ -175,6 +178,62 @@ void vWarpHit(int client, int owner)
 	}
 }
 
+void vCreateParticle(int client, char[] particlename, float time, float origin)
+{
+	if (bIsValidClient(client))
+	{
+		int iParticle = CreateEntityByName("info_particle_system");
+		if (IsValidEntity(iParticle))
+		{
+			float flPos[3];
+			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
+			flPos[2] += origin;
+			DispatchKeyValue(iParticle, "effect_name", particlename);
+			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
+			DispatchSpawn(iParticle);
+			ActivateEntity(iParticle);
+			AcceptEntityInput(iParticle, "Start");
+			vSetEntityParent(iParticle, client);
+			iParticle = EntIndexToEntRef(iParticle);
+			vDeleteEntity(iParticle, time);
+		}
+	}
+}
+
+void vDeleteEntity(int entity, float time = 0.1)
+{
+	if (bIsValidEntRef(entity))
+	{
+		char sVariant[64];
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		AcceptEntityInput(entity, "ClearParent");
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, "AddOutput");
+		AcceptEntityInput(entity, "FireUser1");
+	}
+}
+
+void vPrecacheParticle(char[] particlename)
+{
+	int iParticle = CreateEntityByName("info_particle_system");
+	if (IsValidEntity(iParticle))
+	{
+		DispatchKeyValue(iParticle, "effect_name", particlename);
+		DispatchSpawn(iParticle);
+		ActivateEntity(iParticle);
+		AcceptEntityInput(iParticle, "Start");
+		vSetEntityParent(iParticle, iParticle);
+		iParticle = EntIndexToEntRef(iParticle);
+		vDeleteEntity(iParticle);
+	}
+}
+
+void vSetEntityParent(int entity, int parent)
+{
+	SetVariantString("!activator");
+	AcceptEntityInput(entity, "SetParent", parent);
+}
+
 int iGetRandomSurvivor()
 {
 	int iSurvivorCount;
@@ -187,6 +246,16 @@ int iGetRandomSurvivor()
 		}
 	}
 	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntRef(int entity)
+{
+	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
 public Action tTimerWarp(Handle timer, any userid)

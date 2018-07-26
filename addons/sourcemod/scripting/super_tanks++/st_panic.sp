@@ -148,6 +148,17 @@ public void ST_Ability(int client)
 	}
 }
 
+void vPanic()
+{
+	int iDirector = CreateEntityByName("info_director");
+	if (bIsValidEntity(iDirector))
+	{
+		DispatchSpawn(iDirector);
+		AcceptEntityInput(iDirector, "ForcePanicEvent");
+		AcceptEntityInput(iDirector, "Kill");
+	}
+}
+
 void vPanicHit(int client)
 {
 	int iPanicChance = !g_bTankConfig[ST_TankType(client)] ? g_iPanicChance[ST_TankType(client)] : g_iPanicChance2[ST_TankType(client)];
@@ -158,15 +169,14 @@ void vPanicHit(int client)
 	}
 }
 
-void vPanic()
+bool bIsValidClient(int client)
 {
-	int iDirector = CreateEntityByName("info_director");
-	if (bIsValidEntity(iDirector))
-	{
-		DispatchSpawn(iDirector);
-		AcceptEntityInput(iDirector, "ForcePanicEvent");
-		AcceptEntityInput(iDirector, "Kill");
-	}
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }
 
 public Action tTimerPanic(Handle timer, any userid)

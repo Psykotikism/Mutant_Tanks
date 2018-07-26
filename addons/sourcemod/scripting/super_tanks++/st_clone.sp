@@ -262,3 +262,17 @@ int iGetCloneCount()
 	}
 	return iCloneCount;
 }
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+public bool bTraceRayDontHitSelf(int entity, int mask, any data)
+{
+	if (entity == data)
+	{
+		return false;
+	}
+	return true;
+}

@@ -210,6 +210,16 @@ void vHealHit(int client, int owner)
 	}
 }
 
+int iGetRGBColor(int red, int green, int blue) 
+{
+	return (blue * 65536) + (green * 256) + red;
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
 public Action tTimerHeal(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);

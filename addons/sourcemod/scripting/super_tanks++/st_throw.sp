@@ -103,6 +103,19 @@ public void ST_RockThrow(int client, int entity)
 	}
 }
 
+void vDeleteEntity(int entity, float time = 0.1)
+{
+	if (bIsValidEntRef(entity))
+	{
+		char sVariant[64];
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
+		AcceptEntityInput(entity, "ClearParent");
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, "AddOutput");
+		AcceptEntityInput(entity, "FireUser1");
+	}
+}
+
 void vSpawnInfected(int client, char[] infected)
 {
 	ChangeClientTeam(client, 3);
@@ -113,6 +126,16 @@ void vSpawnInfected(int client, char[] infected)
 	FakeClientCommand(client, "%s %s", sCommand, infected);
 	SetCommandFlags(sCommand, iCmdFlags|FCVAR_CHEAT);
 	KickClient(client);
+}
+
+bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
+}
+
+bool bIsValidEntRef(int entity)
+{
+	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
 public Action tTimerCarThrow(Handle timer, DataPack pack)

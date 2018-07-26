@@ -229,6 +229,11 @@ void vNullifyHit(int client, int owner, int enabled)
 	}
 }
 
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
 public Action tTimerStopNullify(Handle timer, any userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);

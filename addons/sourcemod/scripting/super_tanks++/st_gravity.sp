@@ -244,7 +244,8 @@ public void ST_Ability(int client)
 				DispatchKeyValue(iBlackhole, "radius", "750");
 				DispatchKeyValueFloat(iBlackhole, "magnitude", flGravityForce);
 				DispatchKeyValue(iBlackhole, "spawnflags", "8");
-				vSetEntityParent(iBlackhole, client);
+				SetVariantString("!activator");
+				AcceptEntityInput(iBlackhole, "SetParent", client);
 				AcceptEntityInput(iBlackhole, "Enable");
 				SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
 				if (bIsL4D2Game())
@@ -286,6 +287,16 @@ void vGravityHit(int client, int owner, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }
 
 public Action tTimerStopGravity(Handle timer, DataPack pack)

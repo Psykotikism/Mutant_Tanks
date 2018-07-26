@@ -302,6 +302,19 @@ int iGetBotSurvivor()
 	return -1;
 }
 
+int iGetHumanCount()
+{
+	int iHumanCount;
+	for (int iHuman = 1; iHuman <= MaxClients; iHuman++)
+	{
+		if (bIsHumanSurvivor(iHuman))
+		{
+			iHumanCount++;
+		}
+	}
+	return iHumanCount;
+}
+
 int iGetIdleBot(int client)
 {
 	for (int iBot = 1; iBot <= MaxClients; iBot++)
@@ -330,6 +343,66 @@ int iGetIdlePlayer(int client)
 		}
 	}
 	return 0;
+}
+
+bool bHasIdlePlayer(int client)
+{
+	int iIdler = GetClientOfUserId(GetEntData(client, FindSendPropInfo("SurvivorBot", "m_humanSpectatorUserID")));
+	if (iIdler)
+	{
+		if (IsClientInGame(iIdler) && !IsFakeClient(iIdler) && (GetClientTeam(iIdler) != 2))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool bIsBotIdle(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && IsFakeClient(client) && bHasIdlePlayer(client);
+}
+
+bool bIsBotIdleSurvivor(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && IsFakeClient(client) && !bHasIdlePlayer(client);
+}
+
+bool bIsBotSurvivor(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && IsFakeClient(client);
+}
+
+bool bIsHumanSurvivor(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && !IsFakeClient(client) && !bHasIdlePlayer(client) && !bIsPlayerIdle(client);
+}
+
+bool bIsIdlePlayer(int bot, int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsFakeClient(client) && GetClientTeam(bot) == 2;
+}
+
+bool bIsPlayerIdle(int client)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (!IsClientInGame(iPlayer) || GetClientTeam(iPlayer) != 2 || !IsFakeClient(iPlayer) || !bHasIdlePlayer(iPlayer))
+		{
+			continue;
+		}
+		int iIdler = GetClientOfUserId(GetEntData(iPlayer, FindSendPropInfo("SurvivorBot", "m_humanSpectatorUserID")));
+		if (iIdler == client)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerIdleFix(Handle timer, DataPack pack)

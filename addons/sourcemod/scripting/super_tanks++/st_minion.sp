@@ -242,3 +242,17 @@ void vCopyVector(float source[3], float target[3])
 	target[1] = source[1];
 	target[2] = source[2];
 }
+
+bool bIsValidClient(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+public bool bTraceRayDontHitSelf(int entity, int mask, any data)
+{
+	if (entity == data)
+	{
+		return false;
+	}
+	return true;
+}
