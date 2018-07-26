@@ -22,12 +22,6 @@
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
 				"windows"	"\x83\xEC\x2A\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90\xB8\x2A\x2A\x2A\x8B\x9E\x34\x2A\x2A\x2A\x6A\x2A\x6A\x2A\x6A\x2A"
 			}
-			"SetHumanSpec"
-			{
-				"library"	"server"
-				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
-				"windows"	"\x53\x8B\xD9\x83\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8D\x2A\x2A\x2A\x2A\x2A\x7E\x07\x5E\x32\xC0\x5B\xC2\x04\x00"
-			}
 			"CTerrorPlayer_OnVomitedUpon"
 			{
 				"library"	"server"
@@ -81,12 +75,6 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
 				"windows"	"\x55\x8b\xec\x83\xec*\x53\x56\x57\x8b\xf1\x8b\x06\x8b\x90***\x00\x8b\x9e***\x00\x6a\x00\x6a\x08\x6a\x01"
-			}
-			"SetHumanSpec"
-			{
-				"library"	"server"
-				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
-				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x83\xBE\x2A\x2A\x2A\x2A\x00\x7E\x07\x32\xC0\x5E\x5D\xC2\x04\x00\x8B\x0D"
 			}
 			"CTerrorPlayer_OnVomitedUpon"
 			{

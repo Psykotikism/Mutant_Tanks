@@ -280,16 +280,6 @@ public void OnMapStart()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
 public void OnClientPostAdminCheck(int client)
 {
 	vReset(client);
@@ -311,26 +301,6 @@ public void OnMapEnd()
 	}
 }
 
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
-	}
-}
-
 public Action SetTransmit(int entity, int client)
 {
 	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
@@ -339,92 +309,6 @@ public Action SetTransmit(int entity, int client)
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
-}
-
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	int iDropChance = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iDropChance[ST_TankType(iPlayer)] : g_iDropChance2[ST_TankType(iPlayer)];
-	if (bIsTank(iPlayer) && bIsValidEntity(g_iDrop[iPlayer]) && GetRandomInt(1, iDropChance) == 1)
-	{
-		float flDropWeaponScale = !g_bTankConfig[ST_TankType(iPlayer)] ? g_flDropWeaponScale[ST_TankType(iPlayer)] : g_flDropWeaponScale[ST_TankType(iPlayer)];
-		float flPos[3];
-		float flAngle[3];
-		GetClientEyePosition(iPlayer, flPos);
-		GetClientAbsAngles(iPlayer, flAngle);
-		if (StrContains(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon") != -1)
-		{
-			int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[iPlayer]]);
-			if (bIsValidEntity(iDrop))
-			{
-				TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
-				DispatchSpawn(iDrop);
-				if (bIsL4D2Game())
-				{
-					SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale);
-				}
-			}
-			int iAmmo;
-			int iClip;
-			if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_autoshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_shotgun_spas") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[0].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_pumpshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_shotgun_chrome") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[1].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_hunting_rifle") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[2].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_rifle") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_rifle_ak47") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_rifle_desert") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_rifle_sg552") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[3].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_grenade_launcher") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[4].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_smg") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_smg_silenced") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_smg_mp5") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[5].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_sniper_scout") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_sniper_military") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iPlayer]], "weapon_sniper_awp") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[6].IntValue;
-			}
-			int iDropClipChance = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iDropClipChance[ST_TankType(iPlayer)] : g_iDropClipChance2[ST_TankType(iPlayer)];
-			if (GetRandomInt(1, iDropClipChance) == 1)
-			{
-				iClip = iAmmo; 
-			}
-			if (iClip > 0)
-			{
-				SetEntProp(iDrop, Prop_Send, "m_iClip1", iClip);
-			}
-			if (iAmmo > 0)
-			{
-				SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
-			}
-		}
-		else
-		{
-			int iDrop = CreateEntityByName("weapon_melee");
-			if (bIsValidEntity(iDrop))
-			{
-				DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[iPlayer]]);
-				TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
-				DispatchSpawn(iDrop);
-				if (bIsL4D2Game())
-				{
-					SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale);
-				}
-			}
-		}
-	}
-	vDeleteDrop(iPlayer);
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -450,6 +334,90 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_Death(int client)
+{
+	int iDropChance = !g_bTankConfig[ST_TankType(client)] ? g_iDropChance[ST_TankType(client)] : g_iDropChance2[ST_TankType(client)];
+	if (bIsTank(client) && bIsValidEntity(g_iDrop[client]) && GetRandomInt(1, iDropChance) == 1)
+	{
+		float flDropWeaponScale = !g_bTankConfig[ST_TankType(client)] ? g_flDropWeaponScale[ST_TankType(client)] : g_flDropWeaponScale[ST_TankType(client)];
+		float flPos[3];
+		float flAngle[3];
+		GetClientEyePosition(client, flPos);
+		GetClientAbsAngles(client, flAngle);
+		if (StrContains(g_sWeaponClass[g_iDropWeapon[client]], "weapon") != -1)
+		{
+			int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[client]]);
+			if (bIsValidEntity(iDrop))
+			{
+				TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
+				DispatchSpawn(iDrop);
+				if (bIsL4D2Game())
+				{
+					SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale);
+				}
+			}
+			int iAmmo;
+			int iClip;
+			if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_autoshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_shotgun_spas") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[0].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_pumpshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_shotgun_chrome") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[1].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_hunting_rifle") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[2].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle_ak47") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle_desert") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle_sg552") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[3].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_grenade_launcher") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[4].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_smg") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_smg_silenced") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_smg_mp5") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[5].IntValue;
+			}
+			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_sniper_scout") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_sniper_military") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_sniper_awp") == 0)
+			{
+				iAmmo = g_cvSTFindConVar[6].IntValue;
+			}
+			int iDropClipChance = !g_bTankConfig[ST_TankType(client)] ? g_iDropClipChance[ST_TankType(client)] : g_iDropClipChance2[ST_TankType(client)];
+			if (GetRandomInt(1, iDropClipChance) == 1)
+			{
+				iClip = iAmmo; 
+			}
+			if (iClip > 0)
+			{
+				SetEntProp(iDrop, Prop_Send, "m_iClip1", iClip);
+			}
+			if (iAmmo > 0)
+			{
+				SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
+			}
+		}
+		else
+		{
+			int iDrop = CreateEntityByName("weapon_melee");
+			if (bIsValidEntity(iDrop))
+			{
+				DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[client]]);
+				TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
+				DispatchSpawn(iDrop);
+				if (bIsL4D2Game())
+				{
+					SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale);
+				}
+			}
+		}
+	}
+	vDeleteDrop(client);
 }
 
 public void ST_Spawn(int client)

@@ -55,16 +55,6 @@ public void OnMapStart()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
 public void OnClientPostAdminCheck(int client)
 {
 	g_bCloned[client] = false;
@@ -85,57 +75,6 @@ public void OnMapEnd()
 		{
 			g_bCloned[iPlayer] = false;
 			g_iCloneCount[iPlayer] = 0;
-		}
-	}
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
-	}
-}
-
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	if (bIsTank(iPlayer))
-	{
-		int iCloneAbility = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iCloneAbility[ST_TankType(iPlayer)] : g_iCloneAbility2[ST_TankType(iPlayer)];
-		if (iCloneAbility == 1)
-		{
-			if (g_bCloned[iPlayer])
-			{
-				g_bCloned[iPlayer] = false;
-				if (iGetCloneCount() == 0)
-				{
-					for (int iCloner = 1; iCloner <= MaxClients; iCloner++)
-					{
-						if (!g_bCloned[iCloner] && bIsTank(iCloner))
-						{
-							g_iCloneCount[iCloner] = 0;
-						}
-					}
-				}
-			}
-			else
-			{
-				g_iCloneCount[iPlayer] = 0;
-			}
 		}
 	}
 }
@@ -163,6 +102,35 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_Death(int client)
+{
+	if (bIsTank(client))
+	{
+		int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
+		if (iCloneAbility == 1)
+		{
+			if (g_bCloned[client])
+			{
+				g_bCloned[client] = false;
+				if (iGetCloneCount() == 0)
+				{
+					for (int iCloner = 1; iCloner <= MaxClients; iCloner++)
+					{
+						if (!g_bCloned[iCloner] && bIsTank(iCloner))
+						{
+							g_iCloneCount[iCloner] = 0;
+						}
+					}
+				}
+			}
+			else
+			{
+				g_iCloneCount[client] = 0;
+			}
+		}
+	}
 }
 
 public void ST_Ability(int client)

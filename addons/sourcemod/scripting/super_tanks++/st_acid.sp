@@ -90,16 +90,6 @@ public void OnMapStart()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -108,26 +98,6 @@ public void OnClientPostAdminCheck(int client)
 public void OnClientDisconnect(int client)
 {
 	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
-	}
 }
 
 void vLateLoad(bool late)
@@ -169,20 +139,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	if (bIsTank(iPlayer) && bIsL4D2Game())
-	{
-		float flOrigin[3];
-		float flAngles[3];
-		GetClientAbsOrigin(iPlayer, flOrigin);
-		GetClientAbsAngles(iPlayer, flAngles);
-		SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, iPlayer, 2.0);
-	}
-}
-
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -208,6 +164,18 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_Death(int client)
+{
+	if (bIsTank(client) && bIsL4D2Game())
+	{
+		float flOrigin[3];
+		float flAngles[3];
+		GetClientAbsOrigin(client, flOrigin);
+		GetClientAbsAngles(client, flAngles);
+		SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, client, 2.0);
+	}
 }
 
 public void ST_Ability(int client)

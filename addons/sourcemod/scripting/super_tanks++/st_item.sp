@@ -41,88 +41,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
-	}
-}
-
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	int iItemAbility = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iItemAbility[ST_TankType(iPlayer)] : g_iItemAbility2[ST_TankType(iPlayer)];
-	int iItemChance = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iItemChance[ST_TankType(iPlayer)] : g_iItemChance2[ST_TankType(iPlayer)];
-	int iItemMode = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iItemMode[ST_TankType(iPlayer)] : g_iItemMode2[ST_TankType(iPlayer)];
-	if (iItemAbility == 1 && GetRandomInt(1, iItemChance) == 1 && bIsTank(iPlayer))
-	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor))
-			{
-				switch (iItemMode)
-				{
-					case 0:
-					{
-						char sItems[5][64];
-						char sItemLoadout[325];
-						sItemLoadout = !g_bTankConfig[ST_TankType(iPlayer)] ? g_sItemLoadout[ST_TankType(iPlayer)] : g_sItemLoadout2[ST_TankType(iPlayer)];
-						TrimString(sItemLoadout);
-						ExplodeString(sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-						switch (GetRandomInt(1, 5))
-						{
-							case 1: vCheatCommand(iSurvivor, "give", sItems[0]);
-							case 2: vCheatCommand(iSurvivor, "give", sItems[1]);
-							case 3: vCheatCommand(iSurvivor, "give", sItems[2]);
-							case 4: vCheatCommand(iSurvivor, "give", sItems[3]);
-							case 5: vCheatCommand(iSurvivor, "give", sItems[4]);
-						}
-					}
-					case 1:
-					{
-						char sItemLoadout[325];
-						sItemLoadout = !g_bTankConfig[ST_TankType(iPlayer)] ? g_sItemLoadout[ST_TankType(iPlayer)] : g_sItemLoadout2[ST_TankType(iPlayer)];
-						TrimString(sItemLoadout);
-						char sItems[5][64];
-						ExplodeString(sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-						for (int iItem = 0; iItem < sizeof(sItems); iItem++)
-						{
-							if (StrContains(sItemLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
-							{
-								vCheatCommand(iSurvivor, "give", sItems[iItem]);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -145,6 +63,51 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_Death(int client)
+{
+	int iItemAbility = !g_bTankConfig[ST_TankType(client)] ? g_iItemAbility[ST_TankType(client)] : g_iItemAbility2[ST_TankType(client)];
+	int iItemChance = !g_bTankConfig[ST_TankType(client)] ? g_iItemChance[ST_TankType(client)] : g_iItemChance2[ST_TankType(client)];
+	int iItemMode = !g_bTankConfig[ST_TankType(client)] ? g_iItemMode[ST_TankType(client)] : g_iItemMode2[ST_TankType(client)];
+	if (iItemAbility == 1 && GetRandomInt(1, iItemChance) == 1 && bIsTank(client))
+	{
+		char sItems[5][64];
+		char sItemLoadout[325];
+		sItemLoadout = !g_bTankConfig[ST_TankType(client)] ? g_sItemLoadout[ST_TankType(client)] : g_sItemLoadout2[ST_TankType(client)];
+		TrimString(sItemLoadout);
+		ExplodeString(sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				switch (iItemMode)
+				{
+					case 0:
+					{
+						switch (GetRandomInt(1, 5))
+						{
+							case 1: vCheatCommand(iSurvivor, "give", sItems[0]);
+							case 2: vCheatCommand(iSurvivor, "give", sItems[1]);
+							case 3: vCheatCommand(iSurvivor, "give", sItems[2]);
+							case 4: vCheatCommand(iSurvivor, "give", sItems[3]);
+							case 5: vCheatCommand(iSurvivor, "give", sItems[4]);
+						}
+					}
+					case 1:
+					{
+						for (int iItem = 0; iItem < sizeof(sItems); iItem++)
+						{
+							if (StrContains(sItemLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
+							{
+								vCheatCommand(iSurvivor, "give", sItems[iItem]);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void vCheatCommand(int client, char[] command, char[] arguments = "", any ...)

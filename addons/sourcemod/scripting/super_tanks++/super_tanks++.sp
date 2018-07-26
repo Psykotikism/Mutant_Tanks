@@ -57,11 +57,15 @@ float g_flRunSpeed[ST_MAXTYPES + 1];
 float g_flRunSpeed2[ST_MAXTYPES + 1];
 float g_flThrowInterval[ST_MAXTYPES + 1];
 float g_flThrowInterval2[ST_MAXTYPES + 1];
-Handle g_hAbility;
-Handle g_hConfigs;
-Handle g_hRockBreak;
-Handle g_hRockThrow;
-Handle g_hSpawn;
+Handle g_hAbilityForward;
+Handle g_hAbilityThrowForward;
+Handle g_hConfigsForward;
+Handle g_hDeathForward;
+Handle g_hIncapForward;
+Handle g_hRockBreakForward;
+Handle g_hRockThrowForward;
+Handle g_hRoundStartForward;
+Handle g_hSpawnForward;
 int g_iAnnounceArrival;
 int g_iAnnounceArrival2;
 int g_iAnnounceDeath;
@@ -155,11 +159,15 @@ public int iNative_TankType(Handle plugin, int numParams)
 
 public void OnPluginStart()
 {
-	g_hAbility = CreateGlobalForward("ST_Ability", ET_Ignore, Param_Cell);
-	g_hConfigs = CreateGlobalForward("ST_Configs", ET_Ignore, Param_String, Param_Cell, Param_Cell);
-	g_hRockBreak = CreateGlobalForward("ST_RockBreak", ET_Ignore, Param_Cell, Param_Cell);
-	g_hRockThrow = CreateGlobalForward("ST_RockThrow", ET_Ignore, Param_Cell, Param_Cell);
-	g_hSpawn = CreateGlobalForward("ST_Spawn", ET_Ignore, Param_Cell);
+	g_hAbilityForward = CreateGlobalForward("ST_Ability", ET_Ignore, Param_Cell);
+	g_hAbilityThrowForward = CreateGlobalForward("ST_AbilityThrow", ET_Ignore, Param_Cell);
+	g_hConfigsForward = CreateGlobalForward("ST_Configs", ET_Ignore, Param_String, Param_Cell, Param_Cell);
+	g_hDeathForward = CreateGlobalForward("ST_Death", ET_Ignore, Param_Cell);
+	g_hIncapForward = CreateGlobalForward("ST_Incap", ET_Ignore, Param_Cell);
+	g_hRockBreakForward = CreateGlobalForward("ST_RockBreak", ET_Ignore, Param_Cell, Param_Cell);
+	g_hRockThrowForward = CreateGlobalForward("ST_RockThrow", ET_Ignore, Param_Cell, Param_Cell);
+	g_hRoundStartForward = CreateGlobalForward("ST_RoundStart", ET_Ignore);
+	g_hSpawnForward = CreateGlobalForward("ST_Spawn", ET_Ignore, Param_Cell);
 	CreateDirectory("cfg/sourcemod/super_tanks++/", 511);
 	vCreateConfigFile("cfg/sourcemod/", "super_tanks++/", "super_tanks++", "super_tanks++", true);
 	Format(g_sSavePath, sizeof(g_sSavePath), "cfg/sourcemod/super_tanks++/super_tanks++.cfg");
@@ -439,7 +447,7 @@ public void OnEntityDestroyed(int entity)
 			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 			if (iThrower > 0 && bIsTank(iThrower) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iThrower))))
 			{
-				Call_StartForward(g_hRockBreak);
+				Call_StartForward(g_hRockBreakForward);
 				Call_PushCell(iThrower);
 				Call_PushCell(entity);
 				Call_Finish();
@@ -504,6 +512,9 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 	int iTank = GetClientOfUserId(iUserId);
 	if (bIsTank(iTank))
 	{
+		Call_StartForward(g_hAbilityThrowForward);
+		Call_PushCell(iTank);
+		Call_Finish();
 		int iProp = -1;
 		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 		{
@@ -568,15 +579,18 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 	int iPlayer = GetClientOfUserId(iUserId);
 	if (bIsValidClient(iPlayer))
 	{
-		int iGlowEffect = !g_bTankConfig[g_iTankType[iPlayer]] ? g_iGlowEffect[g_iTankType[iPlayer]] : g_iGlowEffect2[g_iTankType[iPlayer]];
-		if (iGlowEffect == 1 && bIsL4D2Game())
-		{
-			SetEntProp(iPlayer, Prop_Send, "m_iGlowType", 0);
-			SetEntProp(iPlayer, Prop_Send, "m_glowColorOverride", 0);
-		}
+		Call_StartForward(g_hDeathForward);
+		Call_PushCell(iPlayer);
+		Call_Finish();
 		int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 		if (bIsTank(iPlayer, false) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iPlayer))))
 		{
+			int iGlowEffect = !g_bTankConfig[g_iTankType[iPlayer]] ? g_iGlowEffect[g_iTankType[iPlayer]] : g_iGlowEffect2[g_iTankType[iPlayer]];
+			if (iGlowEffect == 1 && bIsL4D2Game())
+			{
+				SetEntProp(iPlayer, Prop_Send, "m_iGlowType", 0);
+				SetEntProp(iPlayer, Prop_Send, "m_glowColorOverride", 0);
+			}
 			char sName[MAX_NAME_LENGTH + 1];
 			sName = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sCustomName[g_iTankType[iPlayer]] : g_sCustomName2[g_iTankType[iPlayer]];
 			int iAnnounceDeath = !g_bGeneralConfig ? g_iAnnounceDeath : g_iAnnounceDeath2;
@@ -632,6 +646,9 @@ public Action eEventPlayerIncapacitated(Event event, const char[] name, bool don
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
+		Call_StartForward(g_hIncapForward);
+		Call_PushCell(iTank);
+		Call_Finish();
 		CreateTimer(3.0, tTimerKillStuckTank, iUserId, TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
@@ -639,6 +656,8 @@ public Action eEventPlayerIncapacitated(Event event, const char[] name, bool don
 public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_iTankWave = 0;
+	Call_StartForward(g_hRoundStartForward);
+	Call_Finish();
 }
 
 public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast)
@@ -937,7 +956,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 		}
 	}
 	delete kvSuperTanks;
-	Call_StartForward(g_hConfigs);
+	Call_StartForward(g_hConfigsForward);
 	Call_PushString(savepath);
 	Call_PushCell(iLimit);
 	Call_PushCell(main);
@@ -2100,7 +2119,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 			int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 			if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 			{
-				Call_StartForward(g_hAbility);
+				Call_StartForward(g_hAbilityForward);
 				Call_PushCell(iTank);
 				Call_Finish();
 				int iFireImmunity = !g_bTankConfig[g_iTankType[iTank]] ? g_iFireImmunity[g_iTankType[iTank]] : g_iFireImmunity2[g_iTankType[iTank]];
@@ -2127,7 +2146,7 @@ public Action tTimerTankSpawn(Handle timer, any userid)
 	int iHumanSupport = !g_bGeneralConfig ? g_iHumanSupport : g_iHumanSupport2;
 	if (bIsTank(iTank) && (iHumanSupport == 1 || (iHumanSupport == 0 && IsFakeClient(iTank))))
 	{
-		Call_StartForward(g_hSpawn);
+		Call_StartForward(g_hSpawnForward);
 		Call_PushCell(iTank);
 		Call_Finish();
 		vParticleEffects(iTank);
@@ -2227,7 +2246,7 @@ public Action tTimerRockThrow(Handle timer, any entity)
 			dpDataPack.WriteCell(EntIndexToEntRef(entity));
 			dpDataPack.WriteString(sEffect);
 		}
-		Call_StartForward(g_hRockThrow);
+		Call_StartForward(g_hRockThrowForward);
 		Call_PushCell(iThrower);
 		Call_PushCell(entity);
 		Call_Finish();

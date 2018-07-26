@@ -19,7 +19,6 @@ bool g_bTankConfig[ST_MAXTYPES + 1];
 float g_flIdleRange[ST_MAXTYPES + 1];
 float g_flIdleRange2[ST_MAXTYPES + 1];
 Handle g_hSDKIdlePlayer;
-Handle g_hSDKSpecPlayer;
 int g_iIdleAbility[ST_MAXTYPES + 1];
 int g_iIdleAbility2[ST_MAXTYPES + 1];
 int g_iIdleChance[ST_MAXTYPES + 1];
@@ -57,14 +56,6 @@ public void OnPluginStart()
 	{
 		PrintToServer("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", ST_PREFIX);
 	}
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "SetHumanSpec");
-	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-	g_hSDKSpecPlayer = EndPrepSDKCall();
-	if (g_hSDKSpecPlayer == null)
-	{
-		PrintToServer("%s Your \"SetHumanSpec\" signature is outdated.", ST_PREFIX);
-	}
 }
 
 public void OnMapStart()
@@ -81,16 +72,6 @@ public void OnMapStart()
 	{
 		vLateLoad(true);
 		g_bLateLoad = false;
-	}
-}
-
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
 	}
 }
 
@@ -117,28 +98,6 @@ public void OnMapEnd()
 			g_bIdle[iPlayer] = false;
 			g_bIdled[iPlayer] = false;
 		}
-	}
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvents(true) : vHookEvents(false);
-}
-
-void vHookEvents(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("player_afk", eEventPlayerAFK, EventHookMode_Pre);
-		HookEvent("player_bot_replace", eEventPlayerBotReplace);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_afk", eEventPlayerAFK);
-		UnhookEvent("player_bot_replace", eEventPlayerBotReplace);
-		hooked = false;
 	}
 }
 
@@ -170,25 +129,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				vIdleHit(victim, attacker, iIdleHit);
 			}
 		}
-	}
-}
-
-public Action eEventPlayerAFK(Event event, const char[] name, bool dontBroadcast)
-{
-	int iPlayerId = event.GetInt("player");
-	int iIdler = GetClientOfUserId(iPlayerId);
-	g_bIdled[iIdler] = true;
-}
-
-public Action eEventPlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
-{
-	int iSurvivorId = event.GetInt("player");
-	int iSurvivor = GetClientOfUserId(iSurvivorId);
-	int iBotId = event.GetInt("bot");
-	int iBot = GetClientOfUserId(iBotId);
-	if (bIsIdlePlayer(iBot, iSurvivor)) 
-	{
-		vIdle(iSurvivor, iBot);
 	}
 }
 
@@ -241,19 +181,6 @@ public void ST_Ability(int client)
 	}
 }
 
-void vIdle(int client, int bot)
-{
-	DataPack dpDataPack;
-	CreateDataTimer(0.2, tTimerIdleFix, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-	dpDataPack.WriteCell(GetClientUserId(client));
-	dpDataPack.WriteCell(GetClientUserId(bot));
-	if (g_bIdle[client])
-	{
-		g_bIdle[client] = false;
-		vIdleWarp(bot);
-	}
-}
-
 void vIdleHit(int client, int owner, int enabled)
 {
 	int iIdleChance = !g_bTankConfig[ST_TankType(owner)] ? g_iIdleChance[ST_TankType(owner)] : g_iIdleChance2[ST_TankType(owner)];
@@ -265,7 +192,6 @@ void vIdleHit(int client, int owner, int enabled)
 		}
 		else
 		{
-			vIdleWarp(client);
 			SDKCall(g_hSDKIdlePlayer, client);
 		}
 		if (bIsBotIdle(client))
@@ -274,32 +200,6 @@ void vIdleHit(int client, int owner, int enabled)
 			g_bIdle[client] = true;
 		}
 	}
-}
-
-void vIdleWarp(int client)
-{
-	float flCurrentOrigin[3];
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (!bIsSurvivor(iPlayer) || iPlayer == client)
-		{
-			continue;
-		}
-		GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-		TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
-	}
-}
-
-int iGetBotSurvivor()
-{
-	for (int iBot = MaxClients; iBot >= 1; iBot--)
-	{
-		if (bIsBotSurvivor(iBot))
-		{
-			return iBot;
-		}
-	}
-	return -1;
 }
 
 int iGetHumanCount()
@@ -313,36 +213,6 @@ int iGetHumanCount()
 		}
 	}
 	return iHumanCount;
-}
-
-int iGetIdleBot(int client)
-{
-	for (int iBot = 1; iBot <= MaxClients; iBot++)
-	{
-		if (iGetIdlePlayer(iBot) == client)
-		{
-			return iBot;
-		}
-	}
-	return 0;
-}
-
-int iGetIdlePlayer(int client)
-{
-	if (bIsBotSurvivor(client))
-	{
-		char sClassname[12];
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "SurvivorBot") == 0)
-		{
-			int iIdler = GetClientOfUserId(GetEntProp(client, Prop_Send, "m_humanSpectatorUserID"));
-			if (iIdler > 0 && IsClientInGame(iIdler) && GetClientTeam(iIdler) == 1)
-			{
-				return iIdler;
-			}
-		}
-	}
-	return 0;
 }
 
 bool bHasIdlePlayer(int client)
@@ -363,24 +233,9 @@ bool bIsBotIdle(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && IsFakeClient(client) && bHasIdlePlayer(client);
 }
 
-bool bIsBotIdleSurvivor(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && IsFakeClient(client) && !bHasIdlePlayer(client);
-}
-
-bool bIsBotSurvivor(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && IsFakeClient(client);
-}
-
 bool bIsHumanSurvivor(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client) && !IsFakeClient(client) && !bHasIdlePlayer(client) && !bIsPlayerIdle(client);
-}
-
-bool bIsIdlePlayer(int bot, int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsFakeClient(client) && GetClientTeam(bot) == 2;
 }
 
 bool bIsPlayerIdle(int client)
@@ -403,34 +258,4 @@ bool bIsPlayerIdle(int client)
 bool bIsValidClient(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-public Action tTimerIdleFix(Handle timer, DataPack pack)
-{
-	pack.Reset();
-	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iBot = GetClientOfUserId(pack.ReadCell());
-	if (iSurvivor == 0 || iBot == 0 || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iSurvivor) || !IsClientInGame(iBot) || !IsPlayerAlive(iSurvivor))
-	{
-		return Plugin_Stop;
-	}
-	if (GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor) || IsFakeClient(iSurvivor))
-	{
-		g_bIdled[iSurvivor] = false;
-	}
-	if (!bIsBotIdleSurvivor(iBot) || GetClientTeam(iBot) != 2)
-	{
-		iBot = iGetBotSurvivor();
-	}
-	if (iBot < 1)
-	{
-		g_bIdled[iSurvivor] = false;
-	}
-	if (g_bIdled[iSurvivor])
-	{
-		g_bIdled[iSurvivor] = false;
-		SDKCall(g_hSDKSpecPlayer, iBot, iSurvivor);
-		SetEntProp(iSurvivor, Prop_Send, "m_iObserverMode", 5);
-	}
-	return Plugin_Continue;
 }

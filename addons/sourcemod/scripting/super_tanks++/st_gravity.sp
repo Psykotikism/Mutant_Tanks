@@ -68,16 +68,6 @@ public void OnMapStart()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -101,26 +91,6 @@ public void OnMapEnd()
 			g_bGravity[iPlayer] = false;
 			g_bGravity2[iPlayer] = false;
 		}
-	}
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
 	}
 }
 
@@ -155,42 +125,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	if (bIsTank(iPlayer))
-	{
-		int iProp = -1;
-		while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
-		{
-			if (bIsL4D2Game())
-			{
-				int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
-				if (iOwner == iPlayer)
-				{
-					AcceptEntityInput(iProp, "Kill");
-				}
-			}
-			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-			if (iOwner == iPlayer)
-			{
-				AcceptEntityInput(iProp, "Kill");
-			}
-		}
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-				dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-				dpDataPack.WriteCell(GetClientUserId(iPlayer));
-			}
-		}
-	}
-}
-
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -220,6 +154,40 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_Death(int client)
+{
+	if (bIsTank(client))
+	{
+		int iProp = -1;
+		while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
+		{
+			if (bIsL4D2Game())
+			{
+				int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
+				if (iOwner == client)
+				{
+					AcceptEntityInput(iProp, "Kill");
+				}
+			}
+			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+			if (iOwner == client)
+			{
+				AcceptEntityInput(iProp, "Kill");
+			}
+		}
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
+			{
+				DataPack dpDataPack;
+				CreateDataTimer(0.1, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+				dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+				dpDataPack.WriteCell(GetClientUserId(client));
+			}
+		}
+	}
 }
 
 public void ST_Ability(int client)

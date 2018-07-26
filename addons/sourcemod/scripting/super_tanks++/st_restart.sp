@@ -69,17 +69,6 @@ public void OnMapStart()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	g_bRestartValid = false;
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -93,26 +82,6 @@ public void OnClientDisconnect(int client)
 public void OnMapEnd()
 {
 	g_bRestartValid = false;
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("round_start", eEventRoundStart);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("round_start", eEventRoundStart);
-		hooked = false;
-	}
 }
 
 void vLateLoad(bool late)
@@ -146,11 +115,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public Action eEventRoundStart(Event event, const char[] name, bool dontBroadcast)
-{
-	CreateTimer(10.0, tTimerRestartCoordinates, _, TIMER_FLAG_NO_MAPCHANGE);
-}
-
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -175,6 +139,11 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_RoundStart()
+{
+	CreateTimer(10.0, tTimerRestartCoordinates, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public void ST_Ability(int client)

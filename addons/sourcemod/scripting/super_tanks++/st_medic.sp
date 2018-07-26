@@ -43,47 +43,40 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnConfigsExecuted()
+public void ST_Configs(char[] savepath, int limit, bool main)
 {
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
 	{
-		vIsPluginAllowed();
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iMedicAbility[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", 0)) : (g_iMedicAbility2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", g_iMedicAbility[iIndex]));
+			main ? (g_iMedicAbility[iIndex] = iSetCellLimit(g_iMedicAbility[iIndex], 0, 1)) : (g_iMedicAbility2[iIndex] = iSetCellLimit(g_iMedicAbility2[iIndex], 0, 1));
+			main ? (g_iMedicChance[iIndex] = kvSuperTanks.GetNum("Medic Ability/Medic Chance", 4)) : (g_iMedicChance2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Medic Chance", g_iMedicChance[iIndex]));
+			main ? (g_iMedicChance[iIndex] = iSetCellLimit(g_iMedicChance[iIndex], 1, 9999999999)) : (g_iMedicChance2[iIndex] = iSetCellLimit(g_iMedicChance2[iIndex], 1, 9999999999));
+			main ? (kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth[iIndex], sizeof(g_sMedicHealth[]), "25,25,25,25,25,25")) : (kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth2[iIndex], sizeof(g_sMedicHealth2[]), g_sMedicHealth[iIndex]));
+			main ? (kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth[iIndex], sizeof(g_sMedicMaxHealth[]), "250,50,250,100,325,600")) : (kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth2[iIndex], sizeof(g_sMedicMaxHealth2[]), g_sMedicMaxHealth[iIndex]));
+			main ? (g_flMedicRange[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", 500.0)) : (g_flMedicRange2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", g_flMedicRange[iIndex]));
+			main ? (g_flMedicRange[iIndex] = flSetFloatLimit(g_flMedicRange[iIndex], 1.0, 9999999999.0)) : (g_flMedicRange2[iIndex] = flSetFloatLimit(g_flMedicRange2[iIndex], 1.0, 9999999999.0));
+			kvSuperTanks.Rewind();
+		}
 	}
+	delete kvSuperTanks;
 }
 
-void vIsPluginAllowed()
+public void ST_Death(int client)
 {
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
+	int iMedicAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMedicAbility[ST_TankType(client)] : g_iMedicAbility2[ST_TankType(client)];
+	int iMedicChance = !g_bTankConfig[ST_TankType(client)] ? g_iMedicChance[ST_TankType(client)] : g_iMedicChance2[ST_TankType(client)];
+	if (iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1 && bIsTank(client))
 	{
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
-	}
-}
-
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	int iMedicAbility = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iMedicAbility[ST_TankType(iPlayer)] : g_iMedicAbility2[ST_TankType(iPlayer)];
-	int iMedicChance = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iMedicChance[ST_TankType(iPlayer)] : g_iMedicChance2[ST_TankType(iPlayer)];
-	if (iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1 && bIsTank(iPlayer))
-	{
-		float flMedicRange = !g_bTankConfig[ST_TankType(iPlayer)] ? g_flMedicRange[ST_TankType(iPlayer)] : g_flMedicRange2[ST_TankType(iPlayer)];
+		float flMedicRange = !g_bTankConfig[ST_TankType(client)] ? g_flMedicRange[ST_TankType(client)] : g_flMedicRange2[ST_TankType(client)];
 		float flTankPos[3];
-		GetClientAbsOrigin(iPlayer, flTankPos);
+		GetClientAbsOrigin(client, flTankPos);
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{
 			if (bIsSpecialInfected(iInfected))
@@ -95,12 +88,12 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 				{
 					char sHealth[6][6];
 					char sMedicHealth[36];
-					sMedicHealth = !g_bTankConfig[ST_TankType(iPlayer)] ? g_sMedicHealth[ST_TankType(iPlayer)] : g_sMedicHealth2[ST_TankType(iPlayer)];
+					sMedicHealth = !g_bTankConfig[ST_TankType(client)] ? g_sMedicHealth[ST_TankType(client)] : g_sMedicHealth2[ST_TankType(client)];
 					TrimString(sMedicHealth);
 					ExplodeString(sMedicHealth, ",", sHealth, sizeof(sHealth), sizeof(sHealth[]));
 					char sMaxHealth[6][6];
 					char sMedicMaxHealth[36];
-					sMedicMaxHealth = !g_bTankConfig[ST_TankType(iPlayer)] ? g_sMedicMaxHealth[ST_TankType(iPlayer)] : g_sMedicMaxHealth2[ST_TankType(iPlayer)];
+					sMedicMaxHealth = !g_bTankConfig[ST_TankType(client)] ? g_sMedicMaxHealth[ST_TankType(client)] : g_sMedicMaxHealth2[ST_TankType(client)];
 					TrimString(sMedicMaxHealth);
 					ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
 					int iHealth = GetClientHealth(iInfected);
@@ -150,31 +143,6 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 			}
 		}
 	}
-}
-
-public void ST_Configs(char[] savepath, int limit, bool main)
-{
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
-	{
-		char sName[MAX_NAME_LENGTH + 1];
-		Format(sName, sizeof(sName), "Tank %d", iIndex);
-		if (kvSuperTanks.JumpToKey(sName))
-		{
-			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
-			main ? (g_iMedicAbility[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", 0)) : (g_iMedicAbility2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", g_iMedicAbility[iIndex]));
-			main ? (g_iMedicAbility[iIndex] = iSetCellLimit(g_iMedicAbility[iIndex], 0, 1)) : (g_iMedicAbility2[iIndex] = iSetCellLimit(g_iMedicAbility2[iIndex], 0, 1));
-			main ? (g_iMedicChance[iIndex] = kvSuperTanks.GetNum("Medic Ability/Medic Chance", 4)) : (g_iMedicChance2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Medic Chance", g_iMedicChance[iIndex]));
-			main ? (g_iMedicChance[iIndex] = iSetCellLimit(g_iMedicChance[iIndex], 1, 9999999999)) : (g_iMedicChance2[iIndex] = iSetCellLimit(g_iMedicChance2[iIndex], 1, 9999999999));
-			main ? (kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth[iIndex], sizeof(g_sMedicHealth[]), "25,25,25,25,25,25")) : (kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth2[iIndex], sizeof(g_sMedicHealth2[]), g_sMedicHealth[iIndex]));
-			main ? (kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth[iIndex], sizeof(g_sMedicMaxHealth[]), "250,50,250,100,325,600")) : (kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth2[iIndex], sizeof(g_sMedicMaxHealth2[]), g_sMedicMaxHealth[iIndex]));
-			main ? (g_flMedicRange[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", 500.0)) : (g_flMedicRange2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", g_flMedicRange[iIndex]));
-			main ? (g_flMedicRange[iIndex] = flSetFloatLimit(g_flMedicRange[iIndex], 1.0, 9999999999.0)) : (g_flMedicRange2[iIndex] = flSetFloatLimit(g_flMedicRange2[iIndex], 1.0, 9999999999.0));
-			kvSuperTanks.Rewind();
-		}
-	}
-	delete kvSuperTanks;
 }
 
 void vMedic(int client, int health, int extrahealth, int maxhealth)

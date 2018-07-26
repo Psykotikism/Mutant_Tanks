@@ -61,16 +61,6 @@ public void OnMapStart()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -79,26 +69,6 @@ public void OnClientPostAdminCheck(int client)
 public void OnClientDisconnect(int client)
 {
 	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
-	}
 }
 
 void vLateLoad(bool late)
@@ -131,24 +101,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	if (bIsSurvivor(iPlayer))
-	{
-		int iCorpse = -1;
-		while ((iCorpse = FindEntityByClassname(iCorpse, "survivor_death_model")) != INVALID_ENT_REFERENCE)
-		{
-			int iOwner = GetEntPropEnt(iCorpse, Prop_Send, "m_hOwnerEntity");
-			if (iPlayer == iOwner)
-			{
-				AcceptEntityInput(iCorpse, "Kill");
-			}
-		}
-	}
-}
-
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -174,6 +126,22 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_Death(int client)
+{
+	if (bIsSurvivor(client))
+	{
+		int iCorpse = -1;
+		while ((iCorpse = FindEntityByClassname(iCorpse, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+		{
+			int iOwner = GetEntPropEnt(iCorpse, Prop_Send, "m_hOwnerEntity");
+			if (client == iOwner)
+			{
+				AcceptEntityInput(iCorpse, "Kill");
+			}
+		}
+	}
 }
 
 public void ST_Ability(int client)

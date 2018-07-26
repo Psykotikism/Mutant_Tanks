@@ -75,16 +75,6 @@ public void OnMapStart()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -105,26 +95,6 @@ public void OnMapEnd()
 		{
 			g_bElectric[iPlayer] = false;
 		}
-	}
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
 	}
 }
 
@@ -154,22 +124,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				int iElectricHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iElectricHit[ST_TankType(attacker)] : g_iElectricHit2[ST_TankType(attacker)];
 				vElectricHit(victim, attacker, iElectricHit);
-			}
-		}
-	}
-}
-
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	if (bIsTank(iPlayer))
-	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor])
-			{
-				SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 			}
 		}
 	}
@@ -206,6 +160,20 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_Death(int client)
+{
+	if (bIsTank(client))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor])
+			{
+				SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			}
+		}
+	}
 }
 
 public void ST_Ability(int client)

@@ -55,16 +55,6 @@ public void OnMapStart()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
 public void OnClientPostAdminCheck(int client)
 {
 	g_bMinion[client] = false;
@@ -86,37 +76,6 @@ public void OnMapEnd()
 			g_bMinion[iPlayer] = false;
 			g_iMinionCount[iPlayer] = 0;
 		}
-	}
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
-	}
-}
-
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	if (bIsTank(iPlayer))
-	{
-		g_bMinion[iPlayer] = false;
-		g_iMinionCount[iPlayer] = 0;
 	}
 }
 
@@ -142,6 +101,15 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_Death(int client)
+{
+	if (bIsTank(client))
+	{
+		g_bMinion[client] = false;
+		g_iMinionCount[client] = 0;
+	}
 }
 
 public void ST_Ability(int client)

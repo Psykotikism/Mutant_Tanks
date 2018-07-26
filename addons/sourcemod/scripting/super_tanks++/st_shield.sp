@@ -69,16 +69,6 @@ public void OnMapStart()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -99,28 +89,6 @@ public void OnMapEnd()
 		{
 			g_bShield[iPlayer] = false;
 		}
-	}
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvents(true) : vHookEvents(false);
-}
-
-void vHookEvents(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("ability_use", eEventAbilityUse);
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("ability_use", eEventAbilityUse);
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
 	}
 }
 
@@ -171,54 +139,6 @@ public Action SetTransmit(int entity, int client)
 	return Plugin_Continue;
 }
 
-public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iTank = GetClientOfUserId(iUserId);
-	if (bIsTank(iTank))
-	{
-		int iProp = -1;
-		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-		{
-			char sModel[128];
-			GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-			if (strcmp(sModel, MODEL_SHIELD, false) == 0)
-			{
-				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == iTank)
-				{
-					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
-				}
-			}
-		}
-	}
-}
-
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	if (bIsTank(iPlayer))
-	{
-		int iProp = -1;
-		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-		{
-			char sModel[128];
-			GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-			if (strcmp(sModel, MODEL_SHIELD, false) == 0)
-			{
-				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == iPlayer)
-				{
-					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-					AcceptEntityInput(iProp, "Kill");
-				}
-			}
-		}
-	}
-}
-
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -239,6 +159,50 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_AbilityThrow(int client)
+{
+	if (bIsTank(client))
+	{
+		int iProp = -1;
+		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+		{
+			char sModel[128];
+			GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+			if (strcmp(sModel, MODEL_SHIELD, false) == 0)
+			{
+				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+				if (iOwner == client)
+				{
+					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
+				}
+			}
+		}
+	}
+}
+
+public void ST_Death(int client)
+{
+	if (bIsTank(client))
+	{
+		int iProp = -1;
+		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+		{
+			char sModel[128];
+			GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+			if (strcmp(sModel, MODEL_SHIELD, false) == 0)
+			{
+				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+				if (iOwner == client)
+				{
+					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+					AcceptEntityInput(iProp, "Kill");
+				}
+			}
+		}
+	}
 }
 
 public void ST_TankSpawn(int client)

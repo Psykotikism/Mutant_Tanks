@@ -41,48 +41,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vIsPluginAllowed();
-	}
-}
-
-void vIsPluginAllowed()
-{
-	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
-}
-
-void vHookEvent(bool hook)
-{
-	static bool hooked;
-	if (hook && !hooked)
-	{
-		HookEvent("player_death", eEventPlayerDeath);
-		hooked = true;
-	}
-	else if (!hook && hooked)
-	{
-		UnhookEvent("player_death", eEventPlayerDeath);
-		hooked = false;
-	}
-}
-
-public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int iUserId = event.GetInt("userid");
-	int iPlayer = GetClientOfUserId(iUserId);
-	int iSplashAbility = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iSplashAbility[ST_TankType(iPlayer)] : g_iSplashAbility2[ST_TankType(iPlayer)];
-	int iSplashChance = !g_bTankConfig[ST_TankType(iPlayer)] ? g_iSplashChance[ST_TankType(iPlayer)] : g_iSplashChance2[ST_TankType(iPlayer)];
-	if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && bIsTank(iPlayer))
-	{
-		CreateTimer(0.1, tTimerSplash, iUserId, TIMER_FLAG_NO_MAPCHANGE);
-	}
-}
-
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -108,29 +66,19 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_Incap(int client)
+{
+	int iSplashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSplashAbility[ST_TankType(client)] : g_iSplashAbility2[ST_TankType(client)];
+	int iSplashChance = !g_bTankConfig[ST_TankType(client)] ? g_iSplashChance[ST_TankType(client)] : g_iSplashChance2[ST_TankType(client)];
+	if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && bIsTank(client))
+	{
+		CreateTimer(2.75, tTimerSplash, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+	}
+}
+
 bool bIsValidEntity(int entity)
 {
 	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
-}
-
-public bool bTraceRayDontHitSelfAndEntity(int entity, int mask)
-{
-	if (!bIsValidEntity(entity))
-	{
-		return false;
-	}
-	return true;
-}
-
-bool bVisiblePosition(float pos1[3], float pos2[3])
-{
-	Handle hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndEntity);
-	if (TR_DidHit(hTrace))
-	{
-		return false;
-	}
-	delete hTrace;
-	return true;
 }
 
 public Action tTimerSplash(Handle timer, any userid)
@@ -144,15 +92,15 @@ public Action tTimerSplash(Handle timer, any userid)
 	{
 		float flSplashRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flSplashRange[ST_TankType(iTank)] : g_flSplashRange2[ST_TankType(iTank)];
 		float flTankPos[3];
-		GetClientEyePosition(iTank, flTankPos);
+		GetClientAbsOrigin(iTank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
 			{
 				float flSurvivorPos[3];
-				GetClientEyePosition(iSurvivor, flSurvivorPos);
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flSplashRange && bVisiblePosition(flTankPos, flSurvivorPos))
+				if (flDistance <= flSplashRange)
 				{
 					char sDamage[6];
 					int iSplashDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashDamage[ST_TankType(iTank)] : g_iSplashDamage2[ST_TankType(iTank)];
@@ -163,7 +111,7 @@ public Action tTimerSplash(Handle timer, any userid)
 						DispatchKeyValue(iSurvivor, "targetname", "hurtme");
 						DispatchKeyValue(iPointHurt, "Damage", sDamage);
 						DispatchKeyValue(iPointHurt, "DamageTarget", "hurtme");
-						DispatchKeyValue(iPointHurt, "DamageType", "65536");
+						DispatchKeyValue(iPointHurt, "DamageType", "2");
 						DispatchSpawn(iPointHurt);
 						AcceptEntityInput(iPointHurt, "Hurt", iSurvivor);
 						AcceptEntityInput(iPointHurt, "Kill");
