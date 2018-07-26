@@ -140,7 +140,7 @@ SourceMod 1.8+
 			// Maximum types of Super Tanks allowed.
 			// Minimum: 1
 			// Maximum: 2500
-			"Maximum Types"					"84"
+			"Maximum Types"					"2500"
 
 			// Multiply the Super Tank's health.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
@@ -296,7 +296,7 @@ SourceMod 1.8+
 			// Maximum: 3.0
 			"Run Speed"						"1.0"
 
-			// The Super Tank's rock throw interval.
+			// The Super Tank throws a rock every time this many seconds passes.
 			// Note: Default throw interval is 5.0 seconds.
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -376,30 +376,6 @@ SourceMod 1.8+
 			// 0: OFF
 			// 1: ON
 			"Acid Rock Break"				"0"
-		}
-		// The Super Tank flies.
-		// Requires "st_airborne.smx" to be installed.
-		"Airborne Ability"
-		{
-			// Enable this ability.
-			// 0: OFF
-			// 1: ON
-			"Ability Enabled"				"0"
-
-			// The Super Tank has 1 out of this many chances to trigger the ability.
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Airborne Chance"				"4"
-
-			// The Super Tank's ability effects last this long.
-			// Minimum: 0.1
-			// Maximum: 9999999999.0
-			"Airborne Duration"				"5.0"
-
-			// The Super Tank flies this fast.
-			// Minimum: 100.0
-			// Maximum: 500.0
-			"Airborne Speed"				"300.0"
 		}
 		// The Super Tank receives more damage from bullets and explosions than usual.
 		// The Super Tank takes away survivors' ammunition.
@@ -631,9 +607,57 @@ SourceMod 1.8+
 			// Maximum: 9999999999.0 (Farthest)
 			"Drug Range"					"150.0"
 		}
+		// The Super Tank electrocutes survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is electrocuted.
+		// "Electric Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is electrocuted.
+		// Requires "st_electric.smx" to be installed.
+		"Electric Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Electric Hit" setting.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Electric Chance"				"4"
+
+			// The Super Tank's electrocutions do this much damage.
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Electric Damage"				"5"
+
+			// The Super Tank's ability effects last this long.
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Electric Duration"				"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// 0: OFF
+			// 1: ON
+			"Electric Hit"					"1"
+
+			// The Super Tank electrocutes survivors every time this many seconds passes.
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Electric Interval"				"1.0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Electric Range"				"150.0"
+
+			// The Super Tank sets the survivors' run speed to this value when they are electrocuted.
+			// Minimum: 0.1
+			// Maximum: 0.99
+			"Electric Speed"				"0.75"
+		}
 		// The Super Tank forces survivors to only use a certain weapon slot.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor will be forced to only use a certain weapon slot.
-		// "Enforce Hit" - When a survivor is hit by a Tank's claw or rock, the survivor will be forced to only use a certain weapon slot.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is forced to only use a certain weapon slot.
+		// "Enforce Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is forced to only use a certain weapon slot.
 		// Requires "st_enforce.smx" to be installed.
 		"Enforce Ability"
 		{
@@ -959,7 +983,7 @@ SourceMod 1.8+
 			// Maximum: 9999999999 (Less chance)
 			"Hurt Chance"					"4"
 
-			// The Super Tank's pain infliction does this much damage.
+			// The Super Tank's pain inflictions do this much damage.
 			// Minimum: 1
 			// Maximum: 9999999999
 			"Hurt Damage"					"1"
@@ -1118,7 +1142,7 @@ SourceMod 1.8+
 			// Enable this ability.
 			// 0: OFF
 			// 1: ON
-			"Ability Enabled"				"1"
+			"Ability Enabled"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// Minimum: 1 (Greatest chance)
@@ -1616,6 +1640,39 @@ SourceMod 1.8+
 			// Maximum: 9999999999.0 (Farthest)
 			"Shove Range"					"150.0"
 		}
+		// The Super Tank smashes survivors or crushes them to death.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is smashed.
+		// "Smash Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is crushed to death.
+		// Requires "st_smash.smx" to be installed.
+		"Smash Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Smash Hit" setting.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Smash Chance"					"4"
+
+			// The Super Tank's smashes do this much damage.
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Smash Damage"					"5"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// 0: OFF
+			// 1: ON
+			"Smash Hit"						"1"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Smash Range"					"150.0"
+		}
 		// The Super Tank smites survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is smitten.
 		// "Smite Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is smitten.
@@ -1667,6 +1724,30 @@ SourceMod 1.8+
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Spam Duration"					"5.0"
+		}
+		// The Super Tank releases a splash damage upon death.
+		// Requires "st_splash.smx" to be installed.
+		"Splash Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Splash Chance"					"4"
+
+			// The Super Tank's splashes do this much damage.
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Splash Damage"					"5"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Splash Range"					"150.0"
 		}
 		// The Super Tank slows survivors down.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is slowed down.
@@ -2448,9 +2529,190 @@ Example:
 
 22. Are there any developer/tester features available in the plugin?
 
-Yes, there are target filters for each special infected and the sm_tank command that allows developers/testers to spawn each Super Tank.
+Yes, there are forwards, natives, stocks, target filters for each special infected, and the sm_tank command that allows developers/testers to spawn each Super Tank.
 
-List of target filters:
+Forwards:
+```
+/* Called every second to trigger the Super Tank's ability.
+ * Use this forward for any passive abilities.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_Ability(int client);
+
+/* Called when the config file is loaded.
+ * Use this forward to load settings for the plugin.
+ *
+ * @param savepath		The savepath of the config.
+ * @param limit			The limit for how many Super Tank type
+ *							settings to check for.
+ * @param main			Checks whether the main config or a
+ *							custom config is being used.
+ */
+forward void ST_Configs(char[] savepath, int limit, bool main);
+
+/* Called when the Tank's rock breaks.
+ * Use this forward for any after-effects.
+ *
+ * @param client		Client index of the Tank.
+ * @param entity		Entity index of the rock.
+ */
+forward void ST_RockBreak(int client, int entity);
+
+/* Called when the Tank throws a rock.
+ * Use this forward for any throwing abilities.
+ *
+ * @param client		Client index of the Tank.
+ * @param entity		Entity index of the rock.
+ */
+forward void ST_RockThrow(int client, int entity);
+
+/* Called when the Tank spawns.
+ * Use this forward for any one-time abilities
+ * or on-spawn presets.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_Spawn(int client);
+```
+
+Natives:
+```
+/* Returns the status of the core plugin.
+ *
+ * @return				True on success, false if core plugin is disabled.
+ */
+native bool ST_PluginEnabled();
+
+/* Spawns a Tank with the specified Super Tank type.
+ *
+ * @param client		Client index of the Tank.
+ * @param type			Type of Super Tank.
+ */
+native void ST_SpawnTank(int client, int type);
+
+/* Returns the Super Tank type of the Tank.
+ *
+ * @param client		Client index of the Tank.
+ *
+ * @return				The Tank's Super Tank type.
+ */
+native int ST_TankType(int client);
+```
+
+Stocks:
+```
+stock bool bIsBoomer(int client, bool alive = true)
+{
+	if (bIsInfected(client, alive))
+	{
+		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 2)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+stock bool bIsCharger(int client, bool alive = true)
+{
+	if (bIsInfected(client, alive))
+	{
+		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 6)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+stock bool bIsHunter(int client, bool alive = true)
+{
+	if (bIsInfected(client, alive))
+	{
+		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 3)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+stock bool bIsInfected(int client, bool alive = true)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3 && (!alive || (alive && IsPlayerAlive(client))) && !IsClientInKickQueue(client);
+}
+
+stock bool bIsJockey(int client, bool alive = true)
+{
+	if (bIsInfected(client, alive))
+	{
+		if (bIsL4D2Game() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+stock bool bIsL4D2Game()
+{
+	return GetEngineVersion() == Engine_Left4Dead2;
+}
+
+stock bool bIsSmoker(int client, bool alive = true)
+{
+	if (bIsInfected(client, alive))
+	{
+		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 1)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+stock bool bIsSpecialInfected(int client)
+{
+	if (bIsSmoker(client) || bIsBoomer(client) || bIsHunter(client) || bIsSpitter(client) || bIsJockey(client) || bIsCharger(client))
+	{
+		return true;
+	}
+	return false;
+}
+
+stock bool bIsSpitter(int client, bool alive = true)
+{
+	if (bIsInfected(client, alive))
+	{
+		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 4)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+stock bool bIsSurvivor(int client)
+{
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client);
+}
+
+stock bool bIsTank(int client, bool alive = true)
+{
+	if (bIsInfected(client, alive))
+	{
+		int iClass = GetEntProp(client, Prop_Send, "m_zombieClass");
+		if ((bIsL4D2Game() && iClass == 8) || (!bIsL4D2Game() && iClass == 5))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+```
+
+Target filters:
 
 ```
 @smokers
@@ -2507,13 +2769,13 @@ Examples:
 
 **honorcode** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?p=1251446) plugin.
 
-**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Flying Tank](https://forums.alliedmods.net/showthread.php?p=1544648), and [Tank's Power](https://forums.alliedmods.net/showthread.php?p=1262968) plugins.
+**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?p=1262968) plugins.
 
 **strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?p=702913), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?p=702914), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?p=702918) plugins.
 
 **Marcus101RR** - For the code to set a player's weapon's ammo.
 
-**AtomicStryker** - For the code and gamedata signatures to respawn survivors.
+**AtomicStryker** - For the [SM Respawn Command](https://forums.alliedmods.net/showthread.php?p=862618) and [Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?p=884839) plugins.
 
 **Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?p=2402076) plugin.
 
