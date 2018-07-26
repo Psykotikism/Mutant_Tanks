@@ -10,7 +10,8 @@ Bug fixes:
 Changes:
 
 1. Added new abilities and renamed some settings.
-2. Divided the plugin into multiple files for the following reasons:
+2. Removed unnecessary code.
+3. Divided the plugin into multiple files for the following reasons:
 
 - To avoid slow compilation time.
 - To make it easier to add new abilities.
