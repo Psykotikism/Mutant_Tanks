@@ -3496,8 +3496,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Splasher Tank\"");
 			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
-			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"\"");
-			fFilename.WriteLine("			\"Props Colors\"					\"\"");
+			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"75,50,75,255|75,50,75\"");
+			fFilename.WriteLine("			\"Props Colors\"					\"50,75,50,255|50,75,50,255|50,75,50,180|50,75,50,255|50,75,50,255\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Enhancements\"");
 			fFilename.WriteLine("		{");
