@@ -92,7 +92,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iMeteorAbility[iIndex] = iSetCellLimit(g_iMeteorAbility[iIndex], 0, 1)) : (g_iMeteorAbility2[iIndex] = iSetCellLimit(g_iMeteorAbility2[iIndex], 0, 1));
 			main ? (g_iMeteorChance[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", 4)) : (g_iMeteorChance2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", g_iMeteorChance[iIndex]));
 			main ? (g_iMeteorChance[iIndex] = iSetCellLimit(g_iMeteorChance[iIndex], 1, 9999999999)) : (g_iMeteorChance2[iIndex] = iSetCellLimit(g_iMeteorChance2[iIndex], 1, 9999999999));
-			main ? (g_iMeteorDamage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Damage", 25)) : (g_iMeteorDamage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Damage", g_iMeteorDamage[iIndex]));
+			main ? (g_iMeteorDamage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Damage", 5)) : (g_iMeteorDamage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Damage", g_iMeteorDamage[iIndex]));
 			main ? (g_iMeteorDamage[iIndex] = iSetCellLimit(g_iMeteorDamage[iIndex], 1, 9999999999)) : (g_iMeteorDamage2[iIndex] = iSetCellLimit(g_iMeteorDamage2[iIndex], 1, 9999999999));
 			main ? (kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius[iIndex], sizeof(g_sMeteorRadius[]), "-180.0,180.0")) : (kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius2[iIndex], sizeof(g_sMeteorRadius2[]), g_sMeteorRadius[iIndex]));
 			kvSuperTanks.Rewind();

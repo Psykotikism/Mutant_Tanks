@@ -14,12 +14,12 @@ public Plugin myinfo =
 
 bool g_bLateLoad;
 bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flWitchDamage[ST_MAXTYPES + 1];
-float g_flWitchDamage2[ST_MAXTYPES + 1];
 int g_iWitchAbility[ST_MAXTYPES + 1];
 int g_iWitchAbility2[ST_MAXTYPES + 1];
 int g_iWitchAmount[ST_MAXTYPES + 1];
 int g_iWitchAmount2[ST_MAXTYPES + 1];
+int g_iWitchDamage[ST_MAXTYPES + 1];
+int g_iWitchDamage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -83,8 +83,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			int iOwner = GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity");
 			if (bIsTank(iOwner))
 			{
-				float flWitchDamage = !g_bTankConfig[ST_TankType(iOwner)] ? g_flWitchDamage[ST_TankType(iOwner)] : g_flWitchDamage2[ST_TankType(iOwner)];
-				damage = flWitchDamage;
+				int iWitchDamage = !g_bTankConfig[ST_TankType(iOwner)] ? g_iWitchDamage[ST_TankType(iOwner)] : g_iWitchDamage2[ST_TankType(iOwner)];
+				damage = float(iWitchDamage);
 				return Plugin_Changed;
 			}
 		}
@@ -107,8 +107,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iWitchAbility[iIndex] = iSetCellLimit(g_iWitchAbility[iIndex], 0, 1)) : (g_iWitchAbility2[iIndex] = iSetCellLimit(g_iWitchAbility2[iIndex], 0, 1));
 			main ? (g_iWitchAmount[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Amount", 3)) : (g_iWitchAmount2[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Amount", g_iWitchAmount[iIndex]));
 			main ? (g_iWitchAmount[iIndex] = iSetCellLimit(g_iWitchAmount[iIndex], 1, 25)) : (g_iWitchAmount2[iIndex] = iSetCellLimit(g_iWitchAmount2[iIndex], 1, 25));
-			main ? (g_flWitchDamage[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Minion Damage", 10.0)) : (g_flWitchDamage2[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Minion Damage", g_flWitchDamage[iIndex]));
-			main ? (g_flWitchDamage[iIndex] = flSetFloatLimit(g_flWitchDamage[iIndex], 1.0, 9999999999.0)) : (g_flWitchDamage2[iIndex] = flSetFloatLimit(g_flWitchDamage2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iWitchDamage[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Minion Damage", 5)) : (g_iWitchDamage2[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Minion Damage", g_iWitchDamage[iIndex]));
+			main ? (g_iWitchDamage[iIndex] = iSetCellLimit(g_iWitchDamage[iIndex], 1, 9999999999)) : (g_iWitchDamage2[iIndex] = iSetCellLimit(g_iWitchDamage2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

@@ -75,6 +75,16 @@ public void OnMapStart()
 	}
 }
 
+public void OnConfigsExecuted()
+{
+	char sMapName[128];
+	GetCurrentMap(sMapName, sizeof(sMapName));
+	if (IsMapValid(sMapName))
+	{
+		vIsPluginAllowed();
+	}
+}
+
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -95,6 +105,26 @@ public void OnMapEnd()
 		{
 			g_bElectric[iPlayer] = false;
 		}
+	}
+}
+
+void vIsPluginAllowed()
+{
+	ST_PluginEnabled() ? vHookEvent(true) : vHookEvent(false);
+}
+
+void vHookEvent(bool hook)
+{
+	static bool hooked;
+	if (hook && !hooked)
+	{
+		HookEvent("player_death", eEventPlayerDeath);
+		hooked = true;
+	}
+	else if (!hook && hooked)
+	{
+		UnhookEvent("player_death", eEventPlayerDeath);
+		hooked = false;
 	}
 }
 
@@ -129,6 +159,22 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
+public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int iUserId = event.GetInt("userid");
+	int iPlayer = GetClientOfUserId(iUserId);
+	if (bIsTank(iPlayer))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor])
+			{
+				SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			}
+		}
+	}
+}
+
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -144,7 +190,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iElectricAbility[iIndex] = iSetCellLimit(g_iElectricAbility[iIndex], 0, 1)) : (g_iElectricAbility2[iIndex] = iSetCellLimit(g_iElectricAbility2[iIndex], 0, 1));
 			main ? (g_iElectricChance[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Chance", 4)) : (g_iElectricChance2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Chance", g_iElectricChance[iIndex]));
 			main ? (g_iElectricChance[iIndex] = iSetCellLimit(g_iElectricChance[iIndex], 1, 9999999999)) : (g_iElectricChance2[iIndex] = iSetCellLimit(g_iElectricChance2[iIndex], 1, 9999999999));
-			main ? (g_iElectricDamage[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Damage", 1)) : (g_iElectricDamage2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Damage", g_iElectricDamage[iIndex]));
+			main ? (g_iElectricDamage[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Damage", 5)) : (g_iElectricDamage2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Damage", g_iElectricDamage[iIndex]));
 			main ? (g_iElectricDamage[iIndex] = iSetCellLimit(g_iElectricDamage[iIndex], 1, 9999999999)) : (g_iElectricDamage2[iIndex] = iSetCellLimit(g_iElectricDamage2[iIndex], 1, 9999999999));
 			main ? (g_flElectricDuration[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Duration", 5.0)) : (g_flElectricDuration2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Duration", g_flElectricDuration[iIndex]));
 			main ? (g_flElectricDuration[iIndex] = flSetFloatLimit(g_flElectricDuration[iIndex], 0.1, 9999999999.0)) : (g_flElectricDuration2[iIndex] = flSetFloatLimit(g_flElectricDuration2[iIndex], 0.1, 9999999999.0));
@@ -287,6 +333,10 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flElectricDuration) < GetEngineTime())
 	{
 		g_bElectric[iSurvivor] = false;
+		if (bIsSurvivor(iSurvivor))
+		{
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		}
 		return Plugin_Stop;
 	}
 	if (bIsTank(iTank) && bIsSurvivor(iSurvivor))

@@ -190,6 +190,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_flStunRange[iIndex] = flSetFloatLimit(g_flStunRange[iIndex], 1.0, 9999999999.0)) : (g_flStunRange2[iIndex] = flSetFloatLimit(g_flStunRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_flStunSpeed[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Speed", 0.25)) : (g_flStunSpeed2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Speed", g_flStunSpeed[iIndex]));
 			main ? (g_flStunSpeed[iIndex] = flSetFloatLimit(g_flStunSpeed[iIndex], 0.1, 0.9)) : (g_flStunSpeed2[iIndex] = flSetFloatLimit(g_flStunSpeed2[iIndex], 0.1, 0.9));
+			kvSuperTanks.Rewind();
 		}
 	}
 	delete kvSuperTanks;

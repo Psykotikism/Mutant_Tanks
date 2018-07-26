@@ -52,6 +52,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iJumpAbility[iIndex] = iSetCellLimit(g_iJumpAbility[iIndex], 0, 1)) : (g_iJumpAbility2[iIndex] = iSetCellLimit(g_iJumpAbility2[iIndex], 0, 1));
 			main ? (g_iJumpChance[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", 4)) : (g_iJumpChance2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", g_iJumpChance[iIndex]));
 			main ? (g_iJumpChance[iIndex] = iSetCellLimit(g_iJumpChance[iIndex], 1, 9999999999)) : (g_iJumpChance2[iIndex] = iSetCellLimit(g_iJumpChance2[iIndex], 1, 9999999999));
+			kvSuperTanks.Rewind();
 		}
 	}
 	delete kvSuperTanks;
