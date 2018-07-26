@@ -258,6 +258,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 		{
 			fFilename.WriteLine("// Super Tanks++ KeyValues Settings");
 			fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+			fFilename.WriteLine("// If any of these Tanks don't work, make sure you have all the abilities installed.");
 			fFilename.WriteLine("\"Super Tanks++\"");
 			fFilename.WriteLine("{");
 			fFilename.WriteLine("	// These are the general settings.");
@@ -3356,10 +3357,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Smash Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
-			fFilename.WriteLine("			\"Smash Chance\"					\"1\"");
+			fFilename.WriteLine("			\"Smash Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Smash Damage\"					\"5\"");
 			fFilename.WriteLine("			\"Smash Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Smash Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Smash Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 52\"");
@@ -3505,9 +3506,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Splash Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
-			fFilename.WriteLine("			\"Splash Chance\"					\"1\"");
+			fFilename.WriteLine("			\"Splash Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Splash Damage\"					\"5\"");
-			fFilename.WriteLine("			\"Splash Range\"					\"500.0\"");
+			fFilename.WriteLine("			\"Splash Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 58\"");
