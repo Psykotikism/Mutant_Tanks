@@ -1,10 +1,10 @@
 // Super Tanks++
-#if defined _supertanks_included
+#if defined _supertanksplusplus_included
 	#endinput
 #endif
-#define _supertanks_included
+#define _supertanksplusplus_included
 
-public SharedPlugin __pl_supertanks = 
+public SharedPlugin __pl_supertanksplusplus = 
 {
 	name = "super_tanks++",
 	file = "super_tanks++.smx",
@@ -16,7 +16,7 @@ public SharedPlugin __pl_supertanks =
 };
 
 #if !defined REQUIRE_PLUGIN
-public void __pl_supertanks_SetNTVOptional()
+public void __pl_supertanksplusplus_SetNTVOptional()
 {
 	MarkNativeAsOptional("ST_PluginEnabled");
 	MarkNativeAsOptional("ST_SpawnTank");
@@ -1434,7 +1434,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// The Super Tank's meteorites do this much damage.");
 			fFilename.WriteLine("			// Minimum: 1");
 			fFilename.WriteLine("			// Maximum: 9999999999");
-			fFilename.WriteLine("			\"Meteor Damage\"					\"25\"");
+			fFilename.WriteLine("			\"Meteor Damage\"					\"5\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The radius of the Super Tank's meteor shower.");
 			fFilename.WriteLine("			// 1st number = Minimum radius");
@@ -1866,7 +1866,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
 			fFilename.WriteLine("			// 0: OFF");
 			fFilename.WriteLine("			// 1: ON");
-			fFilename.WriteLine("			\"Smash Hit\"						\"1\"");
+			fFilename.WriteLine("			\"Smash Hit\"						\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
@@ -2161,9 +2161,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Witch Amount\"					\"3\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank's Witch minion causes this much damage per hit.");
-			fFilename.WriteLine("			// Minimum: 1.0");
-			fFilename.WriteLine("			// Maximum: 9999999999.0");
-			fFilename.WriteLine("			\"Witch Minion Damage\"			\"10.0\"");
+			fFilename.WriteLine("			// Minimum: 1");
+			fFilename.WriteLine("			// Maximum: 9999999999");
+			fFilename.WriteLine("			\"Witch Minion Damage\"			\"5\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		// The Super Tank spawns common infected.");
 			fFilename.WriteLine("		// Requires \"st_zombie.smx\" to be installed.");
@@ -2803,7 +2803,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Hurt Chance\"					\"4\"");
-			fFilename.WriteLine("			\"Hurt Damage\"					\"5\"");
+			fFilename.WriteLine("			\"Hurt Damage\"					\"1\"");
 			fFilename.WriteLine("			\"Hurt Duration\"					\"5.0\"");
 			fFilename.WriteLine("			\"Hurt Hit\"						\"1\"");
 			fFilename.WriteLine("			\"Hurt Range\"					\"150.0\"");
@@ -3011,7 +3011,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Meteor Chance\"					\"4\"");
-			fFilename.WriteLine("			\"Meteor Damage\"					\"25\"");
+			fFilename.WriteLine("			\"Meteor Damage\"					\"5\"");
 			fFilename.WriteLine("			\"Meteor Radius\"					\"-180.0,180.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
@@ -3356,11 +3356,10 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Smash Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
-			fFilename.WriteLine("			\"Smash Chance\"					\"4\"");
-			fFilename.WriteLine("			\"Smash Crush Chance\"			\"4\"");
+			fFilename.WriteLine("			\"Smash Chance\"					\"1\"");
 			fFilename.WriteLine("			\"Smash Damage\"					\"5\"");
 			fFilename.WriteLine("			\"Smash Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Smash Range\"					\"150.0\"");
+			fFilename.WriteLine("			\"Smash Range\"					\"500.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 52\"");
@@ -3506,9 +3505,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Splash Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
-			fFilename.WriteLine("			\"Splash Chance\"					\"4\"");
+			fFilename.WriteLine("			\"Splash Chance\"					\"1\"");
 			fFilename.WriteLine("			\"Splash Damage\"					\"5\"");
-			fFilename.WriteLine("			\"Splash Range\"					\"150.0\"");
+			fFilename.WriteLine("			\"Splash Range\"					\"500.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 58\"");
@@ -3660,7 +3659,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Witch Amount\"					\"3\"");
-			fFilename.WriteLine("			\"Witch Minion Damage\"			\"10.0\"");
+			fFilename.WriteLine("			\"Witch Minion Damage\"			\"5\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 64\"");
@@ -3710,7 +3709,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Meteor Chance\"					\"2\"");
-			fFilename.WriteLine("			\"Meteor Damage\"					\"25\"");
+			fFilename.WriteLine("			\"Meteor Damage\"					\"5\"");
 			fFilename.WriteLine("			\"Meteor Radius\"					\"-180.0,180.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
@@ -3772,7 +3771,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Meteor Chance\"					\"1\"");
-			fFilename.WriteLine("			\"Meteor Damage\"					\"25\"");
+			fFilename.WriteLine("			\"Meteor Damage\"					\"5\"");
 			fFilename.WriteLine("			\"Meteor Radius\"					\"-180.0,180.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Shield Ability\"");
@@ -3795,7 +3794,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Witch Amount\"					\"10\"");
-			fFilename.WriteLine("			\"Witch Minion Damage\"			\"25.0\"");
+			fFilename.WriteLine("			\"Witch Minion Damage\"			\"10\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Zombie Ability\"");
 			fFilename.WriteLine("		{");
@@ -3987,7 +3986,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Meteor Chance\"					\"1\"");
-			fFilename.WriteLine("			\"Meteor Damage\"					\"1\"");
+			fFilename.WriteLine("			\"Meteor Damage\"					\"5\"");
 			fFilename.WriteLine("			\"Meteor Radius\"					\"-180.0,180.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Smite Ability\"");
@@ -4011,7 +4010,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Witch Amount\"					\"5\"");
-			fFilename.WriteLine("			\"Witch Minion Damage\"			\"1.0\"");
+			fFilename.WriteLine("			\"Witch Minion Damage\"			\"5\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Zombie Ability\"");
 			fFilename.WriteLine("		{");
@@ -4133,7 +4132,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Meteor Chance\"					\"3\"");
-			fFilename.WriteLine("			\"Meteor Damage\"					\"25\"");
+			fFilename.WriteLine("			\"Meteor Damage\"					\"5\"");
 			fFilename.WriteLine("			\"Meteor Radius\"					\"-180.0,180.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Shield Ability\"");
@@ -4427,7 +4426,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Meteor Chance\"					\"1\"");
-			fFilename.WriteLine("			\"Meteor Damage\"					\"1\"");
+			fFilename.WriteLine("			\"Meteor Damage\"					\"5\"");
 			fFilename.WriteLine("			\"Meteor Radius\"					\"-200.0,200.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Panic Ability\"");
@@ -4441,7 +4440,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Rock Chance\"					\"4\"");
-			fFilename.WriteLine("			\"Rock Damage\"					\"5\"");
+			fFilename.WriteLine("			\"Rock Damage\"					\"10\"");
 			fFilename.WriteLine("			\"Rock Duration\"					\"2.5\"");
 			fFilename.WriteLine("			\"Rock Radius\"					\"-5.0,5.0\"");
 			fFilename.WriteLine("		}");
