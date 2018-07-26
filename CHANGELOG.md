@@ -20,7 +20,8 @@ Changes:
 Files:
 
 1. Updated include file to remove unnecessary code and transfer some of it to other files.
-2. Updated config file with new settings and presets.
+2. Updated gamedata file to remove unused signatures.
+3. Updated config file with new settings and presets.
 
 ## Version 8.23 (July 20, 2018)
 

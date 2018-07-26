@@ -2540,16 +2540,42 @@ Forwards:
  */
 forward void ST_Ability(int client);
 
+/* Called when a Tank is about to throw a rock.
+ * Use this forward to trigger anything when
+ * the Tank is gonna throw a rock.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_AbilityThrow(int client);
+
 /* Called when the config file is loaded.
  * Use this forward to load settings for the plugin.
  *
  * @param savepath		The savepath of the config.
- * @param limit			The limit for how many Super Tank type
- *							settings to check for.
- * @param main			Checks whether the main config or a
- *							custom config is being used.
+ * @param limit			The limit for how many
+ *							Super Tank types' settings
+ *							to check for.
+ * @param main			Checks whether the main config
+ *							or a custom config
+ *							is being used.
  */
 forward void ST_Configs(char[] savepath, int limit, bool main);
+
+/* Called when someone dies.
+ * Use this forward to execute anything when
+ * a survivor or Tank dies.
+ *
+ * @param client		Client index of the player.
+ */
+forward void ST_Death(int client);
+
+/* Called when a Tank is incapacitated.
+ * Use this forward to execute anything when
+ * a Tank is about to die.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_Incap(int client);
 
 /* Called when the Tank's rock breaks.
  * Use this forward for any after-effects.
@@ -2567,6 +2593,12 @@ forward void ST_RockBreak(int client, int entity);
  */
 forward void ST_RockThrow(int client, int entity);
 
+/* Called when the round starts.
+ * Use this forward for setting something when
+ * the round starts.
+ */
+forward void ST_RoundStart();
+
 /* Called when the Tank spawns.
  * Use this forward for any one-time abilities
  * or on-spawn presets.
@@ -2580,7 +2612,8 @@ Natives:
 ```
 /* Returns the status of the core plugin.
  *
- * @return				True on success, false if core plugin is disabled.
+ * @return				True on success, false if
+ *							core plugin is disabled.
  */
 native bool ST_PluginEnabled();
 
