@@ -1234,7 +1234,7 @@ SourceMod 1.8+
 			// The Super Tank's meteorites do this much damage.
 			// Minimum: 1
 			// Maximum: 9999999999
-			"Meteor Damage"					"25"
+			"Meteor Damage"					"5"
 
 			// The radius of the Super Tank's meteor shower.
 			// 1st number = Minimum radius
@@ -1666,7 +1666,7 @@ SourceMod 1.8+
 			// Note: This setting does not need "Ability Enabled" set to 1.
 			// 0: OFF
 			// 1: ON
-			"Smash Hit"						"1"
+			"Smash Hit"						"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
@@ -1961,9 +1961,9 @@ SourceMod 1.8+
 			"Witch Amount"					"3"
 
 			// The Super Tank's Witch minion causes this much damage per hit.
-			// Minimum: 1.0
-			// Maximum: 9999999999.0
-			"Witch Minion Damage"			"10.0"
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Witch Minion Damage"			"5"
 		}
 		// The Super Tank spawns common infected.
 		// Requires "st_zombie.smx" to be installed.
