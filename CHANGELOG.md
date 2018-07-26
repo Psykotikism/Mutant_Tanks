@@ -5,6 +5,7 @@
 Bug fixes:
 
 1. Fixed various errors reported by Princess LadyRain.
+2. Fixed various abilities not working properly.
 
 Changes:
 
