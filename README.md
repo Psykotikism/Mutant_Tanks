@@ -60,6 +60,7 @@ SourceMod 1.8+
 ```
 // Super Tanks++ KeyValues Settings
 // Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.
+// If any of these Tanks don't work, make sure you have all the abilities installed.
 "Super Tanks++"
 {
 	// These are the general settings.
