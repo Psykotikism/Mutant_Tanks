@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 8.25 (July 26, 2018)
+
+Bug fixes:
+
+1. Fixed the Tank limit for each wave not working properly. (Thanks Mi.Cura!)
+
+Changes:
+
+1. Added Range Chance settings and other settings for various abilities for better control.
+
+Files:
+
+1. Updated include file to include the new settings.
+
 ## Version 8.24 (July 26, 2018)
 
 Bug fixes:

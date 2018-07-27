@@ -143,7 +143,7 @@ SourceMod 1.8+
 			// Maximum types of Super Tanks allowed.
 			// Minimum: 1
 			// Maximum: 2500
-			"Maximum Types"					"2500"
+			"Maximum Types"					"85"
 
 			// Multiply the Super Tank's health.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
@@ -348,7 +348,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank creates acid puddles.
 		// "Ability Enabled" - When a survivor is within range of the Tank, an acid puddle is created underneath the survivor.
+		// - "Acid Range"
+		// - "Acid Range Chance"
 		// "Acid Hit" - When a survivor is hit by a Tank's claw or rock, an acid puddle is created underneath the survivor.
+		// - "Acid Chance"
 		// Requires "st_acid.smx" to be installed.
 		"Acid Ability"
 		{
@@ -374,6 +377,11 @@ SourceMod 1.8+
 			// Maximum: 9999999999.0 (Farthest)
 			"Acid Range"					"150.0"
 
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Acid Range Chance"				"16"
+
 			// The Super Tank's rock creates an acid puddle when it breaks.
 			// Only available in Left 4 Dead 2.
 			// 0: OFF
@@ -383,7 +391,10 @@ SourceMod 1.8+
 		// The Super Tank receives more damage from bullets and explosions than usual.
 		// The Super Tank takes away survivors' ammunition.
 		// "Ability Enabled" - When a survivor is within range of the Tank, their ammunition is taken away.
+		// - "Ammo Range"
+		// - "Ammo Range Chance"
 		// "Ammo Hit" - When a survivor is hit by a Tank's claw or rock, their ammunition is taken away.
+		// - "Ammo Chance"
 		// Requires "st_ammo.smx" to be installed.
 		"Ammo Ability"
 		{
@@ -413,10 +424,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Ammo Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Ammo Range Chance"				"16"
 		}
 		// The Super Tank blinds survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is blinded.
+		// - "Blind Range"
+		// - "Blind Range Chance"
 		// "Blind Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is blinded.
+		// - "Blind Chance"
 		// Requires "st_blind.smx" to be installed.
 		"Blind Ability"
 		{
@@ -451,10 +470,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Blind Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Blind Range Chance"			"16"
 		}
 		// The Super Tank creates explosions.
 		// "Ability Enabled" - When a survivor is within range of the Tank, an explosion is created around the survivor.
+		// - "Bomb Range"
+		// - "Bomb Range Chance"
 		// "Bomb Hit" - When a survivor is hit by a Tank's claw or rock, an explosion is created around the survivor.
+		// - "Bomb Chance"
 		// Requires "st_bomb.smx" to be installed.
 		"Bomb Ability"
 		{
@@ -485,6 +512,11 @@ SourceMod 1.8+
 			// Maximum: 9999999999.0 (Farthest)
 			"Bomb Range"					"150.0"
 
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Bomb Range Chance"				"16"
+
 			// The Super Tank's rock creates an explosion when it breaks.
 			// 0: OFF
 			// 1: ON
@@ -492,7 +524,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank buries survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is buried.
+		// - "Bury Range"
+		// - "Bury Range Chance"
 		// "Bury Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is buried.
+		// - "Bury Chance"
 		// Requires "st_bury.smx" to be installed.
 		"Bury Ability"
 		{
@@ -527,6 +562,11 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Bury Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Bury Range Chance"				"16"
 		}
 		// The Super Tank creates clones of itself.
 		// Requires "st_clone.smx" to be installed.
@@ -579,7 +619,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank drugs survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is drugged.
+		// - "Drug Range"
+		// - "Drug Range Chance"
 		// "Drug Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is drugged.
+		// - "Drug Chance"
 		// Requires "st_drug.smx" to be installed.
 		"Drug Ability"
 		{
@@ -609,10 +652,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Drug Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Drug Range Chance"				"16"
 		}
 		// The Super Tank electrocutes survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is electrocuted.
+		// - "Electric Range"
+		// - "Electric Range Chance"
 		// "Electric Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is electrocuted.
+		// - "Electric Chance"
 		// Requires "st_electric.smx" to be installed.
 		"Electric Ability"
 		{
@@ -641,7 +692,7 @@ SourceMod 1.8+
 			// Note: This setting does not need "Ability Enabled" set to 1.
 			// 0: OFF
 			// 1: ON
-			"Electric Hit"					"1"
+			"Electric Hit"					"0"
 
 			// The Super Tank electrocutes survivors every time this many seconds passes.
 			// Minimum: 0.1
@@ -653,6 +704,11 @@ SourceMod 1.8+
 			// Maximum: 9999999999.0 (Farthest)
 			"Electric Range"				"150.0"
 
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Electric Range Chance"			"16"
+
 			// The Super Tank sets the survivors' run speed to this value when they are electrocuted.
 			// Minimum: 0.1
 			// Maximum: 0.99
@@ -660,7 +716,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank forces survivors to only use a certain weapon slot.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is forced to only use a certain weapon slot.
+		// - "Enforce Range"
+		// - "Enforce Range Chance"
 		// "Enforce Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is forced to only use a certain weapon slot.
+		// - "Enforce Chance"
 		// Requires "st_enforce.smx" to be installed.
 		"Enforce Ability"
 		{
@@ -691,6 +750,11 @@ SourceMod 1.8+
 			// Maximum: 9999999999.0 (Farthest)
 			"Enforce Range"					"150.0"
 
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Enforce Range Chance"			"16"
+
 			// The Super Tank forces survivors to only use one of the following weapon slots.
 			// Combine numbers in any order for different results.
 			// Character limit: 5
@@ -703,7 +767,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank creates fires.
 		// "Ability Enabled" - When a survivor is within range of the Tank, a fire is created around the survivor.
+		// - "Fire Range"
+		// - "Fire Range Chance"
 		// "Fire Hit" - When a survivor is hit by a Tank's claw or rock, a fire is created around the survivor.
+		// - "Fire Chance"
 		// Requires "st_fire.smx" to be installed.
 		"Fire Ability"
 		{
@@ -728,6 +795,11 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Fire Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Fire Range Chance"				"16"
 
 			// The Super Tank's rock creates a fire when it breaks.
 			// 0: OFF
@@ -760,7 +832,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank flings survivors high into the air.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is flung into the air.
+		// - "Fling Range"
+		// - "Fling Range Chance"
 		// "Fling Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is flung into the air.
+		// - "Fling Chance"
 		// Requires "st_fling.smx" to be installed.
 		"Fling Ability"
 		{
@@ -785,6 +860,11 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Fling Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Fling Range Chance"			"16"
 		}
 		// The Super Tank takes more damage.
 		// Requires "st_fragile.smx" to be installed.
@@ -805,10 +885,15 @@ SourceMod 1.8+
 			// Maximum: 9999999999.0
 			"Fragile Duration"				"5.0"
 		}
-		// The Super Tank makes itself and any other nearby infected invisible, and disarms survivors.
-		// "Ability Enabled" - Any nearby infected turns invisible.
+		// The Super Tank makes itself and any other nearby special infected invisible, and disarms survivors.
+		// "Ability Enabled" - Any nearby special infected turns invisible.
+		// - "Ghost Cloak Range"
+		// - "Ghost Fade Limit"
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is disarmed.
+		// - "Ghost Range"
+		// - "Ghost Range Chance"
 		// "Ghost Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is disarmed.
+		// - "Ghost Chance"
 		// Requires "st_ghost.smx" to be installed.
 		"Ghost Ability"
 		{
@@ -822,6 +907,11 @@ SourceMod 1.8+
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
 			"Ghost Chance"					"4"
+
+			// The distance between a special infected and the Super Tank needed to trigger the cloak ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Ghost Cloak Range"				"500.0"
 
 			// The limit of the Super Tank's ghost fade effect.
 			// Minimum: 0 (Fully faded)
@@ -838,6 +928,11 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Ghost Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Ghost Range Chance"			"16"
 
 			// The Super Tank disarms the following weapon slots.
 			// Combine numbers in any order for different results.
@@ -871,7 +966,10 @@ SourceMod 1.8+
 		// The Super Tank pulls in or pushes away survivors and any other nearby infected, and changes the survivors' gravity.
 		// "Ability Enabled" - Any nearby infected and survivors are pulled in or pushed away.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's gravity changes.
+		// - "Gravity Range"
+		// - "Gravity Range Chance"
 		// "Gravity Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's gravity changes.
+		// - "Gravity Chance"
 		// Requires "st_gravity.smx" to be installed.
 		"Gravity Ability"
 		{
@@ -909,6 +1007,11 @@ SourceMod 1.8+
 			// Maximum: 9999999999.0 (Farthest)
 			"Gravity Range"					"150.0"
 
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Gravity Range Chance"			"16"
+
 			// The Super Tank sets the survivors' gravity to this value.
 			// Minimum: 0.1
 			// Maximum: 0.99
@@ -916,8 +1019,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank gains health from other nearby infected and sets survivors to black and white with temporary health.
 		// "Ability Enabled" - Any nearby infected can give the Tank some health.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor can go black and white and have temporary health.
+		// - "Heal Interval"
+		// - "Heal Range"
 		// "Heal Hit" - When a survivor is hit by a Tank's claw or rock, the survivor can go black and white and have temporary health.
+		// - "Heal Chance"
 		// Requires "st_heal.smx" to be installed.
 		"Heal Ability"
 		{
@@ -971,7 +1076,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank hurts survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor gets hurt repeatedly.
+		// - "Hurt Range"
+		// - "Hurt Range Chance"
 		// "Hurt Hit" - When a survivor is hit by a Tank's claw or rock, the survivor gets hurt repeatedly.
+		// - "Hurt Chance"
 		// Requires "st_hurt.smx" to be installed.
 		"Hurt Ability"
 		{
@@ -1006,10 +1114,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Hurt Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Hurt Range Chance"				"16"
 		}
 		// The Super Tank hypnotizes survivors to damage themselves or teammates.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is hypnotized.
+		// - "Hypno Range"
+		// - "Hypno Range Chance"
 		// "Hypno Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is hypnotized.
+		// - "Hypno Chance"
 		// Requires "st_hypno.smx" to be installed.
 		"Hypno Ability"
 		{
@@ -1044,10 +1160,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Hypno Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Hypno Range Chance"			"16"
 		}
 		// The Super Tank freezes survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is frozen in place.
+		// - "Ice Range"
+		// - "Ice Range Chance"
 		// "Ice Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is frozen in place.
+		// - "Ice Chance"
 		// Requires "st_ice.smx" to be installed.
 		"Ice Ability"
 		{
@@ -1077,10 +1201,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Ice Range"						"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Ice Range Chance"				"16"
 		}
 		// The Super Tank forces survivors to go idle.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor goes idle.
+		// - "Idle Range"
+		// - "Idle Range Chance"
 		// "Idle Hit" - When a survivor is hit by a Tank's claw or rock, the survivor goes idle.
+		// - "Idle Chance"
 		// Requires "st_idle.smx" to be installed.
 		"Idle Ability"
 		{
@@ -1105,10 +1237,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Idle Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Idle Range Chance"				"16"
 		}
 		// The Super Tank inverts the survivors' movement keys.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's movement keys are inverted.
+		// - "Invert Range"
+		// - "Invert Range Chance"
 		// "Invert Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's movement keys are inverted.
+		// - "Invert Chance"
 		// Requires "st_invert.smx" to be installed.
 		"Invert Ability"
 		{
@@ -1137,6 +1277,11 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Invert Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Invert Range Chance"			"16"
 		}
 		// The Super Tank gives survivors items upon death.
 		// Requires "st_item.smx" to be installed.
@@ -1281,7 +1426,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank nullifies all of the survivors' damage.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor does not do any damage.
+		// - "Nullify Range"
+		// - "Nullify Range Chance"
 		// "Nullify Hit" - When a survivor is hit by a Tank's claw or rock, the survivor does not do any damage.
+		// - "Nullify Chance"
 		// Requires "st_nullify.smx" to be installed.
 		"Nullify Ability"
 		{
@@ -1310,10 +1458,17 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Nullify Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Nullify Range Chance"			"16"
 		}
 		// The Super Tank starts panic events.
 		// "Ability Enabled" - The Tank starts a panic event periodically.
+		// - "Panic Interval"
 		// "Panic Hit" - When a survivor is hit by a Tank's claw or rock, a panic event starts.
+		// - "Panic Chance"
 		// Requires "st_panic.smx" to be installed.
 		"Panic Ability"
 		{
@@ -1341,7 +1496,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank pimp slaps survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is repeatedly pimp slapped.
+		// - "Pimp Range"
+		// - "Pimp Range Chance"
 		// "Pimp Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is repeatedly pimp slapped.
+		// - "Pimp Chance"
 		// Requires "st_pimp.smx" to be installed.
 		"Pimp Ability"
 		{
@@ -1376,10 +1534,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Pimp Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Pimp Range Chance"				"16"
 		}
 		// The Super Tank pukes on survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank pukes on the survivor.
+		// - "Puke Range"
+		// - "Puke Range Chance"
 		// "Puke Hit" - When a survivor is hit by a Tank's claw or rock, the Tank pukes on the survivor.
+		// - "Puke Chance"
 		// Requires "st_puke.smx" to be installed.
 		"Puke Ability"
 		{
@@ -1404,6 +1570,11 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Puke Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Puke Range Chance"				"16"
 		}
 		// The Super Tank gains speed when on fire.
 		// Requires "st_pyro.smx" to be installed.
@@ -1467,7 +1638,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank forces survivors to restart at the beginning of the map with a new loadout.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor respawns at the start of the map or near a teammate.
+		// - "Restart Range"
+		// - "Restart Range Chance"
 		// "Restart Hit" - When a survivor is hit by a Tank's claw or rock, the survivor respawns at the start of the map or near a teammate.
+		// - "Restart Chance"
 		// Requires "st_restart.smx" to be installed.
 		"Restart Ability"
 		{
@@ -1496,6 +1670,11 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Restart Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Restart Range Chance"			"16"
 		}
 		// The Super Tank creates rock showers.
 		// Requires "st_rock.smx" to be installed.
@@ -1532,7 +1711,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank sends survivors into space.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is sent into space.
+		// - "Rocket Range"
+		// - "Rocket Range Chance"
 		// "Rocket Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is sent into space.
+		// - "Rocket Chance"
 		// Requires "st_rocket.smx" to be installed.
 		"Rocket Ability"
 		{
@@ -1556,10 +1738,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Rocket Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Rocket Range Chance"			"16"
 		}
 		// The Super Tank shakes the survivors' screens.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's screen is shaken.
+		// - "Shake Range"
+		// - "Shake Range Chance"
 		// "Shake Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's screen is shaken.
+		// - "Shake Chance"
 		// Requires "st_shake.smx" to be installed.
 		"Shake Ability"
 		{
@@ -1589,6 +1779,11 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Shake Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Shake Range Chance"			"16"
 		}
 		// The Super Tank protects itself with a shield and traps survivors inside their own shields.
 		// Requires "st_shield.smx" to be installed.
@@ -1612,7 +1807,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank shoves survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is shoved repeatedly.
+		// - "Shove Range"
+		// - "Shove Range Chance"
 		// "Shove Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is shoved repeatedly.
+		// - "Shove Chance"
 		// Requires "st_shove.smx" to be installed.
 		"Shove Ability"
 		{
@@ -1642,10 +1840,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Shove Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Shove Range Chance"			"16"
 		}
 		// The Super Tank smashes survivors or crushes them to death.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is smashed.
+		// - "Smash Range"
+		// - "Smash Range Chance"
 		// "Smash Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is crushed to death.
+		// - "Smash Chance"
 		// Requires "st_smash.smx" to be installed.
 		"Smash Ability"
 		{
@@ -1675,10 +1881,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Smash Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Smash Range Chance"			"16"
 		}
 		// The Super Tank smites survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is smitten.
+		// - "Smite Range"
+		// - "Smite Range Chance"
 		// "Smite Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is smitten.
+		// - "Smite Chance"
 		// Requires "st_smite.smx" to be installed.
 		"Smite Ability"
 		{
@@ -1703,6 +1917,11 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Smite Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Smite Range Chance"			"16"
 		}
 		// The Super Tank spams rocks at survivors.
 		// Requires "st_spam.smx" to be installed.
@@ -1754,7 +1973,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank slows survivors down.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is slowed down.
+		// - "Stun Range"
+		// - "Stun Range Chance"
 		// "Stun Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is slowed down.
+		// - "Stun Chance"
 		// Requires "st_stun.smx" to be installed.
 		"Stun Ability"
 		{
@@ -1784,6 +2006,11 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Stun Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Stun Range Chance"				"16"
 
 			// The Super Tank sets the survivors' run speed to this value.
 			// Minimum: 0.1
@@ -1850,7 +2077,10 @@ SourceMod 1.8+
 		}
 		// The Super Tank gains health from hurting survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank gains health.
+		// - "Vampire Range"
+		// - "Vampire Range Chance"
 		// "Vampire Hit" - When a survivor is hit by a Tank's claw or rock, the Tank gains health.
+		// - "Vampire Chance"
 		// Requires "st_vampire.smx" to be installed.
 		"Vampire Ability"
 		{
@@ -1883,10 +2113,18 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Vampire Range"					"500.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Vampire Range Chance"			"16"
 		}
 		// The Super Tank changes the survivors' field of views.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's vision changes.
+		// - "Vision Range"
+		// - "Vision Range Chance"
 		// "Vision Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's vision changes.
+		// - "Vision Chance"
 		// Requires "st_vision.smx" to be installed.
 		"Vision Ability"
 		{
@@ -1921,10 +2159,17 @@ SourceMod 1.8+
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Vision Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Vision Range Chance"			"16"
 		}
 		// The Super Tank warps to survivors and warps survivors back to teammates.
 		// "Ability Enabled" - The Tank warps to a random survivor.
+		// - "Warp Interval"
 		// "Warp Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is warped to a random teammate.
+		// - "Warp Chance"
 		// Requires "st_warp.smx" to be installed.
 		"Warp Ability"
 		{
