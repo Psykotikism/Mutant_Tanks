@@ -27,6 +27,8 @@ int g_iHypnoHit[ST_MAXTYPES + 1];
 int g_iHypnoHit2[ST_MAXTYPES + 1];
 int g_iHypnoMode[ST_MAXTYPES + 1];
 int g_iHypnoMode2[ST_MAXTYPES + 1];
+int g_iHypnoRangeChance[ST_MAXTYPES + 1];
+int g_iHypnoRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -136,8 +138,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iHypnoChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iHypnoChance[ST_TankType(attacker)] : g_iHypnoChance2[ST_TankType(attacker)];
 				int iHypnoHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iHypnoHit[ST_TankType(attacker)] : g_iHypnoHit2[ST_TankType(attacker)];
-				vHypnoHit(victim, attacker, iHypnoHit);
+				vHypnoHit(victim, attacker, iHypnoChance, iHypnoHit);
 			}
 		}
 	}
@@ -167,6 +170,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iHypnoMode[iIndex] = iSetCellLimit(g_iHypnoMode[iIndex], 0, 1)) : (g_iHypnoMode2[iIndex] = iSetCellLimit(g_iHypnoMode2[iIndex], 0, 1));
 			main ? (g_flHypnoRange[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range", 150.0)) : (g_flHypnoRange2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range", g_flHypnoRange[iIndex]));
 			main ? (g_flHypnoRange[iIndex] = flSetFloatLimit(g_flHypnoRange[iIndex], 1.0, 9999999999.0)) : (g_flHypnoRange2[iIndex] = flSetFloatLimit(g_flHypnoRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iHypnoRangeChance[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Range Chance", 16)) : (g_iHypnoRangeChance2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Range Chance", g_iHypnoRangeChance[iIndex]));
+			main ? (g_iHypnoRangeChance[iIndex] = iSetCellLimit(g_iHypnoRangeChance[iIndex], 1, 9999999999)) : (g_iHypnoRangeChance2[iIndex] = iSetCellLimit(g_iHypnoRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -192,6 +197,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iHypnoAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHypnoAbility[ST_TankType(client)] : g_iHypnoAbility2[ST_TankType(client)];
+		int iHypnoRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iHypnoChance[ST_TankType(client)] : g_iHypnoChance2[ST_TankType(client)];
 		float flHypnoRange = !g_bTankConfig[ST_TankType(client)] ? g_flHypnoRange[ST_TankType(client)] : g_flHypnoRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -204,17 +210,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHypnoRange)
 				{
-					vHypnoHit(iSurvivor, client, iHypnoAbility);
+					vHypnoHit(iSurvivor, client, iHypnoRangeChance, iHypnoAbility);
 				}
 			}
 		}
 	}
 }
 
-void vHypnoHit(int client, int owner, int enabled)
+void vHypnoHit(int client, int owner, int chance, int enabled)
 {
-	int iHypnoChance = !g_bTankConfig[ST_TankType(owner)] ? g_iHypnoChance[ST_TankType(owner)] : g_iHypnoChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iHypnoChance) == 1 && bIsSurvivor(client) && !g_bHypno[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bHypno[client])
 	{
 		g_bHypno[client] = true;
 		float flHypnoDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flHypnoDuration[ST_TankType(owner)] : g_flHypnoDuration2[ST_TankType(owner)];

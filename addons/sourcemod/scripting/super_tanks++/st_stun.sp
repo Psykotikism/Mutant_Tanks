@@ -27,6 +27,8 @@ int g_iStunChance[ST_MAXTYPES + 1];
 int g_iStunChance2[ST_MAXTYPES + 1];
 int g_iStunHit[ST_MAXTYPES + 1];
 int g_iStunHit2[ST_MAXTYPES + 1];
+int g_iStunRangeChance[ST_MAXTYPES + 1];
+int g_iStunRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -111,8 +113,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iStunChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iStunChance[ST_TankType(attacker)] : g_iStunChance2[ST_TankType(attacker)];
 				int iStunHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iStunHit[ST_TankType(attacker)] : g_iStunHit2[ST_TankType(attacker)];
-				vStunHit(victim, attacker, iStunHit);
+				vStunHit(victim, attacker, iStunChance, iStunHit);
 			}
 		}
 	}
@@ -139,6 +142,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iStunHit[iIndex] = iSetCellLimit(g_iStunHit[iIndex], 0, 1)) : (g_iStunHit2[iIndex] = iSetCellLimit(g_iStunHit2[iIndex], 0, 1));
 			main ? (g_flStunRange[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Range", 150.0)) : (g_flStunRange2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Range", g_flStunRange[iIndex]));
 			main ? (g_flStunRange[iIndex] = flSetFloatLimit(g_flStunRange[iIndex], 1.0, 9999999999.0)) : (g_flStunRange2[iIndex] = flSetFloatLimit(g_flStunRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iStunRangeChance[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Range Chance", 16)) : (g_iStunRangeChance2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Range Chance", g_iStunRangeChance[iIndex]));
+			main ? (g_iStunRangeChance[iIndex] = iSetCellLimit(g_iStunRangeChance[iIndex], 1, 9999999999)) : (g_iStunRangeChance2[iIndex] = iSetCellLimit(g_iStunRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_flStunSpeed[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Speed", 0.25)) : (g_flStunSpeed2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Speed", g_flStunSpeed[iIndex]));
 			main ? (g_flStunSpeed[iIndex] = flSetFloatLimit(g_flStunSpeed[iIndex], 0.1, 0.9)) : (g_flStunSpeed2[iIndex] = flSetFloatLimit(g_flStunSpeed2[iIndex], 0.1, 0.9));
 			kvSuperTanks.Rewind();
@@ -169,6 +174,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iStunAbility = !g_bTankConfig[ST_TankType(client)] ? g_iStunAbility[ST_TankType(client)] : g_iStunAbility2[ST_TankType(client)];
+		int iStunRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iStunChance[ST_TankType(client)] : g_iStunChance2[ST_TankType(client)];
 		float flStunRange = !g_bTankConfig[ST_TankType(client)] ? g_flStunRange[ST_TankType(client)] : g_flStunRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -181,17 +187,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flStunRange)
 				{
-					vStunHit(iSurvivor, client, iStunAbility);
+					vStunHit(iSurvivor, client, iStunRangeChance, iStunAbility);
 				}
 			}
 		}
 	}
 }
 
-void vStunHit(int client, int owner, int enabled)
+void vStunHit(int client, int owner, int chance, int enabled)
 {
-	int iStunChance = !g_bTankConfig[ST_TankType(owner)] ? g_iStunChance[ST_TankType(owner)] : g_iStunChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iStunChance) == 1 && bIsSurvivor(client) && !g_bStun[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bStun[client])
 	{
 		g_bStun[client] = true;
 		float flStunSpeed = !g_bTankConfig[ST_TankType(owner)] ? g_flStunSpeed[ST_TankType(owner)] : g_flStunSpeed2[ST_TankType(owner)];

@@ -24,6 +24,8 @@ int g_iVampireHealth[ST_MAXTYPES + 1];
 int g_iVampireHealth2[ST_MAXTYPES + 1];
 int g_iVampireHit[ST_MAXTYPES + 1];
 int g_iVampireHit2[ST_MAXTYPES + 1];
+int g_iVampireRangeChance[ST_MAXTYPES + 1];
+int g_iVampireRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -88,8 +90,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iVampireChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iVampireChance[ST_TankType(attacker)] : g_iVampireChance2[ST_TankType(attacker)];
 				int iVampireHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iVampireHit[ST_TankType(attacker)] : g_iVampireHit2[ST_TankType(attacker)];
-				vVampireHit(attacker, iVampireHit);
+				vVampireHit(attacker, iVampireChance, iVampireHit);
 			}
 		}
 	}
@@ -116,6 +119,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iVampireHit[iIndex] = iSetCellLimit(g_iVampireHit[iIndex], 0, 1)) : (g_iVampireHit2[iIndex] = iSetCellLimit(g_iVampireHit2[iIndex], 0, 1));
 			main ? (g_flVampireRange[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range", 500.0)) : (g_flVampireRange2[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range", g_flVampireRange[iIndex]));
 			main ? (g_flVampireRange[iIndex] = flSetFloatLimit(g_flVampireRange[iIndex], 1.0, 9999999999.0)) : (g_flVampireRange2[iIndex] = flSetFloatLimit(g_flVampireRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iVampireRangeChance[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Range Chance", 16)) : (g_iVampireRangeChance2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Range Chance", g_iVampireRangeChance[iIndex]));
+			main ? (g_iVampireRangeChance[iIndex] = iSetCellLimit(g_iVampireRangeChance[iIndex], 1, 9999999999)) : (g_iVampireRangeChance2[iIndex] = iSetCellLimit(g_iVampireRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -125,6 +130,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iVampireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iVampireAbility[ST_TankType(client)] : g_iVampireAbility2[ST_TankType(client)];
+	int iVampireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iVampireChance[ST_TankType(client)] : g_iVampireChance2[ST_TankType(client)];
 	if (iVampireAbility == 1 && bIsTank(client))
 	{
 		int iVampireCount;
@@ -146,15 +152,14 @@ public void ST_Ability(int client)
 		}
 		if (iVampireCount > 0)
 		{
-			vVampireHit(client, iVampireAbility);
+			vVampireHit(client, iVampireRangeChance, iVampireAbility);
 		}
 	}
 }
 
-void vVampireHit(int client, int enabled)
+void vVampireHit(int client, int chance, int enabled)
 {
-	int iVampireChance = !g_bTankConfig[ST_TankType(client)] ? g_iVampireChance[ST_TankType(client)] : g_iVampireChance2[ST_TankType(client)];
-	if (enabled == 1 && GetRandomInt(1, iVampireChance) == 1 && bIsTank(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsTank(client))
 	{
 		int iHealth = GetClientHealth(client);
 		int iVampireHealth = !g_bTankConfig[ST_TankType(client)] ? (iHealth + g_iVampireHealth[ST_TankType(client)]) : (iHealth + g_iVampireHealth2[ST_TankType(client)]);

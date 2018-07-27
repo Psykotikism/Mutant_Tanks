@@ -25,6 +25,8 @@ int g_iIdleChance[ST_MAXTYPES + 1];
 int g_iIdleChance2[ST_MAXTYPES + 1];
 int g_iIdleHit[ST_MAXTYPES + 1];
 int g_iIdleHit2[ST_MAXTYPES + 1];
+int g_iIdleRangeChance[ST_MAXTYPES + 1];
+int g_iIdleRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -125,8 +127,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iIdleChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iIdleChance[ST_TankType(attacker)] : g_iIdleChance2[ST_TankType(attacker)];
 				int iIdleHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iIdleHit[ST_TankType(attacker)] : g_iIdleHit2[ST_TankType(attacker)];
-				vIdleHit(victim, attacker, iIdleHit);
+				vIdleHit(victim, iIdleChance, iIdleHit);
 			}
 		}
 	}
@@ -151,6 +154,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iIdleHit[iIndex] = iSetCellLimit(g_iIdleHit[iIndex], 0, 1)) : (g_iIdleHit2[iIndex] = iSetCellLimit(g_iIdleHit2[iIndex], 0, 1));
 			main ? (g_flIdleRange[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", 150.0)) : (g_flIdleRange2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", g_flIdleRange[iIndex]));
 			main ? (g_flIdleRange[iIndex] = flSetFloatLimit(g_flIdleRange[iIndex], 1.0, 9999999999.0)) : (g_flIdleRange2[iIndex] = flSetFloatLimit(g_flIdleRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iIdleRangeChance[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Range Chance", 16)) : (g_iIdleRangeChance2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Range Chance", g_iIdleRangeChance[iIndex]));
+			main ? (g_iIdleRangeChance[iIndex] = iSetCellLimit(g_iIdleRangeChance[iIndex], 1, 9999999999)) : (g_iIdleRangeChance2[iIndex] = iSetCellLimit(g_iIdleRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -162,6 +167,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iIdleAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIdleAbility[ST_TankType(client)] : g_iIdleAbility2[ST_TankType(client)];
+		int iIdleRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iIdleChance[ST_TankType(client)] : g_iIdleChance2[ST_TankType(client)];
 		float flIdleRange = !g_bTankConfig[ST_TankType(client)] ? g_flIdleRange[ST_TankType(client)] : g_flIdleRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -174,17 +180,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIdleRange)
 				{
-					vIdleHit(iSurvivor, client, iIdleAbility);
+					vIdleHit(iSurvivor, iIdleRangeChance, iIdleAbility);
 				}
 			}
 		}
 	}
 }
 
-void vIdleHit(int client, int owner, int enabled)
+void vIdleHit(int client, int chance, int enabled)
 {
-	int iIdleChance = !g_bTankConfig[ST_TankType(owner)] ? g_iIdleChance[ST_TankType(owner)] : g_iIdleChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iIdleChance) == 1 && bIsHumanSurvivor(client) && !g_bIdle[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsHumanSurvivor(client) && !g_bIdle[client])
 	{
 		if (iGetHumanCount() > 1)
 		{

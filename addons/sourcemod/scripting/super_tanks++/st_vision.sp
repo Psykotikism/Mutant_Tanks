@@ -27,6 +27,8 @@ int g_iVisionFOV[ST_MAXTYPES + 1];
 int g_iVisionFOV2[ST_MAXTYPES + 1];
 int g_iVisionHit[ST_MAXTYPES + 1];
 int g_iVisionHit2[ST_MAXTYPES + 1];
+int g_iVisionRangeChance[ST_MAXTYPES + 1];
+int g_iVisionRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -111,8 +113,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iVisionChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iVisionChance[ST_TankType(attacker)] : g_iVisionChance2[ST_TankType(attacker)];
 				int iVisionHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iVisionHit[ST_TankType(attacker)] : g_iVisionHit2[ST_TankType(attacker)];
-				vVisionHit(victim, attacker, iVisionHit);
+				vVisionHit(victim, attacker, iVisionChance, iVisionHit);
 			}
 		}
 	}
@@ -141,6 +144,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iVisionHit[iIndex] = iSetCellLimit(g_iVisionHit[iIndex], 0, 1)) : (g_iVisionHit2[iIndex] = iSetCellLimit(g_iVisionHit2[iIndex], 0, 1));
 			main ? (g_flVisionRange[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range", 150.0)) : (g_flVisionRange2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range", g_flVisionRange[iIndex]));
 			main ? (g_flVisionRange[iIndex] = flSetFloatLimit(g_flVisionRange[iIndex], 1.0, 9999999999.0)) : (g_flVisionRange2[iIndex] = flSetFloatLimit(g_flVisionRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iVisionRangeChance[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Range Chance", 16)) : (g_iVisionRangeChance2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Range Chance", g_iVisionRangeChance[iIndex]));
+			main ? (g_iVisionRangeChance[iIndex] = iSetCellLimit(g_iVisionRangeChance[iIndex], 1, 9999999999)) : (g_iVisionRangeChance2[iIndex] = iSetCellLimit(g_iVisionRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -152,6 +157,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iVisionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iVisionAbility[ST_TankType(client)] : g_iVisionAbility2[ST_TankType(client)];
+		int iVisionRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iVisionChance[ST_TankType(client)] : g_iVisionChance2[ST_TankType(client)];
 		float flVisionRange = !g_bTankConfig[ST_TankType(client)] ? g_flVisionRange[ST_TankType(client)] : g_flVisionRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -164,17 +170,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flVisionRange)
 				{
-					vVisionHit(iSurvivor, client, iVisionAbility);
+					vVisionHit(iSurvivor, client, iVisionRangeChance, iVisionAbility);
 				}
 			}
 		}
 	}
 }
 
-void vVisionHit(int client, int owner, int enabled)
+void vVisionHit(int client, int owner, int chance, int enabled)
 {
-	int iVisionChance = !g_bTankConfig[ST_TankType(owner)] ? g_iVisionChance[ST_TankType(owner)] : g_iVisionChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iVisionChance) == 1 && bIsSurvivor(client) && !g_bVision[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bVision[client])
 	{
 		g_bVision[client] = true;
 		DataPack dpDataPack;

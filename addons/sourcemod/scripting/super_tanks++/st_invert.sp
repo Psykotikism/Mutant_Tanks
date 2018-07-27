@@ -25,6 +25,8 @@ int g_iInvertChance[ST_MAXTYPES + 1];
 int g_iInvertChance2[ST_MAXTYPES + 1];
 int g_iInvertHit[ST_MAXTYPES + 1];
 int g_iInvertHit2[ST_MAXTYPES + 1];
+int g_iInvertRangeChance[ST_MAXTYPES + 1];
+int g_iInvertRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -144,8 +146,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iInvertChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iInvertChance[ST_TankType(attacker)] : g_iInvertChance2[ST_TankType(attacker)];
 				int iInvertHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iInvertHit[ST_TankType(attacker)] : g_iInvertHit2[ST_TankType(attacker)];
-				vInvertHit(victim, attacker, iInvertHit);
+				vInvertHit(victim, attacker, iInvertChance, iInvertHit);
 			}
 		}
 	}
@@ -172,6 +175,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iInvertHit[iIndex] = iSetCellLimit(g_iInvertHit[iIndex], 0, 1)) : (g_iInvertHit2[iIndex] = iSetCellLimit(g_iInvertHit2[iIndex], 0, 1));
 			main ? (g_flInvertRange[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range", 150.0)) : (g_flInvertRange2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range", g_flInvertRange[iIndex]));
 			main ? (g_flInvertRange[iIndex] = flSetFloatLimit(g_flInvertRange[iIndex], 1.0, 9999999999.0)) : (g_flInvertRange2[iIndex] = flSetFloatLimit(g_flInvertRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iInvertRangeChance[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Range Chance", 16)) : (g_iInvertRangeChance2[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Range Chance", g_iInvertRangeChance[iIndex]));
+			main ? (g_iInvertRangeChance[iIndex] = iSetCellLimit(g_iInvertRangeChance[iIndex], 1, 9999999999)) : (g_iInvertRangeChance2[iIndex] = iSetCellLimit(g_iInvertRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -197,6 +202,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iInvertAbility = !g_bTankConfig[ST_TankType(client)] ? g_iInvertAbility[ST_TankType(client)] : g_iInvertAbility2[ST_TankType(client)];
+		int iInvertRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iInvertChance[ST_TankType(client)] : g_iInvertChance2[ST_TankType(client)];
 		float flInvertRange = !g_bTankConfig[ST_TankType(client)] ? g_flInvertRange[ST_TankType(client)] : g_flInvertRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -209,17 +215,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flInvertRange)
 				{
-					vInvertHit(iSurvivor, client, iInvertAbility);
+					vInvertHit(iSurvivor, client, iInvertRangeChance, iInvertAbility);
 				}
 			}
 		}
 	}
 }
 
-void vInvertHit(int client, int owner, int enabled)
+void vInvertHit(int client, int owner, int chance, int enabled)
 {
-	int iInvertChance = !g_bTankConfig[ST_TankType(owner)] ? g_iInvertChance[ST_TankType(owner)] : g_iInvertChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iInvertChance) == 1 && bIsSurvivor(client) && !g_bInvert[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bInvert[client])
 	{
 		g_bInvert[client] = true;
 		float flInvertDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flInvertDuration[ST_TankType(owner)] : g_flInvertDuration2[ST_TankType(owner)];

@@ -29,6 +29,8 @@ int g_iBombHit[ST_MAXTYPES + 1];
 int g_iBombHit2[ST_MAXTYPES + 1];
 int g_iBombPower[ST_MAXTYPES + 1];
 int g_iBombPower2[ST_MAXTYPES + 1];
+int g_iBombRangeChance[ST_MAXTYPES + 1];
+int g_iBombRangeChance2[ST_MAXTYPES + 1];
 int g_iBombRock[ST_MAXTYPES + 1];
 int g_iBombRock2[ST_MAXTYPES + 1];
 
@@ -99,16 +101,18 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iBombChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iBombChance[ST_TankType(attacker)] : g_iBombChance2[ST_TankType(attacker)];
 				int iBombHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iBombHit[ST_TankType(attacker)] : g_iBombHit2[ST_TankType(attacker)];
-				vBombHit(victim, attacker, iBombHit);
+				vBombHit(victim, attacker, iBombChance, iBombHit);
 			}
 		}
 		else if (bIsSurvivor(attacker) && bIsTank(victim))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
+				int iBombChance = !g_bTankConfig[ST_TankType(victim)] ? g_iBombChance[ST_TankType(victim)] : g_iBombChance2[ST_TankType(victim)];
 				int iBombHit = !g_bTankConfig[ST_TankType(victim)] ? g_iBombHit[ST_TankType(victim)] : g_iBombHit2[ST_TankType(victim)];
-				vBombHit(attacker, victim, iBombHit);
+				vBombHit(attacker, victim, iBombChance, iBombHit);
 			}
 		}
 	}
@@ -135,6 +139,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iBombPower[iIndex] = iSetCellLimit(g_iBombPower[iIndex], 1, 9999999999)) : (g_iBombPower2[iIndex] = iSetCellLimit(g_iBombPower2[iIndex], 1, 9999999999));
 			main ? (g_flBombRange[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range", 150.0)) : (g_flBombRange2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range", g_flBombRange[iIndex]));
 			main ? (g_flBombRange[iIndex] = flSetFloatLimit(g_flBombRange[iIndex], 1.0, 9999999999.0)) : (g_flBombRange2[iIndex] = flSetFloatLimit(g_flBombRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iBombRangeChance[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Range Chance", 16)) : (g_iBombRangeChance2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Range Chance", g_iBombRangeChance[iIndex]));
+			main ? (g_iBombRangeChance[iIndex] = iSetCellLimit(g_iBombRangeChance[iIndex], 1, 9999999999)) : (g_iBombRangeChance2[iIndex] = iSetCellLimit(g_iBombRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_iBombRock[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Rock Break", 0)) : (g_iBombRock2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Rock Break", g_iBombRock[iIndex]));
 			main ? (g_iBombRock[iIndex] = iSetCellLimit(g_iBombRock[iIndex], 0, 1)) : (g_iBombRock2[iIndex] = iSetCellLimit(g_iBombRock2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
@@ -158,6 +164,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iBombAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBombAbility[ST_TankType(client)] : g_iBombAbility2[ST_TankType(client)];
+		int iBombRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBombChance[ST_TankType(client)] : g_iBombChance2[ST_TankType(client)];
 		float flBombRange = !g_bTankConfig[ST_TankType(client)] ? g_flBombRange[ST_TankType(client)] : g_flBombRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -170,7 +177,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBombRange)
 				{
-					vBombHit(iSurvivor, client, iBombAbility);
+					vBombHit(iSurvivor, client, iBombRangeChance, iBombAbility);
 				}
 			}
 		}
@@ -267,10 +274,9 @@ void vBomb(int client, float pos[3])
 	vDeleteParticle(iHurt, 15.0, "TurnOff");
 }
 
-void vBombHit(int client, int owner, int enabled)
+void vBombHit(int client, int owner, int chance, int enabled)
 {
-	int iBombChance = !g_bTankConfig[ST_TankType(owner)] ? g_iBombChance[ST_TankType(owner)] : g_iBombChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iBombChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		float flPosition[3];
 		GetClientAbsOrigin(client, flPosition);

@@ -26,6 +26,8 @@ int g_iDrugChance[ST_MAXTYPES + 1];
 int g_iDrugChance2[ST_MAXTYPES + 1];
 int g_iDrugHit[ST_MAXTYPES + 1];
 int g_iDrugHit2[ST_MAXTYPES + 1];
+int g_iDrugRangeChance[ST_MAXTYPES + 1];
+int g_iDrugRangeChance2[ST_MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -116,8 +118,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iDrugChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iDrugChance[ST_TankType(attacker)] : g_iDrugChance2[ST_TankType(attacker)];
 				int iDrugHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iDrugHit[ST_TankType(attacker)] : g_iDrugHit2[ST_TankType(attacker)];
-				vDrugHit(victim, attacker, iDrugHit);
+				vDrugHit(victim, attacker, iDrugChance, iDrugHit);
 			}
 		}
 	}
@@ -144,6 +147,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iDrugHit[iIndex] = iSetCellLimit(g_iDrugHit[iIndex], 0, 1)) : (g_iDrugHit2[iIndex] = iSetCellLimit(g_iDrugHit2[iIndex], 0, 1));
 			main ? (g_flDrugRange[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range", 150.0)) : (g_flDrugRange2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range", g_flDrugRange[iIndex]));
 			main ? (g_flDrugRange[iIndex] = flSetFloatLimit(g_flDrugRange[iIndex], 1.0, 9999999999.0)) : (g_flDrugRange2[iIndex] = flSetFloatLimit(g_flDrugRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iDrugRangeChance[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Range Chance", 16)) : (g_iDrugRangeChance2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Range Chance", g_iDrugRangeChance[iIndex]));
+			main ? (g_iDrugRangeChance[iIndex] = iSetCellLimit(g_iDrugRangeChance[iIndex], 1, 9999999999)) : (g_iDrugRangeChance2[iIndex] = iSetCellLimit(g_iDrugRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -155,6 +160,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iDrugAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDrugAbility[ST_TankType(client)] : g_iDrugAbility2[ST_TankType(client)];
+		int iDrugRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iDrugChance[ST_TankType(client)] : g_iDrugChance2[ST_TankType(client)];
 		float flDrugRange = !g_bTankConfig[ST_TankType(client)] ? g_flDrugRange[ST_TankType(client)] : g_flDrugRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -167,7 +173,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flDrugRange)
 				{
-					vDrugHit(iSurvivor, client, iDrugAbility);
+					vDrugHit(iSurvivor, client, iDrugRangeChance, iDrugAbility);
 				}
 			}
 		}
@@ -214,10 +220,9 @@ void vDrug(int client, bool toggle, UserMsg message, float angles[20])
 	EndMessage();
 }
 
-void vDrugHit(int client, int owner, int enabled)
+void vDrugHit(int client, int owner, int chance, int enabled)
 {
-	int iDrugChance = !g_bTankConfig[ST_TankType(owner)] ? g_iDrugChance[ST_TankType(owner)] : g_iDrugChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iDrugChance) == 1 && bIsSurvivor(client) && !g_bDrug[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bDrug[client])
 	{
 		g_bDrug[client] = true;
 		DataPack dpDataPack;

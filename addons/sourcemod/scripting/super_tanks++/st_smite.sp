@@ -25,6 +25,8 @@ int g_iSmiteChance[ST_MAXTYPES + 1];
 int g_iSmiteChance2[ST_MAXTYPES + 1];
 int g_iSmiteHit[ST_MAXTYPES + 1];
 int g_iSmiteHit2[ST_MAXTYPES + 1];
+int g_iSmiteRangeChance[ST_MAXTYPES + 1];
+int g_iSmiteRangeChance2[ST_MAXTYPES + 1];
 int g_iSmiteSprite = -1;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -92,8 +94,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iSmiteChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iSmiteChance[ST_TankType(attacker)] : g_iSmiteChance2[ST_TankType(attacker)];
 				int iSmiteHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iSmiteHit[ST_TankType(attacker)] : g_iSmiteHit2[ST_TankType(attacker)];
-				vSmiteHit(victim, attacker, iSmiteHit);
+				vSmiteHit(victim, iSmiteChance, iSmiteHit);
 			}
 		}
 	}
@@ -118,6 +121,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iSmiteHit[iIndex] = iSetCellLimit(g_iSmiteHit[iIndex], 0, 1)) : (g_iSmiteHit2[iIndex] = iSetCellLimit(g_iSmiteHit2[iIndex], 0, 1));
 			main ? (g_flSmiteRange[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range", 150.0)) : (g_flSmiteRange2[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range", g_flSmiteRange[iIndex]));
 			main ? (g_flSmiteRange[iIndex] = flSetFloatLimit(g_flSmiteRange[iIndex], 1.0, 9999999999.0)) : (g_flSmiteRange2[iIndex] = flSetFloatLimit(g_flSmiteRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iSmiteRangeChance[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Range Chance", 16)) : (g_iSmiteRangeChance2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Range Chance", g_iSmiteRangeChance[iIndex]));
+			main ? (g_iSmiteRangeChance[iIndex] = iSetCellLimit(g_iSmiteRangeChance[iIndex], 1, 9999999999)) : (g_iSmiteRangeChance2[iIndex] = iSetCellLimit(g_iSmiteRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -129,6 +134,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iSmiteAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSmiteAbility[ST_TankType(client)] : g_iSmiteAbility2[ST_TankType(client)];
+		int iSmiteRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iSmiteChance[ST_TankType(client)] : g_iSmiteChance2[ST_TankType(client)];
 		float flSmiteRange = !g_bTankConfig[ST_TankType(client)] ? g_flSmiteRange[ST_TankType(client)] : g_flSmiteRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -141,17 +147,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flSmiteRange)
 				{
-					vSmiteHit(iSurvivor, client, iSmiteAbility);
+					vSmiteHit(iSurvivor, iSmiteRangeChance, iSmiteAbility);
 				}
 			}
 		}
 	}
 }
 
-void vSmiteHit(int client, int owner, int enabled)
+void vSmiteHit(int client, int chance, int enabled)
 {
-	int iSmiteChance = !g_bTankConfig[ST_TankType(owner)] ? g_iSmiteChance[ST_TankType(owner)] : g_iSmiteChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iSmiteChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		float flPosition[3];
 		GetClientAbsOrigin(client, flPosition);

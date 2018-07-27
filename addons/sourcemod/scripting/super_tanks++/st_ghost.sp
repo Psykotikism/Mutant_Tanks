@@ -28,6 +28,8 @@ char g_sPropsColors[ST_MAXTYPES + 1][80];
 char g_sPropsColors2[ST_MAXTYPES + 1][80];
 char g_sTankColors[ST_MAXTYPES + 1][28];
 char g_sTankColors2[ST_MAXTYPES + 1][28];
+float g_flGhostCloakRange[ST_MAXTYPES + 1];
+float g_flGhostCloakRange2[ST_MAXTYPES + 1];
 float g_flGhostRange[ST_MAXTYPES + 1];
 float g_flGhostRange2[ST_MAXTYPES + 1];
 int g_iGhostAbility[ST_MAXTYPES + 1];
@@ -39,6 +41,8 @@ int g_iGhostFade[ST_MAXTYPES + 1];
 int g_iGhostFade2[ST_MAXTYPES + 1];
 int g_iGhostHit[ST_MAXTYPES + 1];
 int g_iGhostHit2[ST_MAXTYPES + 1];
+int g_iGhostRangeChance[ST_MAXTYPES + 1];
+int g_iGhostRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -129,16 +133,18 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iGhostChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iGhostChance[ST_TankType(attacker)] : g_iGhostChance2[ST_TankType(attacker)];
 				int iGhostHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iGhostHit[ST_TankType(attacker)] : g_iGhostHit2[ST_TankType(attacker)];
-				vGhostHit(victim, attacker, iGhostHit);
+				vGhostHit(victim, attacker, iGhostChance, iGhostHit);
 			}
 		}
 		else if (bIsSurvivor(attacker) && bIsTank(victim))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
+				int iGhostChance = !g_bTankConfig[ST_TankType(victim)] ? g_iGhostChance[ST_TankType(victim)] : g_iGhostChance2[ST_TankType(victim)];
 				int iGhostHit = !g_bTankConfig[ST_TankType(victim)] ? g_iGhostHit[ST_TankType(victim)] : g_iGhostHit2[ST_TankType(victim)];
-				vGhostHit(attacker, victim, iGhostHit);
+				vGhostHit(attacker, victim, iGhostChance, iGhostHit);
 			}
 		}
 	}
@@ -161,12 +167,16 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iGhostAbility[iIndex] = iSetCellLimit(g_iGhostAbility[iIndex], 0, 1)) : (g_iGhostAbility2[iIndex] = iSetCellLimit(g_iGhostAbility2[iIndex], 0, 1));
 			main ? (g_iGhostChance[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Chance", 4)) : (g_iGhostChance2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Chance", g_iGhostChance[iIndex]));
 			main ? (g_iGhostChance[iIndex] = iSetCellLimit(g_iGhostChance[iIndex], 1, 9999999999)) : (g_iGhostChance2[iIndex] = iSetCellLimit(g_iGhostChance2[iIndex], 1, 9999999999));
+			main ? (g_flGhostCloakRange[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Cloak Range", 150.0)) : (g_flGhostCloakRange2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Cloak Range", g_flGhostCloakRange[iIndex]));
+			main ? (g_flGhostCloakRange[iIndex] = flSetFloatLimit(g_flGhostCloakRange[iIndex], 1.0, 9999999999.0)) : (g_flGhostCloakRange2[iIndex] = flSetFloatLimit(g_flGhostCloakRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iGhostFade[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", 255)) : (g_iGhostFade2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", g_iGhostFade[iIndex]));
 			main ? (g_iGhostFade[iIndex] = iSetCellLimit(g_iGhostFade[iIndex], 0, 255)) : (g_iGhostFade2[iIndex] = iSetCellLimit(g_iGhostFade2[iIndex], 0, 255));
 			main ? (g_iGhostHit[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Hit", 0)) : (g_iGhostHit2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Hit", g_iGhostHit[iIndex]));
 			main ? (g_iGhostHit[iIndex] = iSetCellLimit(g_iGhostHit[iIndex], 0, 1)) : (g_iGhostHit2[iIndex] = iSetCellLimit(g_iGhostHit2[iIndex], 0, 1));
 			main ? (g_flGhostRange[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Range", 150.0)) : (g_flGhostRange2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Range", g_flGhostRange[iIndex]));
 			main ? (g_flGhostRange[iIndex] = flSetFloatLimit(g_flGhostRange[iIndex], 1.0, 9999999999.0)) : (g_flGhostRange2[iIndex] = flSetFloatLimit(g_flGhostRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iGhostRangeChance[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Range Chance", 16)) : (g_iGhostRangeChance2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Range Chance", g_iGhostRangeChance[iIndex]));
+			main ? (g_iGhostRangeChance[iIndex] = iSetCellLimit(g_iGhostRangeChance[iIndex], 1, 9999999999)) : (g_iGhostRangeChance2[iIndex] = iSetCellLimit(g_iGhostRangeChance2[iIndex], 1, 9999999999));
 			main ? (kvSuperTanks.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostSlot[iIndex], sizeof(g_sGhostSlot[]), "12345")) : (kvSuperTanks.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostSlot2[iIndex], sizeof(g_sGhostSlot2[]), g_sGhostSlot[iIndex]));
 			kvSuperTanks.Rewind();
 		}
@@ -235,6 +245,7 @@ public void ST_Ability(int client)
 	TrimString(sProps5[2]);
 	int iBlue6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[2]) : 255;
 	int iGhostAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGhostAbility[ST_TankType(client)] : g_iGhostAbility2[ST_TankType(client)];
+	int iGhostRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGhostChance[ST_TankType(client)] : g_iGhostChance2[ST_TankType(client)];
 	if (iGhostAbility == 1 && bIsTank(client))
 	{
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
@@ -245,9 +256,9 @@ public void ST_Ability(int client)
 				float flInfectedPos[3];
 				GetClientAbsOrigin(client, flTankPos);
 				GetClientAbsOrigin(iInfected, flInfectedPos);
-				float flGhostRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostRange[ST_TankType(client)] : g_flGhostRange2[ST_TankType(client)];
+				float flGhostCloakRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostCloakRange[ST_TankType(client)] : g_flGhostCloakRange2[ST_TankType(client)];
 				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-				if (flDistance <= flGhostRange)
+				if (flDistance <= flGhostCloakRange)
 				{
 					SetEntityRenderMode(iInfected, RENDER_TRANSCOLOR);
 					SetEntityRenderColor(iInfected, 255, 255, 255, 50);
@@ -286,6 +297,22 @@ public void ST_Ability(int client)
 			dpDataPack.WriteCell(iBlue6);
 			SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		}
+		float flGhostRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostRange[ST_TankType(client)] : g_flGhostRange2[ST_TankType(client)];
+		float flTankPos[3];
+		GetClientAbsOrigin(client, flTankPos);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flGhostRange)
+				{
+					vGhostHit(iSurvivor, client, iGhostRangeChance, iGhostAbility);
+				}
+			}
+		}
 	}
 }
 
@@ -305,10 +332,9 @@ void vGhostDrop(int client, char[] slots, char[] number, int slot)
 	}
 }
 
-void vGhostHit(int client, int owner, int enabled)
+void vGhostHit(int client, int owner, int chance, int enabled)
 {
-	int iGhostChance = !g_bTankConfig[ST_TankType(owner)] ? g_iGhostChance[ST_TankType(owner)] : g_iGhostChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iGhostChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		char sGhostSlot[6];
 		sGhostSlot = !g_bTankConfig[ST_TankType(owner)] ? g_sGhostSlot[ST_TankType(owner)] : g_sGhostSlot2[ST_TankType(owner)];

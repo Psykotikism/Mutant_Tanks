@@ -26,6 +26,8 @@ int g_iShoveChance[ST_MAXTYPES + 1];
 int g_iShoveChance2[ST_MAXTYPES + 1];
 int g_iShoveHit[ST_MAXTYPES + 1];
 int g_iShoveHit2[ST_MAXTYPES + 1];
+int g_iShoveRangeChance[ST_MAXTYPES + 1];
+int g_iShoveRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -124,8 +126,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iShoveChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iShoveChance[ST_TankType(attacker)] : g_iShoveChance2[ST_TankType(attacker)];
 				int iShoveHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iShoveHit[ST_TankType(attacker)] : g_iShoveHit2[ST_TankType(attacker)];
-				vShoveHit(victim, attacker, iShoveHit);
+				vShoveHit(victim, attacker, iShoveChance, iShoveHit);
 			}
 		}
 	}
@@ -152,6 +155,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iShoveHit[iIndex] = iSetCellLimit(g_iShoveHit[iIndex], 0, 1)) : (g_iShoveHit2[iIndex] = iSetCellLimit(g_iShoveHit2[iIndex], 0, 1));
 			main ? (g_flShoveRange[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Range", 150.0)) : (g_flShoveRange2[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Range", g_flShoveRange[iIndex]));
 			main ? (g_flShoveRange[iIndex] = flSetFloatLimit(g_flShoveRange[iIndex], 1.0, 9999999999.0)) : (g_flShoveRange2[iIndex] = flSetFloatLimit(g_flShoveRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iShoveRangeChance[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Range Chance", 16)) : (g_iShoveRangeChance2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Range Chance", g_iShoveRangeChance[iIndex]));
+			main ? (g_iShoveRangeChance[iIndex] = iSetCellLimit(g_iShoveRangeChance[iIndex], 1, 9999999999)) : (g_iShoveRangeChance2[iIndex] = iSetCellLimit(g_iShoveRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -163,6 +168,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iShoveAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShoveAbility[ST_TankType(client)] : g_iShoveAbility2[ST_TankType(client)];
+		int iShoveRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iShoveChance[ST_TankType(client)] : g_iShoveChance2[ST_TankType(client)];
 		float flShoveRange = !g_bTankConfig[ST_TankType(client)] ? g_flShoveRange[ST_TankType(client)] : g_flShoveRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -175,17 +181,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flShoveRange)
 				{
-					vShoveHit(iSurvivor, client, iShoveAbility);
+					vShoveHit(iSurvivor, client, iShoveRangeChance, iShoveAbility);
 				}
 			}
 		}
 	}
 }
 
-void vShoveHit(int client, int owner, int enabled)
+void vShoveHit(int client, int owner, int chance, int enabled)
 {
-	int iShoveChance = !g_bTankConfig[ST_TankType(owner)] ? g_iShoveChance[ST_TankType(owner)] : g_iShoveChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iShoveChance) == 1 && bIsSurvivor(client) && !g_bShove[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bShove[client])
 	{
 		g_bShove[client] = true;
 		DataPack dpDataPack;

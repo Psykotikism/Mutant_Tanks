@@ -30,6 +30,8 @@ int g_iGravityChance[ST_MAXTYPES + 1];
 int g_iGravityChance2[ST_MAXTYPES + 1];
 int g_iGravityHit[ST_MAXTYPES + 1];
 int g_iGravityHit2[ST_MAXTYPES + 1];
+int g_iGravityRangeChance[ST_MAXTYPES + 1];
+int g_iGravityRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -118,8 +120,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iGravityChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iGravityChance[ST_TankType(attacker)] : g_iGravityChance2[ST_TankType(attacker)];
 				int iGravityHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iGravityHit[ST_TankType(attacker)] : g_iGravityHit2[ST_TankType(attacker)];
-				vGravityHit(victim, attacker, iGravityHit);
+				vGravityHit(victim, attacker, iGravityChance, iGravityHit);
 			}
 		}
 	}
@@ -148,6 +151,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iGravityHit[iIndex] = iSetCellLimit(g_iGravityHit[iIndex], 0, 1)) : (g_iGravityHit2[iIndex] = iSetCellLimit(g_iGravityHit2[iIndex], 0, 1));
 			main ? (g_flGravityRange[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", 150.0)) : (g_flGravityRange2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", g_flGravityRange[iIndex]));
 			main ? (g_flGravityRange[iIndex] = flSetFloatLimit(g_flGravityRange[iIndex], 1.0, 9999999999.0)) : (g_flGravityRange2[iIndex] = flSetFloatLimit(g_flGravityRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iGravityRangeChance[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Range Chance", 16)) : (g_iGravityRangeChance2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Range Chance", g_iGravityRangeChance[iIndex]));
+			main ? (g_iGravityRangeChance[iIndex] = iSetCellLimit(g_iGravityRangeChance[iIndex], 1, 9999999999)) : (g_iGravityRangeChance2[iIndex] = iSetCellLimit(g_iGravityRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_flGravityValue[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", 0.3)) : (g_flGravityValue2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", g_flGravityValue[iIndex]));
 			main ? (g_flGravityValue[iIndex] = flSetFloatLimit(g_flGravityValue[iIndex], 0.1, 0.99)) : (g_flGravityValue2[iIndex] = flSetFloatLimit(g_flGravityValue2[iIndex], 0.1, 0.99));
 			kvSuperTanks.Rewind();
@@ -193,6 +198,7 @@ public void ST_Death(int client)
 public void ST_Ability(int client)
 {
 	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
+	int iGravityRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
 	if (iGravityAbility == 1 && bIsTank(client))
 	{
 		if (!g_bGravity[client])
@@ -234,17 +240,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flGravityRange)
 				{
-					vGravityHit(iSurvivor, client, iGravityAbility);
+					vGravityHit(iSurvivor, client, iGravityRangeChance, iGravityAbility);
 				}
 			}
 		}
 	}
 }
 
-void vGravityHit(int client, int owner, int enabled)
+void vGravityHit(int client, int owner, int chance, int enabled)
 {
-	int iGravityChance = !g_bTankConfig[ST_TankType(owner)] ? g_iGravityChance[ST_TankType(owner)] : g_iGravityChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iGravityChance) == 1 && bIsSurvivor(client) && !g_bGravity2[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bGravity2[client])
 	{
 		g_bGravity2[client] = true;
 		float flGravityValue = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityValue[ST_TankType(owner)] : g_flGravityValue2[ST_TankType(owner)];

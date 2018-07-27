@@ -28,6 +28,8 @@ int g_iBuryChance[ST_MAXTYPES + 1];
 int g_iBuryChance2[ST_MAXTYPES + 1];
 int g_iBuryHit[ST_MAXTYPES + 1];
 int g_iBuryHit2[ST_MAXTYPES + 1];
+int g_iBuryRangeChance[ST_MAXTYPES + 1];
+int g_iBuryRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -124,8 +126,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iBuryChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iBuryChance[ST_TankType(attacker)] : g_iBuryChance2[ST_TankType(attacker)];
 				int iBuryHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iBuryHit[ST_TankType(attacker)] : g_iBuryHit2[ST_TankType(attacker)];
-				vBuryHit(victim, attacker, iBuryHit);
+				vBuryHit(victim, attacker, iBuryChance, iBuryHit);
 			}
 		}
 	}
@@ -154,6 +157,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iBuryHit[iIndex] = iSetCellLimit(g_iBuryHit[iIndex], 0, 1)) : (g_iBuryHit2[iIndex] = iSetCellLimit(g_iBuryHit2[iIndex], 0, 1));
 			main ? (g_flBuryRange[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Range", 150.0)) : (g_flBuryRange2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Range", g_flBuryRange[iIndex]));
 			main ? (g_flBuryRange[iIndex] = flSetFloatLimit(g_flBuryRange[iIndex], 1.0, 9999999999.0)) : (g_flBuryRange2[iIndex] = flSetFloatLimit(g_flBuryRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iBuryRangeChance[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Range Chance", 16)) : (g_iBuryRangeChance2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Range Chance", g_iBuryRangeChance[iIndex]));
+			main ? (g_iBuryRangeChance[iIndex] = iSetCellLimit(g_iBuryRangeChance[iIndex], 1, 9999999999)) : (g_iBuryRangeChance2[iIndex] = iSetCellLimit(g_iBuryRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -182,6 +187,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iBuryAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBuryAbility[ST_TankType(client)] : g_iBuryAbility2[ST_TankType(client)];
+		int iBuryRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBuryChance[ST_TankType(client)] : g_iBuryChance2[ST_TankType(client)];
 		float flBuryRange = !g_bTankConfig[ST_TankType(client)] ? g_flBuryRange[ST_TankType(client)] : g_flBuryRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -194,17 +200,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBuryRange)
 				{
-					vBuryHit(iSurvivor, client, iBuryAbility);
+					vBuryHit(iSurvivor, client, iBuryRangeChance, iBuryAbility);
 				}
 			}
 		}
 	}
 }
 
-void vBuryHit(int client, int owner, int enabled)
+void vBuryHit(int client, int owner, int chance, int enabled)
 {
-	int iBuryChance = !g_bTankConfig[ST_TankType(owner)] ? g_iBuryChance[ST_TankType(owner)] : g_iBuryChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iBuryChance) == 1 && bIsSurvivor(client) && !g_bBury[client] && bIsPlayerGrounded(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBury[client] && bIsPlayerGrounded(client))
 	{
 		g_bBury[client] = true;
 		float flOrigin[3];

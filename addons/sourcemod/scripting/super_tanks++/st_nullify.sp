@@ -25,6 +25,8 @@ int g_iNullifyChance[ST_MAXTYPES + 1];
 int g_iNullifyChance2[ST_MAXTYPES + 1];
 int g_iNullifyHit[ST_MAXTYPES + 1];
 int g_iNullifyHit2[ST_MAXTYPES + 1];
+int g_iNullifyRangeChance[ST_MAXTYPES + 1];
+int g_iNullifyRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -109,8 +111,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iNullifyChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iNullifyChance[ST_TankType(attacker)] : g_iNullifyChance2[ST_TankType(attacker)];
 				int iNullifyHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iNullifyHit[ST_TankType(attacker)] : g_iNullifyHit2[ST_TankType(attacker)];
-				vNullifyHit(victim, attacker, iNullifyHit);
+				vNullifyHit(victim, attacker, iNullifyChance, iNullifyHit);
 			}
 		}
 		else if (bIsTank(victim) && bIsSurvivor(attacker) && g_bNullify[attacker])
@@ -142,6 +145,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iNullifyHit[iIndex] = iSetCellLimit(g_iNullifyHit[iIndex], 0, 1)) : (g_iNullifyHit2[iIndex] = iSetCellLimit(g_iNullifyHit2[iIndex], 0, 1));
 			main ? (g_flNullifyRange[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range", 150.0)) : (g_flNullifyRange2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range", g_flNullifyRange[iIndex]));
 			main ? (g_flNullifyRange[iIndex] = flSetFloatLimit(g_flNullifyRange[iIndex], 1.0, 9999999999.0)) : (g_flNullifyRange2[iIndex] = flSetFloatLimit(g_flNullifyRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iNullifyRangeChance[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Range Chance", 16)) : (g_iNullifyRangeChance2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Range Chance", g_iNullifyRangeChance[iIndex]));
+			main ? (g_iNullifyRangeChance[iIndex] = iSetCellLimit(g_iNullifyRangeChance[iIndex], 1, 9999999999)) : (g_iNullifyRangeChance2[iIndex] = iSetCellLimit(g_iNullifyRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -167,6 +172,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
+		int iNullifyRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyChance[ST_TankType(client)] : g_iNullifyChance2[ST_TankType(client)];
 		float flNullifyRange = !g_bTankConfig[ST_TankType(client)] ? g_flNullifyRange[ST_TankType(client)] : g_flNullifyRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -179,17 +185,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flNullifyRange)
 				{
-					vNullifyHit(iSurvivor, client, iNullifyAbility);
+					vNullifyHit(iSurvivor, client, iNullifyRangeChance, iNullifyAbility);
 				}
 			}
 		}
 	}
 }
 
-void vNullifyHit(int client, int owner, int enabled)
+void vNullifyHit(int client, int owner, int chance, int enabled)
 {
-	int iNullifyChance = !g_bTankConfig[ST_TankType(owner)] ? g_iNullifyChance[ST_TankType(owner)] : g_iNullifyChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iNullifyChance) == 1 && bIsSurvivor(client) && !g_bNullify[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bNullify[client])
 	{
 		g_bNullify[client] = true;
 		float flNullifyDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flNullifyDuration[ST_TankType(owner)] : g_flNullifyDuration2[ST_TankType(owner)];

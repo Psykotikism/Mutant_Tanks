@@ -24,6 +24,8 @@ int g_iFireChance[ST_MAXTYPES + 1];
 int g_iFireChance2[ST_MAXTYPES + 1];
 int g_iFireHit[ST_MAXTYPES + 1];
 int g_iFireHit2[ST_MAXTYPES + 1];
+int g_iFireRangeChance[ST_MAXTYPES + 1];
+int g_iFireRangeChance2[ST_MAXTYPES + 1];
 int g_iFireRock[ST_MAXTYPES + 1];
 int g_iFireRock2[ST_MAXTYPES + 1];
 
@@ -91,16 +93,18 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iFireChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iFireChance[ST_TankType(attacker)] : g_iFireChance2[ST_TankType(attacker)];
 				int iFireHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iFireHit[ST_TankType(attacker)] : g_iFireHit2[ST_TankType(attacker)];
-				vFireHit(victim, attacker, iFireHit);
+				vFireHit(victim, attacker, iFireChance, iFireHit);
 			}
 		}
 		else if (bIsSurvivor(attacker) && bIsTank(victim))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
+				int iFireChance = !g_bTankConfig[ST_TankType(victim)] ? g_iFireChance[ST_TankType(victim)] : g_iFireChance2[ST_TankType(victim)];
 				int iFireHit = !g_bTankConfig[ST_TankType(victim)] ? g_iFireHit[ST_TankType(victim)] : g_iFireHit2[ST_TankType(victim)];
-				vFireHit(attacker, victim, iFireHit);
+				vFireHit(attacker, victim, iFireChance, iFireHit);
 			}
 		}
 	}
@@ -125,6 +129,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iFireHit[iIndex] = iSetCellLimit(g_iFireHit[iIndex], 0, 1)) : (g_iFireHit2[iIndex] = iSetCellLimit(g_iFireHit2[iIndex], 0, 1));
 			main ? (g_flFireRange[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Range", 150.0)) : (g_flFireRange2[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Range", g_flFireRange[iIndex]));
 			main ? (g_flFireRange[iIndex] = flSetFloatLimit(g_flFireRange[iIndex], 1.0, 9999999999.0)) : (g_flFireRange2[iIndex] = flSetFloatLimit(g_flFireRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iFireRangeChance[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Range Chance", 16)) : (g_iFireRangeChance2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Range Chance", g_iFireRangeChance[iIndex]));
+			main ? (g_iFireRangeChance[iIndex] = iSetCellLimit(g_iFireRangeChance[iIndex], 1, 9999999999)) : (g_iFireRangeChance2[iIndex] = iSetCellLimit(g_iFireRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_iFireRock[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Rock Break", 0)) : (g_iFireRock2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Rock Break", g_iFireRock[iIndex]));
 			main ? (g_iFireRock[iIndex] = iSetCellLimit(g_iFireRock[iIndex], 0, 1)) : (g_iFireRock2[iIndex] = iSetCellLimit(g_iFireRock2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
@@ -148,6 +154,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iFireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFireAbility[ST_TankType(client)] : g_iFireAbility2[ST_TankType(client)];
+		int iFireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFireChance[ST_TankType(client)] : g_iFireChance2[ST_TankType(client)];
 		float flFireRange = !g_bTankConfig[ST_TankType(client)] ? g_flFireRange[ST_TankType(client)] : g_flFireRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -160,7 +167,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flFireRange)
 				{
-					vFireHit(iSurvivor, client, iFireAbility);
+					vFireHit(iSurvivor, client, iFireRangeChance, iFireAbility);
 				}
 			}
 		}
@@ -197,10 +204,9 @@ void vFire(int client, float pos[3])
 	}
 }
 
-void vFireHit(int client, int owner, int enabled)
+void vFireHit(int client, int owner, int chance, int enabled)
 {
-	int iFireChance = !g_bTankConfig[ST_TankType(owner)] ? g_iFireChance[ST_TankType(owner)] : g_iFireChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iFireChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		float flPos[3];
 		GetClientAbsOrigin(client, flPos);

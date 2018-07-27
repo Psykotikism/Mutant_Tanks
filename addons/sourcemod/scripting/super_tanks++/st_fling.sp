@@ -24,6 +24,8 @@ int g_iFlingChance[ST_MAXTYPES + 1];
 int g_iFlingChance2[ST_MAXTYPES + 1];
 int g_iFlingHit[ST_MAXTYPES + 1];
 int g_iFlingHit2[ST_MAXTYPES + 1];
+int g_iFlingRangeChance[ST_MAXTYPES + 1];
+int g_iFlingRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -119,8 +121,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iFlingChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iFlingChance[ST_TankType(attacker)] : g_iFlingChance2[ST_TankType(attacker)];
 				int iFlingHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iFlingHit[ST_TankType(attacker)] : g_iFlingHit2[ST_TankType(attacker)];
-				vFlingHit(victim, attacker, iFlingHit);
+				vFlingHit(victim, attacker, iFlingChance, iFlingHit);
 			}
 		}
 	}
@@ -144,6 +147,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iFlingHit[iIndex] = iSetCellLimit(g_iFlingHit[iIndex], 0, 1)) : (g_iFlingHit2[iIndex] = iSetCellLimit(g_iFlingHit2[iIndex], 0, 1));
 			main ? (g_flFlingRange[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", 150.0)) : (g_flFlingRange2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", g_flFlingRange[iIndex]));
 			main ? (g_flFlingRange[iIndex] = flSetFloatLimit(g_flFlingRange[iIndex], 1.0, 9999999999.0)) : (g_flFlingRange2[iIndex] = flSetFloatLimit(g_flFlingRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iFlingRangeChance[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Range Chance", 16)) : (g_iFlingRangeChance2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Range Chance", g_iFlingRangeChance[iIndex]));
+			main ? (g_iFlingRangeChance[iIndex] = iSetCellLimit(g_iFlingRangeChance[iIndex], 1, 9999999999)) : (g_iFlingRangeChance2[iIndex] = iSetCellLimit(g_iFlingRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -155,6 +160,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iFlingAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFlingAbility[ST_TankType(client)] : g_iFlingAbility2[ST_TankType(client)];
+		int iFlingRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFlingChance[ST_TankType(client)] : g_iFlingChance2[ST_TankType(client)];
 		float flFlingRange = !g_bTankConfig[ST_TankType(client)] ? g_flFlingRange[ST_TankType(client)] : g_flFlingRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -167,17 +173,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flFlingRange)
 				{
-					vFlingHit(iSurvivor, client, iFlingAbility);
+					vFlingHit(iSurvivor, client, iFlingRangeChance, iFlingAbility);
 				}
 			}
 		}
 	}
 }
 
-void vFlingHit(int client, int owner, int enabled)
+void vFlingHit(int client, int owner, int chance, int enabled)
 {
-	int iFlingChance = !g_bTankConfig[ST_TankType(owner)] ? g_iFlingChance[ST_TankType(owner)] : g_iFlingChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iFlingChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		if (bIsL4D2Game())
 		{

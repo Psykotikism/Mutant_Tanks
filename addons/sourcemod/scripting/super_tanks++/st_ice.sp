@@ -27,6 +27,8 @@ int g_iIceChance[ST_MAXTYPES + 1];
 int g_iIceChance2[ST_MAXTYPES + 1];
 int g_iIceHit[ST_MAXTYPES + 1];
 int g_iIceHit2[ST_MAXTYPES + 1];
+int g_iIceRangeChance[ST_MAXTYPES + 1];
+int g_iIceRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -112,8 +114,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iIceChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iIceChance[ST_TankType(attacker)] : g_iIceChance2[ST_TankType(attacker)];
 				int iIceHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iIceHit[ST_TankType(attacker)] : g_iIceHit2[ST_TankType(attacker)];
-				vIceHit(victim, attacker, iIceHit);
+				vIceHit(victim, attacker, iIceChance, iIceHit);
 			}
 		}
 	}
@@ -140,6 +143,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iIceHit[iIndex] = iSetCellLimit(g_iIceHit[iIndex], 0, 1)) : (g_iIceHit2[iIndex] = iSetCellLimit(g_iIceHit2[iIndex], 0, 1));
 			main ? (g_flIceRange[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range", 150.0)) : (g_flIceRange2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range", g_flIceRange[iIndex]));
 			main ? (g_flIceRange[iIndex] = flSetFloatLimit(g_flIceRange[iIndex], 1.0, 9999999999.0)) : (g_flIceRange2[iIndex] = flSetFloatLimit(g_flIceRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iIceRangeChance[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Range Chance", 16)) : (g_iIceRangeChance2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Range Chance", g_iIceRangeChance[iIndex]));
+			main ? (g_iIceRangeChance[iIndex] = iSetCellLimit(g_iIceRangeChance[iIndex], 1, 9999999999)) : (g_iIceRangeChance2[iIndex] = iSetCellLimit(g_iIceRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -168,6 +173,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iIceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIceAbility[ST_TankType(client)] : g_iIceAbility2[ST_TankType(client)];
+		int iIceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iIceChance[ST_TankType(client)] : g_iIceChance2[ST_TankType(client)];
 		float flIceRange = !g_bTankConfig[ST_TankType(client)] ? g_flIceRange[ST_TankType(client)] : g_flIceRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -180,17 +186,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIceRange)
 				{
-					vIceHit(iSurvivor, client, iIceAbility);
+					vIceHit(iSurvivor, client, iIceRangeChance, iIceAbility);
 				}
 			}
 		}
 	}
 }
 
-void vIceHit(int client, int owner, int enabled)
+void vIceHit(int client, int owner, int chance, int enabled)
 {
-	int iIceChance = !g_bTankConfig[ST_TankType(owner)] ? g_iIceChance[ST_TankType(owner)] : g_iIceChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iIceChance) == 1 && bIsSurvivor(client) && !g_bIce[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bIce[client])
 	{
 		g_bIce[client] = true;
 		float flPos[3];

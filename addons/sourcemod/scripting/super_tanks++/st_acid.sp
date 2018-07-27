@@ -24,6 +24,8 @@ int g_iAcidChance[ST_MAXTYPES + 1];
 int g_iAcidChance2[ST_MAXTYPES + 1];
 int g_iAcidHit[ST_MAXTYPES + 1];
 int g_iAcidHit2[ST_MAXTYPES + 1];
+int g_iAcidRangeChance[ST_MAXTYPES + 1];
+int g_iAcidRangeChance2[ST_MAXTYPES + 1];
 int g_iAcidRock[ST_MAXTYPES + 1];
 int g_iAcidRock2[ST_MAXTYPES + 1];
 
@@ -124,16 +126,18 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iAcidChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iAcidChance[ST_TankType(attacker)] : g_iAcidChance2[ST_TankType(attacker)];
 				int iAcidHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iAcidHit[ST_TankType(attacker)] : g_iAcidHit2[ST_TankType(attacker)];
-				vAcidHit(victim, attacker, iAcidHit);
+				vAcidHit(victim, attacker, iAcidChance, iAcidHit);
 			}
 		}
 		else if (bIsSurvivor(attacker) && bIsTank(victim))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
+				int iAcidChance = !g_bTankConfig[ST_TankType(victim)] ? g_iAcidChance[ST_TankType(victim)] : g_iAcidChance2[ST_TankType(victim)];
 				int iAcidHit = !g_bTankConfig[ST_TankType(victim)] ? g_iAcidHit[ST_TankType(victim)] : g_iAcidHit2[ST_TankType(victim)];
-				vAcidHit(attacker, victim, iAcidHit);
+				vAcidHit(attacker, victim, iAcidChance, iAcidHit);
 			}
 		}
 	}
@@ -158,6 +162,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iAcidHit[iIndex] = iSetCellLimit(g_iAcidHit[iIndex], 0, 1)) : (g_iAcidHit2[iIndex] = iSetCellLimit(g_iAcidHit2[iIndex], 0, 1));
 			main ? (g_flAcidRange[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", 150.0)) : (g_flAcidRange2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", g_flAcidRange[iIndex]));
 			main ? (g_flAcidRange[iIndex] = flSetFloatLimit(g_flAcidRange[iIndex], 1.0, 9999999999.0)) : (g_flAcidRange2[iIndex] = flSetFloatLimit(g_flAcidRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iAcidRangeChance[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Range Chance", 16)) : (g_iAcidRangeChance2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Range Chance", g_iAcidRangeChance[iIndex]));
+			main ? (g_iAcidRangeChance[iIndex] = iSetCellLimit(g_iAcidRangeChance[iIndex], 1, 9999999999)) : (g_iAcidRangeChance2[iIndex] = iSetCellLimit(g_iAcidRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_iAcidRock[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", 0)) : (g_iAcidRock2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", g_iAcidRock[iIndex]));
 			main ? (g_iAcidRock[iIndex] = iSetCellLimit(g_iAcidRock[iIndex], 0, 1)) : (g_iAcidRock2[iIndex] = iSetCellLimit(g_iAcidRock2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
@@ -170,11 +176,7 @@ public void ST_Death(int client)
 {
 	if (bIsTank(client) && bIsL4D2Game())
 	{
-		float flOrigin[3];
-		float flAngles[3];
-		GetClientAbsOrigin(client, flOrigin);
-		GetClientAbsAngles(client, flAngles);
-		SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, client, 2.0);
+		vAcid(client, client);
 	}
 }
 
@@ -183,6 +185,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)];
+		int iAcidRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAcidChance[ST_TankType(client)] : g_iAcidChance2[ST_TankType(client)];
 		float flAcidRange = !g_bTankConfig[ST_TankType(client)] ? g_flAcidRange[ST_TankType(client)] : g_flAcidRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -195,7 +198,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flAcidRange)
 				{
-					vAcidHit(iSurvivor, client, iAcidAbility);
+					vAcidHit(iSurvivor, client, iAcidRangeChance, iAcidAbility);
 				}
 			}
 		}
@@ -215,23 +218,20 @@ public void ST_RockBreak(int client, int entity)
 	}
 }
 
-void vAcidHit(int client, int owner, int enabled)
+void vAcid(int client, int owner)
 {
-	int iAcidChance = !g_bTankConfig[ST_TankType(owner)] ? g_iAcidChance[ST_TankType(owner)] : g_iAcidChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iAcidChance) == 1 && bIsSurvivor(client))
+	float flOrigin[3];
+	float flAngles[3];
+	GetClientAbsOrigin(client, flOrigin);
+	GetClientAbsAngles(client, flAngles);
+	SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, owner, 2.0);
+}
+
+void vAcidHit(int client, int owner, int chance, int enabled)
+{
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
-		if (bIsL4D2Game())
-		{
-			float flOrigin[3];
-			float flAngles[3];
-			GetClientAbsOrigin(client, flOrigin);
-			GetClientAbsAngles(client, flAngles);
-			SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, owner, 2.0);
-		}
-		else
-		{
-			SDKCall(g_hSDKPukePlayer, client, owner, true);
-		}
+		bIsL4D2Game() ? vAcid(client, owner) : SDKCall(g_hSDKPukePlayer, client, owner, true);
 	}
 }
 

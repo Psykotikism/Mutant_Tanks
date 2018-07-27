@@ -27,6 +27,8 @@ int g_iBlindHit[ST_MAXTYPES + 1];
 int g_iBlindHit2[ST_MAXTYPES + 1];
 int g_iBlindIntensity[ST_MAXTYPES + 1];
 int g_iBlindIntensity2[ST_MAXTYPES + 1];
+int g_iBlindRangeChance[ST_MAXTYPES + 1];
+int g_iBlindRangeChance2[ST_MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -117,8 +119,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iBlindChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iBlindChance[ST_TankType(attacker)] : g_iBlindChance2[ST_TankType(attacker)];
 				int iBlindHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iBlindHit[ST_TankType(attacker)] : g_iBlindHit2[ST_TankType(attacker)];
-				vBlindHit(victim, attacker, iBlindHit);
+				vBlindHit(victim, attacker, iBlindChance, iBlindHit);
 			}
 		}
 	}
@@ -147,6 +150,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iBlindIntensity[iIndex] = iSetCellLimit(g_iBlindIntensity[iIndex], 0, 255)) : (g_iBlindIntensity2[iIndex] = iSetCellLimit(g_iBlindIntensity2[iIndex], 0, 255));
 			main ? (g_flBlindRange[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range", 150.0)) : (g_flBlindRange2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range", g_flBlindRange[iIndex]));
 			main ? (g_flBlindRange[iIndex] = flSetFloatLimit(g_flBlindRange[iIndex], 1.0, 9999999999.0)) : (g_flBlindRange2[iIndex] = flSetFloatLimit(g_flBlindRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iBlindRangeChance[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Range Chance", 16)) : (g_iBlindRangeChance2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Range Chance", g_iBlindRangeChance[iIndex]));
+			main ? (g_iBlindRangeChance[iIndex] = iSetCellLimit(g_iBlindRangeChance[iIndex], 1, 9999999999)) : (g_iBlindRangeChance2[iIndex] = iSetCellLimit(g_iBlindRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -175,6 +180,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iBlindAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
+		int iBlindRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBlindChance[ST_TankType(client)] : g_iBlindChance2[ST_TankType(client)];
 		float flBlindRange = !g_bTankConfig[ST_TankType(client)] ? g_flBlindRange[ST_TankType(client)] : g_flBlindRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -187,7 +193,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBlindRange)
 				{
-					vBlindHit(iSurvivor, client, iBlindAbility);
+					vBlindHit(iSurvivor, client, iBlindRangeChance, iBlindAbility);
 				}
 			}
 		}
@@ -228,10 +234,9 @@ void vBlind(int client, int amount, UserMsg message)
 	}
 }
 
-void vBlindHit(int client, int owner, int enabled)
+void vBlindHit(int client, int owner, int chance, int enabled)
 {
-	int iBlindChance = !g_bTankConfig[ST_TankType(owner)] ? g_iBlindChance[ST_TankType(owner)] : g_iBlindChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iBlindChance) == 1 && bIsSurvivor(client) && !g_bBlind[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBlind[client])
 	{
 		g_bBlind[client] = true;
 		int iBlindIntensity = !g_bTankConfig[ST_TankType(owner)] ? g_iBlindIntensity[ST_TankType(owner)] : g_iBlindIntensity2[ST_TankType(owner)];

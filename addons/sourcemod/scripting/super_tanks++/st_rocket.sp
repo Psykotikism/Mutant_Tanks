@@ -28,6 +28,8 @@ int g_iRocketChance[ST_MAXTYPES + 1];
 int g_iRocketChance2[ST_MAXTYPES + 1];
 int g_iRocketHit[ST_MAXTYPES + 1];
 int g_iRocketHit2[ST_MAXTYPES + 1];
+int g_iRocketRangeChance[ST_MAXTYPES + 1];
+int g_iRocketRangeChance2[ST_MAXTYPES + 1];
 int g_iRocketSprite = -1;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -97,8 +99,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iRocketChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iRocketChance[ST_TankType(attacker)] : g_iRocketChance2[ST_TankType(attacker)];
 				int iRocketHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iRocketHit[ST_TankType(attacker)] : g_iRocketHit2[ST_TankType(attacker)];
-				vRocketHit(victim, attacker, iRocketHit);
+				vRocketHit(victim, iRocketChance, iRocketHit);
 			}
 		}
 	}
@@ -122,16 +125,42 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iRocketHit[iIndex] = iSetCellLimit(g_iRocketHit[iIndex], 0, 1)) : (g_iRocketHit2[iIndex] = iSetCellLimit(g_iRocketHit2[iIndex], 0, 1));
 			main ? (g_flRocketRange[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range", 150.0)) : (g_flRocketRange2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range", g_flRocketRange[iIndex]));
 			main ? (g_flRocketRange[iIndex] = flSetFloatLimit(g_flRocketRange[iIndex], 1.0, 9999999999.0)) : (g_flRocketRange2[iIndex] = flSetFloatLimit(g_flRocketRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iRocketRangeChance[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Range Chance", 16)) : (g_iRocketRangeChance2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Range Chance", g_iRocketRangeChance[iIndex]));
+			main ? (g_iRocketRangeChance[iIndex] = iSetCellLimit(g_iRocketRangeChance[iIndex], 1, 9999999999)) : (g_iRocketRangeChance2[iIndex] = iSetCellLimit(g_iRocketRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
 	delete kvSuperTanks;
 }
 
-void vRocketHit(int client, int owner, int enabled)
+public void ST_Ability(int client)
 {
-	int iRocketChance = !g_bTankConfig[ST_TankType(owner)] ? g_iRocketChance[ST_TankType(owner)] : g_iRocketChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iRocketChance) == 1 && bIsSurvivor(client))
+	if (bIsTank(client))
+	{
+		int iRocketAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRocketAbility[ST_TankType(client)] : g_iRocketAbility2[ST_TankType(client)];
+		int iRocketRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iRocketChance[ST_TankType(client)] : g_iRocketChance2[ST_TankType(client)];
+		float flRocketRange = !g_bTankConfig[ST_TankType(client)] ? g_flRocketRange[ST_TankType(client)] : g_flRocketRange2[ST_TankType(client)];
+		float flTankPos[3];
+		GetClientAbsOrigin(client, flTankPos);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flRocketRange)
+				{
+					vRocketHit(iSurvivor, iRocketRangeChance, iRocketAbility);
+				}
+			}
+		}
+	}
+}
+
+void vRocketHit(int client, int chance, int enabled)
+{
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		int iFlame = CreateEntityByName("env_steam");
 		if (bIsValidEntity(iFlame))

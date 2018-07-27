@@ -24,10 +24,10 @@ int g_iSmashAbility[ST_MAXTYPES + 1];
 int g_iSmashAbility2[ST_MAXTYPES + 1];
 int g_iSmashChance[ST_MAXTYPES + 1];
 int g_iSmashChance2[ST_MAXTYPES + 1];
-int g_iSmashDamage[ST_MAXTYPES + 1];
-int g_iSmashDamage2[ST_MAXTYPES + 1];
 int g_iSmashHit[ST_MAXTYPES + 1];
 int g_iSmashHit2[ST_MAXTYPES + 1];
+int g_iSmashRangeChance[ST_MAXTYPES + 1];
+int g_iSmashRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -95,7 +95,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vSmashHit2(victim, attacker);
+				int iSmashChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iSmashChance[ST_TankType(attacker)] : g_iSmashChance2[ST_TankType(attacker)];
+				int iSmashHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iSmashHit[ST_TankType(attacker)] : g_iSmashHit2[ST_TankType(attacker)];
+				vSmashHit(victim, iSmashChance, iSmashHit);
 			}
 		}
 	}
@@ -116,12 +118,12 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iSmashAbility[iIndex] = iSetCellLimit(g_iSmashAbility[iIndex], 0, 1)) : (g_iSmashAbility2[iIndex] = iSetCellLimit(g_iSmashAbility2[iIndex], 0, 1));
 			main ? (g_iSmashChance[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Chance", 4)) : (g_iSmashChance2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Chance", g_iSmashChance[iIndex]));
 			main ? (g_iSmashChance[iIndex] = iSetCellLimit(g_iSmashChance[iIndex], 1, 9999999999)) : (g_iSmashChance2[iIndex] = iSetCellLimit(g_iSmashChance2[iIndex], 1, 9999999999));
-			main ? (g_iSmashDamage[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Damage", 5)) : (g_iSmashDamage2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Damage", g_iSmashDamage[iIndex]));
-			main ? (g_iSmashDamage[iIndex] = iSetCellLimit(g_iSmashDamage[iIndex], 1, 9999999999)) : (g_iSmashDamage2[iIndex] = iSetCellLimit(g_iSmashDamage2[iIndex], 1, 9999999999));
 			main ? (g_iSmashHit[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit", 0)) : (g_iSmashHit2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit", g_iSmashHit[iIndex]));
 			main ? (g_iSmashHit[iIndex] = iSetCellLimit(g_iSmashHit[iIndex], 0, 1)) : (g_iSmashHit2[iIndex] = iSetCellLimit(g_iSmashHit2[iIndex], 0, 1));
 			main ? (g_flSmashRange[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range", 150.0)) : (g_flSmashRange2[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range", g_flSmashRange[iIndex]));
 			main ? (g_flSmashRange[iIndex] = flSetFloatLimit(g_flSmashRange[iIndex], 1.0, 9999999999.0)) : (g_flSmashRange2[iIndex] = flSetFloatLimit(g_flSmashRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iSmashRangeChance[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Range Chance", 16)) : (g_iSmashRangeChance2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Range Chance", g_iSmashRangeChance[iIndex]));
+			main ? (g_iSmashRangeChance[iIndex] = iSetCellLimit(g_iSmashRangeChance[iIndex], 1, 9999999999)) : (g_iSmashRangeChance2[iIndex] = iSetCellLimit(g_iSmashRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -148,6 +150,8 @@ public void ST_Ability(int client)
 {
 	if (bIsTank(client))
 	{
+		int iSmashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSmashAbility[ST_TankType(client)] : g_iSmashAbility2[ST_TankType(client)];
+		int iSmashRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iSmashChance[ST_TankType(client)] : g_iSmashChance2[ST_TankType(client)];
 		float flSmashRange = !g_bTankConfig[ST_TankType(client)] ? g_flSmashRange[ST_TankType(client)] : g_flSmashRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -160,43 +164,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flSmashRange)
 				{
-					vSmashHit(iSurvivor, client);
+					vSmashHit(iSurvivor, iSmashRangeChance, iSmashAbility);
 				}
 			}
 		}
 	}
 }
 
-void vSmashHit(int client, int owner)
+void vSmashHit(int client, int chance, int enabled)
 {
-	int iSmashAbility = !g_bTankConfig[ST_TankType(owner)] ? g_iSmashAbility[ST_TankType(owner)] : g_iSmashAbility2[ST_TankType(owner)];
-	int iSmashChance = !g_bTankConfig[ST_TankType(owner)] ? g_iSmashChance[ST_TankType(owner)] : g_iSmashChance2[ST_TankType(owner)];
-	if (iSmashAbility == 1 && GetRandomInt(1, iSmashChance) == 1 && bIsSurvivor(client))
-	{
-		EmitSoundToAll(SOUND_GROWL, owner);
-		char sDamage[6];
-		int iSmashDamage = !g_bTankConfig[ST_TankType(owner)] ? g_iSmashDamage[ST_TankType(owner)] : g_iSmashDamage2[ST_TankType(owner)];
-		IntToString(iSmashDamage, sDamage, sizeof(sDamage));
-		int iPointHurt = CreateEntityByName("point_hurt");
-		if (bIsValidEntity(iPointHurt))
-		{
-			DispatchKeyValue(client, "targetname", "hurtme");
-			DispatchKeyValue(iPointHurt, "Damage", sDamage);
-			DispatchKeyValue(iPointHurt, "DamageTarget", "hurtme");
-			DispatchKeyValue(iPointHurt, "DamageType", "2");
-			DispatchSpawn(iPointHurt);
-			AcceptEntityInput(iPointHurt, "Hurt", client);
-			AcceptEntityInput(iPointHurt, "Kill");
-			DispatchKeyValue(client, "targetname", "donthurtme");
-		}
-	}
-}
-
-void vSmashHit2(int client, int owner)
-{
-	int iSmashChance = !g_bTankConfig[ST_TankType(owner)] ? g_iSmashChance[ST_TankType(owner)] : g_iSmashChance2[ST_TankType(owner)];
-	int iSmashHit = !g_bTankConfig[ST_TankType(owner)] ? g_iSmashHit[ST_TankType(owner)] : g_iSmashHit2[ST_TankType(owner)];
-	if (iSmashHit == 1 && GetRandomInt(1, iSmashChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		EmitSoundToAll(SOUND_SMASH, client);
 		vAttachParticle(client, PARTICLE_BLOOD, 0.1, 0.0);
@@ -265,11 +242,6 @@ void vSetEntityParent(int entity, int parent)
 bool bIsValidClient(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }
 
 bool bIsValidEntRef(int entity)

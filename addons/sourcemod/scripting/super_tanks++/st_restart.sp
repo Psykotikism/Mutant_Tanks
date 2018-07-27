@@ -27,6 +27,8 @@ int g_iRestartChance[ST_MAXTYPES + 1];
 int g_iRestartChance2[ST_MAXTYPES + 1];
 int g_iRestartHit[ST_MAXTYPES + 1];
 int g_iRestartHit2[ST_MAXTYPES + 1];
+int g_iRestartRangeChance[ST_MAXTYPES + 1];
+int g_iRestartRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -108,8 +110,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iRestartHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iRestartHit[ST_TankType(attacker)] : g_iRestartHit2[ST_TankType(attacker)];
-				vRestartHit(victim, attacker, iRestartHit);
+				int iRestartChance = !g_bTankConfig[ST_TankType(victim)] ? g_iRestartChance[ST_TankType(victim)] : g_iRestartChance2[ST_TankType(victim)];
+				int iRestartHit = !g_bTankConfig[ST_TankType(victim)] ? g_iRestartHit[ST_TankType(victim)] : g_iRestartHit2[ST_TankType(victim)];
+				vRestartHit(attacker, victim, iRestartChance, iRestartHit);
 			}
 		}
 	}
@@ -135,6 +138,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (kvSuperTanks.GetString("Restart Ability/Restart Loadout", g_sRestartLoadout[iIndex], sizeof(g_sRestartLoadout[]), "smg,pistol,pain_pills")) : (kvSuperTanks.GetString("Restart Ability/Restart Loadout", g_sRestartLoadout2[iIndex], sizeof(g_sRestartLoadout2[]), g_sRestartLoadout[iIndex]));
 			main ? (g_flRestartRange[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range", 150.0)) : (g_flRestartRange2[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range", g_flRestartRange[iIndex]));
 			main ? (g_flRestartRange[iIndex] = flSetFloatLimit(g_flRestartRange[iIndex], 1.0, 9999999999.0)) : (g_flRestartRange2[iIndex] = flSetFloatLimit(g_flRestartRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iRestartRangeChance[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Range Chance", 16)) : (g_iRestartRangeChance2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Range Chance", g_iRestartRangeChance[iIndex]));
+			main ? (g_iRestartRangeChance[iIndex] = iSetCellLimit(g_iRestartRangeChance[iIndex], 1, 9999999999)) : (g_iRestartRangeChance2[iIndex] = iSetCellLimit(g_iRestartRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -151,6 +156,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iRestartAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRestartAbility[ST_TankType(client)] : g_iRestartAbility2[ST_TankType(client)];
+		int iRestartRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iRestartChance[ST_TankType(client)] : g_iRestartChance2[ST_TankType(client)];
 		float flRestartRange = !g_bTankConfig[ST_TankType(client)] ? g_flRestartRange[ST_TankType(client)] : g_flRestartRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -163,17 +169,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRestartRange)
 				{
-					vRestartHit(iSurvivor, client, iRestartAbility);
+					vRestartHit(iSurvivor, client, iRestartRangeChance, iRestartAbility);
 				}
 			}
 		}
 	}
 }
 
-void vRestartHit(int client, int owner, int enabled)
+void vRestartHit(int client, int owner, int chance, int enabled)
 {
-	int iRestartChance = !g_bTankConfig[ST_TankType(owner)] ? g_iRestartChance[ST_TankType(owner)] : g_iRestartChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iRestartChance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		SDKCall(g_hSDKRespawnPlayer, client);
 		char sRestartLoadout[325];

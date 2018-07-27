@@ -28,6 +28,8 @@ int g_iPimpDamage[ST_MAXTYPES + 1];
 int g_iPimpDamage2[ST_MAXTYPES + 1];
 int g_iPimpHit[ST_MAXTYPES + 1];
 int g_iPimpHit2[ST_MAXTYPES + 1];
+int g_iPimpRangeChance[ST_MAXTYPES + 1];
+int g_iPimpRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -116,8 +118,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iPimpChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iPimpChance[ST_TankType(attacker)] : g_iPimpChance2[ST_TankType(attacker)];
 				int iPimpHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iPimpHit[ST_TankType(attacker)] : g_iPimpHit2[ST_TankType(attacker)];
-				vPimpHit(victim, attacker, iPimpHit);
+				vPimpHit(victim, attacker, iPimpChance, iPimpHit);
 			}
 		}
 	}
@@ -146,6 +149,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iPimpHit[iIndex] = iSetCellLimit(g_iPimpHit[iIndex], 0, 1)) : (g_iPimpHit2[iIndex] = iSetCellLimit(g_iPimpHit2[iIndex], 0, 1));
 			main ? (g_flPimpRange[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range", 150.0)) : (g_flPimpRange2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range", g_flPimpRange[iIndex]));
 			main ? (g_flPimpRange[iIndex] = flSetFloatLimit(g_flPimpRange[iIndex], 1.0, 9999999999.0)) : (g_flPimpRange2[iIndex] = flSetFloatLimit(g_flPimpRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iPimpRangeChance[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Range Chance", 16)) : (g_iPimpRangeChance2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Range Chance", g_iPimpRangeChance[iIndex]));
+			main ? (g_iPimpRangeChance[iIndex] = iSetCellLimit(g_iPimpRangeChance[iIndex], 1, 9999999999)) : (g_iPimpRangeChance2[iIndex] = iSetCellLimit(g_iPimpRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -157,6 +162,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iPimpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPimpAbility[ST_TankType(client)] : g_iPimpAbility2[ST_TankType(client)];
+		int iPimpRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPimpChance[ST_TankType(client)] : g_iPimpChance2[ST_TankType(client)];
 		float flPimpRange = !g_bTankConfig[ST_TankType(client)] ? g_flPimpRange[ST_TankType(client)] : g_flPimpRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -169,17 +175,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPimpRange)
 				{
-					vPimpHit(iSurvivor, client, iPimpAbility);
+					vPimpHit(iSurvivor, client, iPimpRangeChance, iPimpAbility);
 				}
 			}
 		}
 	}
 }
 
-void vPimpHit(int client, int owner, int enabled)
+void vPimpHit(int client, int owner, int chance, int enabled)
 {
-	int iPimpChance = !g_bTankConfig[ST_TankType(owner)] ? g_iPimpChance[ST_TankType(owner)] : g_iPimpChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iPimpChance) == 1 && bIsSurvivor(client) && !g_bPimp[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bPimp[client])
 	{
 		g_bPimp[client] = true;
 		DataPack dpDataPack;

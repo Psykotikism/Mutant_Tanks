@@ -710,9 +710,9 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 				int iWave3 = (sNumbers[2][0] != '\0') ? StringToInt(sNumbers[2]) : 3;
 				switch (g_iTankWave)
 				{
-					case 1: vTankCountCheck(iWave1);
-					case 2: vTankCountCheck(iWave2);
-					case 3: vTankCountCheck(iWave3);
+					case 1: vTankCountCheck(iTank, iWave1);
+					case 2: vTankCountCheck(iTank, iWave2);
+					case 3: vTankCountCheck(iTank, iWave3);
 				}
 			}
 		}
@@ -1551,11 +1551,15 @@ void vSpawnTank(int wave)
 	}
 }
 
-void vTankCountCheck(int wave)
+void vTankCountCheck(int client, int wave)
 {
 	if (iGetTankCount() < wave)
 	{
 		CreateTimer(5.0, tTimerSpawnTanks, wave, TIMER_FLAG_NO_MAPCHANGE);
+	}
+	else if (iGetTankCount() > wave)
+	{
+		IsFakeClient(client) ? KickClient(client) : ForcePlayerSuicide(client);
 	}
 }
 

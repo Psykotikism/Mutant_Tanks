@@ -24,6 +24,8 @@ int g_iAmmoCount[ST_MAXTYPES + 1];
 int g_iAmmoCount2[ST_MAXTYPES + 1];
 int g_iAmmoHit[ST_MAXTYPES + 1];
 int g_iAmmoHit2[ST_MAXTYPES + 1];
+int g_iAmmoRangeChance[ST_MAXTYPES + 1];
+int g_iAmmoRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -88,8 +90,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
+				int iAmmoChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iAmmoChance[ST_TankType(attacker)] : g_iAmmoChance2[ST_TankType(attacker)];
 				int iAmmoHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iAmmoHit[ST_TankType(attacker)] : g_iAmmoHit2[ST_TankType(attacker)];
-				vAmmoHit(victim, attacker, iAmmoHit);
+				vAmmoHit(victim, attacker, iAmmoChance, iAmmoHit);
 			}
 		}
 	}
@@ -116,6 +119,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iAmmoHit[iIndex] = iSetCellLimit(g_iAmmoHit[iIndex], 0, 1)) : (g_iAmmoHit2[iIndex] = iSetCellLimit(g_iAmmoHit2[iIndex], 0, 1));
 			main ? (g_flAmmoRange[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Range", 150.0)) : (g_flAmmoRange2[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Range", g_flAmmoRange[iIndex]));
 			main ? (g_flAmmoRange[iIndex] = flSetFloatLimit(g_flAmmoRange[iIndex], 1.0, 9999999999.0)) : (g_flAmmoRange2[iIndex] = flSetFloatLimit(g_flAmmoRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iAmmoRangeChance[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Range Chance", 16)) : (g_iAmmoRangeChance2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Range Chance", g_iAmmoRangeChance[iIndex]));
+			main ? (g_iAmmoRangeChance[iIndex] = iSetCellLimit(g_iAmmoRangeChance[iIndex], 1, 9999999999)) : (g_iAmmoRangeChance2[iIndex] = iSetCellLimit(g_iAmmoRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -127,6 +132,7 @@ public void ST_Ability(int client)
 	if (bIsTank(client))
 	{
 		int iAmmoAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAmmoAbility[ST_TankType(client)] : g_iAmmoAbility2[ST_TankType(client)];
+		int iAmmoRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAmmoChance[ST_TankType(client)] : g_iAmmoChance2[ST_TankType(client)];
 		float flAmmoRange = !g_bTankConfig[ST_TankType(client)] ? g_flAmmoRange[ST_TankType(client)] : g_flAmmoRange2[ST_TankType(client)];
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -139,17 +145,16 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flAmmoRange)
 				{
-					vAmmoHit(iSurvivor, client, iAmmoAbility);
+					vAmmoHit(iSurvivor, client, iAmmoRangeChance, iAmmoAbility);
 				}
 			}
 		}
 	}
 }
 
-void vAmmoHit(int client, int owner, int enabled)
+void vAmmoHit(int client, int owner, int chance, int enabled)
 {
-	int iAmmoChance = !g_bTankConfig[ST_TankType(owner)] ? g_iAmmoChance[ST_TankType(owner)] : g_iAmmoChance2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, iAmmoChance) == 1 && bIsSurvivor(client) && GetPlayerWeaponSlot(client, 0) > 0)
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && GetPlayerWeaponSlot(client, 0) > 0)
 	{
 		char sWeapon[32];
 		int iActiveWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
