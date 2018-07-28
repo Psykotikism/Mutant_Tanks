@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 8.26 (July 28, 2018)
+
+Bug fixes:
+
+1. Fixed some abilities and features staying on even when the "Human Super Tanks" KeyValue setting is set to 0.
+2. Fixed some abilities and features staying on even when they're disabled for a specific Tank.
+3. Fixed OnTakeDamage errors reported by FatalOE71.
+4. Fixed the issue with so many Tanks spawning towards the end of finales.
+
+Changes:
+
+1. Added a new native for developers to use: native bool ST_TankAllowed(int client) - Returns the status of the "Human Super Tanks" setting.
+2. Added a new native for developers to use: native int ST_MaxTypes() - Returns the value of the "Maximum Types" setting.
+3. Added a new forward for developers to use: forward void ST_Death2(int enemy, int client) - Called when a Tank dies and returns the attacker's index.
+4. Added checks to various timers in case abilities are disabled before the timers are triggered.
+5. Added a check to prevent clone Tanks from being counted as actual Tanks.
+
+Files:
+
+1. Updated include file with the new native and forward.
+
 ## Version 8.25 (July 26, 2018)
 
 Bug fixes:

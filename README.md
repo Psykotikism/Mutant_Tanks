@@ -2812,10 +2812,21 @@ forward void ST_Configs(char[] savepath, int limit, bool main);
 /* Called when someone dies.
  * Use this forward to execute anything when
  * a survivor or Tank dies.
+ * Use ST_Death2 if you also want to get the attacker's ID.
  *
- * @param client		Client index of the player.
+ * @param client		Client index of the victim.
  */
 forward void ST_Death(int client);
+
+/* Called when someone dies.
+ * Use this forward to execute anything when
+ * a survivor or Tank dies.
+ * Use ST_Death if you just want to get the victim's ID.
+ *
+ * @param enemy			Client index of the attacker.
+ * @param client		Client index of the victim.
+ */
+forward void ST_Death2(int enemy, int client);
 
 /* Called when a Tank is incapacitated.
  * Use this forward to execute anything when
@@ -2858,6 +2869,13 @@ forward void ST_Spawn(int client);
 
 Natives:
 ```
+/* Returns the value of the "Maximum Types" setting.
+ *
+ * @return				The value of the
+ *							"Maximum Types" setting.
+ */
+native int ST_MaxTypes();
+
 /* Returns the status of the core plugin.
  *
  * @return				True on success, false if
@@ -2871,6 +2889,15 @@ native bool ST_PluginEnabled();
  * @param type			Type of Super Tank.
  */
 native void ST_SpawnTank(int client, int type);
+
+/* Returns the status of the "Human Super Tanks" setting.
+ *
+ * @param client		Client index of the Tank.
+ *
+ * @return				True on success, false if
+ *							the setting is disabled.
+ */
+native bool ST_TankAllowed(int client);
 
 /* Returns the Super Tank type of the Tank.
  *
