@@ -101,13 +101,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && g_bFragile[victim])
 		{
-			int iHealth = GetClientHealth(victim);
 			if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 			{
 				damage = damage * 5;
 			}
-			(iHealth > damage) ? SetEntityHealth(victim, iHealth - RoundFloat(damage)) : SetEntProp(victim, Prop_Send, "m_isIncapacitated", 1);
-			damage = 0.0;
+			else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
+			{
+				damage = damage * 1.05;
+			}
 			return Plugin_Changed;
 		}
 	}
@@ -135,6 +136,18 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_Incap(int client)
+{
+	int iFragileAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFragileAbility[ST_TankType(client)] : g_iFragileAbility2[ST_TankType(client)];
+	if (iFragileAbility == 1 && ST_TankAllowed(client))
+	{
+		if (g_bFragile[client])
+		{
+			tTimerStopFragile(null, GetClientUserId(client));
+		}
+	}
 }
 
 public void ST_Ability(int client)

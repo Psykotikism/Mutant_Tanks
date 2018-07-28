@@ -205,15 +205,15 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	int iHurtAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHurtAbility[ST_TankType(iTank)] : g_iHurtAbility2[ST_TankType(iTank)];
 	float flTime = pack.ReadFloat();
+	int iHurtAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHurtAbility[ST_TankType(iTank)] : g_iHurtAbility2[ST_TankType(iTank)];
 	float flHurtDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flHurtDuration[ST_TankType(iTank)] : g_flHurtDuration2[ST_TankType(iTank)];
 	if (iHurtAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flHurtDuration) < GetEngineTime())
 	{
 		g_bHurt[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank) && bIsSurvivor(iSurvivor))
+	if (bIsSurvivor(iSurvivor))
 	{
 		char sDamage[6];
 		int iHurtDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iHurtDamage[ST_TankType(iTank)] : g_iHurtDamage2[ST_TankType(iTank)];

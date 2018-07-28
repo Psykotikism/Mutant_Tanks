@@ -110,9 +110,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iRestartChance = !g_bTankConfig[ST_TankType(victim)] ? g_iRestartChance[ST_TankType(victim)] : g_iRestartChance2[ST_TankType(victim)];
-				int iRestartHit = !g_bTankConfig[ST_TankType(victim)] ? g_iRestartHit[ST_TankType(victim)] : g_iRestartHit2[ST_TankType(victim)];
-				vRestartHit(attacker, victim, iRestartChance, iRestartHit);
+				int iRestartChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iRestartChance[ST_TankType(attacker)] : g_iRestartChance2[ST_TankType(attacker)];
+				int iRestartHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iRestartHit[ST_TankType(attacker)] : g_iRestartHit2[ST_TankType(attacker)];
+				vRestartHit(victim, attacker, iRestartChance, iRestartHit);
 			}
 		}
 	}

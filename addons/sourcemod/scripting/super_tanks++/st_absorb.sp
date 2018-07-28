@@ -101,7 +101,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && g_bAbsorb[victim])
 		{
-			int iHealth = GetClientHealth(victim);
 			if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 			{
 				damage = damage / 10;
@@ -110,8 +109,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				damage = damage / 1000;
 			}
-			(iHealth > damage) ? SetEntityHealth(victim, iHealth - RoundFloat(damage)) : SetEntProp(victim, Prop_Send, "m_isIncapacitated", 1);
-			damage = 0.0;
 			return Plugin_Changed;
 		}
 	}
@@ -139,6 +136,18 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_Incap(int client)
+{
+	int iAbsorbAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbAbility[ST_TankType(client)] : g_iAbsorbAbility2[ST_TankType(client)];
+	if (iAbsorbAbility == 1 && ST_TankAllowed(client))
+	{
+		if (g_bAbsorb[client])
+		{
+			tTimerStopAbsorb(null, GetClientUserId(client));
+		}
+	}
 }
 
 public void ST_Ability(int client)

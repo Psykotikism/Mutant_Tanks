@@ -206,7 +206,7 @@ public void ST_Death(int client)
 	}
 }
 
-public void ST_TankSpawn(int client)
+public void ST_Spawn(int client)
 {
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
 	if (iShieldAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bShield[client])

@@ -154,7 +154,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Death(int client)
 {
 	int iIceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIceAbility[ST_TankType(client)] : g_iIceAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iIceAbility == 1)
+	if (ST_TankAllowed(client) && iIceAbility == 1)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

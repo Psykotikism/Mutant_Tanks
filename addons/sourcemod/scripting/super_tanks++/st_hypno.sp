@@ -107,7 +107,18 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker) && g_bHypno[attacker])
+		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		{
+			char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			{
+				int iHypnoChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iHypnoChance[ST_TankType(attacker)] : g_iHypnoChance2[ST_TankType(attacker)];
+				int iHypnoHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iHypnoHit[ST_TankType(attacker)] : g_iHypnoHit2[ST_TankType(attacker)];
+				vHypnoHit(victim, attacker, iHypnoChance, iHypnoHit);
+			}
+		}
+		else if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker) && g_bHypno[attacker])
 		{
 			if (damagetype & DMG_BURN)
 			{
@@ -130,17 +141,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				(iHealth > damage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - RoundFloat(damage)) : SetEntityHealth(attacker, iHealth - RoundFloat(damage))) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntProp(iTarget, Prop_Send, "m_isIncapacitated", 1) : SetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1));
 				damage = 0.0;
 				return Plugin_Changed;
-			}
-		}
-		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
-		{
-			char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
-			{
-				int iHypnoChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iHypnoChance[ST_TankType(attacker)] : g_iHypnoChance2[ST_TankType(attacker)];
-				int iHypnoHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iHypnoHit[ST_TankType(attacker)] : g_iHypnoHit2[ST_TankType(attacker)];
-				vHypnoHit(victim, attacker, iHypnoChance, iHypnoHit);
 			}
 		}
 	}

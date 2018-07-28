@@ -95,6 +95,18 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_Incap(int client)
+{
+	int iGodAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGodAbility[ST_TankType(client)] : g_iGodAbility2[ST_TankType(client)];
+	if (iGodAbility == 1 && ST_TankAllowed(client))
+	{
+		if (g_bGod[client])
+		{
+			tTimerStopGod(null, GetClientUserId(client));
+		}
+	}
+}
+
 public void ST_Ability(int client)
 {
 	int iGodAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGodAbility[ST_TankType(client)] : g_iGodAbility2[ST_TankType(client)];
