@@ -21,7 +21,7 @@ Changes:
 
 Files:
 
-1. Updated include file with the new native and forward.
+1. Updated include file with the new natives and forward.
 
 ## Version 8.25 (July 26, 2018)
 
