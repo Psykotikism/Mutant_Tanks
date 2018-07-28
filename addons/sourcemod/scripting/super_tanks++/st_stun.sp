@@ -107,7 +107,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -154,7 +154,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iStunAbility = !g_bTankConfig[ST_TankType(client)] ? g_iStunAbility[ST_TankType(client)] : g_iStunAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iStunAbility == 1)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -171,7 +172,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iStunAbility = !g_bTankConfig[ST_TankType(client)] ? g_iStunAbility[ST_TankType(client)] : g_iStunAbility2[ST_TankType(client)];
 		int iStunRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iStunChance[ST_TankType(client)] : g_iStunChance2[ST_TankType(client)];
@@ -219,7 +220,8 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
+	int iStunAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iStunAbility[ST_TankType(iTank)] : g_iStunAbility2[ST_TankType(iTank)];
+	if (iStunAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		g_bStun[iSurvivor] = false;
 		if (bIsSurvivor(iSurvivor))

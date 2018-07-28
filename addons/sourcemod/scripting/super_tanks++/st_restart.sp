@@ -104,7 +104,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -153,7 +153,7 @@ public void ST_RoundStart()
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iRestartAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRestartAbility[ST_TankType(client)] : g_iRestartAbility2[ST_TankType(client)];
 		int iRestartRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iRestartChance[ST_TankType(client)] : g_iRestartChance2[ST_TankType(client)];

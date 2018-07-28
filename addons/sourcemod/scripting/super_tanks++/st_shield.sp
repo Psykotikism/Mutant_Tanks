@@ -110,7 +110,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(victim) && bIsSurvivor(attacker))
+		if (ST_TankAllowed(victim) && bIsSurvivor(attacker))
 		{
 			if (g_bShield[victim])
 			{
@@ -163,7 +163,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_AbilityThrow(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iProp = -1;
 		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
@@ -185,7 +185,8 @@ public void ST_AbilityThrow(int client)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iShieldAbility == 1)
 	{
 		int iProp = -1;
 		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
@@ -208,7 +209,7 @@ public void ST_Death(int client)
 public void ST_TankSpawn(int client)
 {
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (iShieldAbility == 1 && bIsTank(client) && !g_bShield[client])
+	if (iShieldAbility == 1 && ST_TankAllowed(client) && !g_bShield[client])
 	{
 		vShield(client, true);
 	}
@@ -301,7 +302,7 @@ public Action tTimerShield(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank) && !g_bShield[iTank])
+	if (ST_TankAllowed(iTank) && !g_bShield[iTank])
 	{
 		vShield(iTank, true);
 	}
@@ -318,7 +319,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		float flVelocity[3];
 		if (bIsValidEntity(iRock))

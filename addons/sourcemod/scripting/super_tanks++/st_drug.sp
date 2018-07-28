@@ -112,7 +112,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -157,7 +157,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iDrugAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDrugAbility[ST_TankType(client)] : g_iDrugAbility2[ST_TankType(client)];
 		int iDrugRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iDrugChance[ST_TankType(client)] : g_iDrugChance2[ST_TankType(client)];
@@ -244,8 +244,9 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	float flTime = pack.ReadFloat();
+	int iDrugAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iDrugAbility[ST_TankType(iTank)] : g_iDrugAbility2[ST_TankType(iTank)];
 	float flDrugDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flDrugDuration[ST_TankType(iTank)] : g_flDrugDuration2[ST_TankType(iTank)];
-	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flDrugDuration) < GetEngineTime())
+	if (iDrugAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flDrugDuration) < GetEngineTime())
 	{
 		g_bDrug[iSurvivor] = false;
 		if (bIsSurvivor(iSurvivor))

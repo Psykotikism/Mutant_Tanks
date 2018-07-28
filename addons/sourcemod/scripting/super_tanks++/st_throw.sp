@@ -22,6 +22,8 @@ char g_sThrowCarOptions2[ST_MAXTYPES + 1][7];
 char g_sThrowInfectedOptions[ST_MAXTYPES + 1][15];
 char g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15];
 ConVar g_cvSTFindConVar;
+int g_iTankEnabled[ST_MAXTYPES + 1];
+int g_iTankEnabled2[ST_MAXTYPES + 1];
 int g_iThrowAbility[ST_MAXTYPES + 1];
 int g_iThrowAbility2[ST_MAXTYPES + 1];
 
@@ -67,6 +69,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iTankEnabled[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", 0)) : (g_iTankEnabled2[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", g_iTankEnabled[iIndex]));
+			main ? (g_iTankEnabled[iIndex] = iSetCellLimit(g_iTankEnabled[iIndex], 0, 1)) : (g_iTankEnabled2[iIndex] = iSetCellLimit(g_iTankEnabled2[iIndex], 0, 1));
 			main ? (g_iThrowAbility[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", 0)) : (g_iThrowAbility2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", g_iThrowAbility[iIndex]));
 			main ? (g_iThrowAbility[iIndex] = iSetCellLimit(g_iThrowAbility[iIndex], 0, 3)) : (g_iThrowAbility2[iIndex] = iSetCellLimit(g_iThrowAbility2[iIndex], 0, 3));
 			main ? (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions[iIndex], sizeof(g_sThrowCarOptions[]), "123")) : (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions2[iIndex], sizeof(g_sThrowCarOptions2[]), g_sThrowCarOptions[iIndex]));
@@ -87,14 +91,14 @@ public void ST_RockThrow(int client, int entity)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(EntIndexToEntRef(entity));
 	}
-	if (iThrowAbility == 2)
+	else if (iThrowAbility == 2)
 	{
 		DataPack dpDataPack;
 		CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(EntIndexToEntRef(entity));
 	}
-	if (iThrowAbility == 3)
+	else if (iThrowAbility == 3)
 	{
 		DataPack dpDataPack;
 		CreateDataTimer(0.1, tTimerSelfThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -148,7 +152,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		float flVelocity[3];
 		if (bIsValidEntity(iRock))
@@ -200,7 +204,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		float flVelocity[3];
 		if (bIsValidEntity(iRock))
@@ -249,7 +253,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		float flVelocity[3];
 		if (bIsValidEntity(iRock))

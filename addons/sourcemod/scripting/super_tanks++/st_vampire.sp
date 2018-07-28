@@ -84,7 +84,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -131,7 +131,7 @@ public void ST_Ability(int client)
 {
 	int iVampireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iVampireAbility[ST_TankType(client)] : g_iVampireAbility2[ST_TankType(client)];
 	int iVampireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iVampireChance[ST_TankType(client)] : g_iVampireChance2[ST_TankType(client)];
-	if (iVampireAbility == 1 && bIsTank(client))
+	if (iVampireAbility == 1 && ST_TankAllowed(client))
 	{
 		int iVampireCount;
 		float flTankPos[3];
@@ -159,7 +159,7 @@ public void ST_Ability(int client)
 
 void vVampireHit(int client, int chance, int enabled)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsTank(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && ST_TankAllowed(client))
 	{
 		int iHealth = GetClientHealth(client);
 		int iVampireHealth = !g_bTankConfig[ST_TankType(client)] ? (iHealth + g_iVampireHealth[ST_TankType(client)]) : (iHealth + g_iVampireHealth2[ST_TankType(client)]);

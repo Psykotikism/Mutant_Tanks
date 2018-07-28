@@ -112,7 +112,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -159,7 +159,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iPimpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPimpAbility[ST_TankType(client)] : g_iPimpAbility2[ST_TankType(client)];
 		int iPimpRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPimpChance[ST_TankType(client)] : g_iPimpChance2[ST_TankType(client)];
@@ -204,9 +204,10 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iPimpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAbility[ST_TankType(iTank)] : g_iPimpAbility2[ST_TankType(iTank)];
 	int iPimpAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAmount[ST_TankType(iTank)] : g_iPimpAmount2[ST_TankType(iTank)];
 	int iPimpDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpDamage[ST_TankType(iTank)] : g_iPimpDamage2[ST_TankType(iTank)];
-	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || g_iPimpCount[iSurvivor] >= iPimpAmount)
+	if (iPimpAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || g_iPimpCount[iSurvivor] >= iPimpAmount)
 	{
 		g_bPimp[iSurvivor] = false;
 		g_iPimpCount[iSurvivor] = 0;

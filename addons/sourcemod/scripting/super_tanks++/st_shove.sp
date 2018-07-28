@@ -120,7 +120,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -165,7 +165,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iShoveAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShoveAbility[ST_TankType(client)] : g_iShoveAbility2[ST_TankType(client)];
 		int iShoveRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iShoveChance[ST_TankType(client)] : g_iShoveChance2[ST_TankType(client)];
@@ -212,8 +212,9 @@ public Action tTimerShove(Handle timer, DataPack pack)
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	float flTime = pack.ReadFloat();
+	int iShoveAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShoveAbility[ST_TankType(iTank)] : g_iShoveAbility2[ST_TankType(iTank)];
 	float flShoveDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShoveDuration[ST_TankType(iTank)] : g_flShoveDuration2[ST_TankType(iTank)];
-	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flShoveDuration) < GetEngineTime())
+	if (iShoveAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flShoveDuration) < GetEngineTime())
 	{
 		g_bShove[iSurvivor] = false;
 		return Plugin_Stop;

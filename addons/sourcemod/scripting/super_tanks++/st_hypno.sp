@@ -107,7 +107,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(victim) && bIsSurvivor(attacker) && g_bHypno[attacker])
+		if (ST_TankAllowed(victim) && bIsSurvivor(attacker) && g_bHypno[attacker])
 		{
 			if (damagetype & DMG_BURN)
 			{
@@ -132,7 +132,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Changed;
 			}
 		}
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -180,7 +180,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iHypnoAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHypnoAbility[ST_TankType(client)] : g_iHypnoAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iHypnoAbility == 1)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -194,7 +195,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iHypnoAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHypnoAbility[ST_TankType(client)] : g_iHypnoAbility2[ST_TankType(client)];
 		int iHypnoRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iHypnoChance[ST_TankType(client)] : g_iHypnoChance2[ST_TankType(client)];
@@ -223,7 +224,10 @@ void vHypnoHit(int client, int owner, int chance, int enabled)
 	{
 		g_bHypno[client] = true;
 		float flHypnoDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flHypnoDuration[ST_TankType(owner)] : g_flHypnoDuration2[ST_TankType(owner)];
-		CreateTimer(flHypnoDuration, tTimerStopHypno, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		DataPack dpDataPack;
+		CreateDataTimer(flHypnoDuration, tTimerStopHypno, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+		dpDataPack.WriteCell(GetClientUserId(client));
+		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
 }
 
@@ -246,10 +250,13 @@ bool bIsValidClient(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
-public Action tTimerStopHypno(Handle timer, any userid)
+public Action tTimerStopHypno(Handle timer, DataPack pack)
 {
-	int iSurvivor = GetClientOfUserId(userid);
-	if (iSurvivor == 0 || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iSurvivor))
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iHypnoAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHypnoAbility[ST_TankType(iTank)] : g_iHypnoAbility2[ST_TankType(iTank)];
+	if (iHypnoAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		g_bHypno[iSurvivor] = false;
 		return Plugin_Stop;

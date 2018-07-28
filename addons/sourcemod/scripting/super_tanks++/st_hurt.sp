@@ -107,7 +107,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -154,7 +154,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iHurtAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHurtAbility[ST_TankType(client)] : g_iHurtAbility2[ST_TankType(client)];
 		int iHurtRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iHurtChance[ST_TankType(client)] : g_iHurtChance2[ST_TankType(client)];
@@ -205,14 +205,15 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iHurtAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHurtAbility[ST_TankType(iTank)] : g_iHurtAbility2[ST_TankType(iTank)];
 	float flTime = pack.ReadFloat();
 	float flHurtDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flHurtDuration[ST_TankType(iTank)] : g_flHurtDuration2[ST_TankType(iTank)];
-	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flHurtDuration) < GetEngineTime())
+	if (iHurtAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flHurtDuration) < GetEngineTime())
 	{
 		g_bHurt[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank) && bIsSurvivor(iSurvivor))
+	if (ST_TankAllowed(iTank) && bIsSurvivor(iSurvivor))
 	{
 		char sDamage[6];
 		int iHurtDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iHurtDamage[ST_TankType(iTank)] : g_iHurtDamage2[ST_TankType(iTank)];

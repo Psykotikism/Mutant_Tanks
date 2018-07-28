@@ -137,7 +137,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -188,7 +188,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iHealAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHealAbility[ST_TankType(client)] : g_iHealAbility2[ST_TankType(client)];
-	if (iHealAbility == 1 && bIsTank(client) && !g_bHeal[client])
+	if (iHealAbility == 1 && ST_TankAllowed(client) && !g_bHeal[client])
 	{
 		g_bHeal[client] = true;
 		float flHealInterval = !g_bTankConfig[ST_TankType(client)] ? g_flHealInterval[ST_TankType(client)] : g_flHealInterval2[ST_TankType(client)];
@@ -229,7 +229,7 @@ public Action tTimerHeal(Handle timer, any userid)
 		g_bHeal[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		int iType;
 		int iSpecial = -1;
@@ -290,7 +290,7 @@ public Action tTimerHeal(Handle timer, any userid)
 					}
 				}
 			}
-			else if (bIsTank(iInfected) && iInfected != iTank)
+			else if (ST_TankAllowed(iInfected) && iInfected != iTank)
 			{
 				float flTankPos[3];
 				float flInfectedPos[3];

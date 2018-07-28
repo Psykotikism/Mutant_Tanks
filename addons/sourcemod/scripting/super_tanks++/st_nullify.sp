@@ -105,7 +105,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -116,7 +116,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				vNullifyHit(victim, attacker, iNullifyChance, iNullifyHit);
 			}
 		}
-		else if (bIsTank(victim) && bIsSurvivor(attacker) && g_bNullify[attacker])
+		else if (ST_TankAllowed(victim) && bIsSurvivor(attacker) && g_bNullify[attacker])
 		{
 			damage = 0.0;
 			return Plugin_Handled;
@@ -155,7 +155,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iNullifyAbility == 1)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -169,7 +170,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
 		int iNullifyRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyChance[ST_TankType(client)] : g_iNullifyChance2[ST_TankType(client)];
@@ -198,7 +199,10 @@ void vNullifyHit(int client, int owner, int chance, int enabled)
 	{
 		g_bNullify[client] = true;
 		float flNullifyDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flNullifyDuration[ST_TankType(owner)] : g_flNullifyDuration2[ST_TankType(owner)];
-		CreateTimer(flNullifyDuration, tTimerStopNullify, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		DataPack dpDataPack;
+		CreateDataTimer(flNullifyDuration, tTimerStopNullify, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+		dpDataPack.WriteCell(GetClientUserId(client));
+		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
 }
 
@@ -207,10 +211,13 @@ bool bIsValidClient(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
-public Action tTimerStopNullify(Handle timer, any userid)
+public Action tTimerStopNullify(Handle timer, DataPack pack)
 {
-	int iSurvivor = GetClientOfUserId(userid);
-	if (iSurvivor == 0 || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iSurvivor))
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iNullifyAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iNullifyAbility[ST_TankType(iTank)] : g_iNullifyAbility2[ST_TankType(iTank)];
+	if (iNullifyAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		g_bNullify[iSurvivor] = false;
 		return Plugin_Stop;

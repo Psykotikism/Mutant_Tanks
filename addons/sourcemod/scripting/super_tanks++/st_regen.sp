@@ -98,7 +98,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iRegenAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRegenAbility[ST_TankType(client)] : g_iRegenAbility2[ST_TankType(client)];
-	if (iRegenAbility == 1 && bIsTank(client) && !g_bRegen[client])
+	if (iRegenAbility == 1 && ST_TankAllowed(client) && !g_bRegen[client])
 	{
 		g_bRegen[client] = true;
 		float flRegenInterval = !g_bTankConfig[ST_TankType(client)] ? g_flRegenInterval[ST_TankType(client)] : g_flRegenInterval2[ST_TankType(client)];
@@ -114,12 +114,13 @@ bool bIsValidClient(int client)
 public Action tTimerRegen(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	int iRegenAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRegenAbility[ST_TankType(iTank)] : g_iRegenAbility2[ST_TankType(iTank)];
+	if (iRegenAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bRegen[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		int iHealth = GetClientHealth(iTank);
 		int iRegenHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iRegenHealth[ST_TankType(iTank)]) : (iHealth + g_iRegenHealth2[ST_TankType(iTank)]);

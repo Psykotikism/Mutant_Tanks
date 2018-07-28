@@ -70,7 +70,7 @@ public void ST_Death(int client)
 	int iItemAbility = !g_bTankConfig[ST_TankType(client)] ? g_iItemAbility[ST_TankType(client)] : g_iItemAbility2[ST_TankType(client)];
 	int iItemChance = !g_bTankConfig[ST_TankType(client)] ? g_iItemChance[ST_TankType(client)] : g_iItemChance2[ST_TankType(client)];
 	int iItemMode = !g_bTankConfig[ST_TankType(client)] ? g_iItemMode[ST_TankType(client)] : g_iItemMode2[ST_TankType(client)];
-	if (iItemAbility == 1 && GetRandomInt(1, iItemChance) == 1 && bIsTank(client))
+	if (ST_TankAllowed(client) && iItemAbility == 1 && GetRandomInt(1, iItemChance) == 1)
 	{
 		char sItems[5][64];
 		char sItemLoadout[325];

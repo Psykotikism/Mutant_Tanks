@@ -338,8 +338,9 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
+	int iDropAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
 	int iDropChance = !g_bTankConfig[ST_TankType(client)] ? g_iDropChance[ST_TankType(client)] : g_iDropChance2[ST_TankType(client)];
-	if (bIsTank(client) && bIsValidEntity(g_iDrop[client]) && GetRandomInt(1, iDropChance) == 1)
+	if (ST_TankAllowed(client) && iDropAbility == 1 && GetRandomInt(1, iDropChance) == 1 && bIsValidEntity(g_iDrop[client]))
 	{
 		float flDropWeaponScale = !g_bTankConfig[ST_TankType(client)] ? g_flDropWeaponScale[ST_TankType(client)] : g_flDropWeaponScale[ST_TankType(client)];
 		float flPos[3];
@@ -423,7 +424,7 @@ public void ST_Death(int client)
 public void ST_Spawn(int client)
 {
 	int iDropAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
-	if (iDropAbility == 1 && bIsTank(client) && !g_bDrop[client])
+	if (iDropAbility == 1 && ST_TankAllowed(client) && !g_bDrop[client])
 	{
 		g_bDrop[client] = true;
 		CreateTimer(1.0, tTimerDrop, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
@@ -571,7 +572,7 @@ public Action tTimerDrop(Handle timer, any userid)
 		g_bDrop[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		vDeleteDrop(iTank);
 	 	int iWeapon = bIsL4D2Game() ? GetRandomInt(1, 31) : GetRandomInt(1, 6);

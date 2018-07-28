@@ -70,9 +70,9 @@ public void ST_Incap(int client)
 {
 	int iSplashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSplashAbility[ST_TankType(client)] : g_iSplashAbility2[ST_TankType(client)];
 	int iSplashChance = !g_bTankConfig[ST_TankType(client)] ? g_iSplashChance[ST_TankType(client)] : g_iSplashChance2[ST_TankType(client)];
-	if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && bIsTank(client))
+	if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && ST_TankAllowed(client))
 	{
-		CreateTimer(2.75, tTimerSplash, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(2.9, tTimerSplash, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -84,11 +84,12 @@ bool bIsValidEntity(int entity)
 public Action tTimerSplash(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	int iSplashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashAbility[ST_TankType(iTank)] : g_iSplashAbility2[ST_TankType(iTank)];
+	if (iSplashAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		float flSplashRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flSplashRange[ST_TankType(iTank)] : g_flSplashRange2[ST_TankType(iTank)];
 		float flTankPos[3];

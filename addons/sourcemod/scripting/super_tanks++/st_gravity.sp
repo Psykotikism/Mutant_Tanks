@@ -114,7 +114,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -163,7 +163,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iGravityAbility == 1)
 	{
 		int iProp = -1;
 		while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
@@ -199,7 +200,7 @@ public void ST_Ability(int client)
 {
 	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
 	int iGravityRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
-	if (iGravityAbility == 1 && bIsTank(client))
+	if (iGravityAbility == 1 && ST_TankAllowed(client))
 	{
 		if (!g_bGravity[client])
 		{
@@ -277,7 +278,8 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
+	int iGravityAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGravityAbility[ST_TankType(iTank)] : g_iGravityAbility2[ST_TankType(iTank)];
+	if (iGravityAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		g_bGravity2[iSurvivor] = false;
 		if (bIsSurvivor(iSurvivor))

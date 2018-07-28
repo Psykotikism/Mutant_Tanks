@@ -118,7 +118,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -169,7 +169,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iElectricAbility = !g_bTankConfig[ST_TankType(client)] ? g_iElectricAbility[ST_TankType(client)] : g_iElectricAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iElectricAbility == 1)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -183,7 +184,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iElectricAbility = !g_bTankConfig[ST_TankType(client)] ? g_iElectricAbility[ST_TankType(client)] : g_iElectricAbility2[ST_TankType(client)];
 		int iElectricRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iElectricChance[ST_TankType(client)] : g_iElectricChance2[ST_TankType(client)];
@@ -302,8 +303,9 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	float flTime = pack.ReadFloat();
+	int iElectricAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iElectricAbility[ST_TankType(iTank)] : g_iElectricAbility2[ST_TankType(iTank)];
 	float flElectricDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flElectricDuration[ST_TankType(iTank)] : g_flElectricDuration2[ST_TankType(iTank)];
-	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flElectricDuration) < GetEngineTime())
+	if (iElectricAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flElectricDuration) < GetEngineTime())
 	{
 		g_bElectric[iSurvivor] = false;
 		if (bIsSurvivor(iSurvivor))
@@ -312,7 +314,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		}
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank) && bIsSurvivor(iSurvivor))
+	if (ST_TankAllowed(iTank) && bIsSurvivor(iSurvivor))
 	{
 		char sDamage[6];
 		int iElectricDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iElectricDamage[ST_TankType(iTank)] : g_iElectricDamage2[ST_TankType(iTank)];

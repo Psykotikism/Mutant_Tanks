@@ -105,7 +105,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iMinionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAbility[ST_TankType(client)] : g_iMinionAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iMinionAbility == 1)
 	{
 		g_bMinion[client] = false;
 		g_iMinionCount[client] = 0;
@@ -116,7 +117,7 @@ public void ST_Ability(int client)
 {
 	int iMinionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAbility[ST_TankType(client)] : g_iMinionAbility2[ST_TankType(client)];
 	int iMinionChance = !g_bTankConfig[ST_TankType(client)] ? g_iMinionChance[ST_TankType(client)] : g_iMinionChance2[ST_TankType(client)];
-	if (iMinionAbility == 1 && GetRandomInt(1, iMinionChance) == 1 && bIsTank(client))
+	if (iMinionAbility == 1 && GetRandomInt(1, iMinionChance) == 1 && ST_TankAllowed(client))
 	{
 		int iMinionAmount = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAmount[ST_TankType(client)] : g_iMinionAmount2[ST_TankType(client)];
 		if (g_iMinionCount[client] < iMinionAmount)
@@ -134,7 +135,6 @@ public void ST_Ability(int client)
 				default: sInfectedName = "hunter";
 			}
 			vMinionSpawner(client, sInfectedName);
-			g_iMinionCount[client]++;
 		}
 	}
 }
@@ -172,6 +172,7 @@ void vMinion(int client, char[] type, float pos[3])
 	{
 		TeleportEntity(iSelectedType, pos, NULL_VECTOR, NULL_VECTOR);
 		g_bMinion[iSelectedType] = true;
+		g_iMinionCount[client]++;
 	}
 }
 

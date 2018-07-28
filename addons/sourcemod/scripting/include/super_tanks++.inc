@@ -18,8 +18,10 @@ public SharedPlugin __pl_supertanksplusplus =
 #if !defined REQUIRE_PLUGIN
 public void __pl_supertanksplusplus_SetNTVOptional()
 {
+	MarkNativeAsOptional("ST_MaxTypes");
 	MarkNativeAsOptional("ST_PluginEnabled");
 	MarkNativeAsOptional("ST_SpawnTank");
+	MarkNativeAsOptional("ST_TankAllowed");
 	MarkNativeAsOptional("ST_TankType");
 }
 #endif
@@ -32,7 +34,7 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.25"
+#define ST_VERSION "8.26"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 2500
 #define ST_MAXHEALTH 65535
@@ -70,10 +72,21 @@ forward void ST_Configs(char[] savepath, int limit, bool main);
 /* Called when someone dies.
  * Use this forward to execute anything when
  * a survivor or Tank dies.
+ * Use ST_Death2 if you also want to get the attacker's ID.
  *
- * @param client		Client index of the player.
+ * @param client		Client index of the victim.
  */
 forward void ST_Death(int client);
+
+/* Called when someone dies.
+ * Use this forward to execute anything when
+ * a survivor or Tank dies.
+ * Use ST_Death if you just want to get the victim's ID.
+ *
+ * @param enemy			Client index of the attacker.
+ * @param client		Client index of the victim.
+ */
+forward void ST_Death2(int enemy, int client);
 
 /* Called when a Tank is incapacitated.
  * Use this forward to execute anything when
@@ -114,6 +127,13 @@ forward void ST_RoundStart();
 forward void ST_Spawn(int client);
 
 // Natives
+/* Returns the value of the "Maximum Types" setting.
+ *
+ * @return				The value of the
+ *							"Maximum Types" setting.
+ */
+native int ST_MaxTypes();
+
 /* Returns the status of the core plugin.
  *
  * @return				True on success, false if
@@ -128,6 +148,15 @@ native bool ST_PluginEnabled();
  */
 native void ST_SpawnTank(int client, int type);
 
+/* Returns the status of the "Human Super Tanks" setting.
+ *
+ * @param client		Client index of the Tank.
+ *
+ * @return				True on success, false if
+ *							the setting is disabled.
+ */
+native bool ST_TankAllowed(int client);
+
 /* Returns the Super Tank type of the Tank.
  *
  * @param client		Client index of the Tank.
@@ -137,9 +166,9 @@ native void ST_SpawnTank(int client, int type);
 native int ST_TankType(int client);
 
 // Checks
-stock bool bIsBoomer(int client, bool alive = true)
+stock bool bIsBoomer(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 2)
 		{
@@ -149,9 +178,9 @@ stock bool bIsBoomer(int client, bool alive = true)
 	return false;
 }
 
-stock bool bIsCharger(int client, bool alive = true)
+stock bool bIsCharger(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 6)
 		{
@@ -161,9 +190,9 @@ stock bool bIsCharger(int client, bool alive = true)
 	return false;
 }
 
-stock bool bIsHunter(int client, bool alive = true)
+stock bool bIsHunter(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 3)
 		{
@@ -173,14 +202,14 @@ stock bool bIsHunter(int client, bool alive = true)
 	return false;
 }
 
-stock bool bIsInfected(int client, bool alive = true)
+stock bool bIsInfected(int client)
 {
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3 && (!alive || (alive && IsPlayerAlive(client))) && !IsClientInKickQueue(client);
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3 && !IsClientInKickQueue(client);
 }
 
-stock bool bIsJockey(int client, bool alive = true)
+stock bool bIsJockey(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (bIsL4D2Game() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5)
 		{
@@ -195,9 +224,9 @@ stock bool bIsL4D2Game()
 	return GetEngineVersion() == Engine_Left4Dead2;
 }
 
-stock bool bIsSmoker(int client, bool alive = true)
+stock bool bIsSmoker(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 1)
 		{
@@ -216,9 +245,9 @@ stock bool bIsSpecialInfected(int client)
 	return false;
 }
 
-stock bool bIsSpitter(int client, bool alive = true)
+stock bool bIsSpitter(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 4)
 		{
@@ -233,9 +262,9 @@ stock bool bIsSurvivor(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client);
 }
 
-stock bool bIsTank(int client, bool alive = true)
+stock bool bIsTank(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		int iClass = GetEntProp(client, Prop_Send, "m_zombieClass");
 		if ((bIsL4D2Game() && iClass == 8) || (!bIsL4D2Game() && iClass == 5))

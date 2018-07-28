@@ -106,29 +106,26 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iCloneAbility == 1)
 	{
-		int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
-		if (iCloneAbility == 1)
+		if (g_bCloned[client])
 		{
-			if (g_bCloned[client])
+			g_bCloned[client] = false;
+			if (iGetCloneCount() == 0)
 			{
-				g_bCloned[client] = false;
-				if (iGetCloneCount() == 0)
+				for (int iCloner = 1; iCloner <= MaxClients; iCloner++)
 				{
-					for (int iCloner = 1; iCloner <= MaxClients; iCloner++)
+					if (!g_bCloned[iCloner] && ST_TankAllowed(iCloner))
 					{
-						if (!g_bCloned[iCloner] && bIsTank(iCloner))
-						{
-							g_iCloneCount[iCloner] = 0;
-						}
+						g_iCloneCount[iCloner] = 0;
 					}
 				}
 			}
-			else
-			{
-				g_iCloneCount[client] = 0;
-			}
+		}
+		else
+		{
+			g_iCloneCount[client] = 0;
 		}
 	}
 }
@@ -137,13 +134,12 @@ public void ST_Ability(int client)
 {
 	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
 	int iCloneChance = !g_bTankConfig[ST_TankType(client)] ? g_iCloneChance[ST_TankType(client)] : g_iCloneChance2[ST_TankType(client)];
-	if (iCloneAbility == 1 && GetRandomInt(1, iCloneChance) == 1 && !g_bCloned[client] && bIsTank(client))
+	if (iCloneAbility == 1 && GetRandomInt(1, iCloneChance) == 1 && !g_bCloned[client] && ST_TankAllowed(client))
 	{
 		int iCloneAmount = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAmount[ST_TankType(client)] : g_iCloneAmount2[ST_TankType(client)];
 		if (g_iCloneCount[client] < iCloneAmount)
 		{
 			vCloneSpawner(client);
-			g_iCloneCount[client]++;
 		}
 	}
 }
@@ -154,7 +150,7 @@ void vClone(int client, float pos[3])
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		bTankBoss[iPlayer] = false;
-		if (bIsTank(iPlayer))
+		if (ST_TankAllowed(iPlayer))
 		{
 			bTankBoss[iPlayer] = true;
 		}
@@ -163,7 +159,7 @@ void vClone(int client, float pos[3])
 	int iSelectedType;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsTank(iPlayer))
+		if (ST_TankAllowed(iPlayer))
 		{
 			if (!bTankBoss[iPlayer])
 			{
@@ -179,6 +175,7 @@ void vClone(int client, float pos[3])
 		int iCloneHealth = !g_bTankConfig[ST_TankType(client)] ? g_iCloneHealth[ST_TankType(client)] : g_iCloneHealth2[ST_TankType(client)];
 		int iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
 		SetEntityHealth(iSelectedType, iNewHealth);
+		g_iCloneCount[client]++;
 	}
 }
 
@@ -203,7 +200,8 @@ void vCloneSpawner(int client)
 		NormalizeVector(flVector, flVector);
 		ScaleVector(flVector, -40.0);
 		AddVectors(flHitPosition, flVector, flHitPosition);
-		if (GetVectorDistance(flHitPosition, flPosition) < 200.0 && GetVectorDistance(flHitPosition, flPosition) > 40.0)
+		float flDistance = GetVectorDistance(flHitPosition, flPosition);
+		if (flDistance < 200.0 && flDistance > 40.0)
 		{
 			vClone(client, flHitPosition);
 		}
@@ -223,7 +221,7 @@ int iGetCloneCount()
 	int iCloneCount;
 	for (int iClone = 1; iClone <= MaxClients; iClone++)
 	{
-		if (g_bCloned[iClone] && bIsTank(iClone))
+		if (g_bCloned[iClone] && ST_TankAllowed(iClone))
 		{
 			iCloneCount++;
 		}

@@ -101,7 +101,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -140,7 +140,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iPanicAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPanicAbility[ST_TankType(client)] : g_iPanicAbility2[ST_TankType(client)];
-	if (iPanicAbility == 1 && bIsTank(client) && !g_bPanic[client])
+	if (iPanicAbility == 1 && ST_TankAllowed(client) && !g_bPanic[client])
 	{
 		g_bPanic[client] = true;
 		float flPanicInterval = !g_bTankConfig[ST_TankType(client)] ? g_flPanicInterval[ST_TankType(client)] : g_flPanicInterval2[ST_TankType(client)];
@@ -163,7 +163,7 @@ void vPanicHit(int client)
 {
 	int iPanicChance = !g_bTankConfig[ST_TankType(client)] ? g_iPanicChance[ST_TankType(client)] : g_iPanicChance2[ST_TankType(client)];
 	int iPanicHit = !g_bTankConfig[ST_TankType(client)] ? g_iPanicHit[ST_TankType(client)] : g_iPanicHit2[ST_TankType(client)];
-	if (iPanicHit == 1 && GetRandomInt(1, iPanicChance) == 1 && bIsTank(client))
+	if (iPanicHit == 1 && GetRandomInt(1, iPanicChance) == 1 && ST_TankAllowed(client))
 	{
 		vPanic();
 	}
@@ -182,12 +182,13 @@ bool bIsValidEntity(int entity)
 public Action tTimerPanic(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	int iPanicAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPanicAbility[ST_TankType(iTank)] : g_iPanicAbility2[ST_TankType(iTank)];
+	if (iPanicAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bPanic[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		vPanic();
 	}

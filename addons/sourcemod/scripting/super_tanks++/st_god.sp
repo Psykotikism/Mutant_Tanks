@@ -99,7 +99,7 @@ public void ST_Ability(int client)
 {
 	int iGodAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGodAbility[ST_TankType(client)] : g_iGodAbility2[ST_TankType(client)];
 	int iGodChance = !g_bTankConfig[ST_TankType(client)] ? g_iGodChance[ST_TankType(client)] : g_iGodChance2[ST_TankType(client)];
-	if (iGodAbility == 1 && GetRandomInt(1, iGodChance) == 1 && bIsTank(client) && !g_bGod[client])
+	if (iGodAbility == 1 && GetRandomInt(1, iGodChance) == 1 && ST_TankAllowed(client) && !g_bGod[client])
 	{
 		g_bGod[client] = true;
 		SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
@@ -116,12 +116,13 @@ bool bIsValidClient(int client)
 public Action tTimerStopGod(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	int iGodAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGodAbility[ST_TankType(iTank)] : g_iGodAbility2[ST_TankType(iTank)];
+	if (iGodAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bGod[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		g_bGod[iTank] = false;
 		SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);

@@ -97,7 +97,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
@@ -106,7 +106,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				vBombHit(victim, attacker, iBombChance, iBombHit);
 			}
 		}
-		else if (bIsSurvivor(attacker) && bIsTank(victim))
+		else if (bIsSurvivor(attacker) && ST_TankAllowed(victim))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
@@ -151,7 +151,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client) && bIsL4D2Game())
+	int iBombAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBombAbility[ST_TankType(client)] : g_iBombAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iBombAbility == 1 && bIsL4D2Game())
 	{
 		float flPosition[3];
 		GetClientAbsOrigin(client, flPosition);
@@ -161,7 +162,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iBombAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBombAbility[ST_TankType(client)] : g_iBombAbility2[ST_TankType(client)];
 		int iBombRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBombChance[ST_TankType(client)] : g_iBombChance2[ST_TankType(client)];
@@ -187,7 +188,7 @@ public void ST_Ability(int client)
 public void ST_RockBreak(int client, int entity)
 {
 	int iBombRock = !g_bTankConfig[ST_TankType(client)] ? g_iBombRock[ST_TankType(client)] : g_iBombRock2[ST_TankType(client)];
-	if (iBombRock == 1 && bIsTank(client))
+	if (iBombRock == 1 && ST_TankAllowed(client))
 	{
 		float flPosition[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPosition);

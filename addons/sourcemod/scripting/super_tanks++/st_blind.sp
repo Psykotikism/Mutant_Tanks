@@ -113,7 +113,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -160,7 +160,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iBlindAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iBlindAbility == 1)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -177,7 +178,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iBlindAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
 		int iBlindRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBlindChance[ST_TankType(client)] : g_iBlindChance2[ST_TankType(client)];
@@ -259,7 +260,8 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
+	int iBlindAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindAbility[ST_TankType(iTank)] : g_iBlindAbility2[ST_TankType(iTank)];
+	if (iBlindAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		g_bBlind[iSurvivor] = false;
 		if (bIsSurvivor(iSurvivor))

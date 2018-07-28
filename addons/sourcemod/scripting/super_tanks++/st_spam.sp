@@ -107,8 +107,17 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (inflictor != -1)
 			{
-				int iOwner = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == victim || bIsTank(iOwner) || strcmp(sClassname, "tank_rock") == 0)
+				int iOwner;
+				if (HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity"))
+				{
+					iOwner = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
+				}
+				int iThrower;
+				if (HasEntProp(inflictor, Prop_Data, "m_hThrower"))
+				{
+					iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
+				}
+				if ((iOwner > 0 && iOwner == victim) || (iThrower > 0 && iThrower == victim) || ST_TankAllowed(iOwner) || strcmp(sClassname, "tank_rock") == 0)
 				{
 					damage = 0.0;
 					return Plugin_Changed;
@@ -148,7 +157,7 @@ public void ST_Ability(int client)
 {
 	int iSpamAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSpamAbility[ST_TankType(client)] : g_iSpamAbility2[ST_TankType(client)];
 	int iSpamChance = !g_bTankConfig[ST_TankType(client)] ? g_iSpamChance[ST_TankType(client)] : g_iSpamChance2[ST_TankType(client)];
-	if (iSpamAbility == 1 && GetRandomInt(1, iSpamChance) == 1 && bIsTank(client) && !g_bSpam[client])
+	if (iSpamAbility == 1 && GetRandomInt(1, iSpamChance) == 1 && ST_TankAllowed(client) && !g_bSpam[client])
 	{
 		g_bSpam[client] = true;
 		DataPack dpDataPack;
@@ -180,7 +189,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 		g_bSpam[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		char sDamage[6];
 		int iSpamDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamDamage[ST_TankType(iTank)] : g_iSpamDamage2[ST_TankType(iTank)];

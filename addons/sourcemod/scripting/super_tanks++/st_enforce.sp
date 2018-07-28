@@ -126,7 +126,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -172,7 +172,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iEnforceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceAbility[ST_TankType(client)] : g_iEnforceAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iEnforceAbility == 1)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -186,7 +187,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iEnforceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceAbility[ST_TankType(client)] : g_iEnforceAbility2[ST_TankType(client)];
 		int iEnforceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceChance[ST_TankType(client)] : g_iEnforceChance2[ST_TankType(client)];
@@ -224,7 +225,10 @@ void vEnforceHit(int client, int owner, int chance, int enabled)
 			case '5': g_iEnforceSlot[client] = 4;
 		}
 		float flEnforceDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flEnforceDuration[ST_TankType(owner)] : g_flEnforceDuration2[ST_TankType(owner)];
-		CreateTimer(flEnforceDuration, tTimerStopEnforce, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		DataPack dpDataPack;
+		CreateDataTimer(flEnforceDuration, tTimerStopEnforce, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+		dpDataPack.WriteCell(GetClientUserId(client));
+		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
 }
 
@@ -233,10 +237,13 @@ bool bIsValidClient(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
-public Action tTimerStopEnforce(Handle timer, any userid)
+public Action tTimerStopEnforce(Handle timer, DataPack pack)
 {
-	int iSurvivor = GetClientOfUserId(userid);
-	if (iSurvivor == 0 || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iSurvivor))
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iEnforceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iEnforceAbility[ST_TankType(iTank)] : g_iEnforceAbility2[ST_TankType(iTank)];
+	if (iEnforceAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		g_bEnforce[iSurvivor] = false;
 		return Plugin_Stop;

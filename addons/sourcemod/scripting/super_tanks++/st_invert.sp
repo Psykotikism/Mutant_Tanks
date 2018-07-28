@@ -140,7 +140,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -185,7 +185,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Death(int client)
 {
-	if (bIsTank(client))
+	int iInvertAbility = !g_bTankConfig[ST_TankType(client)] ? g_iInvertAbility[ST_TankType(client)] : g_iInvertAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iInvertAbility == 1)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -199,7 +200,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iInvertAbility = !g_bTankConfig[ST_TankType(client)] ? g_iInvertAbility[ST_TankType(client)] : g_iInvertAbility2[ST_TankType(client)];
 		int iInvertRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iInvertChance[ST_TankType(client)] : g_iInvertChance2[ST_TankType(client)];
@@ -228,7 +229,10 @@ void vInvertHit(int client, int owner, int chance, int enabled)
 	{
 		g_bInvert[client] = true;
 		float flInvertDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flInvertDuration[ST_TankType(owner)] : g_flInvertDuration2[ST_TankType(owner)];
-		CreateTimer(flInvertDuration, tTimerStopInvert, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		DataPack dpDataPack;
+		CreateDataTimer(flInvertDuration, tTimerStopInvert, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+		dpDataPack.WriteCell(GetClientUserId(client));
+		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
 }
 
@@ -237,10 +241,13 @@ bool bIsValidClient(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
-public Action tTimerStopInvert(Handle timer, any userid)
+public Action tTimerStopInvert(Handle timer, DataPack pack)
 {
-	int iSurvivor = GetClientOfUserId(userid);
-	if (iSurvivor == 0 || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iSurvivor))
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iInvertAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iInvertAbility[ST_TankType(iTank)] : g_iInvertAbility2[ST_TankType(iTank)];
+	if (iInvertAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		g_bInvert[iSurvivor] = false;
 		return Plugin_Stop;

@@ -109,8 +109,17 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (inflictor != -1)
 			{
-				int iOwner = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == victim || bIsTank(iOwner) || strcmp(sClassname, "tank_rock") == 0)
+				int iOwner;
+				if (HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity"))
+				{
+					iOwner = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
+				}
+				int iThrower;
+				if (HasEntProp(inflictor, Prop_Data, "m_hThrower"))
+				{
+					iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
+				}
+				if ((iOwner > 0 && iOwner == victim) || (iThrower > 0 && iThrower == victim) || ST_TankAllowed(iOwner) || strcmp(sClassname, "tank_rock") == 0)
 				{
 					damage = 0.0;
 					return Plugin_Changed;
@@ -151,7 +160,7 @@ public void ST_Ability(int client)
 {
 	int iRockAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRockAbility[ST_TankType(client)] : g_iRockAbility2[ST_TankType(client)];
 	int iRockChance = !g_bTankConfig[ST_TankType(client)] ? g_iRockChance[ST_TankType(client)] : g_iRockChance2[ST_TankType(client)];
-	if (iRockAbility == 1 && GetRandomInt(1, iRockChance) == 1 && bIsTank(client) && !g_bRock[client])
+	if (iRockAbility == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(client) && !g_bRock[client])
 	{
 		g_bRock[client] = true;
 		float flPos[3];
@@ -246,7 +255,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 		AcceptEntityInput(iRock, "Kill");
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		if (bIsValidEntity(iRock))
 		{

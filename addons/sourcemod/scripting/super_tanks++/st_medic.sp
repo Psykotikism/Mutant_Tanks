@@ -72,7 +72,7 @@ public void ST_Death(int client)
 {
 	int iMedicAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMedicAbility[ST_TankType(client)] : g_iMedicAbility2[ST_TankType(client)];
 	int iMedicChance = !g_bTankConfig[ST_TankType(client)] ? g_iMedicChance[ST_TankType(client)] : g_iMedicChance2[ST_TankType(client)];
-	if (iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1 && bIsTank(client))
+	if (ST_TankAllowed(client) && iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1)
 	{
 		float flMedicRange = !g_bTankConfig[ST_TankType(client)] ? g_flMedicRange[ST_TankType(client)] : g_flMedicRange2[ST_TankType(client)];
 		float flTankPos[3];

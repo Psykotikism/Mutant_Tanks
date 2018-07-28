@@ -93,7 +93,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (bIsTank(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -101,7 +101,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				int iRocketChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iRocketChance[ST_TankType(attacker)] : g_iRocketChance2[ST_TankType(attacker)];
 				int iRocketHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iRocketHit[ST_TankType(attacker)] : g_iRocketHit2[ST_TankType(attacker)];
-				vRocketHit(victim, iRocketChance, iRocketHit);
+				vRocketHit(victim, attacker, iRocketChance, iRocketHit);
 			}
 		}
 	}
@@ -135,7 +135,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Ability(int client)
 {
-	if (bIsTank(client))
+	if (ST_TankAllowed(client))
 	{
 		int iRocketAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRocketAbility[ST_TankType(client)] : g_iRocketAbility2[ST_TankType(client)];
 		int iRocketRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iRocketChance[ST_TankType(client)] : g_iRocketChance2[ST_TankType(client)];
@@ -151,14 +151,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRocketRange)
 				{
-					vRocketHit(iSurvivor, iRocketRangeChance, iRocketAbility);
+					vRocketHit(iSurvivor, client, iRocketRangeChance, iRocketAbility);
 				}
 			}
 		}
 	}
 }
 
-void vRocketHit(int client, int chance, int enabled)
+void vRocketHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -191,8 +191,14 @@ void vRocketHit(int client, int chance, int enabled)
 			g_iRocket[client] = iFlame;
 		}
 		EmitSoundToAll(SOUND_FIRE, client, _, _, _, 1.0);
-		CreateTimer(2.0, tTimerRocketLaunch, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-		CreateTimer(3.5, tTimerRocketDetonate, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		DataPack dpDataPack;
+		CreateDataTimer(2.0, tTimerRocketLaunch, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+		dpDataPack.WriteCell(GetClientUserId(client));
+		dpDataPack.WriteCell(GetClientUserId(owner));
+		DataPack dpDataPack2;
+		CreateDataTimer(3.5, tTimerRocketDetonate, dpDataPack2, TIMER_FLAG_NO_MAPCHANGE);
+		dpDataPack2.WriteCell(GetClientUserId(client));
+		dpDataPack2.WriteCell(GetClientUserId(owner));
 	}
 }
 
@@ -224,10 +230,13 @@ bool bIsValidEntRef(int entity)
 	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
-public Action tTimerRocketLaunch(Handle timer, any userid)
+public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 {
-	int iSurvivor = GetClientOfUserId(userid);
-	if (iSurvivor == 0 || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iSurvivor))
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iRocketAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRocketAbility[ST_TankType(iTank)] : g_iRocketAbility2[ST_TankType(iTank)];
+	if (iRocketAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		return Plugin_Stop;
 	}
@@ -245,10 +254,13 @@ public Action tTimerRocketLaunch(Handle timer, any userid)
 	return Plugin_Handled;
 }
 
-public Action tTimerRocketDetonate(Handle timer, any userid)
+public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 {
-	int iSurvivor = GetClientOfUserId(userid);
-	if (iSurvivor == 0 || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iSurvivor))
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iRocketAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRocketAbility[ST_TankType(iTank)] : g_iRocketAbility2[ST_TankType(iTank)];
+	if (iRocketAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor))
 	{
 		return Plugin_Stop;
 	}

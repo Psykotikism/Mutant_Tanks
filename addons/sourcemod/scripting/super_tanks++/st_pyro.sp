@@ -94,7 +94,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Spawn(int client)
 {
 	int iPyroAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPyroAbility[ST_TankType(client)] : g_iPyroAbility2[ST_TankType(client)];
-	if (iPyroAbility == 1 && bIsTank(client))
+	if (iPyroAbility == 1 && ST_TankAllowed(client))
 	{
 		CreateTimer(1.0, tTimerPyro, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
@@ -123,7 +123,7 @@ public Action tTimerPyro(Handle timer, any userid)
 		g_bPyro[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank))
+	if (ST_TankAllowed(iTank))
 	{
 		float flPyroBoost = !g_bTankConfig[ST_TankType(iTank)] ? g_flPyroBoost[ST_TankType(iTank)] : g_flPyroBoost2[ST_TankType(iTank)];
 		if (bIsPlayerFired(iTank) && !g_bPyro[iTank])

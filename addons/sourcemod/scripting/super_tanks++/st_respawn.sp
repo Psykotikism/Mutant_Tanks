@@ -22,6 +22,8 @@ int g_iRespawnChance2[ST_MAXTYPES + 1];
 int g_iRespawnCount[MAXPLAYERS + 1];
 int g_iRespawnRandom[ST_MAXTYPES + 1];
 int g_iRespawnRandom2[ST_MAXTYPES + 1];
+int g_iTankEnabled[ST_MAXTYPES + 1];
+int g_iTankEnabled2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -53,6 +55,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iTankEnabled[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", 0)) : (g_iTankEnabled2[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", g_iTankEnabled[iIndex]));
+			main ? (g_iTankEnabled[iIndex] = iSetCellLimit(g_iTankEnabled[iIndex], 0, 1)) : (g_iTankEnabled2[iIndex] = iSetCellLimit(g_iTankEnabled2[iIndex], 0, 1));
 			main ? (g_iRespawnAbility[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Enabled", 0)) : (g_iRespawnAbility2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Enabled", g_iRespawnAbility[iIndex]));
 			main ? (g_iRespawnAbility[iIndex] = iSetCellLimit(g_iRespawnAbility[iIndex], 0, 1)) : (g_iRespawnAbility2[iIndex] = iSetCellLimit(g_iRespawnAbility2[iIndex], 0, 1));
 			main ? (g_iRespawnAmount[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", 1)) : (g_iRespawnAmount2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", g_iRespawnAmount[iIndex]));
@@ -71,7 +75,7 @@ public void ST_Incap(int client)
 {
 	int iRespawnAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRespawnAbility[ST_TankType(client)] : g_iRespawnAbility2[ST_TankType(client)];
 	int iRespawnChance = !g_bTankConfig[ST_TankType(client)] ? g_iRespawnChance[ST_TankType(client)] : g_iRespawnChance2[ST_TankType(client)];
-	if (iRespawnAbility == 1 && GetRandomInt(1, iRespawnChance) == 1 && bIsTank(client))
+	if (iRespawnAbility == 1 && GetRandomInt(1, iRespawnChance) == 1 && ST_TankAllowed(client))
 	{
 		float flPos[3];
 		float flAngles[3];
@@ -100,7 +104,7 @@ int iRespawn(int client, int count)
 	for (int iNewTank = 1; iNewTank <= MaxClients; iNewTank++)
 	{
 		bExists[iNewTank] = false;
-		if (bIsTank(iNewTank))
+		if (ST_TankAllowed(iNewTank))
 		{
 			bExists[iNewTank] = true;
 		}
@@ -111,16 +115,28 @@ int iRespawn(int client, int count)
 		case 0: ST_SpawnTank(client, ST_TankType(client));
 		case 1:
 		{
-			char sCommand[32] = "z_spawn";
-			int iCmdFlags = GetCommandFlags(sCommand);
-			SetCommandFlags(sCommand, iCmdFlags & ~FCVAR_CHEAT);
-			FakeClientCommand(client, "%s tank", sCommand);
-			SetCommandFlags(sCommand, iCmdFlags|FCVAR_CHEAT);
+			int iTypeCount;
+			int iTankTypes[ST_MAXTYPES + 1];
+			for (int iIndex = 1; iIndex <= ST_MaxTypes(); iIndex++)
+			{
+				int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
+				if (iTankEnabled == 0)
+				{
+					continue;
+				}
+				iTankTypes[iTypeCount + 1] = iIndex;
+				iTypeCount++;
+			}
+			if (iTypeCount > 0)
+			{
+				int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
+				ST_SpawnTank(client, iChosen);
+			}
 		}
 	}
 	for (int iNewTank = 1; iNewTank <= MaxClients; iNewTank++)
 	{
-		if (bIsTank(iNewTank))
+		if (ST_TankAllowed(iNewTank))
 		{
 			if (!bExists[iNewTank])
 			{
@@ -156,19 +172,20 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	flAngles[0] = pack.ReadFloat();
 	flAngles[1] = pack.ReadFloat();
 	flAngles[2] = pack.ReadFloat();
-	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	int iRespawnAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAbility[ST_TankType(iTank)] : g_iRespawnAbility2[ST_TankType(iTank)];
+	if (iRespawnAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_iRespawnCount[iTank] = 0;
 		return Plugin_Stop;
 	}
-	if (bIsTank(iTank) && bIsPlayerIncapacitated(iTank))
+	if (ST_TankAllowed(iTank) && bIsPlayerIncapacitated(iTank))
 	{
 		int iRespawnAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAmount[ST_TankType(iTank)] : g_iRespawnAmount2[ST_TankType(iTank)];
 		if (g_iRespawnCount[iTank] < iRespawnAmount)
 		{
 			g_iRespawnCount[iTank]++;
 			int iNewTank = iRespawn(iTank, g_iRespawnCount[iTank]);
-			if (bIsTank(iNewTank))
+			if (ST_TankAllowed(iNewTank))
 			{
 				SetEntProp(iNewTank, Prop_Send, "m_fFlags", iFlags);
 				SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);
