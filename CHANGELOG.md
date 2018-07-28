@@ -8,6 +8,8 @@ Bug fixes:
 2. Fixed some abilities and features staying on even when they're disabled for a specific Tank.
 3. Fixed OnTakeDamage errors reported by FatalOE71.
 4. Fixed the issue with so many Tanks spawning towards the end of finales.
+5. Fixed various abilities not working properly.
+6. Fixed the issue with Tanks that have the Fragile ability not dying properly.
 
 Changes:
 
