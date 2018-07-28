@@ -117,7 +117,7 @@ public void ST_Ability(int client)
 {
 	int iMinionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAbility[ST_TankType(client)] : g_iMinionAbility2[ST_TankType(client)];
 	int iMinionChance = !g_bTankConfig[ST_TankType(client)] ? g_iMinionChance[ST_TankType(client)] : g_iMinionChance2[ST_TankType(client)];
-	if (iMinionAbility == 1 && GetRandomInt(1, iMinionChance) == 1 && ST_TankAllowed(client))
+	if (iMinionAbility == 1 && GetRandomInt(1, iMinionChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iMinionAmount = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAmount[ST_TankType(client)] : g_iMinionAmount2[ST_TankType(client)];
 		if (g_iMinionCount[client] < iMinionAmount)

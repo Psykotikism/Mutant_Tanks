@@ -107,7 +107,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && bIsSurvivor(attacker) && g_bHypno[attacker])
+		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker) && g_bHypno[attacker])
 		{
 			if (damagetype & DMG_BURN)
 			{
@@ -132,7 +132,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Changed;
 			}
 		}
-		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -195,7 +195,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client))
+	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iHypnoAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHypnoAbility[ST_TankType(client)] : g_iHypnoAbility2[ST_TankType(client)];
 		int iHypnoRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iHypnoChance[ST_TankType(client)] : g_iHypnoChance2[ST_TankType(client)];

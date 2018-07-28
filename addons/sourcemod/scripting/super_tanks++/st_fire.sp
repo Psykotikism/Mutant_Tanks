@@ -89,7 +89,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
@@ -98,7 +98,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				vFireHit(victim, attacker, iFireChance, iFireHit);
 			}
 		}
-		else if (bIsSurvivor(attacker) && ST_TankAllowed(victim))
+		else if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
@@ -152,7 +152,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client))
+	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iFireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFireAbility[ST_TankType(client)] : g_iFireAbility2[ST_TankType(client)];
 		int iFireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFireChance[ST_TankType(client)] : g_iFireChance2[ST_TankType(client)];
@@ -178,7 +178,7 @@ public void ST_Ability(int client)
 public void ST_RockBreak(int client, int entity)
 {
 	int iFireRock = !g_bTankConfig[ST_TankType(client)] ? g_iFireRock[ST_TankType(client)] : g_iFireRock2[ST_TankType(client)];
-	if (iFireRock == 1 && ST_TankAllowed(client))
+	if (iFireRock == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		float flPos[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);

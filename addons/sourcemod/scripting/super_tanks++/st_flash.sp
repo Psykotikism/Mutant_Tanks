@@ -106,7 +106,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iFlashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFlashAbility[ST_TankType(client)] : g_iFlashAbility2[ST_TankType(client)];
-	if (iFlashAbility == 1 && ST_TankAllowed(client))
+	if (iFlashAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		if (!g_bFlash[client])
 		{

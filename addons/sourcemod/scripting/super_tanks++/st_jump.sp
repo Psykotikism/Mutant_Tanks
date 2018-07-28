@@ -61,7 +61,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Spawn(int client)
 {
 	int iJumpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iJumpAbility[ST_TankType(client)] : g_iJumpAbility2[ST_TankType(client)];
-	if (iJumpAbility == 1 && ST_TankAllowed(client))
+	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iJumpAbility == 1)
 	{
 		CreateTimer(1.0, tTimerJump, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}

@@ -82,7 +82,7 @@ public void ST_RockThrow(int client, int entity)
 {
 	int iTrackAbility = !g_bTankConfig[ST_TankType(client)] ? g_iTrackAbility[ST_TankType(client)] : g_iTrackAbility2[ST_TankType(client)];
 	int iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
-	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client))
+	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		DataPack dpDataPack;
 		CreateDataTimer(0.5, tTimerTrack, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);

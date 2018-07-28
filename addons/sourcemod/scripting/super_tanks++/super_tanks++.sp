@@ -399,7 +399,7 @@ public void OnPluginEnd()
 	vMultiTargetFilters(0);
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank))
+		if (bIsTank(iTank) && IsPlayerAlive(iTank))
 		{
 			int iGlowEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_iGlowEffect[g_iTankType[iTank]] : g_iGlowEffect2[g_iTankType[iTank]];
 			if (iGlowEffect == 1 && bIsL4D2Game())
@@ -467,7 +467,7 @@ public void OnEntityDestroyed(int entity)
 		if (strcmp(sClassname, "tank_rock") == 0)
 		{
 			int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-			if (iThrower > 0 && bIsTankAllowed(iThrower))
+			if (iThrower > 0 && bIsTankAllowed(iThrower) && IsPlayerAlive(iThrower))
 			{
 				Call_StartForward(g_hRockBreakForward);
 				Call_PushCell(iThrower);
@@ -486,7 +486,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (bIsInfected(victim))
 		{
-			if (bIsTankAllowed(victim))
+			if (bIsTankAllowed(victim) && IsPlayerAlive(victim))
 			{
 				int iBulletImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iBulletImmunity[g_iTankType[victim]] : g_iBulletImmunity2[g_iTankType[victim]];
 				int iExplosiveImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iExplosiveImmunity[g_iTankType[victim]] : g_iExplosiveImmunity2[g_iTankType[victim]];
@@ -540,7 +540,7 @@ public Action eEventAbilityUse(Event event, const char[] name, bool dontBroadcas
 {
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
 		Call_StartForward(g_hAbilityThrowForward);
 		Call_PushCell(iTank);
@@ -595,7 +595,7 @@ public Action eEventFinaleStart(Event event, const char[] name, bool dontBroadca
 
 public Action eEventFinaleVehicleLeaving(Event event, const char[] name, bool dontBroadcast)
 {
-	g_iTankWave = 3;
+	g_iTankWave = 4;
 }
 
 public Action eEventFinaleVehicleReady(Event event, const char[] name, bool dontBroadcast)
@@ -678,7 +678,7 @@ public Action eEventPlayerIncapacitated(Event event, const char[] name, bool don
 {
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
 		Call_StartForward(g_hIncapForward);
 		Call_PushCell(iTank);
@@ -698,55 +698,51 @@ public Action eEventTankSpawn(Event event, const char[] name, bool dontBroadcast
 {
 	int iUserId = event.GetInt("userid");
 	int iTank = GetClientOfUserId(iUserId);
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
-		if (g_bCmdUsed)
+		g_iTankType[iTank] = 0;
+		int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
+		if (iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
 		{
-			g_bSpawned[iTank] = true;
-			vSetColor(iTank, g_iType);
-			g_bCmdUsed = false;
-		}
-		else
-		{
-			g_iTankType[iTank] = 0;
-			int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
-			if (iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
+			int iTypeCount;
+			int iMaxTypes = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
+			int iTankTypes[ST_MAXTYPES + 1];
+			for (int iIndex = 1; iIndex <= iMaxTypes; iIndex++)
 			{
-				int iTypeCount;
-				int iMaxTypes = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
-				int iTankTypes[ST_MAXTYPES + 1];
-				for (int iIndex = 1; iIndex <= iMaxTypes; iIndex++)
+				int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
+				if (iTankEnabled == 0)
 				{
-					int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
-					if (iTankEnabled == 0)
-					{
-						continue;
-					}
-					iTankTypes[iTypeCount + 1] = iIndex;
-					iTypeCount++;
+					continue;
 				}
-				if (iTypeCount > 0)
+				iTankTypes[iTypeCount + 1] = iIndex;
+				iTypeCount++;
+			}
+			if (iTypeCount > 0)
+			{
+				int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
+				vSetColor(iTank, !g_bCmdUsed ? iChosen : g_iType);
+				if (g_bCmdUsed)
 				{
-					int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
-					vSetColor(iTank, iChosen);
+					g_bSpawned[iTank] = true;
+					g_bCmdUsed = false;
 				}
-				char sNumbers[3][4];
-				char sTankWaves[12];
-				sTankWaves = !g_bGeneralConfig ? g_sTankWaves : g_sTankWaves2;
-				TrimString(sTankWaves);
-				ExplodeString(sTankWaves, ",", sNumbers, sizeof(sNumbers), sizeof(sNumbers[]));
-				TrimString(sNumbers[0]);
-				int iWave1 = (sNumbers[0][0] != '\0') ? StringToInt(sNumbers[0]) : 1;
-				TrimString(sNumbers[1]);
-				int iWave2 = (sNumbers[1][0] != '\0') ? StringToInt(sNumbers[1]) : 2;
-				TrimString(sNumbers[2]);
-				int iWave3 = (sNumbers[2][0] != '\0') ? StringToInt(sNumbers[2]) : 3;
-				switch (g_iTankWave)
-				{
-					case 1: vTankCountCheck(iTank, iWave1);
-					case 2: vTankCountCheck(iTank, iWave2);
-					case 3: vTankCountCheck(iTank, iWave3);
-				}
+			}
+			char sNumbers[3][4];
+			char sTankWaves[12];
+			sTankWaves = !g_bGeneralConfig ? g_sTankWaves : g_sTankWaves2;
+			TrimString(sTankWaves);
+			ExplodeString(sTankWaves, ",", sNumbers, sizeof(sNumbers), sizeof(sNumbers[]));
+			TrimString(sNumbers[0]);
+			int iWave1 = (sNumbers[0][0] != '\0') ? StringToInt(sNumbers[0]) : 1;
+			TrimString(sNumbers[1]);
+			int iWave2 = (sNumbers[1][0] != '\0') ? StringToInt(sNumbers[1]) : 2;
+			TrimString(sNumbers[2]);
+			int iWave3 = (sNumbers[2][0] != '\0') ? StringToInt(sNumbers[2]) : 3;
+			switch (g_iTankWave)
+			{
+				case 1: vTankCountCheck(iTank, iWave1);
+				case 2: vTankCountCheck(iTank, iWave2);
+				case 3: vTankCountCheck(iTank, iWave3);
 			}
 		}
 		CreateTimer(0.1, tTimerTankSpawn, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
@@ -1370,7 +1366,7 @@ void vParticleEffects(int client)
 	int iParticleEffect = !g_bTankConfig[g_iTankType[client]] ? g_iParticleEffect[g_iTankType[client]] : g_iParticleEffect2[g_iTankType[client]];
 	char sEffect[8];
 	sEffect = !g_bTankConfig[g_iTankType[client]] ? g_sParticleEffects[g_iTankType[client]] : g_sParticleEffects2[g_iTankType[client]];
-	if (iParticleEffect == 1 && bIsTankAllowed(client))
+	if (iParticleEffect == 1 && bIsTankAllowed(client) && IsPlayerAlive(client))
 	{
 		if (StrContains(sEffect, "1") != -1)
 		{
@@ -1517,7 +1513,7 @@ void vSetName(int client, char[] name = "Tank")
 	int iBlue5 = (sRGB5[2][0] != '\0') ? StringToInt(sRGB5[2]) : 255;
 	TrimString(sRGB5[3]);
 	int iAlpha5 = (sRGB5[3][0] != '\0') ? StringToInt(sRGB5[3]) : 255;
-	if (bIsTankAllowed(client))
+	if (bIsTankAllowed(client) && IsPlayerAlive(client))
 	{
 		vSetProps(client, iRed, iGreen, iBlue, iAlpha, iRed2, iGreen2, iBlue2, iAlpha2, iRed3, iGreen3, iBlue3, iAlpha3, iRed4, iGreen4, iBlue4, iAlpha4, iRed5, iGreen5, iBlue5, iAlpha5);
 		if (IsFakeClient(client))
@@ -1546,7 +1542,7 @@ void vSetName(int client, char[] name = "Tank")
 
 void vSetProps(int client, int red, int green, int blue, int alpha, int red2, int green2, int blue2, int alpha2, int red3, int green3, int blue3, int alpha3, int red4, int green4, int blue4, int alpha4, int red5, int green5, int blue5, int alpha5)
 {
-	if (bIsTankAllowed(client))
+	if (bIsTankAllowed(client) && IsPlayerAlive(client))
 	{
 		vAttachProps(client, red, green, blue, alpha, red2, green2, blue2, alpha2, red3, green3, blue3, alpha3, red4, green4, blue4, alpha4, red5, green5, blue5, alpha5);
 	}
@@ -1583,7 +1579,7 @@ void vTankCountCheck(int client, int wave)
 
 void vThrowInterval(int client, float time)
 {
-	if (bIsTankAllowed(client))
+	if (bIsTankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iAbility = GetEntPropEnt(client, Prop_Send, "m_customAbility");
 		if (iAbility > 0)
@@ -1630,7 +1626,7 @@ int iGetTankCount()
 	int iTankCount;
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank) && !g_bSpawned[iTank])
+		if (bIsTank(iTank) && IsPlayerAlive(iTank) && !g_bSpawned[iTank])
 		{
 			iTankCount++;
 		}
@@ -1776,7 +1772,7 @@ public bool bBoomerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsBoomer(iPlayer))
+		if (bIsBoomer(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1788,7 +1784,7 @@ public bool bChargerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsCharger(iPlayer))
+		if (bIsCharger(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1800,7 +1796,7 @@ public bool bHunterFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsHunter(iPlayer))
+		if (bIsHunter(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1812,7 +1808,7 @@ public bool bJockeyFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsJockey(iPlayer))
+		if (bIsJockey(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1824,7 +1820,7 @@ public bool bSmokerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSmoker(iPlayer))
+		if (bIsSmoker(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1836,7 +1832,7 @@ public bool bSpitterFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSpitter(iPlayer))
+		if (bIsSpitter(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1848,7 +1844,7 @@ public bool bTankFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsTank(iPlayer))
+		if (bIsTank(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1895,7 +1891,7 @@ public Action tTimerBloodEffect(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
 		vAttachParticle(iTank, PARTICLE_BLOOD, 0.75, 30.0);
 	}
@@ -1911,7 +1907,7 @@ public Action tTimerBlurEffect(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
 		char sSet[2][16];
 		char sTankColors[28];
@@ -1961,7 +1957,7 @@ public Action tTimerElectricEffect(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
 		vAttachParticle(iTank, PARTICLE_ELECTRICITY, 0.75, 30.0);
 	}
@@ -1977,7 +1973,7 @@ public Action tTimerFireEffect(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
 		vAttachParticle(iTank, PARTICLE_FIRE, 0.75);
 	}
@@ -1993,7 +1989,7 @@ public Action tTimerIceEffect(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
 		vAttachParticle(iTank, PARTICLE_ICE, 2.0, 30.0);
 	}
@@ -2023,7 +2019,7 @@ public Action tTimerMeteorEffect(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
 		vAttachParticle(iTank, PARTICLE_METEOR, 6.0, 30.0);
 	}
@@ -2039,7 +2035,7 @@ public Action tTimerSmokeEffect(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
 		vAttachParticle(iTank, PARTICLE_SMOKE, 1.5);
 	}
@@ -2055,7 +2051,7 @@ public Action tTimerSpitEffect(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	if (bIsTankAllowed(iTank))
+	if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 	{
 		vAttachParticle(iTank, PARTICLE_SPIT, 2.0, 30.0);
 	}
@@ -2107,7 +2103,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
 					if (strcmp(sClassname, "player") == 0)
 					{
-						if (bIsTankAllowed(iTarget))
+						if (bIsTankAllowed(iTarget) && IsPlayerAlive(iTarget))
 						{
 							int iHealth = GetClientHealth(iTarget);
 							int iDisplay = !g_bGeneralConfig ? g_iDisplayHealth : g_iDisplayHealth2;
@@ -2135,7 +2131,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 	g_cvSTFindConVar[3].SetString("32");
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTankAllowed(iTank))
+		if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 		{
 			Call_StartForward(g_hAbilityForward);
 			Call_PushCell(iTank);
@@ -2248,7 +2244,7 @@ public Action tTimerRockThrow(Handle timer, any entity)
 		return Plugin_Stop;
 	}
 	int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-	if (iThrower > 0 && bIsTankAllowed(iThrower))
+	if (iThrower > 0 && bIsTankAllowed(iThrower) && IsPlayerAlive(iThrower))
 	{
 		char sEffect[5];
 		sEffect = !g_bTankConfig[g_iTankType[iThrower]] ? g_sRockEffects[g_iTankType[iThrower]] : g_sRockEffects2[g_iTankType[iThrower]];

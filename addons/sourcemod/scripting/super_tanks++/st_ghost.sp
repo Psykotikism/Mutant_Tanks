@@ -129,7 +129,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
@@ -138,7 +138,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				vGhostHit(victim, attacker, iGhostChance, iGhostHit);
 			}
 		}
-		else if (bIsSurvivor(attacker) && ST_TankAllowed(victim))
+		else if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
@@ -246,7 +246,7 @@ public void ST_Ability(int client)
 	int iBlue6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[2]) : 255;
 	int iGhostAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGhostAbility[ST_TankType(client)] : g_iGhostAbility2[ST_TankType(client)];
 	int iGhostRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGhostChance[ST_TankType(client)] : g_iGhostChance2[ST_TankType(client)];
-	if (iGhostAbility == 1 && ST_TankAllowed(client))
+	if (iGhostAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{

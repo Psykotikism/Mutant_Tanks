@@ -99,7 +99,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && g_bAbsorb[victim])
+		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && g_bAbsorb[victim])
 		{
 			int iHealth = GetClientHealth(victim);
 			if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
@@ -145,7 +145,7 @@ public void ST_Ability(int client)
 {
 	int iAbsorbAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbAbility[ST_TankType(client)] : g_iAbsorbAbility2[ST_TankType(client)];
 	int iAbsorbChance = !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbChance[ST_TankType(client)] : g_iAbsorbChance2[ST_TankType(client)];
-	if (iAbsorbAbility == 1 && GetRandomInt(1, iAbsorbChance) == 1 && ST_TankAllowed(client) && !g_bAbsorb[client])
+	if (iAbsorbAbility == 1 && GetRandomInt(1, iAbsorbChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bAbsorb[client])
 	{
 		g_bAbsorb[client] = true;
 		float flAbsorbDuration = !g_bTankConfig[ST_TankType(client)] ? g_flAbsorbDuration[ST_TankType(client)] : g_flAbsorbDuration2[ST_TankType(client)];

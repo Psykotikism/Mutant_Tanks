@@ -109,24 +109,7 @@ public void ST_Death(int client)
 	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
 	if (ST_TankAllowed(client) && iCloneAbility == 1)
 	{
-		if (g_bCloned[client])
-		{
-			g_bCloned[client] = false;
-			if (iGetCloneCount() == 0)
-			{
-				for (int iCloner = 1; iCloner <= MaxClients; iCloner++)
-				{
-					if (!g_bCloned[iCloner] && ST_TankAllowed(iCloner))
-					{
-						g_iCloneCount[iCloner] = 0;
-					}
-				}
-			}
-		}
-		else
-		{
-			g_iCloneCount[client] = 0;
-		}
+		g_iCloneCount[client] = 0;
 	}
 }
 
@@ -134,7 +117,7 @@ public void ST_Ability(int client)
 {
 	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
 	int iCloneChance = !g_bTankConfig[ST_TankType(client)] ? g_iCloneChance[ST_TankType(client)] : g_iCloneChance2[ST_TankType(client)];
-	if (iCloneAbility == 1 && GetRandomInt(1, iCloneChance) == 1 && !g_bCloned[client] && ST_TankAllowed(client))
+	if (iCloneAbility == 1 && GetRandomInt(1, iCloneChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bCloned[client])
 	{
 		int iCloneAmount = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAmount[ST_TankType(client)] : g_iCloneAmount2[ST_TankType(client)];
 		if (g_iCloneCount[client] < iCloneAmount)
@@ -150,7 +133,7 @@ void vClone(int client, float pos[3])
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		bTankBoss[iPlayer] = false;
-		if (ST_TankAllowed(iPlayer))
+		if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			bTankBoss[iPlayer] = true;
 		}
@@ -159,7 +142,7 @@ void vClone(int client, float pos[3])
 	int iSelectedType;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (ST_TankAllowed(iPlayer))
+		if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			if (!bTankBoss[iPlayer])
 			{
@@ -214,19 +197,6 @@ void vCopyVector(float source[3], float target[3])
 	target[0] = source[0];
 	target[1] = source[1];
 	target[2] = source[2];
-}
-
-int iGetCloneCount()
-{
-	int iCloneCount;
-	for (int iClone = 1; iClone <= MaxClients; iClone++)
-	{
-		if (g_bCloned[iClone] && ST_TankAllowed(iClone))
-		{
-			iCloneCount++;
-		}
-	}
-	return iCloneCount;
 }
 
 bool bIsValidClient(int client)

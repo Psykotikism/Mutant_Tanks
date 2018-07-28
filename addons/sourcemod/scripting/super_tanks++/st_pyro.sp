@@ -94,7 +94,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Spawn(int client)
 {
 	int iPyroAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPyroAbility[ST_TankType(client)] : g_iPyroAbility2[ST_TankType(client)];
-	if (iPyroAbility == 1 && ST_TankAllowed(client))
+	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iPyroAbility == 1)
 	{
 		CreateTimer(1.0, tTimerPyro, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}

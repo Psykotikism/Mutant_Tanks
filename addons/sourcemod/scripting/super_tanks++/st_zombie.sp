@@ -94,7 +94,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iZombieAbility = !g_bTankConfig[ST_TankType(client)] ? g_iZombieAbility[ST_TankType(client)] : g_iZombieAbility2[ST_TankType(client)];
-	if (iZombieAbility == 1 && ST_TankAllowed(client))
+	if (iZombieAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		g_iZombieInterval[client]++;
 		int iZombieAmount = !g_bTankConfig[ST_TankType(client)] ? g_iZombieAmount[ST_TankType(client)] : g_iZombieAmount2[ST_TankType(client)];

@@ -104,7 +104,7 @@ int iRespawn(int client, int count)
 	for (int iNewTank = 1; iNewTank <= MaxClients; iNewTank++)
 	{
 		bExists[iNewTank] = false;
-		if (ST_TankAllowed(iNewTank))
+		if (ST_TankAllowed(iNewTank) && IsPlayerAlive(iNewTank))
 		{
 			bExists[iNewTank] = true;
 		}
@@ -136,7 +136,7 @@ int iRespawn(int client, int count)
 	}
 	for (int iNewTank = 1; iNewTank <= MaxClients; iNewTank++)
 	{
-		if (ST_TankAllowed(iNewTank))
+		if (ST_TankAllowed(iNewTank) && IsPlayerAlive(iNewTank))
 		{
 			if (!bExists[iNewTank])
 			{
@@ -185,7 +185,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		{
 			g_iRespawnCount[iTank]++;
 			int iNewTank = iRespawn(iTank, g_iRespawnCount[iTank]);
-			if (ST_TankAllowed(iNewTank))
+			if (ST_TankAllowed(iNewTank) && IsPlayerAlive(iNewTank))
 			{
 				SetEntProp(iNewTank, Prop_Send, "m_fFlags", iFlags);
 				SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);

@@ -157,7 +157,7 @@ public void ST_Ability(int client)
 {
 	int iSpamAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSpamAbility[ST_TankType(client)] : g_iSpamAbility2[ST_TankType(client)];
 	int iSpamChance = !g_bTankConfig[ST_TankType(client)] ? g_iSpamChance[ST_TankType(client)] : g_iSpamChance2[ST_TankType(client)];
-	if (iSpamAbility == 1 && GetRandomInt(1, iSpamChance) == 1 && ST_TankAllowed(client) && !g_bSpam[client])
+	if (iSpamAbility == 1 && GetRandomInt(1, iSpamChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bSpam[client])
 	{
 		g_bSpam[client] = true;
 		DataPack dpDataPack;

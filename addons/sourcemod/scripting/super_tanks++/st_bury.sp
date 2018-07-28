@@ -120,7 +120,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -185,7 +185,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client))
+	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iBuryAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBuryAbility[ST_TankType(client)] : g_iBuryAbility2[ST_TankType(client)];
 		int iBuryRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBuryChance[ST_TankType(client)] : g_iBuryChance2[ST_TankType(client)];
@@ -250,7 +250,7 @@ void vStopBury(int client, int owner)
 		float flCurrentOrigin[3];
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsSurvivor(iPlayer) && iPlayer != client)
+			if (bIsSurvivor(iPlayer) && !g_bBury[iPlayer] && iPlayer != client)
 			{
 				GetClientAbsOrigin(iPlayer, flCurrentOrigin);
 				TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);

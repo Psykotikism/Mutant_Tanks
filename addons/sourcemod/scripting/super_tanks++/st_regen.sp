@@ -98,7 +98,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iRegenAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRegenAbility[ST_TankType(client)] : g_iRegenAbility2[ST_TankType(client)];
-	if (iRegenAbility == 1 && ST_TankAllowed(client) && !g_bRegen[client])
+	if (iRegenAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bRegen[client])
 	{
 		g_bRegen[client] = true;
 		float flRegenInterval = !g_bTankConfig[ST_TankType(client)] ? g_flRegenInterval[ST_TankType(client)] : g_flRegenInterval2[ST_TankType(client)];

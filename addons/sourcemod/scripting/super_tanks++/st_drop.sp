@@ -424,7 +424,7 @@ public void ST_Death(int client)
 public void ST_Spawn(int client)
 {
 	int iDropAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
-	if (iDropAbility == 1 && ST_TankAllowed(client) && !g_bDrop[client])
+	if (iDropAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bDrop[client])
 	{
 		g_bDrop[client] = true;
 		CreateTimer(1.0, tTimerDrop, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);

@@ -160,7 +160,7 @@ public void ST_Ability(int client)
 {
 	int iRockAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRockAbility[ST_TankType(client)] : g_iRockAbility2[ST_TankType(client)];
 	int iRockChance = !g_bTankConfig[ST_TankType(client)] ? g_iRockChance[ST_TankType(client)] : g_iRockChance2[ST_TankType(client)];
-	if (iRockAbility == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(client) && !g_bRock[client])
+	if (iRockAbility == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bRock[client])
 	{
 		g_bRock[client] = true;
 		float flPos[3];

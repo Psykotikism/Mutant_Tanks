@@ -99,7 +99,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && g_bFragile[victim])
+		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && g_bFragile[victim])
 		{
 			int iHealth = GetClientHealth(victim);
 			if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
@@ -141,7 +141,7 @@ public void ST_Ability(int client)
 {
 	int iFragileAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFragileAbility[ST_TankType(client)] : g_iFragileAbility2[ST_TankType(client)];
 	int iFragileChance = !g_bTankConfig[ST_TankType(client)] ? g_iFragileChance[ST_TankType(client)] : g_iFragileChance2[ST_TankType(client)];
-	if (iFragileAbility == 1 && GetRandomInt(1, iFragileChance) == 1 && ST_TankAllowed(client) && !g_bFragile[client])
+	if (iFragileAbility == 1 && GetRandomInt(1, iFragileChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bFragile[client])
 	{
 		g_bFragile[client] = true;
 		float flFragileDuration = !g_bTankConfig[ST_TankType(client)] ? g_flFragileDuration[ST_TankType(client)] : g_flFragileDuration2[ST_TankType(client)];

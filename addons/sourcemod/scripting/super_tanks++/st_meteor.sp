@@ -105,7 +105,7 @@ public void ST_Ability(int client)
 {
 	int iMeteorAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorAbility[ST_TankType(client)] : g_iMeteorAbility2[ST_TankType(client)];
 	int iMeteorChance = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorChance[ST_TankType(client)] : g_iMeteorChance2[ST_TankType(client)];
-	if (iMeteorAbility == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(client) && !g_bMeteor[client])
+	if (iMeteorAbility == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bMeteor[client])
 	{
 		g_bMeteor[client] = true;
 		float flPos[3];
@@ -122,7 +122,7 @@ public void ST_Ability(int client)
 
 void vMeteor(int client, int entity)
 {
-	if (ST_TankAllowed(client) && bIsValidEntity(entity))
+	if (ST_TankAllowed(client) && IsPlayerAlive(client) && bIsValidEntity(entity))
 	{
 		char sClassname[16];
 		GetEntityClassname(entity, sClassname, sizeof(sClassname));

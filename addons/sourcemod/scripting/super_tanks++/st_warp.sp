@@ -106,14 +106,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
 				vWarpHit(victim, attacker);
 			}
 		}
-		else if (bIsSurvivor(attacker) && ST_TankAllowed(victim))
+		else if (bIsSurvivor(attacker) && ST_TankAllowed(victim) && IsPlayerAlive(victim))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
@@ -151,7 +151,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iWarpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iWarpAbility[ST_TankType(client)] : g_iWarpAbility2[ST_TankType(client)];
-	if (iWarpAbility == 1 && ST_TankAllowed(client) && !g_bWarp[client])
+	if (iWarpAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bWarp[client])
 	{
 		g_bWarp[client] = true;
 		float flWarpInterval = !g_bTankConfig[ST_TankType(client)] ? g_flWarpInterval[ST_TankType(client)] : g_flWarpInterval2[ST_TankType(client)];

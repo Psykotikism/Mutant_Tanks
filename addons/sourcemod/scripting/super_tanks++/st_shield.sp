@@ -110,7 +110,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && bIsSurvivor(attacker))
+		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (g_bShield[victim])
 			{
@@ -163,7 +163,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_AbilityThrow(int client)
 {
-	if (ST_TankAllowed(client))
+	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iProp = -1;
 		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
@@ -209,7 +209,7 @@ public void ST_Death(int client)
 public void ST_TankSpawn(int client)
 {
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (iShieldAbility == 1 && ST_TankAllowed(client) && !g_bShield[client])
+	if (iShieldAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bShield[client])
 	{
 		vShield(client, true);
 	}
@@ -218,7 +218,7 @@ public void ST_TankSpawn(int client)
 public void ST_RockThrow(int client, int entity)
 {
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (iShieldAbility == 1)
+	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iShieldAbility == 1)
 	{
 		DataPack dpDataPack;
 		CreateDataTimer(0.1, tTimerShieldThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);

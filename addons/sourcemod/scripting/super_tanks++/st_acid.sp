@@ -122,7 +122,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (ST_TankAllowed(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
@@ -131,7 +131,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				vAcidHit(victim, attacker, iAcidChance, iAcidHit);
 			}
 		}
-		else if (bIsSurvivor(attacker) && ST_TankAllowed(victim))
+		else if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
@@ -183,7 +183,7 @@ public void ST_Death(int client)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client))
+	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)];
 		int iAcidRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAcidChance[ST_TankType(client)] : g_iAcidChance2[ST_TankType(client)];
@@ -209,7 +209,7 @@ public void ST_Ability(int client)
 public void ST_RockBreak(int client, int entity)
 {
 	int iAcidRock = !g_bTankConfig[ST_TankType(client)] ? g_iAcidRock[ST_TankType(client)] : g_iAcidRock2[ST_TankType(client)];
-	if (iAcidRock == 1 && ST_TankAllowed(client) && bIsL4D2Game())
+	if (iAcidRock == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && bIsL4D2Game())
 	{
 		float flOrigin[3];
 		float flAngles[3];
