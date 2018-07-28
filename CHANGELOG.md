@@ -18,6 +18,7 @@ Changes:
 3. Added a new forward for developers to use: forward void ST_Death2(int enemy, int client) - Called when a Tank dies and returns the attacker's index.
 4. Added checks to various timers in case abilities are disabled before the timers are triggered.
 5. Added a check to prevent clone Tanks from being counted as actual Tanks.
+6. The Clone ability no longer spawns more clones when all of the current clones die. (This is to prevent glitches with the Tank spawner.)
 
 Files:
 
