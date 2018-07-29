@@ -143,7 +143,7 @@ SourceMod 1.8+
 			// Maximum types of Super Tanks allowed.
 			// Minimum: 1
 			// Maximum: 2500
-			"Maximum Types"					"85"
+			"Maximum Types"					"2500"
 
 			// Multiply the Super Tank's health.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
@@ -501,11 +501,6 @@ SourceMod 1.8+
 			// 0: OFF
 			// 1: ON
 			"Bomb Hit"						"0"
-
-			// The power of the Super Tank's explosions.
-			// Minimum: 1 (Smallest and least painful explosion)
-			// Maximum: 9999999999 (Biggest and most painful explosion)
-			"Bomb Power"					"75"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
