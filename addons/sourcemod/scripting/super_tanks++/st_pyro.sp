@@ -118,7 +118,7 @@ public Action tTimerPyro(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	int iPyroAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPyroAbility[ST_TankType(iTank)] : g_iPyroAbility2[ST_TankType(iTank)];
-	if (iPyroAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iPyroAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bPyro[iTank] = false;
 		return Plugin_Stop;

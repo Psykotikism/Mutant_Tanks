@@ -262,7 +262,7 @@ public Action tTimerWarp(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	int iWarpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpAbility[ST_TankType(iTank)] : g_iWarpAbility2[ST_TankType(iTank)];
-	if (iWarpAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iWarpAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}

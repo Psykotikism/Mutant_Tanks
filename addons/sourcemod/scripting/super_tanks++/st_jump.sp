@@ -102,7 +102,7 @@ public Action tTimerJump(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	int iJumpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iJumpAbility[ST_TankType(iTank)] : g_iJumpAbility2[ST_TankType(iTank)];
 	int iJumpChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iJumpChance[ST_TankType(iTank)] : g_iJumpChance2[ST_TankType(iTank)];
-	if (iJumpAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iJumpAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}

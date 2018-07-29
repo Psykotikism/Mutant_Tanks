@@ -148,7 +148,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
 	int iThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iThrowAbility[ST_TankType(iTank)] : g_iThrowAbility2[ST_TankType(iTank)];
-	if (iThrowAbility == 0 || iThrowAbility != 1 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
+	if (iThrowAbility == 0 || iThrowAbility != 1 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
 	{
 		return Plugin_Stop;
 	}
@@ -200,7 +200,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
 	int iThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iThrowAbility[ST_TankType(iTank)] : g_iThrowAbility2[ST_TankType(iTank)];
-	if (iThrowAbility == 0 || iThrowAbility != 2 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
+	if (iThrowAbility == 0 || iThrowAbility != 2 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
 	{
 		return Plugin_Stop;
 	}
@@ -249,7 +249,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
 	int iThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iThrowAbility[ST_TankType(iTank)] : g_iThrowAbility2[ST_TankType(iTank)];
-	if (iThrowAbility == 0 || iThrowAbility != 3 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
+	if (iThrowAbility == 0 || iThrowAbility != 3 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
 	{
 		return Plugin_Stop;
 	}

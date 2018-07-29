@@ -290,7 +290,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
 	flMin = flSetFloatLimit(flMin, -200.0, 0.0);
 	flMax = flSetFloatLimit(flMax, 0.0, 200.0);
-	if (iMeteorAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iMeteorAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bMeteor[iTank] = false;
 		return Plugin_Stop;

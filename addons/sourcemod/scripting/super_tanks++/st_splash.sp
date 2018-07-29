@@ -76,6 +76,15 @@ public void ST_Incap(int client)
 	}
 }
 
+bool bIsPlayerIncapacitated(int client)
+{
+	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
+	{
+		return true;
+	}
+	return false;
+}
+
 bool bIsValidEntity(int entity)
 {
 	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
@@ -85,7 +94,7 @@ public Action tTimerSplash(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	int iSplashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashAbility[ST_TankType(iTank)] : g_iSplashAbility2[ST_TankType(iTank)];
-	if (iSplashAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iSplashAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -96,7 +105,7 @@ public Action tTimerSplash(Handle timer, any userid)
 		GetClientAbsOrigin(iTank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor) && bIsPlayerIncapacitated(iTank))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);

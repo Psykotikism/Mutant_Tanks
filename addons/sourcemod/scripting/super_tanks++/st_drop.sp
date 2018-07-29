@@ -567,7 +567,7 @@ bool bIsValidEntRef(int entity)
 public Action tTimerDrop(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bDrop[iTank] = false;
 		return Plugin_Stop;

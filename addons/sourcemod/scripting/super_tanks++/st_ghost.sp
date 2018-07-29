@@ -379,7 +379,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	int iGreen6 = pack.ReadCell();
 	int iBlue6 = pack.ReadCell();
 	int iGhostAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostAbility[ST_TankType(iTank)] : g_iGhostAbility2[ST_TankType(iTank)];
-	if (iGhostAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iGhostAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bGhost[iTank] = false;
 		return Plugin_Stop;

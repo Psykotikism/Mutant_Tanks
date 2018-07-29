@@ -171,7 +171,7 @@ public Action tTimerStopFragile(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	int iFragileAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFragileAbility[ST_TankType(iTank)] : g_iFragileAbility2[ST_TankType(iTank)];
-	if (iFragileAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iFragileAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bFragile[iTank] = false;
 		return Plugin_Stop;

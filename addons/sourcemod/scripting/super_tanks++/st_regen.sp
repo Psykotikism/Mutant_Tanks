@@ -115,7 +115,7 @@ public Action tTimerRegen(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	int iRegenAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRegenAbility[ST_TankType(iTank)] : g_iRegenAbility2[ST_TankType(iTank)];
-	if (iRegenAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iRegenAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bRegen[iTank] = false;
 		return Plugin_Stop;

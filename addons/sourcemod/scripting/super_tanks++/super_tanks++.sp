@@ -1891,7 +1891,7 @@ public Action tTimerBloodEffect(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	char sEffect[8];
 	sEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (StrContains(sEffect, "1") == -1 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (StrContains(sEffect, "1") == -1 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1907,7 +1907,7 @@ public Action tTimerBlurEffect(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	char sEffect[7];
 	sEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_sPropsAttached[g_iTankType[iTank]] : g_sPropsAttached2[g_iTankType[iTank]];
-	if (StrContains(sEffect, "1") == -1 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (StrContains(sEffect, "1") == -1 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1957,7 +1957,7 @@ public Action tTimerElectricEffect(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	char sEffect[8];
 	sEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (StrContains(sEffect, "2") == -1 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (StrContains(sEffect, "2") == -1 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1973,7 +1973,7 @@ public Action tTimerFireEffect(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	char sEffect[8];
 	sEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (StrContains(sEffect, "3") == -1 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (StrContains(sEffect, "3") == -1 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1989,7 +1989,7 @@ public Action tTimerIceEffect(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	char sEffect[8];
 	sEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (StrContains(sEffect, "4") == -1 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (StrContains(sEffect, "4") == -1 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -2003,7 +2003,7 @@ public Action tTimerIceEffect(Handle timer, any userid)
 public Action tTimerKillStuckTank(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -2019,7 +2019,7 @@ public Action tTimerMeteorEffect(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	char sEffect[8];
 	sEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (StrContains(sEffect, "5") == -1 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (StrContains(sEffect, "5") == -1 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -2035,7 +2035,7 @@ public Action tTimerSmokeEffect(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	char sEffect[8];
 	sEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (StrContains(sEffect, "6") == -1 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (StrContains(sEffect, "6") == -1 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -2051,7 +2051,7 @@ public Action tTimerSpitEffect(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	char sEffect[8];
 	sEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (StrContains(sEffect, "7") == -1 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (StrContains(sEffect, "7") == -1 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -2156,7 +2156,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 public Action tTimerTankSpawn(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -2209,7 +2209,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 	char sEffect[5];
 	pack.ReadString(sEffect, sizeof(sEffect));
 	int iRockEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_iRockEffect[g_iTankType[iTank]] : g_iRockEffect2[g_iTankType[iTank]];
-	if (iRockEffect == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iRockEffect == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}

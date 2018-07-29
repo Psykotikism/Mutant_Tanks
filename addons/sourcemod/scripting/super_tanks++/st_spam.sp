@@ -184,7 +184,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	float flTime = pack.ReadFloat();
 	int iSpamAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamAbility[ST_TankType(iTank)] : g_iSpamAbility2[ST_TankType(iTank)];
 	float flSpamDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flSpamDuration[ST_TankType(iTank)] : g_flSpamDuration2[ST_TankType(iTank)];
-	if (iSpamAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (flTime + flSpamDuration) < GetEngineTime())
+	if (iSpamAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || (flTime + flSpamDuration) < GetEngineTime())
 	{
 		g_bSpam[iTank] = false;
 		return Plugin_Stop;

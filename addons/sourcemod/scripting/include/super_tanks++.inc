@@ -34,7 +34,7 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.27"
+#define ST_VERSION "8.28"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 2500
 #define ST_MAXHEALTH 65535
@@ -761,11 +761,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			// 0: OFF");
 			fFilename.WriteLine("			// 1: ON");
 			fFilename.WriteLine("			\"Bomb Hit\"						\"0\"");
-			fFilename.WriteLine("");
-			fFilename.WriteLine("			// The power of the Super Tank's explosions.");
-			fFilename.WriteLine("			// Minimum: 1 (Smallest and least painful explosion)");
-			fFilename.WriteLine("			// Maximum: 9999999999 (Biggest and most painful explosion)");
-			fFilename.WriteLine("			\"Bomb Power\"					\"75\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
 			fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
@@ -2609,7 +2604,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Bomb Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Bomb Hit\"						\"1\"");
-			fFilename.WriteLine("			\"Bomb Power\"					\"75\"");
 			fFilename.WriteLine("			\"Bomb Rock Break\"				\"1\"");
 			fFilename.WriteLine("			\"Bomb Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Bomb Range Chance\"				\"16\"");
@@ -4702,7 +4696,6 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Bomb Ability\"");
 			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Bomb Power\"					\"75\"");
 			fFilename.WriteLine("			\"Bomb Rock Break\"				\"1\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Clone Ability\"");

@@ -199,7 +199,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 	float flTime = pack.ReadFloat();
 	int iShakeAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShakeAbility[ST_TankType(iTank)] : g_iShakeAbility2[ST_TankType(iTank)];
 	float flShakeDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShakeDuration[ST_TankType(iTank)] : g_flShakeDuration2[ST_TankType(iTank)];
-	if (iShakeAbility == 0 || iTank == 0 || iSurvivor == 0 || !IsClientInGame(iTank) || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iTank) || !IsPlayerAlive(iSurvivor) || (flTime + flShakeDuration) < GetEngineTime())
+	if (iShakeAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor) || (flTime + flShakeDuration) < GetEngineTime())
 	{
 		g_bShake[iSurvivor] = false;
 		return Plugin_Stop;
@@ -213,7 +213,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 			bfWrite.WriteByte(0);
 			bfWrite.WriteFloat(16.0);
 			bfWrite.WriteFloat(0.5);
-			bfWrite.WriteFloat(5.0);
+			bfWrite.WriteFloat(1.0);
 			EndMessage();
 		}
 	}

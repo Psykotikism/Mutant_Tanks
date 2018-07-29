@@ -472,7 +472,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
 	int iTrackAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackAbility[ST_TankType(iTank)] : g_iTrackAbility2[ST_TankType(iTank)];
-	if (iTrackAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
+	if (iTrackAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
 	{
 		return Plugin_Stop;
 	}

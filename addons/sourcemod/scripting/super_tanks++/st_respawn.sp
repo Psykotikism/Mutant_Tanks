@@ -173,7 +173,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	flAngles[1] = pack.ReadFloat();
 	flAngles[2] = pack.ReadFloat();
 	int iRespawnAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAbility[ST_TankType(iTank)] : g_iRespawnAbility2[ST_TankType(iTank)];
-	if (iRespawnAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iRespawnAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_iRespawnCount[iTank] = 0;
 		return Plugin_Stop;

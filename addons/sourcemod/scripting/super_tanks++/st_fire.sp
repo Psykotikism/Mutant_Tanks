@@ -189,7 +189,7 @@ public void ST_RockBreak(int client, int entity)
 void vFire(int client, float pos[3])
 {
 	int iFire = CreateEntityByName("prop_physics");
-	if (IsValidEntity(iFire))
+	if (bIsValidEntity(iFire))
 	{
 		DispatchKeyValue(iFire, "disableshadows", "1");
 		SetEntityModel(iFire, MODEL_GASCAN);
@@ -218,4 +218,9 @@ void vFireHit(int client, int owner, int chance, int enabled)
 bool bIsValidClient(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+}
+
+bool bIsValidEntity(int entity)
+{
+	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }

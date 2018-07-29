@@ -249,7 +249,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 5.0;
 	flMin = flSetFloatLimit(flMin, -5.0, 0.0);
 	flMax = flSetFloatLimit(flMax, 0.0, 5.0);
-	if (iRockAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank) || (flTime + flRockDuration) < GetEngineTime())
+	if (iRockAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || (flTime + flRockDuration) < GetEngineTime())
 	{
 		g_bRock[iTank] = false;
 		AcceptEntityInput(iRock, "Kill");

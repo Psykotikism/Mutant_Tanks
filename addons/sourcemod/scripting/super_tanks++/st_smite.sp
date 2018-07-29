@@ -13,7 +13,7 @@ public Plugin myinfo =
 };
 
 #define SPRITE_GLOW "sprites/glow.vmt"
-#define SOUND_EXPLOSION3 "ambient/explosions/explode_2.wav"
+#define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 
 bool g_bLateLoad;
 bool g_bTankConfig[ST_MAXTYPES + 1];
@@ -52,7 +52,7 @@ public void OnAllPluginsLoaded()
 public void OnMapStart()
 {
 	g_iSmiteSprite = PrecacheModel(SPRITE_GLOW, true);
-	PrecacheSound(SOUND_EXPLOSION3, true);
+	PrecacheSound(SOUND_EXPLOSION, true);
 	if (g_bLateLoad)
 	{
 		vLateLoad(true);
@@ -173,7 +173,7 @@ void vSmiteHit(int client, int chance, int enabled)
 		TE_SendToAll();
 		TE_SetupEnergySplash(flPosition, flDirection, false);
 		TE_SendToAll();
-		EmitAmbientSound(SOUND_EXPLOSION3, flStartPosition, client, SNDLEVEL_RAIDSIREN);
+		EmitAmbientSound(SOUND_EXPLOSION, flStartPosition, client, SNDLEVEL_RAIDSIREN);
 		ForcePlayerSuicide(client);
 	}
 }

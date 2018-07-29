@@ -224,7 +224,7 @@ public Action tTimerHeal(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	int iHealAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHealAbility[ST_TankType(iTank)] : g_iHealAbility2[ST_TankType(iTank)];
-	if (iHealAbility == 0 || iTank == 0 || !IsClientInGame(iTank) || !IsPlayerAlive(iTank))
+	if (iHealAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bHeal[iTank] = false;
 		return Plugin_Stop;
