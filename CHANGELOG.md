@@ -1,5 +1,22 @@
 # Changelog
 
+## Version 8.28 (July 28, 2018)
+
+Bug fixes:
+
+1. Fixed the Panic ability not working in L4D1.
+
+Changes:
+
+1. Changed how the Bomb ability creates explosions to prevent crashes.
+2. Removed the "Bomb Power" setting.
+3. Optimized code a bit.
+
+Files:
+
+1. Updated include file.
+2. Updated config file to remove the "Bomb Power" setting.
+
 ## Version 8.27 (July 28, 2018)
 
 Changes:

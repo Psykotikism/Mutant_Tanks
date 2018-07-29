@@ -2910,9 +2910,9 @@ native int ST_TankType(int client);
 
 Stocks:
 ```
-stock bool bIsBoomer(int client, bool alive = true)
+stock bool bIsBoomer(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 2)
 		{
@@ -2922,9 +2922,9 @@ stock bool bIsBoomer(int client, bool alive = true)
 	return false;
 }
 
-stock bool bIsCharger(int client, bool alive = true)
+stock bool bIsCharger(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 6)
 		{
@@ -2934,9 +2934,9 @@ stock bool bIsCharger(int client, bool alive = true)
 	return false;
 }
 
-stock bool bIsHunter(int client, bool alive = true)
+stock bool bIsHunter(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 3)
 		{
@@ -2946,14 +2946,14 @@ stock bool bIsHunter(int client, bool alive = true)
 	return false;
 }
 
-stock bool bIsInfected(int client, bool alive = true)
+stock bool bIsInfected(int client)
 {
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3 && (!alive || (alive && IsPlayerAlive(client))) && !IsClientInKickQueue(client);
+	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3 && !IsClientInKickQueue(client);
 }
 
-stock bool bIsJockey(int client, bool alive = true)
+stock bool bIsJockey(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (bIsL4D2Game() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5)
 		{
@@ -2968,9 +2968,9 @@ stock bool bIsL4D2Game()
 	return GetEngineVersion() == Engine_Left4Dead2;
 }
 
-stock bool bIsSmoker(int client, bool alive = true)
+stock bool bIsSmoker(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 1)
 		{
@@ -2989,9 +2989,9 @@ stock bool bIsSpecialInfected(int client)
 	return false;
 }
 
-stock bool bIsSpitter(int client, bool alive = true)
+stock bool bIsSpitter(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 4)
 		{
@@ -3006,9 +3006,9 @@ stock bool bIsSurvivor(int client)
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client) && !IsClientInKickQueue(client);
 }
 
-stock bool bIsTank(int client, bool alive = true)
+stock bool bIsTank(int client)
 {
-	if (bIsInfected(client, alive))
+	if (bIsInfected(client))
 	{
 		int iClass = GetEntProp(client, Prop_Send, "m_zombieClass");
 		if ((bIsL4D2Game() && iClass == 8) || (!bIsL4D2Game() && iClass == 5))
