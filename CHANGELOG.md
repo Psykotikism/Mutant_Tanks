@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 8.27 (July 28, 2018)
+
+Changes:
+
+1. Added extra checks to make sure the plugin spawns the proper amount of Tanks for each wave.
+2. Lessened the occurrence of Tanks flashing all over the map on finales. (Set "Glow Effect" to 1 to completely disable the glow outlines.)
+
+Files:
+
+1. super_tanks++.sp (Where the extra checks were added.)
+2. super_tanks++.inc (Updated version number.)
+
 ## Version 8.26 (July 28, 2018)
 
 Bug fixes:
