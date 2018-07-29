@@ -669,7 +669,7 @@ public Action eEventPlayerDeath(Event event, const char[] name, bool dontBroadca
 					AcceptEntityInput(iProp, "Kill");
 				}
 			}
-			CreateTimer(5.0, tTimerTankWave, g_iTankWave, TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(3.0, tTimerTankWave, g_iTankWave, TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 }
@@ -847,7 +847,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 void vIsPluginAllowed()
 {
-	bool bIsPluginAllowed = bIsPluginEnabled(g_cvSTFindConVar[1], g_iGameModeTypes, g_sEnabledGameModes, g_sDisabledGameModes);
+	bool bIsPluginAllowed = bIsPluginEnabled();
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
 	if (iPluginEnabled == 1)
 	{
@@ -1567,9 +1567,13 @@ void vSpawnCommand(int client, bool auto = false)
 
 void vTankCountCheck(int client, int wave)
 {
+	if (iGetTankCount() == wave)
+	{
+		return;
+	}
 	if (iGetTankCount() < wave)
 	{
-		CreateTimer(5.0, tTimerSpawnTanks, wave, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(3.0, tTimerSpawnTanks, wave, TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else if (iGetTankCount() > wave)
 	{
@@ -1692,13 +1696,13 @@ bool bIsPlayerIncapacitated(int client)
 	return false;
 }
 
-bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disabled)
+bool bIsPluginEnabled()
 {
-	if (convar == null)
+	if (g_cvSTFindConVar[1] == null)
 	{
 		return false;
 	}
-	if (mode != 0)
+	if (g_iGameModeTypes != 0)
 	{
 		g_iCurrentMode = 0;
 		int iGameMode = CreateEntityByName("info_gamemode");
@@ -1710,26 +1714,26 @@ bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disabled)
 		ActivateEntity(iGameMode);
 		AcceptEntityInput(iGameMode, "PostSpawnActivate");
 		AcceptEntityInput(iGameMode, "Kill");
-		if (g_iCurrentMode == 0 || !(mode & g_iCurrentMode))
+		if (g_iCurrentMode == 0 || !(g_iGameModeTypes & g_iCurrentMode))
 		{
 			return false;
 		}
 	}
 	char sGameMode[64];
 	char sGameModes[64];
-	convar.GetString(sGameMode, sizeof(sGameMode));
+	g_cvSTFindConVar[1].GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
-	if (strcmp(enabled, ""))
+	if (strcmp(g_sEnabledGameModes, ""))
 	{
-		Format(sGameModes, sizeof(sGameModes), ",%s,", enabled);
+		Format(sGameModes, sizeof(sGameModes), ",%s,", g_sEnabledGameModes);
 		if (StrContains(sGameModes, sGameMode, false) == -1)
 		{
 			return false;
 		}
 	}
-	if (strcmp(disabled, ""))
+	if (strcmp(g_sDisabledGameModes, ""))
 	{
-		Format(sGameModes, sizeof(sGameModes), ",%s,", disabled);
+		Format(sGameModes, sizeof(sGameModes), ",%s,", g_sDisabledGameModes);
 		if (StrContains(sGameModes, sGameMode, false) != -1)
 		{
 			return false;
@@ -2267,28 +2271,32 @@ public Action tTimerRockThrow(Handle timer, any entity)
 
 public Action tTimerSpawnTanks(Handle timer, any wave)
 {
-	if (iGetTankCount() < wave)
+	if (iGetTankCount() >= wave)
 	{
-		int iTank = CreateFakeClient("Tank");
-		if (iTank > 0)
-		{
-			ChangeClientTeam(iTank, 3);
-			vSpawnCommand(iTank, true);
-			KickClient(iTank);
-		}
+		return Plugin_Stop;
 	}
+	int iTank = CreateFakeClient("Tank");
+	if (iTank > 0)
+	{
+		ChangeClientTeam(iTank, 3);
+		vSpawnCommand(iTank, true);
+		KickClient(iTank);
+	}
+	return Plugin_Continue;
 }
 
 public Action tTimerTankWave(Handle timer, any wave)
 {
-	if (iGetTankCount() == 0)
+	if (iGetTankCount() > 0)
 	{
-		switch (wave)
-		{
-			case 1: g_iTankWave = 2;
-			case 2: g_iTankWave = 3;
-		}
+		return Plugin_Stop;
 	}
+	switch (wave)
+	{
+		case 1: g_iTankWave = 2;
+		case 2: g_iTankWave = 3;
+	}
+	return Plugin_Continue;
 }
 
 public Action tTimerReloadConfigs(Handle timer)
