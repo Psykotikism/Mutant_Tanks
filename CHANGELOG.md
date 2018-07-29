@@ -14,7 +14,7 @@ Changes:
 
 Files:
 
-1. Updated include file.
+1. Updated include file to remove the "Bomb Power" setting from the auto-config generator.
 2. Updated config file to remove the "Bomb Power" setting.
 
 ## Version 8.27 (July 28, 2018)
