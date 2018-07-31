@@ -165,19 +165,24 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iBuryAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBuryAbility[ST_TankType(client)] : g_iBuryAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iBuryAbility == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iBuryAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBuryAbility[ST_TankType(iTank)] : g_iBuryAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iBuryAbility == 1)
 		{
-			if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-				dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-				dpDataPack.WriteCell(GetClientUserId(client));
+				if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
+				{
+					DataPack dpDataPack;
+					CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+					dpDataPack.WriteCell(GetClientUserId(iTank));
+				}
 			}
 		}
 	}
@@ -267,29 +272,6 @@ void vStopBury(int client, int owner)
 			SetEntityMoveType(client, MOVETYPE_WALK);
 		}
 	}
-}
-
-bool bIsPlayerGrounded(int client)
-{
-	if (GetEntProp(client, Prop_Send, "m_fFlags") & FL_ONGROUND)
-	{
-		return true;
-	}
-	return false;
-}
-
-bool bIsPlayerIncapacitated(int client)
-{
-	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
-	{
-		return true;
-	}
-	return false;
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerStopBury(Handle timer, DataPack pack)

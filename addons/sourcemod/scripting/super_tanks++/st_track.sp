@@ -185,19 +185,19 @@ void vTrack(int entity)
 			if (bVisible)
 			{
 				flBase = 80.0;
-				float flFront2 = flGetDistance(flPos, flAngle, 0.0, 0.0, flFront, entity);
-				float flDown2 = flGetDistance(flPos, flAngle, 90.0, 0.0, flDown, entity);
-				float flUp2 = flGetDistance(flPos, flAngle, -90.0, 0.0, flUp, entity);
-				float flLeft2 = flGetDistance(flPos, flAngle, 0.0, 90.0, flLeft, entity);
-				float flRight2 = flGetDistance(flPos, flAngle, 0.0, -90.0, flRight, entity);
-				float flDistance2 = flGetDistance(flPos, flAngle, 30.0, 0.0, flVector1, entity);
-				float flDistance3 = flGetDistance(flPos, flAngle, 30.0, 45.0, flVector2, entity);
-				float flDistance4 = flGetDistance(flPos, flAngle, 0.0, 45.0, flVector3, entity);
-				float flDistance5 = flGetDistance(flPos, flAngle, -30.0, 45.0, flVector4, entity);
-				float flDistance6 = flGetDistance(flPos, flAngle, -30.0, 0.0, flVector5, entity);
-				float flDistance7 = flGetDistance(flPos, flAngle, -30.0, -45.0, flVector6, entity);
-				float flDistance8 = flGetDistance(flPos, flAngle, 0.0, -45.0, flVector7, entity);
-				float flDistance9 = flGetDistance(flPos, flAngle, 30.0, -45.0, flVector8, entity);
+				float flFront2 = flGetDistance(flPos, flAngle, 0.0, 0.0, flFront, entity, 3);
+				float flDown2 = flGetDistance(flPos, flAngle, 90.0, 0.0, flDown, entity, 3);
+				float flUp2 = flGetDistance(flPos, flAngle, -90.0, 0.0, flUp, entity, 3);
+				float flLeft2 = flGetDistance(flPos, flAngle, 0.0, 90.0, flLeft, entity, 3);
+				float flRight2 = flGetDistance(flPos, flAngle, 0.0, -90.0, flRight, entity, 3);
+				float flDistance2 = flGetDistance(flPos, flAngle, 30.0, 0.0, flVector1, entity, 3);
+				float flDistance3 = flGetDistance(flPos, flAngle, 30.0, 45.0, flVector2, entity, 3);
+				float flDistance4 = flGetDistance(flPos, flAngle, 0.0, 45.0, flVector3, entity, 3);
+				float flDistance5 = flGetDistance(flPos, flAngle, -30.0, 45.0, flVector4, entity, 3);
+				float flDistance6 = flGetDistance(flPos, flAngle, -30.0, 0.0, flVector5, entity, 3);
+				float flDistance7 = flGetDistance(flPos, flAngle, -30.0, -45.0, flVector6, entity, 3);
+				float flDistance8 = flGetDistance(flPos, flAngle, 0.0, -45.0, flVector7, entity, 3);
+				float flDistance9 = flGetDistance(flPos, flAngle, 30.0, -45.0, flVector8, entity, 3);
 				NormalizeVector(flFront, flFront);
 				NormalizeVector(flUp, flUp);
 				NormalizeVector(flDown, flDown);
@@ -341,129 +341,6 @@ void vTrack(int entity)
 			}
 		}
 	}
-}
-
-void vCopyVector(float source[3], float target[3])
-{
-	target[0] = source[0];
-	target[1] = source[1];
-	target[2] = source[2];
-}
-
-float flGetAngle(float angle1[3], float angle2[3])
-{
-	return ArcCosine(GetVectorDotProduct(angle1, angle2) / (GetVectorLength(angle1) * GetVectorLength(angle2)));
-}
-
-float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity) 
-{
-	float flAngle[3];
-	vCopyVector(angle, flAngle);
-	flAngle[0] += offset1;
-	flAngle[1] += offset2;
-	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
-	float flDistance = flGetRayDistance(pos, flAngle, entity);
-	return flDistance;
-}
-
-float flGetRayDistance(float pos[3], float angle[3], int entity)
-{
-	float flHitPos[3];
-	iGetRayHitPos(pos, angle, flHitPos, entity);
-	return GetVectorDistance(pos, flHitPos);
-}
-
-int iGetRandomTarget(float pos[3], float angle[3])
-{
-	float flMin = 4.0;
-	float flPos[3];
-	float flAngle;
-	int iTarget;
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor))
-		{
-			GetClientEyePosition(iSurvivor, flPos);
-			MakeVectorFromPoints(pos, flPos, flPos);
-			flAngle = flGetAngle(angle, flPos);
-			if (flAngle <= flMin)
-			{
-				flMin = flAngle;
-				iTarget = iSurvivor;
-			}
-		}
-	}
-	return iTarget;
-}
-
-int iGetRGBColor(int red, int green, int blue) 
-{
-	return (blue * 65536) + (green * 256) + red;
-}
-
-int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false)
-{
-	int iHit = 0;
-	Handle hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, entity);
-	if (TR_DidHit(hTrace))
-	{
-		TR_GetEndPosition(hitpos, hTrace);
-		iHit = TR_GetEntityIndex(hTrace);
-	}
-	delete hTrace;
-	if (offset)
-	{
-		float flVector[3];
-		MakeVectorFromPoints(hitpos, pos, flVector);
-		NormalizeVector(flVector, flVector);
-		ScaleVector(flVector, 15.0);
-		AddVectors(hitpos, flVector, hitpos);
-	}
-	return iHit;
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
-}
-
-public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
-{
-	if (entity == data || bIsValidClient(entity))
-	{
-		return false;
-	}
-	return true;
-}
-
-public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
-{
-	if (entity == data || bIsSurvivor(entity))
-	{
-		return false;
-	}
-	return true;
-}
-
-bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int flag)
-{
-	Handle hTrace;
-	switch (flag)
-	{
-		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
-		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
-	}
-	if (TR_DidHit(hTrace))
-	{
-		return false;
-	}
-	delete hTrace;
-	return true;
 }
 
 public Action tTimerTrack(Handle timer, DataPack pack)

@@ -190,11 +190,6 @@ void vVisionHit(int client, int owner, int chance, int enabled)
 	}
 }
 
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
 public Action tTimerVision(Handle timer, DataPack pack)
 {
 	pack.Reset();

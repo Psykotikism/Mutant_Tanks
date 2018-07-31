@@ -172,12 +172,17 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iAcidAbility == 1 && bIsL4D2Game())
+	if (strcmp(name, "player_death") == 0)
 	{
-		vAcid(client, client);
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iAcidAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iAcidAbility[ST_TankType(iTank)] : g_iAcidAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iAcidAbility == 1 && bIsL4D2Game())
+		{
+			vAcid(iTank, iTank);
+		}
 	}
 }
 
@@ -234,9 +239,4 @@ void vAcidHit(int client, int owner, int chance, int enabled)
 	{
 		bIsL4D2Game() ? vAcid(client, owner) : SDKCall(g_hSDKPukePlayer, client, owner, true);
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }

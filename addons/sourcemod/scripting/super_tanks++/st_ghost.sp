@@ -316,22 +316,6 @@ public void ST_Ability(int client)
 	}
 }
 
-void vGhost(int client, int slot)
-{
-	if (bIsSurvivor(client) && GetPlayerWeaponSlot(client, slot) > 0)
-	{
-		SDKHooks_DropWeapon(client, GetPlayerWeaponSlot(client, slot), NULL_VECTOR, NULL_VECTOR);
-	}
-}
-
-void vGhostDrop(int client, char[] slots, char[] number, int slot)
-{
-	if (StrContains(slots, number) != -1)
-	{
-		vGhost(client, slot);
-	}
-}
-
 void vGhostHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
@@ -349,11 +333,6 @@ void vGhostHit(int client, int owner, int chance, int enabled)
 			case 2: EmitSoundToClient(client, SOUND_INFECTED2, owner);
 		}
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerGhost(Handle timer, DataPack pack)

@@ -102,19 +102,9 @@ public void ST_Ability(int client)
 		{
 			for (int iZombie = 1; iZombie <= iZombieAmount; iZombie++)
 			{
-				char sCommand[32];
-				sCommand = bIsL4D2Game() ? "z_spawn_old" : "z_spawn";
-				int iCmdFlags = GetCommandFlags(sCommand);
-				SetCommandFlags(sCommand, iCmdFlags & ~FCVAR_CHEAT);
-				FakeClientCommand(client, "%s zombie area", sCommand);
-				SetCommandFlags(sCommand, iCmdFlags|FCVAR_CHEAT);
+				vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", "zombie area");
 			}
 			g_iZombieInterval[client] = 0;
 		}
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }

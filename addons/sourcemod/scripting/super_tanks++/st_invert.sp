@@ -183,16 +183,21 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iInvertAbility = !g_bTankConfig[ST_TankType(client)] ? g_iInvertAbility[ST_TankType(client)] : g_iInvertAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iInvertAbility == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iInvertAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iInvertAbility[ST_TankType(iTank)] : g_iInvertAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iInvertAbility == 1)
 		{
-			if (bIsSurvivor(iSurvivor) && g_bInvert[iSurvivor])
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				g_bInvert[iSurvivor] = false;
+				if (bIsSurvivor(iSurvivor) && g_bInvert[iSurvivor])
+				{
+					g_bInvert[iSurvivor] = false;
+				}
 			}
 		}
 	}
@@ -234,11 +239,6 @@ void vInvertHit(int client, int owner, int chance, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerStopInvert(Handle timer, DataPack pack)

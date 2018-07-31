@@ -153,16 +153,21 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iNullifyAbility == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iNullifyAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iNullifyAbility[ST_TankType(iTank)] : g_iNullifyAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iNullifyAbility == 1)
 		{
-			if (bIsSurvivor(iSurvivor) && g_bNullify[iSurvivor])
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				g_bNullify[iSurvivor] = false;
+				if (bIsSurvivor(iSurvivor) && g_bNullify[iSurvivor])
+				{
+					g_bNullify[iSurvivor] = false;
+				}
 			}
 		}
 	}
@@ -204,11 +209,6 @@ void vNullifyHit(int client, int owner, int chance, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerStopNullify(Handle timer, DataPack pack)

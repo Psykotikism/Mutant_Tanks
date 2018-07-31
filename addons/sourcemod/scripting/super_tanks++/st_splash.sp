@@ -66,28 +66,19 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Incap(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iSplashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSplashAbility[ST_TankType(client)] : g_iSplashAbility2[ST_TankType(client)];
-	int iSplashChance = !g_bTankConfig[ST_TankType(client)] ? g_iSplashChance[ST_TankType(client)] : g_iSplashChance2[ST_TankType(client)];
-	if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && ST_TankAllowed(client))
+	if (strcmp(name, "player_incapacitated") == 0)
 	{
-		CreateTimer(2.9, tTimerSplash, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iSplashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashAbility[ST_TankType(iTank)] : g_iSplashAbility2[ST_TankType(iTank)];
+		int iSplashChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashChance[ST_TankType(iTank)] : g_iSplashChance2[ST_TankType(iTank)];
+		if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && ST_TankAllowed(iTank))
+		{
+			CreateTimer(2.9, tTimerSplash, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+		}
 	}
-}
-
-bool bIsPlayerIncapacitated(int client)
-{
-	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
-	{
-		return true;
-	}
-	return false;
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }
 
 public Action tTimerSplash(Handle timer, any userid)

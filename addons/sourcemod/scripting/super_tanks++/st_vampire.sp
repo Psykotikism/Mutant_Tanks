@@ -169,8 +169,3 @@ void vVampireHit(int client, int chance, int enabled)
 		SetEntityHealth(client, iRealHealth);
 	}
 }
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}

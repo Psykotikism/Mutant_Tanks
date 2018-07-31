@@ -186,11 +186,6 @@ void vShakeHit(int client, int owner, int chance, int enabled)
 	}
 }
 
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
 public Action tTimerShake(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -206,16 +201,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 	}
 	if (bIsSurvivor(iSurvivor))
 	{
-		Handle hShakeTarget = StartMessageOne("Shake", iSurvivor);
-		if (hShakeTarget != null)
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
-			bfWrite.WriteByte(0);
-			bfWrite.WriteFloat(16.0);
-			bfWrite.WriteFloat(0.5);
-			bfWrite.WriteFloat(1.0);
-			EndMessage();
-		}
+		vShake(iSurvivor);
 	}
 	return Plugin_Continue;
 }

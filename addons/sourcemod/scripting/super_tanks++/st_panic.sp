@@ -148,33 +148,14 @@ public void ST_Ability(int client)
 	}
 }
 
-void vPanic(int client)
-{
-	char sCommand[32] = "director_force_panic_event";
-	int iCmdFlags = GetCommandFlags(sCommand);
-	SetCommandFlags(sCommand, iCmdFlags & ~FCVAR_CHEAT);
-	FakeClientCommand(client, "%s", sCommand);
-	SetCommandFlags(sCommand, iCmdFlags|FCVAR_CHEAT);
-}
-
 void vPanicHit(int client)
 {
 	int iPanicChance = !g_bTankConfig[ST_TankType(client)] ? g_iPanicChance[ST_TankType(client)] : g_iPanicChance2[ST_TankType(client)];
 	int iPanicHit = !g_bTankConfig[ST_TankType(client)] ? g_iPanicHit[ST_TankType(client)] : g_iPanicHit2[ST_TankType(client)];
 	if (iPanicHit == 1 && GetRandomInt(1, iPanicChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		vPanic(client);
+		vCheatCommand(client, "director_force_panic_event");
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }
 
 public Action tTimerPanic(Handle timer, any userid)
@@ -188,7 +169,7 @@ public Action tTimerPanic(Handle timer, any userid)
 	}
 	if (ST_TankAllowed(iTank))
 	{
-		vPanic(iTank);
+		vCheatCommand(iTank, "director_force_panic_event");
 	}
 	return Plugin_Continue;
 }

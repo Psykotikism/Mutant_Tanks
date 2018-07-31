@@ -25,6 +25,8 @@ int g_iWarpChance[ST_MAXTYPES + 1];
 int g_iWarpChance2[ST_MAXTYPES + 1];
 int g_iWarpHit[ST_MAXTYPES + 1];
 int g_iWarpHit2[ST_MAXTYPES + 1];
+int g_iWarpMode[ST_MAXTYPES + 1];
+int g_iWarpMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -140,6 +142,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iWarpChance[iIndex] = iSetCellLimit(g_iWarpChance[iIndex], 1, 9999999999)) : (g_iWarpChance2[iIndex] = iSetCellLimit(g_iWarpChance2[iIndex], 1, 9999999999));
 			main ? (g_iWarpHit[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", 0)) : (g_iWarpHit2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", g_iWarpHit[iIndex]));
 			main ? (g_iWarpHit[iIndex] = iSetCellLimit(g_iWarpHit[iIndex], 0, 1)) : (g_iWarpHit2[iIndex] = iSetCellLimit(g_iWarpHit2[iIndex], 0, 1));
+			main ? (g_iWarpMode[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Mode", 0)) : (g_iWarpMode2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Mode", g_iWarpMode[iIndex]));
+			main ? (g_iWarpMode[iIndex] = iSetCellLimit(g_iWarpMode[iIndex], 0, 1)) : (g_iWarpMode2[iIndex] = iSetCellLimit(g_iWarpMode2[iIndex], 0, 1));
 			main ? (g_flWarpInterval[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Interval", 5.0)) : (g_flWarpInterval2[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Interval", g_flWarpInterval[iIndex]));
 			main ? (g_flWarpInterval[iIndex] = flSetFloatLimit(g_flWarpInterval[iIndex], 0.1, 9999999999.0)) : (g_flWarpInterval2[iIndex] = flSetFloatLimit(g_flWarpInterval2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
@@ -178,105 +182,38 @@ void vWarpHit(int client, int owner)
 	}
 }
 
-void vCreateParticle(int client, char[] particlename, float time, float origin)
-{
-	if (bIsValidClient(client))
-	{
-		int iParticle = CreateEntityByName("info_particle_system");
-		if (IsValidEntity(iParticle))
-		{
-			float flPos[3];
-			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
-			flPos[2] += origin;
-			DispatchKeyValue(iParticle, "effect_name", particlename);
-			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iParticle);
-			ActivateEntity(iParticle);
-			AcceptEntityInput(iParticle, "Start");
-			vSetEntityParent(iParticle, client);
-			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteEntity(iParticle, time);
-		}
-	}
-}
-
-void vDeleteEntity(int entity, float time = 0.1)
-{
-	if (bIsValidEntRef(entity))
-	{
-		char sVariant[64];
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		AcceptEntityInput(entity, "ClearParent");
-		SetVariantString(sVariant);
-		AcceptEntityInput(entity, "AddOutput");
-		AcceptEntityInput(entity, "FireUser1");
-	}
-}
-
-void vPrecacheParticle(char[] particlename)
-{
-	int iParticle = CreateEntityByName("info_particle_system");
-	if (IsValidEntity(iParticle))
-	{
-		DispatchKeyValue(iParticle, "effect_name", particlename);
-		DispatchSpawn(iParticle);
-		ActivateEntity(iParticle);
-		AcceptEntityInput(iParticle, "Start");
-		vSetEntityParent(iParticle, iParticle);
-		iParticle = EntIndexToEntRef(iParticle);
-		vDeleteEntity(iParticle);
-	}
-}
-
-void vSetEntityParent(int entity, int parent)
-{
-	SetVariantString("!activator");
-	AcceptEntityInput(entity, "SetParent", parent);
-}
-
-int iGetRandomSurvivor()
-{
-	int iSurvivorCount;
-	int iSurvivors[MAXPLAYERS + 1];
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor))
-		{
-			iSurvivors[iSurvivorCount++] = iSurvivor;
-		}
-	}
-	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntRef(int entity)
-{
-	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
-}
-
 public Action tTimerWarp(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	int iWarpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpAbility[ST_TankType(iTank)] : g_iWarpAbility2[ST_TankType(iTank)];
+	int iWarpMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpMode[ST_TankType(iTank)] : g_iWarpMode2[ST_TankType(iTank)];
 	if (iWarpAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
 	if (ST_TankAllowed(iTank))
 	{
-		int iTarget = iGetRandomSurvivor();
-		if (iTarget > 0)
+		int iSurvivor = iGetRandomSurvivor(iTank);
+		if (iSurvivor > 0)
 		{
-			float flOrigin[3];
-			float flAngles[3];
-			GetClientAbsOrigin(iTarget, flOrigin);
-			GetClientAbsAngles(iTarget, flAngles);
+			float flTankOrigin[3];
+			float flTankAngles[3];
+			GetClientAbsOrigin(iTank, flTankOrigin);
+			GetClientAbsAngles(iTank, flTankAngles);
+			float flSurvivorOrigin[3];
+			float flSurvivorAngles[3];
+			GetClientAbsOrigin(iSurvivor, flSurvivorOrigin);
+			GetClientAbsAngles(iSurvivor, flSurvivorAngles);
 			vCreateParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
-			TeleportEntity(iTank, flOrigin, flAngles, NULL_VECTOR);
+			if (iWarpMode == 1)
+			{
+				vCreateParticle(iSurvivor, PARTICLE_ELECTRICITY, 1.0, 0.0);
+			}
+			TeleportEntity(iTank, flSurvivorOrigin, flSurvivorAngles, NULL_VECTOR);
+			if (iWarpMode == 1)
+			{
+				TeleportEntity(iSurvivor, flTankOrigin, flTankAngles, NULL_VECTOR);
+			}
 		}
 	}
 	return Plugin_Continue;

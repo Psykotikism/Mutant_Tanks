@@ -71,29 +71,34 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Incap(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iRespawnAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRespawnAbility[ST_TankType(client)] : g_iRespawnAbility2[ST_TankType(client)];
-	int iRespawnChance = !g_bTankConfig[ST_TankType(client)] ? g_iRespawnChance[ST_TankType(client)] : g_iRespawnChance2[ST_TankType(client)];
-	if (iRespawnAbility == 1 && GetRandomInt(1, iRespawnChance) == 1 && ST_TankAllowed(client))
+	if (strcmp(name, "player_incapacitated") == 0)
 	{
-		float flPos[3];
-		float flAngles[3];
-		int iFlags = GetEntProp(client, Prop_Send, "m_fFlags");
-		int iSequence = GetEntProp(client, Prop_Data, "m_nSequence");
-		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
-		GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
-		DataPack dpDataPack;
-		CreateDataTimer(2.9, tTimerRespawn, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-		dpDataPack.WriteCell(GetClientUserId(client));
-		dpDataPack.WriteCell(iFlags);
-		dpDataPack.WriteCell(iSequence);
-		dpDataPack.WriteFloat(flPos[0]);
-		dpDataPack.WriteFloat(flPos[1]);
-		dpDataPack.WriteFloat(flPos[2]);
-		dpDataPack.WriteFloat(flAngles[0]);
-		dpDataPack.WriteFloat(flAngles[1]);
-		dpDataPack.WriteFloat(flAngles[2]);
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iRespawnAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAbility[ST_TankType(iTank)] : g_iRespawnAbility2[ST_TankType(iTank)];
+		int iRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnChance[ST_TankType(iTank)] : g_iRespawnChance2[ST_TankType(iTank)];
+		if (iRespawnAbility == 1 && GetRandomInt(1, iRespawnChance) == 1 && ST_TankAllowed(iTank))
+		{
+			float flPos[3];
+			float flAngles[3];
+			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags");
+			int iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
+			GetEntPropVector(iTank, Prop_Send, "m_vecOrigin", flPos);
+			GetEntPropVector(iTank, Prop_Send, "m_angRotation", flAngles);
+			DataPack dpDataPack;
+			CreateDataTimer(2.9, tTimerRespawn, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+			dpDataPack.WriteCell(GetClientUserId(iTank));
+			dpDataPack.WriteCell(iFlags);
+			dpDataPack.WriteCell(iSequence);
+			dpDataPack.WriteFloat(flPos[0]);
+			dpDataPack.WriteFloat(flPos[1]);
+			dpDataPack.WriteFloat(flPos[2]);
+			dpDataPack.WriteFloat(flAngles[0]);
+			dpDataPack.WriteFloat(flAngles[1]);
+			dpDataPack.WriteFloat(flAngles[2]);
+		}
 	}
 }
 
@@ -147,15 +152,6 @@ int iRespawn(int client, int count)
 		}
 	}
 	return iTank;
-}
-
-bool bIsPlayerIncapacitated(int client)
-{
-	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
-	{
-		return true;
-	}
-	return false;
 }
 
 public Action tTimerRespawn(Handle timer, DataPack pack)

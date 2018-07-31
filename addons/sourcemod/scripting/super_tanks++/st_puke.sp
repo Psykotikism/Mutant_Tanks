@@ -170,8 +170,3 @@ void vPukeHit(int client, int owner, int chance, int enabled)
 		SDKCall(g_hSDKPukePlayer, client, owner, true);
 	}
 }
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}

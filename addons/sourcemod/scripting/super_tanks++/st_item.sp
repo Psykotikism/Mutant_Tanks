@@ -65,42 +65,47 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iItemAbility = !g_bTankConfig[ST_TankType(client)] ? g_iItemAbility[ST_TankType(client)] : g_iItemAbility2[ST_TankType(client)];
-	int iItemChance = !g_bTankConfig[ST_TankType(client)] ? g_iItemChance[ST_TankType(client)] : g_iItemChance2[ST_TankType(client)];
-	int iItemMode = !g_bTankConfig[ST_TankType(client)] ? g_iItemMode[ST_TankType(client)] : g_iItemMode2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iItemAbility == 1 && GetRandomInt(1, iItemChance) == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		char sItems[5][64];
-		char sItemLoadout[325];
-		sItemLoadout = !g_bTankConfig[ST_TankType(client)] ? g_sItemLoadout[ST_TankType(client)] : g_sItemLoadout2[ST_TankType(client)];
-		TrimString(sItemLoadout);
-		ExplodeString(sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iItemAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemAbility[ST_TankType(iTank)] : g_iItemAbility2[ST_TankType(iTank)];
+		int iItemChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemChance[ST_TankType(iTank)] : g_iItemChance2[ST_TankType(iTank)];
+		int iItemMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemMode[ST_TankType(iTank)] : g_iItemMode2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iItemAbility == 1 && GetRandomInt(1, iItemChance) == 1)
 		{
-			if (bIsSurvivor(iSurvivor))
+			char sItems[5][64];
+			char sItemLoadout[325];
+			sItemLoadout = !g_bTankConfig[ST_TankType(iTank)] ? g_sItemLoadout[ST_TankType(iTank)] : g_sItemLoadout2[ST_TankType(iTank)];
+			TrimString(sItemLoadout);
+			ExplodeString(sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				switch (iItemMode)
+				if (bIsSurvivor(iSurvivor))
 				{
-					case 0:
+					switch (iItemMode)
 					{
-						switch (GetRandomInt(1, 5))
+						case 0:
 						{
-							case 1: vCheatCommand(iSurvivor, "give", sItems[0]);
-							case 2: vCheatCommand(iSurvivor, "give", sItems[1]);
-							case 3: vCheatCommand(iSurvivor, "give", sItems[2]);
-							case 4: vCheatCommand(iSurvivor, "give", sItems[3]);
-							case 5: vCheatCommand(iSurvivor, "give", sItems[4]);
-						}
-					}
-					case 1:
-					{
-						for (int iItem = 0; iItem < sizeof(sItems); iItem++)
-						{
-							if (StrContains(sItemLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
+							switch (GetRandomInt(1, 5))
 							{
-								vCheatCommand(iSurvivor, "give", sItems[iItem]);
+								case 1: vCheatCommand(iSurvivor, "give", sItems[0]);
+								case 2: vCheatCommand(iSurvivor, "give", sItems[1]);
+								case 3: vCheatCommand(iSurvivor, "give", sItems[2]);
+								case 4: vCheatCommand(iSurvivor, "give", sItems[3]);
+								case 5: vCheatCommand(iSurvivor, "give", sItems[4]);
+							}
+						}
+						case 1:
+						{
+							for (int iItem = 0; iItem < sizeof(sItems); iItem++)
+							{
+								if (StrContains(sItemLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
+								{
+									vCheatCommand(iSurvivor, "give", sItems[iItem]);
+								}
 							}
 						}
 					}
@@ -108,12 +113,4 @@ public void ST_Death(int client)
 			}
 		}
 	}
-}
-
-void vCheatCommand(int client, char[] command, char[] arguments = "", any ...)
-{
-	int iCmdFlags = GetCommandFlags(command);
-	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
-	FakeClientCommand(client, "%s %s", command, arguments);
-	SetCommandFlags(command, iCmdFlags|FCVAR_CHEAT);
 }

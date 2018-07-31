@@ -161,45 +161,51 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_AbilityThrow(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	if (ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (strcmp(name, "ability_use") == 0)
 	{
-		int iProp = -1;
-		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		if (ST_TankAllowed(iTank) && IsPlayerAlive(iTank))
 		{
-			char sModel[128];
-			GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-			if (strcmp(sModel, MODEL_SHIELD, false) == 0)
+			int iProp = -1;
+			while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 			{
-				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == client)
+				char sModel[128];
+				GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+				if (strcmp(sModel, MODEL_SHIELD, false) == 0)
 				{
-					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
+					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+					if (iOwner == iTank)
+					{
+						SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
+					}
 				}
 			}
 		}
 	}
-}
-
-public void ST_Death(int client)
-{
-	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iShieldAbility == 1)
+	else if (strcmp(name, "player_death") == 0)
 	{
-		int iProp = -1;
-		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iShieldAbility == 1)
 		{
-			char sModel[128];
-			GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-			if (strcmp(sModel, MODEL_SHIELD, false) == 0)
+			int iProp = -1;
+			while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 			{
-				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == client)
+				char sModel[128];
+				GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+				if (strcmp(sModel, MODEL_SHIELD, false) == 0)
 				{
-					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-					AcceptEntityInput(iProp, "Kill");
+					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+					if (iOwner == iTank)
+					{
+						SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+						AcceptEntityInput(iProp, "Kill");
+					}
 				}
 			}
 		}
@@ -251,8 +257,7 @@ void vShield(int client, bool shield)
 			SetEntityModel(iShield, MODEL_SHIELD);
 			DispatchKeyValueVector(iShield, "origin", flOrigin);
 			DispatchSpawn(iShield);
-			SetVariantString("!activator");
-			AcceptEntityInput(iShield, "SetParent", client);
+			vSetEntityParent(iShield, client);
 			SetEntityRenderMode(iShield, RENDER_TRANSTEXTURE);
 			SetEntityRenderColor(iShield, iRed, iGreen, iBlue, 50);
 			SetEntProp(iShield, Prop_Send, "m_CollisionGroup", 1);
@@ -282,16 +287,6 @@ void vShield(int client, bool shield)
 		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		g_bShield[client] = false;
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }
 
 public Action tTimerShield(Handle timer, any userid)

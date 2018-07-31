@@ -190,16 +190,6 @@ void vHurtHit(int client, int owner, int chance, int enabled)
 	}
 }
 
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
-}
-
 public Action tTimerHurt(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -218,18 +208,7 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 		char sDamage[6];
 		int iHurtDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iHurtDamage[ST_TankType(iTank)] : g_iHurtDamage2[ST_TankType(iTank)];
 		IntToString(iHurtDamage, sDamage, sizeof(sDamage));
-		int iPointHurt = CreateEntityByName("point_hurt");
-		if (bIsValidEntity(iPointHurt))
-		{
-			DispatchKeyValue(iSurvivor, "targetname", "hurtme");
-			DispatchKeyValue(iPointHurt, "Damage", sDamage);
-			DispatchKeyValue(iPointHurt, "DamageTarget", "hurtme");
-			DispatchKeyValue(iPointHurt, "DamageType", "2");
-			DispatchSpawn(iPointHurt);
-			AcceptEntityInput(iPointHurt, "Hurt", iSurvivor);
-			AcceptEntityInput(iPointHurt, "Kill");
-			DispatchKeyValue(iSurvivor, "targetname", "donthurtme");
-		}
+		vDamage(iSurvivor, sDamage);
 	}
 	return Plugin_Continue;
 }

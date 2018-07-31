@@ -151,19 +151,24 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iIceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIceAbility[ST_TankType(client)] : g_iIceAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iIceAbility == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iIceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iIceAbility[ST_TankType(iTank)] : g_iIceAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iIceAbility == 1)
 		{
-			if (bIsSurvivor(iSurvivor) && g_bIce[iSurvivor])
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerStopIce, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-				dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-				dpDataPack.WriteCell(GetClientUserId(client));
+				if (bIsSurvivor(iSurvivor) && g_bIce[iSurvivor])
+				{
+					DataPack dpDataPack;
+					CreateDataTimer(0.1, tTimerStopIce, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+					dpDataPack.WriteCell(GetClientUserId(iTank));
+				}
 			}
 		}
 	}
@@ -229,11 +234,6 @@ void vStopIce(int client)
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 		EmitAmbientSound(SOUND_BULLET, flPos, client, SNDLEVEL_RAIDSIREN);
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerStopIce(Handle timer, DataPack pack)

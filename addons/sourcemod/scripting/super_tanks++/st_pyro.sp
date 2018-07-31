@@ -100,20 +100,6 @@ public void ST_Spawn(int client)
 	}
 }
 
-bool bIsPlayerFired(int client)
-{
-	if (GetEntProp(client, Prop_Data, "m_fFlags") & FL_ONFIRE)
-	{
-		return true;
-	}
-	return false;
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
 public Action tTimerPyro(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);

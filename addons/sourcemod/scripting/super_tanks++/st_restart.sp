@@ -146,9 +146,12 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_RoundStart()
+public void ST_Event(Event event, const char[] name)
 {
-	CreateTimer(10.0, tTimerRestartCoordinates, _, TIMER_FLAG_NO_MAPCHANGE);
+	if (strcmp(name, "round_start") == 0)
+	{
+		CreateTimer(10.0, tTimerRestartCoordinates, _, TIMER_FLAG_NO_MAPCHANGE);
+	}
 }
 
 public void ST_Ability(int client)
@@ -189,11 +192,7 @@ void vRestartHit(int client, int owner, int chance, int enabled)
 		{
 			if (StrContains(sRestartLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
 			{
-				char sCommand[32] = "give";
-				int iCmdFlags = GetCommandFlags(sCommand);
-				SetCommandFlags(sCommand, iCmdFlags & ~FCVAR_CHEAT);
-				FakeClientCommand(client, "%s %s", sCommand, sItems[iItem]);
-				SetCommandFlags(sCommand, iCmdFlags|FCVAR_CHEAT);
+				vCheatCommand(client, "give", sItems[iItem]);
 			}
 		}
 		if (g_bRestartValid)
@@ -214,11 +213,6 @@ void vRestartHit(int client, int owner, int chance, int enabled)
 			}
 		}
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerRestartCoordinates(Handle timer)

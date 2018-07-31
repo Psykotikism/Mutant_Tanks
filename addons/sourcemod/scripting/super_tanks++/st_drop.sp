@@ -336,89 +336,94 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iDropAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
-	int iDropChance = !g_bTankConfig[ST_TankType(client)] ? g_iDropChance[ST_TankType(client)] : g_iDropChance2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iDropAbility == 1 && GetRandomInt(1, iDropChance) == 1 && bIsValidEntity(g_iDrop[client]))
+	if (strcmp(name, "player_death") == 0)
 	{
-		float flDropWeaponScale = !g_bTankConfig[ST_TankType(client)] ? g_flDropWeaponScale[ST_TankType(client)] : g_flDropWeaponScale[ST_TankType(client)];
-		float flPos[3];
-		float flAngle[3];
-		GetClientEyePosition(client, flPos);
-		GetClientAbsAngles(client, flAngle);
-		if (StrContains(g_sWeaponClass[g_iDropWeapon[client]], "weapon") != -1)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iDropAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropAbility[ST_TankType(iTank)] : g_iDropAbility2[ST_TankType(iTank)];
+		int iDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropChance[ST_TankType(iTank)] : g_iDropChance2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iDropAbility == 1 && GetRandomInt(1, iDropChance) == 1 && bIsValidEntity(g_iDrop[iTank]))
 		{
-			int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[client]]);
-			if (bIsValidEntity(iDrop))
+			float flDropWeaponScale = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropWeaponScale[ST_TankType(iTank)] : g_flDropWeaponScale[ST_TankType(iTank)];
+			float flPos[3];
+			float flAngle[3];
+			GetClientEyePosition(iTank, flPos);
+			GetClientAbsAngles(iTank, flAngle);
+			if (StrContains(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon") != -1)
 			{
-				TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
-				DispatchSpawn(iDrop);
-				if (bIsL4D2Game())
+				int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[iTank]]);
+				if (bIsValidEntity(iDrop))
 				{
-					SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale);
+					TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
+					DispatchSpawn(iDrop);
+					if (bIsL4D2Game())
+					{
+						SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale);
+					}
+				}
+				int iAmmo;
+				int iClip;
+				if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_autoshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_spas") == 0)
+				{
+					iAmmo = g_cvSTFindConVar[0].IntValue;
+				}
+				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_pumpshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_chrome") == 0)
+				{
+					iAmmo = g_cvSTFindConVar[1].IntValue;
+				}
+				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_hunting_rifle") == 0)
+				{
+					iAmmo = g_cvSTFindConVar[2].IntValue;
+				}
+				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_ak47") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_desert") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_sg552") == 0)
+				{
+					iAmmo = g_cvSTFindConVar[3].IntValue;
+				}
+				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_grenade_launcher") == 0)
+				{
+					iAmmo = g_cvSTFindConVar[4].IntValue;
+				}
+				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg_silenced") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg_mp5") == 0)
+				{
+					iAmmo = g_cvSTFindConVar[5].IntValue;
+				}
+				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_scout") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_military") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_awp") == 0)
+				{
+					iAmmo = g_cvSTFindConVar[6].IntValue;
+				}
+				int iDropClipChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropClipChance[ST_TankType(iTank)] : g_iDropClipChance2[ST_TankType(iTank)];
+				if (GetRandomInt(1, iDropClipChance) == 1)
+				{
+					iClip = iAmmo; 
+				}
+				if (iClip > 0)
+				{
+					SetEntProp(iDrop, Prop_Send, "m_iClip1", iClip);
+				}
+				if (iAmmo > 0)
+				{
+					SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
 				}
 			}
-			int iAmmo;
-			int iClip;
-			if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_autoshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_shotgun_spas") == 0)
+			else
 			{
-				iAmmo = g_cvSTFindConVar[0].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_pumpshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_shotgun_chrome") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[1].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_hunting_rifle") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[2].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle_ak47") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle_desert") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_rifle_sg552") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[3].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_grenade_launcher") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[4].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_smg") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_smg_silenced") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_smg_mp5") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[5].IntValue;
-			}
-			else if (strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_sniper_scout") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_sniper_military") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[client]], "weapon_sniper_awp") == 0)
-			{
-				iAmmo = g_cvSTFindConVar[6].IntValue;
-			}
-			int iDropClipChance = !g_bTankConfig[ST_TankType(client)] ? g_iDropClipChance[ST_TankType(client)] : g_iDropClipChance2[ST_TankType(client)];
-			if (GetRandomInt(1, iDropClipChance) == 1)
-			{
-				iClip = iAmmo; 
-			}
-			if (iClip > 0)
-			{
-				SetEntProp(iDrop, Prop_Send, "m_iClip1", iClip);
-			}
-			if (iAmmo > 0)
-			{
-				SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
-			}
-		}
-		else
-		{
-			int iDrop = CreateEntityByName("weapon_melee");
-			if (bIsValidEntity(iDrop))
-			{
-				DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[client]]);
-				TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
-				DispatchSpawn(iDrop);
-				if (bIsL4D2Game())
+				int iDrop = CreateEntityByName("weapon_melee");
+				if (bIsValidEntity(iDrop))
 				{
-					SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale);
+					DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[iTank]]);
+					TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
+					DispatchSpawn(iDrop);
+					if (bIsL4D2Game())
+					{
+						SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale);
+					}
 				}
 			}
 		}
+		vDeleteDrop(iTank);
 	}
-	vDeleteDrop(client);
 }
 
 public void ST_Spawn(int client)
@@ -529,41 +534,6 @@ void vReset(int client)
 	g_iDropWeapon[client] = 0;
 }
 
-void vDeleteEntity(int entity, float time = 0.1)
-{
-	if (bIsValidEntRef(entity))
-	{
-		char sVariant[64];
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		AcceptEntityInput(entity, "ClearParent");
-		SetVariantString(sVariant);
-		AcceptEntityInput(entity, "AddOutput");
-		AcceptEntityInput(entity, "FireUser1");
-	}
-}
-
-void vSetVector(float target[3], float x, float y, float z)
-{
-	target[0] = x;
-	target[1] = y;
-	target[2] = z;
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
-}
-
-bool bIsValidEntRef(int entity)
-{
-	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
-}
-
 public Action tTimerDrop(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -592,8 +562,7 @@ public Action tTimerDrop(Handle timer, any userid)
 			SetEntityModel(iDrop, g_sWeaponModel[iWeapon]);
 			TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
 			DispatchSpawn(iDrop);
-			SetVariantString("!activator");
-			AcceptEntityInput(iDrop, "SetParent", iTank);
+			vSetEntityParent(iDrop, iTank);
 			switch (iPosition)
 			{
 				case 1: sPosition = "rhand";

@@ -161,36 +161,41 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iGravityAbility == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		int iProp = -1;
-		while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iGravityAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGravityAbility[ST_TankType(iTank)] : g_iGravityAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iGravityAbility == 1)
 		{
-			if (bIsL4D2Game())
+			int iProp = -1;
+			while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
 			{
-				int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
-				if (iOwner == client)
+				if (bIsL4D2Game())
+				{
+					int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
+					if (iOwner == iTank)
+					{
+						AcceptEntityInput(iProp, "Kill");
+					}
+				}
+				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+				if (iOwner == iTank)
 				{
 					AcceptEntityInput(iProp, "Kill");
 				}
 			}
-			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-			if (iOwner == client)
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				AcceptEntityInput(iProp, "Kill");
-			}
-		}
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
-			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-				dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-				dpDataPack.WriteCell(GetClientUserId(client));
+				if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
+				{
+					DataPack dpDataPack;
+					CreateDataTimer(0.1, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+					dpDataPack.WriteCell(GetClientUserId(iTank));
+				}
 			}
 		}
 	}
@@ -219,8 +224,7 @@ public void ST_Ability(int client)
 				DispatchKeyValue(iBlackhole, "radius", "750");
 				DispatchKeyValueFloat(iBlackhole, "magnitude", flGravityForce);
 				DispatchKeyValue(iBlackhole, "spawnflags", "8");
-				SetVariantString("!activator");
-				AcceptEntityInput(iBlackhole, "SetParent", client);
+				vSetEntityParent(iBlackhole, client);
 				AcceptEntityInput(iBlackhole, "Enable");
 				SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
 				if (bIsL4D2Game())
@@ -261,16 +265,6 @@ void vGravityHit(int client, int owner, int chance, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }
 
 public Action tTimerStopGravity(Handle timer, DataPack pack)

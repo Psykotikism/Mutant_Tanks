@@ -22,8 +22,6 @@ char g_sThrowCarOptions2[ST_MAXTYPES + 1][7];
 char g_sThrowInfectedOptions[ST_MAXTYPES + 1][15];
 char g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15];
 ConVar g_cvSTFindConVar;
-int g_iTankEnabled[ST_MAXTYPES + 1];
-int g_iTankEnabled2[ST_MAXTYPES + 1];
 int g_iThrowAbility[ST_MAXTYPES + 1];
 int g_iThrowAbility2[ST_MAXTYPES + 1];
 
@@ -69,8 +67,6 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
-			main ? (g_iTankEnabled[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", 0)) : (g_iTankEnabled2[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", g_iTankEnabled[iIndex]));
-			main ? (g_iTankEnabled[iIndex] = iSetCellLimit(g_iTankEnabled[iIndex], 0, 1)) : (g_iTankEnabled2[iIndex] = iSetCellLimit(g_iTankEnabled2[iIndex], 0, 1));
 			main ? (g_iThrowAbility[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", 0)) : (g_iThrowAbility2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", g_iThrowAbility[iIndex]));
 			main ? (g_iThrowAbility[iIndex] = iSetCellLimit(g_iThrowAbility[iIndex], 0, 3)) : (g_iThrowAbility2[iIndex] = iSetCellLimit(g_iThrowAbility2[iIndex], 0, 3));
 			main ? (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions[iIndex], sizeof(g_sThrowCarOptions[]), "123")) : (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions2[iIndex], sizeof(g_sThrowCarOptions2[]), g_sThrowCarOptions[iIndex]));
@@ -105,41 +101,6 @@ public void ST_RockThrow(int client, int entity)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(EntIndexToEntRef(entity));
 	}
-}
-
-void vDeleteEntity(int entity, float time = 0.1)
-{
-	if (bIsValidEntRef(entity))
-	{
-		char sVariant[64];
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		AcceptEntityInput(entity, "ClearParent");
-		SetVariantString(sVariant);
-		AcceptEntityInput(entity, "AddOutput");
-		AcceptEntityInput(entity, "FireUser1");
-	}
-}
-
-void vSpawnInfected(int client, char[] infected)
-{
-	ChangeClientTeam(client, 3);
-	char sCommand[32];
-	sCommand = bIsL4D2Game() ? "z_spawn_old" : "z_spawn";
-	int iCmdFlags = GetCommandFlags(sCommand);
-	SetCommandFlags(sCommand, iCmdFlags & ~FCVAR_CHEAT);
-	FakeClientCommand(client, "%s %s", sCommand, infected);
-	SetCommandFlags(sCommand, iCmdFlags|FCVAR_CHEAT);
-	KickClient(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
-}
-
-bool bIsValidEntRef(int entity)
-{
-	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
 public Action tTimerCarThrow(Handle timer, DataPack pack)

@@ -130,18 +130,25 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death2(int enemy, int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iSmashAbility = !g_bTankConfig[ST_TankType(enemy)] ? g_iSmashAbility[ST_TankType(enemy)] : g_iSmashAbility2[ST_TankType(enemy)];
-	if (ST_TankAllowed(enemy) && iSmashAbility == 1 && bIsSurvivor(client))
+	if (strcmp(name, "player_death") == 0)
 	{
-		int iCorpse = -1;
-		while ((iCorpse = FindEntityByClassname(iCorpse, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+		int iSurvivorId = event.GetInt("userid");
+		int iSurvivor = GetClientOfUserId(iSurvivorId);
+		int iTankId = event.GetInt("attacker");
+		int iTank = GetClientOfUserId(iTankId);
+		int iSmashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSmashAbility[ST_TankType(iTank)] : g_iSmashAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iSmashAbility == 1 && bIsSurvivor(iSurvivor))
 		{
-			int iOwner = GetEntPropEnt(iCorpse, Prop_Send, "m_hOwnerEntity");
-			if (client == iOwner)
+			int iCorpse = -1;
+			while ((iCorpse = FindEntityByClassname(iCorpse, "survivor_death_model")) != INVALID_ENT_REFERENCE)
 			{
-				AcceptEntityInput(iCorpse, "Kill");
+				int iOwner = GetEntPropEnt(iCorpse, Prop_Send, "m_hOwnerEntity");
+				if (iSurvivor == iOwner)
+				{
+					AcceptEntityInput(iCorpse, "Kill");
+				}
 			}
 		}
 	}
@@ -180,72 +187,4 @@ void vSmashHit(int client, int chance, int enabled)
 		vAttachParticle(client, PARTICLE_BLOOD, 0.1, 0.0);
 		ForcePlayerSuicide(client);
 	}
-}
-
-void vAttachParticle(int client, char[] particlename, float time = 0.0, float origin = 0.0)
-{
-	if (bIsValidClient(client))
-	{
-		int iParticle = CreateEntityByName("info_particle_system");
-		if (IsValidEntity(iParticle))
-		{
-			float flPos[3];
-			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
-			flPos[2] += origin;
-			DispatchKeyValue(iParticle, "scale", "");
-			DispatchKeyValue(iParticle, "effect_name", particlename);
-			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iParticle);
-			ActivateEntity(iParticle);
-			AcceptEntityInput(iParticle, "Enable");
-			AcceptEntityInput(iParticle, "Start");
-			vSetEntityParent(iParticle, client);
-			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteEntity(iParticle, time);
-		}
-	}
-}
-
-void vDeleteEntity(int entity, float time = 0.1)
-{
-	if (bIsValidEntRef(entity))
-	{
-		char sVariant[64];
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		AcceptEntityInput(entity, "ClearParent");
-		SetVariantString(sVariant);
-		AcceptEntityInput(entity, "AddOutput");
-		AcceptEntityInput(entity, "FireUser1");
-	}
-}
-
-void vPrecacheParticle(char[] particlename)
-{
-	int iParticle = CreateEntityByName("info_particle_system");
-	if (IsValidEntity(iParticle))
-	{
-		DispatchKeyValue(iParticle, "effect_name", particlename);
-		DispatchSpawn(iParticle);
-		ActivateEntity(iParticle);
-		AcceptEntityInput(iParticle, "Start");
-		vSetEntityParent(iParticle, iParticle);
-		iParticle = EntIndexToEntRef(iParticle);
-		vDeleteEntity(iParticle);
-	}
-}
-
-void vSetEntityParent(int entity, int parent)
-{
-	SetVariantString("!activator");
-	AcceptEntityInput(entity, "SetParent", parent);
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntRef(int entity)
-{
-	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }

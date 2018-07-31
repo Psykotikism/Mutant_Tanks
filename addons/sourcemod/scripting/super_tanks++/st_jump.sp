@@ -67,36 +67,6 @@ public void ST_Spawn(int client)
 	}
 }
 
-int iGetNearestSurvivor(int client)
-{
-	float flDistance = 0.0;
-	float flNearest = 0.0;
-	float flPlayerPos[3];
-	float flTargetPos[3];
-	if (bIsValidClient(client))
-	{
-		GetClientAbsOrigin(client, flPlayerPos);
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor))
-			{
-				GetClientAbsOrigin(iSurvivor, flTargetPos);
-				flDistance = GetVectorDistance(flPlayerPos, flTargetPos);
-				if (flNearest == 0.0 || flNearest > flDistance)
-				{
-					flNearest = flDistance;
-				}
-			}
-		}
-	}
-	return RoundFloat(flDistance);
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
 public Action tTimerJump(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);

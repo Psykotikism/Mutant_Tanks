@@ -167,16 +167,21 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iElectricAbility = !g_bTankConfig[ST_TankType(client)] ? g_iElectricAbility[ST_TankType(client)] : g_iElectricAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iElectricAbility == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iElectricAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iElectricAbility[ST_TankType(iTank)] : g_iElectricAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iElectricAbility == 1)
 		{
-			if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor])
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+				if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor])
+				{
+					SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+				}
 			}
 		}
 	}
@@ -224,79 +229,6 @@ void vElectricHit(int client, int owner, int chance, int enabled)
 	}
 }
 
-void vAttachParticle(int client, char[] particlename, float time = 0.0, float origin = 0.0)
-{
-	if (bIsValidClient(client))
-	{
-		int iParticle = CreateEntityByName("info_particle_system");
-		if (IsValidEntity(iParticle))
-		{
-			float flPos[3];
-			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
-			flPos[2] += origin;
-			DispatchKeyValue(iParticle, "scale", "");
-			DispatchKeyValue(iParticle, "effect_name", particlename);
-			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iParticle);
-			ActivateEntity(iParticle);
-			AcceptEntityInput(iParticle, "Enable");
-			AcceptEntityInput(iParticle, "Start");
-			vSetEntityParent(iParticle, client);
-			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteEntity(iParticle, time);
-		}
-	}
-}
-
-void vDeleteEntity(int entity, float time = 0.1)
-{
-	if (bIsValidEntRef(entity))
-	{
-		char sVariant[64];
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		AcceptEntityInput(entity, "ClearParent");
-		SetVariantString(sVariant);
-		AcceptEntityInput(entity, "AddOutput");
-		AcceptEntityInput(entity, "FireUser1");
-	}
-}
-
-void vPrecacheParticle(char[] particlename)
-{
-	int iParticle = CreateEntityByName("info_particle_system");
-	if (IsValidEntity(iParticle))
-	{
-		DispatchKeyValue(iParticle, "effect_name", particlename);
-		DispatchSpawn(iParticle);
-		ActivateEntity(iParticle);
-		AcceptEntityInput(iParticle, "Start");
-		vSetEntityParent(iParticle, iParticle);
-		iParticle = EntIndexToEntRef(iParticle);
-		vDeleteEntity(iParticle);
-	}
-}
-
-void vSetEntityParent(int entity, int parent)
-{
-	SetVariantString("!activator");
-	AcceptEntityInput(entity, "SetParent", parent);
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
-}
-
-bool bIsValidEntRef(int entity)
-{
-	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
-}
-
 public Action tTimerElectric(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -319,28 +251,8 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		char sDamage[6];
 		int iElectricDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iElectricDamage[ST_TankType(iTank)] : g_iElectricDamage2[ST_TankType(iTank)];
 		IntToString(iElectricDamage, sDamage, sizeof(sDamage));
-		int iPointHurt = CreateEntityByName("point_hurt");
-		if (bIsValidEntity(iPointHurt))
-		{
-			DispatchKeyValue(iSurvivor, "targetname", "hurtme");
-			DispatchKeyValue(iPointHurt, "Damage", sDamage);
-			DispatchKeyValue(iPointHurt, "DamageTarget", "hurtme");
-			DispatchKeyValue(iPointHurt, "DamageType", "2");
-			DispatchSpawn(iPointHurt);
-			AcceptEntityInput(iPointHurt, "Hurt", iSurvivor);
-			AcceptEntityInput(iPointHurt, "Kill");
-			DispatchKeyValue(iSurvivor, "targetname", "donthurtme");
-		}
-		Handle hShakeTarget = StartMessageOne("Shake", iSurvivor);
-		if (hShakeTarget != null)
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
-			bfWrite.WriteByte(0);
-			bfWrite.WriteFloat(16.0);
-			bfWrite.WriteFloat(0.5);
-			bfWrite.WriteFloat(1.0);
-			EndMessage();
-		}
+		vDamage(iSurvivor, sDamage);
+		vShake(iSurvivor);
 		vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
 		switch (GetRandomInt(1, 2)) 
 		{

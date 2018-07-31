@@ -139,14 +139,19 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iFireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFireAbility[ST_TankType(client)] : g_iFireAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iFireAbility == 1 && bIsL4D2Game())
+	if (strcmp(name, "player_death") == 0)
 	{
-		float flPos[3];
-		GetClientAbsOrigin(client, flPos);
-		vFire(client, flPos);
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iFireAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFireAbility[ST_TankType(iTank)] : g_iFireAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iFireAbility == 1 && bIsL4D2Game())
+		{
+			float flPos[3];
+			GetClientAbsOrigin(iTank, flPos);
+			vFire(iTank, flPos);
+		}
 	}
 }
 
@@ -213,14 +218,4 @@ void vFireHit(int client, int owner, int chance, int enabled)
 		GetClientAbsOrigin(client, flPos);
 		vFire(owner, flPos);
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
 }

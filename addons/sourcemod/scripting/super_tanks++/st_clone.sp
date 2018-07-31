@@ -104,12 +104,17 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iCloneAbility == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		g_iCloneCount[client] = 0;
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iCloneAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iCloneAbility[ST_TankType(iTank)] : g_iCloneAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iCloneAbility == 1)
+		{
+			g_iCloneCount[iTank] = 0;
+		}
 	}
 }
 
@@ -122,93 +127,62 @@ public void ST_Ability(int client)
 		int iCloneAmount = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAmount[ST_TankType(client)] : g_iCloneAmount2[ST_TankType(client)];
 		if (g_iCloneCount[client] < iCloneAmount)
 		{
-			vCloneSpawner(client);
-		}
-	}
-}
-
-void vClone(int client, float pos[3])
-{
-	bool bTankBoss[MAXPLAYERS + 1];
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		bTankBoss[iPlayer] = false;
-		if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer))
-		{
-			bTankBoss[iPlayer] = true;
-		}
-	}
-	ST_SpawnTank(client, ST_TankType(client));
-	int iSelectedType;
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer))
-		{
-			if (!bTankBoss[iPlayer])
+			float flHitPosition[3];
+			float flPosition[3];
+			float flAngle[3];
+			float flVector[3];
+			GetClientEyePosition(client, flPosition);
+			GetClientEyeAngles(client, flAngle);
+			flAngle[0] = -25.0;
+			GetAngleVectors(flAngle, flAngle, NULL_VECTOR, NULL_VECTOR);
+			NormalizeVector(flAngle, flAngle);
+			ScaleVector(flAngle, -1.0);
+			vCopyVector(flAngle, flVector);
+			GetVectorAngles(flAngle, flAngle);
+			Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, client);
+			if (TR_DidHit(hTrace))
 			{
-				iSelectedType = iPlayer;
-				break;
+				TR_GetEndPosition(flHitPosition, hTrace);
+				NormalizeVector(flVector, flVector);
+				ScaleVector(flVector, -40.0);
+				AddVectors(flHitPosition, flVector, flHitPosition);
+				float flDistance = GetVectorDistance(flHitPosition, flPosition);
+				if (flDistance < 200.0 && flDistance > 40.0)
+				{
+					bool bTankBoss[MAXPLAYERS + 1];
+					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+					{
+						bTankBoss[iPlayer] = false;
+						if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer))
+						{
+							bTankBoss[iPlayer] = true;
+						}
+					}
+					ST_SpawnTank(client, ST_TankType(client));
+					int iSelectedType;
+					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+					{
+						if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer))
+						{
+							if (!bTankBoss[iPlayer])
+							{
+								iSelectedType = iPlayer;
+								break;
+							}
+						}
+					}
+					if (iSelectedType > 0)
+					{
+						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
+						g_bCloned[iSelectedType] = true;
+						int iCloneHealth = !g_bTankConfig[ST_TankType(client)] ? g_iCloneHealth[ST_TankType(client)] : g_iCloneHealth2[ST_TankType(client)];
+						int iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
+						SetEntityHealth(iSelectedType, iNewHealth);
+						g_iCloneCount[client]++;
+					}
+				}
 			}
+			delete hTrace;
 		}
 	}
-	if (iSelectedType > 0)
-	{
-		TeleportEntity(iSelectedType, pos, NULL_VECTOR, NULL_VECTOR);
-		g_bCloned[iSelectedType] = true;
-		int iCloneHealth = !g_bTankConfig[ST_TankType(client)] ? g_iCloneHealth[ST_TankType(client)] : g_iCloneHealth2[ST_TankType(client)];
-		int iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
-		SetEntityHealth(iSelectedType, iNewHealth);
-		g_iCloneCount[client]++;
-	}
-}
-
-void vCloneSpawner(int client)
-{
-	float flHitPosition[3];
-	float flPosition[3];
-	float flAngle[3];
-	float flVector[3];
-	GetClientEyePosition(client, flPosition);
-	GetClientEyeAngles(client, flAngle);
-	flAngle[0] = -25.0;
-	GetAngleVectors(flAngle, flAngle, NULL_VECTOR, NULL_VECTOR);
-	NormalizeVector(flAngle, flAngle);
-	ScaleVector(flAngle, -1.0);
-	vCopyVector(flAngle, flVector);
-	GetVectorAngles(flAngle, flAngle);
-	Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, client);
-	if (TR_DidHit(hTrace))
-	{
-		TR_GetEndPosition(flHitPosition, hTrace);
-		NormalizeVector(flVector, flVector);
-		ScaleVector(flVector, -40.0);
-		AddVectors(flHitPosition, flVector, flHitPosition);
-		float flDistance = GetVectorDistance(flHitPosition, flPosition);
-		if (flDistance < 200.0 && flDistance > 40.0)
-		{
-			vClone(client, flHitPosition);
-		}
-	}
-	delete hTrace;
-}
-
-void vCopyVector(float source[3], float target[3])
-{
-	target[0] = source[0];
-	target[1] = source[1];
-	target[2] = source[2];
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-public bool bTraceRayDontHitSelf(int entity, int mask, any data)
-{
-	if (entity == data)
-	{
-		return false;
-	}
-	return true;
 }

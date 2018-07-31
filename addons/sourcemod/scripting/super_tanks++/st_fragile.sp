@@ -138,14 +138,19 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Incap(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iFragileAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFragileAbility[ST_TankType(client)] : g_iFragileAbility2[ST_TankType(client)];
-	if (iFragileAbility == 1 && ST_TankAllowed(client))
+	if (strcmp(name, "player_incapacitated") == 0)
 	{
-		if (g_bFragile[client])
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iFragileAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFragileAbility[ST_TankType(iTank)] : g_iFragileAbility2[ST_TankType(iTank)];
+		if (iFragileAbility == 1 && ST_TankAllowed(iTank))
 		{
-			tTimerStopFragile(null, GetClientUserId(client));
+			if (g_bFragile[iTank])
+			{
+				tTimerStopFragile(null, GetClientUserId(iTank));
+			}
 		}
 	}
 }
@@ -160,11 +165,6 @@ public void ST_Ability(int client)
 		float flFragileDuration = !g_bTankConfig[ST_TankType(client)] ? g_flFragileDuration[ST_TankType(client)] : g_flFragileDuration2[ST_TankType(client)];
 		CreateTimer(flFragileDuration, tTimerStopFragile, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerStopFragile(Handle timer, any userid)

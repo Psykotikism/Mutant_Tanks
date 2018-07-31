@@ -186,46 +186,6 @@ public void ST_Ability(int client)
 	}
 }
 
-int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false)
-{
-	int iHit = 0;
-	Handle hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, entity);
-	if (TR_DidHit(hTrace))
-	{
-		TR_GetEndPosition(hitpos, hTrace);
-		iHit = TR_GetEntityIndex(hTrace);
-	}
-	delete hTrace;
-	if (offset)
-	{
-		float flVector[3];
-		MakeVectorFromPoints(hitpos, pos, flVector);
-		NormalizeVector(flVector, flVector);
-		ScaleVector(flVector, 15.0);
-		AddVectors(hitpos, flVector, hitpos);
-	}
-	return iHit;
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
-}
-
-public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
-{
-	if (entity == data || bIsValidClient(entity))
-	{
-		return false;
-	}
-	return true;
-}
-
 public Action tTimerRockUpdate(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -265,7 +225,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 			flAngles[1] = GetRandomFloat(-1.0, 1.0);
 			flAngles[2] = 2.0;
 			GetVectorAngles(flAngles, flAngles);
-			iGetRayHitPos(flPos, flAngles, flHitPos, iTank, true);
+			iGetRayHitPos(flPos, flAngles, flHitPos, iTank, true, 2);
 			float flDistance = GetVectorDistance(flPos, flHitPos);
 			if (flDistance > 800.0)
 			{

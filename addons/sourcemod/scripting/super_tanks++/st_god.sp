@@ -95,14 +95,19 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Incap(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iGodAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGodAbility[ST_TankType(client)] : g_iGodAbility2[ST_TankType(client)];
-	if (iGodAbility == 1 && ST_TankAllowed(client))
+	if (strcmp(name, "player_incapacitated") == 0)
 	{
-		if (g_bGod[client])
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iGodAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGodAbility[ST_TankType(iTank)] : g_iGodAbility2[ST_TankType(iTank)];
+		if (iGodAbility == 1 && ST_TankAllowed(iTank))
 		{
-			tTimerStopGod(null, GetClientUserId(client));
+			if (g_bGod[iTank])
+			{
+				tTimerStopGod(null, GetClientUserId(iTank));
+			}
 		}
 	}
 }
@@ -118,11 +123,6 @@ public void ST_Ability(int client)
 		float flGodDuration = !g_bTankConfig[ST_TankType(client)] ? g_flGodDuration[ST_TankType(client)] : g_flGodDuration2[ST_TankType(client)];
 		CreateTimer(flGodDuration, tTimerStopGod, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerStopGod(Handle timer, any userid)

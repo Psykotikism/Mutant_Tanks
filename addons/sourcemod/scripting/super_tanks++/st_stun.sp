@@ -152,19 +152,24 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iStunAbility = !g_bTankConfig[ST_TankType(client)] ? g_iStunAbility[ST_TankType(client)] : g_iStunAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iStunAbility == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iStunAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iStunAbility[ST_TankType(iTank)] : g_iStunAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iStunAbility == 1)
 		{
-			if (bIsSurvivor(iSurvivor) && g_bStun[iSurvivor])
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				DataPack dpDataPack;
-				CreateDataTimer(0.1, tTimerStopStun, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-				dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-				dpDataPack.WriteCell(GetClientUserId(client));
+				if (bIsSurvivor(iSurvivor) && g_bStun[iSurvivor])
+				{
+					DataPack dpDataPack;
+					CreateDataTimer(0.1, tTimerStopStun, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+					dpDataPack.WriteCell(GetClientUserId(iTank));
+				}
 			}
 		}
 	}
@@ -208,11 +213,6 @@ void vStunHit(int client, int owner, int chance, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerStopStun(Handle timer, DataPack pack)

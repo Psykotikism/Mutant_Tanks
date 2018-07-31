@@ -68,88 +68,84 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iMedicAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMedicAbility[ST_TankType(client)] : g_iMedicAbility2[ST_TankType(client)];
-	int iMedicChance = !g_bTankConfig[ST_TankType(client)] ? g_iMedicChance[ST_TankType(client)] : g_iMedicChance2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		float flMedicRange = !g_bTankConfig[ST_TankType(client)] ? g_flMedicRange[ST_TankType(client)] : g_flMedicRange2[ST_TankType(client)];
-		float flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
-		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iMedicAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iMedicAbility[ST_TankType(iTank)] : g_iMedicAbility2[ST_TankType(iTank)];
+		int iMedicChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iMedicChance[ST_TankType(iTank)] : g_iMedicChance2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1)
 		{
-			if (bIsSpecialInfected(iInfected))
+			float flMedicRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flMedicRange[ST_TankType(iTank)] : g_flMedicRange2[ST_TankType(iTank)];
+			float flTankPos[3];
+			GetClientAbsOrigin(iTank, flTankPos);
+			for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 			{
-				float flInfectedPos[3];
-				GetClientAbsOrigin(iInfected, flInfectedPos);
-				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-				if (flDistance <= flMedicRange)
+				if (bIsSpecialInfected(iInfected))
 				{
-					char sHealth[6][6];
-					char sMedicHealth[36];
-					sMedicHealth = !g_bTankConfig[ST_TankType(client)] ? g_sMedicHealth[ST_TankType(client)] : g_sMedicHealth2[ST_TankType(client)];
-					TrimString(sMedicHealth);
-					ExplodeString(sMedicHealth, ",", sHealth, sizeof(sHealth), sizeof(sHealth[]));
-					char sMaxHealth[6][6];
-					char sMedicMaxHealth[36];
-					sMedicMaxHealth = !g_bTankConfig[ST_TankType(client)] ? g_sMedicMaxHealth[ST_TankType(client)] : g_sMedicMaxHealth2[ST_TankType(client)];
-					TrimString(sMedicMaxHealth);
-					ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
-					int iHealth = GetClientHealth(iInfected);
-					int iSmokerHealth = (sHealth[0][0] != '\0') ? StringToInt(sHealth[0]) : 25;
-					iSmokerHealth = iSetCellLimit(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-					int iSmokerMaxHealth = (sMaxHealth[0][0] != '\0') ? StringToInt(sMaxHealth[0]) : 250;
-					int iBoomerHealth = (sHealth[1][0] != '\0') ? StringToInt(sHealth[1]) : 25;
-					iBoomerHealth = iSetCellLimit(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-					int iBoomerMaxHealth = (sMaxHealth[1][0] != '\0') ? StringToInt(sMaxHealth[1]) : 50;
-					int iHunterHealth = (sHealth[2][0] != '\0') ? StringToInt(sHealth[2]) : 25;
-					iHunterHealth = iSetCellLimit(iHunterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-					int iHunterMaxHealth = (sMaxHealth[2][0] != '\0') ? StringToInt(sMaxHealth[2]) : 250;
-					int iSpitterHealth = (sHealth[3][0] != '\0') ? StringToInt(sHealth[3]) : 25;
-					iSpitterHealth = iSetCellLimit(iSpitterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-					int iSpitterMaxHealth = (sMaxHealth[3][0] != '\0') ? StringToInt(sMaxHealth[3]) : 100;
-					int iJockeyHealth = (sHealth[4][0] != '\0') ? StringToInt(sHealth[4]) : 25;
-					iJockeyHealth = iSetCellLimit(iJockeyHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-					int iJockeyMaxHealth = (sMaxHealth[4][0] != '\0') ? StringToInt(sMaxHealth[4]) : 325;
-					int iChargerHealth = (sHealth[5][0] != '\0') ? StringToInt(sHealth[5]) : 25;
-					iChargerHealth = iSetCellLimit(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-					int iChargerMaxHealth = (sMaxHealth[5][0] != '\0') ? StringToInt(sMaxHealth[5]) : 600;
-					if (bIsSmoker(iInfected))
+					float flInfectedPos[3];
+					GetClientAbsOrigin(iInfected, flInfectedPos);
+					float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
+					if (flDistance <= flMedicRange)
 					{
-						vMedic(iInfected, iHealth, iHealth + iSmokerHealth, iSmokerMaxHealth);
-					}
-					else if (bIsBoomer(iInfected))
-					{
-						vMedic(iInfected, iHealth, iHealth + iBoomerHealth, iBoomerMaxHealth);
-					}
-					else if (bIsHunter(iInfected))
-					{
-						vMedic(iInfected, iHealth, iHealth + iHunterHealth, iHunterMaxHealth);
-					}
-					else if (bIsSpitter(iInfected))
-					{
-						vMedic(iInfected, iHealth, iHealth + iSpitterHealth, iSpitterMaxHealth);
-					}
-					else if (bIsJockey(iInfected))
-					{
-						vMedic(iInfected, iHealth, iHealth + iJockeyHealth, iJockeyMaxHealth);
-					}
-					else if (bIsCharger(iInfected))
-					{
-						vMedic(iInfected, iHealth, iHealth + iChargerHealth, iChargerMaxHealth);
+						char sHealth[6][6];
+						char sMedicHealth[36];
+						sMedicHealth = !g_bTankConfig[ST_TankType(iTank)] ? g_sMedicHealth[ST_TankType(iTank)] : g_sMedicHealth2[ST_TankType(iTank)];
+						TrimString(sMedicHealth);
+						ExplodeString(sMedicHealth, ",", sHealth, sizeof(sHealth), sizeof(sHealth[]));
+						char sMaxHealth[6][6];
+						char sMedicMaxHealth[36];
+						sMedicMaxHealth = !g_bTankConfig[ST_TankType(iTank)] ? g_sMedicMaxHealth[ST_TankType(iTank)] : g_sMedicMaxHealth2[ST_TankType(iTank)];
+						TrimString(sMedicMaxHealth);
+						ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
+						int iHealth = GetClientHealth(iInfected);
+						int iSmokerHealth = (sHealth[0][0] != '\0') ? StringToInt(sHealth[0]) : 25;
+						iSmokerHealth = iSetCellLimit(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+						int iSmokerMaxHealth = (sMaxHealth[0][0] != '\0') ? StringToInt(sMaxHealth[0]) : 250;
+						int iBoomerHealth = (sHealth[1][0] != '\0') ? StringToInt(sHealth[1]) : 25;
+						iBoomerHealth = iSetCellLimit(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+						int iBoomerMaxHealth = (sMaxHealth[1][0] != '\0') ? StringToInt(sMaxHealth[1]) : 50;
+						int iHunterHealth = (sHealth[2][0] != '\0') ? StringToInt(sHealth[2]) : 25;
+						iHunterHealth = iSetCellLimit(iHunterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+						int iHunterMaxHealth = (sMaxHealth[2][0] != '\0') ? StringToInt(sMaxHealth[2]) : 250;
+						int iSpitterHealth = (sHealth[3][0] != '\0') ? StringToInt(sHealth[3]) : 25;
+						iSpitterHealth = iSetCellLimit(iSpitterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+						int iSpitterMaxHealth = (sMaxHealth[3][0] != '\0') ? StringToInt(sMaxHealth[3]) : 100;
+						int iJockeyHealth = (sHealth[4][0] != '\0') ? StringToInt(sHealth[4]) : 25;
+						iJockeyHealth = iSetCellLimit(iJockeyHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+						int iJockeyMaxHealth = (sMaxHealth[4][0] != '\0') ? StringToInt(sMaxHealth[4]) : 325;
+						int iChargerHealth = (sHealth[5][0] != '\0') ? StringToInt(sHealth[5]) : 25;
+						iChargerHealth = iSetCellLimit(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+						int iChargerMaxHealth = (sMaxHealth[5][0] != '\0') ? StringToInt(sMaxHealth[5]) : 600;
+						if (bIsSmoker(iInfected) && IsPlayerAlive(iInfected))
+						{
+							vHeal(iInfected, iHealth, iHealth + iSmokerHealth, iSmokerMaxHealth);
+						}
+						else if (bIsBoomer(iInfected) && IsPlayerAlive(iInfected))
+						{
+							vHeal(iInfected, iHealth, iHealth + iBoomerHealth, iBoomerMaxHealth);
+						}
+						else if (bIsHunter(iInfected) && IsPlayerAlive(iInfected))
+						{
+							vHeal(iInfected, iHealth, iHealth + iHunterHealth, iHunterMaxHealth);
+						}
+						else if (bIsSpitter(iInfected) && IsPlayerAlive(iInfected))
+						{
+							vHeal(iInfected, iHealth, iHealth + iSpitterHealth, iSpitterMaxHealth);
+						}
+						else if (bIsJockey(iInfected) && IsPlayerAlive(iInfected))
+						{
+							vHeal(iInfected, iHealth, iHealth + iJockeyHealth, iJockeyMaxHealth);
+						}
+						else if (bIsCharger(iInfected) && IsPlayerAlive(iInfected))
+						{
+							vHeal(iInfected, iHealth, iHealth + iChargerHealth, iChargerMaxHealth);
+						}
 					}
 				}
 			}
 		}
 	}
-}
-
-void vMedic(int client, int health, int extrahealth, int maxhealth)
-{
-	maxhealth = iSetCellLimit(maxhealth, 1, ST_MAXHEALTH);
-	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth;
-	int iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth;
-	int iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
-	SetEntityHealth(client, iRealHealth);
 }

@@ -179,96 +179,6 @@ void vMeteor(int client, int entity)
 	}
 }
 
-void vDeleteEntity(int entity, float time = 0.1)
-{
-	if (bIsValidEntRef(entity))
-	{
-		char sVariant[64];
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		AcceptEntityInput(entity, "ClearParent");
-		SetVariantString(sVariant);
-		AcceptEntityInput(entity, "AddOutput");
-		AcceptEntityInput(entity, "FireUser1");
-	}
-}
-
-float flGetGroundUnits(int entity)
-{
-	if (!(GetEntityFlags(entity) & FL_ONGROUND))
-	{ 
-		Handle hTrace;
-		float flOrigin[3];
-		float flPosition[3];
-		float flDown[3] = {90.0, 0.0, 0.0};
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
-		hTrace = TR_TraceRayFilterEx(flOrigin, flDown, CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
-		if (TR_DidHit(hTrace))
-		{
-			float flUnits;
-			TR_GetEndPosition(flPosition, hTrace);
-			flUnits = flOrigin[2] - flPosition[2];
-			delete hTrace;
-			return flUnits;
-		}
-		delete hTrace;
-	}
-	return 0.0;
-}
-
-int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false)
-{
-	int iHit = 0;
-	Handle hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, entity);
-	if (TR_DidHit(hTrace))
-	{
-		TR_GetEndPosition(hitpos, hTrace);
-		iHit = TR_GetEntityIndex(hTrace);
-	}
-	delete hTrace;
-	if (offset)
-	{
-		float flVector[3];
-		MakeVectorFromPoints(hitpos, pos, flVector);
-		NormalizeVector(flVector, flVector);
-		ScaleVector(flVector, 15.0);
-		AddVectors(hitpos, flVector, hitpos);
-	}
-	return iHit;
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
-}
-
-bool bIsValidEntRef(int entity)
-{
-	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
-}
-
-public bool bTraceRayDontHitSelf(int entity, int mask, any data)
-{
-	if (entity == data)
-	{
-		return false;
-	}
-	return true;
-}
-
-public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
-{
-	if (entity == data || bIsValidClient(entity))
-	{
-		return false;
-	}
-	return true;
-}
-
 public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -311,7 +221,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 			flAngles[1] = GetRandomFloat(-20.0, 20.0);
 			flAngles[2] = 60.0;
 			GetVectorAngles(flAngles, flAngles);
-			iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true);
+			iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
 			float flDistance = GetVectorDistance(flPos, flHitpos);
 			if (flDistance > 1600.0)
 			{

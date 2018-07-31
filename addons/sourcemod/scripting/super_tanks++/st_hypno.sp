@@ -178,16 +178,21 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Death(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iHypnoAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHypnoAbility[ST_TankType(client)] : g_iHypnoAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iHypnoAbility == 1)
+	if (strcmp(name, "player_death") == 0)
 	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iHypnoAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHypnoAbility[ST_TankType(iTank)] : g_iHypnoAbility2[ST_TankType(iTank)];
+		if (ST_TankAllowed(iTank) && iHypnoAbility == 1)
 		{
-			if (bIsSurvivor(iSurvivor) && g_bHypno[iSurvivor])
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				g_bHypno[iSurvivor] = false;
+				if (bIsSurvivor(iSurvivor) && g_bHypno[iSurvivor])
+				{
+					g_bHypno[iSurvivor] = false;
+				}
 			}
 		}
 	}
@@ -229,25 +234,6 @@ void vHypnoHit(int client, int owner, int chance, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 	}
-}
-
-int iGetRandomSurvivor(int client)
-{
-	int iSurvivorCount;
-	int iSurvivors[MAXPLAYERS + 1];
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor) && iSurvivor != client)
-		{
-			iSurvivors[iSurvivorCount++] = iSurvivor;
-		}
-	}
-	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerStopHypno(Handle timer, DataPack pack)

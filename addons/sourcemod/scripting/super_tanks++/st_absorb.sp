@@ -138,14 +138,19 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Incap(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	int iAbsorbAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbAbility[ST_TankType(client)] : g_iAbsorbAbility2[ST_TankType(client)];
-	if (iAbsorbAbility == 1 && ST_TankAllowed(client))
+	if (strcmp(name, "player_incapacitated") == 0)
 	{
-		if (g_bAbsorb[client])
+		int iTankId = event.GetInt("userid");
+		int iTank = GetClientOfUserId(iTankId);
+		int iAbsorbAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iAbsorbAbility[ST_TankType(iTank)] : g_iAbsorbAbility2[ST_TankType(iTank)];
+		if (iAbsorbAbility == 1 && ST_TankAllowed(iTank))
 		{
-			tTimerStopAbsorb(null, GetClientUserId(client));
+			if (g_bAbsorb[iTank])
+			{
+				tTimerStopAbsorb(null, GetClientUserId(iTank));
+			}
 		}
 	}
 }
@@ -160,11 +165,6 @@ public void ST_Ability(int client)
 		float flAbsorbDuration = !g_bTankConfig[ST_TankType(client)] ? g_flAbsorbDuration[ST_TankType(client)] : g_flAbsorbDuration2[ST_TankType(client)];
 		CreateTimer(flAbsorbDuration, tTimerStopAbsorb, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
-}
-
-bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
 }
 
 public Action tTimerStopAbsorb(Handle timer, any userid)
