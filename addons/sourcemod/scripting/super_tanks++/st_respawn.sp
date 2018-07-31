@@ -105,7 +105,7 @@ public void ST_Event(Event event, const char[] name)
 int iRespawn(int client, int count)
 {
 	int iTank;
-	bool bExists[MAXPLAYERS+1];
+	bool bExists[MAXPLAYERS + 1];
 	for (int iNewTank = 1; iNewTank <= MaxClients; iNewTank++)
 	{
 		bExists[iNewTank] = false;

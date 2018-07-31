@@ -198,8 +198,8 @@ void vFlingHit(int client, int owner, int chance, int enabled)
 			flDistance[1] = (flSpos[1] - flTpos[1]);
 			flDistance[2] = (flSpos[2] - flTpos[2]);
 			GetEntPropVector(client, Prop_Data, "m_vecVelocity", flTvec);
-			flRatio[0] =  FloatDiv(flDistance[0], SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
-			flRatio[1] =  FloatDiv(flDistance[1], SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
+			flRatio[0] = FloatDiv(flDistance[0], SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
+			flRatio[1] = FloatDiv(flDistance[1], SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
 			flAddVel[0] = FloatMul(flRatio[0] * -1, 500.0);
 			flAddVel[1] = FloatMul(flRatio[1] * -1, 500.0);
 			flAddVel[2] = 500.0;

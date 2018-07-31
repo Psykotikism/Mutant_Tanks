@@ -2431,6 +2431,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
 			fFilename.WriteLine("");
 			fFilename.WriteLine("			// The Super Tank respawns up to this many times.");
+			fFilename.WriteLine("			// Note: This setting only applies if the \"Respawn Random\" setting is set to 0.");
 			fFilename.WriteLine("			// Minimum: 1");
 			fFilename.WriteLine("			// Maximum: 9999999999");
 			fFilename.WriteLine("			\"Respawn Amount\"				\"1\"");
