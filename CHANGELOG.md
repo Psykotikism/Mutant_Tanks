@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 8.29 (July 31, 2018)
+
+Bug fixes:
+
+1. Fixed potential idle bug.
+
+Changes:
+
+1. Added the "Claw Damage" KeyValue setting under the "Enhancements" section which determines how much damage a Tank's claw attack does.
+2. Added the "Rock Damage" KeyValue setting under the "Enhancements" section which determines how much damage a Tank's rock throw does.
+2. Moved all stock/common functions to the include file.
+3. Replaced multiple forwards with one forward to handle events hooked by the core plugin.
+4. Removed an extra check for spawning Super Tanks from the sm_tank menu.
+5. Removed unused code.
+
+Files:
+
+1. Updated gamedata file with new signatures for the Idle ability.
+2. Updated include file to store more stock/common functions and to remove unused KeyValue settings from the auto-config generator.
+3. Updated config file to remove unused KeyValue settings from the config file.
+
 ## Version 8.28 (July 28, 2018)
 
 Bug fixes:
