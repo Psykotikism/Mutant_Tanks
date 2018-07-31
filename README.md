@@ -1623,6 +1623,7 @@ SourceMod 1.8+
 			"Ability Enabled"				"0"
 
 			// The Super Tank respawns up to this many times.
+			// Note: This setting only applies if the "Respawn Random" setting is set to 0.
 			// Minimum: 1
 			// Maximum: 9999999999
 			"Respawn Amount"				"1"
