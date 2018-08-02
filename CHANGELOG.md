@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 8.30 (August 1, 2018)
+
+Changes:
+
+1. Added the "Regen Limit" KeyValue setting for the Regen Ability. More information in the "information" folder and README file on GitHub.
+2. Added the "Restart Mode" KeyValue setting for the Restart ability. More information in the "information" folder and README file on GitHub.
+3. Added the "st_enableplugin" cvar so users can disable the plugin via console. (The ConVar-based config file is located in cfg/sourcemod/ while the KeyValues-based config file is still located in cfg/sourcemod/super_tanks++.)
+
+Files:
+
+1. Updated include file with the new settings.
+2. Updated config file with the new settings.
+3. Added the "information" folder in the same location as the config file which contains information about each ability and setting.
+
 ## Version 8.29 (July 31, 2018)
 
 Bug fixes:

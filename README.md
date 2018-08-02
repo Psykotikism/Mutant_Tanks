@@ -28,7 +28,9 @@ SourceMod 1.8+
 3. Place all the contents into their respective folders.
 4. If prompted to replace or merge anything, click yes.
 5. Load up Super Tanks++ by restarting the server.
-6. Customize Super Tanks++ in super_tanks++.cfg.
+6. Customize Super Tanks++ in:
+- cfg/sourcemod/super_tanks++.cfg
+- cfg/sourcemod/super_tanks++/super_tanks++.cfg.
 
 ### Uninstalling/Upgrading to Newer Versions
 1. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/plugins folder.
@@ -36,7 +38,8 @@ SourceMod 1.8+
 3. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/scripting folder.
 4. Delete super_tanks++.inc from addons/sourcemod/scripting/include folder.
 5. Delete super_tanks++ folder from cfg/sourcemod folder.
-6. Follow the Installation guide above. (Only for upgrading to newer versions.)
+6. Delete super_tanks++.cfg from cfg/sourcemod folder.
+7. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
 ### Disabling
 1. Move super_tanks++ folder (super_tanks++.smx and all of its modules) to plugins/disabled folder.
@@ -51,6 +54,16 @@ SourceMod 1.8+
 6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
 7. Optional abilities - Provides the option to choose which abilities to install.
 8. Forwards and natives - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
+
+## ConVars
+```
+// Enable Super Tanks++.
+// 0: OFF
+// 1: ON
+// -
+// Default: "1"
+st_enableplugin "1"
+```
 
 ## KeyValues Settings
 ```
@@ -1612,6 +1625,13 @@ SourceMod 1.8+
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Regen Interval"				"1.0"
+
+			// The Super Tank regenerates this much health each time.
+			// Positive numbers: The Super Tank will stop regenerating health when it reaches this number.
+			// Negative numbers: The Super Tank will stop losing health when it reaches this number.
+			// Minimum: -65535
+			// Maximum: 65535
+			"Regen Limit"					"65535"
 		}
 		// The Super Tank respawns.
 		// Requires "st_respawn.smx" to be installed.
@@ -1667,6 +1687,11 @@ SourceMod 1.8+
 			// Item limit: 5
 			// Character limit for each item: 64
 			"Restart Loadout"				"smg,pistol,pain_pills"
+
+			// The mode of the Super Tank's restart ability.
+			// 0: Survivors are teleported to the spawn area.
+			// 1: Survivors are teleported to another teammate.
+			"Restart Mode"					"1"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// Minimum: 1.0 (Closest)
@@ -3896,6 +3921,8 @@ Examples:
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 
 **Mi.Cura** - For reporting issues, giving me ideas, and overall support.
+
+**KasperH** - For reporting issues, giving me ideas, and overall support.
 
 **emsit** - For reporting issues and helping with parts of the code.
 
