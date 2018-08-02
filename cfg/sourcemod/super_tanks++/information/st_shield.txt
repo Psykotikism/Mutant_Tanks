@@ -1,0 +1,27 @@
+// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.
+"Super Tanks++"
+{
+	"Example"
+	{
+		// The Super Tank protects itself with a shield and traps survivors inside their own shields.
+		// Requires "st_shield.smx" to be installed.
+		"Shield Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// This is the Super Tank's shield's color.
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			"Shield Color"					"255,255,255"
+
+			// The Super Tank's shield reactivates after this many seconds passes.
+			// Minimum: 1.0
+			// Maximum: 9999999999.0
+			"Shield Delay"					"5.0"
+		}
+	}
+}

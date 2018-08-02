@@ -1,0 +1,26 @@
+// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.
+"Super Tanks++"
+{
+	"Example"
+	{
+		// The Super Tank spawns Witch minions.
+		// Requires "st_witch.smx" to be installed.
+		"Witch Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank spawns this many Witches at once.
+			// Minimum: 1
+			// Maximum: 25
+			"Witch Amount"					"3"
+
+			// The Super Tank's Witch minion causes this much damage per hit.
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Witch Minion Damage"			"5"
+		}
+	}
+}

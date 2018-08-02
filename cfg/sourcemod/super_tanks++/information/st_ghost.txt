@@ -1,0 +1,66 @@
+// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.
+"Super Tanks++"
+{
+	"Example"
+	{
+		// The Super Tank makes itself and any other nearby special infected invisible, and disarms survivors.
+		// "Ability Enabled" - Any nearby special infected turns invisible.
+		// - "Ghost Cloak Range"
+		// - "Ghost Fade Limit"
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is disarmed.
+		// - "Ghost Range"
+		// - "Ghost Range Chance"
+		// "Ghost Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is disarmed.
+		// - "Ghost Chance"
+		// Requires "st_ghost.smx" to be installed.
+		"Ghost Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Ghost Hit" setting.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Ghost Chance"					"4"
+
+			// The distance between a special infected and the Super Tank needed to trigger the cloak ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Ghost Cloak Range"				"500.0"
+
+			// The limit of the Super Tank's ghost fade effect.
+			// Minimum: 0 (Fully faded)
+			// Maximum: 255 (No effect)
+			"Ghost Fade Limit"				"0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// 0: OFF
+			// 1: ON
+			"Ghost Hit"						"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Ghost Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Ghost Range Chance"			"16"
+
+			// The Super Tank disarms the following weapon slots.
+			// Combine numbers in any order for different results.
+			// Character limit: 5
+			// 1: 1st slot only.
+			// 2: 2nd slot only.
+			// 3: 3rd slot only.
+			// 4: 4th slot only.
+			// 5: 5th slot only.
+			"Ghost Weapon Slots"			"12345"
+		}
+	}
+}

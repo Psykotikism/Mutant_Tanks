@@ -1,0 +1,40 @@
+// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.
+"Super Tanks++"
+{
+	"Example"
+	{
+		// The Super Tank creates rock showers.
+		// Requires "st_rock.smx" to be installed.
+		"Rock Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Rock Chance"					"4"
+
+			// The Super Tank's rocks do this much damage.
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Rock Damage"					"5"
+
+			// The Super Tank's ability effects last this long.
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Rock Duration"					"5.0"
+
+			// The radius of the Super Tank's rock shower.
+			// 1st number = Minimum radius
+			// Minimum: -5.0
+			// Maximum: 0.0
+			// 2nd number = Maximum radius
+			// Minimum: 0.0
+			// Maximum: 5.0
+			"Rock Radius"					"-1.25,1.25"
+		}
+	}
+}

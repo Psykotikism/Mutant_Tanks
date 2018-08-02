@@ -1,0 +1,38 @@
+// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.
+"Super Tanks++"
+{
+	"Example"
+	{
+		// The Super Tank spawns minions.
+		// Requires "st_minion.smx" to be installed.
+		"Minion Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The amount of minions the Super Tank can spawn.
+			// Minimum: 1
+			// Maximum: 25
+			"Minion Amount"					"5"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Minion Chance"					"4"
+
+			// The Super Tank can spawn these minions.
+			// Combine numbers in any order for different results.
+			// Repeat the same number to increase its chance of being chosen.
+			// Character limit: 12
+			// 1: Smoker
+			// 2: Boomer
+			// 3: Hunter
+			// 4: Spitter (Switches to Boomer in L4D1.)
+			// 5: Jockey (Switches to Hunter in L4D1.)
+			// 6: Charger (Switches to Smoker in L4D1.)
+			"Minion Types"					"123456"
+		}
+	}
+}

@@ -1,0 +1,51 @@
+// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.
+"Super Tanks++"
+{
+	"Example"
+	{
+		// The Super Tank heals special infected upon death.
+		// Requires "st_medic.smx" to be installed.
+		"Medic Ability"
+		{
+			// Enable this ability.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Medic Chance"					"4"
+
+			// The Super Tank gives special infected this much health each time.
+			// 1st number = Health given to Smokers.
+			// 2nd number = Health given to Boomers.
+			// 3rd number = Health given to Hunters.
+			// 4th number = Health given to Spitters.
+			// 5th number = Health given to Jockeys.
+			// 6th number = Health given to Chargers.
+			// Positive numbers: Current health + Medic health
+			// Negative numbers: Current health - Medic health
+			// Minimum: -65535
+			// Maximum: 65535
+			"Medic Health"					"25,25,25,25,25,25"
+
+			// The special infected's max health.
+			// The Super Tank will not heal special infected if they already have this much health.
+			// 1st number = Smoker's maximum health.
+			// 2nd number = Boomer's maximum health.
+			// 3rd number = Hunter's maximum health.
+			// 4th number = Spitter's maximum health.
+			// 5th number = Jockey's maximum health.
+			// 6th number = Charger's maximum health.
+			// Minimum: 1
+			// Maximum: 65535
+			"Medic Max Health"				"250,50,250,100,325,600"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Medic Range"					"500.0"
+		}
+	}
+}

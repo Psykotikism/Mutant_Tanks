@@ -1,0 +1,43 @@
+// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.
+"Super Tanks++"
+{
+	"Example"
+	{
+		// The Super Tank flings survivors high into the air.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is flung into the air.
+		// - "Fling Range"
+		// - "Fling Range Chance"
+		// "Fling Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is flung into the air.
+		// - "Fling Chance"
+		// Requires "st_fling.smx" to be installed.
+		"Fling Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Fling Hit" setting.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Fling Chance"					"4"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// 0: OFF
+			// 1: ON
+			"Fling Hit"						"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Fling Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Fling Range Chance"			"16"
+		}
+	}
+}

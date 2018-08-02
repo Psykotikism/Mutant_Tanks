@@ -1,0 +1,61 @@
+// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.
+"Super Tanks++"
+{
+	"Example"
+	{
+		// The Super Tank pulls in or pushes away survivors and any other nearby infected, and changes the survivors' gravity.
+		// "Ability Enabled" - Any nearby infected and survivors are pulled in or pushed away.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's gravity changes.
+		// - "Gravity Range"
+		// - "Gravity Range Chance"
+		// "Gravity Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's gravity changes.
+		// - "Gravity Chance"
+		// Requires "st_gravity.smx" to be installed.
+		"Gravity Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Gravity Hit" setting.
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Gravity Chance"				"4"
+
+			// The Super Tank's ability effects last this long.
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Gravity Duration"				"5.0"
+
+			// The Super Tank's gravity force.
+			// Positive numbers = Push back
+			// Negative numbers = Pull back
+			// Minimum: -100.0
+			// Maximum: 100.0
+			"Gravity Force"					"-50.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// 0: OFF
+			// 1: ON
+			"Gravity Hit"					"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Gravity Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Gravity Range Chance"			"16"
+
+			// The Super Tank sets the survivors' gravity to this value.
+			// Minimum: 0.1
+			// Maximum: 0.99
+			"Gravity Value"					"0.3"
+		}
+	}
+}
