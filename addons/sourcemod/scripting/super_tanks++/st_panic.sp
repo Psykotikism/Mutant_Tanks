@@ -44,6 +44,11 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_panic", "st_panic");
+}
+
 public void OnMapStart()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -155,6 +160,61 @@ void vPanicHit(int client)
 	if (iPanicHit == 1 && GetRandomInt(1, iPanicChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		vCheatCommand(client, "director_force_panic_event");
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank starts panic events.");
+		fFilename.WriteLine("		// \"Ability Enabled\" - The Tank starts a panic event periodically.");
+		fFilename.WriteLine("		// - \"Panic Interval\"");
+		fFilename.WriteLine("		// \"Panic Hit\" - When a survivor is hit by a Tank's claw or rock, a panic event starts.");
+		fFilename.WriteLine("		// - \"Panic Chance\"");
+		fFilename.WriteLine("		// Requires \"st_panic.smx\" to be installed.");
+		fFilename.WriteLine("		\"Panic Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// Note: This setting does not affect the \"Panic Hit\" setting.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Panic Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
+		fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Panic Hit\"						\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank starts a panic event every time this many seconds passes.");
+		fFilename.WriteLine("			// Minimum: 0.1");
+		fFilename.WriteLine("			// Maximum: 9999999999.0");
+		fFilename.WriteLine("			\"Panic Interval\"				\"5.0\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }
 

@@ -12,13 +12,6 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
-#define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
-#define MODEL_TANK "models/infected/hulk.mdl"
-#define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
-#define SOUND_INFECTED "npc/infected/action/die/male/death_42.wav"
-#define SOUND_INFECTED2 "npc/infected/action/die/male/death_43.wav"
-
 bool g_bGhost[MAXPLAYERS + 1];
 bool g_bLateLoad;
 bool g_bTankConfig[ST_MAXTYPES + 1];
@@ -62,6 +55,11 @@ public void OnAllPluginsLoaded()
 	{
 		SetFailState("No Super Tanks++ library found.");
 	}
+}
+
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_ghost", "st_ghost");
 }
 
 public void OnMapStart()
@@ -332,6 +330,90 @@ void vGhostHit(int client, int owner, int chance, int enabled)
 			case 1: EmitSoundToClient(client, SOUND_INFECTED, owner);
 			case 2: EmitSoundToClient(client, SOUND_INFECTED2, owner);
 		}
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank makes itself and any other nearby special infected invisible, and disarms survivors.");
+		fFilename.WriteLine("		// \"Ability Enabled\" - Any nearby special infected turns invisible.");
+		fFilename.WriteLine("		// - \"Ghost Cloak Range\"");
+		fFilename.WriteLine("		// - \"Ghost Fade Limit\"");
+		fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is disarmed.");
+		fFilename.WriteLine("		// - \"Ghost Range\"");
+		fFilename.WriteLine("		// - \"Ghost Range Chance\"");
+		fFilename.WriteLine("		// \"Ghost Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is disarmed.");
+		fFilename.WriteLine("		// - \"Ghost Chance\"");
+		fFilename.WriteLine("		// Requires \"st_ghost.smx\" to be installed.");
+		fFilename.WriteLine("		\"Ghost Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// Note: This setting does not affect the \"Ghost Hit\" setting.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Ghost Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The distance between a special infected and the Super Tank needed to trigger the cloak ability.");
+		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
+		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
+		fFilename.WriteLine("			\"Ghost Cloak Range\"				\"500.0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The limit of the Super Tank's ghost fade effect.");
+		fFilename.WriteLine("			// Minimum: 0 (Fully faded)");
+		fFilename.WriteLine("			// Maximum: 255 (No effect)");
+		fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
+		fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ghost Hit\"						\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
+		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
+		fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the range ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Ghost Range Chance\"			\"16\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank disarms the following weapon slots.");
+		fFilename.WriteLine("			// Combine numbers in any order for different results.");
+		fFilename.WriteLine("			// Character limit: 5");
+		fFilename.WriteLine("			// 1: 1st slot only.");
+		fFilename.WriteLine("			// 2: 2nd slot only.");
+		fFilename.WriteLine("			// 3: 3rd slot only.");
+		fFilename.WriteLine("			// 4: 4th slot only.");
+		fFilename.WriteLine("			// 5: 5th slot only.");
+		fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"12345\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }
 

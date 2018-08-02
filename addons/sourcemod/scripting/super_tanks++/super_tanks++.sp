@@ -12,20 +12,6 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
-#define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
-#define MODEL_TANK "models/infected/hulk.mdl"
-#define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
-#define MODEL_WITCH "models/infected/witch.mdl"
-#define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl"
-#define PARTICLE_BLOOD "boomer_explode_D"
-#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
-#define PARTICLE_FIRE "aircraft_destroy_fastFireTrail"
-#define PARTICLE_ICE "steam_manhole"
-#define PARTICLE_METEOR "smoke_medium_01"
-#define PARTICLE_SMOKE "smoker_smokecloud"
-#define PARTICLE_SPIT "spitter_projectile"
-
 bool g_bGeneralConfig;
 bool g_bLateLoad;
 bool g_bPluginEnabled;
@@ -52,7 +38,7 @@ char g_sTankColors[ST_MAXTYPES + 1][28];
 char g_sTankColors2[ST_MAXTYPES + 1][28];
 char g_sTankWaves[12];
 char g_sTankWaves2[12];
-ConVar g_cvSTFindConVar[4];
+ConVar g_cvSTFindConVar[5];
 float g_flClawDamage[ST_MAXTYPES + 1];
 float g_flClawDamage2[ST_MAXTYPES + 1];
 float g_flRockDamage[ST_MAXTYPES + 1];
@@ -186,24 +172,30 @@ public void OnPluginStart()
 	g_hSpawnForward = CreateGlobalForward("ST_Spawn", ET_Ignore, Param_Cell);
 	CreateDirectory("cfg/sourcemod/super_tanks++/", 511);
 	vCreateConfigFile("cfg/sourcemod/", "super_tanks++/", "super_tanks++", "super_tanks++", true);
+	CreateDirectory("cfg/sourcemod/super_tanks++/information/", 511);
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "general_plugin_settings", "general_plugin_settings");
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "general_tank_settings", "general_tank_settings", false);
 	Format(g_sSavePath, sizeof(g_sSavePath), "cfg/sourcemod/super_tanks++/super_tanks++.cfg");
 	vLoadConfigs(g_sSavePath, true);
 	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 	vMultiTargetFilters(1);
 	LoadTranslations("common.phrases");
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
+	g_cvSTFindConVar[0] = CreateConVar("st_enableplugin", "1", "Enable Super Tanks++.\n0: OFF\n1: ON");
 	CreateConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_cvSTFindConVar[0] = FindConVar("z_difficulty");
-	g_cvSTFindConVar[1] = FindConVar("mp_gamemode");
-	g_cvSTFindConVar[2] = FindConVar("sv_gametypes");
-	g_cvSTFindConVar[3] = FindConVar("z_max_player_zombies");
-	g_cvSTFindConVar[0].AddChangeHook(vSTGameDifficultyCvar);
+	g_cvSTFindConVar[1] = FindConVar("z_difficulty");
+	g_cvSTFindConVar[2] = FindConVar("mp_gamemode");
+	g_cvSTFindConVar[3] = FindConVar("sv_gametypes");
+	g_cvSTFindConVar[4] = FindConVar("z_max_player_zombies");
+	g_cvSTFindConVar[0].AddChangeHook(vSTEnableCvar);
+	g_cvSTFindConVar[1].AddChangeHook(vSTGameDifficultyCvar);
 	HookEvent("round_start", vEventHandler);
 	TopMenu tmAdminMenu;
 	if (LibraryExists("adminmenu") && ((tmAdminMenu = GetAdminTopMenu()) != null))
 	{
 		OnAdminMenuReady(tmAdminMenu);
 	}
+	AutoExecConfig(true, "super_tanks++");
 }
 
 public void OnMapStart()
@@ -249,7 +241,7 @@ public void OnConfigsExecuted()
 	GetCurrentMap(sMapName, sizeof(sMapName));
 	if (IsMapValid(sMapName))
 	{
-		vIsPluginAllowed();
+		vPluginStatus();
 		CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(0.1, tTimerTankHealthUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(1.0, tTimerTankTypeUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -300,7 +292,7 @@ public void OnConfigsExecuted()
 		CreateDirectory((bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/"), 511);
 		char sGameType[2049];
 		char sTypes[64][32];
-		g_cvSTFindConVar[2].GetString(sGameType, sizeof(sGameType));
+		g_cvSTFindConVar[3].GetString(sGameType, sizeof(sGameType));
 		TrimString(sGameType);
 		ExplodeString(sGameType, ",", sTypes, sizeof(sTypes), sizeof(sTypes[]));
 		for (int iMode = 0; iMode < sizeof(sTypes); iMode++)
@@ -340,10 +332,10 @@ public void OnConfigsExecuted()
 			vCreateConfigFile("cfg/sourcemod/super_tanks++/", "playercount_configs/", sPlayerCount, sPlayerCount);
 		}
 	}
-	if (StrContains(g_sConfigExecute, "1") != -1 && g_iConfigEnable == 1 && g_cvSTFindConVar[0] != null)
+	if (StrContains(g_sConfigExecute, "1") != -1 && g_iConfigEnable == 1 && g_cvSTFindConVar[1] != null)
 	{
 		char sDifficultyConfig[512];
-		vGetCurrentDifficulty(g_cvSTFindConVar[0], sDifficultyConfig);
+		vGetCurrentDifficulty(g_cvSTFindConVar[1], sDifficultyConfig);
 		vLoadConfigs(sDifficultyConfig);
 		g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 	}
@@ -357,7 +349,7 @@ public void OnConfigsExecuted()
 	if (StrContains(g_sConfigExecute, "3") != -1 && g_iConfigEnable == 1)
 	{
 		char sModeConfig[512];
-		vGetCurrentMode(g_cvSTFindConVar[1], sModeConfig);
+		vGetCurrentMode(g_cvSTFindConVar[2], sModeConfig);
 		vLoadConfigs(sModeConfig);
 		g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 	}
@@ -738,7 +730,7 @@ public Action cmdTank(int client, int args)
 {
 	if (!g_bPluginEnabled)
 	{
-		ReplyToCommand(client, "\x04%s\x01 Super Tanks++ is disabled.", ST_PREFIX);
+		ReplyToCommand(client, "\x04%s\x05 Super Tanks++\x01 is disabled.", ST_PREFIX);
 		return Plugin_Handled;
 	}
 	if (!bIsValidHumanClient(client))
@@ -829,13 +821,13 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	}
 }
 
-void vIsPluginAllowed()
+void vPluginStatus()
 {
-	bool bIsPluginAllowed = bIsPluginEnabled(g_cvSTFindConVar[1], g_iGameModeTypes, g_sEnabledGameModes, g_sDisabledGameModes);
+	bool bIsPluginAllowed = bIsPluginEnabled(g_cvSTFindConVar[2], g_iGameModeTypes, g_sEnabledGameModes, g_sDisabledGameModes);
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
 	if (iPluginEnabled == 1)
 	{
-		if (bIsPluginAllowed)
+		if (g_cvSTFindConVar[0].BoolValue && bIsPluginAllowed)
 		{
 			vHookEvents(true);
 			vLateLoad(true);
@@ -871,10 +863,10 @@ void vHookEvents(bool hook)
 	{
 		UnhookEvent("ability_use", vEventHandler);
 		UnhookEvent("finale_escape_start", vEventHandler);
-		UnhookEvent("finale_start", vEventHandler);
+		UnhookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("finale_vehicle_leaving", vEventHandler);
 		UnhookEvent("finale_vehicle_ready", vEventHandler);
-		UnhookEvent("player_afk", vEventHandler);
+		UnhookEvent("player_afk", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("player_bot_replace", vEventHandler);
 		UnhookEvent("player_death", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
@@ -988,6 +980,313 @@ void vLateLoad(bool late)
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
 			}
 		}
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "", bool general = true)
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		if (general)
+		{
+			fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+			fFilename.WriteLine("\"Super Tanks++\"");
+			fFilename.WriteLine("{");
+			fFilename.WriteLine("	// These are the general settings.");
+			fFilename.WriteLine("	// Note: The following settings will not work in custom config files:");
+			fFilename.WriteLine("	// \"Create Backup\"");
+			fFilename.WriteLine("	// \"Game Mode Types\"");
+			fFilename.WriteLine("	// \"Enabled Game Modes\"");
+			fFilename.WriteLine("	// \"Disabled Game Modes\"");
+			fFilename.WriteLine("	// \"Enable Custom Configs\"");
+			fFilename.WriteLine("	// \"Create Config Types\"");
+			fFilename.WriteLine("	// \"Execute Config Types\"");
+			fFilename.WriteLine("	\"Plugin Settings\"");
+			fFilename.WriteLine("	{");
+			fFilename.WriteLine("		\"General\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			// Enable Super Tanks++.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Plugin Enabled\"				\"1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Super Tanks++ will create a backup config file.");
+			fFilename.WriteLine("			// The file will be located in cfg/sourcemod/super_tanks++/backup_config.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Create Backup\"					\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Enable Super Tanks++ in these game mode types.");
+			fFilename.WriteLine("			// Add up numbers together for different results.");
+			fFilename.WriteLine("			// 0: All game mode types.");
+			fFilename.WriteLine("			// 1: Co-Op modes only.");
+			fFilename.WriteLine("			// 2: Versus modes only.");
+			fFilename.WriteLine("			// 4: Survival modes only.");
+			fFilename.WriteLine("			// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)");
+			fFilename.WriteLine("			\"Game Mode Types\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Enable Super Tanks++ in these game modes.");
+			fFilename.WriteLine("			// Separate game modes with commas.");
+			fFilename.WriteLine("			// Game mode limit: 64");
+			fFilename.WriteLine("			// Character limit for each game mode: 64");
+			fFilename.WriteLine("			// Empty: All");
+			fFilename.WriteLine("			// Not empty: Enabled only in these game modes.");
+			fFilename.WriteLine("			\"Enabled Game Modes\"			\"\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Disable Super Tanks++ in these game modes.");
+			fFilename.WriteLine("			// Separate game modes with commas.");
+			fFilename.WriteLine("			// Game mode limit: 64");
+			fFilename.WriteLine("			// Character limit for each game mode: 64");
+			fFilename.WriteLine("			// Empty: None");
+			fFilename.WriteLine("			// Not empty: Disabled only in these game modes.");
+			fFilename.WriteLine("			\"Disabled Game Modes\"			\"\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Announce each Super Tank's arrival.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Announce Arrival\"				\"1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Announce each Super Tank's death.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Announce Death\"				\"1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Display Tanks' names and health.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON, show names only.");
+			fFilename.WriteLine("			// 2: ON, show health only.");
+			fFilename.WriteLine("			// 3: ON, show both names and health.");
+			fFilename.WriteLine("			\"Display Health\"				\"3\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Enable Super Tanks++ in finales only.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Finales Only\"					\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Enable Super Tanks++ for human-controlled Tanks.");
+			fFilename.WriteLine("			// Note: Some Super Tank abilities may be too overpowered to use in a competitive game mode.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Human Super Tanks\"				\"1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Maximum types of Super Tanks allowed.");
+			fFilename.WriteLine("			// Minimum: 1");
+			fFilename.WriteLine("			// Maximum: 2500");
+			fFilename.WriteLine("			\"Maximum Types\"					\"86\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Multiply the Super Tank's health.");
+			fFilename.WriteLine("			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.");
+			fFilename.WriteLine("			// 0: No changes to health.");
+			fFilename.WriteLine("			// 1: Multiply original health only.");
+			fFilename.WriteLine("			// 2: Multiply extra health only.");
+			fFilename.WriteLine("			// 3: Multiply both.");
+			fFilename.WriteLine("			\"Multiply Health\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Amount of Tanks to spawn for each finale wave.");
+			fFilename.WriteLine("			// Separate waves with commas.");
+			fFilename.WriteLine("			// Wave limit: 3");
+			fFilename.WriteLine("			// Character limit for each wave: 3");
+			fFilename.WriteLine("			// 1st number = 1st wave");
+			fFilename.WriteLine("			// 2nd number = 2nd wave");
+			fFilename.WriteLine("			// 3rd number = 3rd wave");
+			fFilename.WriteLine("			\"Tank Waves\"					\"2,3,4\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Custom\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			// Enable Super Tanks++ custom configuration.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Enable Custom Configs\"			\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The type of custom config that Super Tanks++ creates.");
+			fFilename.WriteLine("			// Combine numbers in any order for different results.");
+			fFilename.WriteLine("			// Character limit: 5");
+			fFilename.WriteLine("			// 1: Difficulties");
+			fFilename.WriteLine("			// 2: Maps");
+			fFilename.WriteLine("			// 3: Game modes");
+			fFilename.WriteLine("			// 4: Days");
+			fFilename.WriteLine("			// 5: Player count");
+			fFilename.WriteLine("			\"Create Config Types\"			\"12345\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The type of custom config that Super Tanks++ executes.");
+			fFilename.WriteLine("			// Combine numbers in any order for different results.");
+			fFilename.WriteLine("			// Character limit: 5");
+			fFilename.WriteLine("			// 1: Difficulties");
+			fFilename.WriteLine("			// 2: Maps");
+			fFilename.WriteLine("			// 3: Game modes");
+			fFilename.WriteLine("			// 4: Days");
+			fFilename.WriteLine("			// 5: Player count");
+			fFilename.WriteLine("			\"Execute Config Types\"			\"1\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("	}");
+			fFilename.WriteLine("}");
+		}
+		else
+		{
+			fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+			fFilename.WriteLine("\"Super Tanks++\"");
+			fFilename.WriteLine("{");
+			fFilename.WriteLine("	\"Example\"");
+			fFilename.WriteLine("	{");
+			fFilename.WriteLine("		\"General\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			// Name of the Super Tank.");
+			fFilename.WriteLine("			// Character limit: 32");
+			fFilename.WriteLine("			// Empty: \"Tank\"");
+			fFilename.WriteLine("			// Not Empty: Tank's custom name");
+			fFilename.WriteLine("			\"Tank Name\"						\"Tank 1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Enable the Super Tank.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// These are the Super Tank's skin and glow outline colors.");
+			fFilename.WriteLine("			// Separate colors with \"|\".");
+			fFilename.WriteLine("			// Separate RGBAs with commas.");
+			fFilename.WriteLine("			// 1st set = skin color (RGBA)");
+			fFilename.WriteLine("			// 2nd set = glow color (RGB)");
+			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"255,255,255,255|255,255,255\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank will have a glow outline.");
+			fFilename.WriteLine("			// Only available in Left 4 Dead 2.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Glow Effect\"					\"1\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Props that the Super Tank can spawn with.");
+			fFilename.WriteLine("			// Combine numbers in any order for different results.");
+			fFilename.WriteLine("			// Character limit: 6");
+			fFilename.WriteLine("			// 1: Attach a blur effect only.");
+			fFilename.WriteLine("			// 2: Attach lights only.");
+			fFilename.WriteLine("			// 3: Attach oxygen tanks only.");
+			fFilename.WriteLine("			// 4: Attach flames to oxygen tanks.");
+			fFilename.WriteLine("			// 5: Attach rocks only.");
+			fFilename.WriteLine("			// 6: Attach tires only.");
+			fFilename.WriteLine("			\"Props Attached\"				\"23456\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Each prop has 1 of this many chances to appear when the Super Tank appears.");
+			fFilename.WriteLine("			// Separate chances with commas.");
+			fFilename.WriteLine("			// Chances limit: 6");
+			fFilename.WriteLine("			// Character limit for each chance: 3");
+			fFilename.WriteLine("			// 1st number = Chance for a blur effect to appear.");
+			fFilename.WriteLine("			// 2nd number = Chance for lights to appear.");
+			fFilename.WriteLine("			// 3rd number = Chance for oxygen tanks to appear.");
+			fFilename.WriteLine("			// 4th number = Chance for oxygen tank flames to appear.");
+			fFilename.WriteLine("			// 5th number = Chance for rocks to appear.");
+			fFilename.WriteLine("			// 6th number = Chance for tires to appear.");
+			fFilename.WriteLine("			\"Props Chance\"					\"3,3,3,3,3,3\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank's prop colors.");
+			fFilename.WriteLine("			// Separate colors with \"|\".");
+			fFilename.WriteLine("			// Separate RGBAs with commas.");
+			fFilename.WriteLine("			// 1st set = lights color (RGBA)");
+			fFilename.WriteLine("			// 2nd set = oxygen tanks color (RGBA)");
+			fFilename.WriteLine("			// 3rd set = oxygen tank flames color (RGBA)");
+			fFilename.WriteLine("			// 4th set = rocks color (RGBA)");
+			fFilename.WriteLine("			// 5th set = tires color (RGBA)");
+			fFilename.WriteLine("			\"Props Colors\"					\"255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank will spawn with a particle effect.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Particle Effect\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The particle effects for the Super Tank.");
+			fFilename.WriteLine("			// Combine numbers in any order for different results.");
+			fFilename.WriteLine("			// Character limit: 7");
+			fFilename.WriteLine("			// 1: Blood Explosion");
+			fFilename.WriteLine("			// 2: Electric Jolt");
+			fFilename.WriteLine("			// 3: Fire Trail");
+			fFilename.WriteLine("			// 4: Ice Steam");
+			fFilename.WriteLine("			// 5: Meteor Smoke");
+			fFilename.WriteLine("			// 6: Smoker Cloud");
+			fFilename.WriteLine("			// 7: Acid Trail (Only available in Left 4 Dead 2.)");
+			fFilename.WriteLine("			\"Particle Effects\"				\"1234567\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank's rock will have a particle effect.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Rock Effect\"					\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The particle effects for the Super Tank's rock.");
+			fFilename.WriteLine("			// Combine numbers in any order for different results.");
+			fFilename.WriteLine("			// Character limit: 4");
+			fFilename.WriteLine("			// 1: Blood Explosion");
+			fFilename.WriteLine("			// 2: Electric Jolt");
+			fFilename.WriteLine("			// 3: Fire Trail");
+			fFilename.WriteLine("			// 4: Acid Trail (Only available in Left 4 Dead 2.)");
+			fFilename.WriteLine("			\"Rock Effects\"					\"1234\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Enhancements\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			// The Super Tank's claw attacks do this much damage.");
+			fFilename.WriteLine("			// Minimum: 0.0");
+			fFilename.WriteLine("			// Maximum: 9999999999.0");
+			fFilename.WriteLine("			\"Claw Damage\"					\"5.0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Extra health given to the Super Tank.");
+			fFilename.WriteLine("			// Note: Tank's health limit on any difficulty is 65,535.");
+			fFilename.WriteLine("			// Note: Depending on the setting for \"Multiply Health,\" the Super Tank's health will be multiplied based on player count.");
+			fFilename.WriteLine("			// Positive numbers: Current health + Extra health");
+			fFilename.WriteLine("			// Negative numbers: Current health - Extra health");
+			fFilename.WriteLine("			// Minimum: -65535");
+			fFilename.WriteLine("			// Maximum: 65535");
+			fFilename.WriteLine("			\"Extra Health\"					\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank's rock throws do this much damage.");
+			fFilename.WriteLine("			// Minimum: 0.0");
+			fFilename.WriteLine("			// Maximum: 9999999999.0");
+			fFilename.WriteLine("			\"Rock Damage\"					\"5.0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Set the Super Tank's run speed.");
+			fFilename.WriteLine("			// Note: Default run speed is 1.0.");
+			fFilename.WriteLine("			// Minimum: 0.1");
+			fFilename.WriteLine("			// Maximum: 3.0");
+			fFilename.WriteLine("			\"Run Speed\"						\"1.0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// The Super Tank throws a rock every time this many seconds passes.");
+			fFilename.WriteLine("			// Note: Default throw interval is 5.0 seconds.");
+			fFilename.WriteLine("			// Minimum: 0.1");
+			fFilename.WriteLine("			// Maximum: 9999999999.0");
+			fFilename.WriteLine("			\"Throw Interval\"				\"5.0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Immunities\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			// Give the Super Tank bullet immunity.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Bullet Immunity\"				\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Give the Super Tank explosive immunity.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Explosive Immunity\"			\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Give the Super Tank fire immunity.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Fire Immunity\"					\"0\"");
+			fFilename.WriteLine("");
+			fFilename.WriteLine("			// Give the Super Tank melee immunity.");
+			fFilename.WriteLine("			// 0: OFF");
+			fFilename.WriteLine("			// 1: ON");
+			fFilename.WriteLine("			\"Melee Immunity\"				\"0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("	}");
+			fFilename.WriteLine("}");
+		}
+		delete fFilename;
 	}
 }
 
@@ -1454,12 +1753,17 @@ bool bIsTankAllowed(int client)
 	return true;
 }
 
+public void vSTEnableCvar(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	vPluginStatus();
+}
+
 public void vSTGameDifficultyCvar(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	if (StrContains(g_sConfigExecute, "1") != -1)
 	{
 		char sDifficultyConfig[512];
-		vGetCurrentDifficulty(g_cvSTFindConVar[0], sDifficultyConfig);
+		vGetCurrentDifficulty(g_cvSTFindConVar[1], sDifficultyConfig);
 		vLoadConfigs(sDifficultyConfig);
 	}
 }
@@ -1710,7 +2014,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 	{
 		return Plugin_Continue;
 	}
-	g_cvSTFindConVar[3].SetString("32");
+	g_cvSTFindConVar[4].SetString("32");
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
 		if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
@@ -1890,10 +2194,10 @@ public Action tTimerReloadConfigs(Handle timer)
 		vLoadConfigs(g_sSavePath, true);
 		g_iFileTimeOld[0] = g_iFileTimeNew[0];
 	}
-	if (StrContains(g_sConfigExecute, "1") != -1 && g_iConfigEnable == 1 && g_cvSTFindConVar[0] != null)
+	if (StrContains(g_sConfigExecute, "1") != -1 && g_iConfigEnable == 1 && g_cvSTFindConVar[1] != null)
 	{
 		char sDifficultyConfig[512];
-		vGetCurrentDifficulty(g_cvSTFindConVar[0], sDifficultyConfig);
+		vGetCurrentDifficulty(g_cvSTFindConVar[1], sDifficultyConfig);
 		g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[1] != g_iFileTimeNew[1])
 		{
@@ -1917,7 +2221,7 @@ public Action tTimerReloadConfigs(Handle timer)
 	if (StrContains(g_sConfigExecute, "3") != -1 && g_iConfigEnable == 1)
 	{
 		char sModeConfig[512];
-		vGetCurrentMode(g_cvSTFindConVar[1], sModeConfig);
+		vGetCurrentMode(g_cvSTFindConVar[2], sModeConfig);
 		g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[3] != g_iFileTimeNew[3])
 		{

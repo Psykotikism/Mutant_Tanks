@@ -41,6 +41,11 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_item", "st_item");
+}
+
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -112,5 +117,54 @@ public void ST_Event(Event event, const char[] name)
 				}
 			}
 		}
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank gives survivors items upon death.");
+		fFilename.WriteLine("		// Requires \"st_item.smx\" to be installed.");
+		fFilename.WriteLine("		\"Item Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Item Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank gives survivors this loadout.");
+		fFilename.WriteLine("			// Item limit: 5");
+		fFilename.WriteLine("			// Character limit for each item: 64");
+		fFilename.WriteLine("			\"Item Loadout\"					\"rifle,pistol,first_aid_kit,pain_pills\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The mode of the Super Tank's item ability.");
+		fFilename.WriteLine("			// 0: Survivors get a random item.");
+		fFilename.WriteLine("			// 1: Survivors get all items.");
+		fFilename.WriteLine("			\"Item Mode\"						\"0\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }

@@ -37,6 +37,11 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_jump", "st_jump");
+}
+
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -64,6 +69,45 @@ public void ST_Spawn(int client)
 	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iJumpAbility == 1)
 	{
 		CreateTimer(1.0, tTimerJump, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank jumps really high.");
+		fFilename.WriteLine("		// Requires \"st_jump.smx\" to be installed.");
+		fFilename.WriteLine("		\"Jump Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Jump Chance\"					\"4\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }
 

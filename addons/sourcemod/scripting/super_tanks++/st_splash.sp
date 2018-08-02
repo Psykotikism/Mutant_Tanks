@@ -41,6 +41,11 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_splash", "st_splash");
+}
+
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -78,6 +83,55 @@ public void ST_Event(Event event, const char[] name)
 		{
 			CreateTimer(2.9, tTimerSplash, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank releases a splash damage upon death.");
+		fFilename.WriteLine("		// Requires \"st_splash.smx\" to be installed.");
+		fFilename.WriteLine("		\"Splash Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Splash Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank's splashes do this much damage.");
+		fFilename.WriteLine("			// Minimum: 1");
+		fFilename.WriteLine("			// Maximum: 9999999999");
+		fFilename.WriteLine("			\"Splash Damage\"					\"5\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
+		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
+		fFilename.WriteLine("			\"Splash Range\"					\"150.0\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }
 

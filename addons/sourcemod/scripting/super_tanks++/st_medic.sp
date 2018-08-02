@@ -43,6 +43,11 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_medic", "st_medic");
+}
+
 public void ST_Configs(char[] savepath, int limit, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -147,5 +152,74 @@ public void ST_Event(Event event, const char[] name)
 				}
 			}
 		}
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank heals special infected upon death.");
+		fFilename.WriteLine("		// Requires \"st_medic.smx\" to be installed.");
+		fFilename.WriteLine("		\"Medic Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Medic Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank gives special infected this much health each time.");
+		fFilename.WriteLine("			// 1st number = Health given to Smokers.");
+		fFilename.WriteLine("			// 2nd number = Health given to Boomers.");
+		fFilename.WriteLine("			// 3rd number = Health given to Hunters.");
+		fFilename.WriteLine("			// 4th number = Health given to Spitters.");
+		fFilename.WriteLine("			// 5th number = Health given to Jockeys.");
+		fFilename.WriteLine("			// 6th number = Health given to Chargers.");
+		fFilename.WriteLine("			// Positive numbers: Current health + Medic health");
+		fFilename.WriteLine("			// Negative numbers: Current health - Medic health");
+		fFilename.WriteLine("			// Minimum: -65535");
+		fFilename.WriteLine("			// Maximum: 65535");
+		fFilename.WriteLine("			\"Medic Health\"					\"25,25,25,25,25,25\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The special infected's max health.");
+		fFilename.WriteLine("			// The Super Tank will not heal special infected if they already have this much health.");
+		fFilename.WriteLine("			// 1st number = Smoker's maximum health.");
+		fFilename.WriteLine("			// 2nd number = Boomer's maximum health.");
+		fFilename.WriteLine("			// 3rd number = Hunter's maximum health.");
+		fFilename.WriteLine("			// 4th number = Spitter's maximum health.");
+		fFilename.WriteLine("			// 5th number = Jockey's maximum health.");
+		fFilename.WriteLine("			// 6th number = Charger's maximum health.");
+		fFilename.WriteLine("			// Minimum: 1");
+		fFilename.WriteLine("			// Maximum: 65535");
+		fFilename.WriteLine("			\"Medic Max Health\"				\"250,50,250,100,325,600\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
+		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
+		fFilename.WriteLine("			\"Medic Range\"					\"500.0\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }

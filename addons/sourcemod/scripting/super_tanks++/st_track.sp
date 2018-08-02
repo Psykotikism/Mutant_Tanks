@@ -45,6 +45,11 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_track", "st_track");
+}
+
 public void Think(int entity)
 {
 	bIsValidEntity(entity) ? vTrack(entity) : SDKUnhook(entity, SDKHook_Think, Think);
@@ -340,6 +345,56 @@ void vTrack(int entity)
 				SetEntProp(entity, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
 			}
 		}
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank throws a heat-seeking rock that will track down the nearest survivor.");
+		fFilename.WriteLine("		// Requires \"st_track.smx\" to be installed.");
+		fFilename.WriteLine("		\"Track Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Track Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The mode of the Super Tank's track ability.");
+		fFilename.WriteLine("			// 0: The Super Tank's rock will only start tracking when it's near a survivor.");
+		fFilename.WriteLine("			// 1: The Super Tank's rock will track the nearest survivor.");
+		fFilename.WriteLine("			\"Track Mode\"					\"1\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank's track ability is this fast.");
+		fFilename.WriteLine("			// Note: This setting only applies if the \"Track Mode\" setting is set to 1.");
+		fFilename.WriteLine("			// Minimum: 100.0");
+		fFilename.WriteLine("			// Maximum: 500.0");
+		fFilename.WriteLine("			\"Track Speed\"					\"300.0\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }
 

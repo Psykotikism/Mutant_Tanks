@@ -41,6 +41,11 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_witch", "st_witch");
+}
+
 public void OnMapStart()
 {
 	if (g_bLateLoad)
@@ -153,5 +158,49 @@ public void ST_Ability(int client)
 				}
 			}
 		}
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank spawns Witch minions.");
+		fFilename.WriteLine("		// Requires \"st_witch.smx\" to be installed.");
+		fFilename.WriteLine("		\"Witch Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank spawns this many Witches at once.");
+		fFilename.WriteLine("			// Minimum: 1");
+		fFilename.WriteLine("			// Maximum: 25");
+		fFilename.WriteLine("			\"Witch Amount\"					\"3\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank's Witch minion causes this much damage per hit.");
+		fFilename.WriteLine("			// Minimum: 1");
+		fFilename.WriteLine("			// Maximum: 9999999999");
+		fFilename.WriteLine("			\"Witch Minion Damage\"			\"5\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }

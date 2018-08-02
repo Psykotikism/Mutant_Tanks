@@ -12,92 +12,6 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define MELEE_AXE_V "models/weapons/melee/v_fireaxe.mdl"
-#define MELEE_AXE_W "models/weapons/melee/w_fireaxe.mdl"
-#define MELEE_BAT_V "models/weapons/melee/v_bat.mdl"
-#define MELEE_BAT_W "models/weapons/melee/w_bat.mdl"
-#define MELEE_CHAINSAW_V "models/weapons/melee/v_chainsaw.mdl"
-#define MELEE_CHAINSAW_W "models/weapons/melee/w_chainsaw.mdl"
-#define MELEE_CRICKET_V "models/weapons/melee/v_cricket_bat.mdl"
-#define MELEE_CRICKET_W "models/weapons/melee/w_cricket_bat.mdl"
-#define MELEE_CROWBAR_V "models/weapons/melee/v_crowbar.mdl"
-#define MELEE_CROWBAR_W "models/weapons/melee/w_crowbar.mdl"
-#define MELEE_GOLFCLUB_V "models/weapons/melee/v_golfclub.mdl"
-#define MELEE_GOLFCLUB_W "models/weapons/melee/w_golfclub.mdl"
-#define MELEE_GUITAR_V "models/weapons/melee/v_electric_guitar.mdl"
-#define MELEE_GUITAR_W "models/weapons/melee/w_electric_guitar.mdl"
-#define MELEE_KATANA_V "models/weapons/melee/v_katana.mdl"
-#define MELEE_KATANA_W "models/weapons/melee/w_katana.mdl"
-#define MELEE_KNIFE_V "models/v_models/v_knife_t.mdl"
-#define MELEE_KNIFE_W "models/w_models/weapons/w_knife_t.mdl"
-#define MELEE_MACHETE_V "models/weapons/melee/v_machete.mdl"
-#define MELEE_MACHETE_W "models/weapons/melee/w_machete.mdl"
-#define MELEE_PAN_V "models/weapons/melee/v_frying_pan.mdl"
-#define MELEE_PAN_W "models/weapons/melee/w_frying_pan.mdl"
-#define MELEE_TONFA_V "models/weapons/melee/v_tonfa.mdl"
-#define MELEE_TONFA_W "models/weapons/melee/w_tonfa.mdl"
-#define SCRIPT_AXE "scripts/melee/fireaxe.txt"
-#define SCRIPT_BAT "scripts/melee/baseball_bat.txt"
-#define SCRIPT_CRICKET "scripts/melee/cricket_bat.txt"
-#define SCRIPT_CROWBAR "scripts/melee/crowbar.txt"
-#define SCRIPT_GOLFCLUB "scripts/melee/golfclub.txt"
-#define SCRIPT_GUITAR "scripts/melee/electric_guitar.txt"
-#define SCRIPT_KATANA "scripts/melee/katana.txt"
-#define SCRIPT_KNIFE "scripts/melee/knife.txt"
-#define SCRIPT_MACHETE "scripts/melee/machete.txt"
-#define SCRIPT_PAN "scripts/melee/frying_pan.txt"
-#define SCRIPT_TONFA "scripts/melee/tonfa.txt"
-#define WEAPON_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
-#define WEAPON_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
-#define WEAPON_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
-#define WEAPON_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
-#define WEAPON_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
-#define WEAPON_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
-#define WEAPON_PISTOL_V "models/v_models/weapons/v_pistol_1911.mdl"
-#define WEAPON_PISTOL_W "models/w_models/weapons/w_pistol_1911.mdl"
-#define WEAPON_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
-#define WEAPON_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
-#define WEAPON_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
-#define WEAPON_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
-#define WEAPON2_AK47_V "models/v_models/weapons/v_rifle_ak47.mdl"
-#define WEAPON2_AK47_W "models/w_models/weapons/w_rifle_ak47.mdl"
-#define WEAPON2_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
-#define WEAPON2_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
-#define WEAPON2_AWP_V "models/v_models/weapons/v_sniper_awp.mdl"
-#define WEAPON2_AWP_W "models/w_models/weapons/w_sniper_awp.mdl"
-#define WEAPON2_CHROME_V "models/v_models/weapons/v_shotgun.mdl"
-#define WEAPON2_CHROME_W "models/w_models/weapons/w_shotgun.mdl"
-#define WEAPON2_DESERT_V "models/v_models/weapons/v_desert_rifle.mdl"
-#define WEAPON2_DESERT_W "models/w_models/weapons/w_desert_rifle.mdl"
-#define WEAPON2_GRENADE_V "models/v_models/weapons/v_grenade_launcher.mdl"
-#define WEAPON2_GRENADE_W "models/w_models/weapons/w_grenade_launcher.mdl"
-#define WEAPON2_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
-#define WEAPON2_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
-#define WEAPON2_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
-#define WEAPON2_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
-#define WEAPON2_M60_V "models/v_models/weapons/v_m60.mdl"
-#define WEAPON2_M60_W "models/w_models/weapons/w_m60.mdl"
-#define WEAPON2_MAGNUM_V "models/v_models/weapons/v_desert_eagle.mdl"
-#define WEAPON2_MAGNUM_W "models/w_models/weapons/w_desert_eagle.mdl"
-#define WEAPON2_MILITARY_V "models/v_models/weapons/v_sniper_military.mdl"
-#define WEAPON2_MILITARY_W "models/w_models/weapons/w_sniper_military.mdl"
-#define WEAPON2_MP5_V "models/v_models/weapons/v_smg_mp5.mdl"
-#define WEAPON2_MP5_W "models/w_models/weapons/w_smg_mp5.mdl"
-#define WEAPON2_PISTOL_V "models/v_models/weapons/v_pistol_a.mdl"
-#define WEAPON2_PISTOL_W "models/w_models/weapons/w_pistol_a.mdl"
-#define WEAPON2_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
-#define WEAPON2_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
-#define WEAPON2_SCOUT_V "models/v_models/weapons/v_sniper_scout.mdl"
-#define WEAPON2_SCOUT_W "models/w_models/weapons/w_sniper_scout.mdl"
-#define WEAPON2_SG552_V "models/v_models/weapons/v_rifle_sg552.mdl"
-#define WEAPON2_SG552_W "models/w_models/weapons/w_rifle_sg552.mdl"
-#define WEAPON2_SILENCED_V "models/v_models/weapons/v_smg_a.mdl"
-#define WEAPON2_SILENCED_W "models/w_models/weapons/w_smg_a.mdl"
-#define WEAPON2_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
-#define WEAPON2_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
-#define WEAPON2_SPAS_V "models/v_models/weapons/v_shotgun_spas.mdl"
-#define WEAPON2_SPAS_W "models/w_models/weapons/w_shotgun_spas.mdl"
-
 bool g_bDrop[MAXPLAYERS + 1];
 bool g_bTankConfig[ST_MAXTYPES + 1];
 char g_sWeaponClass[32][128];
@@ -135,6 +49,7 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_drop", "st_drop");
 	g_cvSTFindConVar[0] = bIsL4D2Game() ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
 	g_cvSTFindConVar[1] = bIsL4D2Game() ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
 	g_cvSTFindConVar[2] = FindConVar("ammo_huntingrifle_max");
@@ -525,6 +440,56 @@ void vGetPosAng2(int client, int weapon, float pos[3], float angle[3], int posit
 	}
 	float flDropWeaponScale = !g_bTankConfig[ST_TankType(client)] ? g_flDropWeaponScale[ST_TankType(client)] : g_flDropWeaponScale2[ST_TankType(client)];
 	scale = scale * flDropWeaponScale;
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank drops weapons upon death.");
+		fFilename.WriteLine("		// Requires \"st_drop.smx\" to be installed.");
+		fFilename.WriteLine("		\"Drop Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Drop Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to drop guns with a full clip.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Drop Clip Chance\"				\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank's weapon size is multiplied by this value.");
+		fFilename.WriteLine("			// Note: Default weapon size x Drop weapon scale");
+		fFilename.WriteLine("			// Minimum: 1.0");
+		fFilename.WriteLine("			// Maximum: 2.0");
+		fFilename.WriteLine("			\"Drop Weapon Scale\"				\"1.0\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
+	}
 }
 
 void vReset(int client)

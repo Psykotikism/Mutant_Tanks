@@ -46,6 +46,11 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_rock", "st_rock");
+}
+
 public void OnMapStart()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -183,6 +188,64 @@ public void ST_Ability(int client)
 		dpDataPack.WriteFloat(flPos[1]);
 		dpDataPack.WriteFloat(flPos[2]);
 		dpDataPack.WriteFloat(GetEngineTime());
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank creates rock showers.");
+		fFilename.WriteLine("		// Requires \"st_rock.smx\" to be installed.");
+		fFilename.WriteLine("		\"Rock Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Rock Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank's rocks do this much damage.");
+		fFilename.WriteLine("			// Minimum: 1");
+		fFilename.WriteLine("			// Maximum: 9999999999");
+		fFilename.WriteLine("			\"Rock Damage\"					\"5\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank's ability effects last this long.");
+		fFilename.WriteLine("			// Minimum: 0.1");
+		fFilename.WriteLine("			// Maximum: 9999999999.0");
+		fFilename.WriteLine("			\"Rock Duration\"					\"5.0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The radius of the Super Tank's rock shower.");
+		fFilename.WriteLine("			// 1st number = Minimum radius");
+		fFilename.WriteLine("			// Minimum: -5.0");
+		fFilename.WriteLine("			// Maximum: 0.0");
+		fFilename.WriteLine("			// 2nd number = Maximum radius");
+		fFilename.WriteLine("			// Minimum: 0.0");
+		fFilename.WriteLine("			// Maximum: 5.0");
+		fFilename.WriteLine("			\"Rock Radius\"					\"-1.25,1.25\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }
 

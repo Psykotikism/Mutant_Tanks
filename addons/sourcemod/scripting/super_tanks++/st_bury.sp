@@ -53,6 +53,7 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_bury", "st_bury");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	StartPrepSDKCall(SDKCall_Player);
 	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnRevived");
@@ -271,6 +272,77 @@ void vStopBury(int client, int owner)
 		{
 			SetEntityMoveType(client, MOVETYPE_WALK);
 		}
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank buries survivors.");
+		fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is buried.");
+		fFilename.WriteLine("		// - \"Bury Range\"");
+		fFilename.WriteLine("		// - \"Bury Range Chance\"");
+		fFilename.WriteLine("		// \"Bury Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is buried.");
+		fFilename.WriteLine("		// - \"Bury Chance\"");
+		fFilename.WriteLine("		// Requires \"st_bury.smx\" to be installed.");
+		fFilename.WriteLine("		\"Bury Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// Note: This setting does not affect the \"Bury Hit\" setting.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Bury Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank's ability effects last this long.");
+		fFilename.WriteLine("			// Minimum: 0.1");
+		fFilename.WriteLine("			// Maximum: 9999999999.0");
+		fFilename.WriteLine("			\"Bury Duration\"					\"5.0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank buries survivors this deep into the ground.");
+		fFilename.WriteLine("			// Minimum: 0.1");
+		fFilename.WriteLine("			// Maximum: 9999999999.0");
+		fFilename.WriteLine("			\"Bury Height\"					\"50.0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
+		fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Bury Hit\"						\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
+		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
+		fFilename.WriteLine("			\"Bury Range\"					\"150.0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the range ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Bury Range Chance\"				\"16\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }
 

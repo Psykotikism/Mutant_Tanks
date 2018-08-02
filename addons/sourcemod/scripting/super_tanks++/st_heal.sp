@@ -61,6 +61,7 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_heal", "st_heal");
 	g_cvSTFindConVar = FindConVar("survivor_max_incapacitated_count");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	StartPrepSDKCall(SDKCall_Player);
@@ -207,6 +208,88 @@ void vHealHit(int client, int owner)
 		SDKCall(g_hSDKRevivePlayer, client);
 		SetEntityHealth(client, 1);
 		SDKCall(g_hSDKHealPlayer, client, 50.0);
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank gains health from other nearby infected and sets survivors to black and white with temporary health.");
+		fFilename.WriteLine("		// \"Ability Enabled\" - Any nearby infected can give the Tank some health.");
+		fFilename.WriteLine("		// - \"Heal Interval\"");
+		fFilename.WriteLine("		// - \"Heal Range\"");
+		fFilename.WriteLine("		// \"Heal Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor can go black and white and have temporary health.");
+		fFilename.WriteLine("		// - \"Heal Chance\"");
+		fFilename.WriteLine("		// Requires \"st_heal.smx\" to be installed.");
+		fFilename.WriteLine("		\"Heal Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// Note: This setting does not affect the \"Heal Hit\" setting.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Heal Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
+		fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Heal Hit\"						\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank receives health from nearby infected every time this many seconds passes.");
+		fFilename.WriteLine("			// Minimum: 0.1");
+		fFilename.WriteLine("			// Maximum: 9999999999.0");
+		fFilename.WriteLine("			\"Heal Interval\"					\"5.0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The distance between an infected and the Super Tank needed to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
+		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
+		fFilename.WriteLine("			\"Heal Range\"					\"500.0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank receives this much health from nearby common infected.");
+		fFilename.WriteLine("			// Positive numbers: Current health + Health from commons");
+		fFilename.WriteLine("			// Negative numbers: Current health - Health from commons");
+		fFilename.WriteLine("			// Minimum: -65535");
+		fFilename.WriteLine("			// Maximum: 65535");
+		fFilename.WriteLine("			\"Health From Commons\"			\"50\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank receives this much health from other nearby special infected.");
+		fFilename.WriteLine("			// Positive numbers: Current health + Health from specials");
+		fFilename.WriteLine("			// Negative numbers: Current health - Health from specials");
+		fFilename.WriteLine("			// Minimum: -65535");
+		fFilename.WriteLine("			// Maximum: 65535");
+		fFilename.WriteLine("			\"Health From Specials\"			\"100\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank receives this much health from other nearby Tanks.");
+		fFilename.WriteLine("			// Positive numbers: Current health + Health from Tanks");
+		fFilename.WriteLine("			// Negative numbers: Current health - Health from Tanks");
+		fFilename.WriteLine("			// Minimum: -65535");
+		fFilename.WriteLine("			// Maximum: 65535");
+		fFilename.WriteLine("			\"Health From Tanks\"				\"500\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }
 

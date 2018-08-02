@@ -51,6 +51,11 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_enforce", "st_enforce");
+}
+
 public void OnMapStart()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -234,6 +239,82 @@ void vEnforceHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flEnforceDuration, tTimerStopEnforce, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank forces survivors to only use a certain weapon slot.");
+		fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is forced to only use a certain weapon slot.");
+		fFilename.WriteLine("		// - \"Enforce Range\"");
+		fFilename.WriteLine("		// - \"Enforce Range Chance\"");
+		fFilename.WriteLine("		// \"Enforce Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is forced to only use a certain weapon slot.");
+		fFilename.WriteLine("		// - \"Enforce Chance\"");
+		fFilename.WriteLine("		// Requires \"st_enforce.smx\" to be installed.");
+		fFilename.WriteLine("		\"Enforce Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// Note: This setting does not affect the \"Enforce Hit\" setting.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Enforce Chance\"				\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank's ability effects last this long.");
+		fFilename.WriteLine("			// Minimum: 0.1");
+		fFilename.WriteLine("			// Maximum: 9999999999.0");
+		fFilename.WriteLine("			\"Enforce Duration\"				\"5.0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
+		fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Enforce Hit\"					\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
+		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
+		fFilename.WriteLine("			\"Enforce Range\"					\"150.0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the range ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Enforce Range Chance\"			\"16\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank forces survivors to only use one of the following weapon slots.");
+		fFilename.WriteLine("			// Combine numbers in any order for different results.");
+		fFilename.WriteLine("			// Character limit: 5");
+		fFilename.WriteLine("			// 1: 1st slot only.");
+		fFilename.WriteLine("			// 2: 2nd slot only.");
+		fFilename.WriteLine("			// 3: 3rd slot only.");
+		fFilename.WriteLine("			// 4: 4th slot only.");
+		fFilename.WriteLine("			// 5: 5th slot only.");
+		fFilename.WriteLine("			\"Enforce Weapon Slots\"			\"12345\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }
 

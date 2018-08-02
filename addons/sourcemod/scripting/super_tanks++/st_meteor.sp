@@ -12,9 +12,6 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
-#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
-
 bool g_bMeteor[MAXPLAYERS + 1];
 bool g_bTankConfig[ST_MAXTYPES + 1];
 char g_sMeteorRadius[ST_MAXTYPES + 1][13];
@@ -43,6 +40,11 @@ public void OnAllPluginsLoaded()
 	{
 		SetFailState("No Super Tanks++ library found.");
 	}
+}
+
+public void OnPluginStart()
+{
+	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_meteor", "st_meteor");
 }
 
 public void OnMapStart()
@@ -176,6 +178,59 @@ void vMeteor(int client, int entity)
 				vDeleteEntity(iPointPush, 0.5);
 			}
 		}
+	}
+}
+
+void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+{
+	char sConfigFilename[128];
+	char sConfigLabel[128];
+	File fFilename;
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
+	if (FileExists(sConfigFilename))
+	{
+		return;
+	}
+	fFilename = OpenFile(sConfigFilename, "w+");
+	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
+	if (fFilename != null)
+	{
+		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
+		fFilename.WriteLine("\"Super Tanks++\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("	\"Example\"");
+		fFilename.WriteLine("	{");
+		fFilename.WriteLine("		// The Super Tank creates meteor showers.");
+		fFilename.WriteLine("		// Requires \"st_meteor.smx\" to be installed.");
+		fFilename.WriteLine("		\"Meteor Ability\"");
+		fFilename.WriteLine("		{");
+		fFilename.WriteLine("			// Enable this ability.");
+		fFilename.WriteLine("			// 0: OFF");
+		fFilename.WriteLine("			// 1: ON");
+		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
+		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
+		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
+		fFilename.WriteLine("			\"Meteor Chance\"					\"4\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The Super Tank's meteorites do this much damage.");
+		fFilename.WriteLine("			// Minimum: 1");
+		fFilename.WriteLine("			// Maximum: 9999999999");
+		fFilename.WriteLine("			\"Meteor Damage\"					\"5\"");
+		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The radius of the Super Tank's meteor shower.");
+		fFilename.WriteLine("			// 1st number = Minimum radius");
+		fFilename.WriteLine("			// Minimum: -200.0");
+		fFilename.WriteLine("			// Maximum: 0.0");
+		fFilename.WriteLine("			// 2nd number = Maximum radius");
+		fFilename.WriteLine("			// Minimum: 0.0");
+		fFilename.WriteLine("			// Maximum: 200.0");
+		fFilename.WriteLine("			\"Meteor Radius\"					\"-180.0,180.0\"");
+		fFilename.WriteLine("		}");
+		fFilename.WriteLine("	}");
+		fFilename.WriteLine("}");
+		delete fFilename;
 	}
 }
 
