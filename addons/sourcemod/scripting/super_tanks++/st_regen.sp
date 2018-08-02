@@ -155,7 +155,7 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 		fFilename.WriteLine("			// Maximum: 9999999999.0");
 		fFilename.WriteLine("			\"Regen Interval\"				\"1.0\"");
 		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank regenerates this much health each time.");
+		fFilename.WriteLine("			// The Super Tank stops regenerating health at this value.");
 		fFilename.WriteLine("			// Positive numbers: The Super Tank will stop regenerating health when it reaches this number.");
 		fFilename.WriteLine("			// Negative numbers: The Super Tank will stop losing health when it reaches this number.");
 		fFilename.WriteLine("			// Minimum: -65535");
