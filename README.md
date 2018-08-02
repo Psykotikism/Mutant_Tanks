@@ -1626,7 +1626,7 @@ st_enableplugin "1"
 			// Maximum: 9999999999.0
 			"Regen Interval"				"1.0"
 
-			// The Super Tank regenerates this much health each time.
+			// The Super Tank stops regenerating health at this value.
 			// Positive numbers: The Super Tank will stop regenerating health when it reaches this number.
 			// Negative numbers: The Super Tank will stop losing health when it reaches this number.
 			// Minimum: -65535
