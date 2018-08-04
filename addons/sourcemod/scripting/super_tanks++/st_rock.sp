@@ -182,8 +182,8 @@ public void ST_Ability(int client)
 		}
 		DataPack dpDataPack;
 		CreateDataTimer(0.2, tTimerRockUpdate, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpDataPack.WriteCell(EntIndexToEntRef(iRock));
 		dpDataPack.WriteCell(GetClientUserId(client));
-		dpDataPack.WriteCell(iRock);
 		dpDataPack.WriteFloat(flPos[0]);
 		dpDataPack.WriteFloat(flPos[1]);
 		dpDataPack.WriteFloat(flPos[2]);
@@ -252,9 +252,16 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerRockUpdate(Handle timer, DataPack pack)
 {
 	pack.Reset();
-	float flPos[3];
+	int iRock = EntRefToEntIndex(pack.ReadCell());// i changed the call order in the datapack to avoid doing useless stuff if the rock dont exist
+	if(iRock == INVALID_ENT_REFERENCE || !IsValidEntity(iRock))
+		return Plugin_Stop;
+	
+	// please check below if anything needs to be called even if the rock exists to me most if that looks useless
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	int iRock = pack.ReadCell();
+	if(!ST_TankAllowed(iTank))// it looks like you're not using anything below even if the !ST_TankAllowed(), you know you're code best
+		return Plugin_Stop;
+	
+	float flPos[3];
 	flPos[0] = pack.ReadFloat();
 	flPos[1] = pack.ReadFloat();
 	flPos[2] = pack.ReadFloat();
@@ -278,38 +285,34 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 		AcceptEntityInput(iRock, "Kill");
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	
+	float flAngles[3];
+	float flHitPos[3];
+	flAngles[0] = GetRandomFloat(-1.0, 1.0);
+	flAngles[1] = GetRandomFloat(-1.0, 1.0);
+	flAngles[2] = 2.0;
+	GetVectorAngles(flAngles, flAngles);
+	iGetRayHitPos(flPos, flAngles, flHitPos, iTank, true, 2);
+	float flDistance = GetVectorDistance(flPos, flHitPos);
+	if (flDistance > 800.0)
 	{
-		if (bIsValidEntity(iRock))
-		{
-			float flAngles[3];
-			float flHitPos[3];
-			flAngles[0] = GetRandomFloat(-1.0, 1.0);
-			flAngles[1] = GetRandomFloat(-1.0, 1.0);
-			flAngles[2] = 2.0;
-			GetVectorAngles(flAngles, flAngles);
-			iGetRayHitPos(flPos, flAngles, flHitPos, iTank, true, 2);
-			float flDistance = GetVectorDistance(flPos, flHitPos);
-			if (flDistance > 800.0)
-			{
-				flDistance = 800.0;
-			}
-			float flVector[3];
-			MakeVectorFromPoints(flPos, flHitPos, flVector);
-			NormalizeVector(flVector, flVector);
-			ScaleVector(flVector, flDistance - 40.0);
-			AddVectors(flPos, flVector, flHitPos);
-			if (flDistance > 300.0)
-			{ 
-				float flAngles2[3];
-				flAngles2[0] = GetRandomFloat(flMin, flMax);
-				flAngles2[1] = GetRandomFloat(flMin, flMax);
-				flAngles2[2] = -2.0;
-				GetVectorAngles(flAngles2, flAngles2);
-				TeleportEntity(iRock, flHitPos, flAngles2, NULL_VECTOR);
-				AcceptEntityInput(iRock, "LaunchRock");
-			}
-		}
+		flDistance = 800.0;
 	}
+	float flVector[3];
+	MakeVectorFromPoints(flPos, flHitPos, flVector);
+	NormalizeVector(flVector, flVector);
+	ScaleVector(flVector, flDistance - 40.0);
+	AddVectors(flPos, flVector, flHitPos);
+	if (flDistance > 300.0)
+	{
+		float flAngles2[3];
+		flAngles2[0] = GetRandomFloat(flMin, flMax);
+		flAngles2[1] = GetRandomFloat(flMin, flMax);
+		flAngles2[2] = -2.0;
+		GetVectorAngles(flAngles2, flAngles2);
+		TeleportEntity(iRock, flHitPos, flAngles2, NULL_VECTOR);
+		AcceptEntityInput(iRock, "LaunchRock");
+	}
+	
 	return Plugin_Continue;
 }
