@@ -226,7 +226,7 @@ void vDrugHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bDrug[client])
 	{
 		g_bDrug[client] = true;
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(1.0, tTimerDrug, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
@@ -304,22 +304,27 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsSurvivor(iSurvivor))
+	{
+		g_bDrug[iSurvivor] = false;
+		return Plugin_Stop;
+	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	{
+		g_bDrug[iSurvivor] = false;
+		vDrug(iSurvivor, false, g_umFadeUserMsgId, g_flDrugAngles);
+		return Plugin_Stop;
+	}
 	float flTime = pack.ReadFloat();
 	int iDrugAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iDrugAbility[ST_TankType(iTank)] : g_iDrugAbility2[ST_TankType(iTank)];
 	float flDrugDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flDrugDuration[ST_TankType(iTank)] : g_flDrugDuration2[ST_TankType(iTank)];
-	if (iDrugAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor) || (flTime + flDrugDuration) < GetEngineTime())
+	if (iDrugAbility == 0 || (flTime + flDrugDuration) < GetEngineTime())
 	{
 		g_bDrug[iSurvivor] = false;
-		if (bIsSurvivor(iSurvivor))
-		{
-			vDrug(iSurvivor, false, g_umFadeUserMsgId, g_flDrugAngles);
-		}
+		vDrug(iSurvivor, false, g_umFadeUserMsgId, g_flDrugAngles);
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(iSurvivor))
-	{
-		vDrug(iSurvivor, true, g_umFadeUserMsgId, g_flDrugAngles);
-	}
+	vDrug(iSurvivor, true, g_umFadeUserMsgId, g_flDrugAngles);
 	return Plugin_Handled;
 }

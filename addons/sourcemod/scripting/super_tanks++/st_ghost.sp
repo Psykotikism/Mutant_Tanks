@@ -184,68 +184,68 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 
 public void ST_Ability(int client)
 {
-	char sSet[2][16];
-	char sTankColors[28];
-	sTankColors = !g_bTankConfig[ST_TankType(client)] ? g_sTankColors[ST_TankType(client)] : g_sTankColors2[ST_TankType(client)];
-	TrimString(sTankColors);
-	ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-	char sRGB[4][4];
-	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
-	TrimString(sRGB[0]);
-	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-	TrimString(sRGB[1]);
-	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-	TrimString(sRGB[2]);
-	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-	char sSet2[5][16];
-	char sPropsColors[80];
-	sPropsColors = !g_bTankConfig[ST_TankType(client)] ? g_sPropsColors[ST_TankType(client)] : g_sPropsColors2[ST_TankType(client)];
-	TrimString(sPropsColors);
-	ExplodeString(sPropsColors, "|", sSet2, sizeof(sSet2), sizeof(sSet2[]));
-	char sProps[4][4];
-	ExplodeString(sSet2[0], ",", sProps, sizeof(sProps), sizeof(sProps[]));
-	TrimString(sProps[0]);
-	int iRed2 = (sProps[0][0] != '\0') ? StringToInt(sProps[0]) : 255;
-	TrimString(sProps[1]);
-	int iGreen2 = (sProps[1][0] != '\0') ? StringToInt(sProps[1]) : 255;
-	TrimString(sProps[2]);
-	int iBlue2 = (sProps[2][0] != '\0') ? StringToInt(sProps[2]) : 255;
-	char sProps2[4][4];
-	ExplodeString(sSet2[1], ",", sProps2, sizeof(sProps2), sizeof(sProps2[]));
-	TrimString(sProps2[0]);
-	int iRed3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[0]) : 255;
-	TrimString(sProps2[1]);
-	int iGreen3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[1]) : 255;
-	TrimString(sProps2[2]);
-	int iBlue3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[2]) : 255;
-	char sProps3[4][4];
-	ExplodeString(sSet2[2], ",", sProps3, sizeof(sProps3), sizeof(sProps3[]));
-	TrimString(sProps3[0]);
-	int iRed4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[0]) : 255;
-	TrimString(sProps3[1]);
-	int iGreen4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[1]) : 255;
-	TrimString(sProps3[2]);
-	int iBlue4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[2]) : 255;
-	char sProps4[4][4];
-	ExplodeString(sSet2[3], ",", sProps4, sizeof(sProps4), sizeof(sProps4[]));
-	TrimString(sProps4[0]);
-	int iRed5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[0]) : 255;
-	TrimString(sProps4[1]);
-	int iGreen5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[1]) : 255;
-	TrimString(sProps4[2]);
-	int iBlue5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[2]) : 255;
-	char sProps5[4][4];
-	ExplodeString(sSet2[4], ",", sProps5, sizeof(sProps5), sizeof(sProps5[]));
-	TrimString(sProps5[0]);
-	int iRed6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[0]) : 255;
-	TrimString(sProps5[1]);
-	int iGreen6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[1]) : 255;
-	TrimString(sProps5[2]);
-	int iBlue6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[2]) : 255;
 	int iGhostAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGhostAbility[ST_TankType(client)] : g_iGhostAbility2[ST_TankType(client)];
-	int iGhostRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGhostChance[ST_TankType(client)] : g_iGhostChance2[ST_TankType(client)];
 	if (iGhostAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
+		char sSet[2][16];
+		char sTankColors[28];
+		sTankColors = !g_bTankConfig[ST_TankType(client)] ? g_sTankColors[ST_TankType(client)] : g_sTankColors2[ST_TankType(client)];
+		TrimString(sTankColors);
+		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+		char sRGB[4][4];
+		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+		TrimString(sRGB[0]);
+		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+		TrimString(sRGB[1]);
+		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+		TrimString(sRGB[2]);
+		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+		char sSet2[5][16];
+		char sPropsColors[80];
+		sPropsColors = !g_bTankConfig[ST_TankType(client)] ? g_sPropsColors[ST_TankType(client)] : g_sPropsColors2[ST_TankType(client)];
+		TrimString(sPropsColors);
+		ExplodeString(sPropsColors, "|", sSet2, sizeof(sSet2), sizeof(sSet2[]));
+		char sProps[4][4];
+		ExplodeString(sSet2[0], ",", sProps, sizeof(sProps), sizeof(sProps[]));
+		TrimString(sProps[0]);
+		int iRed2 = (sProps[0][0] != '\0') ? StringToInt(sProps[0]) : 255;
+		TrimString(sProps[1]);
+		int iGreen2 = (sProps[1][0] != '\0') ? StringToInt(sProps[1]) : 255;
+		TrimString(sProps[2]);
+		int iBlue2 = (sProps[2][0] != '\0') ? StringToInt(sProps[2]) : 255;
+		char sProps2[4][4];
+		ExplodeString(sSet2[1], ",", sProps2, sizeof(sProps2), sizeof(sProps2[]));
+		TrimString(sProps2[0]);
+		int iRed3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[0]) : 255;
+		TrimString(sProps2[1]);
+		int iGreen3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[1]) : 255;
+		TrimString(sProps2[2]);
+		int iBlue3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[2]) : 255;
+		char sProps3[4][4];
+		ExplodeString(sSet2[2], ",", sProps3, sizeof(sProps3), sizeof(sProps3[]));
+		TrimString(sProps3[0]);
+		int iRed4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[0]) : 255;
+		TrimString(sProps3[1]);
+		int iGreen4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[1]) : 255;
+		TrimString(sProps3[2]);
+		int iBlue4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[2]) : 255;
+		char sProps4[4][4];
+		ExplodeString(sSet2[3], ",", sProps4, sizeof(sProps4), sizeof(sProps4[]));
+		TrimString(sProps4[0]);
+		int iRed5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[0]) : 255;
+		TrimString(sProps4[1]);
+		int iGreen5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[1]) : 255;
+		TrimString(sProps4[2]);
+		int iBlue5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[2]) : 255;
+		char sProps5[4][4];
+		ExplodeString(sSet2[4], ",", sProps5, sizeof(sProps5), sizeof(sProps5[]));
+		TrimString(sProps5[0]);
+		int iRed6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[0]) : 255;
+		TrimString(sProps5[1]);
+		int iGreen6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[1]) : 255;
+		TrimString(sProps5[2]);
+		int iBlue6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[2]) : 255;
+		int iGhostRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGhostChance[ST_TankType(client)] : g_iGhostChance2[ST_TankType(client)];
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{
 			if (bIsSpecialInfected(iInfected))
@@ -272,7 +272,7 @@ public void ST_Ability(int client)
 		{
 			g_iGhostAlpha[client] = 255;
 			g_bGhost[client] = true;
-			DataPack dpDataPack;
+			DataPack dpDataPack = new DataPack();
 			CreateDataTimer(0.1, tTimerGhost, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpDataPack.WriteCell(GetClientUserId(client));
 			dpDataPack.WriteCell(iRed);
@@ -421,6 +421,11 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	{
+		g_bGhost[iTank] = false;
+		return Plugin_Stop;
+	}
 	int iRed = pack.ReadCell();
 	int iGreen = pack.ReadCell();
 	int iBlue = pack.ReadCell();
@@ -440,72 +445,69 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	int iGreen6 = pack.ReadCell();
 	int iBlue6 = pack.ReadCell();
 	int iGhostAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostAbility[ST_TankType(iTank)] : g_iGhostAbility2[ST_TankType(iTank)];
-	if (iGhostAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (iGhostAbility == 0)
 	{
 		g_bGhost[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	g_iGhostAlpha[iTank] -= 2;
+	int iGhostFade = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFade[ST_TankType(iTank)] : g_iGhostFade2[ST_TankType(iTank)];
+	if (g_iGhostAlpha[iTank] < iGhostFade)
 	{
-		g_iGhostAlpha[iTank] -= 2;
-		int iGhostFade = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFade[ST_TankType(iTank)] : g_iGhostFade2[ST_TankType(iTank)];
-		if (g_iGhostAlpha[iTank] < iGhostFade)
+		g_iGhostAlpha[iTank] = iGhostFade;
+	}
+	int iProp = -1;
+	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+	{
+		char sModel[128];
+		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+		if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
 		{
-			g_iGhostAlpha[iTank] = iGhostFade;
-		}
-		int iProp = -1;
-		while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-		{
-			char sModel[128];
-			GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-			if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
+			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+			if (iOwner == iTank)
 			{
-				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == iTank)
+				if (strcmp(sModel, MODEL_JETPACK, false) == 0)
 				{
-					if (strcmp(sModel, MODEL_JETPACK, false) == 0)
-					{
-						SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iProp, iRed3, iGreen3, iBlue3, g_iGhostAlpha[iTank]);
-					}
-					if (strcmp(sModel, MODEL_CONCRETE, false) == 0)
-					{
-						SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iProp, iRed5, iGreen5, iBlue5, g_iGhostAlpha[iTank]);
-					}
-					if (strcmp(sModel, MODEL_TIRES, false) == 0)
-					{
-						SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iProp, iRed6, iGreen6, iBlue6, g_iGhostAlpha[iTank]);
-					}
-					if (strcmp(sModel, MODEL_TANK, false) == 0)
-					{
-						SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-						SetEntityRenderColor(iProp, iRed, iGreen, iBlue, g_iGhostAlpha[iTank]);
-					}
+					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+					SetEntityRenderColor(iProp, iRed3, iGreen3, iBlue3, g_iGhostAlpha[iTank]);
+				}
+				if (strcmp(sModel, MODEL_CONCRETE, false) == 0)
+				{
+					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+					SetEntityRenderColor(iProp, iRed5, iGreen5, iBlue5, g_iGhostAlpha[iTank]);
+				}
+				if (strcmp(sModel, MODEL_TIRES, false) == 0)
+				{
+					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+					SetEntityRenderColor(iProp, iRed6, iGreen6, iBlue6, g_iGhostAlpha[iTank]);
+				}
+				if (strcmp(sModel, MODEL_TANK, false) == 0)
+				{
+					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+					SetEntityRenderColor(iProp, iRed, iGreen, iBlue, g_iGhostAlpha[iTank]);
 				}
 			}
 		}
-		while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
-		{
-			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-			if (iOwner == iTank)
-			{
-				SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(iProp, iRed2, iGreen2, iBlue2, g_iGhostAlpha[iTank]);
-			}
-		}
-		while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
-		{
-			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-			if (iOwner == iTank)
-			{
-				SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(iProp, iRed4, iGreen4, iBlue4, g_iGhostAlpha[iTank]);
-			}
-		}
-		SetEntityRenderMode(iTank, RENDER_TRANSCOLOR);
-		SetEntityRenderColor(iTank, iRed, iGreen, iBlue, g_iGhostAlpha[iTank]);
 	}
+	while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+	{
+		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		if (iOwner == iTank)
+		{
+			SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+			SetEntityRenderColor(iProp, iRed2, iGreen2, iBlue2, g_iGhostAlpha[iTank]);
+		}
+	}
+	while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
+	{
+		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		if (iOwner == iTank)
+		{
+			SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+			SetEntityRenderColor(iProp, iRed4, iGreen4, iBlue4, g_iGhostAlpha[iTank]);
+		}
+	}
+	SetEntityRenderMode(iTank, RENDER_TRANSCOLOR);
+	SetEntityRenderColor(iTank, iRed, iGreen, iBlue, g_iGhostAlpha[iTank]);
 	return Plugin_Continue;
 }

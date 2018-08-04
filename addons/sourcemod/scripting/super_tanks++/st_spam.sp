@@ -165,7 +165,7 @@ public void ST_Ability(int client)
 	if (iSpamAbility == 1 && GetRandomInt(1, iSpamChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bSpam[client])
 	{
 		g_bSpam[client] = true;
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(0.5, tTimerSpam, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteFloat(GetEngineTime());
@@ -225,33 +225,35 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	float flTime = pack.ReadFloat();
-	int iSpamAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamAbility[ST_TankType(iTank)] : g_iSpamAbility2[ST_TankType(iTank)];
-	float flSpamDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flSpamDuration[ST_TankType(iTank)] : g_flSpamDuration2[ST_TankType(iTank)];
-	if (iSpamAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || (flTime + flSpamDuration) < GetEngineTime())
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bSpam[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	float flTime = pack.ReadFloat();
+	int iSpamAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamAbility[ST_TankType(iTank)] : g_iSpamAbility2[ST_TankType(iTank)];
+	float flSpamDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flSpamDuration[ST_TankType(iTank)] : g_flSpamDuration2[ST_TankType(iTank)];
+	if (iSpamAbility == 0 || (flTime + flSpamDuration) < GetEngineTime())
 	{
-		char sDamage[6];
-		int iSpamDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamDamage[ST_TankType(iTank)] : g_iSpamDamage2[ST_TankType(iTank)];
-		IntToString(iSpamDamage, sDamage, sizeof(sDamage));
-		float flPos[3];
-		float flAng[3];
-		GetClientEyePosition(iTank, flPos);
-		GetClientEyeAngles(iTank, flAng);
-		flPos[2] += 80.0;
-		int iSpammer = CreateEntityByName("env_rock_launcher");
-		if (bIsValidEntity(iSpammer))
-		{
-			DispatchKeyValue(iSpammer, "rockdamageoverride", sDamage);
-			TeleportEntity(iSpammer, flPos, flAng, NULL_VECTOR);
-			DispatchSpawn(iSpammer);
-			AcceptEntityInput(iSpammer, "LaunchRock");
-			AcceptEntityInput(iSpammer, "Kill");
-		}
+		g_bSpam[iTank] = false;
+		return Plugin_Stop;
+	}
+	char sDamage[6];
+	int iSpamDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamDamage[ST_TankType(iTank)] : g_iSpamDamage2[ST_TankType(iTank)];
+	IntToString(iSpamDamage, sDamage, sizeof(sDamage));
+	float flPos[3];
+	float flAng[3];
+	GetClientEyePosition(iTank, flPos);
+	GetClientEyeAngles(iTank, flAng);
+	flPos[2] += 80.0;
+	int iSpammer = CreateEntityByName("env_rock_launcher");
+	if (bIsValidEntity(iSpammer))
+	{
+		DispatchKeyValue(iSpammer, "rockdamageoverride", sDamage);
+		TeleportEntity(iSpammer, flPos, flAng, NULL_VECTOR);
+		DispatchSpawn(iSpammer);
+		AcceptEntityInput(iSpammer, "LaunchRock");
+		AcceptEntityInput(iSpammer, "Kill");
 	}
 	return Plugin_Continue;
 }

@@ -167,7 +167,7 @@ public void ST_Event(Event event, const char[] name)
 			{
 				if (bIsSurvivor(iSurvivor) && g_bIce[iSurvivor])
 				{
-					DataPack dpDataPack;
+					DataPack dpDataPack = new DataPack();
 					CreateDataTimer(0.1, tTimerStopIce, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 					dpDataPack.WriteCell(GetClientUserId(iTank));
@@ -216,7 +216,7 @@ void vIceHit(int client, int owner, int chance, int enabled)
 		SetEntityRenderColor(client, 0, 130, 255, 190);
 		EmitAmbientSound(SOUND_BULLET, flPos, client, SNDLEVEL_RAIDSIREN);
 		float flIceDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flIceDuration[ST_TankType(owner)] : g_flIceDuration2[ST_TankType(owner)];
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(flIceDuration, tTimerStopIce, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
@@ -309,19 +309,23 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	int iIceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iIceAbility[ST_TankType(iTank)] : g_iIceAbility2[ST_TankType(iTank)];
-	if (iIceAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor))
 	{
-		if (bIsSurvivor(iSurvivor))
-		{
-			vStopIce(iSurvivor);
-		}
+		g_bIce[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(iSurvivor))
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		vStopIce(iSurvivor);
+		return Plugin_Stop;
 	}
+	int iIceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iIceAbility[ST_TankType(iTank)] : g_iIceAbility2[ST_TankType(iTank)];
+	if (iIceAbility == 0)
+	{
+		vStopIce(iSurvivor);
+		return Plugin_Stop;
+	}
+	vStopIce(iSurvivor);
 	return Plugin_Continue;
 }

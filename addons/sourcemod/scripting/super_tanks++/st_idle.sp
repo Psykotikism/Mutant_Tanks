@@ -188,7 +188,7 @@ public void ST_Event(Event event, const char[] name)
 		int iBot = GetClientOfUserId(iBotId);
 		if (bIsIdlePlayer(iBot, iSurvivor)) 
 		{
-			DataPack dpDataPack;
+			DataPack dpDataPack = new DataPack();
 			CreateDataTimer(0.2, tTimerIdleFix, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 			dpDataPack.WriteCell(iSurvivorId);
 			dpDataPack.WriteCell(iBotId);
@@ -304,7 +304,7 @@ public Action tTimerIdleFix(Handle timer, DataPack pack)
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	int iBot = GetClientOfUserId(pack.ReadCell());
-	if (iSurvivor == 0 || iBot == 0 || !IsClientInGame(iSurvivor) || !IsPlayerAlive(iSurvivor) || !IsClientInGame(iBot) || !IsPlayerAlive(iSurvivor))
+	if (!bIsValidClient(iSurvivor) || !IsPlayerAlive(iSurvivor) || !bIsValidClient(iBot) || !IsPlayerAlive(iSurvivor))
 	{
 		return Plugin_Stop;
 	}

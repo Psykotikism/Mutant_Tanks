@@ -221,7 +221,7 @@ void vElectricHit(int client, int owner, int chance, int enabled)
 		float flElectricSpeed = !g_bTankConfig[ST_TankType(owner)] ? g_flElectricSpeed[ST_TankType(owner)] : g_flElectricSpeed2[ST_TankType(owner)];
 		SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", flElectricSpeed);
 		float flElectricInterval = !g_bTankConfig[ST_TankType(owner)] ? g_flElectricInterval[ST_TankType(owner)] : g_flElectricInterval2[ST_TankType(owner)];
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(flElectricInterval, tTimerElectric, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
@@ -315,32 +315,37 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsSurvivor(iSurvivor))
+	{
+		g_bElectric[iSurvivor] = false;
+		return Plugin_Stop;
+	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	{
+		g_bElectric[iSurvivor] = false;
+		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		return Plugin_Stop;
+	}
 	float flTime = pack.ReadFloat();
 	int iElectricAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iElectricAbility[ST_TankType(iTank)] : g_iElectricAbility2[ST_TankType(iTank)];
 	float flElectricDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flElectricDuration[ST_TankType(iTank)] : g_flElectricDuration2[ST_TankType(iTank)];
-	if (iElectricAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor) || (flTime + flElectricDuration) < GetEngineTime())
+	if (iElectricAbility == 0 || (flTime + flElectricDuration) < GetEngineTime())
 	{
 		g_bElectric[iSurvivor] = false;
-		if (bIsSurvivor(iSurvivor))
-		{
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
-		}
+		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(iSurvivor))
+	char sDamage[6];
+	int iElectricDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iElectricDamage[ST_TankType(iTank)] : g_iElectricDamage2[ST_TankType(iTank)];
+	IntToString(iElectricDamage, sDamage, sizeof(sDamage));
+	vDamage(iSurvivor, sDamage);
+	vShake(iSurvivor);
+	vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
+	switch (GetRandomInt(1, 2)) 
 	{
-		char sDamage[6];
-		int iElectricDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iElectricDamage[ST_TankType(iTank)] : g_iElectricDamage2[ST_TankType(iTank)];
-		IntToString(iElectricDamage, sDamage, sizeof(sDamage));
-		vDamage(iSurvivor, sDamage);
-		vShake(iSurvivor);
-		vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
-		switch (GetRandomInt(1, 2)) 
-		{
-			case 1: EmitSoundToAll(SOUND_ELECTRICITY, iSurvivor);
-			case 2: EmitSoundToAll(SOUND_ELECTRICITY2, iSurvivor);
-		}
+		case 1: EmitSoundToAll(SOUND_ELECTRICITY, iSurvivor);
+		case 2: EmitSoundToAll(SOUND_ELECTRICITY2, iSurvivor);
 	}
 	return Plugin_Continue;
 }

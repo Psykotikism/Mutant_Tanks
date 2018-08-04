@@ -34,7 +34,7 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.30"
+#define ST_VERSION "8.31"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 2500
 #define ST_MAXHEALTH 65535
@@ -331,16 +331,7 @@ stock bool bIsL4D2Game()
 
 stock bool bIsPlayerBurning(int client)
 {
-	if (GetEntPropFloat(client, Prop_Send, "m_burnPercent") > 0)
-	{
-		return true;
-	}
-	return false;
-}
-
-stock bool bIsPlayerFired(int client)
-{
-	if (GetEntProp(client, Prop_Data, "m_fFlags") & FL_ONFIRE)
+	if (GetEntPropFloat(client, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(client, Prop_Data, "m_fFlags") & FL_ONFIRE)
 	{
 		return true;
 	}
@@ -1266,6 +1257,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Drop Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Drop Clip Chance\"				\"4\"");
+			fFilename.WriteLine("			\"Drop Mode\"						\"0\"");
 			fFilename.WriteLine("			\"Drop Weapon Scale\"				\"1.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
@@ -3183,7 +3175,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Enhancements\"");
 			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Claw Damage\"					\"10.0\"");
 			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
+			fFilename.WriteLine("			\"Rock Damage\"					\"10.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Acid Ability\"");
 			fFilename.WriteLine("		{");
@@ -3231,6 +3225,13 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Spam Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Spam Damage\"					\"10\"");
 			fFilename.WriteLine("			\"Spam Duration\"					\"5.0\"");
+			fFilename.WriteLine("		}");
+			fFilename.WriteLine("		\"Track Ability\"");
+			fFilename.WriteLine("		{");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
+			fFilename.WriteLine("			\"Track Chance\"					\"1\"");
+			fFilename.WriteLine("			\"Track Mode\"					\"1\"");
+			fFilename.WriteLine("			\"Track Speed\"					\"450.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	// Here are some miscellaneous Tanks.");

@@ -296,123 +296,125 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerHeal(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iHealAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHealAbility[ST_TankType(iTank)] : g_iHealAbility2[ST_TankType(iTank)];
-	if (iHealAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bHeal[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iHealAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHealAbility[ST_TankType(iTank)] : g_iHealAbility2[ST_TankType(iTank)];
+	if (iHealAbility == 0)
 	{
-		int iType;
-		int iSpecial = -1;
-		float flHealRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flHealRange[ST_TankType(iTank)] : g_flHealRange2[ST_TankType(iTank)];
-		while ((iSpecial = FindEntityByClassname(iSpecial, "infected")) != INVALID_ENT_REFERENCE)
+		g_bHeal[iTank] = false;
+		return Plugin_Stop;
+	}
+	int iType;
+	int iSpecial = -1;
+	float flHealRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flHealRange[ST_TankType(iTank)] : g_flHealRange2[ST_TankType(iTank)];
+	while ((iSpecial = FindEntityByClassname(iSpecial, "infected")) != INVALID_ENT_REFERENCE)
+	{
+		float flTankPos[3];
+		float flInfectedPos[3];
+		GetClientAbsOrigin(iTank, flTankPos);
+		GetEntPropVector(iSpecial, Prop_Send, "m_vecOrigin", flInfectedPos);
+		float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
+		if (flDistance <= flHealRange)
+		{
+			int iHealth = GetClientHealth(iTank);
+			int iCommonHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealCommon[ST_TankType(iTank)]) : (iHealth + g_iHealCommon2[ST_TankType(iTank)]);
+			int iExtraHealth = (iCommonHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCommonHealth;
+			int iExtraHealth2 = (iCommonHealth < iHealth) ? 1 : iCommonHealth;
+			int iRealHealth = (iCommonHealth >= 0) ? iExtraHealth : iExtraHealth2;
+			if (iHealth > 500)
+			{
+				SetEntityHealth(iTank, iRealHealth);
+				if (bIsL4D2Game())
+				{
+					SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
+					SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 185, 0));
+					SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
+				}
+				iType = 1;
+			}
+		}
+	}
+	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
+	{
+		if (bIsSpecialInfected(iInfected))
 		{
 			float flTankPos[3];
 			float flInfectedPos[3];
 			GetClientAbsOrigin(iTank, flTankPos);
-			GetEntPropVector(iSpecial, Prop_Send, "m_vecOrigin", flInfectedPos);
-			float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
+			GetClientAbsOrigin(iInfected, flInfectedPos);
+			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
 			if (flDistance <= flHealRange)
 			{
 				int iHealth = GetClientHealth(iTank);
-				int iCommonHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealCommon[ST_TankType(iTank)]) : (iHealth + g_iHealCommon2[ST_TankType(iTank)]);
-				int iExtraHealth = (iCommonHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCommonHealth;
-				int iExtraHealth2 = (iCommonHealth < iHealth) ? 1 : iCommonHealth;
-				int iRealHealth = (iCommonHealth >= 0) ? iExtraHealth : iExtraHealth2;
+				int iSpecialHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealSpecial[ST_TankType(iTank)]) : (iHealth + g_iHealSpecial2[ST_TankType(iTank)]);
+				int iExtraHealth = (iSpecialHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iSpecialHealth;
+				int iExtraHealth2 = (iSpecialHealth < iHealth) ? 1 : iSpecialHealth;
+				int iRealHealth = (iSpecialHealth >= 0) ? iExtraHealth : iExtraHealth2;
+				if (iHealth > 500)
+				{
+					SetEntityHealth(iTank, iRealHealth);
+					if (iType < 2 && bIsL4D2Game())
+					{
+						SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
+						SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 220, 0));
+						SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
+						iType = 1;
+					}
+				}
+			}
+		}
+		else if (ST_TankAllowed(iInfected) && IsPlayerAlive(iInfected) && iInfected != iTank)
+		{
+			float flTankPos[3];
+			float flInfectedPos[3];
+			GetClientAbsOrigin(iTank, flTankPos);
+			GetClientAbsOrigin(iInfected, flInfectedPos);
+			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
+			if (flDistance <= flHealRange)
+			{
+				int iHealth = GetClientHealth(iTank);
+				int iTankHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealTank[ST_TankType(iTank)]) : (iHealth + g_iHealTank2[ST_TankType(iTank)]);
+				int iExtraHealth = (iTankHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iTankHealth;
+				int iExtraHealth2 = (iTankHealth < iHealth) ? 1 : iTankHealth;
+				int iRealHealth = (iTankHealth >= 0) ? iExtraHealth : iExtraHealth2;
 				if (iHealth > 500)
 				{
 					SetEntityHealth(iTank, iRealHealth);
 					if (bIsL4D2Game())
 					{
 						SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
-						SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 185, 0));
+						SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 255, 0));
 						SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
-					}
-					iType = 1;
-				}
-			}
-		}
-		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
-		{
-			if (bIsSpecialInfected(iInfected))
-			{
-				float flTankPos[3];
-				float flInfectedPos[3];
-				GetClientAbsOrigin(iTank, flTankPos);
-				GetClientAbsOrigin(iInfected, flInfectedPos);
-				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-				if (flDistance <= flHealRange)
-				{
-					int iHealth = GetClientHealth(iTank);
-					int iSpecialHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealSpecial[ST_TankType(iTank)]) : (iHealth + g_iHealSpecial2[ST_TankType(iTank)]);
-					int iExtraHealth = (iSpecialHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iSpecialHealth;
-					int iExtraHealth2 = (iSpecialHealth < iHealth) ? 1 : iSpecialHealth;
-					int iRealHealth = (iSpecialHealth >= 0) ? iExtraHealth : iExtraHealth2;
-					if (iHealth > 500)
-					{
-						SetEntityHealth(iTank, iRealHealth);
-						if (iType < 2 && bIsL4D2Game())
-						{
-							SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
-							SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 220, 0));
-							SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
-							iType = 1;
-						}
-					}
-				}
-			}
-			else if (ST_TankAllowed(iInfected) && IsPlayerAlive(iInfected) && iInfected != iTank)
-			{
-				float flTankPos[3];
-				float flInfectedPos[3];
-				GetClientAbsOrigin(iTank, flTankPos);
-				GetClientAbsOrigin(iInfected, flInfectedPos);
-				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-				if (flDistance <= flHealRange)
-				{
-					int iHealth = GetClientHealth(iTank);
-					int iTankHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealTank[ST_TankType(iTank)]) : (iHealth + g_iHealTank2[ST_TankType(iTank)]);
-					int iExtraHealth = (iTankHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iTankHealth;
-					int iExtraHealth2 = (iTankHealth < iHealth) ? 1 : iTankHealth;
-					int iRealHealth = (iTankHealth >= 0) ? iExtraHealth : iExtraHealth2;
-					if (iHealth > 500)
-					{
-						SetEntityHealth(iTank, iRealHealth);
-						if (bIsL4D2Game())
-						{
-							SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
-							SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 255, 0));
-							SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
-							iType = 2;
-						}
+						iType = 2;
 					}
 				}
 			}
 		}
-		if (iType == 0 && bIsL4D2Game())
+	}
+	if (iType == 0 && bIsL4D2Game())
+	{
+		char sSet[2][16];
+		char sTankColors[28];
+		sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
+		TrimString(sTankColors);
+		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+		char sGlow[3][4];
+		ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
+		TrimString(sGlow[0]);
+		int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
+		TrimString(sGlow[1]);
+		int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
+		TrimString(sGlow[2]);
+		int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
+		int iGlowEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEffect[ST_TankType(iTank)] : g_iGlowEffect2[ST_TankType(iTank)];
+		if (iGlowEffect == 1 && bIsL4D2Game())
 		{
-			char sSet[2][16];
-			char sTankColors[28];
-			sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
-			TrimString(sTankColors);
-			ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-			char sGlow[3][4];
-			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
-			TrimString(sGlow[0]);
-			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
-			TrimString(sGlow[1]);
-			int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
-			TrimString(sGlow[2]);
-			int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
-			int iGlowEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEffect[ST_TankType(iTank)] : g_iGlowEffect2[ST_TankType(iTank)];
-			if (iGlowEffect == 1 && bIsL4D2Game())
-			{
-				SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
-				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));
-				SetEntProp(iTank, Prop_Send, "m_bFlashing", 0);
-			}
+			SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
+			SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));
+			SetEntProp(iTank, Prop_Send, "m_bFlashing", 0);
 		}
 	}
 	return Plugin_Continue;

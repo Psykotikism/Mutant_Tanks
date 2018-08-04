@@ -224,10 +224,10 @@ public void ST_RockThrow(int client, int entity)
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
 	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iShieldAbility == 1)
 	{
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(0.1, tTimerShieldThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(EntIndexToEntRef(entity));
+		dpDataPack.WriteCell(GetClientUserId(client));
 	}
 }
 
@@ -335,66 +335,66 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerShield(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
-	if (iShieldAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || g_bShield[iTank])
 	{
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank) && !g_bShield[iTank])
+	int iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
+	if (iShieldAbility == 0)
 	{
-		vShield(iTank, true);
+		return Plugin_Stop;
 	}
+	vShield(iTank, true);
 	return Plugin_Continue;
 }
 
 public Action tTimerShieldThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
-	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	int iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
-	if (iShieldAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
+	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
-		float flVelocity[3];
-		if (bIsValidEntity(iRock))
+		return Plugin_Stop;
+	}
+	int iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
+	if (iShieldAbility == 0)
+	{
+		return Plugin_Stop;
+	}
+	float flVelocity[3];
+	GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
+	float flVector = GetVectorLength(flVelocity);
+	if (flVector > 500.0)
+	{
+		int iPropane = CreateEntityByName("prop_physics");
+		if (bIsValidEntity(iPropane))
 		{
-			GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
-			float flVector = GetVectorLength(flVelocity);
-			if (flVector > 500.0)
-			{
-				int iPropane = CreateEntityByName("prop_physics");
-				if (bIsValidEntity(iPropane))
-				{
-					SetEntityModel(iPropane, MODEL_PROPANETANK);
-					float flPos[3];
-					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-					AcceptEntityInput(iRock, "Kill");
-					NormalizeVector(flVelocity, flVelocity);
-					float flSpeed = g_cvSTFindConVar.FloatValue;
-					ScaleVector(flVelocity, flSpeed * 1.4);
-					DispatchSpawn(iPropane);
-					TeleportEntity(iPropane, flPos, NULL_VECTOR, flVelocity);
-				}
-				return Plugin_Stop;
-			}
+			SetEntityModel(iPropane, MODEL_PROPANETANK);
+			float flPos[3];
+			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+			AcceptEntityInput(iRock, "Kill");
+			NormalizeVector(flVelocity, flVelocity);
+			float flSpeed = g_cvSTFindConVar.FloatValue;
+			ScaleVector(flVelocity, flSpeed * 1.4);
+			DispatchSpawn(iPropane);
+			TeleportEntity(iPropane, flPos, NULL_VECTOR, flVelocity);
 		}
+		return Plugin_Stop;
 	}
 	return Plugin_Continue;
 }
 
 public Action tTimerSetTransmit(Handle timer, any entity)
 {
-	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE)
+	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE || !bIsValidEntity(entity))
 	{
 		return Plugin_Stop;
 	}
-	if (bIsValidEntity(entity))
-	{
-		SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
-	}
+	SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
 	return Plugin_Continue;
 }

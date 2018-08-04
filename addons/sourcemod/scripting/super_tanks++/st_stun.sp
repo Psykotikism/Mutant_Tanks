@@ -170,7 +170,7 @@ public void ST_Event(Event event, const char[] name)
 			{
 				if (bIsSurvivor(iSurvivor) && g_bStun[iSurvivor])
 				{
-					DataPack dpDataPack;
+					DataPack dpDataPack = new DataPack();
 					CreateDataTimer(0.1, tTimerStopStun, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 					dpDataPack.WriteCell(GetClientUserId(iTank));
@@ -213,7 +213,7 @@ void vStunHit(int client, int owner, int chance, int enabled)
 		float flStunSpeed = !g_bTankConfig[ST_TankType(owner)] ? g_flStunSpeed[ST_TankType(owner)] : g_flStunSpeed2[ST_TankType(owner)];
 		SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", flStunSpeed);
 		float flStunDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flStunDuration[ST_TankType(owner)] : g_flStunDuration2[ST_TankType(owner)];
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(flStunDuration, tTimerStopStun, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
@@ -295,21 +295,26 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	int iStunAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iStunAbility[ST_TankType(iTank)] : g_iStunAbility2[ST_TankType(iTank)];
-	if (iStunAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bStun[iSurvivor] = false;
-		if (bIsSurvivor(iSurvivor))
-		{
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
-		}
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(iSurvivor))
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bStun[iSurvivor] = false;
 		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		return Plugin_Stop;
 	}
+	int iStunAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iStunAbility[ST_TankType(iTank)] : g_iStunAbility2[ST_TankType(iTank)];
+	if (iStunAbility == 0)
+	{
+		g_bStun[iSurvivor] = false;
+		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		return Plugin_Stop;
+	}
+	g_bStun[iSurvivor] = false;
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 	return Plugin_Continue;
 }

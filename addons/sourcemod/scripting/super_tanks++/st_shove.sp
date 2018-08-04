@@ -194,7 +194,7 @@ void vShoveHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bShove[client])
 	{
 		g_bShove[client] = true;
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(1.0, tTimerShove, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
@@ -272,20 +272,27 @@ public Action tTimerShove(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	float flTime = pack.ReadFloat();
-	int iShoveAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShoveAbility[ST_TankType(iTank)] : g_iShoveAbility2[ST_TankType(iTank)];
-	float flShoveDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShoveDuration[ST_TankType(iTank)] : g_flShoveDuration2[ST_TankType(iTank)];
-	if (iShoveAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor) || (flTime + flShoveDuration) < GetEngineTime())
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bShove[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(iSurvivor))
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
-		float flOrigin[3];
-		GetClientAbsOrigin(iSurvivor, flOrigin);
-		SDKCall(g_hSDKShovePlayer, iSurvivor, iSurvivor, flOrigin);
+		g_bShove[iSurvivor] = false;
+		return Plugin_Stop;
 	}
+	float flTime = pack.ReadFloat();
+	int iShoveAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShoveAbility[ST_TankType(iTank)] : g_iShoveAbility2[ST_TankType(iTank)];
+	float flShoveDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShoveDuration[ST_TankType(iTank)] : g_flShoveDuration2[ST_TankType(iTank)];
+	if (iShoveAbility == 0 || (flTime + flShoveDuration) < GetEngineTime())
+	{
+		g_bShove[iSurvivor] = false;
+		return Plugin_Stop;
+	}
+	float flOrigin[3];
+	GetClientAbsOrigin(iSurvivor, flOrigin);
+	SDKCall(g_hSDKShovePlayer, iSurvivor, iSurvivor, flOrigin);
 	return Plugin_Continue;
 }

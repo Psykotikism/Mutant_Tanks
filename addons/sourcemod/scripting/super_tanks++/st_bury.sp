@@ -179,7 +179,7 @@ public void ST_Event(Event event, const char[] name)
 			{
 				if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
 				{
-					DataPack dpDataPack;
+					DataPack dpDataPack = new DataPack();
 					CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 					dpDataPack.WriteCell(GetClientUserId(iTank));
@@ -236,7 +236,7 @@ void vBuryHit(int client, int owner, int chance, int enabled)
 			SetEntityMoveType(client, MOVETYPE_NONE);
 		}
 		float flBuryDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flBuryDuration[ST_TankType(owner)] : g_flBuryDuration2[ST_TankType(owner)];
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(flBuryDuration, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
@@ -350,19 +350,23 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	int iBuryAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBuryAbility[ST_TankType(iTank)] : g_iBuryAbility2[ST_TankType(iTank)];
-	if (iBuryAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor))
 	{
-		if (bIsSurvivor(iSurvivor))
-		{
-			vStopBury(iSurvivor, iTank);
-		}
+		g_bBury[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(iSurvivor))
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		vStopBury(iSurvivor, iTank);
+		return Plugin_Stop;
 	}
+	int iBuryAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBuryAbility[ST_TankType(iTank)] : g_iBuryAbility2[ST_TankType(iTank)];
+	if (iBuryAbility == 0)
+	{
+		vStopBury(iSurvivor, iTank);
+		return Plugin_Stop;
+	}
+	vStopBury(iSurvivor, iTank);
 	return Plugin_Continue;
 }

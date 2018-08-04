@@ -92,7 +92,7 @@ public void ST_Event(Event event, const char[] name)
 			int iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
 			GetEntPropVector(iTank, Prop_Send, "m_vecOrigin", flPos);
 			GetEntPropVector(iTank, Prop_Send, "m_angRotation", flAngles);
-			DataPack dpDataPack;
+			DataPack dpDataPack = new DataPack();
 			CreateDataTimer(2.9, tTimerRespawn, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 			dpDataPack.WriteCell(GetClientUserId(iTank));
 			dpDataPack.WriteCell(iFlags);
@@ -213,6 +213,11 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !bIsPlayerIncapacitated(iTank))
+	{
+		g_iRespawnCount[iTank] = 0;
+		return Plugin_Stop;
+	}
 	int iFlags = pack.ReadCell();
 	int iSequence = pack.ReadCell();
 	float flPos[3];
@@ -224,29 +229,26 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	flAngles[1] = pack.ReadFloat();
 	flAngles[2] = pack.ReadFloat();
 	int iRespawnAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAbility[ST_TankType(iTank)] : g_iRespawnAbility2[ST_TankType(iTank)];
-	if (iRespawnAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (iRespawnAbility == 0)
 	{
 		g_iRespawnCount[iTank] = 0;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank) && bIsPlayerIncapacitated(iTank))
+	int iRespawnAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAmount[ST_TankType(iTank)] : g_iRespawnAmount2[ST_TankType(iTank)];
+	if (g_iRespawnCount[iTank] < iRespawnAmount)
 	{
-		int iRespawnAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAmount[ST_TankType(iTank)] : g_iRespawnAmount2[ST_TankType(iTank)];
-		if (g_iRespawnCount[iTank] < iRespawnAmount)
+		g_iRespawnCount[iTank]++;
+		int iNewTank = iRespawn(iTank, g_iRespawnCount[iTank]);
+		if (ST_TankAllowed(iNewTank) && IsPlayerAlive(iNewTank))
 		{
-			g_iRespawnCount[iTank]++;
-			int iNewTank = iRespawn(iTank, g_iRespawnCount[iTank]);
-			if (ST_TankAllowed(iNewTank) && IsPlayerAlive(iNewTank))
-			{
-				SetEntProp(iNewTank, Prop_Send, "m_fFlags", iFlags);
-				SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);
-				TeleportEntity(iNewTank, flPos, flAngles, NULL_VECTOR);
-			}
+			SetEntProp(iNewTank, Prop_Send, "m_fFlags", iFlags);
+			SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);
+			TeleportEntity(iNewTank, flPos, flAngles, NULL_VECTOR);
 		}
-		else
-		{
-			g_iRespawnCount[iTank] = 0;
-		}
+	}
+	else
+	{
+		g_iRespawnCount[iTank] = 0;
 	}
 	return Plugin_Continue;
 }

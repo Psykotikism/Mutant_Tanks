@@ -247,37 +247,38 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerWarp(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iWarpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpAbility[ST_TankType(iTank)] : g_iWarpAbility2[ST_TankType(iTank)];
-	int iWarpMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpMode[ST_TankType(iTank)] : g_iWarpMode2[ST_TankType(iTank)];
-	if (iWarpAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iWarpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpAbility[ST_TankType(iTank)] : g_iWarpAbility2[ST_TankType(iTank)];
+	int iWarpMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpMode[ST_TankType(iTank)] : g_iWarpMode2[ST_TankType(iTank)];
+	if (iWarpAbility == 0)
 	{
-		int iSurvivor = iGetRandomSurvivor(iTank);
-		if (iSurvivor > 0)
+		return Plugin_Stop;
+	}
+	int iSurvivor = iGetRandomSurvivor(iTank);
+	if (iSurvivor > 0)
+	{
+		float flTankOrigin[3];
+		float flTankAngles[3];
+		GetClientAbsOrigin(iTank, flTankOrigin);
+		GetClientAbsAngles(iTank, flTankAngles);
+		float flSurvivorOrigin[3];
+		float flSurvivorAngles[3];
+		GetClientAbsOrigin(iSurvivor, flSurvivorOrigin);
+		GetClientAbsAngles(iSurvivor, flSurvivorAngles);
+		vCreateParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
+		if (iWarpMode == 1)
 		{
-			float flTankOrigin[3];
-			float flTankAngles[3];
-			GetClientAbsOrigin(iTank, flTankOrigin);
-			GetClientAbsAngles(iTank, flTankAngles);
-			float flSurvivorOrigin[3];
-			float flSurvivorAngles[3];
-			GetClientAbsOrigin(iSurvivor, flSurvivorOrigin);
-			GetClientAbsAngles(iSurvivor, flSurvivorAngles);
-			vCreateParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
-			if (iWarpMode == 1)
-			{
-				vCreateParticle(iSurvivor, PARTICLE_ELECTRICITY, 1.0, 0.0);
-			}
-			EmitSoundToAll(SOUND_ELECTRICITY, iTank);
-			EmitSoundToAll(SOUND_ELECTRICITY2, iSurvivor);
-			TeleportEntity(iTank, flSurvivorOrigin, flSurvivorAngles, NULL_VECTOR);
-			if (iWarpMode == 1)
-			{
-				TeleportEntity(iSurvivor, flTankOrigin, flTankAngles, NULL_VECTOR);
-			}
+			vCreateParticle(iSurvivor, PARTICLE_ELECTRICITY, 1.0, 0.0);
+		}
+		EmitSoundToAll(SOUND_ELECTRICITY, iTank);
+		EmitSoundToAll(SOUND_ELECTRICITY2, iSurvivor);
+		TeleportEntity(iTank, flSurvivorOrigin, flSurvivorAngles, NULL_VECTOR);
+		if (iWarpMode == 1)
+		{
+			TeleportEntity(iSurvivor, flTankOrigin, flTankAngles, NULL_VECTOR);
 		}
 	}
 	return Plugin_Continue;

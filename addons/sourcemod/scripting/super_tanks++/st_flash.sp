@@ -185,15 +185,17 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerStopFlash(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iFlashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFlashAbility[ST_TankType(iTank)] : g_iFlashAbility2[ST_TankType(iTank)];
-	if (iFlashAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bFlash[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iFlashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFlashAbility[ST_TankType(iTank)] : g_iFlashAbility2[ST_TankType(iTank)];
+	if (iFlashAbility == 0)
 	{
 		g_bFlash[iTank] = false;
+		return Plugin_Stop;
 	}
+	g_bFlash[iTank] = false;
 	return Plugin_Continue;
 }

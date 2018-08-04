@@ -112,7 +112,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			}
 			else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
 			{
-				damage = damage * 1.05;
+				damage = damage * 1.5;
 			}
 			return Plugin_Changed;
 		}
@@ -219,15 +219,17 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerStopFragile(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iFragileAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFragileAbility[ST_TankType(iTank)] : g_iFragileAbility2[ST_TankType(iTank)];
-	if (iFragileAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bFragile[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iFragileAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFragileAbility[ST_TankType(iTank)] : g_iFragileAbility2[ST_TankType(iTank)];
+	if (iFragileAbility == 0)
 	{
 		g_bFragile[iTank] = false;
+		return Plugin_Stop;
 	}
+	g_bFragile[iTank] = false;
 	return Plugin_Continue;
 }

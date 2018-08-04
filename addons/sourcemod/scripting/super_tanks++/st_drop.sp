@@ -26,6 +26,8 @@ int g_iDropChance[ST_MAXTYPES + 1];
 int g_iDropChance2[ST_MAXTYPES + 1];
 int g_iDropClipChance[ST_MAXTYPES + 1];
 int g_iDropClipChance2[ST_MAXTYPES + 1];
+int g_iDropMode[ST_MAXTYPES + 1];
+int g_iDropMode2[ST_MAXTYPES + 1];
 int g_iDropWeapon[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -243,6 +245,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iDropChance[iIndex] = iSetCellLimit(g_iDropChance[iIndex], 1, 9999999999)) : (g_iDropChance2[iIndex] = iSetCellLimit(g_iDropChance2[iIndex], 1, 9999999999));
 			main ? (g_iDropClipChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", 4)) : (g_iDropClipChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", g_iDropClipChance[iIndex]));
 			main ? (g_iDropClipChance[iIndex] = iSetCellLimit(g_iDropClipChance[iIndex], 1, 9999999999)) : (g_iDropClipChance2[iIndex] = iSetCellLimit(g_iDropClipChance2[iIndex], 1, 9999999999));
+			main ? (g_iDropMode[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", 0)) : (g_iDropMode2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", g_iDropMode[iIndex]));
+			main ? (g_iDropMode[iIndex] = iSetCellLimit(g_iDropMode[iIndex], 0, 2)) : (g_iDropMode2[iIndex] = iSetCellLimit(g_iDropMode2[iIndex], 0, 2));
 			main ? (g_flDropWeaponScale[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", 1.0)) : (g_flDropWeaponScale2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", g_flDropWeaponScale[iIndex]));
 			main ? (g_flDropWeaponScale[iIndex] = flSetFloatLimit(g_flDropWeaponScale[iIndex], 1.0, 2.0)) : (g_flDropWeaponScale2[iIndex] = flSetFloatLimit(g_flDropWeaponScale2[iIndex], 1.0, 2.0));
 			kvSuperTanks.Rewind();
@@ -261,12 +265,13 @@ public void ST_Event(Event event, const char[] name)
 		int iDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropChance[ST_TankType(iTank)] : g_iDropChance2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iDropAbility == 1 && GetRandomInt(1, iDropChance) == 1 && bIsValidEntity(g_iDrop[iTank]))
 		{
+			int iDropMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMode[ST_TankType(iTank)] : g_iDropMode2[ST_TankType(iTank)];
 			float flDropWeaponScale = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropWeaponScale[ST_TankType(iTank)] : g_flDropWeaponScale[ST_TankType(iTank)];
 			float flPos[3];
 			float flAngle[3];
 			GetClientEyePosition(iTank, flPos);
 			GetClientAbsAngles(iTank, flAngle);
-			if (StrContains(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon") != -1)
+			if ((iDropMode == 0 || iDropMode == 1) && StrContains(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon") != -1)
 			{
 				int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[iTank]]);
 				if (bIsValidEntity(iDrop))
@@ -322,7 +327,7 @@ public void ST_Event(Event event, const char[] name)
 					SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
 				}
 			}
-			else
+			else if (iDropMode == 0 || iDropMode == 2)
 			{
 				int iDrop = CreateEntityByName("weapon_melee");
 				if (bIsValidEntity(iDrop))
@@ -480,6 +485,12 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
 		fFilename.WriteLine("			\"Drop Clip Chance\"				\"4\"");
 		fFilename.WriteLine("");
+		fFilename.WriteLine("			// The mode of the Super Tank's drop ability.");
+		fFilename.WriteLine("			// 0: Both");
+		fFilename.WriteLine("			// 1: Guns only.");
+		fFilename.WriteLine("			// 2: Melee weapons only.");
+		fFilename.WriteLine("			\"Drop Mode\"						\"0\"");
+		fFilename.WriteLine("");
 		fFilename.WriteLine("			// The Super Tank's weapon size is multiplied by this value.");
 		fFilename.WriteLine("			// Note: Default weapon size x Drop weapon scale");
 		fFilename.WriteLine("			// Minimum: 1.0");
@@ -502,49 +513,60 @@ void vReset(int client)
 public Action tTimerDrop(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bDrop[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iDropAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropAbility[ST_TankType(iTank)] : g_iDropAbility2[ST_TankType(iTank)];
+	if (iDropAbility == 0)
 	{
-		vDeleteDrop(iTank);
-	 	int iWeapon = bIsL4D2Game() ? GetRandomInt(1, 31) : GetRandomInt(1, 6);
-		int iPosition;
-		switch (GetRandomInt(1, 2))
+		g_bDrop[iTank] = false;
+		return Plugin_Stop;
+	}
+	vDeleteDrop(iTank);
+	int iDropMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMode[ST_TankType(iTank)] : g_iDropMode2[ST_TankType(iTank)];
+ 	int iDropValue;
+	switch (iDropMode)
+	{
+		case 0: iDropValue = GetRandomInt(1, 31);
+		case 1: iDropValue = GetRandomInt(1, 19);
+		case 2: iDropValue = GetRandomInt(20, 31);
+	}
+	int iWeapon = bIsL4D2Game() ? iDropValue : GetRandomInt(1, 6);
+	int iPosition;
+	switch (GetRandomInt(1, 2))
+	{
+		case 1: iPosition = 1;
+		case 2: iPosition = 2;
+	}
+	float flScale;
+	int iDrop = CreateEntityByName("prop_dynamic_override");
+	if (bIsValidEntity(iDrop))
+	{
+		float flPos[3];
+		float flAngle[3];
+		char sPosition[32];
+		SetEntityModel(iDrop, g_sWeaponModel[iWeapon]);
+		TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
+		DispatchSpawn(iDrop);
+		vSetEntityParent(iDrop, iTank);
+		switch (iPosition)
 		{
-			case 1: iPosition = 1;
-			case 2: iPosition = 2;
+			case 1: sPosition = "rhand";
+			case 2: sPosition = "lhand";
 		}
-		float flScale;
-		int iDrop = CreateEntityByName("prop_dynamic_override");
-		if (bIsValidEntity(iDrop))
+		SetVariantString(sPosition);
+		AcceptEntityInput(iDrop, "SetParentAttachment");
+		bIsL4D2Game() ? vGetPosAng2(iTank, iWeapon, flPos, flAngle, iPosition, flScale) : vGetPosAng(flPos, flAngle, iPosition, flScale);
+		SetEntProp(iDrop, Prop_Send, "m_CollisionGroup", 2);
+		if (bIsL4D2Game())
 		{
-			float flPos[3];
-			float flAngle[3];
-			char sPosition[32];
-			SetEntityModel(iDrop, g_sWeaponModel[iWeapon]);
-			TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
-			DispatchSpawn(iDrop);
-			vSetEntityParent(iDrop, iTank);
-			switch (iPosition)
-			{
-				case 1: sPosition = "rhand";
-				case 2: sPosition = "lhand";
-			}
-			SetVariantString(sPosition);
-			AcceptEntityInput(iDrop, "SetParentAttachment");
-			bIsL4D2Game() ? vGetPosAng2(iTank, iWeapon, flPos, flAngle, iPosition, flScale) : vGetPosAng(flPos, flAngle, iPosition, flScale);
-			SetEntProp(iDrop, Prop_Send, "m_CollisionGroup", 2);
-			if (bIsL4D2Game())
-			{
-				SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flScale);
-			}
-			g_iDrop[iTank] = iDrop;
-			g_iDropWeapon[iTank] = iWeapon;
-			SDKHook(g_iDrop[iTank], SDKHook_SetTransmit, SetTransmit);
+			SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flScale);
 		}
+		g_iDrop[iTank] = iDrop;
+		g_iDropWeapon[iTank] = iWeapon;
+		SDKHook(g_iDrop[iTank], SDKHook_SetTransmit, SetTransmit);
 	}
 	return Plugin_Continue;
 }

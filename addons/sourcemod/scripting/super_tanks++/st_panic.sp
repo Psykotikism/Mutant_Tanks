@@ -221,15 +221,17 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerPanic(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iPanicAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPanicAbility[ST_TankType(iTank)] : g_iPanicAbility2[ST_TankType(iTank)];
-	if (iPanicAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bPanic[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iPanicAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPanicAbility[ST_TankType(iTank)] : g_iPanicAbility2[ST_TankType(iTank)];
+	if (iPanicAbility == 0)
 	{
-		vCheatCommand(iTank, "director_force_panic_event");
+		g_bPanic[iTank] = false;
+		return Plugin_Stop;
 	}
+	vCheatCommand(iTank, "director_force_panic_event");
 	return Plugin_Continue;
 }

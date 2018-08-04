@@ -219,15 +219,17 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerStopAbsorb(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iAbsorbAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iAbsorbAbility[ST_TankType(iTank)] : g_iAbsorbAbility2[ST_TankType(iTank)];
-	if (iAbsorbAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bAbsorb[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iAbsorbAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iAbsorbAbility[ST_TankType(iTank)] : g_iAbsorbAbility2[ST_TankType(iTank)];
+	if (iAbsorbAbility == 0)
 	{
 		g_bAbsorb[iTank] = false;
+		return Plugin_Stop;
 	}
+	g_bAbsorb[iTank] = false;
 	return Plugin_Continue;
 }

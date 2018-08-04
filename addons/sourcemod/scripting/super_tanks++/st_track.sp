@@ -89,10 +89,10 @@ public void ST_RockThrow(int client, int entity)
 	int iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
 	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(0.5, tTimerTrack, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(EntIndexToEntRef(entity));
+		dpDataPack.WriteCell(GetClientUserId(client));
 	}
 }
 
@@ -401,20 +401,22 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerTrack(Handle timer, DataPack pack)
 {
 	pack.Reset();
-	int iTank = GetClientOfUserId(pack.ReadCell());
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	int iTrackAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackAbility[ST_TankType(iTank)] : g_iTrackAbility2[ST_TankType(iTank)];
-	if (iTrackAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || iRock == INVALID_ENT_REFERENCE)
+	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
-		if (bIsValidEntity(iRock))
-		{
-			SDKUnhook(iRock, SDKHook_Think, Think);
-			SDKHook(iRock, SDKHook_Think, Think);
-		}
+		return Plugin_Stop;
 	}
+	int iTrackAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackAbility[ST_TankType(iTank)] : g_iTrackAbility2[ST_TankType(iTank)];
+	if (iTrackAbility == 0)
+	{
+		return Plugin_Stop;
+	}
+	SDKUnhook(iRock, SDKHook_Think, Think);
+	SDKHook(iRock, SDKHook_Think, Think);
 	return Plugin_Continue;
 }

@@ -149,11 +149,12 @@ public void ST_Ability(int client)
 					int iWitch = CreateEntityByName("witch");
 					if (bIsValidEntity(iWitch))
 					{
-						TeleportEntity(iWitch, flInfectedPos, flInfectedAng, NULL_VECTOR);
-						DispatchSpawn(iWitch);
-						ActivateEntity(iWitch);
-						SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", client);
+						return;
 					}
+					TeleportEntity(iWitch, flInfectedPos, flInfectedAng, NULL_VECTOR);
+					DispatchSpawn(iWitch);
+					ActivateEntity(iWitch);
+					SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", client);
 					iWitchCount++;
 				}
 			}

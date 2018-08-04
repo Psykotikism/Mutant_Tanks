@@ -183,7 +183,7 @@ void vShakeHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bShake[client])
 	{
 		g_bShake[client] = true;
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(1.0, tTimerShake, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
@@ -261,18 +261,25 @@ public Action tTimerShake(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	float flTime = pack.ReadFloat();
-	int iShakeAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShakeAbility[ST_TankType(iTank)] : g_iShakeAbility2[ST_TankType(iTank)];
-	float flShakeDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShakeDuration[ST_TankType(iTank)] : g_flShakeDuration2[ST_TankType(iTank)];
-	if (iShakeAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor) || (flTime + flShakeDuration) < GetEngineTime())
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bShake[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(iSurvivor))
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
-		vShake(iSurvivor);
+		g_bShake[iSurvivor] = false;
+		return Plugin_Stop;
 	}
+	float flTime = pack.ReadFloat();
+	int iShakeAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShakeAbility[ST_TankType(iTank)] : g_iShakeAbility2[ST_TankType(iTank)];
+	float flShakeDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShakeDuration[ST_TankType(iTank)] : g_flShakeDuration2[ST_TankType(iTank)];
+	if (iShakeAbility == 0 || (flTime + flShakeDuration) < GetEngineTime())
+	{
+		g_bShake[iSurvivor] = false;
+		return Plugin_Stop;
+	}
+	vShake(iSurvivor);
 	return Plugin_Continue;
 }

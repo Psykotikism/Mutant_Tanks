@@ -192,7 +192,7 @@ void vPimpHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bPimp[client])
 	{
 		g_bPimp[client] = true;
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(0.5, tTimerPimp, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
@@ -274,20 +274,29 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	int iPimpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAbility[ST_TankType(iTank)] : g_iPimpAbility2[ST_TankType(iTank)];
-	int iPimpAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAmount[ST_TankType(iTank)] : g_iPimpAmount2[ST_TankType(iTank)];
-	int iPimpDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpDamage[ST_TankType(iTank)] : g_iPimpDamage2[ST_TankType(iTank)];
-	if (iPimpAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor) || g_iPimpCount[iSurvivor] >= iPimpAmount)
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bPimp[iSurvivor] = false;
 		g_iPimpCount[iSurvivor] = 0;
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(iSurvivor) && g_iPimpCount[iSurvivor] < iPimpAmount)
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
-		SlapPlayer(iSurvivor, iPimpDamage, true);
-		g_iPimpCount[iSurvivor]++;
+		g_bPimp[iSurvivor] = false;
+		g_iPimpCount[iSurvivor] = 0;
+		return Plugin_Stop;
 	}
+	int iPimpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAbility[ST_TankType(iTank)] : g_iPimpAbility2[ST_TankType(iTank)];
+	int iPimpAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAmount[ST_TankType(iTank)] : g_iPimpAmount2[ST_TankType(iTank)];
+	int iPimpDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpDamage[ST_TankType(iTank)] : g_iPimpDamage2[ST_TankType(iTank)];
+	if (iPimpAbility == 0 || g_iPimpCount[iSurvivor] >= iPimpAmount)
+	{
+		g_bPimp[iSurvivor] = false;
+		g_iPimpCount[iSurvivor] = 0;
+		return Plugin_Stop;
+	}
+	SlapPlayer(iSurvivor, iPimpDamage, true);
+	g_iPimpCount[iSurvivor]++;
 	return Plugin_Continue;
 }

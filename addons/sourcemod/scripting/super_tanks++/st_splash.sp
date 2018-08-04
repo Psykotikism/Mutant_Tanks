@@ -138,40 +138,41 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerSplash(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iSplashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashAbility[ST_TankType(iTank)] : g_iSplashAbility2[ST_TankType(iTank)];
-	if (iSplashAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iSplashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashAbility[ST_TankType(iTank)] : g_iSplashAbility2[ST_TankType(iTank)];
+	if (iSplashAbility == 0)
 	{
-		float flSplashRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flSplashRange[ST_TankType(iTank)] : g_flSplashRange2[ST_TankType(iTank)];
-		float flTankPos[3];
-		GetClientAbsOrigin(iTank, flTankPos);
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		return Plugin_Stop;
+	}
+	float flSplashRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flSplashRange[ST_TankType(iTank)] : g_flSplashRange2[ST_TankType(iTank)];
+	float flTankPos[3];
+	GetClientAbsOrigin(iTank, flTankPos);
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && bIsPlayerIncapacitated(iTank))
 		{
-			if (bIsSurvivor(iSurvivor) && bIsPlayerIncapacitated(iTank))
+			float flSurvivorPos[3];
+			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+			float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+			if (flDistance <= flSplashRange)
 			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flSplashRange)
+				char sDamage[6];
+				int iSplashDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashDamage[ST_TankType(iTank)] : g_iSplashDamage2[ST_TankType(iTank)];
+				IntToString(iSplashDamage, sDamage, sizeof(sDamage));
+				int iPointHurt = CreateEntityByName("point_hurt");
+				if (bIsValidEntity(iPointHurt))
 				{
-					char sDamage[6];
-					int iSplashDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashDamage[ST_TankType(iTank)] : g_iSplashDamage2[ST_TankType(iTank)];
-					IntToString(iSplashDamage, sDamage, sizeof(sDamage));
-					int iPointHurt = CreateEntityByName("point_hurt");
-					if (bIsValidEntity(iPointHurt))
-					{
-						DispatchKeyValue(iSurvivor, "targetname", "hurtme");
-						DispatchKeyValue(iPointHurt, "Damage", sDamage);
-						DispatchKeyValue(iPointHurt, "DamageTarget", "hurtme");
-						DispatchKeyValue(iPointHurt, "DamageType", "2");
-						DispatchSpawn(iPointHurt);
-						AcceptEntityInput(iPointHurt, "Hurt", iSurvivor);
-						AcceptEntityInput(iPointHurt, "Kill");
-						DispatchKeyValue(iSurvivor, "targetname", "donthurtme");
-					}
+					DispatchKeyValue(iSurvivor, "targetname", "hurtme");
+					DispatchKeyValue(iPointHurt, "Damage", sDamage);
+					DispatchKeyValue(iPointHurt, "DamageTarget", "hurtme");
+					DispatchKeyValue(iPointHurt, "DamageType", "2");
+					DispatchSpawn(iPointHurt);
+					AcceptEntityInput(iPointHurt, "Hurt", iSurvivor);
+					AcceptEntityInput(iPointHurt, "Kill");
+					DispatchKeyValue(iSurvivor, "targetname", "donthurtme");
 				}
 			}
 		}

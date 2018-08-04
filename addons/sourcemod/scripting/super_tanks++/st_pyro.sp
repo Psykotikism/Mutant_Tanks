@@ -12,10 +12,12 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+bool g_bLateLoad;
 bool g_bTankConfig[ST_MAXTYPES + 1];
-bool g_bPyro[MAXPLAYERS + 1];
 float g_flPyroBoost[ST_MAXTYPES + 1];
 float g_flPyroBoost2[ST_MAXTYPES + 1];
+float g_flRunSpeed[ST_MAXTYPES + 1];
+float g_flRunSpeed2[ST_MAXTYPES + 1];
 int g_iPyroAbility[ST_MAXTYPES + 1];
 int g_iPyroAbility2[ST_MAXTYPES + 1];
 
@@ -27,6 +29,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		strcopy(error, err_max, "[ST++] Pyro Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
+	g_bLateLoad = late;
 	return APLRes_Success;
 }
 
@@ -45,32 +48,50 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (g_bLateLoad)
 	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bPyro[iPlayer] = false;
-		}
+		vLateLoad(true);
+		g_bLateLoad = false;
 	}
 }
 
 public void OnClientPostAdminCheck(int client)
 {
-	g_bPyro[client] = false;
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public void OnClientDisconnect(int client)
 {
-	g_bPyro[client] = false;
+	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public void OnMapEnd()
+void vLateLoad(bool late)
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (late)
 	{
-		if (bIsValidClient(iPlayer))
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			g_bPyro[iPlayer] = false;
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
+	}
+}
+
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (ST_PluginEnabled() && damage > 0.0)
+	{
+		if (ST_TankAllowed(victim) && IsPlayerAlive(victim))
+		{
+			int iPyroAbility = !g_bTankConfig[ST_TankType(victim)] ? g_iPyroAbility[ST_TankType(victim)] : g_iPyroAbility2[ST_TankType(victim)];
+			float flPyroBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroBoost[ST_TankType(victim)] : g_flPyroBoost2[ST_TankType(victim)];
+			float flRunSpeed = !g_bTankConfig[ST_TankType(victim)] ? g_flRunSpeed[ST_TankType(victim)] : g_flRunSpeed2[ST_TankType(victim)];
+			if (damagetype & DMG_BURN && iPyroAbility == 1)
+			{
+				SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flRunSpeed + flPyroBoost);
+			}
 		}
 	}
 }
@@ -86,6 +107,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", 1.0)) : (g_flRunSpeed2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", g_flRunSpeed[iIndex]));
+			main ? (g_flRunSpeed[iIndex] = flSetFloatLimit(g_flRunSpeed[iIndex], 0.1, 3.0)) : (g_flRunSpeed2[iIndex] = flSetFloatLimit(g_flRunSpeed2[iIndex], 0.1, 3.0));
 			main ? (g_iPyroAbility[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Enabled", 0)) : (g_iPyroAbility2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Enabled", g_iPyroAbility[iIndex]));
 			main ? (g_iPyroAbility[iIndex] = iSetCellLimit(g_iPyroAbility[iIndex], 0, 1)) : (g_iPyroAbility2[iIndex] = iSetCellLimit(g_iPyroAbility2[iIndex], 0, 1));
 			main ? (g_flPyroBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", 1.0)) : (g_flPyroBoost2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", g_flPyroBoost[iIndex]));
@@ -94,15 +117,6 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
-}
-
-public void ST_Spawn(int client)
-{
-	int iPyroAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPyroAbility[ST_TankType(client)] : g_iPyroAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iPyroAbility == 1)
-	{
-		CreateTimer(1.0, tTimerPyro, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	}
 }
 
 void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
@@ -143,32 +157,4 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 		fFilename.WriteLine("}");
 		delete fFilename;
 	}
-}
-
-public Action tTimerPyro(Handle timer, any userid)
-{
-	int iTank = GetClientOfUserId(userid);
-	int iPyroAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPyroAbility[ST_TankType(iTank)] : g_iPyroAbility2[ST_TankType(iTank)];
-	if (iPyroAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
-	{
-		g_bPyro[iTank] = false;
-		return Plugin_Stop;
-	}
-	if (ST_TankAllowed(iTank))
-	{
-		float flPyroBoost = !g_bTankConfig[ST_TankType(iTank)] ? g_flPyroBoost[ST_TankType(iTank)] : g_flPyroBoost2[ST_TankType(iTank)];
-		if (bIsPlayerFired(iTank) && !g_bPyro[iTank])
-		{
-			g_bPyro[iTank] = true;
-			float flCurrentSpeed = GetEntPropFloat(iTank, Prop_Data, "m_flLaggedMovementValue");
-			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flCurrentSpeed + flPyroBoost);
-		}
-		else if (g_bPyro[iTank])
-		{
-			g_bPyro[iTank] = false;
-			float flCurrentSpeed = GetEntPropFloat(iTank, Prop_Data, "m_flLaggedMovementValue");
-			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flCurrentSpeed - flPyroBoost);
-		}
-	}
-	return Plugin_Continue;
 }

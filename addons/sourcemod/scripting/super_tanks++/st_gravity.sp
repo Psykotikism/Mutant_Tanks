@@ -196,7 +196,7 @@ public void ST_Event(Event event, const char[] name)
 			{
 				if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
 				{
-					DataPack dpDataPack;
+					DataPack dpDataPack = new DataPack();
 					CreateDataTimer(0.1, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 					dpDataPack.WriteCell(GetClientUserId(iTank));
@@ -265,7 +265,7 @@ void vGravityHit(int client, int owner, int chance, int enabled)
 		float flGravityValue = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityValue[ST_TankType(owner)] : g_flGravityValue2[ST_TankType(owner)];
 		SetEntityGravity(client, flGravityValue);
 		float flGravityDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityDuration[ST_TankType(owner)] : g_flGravityDuration2[ST_TankType(owner)];
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(flGravityDuration, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
@@ -355,21 +355,26 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	int iGravityAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGravityAbility[ST_TankType(iTank)] : g_iGravityAbility2[ST_TankType(iTank)];
-	if (iGravityAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bGravity2[iSurvivor] = false;
-		if (bIsSurvivor(iSurvivor))
-		{
-			SetEntityGravity(iSurvivor, 1.0);
-		}
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(iSurvivor))
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bGravity2[iSurvivor] = false;
 		SetEntityGravity(iSurvivor, 1.0);
+		return Plugin_Stop;
 	}
+	int iGravityAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGravityAbility[ST_TankType(iTank)] : g_iGravityAbility2[ST_TankType(iTank)];
+	if (iGravityAbility == 0)
+	{
+		g_bGravity2[iSurvivor] = false;
+		SetEntityGravity(iSurvivor, 1.0);
+		return Plugin_Stop;
+	}
+	g_bGravity2[iSurvivor] = false;
+	SetEntityGravity(iSurvivor, 1.0);
 	return Plugin_Continue;
 }

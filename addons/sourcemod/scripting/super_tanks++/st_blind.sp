@@ -172,7 +172,7 @@ public void ST_Event(Event event, const char[] name)
 			{
 				if (bIsSurvivor(iSurvivor) && g_bBlind[iSurvivor])
 				{
-					DataPack dpDataPack;
+					DataPack dpDataPack = new DataPack();
 					CreateDataTimer(0.1, tTimerStopBlindness, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 					dpDataPack.WriteCell(GetClientUserId(iTank));
@@ -249,7 +249,7 @@ void vBlindHit(int client, int owner, int chance, int enabled)
 		int iBlindIntensity = !g_bTankConfig[ST_TankType(owner)] ? g_iBlindIntensity[ST_TankType(owner)] : g_iBlindIntensity2[ST_TankType(owner)];
 		vBlind(client, iBlindIntensity, g_umFadeUserMsgId);
 		float flBlindDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flBlindDuration[ST_TankType(owner)] : g_flBlindDuration2[ST_TankType(owner)];
-		DataPack dpDataPack;
+		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
@@ -331,21 +331,26 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	int iBlindAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindAbility[ST_TankType(iTank)] : g_iBlindAbility2[ST_TankType(iTank)];
-	if (iBlindAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank) || !bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bBlind[iSurvivor] = false;
-		if (bIsSurvivor(iSurvivor))
-		{
-			vBlind(iSurvivor, 0, g_umFadeUserMsgId);
-		}
 		return Plugin_Stop;
 	}
-	if (bIsSurvivor(iSurvivor))
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bBlind[iSurvivor] = false;
 		vBlind(iSurvivor, 0, g_umFadeUserMsgId);
+		return Plugin_Stop;
 	}
+	int iBlindAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindAbility[ST_TankType(iTank)] : g_iBlindAbility2[ST_TankType(iTank)];
+	if (iBlindAbility == 0)
+	{
+		g_bBlind[iSurvivor] = false;
+		vBlind(iSurvivor, 0, g_umFadeUserMsgId);
+		return Plugin_Stop;
+	}
+	g_bBlind[iSurvivor] = false;
+	vBlind(iSurvivor, 0, g_umFadeUserMsgId);
 	return Plugin_Continue;
 }

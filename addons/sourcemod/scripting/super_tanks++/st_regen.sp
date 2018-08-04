@@ -171,24 +171,26 @@ void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] fi
 public Action tTimerRegen(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	int iRegenAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRegenAbility[ST_TankType(iTank)] : g_iRegenAbility2[ST_TankType(iTank)];
-	if (iRegenAbility == 0 || !bIsTank(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bRegen[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (ST_TankAllowed(iTank))
+	int iRegenAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRegenAbility[ST_TankType(iTank)] : g_iRegenAbility2[ST_TankType(iTank)];
+	if (iRegenAbility == 0)
 	{
-		int iHealth = GetClientHealth(iTank);
-		int iRegenHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iRegenHealth[ST_TankType(iTank)]) : (iHealth + g_iRegenHealth2[ST_TankType(iTank)]);
-		int iRegenLimit = !g_bTankConfig[ST_TankType(iTank)] ? g_iRegenLimit[ST_TankType(iTank)] : g_iRegenLimit2[ST_TankType(iTank)];
-		int iExtraHealth = (iRegenHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iRegenHealth;
-		int iExtraHealth2 = (iRegenHealth < iHealth) ? 1 : iRegenHealth;
-		int iRealHealth = (iRegenHealth >= 0) ? iExtraHealth : iExtraHealth2;
-		int iLimitHealth = (iRealHealth > iRegenLimit) ? iRegenLimit : iRealHealth;
-		int iLimitHealth2 = (iRealHealth < iRegenLimit) ? iRegenLimit : iRealHealth;
-		int iFinalHealth = (iRegenLimit >= 0) ? iLimitHealth : iLimitHealth2;
-		SetEntityHealth(iTank, iFinalHealth);
+		g_bRegen[iTank] = false;
+		return Plugin_Stop;
 	}
+	int iHealth = GetClientHealth(iTank);
+	int iRegenHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iRegenHealth[ST_TankType(iTank)]) : (iHealth + g_iRegenHealth2[ST_TankType(iTank)]);
+	int iRegenLimit = !g_bTankConfig[ST_TankType(iTank)] ? g_iRegenLimit[ST_TankType(iTank)] : g_iRegenLimit2[ST_TankType(iTank)];
+	int iExtraHealth = (iRegenHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iRegenHealth;
+	int iExtraHealth2 = (iRegenHealth < iHealth) ? 1 : iRegenHealth;
+	int iRealHealth = (iRegenHealth >= 0) ? iExtraHealth : iExtraHealth2;
+	int iLimitHealth = (iRealHealth > iRegenLimit) ? iRegenLimit : iRealHealth;
+	int iLimitHealth2 = (iRealHealth < iRegenLimit) ? iRegenLimit : iRealHealth;
+	int iFinalHealth = (iRegenLimit >= 0) ? iLimitHealth : iLimitHealth2;
+	SetEntityHealth(iTank, iFinalHealth);
 	return Plugin_Continue;
 }
