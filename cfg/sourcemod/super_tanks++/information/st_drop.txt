@@ -22,6 +22,12 @@
 			// Maximum: 9999999999 (Less chance)
 			"Drop Clip Chance"				"4"
 
+			// The mode of the Super Tank's drop ability.
+			// 0: Both
+			// 1: Guns only.
+			// 2: Melee weapons only.
+			"Drop Mode"						"0"
+
 			// The Super Tank's weapon size is multiplied by this value.
 			// Note: Default weapon size x Drop weapon scale
 			// Minimum: 1.0

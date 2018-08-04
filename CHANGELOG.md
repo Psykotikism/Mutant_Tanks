@@ -1,6 +1,20 @@
 # Changelog
 
-## Version 8.30 (August 1, 2018)
+## Version 8.31 (August 4, 2018)
+
+Changes:
+
+1. Added a 3rd parameter for the sm_tank command. (Usage: sm_tank <1-2500> <0: spawn at crosshair, 1: spawn automatically>)
+2. Added the "Drop Mode" KeyValue setting to determine what kind of weapons the Super Tank can drop. (0: Both|1: Guns only|2: Melee weapons only)
+3. Changed how the Pyro ability detects Tanks that are on fire.
+4. Major code optimization. (Thanks Lux!)
+
+Files:
+
+1. Updated include file.
+2. Updated config file.
+
+## Version 8.30 (August 2, 2018)
 
 Changes:
 

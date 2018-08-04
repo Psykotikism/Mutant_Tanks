@@ -625,6 +625,12 @@ st_enableplugin "1"
 			// Maximum: 9999999999 (Less chance)
 			"Drop Clip Chance"				"4"
 
+			// The mode of the Super Tank's drop ability.
+			// 0: Both
+			// 1: Guns only.
+			// 2: Melee weapons only.
+			"Drop Mode"						"0"
+
 			// The Super Tank's weapon size is multiplied by this value.
 			// Note: Default weapon size x Drop weapon scale
 			// Minimum: 1.0
@@ -3914,7 +3920,9 @@ Examples:
 
 **sheo** - For the [Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?p=2133193) plugin.
 
-**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and help with optimizing/fixing various parts of the code.
+**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and helping to optimize/fix various parts of the code.
+
+**Lux** - For helping to optimize/fix various parts of the code.
 
 **Milo|** - For the code that automatically generates config files for each day and each map installed on a server.
 
