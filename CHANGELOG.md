@@ -2,6 +2,11 @@
 
 ## Version 8.31 (August 4, 2018)
 
+Bug fixes:
+
+1. Fixed errors reported by Mi.Cura regarding the Rock ability.
+2. Fixed potential bugs and errors from various abilities.
+
 Changes:
 
 1. Added a 3rd parameter for the sm_tank command. (Usage: sm_tank <1-2500> <0: spawn at crosshair, 1: spawn automatically>)
