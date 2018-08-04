@@ -167,19 +167,19 @@ public void ST_Ability(int client)
 	int iRockChance = !g_bTankConfig[ST_TankType(client)] ? g_iRockChance[ST_TankType(client)] : g_iRockChance2[ST_TankType(client)];
 	if (iRockAbility == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bRock[client])
 	{
-		g_bRock[client] = true;
+		int iRock = CreateEntityByName("env_rock_launcher");
+		if(!bIsValidEntity(iRock))// don't run code that is only going to fail if the entity dont exist and waste cpu cycles
+			return;
+		
+		g_bRock[client] = true;// maybe this should not be true if the entity cannot be created
 		float flPos[3];
 		GetClientEyePosition(client, flPos);
 		flPos[2] += 20.0;
 		char sDamage[6];
 		int iRockDamage = !g_bTankConfig[ST_TankType(client)] ? g_iRockDamage[ST_TankType(client)] : g_iRockDamage2[ST_TankType(client)];
 		IntToString(iRockDamage, sDamage, sizeof(sDamage));
-		int iRock = CreateEntityByName("env_rock_launcher");
-		if (bIsValidEntity(iRock))
-		{
-			DispatchSpawn(iRock);
-			DispatchKeyValue(iRock, "rockdamageoverride", sDamage);
-		}
+		DispatchSpawn(iRock);
+		DispatchKeyValue(iRock, "rockdamageoverride", sDamage);
 		DataPack dpDataPack;
 		CreateDataTimer(0.2, tTimerRockUpdate, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(EntIndexToEntRef(iRock));
