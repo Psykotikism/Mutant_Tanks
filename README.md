@@ -3892,6 +3892,8 @@ Examples:
 ```
 
 ## Credits
+**Machine** - For the original [Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752).
+
 **NgBUCKWANGS** - For the mapname.cfg code in his [ABM](https://forums.alliedmods.net/showthread.php?t=291562) plugin.
 
 **Spirit_12** - For the L4D signatures for the gamedata file.
