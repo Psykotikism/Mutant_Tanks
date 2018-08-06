@@ -16,7 +16,7 @@ Files:
 
 1. Updated include file (super_tanks++.inc).
 3. Updated core plugin (super_tanks++.sp).
-4. Updated all plugins to stop generating information files.
+4. Updated all plugins to stop creating information files.
 5. Updated config file.
 
 ## Version 8.31 (August 4, 2018)
