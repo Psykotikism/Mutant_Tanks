@@ -43,11 +43,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_clone", "st_clone");
-}
-
 public void OnMapStart()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -189,54 +184,5 @@ public void ST_Ability(int client)
 			}
 			delete hTrace;
 		}
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank creates clones of itself.");
-		fFilename.WriteLine("		// Requires \"st_clone.smx\" to be installed.");
-		fFilename.WriteLine("		\"Clone Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The amount of clones the Super Tank can spawn.");
-		fFilename.WriteLine("			// Minimum: 1");
-		fFilename.WriteLine("			// Maximum: 25");
-		fFilename.WriteLine("			\"Clone Amount\"					\"2\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Clone Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's clones' health.");
-		fFilename.WriteLine("			// Minimum: 1");
-		fFilename.WriteLine("			// Maximum: 65535");
-		fFilename.WriteLine("			\"Clone Health\"					\"1000\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }

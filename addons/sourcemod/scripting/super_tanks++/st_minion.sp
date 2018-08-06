@@ -43,11 +43,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_minion", "st_minion");
-}
-
 public void OnMapStart()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -197,61 +192,5 @@ public void ST_Ability(int client)
 			}
 			delete hTrace;
 		}
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank spawns minions.");
-		fFilename.WriteLine("		// Requires \"st_minion.smx\" to be installed.");
-		fFilename.WriteLine("		\"Minion Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The amount of minions the Super Tank can spawn.");
-		fFilename.WriteLine("			// Minimum: 1");
-		fFilename.WriteLine("			// Maximum: 25");
-		fFilename.WriteLine("			\"Minion Amount\"					\"5\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Minion Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank can spawn these minions.");
-		fFilename.WriteLine("			// Combine numbers in any order for different results.");
-		fFilename.WriteLine("			// Repeat the same number to increase its chance of being chosen.");
-		fFilename.WriteLine("			// Character limit: 12");
-		fFilename.WriteLine("			// 1: Smoker");
-		fFilename.WriteLine("			// 2: Boomer");
-		fFilename.WriteLine("			// 3: Hunter");
-		fFilename.WriteLine("			// 4: Spitter (Switches to Boomer in L4D1.)");
-		fFilename.WriteLine("			// 5: Jockey (Switches to Hunter in L4D1.)");
-		fFilename.WriteLine("			// 6: Charger (Switches to Smoker in L4D1.)");
-		fFilename.WriteLine("			\"Minion Types\"					\"123456\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }

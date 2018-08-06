@@ -51,11 +51,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_pimp", "st_pimp");
-}
-
 public void OnMapStart()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -196,77 +191,6 @@ void vPimpHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(0.5, tTimerPimp, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank pimp slaps survivors.");
-		fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is repeatedly pimp slapped.");
-		fFilename.WriteLine("		// - \"Pimp Range\"");
-		fFilename.WriteLine("		// - \"Pimp Range Chance\"");
-		fFilename.WriteLine("		// \"Pimp Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is repeatedly pimp slapped.");
-		fFilename.WriteLine("		// - \"Pimp Chance\"");
-		fFilename.WriteLine("		// Requires \"st_pimp.smx\" to be installed.");
-		fFilename.WriteLine("		\"Pimp Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// Note: This setting does not affect the \"Pimp Hit\" setting.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The amount of pimp slaps the Super Tank can give to survivors.");
-		fFilename.WriteLine("			// Minimum: 1");
-		fFilename.WriteLine("			// Maximum: 9999999999");
-		fFilename.WriteLine("			\"Pimp Amount\"					\"5\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Pimp Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's pimp slaps do this much damage.");
-		fFilename.WriteLine("			// Minimum: 1");
-		fFilename.WriteLine("			// Maximum: 9999999999");
-		fFilename.WriteLine("			\"Pimp Damage\"					\"1\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
-		fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Pimp Hit\"						\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
-		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-		fFilename.WriteLine("			\"Pimp Range\"					\"150.0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the range ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Pimp Range Chance\"				\"16\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }
 

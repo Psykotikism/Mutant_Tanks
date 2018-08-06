@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 8.32 (August 6, 2018)
+
+Bug fixes:
+
+1. Fixed the "Enabled Game Modes" and "Disabled Game Modes" settings not allowing more than 64 characters.
+
+Changes:
+
+1. Lowered the character limit of the "Enabled Game Modes" and "Disabled Game Modes" settings from 2048 to 512.
+2. Rocks thrown by Tanks now have the same color as the rocks attached to their bodies.
+3. Removed the "information" folder in favor of the INFORMATION.md file that comes with the plugin's package.
+
+Files:
+
+1. Updated include file (super_tanks++.inc).
+3. Updated core plugin (super_tanks++.sp).
+4. Updated st_bomb.sp, st_fire.sp, st_ghost.sp, st_idle.sp, st_rock.sp, st_spam.sp, and st_track.sp.
+5. Updated config file.
+
 ## Version 8.31 (August 4, 2018)
 
 Bug fixes:

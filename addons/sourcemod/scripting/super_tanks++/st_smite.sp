@@ -46,11 +46,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_smite", "st_smite");
-}
-
 public void OnMapStart()
 {
 	g_iSmiteSprite = PrecacheModel(SPRITE_GLOW, true);
@@ -177,66 +172,5 @@ void vSmiteHit(int client, int chance, int enabled)
 		TE_SendToAll();
 		EmitAmbientSound(SOUND_EXPLOSION2, flStartPosition, client, SNDLEVEL_RAIDSIREN);
 		ForcePlayerSuicide(client);
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank smites survivors.");
-		fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor is smitten.");
-		fFilename.WriteLine("		// - \"Smite Range\"");
-		fFilename.WriteLine("		// - \"Smite Range Chance\"");
-		fFilename.WriteLine("		// \"Smite Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is smitten.");
-		fFilename.WriteLine("		// - \"Smite Chance\"");
-		fFilename.WriteLine("		// Requires \"st_smite.smx\" to be installed.");
-		fFilename.WriteLine("		\"Smite Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// Note: This setting does not affect the \"Smite Hit\" setting.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Smite Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
-		fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Smite Hit\"						\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
-		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-		fFilename.WriteLine("			\"Smite Range\"					\"150.0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the range ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Smite Range Chance\"			\"16\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }

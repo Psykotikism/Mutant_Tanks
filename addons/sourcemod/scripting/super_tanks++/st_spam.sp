@@ -12,7 +12,6 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
 bool g_bSpam[MAXPLAYERS + 1];
 bool g_bTankConfig[ST_MAXTYPES + 1];
 float g_flSpamDuration[ST_MAXTYPES + 1];
@@ -32,7 +31,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		strcopy(error, err_max, "[ST++] Spam Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
-	g_bLateLoad = late;
 	return APLRes_Success;
 }
 
@@ -44,11 +42,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_spam", "st_spam");
-}
-
 public void OnMapStart()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -58,22 +51,15 @@ public void OnMapStart()
 			g_bSpam[iPlayer] = false;
 		}
 	}
-	if (g_bLateLoad)
-	{
-		vLateLoad(true);
-		g_bLateLoad = false;
-	}
 }
 
 public void OnClientPostAdminCheck(int client)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bSpam[client] = false;
 }
 
 public void OnClientDisconnect(int client)
 {
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bSpam[client] = false;
 }
 
@@ -86,51 +72,6 @@ public void OnMapEnd()
 			g_bSpam[iPlayer] = false;
 		}
 	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
-}
-
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
-{
-	if (ST_PluginEnabled() && damage > 0.0)
-	{
-		if (bIsInfected(victim))
-		{
-			char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-			if (inflictor != -1)
-			{
-				int iOwner;
-				if (HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity"))
-				{
-					iOwner = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-				}
-				int iThrower;
-				if (HasEntProp(inflictor, Prop_Data, "m_hThrower"))
-				{
-					iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
-				}
-				if ((iOwner > 0 && iOwner == victim) || (iThrower > 0 && iThrower == victim) || ST_TankAllowed(iOwner) || strcmp(sClassname, "tank_rock") == 0)
-				{
-					damage = 0.0;
-					return Plugin_Changed;
-				}
-			}
-		}
-	}
-	return Plugin_Continue;
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -169,55 +110,6 @@ public void ST_Ability(int client)
 		CreateDataTimer(0.5, tTimerSpam, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteFloat(GetEngineTime());
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank spams rocks at survivors.");
-		fFilename.WriteLine("		// Requires \"st_spam.smx\" to be installed.");
-		fFilename.WriteLine("		\"Spam Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Spam Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's rocks do this much damage.");
-		fFilename.WriteLine("			// Minimum: 1");
-		fFilename.WriteLine("			// Maximum: 9999999999");
-		fFilename.WriteLine("			\"Spam Damage\"					\"5\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's ability effects last this long.");
-		fFilename.WriteLine("			// Minimum: 0.1");
-		fFilename.WriteLine("			// Maximum: 9999999999.0");
-		fFilename.WriteLine("			\"Spam Duration\"					\"5.0\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }
 

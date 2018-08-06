@@ -42,11 +42,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_regen", "st_regen");
-}
-
 public void OnMapStart()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -112,59 +107,6 @@ public void ST_Ability(int client)
 		g_bRegen[client] = true;
 		float flRegenInterval = !g_bTankConfig[ST_TankType(client)] ? g_flRegenInterval[ST_TankType(client)] : g_flRegenInterval2[ST_TankType(client)];
 		CreateTimer(flRegenInterval, tTimerRegen, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank regenerates health.");
-		fFilename.WriteLine("		// Requires \"st_regen.smx\" to be installed.");
-		fFilename.WriteLine("		\"Regen Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank regenerates this much health each time.");
-		fFilename.WriteLine("			// Positive numbers: Current health + Regen health");
-		fFilename.WriteLine("			// Negative numbers: Current health - Regen health");
-		fFilename.WriteLine("			// Minimum: -65535");
-		fFilename.WriteLine("			// Maximum: 65535");
-		fFilename.WriteLine("			\"Regen Health\"					\"1\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank regenerates health every time this many seconds passes.");
-		fFilename.WriteLine("			// Minimum: 0.1");
-		fFilename.WriteLine("			// Maximum: 9999999999.0");
-		fFilename.WriteLine("			\"Regen Interval\"				\"1.0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank stops regenerating health at this value.");
-		fFilename.WriteLine("			// Positive numbers: The Super Tank will stop regenerating health when it reaches this number.");
-		fFilename.WriteLine("			// Negative numbers: The Super Tank will stop losing health when it reaches this number.");
-		fFilename.WriteLine("			// Minimum: -65535");
-		fFilename.WriteLine("			// Maximum: 65535");
-		fFilename.WriteLine("			\"Regen Limit\"					\"65535\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }
 

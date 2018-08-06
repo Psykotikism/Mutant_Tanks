@@ -45,7 +45,6 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_shield", "st_shield");
 	g_cvSTFindConVar = FindConVar("z_tank_throw_force");
 }
 
@@ -284,51 +283,6 @@ void vShield(int client, bool shield)
 		float flShieldDelay = !g_bTankConfig[ST_TankType(client)] ? g_flShieldDelay[ST_TankType(client)] : g_flShieldDelay2[ST_TankType(client)];
 		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		g_bShield[client] = false;
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank protects itself with a shield and traps survivors inside their own shields.");
-		fFilename.WriteLine("		// Requires \"st_shield.smx\" to be installed.");
-		fFilename.WriteLine("		\"Shield Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// This is the Super Tank's shield's color.");
-		fFilename.WriteLine("			// 1st number = Red");
-		fFilename.WriteLine("			// 2nd number = Green");
-		fFilename.WriteLine("			// 3rd number = Blue");
-		fFilename.WriteLine("			\"Shield Color\"					\"255,255,255\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's shield reactivates after this many seconds passes.");
-		fFilename.WriteLine("			// Minimum: 1.0");
-		fFilename.WriteLine("			// Maximum: 9999999999.0");
-		fFilename.WriteLine("			\"Shield Delay\"					\"5.0\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }
 
