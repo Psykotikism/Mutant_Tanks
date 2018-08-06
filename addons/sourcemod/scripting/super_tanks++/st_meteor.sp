@@ -16,6 +16,8 @@ bool g_bMeteor[MAXPLAYERS + 1];
 bool g_bTankConfig[ST_MAXTYPES + 1];
 char g_sMeteorRadius[ST_MAXTYPES + 1][13];
 char g_sMeteorRadius2[ST_MAXTYPES + 1][13];
+char g_sPropsColors[ST_MAXTYPES + 1][80];
+char g_sPropsColors2[ST_MAXTYPES + 1][80];
 int g_iMeteorAbility[ST_MAXTYPES + 1];
 int g_iMeteorAbility2[ST_MAXTYPES + 1];
 int g_iMeteorChance[ST_MAXTYPES + 1];
@@ -40,11 +42,6 @@ public void OnAllPluginsLoaded()
 	{
 		SetFailState("No Super Tanks++ library found.");
 	}
-}
-
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_meteor", "st_meteor");
 }
 
 public void OnMapStart()
@@ -90,6 +87,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
+			main ? (kvSuperTanks.GetString("General/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255")) : (kvSuperTanks.GetString("General/Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]));
 			main ? (g_iMeteorAbility[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", 0)) : (g_iMeteorAbility2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", g_iMeteorAbility[iIndex]));
 			main ? (g_iMeteorAbility[iIndex] = iSetCellLimit(g_iMeteorAbility[iIndex], 0, 1)) : (g_iMeteorAbility2[iIndex] = iSetCellLimit(g_iMeteorAbility2[iIndex], 0, 1));
 			main ? (g_iMeteorChance[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", 4)) : (g_iMeteorChance2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", g_iMeteorChance[iIndex]));
@@ -182,59 +180,6 @@ void vMeteor(int client, int entity)
 	}
 }
 
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank creates meteor showers.");
-		fFilename.WriteLine("		// Requires \"st_meteor.smx\" to be installed.");
-		fFilename.WriteLine("		\"Meteor Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Meteor Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's meteorites do this much damage.");
-		fFilename.WriteLine("			// Minimum: 1");
-		fFilename.WriteLine("			// Maximum: 9999999999");
-		fFilename.WriteLine("			\"Meteor Damage\"					\"5\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The radius of the Super Tank's meteor shower.");
-		fFilename.WriteLine("			// 1st number = Minimum radius");
-		fFilename.WriteLine("			// Minimum: -200.0");
-		fFilename.WriteLine("			// Maximum: 0.0");
-		fFilename.WriteLine("			// 2nd number = Maximum radius");
-		fFilename.WriteLine("			// Minimum: 0.0");
-		fFilename.WriteLine("			// Maximum: 200.0");
-		fFilename.WriteLine("			\"Meteor Radius\"					\"-180.0,180.0\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
-	}
-}
-
 public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -261,6 +206,21 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
 	flMin = flSetFloatLimit(flMin, -200.0, 0.0);
 	flMax = flSetFloatLimit(flMax, 0.0, 200.0);
+	char sSet[5][16];
+	char sPropsColors[80];
+	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
+	TrimString(sPropsColors);
+	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+	char sRGB[4][4];
+	ExplodeString(sSet[3], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+	TrimString(sRGB[0]);
+	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+	TrimString(sRGB[1]);
+	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+	TrimString(sRGB[2]);
+	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+	TrimString(sRGB[3]);
+	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
 	if (iMeteorAbility == 0)
 	{
 		g_bMeteor[iTank] = false;
@@ -300,6 +260,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 				return Plugin_Stop;
 			}
 			SetEntityModel(iRock, MODEL_CONCRETE);
+			SetEntityRenderColor(iRock, iRed, iGreen, iBlue, iAlpha);
 			float flAngles2[3];
 			flAngles2[0] = GetRandomFloat(flMin, flMax);
 			flAngles2[1] = GetRandomFloat(flMin, flMax);

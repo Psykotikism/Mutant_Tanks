@@ -45,11 +45,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_track", "st_track");
-}
-
 public void Think(int entity)
 {
 	bIsValidEntity(entity) ? vTrack(entity) : SDKUnhook(entity, SDKHook_Think, Think);
@@ -75,8 +70,8 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iTrackChance[iIndex] = iSetCellLimit(g_iTrackChance[iIndex], 1, 9999999999)) : (g_iTrackChance2[iIndex] = iSetCellLimit(g_iTrackChance2[iIndex], 1, 9999999999));
 			main ? (g_iTrackMode[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", 1)) : (g_iTrackMode2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", g_iTrackMode[iIndex]));
 			main ? (g_iTrackMode[iIndex] = iSetCellLimit(g_iTrackMode[iIndex], 0, 1)) : (g_iTrackMode2[iIndex] = iSetCellLimit(g_iTrackMode2[iIndex], 0, 1));
-			main ? (g_flTrackSpeed[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", 300.0)) : (g_flTrackSpeed2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[iIndex]));
-			main ? (g_flTrackSpeed[iIndex] = flSetFloatLimit(g_flTrackSpeed[iIndex], 100.0, 500.0)) : (g_flTrackSpeed2[iIndex] = flSetFloatLimit(g_flTrackSpeed2[iIndex], 100.0, 500.0));
+			main ? (g_flTrackSpeed[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", 500.0)) : (g_flTrackSpeed2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[iIndex]));
+			main ? (g_flTrackSpeed[iIndex] = flSetFloatLimit(g_flTrackSpeed[iIndex], 0.1, 9999999999.0)) : (g_flTrackSpeed2[iIndex] = flSetFloatLimit(g_flTrackSpeed2[iIndex], 100.0, 500.0));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -332,69 +327,19 @@ void vTrack(int entity)
 			char sGlow[3][4];
 			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 			TrimString(sGlow[0]);
-			int iRed2 = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
+			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
 			TrimString(sGlow[1]);
-			int iGreen2 = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
+			int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
 			TrimString(sGlow[2]);
-			int iBlue2 = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
+			int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
 			int iGlowEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEffect[ST_TankType(iTank)] : g_iGlowEffect2[ST_TankType(iTank)];
 			if (iGlowEffect == 1 && bIsL4D2Game())
 			{
 				SetEntProp(entity, Prop_Send, "m_iGlowType", 3);
 				SetEntProp(entity, Prop_Send, "m_nGlowRange", 0);
-				SetEntProp(entity, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
+				SetEntProp(entity, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));
 			}
 		}
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank throws a heat-seeking rock that will track down the nearest survivor.");
-		fFilename.WriteLine("		// Requires \"st_track.smx\" to be installed.");
-		fFilename.WriteLine("		\"Track Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Track Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The mode of the Super Tank's track ability.");
-		fFilename.WriteLine("			// 0: The Super Tank's rock will only start tracking when it's near a survivor.");
-		fFilename.WriteLine("			// 1: The Super Tank's rock will track the nearest survivor.");
-		fFilename.WriteLine("			\"Track Mode\"					\"1\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's track ability is this fast.");
-		fFilename.WriteLine("			// Note: This setting only applies if the \"Track Mode\" setting is set to 1.");
-		fFilename.WriteLine("			// Minimum: 100.0");
-		fFilename.WriteLine("			// Maximum: 500.0");
-		fFilename.WriteLine("			\"Track Speed\"					\"300.0\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }
 

@@ -48,7 +48,6 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_puke", "st_puke");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	StartPrepSDKCall(SDKCall_Player);
 	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon");
@@ -169,66 +168,5 @@ void vPukeHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		SDKCall(g_hSDKPukePlayer, client, owner, true);
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank pukes on survivors.");
-		fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the Tank pukes on the survivor.");
-		fFilename.WriteLine("		// - \"Puke Range\"");
-		fFilename.WriteLine("		// - \"Puke Range Chance\"");
-		fFilename.WriteLine("		// \"Puke Hit\" - When a survivor is hit by a Tank's claw or rock, the Tank pukes on the survivor.");
-		fFilename.WriteLine("		// - \"Puke Chance\"");
-		fFilename.WriteLine("		// Requires \"st_puke.smx\" to be installed.");
-		fFilename.WriteLine("		\"Puke Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// Note: This setting does not affect the \"Puke Hit\" setting.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Puke Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
-		fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Puke Hit\"						\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
-		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-		fFilename.WriteLine("			\"Puke Range\"					\"150.0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the range ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Puke Range Chance\"				\"16\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }

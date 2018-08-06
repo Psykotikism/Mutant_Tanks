@@ -51,7 +51,6 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_drop", "st_drop");
 	g_cvSTFindConVar[0] = bIsL4D2Game() ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
 	g_cvSTFindConVar[1] = bIsL4D2Game() ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
 	g_cvSTFindConVar[2] = FindConVar("ammo_huntingrifle_max");
@@ -445,62 +444,6 @@ void vGetPosAng2(int client, int weapon, float pos[3], float angle[3], int posit
 	}
 	float flDropWeaponScale = !g_bTankConfig[ST_TankType(client)] ? g_flDropWeaponScale[ST_TankType(client)] : g_flDropWeaponScale2[ST_TankType(client)];
 	scale = scale * flDropWeaponScale;
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank drops weapons upon death.");
-		fFilename.WriteLine("		// Requires \"st_drop.smx\" to be installed.");
-		fFilename.WriteLine("		\"Drop Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Drop Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to drop guns with a full clip.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Drop Clip Chance\"				\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The mode of the Super Tank's drop ability.");
-		fFilename.WriteLine("			// 0: Both");
-		fFilename.WriteLine("			// 1: Guns only.");
-		fFilename.WriteLine("			// 2: Melee weapons only.");
-		fFilename.WriteLine("			\"Drop Mode\"						\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's weapon size is multiplied by this value.");
-		fFilename.WriteLine("			// Note: Default weapon size x Drop weapon scale");
-		fFilename.WriteLine("			// Minimum: 1.0");
-		fFilename.WriteLine("			// Maximum: 2.0");
-		fFilename.WriteLine("			\"Drop Weapon Scale\"				\"1.0\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
-	}
 }
 
 void vReset(int client)

@@ -42,7 +42,6 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_throw", "st_throw");
 	g_cvSTFindConVar = FindConVar("z_tank_throw_force");
 }
 
@@ -97,64 +96,6 @@ public void ST_RockThrow(int client, int entity)
 		CreateDataTimer(0.1, tTimerSelfThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(EntIndexToEntRef(entity));
 		dpDataPack.WriteCell(GetClientUserId(client));
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank throws things.");
-		fFilename.WriteLine("		// Requires \"st_throw.smx\" to be installed.");
-		fFilename.WriteLine("		\"Throw Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON, the Super Tank throws cars.");
-		fFilename.WriteLine("			// 2: ON, the Super Tank throws special infected.");
-		fFilename.WriteLine("			// 3: ON, the Super Tank throws itself.");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank can throw these cars.");
-		fFilename.WriteLine("			// Combine numbers in any order for different results.");
-		fFilename.WriteLine("			// Repeat the same number to increase its chance of being chosen.");
-		fFilename.WriteLine("			// Character limit: 6");
-		fFilename.WriteLine("			// 1: Small car with a big hatchback.");
-		fFilename.WriteLine("			// 2: Car that looks like a Chevrolet Impala SS.");
-		fFilename.WriteLine("			// 3: Car that looks like a Sixth Generation Chevrolet Impala.");
-		fFilename.WriteLine("			\"Throw Car Options\"				\"123\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank can throw these special infected.");
-		fFilename.WriteLine("			// Combine numbers in any order for different results.");
-		fFilename.WriteLine("			// Repeat the same number to increase its chance of being chosen.");
-		fFilename.WriteLine("			// Character limit: 14");
-		fFilename.WriteLine("			// 1: Smoker");
-		fFilename.WriteLine("			// 2: Boomer");
-		fFilename.WriteLine("			// 3: Hunter");
-		fFilename.WriteLine("			// 4: Spitter (Switches to Boomer in L4D1.)");
-		fFilename.WriteLine("			// 5: Jockey (Switches to Hunter in L4D1.)");
-		fFilename.WriteLine("			// 6: Charger (Switches to Smoker in L4D1.)");
-		fFilename.WriteLine("			// 7: Tank");
-		fFilename.WriteLine("			\"Throw Infected Options\"		\"1234567\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }
 

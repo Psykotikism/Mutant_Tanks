@@ -46,11 +46,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_warp", "st_warp");
-}
-
 public void OnMapStart()
 {
 	vPrecacheParticle(PARTICLE_ELECTRICITY);
@@ -182,65 +177,6 @@ void vWarpHit(int client, int owner)
 				break;
 			}
 		}
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank warps to survivors and warps survivors back to teammates.");
-		fFilename.WriteLine("		// \"Ability Enabled\" - The Tank warps to a random survivor.");
-		fFilename.WriteLine("		// - \"Warp Interval\"");
-		fFilename.WriteLine("		// \"Warp Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor is warped to a random teammate.");
-		fFilename.WriteLine("		// - \"Warp Chance\"");
-		fFilename.WriteLine("		// Requires \"st_warp.smx\" to be installed.");
-		fFilename.WriteLine("		\"Warp Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Warp Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
-		fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Warp Hit\"						\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank warps to a random survivor every time this many seconds passes.");
-		fFilename.WriteLine("			// Minimum: 0.1");
-		fFilename.WriteLine("			// Maximum: 9999999999.0");
-		fFilename.WriteLine("			\"Warp Interval\"					\"5.0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The mode of the Super Tank's warp ability.");
-		fFilename.WriteLine("			// 0: The Super Tank warps to a random survivor.");
-		fFilename.WriteLine("			// 1: The Super Tank switches places with a random survivor.");
-		fFilename.WriteLine("			\"Warp Mode\"						\"0\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }
 

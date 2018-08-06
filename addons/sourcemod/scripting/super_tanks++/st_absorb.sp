@@ -42,11 +42,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_absorb", "st_absorb");
-}
-
 public void OnMapStart()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -169,50 +164,6 @@ public void ST_Ability(int client)
 		g_bAbsorb[client] = true;
 		float flAbsorbDuration = !g_bTankConfig[ST_TankType(client)] ? g_flAbsorbDuration[ST_TankType(client)] : g_flAbsorbDuration2[ST_TankType(client)];
 		CreateTimer(flAbsorbDuration, tTimerStopAbsorb, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank absorbs most of the damage it receives.");
-		fFilename.WriteLine("		// Requires \"st_absorb.smx\" to be installed.");
-		fFilename.WriteLine("		\"Absorb Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Absorb Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's ability effects last this long.");
-		fFilename.WriteLine("			// Minimum: 0.1");
-		fFilename.WriteLine("			// Maximum: 9999999999.0");
-		fFilename.WriteLine("			\"Absorb Duration\"				\"5.0\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }
 

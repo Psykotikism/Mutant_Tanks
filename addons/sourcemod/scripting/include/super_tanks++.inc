@@ -34,7 +34,7 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.31"
+#define ST_VERSION "8.32"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 2500
 #define ST_MAXHEALTH 65535
@@ -406,8 +406,8 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 			return false;
 		}
 	}
-	char sGameMode[64];
-	char sGameModes[64];
+	char sGameMode[32];
+	char sGameModes[513];
 	convar.GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
 	if (strcmp(enabled, ""))
@@ -922,7 +922,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 		{
 			fFilename.WriteLine("// Super Tanks++ KeyValues Settings");
 			fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-			fFilename.WriteLine("// Note: View the README.md file or \"information\" folder for information about each ability/setting.");
+			fFilename.WriteLine("// Note: View the INFORMATION.md file to read about each ability/setting.");
 			fFilename.WriteLine("// If any of these Tanks don't work, make sure you have all the abilities installed.");
 			fFilename.WriteLine("\"Super Tanks++\"");
 			fFilename.WriteLine("{");
@@ -960,7 +960,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Absorber Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"50,90,150,255|50,90,150\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"10,10,10,255|10,10,10,255|10,10,10,180|10,10,10,255|10,10,10,255\"");
 			fFilename.WriteLine("		}");
@@ -1007,7 +1007,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Ammo Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"170,200,210,255|170,200,210\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"5,20,35,255|5,20,35,255|5,20,35,180|5,20,35,255|5,20,35,255\"");
 			fFilename.WriteLine("		}");
@@ -1467,8 +1467,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Ghost Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
-			fFilename.WriteLine("			\"Ghost Hit\"						\"0\"");
-			fFilename.WriteLine("			\"Ghost Range\"					\"1.0\"");
+			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Ghost Range Chance\"			\"16\"");
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"12345\"");
 			fFilename.WriteLine("		}");
@@ -1478,7 +1478,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Godly Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"50,25,150,255|50,25,150\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"0,0,0,255|0,0,0,255|0,0,0,180|0,0,0,255|0,0,0,255\"");
 			fFilename.WriteLine("		}");
@@ -2061,8 +2061,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Rocket Ability\"");
 			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-			fFilename.WriteLine("			\"Rocket Chance\"					\"16\"");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
+			fFilename.WriteLine("			\"Rocket Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Rocket Hit\"					\"1\"");
 			fFilename.WriteLine("			\"Rocket Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Rocket Range Chance\"			\"16\"");
@@ -2114,7 +2114,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Shield Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"135,205,255,255|135,205,255\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"25,125,125,255|25,125,125,255|25,125,125,180|25,125,125,255|25,125,125,255\"");
 			fFilename.WriteLine("		}");
@@ -2168,8 +2168,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Smash Ability\"");
 			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-			fFilename.WriteLine("			\"Smash Chance\"					\"16\"");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
+			fFilename.WriteLine("			\"Smash Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Smash Hit\"						\"1\"");
 			fFilename.WriteLine("			\"Smash Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Smash Range Chance\"			\"16\"");
@@ -2191,8 +2191,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Smite Ability\"");
 			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-			fFilename.WriteLine("			\"Smite Chance\"					\"16\"");
+			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
+			fFilename.WriteLine("			\"Smite Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Smite Hit\"						\"1\"");
 			fFilename.WriteLine("			\"Smite Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Smite Range Chance\"			\"16\"");
@@ -2362,16 +2362,12 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Extra Health\"					\"1000\"");
 			fFilename.WriteLine("			\"Throw Interval\"				\"1.0\"");
 			fFilename.WriteLine("		}");
-			fFilename.WriteLine("		\"Immunities\"");
-			fFilename.WriteLine("		{");
-			fFilename.WriteLine("			\"Fire Immunity\"					\"1\"");
-			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Track Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Track Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Track Mode\"					\"1\"");
-			fFilename.WriteLine("			\"Track Speed\"					\"300.0\"");
+			fFilename.WriteLine("			\"Track Speed\"					\"500.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 61\"");
@@ -2536,7 +2532,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Boss Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"0,0,50,255|0,175,255\"");
 			fFilename.WriteLine("			\"Props Attached\"				\"123456\"");
 			fFilename.WriteLine("			\"Props Chance\"					\"1,3,3,3,3,3\"");
@@ -2566,8 +2562,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Ghost Chance\"					\"3\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
-			fFilename.WriteLine("			\"Ghost Hit\"						\"0\"");
-			fFilename.WriteLine("			\"Ghost Range\"					\"1.0\"");
+			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Ghost Range Chance\"			\"16\"");
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"123\"");
 			fFilename.WriteLine("		}");
@@ -2627,7 +2623,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Distraction Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"225,225,0,255|225,225,0\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"25,0,0,255|25,0,0,255|25,0,0,180|25,0,0,255|25,0,0,255\"");
 			fFilename.WriteLine("		}");
@@ -2674,7 +2670,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Goliath Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"0,0,100,255|0,0,100\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"25,25,25,255|25,25,25,255|25,25,25,180|25,25,25,255|25,25,25,255\"");
 			fFilename.WriteLine("		}");
@@ -2732,8 +2728,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Ghost Chance\"					\"3\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
-			fFilename.WriteLine("			\"Ghost Hit\"						\"0\"");
-			fFilename.WriteLine("			\"Ghost Range\"					\"1.0\"");
+			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Ghost Range Chance\"			\"16\"");
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"123\"");
 			fFilename.WriteLine("		}");
@@ -2748,7 +2744,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Meme Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"0,255,0,255|0,255,0\"");
 			fFilename.WriteLine("			\"Props Attached\"				\"123456\"");
 			fFilename.WriteLine("			\"Props Chance\"					\"1,3,3,3,3,3\"");
@@ -2784,8 +2780,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Ghost Chance\"					\"3\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
-			fFilename.WriteLine("			\"Ghost Hit\"						\"0\"");
-			fFilename.WriteLine("			\"Ghost Range\"					\"1.0\"");
+			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Ghost Range Chance\"			\"16\"");
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"123\"");
 			fFilename.WriteLine("		}");
@@ -2846,7 +2842,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Mirage Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"25,40,25,255|25,40,25\"");
 			fFilename.WriteLine("			\"Props Attached\"				\"123456\"");
 			fFilename.WriteLine("			\"Props Chance\"					\"1,3,3,3,3,3\"");
@@ -2880,7 +2876,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Poltergeist Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"100,50,50,255|100,50,50\"");
 			fFilename.WriteLine("			\"Props Attached\"				\"123456\"");
 			fFilename.WriteLine("			\"Props Chance\"					\"1,3,3,3,3,3\"");
@@ -2908,8 +2904,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Ghost Chance\"					\"3\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
-			fFilename.WriteLine("			\"Ghost Hit\"						\"0\"");
-			fFilename.WriteLine("			\"Ghost Range\"					\"1.0\"");
+			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
+			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
 			fFilename.WriteLine("			\"Ghost Range Chance\"			\"16\"");
 			fFilename.WriteLine("			\"Ghost Weapon Slots\"			\"123\"");
 			fFilename.WriteLine("		}");
@@ -2924,7 +2920,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Psychotic Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"0,0,0,255|255,0,0\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"255,0,0,255|255,0,0,255|255,0,0,180|255,0,0,255|255,0,0,255\"");
 			fFilename.WriteLine("			\"Particle Effect\"				\"1\"");
@@ -3190,7 +3186,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Clone Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
-			fFilename.WriteLine("			\"Clone Amount\"					\"10\"");
+			fFilename.WriteLine("			\"Clone Amount\"					\"2\"");
 			fFilename.WriteLine("			\"Clone Chance\"					\"1\"");
 			fFilename.WriteLine("			\"Clone Health\"					\"250\"");
 			fFilename.WriteLine("		}");
@@ -3231,7 +3227,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Track Chance\"					\"1\"");
 			fFilename.WriteLine("			\"Track Mode\"					\"1\"");
-			fFilename.WriteLine("			\"Track Speed\"					\"450.0\"");
+			fFilename.WriteLine("			\"Track Speed\"					\"600.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	// Here are some miscellaneous Tanks.");
@@ -3241,7 +3237,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Apocalyptic Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"15,15,15,255|100,15,15\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"100,15,15,255|100,15,15,255|100,15,15,180|100,15,15,255|100,15,15,255|\"");
 			fFilename.WriteLine("			\"Glow Effect\"					\"1\"");
@@ -3284,7 +3280,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Horde Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"100,100,15,255|200,50,15\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"200,50,15,255|200,50,15,255|200,50,15,180|200,50,15,255|200,50,15,255\"");
 			fFilename.WriteLine("			\"Glow Effect\"					\"1\"");
@@ -3330,7 +3326,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"General\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Tank Name\"						\"Grim Reaper Tank\"");
-			fFilename.WriteLine("			\"Tank Enabled\"					\"0\"");
+			fFilename.WriteLine("			\"Tank Enabled\"					\"1\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"50,50,50,150|100,100,100\"");
 			fFilename.WriteLine("			\"Props Attached\"				\"123456\"");
 			fFilename.WriteLine("			\"Props Chance\"					\"1,3,3,3,3,3\"");
@@ -3630,4 +3626,23 @@ stock void vSpawnInfected(int client, char[] infected)
 	ChangeClientTeam(client, 3);
 	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", infected);
 	KickClient(client);
+}
+
+stock void vSpecialAttack(int client, float pos[3], char[] model)
+{
+	int iProp = CreateEntityByName("prop_physics");
+	if (bIsValidEntity(iProp))
+	{
+		DispatchKeyValue(iProp, "disableshadows", "1");
+		SetEntityModel(iProp, model);
+		pos[2] += 10.0;
+		TeleportEntity(iProp, pos, NULL_VECTOR, NULL_VECTOR);
+		DispatchSpawn(iProp);
+		SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", client);
+		SetEntPropFloat(iProp, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
+		SetEntProp(iProp, Prop_Send, "m_CollisionGroup", 1);
+		SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
+		SetEntityRenderColor(iProp, 0, 0, 0, 0);
+		AcceptEntityInput(iProp, "Break");
+	}
 }

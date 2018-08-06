@@ -50,11 +50,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_vision", "st_vision");
-}
-
 public void OnMapStart()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -192,77 +187,6 @@ void vVisionHit(int client, int owner, int chance, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 		dpDataPack.WriteFloat(GetEngineTime());
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank changes the survivors' field of views.");
-		fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor's vision changes.");
-		fFilename.WriteLine("		// - \"Vision Range\"");
-		fFilename.WriteLine("		// - \"Vision Range Chance\"");
-		fFilename.WriteLine("		// \"Vision Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor's vision changes.");
-		fFilename.WriteLine("		// - \"Vision Chance\"");
-		fFilename.WriteLine("		// Requires \"st_vision.smx\" to be installed.");
-		fFilename.WriteLine("		\"Vision Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// Note: This setting does not affect the \"Vision Hit\" setting.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Vision Chance\"					\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's ability effects last this long.");
-		fFilename.WriteLine("			// Minimum: 0.1");
-		fFilename.WriteLine("			// Maximum: 9999999999.0");
-		fFilename.WriteLine("			\"Vision Duration\"				\"5.0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank sets survivors' fields of view to this value.");
-		fFilename.WriteLine("			// Minimum: 1");
-		fFilename.WriteLine("			// Maximum: 160");
-		fFilename.WriteLine("			\"Vision FOV\"					\"160\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
-		fFilename.WriteLine("			// Note: This setting does not need \"Ability Enabled\" set to 1.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Vision Hit\"					\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
-		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-		fFilename.WriteLine("			\"Vision Range\"					\"150.0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the range ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Vision Range Chance\"			\"16\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }
 

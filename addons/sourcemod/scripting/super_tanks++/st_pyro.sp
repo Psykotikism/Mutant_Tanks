@@ -41,11 +41,6 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public void OnPluginStart()
-{
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_pyro", "st_pyro");
-}
-
 public void OnMapStart()
 {
 	if (g_bLateLoad)
@@ -117,44 +112,4 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 		}
 	}
 	delete kvSuperTanks;
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank gains speed when on fire.");
-		fFilename.WriteLine("		// Requires \"st_pyro.smx\" to be installed.");
-		fFilename.WriteLine("		\"Pyro Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank's speed boost value when on fire.");
-		fFilename.WriteLine("			// Note: This is a speed boost, not the overall speed. (Current speed + Pyro boost)");
-		fFilename.WriteLine("			// Minimum: 0.1");
-		fFilename.WriteLine("			// Maximum: 3.0");
-		fFilename.WriteLine("			\"Pyro Boost\"					\"1.0\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
-	}
 }

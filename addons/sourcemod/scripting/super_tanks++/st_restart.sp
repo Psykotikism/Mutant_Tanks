@@ -54,7 +54,6 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
-	vCreateInfoFile("cfg/sourcemod/super_tanks++/", "information/", "st_restart", "st_restart");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	StartPrepSDKCall(SDKCall_Player);
 	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "RoundRespawn");
@@ -218,76 +217,6 @@ void vRestartHit(int client, int owner, int chance, int enabled)
 				TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
 			}
 		}
-	}
-}
-
-void vCreateInfoFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
-{
-	char sConfigFilename[128];
-	char sConfigLabel[128];
-	File fFilename;
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.txt", filepath, folder, filename);
-	if (FileExists(sConfigFilename))
-	{
-		return;
-	}
-	fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
-	if (fFilename != null)
-	{
-		fFilename.WriteLine("// Note: The config will automatically update any changes mid-game. No need to restart the server or reload the plugin.");
-		fFilename.WriteLine("\"Super Tanks++\"");
-		fFilename.WriteLine("{");
-		fFilename.WriteLine("	\"Example\"");
-		fFilename.WriteLine("	{");
-		fFilename.WriteLine("		// The Super Tank forces survivors to restart at the beginning of the map with a new loadout.");
-		fFilename.WriteLine("		// \"Ability Enabled\" - When a survivor is within range of the Tank, the survivor respawns at the start of the map or near a teammate.");
-		fFilename.WriteLine("		// - \"Restart Range\"");
-		fFilename.WriteLine("		// - \"Restart Range Chance\"");
-		fFilename.WriteLine("		// \"Restart Hit\" - When a survivor is hit by a Tank's claw or rock, the survivor respawns at the start of the map or near a teammate.");
-		fFilename.WriteLine("		// - \"Restart Chance\"");
-		fFilename.WriteLine("		// Requires \"st_restart.smx\" to be installed.");
-		fFilename.WriteLine("		\"Restart Ability\"");
-		fFilename.WriteLine("		{");
-		fFilename.WriteLine("			// Enable this ability.");
-		fFilename.WriteLine("			// Note: This setting does not affect the \"Restart Hit\" setting.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Ability Enabled\"				\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Restart Chance\"				\"4\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// Enable the Super Tank's claw/rock attack.");
-		fFilename.WriteLine("			// 0: OFF");
-		fFilename.WriteLine("			// 1: ON");
-		fFilename.WriteLine("			\"Restart Hit\"					\"0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank makes survivors restart with this loadout.");
-		fFilename.WriteLine("			// Item limit: 5");
-		fFilename.WriteLine("			// Character limit for each item: 64");
-		fFilename.WriteLine("			\"Restart Loadout\"				\"smg,pistol,pain_pills\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The mode of the Super Tank's restart ability.");
-		fFilename.WriteLine("			// 0: Survivors are teleported to the spawn area.");
-		fFilename.WriteLine("			// 1: Survivors are teleported to another teammate.");
-		fFilename.WriteLine("			\"Restart Mode\"					\"1\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The distance between a survivor and the Super Tank needed to trigger the ability.");
-		fFilename.WriteLine("			// Minimum: 1.0 (Closest)");
-		fFilename.WriteLine("			// Maximum: 9999999999.0 (Farthest)");
-		fFilename.WriteLine("			\"Restart Range\"					\"150.0\"");
-		fFilename.WriteLine("");
-		fFilename.WriteLine("			// The Super Tank has 1 out of this many chances to trigger the range ability.");
-		fFilename.WriteLine("			// Minimum: 1 (Greatest chance)");
-		fFilename.WriteLine("			// Maximum: 9999999999 (Less chance)");
-		fFilename.WriteLine("			\"Restart Range Chance\"			\"16\"");
-		fFilename.WriteLine("		}");
-		fFilename.WriteLine("	}");
-		fFilename.WriteLine("}");
-		delete fFilename;
 	}
 }
 
