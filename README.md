@@ -66,7 +66,7 @@ st_enableplugin "1"
 ```
 
 ## KeyValues Settings
-View the INFORMATION.md file for information about each available setting.
+> View the INFORMATION.md file for information about each available setting.
 
 ### Custom Configuration Files
 Super Tanks++ has features that allow for creating and executing custom configuration files.
