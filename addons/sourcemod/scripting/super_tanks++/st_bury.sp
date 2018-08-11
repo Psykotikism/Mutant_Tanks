@@ -174,16 +174,7 @@ public void ST_Event(Event event, const char[] name)
 		int iBuryAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBuryAbility[ST_TankType(iTank)] : g_iBuryAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iBuryAbility == 1)
 		{
-			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-			{
-				if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
-				{
-					DataPack dpDataPack = new DataPack();
-					CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-					dpDataPack.WriteCell(GetClientUserId(iTank));
-				}
-			}
+			vRemoveBury(iTank);
 		}
 	}
 }
@@ -213,6 +204,15 @@ public void ST_Ability(int client)
 	}
 }
 
+public void ST_BossStage(int client)
+{
+	int iBuryAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBuryAbility[ST_TankType(client)] : g_iBuryAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iBuryAbility == 1)
+	{
+		vRemoveBury(client);
+	}
+}
+
 void vBuryHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBury[client] && bIsPlayerGrounded(client))
@@ -239,6 +239,20 @@ void vBuryHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flBuryDuration, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
+	}
+}
+
+void vRemoveBury(int client)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
+		{
+			DataPack dpDataPack = new DataPack();
+			CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+			dpDataPack.WriteCell(GetClientUserId(client));
+		}
 	}
 }
 

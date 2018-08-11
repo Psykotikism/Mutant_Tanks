@@ -211,6 +211,15 @@ public void ST_Ability(int client)
 	}
 }
 
+public void ST_BossStage(int client)
+{
+	int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iAcidAbility == 1 && bIsL4D2Game())
+	{
+		vAcid(client, client);
+	}
+}
+
 public void ST_RockBreak(int client, int entity)
 {
 	int iAcidRock = !g_bTankConfig[ST_TankType(client)] ? g_iAcidRock[ST_TankType(client)] : g_iAcidRock2[ST_TankType(client)];

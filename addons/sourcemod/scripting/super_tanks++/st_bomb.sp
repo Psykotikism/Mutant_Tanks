@@ -178,6 +178,17 @@ public void ST_Ability(int client)
 	}
 }
 
+public void ST_BossStage(int client)
+{
+	int iBombAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBombAbility[ST_TankType(client)] : g_iBombAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iBombAbility == 1 && bIsL4D2Game())
+	{
+		float flPos[3];
+		GetClientAbsOrigin(client, flPos);
+		vSpecialAttack(client, flPos, MODEL_PROPANETANK);
+	}
+}
+
 public void ST_RockBreak(int client, int entity)
 {
 	int iBombRock = !g_bTankConfig[ST_TankType(client)] ? g_iBombRock[ST_TankType(client)] : g_iBombRock2[ST_TankType(client)];

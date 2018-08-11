@@ -186,3 +186,12 @@ public void ST_Ability(int client)
 		}
 	}
 }
+
+public void ST_BossStage(int client)
+{
+	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iCloneAbility == 1)
+	{
+		g_iCloneCount[client] = 0;
+	}
+}

@@ -195,6 +195,11 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
 	int iMeteorAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iMeteorAbility[ST_TankType(iTank)] : g_iMeteorAbility2[ST_TankType(iTank)];
+	if (iMeteorAbility == 0)
+	{
+		g_bMeteor[iTank] = false;
+		return Plugin_Stop;
+	}
 	char sRadius[2][7];
 	char sMeteorRadius[13];
 	sMeteorRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sMeteorRadius[ST_TankType(iTank)] : g_sMeteorRadius2[ST_TankType(iTank)];
@@ -221,11 +226,6 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
 	TrimString(sRGB[3]);
 	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
-	if (iMeteorAbility == 0)
-	{
-		g_bMeteor[iTank] = false;
-		return Plugin_Stop;
-	}
 	if ((GetEngineTime() - flTime) > 5.0)
 	{
 		g_bMeteor[iTank] = false;

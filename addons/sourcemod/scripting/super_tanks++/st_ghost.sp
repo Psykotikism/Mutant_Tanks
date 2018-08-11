@@ -337,6 +337,12 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 		g_bGhost[iTank] = false;
 		return Plugin_Stop;
 	}
+	int iGhostAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostAbility[ST_TankType(iTank)] : g_iGhostAbility2[ST_TankType(iTank)];
+	if (iGhostAbility == 0)
+	{
+		g_bGhost[iTank] = false;
+		return Plugin_Stop;
+	}
 	int iRed = pack.ReadCell();
 	int iGreen = pack.ReadCell();
 	int iBlue = pack.ReadCell();
@@ -355,12 +361,6 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	int iRed6 = pack.ReadCell();
 	int iGreen6 = pack.ReadCell();
 	int iBlue6 = pack.ReadCell();
-	int iGhostAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostAbility[ST_TankType(iTank)] : g_iGhostAbility2[ST_TankType(iTank)];
-	if (iGhostAbility == 0)
-	{
-		g_bGhost[iTank] = false;
-		return Plugin_Stop;
-	}
 	g_iGhostAlpha[iTank] -= 2;
 	int iGhostFade = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFade[ST_TankType(iTank)] : g_iGhostFade2[ST_TankType(iTank)];
 	if (g_iGhostAlpha[iTank] < iGhostFade)

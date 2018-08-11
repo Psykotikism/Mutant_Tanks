@@ -213,13 +213,13 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 	}
 	int iPimpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAbility[ST_TankType(iTank)] : g_iPimpAbility2[ST_TankType(iTank)];
 	int iPimpAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAmount[ST_TankType(iTank)] : g_iPimpAmount2[ST_TankType(iTank)];
-	int iPimpDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpDamage[ST_TankType(iTank)] : g_iPimpDamage2[ST_TankType(iTank)];
 	if (iPimpAbility == 0 || g_iPimpCount[iSurvivor] >= iPimpAmount)
 	{
 		g_bPimp[iSurvivor] = false;
 		g_iPimpCount[iSurvivor] = 0;
 		return Plugin_Stop;
 	}
+	int iPimpDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpDamage[ST_TankType(iTank)] : g_iPimpDamage2[ST_TankType(iTank)];
 	SlapPlayer(iSurvivor, iPimpDamage, true);
 	g_iPimpCount[iSurvivor]++;
 	return Plugin_Continue;

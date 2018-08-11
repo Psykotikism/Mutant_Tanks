@@ -172,13 +172,7 @@ public void ST_Event(Event event, const char[] name)
 		int iElectricAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iElectricAbility[ST_TankType(iTank)] : g_iElectricAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iElectricAbility == 1)
 		{
-			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-			{
-				if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor])
-				{
-					SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
-				}
-			}
+			vRemoveElectric();
 		}
 	}
 }
@@ -208,6 +202,15 @@ public void ST_Ability(int client)
 	}
 }
 
+public void ST_BossStage(int client)
+{
+	int iElectricAbility = !g_bTankConfig[ST_TankType(client)] ? g_iElectricAbility[ST_TankType(client)] : g_iElectricAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iElectricAbility == 1)
+	{
+		vRemoveElectric();
+	}
+}
+
 void vElectricHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bElectric[client])
@@ -222,6 +225,17 @@ void vElectricHit(int client, int owner, int chance, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(owner));
 		dpDataPack.WriteFloat(GetEngineTime());
 		vAttachParticle(client, PARTICLE_ELECTRICITY, 2.0, 30.0);
+	}
+}
+
+void vRemoveElectric()
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor])
+		{
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		}
 	}
 }
 

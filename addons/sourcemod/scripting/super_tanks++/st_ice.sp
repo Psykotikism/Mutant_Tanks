@@ -158,16 +158,7 @@ public void ST_Event(Event event, const char[] name)
 		int iIceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iIceAbility[ST_TankType(iTank)] : g_iIceAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iIceAbility == 1)
 		{
-			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-			{
-				if (bIsSurvivor(iSurvivor) && g_bIce[iSurvivor])
-				{
-					DataPack dpDataPack = new DataPack();
-					CreateDataTimer(0.1, tTimerStopIce, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-					dpDataPack.WriteCell(GetClientUserId(iTank));
-				}
-			}
+			vRemoveIce(iTank);
 		}
 	}
 }
@@ -197,6 +188,15 @@ public void ST_Ability(int client)
 	}
 }
 
+public void ST_BossStage(int client)
+{
+	int iIceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIceAbility[ST_TankType(client)] : g_iIceAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iIceAbility == 1)
+	{
+		vRemoveIce(client);
+	}
+}
+
 void vIceHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bIce[client])
@@ -215,6 +215,20 @@ void vIceHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flIceDuration, tTimerStopIce, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
+	}
+}
+
+void vRemoveIce(int client)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && g_bIce[iSurvivor])
+		{
+			DataPack dpDataPack = new DataPack();
+			CreateDataTimer(0.1, tTimerStopIce, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+			dpDataPack.WriteCell(GetClientUserId(client));
+		}
 	}
 }
 

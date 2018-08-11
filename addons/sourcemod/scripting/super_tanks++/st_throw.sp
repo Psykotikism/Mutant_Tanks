@@ -113,7 +113,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iThrowAbility[ST_TankType(iTank)] : g_iThrowAbility2[ST_TankType(iTank)];
-	if (iThrowAbility == 0 || iThrowAbility != 1)
+	if (iThrowAbility != 1)
 	{
 		return Plugin_Stop;
 	}
@@ -167,7 +167,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iThrowAbility[ST_TankType(iTank)] : g_iThrowAbility2[ST_TankType(iTank)];
-	if (iThrowAbility == 0 || iThrowAbility != 2)
+	if (iThrowAbility != 2)
 	{
 		return Plugin_Stop;
 	}
@@ -218,7 +218,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iThrowAbility[ST_TankType(iTank)] : g_iThrowAbility2[ST_TankType(iTank)];
-	if (iThrowAbility == 0 || iThrowAbility != 3)
+	if (iThrowAbility != 3)
 	{
 		return Plugin_Stop;
 	}

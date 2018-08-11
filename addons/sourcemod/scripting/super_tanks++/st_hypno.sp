@@ -187,13 +187,7 @@ public void ST_Event(Event event, const char[] name)
 		int iHypnoAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHypnoAbility[ST_TankType(iTank)] : g_iHypnoAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iHypnoAbility == 1)
 		{
-			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-			{
-				if (bIsSurvivor(iSurvivor) && g_bHypno[iSurvivor])
-				{
-					g_bHypno[iSurvivor] = false;
-				}
-			}
+			vRemoveHypno();
 		}
 	}
 }
@@ -223,6 +217,15 @@ public void ST_Ability(int client)
 	}
 }
 
+public void ST_BossStage(int client)
+{
+	int iHypnoAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHypnoAbility[ST_TankType(client)] : g_iHypnoAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iHypnoAbility == 1)
+	{
+		vRemoveHypno();
+	}
+}
+
 void vHypnoHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bHypno[client])
@@ -233,6 +236,17 @@ void vHypnoHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flHypnoDuration, tTimerStopHypno, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
+	}
+}
+
+void vRemoveHypno()
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && g_bHypno[iSurvivor])
+		{
+			g_bHypno[iSurvivor] = false;
+		}
 	}
 }
 

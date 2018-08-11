@@ -194,3 +194,13 @@ public void ST_Ability(int client)
 		}
 	}
 }
+
+public void ST_BossStage(int client)
+{
+	int iMinionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAbility[ST_TankType(client)] : g_iMinionAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iMinionAbility == 1)
+	{
+		g_bMinion[client] = false;
+		g_iMinionCount[client] = 0;
+	}
+}

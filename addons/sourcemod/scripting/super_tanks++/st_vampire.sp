@@ -92,7 +92,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				int iVampireChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iVampireChance[ST_TankType(attacker)] : g_iVampireChance2[ST_TankType(attacker)];
 				int iVampireHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iVampireHit[ST_TankType(attacker)] : g_iVampireHit2[ST_TankType(attacker)];
-				vVampireHit(attacker, iVampireChance, iVampireHit);
+				if (iVampireHit == 1 && GetRandomInt(1, iVampireChance) == 1)
+				{
+					int iDamage = view_as<int>(damage);
+					int iHealth = GetClientHealth(attacker);
+					int iNewHealth = iDamage + iHealth;
+					int iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
+					SetEntityHealth(attacker, iFinalHealth);
+				}
 			}
 		}
 	}
@@ -152,20 +159,15 @@ public void ST_Ability(int client)
 		}
 		if (iVampireCount > 0)
 		{
-			vVampireHit(client, iVampireRangeChance, iVampireAbility);
+			if (iVampireAbility == 1 && GetRandomInt(1, iVampireRangeChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
+			{
+				int iHealth = GetClientHealth(client);
+				int iVampireHealth = !g_bTankConfig[ST_TankType(client)] ? (iHealth + g_iVampireHealth[ST_TankType(client)]) : (iHealth + g_iVampireHealth2[ST_TankType(client)]);
+				int iExtraHealth = (iVampireHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iVampireHealth;
+				int iExtraHealth2 = (iVampireHealth < iHealth) ? 1 : iVampireHealth;
+				int iRealHealth = (iVampireHealth >= 0) ? iExtraHealth : iExtraHealth2;
+				SetEntityHealth(client, iRealHealth);
+			}
 		}
-	}
-}
-
-void vVampireHit(int client, int chance, int enabled)
-{
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
-	{
-		int iHealth = GetClientHealth(client);
-		int iVampireHealth = !g_bTankConfig[ST_TankType(client)] ? (iHealth + g_iVampireHealth[ST_TankType(client)]) : (iHealth + g_iVampireHealth2[ST_TankType(client)]);
-		int iExtraHealth = (iVampireHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iVampireHealth;
-		int iExtraHealth2 = (iVampireHealth < iHealth) ? 1 : iVampireHealth;
-		int iRealHealth = (iVampireHealth >= 0) ? iExtraHealth : iExtraHealth2;
-		SetEntityHealth(client, iRealHealth);
 	}
 }

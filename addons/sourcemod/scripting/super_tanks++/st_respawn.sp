@@ -88,7 +88,7 @@ public void ST_Event(Event event, const char[] name)
 			GetEntPropVector(iTank, Prop_Send, "m_vecOrigin", flPos);
 			GetEntPropVector(iTank, Prop_Send, "m_angRotation", flAngles);
 			DataPack dpDataPack = new DataPack();
-			CreateDataTimer(2.9, tTimerRespawn, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+			CreateDataTimer(0.4, tTimerRespawn, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 			dpDataPack.WriteCell(GetClientUserId(iTank));
 			dpDataPack.WriteCell(iFlags);
 			dpDataPack.WriteCell(iSequence);
@@ -163,6 +163,12 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		g_iRespawnCount[iTank] = 0;
 		return Plugin_Stop;
 	}
+	int iRespawnAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAbility[ST_TankType(iTank)] : g_iRespawnAbility2[ST_TankType(iTank)];
+	if (iRespawnAbility == 0)
+	{
+		g_iRespawnCount[iTank] = 0;
+		return Plugin_Stop;
+	}
 	int iFlags = pack.ReadCell();
 	int iSequence = pack.ReadCell();
 	float flPos[3];
@@ -173,12 +179,6 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	flAngles[0] = pack.ReadFloat();
 	flAngles[1] = pack.ReadFloat();
 	flAngles[2] = pack.ReadFloat();
-	int iRespawnAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAbility[ST_TankType(iTank)] : g_iRespawnAbility2[ST_TankType(iTank)];
-	if (iRespawnAbility == 0)
-	{
-		g_iRespawnCount[iTank] = 0;
-		return Plugin_Stop;
-	}
 	int iRespawnAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAmount[ST_TankType(iTank)] : g_iRespawnAmount2[ST_TankType(iTank)];
 	if (g_iRespawnCount[iTank] < iRespawnAmount)
 	{

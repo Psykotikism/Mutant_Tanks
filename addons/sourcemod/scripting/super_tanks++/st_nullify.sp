@@ -162,13 +162,7 @@ public void ST_Event(Event event, const char[] name)
 		int iNullifyAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iNullifyAbility[ST_TankType(iTank)] : g_iNullifyAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iNullifyAbility == 1)
 		{
-			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-			{
-				if (bIsSurvivor(iSurvivor) && g_bNullify[iSurvivor])
-				{
-					g_bNullify[iSurvivor] = false;
-				}
-			}
+			vRemoveNullify();
 		}
 	}
 }
@@ -198,6 +192,15 @@ public void ST_Ability(int client)
 	}
 }
 
+public void ST_BossStage(int client)
+{
+	int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iNullifyAbility == 1)
+	{
+		vRemoveNullify();
+	}
+}
+
 void vNullifyHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bNullify[client])
@@ -208,6 +211,17 @@ void vNullifyHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flNullifyDuration, tTimerStopNullify, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
+	}
+}
+
+void vRemoveNullify()
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && g_bNullify[iSurvivor])
+		{
+			g_bNullify[iSurvivor] = false;
+		}
 	}
 }
 

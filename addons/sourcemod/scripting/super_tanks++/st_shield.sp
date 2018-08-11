@@ -190,22 +190,17 @@ public void ST_Event(Event event, const char[] name)
 		int iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iShieldAbility == 1)
 		{
-			int iProp = -1;
-			while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-			{
-				char sModel[128];
-				GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (strcmp(sModel, MODEL_SHIELD, false) == 0)
-				{
-					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iTank)
-					{
-						SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-						AcceptEntityInput(iProp, "Kill");
-					}
-				}
-			}
+			vRemoveShield(iTank);
 		}
+	}
+}
+
+public void ST_BossStage(int client)
+{
+	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iShieldAbility == 1)
+	{
+		vRemoveShield(client);
 	}
 }
 
@@ -227,6 +222,25 @@ public void ST_RockThrow(int client, int entity)
 		CreateDataTimer(0.1, tTimerShieldThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(EntIndexToEntRef(entity));
 		dpDataPack.WriteCell(GetClientUserId(client));
+	}
+}
+
+void vRemoveShield(int client)
+{
+	int iProp = -1;
+	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+	{
+		char sModel[128];
+		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+		if (strcmp(sModel, MODEL_SHIELD, false) == 0)
+		{
+			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+			if (iOwner == client)
+			{
+				SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
+				AcceptEntityInput(iProp, "Kill");
+			}
+		}
 	}
 }
 

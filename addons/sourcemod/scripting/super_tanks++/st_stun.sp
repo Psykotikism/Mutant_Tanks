@@ -161,16 +161,7 @@ public void ST_Event(Event event, const char[] name)
 		int iStunAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iStunAbility[ST_TankType(iTank)] : g_iStunAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iStunAbility == 1)
 		{
-			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-			{
-				if (bIsSurvivor(iSurvivor) && g_bStun[iSurvivor])
-				{
-					DataPack dpDataPack = new DataPack();
-					CreateDataTimer(0.1, tTimerStopStun, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-					dpDataPack.WriteCell(GetClientUserId(iTank));
-				}
-			}
+			vRemoveStun(iTank);
 		}
 	}
 }
@@ -196,6 +187,29 @@ public void ST_Ability(int client)
 					vStunHit(iSurvivor, client, iStunRangeChance, iStunAbility);
 				}
 			}
+		}
+	}
+}
+
+public void ST_BossStage(int client)
+{
+	int iStunAbility = !g_bTankConfig[ST_TankType(client)] ? g_iStunAbility[ST_TankType(client)] : g_iStunAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iStunAbility == 1)
+	{
+		vRemoveStun(client);
+	}
+}
+
+void vRemoveStun(int client)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && g_bStun[iSurvivor])
+		{
+			DataPack dpDataPack = new DataPack();
+			CreateDataTimer(0.1, tTimerStopStun, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+			dpDataPack.WriteCell(GetClientUserId(client));
 		}
 	}
 }

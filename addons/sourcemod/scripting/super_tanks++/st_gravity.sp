@@ -170,33 +170,7 @@ public void ST_Event(Event event, const char[] name)
 		int iGravityAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGravityAbility[ST_TankType(iTank)] : g_iGravityAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iGravityAbility == 1)
 		{
-			int iProp = -1;
-			while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
-			{
-				if (bIsL4D2Game())
-				{
-					int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
-					if (iOwner == iTank)
-					{
-						AcceptEntityInput(iProp, "Kill");
-					}
-				}
-				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == iTank)
-				{
-					AcceptEntityInput(iProp, "Kill");
-				}
-			}
-			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-			{
-				if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
-				{
-					DataPack dpDataPack = new DataPack();
-					CreateDataTimer(0.1, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-					dpDataPack.WriteCell(GetClientUserId(iTank));
-				}
-			}
+			vRemoveGravity(iTank);
 		}
 	}
 }
@@ -252,6 +226,15 @@ public void ST_Ability(int client)
 	}
 }
 
+public void ST_BossStage(int client)
+{
+	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iGravityAbility == 1)
+	{
+		vRemoveGravity(client);
+	}
+}
+
 void vGravityHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bGravity2[client])
@@ -264,6 +247,37 @@ void vGravityHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flGravityDuration, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
+	}
+}
+
+void vRemoveGravity(int client)
+{
+	int iProp = -1;
+	while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
+	{
+		if (bIsL4D2Game())
+		{
+			int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
+			if (iOwner == client)
+			{
+				AcceptEntityInput(iProp, "Kill");
+			}
+		}
+		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		if (iOwner == client)
+		{
+			AcceptEntityInput(iProp, "Kill");
+		}
+	}
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
+		{
+			DataPack dpDataPack = new DataPack();
+			CreateDataTimer(0.1, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+			dpDataPack.WriteCell(GetClientUserId(client));
+		}
 	}
 }
 

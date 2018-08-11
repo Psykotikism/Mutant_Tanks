@@ -34,7 +34,7 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.32"
+#define ST_VERSION "8.33"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 2500
 #define ST_MAXHEALTH 65535
@@ -95,6 +95,7 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 #define SCRIPT_TONFA "scripts/melee/tonfa.txt"
 #define SPRITE_FIRE "sprites/sprite_fire01.vmt"
 #define SPRITE_GLOW "sprites/glow.vmt"
+#define SOUND_BOSS "items/suitchargeok1.wav"
 #define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
 #define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
 #define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
@@ -164,6 +165,14 @@ public void __pl_supertanksplusplus_SetNTVOptional()
  * @param client		Client index of the Tank.
  */
 forward void ST_Ability(int client);
+
+/* Called when the Super Tank evolves.
+ * Use this forward to trigger any features/abilities/settings
+ * when a Super Tank evolves.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_BossStage(int client);
 
 /* Called when the config file is loaded.
  * Use this forward to load settings for the plugin.
@@ -937,11 +946,15 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Disabled Game Modes\"			\"\"");
 			fFilename.WriteLine("			\"Announce Arrival\"				\"1\"");
 			fFilename.WriteLine("			\"Announce Death\"				\"1\"");
+			fFilename.WriteLine("			\"Boss Health Stages\"			\"5000,2500,1500,1000,500\"");
+			fFilename.WriteLine("			\"Boss Stages\"					\"3\"");
 			fFilename.WriteLine("			\"Display Health\"				\"3\"");
 			fFilename.WriteLine("			\"Finales Only\"					\"0\"");
 			fFilename.WriteLine("			\"Human Super Tanks\"				\"1\"");
 			fFilename.WriteLine("			\"Maximum Types\"					\"86\"");
 			fFilename.WriteLine("			\"Multiply Health\"				\"0\"");
+			fFilename.WriteLine("			\"Random Interval\"				\"5.0\"");
+			fFilename.WriteLine("			\"Spawn Mode\"					\"0\"");
 			fFilename.WriteLine("			\"Tank Waves\"					\"2,3,4\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Custom\"");
@@ -2321,6 +2334,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Splash Chance\"					\"4\"");
 			fFilename.WriteLine("			\"Splash Damage\"					\"5\"");
+			fFilename.WriteLine("			\"Splash Interval\"				\"5.0\"");
 			fFilename.WriteLine("			\"Splash Range\"					\"150.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
@@ -2474,6 +2488,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Witch Amount\"					\"3\"");
 			fFilename.WriteLine("			\"Witch Minion Damage\"			\"5\"");
+			fFilename.WriteLine("			\"Witch Range\"					\"500.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("	}");
 			fFilename.WriteLine("	\"Tank 65\"");
@@ -2609,8 +2624,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		\"Witch Ability\"");
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
-			fFilename.WriteLine("			\"Witch Amount\"					\"10\"");
+			fFilename.WriteLine("			\"Witch Amount\"					\"5\"");
 			fFilename.WriteLine("			\"Witch Minion Damage\"			\"10\"");
+			fFilename.WriteLine("			\"Witch Range\"					\"500.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Zombie Ability\"");
 			fFilename.WriteLine("		{");
@@ -2830,6 +2846,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Witch Amount\"					\"5\"");
 			fFilename.WriteLine("			\"Witch Minion Damage\"			\"5\"");
+			fFilename.WriteLine("			\"Witch Range\"					\"500.0\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Zombie Ability\"");
 			fFilename.WriteLine("		{");

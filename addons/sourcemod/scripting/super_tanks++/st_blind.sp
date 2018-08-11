@@ -167,16 +167,7 @@ public void ST_Event(Event event, const char[] name)
 		int iBlindAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindAbility[ST_TankType(iTank)] : g_iBlindAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iBlindAbility == 1)
 		{
-			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-			{
-				if (bIsSurvivor(iSurvivor) && g_bBlind[iSurvivor])
-				{
-					DataPack dpDataPack = new DataPack();
-					CreateDataTimer(0.1, tTimerStopBlindness, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-					dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-					dpDataPack.WriteCell(GetClientUserId(iTank));
-				}
-			}
+			vRemoveBlind(iTank);
 		}
 	}
 }
@@ -203,6 +194,15 @@ public void ST_Ability(int client)
 				}
 			}
 		}
+	}
+}
+
+public void ST_BossStage(int client)
+{
+	int iBlindAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
+	if (ST_TankAllowed(client) && iBlindAbility == 1)
+	{
+		vRemoveBlind(client);
 	}
 }
 
@@ -252,6 +252,20 @@ void vBlindHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
+	}
+}
+
+void vRemoveBlind(int client)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && g_bBlind[iSurvivor])
+		{
+			DataPack dpDataPack = new DataPack();
+			CreateDataTimer(0.1, tTimerStopBlindness, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
+			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
+			dpDataPack.WriteCell(GetClientUserId(client));
+		}
 	}
 }
 

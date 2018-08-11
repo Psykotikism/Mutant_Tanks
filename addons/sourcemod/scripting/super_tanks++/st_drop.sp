@@ -270,7 +270,7 @@ public void ST_Event(Event event, const char[] name)
 			float flAngle[3];
 			GetClientEyePosition(iTank, flPos);
 			GetClientAbsAngles(iTank, flAngle);
-			if ((iDropMode == 0 || iDropMode == 1) && StrContains(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon") != -1)
+			if (iDropMode != 2 && StrContains(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon") != -1)
 			{
 				int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[iTank]]);
 				if (bIsValidEntity(iDrop))
@@ -326,7 +326,7 @@ public void ST_Event(Event event, const char[] name)
 					SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
 				}
 			}
-			else if (iDropMode == 0 || iDropMode == 2)
+			else if (iDropMode != 1)
 			{
 				int iDrop = CreateEntityByName("weapon_melee");
 				if (bIsValidEntity(iDrop))
@@ -343,6 +343,11 @@ public void ST_Event(Event event, const char[] name)
 		}
 		vDeleteDrop(iTank);
 	}
+}
+
+public void ST_BossStage(int client)
+{
+	vDeleteDrop(client);
 }
 
 public void ST_Spawn(int client)

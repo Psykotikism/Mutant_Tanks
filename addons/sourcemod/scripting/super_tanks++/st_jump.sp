@@ -75,11 +75,11 @@ public Action tTimerJump(Handle timer, any userid)
 		return Plugin_Stop;
 	}
 	int iJumpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iJumpAbility[ST_TankType(iTank)] : g_iJumpAbility2[ST_TankType(iTank)];
-	int iJumpChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iJumpChance[ST_TankType(iTank)] : g_iJumpChance2[ST_TankType(iTank)];
 	if (iJumpAbility == 0)
 	{
 		return Plugin_Stop;
 	}
+	int iJumpChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iJumpChance[ST_TankType(iTank)] : g_iJumpChance2[ST_TankType(iTank)];
 	if (GetRandomInt(1, iJumpChance) == 1)
 	{
 		int iNearestSurvivor = iGetNearestSurvivor(iTank);

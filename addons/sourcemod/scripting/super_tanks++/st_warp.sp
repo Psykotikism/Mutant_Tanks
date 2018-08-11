@@ -188,11 +188,11 @@ public Action tTimerWarp(Handle timer, any userid)
 		return Plugin_Stop;
 	}
 	int iWarpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpAbility[ST_TankType(iTank)] : g_iWarpAbility2[ST_TankType(iTank)];
-	int iWarpMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpMode[ST_TankType(iTank)] : g_iWarpMode2[ST_TankType(iTank)];
 	if (iWarpAbility == 0)
 	{
 		return Plugin_Stop;
 	}
+	int iWarpMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpMode[ST_TankType(iTank)] : g_iWarpMode2[ST_TankType(iTank)];
 	int iSurvivor = iGetRandomSurvivor(iTank);
 	if (iSurvivor > 0)
 	{
