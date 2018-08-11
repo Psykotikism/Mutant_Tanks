@@ -70,6 +70,26 @@
 			// 1: ON
 			"Announce Death"				"1"
 
+			// The health of bosses needed for each stage.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// Note: The values will be added to the boss's new health on every new stage.
+			// Note: The values will determine when the boss evolves to the next stage.
+			// Example: When Stage 1 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
+			// --
+			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 1 boss. (The "Boss Stages" setting must be set to "1" or higher.)
+			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "2" or higher.)
+			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "3" or higher.)
+			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "4" or higher.)
+			// 5th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "5" or higher.)
+			"Boss Health Stages"			"5000,2500,1500,1000,500"
+
+			// The number of stages for Super Tank bosses.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// --
+			// Minimum: 1
+			// Maximum: 5
+			"Boss Stages"					"3"
+
 			// Display Tanks' names and health.
 			// --
 			// 0: OFF
@@ -105,6 +125,20 @@
 			// 2: Multiply extra health only.
 			// 3: Multiply both.
 			"Multiply Health"				"0"
+
+			// The interval between each random switch.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Random Interval"				"5.0"
+
+			// The mode of the Super Tanks' spawn status.
+			// --
+			// 0: Spawn as normal Super Tanks.
+			// 1: Spawn as Super Tank bosses.
+			// 2. Spawn as Super Tanks that switch randomly between each type.
+			"Spawn Mode"					"0"
 
 			// Amount of Tanks to spawn for each finale wave.
 			// Separate waves with commas.
@@ -2699,7 +2733,7 @@
 {
 	"Tank 0"
 	{
-		// The Super Tank releases a splash damage upon death.
+		// The Super Tank constantly deals splash damage to nearby survivors.
 		// Requires "st_splash.smx" to be installed.
 		"Splash Ability"
 		{
@@ -2720,6 +2754,12 @@
 			// Minimum: 1
 			// Maximum: 9999999999
 			"Splash Damage"					"5"
+
+			// The Super Tank deals splash damage to nearby survivors every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Splash Interval"				"5.0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -2891,6 +2931,7 @@
 	{
 		// The Super Tank gains health from hurting survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank gains health.
+		// - "Vampire Health"
 		// - "Vampire Range"
 		// - "Vampire Range Chance"
 		// "Vampire Hit" - When a survivor is hit by a Tank's claw or rock, the Tank gains health.
@@ -2913,6 +2954,7 @@
 
 			// The Super Tank receives this much health from survivors.
 			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: This setting does not apply to the "Vampire Hit" setting.
 			// Positive numbers: Current health + Vampire health
 			// Negative numbers: Current health - Vampire health
 			// --
@@ -3064,7 +3106,7 @@
 {
 	"Tank 0"
 	{
-		// The Super Tank spawns Witch minions.
+		// The Super Tank converts nearby common infected into Witch minions.
 		// Requires "st_witch.smx" to be installed.
 		"Witch Ability"
 		{
@@ -3074,7 +3116,7 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
-			// The Super Tank spawns this many Witches at once.
+			// The Super Tank converts this many common infected into Witch minions at once.
 			// --
 			// Minimum: 1
 			// Maximum: 25
@@ -3085,6 +3127,12 @@
 			// Minimum: 1
 			// Maximum: 9999999999
 			"Witch Minion Damage"			"5"
+
+			// The distance between a common infected and the Super Tank needed to convert the common infected into a Witch minion.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Witch Range"					"500.0"
 		}
 	}
 }

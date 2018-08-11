@@ -1,5 +1,32 @@
 # Changelog
 
+## Version 8.33 (August 10, 2018)
+
+Bug fixes:
+
+1. Fixed the Witch ability causing crashes when converting common infected into Witch minions.
+
+Changes:
+
+1. Added a boss mode feature, which is a feature taken from the original Last Boss. View the INFORMATION.md file for more details. (2 new settings: "Boss Health Stages" and "Boss Stages")
+2. Added a random mode feature, which is a feature that randomizes Super Tanks every X seconds after spawning. View the INFORMATION.md file for more details. (1 new setting: "Random Interval")
+3. Added a new forward to use for the boss and random modes:
+
+forward void ST_BossStage(int client); (This forward is called when the Super Tank is evolving into the next stage.)
+
+4. Added the "Spawn Mode" KeyValue setting to allow users to decide if Super Tanks either spawn normally, spawn as bosses (boss mode), or spawn as randomized Tanks (random mode).
+5. The Splash ability now damages nearby survivors every X seconds while the Super Tank is alive.
+6. Added the "Splash Interval" KeyValue setting to support the new Splash ability feature.
+7. The Vampire ability's "Vampire Health" KeyValue setting now only applies to the range ability. (When the Super Tank hits a survivor, he now gains the amount of damage as health.)
+8. The Witch ability's range used for detecting nearby common infected can now be configurable via the new "Witch Range" KeyValue setting.
+9. Changed a few lines of code.
+
+Files:
+
+1. Updated include file with the new settings.
+2. Updated config file with the new settings.
+3. Updated INFORMATION.md file with information about the new settings.
+
 ## Version 8.32 (August 6, 2018)
 
 Bug fixes:

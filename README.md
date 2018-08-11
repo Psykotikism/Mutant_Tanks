@@ -624,6 +624,14 @@ Forwards:
  */
 forward void ST_Ability(int client);
 
+/* Called when the Super Tank evolves.
+ * Use this forward to trigger any features/abilities/settings
+ * when a Super Tank evolves.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_BossStage(int client);
+
 /* Called when the config file is loaded.
  * Use this forward to load settings for the plugin.
  *
@@ -734,14 +742,7 @@ stock bool bHasIdlePlayer(int client)
 
 stock bool bIsBoomer(int client)
 {
-	if (bIsInfected(client))
-	{
-		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 2)
-		{
-			return true;
-		}
-	}
-	return false;
+	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 2;
 }
 
 stock bool bIsBotIdle(int client)
@@ -761,14 +762,7 @@ stock bool bIsBotSurvivor(int client)
 
 stock bool bIsCharger(int client)
 {
-	if (bIsInfected(client))
-	{
-		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 6)
-		{
-			return true;
-		}
-	}
-	return false;
+	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 6;
 }
 
 stock bool bIsFinaleMap()
@@ -783,14 +777,7 @@ stock bool bIsHumanSurvivor(int client)
 
 stock bool bIsHunter(int client)
 {
-	if (bIsInfected(client))
-	{
-		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 3)
-		{
-			return true;
-		}
-	}
-	return false;
+	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 3;
 }
 
 stock bool bIsIdlePlayer(int bot, int client)
@@ -805,14 +792,7 @@ stock bool bIsInfected(int client)
 
 stock bool bIsJockey(int client)
 {
-	if (bIsInfected(client))
-	{
-		if (bIsL4D2Game() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5)
-		{
-			return true;
-		}
-	}
-	return false;
+	return bIsInfected(client) && bIsL4D2Game() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5;
 }
 
 stock bool bIsL4D2Game()
@@ -822,16 +802,7 @@ stock bool bIsL4D2Game()
 
 stock bool bIsPlayerBurning(int client)
 {
-	if (GetEntPropFloat(client, Prop_Send, "m_burnPercent") > 0)
-	{
-		return true;
-	}
-	return false;
-}
-
-stock bool bIsPlayerFired(int client)
-{
-	if (GetEntProp(client, Prop_Data, "m_fFlags") & FL_ONFIRE)
+	if (GetEntPropFloat(client, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(client, Prop_Data, "m_fFlags") & FL_ONFIRE)
 	{
 		return true;
 	}
@@ -906,8 +877,8 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 			return false;
 		}
 	}
-	char sGameMode[64];
-	char sGameModes[64];
+	char sGameMode[32];
+	char sGameModes[513];
 	convar.GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
 	if (strcmp(enabled, ""))
@@ -931,14 +902,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 
 stock bool bIsSmoker(int client)
 {
-	if (bIsInfected(client))
-	{
-		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 1)
-		{
-			return true;
-		}
-	}
-	return false;
+	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 1;
 }
 
 stock bool bIsSpecialInfected(int client)
@@ -952,14 +916,7 @@ stock bool bIsSpecialInfected(int client)
 
 stock bool bIsSpitter(int client)
 {
-	if (bIsInfected(client))
-	{
-		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 4)
-		{
-			return true;
-		}
-	}
-	return false;
+	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 4;
 }
 
 stock bool bIsSurvivor(int client)
@@ -969,15 +926,7 @@ stock bool bIsSurvivor(int client)
 
 stock bool bIsTank(int client)
 {
-	if (bIsInfected(client))
-	{
-		int iClass = GetEntProp(client, Prop_Send, "m_zombieClass");
-		if ((bIsL4D2Game() && iClass == 8) || (!bIsL4D2Game() && iClass == 5))
-		{
-			return true;
-		}
-	}
-	return false;
+	return bIsInfected(client) && (bIsL4D2Game() ? GetEntProp(client, Prop_Send, "m_zombieClass") == 8 : GetEntProp(client, Prop_Send, "m_zombieClass") == 5);
 }
 
 stock bool bIsValidClient(int client)
