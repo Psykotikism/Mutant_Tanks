@@ -206,7 +206,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-void vBlind(int client, int amount, UserMsg message)
+void vBlind(int client, int amount)
 {
 	int iTargets[2];
 	iTargets[0] = client;
@@ -216,7 +216,7 @@ void vBlind(int client, int amount, UserMsg message)
 		amount == 0 ? (iFlags = (0x0001|0x0010)) : (iFlags = (0x0002|0x0008));
 		int iColor[4] = {0, 0, 0, 0};
 		iColor[3] = amount;
-		Handle hBlindTarget = StartMessageEx(message, iTargets, 1);
+		Handle hBlindTarget = StartMessageEx(g_umFadeUserMsgId, iTargets, 1);
 		if (GetUserMessageType() == UM_Protobuf)
 		{
 			Protobuf pbSet = UserMessageToProtobuf(hBlindTarget);
@@ -246,7 +246,7 @@ void vBlindHit(int client, int owner, int chance, int enabled)
 	{
 		g_bBlind[client] = true;
 		int iBlindIntensity = !g_bTankConfig[ST_TankType(owner)] ? g_iBlindIntensity[ST_TankType(owner)] : g_iBlindIntensity2[ST_TankType(owner)];
-		vBlind(client, iBlindIntensity, g_umFadeUserMsgId);
+		vBlind(client, iBlindIntensity);
 		float flBlindDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flBlindDuration[ST_TankType(owner)] : g_flBlindDuration2[ST_TankType(owner)];
 		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
@@ -282,17 +282,17 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bBlind[iSurvivor] = false;
-		vBlind(iSurvivor, 0, g_umFadeUserMsgId);
+		vBlind(iSurvivor, 0);
 		return Plugin_Stop;
 	}
 	int iBlindAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindAbility[ST_TankType(iTank)] : g_iBlindAbility2[ST_TankType(iTank)];
 	if (iBlindAbility == 0)
 	{
 		g_bBlind[iSurvivor] = false;
-		vBlind(iSurvivor, 0, g_umFadeUserMsgId);
+		vBlind(iSurvivor, 0);
 		return Plugin_Stop;
 	}
 	g_bBlind[iSurvivor] = false;
-	vBlind(iSurvivor, 0, g_umFadeUserMsgId);
+	vBlind(iSurvivor, 0);
 	return Plugin_Continue;
 }

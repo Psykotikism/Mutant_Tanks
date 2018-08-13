@@ -97,15 +97,24 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
-			char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
 				int iPukeChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iPukeChance[ST_TankType(attacker)] : g_iPukeChance2[ST_TankType(attacker)];
 				int iPukeHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iPukeHit[ST_TankType(attacker)] : g_iPukeHit2[ST_TankType(attacker)];
 				vPukeHit(victim, attacker, iPukeChance, iPukeHit);
+			}
+		}
+		else if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		{
+			if (strcmp(sClassname, "weapon_melee") == 0)
+			{
+				int iPukeChance = !g_bTankConfig[ST_TankType(victim)] ? g_iPukeChance[ST_TankType(victim)] : g_iPukeChance2[ST_TankType(victim)];
+				int iPukeHit = !g_bTankConfig[ST_TankType(victim)] ? g_iPukeHit[ST_TankType(victim)] : g_iPukeHit2[ST_TankType(victim)];
+				vPukeHit(attacker, victim, iPukeChance, iPukeHit);
 			}
 		}
 	}

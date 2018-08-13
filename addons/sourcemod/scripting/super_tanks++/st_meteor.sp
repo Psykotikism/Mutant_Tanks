@@ -254,26 +254,25 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 		if (flDistance > 100.0)
 		{
 			int iRock = CreateEntityByName("tank_rock");
-			if (!bIsValidEntity(iRock))
+			if (bIsValidEntity(iRock))
 			{
-				g_bMeteor[iTank] = false;
-				return Plugin_Stop;
+				SetEntityModel(iRock, MODEL_CONCRETE);
+				SetEntityRenderColor(iRock, iRed, iGreen, iBlue, iAlpha);
+				float flAngles2[3];
+				flAngles2[0] = GetRandomFloat(flMin, flMax);
+				flAngles2[1] = GetRandomFloat(flMin, flMax);
+				flAngles2[2] = GetRandomFloat(flMin, flMax);
+				flVelocity[0] = GetRandomFloat(0.0, 350.0);
+				flVelocity[1] = GetRandomFloat(0.0, 350.0);
+				flVelocity[2] = GetRandomFloat(0.0, 30.0);
+				TeleportEntity(iRock, flHitpos, flAngles2, flVelocity);
+				DispatchSpawn(iRock);
+				ActivateEntity(iRock);
+				AcceptEntityInput(iRock, "Ignite");
+				SetEntPropEnt(iRock, Prop_Send, "m_hOwnerEntity", iTank);
+				iRock = EntIndexToEntRef(iRock);
+				vDeleteEntity(iRock, 30.0);
 			}
-			SetEntityModel(iRock, MODEL_CONCRETE);
-			SetEntityRenderColor(iRock, iRed, iGreen, iBlue, iAlpha);
-			float flAngles2[3];
-			flAngles2[0] = GetRandomFloat(flMin, flMax);
-			flAngles2[1] = GetRandomFloat(flMin, flMax);
-			flAngles2[2] = GetRandomFloat(flMin, flMax);
-			flVelocity[0] = GetRandomFloat(0.0, 350.0);
-			flVelocity[1] = GetRandomFloat(0.0, 350.0);
-			flVelocity[2] = GetRandomFloat(0.0, 30.0);
-			TeleportEntity(iRock, flHitpos, flAngles2, flVelocity);
-			DispatchSpawn(iRock);
-			ActivateEntity(iRock);
-			AcceptEntityInput(iRock, "Ignite");
-			SetEntPropEnt(iRock, Prop_Send, "m_hOwnerEntity", iTank);
-			vDeleteEntity(iRock, 30.0);
 		}
 	}
 	else

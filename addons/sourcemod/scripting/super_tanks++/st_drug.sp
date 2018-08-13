@@ -180,7 +180,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vDrug(int client, bool toggle, UserMsg message, float angles[20])
+void vDrug(int client, bool toggle, float angles[20])
 {
 	float flAngles[3];
 	GetClientEyeAngles(client, flAngles);
@@ -197,7 +197,7 @@ void vDrug(int client, bool toggle, UserMsg message, float angles[20])
 		iColor[1] = GetRandomInt(0, 255);
 		iColor[2] = GetRandomInt(0, 255);
 	}
-	Handle hDrugTarget = StartMessageEx(message, iClients, 1);
+	Handle hDrugTarget = StartMessageEx(g_umFadeUserMsgId, iClients, 1);
 	if (GetUserMessageType() == UM_Protobuf)
 	{
 		Protobuf pbSet = UserMessageToProtobuf(hDrugTarget);
@@ -246,7 +246,7 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bDrug[iSurvivor] = false;
-		vDrug(iSurvivor, false, g_umFadeUserMsgId, g_flDrugAngles);
+		vDrug(iSurvivor, false, g_flDrugAngles);
 		return Plugin_Stop;
 	}
 	float flTime = pack.ReadFloat();
@@ -255,9 +255,9 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 	if (iDrugAbility == 0 || (flTime + flDrugDuration) < GetEngineTime())
 	{
 		g_bDrug[iSurvivor] = false;
-		vDrug(iSurvivor, false, g_umFadeUserMsgId, g_flDrugAngles);
+		vDrug(iSurvivor, false, g_flDrugAngles);
 		return Plugin_Stop;
 	}
-	vDrug(iSurvivor, true, g_umFadeUserMsgId, g_flDrugAngles);
+	vDrug(iSurvivor, true, g_flDrugAngles);
 	return Plugin_Handled;
 }

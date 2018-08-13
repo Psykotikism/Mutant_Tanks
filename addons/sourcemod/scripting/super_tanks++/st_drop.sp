@@ -364,8 +364,8 @@ void vDeleteDrop(int client)
 {
 	if (bIsValidEntity(g_iDrop[client]))
 	{
-		vDeleteEntity(g_iDrop[client]);
 		SDKUnhook(g_iDrop[client], SDKHook_SetTransmit, SetTransmit);
+		AcceptEntityInput(g_iDrop[client], "Kill");
 	}
 	g_iDrop[client] = 0;
 }
