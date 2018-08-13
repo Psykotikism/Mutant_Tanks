@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 8.34 (August 12, 2018)
+
+Bug fixes:
+
+1. Fixed the Drop ability not properly deleting weapon entities attached to the Super Tank when he dies.
+
+Changes:
+
+1. Moved some lines of code around, optimized some code, etc.
+2. The Puke ability now gives the Super Tank a chance to puke on survivors when being hit with a melee weapon.
+3. The following settings can now be set for each Tank instead of affecting all Tanks at once:
+
+- "Boss Health Stages"
+- "Boss Stages"
+- "Random Interval"
+- "Spawn Mode"
+
+Files:
+
+1. The auto-generated config file has less presets (smaller file size).
+
 ## Version 8.33 (August 10, 2018)
 
 Bug fixes:

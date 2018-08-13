@@ -70,26 +70,6 @@
 			// 1: ON
 			"Announce Death"				"1"
 
-			// The health of bosses needed for each stage.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
-			// Note: The values will be added to the boss's new health on every new stage.
-			// Note: The values will determine when the boss evolves to the next stage.
-			// Example: When Stage 1 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
-			// --
-			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 1 boss. (The "Boss Stages" setting must be set to "1" or higher.)
-			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "2" or higher.)
-			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "3" or higher.)
-			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "4" or higher.)
-			// 5th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "5" or higher.)
-			"Boss Health Stages"			"5000,2500,1500,1000,500"
-
-			// The number of stages for Super Tank bosses.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
-			// --
-			// Minimum: 1
-			// Maximum: 5
-			"Boss Stages"					"3"
-
 			// Display Tanks' names and health.
 			// --
 			// 0: OFF
@@ -115,7 +95,7 @@
 			// --
 			// Minimum: 1
 			// Maximum: 2500
-			"Maximum Types"					"86"
+			"Maximum Types"					"2500"
 
 			// Multiply the Super Tank's health.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
@@ -125,20 +105,6 @@
 			// 2: Multiply extra health only.
 			// 3: Multiply both.
 			"Multiply Health"				"0"
-
-			// The interval between each random switch.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
-			// --
-			// Minimum: 0.1
-			// Maximum: 9999999999.0
-			"Random Interval"				"5.0"
-
-			// The mode of the Super Tanks' spawn status.
-			// --
-			// 0: Spawn as normal Super Tanks.
-			// 1: Spawn as Super Tank bosses.
-			// 2. Spawn as Super Tanks that switch randomly between each type.
-			"Spawn Mode"					"0"
 
 			// Amount of Tanks to spawn for each finale wave.
 			// Separate waves with commas.
@@ -207,6 +173,40 @@
 			// 0: OFF
 			// 1: ON
 			"Tank Enabled"					"0"
+
+			// The health of bosses needed for each stage.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// Note: The values will be added to the boss's new health on every new stage.
+			// Note: The values will determine when the boss evolves to the next stage.
+			// Example: When Stage 1 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
+			// --
+			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 1 boss. (The "Boss Stages" setting must be set to "1" or higher.)
+			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "2" or higher.)
+			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "3" or higher.)
+			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "4" or higher.)
+			// 5th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "5" or higher.)
+			"Boss Health Stages"			"5000,2500,1500,1000,500"
+
+			// The number of stages for Super Tank bosses.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// --
+			// Minimum: 1
+			// Maximum: 5
+			"Boss Stages"					"3"
+
+			// The interval between each random switch.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Random Interval"				"5.0"
+
+			// The mode of the Super Tanks' spawn status.
+			// --
+			// 0: Spawn as normal Super Tanks.
+			// 1: Spawn as Super Tank bosses.
+			// 2. Spawn as Super Tanks that switch randomly between each type.
+			"Spawn Mode"					"0"
 
 			// These are the Super Tank's skin and glow outline colors.
 			// Separate colors with "|".
