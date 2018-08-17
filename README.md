@@ -551,7 +551,7 @@ Example:
 
 Output: When the current difficulty is Expert mode (impossible), the Idiot Tank will spawn instead of Psyk0tik Tank as long as custom configs is being used.
 
-These are basically temporary Tanks that you guys can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
+These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
 
 21. How can I move the Super Tanks++ category around on the admin menu?
@@ -613,7 +613,7 @@ Example:
 
 22. Are there any developer/tester features available in the plugin?
 
-Yes, there are forwards, natives, stocks, target filters for each special infected, and the sm_tank command that allows developers/testers to spawn each Super Tank.
+Yes, there are forwards, natives, stocks, target filters for each special infected, and admin commands that allow developers/testers to spawn each Super Tank and see their statuses.
 
 Forwards:
 ```
@@ -1425,6 +1425,23 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 	}
 }
 
+stock void vFade(int client, int duration, int unknown, int red, int green, int blue)
+{
+	Handle hFadeTarget = StartMessageOne("Fade", client);
+	if (hFadeTarget != null)
+	{
+		BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
+		bfWrite.WriteShort(duration);
+		bfWrite.WriteShort(unknown);
+		bfWrite.WriteShort((0x0010|0x0001));
+		bfWrite.WriteByte(red);
+		bfWrite.WriteByte(green);
+		bfWrite.WriteByte(blue);
+		bfWrite.WriteByte(150);
+		EndMessage();
+	}
+}
+
 public void vGameMode(const char[] output, int caller, int activator, float delay)
 {
 	if (strcmp(output, "OnCoop") == 0)
@@ -1625,10 +1642,11 @@ Target filters:
 @tanks
 ```
 
-Command usage:
+Commands:
 
 ```
-sm_tank <type 1-*> *The maximum value is determined by the value of the "Maximum Types" KeyValue. (The highest value you can set is 2500 though.)
+1. sm_tank <type 1-*> *The maximum value is determined by the value of the "Maximum Types" KeyValue. (The highest value you can set is 2500 though.)
+2. sm_tanklist
 ```
 
 Additionally, there is also a setting called "Create Backup" which users can use to create a backup copy of the main config file in case they want to test or mess around with the settings.

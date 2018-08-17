@@ -1,5 +1,37 @@
 # Changelog
 
+## Version 8.35 (August 16, 2018)
+
+Bug fixes:
+
+1. Rock ability - Fixed the "Rock Radius" KeyValue setting not being read properly due to a small buffer size.
+2. Drop ability - Fixed incorrect scaling on some of the melee weapons.
+
+Changes:
+
+1. Warp ability - The Super Tank will no longer warp to incapacitated survivors.
+2. Restart ability - Survivors will no longer warp to incapacitated teammates.
+3. New ability added: Cancer ability - The Super Tank gives survivors cancer (survivors die when they reach 0 HP instead of getting incapacitated first).
+4. Added the command "sm_tanklist" which prints a list of Super Tanks and their current statuses on the user's console.
+5. Added the following new settings for the Absorb and Fragile abilities:
+
+- "Absorb Bullet Damage"
+- "Absorb Explosive Damage"
+- "Absorb Fire Damage"
+- "Absorb Melee Damage"
+- "Fragile Bullet Damage"
+- "Fragile Explosive Damage"
+- "Fragile Fire Damage"
+- "Fragile Melee Damage"
+
+6. The plugin and all of its modules no longer work on locally-hosted/listen servers. (I'm tired of people reporting issues from their listen servers...)
+7. The plugin and all of its modules now require SM 1.9.0.6225 or higher to work.
+8. Removed unnecessary code.
+
+Files:
+
+1. Updated gamedata file with a new signature for "CTerrorPlayer_OnStaggered" for Windows to make the Shove ability compatible with Left 4 Downtown 2. (Thanks Spirit_12!)
+
 ## Version 8.34 (August 12, 2018)
 
 Bug fixes:

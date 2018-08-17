@@ -381,6 +381,15 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// The bullet damage received by the Super Tank is divided by this value.
+			// Note: Damage = Bullet damage/Absorb bullet damage
+			// Example: Damage = 30.0/20.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Bullet damage/1.0 = Bullet damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Absorb Bullet Damage"			"20.0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -392,6 +401,33 @@
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Absorb Duration"				"5.0"
+
+			// The explosive damage received by the Super Tank is divided by this value.
+			// Note: Damage = Explosive damage/Absorb explosive damage
+			// Example: Damage = 30.0/20.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Explosive damage/1.0 = Explosive damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Absorb Explosive Damage"		"20.0"
+
+			// The fire damage received by the Super Tank is divided by this value.
+			// Note: Damage = Fire damage/Absorb fire damage
+			// Example: Damage = 300.0/200.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Fire damage/1.0 = Fire damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Absorb Fire Damage"			"200.0"
+
+			// The melee damage received by the Super Tank is divided by this value.
+			// Note: Damage = Melee damage/Absorb melee damage
+			// Example: Damage = 300.0/200.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Melee damage/1.0 = Melee damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Absorb Melee Damage"			"200.0"
 		}
 	}
 }
@@ -696,6 +732,58 @@
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
 			"Bury Range Chance"				"16"
+		}
+	}
+}
+```
+
+#### Cancer Ability
+
+```
+"Super Tanks++"
+{
+	"Tank 0"
+	{
+		// The Super Tank gives survivors cancer.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is given cancer.
+		// - "Cancer Range"
+		// - "Cancer Range Chance"
+		// "Cancer Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is given cancer.
+		// - "Cancer Chance"
+		// Requires "st_cancer.smx" to be installed.
+		"Cancer Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Cancer Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Cancer Chance"					"4"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Cancer Hit"						"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Cancer Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Cancer Range Chance"				"16"
 		}
 	}
 }
@@ -1156,6 +1244,15 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// The bullet damage received by the Super Tank is multiplied by this value.
+			// Note: Damage = Bullet damage x Fragile bullet damage
+			// Example: Damage = 30.0 x 5.0 (150.0)
+			// Note: Use the value "1.0" to disable this setting. (Bullet damage x 1.0 = Bullet damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Fragile Bullet Damage"			"5.0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -1167,6 +1264,33 @@
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Fragile Duration"				"5.0"
+
+			// The explosive damage received by the Super Tank is multiplied by this value.
+			// Note: Damage = Explosive damage x Fragile explosive damage
+			// Example: Damage = 30.0 x 5.0 (150.0)
+			// Note: Use the value "1.0" to disable this setting. (Explosive damage x 1.0 = Explosive damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Fragile Explosive Damage"		"5.0"
+
+			// The fire damage received by the Super Tank is multiplied by this value.
+			// Note: Damage = Fire damage x Fragile fire damage
+			// Example: Damage = 30.0 x 3.0 (90.0)
+			// Note: Use the value "1.0" to disable this setting. (Fire damage x 1.0 = Fire damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Fragile Fire Damage"			"3.0"
+
+			// The melee damage received by the Super Tank is multiplied by this value.
+			// Note: Damage = Melee damage x Fragile melee damage
+			// Example: Damage = 100.0 x 1.5 (150.0)
+			// Note: Use the value "1.0" to disable this setting. (Melee damage x 1.0 = Melee damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Fragile Melee Damage"			"1.5"
 		}
 	}
 }
