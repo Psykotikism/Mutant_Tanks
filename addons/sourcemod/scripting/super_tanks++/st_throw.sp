@@ -24,9 +24,9 @@ int g_iThrowAbility2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Throw Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Throw Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -139,7 +139,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 			SetEntityRenderColor(iCar, iRed, iGreen, iBlue, 255);
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			AcceptEntityInput(iRock, "Kill");
+			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
 			float flSpeed = g_cvSTFindConVar.FloatValue;
 			ScaleVector(flVelocity, flSpeed * 1.4);
@@ -193,7 +193,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 			}
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			AcceptEntityInput(iRock, "Kill");
+			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
 			float flSpeed = g_cvSTFindConVar.FloatValue;
 			ScaleVector(flVelocity, flSpeed * 1.4);
@@ -229,7 +229,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 	{
 		float flPos[3];
 		GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-		AcceptEntityInput(iRock, "Kill");
+		RemoveEntity(iRock);
 		NormalizeVector(flVelocity, flVelocity);
 		float flSpeed = g_cvSTFindConVar.FloatValue;
 		ScaleVector(flVelocity, flSpeed * 1.4);

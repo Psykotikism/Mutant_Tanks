@@ -33,9 +33,9 @@ UserMsg g_umFadeUserMsgId;
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Drug Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Drug Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	g_bLateLoad = late;
@@ -74,12 +74,6 @@ public void OnMapStart()
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	g_bDrug[client] = false;
-}
-
-public void OnClientDisconnect(int client)
-{
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bDrug[client] = false;
 }
 

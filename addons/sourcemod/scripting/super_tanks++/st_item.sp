@@ -25,9 +25,9 @@ int g_iItemMode2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Item Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Item Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;

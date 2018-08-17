@@ -28,9 +28,9 @@ int g_iMeteorDamage2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Meteor Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Meteor Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -57,11 +57,6 @@ public void OnMapStart()
 }
 
 public void OnClientPostAdminCheck(int client)
-{
-	g_bMeteor[client] = false;
-}
-
-public void OnClientDisconnect(int client)
 {
 	g_bMeteor[client] = false;
 }
@@ -130,7 +125,7 @@ void vMeteor(int client, int entity)
 	GetEntityClassname(entity, sClassname, sizeof(sClassname));
 	if (strcmp(sClassname, "tank_rock") == 0)
 	{
-		AcceptEntityInput(entity, "Kill");
+		RemoveEntity(entity);
 		char sDamage[6];
 		int iMeteorDamage = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorDamage[ST_TankType(client)] : g_iMeteorDamage2[ST_TankType(client)];
 		IntToString(iMeteorDamage, sDamage, sizeof(sDamage));
@@ -162,7 +157,7 @@ void vMeteor(int client, int entity)
 			TeleportEntity(iPointHurt, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iPointHurt);
 			AcceptEntityInput(iPointHurt, "Hurt", client);
-			AcceptEntityInput(iPointHurt, "Kill");
+			RemoveEntity(iPointHurt);
 		}
 		int iPointPush = CreateEntityByName("point_push");
 		if (bIsValidEntity(iPointPush))

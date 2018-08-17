@@ -15,8 +15,16 @@ public Plugin myinfo =
 bool g_bFragile[MAXPLAYERS + 1];
 bool g_bLateLoad;
 bool g_bTankConfig[ST_MAXTYPES + 1];
+float g_flFragileBulletDamage[ST_MAXTYPES + 1];
+float g_flFragileBulletDamage2[ST_MAXTYPES + 1];
 float g_flFragileDuration[ST_MAXTYPES + 1];
 float g_flFragileDuration2[ST_MAXTYPES + 1];
+float g_flFragileExplosiveDamage[ST_MAXTYPES + 1];
+float g_flFragileExplosiveDamage2[ST_MAXTYPES + 1];
+float g_flFragileFireDamage[ST_MAXTYPES + 1];
+float g_flFragileFireDamage2[ST_MAXTYPES + 1];
+float g_flFragileMeleeDamage[ST_MAXTYPES + 1];
+float g_flFragileMeleeDamage2[ST_MAXTYPES + 1];
 int g_iFragileAbility[ST_MAXTYPES + 1];
 int g_iFragileAbility2[ST_MAXTYPES + 1];
 int g_iFragileChance[ST_MAXTYPES + 1];
@@ -25,9 +33,9 @@ int g_iFragileChance2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Fragile Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Fragile Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	g_bLateLoad = late;
@@ -64,12 +72,6 @@ public void OnClientPostAdminCheck(int client)
 	g_bFragile[client] = false;
 }
 
-public void OnClientDisconnect(int client)
-{
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	g_bFragile[client] = false;
-}
-
 public void OnMapEnd()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -101,13 +103,25 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && g_bFragile[victim])
 		{
-			if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
+			float flFragileBulletDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileBulletDamage[ST_TankType(victim)] : g_flFragileBulletDamage2[ST_TankType(victim)];
+			float flFragileExplosiveDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileExplosiveDamage[ST_TankType(victim)] : g_flFragileExplosiveDamage2[ST_TankType(victim)];
+			float flFragileFireDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileFireDamage[ST_TankType(victim)] : g_flFragileFireDamage2[ST_TankType(victim)];
+			float flFragileMeleeDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileMeleeDamage[ST_TankType(victim)] : g_flFragileMeleeDamage2[ST_TankType(victim)];
+			if (damagetype & DMG_BULLET)
 			{
-				damage = damage * 5;
+				damage = damage * flFragileBulletDamage;
+			}
+			else if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
+			{
+				damage = damage * flFragileExplosiveDamage;
+			}
+			else if (damagetype & DMG_BURN)
+			{
+				damage = damage * flFragileFireDamage;
 			}
 			else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
 			{
-				damage = damage * 1.5;
+				damage = damage * flFragileMeleeDamage;
 			}
 			return Plugin_Changed;
 		}
@@ -128,10 +142,18 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iFragileAbility[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Ability Enabled", 0)) : (g_iFragileAbility2[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Ability Enabled", g_iFragileAbility[iIndex]));
 			main ? (g_iFragileAbility[iIndex] = iSetCellLimit(g_iFragileAbility[iIndex], 0, 1)) : (g_iFragileAbility2[iIndex] = iSetCellLimit(g_iFragileAbility2[iIndex], 0, 1));
+			main ? (g_flFragileBulletDamage[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Bullet Damage", 5.0)) : (g_flFragileBulletDamage2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Bullet Damage", g_flFragileBulletDamage[iIndex]));
+			main ? (g_flFragileBulletDamage[iIndex] = flSetFloatLimit(g_flFragileBulletDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileBulletDamage2[iIndex] = flSetFloatLimit(g_flFragileBulletDamage2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iFragileChance[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Fragile Chance", 4)) : (g_iFragileChance2[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Fragile Chance", g_iFragileChance[iIndex]));
 			main ? (g_iFragileChance[iIndex] = iSetCellLimit(g_iFragileChance[iIndex], 1, 9999999999)) : (g_iFragileChance2[iIndex] = iSetCellLimit(g_iFragileChance2[iIndex], 1, 9999999999));
 			main ? (g_flFragileDuration[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Duration", 5.0)) : (g_flFragileDuration2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Duration", g_flFragileDuration[iIndex]));
 			main ? (g_flFragileDuration[iIndex] = flSetFloatLimit(g_flFragileDuration[iIndex], 0.1, 9999999999.0)) : (g_flFragileDuration2[iIndex] = flSetFloatLimit(g_flFragileDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFragileExplosiveDamage[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Explosive Damage", 5.0)) : (g_flFragileExplosiveDamage2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Explosive Damage", g_flFragileExplosiveDamage[iIndex]));
+			main ? (g_flFragileExplosiveDamage[iIndex] = flSetFloatLimit(g_flFragileExplosiveDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileExplosiveDamage2[iIndex] = flSetFloatLimit(g_flFragileExplosiveDamage2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFragileFireDamage[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Fire Damage", 3.0)) : (g_flFragileFireDamage2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Fire Damage", g_flFragileFireDamage[iIndex]));
+			main ? (g_flFragileFireDamage[iIndex] = flSetFloatLimit(g_flFragileFireDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileFireDamage2[iIndex] = flSetFloatLimit(g_flFragileFireDamage2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFragileMeleeDamage[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Melee Damage", 1.5)) : (g_flFragileMeleeDamage2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Melee Damage", g_flFragileMeleeDamage[iIndex]));
+			main ? (g_flFragileMeleeDamage[iIndex] = flSetFloatLimit(g_flFragileMeleeDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileMeleeDamage2[iIndex] = flSetFloatLimit(g_flFragileMeleeDamage2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}

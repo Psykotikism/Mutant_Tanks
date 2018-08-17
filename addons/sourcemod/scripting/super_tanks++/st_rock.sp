@@ -14,8 +14,8 @@ public Plugin myinfo =
 
 bool g_bRock[MAXPLAYERS + 1];
 bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sRockRadius[ST_MAXTYPES + 1][6];
-char g_sRockRadius2[ST_MAXTYPES + 1][6];
+char g_sRockRadius[ST_MAXTYPES + 1][11];
+char g_sRockRadius2[ST_MAXTYPES + 1][11];
 float g_flRockDuration[ST_MAXTYPES + 1];
 float g_flRockDuration2[ST_MAXTYPES + 1];
 int g_iRockAbility[ST_MAXTYPES + 1];
@@ -28,9 +28,9 @@ int g_iRockDamage2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Rock Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Rock Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -56,11 +56,6 @@ public void OnMapStart()
 }
 
 public void OnClientPostAdminCheck(int client)
-{
-	g_bRock[client] = false;
-}
-
-public void OnClientDisconnect(int client)
 {
 	g_bRock[client] = false;
 }
@@ -108,15 +103,15 @@ public void ST_Ability(int client)
 	int iRockChance = !g_bTankConfig[ST_TankType(client)] ? g_iRockChance[ST_TankType(client)] : g_iRockChance2[ST_TankType(client)];
 	if (iRockAbility == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bRock[client])
 	{
-		float flPos[3];
-		GetClientEyePosition(client, flPos);
-		flPos[2] += 20.0;
 		int iRock = CreateEntityByName("env_rock_launcher");
 		if (!bIsValidEntity(iRock))
 		{
 			return;
 		}
 		g_bRock[client] = true;
+		float flPos[3];
+		GetClientEyePosition(client, flPos);
+		flPos[2] += 20.0;
 		char sDamage[6];
 		int iRockDamage = !g_bTankConfig[ST_TankType(client)] ? g_iRockDamage[ST_TankType(client)] : g_iRockDamage2[ST_TankType(client)];
 		IntToString(iRockDamage, sDamage, sizeof(sDamage));
@@ -157,11 +152,11 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	if (iRockAbility == 0 || (flTime + flRockDuration) < GetEngineTime())
 	{
 		g_bRock[iTank] = false;
-		AcceptEntityInput(iRock, "Kill");
+		RemoveEntity(iRock);
 		return Plugin_Stop;
 	}
 	char sRadius[2][6];
-	char sRockRadius[12];
+	char sRockRadius[11];
 	sRockRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sRockRadius[ST_TankType(iTank)] : g_sRockRadius2[ST_TankType(iTank)];
 	TrimString(sRockRadius);
 	ExplodeString(sRockRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));

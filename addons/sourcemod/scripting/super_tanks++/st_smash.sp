@@ -28,9 +28,9 @@ int g_iSmashRangeChance2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Smash Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Smash Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	g_bLateLoad = late;
@@ -60,11 +60,6 @@ public void OnMapStart()
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-public void OnClientDisconnect(int client)
-{
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 void vLateLoad(bool late)
@@ -143,7 +138,7 @@ public void ST_Event(Event event, const char[] name)
 				int iOwner = GetEntPropEnt(iCorpse, Prop_Send, "m_hOwnerEntity");
 				if (iSurvivor == iOwner)
 				{
-					AcceptEntityInput(iCorpse, "Kill");
+					RemoveEntity(iCorpse);
 				}
 			}
 		}

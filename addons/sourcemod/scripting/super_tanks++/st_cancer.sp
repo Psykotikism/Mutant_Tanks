@@ -1,0 +1,185 @@
+// Super Tanks++: Cancer Ability
+#pragma semicolon 1
+#pragma newdecls required
+#include <super_tanks++>
+
+public Plugin myinfo =
+{
+	name = "[ST++] Cancer Ability",
+	author = ST_AUTHOR,
+	description = ST_DESCRIPTION,
+	version = ST_VERSION,
+	url = ST_URL
+};
+
+bool g_bLateLoad;
+bool g_bTankConfig[ST_MAXTYPES + 1];
+char g_sTankColors[ST_MAXTYPES + 1][28];
+char g_sTankColors2[ST_MAXTYPES + 1][28];
+ConVar g_cvSTFindConVar;
+float g_flCancerRange[ST_MAXTYPES + 1];
+float g_flCancerRange2[ST_MAXTYPES + 1];
+int g_iCancerAbility[ST_MAXTYPES + 1];
+int g_iCancerAbility2[ST_MAXTYPES + 1];
+int g_iCancerChance[ST_MAXTYPES + 1];
+int g_iCancerChance2[ST_MAXTYPES + 1];
+int g_iCancerHit[ST_MAXTYPES + 1];
+int g_iCancerHit2[ST_MAXTYPES + 1];
+int g_iCancerRangeChance[ST_MAXTYPES + 1];
+int g_iCancerRangeChance2[ST_MAXTYPES + 1];
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
+	{
+		strcopy(error, err_max, "[ST++] Cancer Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
+		return APLRes_SilentFailure;
+	}
+	g_bLateLoad = late;
+	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	if (!LibraryExists("super_tanks++"))
+	{
+		SetFailState("No Super Tanks++ library found.");
+	}
+}
+
+public void OnPluginStart()
+{
+	g_cvSTFindConVar = FindConVar("survivor_max_incapacitated_count");
+}
+
+public void OnMapStart()
+{
+	if (g_bLateLoad)
+	{
+		vLateLoad(true);
+		g_bLateLoad = false;
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+}
+
+void vLateLoad(bool late)
+{
+	if (late)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
+	}
+}
+
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (ST_PluginEnabled() && damage > 0.0)
+	{
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		{
+			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			{
+				int iCancerChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iCancerChance[ST_TankType(attacker)] : g_iCancerChance2[ST_TankType(attacker)];
+				int iCancerHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iCancerHit[ST_TankType(attacker)] : g_iCancerHit2[ST_TankType(attacker)];
+				vCancerHit(victim, attacker, iCancerChance, iCancerHit);
+			}
+		}
+		else if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		{
+			if (strcmp(sClassname, "weapon_melee") == 0)
+			{
+				int iCancerChance = !g_bTankConfig[ST_TankType(victim)] ? g_iCancerChance[ST_TankType(victim)] : g_iCancerChance2[ST_TankType(victim)];
+				int iCancerHit = !g_bTankConfig[ST_TankType(victim)] ? g_iCancerHit[ST_TankType(victim)] : g_iCancerHit2[ST_TankType(victim)];
+				vCancerHit(attacker, victim, iCancerChance, iCancerHit);
+			}
+		}
+	}
+	return Plugin_Continue;
+}
+
+public void ST_Configs(char[] savepath, int limit, bool main)
+{
+	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
+	kvSuperTanks.ImportFromFile(savepath);
+	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	{
+		char sName[MAX_NAME_LENGTH + 1];
+		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		if (kvSuperTanks.JumpToKey(sName))
+		{
+			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
+			main ? (g_iCancerAbility[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Enabled", 0)) : (g_iCancerAbility2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Enabled", g_iCancerAbility[iIndex]));
+			main ? (g_iCancerAbility[iIndex] = iSetCellLimit(g_iCancerAbility[iIndex], 0, 1)) : (g_iCancerAbility2[iIndex] = iSetCellLimit(g_iCancerAbility2[iIndex], 0, 1));
+			main ? (g_iCancerChance[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Chance", 4)) : (g_iCancerChance2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Chance", g_iCancerChance[iIndex]));
+			main ? (g_iCancerChance[iIndex] = iSetCellLimit(g_iCancerChance[iIndex], 1, 9999999999)) : (g_iCancerChance2[iIndex] = iSetCellLimit(g_iCancerChance2[iIndex], 1, 9999999999));
+			main ? (g_iCancerHit[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Hit", 0)) : (g_iCancerHit2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Hit", g_iCancerHit[iIndex]));
+			main ? (g_iCancerHit[iIndex] = iSetCellLimit(g_iCancerHit[iIndex], 0, 1)) : (g_iCancerHit2[iIndex] = iSetCellLimit(g_iCancerHit2[iIndex], 0, 1));
+			main ? (g_flCancerRange[iIndex] = kvSuperTanks.GetFloat("Cancer Ability/Cancer Range", 150.0)) : (g_flCancerRange2[iIndex] = kvSuperTanks.GetFloat("Cancer Ability/Cancer Range", g_flCancerRange[iIndex]));
+			main ? (g_flCancerRange[iIndex] = flSetFloatLimit(g_flCancerRange[iIndex], 1.0, 9999999999.0)) : (g_flCancerRange2[iIndex] = flSetFloatLimit(g_flCancerRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iCancerRangeChance[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Range Chance", 16)) : (g_iCancerRangeChance2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Range Chance", g_iCancerRangeChance[iIndex]));
+			main ? (g_iCancerRangeChance[iIndex] = iSetCellLimit(g_iCancerRangeChance[iIndex], 1, 9999999999)) : (g_iCancerRangeChance2[iIndex] = iSetCellLimit(g_iCancerRangeChance2[iIndex], 1, 9999999999));
+			kvSuperTanks.Rewind();
+		}
+	}
+	delete kvSuperTanks;
+}
+
+public void ST_Ability(int client)
+{
+	if (ST_TankAllowed(client) && IsPlayerAlive(client))
+	{
+		int iCancerAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCancerAbility[ST_TankType(client)] : g_iCancerAbility2[ST_TankType(client)];
+		int iCancerRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iCancerChance[ST_TankType(client)] : g_iCancerChance2[ST_TankType(client)];
+		float flCancerRange = !g_bTankConfig[ST_TankType(client)] ? g_flCancerRange[ST_TankType(client)] : g_flCancerRange2[ST_TankType(client)];
+		float flTankPos[3];
+		GetClientAbsOrigin(client, flTankPos);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flCancerRange)
+				{
+					vCancerHit(iSurvivor, client, iCancerRangeChance, iCancerAbility);
+				}
+			}
+		}
+	}
+}
+
+void vCancerHit(int client, int owner, int chance, int enabled)
+{
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	{
+		char sSet[2][16];
+		char sTankColors[28];
+		sTankColors = !g_bTankConfig[ST_TankType(owner)] ? g_sTankColors[ST_TankType(owner)] : g_sTankColors2[ST_TankType(owner)];
+		TrimString(sTankColors);
+		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+		char sRGB[4][4];
+		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+		TrimString(sRGB[0]);
+		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+		TrimString(sRGB[1]);
+		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+		TrimString(sRGB[2]);
+		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTFindConVar.IntValue);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
+	}
+}

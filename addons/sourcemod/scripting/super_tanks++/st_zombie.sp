@@ -22,9 +22,9 @@ int g_iZombieInterval[MAXPLAYERS + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Zombie Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Zombie Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -50,11 +50,6 @@ public void OnMapStart()
 }
 
 public void OnClientPostAdminCheck(int client)
-{
-	g_iZombieInterval[client] = 0;
-}
-
-public void OnClientDisconnect(int client)
 {
 	g_iZombieInterval[client] = 0;
 }

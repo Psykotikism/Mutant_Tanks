@@ -36,9 +36,9 @@ int g_iGravityRangeChance2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Gravity Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Gravity Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	g_bLateLoad = late;
@@ -73,13 +73,6 @@ public void OnMapStart()
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	g_bGravity[client] = false;
-	g_bGravity2[client] = false;
-}
-
-public void OnClientDisconnect(int client)
-{
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bGravity[client] = false;
 	g_bGravity2[client] = false;
 }
@@ -260,13 +253,13 @@ void vRemoveGravity(int client)
 			int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
 			if (iOwner == client)
 			{
-				AcceptEntityInput(iProp, "Kill");
+				RemoveEntity(iProp);
 			}
 		}
 		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 		if (iOwner == client)
 		{
-			AcceptEntityInput(iProp, "Kill");
+			RemoveEntity(iProp);
 		}
 	}
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)

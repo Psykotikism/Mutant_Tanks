@@ -29,9 +29,9 @@ int g_iWarpMode2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Warp Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Warp Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	g_bLateLoad = late;
@@ -66,12 +66,6 @@ public void OnMapStart()
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	g_bWarp[client] = false;
-}
-
-public void OnClientDisconnect(int client)
-{
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bWarp[client] = false;
 }
 
@@ -170,7 +164,7 @@ void vWarpHit(int client, int owner)
 		float flCurrentOrigin[3];
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsSurvivor(iPlayer) && iPlayer != client)
+			if (bIsSurvivor(iPlayer) && !bIsPlayerIncapacitated(iPlayer) && iPlayer != client)
 			{
 				GetClientAbsOrigin(iPlayer, flCurrentOrigin);
 				TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);

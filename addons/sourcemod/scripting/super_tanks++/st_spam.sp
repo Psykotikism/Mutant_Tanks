@@ -26,9 +26,9 @@ int g_iSpamDamage2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Spam Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Spam Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -54,11 +54,6 @@ public void OnMapStart()
 }
 
 public void OnClientPostAdminCheck(int client)
-{
-	g_bSpam[client] = false;
-}
-
-public void OnClientDisconnect(int client)
 {
 	g_bSpam[client] = false;
 }
@@ -145,7 +140,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 		TeleportEntity(iSpammer, flPos, flAng, NULL_VECTOR);
 		DispatchSpawn(iSpammer);
 		AcceptEntityInput(iSpammer, "LaunchRock");
-		AcceptEntityInput(iSpammer, "Kill");
+		RemoveEntity(iSpammer);
 	}
 	return Plugin_Continue;
 }

@@ -33,9 +33,9 @@ int g_iDropWeapon[MAXPLAYERS + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Drop Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Drop Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -201,11 +201,6 @@ public void OnClientPostAdminCheck(int client)
 	vReset(client);
 }
 
-public void OnClientDisconnect(int client)
-{
-	vReset(client);
-}
-
 public void OnMapEnd()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -365,7 +360,7 @@ void vDeleteDrop(int client)
 	if (bIsValidEntity(g_iDrop[client]))
 	{
 		SDKUnhook(g_iDrop[client], SDKHook_SetTransmit, SetTransmit);
-		AcceptEntityInput(g_iDrop[client], "Kill");
+		RemoveEntity(g_iDrop[client]);
 	}
 	g_iDrop[client] = 0;
 }
@@ -440,12 +435,12 @@ void vGetPosAng2(int client, int weapon, float pos[3], float angle[3], int posit
 	scale = 2.5;
 	switch (weapon)
 	{
-		case 22: scale = 2.0;
-		case 23: scale = 1.7;
-		case 26: scale = 2.3;
-		case 27: scale = 3.0;
-		case 29: scale = 4.0;
-		case 30: scale = 3.5;
+		case 29: scale = 2.0;
+		case 21: scale = 1.7;
+		case 30: scale = 2.3;
+		case 26: scale = 3.0;
+		case 22: scale = 4.0;
+		case 27: scale = 3.5;
 	}
 	float flDropWeaponScale = !g_bTankConfig[ST_TankType(client)] ? g_flDropWeaponScale[ST_TankType(client)] : g_flDropWeaponScale2[ST_TankType(client)];
 	scale = scale * flDropWeaponScale;

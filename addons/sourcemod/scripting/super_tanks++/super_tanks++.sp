@@ -114,9 +114,9 @@ TopMenu g_tmSTMenu;
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "Super Tanks++ only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "Super Tanks++ only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	CreateNative("ST_MaxTypes", iNative_MaxTypes);
@@ -189,6 +189,7 @@ public void OnPluginStart()
 	vMultiTargetFilters(1);
 	LoadTranslations("common.phrases");
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
+	RegAdminCmd("sm_tanklist", cmdTankList, ADMFLAG_ROOT, "View the Super Tanks list.");
 	g_cvSTFindConVar[0] = CreateConVar("st_enableplugin", "1", "Enable Super Tanks++.\n0: OFF\n1: ON");
 	CreateConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_cvSTFindConVar[1] = FindConVar("z_difficulty");
@@ -247,19 +248,6 @@ public void OnMapStart()
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	for (int iNumber = 0; iNumber <= 4; iNumber++)
-	{
-		g_iBossTypes[client][iNumber] = 0;
-	}
-	g_iBossStageCount[client] = 0;
-	g_iTankType[client] = 0;
-	g_bBoss[client] = false;
-	g_bRandomized[client] = false;
-}
-
-public void OnClientDisconnect(int client)
-{
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	for (int iNumber = 0; iNumber <= 4; iNumber++)
 	{
 		g_iBossTypes[client][iNumber] = 0;
@@ -855,6 +843,47 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	}
 }
 
+public Action cmdTankList(int client, int args)
+{
+	if (!g_bPluginEnabled)
+	{
+		ReplyToCommand(client, "\x04%s\x05 Super Tanks++\x01 is disabled.", ST_PREFIX);
+		return Plugin_Handled;
+	}
+	if (args > 0)
+	{
+		ReplyToCommand(client, "\x04%s\x01 Usage: sm_tanklist", ST_PREFIX);
+		return Plugin_Handled;
+	}
+	int iMaxTypes = !g_bGeneralConfig ? g_iMaxTypes : g_iMaxTypes2;
+	for (int iIndex = 1; iIndex <= iMaxTypes; iIndex++)
+	{
+		int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
+		char sName[MAX_NAME_LENGTH + 1];
+		sName = !g_bTankConfig[iIndex] ? g_sCustomName[iIndex] : g_sCustomName2[iIndex];
+		char sStatus[32];
+		switch (iTankEnabled)
+		{
+			case 0: sStatus = "Disabled";
+			case 1: sStatus = "Enabled";
+		}
+		int iSpawnMode = !g_bTankConfig[iIndex] ? g_iSpawnMode[iIndex] : g_iSpawnMode2[iIndex];
+		char sMode[32];
+		switch (iSpawnMode)
+		{
+			case 0: sMode = "Normal";
+			case 1: sMode = "Boss";
+			case 2: sMode = "Randomized";
+		}
+		PrintToConsole(client, "%d. Name: %s, Status: %s, Mode: %s", iIndex, sName, sStatus, sMode);
+	}
+	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
+	{
+		PrintToChat(client, "\x04%s\x01 See console for output.", ST_PREFIX);
+	}
+	return Plugin_Handled;
+}
+
 void vPluginStatus()
 {
 	bool bIsPluginAllowed = bIsPluginEnabled(g_cvSTFindConVar[2], g_iGameModeTypes, g_sEnabledGameModes, g_sDisabledGameModes);
@@ -1268,10 +1297,10 @@ void vAttachProps(int client, int red, int green, int blue, int alpha, int red2,
 
 void vBoss(int client, int limit, int stages, int stage)
 {
-	g_iBossTypes[client][stage - 1] = g_iTankType[client];
 	int iHealth = GetClientHealth(client);
 	if (iHealth <= limit && stages >= stage)
 	{
+		g_iBossTypes[client][stage - 1] = g_iTankType[client];
 		g_iBossStageCount[client] = stage;
 		vNewTankSettings(client);
 		int iTypeCount;
@@ -1364,7 +1393,7 @@ void vRemoveProps(int client)
 			if (iOwner == client)
 			{
 				SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-				AcceptEntityInput(iProp, "Kill");
+				RemoveEntity(iProp);
 			}
 		}
 	}
@@ -1374,7 +1403,7 @@ void vRemoveProps(int client)
 		if (iOwner == client)
 		{
 			SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-			AcceptEntityInput(iProp, "Kill");
+			RemoveEntity(iProp);
 		}
 	}
 }

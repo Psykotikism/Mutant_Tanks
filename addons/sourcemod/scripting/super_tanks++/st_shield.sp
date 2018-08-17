@@ -26,9 +26,9 @@ int g_iShieldAbility2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
 	{
-		strcopy(error, err_max, "[ST++] Shield Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "[ST++] Shield Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
 		return APLRes_SilentFailure;
 	}
 	g_bLateLoad = late;
@@ -69,12 +69,6 @@ public void OnMapStart()
 public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	g_bShield[client] = false;
-}
-
-public void OnClientDisconnect(int client)
-{
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bShield[client] = false;
 }
 
@@ -238,7 +232,7 @@ void vRemoveShield(int client)
 			if (iOwner == client)
 			{
 				SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-				AcceptEntityInput(iProp, "Kill");
+				RemoveEntity(iProp);
 			}
 		}
 	}
@@ -290,7 +284,7 @@ void vShield(int client, bool shield)
 				if (iOwner == client)
 				{
 					SDKUnhook(iShield, SDKHook_SetTransmit, SetTransmit);
-					AcceptEntityInput(iShield, "Kill");
+					RemoveEntity(iShield);
 				}
 			}
 		}
@@ -345,7 +339,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 			SetEntityModel(iPropane, MODEL_PROPANETANK);
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			AcceptEntityInput(iRock, "Kill");
+			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
 			float flSpeed = g_cvSTFindConVar.FloatValue;
 			ScaleVector(flVelocity, flSpeed * 1.4);
