@@ -1,7 +1,7 @@
 // Super Tanks++: Drop Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,23 +12,14 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bDrop[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sWeaponClass[32][128];
-char g_sWeaponModel[32][128];
+bool g_bDrop[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sWeaponClass[32][128], g_sWeaponModel[32][128];
 ConVar g_cvSTFindConVar[7];
-float g_flDropWeaponScale[ST_MAXTYPES + 1];
-float g_flDropWeaponScale2[ST_MAXTYPES + 1];
-int g_iDrop[MAXPLAYERS + 1];
-int g_iDropAbility[ST_MAXTYPES + 1];
-int g_iDropAbility2[ST_MAXTYPES + 1];
-int g_iDropChance[ST_MAXTYPES + 1];
-int g_iDropChance2[ST_MAXTYPES + 1];
-int g_iDropClipChance[ST_MAXTYPES + 1];
-int g_iDropClipChance2[ST_MAXTYPES + 1];
-int g_iDropMode[ST_MAXTYPES + 1];
-int g_iDropMode2[ST_MAXTYPES + 1];
-int g_iDropWeapon[MAXPLAYERS + 1];
+float g_flDropWeaponScale[ST_MAXTYPES + 1], g_flDropWeaponScale2[ST_MAXTYPES + 1];
+int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropAbility2[ST_MAXTYPES + 1],
+	g_iDropChance[ST_MAXTYPES + 1], g_iDropChance2[ST_MAXTYPES + 1],
+	g_iDropClipChance[ST_MAXTYPES + 1], g_iDropClipChance2[ST_MAXTYPES + 1],
+	g_iDropMode[ST_MAXTYPES + 1], g_iDropMode2[ST_MAXTYPES + 1], g_iDropWeapon[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -62,13 +53,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			vReset(iPlayer);
-		}
-	}
+	vReset();
 	PrecacheModel(MELEE_AXE_V, true);
 	PrecacheModel(MELEE_AXE_W, true);
 	PrecacheModel(MELEE_CHAINSAW_V, true);
@@ -198,18 +183,12 @@ public void OnMapStart()
 
 public void OnClientPostAdminCheck(int client)
 {
-	vReset(client);
+	vResetDrop(client);
 }
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			vReset(iPlayer);
-		}
-	}
+	vReset();
 }
 
 public Action SetTransmit(int entity, int client)
@@ -261,8 +240,7 @@ public void ST_Event(Event event, const char[] name)
 		{
 			int iDropMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMode[ST_TankType(iTank)] : g_iDropMode2[ST_TankType(iTank)];
 			float flDropWeaponScale = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropWeaponScale[ST_TankType(iTank)] : g_flDropWeaponScale[ST_TankType(iTank)];
-			float flPos[3];
-			float flAngle[3];
+			float flPos[3], flAngle[3];
 			GetClientEyePosition(iTank, flPos);
 			GetClientAbsAngles(iTank, flAngle);
 			if (iDropMode != 2 && StrContains(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon") != -1)
@@ -277,8 +255,7 @@ public void ST_Event(Event event, const char[] name)
 						SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale);
 					}
 				}
-				int iAmmo;
-				int iClip;
+				int iAmmo, iClip;
 				if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_autoshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_spas") == 0)
 				{
 					iAmmo = g_cvSTFindConVar[0].IntValue;
@@ -446,7 +423,18 @@ void vGetPosAng2(int client, int weapon, float pos[3], float angle[3], int posit
 	scale = scale * flDropWeaponScale;
 }
 
-void vReset(int client)
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			vResetDrop(iPlayer);
+		}
+	}
+}
+
+void vResetDrop(int client)
 {
 	g_bDrop[client] = false;
 	g_iDrop[client] = 0;
@@ -469,7 +457,7 @@ public Action tTimerDrop(Handle timer, any userid)
 	}
 	vDeleteDrop(iTank);
 	int iDropMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMode[ST_TankType(iTank)] : g_iDropMode2[ST_TankType(iTank)];
- 	int iDropValue;
+ 	int iDropValue, iPosition;
 	switch (iDropMode)
 	{
 		case 0: iDropValue = GetRandomInt(1, 31);
@@ -477,7 +465,6 @@ public Action tTimerDrop(Handle timer, any userid)
 		case 2: iDropValue = GetRandomInt(20, 31);
 	}
 	int iWeapon = bIsL4D2Game() ? iDropValue : GetRandomInt(1, 6);
-	int iPosition;
 	switch (GetRandomInt(1, 2))
 	{
 		case 1: iPosition = 1;
@@ -487,8 +474,7 @@ public Action tTimerDrop(Handle timer, any userid)
 	int iDrop = CreateEntityByName("prop_dynamic_override");
 	if (bIsValidEntity(iDrop))
 	{
-		float flPos[3];
-		float flAngle[3];
+		float flPos[3], flAngle[3];
 		char sPosition[32];
 		SetEntityModel(iDrop, g_sWeaponModel[iWeapon]);
 		TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);

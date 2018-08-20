@@ -1,7 +1,7 @@
 // Super Tanks++: Nullify Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,21 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bNullify[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flNullifyDuration[ST_MAXTYPES + 1];
-float g_flNullifyDuration2[ST_MAXTYPES + 1];
-float g_flNullifyRange[ST_MAXTYPES + 1];
-float g_flNullifyRange2[ST_MAXTYPES + 1];
-int g_iNullifyAbility[ST_MAXTYPES + 1];
-int g_iNullifyAbility2[ST_MAXTYPES + 1];
-int g_iNullifyChance[ST_MAXTYPES + 1];
-int g_iNullifyChance2[ST_MAXTYPES + 1];
-int g_iNullifyHit[ST_MAXTYPES + 1];
-int g_iNullifyHit2[ST_MAXTYPES + 1];
-int g_iNullifyRangeChance[ST_MAXTYPES + 1];
-int g_iNullifyRangeChance2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bNullify[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+float g_flNullifyDuration[ST_MAXTYPES + 1], g_flNullifyDuration2[ST_MAXTYPES + 1],
+	g_flNullifyRange[ST_MAXTYPES + 1], g_flNullifyRange2[ST_MAXTYPES + 1];
+int g_iNullifyAbility[ST_MAXTYPES + 1], g_iNullifyAbility2[ST_MAXTYPES + 1],
+	g_iNullifyChance[ST_MAXTYPES + 1], g_iNullifyChance2[ST_MAXTYPES + 1],
+	g_iNullifyHit[ST_MAXTYPES + 1], g_iNullifyHit2[ST_MAXTYPES + 1],
+	g_iNullifyRangeChance[ST_MAXTYPES + 1], g_iNullifyRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -50,16 +42,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bNullify[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -72,27 +64,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bNullify[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -215,6 +187,17 @@ void vRemoveNullify()
 		if (bIsSurvivor(iSurvivor) && g_bNullify[iSurvivor])
 		{
 			g_bNullify[iSurvivor] = false;
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bNullify[iPlayer] = false;
 		}
 	}
 }

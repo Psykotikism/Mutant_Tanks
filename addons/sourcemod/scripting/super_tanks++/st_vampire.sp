@@ -1,7 +1,7 @@
 // Super Tanks++: Vampire Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,20 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flVampireRange[ST_MAXTYPES + 1];
-float g_flVampireRange2[ST_MAXTYPES + 1];
-int g_iVampireAbility[ST_MAXTYPES + 1];
-int g_iVampireAbility2[ST_MAXTYPES + 1];
-int g_iVampireChance[ST_MAXTYPES + 1];
-int g_iVampireChance2[ST_MAXTYPES + 1];
-int g_iVampireHealth[ST_MAXTYPES + 1];
-int g_iVampireHealth2[ST_MAXTYPES + 1];
-int g_iVampireHit[ST_MAXTYPES + 1];
-int g_iVampireHit2[ST_MAXTYPES + 1];
-int g_iVampireRangeChance[ST_MAXTYPES + 1];
-int g_iVampireRangeChance2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flVampireRange[ST_MAXTYPES + 1], g_flVampireRange2[ST_MAXTYPES + 1];
+int g_iVampireAbility[ST_MAXTYPES + 1], g_iVampireAbility2[ST_MAXTYPES + 1],
+	g_iVampireChance[ST_MAXTYPES + 1], g_iVampireChance2[ST_MAXTYPES + 1],
+	g_iVampireHealth[ST_MAXTYPES + 1], g_iVampireHealth2[ST_MAXTYPES + 1],
+	g_iVampireHit[ST_MAXTYPES + 1], g_iVampireHit2[ST_MAXTYPES + 1],
+	g_iVampireRangeChance[ST_MAXTYPES + 1], g_iVampireRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,20 +44,6 @@ public void OnMapStart()
 {
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
-		g_bLateLoad = false;
-	}
-}
-
-public void OnClientPostAdminCheck(int client)
-{
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
@@ -72,7 +51,13 @@ void vLateLoad(bool late)
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
 			}
 		}
+		g_bLateLoad = false;
 	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)

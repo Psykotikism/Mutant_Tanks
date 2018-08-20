@@ -1,7 +1,7 @@
 // Super Tanks++: Medic Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -13,16 +13,11 @@ public Plugin myinfo =
 };
 
 bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sMedicHealth[ST_MAXTYPES + 1][36];
-char g_sMedicHealth2[ST_MAXTYPES + 1][36];
-char g_sMedicMaxHealth[ST_MAXTYPES + 1][36];
-char g_sMedicMaxHealth2[ST_MAXTYPES + 1][36];
-float g_flMedicRange[ST_MAXTYPES + 1];
-float g_flMedicRange2[ST_MAXTYPES + 1];
-int g_iMedicAbility[ST_MAXTYPES + 1];
-int g_iMedicAbility2[ST_MAXTYPES + 1];
-int g_iMedicChance[ST_MAXTYPES + 1];
-int g_iMedicChance2[ST_MAXTYPES + 1];
+char g_sMedicHealth[ST_MAXTYPES + 1][36], g_sMedicHealth2[ST_MAXTYPES + 1][36],
+	g_sMedicMaxHealth[ST_MAXTYPES + 1][36], g_sMedicMaxHealth2[ST_MAXTYPES + 1][36];
+float g_flMedicRange[ST_MAXTYPES + 1], g_flMedicRange2[ST_MAXTYPES + 1];
+int g_iMedicAbility[ST_MAXTYPES + 1], g_iMedicAbility2[ST_MAXTYPES + 1],
+	g_iMedicChance[ST_MAXTYPES + 1], g_iMedicChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -107,13 +102,10 @@ void vMedic(int client)
 			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
 			if (flDistance <= flMedicRange)
 			{
-				char sHealth[6][6];
-				char sMedicHealth[36];
+				char sHealth[6][6], sMedicHealth[36], sMaxHealth[6][6], sMedicMaxHealth[36];
 				sMedicHealth = !g_bTankConfig[ST_TankType(client)] ? g_sMedicHealth[ST_TankType(client)] : g_sMedicHealth2[ST_TankType(client)];
 				TrimString(sMedicHealth);
 				ExplodeString(sMedicHealth, ",", sHealth, sizeof(sHealth), sizeof(sHealth[]));
-				char sMaxHealth[6][6];
-				char sMedicMaxHealth[36];
 				sMedicMaxHealth = !g_bTankConfig[ST_TankType(client)] ? g_sMedicMaxHealth[ST_TankType(client)] : g_sMedicMaxHealth2[ST_TankType(client)];
 				TrimString(sMedicMaxHealth);
 				ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));

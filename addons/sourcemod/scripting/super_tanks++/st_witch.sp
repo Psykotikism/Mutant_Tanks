@@ -1,7 +1,7 @@
 // Super Tanks++: Witch Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,16 +12,10 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flWitchRange[ST_MAXTYPES + 1];
-float g_flWitchRange2[ST_MAXTYPES + 1];
-int g_iWitchAbility[ST_MAXTYPES + 1];
-int g_iWitchAbility2[ST_MAXTYPES + 1];
-int g_iWitchAmount[ST_MAXTYPES + 1];
-int g_iWitchAmount2[ST_MAXTYPES + 1];
-int g_iWitchDamage[ST_MAXTYPES + 1];
-int g_iWitchDamage2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flWitchRange[ST_MAXTYPES + 1], g_flWitchRange2[ST_MAXTYPES + 1];
+int g_iWitchAbility[ST_MAXTYPES + 1], g_iWitchAbility2[ST_MAXTYPES + 1],
+	g_iWitchAmount[ST_MAXTYPES + 1], g_iWitchAmount2[ST_MAXTYPES + 1], g_iWitchDamage[ST_MAXTYPES + 1], g_iWitchDamage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -47,20 +41,6 @@ public void OnMapStart()
 {
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
-		g_bLateLoad = false;
-	}
-}
-
-public void OnClientPostAdminCheck(int client)
-{
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
@@ -68,7 +48,13 @@ void vLateLoad(bool late)
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
 			}
 		}
+		g_bLateLoad = false;
 	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -123,17 +109,14 @@ public void ST_Ability(int client)
 	int iWitchAbility = !g_bTankConfig[ST_TankType(client)] ? g_iWitchAbility[ST_TankType(client)] : g_iWitchAbility2[ST_TankType(client)];
 	if (iWitchAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iWitchCount;
-		int iInfected = -1;
+		int iWitchCount, iInfected = -1;
 		while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
 		{
 			float flWitchRange = !g_bTankConfig[ST_TankType(client)] ? g_flWitchRange[ST_TankType(client)] : g_flWitchRange[ST_TankType(client)];
 			int iWitchAmount = !g_bTankConfig[ST_TankType(client)] ? g_iWitchAmount[ST_TankType(client)] : g_iWitchAmount2[ST_TankType(client)];
 			if (iWitchCount < 4 && iGetWitchCount() < iWitchAmount)
 			{
-				float flTankPos[3];
-				float flInfectedPos[3];
-				float flInfectedAng[3];
+				float flTankPos[3], flInfectedPos[3], flInfectedAng[3];
 				GetClientAbsOrigin(client, flTankPos);
 				GetEntPropVector(iInfected, Prop_Send, "m_vecOrigin", flInfectedPos);
 				GetEntPropVector(iInfected, Prop_Send, "m_angRotation", flInfectedAng);

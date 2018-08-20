@@ -1,7 +1,7 @@
 // Super Tanks++: Meteor Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,18 +12,12 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bMeteor[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sMeteorRadius[ST_MAXTYPES + 1][13];
-char g_sMeteorRadius2[ST_MAXTYPES + 1][13];
-char g_sPropsColors[ST_MAXTYPES + 1][80];
-char g_sPropsColors2[ST_MAXTYPES + 1][80];
-int g_iMeteorAbility[ST_MAXTYPES + 1];
-int g_iMeteorAbility2[ST_MAXTYPES + 1];
-int g_iMeteorChance[ST_MAXTYPES + 1];
-int g_iMeteorChance2[ST_MAXTYPES + 1];
-int g_iMeteorDamage[ST_MAXTYPES + 1];
-int g_iMeteorDamage2[ST_MAXTYPES + 1];
+bool g_bMeteor[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13],
+	g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80];
+int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1],
+	g_iMeteorChance[ST_MAXTYPES + 1], g_iMeteorChance2[ST_MAXTYPES + 1],
+	g_iMeteorDamage[ST_MAXTYPES + 1], g_iMeteorDamage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -47,13 +41,7 @@ public void OnAllPluginsLoaded()
 public void OnMapStart()
 {
 	PrecacheModel(MODEL_PROPANETANK, true);
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bMeteor[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -63,13 +51,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bMeteor[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -175,6 +157,17 @@ void vMeteor(int client, int entity)
 	}
 }
 
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bMeteor[iPlayer] = false;
+		}
+	}
+}
+
 public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -195,8 +188,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 		g_bMeteor[iTank] = false;
 		return Plugin_Stop;
 	}
-	char sRadius[2][7];
-	char sMeteorRadius[13];
+	char sRadius[2][7], sMeteorRadius[13];
 	sMeteorRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sMeteorRadius[ST_TankType(iTank)] : g_sMeteorRadius2[ST_TankType(iTank)];
 	TrimString(sMeteorRadius);
 	ExplodeString(sMeteorRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
@@ -206,12 +198,10 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
 	flMin = flSetFloatLimit(flMin, -200.0, 0.0);
 	flMax = flSetFloatLimit(flMax, 0.0, 200.0);
-	char sSet[5][16];
-	char sPropsColors[80];
+	char sSet[5][16], sPropsColors[80], sRGB[4][4];
 	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
 	TrimString(sPropsColors);
 	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-	char sRGB[4][4];
 	ExplodeString(sSet[3], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 	TrimString(sRGB[0]);
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
@@ -228,9 +218,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	int iMeteor = -1;
 	if (g_bMeteor[iTank])
 	{
-		float flAngles[3];
-		float flVelocity[3];
-		float flHitpos[3];
+		float flAngles[3], flVelocity[3], flHitpos[3];
 		flAngles[0] = GetRandomFloat(-20.0, 20.0);
 		flAngles[1] = GetRandomFloat(-20.0, 20.0);
 		flAngles[2] = 60.0;

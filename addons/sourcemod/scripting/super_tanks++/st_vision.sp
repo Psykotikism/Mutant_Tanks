@@ -1,7 +1,7 @@
 // Super Tanks++: Vision Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,23 +12,14 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-bool g_bVision[MAXPLAYERS + 1];
-float g_flVisionDuration[ST_MAXTYPES + 1];
-float g_flVisionDuration2[ST_MAXTYPES + 1];
-float g_flVisionRange[ST_MAXTYPES + 1];
-float g_flVisionRange2[ST_MAXTYPES + 1];
-int g_iVisionAbility[ST_MAXTYPES + 1];
-int g_iVisionAbility2[ST_MAXTYPES + 1];
-int g_iVisionChance[ST_MAXTYPES + 1];
-int g_iVisionChance2[ST_MAXTYPES + 1];
-int g_iVisionFOV[ST_MAXTYPES + 1];
-int g_iVisionFOV2[ST_MAXTYPES + 1];
-int g_iVisionHit[ST_MAXTYPES + 1];
-int g_iVisionHit2[ST_MAXTYPES + 1];
-int g_iVisionRangeChance[ST_MAXTYPES + 1];
-int g_iVisionRangeChance2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1], g_bVision[MAXPLAYERS + 1];
+float g_flVisionDuration[ST_MAXTYPES + 1], g_flVisionDuration2[ST_MAXTYPES + 1],
+	g_flVisionRange[ST_MAXTYPES + 1], g_flVisionRange2[ST_MAXTYPES + 1];
+int g_iVisionAbility[ST_MAXTYPES + 1], g_iVisionAbility2[ST_MAXTYPES + 1],
+	g_iVisionChance[ST_MAXTYPES + 1], g_iVisionChance2[ST_MAXTYPES + 1],
+	g_iVisionFOV[ST_MAXTYPES + 1], g_iVisionFOV2[ST_MAXTYPES + 1], g_iVisionHit[ST_MAXTYPES + 1],
+	g_iVisionHit2[ST_MAXTYPES + 1], g_iVisionRangeChance[ST_MAXTYPES + 1],
+	g_iVisionRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,16 +43,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bVision[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -74,27 +65,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bVision[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -167,6 +138,17 @@ public void ST_Ability(int client)
 					vVisionHit(iSurvivor, client, iVisionRangeChance, iVisionAbility);
 				}
 			}
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bVision[iPlayer] = false;
 		}
 	}
 }

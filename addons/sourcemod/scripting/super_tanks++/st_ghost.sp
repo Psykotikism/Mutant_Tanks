@@ -1,7 +1,7 @@
 // Super Tanks++: Ghost Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,30 +12,17 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bGhost[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sGhostSlot[ST_MAXTYPES + 1][6];
-char g_sGhostSlot2[ST_MAXTYPES + 1][6];
-char g_sPropsColors[ST_MAXTYPES + 1][80];
-char g_sPropsColors2[ST_MAXTYPES + 1][80];
-char g_sTankColors[ST_MAXTYPES + 1][28];
-char g_sTankColors2[ST_MAXTYPES + 1][28];
-float g_flGhostCloakRange[ST_MAXTYPES + 1];
-float g_flGhostCloakRange2[ST_MAXTYPES + 1];
-float g_flGhostRange[ST_MAXTYPES + 1];
-float g_flGhostRange2[ST_MAXTYPES + 1];
-int g_iGhostAbility[ST_MAXTYPES + 1];
-int g_iGhostAbility2[ST_MAXTYPES + 1];
-int g_iGhostAlpha[MAXPLAYERS + 1];
-int g_iGhostChance[ST_MAXTYPES + 1];
-int g_iGhostChance2[ST_MAXTYPES + 1];
-int g_iGhostFade[ST_MAXTYPES + 1];
-int g_iGhostFade2[ST_MAXTYPES + 1];
-int g_iGhostHit[ST_MAXTYPES + 1];
-int g_iGhostHit2[ST_MAXTYPES + 1];
-int g_iGhostRangeChance[ST_MAXTYPES + 1];
-int g_iGhostRangeChance2[ST_MAXTYPES + 1];
+bool g_bGhost[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sGhostSlot[ST_MAXTYPES + 1][6], g_sGhostSlot2[ST_MAXTYPES + 1][6],
+	g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80],
+	g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
+float g_flGhostCloakRange[ST_MAXTYPES + 1], g_flGhostCloakRange2[ST_MAXTYPES + 1],
+	g_flGhostRange[ST_MAXTYPES + 1], g_flGhostRange2[ST_MAXTYPES + 1];
+int g_iGhostAbility[ST_MAXTYPES + 1], g_iGhostAbility2[ST_MAXTYPES + 1],
+	g_iGhostAlpha[MAXPLAYERS + 1], g_iGhostChance[ST_MAXTYPES + 1],
+	g_iGhostChance2[ST_MAXTYPES + 1], g_iGhostFade[ST_MAXTYPES + 1],
+	g_iGhostFade2[ST_MAXTYPES + 1], g_iGhostHit[ST_MAXTYPES + 1], g_iGhostHit2[ST_MAXTYPES + 1],
+	g_iGhostRangeChance[ST_MAXTYPES + 1], g_iGhostRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -61,17 +48,16 @@ public void OnMapStart()
 {
 	PrecacheSound(SOUND_INFECTED, true);
 	PrecacheSound(SOUND_INFECTED2, true);
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bGhost[iPlayer] = false;
-			g_iGhostAlpha[iPlayer] = 255;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -85,28 +71,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bGhost[iPlayer] = false;
-			g_iGhostAlpha[iPlayer] = 255;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -175,12 +140,11 @@ public void ST_Ability(int client)
 	int iGhostAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGhostAbility[ST_TankType(client)] : g_iGhostAbility2[ST_TankType(client)];
 	if (iGhostAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		char sSet[2][16];
-		char sTankColors[28];
+		char sSet[2][16], sTankColors[28], sRGB[4][4], sSet2[5][16], sPropsColors[80], sProps[4][4],
+			sProps2[4][4], sProps3[4][4], sProps4[4][4], sProps5[4][4];
 		sTankColors = !g_bTankConfig[ST_TankType(client)] ? g_sTankColors[ST_TankType(client)] : g_sTankColors2[ST_TankType(client)];
 		TrimString(sTankColors);
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-		char sRGB[4][4];
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 		TrimString(sRGB[0]);
 		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
@@ -188,12 +152,9 @@ public void ST_Ability(int client)
 		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
 		TrimString(sRGB[2]);
 		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-		char sSet2[5][16];
-		char sPropsColors[80];
 		sPropsColors = !g_bTankConfig[ST_TankType(client)] ? g_sPropsColors[ST_TankType(client)] : g_sPropsColors2[ST_TankType(client)];
 		TrimString(sPropsColors);
 		ExplodeString(sPropsColors, "|", sSet2, sizeof(sSet2), sizeof(sSet2[]));
-		char sProps[4][4];
 		ExplodeString(sSet2[0], ",", sProps, sizeof(sProps), sizeof(sProps[]));
 		TrimString(sProps[0]);
 		int iRed2 = (sProps[0][0] != '\0') ? StringToInt(sProps[0]) : 255;
@@ -201,7 +162,6 @@ public void ST_Ability(int client)
 		int iGreen2 = (sProps[1][0] != '\0') ? StringToInt(sProps[1]) : 255;
 		TrimString(sProps[2]);
 		int iBlue2 = (sProps[2][0] != '\0') ? StringToInt(sProps[2]) : 255;
-		char sProps2[4][4];
 		ExplodeString(sSet2[1], ",", sProps2, sizeof(sProps2), sizeof(sProps2[]));
 		TrimString(sProps2[0]);
 		int iRed3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[0]) : 255;
@@ -209,7 +169,6 @@ public void ST_Ability(int client)
 		int iGreen3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[1]) : 255;
 		TrimString(sProps2[2]);
 		int iBlue3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[2]) : 255;
-		char sProps3[4][4];
 		ExplodeString(sSet2[2], ",", sProps3, sizeof(sProps3), sizeof(sProps3[]));
 		TrimString(sProps3[0]);
 		int iRed4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[0]) : 255;
@@ -217,7 +176,6 @@ public void ST_Ability(int client)
 		int iGreen4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[1]) : 255;
 		TrimString(sProps3[2]);
 		int iBlue4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[2]) : 255;
-		char sProps4[4][4];
 		ExplodeString(sSet2[3], ",", sProps4, sizeof(sProps4), sizeof(sProps4[]));
 		TrimString(sProps4[0]);
 		int iRed5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[0]) : 255;
@@ -225,7 +183,6 @@ public void ST_Ability(int client)
 		int iGreen5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[1]) : 255;
 		TrimString(sProps4[2]);
 		int iBlue5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[2]) : 255;
-		char sProps5[4][4];
 		ExplodeString(sSet2[4], ",", sProps5, sizeof(sProps5), sizeof(sProps5[]));
 		TrimString(sProps5[0]);
 		int iRed6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[0]) : 255;
@@ -238,8 +195,7 @@ public void ST_Ability(int client)
 		{
 			if (bIsSpecialInfected(iInfected))
 			{
-				float flTankPos[3];
-				float flInfectedPos[3];
+				float flTankPos[3], flInfectedPos[3];
 				GetClientAbsOrigin(client, flTankPos);
 				GetClientAbsOrigin(iInfected, flInfectedPos);
 				float flGhostCloakRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostCloakRange[ST_TankType(client)] : g_flGhostCloakRange2[ST_TankType(client)];
@@ -317,6 +273,18 @@ void vGhostHit(int client, int owner, int chance, int enabled)
 		{
 			case 1: EmitSoundToClient(client, SOUND_INFECTED, owner);
 			case 2: EmitSoundToClient(client, SOUND_INFECTED2, owner);
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bGhost[iPlayer] = false;
+			g_iGhostAlpha[iPlayer] = 255;
 		}
 	}
 }

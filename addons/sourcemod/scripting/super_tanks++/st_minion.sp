@@ -1,7 +1,7 @@
 // Super Tanks++: Minion Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,17 +12,12 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bMinion[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sMinionTypes[ST_MAXTYPES + 1][13];
-char g_sMinionTypes2[ST_MAXTYPES + 1][13];
-int g_iMinionAbility[ST_MAXTYPES + 1];
-int g_iMinionAbility2[ST_MAXTYPES + 1];
-int g_iMinionAmount[ST_MAXTYPES + 1];
-int g_iMinionAmount2[ST_MAXTYPES + 1];
-int g_iMinionChance[ST_MAXTYPES + 1];
-int g_iMinionChance2[ST_MAXTYPES + 1];
-int g_iMinionCount[MAXPLAYERS + 1];
+bool g_bMinion[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sMinionTypes[ST_MAXTYPES + 1][13], g_sMinionTypes2[ST_MAXTYPES + 1][13];
+int g_iMinionAbility[ST_MAXTYPES + 1], g_iMinionAbility2[ST_MAXTYPES + 1],
+	g_iMinionAmount[ST_MAXTYPES + 1], g_iMinionAmount2[ST_MAXTYPES + 1],
+	g_iMinionChance[ST_MAXTYPES + 1], g_iMinionChance2[ST_MAXTYPES + 1],
+	g_iMinionCount[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -45,14 +40,7 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bMinion[iPlayer] = false;
-			g_iMinionCount[iPlayer] = 0;
-		}
-	}
+	vReset();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -63,14 +51,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bMinion[iPlayer] = false;
-			g_iMinionCount[iPlayer] = 0;
-		}
-	}
+	vReset();
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -133,10 +114,7 @@ public void ST_Ability(int client)
 				case '6': sInfectedName = bIsL4D2Game() ? "charger" : "smoker";
 				default: sInfectedName = "hunter";
 			}
-			float flHitPosition[3];
-			float flPosition[3];
-			float flAngle[3];
-			float flVector[3];
+			float flHitPosition[3], flPosition[3], flAngle[3], flVector[3];
 			GetClientEyePosition(client, flPosition);
 			GetClientEyeAngles(client, flAngle);
 			flAngle[0] = -25.0;
@@ -196,5 +174,17 @@ public void ST_BossStage(int client)
 	{
 		g_bMinion[client] = false;
 		g_iMinionCount[client] = 0;
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bMinion[iPlayer] = false;
+			g_iMinionCount[iPlayer] = 0;
+		}
 	}
 }

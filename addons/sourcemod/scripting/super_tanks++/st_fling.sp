@@ -1,7 +1,7 @@
 // Super Tanks++: Fling Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,20 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flFlingRange[ST_MAXTYPES + 1];
-float g_flFlingRange2[ST_MAXTYPES + 1];
-Handle g_hSDKFlingPlayer;
-Handle g_hSDKPukePlayer;
-int g_iFlingAbility[ST_MAXTYPES + 1];
-int g_iFlingAbility2[ST_MAXTYPES + 1];
-int g_iFlingChance[ST_MAXTYPES + 1];
-int g_iFlingChance2[ST_MAXTYPES + 1];
-int g_iFlingHit[ST_MAXTYPES + 1];
-int g_iFlingHit2[ST_MAXTYPES + 1];
-int g_iFlingRangeChance[ST_MAXTYPES + 1];
-int g_iFlingRangeChance2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flFlingRange[ST_MAXTYPES + 1], g_flFlingRange2[ST_MAXTYPES + 1];
+Handle g_hSDKFlingPlayer, g_hSDKPukePlayer;
+int g_iFlingAbility[ST_MAXTYPES + 1], g_iFlingAbility2[ST_MAXTYPES + 1],
+	g_iFlingChance[ST_MAXTYPES + 1], g_iFlingChance2[ST_MAXTYPES + 1], g_iFlingHit[ST_MAXTYPES + 1],
+	g_iFlingHit2[ST_MAXTYPES + 1], g_iFlingRangeChance[ST_MAXTYPES + 1],
+	g_iFlingRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -82,20 +75,6 @@ public void OnMapStart()
 {
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
-		g_bLateLoad = false;
-	}
-}
-
-public void OnClientPostAdminCheck(int client)
-{
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
@@ -103,7 +82,13 @@ void vLateLoad(bool late)
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
 			}
 		}
+		g_bLateLoad = false;
 	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -181,24 +166,19 @@ void vFlingHit(int client, int owner, int chance, int enabled)
 	{
 		if (bIsL4D2Game())
 		{
-			float flTpos[3];
-			float flSpos[3];
-			float flDistance[3];
-			float flRatio[3];
-			float flAddVel[3];
-			float flTvec[3];
-			GetClientAbsOrigin(client, flTpos);
-			GetClientAbsOrigin(owner, flSpos);
-			flDistance[0] = (flSpos[0] - flTpos[0]);
-			flDistance[1] = (flSpos[1] - flTpos[1]);
-			flDistance[2] = (flSpos[2] - flTpos[2]);
-			GetEntPropVector(client, Prop_Data, "m_vecVelocity", flTvec);
+			float flSurvivorPos[3], flSurvivorVelocity[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
+			GetClientAbsOrigin(client, flSurvivorPos);
+			GetClientAbsOrigin(owner, flTankPos);
+			flDistance[0] = (flTankPos[0] - flSurvivorPos[0]);
+			flDistance[1] = (flTankPos[1] - flSurvivorPos[1]);
+			flDistance[2] = (flTankPos[2] - flSurvivorPos[2]);
+			GetEntPropVector(client, Prop_Data, "m_vecVelocity", flSurvivorVelocity);
 			flRatio[0] = flDistance[0] / (SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
 			flRatio[1] = flDistance[1] / (SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
-			flAddVel[0] = (flRatio[0] * -1) * 500.0;
-			flAddVel[1] = (flRatio[1] * -1) * 500.0;
-			flAddVel[2] = 500.0;
-			SDKCall(g_hSDKFlingPlayer, client, flAddVel, 76, owner, 7.0);
+			flVelocity[0] = (flRatio[0] * -1) * 500.0;
+			flVelocity[1] = (flRatio[1] * -1) * 500.0;
+			flVelocity[2] = 500.0;
+			SDKCall(g_hSDKFlingPlayer, client, flVelocity, 76, owner, 7.0);
 		}
 		else
 		{

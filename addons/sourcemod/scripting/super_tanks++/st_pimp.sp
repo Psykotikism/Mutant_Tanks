@@ -1,7 +1,7 @@
 // Super Tanks++: Pimp Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,24 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bPimp[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flPimpRange[ST_MAXTYPES + 1];
-float g_flPimpRange2[ST_MAXTYPES + 1];
-int g_iPimpAbility[ST_MAXTYPES + 1];
-int g_iPimpAbility2[ST_MAXTYPES + 1];
-int g_iPimpAmount[ST_MAXTYPES + 1];
-int g_iPimpAmount2[ST_MAXTYPES + 1];
-int g_iPimpChance[ST_MAXTYPES + 1];
-int g_iPimpChance2[ST_MAXTYPES + 1];
-int g_iPimpCount[MAXPLAYERS + 1];
-int g_iPimpDamage[ST_MAXTYPES + 1];
-int g_iPimpDamage2[ST_MAXTYPES + 1];
-int g_iPimpHit[ST_MAXTYPES + 1];
-int g_iPimpHit2[ST_MAXTYPES + 1];
-int g_iPimpRangeChance[ST_MAXTYPES + 1];
-int g_iPimpRangeChance2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bPimp[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+float g_flPimpRange[ST_MAXTYPES + 1], g_flPimpRange2[ST_MAXTYPES + 1];
+int g_iPimpAbility[ST_MAXTYPES + 1], g_iPimpAbility2[ST_MAXTYPES + 1],
+	g_iPimpAmount[ST_MAXTYPES + 1], g_iPimpAmount2[ST_MAXTYPES + 1], g_iPimpChance[ST_MAXTYPES + 1],
+	g_iPimpChance2[ST_MAXTYPES + 1], g_iPimpCount[MAXPLAYERS + 1], g_iPimpDamage[ST_MAXTYPES + 1],
+	g_iPimpDamage2[ST_MAXTYPES + 1], g_iPimpHit[ST_MAXTYPES + 1], g_iPimpHit2[ST_MAXTYPES + 1],
+	g_iPimpRangeChance[ST_MAXTYPES + 1], g_iPimpRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -53,17 +42,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bPimp[iPlayer] = false;
-			g_iPimpCount[iPlayer] = 0;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -77,28 +65,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bPimp[iPlayer] = false;
-			g_iPimpCount[iPlayer] = 0;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -184,6 +151,18 @@ void vPimpHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(0.5, tTimerPimp, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bPimp[iPlayer] = false;
+			g_iPimpCount[iPlayer] = 0;
+		}
 	}
 }
 

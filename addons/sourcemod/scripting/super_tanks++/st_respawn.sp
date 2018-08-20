@@ -1,7 +1,7 @@
 // Super Tanks++: Respawn Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -13,17 +13,12 @@ public Plugin myinfo =
 };
 
 bool g_bTankConfig[ST_MAXTYPES + 1];
-int g_iRespawnAbility[ST_MAXTYPES + 1];
-int g_iRespawnAbility2[ST_MAXTYPES + 1];
-int g_iRespawnAmount[ST_MAXTYPES + 1];
-int g_iRespawnAmount2[ST_MAXTYPES + 1];
-int g_iRespawnChance[ST_MAXTYPES + 1];
-int g_iRespawnChance2[ST_MAXTYPES + 1];
-int g_iRespawnCount[MAXPLAYERS + 1];
-int g_iRespawnRandom[ST_MAXTYPES + 1];
-int g_iRespawnRandom2[ST_MAXTYPES + 1];
-int g_iTankEnabled[ST_MAXTYPES + 1];
-int g_iTankEnabled2[ST_MAXTYPES + 1];
+int g_iRespawnAbility[ST_MAXTYPES + 1], g_iRespawnAbility2[ST_MAXTYPES + 1],
+	g_iRespawnAmount[ST_MAXTYPES + 1], g_iRespawnAmount2[ST_MAXTYPES + 1],
+	g_iRespawnChance[ST_MAXTYPES + 1], g_iRespawnChance2[ST_MAXTYPES + 1],
+	g_iRespawnCount[MAXPLAYERS + 1], g_iRespawnRandom[ST_MAXTYPES + 1],
+	g_iRespawnRandom2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1],
+	g_iTankEnabled2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -81,8 +76,7 @@ public void ST_Event(Event event, const char[] name)
 		int iRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnChance[ST_TankType(iTank)] : g_iRespawnChance2[ST_TankType(iTank)];
 		if (iRespawnAbility == 1 && GetRandomInt(1, iRespawnChance) == 1 && ST_TankAllowed(iTank))
 		{
-			float flPos[3];
-			float flAngles[3];
+			float flPos[3], flAngles[3];
 			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags");
 			int iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
 			GetEntPropVector(iTank, Prop_Send, "m_vecOrigin", flPos);
@@ -120,8 +114,7 @@ int iRespawn(int client, int count)
 		case 0: ST_SpawnTank(client, ST_TankType(client));
 		case 1:
 		{
-			int iTypeCount;
-			int iTankTypes[ST_MAXTYPES + 1];
+			int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 			for (int iIndex = 1; iIndex <= ST_MaxTypes(); iIndex++)
 			{
 				int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
@@ -171,8 +164,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	}
 	int iFlags = pack.ReadCell();
 	int iSequence = pack.ReadCell();
-	float flPos[3];
-	float flAngles[3];
+	float flPos[3], flAngles[3];
 	flPos[0] = pack.ReadFloat();
 	flPos[1] = pack.ReadFloat();
 	flPos[2] = pack.ReadFloat();

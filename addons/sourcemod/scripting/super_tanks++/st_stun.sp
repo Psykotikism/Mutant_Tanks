@@ -1,7 +1,7 @@
 // Super Tanks++: Stun Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,23 +12,14 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bStun[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flStunDuration[ST_MAXTYPES + 1];
-float g_flStunDuration2[ST_MAXTYPES + 1];
-float g_flStunRange[ST_MAXTYPES + 1];
-float g_flStunRange2[ST_MAXTYPES + 1];
-float g_flStunSpeed[ST_MAXTYPES + 1];
-float g_flStunSpeed2[ST_MAXTYPES + 1];
-int g_iStunAbility[ST_MAXTYPES + 1];
-int g_iStunAbility2[ST_MAXTYPES + 1];
-int g_iStunChance[ST_MAXTYPES + 1];
-int g_iStunChance2[ST_MAXTYPES + 1];
-int g_iStunHit[ST_MAXTYPES + 1];
-int g_iStunHit2[ST_MAXTYPES + 1];
-int g_iStunRangeChance[ST_MAXTYPES + 1];
-int g_iStunRangeChance2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bStun[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+float g_flStunDuration[ST_MAXTYPES + 1], g_flStunDuration2[ST_MAXTYPES + 1],
+	g_flStunRange[ST_MAXTYPES + 1], g_flStunRange2[ST_MAXTYPES + 1], g_flStunSpeed[ST_MAXTYPES + 1],
+	g_flStunSpeed2[ST_MAXTYPES + 1];
+int g_iStunAbility[ST_MAXTYPES + 1], g_iStunAbility2[ST_MAXTYPES + 1],
+	g_iStunChance[ST_MAXTYPES + 1], g_iStunChance2[ST_MAXTYPES + 1], g_iStunHit[ST_MAXTYPES + 1],
+	g_iStunHit2[ST_MAXTYPES + 1], g_iStunRangeChance[ST_MAXTYPES + 1],
+	g_iStunRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,16 +43,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bStun[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -74,27 +65,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bStun[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -204,6 +175,17 @@ void vRemoveStun(int client)
 			CreateDataTimer(0.1, tTimerStopStun, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 			dpDataPack.WriteCell(GetClientUserId(client));
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bStun[iPlayer] = false;
 		}
 	}
 }

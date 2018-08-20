@@ -1,7 +1,7 @@
 // Super Tanks++: Flash Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,18 +12,11 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bFlash[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flFlashDuration[ST_MAXTYPES + 1];
-float g_flFlashDuration2[ST_MAXTYPES + 1];
-float g_flFlashSpeed[ST_MAXTYPES + 1];
-float g_flFlashSpeed2[ST_MAXTYPES + 1];
-float g_flRunSpeed[ST_MAXTYPES + 1];
-float g_flRunSpeed2[ST_MAXTYPES + 1];
-int g_iFlashAbility[ST_MAXTYPES + 1];
-int g_iFlashAbility2[ST_MAXTYPES + 1];
-int g_iFlashChance[ST_MAXTYPES + 1];
-int g_iFlashChance2[ST_MAXTYPES + 1];
+bool g_bFlash[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+float g_flFlashDuration[ST_MAXTYPES + 1], g_flFlashDuration2[ST_MAXTYPES + 1],
+	g_flFlashSpeed[ST_MAXTYPES + 1], g_flFlashSpeed2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1];
+int g_iFlashAbility[ST_MAXTYPES + 1], g_iFlashAbility2[ST_MAXTYPES + 1],
+	g_iFlashChance[ST_MAXTYPES + 1], g_iFlashChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -46,13 +39,7 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bFlash[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -62,13 +49,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bFlash[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -119,6 +100,17 @@ public void ST_Ability(int client)
 			SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", flFlashSpeed);
 			float flFlashDuration = !g_bTankConfig[ST_TankType(client)] ? g_flFlashDuration[ST_TankType(client)] : g_flFlashDuration2[ST_TankType(client)];
 			CreateTimer(flFlashDuration, tTimerStopFlash, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bFlash[iPlayer] = false;
 		}
 	}
 }

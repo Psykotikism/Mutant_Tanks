@@ -1,7 +1,7 @@
 // Super Tanks++: Fire Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,20 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flFireRange[ST_MAXTYPES + 1];
-float g_flFireRange2[ST_MAXTYPES + 1];
-int g_iFireAbility[ST_MAXTYPES + 1];
-int g_iFireAbility2[ST_MAXTYPES + 1];
-int g_iFireChance[ST_MAXTYPES + 1];
-int g_iFireChance2[ST_MAXTYPES + 1];
-int g_iFireHit[ST_MAXTYPES + 1];
-int g_iFireHit2[ST_MAXTYPES + 1];
-int g_iFireRangeChance[ST_MAXTYPES + 1];
-int g_iFireRangeChance2[ST_MAXTYPES + 1];
-int g_iFireRock[ST_MAXTYPES + 1];
-int g_iFireRock2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flFireRange[ST_MAXTYPES + 1], g_flFireRange2[ST_MAXTYPES + 1];
+int g_iFireAbility[ST_MAXTYPES + 1], g_iFireAbility2[ST_MAXTYPES + 1],
+	g_iFireChance[ST_MAXTYPES + 1], g_iFireChance2[ST_MAXTYPES + 1], g_iFireHit[ST_MAXTYPES + 1],
+	g_iFireHit2[ST_MAXTYPES + 1], g_iFireRangeChance[ST_MAXTYPES + 1],
+	g_iFireRangeChance2[ST_MAXTYPES + 1], g_iFireRock[ST_MAXTYPES + 1],
+	g_iFireRock2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,20 +45,6 @@ public void OnMapStart()
 	PrecacheModel(MODEL_GASCAN, true);
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
-		g_bLateLoad = false;
-	}
-}
-
-public void OnClientPostAdminCheck(int client)
-{
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
@@ -73,7 +52,13 @@ void vLateLoad(bool late)
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
 			}
 		}
+		g_bLateLoad = false;
 	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)

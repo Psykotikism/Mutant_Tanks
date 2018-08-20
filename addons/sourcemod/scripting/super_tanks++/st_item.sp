@@ -1,7 +1,7 @@
 // Super Tanks++: Item Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -13,14 +13,10 @@ public Plugin myinfo =
 };
 
 bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sItemLoadout[ST_MAXTYPES + 1][325];
-char g_sItemLoadout2[ST_MAXTYPES + 1][325];
-int g_iItemAbility[ST_MAXTYPES + 1];
-int g_iItemAbility2[ST_MAXTYPES + 1];
-int g_iItemChance[ST_MAXTYPES + 1];
-int g_iItemChance2[ST_MAXTYPES + 1];
-int g_iItemMode[ST_MAXTYPES + 1];
-int g_iItemMode2[ST_MAXTYPES + 1];
+char g_sItemLoadout[ST_MAXTYPES + 1][325], g_sItemLoadout2[ST_MAXTYPES + 1][325];
+int g_iItemAbility[ST_MAXTYPES + 1], g_iItemAbility2[ST_MAXTYPES + 1],
+	g_iItemChance[ST_MAXTYPES + 1], g_iItemChance2[ST_MAXTYPES + 1], g_iItemMode[ST_MAXTYPES + 1],
+	g_iItemMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -76,8 +72,7 @@ public void ST_Event(Event event, const char[] name)
 		int iItemMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemMode[ST_TankType(iTank)] : g_iItemMode2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iItemAbility == 1 && GetRandomInt(1, iItemChance) == 1)
 		{
-			char sItems[5][64];
-			char sItemLoadout[325];
+			char sItems[5][64], sItemLoadout[325];
 			sItemLoadout = !g_bTankConfig[ST_TankType(iTank)] ? g_sItemLoadout[ST_TankType(iTank)] : g_sItemLoadout2[ST_TankType(iTank)];
 			TrimString(sItemLoadout);
 			ExplodeString(sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));

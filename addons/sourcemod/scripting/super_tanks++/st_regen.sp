@@ -1,7 +1,7 @@
 // Super Tanks++: Regen Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,16 +12,11 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bRegen[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flRegenInterval[ST_MAXTYPES + 1];
-float g_flRegenInterval2[ST_MAXTYPES + 1];
-int g_iRegenAbility[ST_MAXTYPES + 1];
-int g_iRegenAbility2[ST_MAXTYPES + 1];
-int g_iRegenHealth[ST_MAXTYPES + 1];
-int g_iRegenHealth2[ST_MAXTYPES + 1];
-int g_iRegenLimit[ST_MAXTYPES + 1];
-int g_iRegenLimit2[ST_MAXTYPES + 1];
+bool g_bRegen[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+float g_flRegenInterval[ST_MAXTYPES + 1], g_flRegenInterval2[ST_MAXTYPES + 1];
+int g_iRegenAbility[ST_MAXTYPES + 1], g_iRegenAbility2[ST_MAXTYPES + 1],
+	g_iRegenHealth[ST_MAXTYPES + 1], g_iRegenHealth2[ST_MAXTYPES + 1],
+	g_iRegenLimit[ST_MAXTYPES + 1], g_iRegenLimit2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -44,13 +39,7 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bRegen[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -60,13 +49,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bRegen[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -102,6 +85,17 @@ public void ST_Ability(int client)
 		g_bRegen[client] = true;
 		float flRegenInterval = !g_bTankConfig[ST_TankType(client)] ? g_flRegenInterval[ST_TankType(client)] : g_flRegenInterval2[ST_TankType(client)];
 		CreateTimer(flRegenInterval, tTimerRegen, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bRegen[iPlayer] = false;
+		}
 	}
 }
 

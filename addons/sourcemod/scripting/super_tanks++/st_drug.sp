@@ -1,7 +1,7 @@
 // Super Tanks++: Drug Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,22 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bDrug[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0};
-float g_flDrugDuration[ST_MAXTYPES + 1];
-float g_flDrugDuration2[ST_MAXTYPES + 1];
-float g_flDrugRange[ST_MAXTYPES + 1];
-float g_flDrugRange2[ST_MAXTYPES + 1];
-int g_iDrugAbility[ST_MAXTYPES + 1];
-int g_iDrugAbility2[ST_MAXTYPES + 1];
-int g_iDrugChance[ST_MAXTYPES + 1];
-int g_iDrugChance2[ST_MAXTYPES + 1];
-int g_iDrugHit[ST_MAXTYPES + 1];
-int g_iDrugHit2[ST_MAXTYPES + 1];
-int g_iDrugRangeChance[ST_MAXTYPES + 1];
-int g_iDrugRangeChance2[ST_MAXTYPES + 1];
+bool g_bDrug[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0}, g_flDrugDuration[ST_MAXTYPES + 1], g_flDrugDuration2[ST_MAXTYPES + 1],
+	g_flDrugRange[ST_MAXTYPES + 1], g_flDrugRange2[ST_MAXTYPES + 1];
+int g_iDrugAbility[ST_MAXTYPES + 1], g_iDrugAbility2[ST_MAXTYPES + 1],
+	g_iDrugChance[ST_MAXTYPES + 1], g_iDrugChance2[ST_MAXTYPES + 1], g_iDrugHit[ST_MAXTYPES + 1],
+	g_iDrugHit2[ST_MAXTYPES + 1], g_iDrugRangeChance[ST_MAXTYPES + 1],
+	g_iDrugRangeChance2[ST_MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -57,16 +48,16 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bDrug[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -79,27 +70,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bDrug[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -180,11 +151,9 @@ void vDrug(int client, bool toggle, float angles[20])
 	GetClientEyeAngles(client, flAngles);
 	flAngles[2] = toggle ? angles[GetRandomInt(0, 100) % 20] : 0.0;
 	TeleportEntity(client, NULL_VECTOR, flAngles, NULL_VECTOR);
-	int iClients[2];
+	int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0};
 	iClients[0] = client;
 	int iFlags = toggle ? 0x0002 : (0x0001|0x0010);
-	int iColor[4] = {0, 0, 0, 128};
-	int iColor2[4] = {0, 0, 0, 0};
 	if (toggle)
 	{
 		iColor[0] = GetRandomInt(0, 255);
@@ -224,6 +193,17 @@ void vDrugHit(int client, int owner, int chance, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 		dpDataPack.WriteFloat(GetEngineTime());
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bDrug[iPlayer] = false;
+		}
 	}
 }
 

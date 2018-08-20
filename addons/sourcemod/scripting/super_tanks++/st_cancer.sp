@@ -1,7 +1,7 @@
 // Super Tanks++: Cancer Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,21 +12,14 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sTankColors[ST_MAXTYPES + 1][28];
-char g_sTankColors2[ST_MAXTYPES + 1][28];
+bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 ConVar g_cvSTFindConVar;
-float g_flCancerRange[ST_MAXTYPES + 1];
-float g_flCancerRange2[ST_MAXTYPES + 1];
-int g_iCancerAbility[ST_MAXTYPES + 1];
-int g_iCancerAbility2[ST_MAXTYPES + 1];
-int g_iCancerChance[ST_MAXTYPES + 1];
-int g_iCancerChance2[ST_MAXTYPES + 1];
-int g_iCancerHit[ST_MAXTYPES + 1];
-int g_iCancerHit2[ST_MAXTYPES + 1];
-int g_iCancerRangeChance[ST_MAXTYPES + 1];
-int g_iCancerRangeChance2[ST_MAXTYPES + 1];
+float g_flCancerRange[ST_MAXTYPES + 1], g_flCancerRange2[ST_MAXTYPES + 1];
+int g_iCancerAbility[ST_MAXTYPES + 1], g_iCancerAbility2[ST_MAXTYPES + 1],
+	g_iCancerChance[ST_MAXTYPES + 1], g_iCancerChance2[ST_MAXTYPES + 1],
+	g_iCancerHit[ST_MAXTYPES + 1], g_iCancerHit2[ST_MAXTYPES + 1],
+	g_iCancerRangeChance[ST_MAXTYPES + 1], g_iCancerRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -57,20 +50,6 @@ public void OnMapStart()
 {
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
-		g_bLateLoad = false;
-	}
-}
-
-public void OnClientPostAdminCheck(int client)
-{
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
@@ -78,7 +57,13 @@ void vLateLoad(bool late)
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
 			}
 		}
+		g_bLateLoad = false;
 	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -166,12 +151,10 @@ void vCancerHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
-		char sSet[2][16];
-		char sTankColors[28];
+		char sSet[2][16], sTankColors[28], sRGB[4][4];
 		sTankColors = !g_bTankConfig[ST_TankType(owner)] ? g_sTankColors[ST_TankType(owner)] : g_sTankColors2[ST_TankType(owner)];
 		TrimString(sTankColors);
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-		char sRGB[4][4];
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 		TrimString(sRGB[0]);
 		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;

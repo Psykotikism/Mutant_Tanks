@@ -1,7 +1,7 @@
 // Super Tanks++: Heal Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,32 +12,18 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bHeal[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sTankColors[ST_MAXTYPES + 1][28];
-char g_sTankColors2[ST_MAXTYPES + 1][28];
+bool g_bHeal[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 ConVar g_cvSTFindConVar;
-float g_flHealInterval[ST_MAXTYPES + 1];
-float g_flHealInterval2[ST_MAXTYPES + 1];
-float g_flHealRange[ST_MAXTYPES + 1];
-float g_flHealRange2[ST_MAXTYPES + 1];
-Handle g_hSDKHealPlayer;
-Handle g_hSDKRevivePlayer;
-int g_iGlowEffect[ST_MAXTYPES + 1];
-int g_iGlowEffect2[ST_MAXTYPES + 1];
-int g_iHealAbility[ST_MAXTYPES + 1];
-int g_iHealAbility2[ST_MAXTYPES + 1];
-int g_iHealChance[ST_MAXTYPES + 1];
-int g_iHealChance2[ST_MAXTYPES + 1];
-int g_iHealCommon[ST_MAXTYPES + 1];
-int g_iHealCommon2[ST_MAXTYPES + 1];
-int g_iHealHit[ST_MAXTYPES + 1];
-int g_iHealHit2[ST_MAXTYPES + 1];
-int g_iHealSpecial[ST_MAXTYPES + 1];
-int g_iHealSpecial2[ST_MAXTYPES + 1];
-int g_iHealTank[ST_MAXTYPES + 1];
-int g_iHealTank2[ST_MAXTYPES + 1];
+float g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1],
+	g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1];
+Handle g_hSDKHealPlayer, g_hSDKRevivePlayer;
+int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1],
+	g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1],
+	g_iHealChance[ST_MAXTYPES + 1], g_iHealChance2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1],
+	g_iHealCommon2[ST_MAXTYPES + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1],
+	g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1],
+	g_iHealTank2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -82,16 +68,16 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bHeal[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -104,27 +90,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bHeal[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -204,6 +170,17 @@ void vHealHit(int client, int owner)
 	}
 }
 
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bHeal[iPlayer] = false;
+		}
+	}
+}
+
 public Action tTimerHeal(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -218,13 +195,11 @@ public Action tTimerHeal(Handle timer, any userid)
 		g_bHeal[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iType;
-	int iSpecial = -1;
+	int iType, iSpecial = -1;
 	float flHealRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flHealRange[ST_TankType(iTank)] : g_flHealRange2[ST_TankType(iTank)];
 	while ((iSpecial = FindEntityByClassname(iSpecial, "infected")) != INVALID_ENT_REFERENCE)
 	{
-		float flTankPos[3];
-		float flInfectedPos[3];
+		float flTankPos[3], flInfectedPos[3];
 		GetClientAbsOrigin(iTank, flTankPos);
 		GetEntPropVector(iSpecial, Prop_Send, "m_vecOrigin", flInfectedPos);
 		float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
@@ -252,8 +227,7 @@ public Action tTimerHeal(Handle timer, any userid)
 	{
 		if (bIsSpecialInfected(iInfected))
 		{
-			float flTankPos[3];
-			float flInfectedPos[3];
+			float flTankPos[3], flInfectedPos[3];
 			GetClientAbsOrigin(iTank, flTankPos);
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
@@ -279,8 +253,7 @@ public Action tTimerHeal(Handle timer, any userid)
 		}
 		else if (ST_TankAllowed(iInfected) && IsPlayerAlive(iInfected) && iInfected != iTank)
 		{
-			float flTankPos[3];
-			float flInfectedPos[3];
+			float flTankPos[3], flInfectedPos[3];
 			GetClientAbsOrigin(iTank, flTankPos);
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
@@ -307,12 +280,10 @@ public Action tTimerHeal(Handle timer, any userid)
 	}
 	if (iType == 0 && bIsL4D2Game())
 	{
-		char sSet[2][16];
-		char sTankColors[28];
+		char sSet[2][16], sTankColors[28], sGlow[3][4];
 		sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
 		TrimString(sTankColors);
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-		char sGlow[3][4];
 		ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 		TrimString(sGlow[0]);
 		int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;

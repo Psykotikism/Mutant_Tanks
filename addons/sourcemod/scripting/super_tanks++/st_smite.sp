@@ -1,7 +1,7 @@
 // Super Tanks++: Smite Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,19 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flSmiteRange[ST_MAXTYPES + 1];
-float g_flSmiteRange2[ST_MAXTYPES + 1];
-int g_iSmiteAbility[ST_MAXTYPES + 1];
-int g_iSmiteAbility2[ST_MAXTYPES + 1];
-int g_iSmiteChance[ST_MAXTYPES + 1];
-int g_iSmiteChance2[ST_MAXTYPES + 1];
-int g_iSmiteHit[ST_MAXTYPES + 1];
-int g_iSmiteHit2[ST_MAXTYPES + 1];
-int g_iSmiteRangeChance[ST_MAXTYPES + 1];
-int g_iSmiteRangeChance2[ST_MAXTYPES + 1];
-int g_iSmiteSprite = -1;
+bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flSmiteRange[ST_MAXTYPES + 1], g_flSmiteRange2[ST_MAXTYPES + 1];
+int g_iSmiteAbility[ST_MAXTYPES + 1], g_iSmiteAbility2[ST_MAXTYPES + 1],
+	g_iSmiteChance[ST_MAXTYPES + 1], g_iSmiteChance2[ST_MAXTYPES + 1],
+	g_iSmiteHit[ST_MAXTYPES + 1], g_iSmiteHit2[ST_MAXTYPES + 1],
+	g_iSmiteRangeChance[ST_MAXTYPES + 1], g_iSmiteRangeChance2[ST_MAXTYPES + 1],
+	g_iSmiteSprite = -1;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,20 +46,6 @@ public void OnMapStart()
 	PrecacheSound(SOUND_EXPLOSION2, true);
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
-		g_bLateLoad = false;
-	}
-}
-
-public void OnClientPostAdminCheck(int client)
-{
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
@@ -73,7 +53,13 @@ void vLateLoad(bool late)
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
 			}
 		}
+		g_bLateLoad = false;
 	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -150,15 +136,13 @@ void vSmiteHit(int client, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
-		float flPosition[3];
+		float flPosition[3], flStartPosition[3], flDirection[3] = {0.0, 0.0, 0.0};
 		GetClientAbsOrigin(client, flPosition);
 		flPosition[2] -= 26;
-		float flStartPosition[3];
 		flStartPosition[0] = flPosition[0] + GetRandomInt(-500, 500);
 		flStartPosition[1] = flPosition[1] + GetRandomInt(-500, 500);
 		flStartPosition[2] = flPosition[2] + 800;
 		int iColor[4] = {255, 255, 255, 255};
-		float flDirection[3] = {0.0, 0.0, 0.0};
 		TE_SetupBeamPoints(flStartPosition, flPosition, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
 		TE_SendToAll();
 		TE_SetupSparks(flPosition, flDirection, 5000, 1000);

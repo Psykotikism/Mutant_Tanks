@@ -1,7 +1,7 @@
 // Super Tanks++: Spam Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,16 +12,11 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bSpam[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flSpamDuration[ST_MAXTYPES + 1];
-float g_flSpamDuration2[ST_MAXTYPES + 1];
-int g_iSpamAbility[ST_MAXTYPES + 1];
-int g_iSpamAbility2[ST_MAXTYPES + 1];
-int g_iSpamChance[ST_MAXTYPES + 1];
-int g_iSpamChance2[ST_MAXTYPES + 1];
-int g_iSpamDamage[ST_MAXTYPES + 1];
-int g_iSpamDamage2[ST_MAXTYPES + 1];
+bool g_bSpam[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+float g_flSpamDuration[ST_MAXTYPES + 1], g_flSpamDuration2[ST_MAXTYPES + 1];
+int g_iSpamAbility[ST_MAXTYPES + 1], g_iSpamAbility2[ST_MAXTYPES + 1],
+	g_iSpamChance[ST_MAXTYPES + 1], g_iSpamChance2[ST_MAXTYPES + 1], g_iSpamDamage[ST_MAXTYPES + 1],
+	g_iSpamDamage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -44,13 +39,7 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bSpam[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -60,13 +49,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bSpam[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -108,6 +91,17 @@ public void ST_Ability(int client)
 	}
 }
 
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bSpam[iPlayer] = false;
+		}
+	}
+}
+
 public Action tTimerSpam(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -128,8 +122,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	char sDamage[6];
 	int iSpamDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamDamage[ST_TankType(iTank)] : g_iSpamDamage2[ST_TankType(iTank)];
 	IntToString(iSpamDamage, sDamage, sizeof(sDamage));
-	float flPos[3];
-	float flAng[3];
+	float flPos[3], flAng[3];
 	GetClientEyePosition(iTank, flPos);
 	GetClientEyeAngles(iTank, flAng);
 	flPos[2] += 80.0;

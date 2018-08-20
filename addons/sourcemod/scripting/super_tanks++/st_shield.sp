@@ -1,7 +1,7 @@
 // Super Tanks++: Shield Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,16 +12,11 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bShield[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sShieldColor[ST_MAXTYPES + 1][12];
-char g_sShieldColor2[ST_MAXTYPES + 1][12];
+bool g_bLateLoad, g_bShield[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sShieldColor[ST_MAXTYPES + 1][12], g_sShieldColor2[ST_MAXTYPES + 1][12];
 ConVar g_cvSTFindConVar;
-float g_flShieldDelay[ST_MAXTYPES + 1];
-float g_flShieldDelay2[ST_MAXTYPES + 1];
-int g_iShieldAbility[ST_MAXTYPES + 1];
-int g_iShieldAbility2[ST_MAXTYPES + 1];
+float g_flShieldDelay[ST_MAXTYPES + 1], g_flShieldDelay2[ST_MAXTYPES + 1];
+int g_iShieldAbility[ST_MAXTYPES + 1], g_iShieldAbility2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,16 +47,16 @@ public void OnMapStart()
 {
 	PrecacheModel(MODEL_PROPANETANK, true);
 	PrecacheModel(MODEL_SHIELD, true);
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bShield[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -74,27 +69,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bShield[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -238,12 +213,22 @@ void vRemoveShield(int client)
 	}
 }
 
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bShield[iPlayer] = false;
+		}
+	}
+}
+
 void vShield(int client, bool shield)
 {
 	if (shield)
 	{
-		char sSet[3][4];
-		char sShieldColor[12];
+		char sSet[3][4], sShieldColor[12];
 		sShieldColor = !g_bTankConfig[ST_TankType(client)] ? g_sShieldColor[ST_TankType(client)] : g_sShieldColor2[ST_TankType(client)];
 		TrimString(sShieldColor);
 		ExplodeString(sShieldColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -341,8 +326,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
-			float flSpeed = g_cvSTFindConVar.FloatValue;
-			ScaleVector(flVelocity, flSpeed * 1.4);
+			ScaleVector(flVelocity, g_cvSTFindConVar.FloatValue * 1.4);
 			DispatchSpawn(iPropane);
 			TeleportEntity(iPropane, flPos, NULL_VECTOR, flVelocity);
 		}

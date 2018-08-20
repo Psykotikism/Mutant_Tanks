@@ -1,7 +1,7 @@
 // Super Tanks++: Absorb Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,23 +12,14 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bAbsorb[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flAbsorbBulletDamage[ST_MAXTYPES + 1];
-float g_flAbsorbBulletDamage2[ST_MAXTYPES + 1];
-float g_flAbsorbDuration[ST_MAXTYPES + 1];
-float g_flAbsorbDuration2[ST_MAXTYPES + 1];
-float g_flAbsorbExplosiveDamage[ST_MAXTYPES + 1];
-float g_flAbsorbExplosiveDamage2[ST_MAXTYPES + 1];
-float g_flAbsorbFireDamage[ST_MAXTYPES + 1];
-float g_flAbsorbFireDamage2[ST_MAXTYPES + 1];
-float g_flAbsorbMeleeDamage[ST_MAXTYPES + 1];
-float g_flAbsorbMeleeDamage2[ST_MAXTYPES + 1];
-int g_iAbsorbAbility[ST_MAXTYPES + 1];
-int g_iAbsorbAbility2[ST_MAXTYPES + 1];
-int g_iAbsorbChance[ST_MAXTYPES + 1];
-int g_iAbsorbChance2[ST_MAXTYPES + 1];
+bool g_bAbsorb[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flAbsorbBulletDamage[ST_MAXTYPES + 1], g_flAbsorbBulletDamage2[ST_MAXTYPES + 1],
+	g_flAbsorbDuration[ST_MAXTYPES + 1], g_flAbsorbDuration2[ST_MAXTYPES + 1],
+	g_flAbsorbExplosiveDamage[ST_MAXTYPES + 1], g_flAbsorbExplosiveDamage2[ST_MAXTYPES + 1],
+	g_flAbsorbFireDamage[ST_MAXTYPES + 1], g_flAbsorbFireDamage2[ST_MAXTYPES + 1],
+	g_flAbsorbMeleeDamage[ST_MAXTYPES + 1], g_flAbsorbMeleeDamage2[ST_MAXTYPES + 1];
+int g_iAbsorbAbility[ST_MAXTYPES + 1], g_iAbsorbAbility2[ST_MAXTYPES + 1],
+	g_iAbsorbChance[ST_MAXTYPES + 1], g_iAbsorbChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,16 +43,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bAbsorb[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -74,27 +65,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bAbsorb[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -107,21 +78,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			float flAbsorbExplosiveDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbExplosiveDamage[ST_TankType(victim)] : g_flAbsorbExplosiveDamage2[ST_TankType(victim)];
 			float flAbsorbFireDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbFireDamage[ST_TankType(victim)] : g_flAbsorbFireDamage2[ST_TankType(victim)];
 			float flAbsorbMeleeDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbMeleeDamage[ST_TankType(victim)] : g_flAbsorbMeleeDamage2[ST_TankType(victim)];
-			if (damagetype & DMG_BULLET)
+			switch (damagetype)
 			{
-				damage = damage / flAbsorbBulletDamage;
-			}
-			else if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-			{
-				damage = damage / flAbsorbExplosiveDamage;
-			}
-			else if (damagetype & DMG_BURN)
-			{
-				damage = damage / flAbsorbFireDamage;
-			}
-			else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
-			{
-				damage = damage / flAbsorbMeleeDamage;
+				case DMG_BULLET: damage = damage / flAbsorbBulletDamage;
+				case DMG_BLAST, DMG_BLAST_SURFACE, DMG_AIRBOAT, DMG_PLASMA: damage = damage / flAbsorbExplosiveDamage;
+				case DMG_BURN: damage = damage / flAbsorbFireDamage;
+				case DMG_SLASH, DMG_CLUB: damage = damage / flAbsorbMeleeDamage;
 			}
 			return Plugin_Changed;
 		}
@@ -186,6 +148,17 @@ public void ST_Ability(int client)
 		g_bAbsorb[client] = true;
 		float flAbsorbDuration = !g_bTankConfig[ST_TankType(client)] ? g_flAbsorbDuration[ST_TankType(client)] : g_flAbsorbDuration2[ST_TankType(client)];
 		CreateTimer(flAbsorbDuration, tTimerStopAbsorb, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bAbsorb[iPlayer] = false;
+		}
 	}
 }
 

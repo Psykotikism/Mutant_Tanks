@@ -1,7 +1,7 @@
 // Super Tanks++: Rock Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,18 +12,12 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bRock[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sRockRadius[ST_MAXTYPES + 1][11];
-char g_sRockRadius2[ST_MAXTYPES + 1][11];
-float g_flRockDuration[ST_MAXTYPES + 1];
-float g_flRockDuration2[ST_MAXTYPES + 1];
-int g_iRockAbility[ST_MAXTYPES + 1];
-int g_iRockAbility2[ST_MAXTYPES + 1];
-int g_iRockChance[ST_MAXTYPES + 1];
-int g_iRockChance2[ST_MAXTYPES + 1];
-int g_iRockDamage[ST_MAXTYPES + 1];
-int g_iRockDamage2[ST_MAXTYPES + 1];
+bool g_bRock[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sRockRadius[ST_MAXTYPES + 1][11], g_sRockRadius2[ST_MAXTYPES + 1][11];
+float g_flRockDuration[ST_MAXTYPES + 1], g_flRockDuration2[ST_MAXTYPES + 1];
+int g_iRockAbility[ST_MAXTYPES + 1], g_iRockAbility2[ST_MAXTYPES + 1],
+	g_iRockChance[ST_MAXTYPES + 1], g_iRockChance2[ST_MAXTYPES + 1], g_iRockDamage[ST_MAXTYPES + 1],
+	g_iRockDamage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -46,13 +40,7 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bRock[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -62,13 +50,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bRock[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -128,6 +110,17 @@ public void ST_Ability(int client)
 	}
 }
 
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bRock[iPlayer] = false;
+		}
+	}
+}
+
 public Action tTimerRockUpdate(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -155,8 +148,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 		RemoveEntity(iRock);
 		return Plugin_Stop;
 	}
-	char sRadius[2][6];
-	char sRockRadius[11];
+	char sRadius[2][6], sRockRadius[11];
 	sRockRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sRockRadius[ST_TankType(iTank)] : g_sRockRadius2[ST_TankType(iTank)];
 	TrimString(sRockRadius);
 	ExplodeString(sRockRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
@@ -166,8 +158,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 5.0;
 	flMin = flSetFloatLimit(flMin, -5.0, 0.0);
 	flMax = flSetFloatLimit(flMax, 0.0, 5.0);
-	float flAngles[3];
-	float flHitPos[3];
+	float flAngles[3], flHitPos[3];
 	flAngles[0] = GetRandomFloat(-1.0, 1.0);
 	flAngles[1] = GetRandomFloat(-1.0, 1.0);
 	flAngles[2] = 2.0;

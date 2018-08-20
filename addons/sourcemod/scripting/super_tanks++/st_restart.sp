@@ -1,7 +1,7 @@
 // Super Tanks++: Restart Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,25 +12,15 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bRestartValid;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sRestartLoadout[ST_MAXTYPES + 1][325];
-char g_sRestartLoadout2[ST_MAXTYPES + 1][325];
-float g_flRestartPosition[3];
-float g_flRestartRange[ST_MAXTYPES + 1];
-float g_flRestartRange2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bRestartValid, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sRestartLoadout[ST_MAXTYPES + 1][325], g_sRestartLoadout2[ST_MAXTYPES + 1][325];
+float g_flRestartPosition[3], g_flRestartRange[ST_MAXTYPES + 1], g_flRestartRange2[ST_MAXTYPES + 1];
 Handle g_hSDKRespawnPlayer;
-int g_iRestartAbility[ST_MAXTYPES + 1];
-int g_iRestartAbility2[ST_MAXTYPES + 1];
-int g_iRestartChance[ST_MAXTYPES + 1];
-int g_iRestartChance2[ST_MAXTYPES + 1];
-int g_iRestartHit[ST_MAXTYPES + 1];
-int g_iRestartHit2[ST_MAXTYPES + 1];
-int g_iRestartMode[ST_MAXTYPES + 1];
-int g_iRestartMode2[ST_MAXTYPES + 1];
-int g_iRestartRangeChance[ST_MAXTYPES + 1];
-int g_iRestartRangeChance2[ST_MAXTYPES + 1];
+int g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1],
+	g_iRestartChance[ST_MAXTYPES + 1], g_iRestartChance2[ST_MAXTYPES + 1],
+	g_iRestartHit[ST_MAXTYPES + 1], g_iRestartHit2[ST_MAXTYPES + 1],
+	g_iRestartMode[ST_MAXTYPES + 1], g_iRestartMode2[ST_MAXTYPES + 1],
+	g_iRestartRangeChance[ST_MAXTYPES + 1], g_iRestartRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -68,7 +58,13 @@ public void OnMapStart()
 {
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -81,20 +77,6 @@ public void OnClientPostAdminCheck(int client)
 public void OnMapEnd()
 {
 	g_bRestartValid = false;
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -184,9 +166,8 @@ void vRestartHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		SDKCall(g_hSDKRespawnPlayer, client);
-		char sRestartLoadout[325];
+		char sRestartLoadout[325], sItems[5][64];
 		sRestartLoadout = !g_bTankConfig[ST_TankType(owner)] ? g_sRestartLoadout[ST_TankType(owner)] : g_sRestartLoadout2[ST_TankType(owner)];
-		char sItems[5][64];
 		ExplodeString(sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
 		for (int iItem = 0; iItem < sizeof(sItems); iItem++)
 		{

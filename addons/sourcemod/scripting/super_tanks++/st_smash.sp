@@ -1,7 +1,7 @@
 // Super Tanks++: Smash Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,18 +12,12 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flSmashRange[ST_MAXTYPES + 1];
-float g_flSmashRange2[ST_MAXTYPES + 1];
-int g_iSmashAbility[ST_MAXTYPES + 1];
-int g_iSmashAbility2[ST_MAXTYPES + 1];
-int g_iSmashChance[ST_MAXTYPES + 1];
-int g_iSmashChance2[ST_MAXTYPES + 1];
-int g_iSmashHit[ST_MAXTYPES + 1];
-int g_iSmashHit2[ST_MAXTYPES + 1];
-int g_iSmashRangeChance[ST_MAXTYPES + 1];
-int g_iSmashRangeChance2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flSmashRange[ST_MAXTYPES + 1], g_flSmashRange2[ST_MAXTYPES + 1];
+int g_iSmashAbility[ST_MAXTYPES + 1], g_iSmashAbility2[ST_MAXTYPES + 1],
+	g_iSmashChance[ST_MAXTYPES + 1], g_iSmashChance2[ST_MAXTYPES + 1], g_iSmashHit[ST_MAXTYPES + 1],
+	g_iSmashHit2[ST_MAXTYPES + 1], g_iSmashRangeChance[ST_MAXTYPES + 1],
+	g_iSmashRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,20 +46,6 @@ public void OnMapStart()
 	PrecacheSound(SOUND_SMASH, true);
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
-		g_bLateLoad = false;
-	}
-}
-
-public void OnClientPostAdminCheck(int client)
-{
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
@@ -73,7 +53,13 @@ void vLateLoad(bool late)
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
 			}
 		}
+		g_bLateLoad = false;
 	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)

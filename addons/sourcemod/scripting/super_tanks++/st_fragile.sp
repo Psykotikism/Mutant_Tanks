@@ -1,7 +1,7 @@
 // Super Tanks++: Fragile Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,23 +12,14 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bFragile[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flFragileBulletDamage[ST_MAXTYPES + 1];
-float g_flFragileBulletDamage2[ST_MAXTYPES + 1];
-float g_flFragileDuration[ST_MAXTYPES + 1];
-float g_flFragileDuration2[ST_MAXTYPES + 1];
-float g_flFragileExplosiveDamage[ST_MAXTYPES + 1];
-float g_flFragileExplosiveDamage2[ST_MAXTYPES + 1];
-float g_flFragileFireDamage[ST_MAXTYPES + 1];
-float g_flFragileFireDamage2[ST_MAXTYPES + 1];
-float g_flFragileMeleeDamage[ST_MAXTYPES + 1];
-float g_flFragileMeleeDamage2[ST_MAXTYPES + 1];
-int g_iFragileAbility[ST_MAXTYPES + 1];
-int g_iFragileAbility2[ST_MAXTYPES + 1];
-int g_iFragileChance[ST_MAXTYPES + 1];
-int g_iFragileChance2[ST_MAXTYPES + 1];
+bool g_bFragile[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flFragileBulletDamage[ST_MAXTYPES + 1], g_flFragileBulletDamage2[ST_MAXTYPES + 1],
+	g_flFragileDuration[ST_MAXTYPES + 1], g_flFragileDuration2[ST_MAXTYPES + 1],
+	g_flFragileExplosiveDamage[ST_MAXTYPES + 1], g_flFragileExplosiveDamage2[ST_MAXTYPES + 1],
+	g_flFragileFireDamage[ST_MAXTYPES + 1], g_flFragileFireDamage2[ST_MAXTYPES + 1],
+	g_flFragileMeleeDamage[ST_MAXTYPES + 1], g_flFragileMeleeDamage2[ST_MAXTYPES + 1];
+int g_iFragileAbility[ST_MAXTYPES + 1], g_iFragileAbility2[ST_MAXTYPES + 1],
+	g_iFragileChance[ST_MAXTYPES + 1], g_iFragileChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,16 +43,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bFragile[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -74,27 +65,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bFragile[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -107,21 +78,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			float flFragileExplosiveDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileExplosiveDamage[ST_TankType(victim)] : g_flFragileExplosiveDamage2[ST_TankType(victim)];
 			float flFragileFireDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileFireDamage[ST_TankType(victim)] : g_flFragileFireDamage2[ST_TankType(victim)];
 			float flFragileMeleeDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileMeleeDamage[ST_TankType(victim)] : g_flFragileMeleeDamage2[ST_TankType(victim)];
-			if (damagetype & DMG_BULLET)
+			switch (damagetype)
 			{
-				damage = damage * flFragileBulletDamage;
-			}
-			else if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-			{
-				damage = damage * flFragileExplosiveDamage;
-			}
-			else if (damagetype & DMG_BURN)
-			{
-				damage = damage * flFragileFireDamage;
-			}
-			else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
-			{
-				damage = damage * flFragileMeleeDamage;
+				case DMG_BULLET: damage = damage * flFragileBulletDamage;
+				case DMG_BLAST, DMG_BLAST_SURFACE, DMG_AIRBOAT, DMG_PLASMA: damage = damage * flFragileExplosiveDamage;
+				case DMG_BURN: damage = damage * flFragileFireDamage;
+				case DMG_SLASH, DMG_CLUB: damage = damage * flFragileMeleeDamage;
 			}
 			return Plugin_Changed;
 		}
@@ -186,6 +148,17 @@ public void ST_Ability(int client)
 		g_bFragile[client] = true;
 		float flFragileDuration = !g_bTankConfig[ST_TankType(client)] ? g_flFragileDuration[ST_TankType(client)] : g_flFragileDuration2[ST_TankType(client)];
 		CreateTimer(flFragileDuration, tTimerStopFragile, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bFragile[iPlayer] = false;
+		}
 	}
 }
 

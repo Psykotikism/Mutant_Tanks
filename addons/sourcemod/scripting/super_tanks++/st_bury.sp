@@ -1,7 +1,7 @@
 // Super Tanks++: Bury Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,24 +12,15 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bBury[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flBuryDuration[ST_MAXTYPES + 1];
-float g_flBuryDuration2[ST_MAXTYPES + 1];
-float g_flBuryHeight[ST_MAXTYPES + 1];
-float g_flBuryHeight2[ST_MAXTYPES + 1];
-float g_flBuryRange[ST_MAXTYPES + 1];
-float g_flBuryRange2[ST_MAXTYPES + 1];
+bool g_bBury[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flBuryDuration[ST_MAXTYPES + 1], g_flBuryDuration2[ST_MAXTYPES + 1],
+	g_flBuryHeight[ST_MAXTYPES + 1], g_flBuryHeight2[ST_MAXTYPES + 1],
+	g_flBuryRange[ST_MAXTYPES + 1], g_flBuryRange2[ST_MAXTYPES + 1];
 Handle g_hSDKRevivePlayer;
-int g_iBuryAbility[ST_MAXTYPES + 1];
-int g_iBuryAbility2[ST_MAXTYPES + 1];
-int g_iBuryChance[ST_MAXTYPES + 1];
-int g_iBuryChance2[ST_MAXTYPES + 1];
-int g_iBuryHit[ST_MAXTYPES + 1];
-int g_iBuryHit2[ST_MAXTYPES + 1];
-int g_iBuryRangeChance[ST_MAXTYPES + 1];
-int g_iBuryRangeChance2[ST_MAXTYPES + 1];
+int g_iBuryAbility[ST_MAXTYPES + 1], g_iBuryAbility2[ST_MAXTYPES + 1],
+	g_iBuryChance[ST_MAXTYPES + 1], g_iBuryChance2[ST_MAXTYPES + 1], g_iBuryHit[ST_MAXTYPES + 1],
+	g_iBuryHit2[ST_MAXTYPES + 1], g_iBuryRangeChance[ST_MAXTYPES + 1],
+	g_iBuryRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -65,16 +56,16 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bBury[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -87,27 +78,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bBury[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -212,7 +183,7 @@ void vBuryHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBury[client] && bIsPlayerGrounded(client))
 	{
 		g_bBury[client] = true;
-		float flOrigin[3];
+		float flOrigin[3], flPos[3];
 		float flBuryHeight = !g_bTankConfig[ST_TankType(owner)] ? g_flBuryHeight[ST_TankType(owner)] : g_flBuryHeight2[ST_TankType(owner)];
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] = flOrigin[2] - flBuryHeight;
@@ -222,7 +193,6 @@ void vBuryHit(int client, int owner, int chance, int enabled)
 			SetEntProp(client, Prop_Send, "m_isIncapacitated", 1);
 			SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 		}
-		float flPos[3];
 		GetClientEyePosition(client, flPos);
 		if (GetEntityMoveType(client) != MOVETYPE_NONE)
 		{
@@ -250,17 +220,27 @@ void vRemoveBury(int client)
 	}
 }
 
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bBury[iPlayer] = false;
+		}
+	}
+}
+
 void vStopBury(int client, int owner)
 {
 	if (g_bBury[client])
 	{
 		g_bBury[client] = false;
-		float flOrigin[3];
+		float flOrigin[3], flCurrentOrigin[3];
 		float flBuryHeight = !g_bTankConfig[ST_TankType(owner)] ? g_flBuryHeight[ST_TankType(owner)] : g_flBuryHeight2[ST_TankType(owner)];
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] = flOrigin[2] + flBuryHeight;
 		SetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-		float flCurrentOrigin[3];
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsSurvivor(iPlayer) && !g_bBury[iPlayer] && iPlayer != client)

@@ -1,7 +1,7 @@
 // Super Tanks++: Hypno Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,23 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bHypno[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flHypnoDuration[ST_MAXTYPES + 1];
-float g_flHypnoDuration2[ST_MAXTYPES + 1];
-float g_flHypnoRange[ST_MAXTYPES + 1];
-float g_flHypnoRange2[ST_MAXTYPES + 1];
-int g_iHypnoAbility[ST_MAXTYPES + 1];
-int g_iHypnoAbility2[ST_MAXTYPES + 1];
-int g_iHypnoChance[ST_MAXTYPES + 1];
-int g_iHypnoChance2[ST_MAXTYPES + 1];
-int g_iHypnoHit[ST_MAXTYPES + 1];
-int g_iHypnoHit2[ST_MAXTYPES + 1];
-int g_iHypnoMode[ST_MAXTYPES + 1];
-int g_iHypnoMode2[ST_MAXTYPES + 1];
-int g_iHypnoRangeChance[ST_MAXTYPES + 1];
-int g_iHypnoRangeChance2[ST_MAXTYPES + 1];
+bool g_bHypno[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flHypnoDuration[ST_MAXTYPES + 1], g_flHypnoDuration2[ST_MAXTYPES + 1],
+	g_flHypnoRange[ST_MAXTYPES + 1], g_flHypnoRange2[ST_MAXTYPES + 1];
+int g_iHypnoAbility[ST_MAXTYPES + 1], g_iHypnoAbility2[ST_MAXTYPES + 1],
+	g_iHypnoChance[ST_MAXTYPES + 1], g_iHypnoChance2[ST_MAXTYPES + 1], g_iHypnoHit[ST_MAXTYPES + 1],
+	g_iHypnoHit2[ST_MAXTYPES + 1], g_iHypnoMode[ST_MAXTYPES + 1], g_iHypnoMode2[ST_MAXTYPES + 1],
+	g_iHypnoRangeChance[ST_MAXTYPES + 1], g_iHypnoRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,16 +42,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bHypno[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -74,27 +64,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bHypno[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -114,28 +84,19 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		else if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker) && g_bHypno[attacker])
 		{
-			if (damagetype & DMG_BURN)
+			int iHypnoMode = !g_bTankConfig[ST_TankType(victim)] ? g_iHypnoMode[ST_TankType(victim)] : g_iHypnoMode2[ST_TankType(victim)];
+			int iHealth = GetClientHealth(attacker);
+			int iTarget = iGetRandomSurvivor(attacker);
+			switch (damagetype)
 			{
-				damage = 0.0;
-				return Plugin_Handled;
+				case DMG_BULLET: damage = damage / 20.0;
+				case DMG_BLAST, DMG_BLAST_SURFACE, DMG_AIRBOAT, DMG_PLASMA: damage = damage / 20.0;
+				case DMG_BURN: damage = damage / 200.0;
+				case DMG_SLASH, DMG_CLUB: damage = damage / 200.0;
 			}
-			else
-			{
-				int iHypnoMode = !g_bTankConfig[ST_TankType(victim)] ? g_iHypnoMode[ST_TankType(victim)] : g_iHypnoMode2[ST_TankType(victim)];
-				int iHealth = GetClientHealth(attacker);
-				int iTarget = iGetRandomSurvivor(attacker);
-				if (damagetype & DMG_BULLET || damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
-				{
-					damage = damage / 10;
-				}
-				else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
-				{
-					damage = damage / 1000;
-				}
-				(iHealth > damage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - RoundFloat(damage)) : SetEntityHealth(attacker, iHealth - RoundFloat(damage))) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntProp(iTarget, Prop_Send, "m_isIncapacitated", 1) : SetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1));
-				damage = 0.0;
-				return Plugin_Changed;
-			}
+			(iHealth > damage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - RoundFloat(damage)) : SetEntityHealth(attacker, iHealth - RoundFloat(damage))) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntProp(iTarget, Prop_Send, "m_isIncapacitated", 1) : SetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1));
+			damage = 0.0;
+			return Plugin_Changed;
 		}
 	}
 	return Plugin_Continue;
@@ -240,6 +201,17 @@ void vRemoveHypno()
 		if (bIsSurvivor(iSurvivor) && g_bHypno[iSurvivor])
 		{
 			g_bHypno[iSurvivor] = false;
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bHypno[iPlayer] = false;
 		}
 	}
 }

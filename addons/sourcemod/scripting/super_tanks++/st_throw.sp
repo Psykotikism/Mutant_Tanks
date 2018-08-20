@@ -1,7 +1,7 @@
 // Super Tanks++: Throw Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -13,13 +13,10 @@ public Plugin myinfo =
 };
 
 bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sThrowCarOptions[ST_MAXTYPES + 1][7];
-char g_sThrowCarOptions2[ST_MAXTYPES + 1][7];
-char g_sThrowInfectedOptions[ST_MAXTYPES + 1][15];
-char g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15];
+char g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7],
+	g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15];
 ConVar g_cvSTFindConVar;
-int g_iThrowAbility[ST_MAXTYPES + 1];
-int g_iThrowAbility2[ST_MAXTYPES + 1];
+int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -141,8 +138,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
-			float flSpeed = g_cvSTFindConVar.FloatValue;
-			ScaleVector(flVelocity, flSpeed * 1.4);
+			ScaleVector(flVelocity, g_cvSTFindConVar.FloatValue * 1.4);
 			DispatchSpawn(iCar);
 			TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
 			iCar = EntIndexToEntRef(iCar);
@@ -195,8 +191,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
-			float flSpeed = g_cvSTFindConVar.FloatValue;
-			ScaleVector(flVelocity, flSpeed * 1.4);
+			ScaleVector(flVelocity, g_cvSTFindConVar.FloatValue * 1.4);
 			TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
 		}
 		return Plugin_Stop;
@@ -231,8 +226,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 		GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 		RemoveEntity(iRock);
 		NormalizeVector(flVelocity, flVelocity);
-		float flSpeed = g_cvSTFindConVar.FloatValue;
-		ScaleVector(flVelocity, flSpeed * 1.4);
+		ScaleVector(flVelocity, g_cvSTFindConVar.FloatValue * 1.4);
 		TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
 		return Plugin_Stop;
 	}

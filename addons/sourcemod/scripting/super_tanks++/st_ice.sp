@@ -1,7 +1,7 @@
 // Super Tanks++: Ice Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,21 +12,11 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bIce[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flIceDuration[ST_MAXTYPES + 1];
-float g_flIceDuration2[ST_MAXTYPES + 1];
-float g_flIceRange[ST_MAXTYPES + 1];
-float g_flIceRange2[ST_MAXTYPES + 1];
-int g_iIceAbility[ST_MAXTYPES + 1];
-int g_iIceAbility2[ST_MAXTYPES + 1];
-int g_iIceChance[ST_MAXTYPES + 1];
-int g_iIceChance2[ST_MAXTYPES + 1];
-int g_iIceHit[ST_MAXTYPES + 1];
-int g_iIceHit2[ST_MAXTYPES + 1];
-int g_iIceRangeChance[ST_MAXTYPES + 1];
-int g_iIceRangeChance2[ST_MAXTYPES + 1];
+bool g_bIce[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flIceDuration[ST_MAXTYPES + 1], g_flIceDuration2[ST_MAXTYPES + 1],
+	g_flIceRange[ST_MAXTYPES + 1], g_flIceRange2[ST_MAXTYPES + 1];
+int g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceChance[ST_MAXTYPES + 1],
+	g_iIceChance2[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceRangeChance[ST_MAXTYPES + 1], g_iIceRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,16 +41,16 @@ public void OnAllPluginsLoaded()
 public void OnMapStart()
 {
 	PrecacheSound(SOUND_BULLET, true);
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bIce[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -73,27 +63,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bIce[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -222,6 +192,17 @@ void vRemoveIce(int client)
 			CreateDataTimer(0.1, tTimerStopIce, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 			dpDataPack.WriteCell(GetClientUserId(client));
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bIce[iPlayer] = false;
 		}
 	}
 }

@@ -1,7 +1,7 @@
 // Super Tanks++: Electric Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,27 +12,16 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bElectric[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flElectricDuration[ST_MAXTYPES + 1];
-float g_flElectricDuration2[ST_MAXTYPES + 1];
-float g_flElectricInterval[ST_MAXTYPES + 1];
-float g_flElectricInterval2[ST_MAXTYPES + 1];
-float g_flElectricRange[ST_MAXTYPES + 1];
-float g_flElectricRange2[ST_MAXTYPES + 1];
-float g_flElectricSpeed[ST_MAXTYPES + 1];
-float g_flElectricSpeed2[ST_MAXTYPES + 1];
-int g_iElectricAbility[ST_MAXTYPES + 1];
-int g_iElectricAbility2[ST_MAXTYPES + 1];
-int g_iElectricChance[ST_MAXTYPES + 1];
-int g_iElectricChance2[ST_MAXTYPES + 1];
-int g_iElectricDamage[ST_MAXTYPES + 1];
-int g_iElectricDamage2[ST_MAXTYPES + 1];
-int g_iElectricHit[ST_MAXTYPES + 1];
-int g_iElectricHit2[ST_MAXTYPES + 1];
-int g_iElectricRangeChance[ST_MAXTYPES + 1];
-int g_iElectricRangeChance2[ST_MAXTYPES + 1];
+bool g_bElectric[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flElectricDuration[ST_MAXTYPES + 1], g_flElectricDuration2[ST_MAXTYPES + 1],
+	g_flElectricInterval[ST_MAXTYPES + 1], g_flElectricInterval2[ST_MAXTYPES + 1],
+	g_flElectricRange[ST_MAXTYPES + 1], g_flElectricRange2[ST_MAXTYPES + 1],
+	g_flElectricSpeed[ST_MAXTYPES + 1], g_flElectricSpeed2[ST_MAXTYPES + 1];
+int g_iElectricAbility[ST_MAXTYPES + 1], g_iElectricAbility2[ST_MAXTYPES + 1],
+	g_iElectricChance[ST_MAXTYPES + 1], g_iElectricChance2[ST_MAXTYPES + 1],
+	g_iElectricDamage[ST_MAXTYPES + 1], g_iElectricDamage2[ST_MAXTYPES + 1],
+	g_iElectricHit[ST_MAXTYPES + 1], g_iElectricHit2[ST_MAXTYPES + 1],
+	g_iElectricRangeChance[ST_MAXTYPES + 1], g_iElectricRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -59,16 +48,16 @@ public void OnMapStart()
 	vPrecacheParticle(PARTICLE_ELECTRICITY);
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_ELECTRICITY2, true);
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bElectric[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -81,27 +70,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bElectric[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -229,6 +198,17 @@ void vRemoveElectric()
 		if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor])
 		{
 			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bElectric[iPlayer] = false;
 		}
 	}
 }

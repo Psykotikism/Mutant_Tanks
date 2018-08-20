@@ -1,7 +1,7 @@
 // Super Tanks++: Rocket Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,20 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flRocketRange[ST_MAXTYPES + 1];
-float g_flRocketRange2[ST_MAXTYPES + 1];
-int g_iRocket[ST_MAXTYPES + 1];
-int g_iRocketAbility[ST_MAXTYPES + 1];
-int g_iRocketAbility2[ST_MAXTYPES + 1];
-int g_iRocketChance[ST_MAXTYPES + 1];
-int g_iRocketChance2[ST_MAXTYPES + 1];
-int g_iRocketHit[ST_MAXTYPES + 1];
-int g_iRocketHit2[ST_MAXTYPES + 1];
-int g_iRocketRangeChance[ST_MAXTYPES + 1];
-int g_iRocketRangeChance2[ST_MAXTYPES + 1];
-int g_iRocketSprite = -1;
+bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flRocketRange[ST_MAXTYPES + 1], g_flRocketRange2[ST_MAXTYPES + 1];
+int g_iRocket[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1],
+	g_iRocketAbility2[ST_MAXTYPES + 1], g_iRocketChance[ST_MAXTYPES + 1],
+	g_iRocketChance2[ST_MAXTYPES + 1], g_iRocketHit[ST_MAXTYPES + 1],
+	g_iRocketHit2[ST_MAXTYPES + 1], g_iRocketRangeChance[ST_MAXTYPES + 1],
+	g_iRocketRangeChance2[ST_MAXTYPES + 1], g_iRocketSprite = -1;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -55,20 +48,6 @@ public void OnMapStart()
 	PrecacheSound(SOUND_LAUNCH, true);
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
-		g_bLateLoad = false;
-	}
-}
-
-public void OnClientPostAdminCheck(int client)
-{
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
@@ -76,7 +55,13 @@ void vLateLoad(bool late)
 				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
 			}
 		}
+		g_bLateLoad = false;
 	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -157,10 +142,9 @@ void vRocketHit(int client, int owner, int chance, int enabled)
 		{
 			return;
 		}
-		float flPosition[3];
+		float flPosition[3], flAngles[3];
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPosition);
 		flPosition[2] += 30.0;
-		float flAngles[3];
 		flAngles[0] = 90.0;
 		flAngles[1] = 0.0;
 		flAngles[2] = 0.0;

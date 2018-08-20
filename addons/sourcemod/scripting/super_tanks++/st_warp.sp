@@ -1,7 +1,7 @@
 // Super Tanks++: Warp Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,19 +12,11 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-bool g_bWarp[MAXPLAYERS + 1];
-float g_flWarpInterval[ST_MAXTYPES + 1];
-float g_flWarpInterval2[ST_MAXTYPES + 1];
-int g_iWarpAbility[ST_MAXTYPES + 1];
-int g_iWarpAbility2[ST_MAXTYPES + 1];
-int g_iWarpChance[ST_MAXTYPES + 1];
-int g_iWarpChance2[ST_MAXTYPES + 1];
-int g_iWarpHit[ST_MAXTYPES + 1];
-int g_iWarpHit2[ST_MAXTYPES + 1];
-int g_iWarpMode[ST_MAXTYPES + 1];
-int g_iWarpMode2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1], g_bWarp[MAXPLAYERS + 1];
+float g_flWarpInterval[ST_MAXTYPES + 1], g_flWarpInterval2[ST_MAXTYPES + 1];
+int g_iWarpAbility[ST_MAXTYPES + 1], g_iWarpAbility2[ST_MAXTYPES + 1],
+	g_iWarpChance[ST_MAXTYPES + 1], g_iWarpChance2[ST_MAXTYPES + 1], g_iWarpHit[ST_MAXTYPES + 1],
+	g_iWarpHit2[ST_MAXTYPES + 1], g_iWarpMode[ST_MAXTYPES + 1], g_iWarpMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -49,16 +41,16 @@ public void OnAllPluginsLoaded()
 public void OnMapStart()
 {
 	vPrecacheParticle(PARTICLE_ELECTRICITY);
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bWarp[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -71,27 +63,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bWarp[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -155,6 +127,17 @@ public void ST_Ability(int client)
 	}
 }
 
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bWarp[iPlayer] = false;
+		}
+	}
+}
+
 void vWarpHit(int client, int owner)
 {
 	int iWarpChance = !g_bTankConfig[ST_TankType(owner)] ? g_iWarpChance[ST_TankType(owner)] : g_iWarpChance2[ST_TankType(owner)];
@@ -190,12 +173,9 @@ public Action tTimerWarp(Handle timer, any userid)
 	int iSurvivor = iGetRandomSurvivor(iTank);
 	if (iSurvivor > 0)
 	{
-		float flTankOrigin[3];
-		float flTankAngles[3];
+		float flTankOrigin[3], flTankAngles[3], flSurvivorOrigin[3], flSurvivorAngles[3];
 		GetClientAbsOrigin(iTank, flTankOrigin);
 		GetClientAbsAngles(iTank, flTankAngles);
-		float flSurvivorOrigin[3];
-		float flSurvivorAngles[3];
 		GetClientAbsOrigin(iSurvivor, flSurvivorOrigin);
 		GetClientAbsAngles(iSurvivor, flSurvivorAngles);
 		vCreateParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);

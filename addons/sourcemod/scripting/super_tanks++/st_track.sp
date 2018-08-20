@@ -1,7 +1,7 @@
 // Super Tanks++: Track Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -13,18 +13,12 @@ public Plugin myinfo =
 };
 
 bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sTankColors[ST_MAXTYPES + 1][28];
-char g_sTankColors2[ST_MAXTYPES + 1][28];
-float g_flTrackSpeed[ST_MAXTYPES + 1];
-float g_flTrackSpeed2[ST_MAXTYPES + 1];
-int g_iGlowEffect[ST_MAXTYPES + 1];
-int g_iGlowEffect2[ST_MAXTYPES + 1];
-int g_iTrackAbility[ST_MAXTYPES + 1];
-int g_iTrackAbility2[ST_MAXTYPES + 1];
-int g_iTrackChance[ST_MAXTYPES + 1];
-int g_iTrackChance2[ST_MAXTYPES + 1];
-int g_iTrackMode[ST_MAXTYPES + 1];
-int g_iTrackMode2[ST_MAXTYPES + 1];
+char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
+float g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
+int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1],
+	g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1],
+	g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1],
+	g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -100,8 +94,7 @@ void vTrack(int entity)
 	{
 		case 0:
 		{
-			float flPos[3];
-			float flVelocity[3];
+			float flPos[3], flVelocity[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 			GetEntPropVector(entity, Prop_Data, "m_vecVelocity", flVelocity);
 			float flVector = GetVectorLength(flVelocity);
@@ -113,8 +106,7 @@ void vTrack(int entity)
 			int iTarget = iGetRandomTarget(flPos, flVelocity);
 			if (iTarget > 0)
 			{
-				float flPos2[3];
-				float flVelocity2[3];
+				float flPos2[3], flVelocity2[3];
 				GetClientEyePosition(iTarget, flPos2);
 				GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
 				bool bVisible = bVisiblePosition(flPos, flPos2, entity, 2);
@@ -124,8 +116,7 @@ void vTrack(int entity)
 					return;
 				}
 				SetEntityGravity(entity, 0.01);
-				float flDirection[3];
-				float flVelocity3[3];
+				float flDirection[3], flVelocity3[3];
 				SubtractVectors(flPos2, flPos, flDirection);
 				NormalizeVector(flDirection, flDirection);
 				ScaleVector(flDirection, 0.5);
@@ -137,8 +128,7 @@ void vTrack(int entity)
 		}
 		case 1:
 		{
-			float flPos[3];
-			float flVelocity[3];
+			float flPos[3], flVelocity[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 			GetEntPropVector(entity, Prop_Data, "m_vecVelocity", flVelocity);
 			if (GetVectorLength(flVelocity) < 50.0)
@@ -147,11 +137,9 @@ void vTrack(int entity)
 			}
 			NormalizeVector(flVelocity, flVelocity);
 			int iTarget = iGetRandomTarget(flPos, flVelocity);
-			float flVelocity2[3];
-			float flVector[3];
+			float flVelocity2[3], flVector[3], flAngle[3];
 			flVector[0] = flVector[1] = flVector[2] = 0.0;
 			bool bVisible;
-			float flAngle[3];
 			float flDistance = 1000.0;
 			if (iTarget > 0)
 			{
@@ -164,23 +152,12 @@ void vTrack(int entity)
 				MakeVectorFromPoints(flPos, flPos2, flVector);
 			}
 			GetVectorAngles(flVelocity, flAngle);
-			float flLeft[3];
-			float flRight[3];
-			float flUp[3];
-			float flDown[3];
-			float flFront[3];
-			float flVector1[3];
-			float flVector2[3];
-			float flVector3[3];
-			float flVector4[3];
-			float flVector5[3];
-			float flVector6[3];
-			float flVector7[3];
-			float flVector8[3];
+			float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3],
+				flVector3[3], flVector4[3], flVector5[3], flVector6[3], flVector7[3], flVector8[3],
+				flVector9;
 			flFront[0] = flFront[1] = flFront[2] = 0.0;
 			float flFactor1 = 0.2;
 			float flFactor2 = 0.5;
-			float flVector9;
 			float flBase = 1500.0;
 			if (bVisible)
 			{
@@ -319,12 +296,10 @@ void vTrack(int entity)
 			ScaleVector(flVelocity3, flTrackSpeed);
 			SetEntityGravity(entity, 0.01);
 			TeleportEntity(entity, NULL_VECTOR, NULL_VECTOR, flVelocity3);
-			char sSet[2][16];
-			char sTankColors[28];
+			char sSet[2][16], sTankColors[28], sGlow[3][4];
 			sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
 			TrimString(sTankColors);
 			ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-			char sGlow[3][4];
 			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 			TrimString(sGlow[0]);
 			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;

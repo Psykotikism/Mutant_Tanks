@@ -1,7 +1,7 @@
 // Super Tanks++: Shove Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,22 +12,14 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad;
-bool g_bShove[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flShoveDuration[ST_MAXTYPES + 1];
-float g_flShoveDuration2[ST_MAXTYPES + 1];
-float g_flShoveRange[ST_MAXTYPES + 1];
-float g_flShoveRange2[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bShove[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+float g_flShoveDuration[ST_MAXTYPES + 1], g_flShoveDuration2[ST_MAXTYPES + 1],
+	g_flShoveRange[ST_MAXTYPES + 1], g_flShoveRange2[ST_MAXTYPES + 1];
 Handle g_hSDKShovePlayer;
-int g_iShoveAbility[ST_MAXTYPES + 1];
-int g_iShoveAbility2[ST_MAXTYPES + 1];
-int g_iShoveChance[ST_MAXTYPES + 1];
-int g_iShoveChance2[ST_MAXTYPES + 1];
-int g_iShoveHit[ST_MAXTYPES + 1];
-int g_iShoveHit2[ST_MAXTYPES + 1];
-int g_iShoveRangeChance[ST_MAXTYPES + 1];
-int g_iShoveRangeChance2[ST_MAXTYPES + 1];
+int g_iShoveAbility[ST_MAXTYPES + 1], g_iShoveAbility2[ST_MAXTYPES + 1],
+	g_iShoveChance[ST_MAXTYPES + 1], g_iShoveChance2[ST_MAXTYPES + 1], g_iShoveHit[ST_MAXTYPES + 1],
+	g_iShoveHit2[ST_MAXTYPES + 1], g_iShoveRangeChance[ST_MAXTYPES + 1],
+	g_iShoveRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -65,16 +57,16 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bShove[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -87,27 +79,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bShove[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -178,6 +150,17 @@ public void ST_Ability(int client)
 					vShoveHit(iSurvivor, client, iShoveRangeChance, iShoveAbility);
 				}
 			}
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bShove[iPlayer] = false;
 		}
 	}
 }

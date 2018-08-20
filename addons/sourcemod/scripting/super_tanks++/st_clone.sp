@@ -1,7 +1,7 @@
 // Super Tanks++: Clone Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,17 +12,11 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bCloned[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-int g_iCloneAbility[ST_MAXTYPES + 1];
-int g_iCloneAbility2[ST_MAXTYPES + 1];
-int g_iCloneAmount[ST_MAXTYPES + 1];
-int g_iCloneAmount2[ST_MAXTYPES + 1];
-int g_iCloneChance[ST_MAXTYPES + 1];
-int g_iCloneChance2[ST_MAXTYPES + 1];
-int g_iCloneCount[MAXPLAYERS + 1];
-int g_iCloneHealth[ST_MAXTYPES + 1];
-int g_iCloneHealth2[ST_MAXTYPES + 1];
+bool g_bCloned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1],
+	g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1],
+	g_iCloneChance[ST_MAXTYPES + 1], g_iCloneChance2[ST_MAXTYPES + 1],
+	g_iCloneCount[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -45,14 +39,7 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bCloned[iPlayer] = false;
-			g_iCloneCount[iPlayer] = 0;
-		}
-	}
+	vReset();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -63,14 +50,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bCloned[iPlayer] = false;
-			g_iCloneCount[iPlayer] = 0;
-		}
-	}
+	vReset();
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -121,10 +101,7 @@ public void ST_Ability(int client)
 		int iCloneAmount = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAmount[ST_TankType(client)] : g_iCloneAmount2[ST_TankType(client)];
 		if (g_iCloneCount[client] < iCloneAmount)
 		{
-			float flHitPosition[3];
-			float flPosition[3];
-			float flAngle[3];
-			float flVector[3];
+			float flHitPosition[3], flPosition[3], flAngle[3], flVector[3];
 			GetClientEyePosition(client, flPosition);
 			GetClientEyeAngles(client, flAngle);
 			flAngle[0] = -25.0;
@@ -187,5 +164,17 @@ public void ST_BossStage(int client)
 	if (ST_TankAllowed(client) && iCloneAbility == 1)
 	{
 		g_iCloneCount[client] = 0;
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bCloned[iPlayer] = false;
+			g_iCloneCount[iPlayer] = 0;
+		}
 	}
 }

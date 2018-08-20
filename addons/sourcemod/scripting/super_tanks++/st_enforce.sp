@@ -1,7 +1,7 @@
 // Super Tanks++: Enforce Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,24 +12,15 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bEnforce[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sEnforceSlot[ST_MAXTYPES + 1][6];
-char g_sEnforceSlot2[ST_MAXTYPES + 1][6];
-float g_flEnforceDuration[ST_MAXTYPES + 1];
-float g_flEnforceDuration2[ST_MAXTYPES + 1];
-float g_flEnforceRange[ST_MAXTYPES + 1];
-float g_flEnforceRange2[ST_MAXTYPES + 1];
-int g_iEnforceAbility[ST_MAXTYPES + 1];
-int g_iEnforceAbility2[ST_MAXTYPES + 1];
-int g_iEnforceChance[ST_MAXTYPES + 1];
-int g_iEnforceChance2[ST_MAXTYPES + 1];
-int g_iEnforceHit[ST_MAXTYPES + 1];
-int g_iEnforceHit2[ST_MAXTYPES + 1];
-int g_iEnforceRangeChance[ST_MAXTYPES + 1];
-int g_iEnforceRangeChance2[ST_MAXTYPES + 1];
-int g_iEnforceSlot[MAXPLAYERS + 1];
+bool g_bEnforce[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sEnforceSlot[ST_MAXTYPES + 1][6], g_sEnforceSlot2[ST_MAXTYPES + 1][6];
+float g_flEnforceDuration[ST_MAXTYPES + 1], g_flEnforceDuration2[ST_MAXTYPES + 1],
+	g_flEnforceRange[ST_MAXTYPES + 1], g_flEnforceRange2[ST_MAXTYPES + 1];
+int g_iEnforceAbility[ST_MAXTYPES + 1], g_iEnforceAbility2[ST_MAXTYPES + 1],
+	g_iEnforceChance[ST_MAXTYPES + 1], g_iEnforceChance2[ST_MAXTYPES + 1],
+	g_iEnforceHit[ST_MAXTYPES + 1], g_iEnforceHit2[ST_MAXTYPES + 1],
+	g_iEnforceRangeChance[ST_MAXTYPES + 1], g_iEnforceRangeChance2[ST_MAXTYPES + 1],
+	g_iEnforceSlot[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -53,17 +44,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bEnforce[iPlayer] = false;
-			g_iEnforceSlot[iPlayer] = -1;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -77,28 +67,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bEnforce[iPlayer] = false;
-			g_iEnforceSlot[iPlayer] = -1;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
@@ -240,6 +209,18 @@ void vRemoveEnforce()
 		if (bIsSurvivor(iSurvivor) && g_bEnforce[iSurvivor])
 		{
 			g_bEnforce[iSurvivor] = false;
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bEnforce[iPlayer] = false;
+			g_iEnforceSlot[iPlayer] = -1;
 		}
 	}
 }

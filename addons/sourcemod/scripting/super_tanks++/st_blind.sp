@@ -1,7 +1,7 @@
 // Super Tanks++: Blind Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,23 +12,14 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bBlind[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flBlindDuration[ST_MAXTYPES + 1];
-float g_flBlindDuration2[ST_MAXTYPES + 1];
-float g_flBlindRange[ST_MAXTYPES + 1];
-float g_flBlindRange2[ST_MAXTYPES + 1];
-int g_iBlindAbility[ST_MAXTYPES + 1];
-int g_iBlindAbility2[ST_MAXTYPES + 1];
-int g_iBlindChance[ST_MAXTYPES + 1];
-int g_iBlindChance2[ST_MAXTYPES + 1];
-int g_iBlindHit[ST_MAXTYPES + 1];
-int g_iBlindHit2[ST_MAXTYPES + 1];
-int g_iBlindIntensity[ST_MAXTYPES + 1];
-int g_iBlindIntensity2[ST_MAXTYPES + 1];
-int g_iBlindRangeChance[ST_MAXTYPES + 1];
-int g_iBlindRangeChance2[ST_MAXTYPES + 1];
+bool g_bBlind[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flBlindDuration[ST_MAXTYPES + 1], g_flBlindDuration2[ST_MAXTYPES + 1],
+	g_flBlindRange[ST_MAXTYPES + 1], g_flBlindRange2[ST_MAXTYPES + 1];
+int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1],
+	g_iBlindChance[ST_MAXTYPES + 1], g_iBlindChance2[ST_MAXTYPES + 1],
+	g_iBlindHit[ST_MAXTYPES + 1], g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1],
+	g_iBlindIntensity2[ST_MAXTYPES + 1], g_iBlindRangeChance[ST_MAXTYPES + 1],
+	g_iBlindRangeChance2[ST_MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -58,16 +49,16 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bBlind[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -80,27 +71,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bBlind[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -202,9 +173,8 @@ public void ST_BossStage(int client)
 
 void vBlind(int client, int amount)
 {
-	int iTargets[2];
+	int iTargets[2], iFlags;
 	iTargets[0] = client;
-	int iFlags;
 	if (bIsSurvivor(client))
 	{
 		amount == 0 ? (iFlags = (0x0001|0x0010)) : (iFlags = (0x0002|0x0008));
@@ -259,6 +229,17 @@ void vRemoveBlind(int client)
 			CreateDataTimer(0.1, tTimerStopBlindness, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 			dpDataPack.WriteCell(GetClientUserId(client));
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bBlind[iPlayer] = false;
 		}
 	}
 }

@@ -1,7 +1,7 @@
 // Super Tanks++: Invert Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,21 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bInvert[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flInvertDuration[ST_MAXTYPES + 1];
-float g_flInvertDuration2[ST_MAXTYPES + 1];
-float g_flInvertRange[ST_MAXTYPES + 1];
-float g_flInvertRange2[ST_MAXTYPES + 1];
-int g_iInvertAbility[ST_MAXTYPES + 1];
-int g_iInvertAbility2[ST_MAXTYPES + 1];
-int g_iInvertChance[ST_MAXTYPES + 1];
-int g_iInvertChance2[ST_MAXTYPES + 1];
-int g_iInvertHit[ST_MAXTYPES + 1];
-int g_iInvertHit2[ST_MAXTYPES + 1];
-int g_iInvertRangeChance[ST_MAXTYPES + 1];
-int g_iInvertRangeChance2[ST_MAXTYPES + 1];
+bool g_bInvert[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flInvertDuration[ST_MAXTYPES + 1], g_flInvertDuration2[ST_MAXTYPES + 1],
+	g_flInvertRange[ST_MAXTYPES + 1], g_flInvertRange2[ST_MAXTYPES + 1];
+int g_iInvertAbility[ST_MAXTYPES + 1], g_iInvertAbility2[ST_MAXTYPES + 1],
+	g_iInvertChance[ST_MAXTYPES + 1], g_iInvertChance2[ST_MAXTYPES + 1],
+	g_iInvertHit[ST_MAXTYPES + 1], g_iInvertHit2[ST_MAXTYPES + 1],
+	g_iInvertRangeChance[ST_MAXTYPES + 1], g_iInvertRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -50,16 +42,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bInvert[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -72,27 +64,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bInvert[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
@@ -245,6 +217,17 @@ void vRemoveInvert()
 		if (bIsSurvivor(iSurvivor) && g_bInvert[iSurvivor])
 		{
 			g_bInvert[iSurvivor] = false;
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bInvert[iPlayer] = false;
 		}
 	}
 }

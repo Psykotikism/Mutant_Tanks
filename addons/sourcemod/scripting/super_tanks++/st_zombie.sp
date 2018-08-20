@@ -1,7 +1,7 @@
 // Super Tanks++: Zombie Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -13,11 +13,9 @@ public Plugin myinfo =
 };
 
 bool g_bTankConfig[ST_MAXTYPES + 1];
-int g_iZombieAbility[ST_MAXTYPES + 1];
-int g_iZombieAbility2[ST_MAXTYPES + 1];
-int g_iZombieAmount[ST_MAXTYPES + 1];
-int g_iZombieAmount2[ST_MAXTYPES + 1];
-int g_iZombieInterval[MAXPLAYERS + 1];
+int g_iZombieAbility[ST_MAXTYPES + 1], g_iZombieAbility2[ST_MAXTYPES + 1],
+	g_iZombieAmount[ST_MAXTYPES + 1], g_iZombieAmount2[ST_MAXTYPES + 1],
+	g_iZombieInterval[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -40,13 +38,7 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_iZombieInterval[iPlayer] = 0;
-		}
-	}
+	vReset();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -56,13 +48,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_iZombieInterval[iPlayer] = 0;
-		}
-	}
+	vReset();
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -100,6 +86,17 @@ public void ST_Ability(int client)
 				g_iZombieInterval[client]++;
 			}
 			g_iZombieInterval[client] = 0;
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iZombieInterval[iPlayer] = 0;
 		}
 	}
 }

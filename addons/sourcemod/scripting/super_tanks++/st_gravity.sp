@@ -1,7 +1,7 @@
 // Super Tanks++: Gravity Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,26 +12,16 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bGravity[MAXPLAYERS + 1];
-bool g_bGravity2[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flGravityDuration[ST_MAXTYPES + 1];
-float g_flGravityDuration2[ST_MAXTYPES + 1];
-float g_flGravityForce[ST_MAXTYPES + 1];
-float g_flGravityForce2[ST_MAXTYPES + 1];
-float g_flGravityRange[ST_MAXTYPES + 1];
-float g_flGravityRange2[ST_MAXTYPES + 1];
-float g_flGravityValue[ST_MAXTYPES + 1];
-float g_flGravityValue2[ST_MAXTYPES + 1];
-int g_iGravityAbility[ST_MAXTYPES + 1];
-int g_iGravityAbility2[ST_MAXTYPES + 1];
-int g_iGravityChance[ST_MAXTYPES + 1];
-int g_iGravityChance2[ST_MAXTYPES + 1];
-int g_iGravityHit[ST_MAXTYPES + 1];
-int g_iGravityHit2[ST_MAXTYPES + 1];
-int g_iGravityRangeChance[ST_MAXTYPES + 1];
-int g_iGravityRangeChance2[ST_MAXTYPES + 1];
+bool g_bGravity[MAXPLAYERS + 1], g_bGravity2[MAXPLAYERS + 1], g_bLateLoad,
+	g_bTankConfig[ST_MAXTYPES + 1];
+float g_flGravityDuration[ST_MAXTYPES + 1], g_flGravityDuration2[ST_MAXTYPES + 1],
+	g_flGravityForce[ST_MAXTYPES + 1], g_flGravityForce2[ST_MAXTYPES + 1],
+	g_flGravityRange[ST_MAXTYPES + 1], g_flGravityRange2[ST_MAXTYPES + 1],
+	g_flGravityValue[ST_MAXTYPES + 1], g_flGravityValue2[ST_MAXTYPES + 1];
+int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1],
+	g_iGravityChance[ST_MAXTYPES + 1], g_iGravityChance2[ST_MAXTYPES + 1],
+	g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHit2[ST_MAXTYPES + 1],
+	g_iGravityRangeChance[ST_MAXTYPES + 1], g_iGravityRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -55,17 +45,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bGravity[iPlayer] = false;
-			g_bGravity2[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -79,28 +68,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bGravity[iPlayer] = false;
-			g_bGravity2[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -181,8 +149,7 @@ public void ST_Ability(int client)
 			int iBlackhole = CreateEntityByName("point_push");
 			if (bIsValidEntity(iBlackhole))
 			{
-				float flOrigin[3];
-				float flAngles[3];
+				float flOrigin[3], flAngles[3];
 				GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
 				GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
 				flAngles[0] += -90.0;
@@ -270,6 +237,18 @@ void vRemoveGravity(int client)
 			CreateDataTimer(0.1, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 			dpDataPack.WriteCell(GetClientUserId(client));
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bGravity[iPlayer] = false;
+			g_bGravity2[iPlayer] = false;
 		}
 	}
 }

@@ -1,7 +1,7 @@
 // Super Tanks++: God Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,14 +12,10 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bGod[MAXPLAYERS + 1];
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flGodDuration[ST_MAXTYPES + 1];
-float g_flGodDuration2[ST_MAXTYPES + 1];
-int g_iGodAbility[ST_MAXTYPES + 1];
-int g_iGodAbility2[ST_MAXTYPES + 1];
-int g_iGodChance[ST_MAXTYPES + 1];
-int g_iGodChance2[ST_MAXTYPES + 1];
+bool g_bGod[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+float g_flGodDuration[ST_MAXTYPES + 1], g_flGodDuration2[ST_MAXTYPES + 1];
+int g_iGodAbility[ST_MAXTYPES + 1], g_iGodAbility2[ST_MAXTYPES + 1], g_iGodChance[ST_MAXTYPES + 1],
+	g_iGodChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -42,13 +38,7 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bGod[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -58,13 +48,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bGod[iPlayer] = false;
-		}
-	}
+	vReset();
 }
 
 public void ST_Configs(char[] savepath, int limit, bool main)
@@ -117,6 +101,17 @@ public void ST_Ability(int client)
 		SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 		float flGodDuration = !g_bTankConfig[ST_TankType(client)] ? g_flGodDuration[ST_TankType(client)] : g_flGodDuration2[ST_TankType(client)];
 		CreateTimer(flGodDuration, tTimerStopGod, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bGod[iPlayer] = false;
+		}
 	}
 }
 

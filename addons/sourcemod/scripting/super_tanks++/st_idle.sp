@@ -1,7 +1,7 @@
 // Super Tanks++: Idle Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,22 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bIdle[MAXPLAYERS + 1];
-bool g_bIdled[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flIdleRange[ST_MAXTYPES + 1];
-float g_flIdleRange2[ST_MAXTYPES + 1];
-Handle g_hSDKIdlePlayer;
-Handle g_hSDKSpecPlayer;
-int g_iIdleAbility[ST_MAXTYPES + 1];
-int g_iIdleAbility2[ST_MAXTYPES + 1];
-int g_iIdleChance[ST_MAXTYPES + 1];
-int g_iIdleChance2[ST_MAXTYPES + 1];
-int g_iIdleHit[ST_MAXTYPES + 1];
-int g_iIdleHit2[ST_MAXTYPES + 1];
-int g_iIdleRangeChance[ST_MAXTYPES + 1];
-int g_iIdleRangeChance2[ST_MAXTYPES + 1];
+bool g_bIdle[MAXPLAYERS + 1], g_bIdled[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flIdleRange[ST_MAXTYPES + 1], g_flIdleRange2[ST_MAXTYPES + 1];
+Handle g_hSDKIdlePlayer, g_hSDKSpecPlayer;
+int g_iIdleAbility[ST_MAXTYPES + 1], g_iIdleAbility2[ST_MAXTYPES + 1],
+	g_iIdleChance[ST_MAXTYPES + 1], g_iIdleChance2[ST_MAXTYPES + 1], g_iIdleHit[ST_MAXTYPES + 1],
+	g_iIdleHit2[ST_MAXTYPES + 1], g_iIdleRangeChance[ST_MAXTYPES + 1],
+	g_iIdleRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -71,17 +62,16 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bIdle[iPlayer] = false;
-			g_bIdled[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -95,28 +85,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bIdle[iPlayer] = false;
-			g_bIdled[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -226,6 +195,18 @@ void vIdleHit(int client, int chance, int enabled)
 		{
 			g_bIdled[client] = true;
 			g_bIdle[client] = true;
+		}
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bIdle[iPlayer] = false;
+			g_bIdled[iPlayer] = false;
 		}
 	}
 }

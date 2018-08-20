@@ -1,7 +1,7 @@
 // Super Tanks++: Hurt Ability
+#include <super_tanks++>
 #pragma semicolon 1
 #pragma newdecls required
-#include <super_tanks++>
 
 public Plugin myinfo =
 {
@@ -12,23 +12,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bHurt[MAXPLAYERS + 1];
-bool g_bLateLoad;
-bool g_bTankConfig[ST_MAXTYPES + 1];
-float g_flHurtDuration[ST_MAXTYPES + 1];
-float g_flHurtDuration2[ST_MAXTYPES + 1];
-float g_flHurtRange[ST_MAXTYPES + 1];
-float g_flHurtRange2[ST_MAXTYPES + 1];
-int g_iHurtAbility[ST_MAXTYPES + 1];
-int g_iHurtAbility2[ST_MAXTYPES + 1];
-int g_iHurtChance[ST_MAXTYPES + 1];
-int g_iHurtChance2[ST_MAXTYPES + 1];
-int g_iHurtDamage[ST_MAXTYPES + 1];
-int g_iHurtDamage2[ST_MAXTYPES + 1];
-int g_iHurtHit[ST_MAXTYPES + 1];
-int g_iHurtHit2[ST_MAXTYPES + 1];
-int g_iHurtRangeChance[ST_MAXTYPES + 1];
-int g_iHurtRangeChance2[ST_MAXTYPES + 1];
+bool g_bHurt[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flHurtDuration[ST_MAXTYPES + 1], g_flHurtDuration2[ST_MAXTYPES + 1],
+	g_flHurtRange[ST_MAXTYPES + 1], g_flHurtRange2[ST_MAXTYPES + 1];
+int g_iHurtAbility[ST_MAXTYPES + 1], g_iHurtAbility2[ST_MAXTYPES + 1],
+	g_iHurtChance[ST_MAXTYPES + 1], g_iHurtChance2[ST_MAXTYPES + 1], g_iHurtDamage[ST_MAXTYPES + 1],
+	g_iHurtDamage2[ST_MAXTYPES + 1], g_iHurtHit[ST_MAXTYPES + 1], g_iHurtHit2[ST_MAXTYPES + 1],
+	g_iHurtRangeChance[ST_MAXTYPES + 1], g_iHurtRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,16 +42,16 @@ public void OnAllPluginsLoaded()
 
 public void OnMapStart()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bHurt[iPlayer] = false;
-		}
-	}
+	vReset();
 	if (g_bLateLoad)
 	{
-		vLateLoad(true);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+			}
+		}
 		g_bLateLoad = false;
 	}
 }
@@ -74,27 +64,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnMapEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_bHurt[iPlayer] = false;
-		}
-	}
-}
-
-void vLateLoad(bool late)
-{
-	if (late)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -181,6 +151,17 @@ void vHurtHit(int client, int owner, int chance, int enabled)
 		dpDataPack.WriteCell(GetClientUserId(client));
 		dpDataPack.WriteCell(GetClientUserId(owner));
 		dpDataPack.WriteFloat(GetEngineTime());
+	}
+}
+
+void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bHurt[iPlayer] = false;
+		}
 	}
 }
 
