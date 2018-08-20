@@ -771,7 +771,7 @@
 			// --
 			// 0: OFF
 			// 1: ON
-			"Cancer Hit"						"0"
+			"Cancer Hit"					"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -783,7 +783,7 @@
 			// --
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
-			"Cancer Range Chance"				"16"
+			"Cancer Range Chance"			"16"
 		}
 	}
 }

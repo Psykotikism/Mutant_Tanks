@@ -10,10 +10,6 @@ Changes:
 
 1. Optimized code a bit for the plugin and all of its modules.
 
-Files:
-
-1. Included a version for local/listen servers. (May be buggy, will not be supported.)
-
 ## Version 8.35 (August 16, 2018)
 
 Bug fixes:
