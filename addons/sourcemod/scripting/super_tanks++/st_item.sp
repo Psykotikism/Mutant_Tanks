@@ -1,5 +1,7 @@
 // Super Tanks++: Item Ability
+#define REQUIRE_PLUGIN
 #include <super_tanks++>
+#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -12,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sItemLoadout[ST_MAXTYPES + 1][325], g_sItemLoadout2[ST_MAXTYPES + 1][325];
 int g_iItemAbility[ST_MAXTYPES + 1], g_iItemAbility2[ST_MAXTYPES + 1],
 	g_iItemChance[ST_MAXTYPES + 1], g_iItemChance2[ST_MAXTYPES + 1], g_iItemMode[ST_MAXTYPES + 1],
@@ -21,9 +23,9 @@ int g_iItemAbility[ST_MAXTYPES + 1], g_iItemAbility2[ST_MAXTYPES + 1],
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		strcopy(error, err_max, "[ST++] Item Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
+		strcopy(error, err_max, "[ST++] Item Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -31,9 +33,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
-	if (!LibraryExists("super_tanks++"))
+	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
 	{
-		SetFailState("No Super Tanks++ library found.");
+		g_bPluginEnabled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
+	{
+		g_bPluginEnabled = false;
 	}
 }
 
@@ -70,7 +85,7 @@ public void ST_Event(Event event, const char[] name)
 		int iItemAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemAbility[ST_TankType(iTank)] : g_iItemAbility2[ST_TankType(iTank)];
 		int iItemChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemChance[ST_TankType(iTank)] : g_iItemChance2[ST_TankType(iTank)];
 		int iItemMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemMode[ST_TankType(iTank)] : g_iItemMode2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank) && iItemAbility == 1 && GetRandomInt(1, iItemChance) == 1)
+		if (g_bPluginEnabled && ST_TankAllowed(iTank) && iItemAbility == 1 && GetRandomInt(1, iItemChance) == 1)
 		{
 			char sItems[5][64], sItemLoadout[325];
 			sItemLoadout = !g_bTankConfig[ST_TankType(iTank)] ? g_sItemLoadout[ST_TankType(iTank)] : g_sItemLoadout2[ST_TankType(iTank)];

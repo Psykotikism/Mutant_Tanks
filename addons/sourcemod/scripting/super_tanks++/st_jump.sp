@@ -1,5 +1,7 @@
 // Super Tanks++: Jump Ability
+#define REQUIRE_PLUGIN
 #include <super_tanks++>
+#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -12,16 +14,16 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
 int g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpAbility2[ST_MAXTYPES + 1],
 	g_iJumpChance[ST_MAXTYPES + 1], g_iJumpChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		strcopy(error, err_max, "[ST++] Jump Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
+		strcopy(error, err_max, "[ST++] Jump Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -29,9 +31,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
-	if (!LibraryExists("super_tanks++"))
+	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
 	{
-		SetFailState("No Super Tanks++ library found.");
+		g_bPluginEnabled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
+	{
+		g_bPluginEnabled = false;
 	}
 }
 
@@ -59,7 +74,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Spawn(int client)
 {
 	int iJumpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iJumpAbility[ST_TankType(client)] : g_iJumpAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iJumpAbility == 1)
+	if (g_bPluginEnabled && ST_TankAllowed(client) && IsPlayerAlive(client) && iJumpAbility == 1)
 	{
 		CreateTimer(1.0, tTimerJump, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
@@ -68,7 +83,7 @@ public void ST_Spawn(int client)
 public Action tTimerJump(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}

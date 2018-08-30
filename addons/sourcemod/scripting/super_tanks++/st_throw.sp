@@ -1,5 +1,7 @@
 // Super Tanks++: Throw Ability
+#define REQUIRE_PLUGIN
 #include <super_tanks++>
+#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -12,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7],
 	g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15];
 ConVar g_cvSTFindConVar;
@@ -21,9 +23,9 @@ int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1];
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		strcopy(error, err_max, "[ST++] Throw Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
+		strcopy(error, err_max, "[ST++] Throw Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -31,9 +33,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
-	if (!LibraryExists("super_tanks++"))
+	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
 	{
-		SetFailState("No Super Tanks++ library found.");
+		g_bPluginEnabled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
+	{
+		g_bPluginEnabled = false;
 	}
 }
 
@@ -73,21 +88,21 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_RockThrow(int client, int entity)
 {
 	int iThrowAbility = !g_bTankConfig[ST_TankType(client)] ? g_iThrowAbility[ST_TankType(client)] : g_iThrowAbility2[ST_TankType(client)];
-	if (iThrowAbility == 1)
+	if (g_bPluginEnabled && iThrowAbility == 1)
 	{
 		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(0.1, tTimerCarThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(EntIndexToEntRef(entity));
 		dpDataPack.WriteCell(GetClientUserId(client));
 	}
-	else if (iThrowAbility == 2)
+	else if (g_bPluginEnabled && iThrowAbility == 2)
 	{
 		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDataPack.WriteCell(EntIndexToEntRef(entity));
 		dpDataPack.WriteCell(GetClientUserId(client));
 	}
-	else if (iThrowAbility == 3)
+	else if (g_bPluginEnabled && iThrowAbility == 3)
 	{
 		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(0.1, tTimerSelfThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -100,7 +115,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	if (!g_bPluginEnabled || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
@@ -136,7 +151,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 			SetEntityRenderColor(iCar, iRed, iGreen, iBlue, 255);
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			RemoveEntity(iRock);
+			AcceptEntityInput(iRock, "Kill");
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTFindConVar.FloatValue * 1.4);
 			DispatchSpawn(iCar);
@@ -153,7 +168,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	if (!g_bPluginEnabled || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
@@ -189,7 +204,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 			}
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			RemoveEntity(iRock);
+			AcceptEntityInput(iRock, "Kill");
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTFindConVar.FloatValue * 1.4);
 			TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
@@ -203,7 +218,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	if (!g_bPluginEnabled || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
@@ -224,7 +239,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 	{
 		float flPos[3];
 		GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-		RemoveEntity(iRock);
+		AcceptEntityInput(iRock, "Kill");
 		NormalizeVector(flVelocity, flVelocity);
 		ScaleVector(flVelocity, g_cvSTFindConVar.FloatValue * 1.4);
 		TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);

@@ -1,5 +1,7 @@
 // Super Tanks++: Nullify Ability
+#define REQUIRE_PLUGIN
 #include <super_tanks++>
+#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -12,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad, g_bNullify[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bNullify[MAXPLAYERS + 1], g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flNullifyDuration[ST_MAXTYPES + 1], g_flNullifyDuration2[ST_MAXTYPES + 1],
 	g_flNullifyRange[ST_MAXTYPES + 1], g_flNullifyRange2[ST_MAXTYPES + 1];
 int g_iNullifyAbility[ST_MAXTYPES + 1], g_iNullifyAbility2[ST_MAXTYPES + 1],
@@ -23,9 +25,9 @@ int g_iNullifyAbility[ST_MAXTYPES + 1], g_iNullifyAbility2[ST_MAXTYPES + 1],
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		strcopy(error, err_max, "[ST++] Nullify Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
+		strcopy(error, err_max, "[ST++] Nullify Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
 	g_bLateLoad = late;
@@ -34,9 +36,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
-	if (!LibraryExists("super_tanks++"))
+	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
 	{
-		SetFailState("No Super Tanks++ library found.");
+		g_bPluginEnabled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
+	{
+		g_bPluginEnabled = false;
 	}
 }
 
@@ -69,7 +84,7 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (g_bPluginEnabled && ST_PluginEnabled() && damage > 0.0)
 	{
 		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
@@ -135,7 +150,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (g_bPluginEnabled && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
 		int iNullifyRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyChance[ST_TankType(client)] : g_iNullifyChance2[ST_TankType(client)];
@@ -161,7 +176,7 @@ public void ST_Ability(int client)
 public void ST_BossStage(int client)
 {
 	int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iNullifyAbility == 1)
+	if (g_bPluginEnabled && ST_TankAllowed(client) && iNullifyAbility == 1)
 	{
 		vRemoveNullify();
 	}
@@ -169,7 +184,7 @@ public void ST_BossStage(int client)
 
 void vNullifyHit(int client, int owner, int chance, int enabled)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bNullify[client])
+	if (g_bPluginEnabled && enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bNullify[client])
 	{
 		g_bNullify[client] = true;
 		float flNullifyDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flNullifyDuration[ST_TankType(owner)] : g_flNullifyDuration2[ST_TankType(owner)];
@@ -206,7 +221,7 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!g_bPluginEnabled || !bIsSurvivor(iSurvivor))
 	{
 		g_bNullify[iSurvivor] = false;
 		return Plugin_Stop;

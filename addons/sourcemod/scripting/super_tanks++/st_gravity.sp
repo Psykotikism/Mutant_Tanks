@@ -1,5 +1,7 @@
 // Super Tanks++: Gravity Ability
+#define REQUIRE_PLUGIN
 #include <super_tanks++>
+#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -12,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bGravity[MAXPLAYERS + 1], g_bGravity2[MAXPLAYERS + 1], g_bLateLoad,
+bool g_bGravity[MAXPLAYERS + 1], g_bGravity2[MAXPLAYERS + 1], g_bLateLoad, g_bPluginEnabled,
 	g_bTankConfig[ST_MAXTYPES + 1];
 float g_flGravityDuration[ST_MAXTYPES + 1], g_flGravityDuration2[ST_MAXTYPES + 1],
 	g_flGravityForce[ST_MAXTYPES + 1], g_flGravityForce2[ST_MAXTYPES + 1],
@@ -26,9 +28,9 @@ int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1],
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		strcopy(error, err_max, "[ST++] Gravity Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
+		strcopy(error, err_max, "[ST++] Gravity Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
 	g_bLateLoad = late;
@@ -37,9 +39,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
-	if (!LibraryExists("super_tanks++"))
+	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
 	{
-		SetFailState("No Super Tanks++ library found.");
+		g_bPluginEnabled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
+	{
+		g_bPluginEnabled = false;
 	}
 }
 
@@ -73,7 +88,7 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (g_bPluginEnabled && ST_PluginEnabled() && damage > 0.0)
 	{
 		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
@@ -140,7 +155,7 @@ public void ST_Ability(int client)
 {
 	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
 	int iGravityRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
-	if (iGravityAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (g_bPluginEnabled && iGravityAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		if (!g_bGravity[client])
 		{
@@ -189,7 +204,7 @@ public void ST_Ability(int client)
 public void ST_BossStage(int client)
 {
 	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iGravityAbility == 1)
+	if (g_bPluginEnabled && ST_TankAllowed(client) && iGravityAbility == 1)
 	{
 		vRemoveGravity(client);
 	}
@@ -197,7 +212,7 @@ public void ST_BossStage(int client)
 
 void vGravityHit(int client, int owner, int chance, int enabled)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bGravity2[client])
+	if (g_bPluginEnabled && enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bGravity2[client])
 	{
 		g_bGravity2[client] = true;
 		float flGravityValue = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityValue[ST_TankType(owner)] : g_flGravityValue2[ST_TankType(owner)];
@@ -220,13 +235,13 @@ void vRemoveGravity(int client)
 			int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
 			if (iOwner == client)
 			{
-				RemoveEntity(iProp);
+				AcceptEntityInput(iProp, "Kill");
 			}
 		}
 		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 		if (iOwner == client)
 		{
-			RemoveEntity(iProp);
+			AcceptEntityInput(iProp, "Kill");
 		}
 	}
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -263,7 +278,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bGravity2[iSurvivor] = false;
 		SetEntityGravity(iSurvivor, 1.0);

@@ -1,5 +1,7 @@
 // Super Tanks++: Meteor Ability
+#define REQUIRE_PLUGIN
 #include <super_tanks++>
+#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -12,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bMeteor[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bMeteor[MAXPLAYERS + 1], g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13],
 	g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80];
 int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1],
@@ -22,9 +24,9 @@ int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1],
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		strcopy(error, err_max, "[ST++] Meteor Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
+		strcopy(error, err_max, "[ST++] Meteor Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -32,9 +34,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
-	if (!LibraryExists("super_tanks++"))
+	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
 	{
-		SetFailState("No Super Tanks++ library found.");
+		g_bPluginEnabled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
+	{
+		g_bPluginEnabled = false;
 	}
 }
 
@@ -82,7 +97,7 @@ public void ST_Ability(int client)
 {
 	int iMeteorAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorAbility[ST_TankType(client)] : g_iMeteorAbility2[ST_TankType(client)];
 	int iMeteorChance = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorChance[ST_TankType(client)] : g_iMeteorChance2[ST_TankType(client)];
-	if (iMeteorAbility == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bMeteor[client])
+	if (g_bPluginEnabled && iMeteorAbility == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bMeteor[client])
 	{
 		g_bMeteor[client] = true;
 		float flPos[3];
@@ -99,7 +114,7 @@ public void ST_Ability(int client)
 
 void vMeteor(int client, int entity)
 {
-	if (!ST_TankAllowed(client) || !IsPlayerAlive(client) || !bIsValidEntity(entity))
+	if (!g_bPluginEnabled || !ST_TankAllowed(client) || !IsPlayerAlive(client) || !bIsValidEntity(entity))
 	{
 		return;
 	}
@@ -107,7 +122,7 @@ void vMeteor(int client, int entity)
 	GetEntityClassname(entity, sClassname, sizeof(sClassname));
 	if (strcmp(sClassname, "tank_rock") == 0)
 	{
-		RemoveEntity(entity);
+		AcceptEntityInput(entity, "Kill");
 		char sDamage[6];
 		int iMeteorDamage = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorDamage[ST_TankType(client)] : g_iMeteorDamage2[ST_TankType(client)];
 		IntToString(iMeteorDamage, sDamage, sizeof(sDamage));
@@ -139,7 +154,7 @@ void vMeteor(int client, int entity)
 			TeleportEntity(iPointHurt, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iPointHurt);
 			AcceptEntityInput(iPointHurt, "Hurt", client);
-			RemoveEntity(iPointHurt);
+			AcceptEntityInput(iPointHurt, "Kill");
 		}
 		int iPointPush = CreateEntityByName("point_push");
 		if (bIsValidEntity(iPointPush))
@@ -172,7 +187,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bMeteor[iTank] = false;
 		return Plugin_Stop;

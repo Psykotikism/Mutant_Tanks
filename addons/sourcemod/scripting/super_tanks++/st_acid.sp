@@ -1,5 +1,7 @@
 // Super Tanks++: Acid Ability
+#define REQUIRE_PLUGIN
 #include <super_tanks++>
+#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -12,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flAcidRange[ST_MAXTYPES + 1], g_flAcidRange2[ST_MAXTYPES + 1];
 Handle g_hSDKAcidPlayer, g_hSDKPukePlayer;
 int g_iAcidAbility[ST_MAXTYPES + 1], g_iAcidAbility2[ST_MAXTYPES + 1],
@@ -23,9 +25,9 @@ int g_iAcidAbility[ST_MAXTYPES + 1], g_iAcidAbility2[ST_MAXTYPES + 1],
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		strcopy(error, err_max, "[ST++] Acid Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
+		strcopy(error, err_max, "[ST++] Acid Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
 	g_bLateLoad = late;
@@ -34,9 +36,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
-	if (!LibraryExists("super_tanks++"))
+	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
 	{
-		SetFailState("No Super Tanks++ library found.");
+		g_bPluginEnabled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
+	{
+		g_bPluginEnabled = false;
 	}
 }
 
@@ -96,7 +111,7 @@ public void OnClientPostAdminCheck(int client)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (g_bPluginEnabled && ST_PluginEnabled() && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -166,7 +181,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (g_bPluginEnabled && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)];
 		int iAcidRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAcidChance[ST_TankType(client)] : g_iAcidChance2[ST_TankType(client)];
@@ -192,7 +207,7 @@ public void ST_Ability(int client)
 public void ST_BossStage(int client)
 {
 	int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iAcidAbility == 1 && bIsL4D2Game())
+	if (g_bPluginEnabled && ST_TankAllowed(client) && iAcidAbility == 1 && bIsL4D2Game())
 	{
 		vAcid(client, client);
 	}
@@ -201,7 +216,7 @@ public void ST_BossStage(int client)
 public void ST_RockBreak(int client, int entity)
 {
 	int iAcidRock = !g_bTankConfig[ST_TankType(client)] ? g_iAcidRock[ST_TankType(client)] : g_iAcidRock2[ST_TankType(client)];
-	if (iAcidRock == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && bIsL4D2Game())
+	if (g_bPluginEnabled && iAcidRock == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && bIsL4D2Game())
 	{
 		float flOrigin[3], flAngles[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
@@ -220,7 +235,7 @@ void vAcid(int client, int owner)
 
 void vAcidHit(int client, int owner, int chance, int enabled)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if (g_bPluginEnabled && enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		bIsL4D2Game() ? vAcid(client, owner) : SDKCall(g_hSDKPukePlayer, client, owner, true);
 	}

@@ -1,5 +1,7 @@
 // Super Tanks++: Drop Ability
+#define REQUIRE_PLUGIN
 #include <super_tanks++>
+#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -12,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bDrop[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bDrop[MAXPLAYERS + 1], g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sWeaponClass[32][128], g_sWeaponModel[32][128];
 ConVar g_cvSTFindConVar[7];
 float g_flDropWeaponScale[ST_MAXTYPES + 1], g_flDropWeaponScale2[ST_MAXTYPES + 1];
@@ -24,9 +26,9 @@ int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropAbility2[ST
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		strcopy(error, err_max, "[ST++] Drop Ability only supports Left 4 Dead 1 & 2 Dedicated Servers.");
+		strcopy(error, err_max, "[ST++] Drop Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
@@ -34,9 +36,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
-	if (!LibraryExists("super_tanks++"))
+	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
 	{
-		SetFailState("No Super Tanks++ library found.");
+		g_bPluginEnabled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "super_tanks++") == 0)
+	{
+		g_bPluginEnabled = false;
 	}
 }
 
@@ -194,7 +209,7 @@ public void OnMapEnd()
 public Action SetTransmit(int entity, int client)
 {
 	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (iOwner == client)
+	if (g_bPluginEnabled && iOwner == client)
 	{
 		return Plugin_Handled;
 	}
@@ -325,7 +340,7 @@ public void ST_BossStage(int client)
 public void ST_Spawn(int client)
 {
 	int iDropAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
-	if (iDropAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bDrop[client])
+	if (g_bPluginEnabled && iDropAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bDrop[client])
 	{
 		g_bDrop[client] = true;
 		CreateTimer(1.0, tTimerDrop, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
@@ -337,7 +352,7 @@ void vDeleteDrop(int client)
 	if (bIsValidEntity(g_iDrop[client]))
 	{
 		SDKUnhook(g_iDrop[client], SDKHook_SetTransmit, SetTransmit);
-		RemoveEntity(g_iDrop[client]);
+		AcceptEntityInput(g_iDrop[client], "Kill");
 	}
 	g_iDrop[client] = 0;
 }
@@ -444,7 +459,7 @@ void vResetDrop(int client)
 public Action tTimerDrop(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bDrop[iTank] = false;
 		return Plugin_Stop;

@@ -53,9 +53,9 @@ TopMenu g_tmSTMenu;
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
-	if ((evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2) || !IsDedicatedServer())
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
-		strcopy(error, err_max, "Super Tanks++ only supports Left 4 Dead 1 & 2 Dedicated Servers.");
+		strcopy(error, err_max, "Super Tanks++ only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
 	CreateNative("ST_MaxTypes", iNative_MaxTypes);
@@ -1052,7 +1052,7 @@ void vRemoveProps(int client)
 			if (iOwner == client)
 			{
 				SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-				RemoveEntity(iProp);
+				AcceptEntityInput(iProp, "Kill");
 			}
 		}
 	}
@@ -1062,7 +1062,7 @@ void vRemoveProps(int client)
 		if (iOwner == client)
 		{
 			SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-			RemoveEntity(iProp);
+			AcceptEntityInput(iProp, "Kill");
 		}
 	}
 }
