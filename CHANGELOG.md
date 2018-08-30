@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 8.37 (August 30, 2018)
+
+Changes:
+
+1. Added support for dynamic loading to the modules. (Thanks Lux!)
+2. Switched RemoveEntity(entity) back to AcceptEntityInput(entity, "Kill") just to be curteous to those who prefer to still use SM 1.8.
+3. Removed IsDedicatedServer() just to be curteous to those who do not have dedicated servers. (Please don't report bugs if you're playing on a local/listen server. :/)
+
 ## Version 8.36 (August 20, 2018)
 
 Bug fixes:
