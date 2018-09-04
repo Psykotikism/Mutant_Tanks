@@ -15,8 +15,7 @@ public Plugin myinfo =
 };
 
 bool g_bTankConfig[ST_MAXTYPES + 1];
-char g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7],
-	g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15];
+char g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7], g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15];
 ConVar g_cvSTTankThrowForce;
 int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1];
 
@@ -69,24 +68,24 @@ public void ST_RockThrow(int client, int entity)
 	int iThrowAbility = !g_bTankConfig[ST_TankType(client)] ? g_iThrowAbility[ST_TankType(client)] : g_iThrowAbility2[ST_TankType(client)];
 	if (iThrowAbility == 1)
 	{
-		DataPack dpDataPack = new DataPack();
-		CreateDataTimer(0.1, tTimerCarThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDataPack.WriteCell(EntIndexToEntRef(entity));
-		dpDataPack.WriteCell(GetClientUserId(client));
+		DataPack dpCarThrow = new DataPack();
+		CreateDataTimer(0.1, tTimerCarThrow, dpCarThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpCarThrow.WriteCell(EntIndexToEntRef(entity));
+		dpCarThrow.WriteCell(GetClientUserId(client));
 	}
 	else if (iThrowAbility == 2)
 	{
-		DataPack dpDataPack = new DataPack();
-		CreateDataTimer(0.1, tTimerInfectedThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDataPack.WriteCell(EntIndexToEntRef(entity));
-		dpDataPack.WriteCell(GetClientUserId(client));
+		DataPack dpInfectedThrow = new DataPack();
+		CreateDataTimer(0.1, tTimerInfectedThrow, dpInfectedThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpInfectedThrow.WriteCell(EntIndexToEntRef(entity));
+		dpInfectedThrow.WriteCell(GetClientUserId(client));
 	}
 	else if (iThrowAbility == 3)
 	{
-		DataPack dpDataPack = new DataPack();
-		CreateDataTimer(0.1, tTimerSelfThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDataPack.WriteCell(EntIndexToEntRef(entity));
-		dpDataPack.WriteCell(GetClientUserId(client));
+		DataPack dpSelfThrow = new DataPack();
+		CreateDataTimer(0.1, tTimerSelfThrow, dpSelfThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpSelfThrow.WriteCell(EntIndexToEntRef(entity));
+		dpSelfThrow.WriteCell(GetClientUserId(client));
 	}
 }
 

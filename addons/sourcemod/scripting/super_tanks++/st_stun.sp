@@ -15,13 +15,8 @@ public Plugin myinfo =
 };
 
 bool g_bLateLoad, g_bStun[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-float g_flStunDuration[ST_MAXTYPES + 1], g_flStunDuration2[ST_MAXTYPES + 1],
-	g_flStunRange[ST_MAXTYPES + 1], g_flStunRange2[ST_MAXTYPES + 1], g_flStunSpeed[ST_MAXTYPES + 1],
-	g_flStunSpeed2[ST_MAXTYPES + 1];
-int g_iStunAbility[ST_MAXTYPES + 1], g_iStunAbility2[ST_MAXTYPES + 1],
-	g_iStunChance[ST_MAXTYPES + 1], g_iStunChance2[ST_MAXTYPES + 1], g_iStunHit[ST_MAXTYPES + 1],
-	g_iStunHit2[ST_MAXTYPES + 1], g_iStunRangeChance[ST_MAXTYPES + 1],
-	g_iStunRangeChance2[ST_MAXTYPES + 1];
+float g_flStunDuration[ST_MAXTYPES + 1], g_flStunDuration2[ST_MAXTYPES + 1], g_flStunRange[ST_MAXTYPES + 1], g_flStunRange2[ST_MAXTYPES + 1], g_flStunSpeed[ST_MAXTYPES + 1], g_flStunSpeed2[ST_MAXTYPES + 1];
+int g_iStunAbility[ST_MAXTYPES + 1], g_iStunAbility2[ST_MAXTYPES + 1], g_iStunChance[ST_MAXTYPES + 1], g_iStunChance2[ST_MAXTYPES + 1], g_iStunHit[ST_MAXTYPES + 1], g_iStunHit2[ST_MAXTYPES + 1], g_iStunRangeChance[ST_MAXTYPES + 1], g_iStunRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -164,10 +159,10 @@ void vRemoveStun(int client)
 	{
 		if (bIsSurvivor(iSurvivor) && g_bStun[iSurvivor])
 		{
-			DataPack dpDataPack = new DataPack();
-			CreateDataTimer(0.1, tTimerStopStun, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-			dpDataPack.WriteCell(GetClientUserId(client));
+			DataPack dpStopStun = new DataPack();
+			CreateDataTimer(0.1, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
+			dpStopStun.WriteCell(GetClientUserId(iSurvivor));
+			dpStopStun.WriteCell(GetClientUserId(client));
 		}
 	}
 }
@@ -191,10 +186,10 @@ void vStunHit(int client, int owner, int chance, int enabled)
 		float flStunSpeed = !g_bTankConfig[ST_TankType(owner)] ? g_flStunSpeed[ST_TankType(owner)] : g_flStunSpeed2[ST_TankType(owner)],
 			flStunDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flStunDuration[ST_TankType(owner)] : g_flStunDuration2[ST_TankType(owner)];
 		SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", flStunSpeed);
-		DataPack dpDataPack = new DataPack();
-		CreateDataTimer(flStunDuration, tTimerStopStun, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-		dpDataPack.WriteCell(GetClientUserId(client));
-		dpDataPack.WriteCell(GetClientUserId(owner));
+		DataPack dpStopStun = new DataPack();
+		CreateDataTimer(flStunDuration, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
+		dpStopStun.WriteCell(GetClientUserId(client));
+		dpStopStun.WriteCell(GetClientUserId(owner));
 	}
 }
 

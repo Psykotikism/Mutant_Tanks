@@ -16,12 +16,9 @@ public Plugin myinfo =
 
 bool g_bDrug[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0},
-	g_flDrugDuration[ST_MAXTYPES + 1], g_flDrugDuration2[ST_MAXTYPES + 1],
-	g_flDrugRange[ST_MAXTYPES + 1], g_flDrugRange2[ST_MAXTYPES + 1];
-int g_iDrugAbility[ST_MAXTYPES + 1], g_iDrugAbility2[ST_MAXTYPES + 1],
-	g_iDrugChance[ST_MAXTYPES + 1], g_iDrugChance2[ST_MAXTYPES + 1], g_iDrugHit[ST_MAXTYPES + 1],
-	g_iDrugHit2[ST_MAXTYPES + 1], g_iDrugRangeChance[ST_MAXTYPES + 1],
-	g_iDrugRangeChance2[ST_MAXTYPES + 1];
+	g_flDrugDuration[ST_MAXTYPES + 1], g_flDrugDuration2[ST_MAXTYPES + 1], g_flDrugRange[ST_MAXTYPES + 1], g_flDrugRange2[ST_MAXTYPES + 1];
+int g_iDrugAbility[ST_MAXTYPES + 1], g_iDrugAbility2[ST_MAXTYPES + 1], g_iDrugChance[ST_MAXTYPES + 1], g_iDrugChance2[ST_MAXTYPES + 1],
+	g_iDrugHit[ST_MAXTYPES + 1], g_iDrugHit2[ST_MAXTYPES + 1], g_iDrugRangeChance[ST_MAXTYPES + 1], g_iDrugRangeChance2[ST_MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -150,9 +147,7 @@ void vDrug(int client, bool toggle, float angles[20])
 	iClients[0] = client;
 	if (toggle)
 	{
-		iColor[0] = GetRandomInt(0, 255);
-		iColor[1] = GetRandomInt(0, 255);
-		iColor[2] = GetRandomInt(0, 255);
+		iColor[0] = GetRandomInt(0, 255), iColor[1] = GetRandomInt(0, 255), iColor[2] = GetRandomInt(0, 255);
 	}
 	Handle hDrugTarget = StartMessageEx(g_umFadeUserMsgId, iClients, 1);
 	if (GetUserMessageType() == UM_Protobuf)
@@ -182,11 +177,11 @@ void vDrugHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bDrug[client])
 	{
 		g_bDrug[client] = true;
-		DataPack dpDataPack = new DataPack();
-		CreateDataTimer(1.0, tTimerDrug, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDataPack.WriteCell(GetClientUserId(client));
-		dpDataPack.WriteCell(GetClientUserId(owner));
-		dpDataPack.WriteFloat(GetEngineTime());
+		DataPack dpDrug = new DataPack();
+		CreateDataTimer(1.0, tTimerDrug, dpDrug, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpDrug.WriteCell(GetClientUserId(client));
+		dpDrug.WriteCell(GetClientUserId(owner));
+		dpDrug.WriteFloat(GetEngineTime());
 	}
 }
 

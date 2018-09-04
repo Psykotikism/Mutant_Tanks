@@ -179,10 +179,10 @@ public void ST_RockThrow(int client, int entity)
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
 	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iShieldAbility == 1)
 	{
-		DataPack dpDataPack = new DataPack();
-		CreateDataTimer(0.1, tTimerShieldThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDataPack.WriteCell(EntIndexToEntRef(entity));
-		dpDataPack.WriteCell(GetClientUserId(client));
+		DataPack dpShieldThrow = new DataPack();
+		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpShieldThrow.WriteCell(EntIndexToEntRef(entity));
+		dpShieldThrow.WriteCell(GetClientUserId(client));
 	}
 }
 

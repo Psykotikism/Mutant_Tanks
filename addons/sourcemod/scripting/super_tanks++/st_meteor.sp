@@ -15,11 +15,8 @@ public Plugin myinfo =
 };
 
 bool g_bMeteor[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13],
-	g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80];
-int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1],
-	g_iMeteorChance[ST_MAXTYPES + 1], g_iMeteorChance2[ST_MAXTYPES + 1],
-	g_iMeteorDamage[ST_MAXTYPES + 1], g_iMeteorDamage2[ST_MAXTYPES + 1];
+char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80];
+int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorChance[ST_MAXTYPES + 1], g_iMeteorChance2[ST_MAXTYPES + 1], g_iMeteorDamage[ST_MAXTYPES + 1], g_iMeteorDamage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -82,13 +79,13 @@ public void ST_Ability(int client)
 		g_bMeteor[client] = true;
 		float flPos[3];
 		GetClientEyePosition(client, flPos);
-		DataPack dpDataPack = new DataPack();
-		CreateDataTimer(0.6, tTimerMeteorUpdate, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDataPack.WriteCell(GetClientUserId(client));
-		dpDataPack.WriteFloat(flPos[0]);
-		dpDataPack.WriteFloat(flPos[1]);
-		dpDataPack.WriteFloat(flPos[2]);
-		dpDataPack.WriteFloat(GetEngineTime());
+		DataPack dpMeteorUpdate = new DataPack();
+		CreateDataTimer(0.6, tTimerMeteorUpdate, dpMeteorUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpMeteorUpdate.WriteCell(GetClientUserId(client));
+		dpMeteorUpdate.WriteFloat(flPos[0]);
+		dpMeteorUpdate.WriteFloat(flPos[1]);
+		dpMeteorUpdate.WriteFloat(flPos[2]);
+		dpMeteorUpdate.WriteFloat(GetEngineTime());
 	}
 }
 
@@ -215,9 +212,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	if (g_bMeteor[iTank])
 	{
 		float flAngles[3], flVelocity[3], flHitpos[3], flVector[3];
-		flAngles[0] = GetRandomFloat(-20.0, 20.0);
-		flAngles[1] = GetRandomFloat(-20.0, 20.0);
-		flAngles[2] = 60.0;
+		flAngles[0] = GetRandomFloat(-20.0, 20.0), flAngles[1] = GetRandomFloat(-20.0, 20.0), flAngles[2] = 60.0;
 		GetVectorAngles(flAngles, flAngles);
 		iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
 		float flDistance = GetVectorDistance(flPos, flHitpos);
@@ -237,12 +232,8 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 				SetEntityModel(iRock, MODEL_CONCRETE);
 				SetEntityRenderColor(iRock, iRed, iGreen, iBlue, iAlpha);
 				float flAngles2[3];
-				flAngles2[0] = GetRandomFloat(flMin, flMax);
-				flAngles2[1] = GetRandomFloat(flMin, flMax);
-				flAngles2[2] = GetRandomFloat(flMin, flMax);
-				flVelocity[0] = GetRandomFloat(0.0, 350.0);
-				flVelocity[1] = GetRandomFloat(0.0, 350.0);
-				flVelocity[2] = GetRandomFloat(0.0, 30.0);
+				flAngles2[0] = GetRandomFloat(flMin, flMax), flAngles2[1] = GetRandomFloat(flMin, flMax), flAngles2[2] = GetRandomFloat(flMin, flMax);
+				flVelocity[0] = GetRandomFloat(0.0, 350.0), flVelocity[1] = GetRandomFloat(0.0, 350.0), flVelocity[2] = GetRandomFloat(0.0, 30.0);
 				TeleportEntity(iRock, flHitpos, flAngles2, flVelocity);
 				DispatchSpawn(iRock);
 				ActivateEntity(iRock);

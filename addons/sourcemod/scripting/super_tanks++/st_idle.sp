@@ -17,10 +17,8 @@ public Plugin myinfo =
 bool g_bIdle[MAXPLAYERS + 1], g_bIdled[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flIdleRange[ST_MAXTYPES + 1], g_flIdleRange2[ST_MAXTYPES + 1];
 Handle g_hSDKIdlePlayer, g_hSDKSpecPlayer;
-int g_iIdleAbility[ST_MAXTYPES + 1], g_iIdleAbility2[ST_MAXTYPES + 1],
-	g_iIdleChance[ST_MAXTYPES + 1], g_iIdleChance2[ST_MAXTYPES + 1], g_iIdleHit[ST_MAXTYPES + 1],
-	g_iIdleHit2[ST_MAXTYPES + 1], g_iIdleRangeChance[ST_MAXTYPES + 1],
-	g_iIdleRangeChance2[ST_MAXTYPES + 1];
+int g_iIdleAbility[ST_MAXTYPES + 1], g_iIdleAbility2[ST_MAXTYPES + 1], g_iIdleChance[ST_MAXTYPES + 1], g_iIdleChance2[ST_MAXTYPES + 1],
+	g_iIdleHit[ST_MAXTYPES + 1], g_iIdleHit2[ST_MAXTYPES + 1], g_iIdleRangeChance[ST_MAXTYPES + 1], g_iIdleRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -140,10 +138,10 @@ public void ST_Event(Event event, const char[] name)
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 		if (bIsIdlePlayer(iBot, iSurvivor)) 
 		{
-			DataPack dpDataPack = new DataPack();
-			CreateDataTimer(0.2, tTimerIdleFix, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-			dpDataPack.WriteCell(iSurvivorId);
-			dpDataPack.WriteCell(iBotId);
+			DataPack dpIdleFix = new DataPack();
+			CreateDataTimer(0.2, tTimerIdleFix, dpIdleFix, TIMER_FLAG_NO_MAPCHANGE);
+			dpIdleFix.WriteCell(iSurvivorId);
+			dpIdleFix.WriteCell(iBotId);
 			if (g_bIdle[iSurvivor])
 			{
 				g_bIdle[iSurvivor] = false;

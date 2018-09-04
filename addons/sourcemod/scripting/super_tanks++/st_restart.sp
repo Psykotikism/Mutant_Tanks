@@ -18,11 +18,8 @@ bool g_bLateLoad, g_bRestartValid, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sRestartLoadout[ST_MAXTYPES + 1][325], g_sRestartLoadout2[ST_MAXTYPES + 1][325];
 float g_flRestartPosition[3], g_flRestartRange[ST_MAXTYPES + 1], g_flRestartRange2[ST_MAXTYPES + 1];
 Handle g_hSDKRespawnPlayer;
-int g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1],
-	g_iRestartChance[ST_MAXTYPES + 1], g_iRestartChance2[ST_MAXTYPES + 1],
-	g_iRestartHit[ST_MAXTYPES + 1], g_iRestartHit2[ST_MAXTYPES + 1],
-	g_iRestartMode[ST_MAXTYPES + 1], g_iRestartMode2[ST_MAXTYPES + 1],
-	g_iRestartRangeChance[ST_MAXTYPES + 1], g_iRestartRangeChance2[ST_MAXTYPES + 1];
+int g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1], g_iRestartChance[ST_MAXTYPES + 1], g_iRestartChance2[ST_MAXTYPES + 1], g_iRestartHit[ST_MAXTYPES + 1],
+	g_iRestartHit2[ST_MAXTYPES + 1], g_iRestartMode[ST_MAXTYPES + 1], g_iRestartMode2[ST_MAXTYPES + 1], g_iRestartRangeChance[ST_MAXTYPES + 1], g_iRestartRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -198,9 +195,7 @@ public Action tTimerRestartCoordinates(Handle timer)
 		if (bIsSurvivor(iSurvivor))
 		{
 			g_bRestartValid = true;
-			g_flRestartPosition[0] = 0.0;
-			g_flRestartPosition[1] = 0.0;
-			g_flRestartPosition[2] = 0.0;
+			g_flRestartPosition[0] = 0.0, g_flRestartPosition[1] = 0.0, g_flRestartPosition[2] = 0.0;
 			GetClientAbsOrigin(iSurvivor, g_flRestartPosition);
 			break;
 		}
