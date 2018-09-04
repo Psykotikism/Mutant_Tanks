@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 8.38 (TBA)
+
+Bug fixes:
+
+1. Fixed some modules not working properly for custom configs.
+2. Fixed custom configs not working.
+
+Changes:
+
+1. Increased the maximum amount of possible Super Tank types from 2500 to 5000.
+2. Replaced the "Maximum Types" setting with the new "Type Range" setting. (Usage: "Type Range" "1-5000")
+
+Files:
+
+1. Updated include file to add new natives and remove some stocks.
+
 ## Version 8.37 (August 30, 2018)
 
 Changes:
