@@ -99,8 +99,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iAcidChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iAcidChance[ST_TankType(attacker)] : g_iAcidChance2[ST_TankType(attacker)];
-				int iAcidHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iAcidHit[ST_TankType(attacker)] : g_iAcidHit2[ST_TankType(attacker)];
+				int iAcidChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iAcidChance[ST_TankType(attacker)] : g_iAcidChance2[ST_TankType(attacker)],
+					iAcidHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iAcidHit[ST_TankType(attacker)] : g_iAcidHit2[ST_TankType(attacker)];
 				vAcidHit(victim, attacker, iAcidChance, iAcidHit);
 			}
 		}
@@ -108,8 +108,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				int iAcidChance = !g_bTankConfig[ST_TankType(victim)] ? g_iAcidChance[ST_TankType(victim)] : g_iAcidChance2[ST_TankType(victim)];
-				int iAcidHit = !g_bTankConfig[ST_TankType(victim)] ? g_iAcidHit[ST_TankType(victim)] : g_iAcidHit2[ST_TankType(victim)];
+				int iAcidChance = !g_bTankConfig[ST_TankType(victim)] ? g_iAcidChance[ST_TankType(victim)] : g_iAcidChance2[ST_TankType(victim)],
+					iAcidHit = !g_bTankConfig[ST_TankType(victim)] ? g_iAcidHit[ST_TankType(victim)] : g_iAcidHit2[ST_TankType(victim)];
 				vAcidHit(attacker, victim, iAcidChance, iAcidHit);
 			}
 		}
@@ -149,9 +149,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iAcidAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iAcidAbility[ST_TankType(iTank)] : g_iAcidAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iAcidAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iAcidAbility[ST_TankType(iTank)] : g_iAcidAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iAcidAbility == 1 && bIsL4D2Game())
 		{
 			vAcid(iTank, iTank);
@@ -163,10 +162,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)];
-		int iAcidRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAcidChance[ST_TankType(client)] : g_iAcidChance2[ST_TankType(client)];
-		float flAcidRange = !g_bTankConfig[ST_TankType(client)] ? g_flAcidRange[ST_TankType(client)] : g_flAcidRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)],
+			iAcidRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAcidChance[ST_TankType(client)] : g_iAcidChance2[ST_TankType(client)];
+		float flAcidRange = !g_bTankConfig[ST_TankType(client)] ? g_flAcidRange[ST_TankType(client)] : g_flAcidRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

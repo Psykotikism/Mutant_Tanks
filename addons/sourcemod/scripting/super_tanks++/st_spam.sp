@@ -73,8 +73,8 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iSpamAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSpamAbility[ST_TankType(client)] : g_iSpamAbility2[ST_TankType(client)];
-	int iSpamChance = !g_bTankConfig[ST_TankType(client)] ? g_iSpamChance[ST_TankType(client)] : g_iSpamChance2[ST_TankType(client)];
+	int iSpamAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSpamAbility[ST_TankType(client)] : g_iSpamAbility2[ST_TankType(client)],
+		iSpamChance = !g_bTankConfig[ST_TankType(client)] ? g_iSpamChance[ST_TankType(client)] : g_iSpamChance2[ST_TankType(client)];
 	if (iSpamAbility == 1 && GetRandomInt(1, iSpamChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bSpam[client])
 	{
 		g_bSpam[client] = true;
@@ -105,9 +105,9 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 		g_bSpam[iTank] = false;
 		return Plugin_Stop;
 	}
-	float flTime = pack.ReadFloat();
+	float flTime = pack.ReadFloat(),
+		flSpamDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flSpamDuration[ST_TankType(iTank)] : g_flSpamDuration2[ST_TankType(iTank)];
 	int iSpamAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamAbility[ST_TankType(iTank)] : g_iSpamAbility2[ST_TankType(iTank)];
-	float flSpamDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flSpamDuration[ST_TankType(iTank)] : g_flSpamDuration2[ST_TankType(iTank)];
 	if (iSpamAbility == 0 || (flTime + flSpamDuration) < GetEngineTime())
 	{
 		g_bSpam[iTank] = false;
@@ -116,15 +116,15 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	char sDamage[6];
 	int iSpamDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamDamage[ST_TankType(iTank)] : g_iSpamDamage2[ST_TankType(iTank)];
 	IntToString(iSpamDamage, sDamage, sizeof(sDamage));
-	float flPos[3], flAng[3];
+	float flPos[3], flAngle[3];
 	GetClientEyePosition(iTank, flPos);
-	GetClientEyeAngles(iTank, flAng);
+	GetClientEyeAngles(iTank, flAngle);
 	flPos[2] += 80.0;
 	int iSpammer = CreateEntityByName("env_rock_launcher");
 	if (bIsValidEntity(iSpammer))
 	{
 		DispatchKeyValue(iSpammer, "rockdamageoverride", sDamage);
-		TeleportEntity(iSpammer, flPos, flAng, NULL_VECTOR);
+		TeleportEntity(iSpammer, flPos, flAngle, NULL_VECTOR);
 		DispatchSpawn(iSpammer);
 		AcceptEntityInput(iSpammer, "LaunchRock");
 		AcceptEntityInput(iSpammer, "Kill");

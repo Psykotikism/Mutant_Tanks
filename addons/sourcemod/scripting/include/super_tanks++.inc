@@ -2894,9 +2894,9 @@ stock void vGhostDrop(int client, char[] slots, char[] number, int slot)
 stock void vHeal(int client, int health, int extrahealth, int maxhealth)
 {
 	maxhealth = iSetCellLimit(maxhealth, 1, ST_MAXHEALTH);
-	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth;
-	int iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth;
-	int iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
+	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth,
+		iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth,
+		iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
 	SetEntityHealth(client, iRealHealth);
 }
 
@@ -2950,9 +2950,7 @@ stock void vSetEntityParent(int entity, int parent)
 
 stock void vSetVector(float target[3], float x, float y, float z)
 {
-	target[0] = x;
-	target[1] = y;
-	target[2] = z;
+	target[0] = x, target[1] = y, target[2] = z;
 }
 
 stock void vShake(int client, float duration = 1.0)

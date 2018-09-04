@@ -86,8 +86,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iShoveChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iShoveChance[ST_TankType(attacker)] : g_iShoveChance2[ST_TankType(attacker)];
-				int iShoveHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iShoveHit[ST_TankType(attacker)] : g_iShoveHit2[ST_TankType(attacker)];
+				int iShoveChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iShoveChance[ST_TankType(attacker)] : g_iShoveChance2[ST_TankType(attacker)],
+					iShoveHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iShoveHit[ST_TankType(attacker)] : g_iShoveHit2[ST_TankType(attacker)];
 				vShoveHit(victim, attacker, iShoveChance, iShoveHit);
 			}
 		}
@@ -127,10 +127,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iShoveAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShoveAbility[ST_TankType(client)] : g_iShoveAbility2[ST_TankType(client)];
-		int iShoveRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iShoveChance[ST_TankType(client)] : g_iShoveChance2[ST_TankType(client)];
-		float flShoveRange = !g_bTankConfig[ST_TankType(client)] ? g_flShoveRange[ST_TankType(client)] : g_flShoveRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iShoveAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShoveAbility[ST_TankType(client)] : g_iShoveAbility2[ST_TankType(client)],
+			iShoveRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iShoveChance[ST_TankType(client)] : g_iShoveChance2[ST_TankType(client)];
+		float flShoveRange = !g_bTankConfig[ST_TankType(client)] ? g_flShoveRange[ST_TankType(client)] : g_flShoveRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -187,9 +187,9 @@ public Action tTimerShove(Handle timer, DataPack pack)
 		g_bShove[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	float flTime = pack.ReadFloat();
+	float flTime = pack.ReadFloat(),
+		flShoveDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShoveDuration[ST_TankType(iTank)] : g_flShoveDuration2[ST_TankType(iTank)];
 	int iShoveAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShoveAbility[ST_TankType(iTank)] : g_iShoveAbility2[ST_TankType(iTank)];
-	float flShoveDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShoveDuration[ST_TankType(iTank)] : g_flShoveDuration2[ST_TankType(iTank)];
 	if (iShoveAbility == 0 || (flTime + flShoveDuration) < GetEngineTime())
 	{
 		g_bShove[iSurvivor] = false;

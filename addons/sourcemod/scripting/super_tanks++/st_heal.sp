@@ -152,8 +152,8 @@ public void ST_Ability(int client)
 
 void vHealHit(int client, int owner)
 {
-	int iHealChance = !g_bTankConfig[ST_TankType(owner)] ? g_iHealChance[ST_TankType(owner)] : g_iHealChance2[ST_TankType(owner)];
-	int iHealHit = !g_bTankConfig[ST_TankType(owner)] ? g_iHealHit[ST_TankType(owner)] : g_iHealHit2[ST_TankType(owner)];
+	int iHealChance = !g_bTankConfig[ST_TankType(owner)] ? g_iHealChance[ST_TankType(owner)] : g_iHealChance2[ST_TankType(owner)],
+		iHealHit = !g_bTankConfig[ST_TankType(owner)] ? g_iHealHit[ST_TankType(owner)] : g_iHealHit2[ST_TankType(owner)];
 	if (iHealHit == 1 && GetRandomInt(1, iHealChance) == 1 && bIsSurvivor(client))
 	{
 		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue - 1);
@@ -199,11 +199,11 @@ public Action tTimerHeal(Handle timer, any userid)
 		float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
 		if (flDistance <= flHealRange)
 		{
-			int iHealth = GetClientHealth(iTank);
-			int iCommonHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealCommon[ST_TankType(iTank)]) : (iHealth + g_iHealCommon2[ST_TankType(iTank)]);
-			int iExtraHealth = (iCommonHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCommonHealth;
-			int iExtraHealth2 = (iCommonHealth < iHealth) ? 1 : iCommonHealth;
-			int iRealHealth = (iCommonHealth >= 0) ? iExtraHealth : iExtraHealth2;
+			int iHealth = GetClientHealth(iTank),
+				iCommonHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealCommon[ST_TankType(iTank)]) : (iHealth + g_iHealCommon2[ST_TankType(iTank)]),
+				iExtraHealth = (iCommonHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCommonHealth,
+				iExtraHealth2 = (iCommonHealth < iHealth) ? 1 : iCommonHealth,
+				iRealHealth = (iCommonHealth >= 0) ? iExtraHealth : iExtraHealth2;
 			if (iHealth > 500)
 			{
 				SetEntityHealth(iTank, iRealHealth);
@@ -227,11 +227,11 @@ public Action tTimerHeal(Handle timer, any userid)
 			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
 			if (flDistance <= flHealRange)
 			{
-				int iHealth = GetClientHealth(iTank);
-				int iSpecialHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealSpecial[ST_TankType(iTank)]) : (iHealth + g_iHealSpecial2[ST_TankType(iTank)]);
-				int iExtraHealth = (iSpecialHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iSpecialHealth;
-				int iExtraHealth2 = (iSpecialHealth < iHealth) ? 1 : iSpecialHealth;
-				int iRealHealth = (iSpecialHealth >= 0) ? iExtraHealth : iExtraHealth2;
+				int iHealth = GetClientHealth(iTank),
+					iSpecialHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealSpecial[ST_TankType(iTank)]) : (iHealth + g_iHealSpecial2[ST_TankType(iTank)]),
+					iExtraHealth = (iSpecialHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iSpecialHealth,
+					iExtraHealth2 = (iSpecialHealth < iHealth) ? 1 : iSpecialHealth,
+					iRealHealth = (iSpecialHealth >= 0) ? iExtraHealth : iExtraHealth2;
 				if (iHealth > 500)
 				{
 					SetEntityHealth(iTank, iRealHealth);
@@ -253,11 +253,11 @@ public Action tTimerHeal(Handle timer, any userid)
 			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
 			if (flDistance <= flHealRange)
 			{
-				int iHealth = GetClientHealth(iTank);
-				int iTankHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealTank[ST_TankType(iTank)]) : (iHealth + g_iHealTank2[ST_TankType(iTank)]);
-				int iExtraHealth = (iTankHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iTankHealth;
-				int iExtraHealth2 = (iTankHealth < iHealth) ? 1 : iTankHealth;
-				int iRealHealth = (iTankHealth >= 0) ? iExtraHealth : iExtraHealth2;
+				int iHealth = GetClientHealth(iTank),
+					iTankHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealTank[ST_TankType(iTank)]) : (iHealth + g_iHealTank2[ST_TankType(iTank)]),
+					iExtraHealth = (iTankHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iTankHealth,
+					iExtraHealth2 = (iTankHealth < iHealth) ? 1 : iTankHealth,
+					iRealHealth = (iTankHealth >= 0) ? iExtraHealth : iExtraHealth2;
 				if (iHealth > 500)
 				{
 					SetEntityHealth(iTank, iRealHealth);

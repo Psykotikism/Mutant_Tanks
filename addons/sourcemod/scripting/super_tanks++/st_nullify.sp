@@ -71,8 +71,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iNullifyChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iNullifyChance[ST_TankType(attacker)] : g_iNullifyChance2[ST_TankType(attacker)];
-				int iNullifyHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iNullifyHit[ST_TankType(attacker)] : g_iNullifyHit2[ST_TankType(attacker)];
+				int iNullifyChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iNullifyChance[ST_TankType(attacker)] : g_iNullifyChance2[ST_TankType(attacker)],
+					iNullifyHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iNullifyHit[ST_TankType(attacker)] : g_iNullifyHit2[ST_TankType(attacker)];
 				vNullifyHit(victim, attacker, iNullifyChance, iNullifyHit);
 			}
 		}
@@ -118,9 +118,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iNullifyAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iNullifyAbility[ST_TankType(iTank)] : g_iNullifyAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iNullifyAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iNullifyAbility[ST_TankType(iTank)] : g_iNullifyAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iNullifyAbility == 1)
 		{
 			vRemoveNullify();
@@ -132,10 +131,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
-		int iNullifyRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyChance[ST_TankType(client)] : g_iNullifyChance2[ST_TankType(client)];
-		float flNullifyRange = !g_bTankConfig[ST_TankType(client)] ? g_flNullifyRange[ST_TankType(client)] : g_flNullifyRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)],
+			iNullifyRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyChance[ST_TankType(client)] : g_iNullifyChance2[ST_TankType(client)];
+		float flNullifyRange = !g_bTankConfig[ST_TankType(client)] ? g_flNullifyRange[ST_TankType(client)] : g_flNullifyRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

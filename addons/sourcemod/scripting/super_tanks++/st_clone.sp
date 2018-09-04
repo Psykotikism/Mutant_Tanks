@@ -76,9 +76,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iCloneAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iCloneAbility[ST_TankType(iTank)] : g_iCloneAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iCloneAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iCloneAbility[ST_TankType(iTank)] : g_iCloneAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iCloneAbility == 1)
 		{
 			g_iCloneCount[iTank] = 0;
@@ -88,8 +87,8 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
-	int iCloneChance = !g_bTankConfig[ST_TankType(client)] ? g_iCloneChance[ST_TankType(client)] : g_iCloneChance2[ST_TankType(client)];
+	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)],
+		iCloneChance = !g_bTankConfig[ST_TankType(client)] ? g_iCloneChance[ST_TankType(client)] : g_iCloneChance2[ST_TankType(client)];
 	if (iCloneAbility == 1 && GetRandomInt(1, iCloneChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bCloned[client])
 	{
 		int iCloneAmount = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAmount[ST_TankType(client)] : g_iCloneAmount2[ST_TankType(client)];
@@ -140,8 +139,8 @@ public void ST_Ability(int client)
 					{
 						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 						g_bCloned[iSelectedType] = true;
-						int iCloneHealth = !g_bTankConfig[ST_TankType(client)] ? g_iCloneHealth[ST_TankType(client)] : g_iCloneHealth2[ST_TankType(client)];
-						int iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
+						int iCloneHealth = !g_bTankConfig[ST_TankType(client)] ? g_iCloneHealth[ST_TankType(client)] : g_iCloneHealth2[ST_TankType(client)],
+							iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
 						SetEntityHealth(iSelectedType, iNewHealth);
 						g_iCloneCount[client]++;
 					}

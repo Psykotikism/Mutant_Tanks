@@ -227,15 +227,14 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iDropAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropAbility[ST_TankType(iTank)] : g_iDropAbility2[ST_TankType(iTank)];
-		int iDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropChance[ST_TankType(iTank)] : g_iDropChance2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iDropAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropAbility[ST_TankType(iTank)] : g_iDropAbility2[ST_TankType(iTank)],
+			iDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropChance[ST_TankType(iTank)] : g_iDropChance2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iDropAbility == 1 && GetRandomInt(1, iDropChance) == 1 && bIsValidEntity(g_iDrop[iTank]))
 		{
 			int iDropMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMode[ST_TankType(iTank)] : g_iDropMode2[ST_TankType(iTank)];
-			float flDropWeaponScale = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropWeaponScale[ST_TankType(iTank)] : g_flDropWeaponScale[ST_TankType(iTank)];
-			float flPos[3], flAngle[3];
+			float flDropWeaponScale = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropWeaponScale[ST_TankType(iTank)] : g_flDropWeaponScale[ST_TankType(iTank)],
+				flPos[3], flAngle[3];
 			GetClientEyePosition(iTank, flPos);
 			GetClientAbsAngles(iTank, flAngle);
 			if (iDropMode != 2 && StrContains(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon") != -1)
@@ -370,8 +369,8 @@ public Action tTimerDrop(Handle timer, any userid)
 		return Plugin_Stop;
 	}
 	vDeleteDrop(iTank);
-	int iDropMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMode[ST_TankType(iTank)] : g_iDropMode2[ST_TankType(iTank)];
- 	int iDropValue, iPosition;
+	int iDropMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMode[ST_TankType(iTank)] : g_iDropMode2[ST_TankType(iTank)],
+		iDropValue, iPosition;
 	switch (iDropMode)
 	{
 		case 0: iDropValue = GetRandomInt(1, 31);

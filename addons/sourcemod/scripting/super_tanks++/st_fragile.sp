@@ -68,10 +68,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && g_bFragile[victim])
 		{
-			float flFragileBulletDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileBulletDamage[ST_TankType(victim)] : g_flFragileBulletDamage2[ST_TankType(victim)];
-			float flFragileExplosiveDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileExplosiveDamage[ST_TankType(victim)] : g_flFragileExplosiveDamage2[ST_TankType(victim)];
-			float flFragileFireDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileFireDamage[ST_TankType(victim)] : g_flFragileFireDamage2[ST_TankType(victim)];
-			float flFragileMeleeDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileMeleeDamage[ST_TankType(victim)] : g_flFragileMeleeDamage2[ST_TankType(victim)];
+			float flFragileBulletDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileBulletDamage[ST_TankType(victim)] : g_flFragileBulletDamage2[ST_TankType(victim)],
+				flFragileExplosiveDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileExplosiveDamage[ST_TankType(victim)] : g_flFragileExplosiveDamage2[ST_TankType(victim)],
+				flFragileFireDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileFireDamage[ST_TankType(victim)] : g_flFragileFireDamage2[ST_TankType(victim)],
+				flFragileMeleeDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileMeleeDamage[ST_TankType(victim)] : g_flFragileMeleeDamage2[ST_TankType(victim)];
 			switch (damagetype)
 			{
 				case DMG_BULLET: damage = damage * flFragileBulletDamage;
@@ -120,9 +120,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_incapacitated") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iFragileAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFragileAbility[ST_TankType(iTank)] : g_iFragileAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iFragileAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFragileAbility[ST_TankType(iTank)] : g_iFragileAbility2[ST_TankType(iTank)];
 		if (iFragileAbility == 1 && ST_TankAllowed(iTank) && g_bFragile[iTank])
 		{
 			tTimerStopFragile(null, GetClientUserId(iTank));
@@ -132,8 +131,8 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	int iFragileAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFragileAbility[ST_TankType(client)] : g_iFragileAbility2[ST_TankType(client)];
-	int iFragileChance = !g_bTankConfig[ST_TankType(client)] ? g_iFragileChance[ST_TankType(client)] : g_iFragileChance2[ST_TankType(client)];
+	int iFragileAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFragileAbility[ST_TankType(client)] : g_iFragileAbility2[ST_TankType(client)],
+		iFragileChance = !g_bTankConfig[ST_TankType(client)] ? g_iFragileChance[ST_TankType(client)] : g_iFragileChance2[ST_TankType(client)];
 	if (iFragileAbility == 1 && GetRandomInt(1, iFragileChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bFragile[client])
 	{
 		g_bFragile[client] = true;

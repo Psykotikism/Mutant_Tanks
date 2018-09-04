@@ -75,8 +75,8 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iMeteorAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorAbility[ST_TankType(client)] : g_iMeteorAbility2[ST_TankType(client)];
-	int iMeteorChance = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorChance[ST_TankType(client)] : g_iMeteorChance2[ST_TankType(client)];
+	int iMeteorAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorAbility[ST_TankType(client)] : g_iMeteorAbility2[ST_TankType(client)],
+		iMeteorChance = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorChance[ST_TankType(client)] : g_iMeteorChance2[ST_TankType(client)];
 	if (iMeteorAbility == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bMeteor[client])
 	{
 		g_bMeteor[client] = true;
@@ -173,9 +173,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	float flPos[3];
-	flPos[0] = pack.ReadFloat();
-	flPos[1] = pack.ReadFloat();
-	flPos[2] = pack.ReadFloat();
+	flPos[0] = pack.ReadFloat(), flPos[1] = pack.ReadFloat(), flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
 	int iMeteorAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iMeteorAbility[ST_TankType(iTank)] : g_iMeteorAbility2[ST_TankType(iTank)];
 	if (iMeteorAbility == 0)
@@ -183,7 +181,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 		g_bMeteor[iTank] = false;
 		return Plugin_Stop;
 	}
-	char sRadius[2][7], sMeteorRadius[13];
+	char sRadius[2][7], sMeteorRadius[13], sSet[5][16], sPropsColors[80], sRGB[4][4];
 	sMeteorRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sMeteorRadius[ST_TankType(iTank)] : g_sMeteorRadius2[ST_TankType(iTank)];
 	TrimString(sMeteorRadius);
 	ExplodeString(sMeteorRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
@@ -193,7 +191,6 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
 	flMin = flSetFloatLimit(flMin, -200.0, 0.0);
 	flMax = flSetFloatLimit(flMax, 0.0, 200.0);
-	char sSet[5][16], sPropsColors[80], sRGB[4][4];
 	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
 	TrimString(sPropsColors);
 	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -217,7 +214,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	int iMeteor = -1;
 	if (g_bMeteor[iTank])
 	{
-		float flAngles[3], flVelocity[3], flHitpos[3];
+		float flAngles[3], flVelocity[3], flHitpos[3], flVector[3];
 		flAngles[0] = GetRandomFloat(-20.0, 20.0);
 		flAngles[1] = GetRandomFloat(-20.0, 20.0);
 		flAngles[2] = 60.0;
@@ -228,7 +225,6 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 		{
 			flDistance = 1600.0;
 		}
-		float flVector[3];
 		MakeVectorFromPoints(flPos, flHitpos, flVector);
 		NormalizeVector(flVector, flVector);
 		ScaleVector(flVector, flDistance - 40.0);

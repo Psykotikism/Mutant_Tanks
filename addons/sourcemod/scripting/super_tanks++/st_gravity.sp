@@ -74,8 +74,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iGravityChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iGravityChance[ST_TankType(attacker)] : g_iGravityChance2[ST_TankType(attacker)];
-				int iGravityHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iGravityHit[ST_TankType(attacker)] : g_iGravityHit2[ST_TankType(attacker)];
+				int iGravityChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iGravityChance[ST_TankType(attacker)] : g_iGravityChance2[ST_TankType(attacker)],
+					iGravityHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iGravityHit[ST_TankType(attacker)] : g_iGravityHit2[ST_TankType(attacker)];
 				vGravityHit(victim, attacker, iGravityChance, iGravityHit);
 			}
 		}
@@ -119,9 +119,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iGravityAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGravityAbility[ST_TankType(iTank)] : g_iGravityAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iGravityAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGravityAbility[ST_TankType(iTank)] : g_iGravityAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iGravityAbility == 1)
 		{
 			vRemoveGravity(iTank);
@@ -131,8 +130,8 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
-	int iGravityRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
+	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)],
+		iGravityRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
 	if (iGravityAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		if (!g_bGravity[client])
@@ -160,8 +159,8 @@ public void ST_Ability(int client)
 				}
 			}
 		}
-		float flGravityRange = !g_bTankConfig[ST_TankType(client)] ? g_flGravityRange[ST_TankType(client)] : g_flGravityRange2[ST_TankType(client)];
-		float flTankPos[3];
+		float flGravityRange = !g_bTankConfig[ST_TankType(client)] ? g_flGravityRange[ST_TankType(client)] : g_flGravityRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -193,9 +192,9 @@ void vGravityHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bGravity2[client])
 	{
 		g_bGravity2[client] = true;
-		float flGravityValue = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityValue[ST_TankType(owner)] : g_flGravityValue2[ST_TankType(owner)];
+		float flGravityValue = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityValue[ST_TankType(owner)] : g_flGravityValue2[ST_TankType(owner)],
+			flGravityDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityDuration[ST_TankType(owner)] : g_flGravityDuration2[ST_TankType(owner)];
 		SetEntityGravity(client, flGravityValue);
-		float flGravityDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityDuration[ST_TankType(owner)] : g_flGravityDuration2[ST_TankType(owner)];
 		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(flGravityDuration, tTimerStopGravity, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 		dpDataPack.WriteCell(GetClientUserId(client));

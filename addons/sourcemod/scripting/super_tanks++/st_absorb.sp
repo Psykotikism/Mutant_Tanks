@@ -68,10 +68,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && g_bAbsorb[victim])
 		{
-			float flAbsorbBulletDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbBulletDamage[ST_TankType(victim)] : g_flAbsorbBulletDamage2[ST_TankType(victim)];
-			float flAbsorbExplosiveDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbExplosiveDamage[ST_TankType(victim)] : g_flAbsorbExplosiveDamage2[ST_TankType(victim)];
-			float flAbsorbFireDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbFireDamage[ST_TankType(victim)] : g_flAbsorbFireDamage2[ST_TankType(victim)];
-			float flAbsorbMeleeDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbMeleeDamage[ST_TankType(victim)] : g_flAbsorbMeleeDamage2[ST_TankType(victim)];
+			float flAbsorbBulletDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbBulletDamage[ST_TankType(victim)] : g_flAbsorbBulletDamage2[ST_TankType(victim)],
+				flAbsorbExplosiveDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbExplosiveDamage[ST_TankType(victim)] : g_flAbsorbExplosiveDamage2[ST_TankType(victim)],
+				flAbsorbFireDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbFireDamage[ST_TankType(victim)] : g_flAbsorbFireDamage2[ST_TankType(victim)],
+				flAbsorbMeleeDamage = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbMeleeDamage[ST_TankType(victim)] : g_flAbsorbMeleeDamage2[ST_TankType(victim)];
 			switch (damagetype)
 			{
 				case DMG_BULLET: damage = damage / flAbsorbBulletDamage;
@@ -120,9 +120,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_incapacitated") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iAbsorbAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iAbsorbAbility[ST_TankType(iTank)] : g_iAbsorbAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iAbsorbAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iAbsorbAbility[ST_TankType(iTank)] : g_iAbsorbAbility2[ST_TankType(iTank)];
 		if (iAbsorbAbility == 1 && ST_TankAllowed(iTank) && g_bAbsorb[iTank])
 		{
 			tTimerStopAbsorb(null, GetClientUserId(iTank));
@@ -132,8 +131,8 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	int iAbsorbAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbAbility[ST_TankType(client)] : g_iAbsorbAbility2[ST_TankType(client)];
-	int iAbsorbChance = !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbChance[ST_TankType(client)] : g_iAbsorbChance2[ST_TankType(client)];
+	int iAbsorbAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbAbility[ST_TankType(client)] : g_iAbsorbAbility2[ST_TankType(client)],
+		iAbsorbChance = !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbChance[ST_TankType(client)] : g_iAbsorbChance2[ST_TankType(client)];
 	if (iAbsorbAbility == 1 && GetRandomInt(1, iAbsorbChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bAbsorb[client])
 	{
 		g_bAbsorb[client] = true;

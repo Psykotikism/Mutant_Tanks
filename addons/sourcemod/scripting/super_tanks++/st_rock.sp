@@ -75,8 +75,8 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iRockAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRockAbility[ST_TankType(client)] : g_iRockAbility2[ST_TankType(client)];
-	int iRockChance = !g_bTankConfig[ST_TankType(client)] ? g_iRockChance[ST_TankType(client)] : g_iRockChance2[ST_TankType(client)];
+	int iRockAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRockAbility[ST_TankType(client)] : g_iRockAbility2[ST_TankType(client)],
+		iRockChance = !g_bTankConfig[ST_TankType(client)] ? g_iRockChance[ST_TankType(client)] : g_iRockChance2[ST_TankType(client)];
 	if (iRockAbility == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bRock[client])
 	{
 		int iRock = CreateEntityByName("env_rock_launcher");
@@ -131,12 +131,10 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	float flPos[3];
-	flPos[0] = pack.ReadFloat();
-	flPos[1] = pack.ReadFloat();
-	flPos[2] = pack.ReadFloat();
-	float flTime = pack.ReadFloat();
+	flPos[0] = pack.ReadFloat(), flPos[1] = pack.ReadFloat(), flPos[2] = pack.ReadFloat();
+	float flTime = pack.ReadFloat(),
+		flRockDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flRockDuration[ST_TankType(iTank)] : g_flRockDuration2[ST_TankType(iTank)];
 	int iRockAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRockAbility[ST_TankType(iTank)] : g_iRockAbility2[ST_TankType(iTank)];
-	float flRockDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flRockDuration[ST_TankType(iTank)] : g_flRockDuration2[ST_TankType(iTank)];
 	if (iRockAbility == 0 || (flTime + flRockDuration) < GetEngineTime())
 	{
 		g_bRock[iTank] = false;
@@ -159,12 +157,11 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	flAngles[2] = 2.0;
 	GetVectorAngles(flAngles, flAngles);
 	iGetRayHitPos(flPos, flAngles, flHitPos, iTank, true, 2);
-	float flDistance = GetVectorDistance(flPos, flHitPos);
+	float flDistance = GetVectorDistance(flPos, flHitPos), flVector[3];
 	if (flDistance > 800.0)
 	{
 		flDistance = 800.0;
 	}
-	float flVector[3];
 	MakeVectorFromPoints(flPos, flHitPos, flVector);
 	NormalizeVector(flVector, flVector);
 	ScaleVector(flVector, flDistance - 40.0);

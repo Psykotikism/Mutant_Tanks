@@ -63,8 +63,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iAmmoChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iAmmoChance[ST_TankType(attacker)] : g_iAmmoChance2[ST_TankType(attacker)];
-				int iAmmoHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iAmmoHit[ST_TankType(attacker)] : g_iAmmoHit2[ST_TankType(attacker)];
+				int iAmmoChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iAmmoChance[ST_TankType(attacker)] : g_iAmmoChance2[ST_TankType(attacker)],
+					iAmmoHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iAmmoHit[ST_TankType(attacker)] : g_iAmmoHit2[ST_TankType(attacker)];
 				vAmmoHit(victim, attacker, iAmmoChance, iAmmoHit);
 			}
 		}
@@ -104,10 +104,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iAmmoAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAmmoAbility[ST_TankType(client)] : g_iAmmoAbility2[ST_TankType(client)];
-		int iAmmoRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAmmoChance[ST_TankType(client)] : g_iAmmoChance2[ST_TankType(client)];
-		float flAmmoRange = !g_bTankConfig[ST_TankType(client)] ? g_flAmmoRange[ST_TankType(client)] : g_flAmmoRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iAmmoAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAmmoAbility[ST_TankType(client)] : g_iAmmoAbility2[ST_TankType(client)],
+			iAmmoRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAmmoChance[ST_TankType(client)] : g_iAmmoChance2[ST_TankType(client)];
+		float flAmmoRange = !g_bTankConfig[ST_TankType(client)] ? g_flAmmoRange[ST_TankType(client)] : g_flAmmoRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -130,8 +130,8 @@ void vAmmoHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && GetPlayerWeaponSlot(client, 0) > 0)
 	{
 		char sWeapon[32];
-		int iActiveWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
-		int iAmmo = !g_bTankConfig[ST_TankType(owner)] ? g_iAmmoCount[ST_TankType(owner)] : g_iAmmoCount2[ST_TankType(owner)];
+		int iActiveWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon"),
+			iAmmo = !g_bTankConfig[ST_TankType(owner)] ? g_iAmmoCount[ST_TankType(owner)] : g_iAmmoCount2[ST_TankType(owner)];
 		GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
 		if (bIsValidEntity(iActiveWeapon))
 		{

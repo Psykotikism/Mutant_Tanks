@@ -58,8 +58,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		if (ST_TankAllowed(victim) && IsPlayerAlive(victim))
 		{
 			int iPyroAbility = !g_bTankConfig[ST_TankType(victim)] ? g_iPyroAbility[ST_TankType(victim)] : g_iPyroAbility2[ST_TankType(victim)];
-			float flPyroBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroBoost[ST_TankType(victim)] : g_flPyroBoost2[ST_TankType(victim)];
-			float flRunSpeed = !g_bTankConfig[ST_TankType(victim)] ? g_flRunSpeed[ST_TankType(victim)] : g_flRunSpeed2[ST_TankType(victim)];
+			float flPyroBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroBoost[ST_TankType(victim)] : g_flPyroBoost2[ST_TankType(victim)],
+				flRunSpeed = !g_bTankConfig[ST_TankType(victim)] ? g_flRunSpeed[ST_TankType(victim)] : g_flRunSpeed2[ST_TankType(victim)];
 			if (damagetype & DMG_BURN && iPyroAbility == 1)
 			{
 				SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flRunSpeed + flPyroBoost);

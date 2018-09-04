@@ -66,8 +66,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iSmashChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iSmashChance[ST_TankType(attacker)] : g_iSmashChance2[ST_TankType(attacker)];
-				int iSmashHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iSmashHit[ST_TankType(attacker)] : g_iSmashHit2[ST_TankType(attacker)];
+				int iSmashChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iSmashChance[ST_TankType(attacker)] : g_iSmashChance2[ST_TankType(attacker)],
+					iSmashHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iSmashHit[ST_TankType(attacker)] : g_iSmashHit2[ST_TankType(attacker)];
 				vSmashHit(victim, iSmashChance, iSmashHit);
 			}
 		}
@@ -105,11 +105,9 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iSurvivorId = event.GetInt("userid");
-		int iSurvivor = GetClientOfUserId(iSurvivorId);
-		int iTankId = event.GetInt("attacker");
-		int iTank = GetClientOfUserId(iTankId);
-		int iSmashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSmashAbility[ST_TankType(iTank)] : g_iSmashAbility2[ST_TankType(iTank)];
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId),
+			iTankId = event.GetInt("attacker"), iTank = GetClientOfUserId(iTankId),
+			iSmashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSmashAbility[ST_TankType(iTank)] : g_iSmashAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iSmashAbility == 1 && bIsSurvivor(iSurvivor))
 		{
 			int iCorpse = -1;
@@ -129,10 +127,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iSmashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSmashAbility[ST_TankType(client)] : g_iSmashAbility2[ST_TankType(client)];
-		int iSmashRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iSmashChance[ST_TankType(client)] : g_iSmashChance2[ST_TankType(client)];
-		float flSmashRange = !g_bTankConfig[ST_TankType(client)] ? g_flSmashRange[ST_TankType(client)] : g_flSmashRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iSmashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSmashAbility[ST_TankType(client)] : g_iSmashAbility2[ST_TankType(client)],
+			iSmashRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iSmashChance[ST_TankType(client)] : g_iSmashChance2[ST_TankType(client)];
+		float flSmashRange = !g_bTankConfig[ST_TankType(client)] ? g_flSmashRange[ST_TankType(client)] : g_flSmashRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

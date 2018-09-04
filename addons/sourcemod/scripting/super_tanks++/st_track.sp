@@ -68,8 +68,8 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_RockThrow(int client, int entity)
 {
-	int iTrackAbility = !g_bTankConfig[ST_TankType(client)] ? g_iTrackAbility[ST_TankType(client)] : g_iTrackAbility2[ST_TankType(client)];
-	int iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
+	int iTrackAbility = !g_bTankConfig[ST_TankType(client)] ? g_iTrackAbility[ST_TankType(client)] : g_iTrackAbility2[ST_TankType(client)],
+		iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
 	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		DataPack dpDataPack = new DataPack();
@@ -81,8 +81,8 @@ public void ST_RockThrow(int client, int entity)
 
 void vTrack(int entity)
 {
-	int iTank = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-	int iTrackMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackMode[ST_TankType(iTank)] : g_iTrackMode2[ST_TankType(iTank)];
+	int iTank = GetEntPropEnt(entity, Prop_Data, "m_hThrower"),
+		iTrackMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackMode[ST_TankType(iTank)] : g_iTrackMode2[ST_TankType(iTank)];
 	float flTrackSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flTrackSpeed[ST_TankType(iTank)] : g_flTrackSpeed2[ST_TankType(iTank)];
 	switch (iTrackMode)
 	{
@@ -147,25 +147,24 @@ void vTrack(int entity)
 			GetVectorAngles(flVelocity, flAngle);
 			float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3],
 				flVector3[3], flVector4[3], flVector5[3], flVector6[3], flVector7[3], flVector8[3],
-				flVector9;
+				flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0;
 			flFront[0] = flFront[1] = flFront[2] = 0.0;
-			float flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0;
 			if (bVisible)
 			{
 				flBase = 80.0;
-				float flFront2 = flGetDistance(flPos, flAngle, 0.0, 0.0, flFront, entity, 3);
-				float flDown2 = flGetDistance(flPos, flAngle, 90.0, 0.0, flDown, entity, 3);
-				float flUp2 = flGetDistance(flPos, flAngle, -90.0, 0.0, flUp, entity, 3);
-				float flLeft2 = flGetDistance(flPos, flAngle, 0.0, 90.0, flLeft, entity, 3);
-				float flRight2 = flGetDistance(flPos, flAngle, 0.0, -90.0, flRight, entity, 3);
-				float flDistance2 = flGetDistance(flPos, flAngle, 30.0, 0.0, flVector1, entity, 3);
-				float flDistance3 = flGetDistance(flPos, flAngle, 30.0, 45.0, flVector2, entity, 3);
-				float flDistance4 = flGetDistance(flPos, flAngle, 0.0, 45.0, flVector3, entity, 3);
-				float flDistance5 = flGetDistance(flPos, flAngle, -30.0, 45.0, flVector4, entity, 3);
-				float flDistance6 = flGetDistance(flPos, flAngle, -30.0, 0.0, flVector5, entity, 3);
-				float flDistance7 = flGetDistance(flPos, flAngle, -30.0, -45.0, flVector6, entity, 3);
-				float flDistance8 = flGetDistance(flPos, flAngle, 0.0, -45.0, flVector7, entity, 3);
-				float flDistance9 = flGetDistance(flPos, flAngle, 30.0, -45.0, flVector8, entity, 3);
+				float flFront2 = flGetDistance(flPos, flAngle, 0.0, 0.0, flFront, entity, 3),
+					flDown2 = flGetDistance(flPos, flAngle, 90.0, 0.0, flDown, entity, 3),
+					flUp2 = flGetDistance(flPos, flAngle, -90.0, 0.0, flUp, entity, 3),
+					flLeft2 = flGetDistance(flPos, flAngle, 0.0, 90.0, flLeft, entity, 3),
+					flRight2 = flGetDistance(flPos, flAngle, 0.0, -90.0, flRight, entity, 3),
+					flDistance2 = flGetDistance(flPos, flAngle, 30.0, 0.0, flVector1, entity, 3),
+					flDistance3 = flGetDistance(flPos, flAngle, 30.0, 45.0, flVector2, entity, 3),
+					flDistance4 = flGetDistance(flPos, flAngle, 0.0, 45.0, flVector3, entity, 3),
+					flDistance5 = flGetDistance(flPos, flAngle, -30.0, 45.0, flVector4, entity, 3),
+					flDistance6 = flGetDistance(flPos, flAngle, -30.0, 0.0, flVector5, entity, 3),
+					flDistance7 = flGetDistance(flPos, flAngle, -30.0, -45.0, flVector6, entity, 3),
+					flDistance8 = flGetDistance(flPos, flAngle, 0.0, -45.0, flVector7, entity, 3),
+					flDistance9 = flGetDistance(flPos, flAngle, 30.0, -45.0, flVector8, entity, 3);
 				NormalizeVector(flFront, flFront);
 				NormalizeVector(flUp, flUp);
 				NormalizeVector(flDown, flDown);
@@ -279,9 +278,8 @@ void vTrack(int entity)
 				AddVectors(flFront, flVector, flFront);
 				NormalizeVector(flFront, flFront);
 			}
-			float flAngle2 = flGetAngle(flFront, flVelocity);
+			float flAngle2 = flGetAngle(flFront, flVelocity), flVelocity3[3];
 			ScaleVector(flFront, flAngle2);
-			float flVelocity3[3];
 			AddVectors(flVelocity, flFront, flVelocity3);
 			NormalizeVector(flVelocity3, flVelocity3);
 			ScaleVector(flVelocity3, flTrackSpeed);
