@@ -14,10 +14,10 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bGod[MAXPLAYERS + 1], g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bGod[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 float g_flGodDuration[ST_MAXTYPES + 1], g_flGodDuration2[ST_MAXTYPES + 1];
-int g_iGodAbility[ST_MAXTYPES + 1], g_iGodAbility2[ST_MAXTYPES + 1], g_iGodChance[ST_MAXTYPES + 1],
-	g_iGodChance2[ST_MAXTYPES + 1];
+int g_iGodAbility[ST_MAXTYPES + 1], g_iGodAbility2[ST_MAXTYPES + 1],
+	g_iGodChance[ST_MAXTYPES + 1], g_iGodChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -28,27 +28,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
-}
-
-public void OnAllPluginsLoaded()
-{
-	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = false;
-	}
 }
 
 public void OnMapStart()
@@ -66,11 +45,11 @@ public void OnMapEnd()
 	vReset();
 }
 
-public void ST_Configs(char[] savepath, int limit, bool main)
+public void ST_Configs(char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
@@ -96,12 +75,9 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid");
 		int iTank = GetClientOfUserId(iTankId);
 		int iGodAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGodAbility[ST_TankType(iTank)] : g_iGodAbility2[ST_TankType(iTank)];
-		if (iGodAbility == 1 && ST_TankAllowed(iTank))
+		if (iGodAbility == 1 && ST_TankAllowed(iTank) && g_bGod[iTank])
 		{
-			if (g_bGod[iTank])
-			{
-				tTimerStopGod(null, GetClientUserId(iTank));
-			}
+			tTimerStopGod(null, GetClientUserId(iTank));
 		}
 	}
 }
@@ -110,7 +86,7 @@ public void ST_Ability(int client)
 {
 	int iGodAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGodAbility[ST_TankType(client)] : g_iGodAbility2[ST_TankType(client)];
 	int iGodChance = !g_bTankConfig[ST_TankType(client)] ? g_iGodChance[ST_TankType(client)] : g_iGodChance2[ST_TankType(client)];
-	if (g_bPluginEnabled && iGodAbility == 1 && GetRandomInt(1, iGodChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bGod[client])
+	if (iGodAbility == 1 && GetRandomInt(1, iGodChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bGod[client])
 	{
 		g_bGod[client] = true;
 		SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
@@ -133,7 +109,7 @@ void vReset()
 public Action tTimerStopGod(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bGod[iTank] = false;
 		return Plugin_Stop;

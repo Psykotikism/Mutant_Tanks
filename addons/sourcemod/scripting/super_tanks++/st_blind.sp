@@ -14,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bBlind[MAXPLAYERS + 1], g_bLateLoad, g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bBlind[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flBlindDuration[ST_MAXTYPES + 1], g_flBlindDuration2[ST_MAXTYPES + 1],
 	g_flBlindRange[ST_MAXTYPES + 1], g_flBlindRange2[ST_MAXTYPES + 1];
 int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1],
@@ -34,27 +34,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	g_bLateLoad = late;
 	return APLRes_Success;
-}
-
-public void OnAllPluginsLoaded()
-{
-	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = false;
-	}
 }
 
 public void OnPluginStart()
@@ -91,7 +70,7 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_bPluginEnabled && ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && damage > 0.0)
 	{
 		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
@@ -107,11 +86,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, int limit, bool main)
+public void ST_Configs(char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
@@ -154,7 +133,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	if (g_bPluginEnabled && ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iBlindAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
 		int iBlindRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBlindChance[ST_TankType(client)] : g_iBlindChance2[ST_TankType(client)];
@@ -180,7 +159,7 @@ public void ST_Ability(int client)
 public void ST_BossStage(int client)
 {
 	int iBlindAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
-	if (g_bPluginEnabled && ST_TankAllowed(client) && iBlindAbility == 1)
+	if (ST_TankAllowed(client) && iBlindAbility == 1)
 	{
 		vRemoveBlind(client);
 	}
@@ -190,7 +169,7 @@ void vBlind(int client, int amount)
 {
 	int iTargets[2], iFlags;
 	iTargets[0] = client;
-	if (g_bPluginEnabled && bIsSurvivor(client))
+	if (bIsSurvivor(client))
 	{
 		amount == 0 ? (iFlags = (0x0001|0x0010)) : (iFlags = (0x0002|0x0008));
 		int iColor[4] = {0, 0, 0, 0};
@@ -221,7 +200,7 @@ void vBlind(int client, int amount)
 
 void vBlindHit(int client, int owner, int chance, int enabled)
 {
-	if (g_bPluginEnabled && enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBlind[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBlind[client])
 	{
 		g_bBlind[client] = true;
 		int iBlindIntensity = !g_bTankConfig[ST_TankType(owner)] ? g_iBlindIntensity[ST_TankType(owner)] : g_iBlindIntensity2[ST_TankType(owner)];
@@ -263,7 +242,7 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!g_bPluginEnabled || !bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bBlind[iSurvivor] = false;
 		return Plugin_Stop;

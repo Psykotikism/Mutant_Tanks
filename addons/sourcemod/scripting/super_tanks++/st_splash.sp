@@ -14,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bTankConfig[ST_MAXTYPES + 1];
 float g_flSplashInterval[ST_MAXTYPES + 1], g_flSplashInterval2[ST_MAXTYPES + 1],
 	g_flSplashRange[ST_MAXTYPES + 1], g_flSplashRange2[ST_MAXTYPES + 1];
 int g_iSplashAbility[ST_MAXTYPES + 1], g_iSplashAbility2[ST_MAXTYPES + 1],
@@ -32,32 +32,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-public void OnAllPluginsLoaded()
-{
-	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = false;
-	}
-}
-
-public void ST_Configs(char[] savepath, int limit, bool main)
+public void ST_Configs(char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
@@ -99,7 +78,7 @@ public void ST_Ability(int client)
 {
 	int iSplashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSplashAbility[ST_TankType(client)] : g_iSplashAbility2[ST_TankType(client)];
 	int iSplashChance = !g_bTankConfig[ST_TankType(client)] ? g_iSplashChance[ST_TankType(client)] : g_iSplashChance2[ST_TankType(client)];
-	if (g_bPluginEnabled && iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		float flSplashInterval = !g_bTankConfig[ST_TankType(client)] ? g_flSplashInterval[ST_TankType(client)] : g_flSplashInterval2[ST_TankType(client)];
 		CreateTimer(flSplashInterval, tTimerSplash, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -109,7 +88,7 @@ public void ST_Ability(int client)
 public Action tTimerSplash(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}

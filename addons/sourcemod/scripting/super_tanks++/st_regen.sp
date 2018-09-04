@@ -14,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bPluginEnabled, g_bRegen[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bRegen[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 float g_flRegenInterval[ST_MAXTYPES + 1], g_flRegenInterval2[ST_MAXTYPES + 1];
 int g_iRegenAbility[ST_MAXTYPES + 1], g_iRegenAbility2[ST_MAXTYPES + 1],
 	g_iRegenHealth[ST_MAXTYPES + 1], g_iRegenHealth2[ST_MAXTYPES + 1],
@@ -29,27 +29,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
-}
-
-public void OnAllPluginsLoaded()
-{
-	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = false;
-	}
 }
 
 public void OnMapStart()
@@ -67,11 +46,11 @@ public void OnMapEnd()
 	vReset();
 }
 
-public void ST_Configs(char[] savepath, int limit, bool main)
+public void ST_Configs(char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
@@ -95,7 +74,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iRegenAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRegenAbility[ST_TankType(client)] : g_iRegenAbility2[ST_TankType(client)];
-	if (g_bPluginEnabled && iRegenAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bRegen[client])
+	if (iRegenAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bRegen[client])
 	{
 		g_bRegen[client] = true;
 		float flRegenInterval = !g_bTankConfig[ST_TankType(client)] ? g_flRegenInterval[ST_TankType(client)] : g_flRegenInterval2[ST_TankType(client)];
@@ -117,7 +96,7 @@ void vReset()
 public Action tTimerRegen(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bRegen[iTank] = false;
 		return Plugin_Stop;

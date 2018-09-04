@@ -14,9 +14,10 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bDrop[MAXPLAYERS + 1], g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bDrop[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sWeaponClass[32][128], g_sWeaponModel[32][128];
-ConVar g_cvSTFindConVar[7];
+ConVar g_cvSTAssaultRifleAmmo, g_cvSTAutoShotgunAmmo, g_cvSTGrenadeLauncherAmmo,
+	g_cvSTHuntingRifleAmmo, g_cvSTShotgunAmmo, g_cvSTSMGAmmo, g_cvSTSniperRifleAmmo;
 float g_flDropWeaponScale[ST_MAXTYPES + 1], g_flDropWeaponScale2[ST_MAXTYPES + 1];
 int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropAbility2[ST_MAXTYPES + 1],
 	g_iDropChance[ST_MAXTYPES + 1], g_iDropChance2[ST_MAXTYPES + 1],
@@ -34,36 +35,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-public void OnAllPluginsLoaded()
-{
-	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = false;
-	}
-}
-
 public void OnPluginStart()
 {
-	g_cvSTFindConVar[0] = bIsL4D2Game() ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
-	g_cvSTFindConVar[1] = bIsL4D2Game() ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
-	g_cvSTFindConVar[2] = FindConVar("ammo_huntingrifle_max");
-	g_cvSTFindConVar[3] = FindConVar("ammo_assaultrifle_max");
-	g_cvSTFindConVar[4] = FindConVar("ammo_grenadelauncher_max");
-	g_cvSTFindConVar[5] = FindConVar("ammo_smg_max");
-	g_cvSTFindConVar[6] = FindConVar("ammo_sniperrifle_max");
+	g_cvSTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
+	g_cvSTAutoShotgunAmmo = bIsL4D2Game() ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
+	g_cvSTGrenadeLauncherAmmo = FindConVar("ammo_grenadelauncher_max");
+	g_cvSTHuntingRifleAmmo = FindConVar("ammo_huntingrifle_max");
+	g_cvSTShotgunAmmo = bIsL4D2Game() ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
+	g_cvSTSMGAmmo = FindConVar("ammo_smg_max");
+	g_cvSTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
 }
 
 public void OnMapStart()
@@ -209,18 +189,18 @@ public void OnMapEnd()
 public Action SetTransmit(int entity, int client)
 {
 	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (g_bPluginEnabled && iOwner == client)
+	if (iOwner == client)
 	{
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
 }
 
-public void ST_Configs(char[] savepath, int limit, bool main)
+public void ST_Configs(char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
@@ -271,38 +251,38 @@ public void ST_Event(Event event, const char[] name)
 					}
 				}
 				int iAmmo, iClip;
-				if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_autoshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_spas") == 0)
+				if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_ak47") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_desert") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_sg552") == 0)
 				{
-					iAmmo = g_cvSTFindConVar[0].IntValue;
+					iAmmo = g_cvSTAssaultRifleAmmo.IntValue;
 				}
-				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_pumpshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_chrome") == 0)
+				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_autoshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_spas") == 0)
 				{
-					iAmmo = g_cvSTFindConVar[1].IntValue;
-				}
-				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_hunting_rifle") == 0)
-				{
-					iAmmo = g_cvSTFindConVar[2].IntValue;
-				}
-				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_ak47") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_desert") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_sg552") == 0)
-				{
-					iAmmo = g_cvSTFindConVar[3].IntValue;
+					iAmmo = g_cvSTAutoShotgunAmmo.IntValue;
 				}
 				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_grenade_launcher") == 0)
 				{
-					iAmmo = g_cvSTFindConVar[4].IntValue;
+					iAmmo = g_cvSTGrenadeLauncherAmmo.IntValue;
+				}
+				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_hunting_rifle") == 0)
+				{
+					iAmmo = g_cvSTHuntingRifleAmmo.IntValue;
+				}
+				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_pumpshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_chrome") == 0)
+				{
+					iAmmo = g_cvSTShotgunAmmo.IntValue;
 				}
 				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg_silenced") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg_mp5") == 0)
 				{
-					iAmmo = g_cvSTFindConVar[5].IntValue;
+					iAmmo = g_cvSTSMGAmmo.IntValue;
 				}
 				else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_scout") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_military") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_awp") == 0)
 				{
-					iAmmo = g_cvSTFindConVar[6].IntValue;
+					iAmmo = g_cvSTSniperRifleAmmo.IntValue;
 				}
 				int iDropClipChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropClipChance[ST_TankType(iTank)] : g_iDropClipChance2[ST_TankType(iTank)];
 				if (GetRandomInt(1, iDropClipChance) == 1)
 				{
-					iClip = iAmmo; 
+					iClip = iAmmo;
 				}
 				if (iClip > 0)
 				{
@@ -340,7 +320,7 @@ public void ST_BossStage(int client)
 public void ST_Spawn(int client)
 {
 	int iDropAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
-	if (g_bPluginEnabled && iDropAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bDrop[client])
+	if (iDropAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bDrop[client])
 	{
 		g_bDrop[client] = true;
 		CreateTimer(1.0, tTimerDrop, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
@@ -355,87 +335,6 @@ void vDeleteDrop(int client)
 		AcceptEntityInput(g_iDrop[client], "Kill");
 	}
 	g_iDrop[client] = 0;
-}
-
-void vGetPosAng(float pos[3], float angle[3], int position, float &scale)
-{
-	switch (position)
-	{
-		case 1:
-		{
-			vSetVector(pos, 1.0, -5.0, 3.0);
-			vSetVector(angle, 0.0, -90.0, 90.0);
-		}
-		case 2:
-		{
-			vSetVector(pos, 4.0, -5.0, -3.0);
-			vSetVector(angle, 0.0, -90.0, 90.0);
-		}
-	}
-}
-
-void vGetPosAng2(int client, int weapon, float pos[3], float angle[3], int position, float &scale)
-{
-	if (weapon == 22)
-	{
-		switch (position)
-		{
-			case 1:
-			{
-				vSetVector(pos, -23.0, -30.0, -5.0);
-				vSetVector(angle, 0.0, 60.0, 180.0);
-			}
-			case 2:
-			{
-				vSetVector(pos, -9.0, -32.0, -1.0);
-				vSetVector(angle, 0.0, 60.0, 180.0);
-			}
-		}
-	}
-	else if (weapon >= 1)
-	{
-		switch (position)
-		{
-			case 1:
-			{
-				vSetVector(pos, 1.0, -5.0, 3.0);
-				vSetVector(angle, 0.0, -90.0, 90.0);
-			}
-			case 2:
-			{
-				vSetVector(pos, 4.0, -5.0, -3.0);
-				vSetVector(angle, 0.0, -90.0, 90.0);
-			}
-		}
-	}	
-	else
-	{
-		switch (position)
-		{
-			case 1:
-			{
-				vSetVector(pos, -4.0, 0.0, 3.0);
-				vSetVector(angle, 0.0, -11.0, 100.0);
-			}
-			case 2:
-			{
-				vSetVector(pos, 4.0, 0.0, -3.0);
-				vSetVector(angle, 0.0, -11.0, 100.0);
-			}
-		}
-	}
-	scale = 2.5;
-	switch (weapon)
-	{
-		case 29: scale = 2.0;
-		case 21: scale = 1.7;
-		case 30: scale = 2.3;
-		case 26: scale = 3.0;
-		case 22: scale = 4.0;
-		case 27: scale = 3.5;
-	}
-	float flDropWeaponScale = !g_bTankConfig[ST_TankType(client)] ? g_flDropWeaponScale[ST_TankType(client)] : g_flDropWeaponScale2[ST_TankType(client)];
-	scale = scale * flDropWeaponScale;
 }
 
 void vReset()
@@ -459,7 +358,7 @@ void vResetDrop(int client)
 public Action tTimerDrop(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bDrop[iTank] = false;
 		return Plugin_Stop;
@@ -502,7 +401,85 @@ public Action tTimerDrop(Handle timer, any userid)
 		}
 		SetVariantString(sPosition);
 		AcceptEntityInput(iDrop, "SetParentAttachment");
-		bIsL4D2Game() ? vGetPosAng2(iTank, iWeapon, flPos, flAngle, iPosition, flScale) : vGetPosAng(flPos, flAngle, iPosition, flScale);
+		if (bIsL4D2Game())
+		{
+			if (iWeapon == 22)
+			{
+				switch (iPosition)
+				{
+					case 1:
+					{
+						vSetVector(flPos, -23.0, -30.0, -5.0);
+						vSetVector(flAngle, 0.0, 60.0, 180.0);
+					}
+					case 2:
+					{
+						vSetVector(flPos, -9.0, -32.0, -1.0);
+						vSetVector(flAngle, 0.0, 60.0, 180.0);
+					}
+				}
+			}
+			else if (iWeapon >= 1)
+			{
+				switch (iPosition)
+				{
+					case 1:
+					{
+						vSetVector(flPos, 1.0, -5.0, 3.0);
+						vSetVector(flAngle, 0.0, -90.0, 90.0);
+					}
+					case 2:
+					{
+						vSetVector(flPos, 4.0, -5.0, -3.0);
+						vSetVector(flAngle, 0.0, -90.0, 90.0);
+					}
+				}
+			}	
+			else
+			{
+				switch (iPosition)
+				{
+					case 1:
+					{
+						vSetVector(flPos, -4.0, 0.0, 3.0);
+						vSetVector(flAngle, 0.0, -11.0, 100.0);
+					}
+					case 2:
+					{
+						vSetVector(flPos, 4.0, 0.0, -3.0);
+						vSetVector(flAngle, 0.0, -11.0, 100.0);
+					}
+				}
+			}
+			flScale = 2.5;
+			switch (iWeapon)
+			{
+				case 29: flScale = 2.0;
+				case 21: flScale = 1.7;
+				case 30: flScale = 2.3;
+				case 26: flScale = 3.0;
+				case 22: flScale = 4.0;
+				case 27: flScale = 3.5;
+			}
+			float flDropWeaponScale = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropWeaponScale[ST_TankType(iTank)] : g_flDropWeaponScale2[ST_TankType(iTank)];
+			flScale = flScale * flDropWeaponScale;
+		}
+		else
+		{
+			switch (iPosition)
+			{
+				case 1:
+				{
+					vSetVector(flPos, 1.0, -5.0, 3.0);
+					vSetVector(flAngle, 0.0, -90.0, 90.0);
+				}
+				case 2:
+				{
+					vSetVector(flPos, 4.0, -5.0, -3.0);
+					vSetVector(flAngle, 0.0, -90.0, 90.0);
+				}
+			}
+		}
 		SetEntProp(iDrop, Prop_Send, "m_CollisionGroup", 2);
 		if (bIsL4D2Game())
 		{
