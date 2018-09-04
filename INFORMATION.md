@@ -26,13 +26,6 @@
 			// 1: ON
 			"Plugin Enabled"				"1"
 
-			// Super Tanks++ will create a backup config file.
-			// The file will be located in cfg/sourcemod/super_tanks++/backup_config.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Create Backup"					"0"
-
 			// Enable Super Tanks++ in these game mode types.
 			// Add up numbers together for different results.
 			// --
@@ -84,13 +77,6 @@
 			// 0: OFF
 			// 1: ON
 			"Finales Only"					"0"
-
-			// Enable Super Tanks++ for human-controlled Tanks.
-			// Note: Some Super Tank abilities may be too overpowered to use in a competitive game mode.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Human Super Tanks"				"1"
 
 			// Multiply the Super Tank's health.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
