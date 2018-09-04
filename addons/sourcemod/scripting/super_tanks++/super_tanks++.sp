@@ -145,6 +145,7 @@ public void OnPluginStart()
 	vCreateConfigFile("cfg/sourcemod/", "super_tanks++/", "super_tanks++", "super_tanks++", true);
 	Format(g_sSavePath, sizeof(g_sSavePath), "cfg/sourcemod/super_tanks++/super_tanks++.cfg");
 	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
+	vLoadConfigs(g_sSavePath, true);
 	vMultiTargetFilters(1);
 	LoadTranslations("common.phrases");
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
@@ -779,9 +780,10 @@ void vTankMenu(int client, int item)
 		{
 			continue;
 		}
-		char sName[MAX_NAME_LENGTH + 1];
+		char sName[MAX_NAME_LENGTH + 1], sMenuItem[MAX_NAME_LENGTH + 12];
 		sName = !g_bTankConfig[iIndex] ? g_sCustomName[iIndex] : g_sCustomName2[iIndex];
-		mTankMenu.AddItem(sName, sName);
+		Format(sMenuItem, sizeof(sMenuItem), "%s (Tank #%d)", sName, iIndex);
+		mTankMenu.AddItem(sName, sMenuItem);
 	}
 	mTankMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
