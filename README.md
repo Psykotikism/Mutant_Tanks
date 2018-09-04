@@ -17,7 +17,7 @@ Super Tanks++ makes fighting Tanks great again!
 > Super Tanks++ will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
 ### What makes Super Tanks++ viable in Left 4 Dead/Left 4 Dead 2?
-Super Tanks++ enhances the experience and fun that players get from Tank fights by 2500. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
+Super Tanks++ enhances the experience and fun that players get from Tank fights by 5000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
 1. SourceMod 1.8+
@@ -50,7 +50,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 1. Supports multiple game modes - Provides the option to enable/disable the plugin in certain game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
 3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the auto-generated KeyValue config file and user-made Super Tanks.
-4. Create and save up to 2500 Super Tank types - Provides the ability to store up to 2500 Super Tank types that users can enable/disable.
+4. Create and save up to 5000 Super Tank types - Provides the ability to store up to 5000 Super Tank types that users can enable/disable.
 5. Easy-to-use config file - Provides a user-friendly KeyValues config file that users can easily understand and edit.
 6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
 7. Optional abilities - Provides the option to choose which abilities to install.
@@ -184,7 +184,7 @@ Here's our final entry:
 }
 ```
 
-To make sure that this entry can be chosen, we must go to the "Plugin Settings" section and look for the "Maximum Types" setting in the "General" subsection.
+To make sure that this entry can be chosen, we must go to the "Plugin Settings" section and look for the "Type Range" setting in the "General" subsection.
 
 ```
 "Super Tanks++"
@@ -193,13 +193,13 @@ To make sure that this entry can be chosen, we must go to the "Plugin Settings" 
 	{
 		"General"
 		{
-			"Maximum Types"			"24" // Determines what entry to stop at when reading the entire config file.
+			"Type Range"			"1-24" // Determines what entry to start and stop at when reading the entire config file.
 		}
 	}
 }
 ```
 
-Now, assuming that "Tank 25" is our highest entry, we just raise the value of "Maximum Types" by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to "Tank 25" it will stop reading the rest.
+Now, assuming that "Tank 25" is our highest entry, we just raise the maximum value of "Type Range" by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to "Tank 25" it will stop reading the rest.
 
 - Advanced Entry Examples
 
@@ -210,7 +210,7 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the value of "M
 	{
 		"General"
 		{
-			"Maximum Types"			"5" // Check "Tank 1" to "Tank 5"
+			"Type Range"			"1-5" // Check "Tank 1" to "Tank 5"
 		}
 	}
 	"Tank 5" // Checked by the plugin.
@@ -239,7 +239,7 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the value of "M
 	{
 		"General"
 		{
-			"Maximum Types"			"11" // Only check for the first 11 Tank types. ("Tank 1" to "Tank 11")
+			"Type Range"			"1-11" // Only check for the first 11 Tank types. ("Tank 1" to "Tank 11")
 		}
 	}
 	"Tank 13" // This will not be checked by the plugin.
@@ -333,12 +333,12 @@ Outcome: The plugin works in every Campaign-based and Survival-based game mode e
 It may be due to one or more of the following:
 
 - The "Tank Enabled" KeyValue for that Super Tank may be set to 0 or doesn't exists at all which defaults to 0.
-- You have created a new Super Tank and didn't raise the value of the "Maximum Types" KeyValue.
+- You have created a new Super Tank and didn't raise the maximum value of the "Type Range" KeyValue.
 - You have misspelled one of the KeyValues settings.
 - You are still using the "Tank Character" KeyValue which is no longer used since v8.16.
 - You didn't set up the Super Tank properly.
 - You are missing quotation marks.
-- You have more than 2500 Super Tanks in your config file.
+- You have more than 5000 Super Tanks in your config file.
 - You didn't format your config file properly.
 
 5. How do I kill the Tanks depending on what abilities they have?
@@ -427,7 +427,7 @@ Since v8.10, extra health given to Tanks is now multiplied by the number of aliv
 18. How do I add more Super Tanks?
 
 - Add a new entry in the config file.
-- Raise the value of the "Maximum Types" KeyValue.
+- Raise the maximum value of the "Type Range" KeyValue.
 
 Example:
 
@@ -438,7 +438,7 @@ Example:
 	{
 		"General"
 		{
-			"Maximum Types"		"69" // The plugin will check for 69 entries when loading the config file.
+			"Type Range"		"1-69" // The plugin will check for 69 entries when loading the config file.
 		}
 	}
 	"Tank 69"
@@ -637,14 +637,11 @@ forward void ST_BossStage(int client);
  * Use this forward to load settings for the plugin.
  *
  * @param savepath		The savepath of the config.
- * @param limit			The limit for how many
- *							Super Tank types' settings
- *							to check for.
  * @param main			Checks whether the main config
  *							or a custom config
  *							is being used.
  */
-forward void ST_Configs(char[] savepath, int limit, bool main);
+forward void ST_Configs(char[] savepath, bool main);
 
 /* Called when an event hooked by the core plugin is fired.
  * Use this forward to trigger something on any of those events.
@@ -681,12 +678,19 @@ forward void ST_Spawn(int client);
 
 Natives:
 ```
-/* Returns the value of the "Maximum Types" setting.
+/* Returns the maximum value of the "Type Range" setting.
  *
- * @return				The value of the
- *							"Maximum Types" setting.
+ * @return				The maximum value of the
+ *							"Type Range" setting.
  */
-native int ST_MaxTypes();
+native int ST_MaxType();
+
+/* Returns the minimum value of the "Type Range" setting.
+ *
+ * @return				The minimum value of the
+ *							"Type Range" setting.
+ */
+native int ST_MinType();
 
 /* Returns the status of the core plugin.
  *
@@ -720,916 +724,6 @@ native bool ST_TankAllowed(int client);
 native int ST_TankType(int client);
 ```
 
-Stocks:
-```
-stock bool bHasIdlePlayer(int client)
-{
-	char sClassname[12];
-	GetEntityNetClass(client, sClassname, sizeof(sClassname));
-	if (strcmp(sClassname, "SurvivorBot") == 0)
-	{
-		int iSpectatorUserId = GetEntProp(client, Prop_Send, "m_humanSpectatorUserID");
-		if (iSpectatorUserId > 0)
-		{
-			int iIdler = GetClientOfUserId(iSpectatorUserId);
-			if (iIdler > 0 && IsClientInGame(iIdler) && !IsFakeClient(iIdler) && (GetClientTeam(iIdler) != 2))
-			{
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-stock bool bIsBoomer(int client)
-{
-	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 2;
-}
-
-stock bool bIsBotIdle(int client)
-{
-	return bIsSurvivor(client) && IsFakeClient(client) && bHasIdlePlayer(client);
-}
-
-stock bool bIsBotIdleSurvivor(int client)
-{
-	return bIsSurvivor(client) && IsFakeClient(client) && !bHasIdlePlayer(client);
-}
-
-stock bool bIsBotSurvivor(int client)
-{
-	return bIsSurvivor(client) && IsFakeClient(client);
-}
-
-stock bool bIsCharger(int client)
-{
-	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 6;
-}
-
-stock bool bIsFinaleMap()
-{
-	return FindEntityByClassname(-1, "trigger_finale") != -1;
-}
-
-stock bool bIsHumanSurvivor(int client)
-{
-	return bIsSurvivor(client) && !IsFakeClient(client) && !bHasIdlePlayer(client) && !bIsPlayerIdle(client);
-}
-
-stock bool bIsHunter(int client)
-{
-	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 3;
-}
-
-stock bool bIsIdlePlayer(int bot, int client)
-{
-	return bIsValidClient(client) && !IsFakeClient(client) && GetClientTeam(bot) == 2;
-}
-
-stock bool bIsInfected(int client)
-{
-	return bIsValidClient(client) && GetClientTeam(client) == 3;
-}
-
-stock bool bIsJockey(int client)
-{
-	return bIsInfected(client) && bIsL4D2Game() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5;
-}
-
-stock bool bIsL4D2Game()
-{
-	return GetEngineVersion() == Engine_Left4Dead2;
-}
-
-stock bool bIsPlayerBurning(int client)
-{
-	if (GetEntPropFloat(client, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(client, Prop_Data, "m_fFlags") & FL_ONFIRE)
-	{
-		return true;
-	}
-	return false;
-}
-
-stock bool bIsPlayerGrounded(int client)
-{
-	if (GetEntProp(client, Prop_Send, "m_fFlags") & FL_ONGROUND)
-	{
-		return true;
-	}
-	return false;
-}
-
-stock bool bIsPlayerIdle(int client)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (!IsClientInGame(iPlayer) || GetClientTeam(iPlayer) != 2 || !IsFakeClient(iPlayer) || !bHasIdlePlayer(iPlayer))
-		{
-			continue;
-		}
-		char sClassname[12];
-		GetEntityNetClass(iPlayer, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "SurvivorBot") == 0)
-		{
-			int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
-			if (iSpectatorUserId > 0)
-			{
-				int iIdler = GetClientOfUserId(iSpectatorUserId);
-				if (iIdler == client)
-				{
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
-
-stock bool bIsPlayerIncapacitated(int client)
-{
-	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
-	{
-		return true;
-	}
-	return false;
-}
-
-int g_iCurrentMode;
-stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disabled)
-{
-	if (convar == null)
-	{
-		return false;
-	}
-	if (mode != 0)
-	{
-		g_iCurrentMode = 0;
-		int iGameMode = CreateEntityByName("info_gamemode");
-		DispatchSpawn(iGameMode);
-		HookSingleEntityOutput(iGameMode, "OnCoop", vGameMode, true);
-		HookSingleEntityOutput(iGameMode, "OnSurvival", vGameMode, true);
-		HookSingleEntityOutput(iGameMode, "OnVersus", vGameMode, true);
-		HookSingleEntityOutput(iGameMode, "OnScavenge", vGameMode, true);
-		ActivateEntity(iGameMode);
-		AcceptEntityInput(iGameMode, "PostSpawnActivate");
-		AcceptEntityInput(iGameMode, "Kill");
-		if (g_iCurrentMode == 0 || !(mode & g_iCurrentMode))
-		{
-			return false;
-		}
-	}
-	char sGameMode[32];
-	char sGameModes[513];
-	convar.GetString(sGameMode, sizeof(sGameMode));
-	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
-	if (strcmp(enabled, ""))
-	{
-		Format(sGameModes, sizeof(sGameModes), ",%s,", enabled);
-		if (StrContains(sGameModes, sGameMode, false) == -1)
-		{
-			return false;
-		}
-	}
-	if (strcmp(disabled, ""))
-	{
-		Format(sGameModes, sizeof(sGameModes), ",%s,", disabled);
-		if (StrContains(sGameModes, sGameMode, false) != -1)
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-stock bool bIsSmoker(int client)
-{
-	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 1;
-}
-
-stock bool bIsSpecialInfected(int client)
-{
-	if (bIsSmoker(client) || bIsBoomer(client) || bIsHunter(client) || bIsSpitter(client) || bIsJockey(client) || bIsCharger(client))
-	{
-		return true;
-	}
-	return false;
-}
-
-stock bool bIsSpitter(int client)
-{
-	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 4;
-}
-
-stock bool bIsSurvivor(int client)
-{
-	return bIsValidClient(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client);
-}
-
-stock bool bIsTank(int client)
-{
-	return bIsInfected(client) && (bIsL4D2Game() ? GetEntProp(client, Prop_Send, "m_zombieClass") == 8 : GetEntProp(client, Prop_Send, "m_zombieClass") == 5);
-}
-
-stock bool bIsValidClient(int client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
-}
-
-stock bool bIsValidEntity(int entity)
-{
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
-}
-
-stock bool bIsValidEntRef(int entity)
-{
-	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
-}
-
-stock bool bIsValidHumanClient(int client)
-{
-	return bIsValidClient(client) && !IsFakeClient(client);
-}
-
-stock bool bIsWitch(int client)
-{
-	if (IsValidEntity(client))
-	{
-		char sClassname[32];
-		GetEntityClassname(client, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "witch") == 0)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-public bool bBoomerFilter(const char[] pattern, Handle clients)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsBoomer(iPlayer) && IsPlayerAlive(iPlayer))
-		{
-			PushArrayCell(clients, iPlayer);
-		}
-	}
-	return true;
-}
-
-public bool bChargerFilter(const char[] pattern, Handle clients)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsCharger(iPlayer) && IsPlayerAlive(iPlayer))
-		{
-			PushArrayCell(clients, iPlayer);
-		}
-	}
-	return true;
-}
-
-public bool bHunterFilter(const char[] pattern, Handle clients)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsHunter(iPlayer) && IsPlayerAlive(iPlayer))
-		{
-			PushArrayCell(clients, iPlayer);
-		}
-	}
-	return true;
-}
-
-public bool bJockeyFilter(const char[] pattern, Handle clients)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsJockey(iPlayer) && IsPlayerAlive(iPlayer))
-		{
-			PushArrayCell(clients, iPlayer);
-		}
-	}
-	return true;
-}
-
-public bool bSmokerFilter(const char[] pattern, Handle clients)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsSmoker(iPlayer) && IsPlayerAlive(iPlayer))
-		{
-			PushArrayCell(clients, iPlayer);
-		}
-	}
-	return true;
-}
-
-public bool bSpitterFilter(const char[] pattern, Handle clients)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsSpitter(iPlayer) && IsPlayerAlive(iPlayer))
-		{
-			PushArrayCell(clients, iPlayer);
-		}
-	}
-	return true;
-}
-
-public bool bTankFilter(const char[] pattern, Handle clients)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsTank(iPlayer) && IsPlayerAlive(iPlayer))
-		{
-			PushArrayCell(clients, iPlayer);
-		}
-	}
-	return true;
-}
-
-public bool bTraceRayDontHitSelf(int entity, int mask, any data)
-{
-	if (entity == data)
-	{
-		return false;
-	}
-	return true;
-}
-
-public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
-{
-	if (entity == data || bIsValidClient(entity))
-	{
-		return false;
-	}
-	return true;
-}
-
-public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
-{
-	if (entity == data || bIsSurvivor(entity))
-	{
-		return false;
-	}
-	return true;
-}
-
-stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int flag)
-{
-	Handle hTrace;
-	switch (flag)
-	{
-		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
-		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
-	}
-	if (TR_DidHit(hTrace))
-	{
-		return false;
-	}
-	delete hTrace;
-	return true;
-}
-
-stock float flGetAngle(float angle1[3], float angle2[3])
-{
-	return ArcCosine(GetVectorDotProduct(angle1, angle2) / (GetVectorLength(angle1) * GetVectorLength(angle2)));
-}
-
-stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int trace) 
-{
-	float flAngle[3];
-	vCopyVector(angle, flAngle);
-	flAngle[0] += offset1;
-	flAngle[1] += offset2;
-	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
-	float flDistance = flGetRayDistance(pos, flAngle, entity, trace);
-	return flDistance;
-}
-
-stock float flGetGroundUnits(int entity)
-{
-	if (!(GetEntityFlags(entity) & FL_ONGROUND))
-	{ 
-		Handle hTrace;
-		float flOrigin[3];
-		float flPosition[3];
-		float flDown[3] = {90.0, 0.0, 0.0};
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
-		hTrace = TR_TraceRayFilterEx(flOrigin, flDown, CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
-		if (TR_DidHit(hTrace))
-		{
-			float flUnits;
-			TR_GetEndPosition(flPosition, hTrace);
-			flUnits = flOrigin[2] - flPosition[2];
-			delete hTrace;
-			return flUnits;
-		}
-		delete hTrace;
-	}
-	return 0.0;
-}
-
-stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace)
-{
-	float flHitPos[3];
-	iGetRayHitPos(pos, angle, flHitPos, entity, false, trace);
-	return GetVectorDistance(pos, flHitPos);
-}
-
-stock float flSetFloatLimit(float value, float min, float max)
-{
-	if (value < min)
-	{
-		value = min;
-	}
-	else if (value > max)
-	{
-		value = max;
-	}
-	return value;
-}
-
-stock int iGetBotSurvivor()
-{
-	for (int iBot = MaxClients; iBot >= 1; iBot--)
-	{
-		if (bIsBotSurvivor(iBot))
-		{
-			return iBot;
-		}
-	}
-	return -1;
-}
-
-stock int iGetHumanCount()
-{
-	int iHumanCount;
-	for (int iHuman = 1; iHuman <= MaxClients; iHuman++)
-	{
-		if (bIsHumanSurvivor(iHuman))
-		{
-			iHumanCount++;
-		}
-	}
-	return iHumanCount;
-}
-
-stock int iGetIdleBot(int client)
-{
-	for (int iBot = 1; iBot <= MaxClients; iBot++)
-	{
-		if (iGetIdlePlayer(iBot) == client)
-		{
-			return iBot;
-		}
-	}
-	return 0;
-}
-
-stock int iGetIdlePlayer(int client)
-{
-	if (bIsBotSurvivor(client))
-	{
-		char sClassname[12];
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "SurvivorBot") == 0)
-		{
-			int iIdler = GetClientOfUserId(GetEntProp(client, Prop_Send, "m_humanSpectatorUserID"));
-			if (iIdler > 0 && IsClientInGame(iIdler) && GetClientTeam(iIdler) == 1)
-			{
-				return iIdler;
-			}
-		}
-	}
-	return 0;
-}
-
-stock int iGetNearestSurvivor(int client)
-{
-	float flDistance = 0.0;
-	float flNearest = 0.0;
-	float flPlayerPos[3];
-	float flTargetPos[3];
-	if (bIsValidClient(client))
-	{
-		GetClientAbsOrigin(client, flPlayerPos);
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor))
-			{
-				GetClientAbsOrigin(iSurvivor, flTargetPos);
-				flDistance = GetVectorDistance(flPlayerPos, flTargetPos);
-				if (flNearest == 0.0 || flNearest > flDistance)
-				{
-					flNearest = flDistance;
-				}
-			}
-		}
-	}
-	return RoundFloat(flDistance);
-}
-
-stock int iGetPlayerCount()
-{
-	int iPlayerCount;
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidHumanClient(iPlayer))
-		{
-			iPlayerCount++;
-		}
-	}
-	return iPlayerCount;
-}
-
-stock int iGetRandomSurvivor(int client)
-{
-	int iSurvivorCount;
-	int iSurvivors[MAXPLAYERS + 1];
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor) && iSurvivor != client)
-		{
-			iSurvivors[iSurvivorCount++] = iSurvivor;
-		}
-	}
-	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
-}
-
-stock int iGetRandomTarget(float pos[3], float angle[3])
-{
-	float flMin = 4.0;
-	float flPos[3];
-	float flAngle;
-	int iTarget;
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor))
-		{
-			GetClientEyePosition(iSurvivor, flPos);
-			MakeVectorFromPoints(pos, flPos, flPos);
-			flAngle = flGetAngle(angle, flPos);
-			if (flAngle <= flMin)
-			{
-				flMin = flAngle;
-				iTarget = iSurvivor;
-			}
-		}
-	}
-	return iTarget;
-}
-
-stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false, int trace)
-{
-	int iHit = 0;
-	Handle hTrace;
-	switch (trace)
-	{
-		case 1: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, entity);
-		case 2: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, entity);
-		case 3: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, entity);
-	}
-	if (TR_DidHit(hTrace))
-	{
-		TR_GetEndPosition(hitpos, hTrace);
-		iHit = TR_GetEntityIndex(hTrace);
-	}
-	delete hTrace;
-	if (offset)
-	{
-		float flVector[3];
-		MakeVectorFromPoints(hitpos, pos, flVector);
-		NormalizeVector(flVector, flVector);
-		ScaleVector(flVector, 15.0);
-		AddVectors(hitpos, flVector, hitpos);
-	}
-	return iHit;
-}
-
-stock int iGetRGBColor(int red, int green, int blue) 
-{
-	return (blue * 65536) + (green * 256) + red;
-}
-
-stock int iGetWitchCount()
-{
-	int iWitchCount;
-	int iWitch = -1;
-	while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
-	{
-		iWitchCount++;
-	}
-	return iWitchCount;
-}
-
-stock int iSetCellLimit(int value, int min, int max)
-{
-	if (value < min)
-	{
-		value = min;
-	}
-	else if (value > max)
-	{
-		value = max;
-	}
-	return value;
-}
-
-stock void vAttachParticle(int client, char[] particlename, float time = 0.0, float origin = 0.0)
-{
-	if (bIsValidClient(client))
-	{
-		int iParticle = CreateEntityByName("info_particle_system");
-		if (IsValidEntity(iParticle))
-		{
-			float flPos[3];
-			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
-			flPos[2] += origin;
-			DispatchKeyValue(iParticle, "scale", "");
-			DispatchKeyValue(iParticle, "effect_name", particlename);
-			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iParticle);
-			ActivateEntity(iParticle);
-			AcceptEntityInput(iParticle, "Enable");
-			AcceptEntityInput(iParticle, "Start");
-			vSetEntityParent(iParticle, client);
-			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteEntity(iParticle, time);
-		}
-	}
-}
-
-stock void vCheatCommand(int client, char[] command, char[] arguments = "", any ...)
-{
-	int iCmdFlags = GetCommandFlags(command);
-	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
-	FakeClientCommand(client, "%s %s", command, arguments);
-	SetCommandFlags(command, iCmdFlags|FCVAR_CHEAT);
-}
-
-stock void vCopyVector(float source[3], float target[3])
-{
-	target[0] = source[0];
-	target[1] = source[1];
-	target[2] = source[2];
-}
-
-stock void vCreateParticle(int client, char[] particlename, float time, float origin)
-{
-	if (bIsValidClient(client))
-	{
-		int iParticle = CreateEntityByName("info_particle_system");
-		if (IsValidEntity(iParticle))
-		{
-			float flPos[3];
-			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
-			flPos[2] += origin;
-			DispatchKeyValue(iParticle, "effect_name", particlename);
-			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iParticle);
-			ActivateEntity(iParticle);
-			AcceptEntityInput(iParticle, "Start");
-			vSetEntityParent(iParticle, client);
-			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteEntity(iParticle, time);
-		}
-	}
-}
-
-stock void vDamage(int client, char[] damage)
-{
-	int iPointHurt = CreateEntityByName("point_hurt");
-	if (bIsValidEntity(iPointHurt))
-	{
-		DispatchKeyValue(client, "targetname", "hurtme");
-		DispatchKeyValue(iPointHurt, "Damage", damage);
-		DispatchKeyValue(iPointHurt, "DamageTarget", "hurtme");
-		DispatchKeyValue(iPointHurt, "DamageType", "2");
-		DispatchSpawn(iPointHurt);
-		AcceptEntityInput(iPointHurt, "Hurt", client);
-		AcceptEntityInput(iPointHurt, "Kill");
-		DispatchKeyValue(client, "targetname", "donthurtme");
-	}
-}
-
-stock void vDeleteEntity(int entity, float time = 0.1)
-{
-	if (bIsValidEntRef(entity))
-	{
-		char sVariant[64];
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		AcceptEntityInput(entity, "ClearParent");
-		SetVariantString(sVariant);
-		AcceptEntityInput(entity, "AddOutput");
-		AcceptEntityInput(entity, "FireUser1");
-	}
-}
-
-stock void vFade(int client, int duration, int unknown, int red, int green, int blue)
-{
-	Handle hFadeTarget = StartMessageOne("Fade", client);
-	if (hFadeTarget != null)
-	{
-		BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
-		bfWrite.WriteShort(duration);
-		bfWrite.WriteShort(unknown);
-		bfWrite.WriteShort((0x0010|0x0001));
-		bfWrite.WriteByte(red);
-		bfWrite.WriteByte(green);
-		bfWrite.WriteByte(blue);
-		bfWrite.WriteByte(150);
-		EndMessage();
-	}
-}
-
-public void vGameMode(const char[] output, int caller, int activator, float delay)
-{
-	if (strcmp(output, "OnCoop") == 0)
-	{
-		g_iCurrentMode = 1;
-	}
-	else if (strcmp(output, "OnVersus") == 0)
-	{
-		g_iCurrentMode = 2;
-	}
-	else if (strcmp(output, "OnSurvival") == 0)
-	{
-		g_iCurrentMode = 4;
-	}
-	else if (strcmp(output, "OnScavenge") == 0)
-	{
-		g_iCurrentMode = 8;
-	}
-}
-
-stock void vGetCurrentCount(char[] config)
-{
-	int iPlayerCount = iGetPlayerCount();
-	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/playercount_configs/%d.cfg", iPlayerCount);
-}
-
-stock void vGetCurrentDay(char[] config)
-{
-	char sDay[9];
-	char sDayNumber[2];
-	FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
-	int iDayNumber = StringToInt(sDayNumber);
-	switch (iDayNumber)
-	{
-		case 6: sDay = "saturday";
-		case 5: sDay = "friday";
-		case 4: sDay = "thursday";
-		case 3: sDay = "wednesday";
-		case 2: sDay = "tuesday";
-		case 1: sDay = "monday";
-		default: sDay = "sunday";
-	}
-	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/daily_configs/%s.cfg", sDay);
-}
-
-stock void vGetCurrentDifficulty(ConVar convar, char[] config)
-{
-	char sDifficulty[11];
-	convar.GetString(sDifficulty, sizeof(sDifficulty));
-	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/difficulty_configs/%s.cfg", sDifficulty);
-}
-
-stock void vGetCurrentMap(char[] config)
-{
-	char sMap[64];
-	GetCurrentMap(sMap, sizeof(sMap));
-	Format(config, strlen(config), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_map_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
-}
-
-stock void vGetCurrentMode(ConVar convar, char[] config)
-{
-	char sMode[64];
-	convar.GetString(sMode, sizeof(sMode));
-	Format(config, strlen(config), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
-}
-
-stock void vGhost(int client, int slot)
-{
-	if (bIsSurvivor(client) && GetPlayerWeaponSlot(client, slot) > 0)
-	{
-		SDKHooks_DropWeapon(client, GetPlayerWeaponSlot(client, slot), NULL_VECTOR, NULL_VECTOR);
-	}
-}
-
-stock void vGhostDrop(int client, char[] slots, char[] number, int slot)
-{
-	if (StrContains(slots, number) != -1)
-	{
-		vGhost(client, slot);
-	}
-}
-
-stock void vHeal(int client, int health, int extrahealth, int maxhealth)
-{
-	maxhealth = iSetCellLimit(maxhealth, 1, ST_MAXHEALTH);
-	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth;
-	int iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth;
-	int iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
-	SetEntityHealth(client, iRealHealth);
-}
-
-stock void vMultiTargetFilters(int toggle)
-{
-	switch (toggle)
-	{
-		case 0:
-		{
-			RemoveMultiTargetFilter("@smokers", bSmokerFilter);
-			RemoveMultiTargetFilter("@boomers", bBoomerFilter);
-			RemoveMultiTargetFilter("@hunters", bHunterFilter);
-			RemoveMultiTargetFilter("@spitters", bSpitterFilter);
-			RemoveMultiTargetFilter("@jockeys", bJockeyFilter);
-			RemoveMultiTargetFilter("@chargers", bChargerFilter);
-			RemoveMultiTargetFilter("@tanks", bTankFilter);
-		}
-		case 1:
-		{
-			AddMultiTargetFilter("@smokers", bSmokerFilter, "all Smokers", false);
-			AddMultiTargetFilter("@boomers", bBoomerFilter, "all Boomers", false);
-			AddMultiTargetFilter("@hunters", bHunterFilter, "all Hunters", false);
-			AddMultiTargetFilter("@spitters", bSpitterFilter, "all Spitters", false);
-			AddMultiTargetFilter("@jockeys", bJockeyFilter, "all Jockeys", false);
-			AddMultiTargetFilter("@chargers", bChargerFilter, "all Chargers", false);
-			AddMultiTargetFilter("@tanks", bTankFilter, "all Tanks", false);
-		}
-	}
-}
-
-stock void vPrecacheParticle(char[] particlename)
-{
-	int iParticle = CreateEntityByName("info_particle_system");
-	if (IsValidEntity(iParticle))
-	{
-		DispatchKeyValue(iParticle, "effect_name", particlename);
-		DispatchSpawn(iParticle);
-		ActivateEntity(iParticle);
-		AcceptEntityInput(iParticle, "Start");
-		vSetEntityParent(iParticle, iParticle);
-		iParticle = EntIndexToEntRef(iParticle);
-		vDeleteEntity(iParticle);
-	}
-}
-
-stock void vSetEntityParent(int entity, int parent)
-{
-	SetVariantString("!activator");
-	AcceptEntityInput(entity, "SetParent", parent);
-}
-
-stock void vSetVector(float target[3], float x, float y, float z)
-{
-	target[0] = x;
-	target[1] = y;
-	target[2] = z;
-}
-
-stock void vShake(int client, float duration = 1.0)
-{
-	Handle hShakeTarget = StartMessageOne("Shake", client);
-	if (hShakeTarget != null)
-	{
-		BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
-		bfWrite.WriteByte(0);
-		bfWrite.WriteFloat(16.0);
-		bfWrite.WriteFloat(0.5);
-		bfWrite.WriteFloat(duration);
-		EndMessage();
-	}
-}
-
-stock void vSpawnInfected(int client, char[] infected)
-{
-	ChangeClientTeam(client, 3);
-	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", infected);
-	KickClient(client);
-}
-
-stock void vSpecialAttack(int client, float pos[3], char[] model)
-{
-	int iProp = CreateEntityByName("prop_physics");
-	if (bIsValidEntity(iProp))
-	{
-		DispatchKeyValue(iProp, "disableshadows", "1");
-		SetEntityModel(iProp, model);
-		pos[2] += 10.0;
-		TeleportEntity(iProp, pos, NULL_VECTOR, NULL_VECTOR);
-		DispatchSpawn(iProp);
-		SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", client);
-		SetEntPropFloat(iProp, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
-		SetEntProp(iProp, Prop_Send, "m_CollisionGroup", 1);
-		SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-		SetEntityRenderColor(iProp, 0, 0, 0, 0);
-		AcceptEntityInput(iProp, "Break");
-	}
-}
-```
-
 Target filters:
 
 ```
@@ -1646,7 +740,7 @@ Target filters:
 Commands:
 
 ```
-1. sm_tank <type 1-*> *The maximum value is determined by the value of the "Maximum Types" KeyValue. (The highest value you can set is 2500 though.)
+1. sm_tank <type 1-*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 5000 though.)
 2. sm_tanklist
 ```
 
@@ -1693,6 +787,8 @@ Examples:
 **panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?p=1262968) plugins.
 
 **strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?p=702913), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?p=702914), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?p=702918) plugins.
+
+**Hipster** - For the [Admin Smite](https://forums.alliedmods.net/showthread.php?t=118534) plugin.
 
 **Marcus101RR** - For the code to set a player's weapon's ammo.
 

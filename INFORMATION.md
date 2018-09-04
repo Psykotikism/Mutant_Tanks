@@ -8,6 +8,7 @@
 {
 	// These are the general settings.
 	// Note: The following settings will not work in custom config files:
+	// "Config Mode"
 	// "Create Backup"
 	// "Game Mode Types"
 	// "Enabled Game Modes"
@@ -91,12 +92,6 @@
 			// 1: ON
 			"Human Super Tanks"				"1"
 
-			// Maximum types of Super Tanks allowed.
-			// --
-			// Minimum: 1
-			// Maximum: 2500
-			"Maximum Types"					"2500"
-
 			// Multiply the Super Tank's health.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
 			// --
@@ -110,11 +105,24 @@
 			// Separate waves with commas.
 			// Wave limit: 3
 			// Character limit for each wave: 3
+			// Minimum value for each wave: 1
+			// Maximum value for each wave: 999
 			// --
 			// 1st number = 1st wave
 			// 2nd number = 2nd wave
 			// 3rd number = 3rd wave
 			"Tank Waves"					"2,3,4"
+
+			// The range of types to check for.
+			// Separate values with "-".
+			// Value limit: 2
+			// Character limit for each value: 4
+			// Minimum number for each value: 1
+			// Maximum number for each value: 5000
+			// --
+			// 1st number = Minimum value
+			// 2nd number = Maximum value
+			"Type Range"					"1-5000"
 		}
 		"Custom"
 		{
@@ -179,6 +187,8 @@
 			// Note: The values will be added to the boss's new health on every new stage.
 			// Note: The values will determine when the boss evolves to the next stage.
 			// Example: When Stage 1 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
+			// Minimum value for each health stage: 1
+			// Maximum value for each health stage: 65535
 			// --
 			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 1 boss. (The "Boss Stages" setting must be set to "1" or higher.)
 			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "2" or higher.)
@@ -211,6 +221,8 @@
 			// These are the Super Tank's skin and glow outline colors.
 			// Separate colors with "|".
 			// Separate RGBAs with commas.
+			// Minimum value for each color: 0
+			// Maximum value for each color: 255
 			// --
 			// 1st set = skin color (RGBA)
 			// 2nd set = glow color (RGB)
@@ -239,6 +251,8 @@
 			// Separate chances with commas.
 			// Chances limit: 6
 			// Character limit for each chance: 3
+			// Minimum value for each chance: 1
+			// Maximum value for each chance: 999
 			// --
 			// 1st number = Chance for a blur effect to appear.
 			// 2nd number = Chance for lights to appear.
@@ -251,6 +265,8 @@
 			// The Super Tank's prop colors.
 			// Separate colors with "|".
 			// Separate RGBAs with commas.
+			// Minimum value for each color: 0
+			// Maximum value for each color: 255
 			// --
 			// 1st set = lights color (RGBA)
 			// 2nd set = oxygen tanks color (RGBA)
@@ -2633,6 +2649,8 @@
 			"Ability Enabled"				"0"
 
 			// This is the Super Tank's shield's color.
+			// Minimum value for each color: 0
+			// Maximum value for each color: 255
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -3031,7 +3049,7 @@
 
 			// The mode of the Super Tank's track ability.
 			// --
-			// 0: The Super Tank's rock will only start tracking when it's near a survivor.
+			// 0: The Super Tank's rock will only start tracking when it is near a survivor.
 			// 1: The Super Tank's rock will track the nearest survivor.
 			"Track Mode"					"1"
 

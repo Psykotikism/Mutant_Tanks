@@ -14,8 +14,8 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bGhost[MAXPLAYERS + 1], g_bLateLoad, g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
-char g_sGhostSlot[ST_MAXTYPES + 1][6], g_sGhostSlot2[ST_MAXTYPES + 1][6],
+bool g_bGhost[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sGhostWeaponSlots[ST_MAXTYPES + 1][6], g_sGhostWeaponSlots2[ST_MAXTYPES + 1][6],
 	g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80],
 	g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 float g_flGhostCloakRange[ST_MAXTYPES + 1], g_flGhostCloakRange2[ST_MAXTYPES + 1],
@@ -36,27 +36,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	g_bLateLoad = late;
 	return APLRes_Success;
-}
-
-public void OnAllPluginsLoaded()
-{
-	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = false;
-	}
 }
 
 public void OnMapStart()
@@ -91,7 +70,7 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_bPluginEnabled && ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -116,11 +95,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, int limit, bool main)
+public void ST_Configs(char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
@@ -133,9 +112,9 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_iGhostAbility[iIndex] = iSetCellLimit(g_iGhostAbility[iIndex], 0, 1)) : (g_iGhostAbility2[iIndex] = iSetCellLimit(g_iGhostAbility2[iIndex], 0, 1));
 			main ? (g_iGhostChance[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Chance", 4)) : (g_iGhostChance2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Chance", g_iGhostChance[iIndex]));
 			main ? (g_iGhostChance[iIndex] = iSetCellLimit(g_iGhostChance[iIndex], 1, 9999999999)) : (g_iGhostChance2[iIndex] = iSetCellLimit(g_iGhostChance2[iIndex], 1, 9999999999));
-			main ? (g_flGhostCloakRange[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Cloak Range", 150.0)) : (g_flGhostCloakRange2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Cloak Range", g_flGhostCloakRange[iIndex]));
+			main ? (g_flGhostCloakRange[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Cloak Range", 500.0)) : (g_flGhostCloakRange2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Cloak Range", g_flGhostCloakRange[iIndex]));
 			main ? (g_flGhostCloakRange[iIndex] = flSetFloatLimit(g_flGhostCloakRange[iIndex], 1.0, 9999999999.0)) : (g_flGhostCloakRange2[iIndex] = flSetFloatLimit(g_flGhostCloakRange2[iIndex], 1.0, 9999999999.0));
-			main ? (g_iGhostFade[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", 255)) : (g_iGhostFade2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", g_iGhostFade[iIndex]));
+			main ? (g_iGhostFade[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", 0)) : (g_iGhostFade2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", g_iGhostFade[iIndex]));
 			main ? (g_iGhostFade[iIndex] = iSetCellLimit(g_iGhostFade[iIndex], 0, 255)) : (g_iGhostFade2[iIndex] = iSetCellLimit(g_iGhostFade2[iIndex], 0, 255));
 			main ? (g_iGhostHit[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Hit", 0)) : (g_iGhostHit2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Hit", g_iGhostHit[iIndex]));
 			main ? (g_iGhostHit[iIndex] = iSetCellLimit(g_iGhostHit[iIndex], 0, 1)) : (g_iGhostHit2[iIndex] = iSetCellLimit(g_iGhostHit2[iIndex], 0, 1));
@@ -143,7 +122,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 			main ? (g_flGhostRange[iIndex] = flSetFloatLimit(g_flGhostRange[iIndex], 1.0, 9999999999.0)) : (g_flGhostRange2[iIndex] = flSetFloatLimit(g_flGhostRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iGhostRangeChance[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Range Chance", 16)) : (g_iGhostRangeChance2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Range Chance", g_iGhostRangeChance[iIndex]));
 			main ? (g_iGhostRangeChance[iIndex] = iSetCellLimit(g_iGhostRangeChance[iIndex], 1, 9999999999)) : (g_iGhostRangeChance2[iIndex] = iSetCellLimit(g_iGhostRangeChance2[iIndex], 1, 9999999999));
-			main ? (kvSuperTanks.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostSlot[iIndex], sizeof(g_sGhostSlot[]), "12345")) : (kvSuperTanks.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostSlot2[iIndex], sizeof(g_sGhostSlot2[]), g_sGhostSlot[iIndex]));
+			main ? (kvSuperTanks.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostWeaponSlots[iIndex], sizeof(g_sGhostWeaponSlots[]), "12345")) : (kvSuperTanks.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostWeaponSlots2[iIndex], sizeof(g_sGhostWeaponSlots2[]), g_sGhostWeaponSlots[iIndex]));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -153,7 +132,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iGhostAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGhostAbility[ST_TankType(client)] : g_iGhostAbility2[ST_TankType(client)];
-	if (g_bPluginEnabled && iGhostAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (iGhostAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		char sSet[2][16], sTankColors[28], sRGB[4][4], sSet2[5][16], sPropsColors[80], sProps[4][4],
 			sProps2[4][4], sProps3[4][4], sProps4[4][4], sProps5[4][4];
@@ -163,48 +142,66 @@ public void ST_Ability(int client)
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 		TrimString(sRGB[0]);
 		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+		iRed = iSetCellLimit(iRed, 0, 255);
 		TrimString(sRGB[1]);
 		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+		iGreen = iSetCellLimit(iGreen, 0, 255);
 		TrimString(sRGB[2]);
 		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+		iBlue = iSetCellLimit(iBlue, 0, 255);
 		sPropsColors = !g_bTankConfig[ST_TankType(client)] ? g_sPropsColors[ST_TankType(client)] : g_sPropsColors2[ST_TankType(client)];
 		TrimString(sPropsColors);
 		ExplodeString(sPropsColors, "|", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 		ExplodeString(sSet2[0], ",", sProps, sizeof(sProps), sizeof(sProps[]));
 		TrimString(sProps[0]);
 		int iRed2 = (sProps[0][0] != '\0') ? StringToInt(sProps[0]) : 255;
+		iRed2 = iSetCellLimit(iRed2, 0, 255);
 		TrimString(sProps[1]);
 		int iGreen2 = (sProps[1][0] != '\0') ? StringToInt(sProps[1]) : 255;
+		iGreen2 = iSetCellLimit(iGreen2, 0, 255);
 		TrimString(sProps[2]);
 		int iBlue2 = (sProps[2][0] != '\0') ? StringToInt(sProps[2]) : 255;
+		iBlue2 = iSetCellLimit(iBlue2, 0, 255);
 		ExplodeString(sSet2[1], ",", sProps2, sizeof(sProps2), sizeof(sProps2[]));
 		TrimString(sProps2[0]);
 		int iRed3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[0]) : 255;
+		iRed3 = iSetCellLimit(iRed3, 0, 255);
 		TrimString(sProps2[1]);
 		int iGreen3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[1]) : 255;
+		iGreen3 = iSetCellLimit(iGreen3, 0, 255);
 		TrimString(sProps2[2]);
 		int iBlue3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[2]) : 255;
+		iBlue3 = iSetCellLimit(iBlue3, 0, 255);
 		ExplodeString(sSet2[2], ",", sProps3, sizeof(sProps3), sizeof(sProps3[]));
 		TrimString(sProps3[0]);
 		int iRed4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[0]) : 255;
+		iRed4 = iSetCellLimit(iRed4, 0, 255);
 		TrimString(sProps3[1]);
 		int iGreen4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[1]) : 255;
+		iGreen4 = iSetCellLimit(iGreen4, 0, 255);
 		TrimString(sProps3[2]);
 		int iBlue4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[2]) : 255;
+		iBlue4 = iSetCellLimit(iBlue4, 0, 255);
 		ExplodeString(sSet2[3], ",", sProps4, sizeof(sProps4), sizeof(sProps4[]));
 		TrimString(sProps4[0]);
 		int iRed5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[0]) : 255;
+		iRed5 = iSetCellLimit(iRed5, 0, 255);
 		TrimString(sProps4[1]);
 		int iGreen5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[1]) : 255;
+		iGreen5 = iSetCellLimit(iGreen5, 0, 255);
 		TrimString(sProps4[2]);
 		int iBlue5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[2]) : 255;
+		iBlue5 = iSetCellLimit(iBlue5, 0, 255);
 		ExplodeString(sSet2[4], ",", sProps5, sizeof(sProps5), sizeof(sProps5[]));
 		TrimString(sProps5[0]);
 		int iRed6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[0]) : 255;
+		iRed6 = iSetCellLimit(iRed6, 0, 255);
 		TrimString(sProps5[1]);
 		int iGreen6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[1]) : 255;
+		iGreen6 = iSetCellLimit(iGreen6, 0, 255);
 		TrimString(sProps5[2]);
 		int iBlue6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[2]) : 255;
+		iBlue6 = iSetCellLimit(iBlue6, 0, 255);
 		int iGhostRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGhostChance[ST_TankType(client)] : g_iGhostChance2[ST_TankType(client)];
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{
@@ -275,15 +272,15 @@ public void ST_Ability(int client)
 
 void vGhostHit(int client, int owner, int chance, int enabled)
 {
-	if (g_bPluginEnabled && enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
-		char sGhostSlot[6];
-		sGhostSlot = !g_bTankConfig[ST_TankType(owner)] ? g_sGhostSlot[ST_TankType(owner)] : g_sGhostSlot2[ST_TankType(owner)];
-		vGhostDrop(client, sGhostSlot, "1", 0);
-		vGhostDrop(client, sGhostSlot, "2", 1);
-		vGhostDrop(client, sGhostSlot, "3", 2);
-		vGhostDrop(client, sGhostSlot, "4", 3);
-		vGhostDrop(client, sGhostSlot, "5", 4);
+		char sGhostWeaponSlots[6];
+		sGhostWeaponSlots = !g_bTankConfig[ST_TankType(owner)] ? g_sGhostWeaponSlots[ST_TankType(owner)] : g_sGhostWeaponSlots2[ST_TankType(owner)];
+		vGhostDrop(client, sGhostWeaponSlots, "1", 0);
+		vGhostDrop(client, sGhostWeaponSlots, "2", 1);
+		vGhostDrop(client, sGhostWeaponSlots, "3", 2);
+		vGhostDrop(client, sGhostWeaponSlots, "4", 3);
+		vGhostDrop(client, sGhostWeaponSlots, "5", 4);
 		switch (GetRandomInt(1, 2))
 		{
 			case 1: EmitSoundToClient(client, SOUND_INFECTED, owner);
@@ -308,7 +305,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bGhost[iTank] = false;
 		return Plugin_Stop;

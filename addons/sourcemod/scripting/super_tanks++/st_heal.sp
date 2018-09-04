@@ -14,9 +14,9 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bHeal[MAXPLAYERS + 1], g_bLateLoad, g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bHeal[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
-ConVar g_cvSTFindConVar;
+ConVar g_cvSTMaxIncapCount;
 float g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1],
 	g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1];
 Handle g_hSDKHealPlayer, g_hSDKRevivePlayer;
@@ -39,30 +39,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-public void OnAllPluginsLoaded()
-{
-	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = false;
-	}
-}
-
 public void OnPluginStart()
 {
-	g_cvSTFindConVar = FindConVar("survivor_max_incapacitated_count");
+	g_cvSTMaxIncapCount = FindConVar("survivor_max_incapacitated_count");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	StartPrepSDKCall(SDKCall_Player);
 	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_SetHealthBuffer");
@@ -110,7 +89,7 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_bPluginEnabled && ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && damage > 0.0)
 	{
 		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
@@ -124,11 +103,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, int limit, bool main)
+public void ST_Configs(char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
@@ -163,7 +142,7 @@ public void ST_Configs(char[] savepath, int limit, bool main)
 public void ST_Ability(int client)
 {
 	int iHealAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHealAbility[ST_TankType(client)] : g_iHealAbility2[ST_TankType(client)];
-	if (g_bPluginEnabled && iHealAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bHeal[client])
+	if (iHealAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bHeal[client])
 	{
 		g_bHeal[client] = true;
 		float flHealInterval = !g_bTankConfig[ST_TankType(client)] ? g_flHealInterval[ST_TankType(client)] : g_flHealInterval2[ST_TankType(client)];
@@ -175,9 +154,9 @@ void vHealHit(int client, int owner)
 {
 	int iHealChance = !g_bTankConfig[ST_TankType(owner)] ? g_iHealChance[ST_TankType(owner)] : g_iHealChance2[ST_TankType(owner)];
 	int iHealHit = !g_bTankConfig[ST_TankType(owner)] ? g_iHealHit[ST_TankType(owner)] : g_iHealHit2[ST_TankType(owner)];
-	if (g_bPluginEnabled && iHealHit == 1 && GetRandomInt(1, iHealChance) == 1 && bIsSurvivor(client))
+	if (iHealHit == 1 && GetRandomInt(1, iHealChance) == 1 && bIsSurvivor(client))
 	{
-		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTFindConVar.IntValue - 1);
+		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue - 1);
 		SetEntProp(client, Prop_Send, "m_isIncapacitated", 1);
 		SDKCall(g_hSDKRevivePlayer, client);
 		SetEntityHealth(client, 1);
@@ -199,7 +178,7 @@ void vReset()
 public Action tTimerHeal(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		g_bHeal[iTank] = false;
 		return Plugin_Stop;
@@ -302,10 +281,13 @@ public Action tTimerHeal(Handle timer, any userid)
 		ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 		TrimString(sGlow[0]);
 		int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
+		iRed = iSetCellLimit(iRed, 0, 255);
 		TrimString(sGlow[1]);
 		int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
+		iGreen = iSetCellLimit(iGreen, 0, 255);
 		TrimString(sGlow[2]);
 		int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
+		iBlue = iSetCellLimit(iBlue, 0, 255);
 		int iGlowEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEffect[ST_TankType(iTank)] : g_iGlowEffect2[ST_TankType(iTank)];
 		if (iGlowEffect == 1 && bIsL4D2Game())
 		{

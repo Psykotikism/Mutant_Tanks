@@ -4,28 +4,6 @@
 #endif
 #define _supertanksplusplus_included
 
-public SharedPlugin __pl_supertanksplusplus = 
-{
-	name = "super_tanks++",
-	file = "super_tanks++.smx",
-#if defined REQUIRE_PLUGIN
-	required = 1,
-#else
-	required = 0,
-#endif
-};
-
-#if !defined REQUIRE_PLUGIN
-public void __pl_supertanksplusplus_SetNTVOptional()
-{
-	MarkNativeAsOptional("ST_MaxTypes");
-	MarkNativeAsOptional("ST_PluginEnabled");
-	MarkNativeAsOptional("ST_SpawnTank");
-	MarkNativeAsOptional("ST_TankAllowed");
-	MarkNativeAsOptional("ST_TankType");
-}
-#endif
-
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
@@ -34,9 +12,9 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.37"
+#define ST_VERSION "8.38"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
-#define ST_MAXTYPES 2500
+#define ST_MAXTYPES 5000
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
 #define MELEE_AXE_V "models/weapons/melee/v_fireaxe.mdl"
@@ -178,14 +156,11 @@ forward void ST_BossStage(int client);
  * Use this forward to load settings for the plugin.
  *
  * @param savepath		The savepath of the config.
- * @param limit			The limit for how many
- *							Super Tank types' settings
- *							to check for.
  * @param main			Checks whether the main config
  *							or a custom config
  *							is being used.
  */
-forward void ST_Configs(char[] savepath, int limit, bool main);
+forward void ST_Configs(char[] savepath, bool main);
 
 /* Called when an event hooked by the core plugin is fired.
  * Use this forward to trigger something on any of those events.
@@ -220,12 +195,19 @@ forward void ST_RockThrow(int client, int entity);
 forward void ST_Spawn(int client);
 
 // Natives
-/* Returns the value of the "Maximum Types" setting.
+/* Returns the maximum value of the "Type Range" setting.
  *
- * @return				The value of the
- *							"Maximum Types" setting.
+ * @return				The maximum value of the
+ *							"Type Range" setting.
  */
-native int ST_MaxTypes();
+native int ST_MaxType();
+
+/* Returns the minimum value of the "Type Range" setting.
+ *
+ * @return				The minimum value of the
+ *							"Type Range" setting.
+ */
+native int ST_MinType();
 
 /* Returns the status of the core plugin.
  *
@@ -415,8 +397,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 			return false;
 		}
 	}
-	char sGameMode[32];
-	char sGameModes[513];
+	char sGameMode[32], sGameModes[513];
 	convar.GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
 	if (strcmp(enabled, ""))
@@ -445,11 +426,7 @@ stock bool bIsSmoker(int client)
 
 stock bool bIsSpecialInfected(int client)
 {
-	if (bIsSmoker(client) || bIsBoomer(client) || bIsHunter(client) || bIsSpitter(client) || bIsJockey(client) || bIsCharger(client))
-	{
-		return true;
-	}
-	return false;
+	return bIsSmoker(client) || bIsBoomer(client) || bIsHunter(client) || bIsSpitter(client) || bIsJockey(client) || bIsCharger(client);
 }
 
 stock bool bIsSpitter(int client)
@@ -650,9 +627,7 @@ stock float flGetGroundUnits(int entity)
 	if (!(GetEntityFlags(entity) & FL_ONGROUND))
 	{ 
 		Handle hTrace;
-		float flOrigin[3];
-		float flPosition[3];
-		float flDown[3] = {90.0, 0.0, 0.0};
+		float flOrigin[3], flPosition[3], flDown[3] = {90.0, 0.0, 0.0};
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
 		hTrace = TR_TraceRayFilterEx(flOrigin, flDown, CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
 		if (TR_DidHit(hTrace))
@@ -745,10 +720,7 @@ stock int iGetIdlePlayer(int client)
 
 stock int iGetNearestSurvivor(int client)
 {
-	float flDistance = 0.0;
-	float flNearest = 0.0;
-	float flPlayerPos[3];
-	float flTargetPos[3];
+	float flDistance = 0.0, flNearest = 0.0, flPlayerPos[3], flTargetPos[3];
 	if (bIsValidClient(client))
 	{
 		GetClientAbsOrigin(client, flPlayerPos);
@@ -783,8 +755,7 @@ stock int iGetPlayerCount()
 
 stock int iGetRandomSurvivor(int client)
 {
-	int iSurvivorCount;
-	int iSurvivors[MAXPLAYERS + 1];
+	int iSurvivorCount, iSurvivors[MAXPLAYERS + 1];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor) && iSurvivor != client)
@@ -797,9 +768,7 @@ stock int iGetRandomSurvivor(int client)
 
 stock int iGetRandomTarget(float pos[3], float angle[3])
 {
-	float flMin = 4.0;
-	float flPos[3];
-	float flAngle;
+	float flMin = 4.0, flPos[3], flAngle;
 	int iTarget;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -852,8 +821,7 @@ stock int iGetRGBColor(int red, int green, int blue)
 
 stock int iGetWitchCount()
 {
-	int iWitchCount;
-	int iWitch = -1;
+	int iWitchCount, iWitch = -1;
 	while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
 	{
 		iWitchCount++;
@@ -915,8 +883,7 @@ stock void vCopyVector(float source[3], float target[3])
 
 stock void vCreateConfigFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "", bool main = false)
 {
-	char sConfigFilename[128];
-	char sConfigLabel[128];
+	char sConfigFilename[128], sConfigLabel[128];
 	File fFilename;
 	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.cfg", filepath, folder, filename);
 	if (FileExists(sConfigFilename))
@@ -949,9 +916,9 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Display Health\"				\"3\"");
 			fFilename.WriteLine("			\"Finales Only\"					\"0\"");
 			fFilename.WriteLine("			\"Human Super Tanks\"				\"1\"");
-			fFilename.WriteLine("			\"Maximum Types\"					\"66\"");
 			fFilename.WriteLine("			\"Multiply Health\"				\"0\"");
 			fFilename.WriteLine("			\"Tank Waves\"					\"2,3,4\"");
+			fFilename.WriteLine("			\"Type Range\"					\"1-66\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Custom\"");
 			fFilename.WriteLine("		{");
@@ -1368,6 +1335,8 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Spawn Mode\"					\"0\"");
 			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"255,245,0,255|255,245,0\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"55,205,65,255|55,205,65,255|55,205,65,180|55,205,65,255|55,205,65,255\"");
+			fFilename.WriteLine("			\"Particle Effect\"				\"1\"");
+			fFilename.WriteLine("			\"Particle Effects\"				\"6\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Enhancements\"");
 			fFilename.WriteLine("		{");
@@ -1597,6 +1566,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("		{");
 			fFilename.WriteLine("			\"Ability Enabled\"				\"1\"");
 			fFilename.WriteLine("			\"Ghost Chance\"					\"4\"");
+			fFilename.WriteLine("			\"Ghost Cloak Range\"				\"500.0\"");
 			fFilename.WriteLine("			\"Ghost Fade Limit\"				\"0\"");
 			fFilename.WriteLine("			\"Ghost Hit\"						\"1\"");
 			fFilename.WriteLine("			\"Ghost Range\"					\"150.0\"");
@@ -2233,7 +2203,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 			fFilename.WriteLine("			\"Boss Stages\"					\"3\"");
 			fFilename.WriteLine("			\"Random Interval\"				\"5.0\"");
 			fFilename.WriteLine("			\"Spawn Mode\"					\"0\"");
-			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"10,40,15,255|10,40,15\"");
+			fFilename.WriteLine("			\"Skin-Glow Colors\"				\"10,40,15,255|225,235,0\"");
 			fFilename.WriteLine("			\"Props Colors\"					\"225,235,0,255|225,235,0,255|225,235,0,180|225,235,0,255|225,235,0,255\"");
 			fFilename.WriteLine("		}");
 			fFilename.WriteLine("		\"Enhancements\"");
@@ -2905,52 +2875,6 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 	}
 }
 
-stock void vGetCurrentCount(char[] config)
-{
-	int iPlayerCount = iGetPlayerCount();
-	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/playercount_configs/%d.cfg", iPlayerCount);
-}
-
-stock void vGetCurrentDay(char[] config)
-{
-	char sDay[9];
-	char sDayNumber[2];
-	FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
-	int iDayNumber = StringToInt(sDayNumber);
-	switch (iDayNumber)
-	{
-		case 6: sDay = "saturday";
-		case 5: sDay = "friday";
-		case 4: sDay = "thursday";
-		case 3: sDay = "wednesday";
-		case 2: sDay = "tuesday";
-		case 1: sDay = "monday";
-		default: sDay = "sunday";
-	}
-	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/daily_configs/%s.cfg", sDay);
-}
-
-stock void vGetCurrentDifficulty(ConVar convar, char[] config)
-{
-	char sDifficulty[11];
-	convar.GetString(sDifficulty, sizeof(sDifficulty));
-	Format(config, strlen(config), "cfg/sourcemod/super_tanks++/difficulty_configs/%s.cfg", sDifficulty);
-}
-
-stock void vGetCurrentMap(char[] config)
-{
-	char sMap[64];
-	GetCurrentMap(sMap, sizeof(sMap));
-	Format(config, strlen(config), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_map_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
-}
-
-stock void vGetCurrentMode(ConVar convar, char[] config)
-{
-	char sMode[64];
-	convar.GetString(sMode, sizeof(sMode));
-	Format(config, strlen(config), (bIsL4D2Game() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
-}
-
 stock void vGhost(int client, int slot)
 {
 	if (bIsSurvivor(client) && GetPlayerWeaponSlot(client, slot) > 0)
@@ -3070,3 +2994,26 @@ stock void vSpecialAttack(int client, float pos[3], char[] model)
 		AcceptEntityInput(iProp, "Break");
 	}
 }
+
+public SharedPlugin __pl_supertanksplusplus = 
+{
+	name = "super_tanks++",
+	file = "super_tanks++.smx",
+#if defined REQUIRE_PLUGIN
+	required = 1,
+#else
+	required = 0,
+#endif
+};
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_supertanksplusplus_SetNTVOptional()
+{
+	MarkNativeAsOptional("ST_MaxType");
+	MarkNativeAsOptional("ST_MinType");
+	MarkNativeAsOptional("ST_PluginEnabled");
+	MarkNativeAsOptional("ST_SpawnTank");
+	MarkNativeAsOptional("ST_TankAllowed");
+	MarkNativeAsOptional("ST_TankType");
+}
+#endif

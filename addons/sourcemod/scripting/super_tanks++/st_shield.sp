@@ -14,9 +14,9 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad, g_bPluginEnabled, g_bShield[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bLateLoad, g_bShield[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sShieldColor[ST_MAXTYPES + 1][12], g_sShieldColor2[ST_MAXTYPES + 1][12];
-ConVar g_cvSTFindConVar;
+ConVar g_cvSTTankThrowForce;
 float g_flShieldDelay[ST_MAXTYPES + 1], g_flShieldDelay2[ST_MAXTYPES + 1];
 int g_iShieldAbility[ST_MAXTYPES + 1], g_iShieldAbility2[ST_MAXTYPES + 1];
 
@@ -32,30 +32,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-public void OnAllPluginsLoaded()
-{
-	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = false;
-	}
-}
-
 public void OnPluginStart()
 {
-	g_cvSTFindConVar = FindConVar("z_tank_throw_force");
+	g_cvSTTankThrowForce = FindConVar("z_tank_throw_force");
 }
 
 public void OnMapStart()
@@ -89,7 +68,7 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_bPluginEnabled && ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && damage > 0.0)
 	{
 		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
@@ -120,11 +99,11 @@ public Action SetTransmit(int entity, int client)
 	return Plugin_Continue;
 }
 
-public void ST_Configs(char[] savepath, int limit, bool main)
+public void ST_Configs(char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
@@ -182,7 +161,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_BossStage(int client)
 {
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (g_bPluginEnabled && ST_TankAllowed(client) && iShieldAbility == 1)
+	if (ST_TankAllowed(client) && iShieldAbility == 1)
 	{
 		vRemoveShield(client);
 	}
@@ -191,7 +170,7 @@ public void ST_BossStage(int client)
 public void ST_Spawn(int client)
 {
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (g_bPluginEnabled && iShieldAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bShield[client])
+	if (iShieldAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bShield[client])
 	{
 		vShield(client, true);
 	}
@@ -200,7 +179,7 @@ public void ST_Spawn(int client)
 public void ST_RockThrow(int client, int entity)
 {
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (g_bPluginEnabled && ST_TankAllowed(client) && IsPlayerAlive(client) && iShieldAbility == 1)
+	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iShieldAbility == 1)
 	{
 		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(0.1, tTimerShieldThrow, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -249,10 +228,13 @@ void vShield(int client, bool shield)
 		ExplodeString(sShieldColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 		TrimString(sSet[0]);
 		int iRed = (sSet[0][0] != '\0') ? StringToInt(sSet[0]) : 255;
+		iRed = iSetCellLimit(iRed, 0, 255);
 		TrimString(sSet[1]);
 		int iGreen = (sSet[1][0] != '\0') ? StringToInt(sSet[1]) : 255;
+		iGreen = iSetCellLimit(iGreen, 0, 255);
 		TrimString(sSet[2]);
 		int iBlue = (sSet[2][0] != '\0') ? StringToInt(sSet[2]) : 255;
+		iBlue = iSetCellLimit(iBlue, 0, 255);
 		float flOrigin[3];
 		GetClientAbsOrigin(client, flOrigin);
 		flOrigin[2] -= 120.0;
@@ -297,7 +279,7 @@ void vShield(int client, bool shield)
 public Action tTimerShield(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || g_bShield[iTank])
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || g_bShield[iTank])
 	{
 		return Plugin_Stop;
 	}
@@ -319,7 +301,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_bPluginEnabled || !ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -341,7 +323,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 			AcceptEntityInput(iRock, "Kill");
 			NormalizeVector(flVelocity, flVelocity);
-			ScaleVector(flVelocity, g_cvSTFindConVar.FloatValue * 1.4);
+			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 			DispatchSpawn(iPropane);
 			TeleportEntity(iPropane, flPos, NULL_VECTOR, flVelocity);
 		}

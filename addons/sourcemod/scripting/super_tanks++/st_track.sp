@@ -14,7 +14,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bPluginEnabled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 float g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
 int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1],
@@ -33,37 +33,16 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-public void OnAllPluginsLoaded()
-{
-	LibraryExists("super_tanks++") ? (g_bPluginEnabled = true) : (g_bPluginEnabled = false);
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "super_tanks++") == 0)
-	{
-		g_bPluginEnabled = false;
-	}
-}
-
 public void Think(int entity)
 {
-	g_bPluginEnabled && bIsValidEntity(entity) ? vTrack(entity) : SDKUnhook(entity, SDKHook_Think, Think);
+	bIsValidEntity(entity) ? vTrack(entity) : SDKUnhook(entity, SDKHook_Think, Think);
 }
 
-public void ST_Configs(char[] savepath, int limit, bool main)
+public void ST_Configs(char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
-	for (int iIndex = 1; iIndex <= limit; iIndex++)
+	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
 		Format(sName, sizeof(sName), "Tank %d", iIndex);
@@ -91,7 +70,7 @@ public void ST_RockThrow(int client, int entity)
 {
 	int iTrackAbility = !g_bTankConfig[ST_TankType(client)] ? g_iTrackAbility[ST_TankType(client)] : g_iTrackAbility2[ST_TankType(client)];
 	int iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
-	if (g_bPluginEnabled && iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
 		DataPack dpDataPack = new DataPack();
 		CreateDataTimer(0.5, tTimerTrack, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
@@ -152,10 +131,9 @@ void vTrack(int entity)
 			}
 			NormalizeVector(flVelocity, flVelocity);
 			int iTarget = iGetRandomTarget(flPos, flVelocity);
-			float flVelocity2[3], flVector[3], flAngle[3];
+			float flVelocity2[3], flVector[3], flAngle[3], flDistance = 1000.0;
 			flVector[0] = flVector[1] = flVector[2] = 0.0;
 			bool bVisible;
-			float flDistance = 1000.0;
 			if (iTarget > 0)
 			{
 				float flPos2[3];
@@ -171,9 +149,7 @@ void vTrack(int entity)
 				flVector3[3], flVector4[3], flVector5[3], flVector6[3], flVector7[3], flVector8[3],
 				flVector9;
 			flFront[0] = flFront[1] = flFront[2] = 0.0;
-			float flFactor1 = 0.2;
-			float flFactor2 = 0.5;
-			float flBase = 1500.0;
+			float flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0;
 			if (bVisible)
 			{
 				flBase = 80.0;
@@ -318,10 +294,13 @@ void vTrack(int entity)
 			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 			TrimString(sGlow[0]);
 			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
+			iRed = iSetCellLimit(iRed, 0, 255);
 			TrimString(sGlow[1]);
 			int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
+			iGreen = iSetCellLimit(iGreen, 0, 255);
 			TrimString(sGlow[2]);
 			int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
+			iBlue = iSetCellLimit(iBlue, 0, 255);
 			int iGlowEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEffect[ST_TankType(iTank)] : g_iGlowEffect2[ST_TankType(iTank)];
 			if (iGlowEffect == 1 && bIsL4D2Game())
 			{
@@ -337,7 +316,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if (!g_bPluginEnabled || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
