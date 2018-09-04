@@ -70,8 +70,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iCancerChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iCancerChance[ST_TankType(attacker)] : g_iCancerChance2[ST_TankType(attacker)];
-				int iCancerHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iCancerHit[ST_TankType(attacker)] : g_iCancerHit2[ST_TankType(attacker)];
+				int iCancerChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iCancerChance[ST_TankType(attacker)] : g_iCancerChance2[ST_TankType(attacker)],
+					iCancerHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iCancerHit[ST_TankType(attacker)] : g_iCancerHit2[ST_TankType(attacker)];
 				vCancerHit(victim, attacker, iCancerChance, iCancerHit);
 			}
 		}
@@ -79,8 +79,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				int iCancerChance = !g_bTankConfig[ST_TankType(victim)] ? g_iCancerChance[ST_TankType(victim)] : g_iCancerChance2[ST_TankType(victim)];
-				int iCancerHit = !g_bTankConfig[ST_TankType(victim)] ? g_iCancerHit[ST_TankType(victim)] : g_iCancerHit2[ST_TankType(victim)];
+				int iCancerChance = !g_bTankConfig[ST_TankType(victim)] ? g_iCancerChance[ST_TankType(victim)] : g_iCancerChance2[ST_TankType(victim)],
+					iCancerHit = !g_bTankConfig[ST_TankType(victim)] ? g_iCancerHit[ST_TankType(victim)] : g_iCancerHit2[ST_TankType(victim)];
 				vCancerHit(attacker, victim, iCancerChance, iCancerHit);
 			}
 		}
@@ -120,10 +120,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iCancerAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCancerAbility[ST_TankType(client)] : g_iCancerAbility2[ST_TankType(client)];
-		int iCancerRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iCancerChance[ST_TankType(client)] : g_iCancerChance2[ST_TankType(client)];
-		float flCancerRange = !g_bTankConfig[ST_TankType(client)] ? g_flCancerRange[ST_TankType(client)] : g_flCancerRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iCancerAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCancerAbility[ST_TankType(client)] : g_iCancerAbility2[ST_TankType(client)],
+			iCancerRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iCancerChance[ST_TankType(client)] : g_iCancerChance2[ST_TankType(client)];
+		float flCancerRange = !g_bTankConfig[ST_TankType(client)] ? g_flCancerRange[ST_TankType(client)] : g_flCancerRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

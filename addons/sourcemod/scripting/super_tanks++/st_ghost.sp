@@ -78,8 +78,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iGhostChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iGhostChance[ST_TankType(attacker)] : g_iGhostChance2[ST_TankType(attacker)];
-				int iGhostHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iGhostHit[ST_TankType(attacker)] : g_iGhostHit2[ST_TankType(attacker)];
+				int iGhostChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iGhostChance[ST_TankType(attacker)] : g_iGhostChance2[ST_TankType(attacker)],
+					iGhostHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iGhostHit[ST_TankType(attacker)] : g_iGhostHit2[ST_TankType(attacker)];
 				vGhostHit(victim, attacker, iGhostChance, iGhostHit);
 			}
 		}
@@ -87,8 +87,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				int iGhostChance = !g_bTankConfig[ST_TankType(victim)] ? g_iGhostChance[ST_TankType(victim)] : g_iGhostChance2[ST_TankType(victim)];
-				int iGhostHit = !g_bTankConfig[ST_TankType(victim)] ? g_iGhostHit[ST_TankType(victim)] : g_iGhostHit2[ST_TankType(victim)];
+				int iGhostChance = !g_bTankConfig[ST_TankType(victim)] ? g_iGhostChance[ST_TankType(victim)] : g_iGhostChance2[ST_TankType(victim)],
+					iGhostHit = !g_bTankConfig[ST_TankType(victim)] ? g_iGhostHit[ST_TankType(victim)] : g_iGhostHit2[ST_TankType(victim)];
 				vGhostHit(attacker, victim, iGhostChance, iGhostHit);
 			}
 		}
@@ -207,10 +207,10 @@ public void ST_Ability(int client)
 		{
 			if (bIsSpecialInfected(iInfected))
 			{
-				float flTankPos[3], flInfectedPos[3];
+				float flTankPos[3], flInfectedPos[3],
+					flGhostCloakRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostCloakRange[ST_TankType(client)] : g_flGhostCloakRange2[ST_TankType(client)];
 				GetClientAbsOrigin(client, flTankPos);
 				GetClientAbsOrigin(iInfected, flInfectedPos);
-				float flGhostCloakRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostCloakRange[ST_TankType(client)] : g_flGhostCloakRange2[ST_TankType(client)];
 				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
 				if (flDistance <= flGhostCloakRange)
 				{
@@ -251,8 +251,8 @@ public void ST_Ability(int client)
 			dpDataPack.WriteCell(iBlue6);
 			SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		}
-		float flGhostRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostRange[ST_TankType(client)] : g_flGhostRange2[ST_TankType(client)];
-		float flTankPos[3];
+		float flGhostRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostRange[ST_TankType(client)] : g_flGhostRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -316,26 +316,14 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 		g_bGhost[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iRed = pack.ReadCell();
-	int iGreen = pack.ReadCell();
-	int iBlue = pack.ReadCell();
-	int iRed2 = pack.ReadCell();
-	int iGreen2 = pack.ReadCell();
-	int iBlue2 = pack.ReadCell();
-	int iRed3 = pack.ReadCell();
-	int iGreen3 = pack.ReadCell();
-	int iBlue3 = pack.ReadCell();
-	int iRed4 = pack.ReadCell();
-	int iGreen4 = pack.ReadCell();
-	int iBlue4 = pack.ReadCell();
-	int iRed5 = pack.ReadCell();
-	int iGreen5 = pack.ReadCell();
-	int iBlue5 = pack.ReadCell();
-	int iRed6 = pack.ReadCell();
-	int iGreen6 = pack.ReadCell();
-	int iBlue6 = pack.ReadCell();
+	int iRed = pack.ReadCell(), iGreen = pack.ReadCell(), iBlue = pack.ReadCell(),
+		iRed2 = pack.ReadCell(), iGreen2 = pack.ReadCell(), iBlue2 = pack.ReadCell(),
+		iRed3 = pack.ReadCell(), iGreen3 = pack.ReadCell(), iBlue3 = pack.ReadCell(),
+		iRed4 = pack.ReadCell(), iGreen4 = pack.ReadCell(), iBlue4 = pack.ReadCell(),
+		iRed5 = pack.ReadCell(), iGreen5 = pack.ReadCell(), iBlue5 = pack.ReadCell(),
+		iRed6 = pack.ReadCell(), iGreen6 = pack.ReadCell(), iBlue6 = pack.ReadCell(),
+		iGhostFade = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFade[ST_TankType(iTank)] : g_iGhostFade2[ST_TankType(iTank)];
 	g_iGhostAlpha[iTank] -= 2;
-	int iGhostFade = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFade[ST_TankType(iTank)] : g_iGhostFade2[ST_TankType(iTank)];
 	if (g_iGhostAlpha[iTank] < iGhostFade)
 	{
 		g_iGhostAlpha[iTank] = iGhostFade;

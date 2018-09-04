@@ -72,8 +72,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iVisionChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iVisionChance[ST_TankType(attacker)] : g_iVisionChance2[ST_TankType(attacker)];
-				int iVisionHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iVisionHit[ST_TankType(attacker)] : g_iVisionHit2[ST_TankType(attacker)];
+				int iVisionChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iVisionChance[ST_TankType(attacker)] : g_iVisionChance2[ST_TankType(attacker)],
+					iVisionHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iVisionHit[ST_TankType(attacker)] : g_iVisionHit2[ST_TankType(attacker)];
 				vVisionHit(victim, attacker, iVisionChance, iVisionHit);
 			}
 		}
@@ -115,10 +115,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iVisionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iVisionAbility[ST_TankType(client)] : g_iVisionAbility2[ST_TankType(client)];
-		int iVisionRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iVisionChance[ST_TankType(client)] : g_iVisionChance2[ST_TankType(client)];
-		float flVisionRange = !g_bTankConfig[ST_TankType(client)] ? g_flVisionRange[ST_TankType(client)] : g_flVisionRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iVisionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iVisionAbility[ST_TankType(client)] : g_iVisionAbility2[ST_TankType(client)],
+			iVisionRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iVisionChance[ST_TankType(client)] : g_iVisionChance2[ST_TankType(client)];
+		float flVisionRange = !g_bTankConfig[ST_TankType(client)] ? g_flVisionRange[ST_TankType(client)] : g_flVisionRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -177,9 +177,9 @@ public Action tTimerVision(Handle timer, DataPack pack)
 		SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", 90);
 		return Plugin_Stop;
 	}
-	float flTime = pack.ReadFloat();
+	float flTime = pack.ReadFloat(),
+		flVisionDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flVisionDuration[ST_TankType(iTank)] : g_flVisionDuration2[ST_TankType(iTank)];
 	int iVisionAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iVisionAbility[ST_TankType(iTank)] : g_iVisionAbility2[ST_TankType(iTank)];
-	float flVisionDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flVisionDuration[ST_TankType(iTank)] : g_flVisionDuration2[ST_TankType(iTank)];
 	if (iVisionAbility == 0 || (flTime + flVisionDuration) < GetEngineTime())
 	{
 		g_bVision[iSurvivor] = false;

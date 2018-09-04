@@ -71,8 +71,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iShakeChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iShakeChance[ST_TankType(attacker)] : g_iShakeChance2[ST_TankType(attacker)];
-				int iShakeHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iShakeHit[ST_TankType(attacker)] : g_iShakeHit2[ST_TankType(attacker)];
+				int iShakeChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iShakeChance[ST_TankType(attacker)] : g_iShakeChance2[ST_TankType(attacker)],
+					iShakeHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iShakeHit[ST_TankType(attacker)] : g_iShakeHit2[ST_TankType(attacker)];
 				vShakeHit(victim, attacker, iShakeChance, iShakeHit);
 			}
 		}
@@ -112,10 +112,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iShakeAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShakeAbility[ST_TankType(client)] : g_iShakeAbility2[ST_TankType(client)];
-		int iShakeRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iShakeChance[ST_TankType(client)] : g_iShakeChance2[ST_TankType(client)];
-		float flShakeRange = !g_bTankConfig[ST_TankType(client)] ? g_flShakeRange[ST_TankType(client)] : g_flShakeRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iShakeAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShakeAbility[ST_TankType(client)] : g_iShakeAbility2[ST_TankType(client)],
+			iShakeRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iShakeChance[ST_TankType(client)] : g_iShakeChance2[ST_TankType(client)];
+		float flShakeRange = !g_bTankConfig[ST_TankType(client)] ? g_flShakeRange[ST_TankType(client)] : g_flShakeRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -172,9 +172,9 @@ public Action tTimerShake(Handle timer, DataPack pack)
 		g_bShake[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	float flTime = pack.ReadFloat();
+	float flTime = pack.ReadFloat(),
+		flShakeDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShakeDuration[ST_TankType(iTank)] : g_flShakeDuration2[ST_TankType(iTank)];
 	int iShakeAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShakeAbility[ST_TankType(iTank)] : g_iShakeAbility2[ST_TankType(iTank)];
-	float flShakeDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShakeDuration[ST_TankType(iTank)] : g_flShakeDuration2[ST_TankType(iTank)];
 	if (iShakeAbility == 0 || (flTime + flShakeDuration) < GetEngineTime())
 	{
 		g_bShake[iSurvivor] = false;

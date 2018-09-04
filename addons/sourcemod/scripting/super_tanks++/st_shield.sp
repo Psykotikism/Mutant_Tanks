@@ -125,8 +125,7 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "ability_use") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank) && IsPlayerAlive(iTank))
 		{
 			int iProp = -1;
@@ -148,9 +147,8 @@ public void ST_Event(Event event, const char[] name)
 	}
 	else if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iShieldAbility == 1)
 		{
 			vRemoveShield(iTank);

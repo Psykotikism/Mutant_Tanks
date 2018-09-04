@@ -68,8 +68,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iRocketChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iRocketChance[ST_TankType(attacker)] : g_iRocketChance2[ST_TankType(attacker)];
-				int iRocketHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iRocketHit[ST_TankType(attacker)] : g_iRocketHit2[ST_TankType(attacker)];
+				int iRocketChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iRocketChance[ST_TankType(attacker)] : g_iRocketChance2[ST_TankType(attacker)],
+					iRocketHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iRocketHit[ST_TankType(attacker)] : g_iRocketHit2[ST_TankType(attacker)];
 				vRocketHit(victim, attacker, iRocketChance, iRocketHit);
 			}
 		}
@@ -107,10 +107,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iRocketAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRocketAbility[ST_TankType(client)] : g_iRocketAbility2[ST_TankType(client)];
-		int iRocketRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iRocketChance[ST_TankType(client)] : g_iRocketChance2[ST_TankType(client)];
-		float flRocketRange = !g_bTankConfig[ST_TankType(client)] ? g_flRocketRange[ST_TankType(client)] : g_flRocketRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iRocketAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRocketAbility[ST_TankType(client)] : g_iRocketAbility2[ST_TankType(client)],
+			iRocketRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iRocketChance[ST_TankType(client)] : g_iRocketChance2[ST_TankType(client)];
+		float flRocketRange = !g_bTankConfig[ST_TankType(client)] ? g_flRocketRange[ST_TankType(client)] : g_flRocketRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

@@ -78,8 +78,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iPukeChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iPukeChance[ST_TankType(attacker)] : g_iPukeChance2[ST_TankType(attacker)];
-				int iPukeHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iPukeHit[ST_TankType(attacker)] : g_iPukeHit2[ST_TankType(attacker)];
+				int iPukeChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iPukeChance[ST_TankType(attacker)] : g_iPukeChance2[ST_TankType(attacker)],
+					iPukeHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iPukeHit[ST_TankType(attacker)] : g_iPukeHit2[ST_TankType(attacker)];
 				vPukeHit(victim, attacker, iPukeChance, iPukeHit);
 			}
 		}
@@ -87,8 +87,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				int iPukeChance = !g_bTankConfig[ST_TankType(victim)] ? g_iPukeChance[ST_TankType(victim)] : g_iPukeChance2[ST_TankType(victim)];
-				int iPukeHit = !g_bTankConfig[ST_TankType(victim)] ? g_iPukeHit[ST_TankType(victim)] : g_iPukeHit2[ST_TankType(victim)];
+				int iPukeChance = !g_bTankConfig[ST_TankType(victim)] ? g_iPukeChance[ST_TankType(victim)] : g_iPukeChance2[ST_TankType(victim)],
+					iPukeHit = !g_bTankConfig[ST_TankType(victim)] ? g_iPukeHit[ST_TankType(victim)] : g_iPukeHit2[ST_TankType(victim)];
 				vPukeHit(attacker, victim, iPukeChance, iPukeHit);
 			}
 		}
@@ -126,10 +126,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iPukeAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPukeAbility[ST_TankType(client)] : g_iPukeAbility2[ST_TankType(client)];
-		int iPukeRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPukeChance[ST_TankType(client)] : g_iPukeChance2[ST_TankType(client)];
-		float flPukeRange = !g_bTankConfig[ST_TankType(client)] ? g_flPukeRange[ST_TankType(client)] : g_flPukeRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iPukeAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPukeAbility[ST_TankType(client)] : g_iPukeAbility2[ST_TankType(client)],
+			iPukeRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPukeChance[ST_TankType(client)] : g_iPukeChance2[ST_TankType(client)];
+		float flPukeRange = !g_bTankConfig[ST_TankType(client)] ? g_flPukeRange[ST_TankType(client)] : g_flPukeRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

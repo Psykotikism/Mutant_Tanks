@@ -71,8 +71,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iHurtChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iHurtChance[ST_TankType(attacker)] : g_iHurtChance2[ST_TankType(attacker)];
-				int iHurtHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iHurtHit[ST_TankType(attacker)] : g_iHurtHit2[ST_TankType(attacker)];
+				int iHurtChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iHurtChance[ST_TankType(attacker)] : g_iHurtChance2[ST_TankType(attacker)],
+					iHurtHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iHurtHit[ST_TankType(attacker)] : g_iHurtHit2[ST_TankType(attacker)];
 				vHurtHit(victim, attacker, iHurtChance, iHurtHit);
 			}
 		}
@@ -114,10 +114,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iHurtAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHurtAbility[ST_TankType(client)] : g_iHurtAbility2[ST_TankType(client)];
-		int iHurtRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iHurtChance[ST_TankType(client)] : g_iHurtChance2[ST_TankType(client)];
-		float flHurtRange = !g_bTankConfig[ST_TankType(client)] ? g_flHurtRange[ST_TankType(client)] : g_flHurtRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iHurtAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHurtAbility[ST_TankType(client)] : g_iHurtAbility2[ST_TankType(client)],
+			iHurtRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iHurtChance[ST_TankType(client)] : g_iHurtChance2[ST_TankType(client)];
+		float flHurtRange = !g_bTankConfig[ST_TankType(client)] ? g_flHurtRange[ST_TankType(client)] : g_flHurtRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -174,9 +174,9 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 		g_bHurt[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	float flTime = pack.ReadFloat();
+	float flTime = pack.ReadFloat(),
+		flHurtDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flHurtDuration[ST_TankType(iTank)] : g_flHurtDuration2[ST_TankType(iTank)];
 	int iHurtAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHurtAbility[ST_TankType(iTank)] : g_iHurtAbility2[ST_TankType(iTank)];
-	float flHurtDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flHurtDuration[ST_TankType(iTank)] : g_flHurtDuration2[ST_TankType(iTank)];
 	if (iHurtAbility == 0 || (flTime + flHurtDuration) < GetEngineTime())
 	{
 		g_bHurt[iSurvivor] = false;

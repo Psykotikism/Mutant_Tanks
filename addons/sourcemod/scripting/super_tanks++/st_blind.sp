@@ -78,8 +78,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iBlindChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iBlindChance[ST_TankType(attacker)] : g_iBlindChance2[ST_TankType(attacker)];
-				int iBlindHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iBlindHit[ST_TankType(attacker)] : g_iBlindHit2[ST_TankType(attacker)];
+				int iBlindChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iBlindChance[ST_TankType(attacker)] : g_iBlindChance2[ST_TankType(attacker)],
+					iBlindHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iBlindHit[ST_TankType(attacker)] : g_iBlindHit2[ST_TankType(attacker)];
 				vBlindHit(victim, attacker, iBlindChance, iBlindHit);
 			}
 		}
@@ -121,9 +121,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iBlindAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindAbility[ST_TankType(iTank)] : g_iBlindAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iBlindAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindAbility[ST_TankType(iTank)] : g_iBlindAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iBlindAbility == 1)
 		{
 			vRemoveBlind(iTank);
@@ -135,10 +134,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iBlindAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
-		int iBlindRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBlindChance[ST_TankType(client)] : g_iBlindChance2[ST_TankType(client)];
-		float flBlindRange = !g_bTankConfig[ST_TankType(client)] ? g_flBlindRange[ST_TankType(client)] : g_flBlindRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iBlindAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)],
+			iBlindRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBlindChance[ST_TankType(client)] : g_iBlindChance2[ST_TankType(client)];
+		float flBlindRange = !g_bTankConfig[ST_TankType(client)] ? g_flBlindRange[ST_TankType(client)] : g_flBlindRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

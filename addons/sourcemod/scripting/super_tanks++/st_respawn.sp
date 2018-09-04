@@ -64,15 +64,13 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_incapacitated") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iRespawnAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAbility[ST_TankType(iTank)] : g_iRespawnAbility2[ST_TankType(iTank)];
-		int iRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnChance[ST_TankType(iTank)] : g_iRespawnChance2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iRespawnAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAbility[ST_TankType(iTank)] : g_iRespawnAbility2[ST_TankType(iTank)],
+			iRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnChance[ST_TankType(iTank)] : g_iRespawnChance2[ST_TankType(iTank)];
 		if (iRespawnAbility == 1 && GetRandomInt(1, iRespawnChance) == 1 && ST_TankAllowed(iTank))
 		{
 			float flPos[3], flAngles[3];
-			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags");
-			int iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
+			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags"), iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
 			GetEntPropVector(iTank, Prop_Send, "m_vecOrigin", flPos);
 			GetEntPropVector(iTank, Prop_Send, "m_angRotation", flAngles);
 			DataPack dpDataPack = new DataPack();
@@ -156,15 +154,9 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		g_iRespawnCount[iTank] = 0;
 		return Plugin_Stop;
 	}
-	int iFlags = pack.ReadCell();
-	int iSequence = pack.ReadCell();
+	int iFlags = pack.ReadCell(), iSequence = pack.ReadCell();
 	float flPos[3], flAngles[3];
-	flPos[0] = pack.ReadFloat();
-	flPos[1] = pack.ReadFloat();
-	flPos[2] = pack.ReadFloat();
-	flAngles[0] = pack.ReadFloat();
-	flAngles[1] = pack.ReadFloat();
-	flAngles[2] = pack.ReadFloat();
+	flPos[0] = pack.ReadFloat(), flPos[1] = pack.ReadFloat(), flPos[2] = pack.ReadFloat(), flAngles[0] = pack.ReadFloat(), flAngles[1] = pack.ReadFloat(), flAngles[2] = pack.ReadFloat();
 	int iRespawnAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAmount[ST_TankType(iTank)] : g_iRespawnAmount2[ST_TankType(iTank)];
 	if (g_iRespawnCount[iTank] < iRespawnAmount)
 	{

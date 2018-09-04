@@ -72,8 +72,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iIceChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iIceChance[ST_TankType(attacker)] : g_iIceChance2[ST_TankType(attacker)];
-				int iIceHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iIceHit[ST_TankType(attacker)] : g_iIceHit2[ST_TankType(attacker)];
+				int iIceChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iIceChance[ST_TankType(attacker)] : g_iIceChance2[ST_TankType(attacker)],
+					iIceHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iIceHit[ST_TankType(attacker)] : g_iIceHit2[ST_TankType(attacker)];
 				vIceHit(victim, attacker, iIceChance, iIceHit);
 			}
 		}
@@ -113,9 +113,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iIceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iIceAbility[ST_TankType(iTank)] : g_iIceAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iIceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iIceAbility[ST_TankType(iTank)] : g_iIceAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iIceAbility == 1)
 		{
 			vRemoveIce(iTank);
@@ -127,10 +126,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client))
 	{
-		int iIceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIceAbility[ST_TankType(client)] : g_iIceAbility2[ST_TankType(client)];
-		int iIceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iIceChance[ST_TankType(client)] : g_iIceChance2[ST_TankType(client)];
-		float flIceRange = !g_bTankConfig[ST_TankType(client)] ? g_flIceRange[ST_TankType(client)] : g_flIceRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iIceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIceAbility[ST_TankType(client)] : g_iIceAbility2[ST_TankType(client)],
+			iIceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iIceChance[ST_TankType(client)] : g_iIceChance2[ST_TankType(client)];
+		float flIceRange = !g_bTankConfig[ST_TankType(client)] ? g_flIceRange[ST_TankType(client)] : g_flIceRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

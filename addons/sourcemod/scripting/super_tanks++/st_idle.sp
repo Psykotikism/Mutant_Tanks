@@ -92,8 +92,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iIdleChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iIdleChance[ST_TankType(attacker)] : g_iIdleChance2[ST_TankType(attacker)];
-				int iIdleHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iIdleHit[ST_TankType(attacker)] : g_iIdleHit2[ST_TankType(attacker)];
+				int iIdleChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iIdleChance[ST_TankType(attacker)] : g_iIdleChance2[ST_TankType(attacker)],
+					iIdleHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iIdleHit[ST_TankType(attacker)] : g_iIdleHit2[ST_TankType(attacker)];
 				vIdleHit(victim, iIdleChance, iIdleHit);
 			}
 		}
@@ -131,16 +131,13 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_afk") == 0)
 	{
-		int iPlayerId = event.GetInt("player");
-		int iIdler = GetClientOfUserId(iPlayerId);
+		int iPlayerId = event.GetInt("player"), iIdler = GetClientOfUserId(iPlayerId);
 		g_bIdled[iIdler] = true;
 	}
 	else if (strcmp(name, "player_bot_replace") == 0)
 	{
-		int iSurvivorId = event.GetInt("player");
-		int iSurvivor = GetClientOfUserId(iSurvivorId);
-		int iBotId = event.GetInt("bot");
-		int iBot = GetClientOfUserId(iBotId);
+		int iSurvivorId = event.GetInt("player"), iSurvivor = GetClientOfUserId(iSurvivorId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 		if (bIsIdlePlayer(iBot, iSurvivor)) 
 		{
 			DataPack dpDataPack = new DataPack();
@@ -159,10 +156,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iIdleAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIdleAbility[ST_TankType(client)] : g_iIdleAbility2[ST_TankType(client)];
-		int iIdleRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iIdleChance[ST_TankType(client)] : g_iIdleChance2[ST_TankType(client)];
-		float flIdleRange = !g_bTankConfig[ST_TankType(client)] ? g_flIdleRange[ST_TankType(client)] : g_flIdleRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iIdleAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIdleAbility[ST_TankType(client)] : g_iIdleAbility2[ST_TankType(client)],
+			iIdleRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iIdleChance[ST_TankType(client)] : g_iIdleChance2[ST_TankType(client)];
+		float flIdleRange = !g_bTankConfig[ST_TankType(client)] ? g_flIdleRange[ST_TankType(client)] : g_flIdleRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -208,8 +205,7 @@ void vReset()
 public Action tTimerIdleFix(Handle timer, DataPack pack)
 {
 	pack.Reset();
-	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	int iBot = GetClientOfUserId(pack.ReadCell());
+	int iSurvivor = GetClientOfUserId(pack.ReadCell()), iBot = GetClientOfUserId(pack.ReadCell());
 	if (!bIsValidClient(iSurvivor) || !IsPlayerAlive(iSurvivor) || !bIsValidClient(iBot) || !IsPlayerAlive(iSurvivor))
 	{
 		return Plugin_Stop;

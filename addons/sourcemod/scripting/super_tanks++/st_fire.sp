@@ -65,8 +65,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iFireChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iFireChance[ST_TankType(attacker)] : g_iFireChance2[ST_TankType(attacker)];
-				int iFireHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iFireHit[ST_TankType(attacker)] : g_iFireHit2[ST_TankType(attacker)];
+				int iFireChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iFireChance[ST_TankType(attacker)] : g_iFireChance2[ST_TankType(attacker)],
+					iFireHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iFireHit[ST_TankType(attacker)] : g_iFireHit2[ST_TankType(attacker)];
 				vFireHit(victim, attacker, iFireChance, iFireHit);
 			}
 		}
@@ -74,8 +74,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				int iFireChance = !g_bTankConfig[ST_TankType(victim)] ? g_iFireChance[ST_TankType(victim)] : g_iFireChance2[ST_TankType(victim)];
-				int iFireHit = !g_bTankConfig[ST_TankType(victim)] ? g_iFireHit[ST_TankType(victim)] : g_iFireHit2[ST_TankType(victim)];
+				int iFireChance = !g_bTankConfig[ST_TankType(victim)] ? g_iFireChance[ST_TankType(victim)] : g_iFireChance2[ST_TankType(victim)],
+					iFireHit = !g_bTankConfig[ST_TankType(victim)] ? g_iFireHit[ST_TankType(victim)] : g_iFireHit2[ST_TankType(victim)];
 				vFireHit(attacker, victim, iFireChance, iFireHit);
 			}
 		}
@@ -115,9 +115,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iFireAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFireAbility[ST_TankType(iTank)] : g_iFireAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iFireAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFireAbility[ST_TankType(iTank)] : g_iFireAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iFireAbility == 1 && bIsL4D2Game())
 		{
 			float flPos[3];
@@ -131,10 +130,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iFireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFireAbility[ST_TankType(client)] : g_iFireAbility2[ST_TankType(client)];
-		int iFireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFireChance[ST_TankType(client)] : g_iFireChance2[ST_TankType(client)];
-		float flFireRange = !g_bTankConfig[ST_TankType(client)] ? g_flFireRange[ST_TankType(client)] : g_flFireRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iFireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFireAbility[ST_TankType(client)] : g_iFireAbility2[ST_TankType(client)],
+			iFireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFireChance[ST_TankType(client)] : g_iFireChance2[ST_TankType(client)];
+		float flFireRange = !g_bTankConfig[ST_TankType(client)] ? g_flFireRange[ST_TankType(client)] : g_flFireRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

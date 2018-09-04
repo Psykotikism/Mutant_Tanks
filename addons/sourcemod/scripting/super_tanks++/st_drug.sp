@@ -78,8 +78,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iDrugChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iDrugChance[ST_TankType(attacker)] : g_iDrugChance2[ST_TankType(attacker)];
-				int iDrugHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iDrugHit[ST_TankType(attacker)] : g_iDrugHit2[ST_TankType(attacker)];
+				int iDrugChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iDrugChance[ST_TankType(attacker)] : g_iDrugChance2[ST_TankType(attacker)],
+					iDrugHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iDrugHit[ST_TankType(attacker)] : g_iDrugHit2[ST_TankType(attacker)];
 				vDrugHit(victim, attacker, iDrugChance, iDrugHit);
 			}
 		}
@@ -119,10 +119,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iDrugAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDrugAbility[ST_TankType(client)] : g_iDrugAbility2[ST_TankType(client)];
-		int iDrugRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iDrugChance[ST_TankType(client)] : g_iDrugChance2[ST_TankType(client)];
-		float flDrugRange = !g_bTankConfig[ST_TankType(client)] ? g_flDrugRange[ST_TankType(client)] : g_flDrugRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iDrugAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDrugAbility[ST_TankType(client)] : g_iDrugAbility2[ST_TankType(client)],
+			iDrugRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iDrugChance[ST_TankType(client)] : g_iDrugChance2[ST_TankType(client)];
+		float flDrugRange = !g_bTankConfig[ST_TankType(client)] ? g_flDrugRange[ST_TankType(client)] : g_flDrugRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -146,9 +146,8 @@ void vDrug(int client, bool toggle, float angles[20])
 	GetClientEyeAngles(client, flAngles);
 	flAngles[2] = toggle ? angles[GetRandomInt(0, 100) % 20] : 0.0;
 	TeleportEntity(client, NULL_VECTOR, flAngles, NULL_VECTOR);
-	int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0};
+	int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags = toggle ? 0x0002 : (0x0001|0x0010);
 	iClients[0] = client;
-	int iFlags = toggle ? 0x0002 : (0x0001|0x0010);
 	if (toggle)
 	{
 		iColor[0] = GetRandomInt(0, 255);
@@ -218,9 +217,9 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 		vDrug(iSurvivor, false, g_flDrugAngles);
 		return Plugin_Stop;
 	}
-	float flTime = pack.ReadFloat();
+	float flTime = pack.ReadFloat(),
+		flDrugDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flDrugDuration[ST_TankType(iTank)] : g_flDrugDuration2[ST_TankType(iTank)];
 	int iDrugAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iDrugAbility[ST_TankType(iTank)] : g_iDrugAbility2[ST_TankType(iTank)];
-	float flDrugDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flDrugDuration[ST_TankType(iTank)] : g_flDrugDuration2[ST_TankType(iTank)];
 	if (iDrugAbility == 0 || (flTime + flDrugDuration) < GetEngineTime())
 	{
 		g_bDrug[iSurvivor] = false;

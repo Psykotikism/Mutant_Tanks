@@ -124,9 +124,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 				case '3': SetEntityModel(iCar, MODEL_CAR3);
 				default: SetEntityModel(iCar, MODEL_CAR);
 			}
-			int iRed = GetRandomInt(0, 255);
-			int iGreen = GetRandomInt(0, 255);
-			int iBlue = GetRandomInt(0, 255);
+			int iRed = GetRandomInt(0, 255), iGreen = GetRandomInt(0, 255), iBlue = GetRandomInt(0, 255);
 			SetEntityRenderColor(iCar, iRed, iGreen, iBlue, 255);
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);

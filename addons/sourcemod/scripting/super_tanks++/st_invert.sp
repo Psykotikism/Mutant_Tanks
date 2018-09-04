@@ -106,8 +106,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iInvertChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iInvertChance[ST_TankType(attacker)] : g_iInvertChance2[ST_TankType(attacker)];
-				int iInvertHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iInvertHit[ST_TankType(attacker)] : g_iInvertHit2[ST_TankType(attacker)];
+				int iInvertChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iInvertChance[ST_TankType(attacker)] : g_iInvertChance2[ST_TankType(attacker)],
+					iInvertHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iInvertHit[ST_TankType(attacker)] : g_iInvertHit2[ST_TankType(attacker)];
 				vInvertHit(victim, attacker, iInvertChance, iInvertHit);
 			}
 		}
@@ -147,9 +147,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iInvertAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iInvertAbility[ST_TankType(iTank)] : g_iInvertAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iInvertAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iInvertAbility[ST_TankType(iTank)] : g_iInvertAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iInvertAbility == 1)
 		{
 			vRemoveInvert();
@@ -161,10 +160,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iInvertAbility = !g_bTankConfig[ST_TankType(client)] ? g_iInvertAbility[ST_TankType(client)] : g_iInvertAbility2[ST_TankType(client)];
-		int iInvertRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iInvertChance[ST_TankType(client)] : g_iInvertChance2[ST_TankType(client)];
-		float flInvertRange = !g_bTankConfig[ST_TankType(client)] ? g_flInvertRange[ST_TankType(client)] : g_flInvertRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iInvertAbility = !g_bTankConfig[ST_TankType(client)] ? g_iInvertAbility[ST_TankType(client)] : g_iInvertAbility2[ST_TankType(client)],
+			iInvertRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iInvertChance[ST_TankType(client)] : g_iInvertChance2[ST_TankType(client)];
+		float flInvertRange = !g_bTankConfig[ST_TankType(client)] ? g_flInvertRange[ST_TankType(client)] : g_flInvertRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

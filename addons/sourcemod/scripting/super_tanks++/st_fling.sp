@@ -95,8 +95,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iFlingChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iFlingChance[ST_TankType(attacker)] : g_iFlingChance2[ST_TankType(attacker)];
-				int iFlingHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iFlingHit[ST_TankType(attacker)] : g_iFlingHit2[ST_TankType(attacker)];
+				int iFlingChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iFlingChance[ST_TankType(attacker)] : g_iFlingChance2[ST_TankType(attacker)],
+					iFlingHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iFlingHit[ST_TankType(attacker)] : g_iFlingHit2[ST_TankType(attacker)];
 				vFlingHit(victim, attacker, iFlingChance, iFlingHit);
 			}
 		}
@@ -134,10 +134,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iFlingAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFlingAbility[ST_TankType(client)] : g_iFlingAbility2[ST_TankType(client)];
-		int iFlingRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFlingChance[ST_TankType(client)] : g_iFlingChance2[ST_TankType(client)];
-		float flFlingRange = !g_bTankConfig[ST_TankType(client)] ? g_flFlingRange[ST_TankType(client)] : g_flFlingRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iFlingAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFlingAbility[ST_TankType(client)] : g_iFlingAbility2[ST_TankType(client)],
+			iFlingRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFlingChance[ST_TankType(client)] : g_iFlingChance2[ST_TankType(client)];
+		float flFlingRange = !g_bTankConfig[ST_TankType(client)] ? g_flFlingRange[ST_TankType(client)] : g_flFlingRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{

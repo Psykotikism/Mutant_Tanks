@@ -72,8 +72,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iPimpChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iPimpChance[ST_TankType(attacker)] : g_iPimpChance2[ST_TankType(attacker)];
-				int iPimpHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iPimpHit[ST_TankType(attacker)] : g_iPimpHit2[ST_TankType(attacker)];
+				int iPimpChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iPimpChance[ST_TankType(attacker)] : g_iPimpChance2[ST_TankType(attacker)],
+					iPimpHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iPimpHit[ST_TankType(attacker)] : g_iPimpHit2[ST_TankType(attacker)];
 				vPimpHit(victim, attacker, iPimpChance, iPimpHit);
 			}
 		}
@@ -115,10 +115,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iPimpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPimpAbility[ST_TankType(client)] : g_iPimpAbility2[ST_TankType(client)];
-		int iPimpRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPimpChance[ST_TankType(client)] : g_iPimpChance2[ST_TankType(client)];
-		float flPimpRange = !g_bTankConfig[ST_TankType(client)] ? g_flPimpRange[ST_TankType(client)] : g_flPimpRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iPimpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPimpAbility[ST_TankType(client)] : g_iPimpAbility2[ST_TankType(client)],
+			iPimpRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPimpChance[ST_TankType(client)] : g_iPimpChance2[ST_TankType(client)];
+		float flPimpRange = !g_bTankConfig[ST_TankType(client)] ? g_flPimpRange[ST_TankType(client)] : g_flPimpRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -177,8 +177,8 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		g_iPimpCount[iSurvivor] = 0;
 		return Plugin_Stop;
 	}
-	int iPimpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAbility[ST_TankType(iTank)] : g_iPimpAbility2[ST_TankType(iTank)];
-	int iPimpAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAmount[ST_TankType(iTank)] : g_iPimpAmount2[ST_TankType(iTank)];
+	int iPimpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAbility[ST_TankType(iTank)] : g_iPimpAbility2[ST_TankType(iTank)],
+		iPimpAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAmount[ST_TankType(iTank)] : g_iPimpAmount2[ST_TankType(iTank)];
 	if (iPimpAbility == 0 || g_iPimpCount[iSurvivor] >= iPimpAmount)
 	{
 		g_bPimp[iSurvivor] = false;

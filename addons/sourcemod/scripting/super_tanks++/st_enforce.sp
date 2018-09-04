@@ -88,8 +88,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iEnforceChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iEnforceChance[ST_TankType(attacker)] : g_iEnforceChance2[ST_TankType(attacker)];
-				int iEnforceHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iEnforceHit[ST_TankType(attacker)] : g_iEnforceHit2[ST_TankType(attacker)];
+				int iEnforceChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iEnforceChance[ST_TankType(attacker)] : g_iEnforceChance2[ST_TankType(attacker)],
+					iEnforceHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iEnforceHit[ST_TankType(attacker)] : g_iEnforceHit2[ST_TankType(attacker)];
 				vEnforceHit(victim, attacker, iEnforceChance, iEnforceHit);
 			}
 		}
@@ -130,9 +130,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid");
-		int iTank = GetClientOfUserId(iTankId);
-		int iEnforceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iEnforceAbility[ST_TankType(iTank)] : g_iEnforceAbility2[ST_TankType(iTank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			iEnforceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iEnforceAbility[ST_TankType(iTank)] : g_iEnforceAbility2[ST_TankType(iTank)];
 		if (ST_TankAllowed(iTank) && iEnforceAbility == 1)
 		{
 			vRemoveEnforce();
@@ -144,10 +143,10 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		int iEnforceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceAbility[ST_TankType(client)] : g_iEnforceAbility2[ST_TankType(client)];
-		int iEnforceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceChance[ST_TankType(client)] : g_iEnforceChance2[ST_TankType(client)];
-		float flEnforceRange = !g_bTankConfig[ST_TankType(client)] ? g_flEnforceRange[ST_TankType(client)] : g_flEnforceRange2[ST_TankType(client)];
-		float flTankPos[3];
+		int iEnforceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceAbility[ST_TankType(client)] : g_iEnforceAbility2[ST_TankType(client)],
+			iEnforceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceChance[ST_TankType(client)] : g_iEnforceChance2[ST_TankType(client)];
+		float flEnforceRange = !g_bTankConfig[ST_TankType(client)] ? g_flEnforceRange[ST_TankType(client)] : g_flEnforceRange2[ST_TankType(client)],
+			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
