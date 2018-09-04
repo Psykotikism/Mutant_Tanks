@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.38 (TBA)
+## Version 8.38 (August 5, 2018)
 
 Bug fixes:
 
@@ -11,6 +11,7 @@ Changes:
 
 1. Increased the maximum amount of possible Super Tank types from 2500 to 5000.
 2. Replaced the "Maximum Types" setting with the new "Type Range" setting. (Usage: "Type Range" "1-5000")
+3. Changed the display info for each Super Tank type on the ST++ menu. (Before: "Tank's Name", After: "Tank's Name (Tank #)")
 
 Files:
 
