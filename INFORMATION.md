@@ -6,10 +6,9 @@
 ```
 "Super Tanks++"
 {
-	// These are the general settings.
+	// These are the general plugin settings.
 	// Note: The following settings will not work in custom config files:
 	// "Config Mode"
-	// "Create Backup"
 	// "Game Mode Types"
 	// "Enabled Game Modes"
 	// "Disabled Game Modes"
@@ -28,6 +27,9 @@
 
 			// Enable Super Tanks++ in these game mode types.
 			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 15
 			// --
 			// 0: All game mode types.
 			// 1: Co-Op modes only.
@@ -91,23 +93,25 @@
 			// Separate waves with commas.
 			// Wave limit: 3
 			// Character limit for each wave: 3
-			// 1st number = 1st wave
-			// 2nd number = 2nd wave
-			// 3rd number = 3rd wave
 			// --
 			// Minimum value for each wave: 1
 			// Maximum value for each wave: 999
+			// --
+			// 1st number = 1st wave
+			// 2nd number = 2nd wave
+			// 3rd number = 3rd wave
 			"Tank Waves"					"2,3,4"
 
 			// The range of types to check for.
 			// Separate values with "-".
 			// Value limit: 2
 			// Character limit for each value: 4
-			// 1st number = Minimum value
-			// 2nd number = Maximum value
 			// --
 			// Minimum number for each value: 1
 			// Maximum number for each value: 5000
+			// --
+			// 1st number = Minimum value
+			// 2nd number = Maximum value
 			"Type Range"					"1-5000"
 		}
 		"Custom"
@@ -173,14 +177,15 @@
 			// Note: The values will be added to the boss's new health on every new stage.
 			// Note: The values will determine when the boss evolves to the next stage.
 			// Example: When Stage 1 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
+			// --
+			// Minimum value for each health stage: 1
+			// Maximum value for each health stage: 65535
+			// --
 			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 1 boss. (The "Boss Stages" setting must be set to "1" or higher.)
 			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "2" or higher.)
 			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "3" or higher.)
 			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "4" or higher.)
 			// 5th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "5" or higher.)
-			// --
-			// Minimum value for each health stage: 1
-			// Maximum value for each health stage: 65535
 			"Boss Health Stages"			"5000,2500,1500,1000,500"
 
 			// The number of stages for Super Tank bosses.
@@ -201,17 +206,18 @@
 			// --
 			// 0: Spawn as normal Super Tanks.
 			// 1: Spawn as Super Tank bosses.
-			// 2. Spawn as Super Tanks that switch randomly between each type.
+			// 2: Spawn as Super Tanks that switch randomly between each type.
 			"Spawn Mode"					"0"
 
 			// These are the Super Tank's skin and glow outline colors.
 			// Separate colors with "|".
 			// Separate RGBAs with commas.
-			// 1st set = skin color (RGBA)
-			// 2nd set = glow color (RGB)
 			// --
 			// Minimum value for each color: 0
 			// Maximum value for each color: 255
+			// --
+			// 1st set = skin color (RGBA)
+			// 2nd set = glow color (RGB)
 			"Skin-Glow Colors"				"255,255,255,255|255,255,255"
 
 			// The Super Tank will have a glow outline.
@@ -237,28 +243,30 @@
 			// Separate chances with commas.
 			// Chances limit: 6
 			// Character limit for each chance: 3
+			// --
+			// Minimum value for each chance: 1
+			// Maximum value for each chance: 999
+			// --
 			// 1st number = Chance for a blur effect to appear.
 			// 2nd number = Chance for lights to appear.
 			// 3rd number = Chance for oxygen tanks to appear.
 			// 4th number = Chance for oxygen tank flames to appear.
 			// 5th number = Chance for rocks to appear.
 			// 6th number = Chance for tires to appear.
-			// --
-			// Minimum value for each chance: 1
-			// Maximum value for each chance: 999
 			"Props Chance"					"3,3,3,3,3,3"
 
 			// The Super Tank's prop colors.
 			// Separate colors with "|".
 			// Separate RGBAs with commas.
+			// --
+			// Minimum value for each color: 0
+			// Maximum value for each color: 255
+			// --
 			// 1st set = lights color (RGBA)
 			// 2nd set = oxygen tanks color (RGBA)
 			// 3rd set = oxygen tank flames color (RGBA)
 			// 4th set = rocks color (RGBA)
 			// 5th set = tires color (RGBA)
-			// --
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
 			"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255"
 
 			// The Super Tank will spawn with a particle effect.
@@ -307,11 +315,12 @@
 			// Extra health given to the Super Tank.
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
-			// Positive numbers: Current health + Extra health
-			// Negative numbers: Current health - Extra health
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Extra health
+			// Negative numbers: Current health - Extra health
 			"Extra Health"					"0"
 
 			// The Super Tank's rock throws do this much damage.
@@ -1446,11 +1455,12 @@
 			"Gravity Duration"				"5.0"
 
 			// The Super Tank's gravity force.
-			// Positive numbers = Push back
-			// Negative numbers = Pull back
 			// --
 			// Minimum: -100.0
 			// Maximum: 100.0
+			// --
+			// Positive numbers = Push back
+			// Negative numbers = Pull back
 			"Gravity Force"					"-50.0"
 
 			// Enable the Super Tank's claw/rock attack.
@@ -1531,27 +1541,30 @@
 			"Heal Range"					"500.0"
 
 			// The Super Tank receives this much health from nearby common infected.
-			// Positive numbers: Current health + Health from commons
-			// Negative numbers: Current health - Health from commons
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Health from commons
+			// Negative numbers: Current health - Health from commons
 			"Health From Commons"			"50"
 
 			// The Super Tank receives this much health from other nearby special infected.
-			// Positive numbers: Current health + Health from specials
-			// Negative numbers: Current health - Health from specials
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Health from specials
+			// Negative numbers: Current health - Health from specials
 			"Health From Specials"			"100"
 
 			// The Super Tank receives this much health from other nearby Tanks.
-			// Positive numbers: Current health + Health from Tanks
-			// Negative numbers: Current health - Health from Tanks
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Health from Tanks
+			// Negative numbers: Current health - Health from Tanks
 			"Health From Tanks"				"500"
 		}
 	}
@@ -1941,30 +1954,33 @@
 			"Medic Chance"					"4"
 
 			// The Super Tank gives special infected this much health each time.
+			// --
+			// Minimum: -65535
+			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Medic health
+			// Negative numbers: Current health - Medic health
+			// --
 			// 1st number = Health given to Smokers.
 			// 2nd number = Health given to Boomers.
 			// 3rd number = Health given to Hunters.
 			// 4th number = Health given to Spitters.
 			// 5th number = Health given to Jockeys.
 			// 6th number = Health given to Chargers.
-			// Positive numbers: Current health + Medic health
-			// Negative numbers: Current health - Medic health
-			// --
-			// Minimum: -65535
-			// Maximum: 65535
 			"Medic Health"					"25,25,25,25,25,25"
 
 			// The special infected's max health.
 			// The Super Tank will not heal special infected if they already have this much health.
+			// --
+			// Minimum: 1
+			// Maximum: 65535
+			// --
 			// 1st number = Smoker's maximum health.
 			// 2nd number = Boomer's maximum health.
 			// 3rd number = Hunter's maximum health.
 			// 4th number = Spitter's maximum health.
 			// 5th number = Jockey's maximum health.
 			// 6th number = Charger's maximum health.
-			// --
-			// Minimum: 1
-			// Maximum: 65535
 			"Medic Max Health"				"250,50,250,100,325,600"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
@@ -2331,11 +2347,12 @@
 			"Ability Enabled"				"0"
 
 			// The Super Tank regenerates this much health each time.
-			// Positive numbers: Current health + Regen health
-			// Negative numbers: Current health - Regen health
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Regen health
+			// Negative numbers: Current health - Regen health
 			"Regen Health"					"1"
 
 			// The Super Tank regenerates health every time this many seconds passes.
@@ -2345,11 +2362,12 @@
 			"Regen Interval"				"1.0"
 
 			// The Super Tank stops regenerating health at this value.
-			// Positive numbers: The Super Tank will stop regenerating health when it reaches this number.
-			// Negative numbers: The Super Tank will stop losing health when it reaches this number.
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
+			// --
+			// Positive numbers: The Super Tank will stop regenerating health when it reaches this number.
+			// Negative numbers: The Super Tank will stop losing health when it reaches this number.
 			"Regen Limit"					"65535"
 		}
 	}
@@ -2635,12 +2653,13 @@
 			"Ability Enabled"				"0"
 
 			// This is the Super Tank's shield's color.
-			// 1st number = Red
-			// 2nd number = Green
-			// 3rd number = Blue
 			// --
 			// Minimum value for each color: 0
 			// Maximum value for each color: 255
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
 			"Shield Color"					"255,255,255"
 
 			// The Super Tank's shield reactivates after this many seconds passes.
@@ -3083,11 +3102,12 @@
 			// The Super Tank receives this much health from survivors.
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: This setting does not apply to the "Vampire Hit" setting.
-			// Positive numbers: Current health + Vampire health
-			// Negative numbers: Current health - Vampire health
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Vampire health
+			// Negative numbers: Current health - Vampire health
 			"Vampire Health"				"100"
 
 			// Enable the Super Tank's claw/rock attack.
