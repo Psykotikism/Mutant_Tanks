@@ -17,10 +17,8 @@ public Plugin myinfo =
 bool g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 float g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
-int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1],
-	g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1],
-	g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1],
-	g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
+int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1],
+	g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -72,10 +70,10 @@ public void ST_RockThrow(int client, int entity)
 		iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
 	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
 	{
-		DataPack dpDataPack = new DataPack();
-		CreateDataTimer(0.5, tTimerTrack, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-		dpDataPack.WriteCell(EntIndexToEntRef(entity));
-		dpDataPack.WriteCell(GetClientUserId(client));
+		DataPack dpTrack = new DataPack();
+		CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
+		dpTrack.WriteCell(EntIndexToEntRef(entity));
+		dpTrack.WriteCell(GetClientUserId(client));
 	}
 }
 
@@ -145,9 +143,8 @@ void vTrack(int entity)
 				MakeVectorFromPoints(flPos, flPos2, flVector);
 			}
 			GetVectorAngles(flVelocity, flAngle);
-			float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3],
-				flVector3[3], flVector4[3], flVector5[3], flVector6[3], flVector7[3], flVector8[3],
-				flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0;
+			float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
+				flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0;
 			flFront[0] = flFront[1] = flFront[2] = 0.0;
 			if (bVisible)
 			{

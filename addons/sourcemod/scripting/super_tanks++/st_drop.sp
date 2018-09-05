@@ -16,13 +16,10 @@ public Plugin myinfo =
 
 bool g_bDrop[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sWeaponClass[32][128], g_sWeaponModel[32][128];
-ConVar g_cvSTAssaultRifleAmmo, g_cvSTAutoShotgunAmmo, g_cvSTGrenadeLauncherAmmo,
-	g_cvSTHuntingRifleAmmo, g_cvSTShotgunAmmo, g_cvSTSMGAmmo, g_cvSTSniperRifleAmmo;
+ConVar g_cvSTAssaultRifleAmmo, g_cvSTAutoShotgunAmmo, g_cvSTGrenadeLauncherAmmo, g_cvSTHuntingRifleAmmo, g_cvSTShotgunAmmo, g_cvSTSMGAmmo, g_cvSTSniperRifleAmmo;
 float g_flDropWeaponScale[ST_MAXTYPES + 1], g_flDropWeaponScale2[ST_MAXTYPES + 1];
-int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropAbility2[ST_MAXTYPES + 1],
-	g_iDropChance[ST_MAXTYPES + 1], g_iDropChance2[ST_MAXTYPES + 1],
-	g_iDropClipChance[ST_MAXTYPES + 1], g_iDropClipChance2[ST_MAXTYPES + 1],
-	g_iDropMode[ST_MAXTYPES + 1], g_iDropMode2[ST_MAXTYPES + 1], g_iDropWeapon[MAXPLAYERS + 1];
+int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropAbility2[ST_MAXTYPES + 1], g_iDropChance[ST_MAXTYPES + 1], g_iDropChance2[ST_MAXTYPES + 1],
+	g_iDropClipChance[ST_MAXTYPES + 1], g_iDropClipChance2[ST_MAXTYPES + 1], g_iDropMode[ST_MAXTYPES + 1], g_iDropMode2[ST_MAXTYPES + 1], g_iDropWeapon[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {

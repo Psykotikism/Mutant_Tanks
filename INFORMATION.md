@@ -26,13 +26,6 @@
 			// 1: ON
 			"Plugin Enabled"				"1"
 
-			// Super Tanks++ will create a backup config file.
-			// The file will be located in cfg/sourcemod/super_tanks++/backup_config.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Create Backup"					"0"
-
 			// Enable Super Tanks++ in these game mode types.
 			// Add up numbers together for different results.
 			// --
@@ -85,13 +78,6 @@
 			// 1: ON
 			"Finales Only"					"0"
 
-			// Enable Super Tanks++ for human-controlled Tanks.
-			// Note: Some Super Tank abilities may be too overpowered to use in a competitive game mode.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Human Super Tanks"				"1"
-
 			// Multiply the Super Tank's health.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
 			// --
@@ -105,23 +91,23 @@
 			// Separate waves with commas.
 			// Wave limit: 3
 			// Character limit for each wave: 3
-			// Minimum value for each wave: 1
-			// Maximum value for each wave: 999
-			// --
 			// 1st number = 1st wave
 			// 2nd number = 2nd wave
 			// 3rd number = 3rd wave
+			// --
+			// Minimum value for each wave: 1
+			// Maximum value for each wave: 999
 			"Tank Waves"					"2,3,4"
 
 			// The range of types to check for.
 			// Separate values with "-".
 			// Value limit: 2
 			// Character limit for each value: 4
-			// Minimum number for each value: 1
-			// Maximum number for each value: 5000
-			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
+			// --
+			// Minimum number for each value: 1
+			// Maximum number for each value: 5000
 			"Type Range"					"1-5000"
 		}
 		"Custom"
@@ -187,14 +173,14 @@
 			// Note: The values will be added to the boss's new health on every new stage.
 			// Note: The values will determine when the boss evolves to the next stage.
 			// Example: When Stage 1 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
-			// Minimum value for each health stage: 1
-			// Maximum value for each health stage: 65535
-			// --
 			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 1 boss. (The "Boss Stages" setting must be set to "1" or higher.)
 			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "2" or higher.)
 			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "3" or higher.)
 			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "4" or higher.)
 			// 5th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "5" or higher.)
+			// --
+			// Minimum value for each health stage: 1
+			// Maximum value for each health stage: 65535
 			"Boss Health Stages"			"5000,2500,1500,1000,500"
 
 			// The number of stages for Super Tank bosses.
@@ -221,11 +207,11 @@
 			// These are the Super Tank's skin and glow outline colors.
 			// Separate colors with "|".
 			// Separate RGBAs with commas.
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
-			// --
 			// 1st set = skin color (RGBA)
 			// 2nd set = glow color (RGB)
+			// --
+			// Minimum value for each color: 0
+			// Maximum value for each color: 255
 			"Skin-Glow Colors"				"255,255,255,255|255,255,255"
 
 			// The Super Tank will have a glow outline.
@@ -251,28 +237,28 @@
 			// Separate chances with commas.
 			// Chances limit: 6
 			// Character limit for each chance: 3
-			// Minimum value for each chance: 1
-			// Maximum value for each chance: 999
-			// --
 			// 1st number = Chance for a blur effect to appear.
 			// 2nd number = Chance for lights to appear.
 			// 3rd number = Chance for oxygen tanks to appear.
 			// 4th number = Chance for oxygen tank flames to appear.
 			// 5th number = Chance for rocks to appear.
 			// 6th number = Chance for tires to appear.
+			// --
+			// Minimum value for each chance: 1
+			// Maximum value for each chance: 999
 			"Props Chance"					"3,3,3,3,3,3"
 
 			// The Super Tank's prop colors.
 			// Separate colors with "|".
 			// Separate RGBAs with commas.
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
-			// --
 			// 1st set = lights color (RGBA)
 			// 2nd set = oxygen tanks color (RGBA)
 			// 3rd set = oxygen tank flames color (RGBA)
 			// 4th set = rocks color (RGBA)
 			// 5th set = tires color (RGBA)
+			// --
+			// Minimum value for each color: 0
+			// Maximum value for each color: 255
 			"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255"
 
 			// The Super Tank will spawn with a particle effect.
@@ -2649,12 +2635,12 @@
 			"Ability Enabled"				"0"
 
 			// This is the Super Tank's shield's color.
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
-			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
+			// --
+			// Minimum value for each color: 0
+			// Maximum value for each color: 255
 			"Shield Color"					"255,255,255"
 
 			// The Super Tank's shield reactivates after this many seconds passes.

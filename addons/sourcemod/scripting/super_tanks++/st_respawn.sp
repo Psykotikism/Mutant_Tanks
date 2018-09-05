@@ -15,12 +15,8 @@ public Plugin myinfo =
 };
 
 bool g_bTankConfig[ST_MAXTYPES + 1];
-int g_iRespawnAbility[ST_MAXTYPES + 1], g_iRespawnAbility2[ST_MAXTYPES + 1],
-	g_iRespawnAmount[ST_MAXTYPES + 1], g_iRespawnAmount2[ST_MAXTYPES + 1],
-	g_iRespawnChance[ST_MAXTYPES + 1], g_iRespawnChance2[ST_MAXTYPES + 1],
-	g_iRespawnCount[MAXPLAYERS + 1], g_iRespawnRandom[ST_MAXTYPES + 1],
-	g_iRespawnRandom2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1],
-	g_iTankEnabled2[ST_MAXTYPES + 1];
+int g_iRespawnAbility[ST_MAXTYPES + 1], g_iRespawnAbility2[ST_MAXTYPES + 1], g_iRespawnAmount[ST_MAXTYPES + 1], g_iRespawnAmount2[ST_MAXTYPES + 1], g_iRespawnChance[ST_MAXTYPES + 1], g_iRespawnChance2[ST_MAXTYPES + 1],
+	g_iRespawnCount[MAXPLAYERS + 1], g_iRespawnRandom[ST_MAXTYPES + 1], g_iRespawnRandom2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -73,17 +69,17 @@ public void ST_Event(Event event, const char[] name)
 			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags"), iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
 			GetEntPropVector(iTank, Prop_Send, "m_vecOrigin", flPos);
 			GetEntPropVector(iTank, Prop_Send, "m_angRotation", flAngles);
-			DataPack dpDataPack = new DataPack();
-			CreateDataTimer(0.4, tTimerRespawn, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-			dpDataPack.WriteCell(GetClientUserId(iTank));
-			dpDataPack.WriteCell(iFlags);
-			dpDataPack.WriteCell(iSequence);
-			dpDataPack.WriteFloat(flPos[0]);
-			dpDataPack.WriteFloat(flPos[1]);
-			dpDataPack.WriteFloat(flPos[2]);
-			dpDataPack.WriteFloat(flAngles[0]);
-			dpDataPack.WriteFloat(flAngles[1]);
-			dpDataPack.WriteFloat(flAngles[2]);
+			DataPack dpRespawn = new DataPack();
+			CreateDataTimer(0.4, tTimerRespawn, dpRespawn, TIMER_FLAG_NO_MAPCHANGE);
+			dpRespawn.WriteCell(GetClientUserId(iTank));
+			dpRespawn.WriteCell(iFlags);
+			dpRespawn.WriteCell(iSequence);
+			dpRespawn.WriteFloat(flPos[0]);
+			dpRespawn.WriteFloat(flPos[1]);
+			dpRespawn.WriteFloat(flPos[2]);
+			dpRespawn.WriteFloat(flAngles[0]);
+			dpRespawn.WriteFloat(flAngles[1]);
+			dpRespawn.WriteFloat(flAngles[2]);
 		}
 	}
 }

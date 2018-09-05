@@ -706,12 +706,13 @@ native bool ST_PluginEnabled();
  */
 native void ST_SpawnTank(int client, int type);
 
-/* Returns the status of the "Human Super Tanks" setting.
+/* Returns the status of the Tank.
  *
  * @param client		Client index of the Tank.
  *
  * @return				True on success, false if
- *							the setting is disabled.
+ *							the Tank is controlled
+ *							by a human.
  */
 native bool ST_TankAllowed(int client);
 
@@ -743,8 +744,6 @@ Commands:
 1. sm_tank <type 1-*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 5000 though.)
 2. sm_tanklist
 ```
-
-Additionally, there is also a setting called "Create Backup" which users can use to create a backup copy of the main config file in case they want to test or mess around with the settings.
 
 ### Configuration
 1. How do I enable the custom configurations features?

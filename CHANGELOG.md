@@ -12,10 +12,15 @@ Changes:
 1. Increased the maximum amount of possible Super Tank types from 2500 to 5000.
 2. Replaced the "Maximum Types" setting with the new "Type Range" setting. (Usage: "Type Range" "1-5000")
 3. Changed the display info for each Super Tank type on the ST++ menu. (Before: "Tank's Name", After: "Tank's Name (Tank #)")
+4. The plugin no longer generates a config file nor a backup copy of it. (This feature was just wasting space and was overall unnecessary.)
+5. Removed the "Create Backup" setting.
+6. Removed support for human-controlled Tanks. (This feature was buggy and made the Infected team overpowered.)
+7. Removed the "Human Super Tanks" setting.
 
 Files:
 
 1. Updated include file to add new natives and remove some stocks.
+2. Smaller file sizes.
 
 ## Version 8.37 (August 30, 2018)
 

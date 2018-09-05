@@ -16,11 +16,8 @@ public Plugin myinfo =
 
 bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flSmiteRange[ST_MAXTYPES + 1], g_flSmiteRange2[ST_MAXTYPES + 1];
-int g_iSmiteAbility[ST_MAXTYPES + 1], g_iSmiteAbility2[ST_MAXTYPES + 1],
-	g_iSmiteChance[ST_MAXTYPES + 1], g_iSmiteChance2[ST_MAXTYPES + 1],
-	g_iSmiteHit[ST_MAXTYPES + 1], g_iSmiteHit2[ST_MAXTYPES + 1],
-	g_iSmiteRangeChance[ST_MAXTYPES + 1], g_iSmiteRangeChance2[ST_MAXTYPES + 1],
-	g_iSmiteSprite = -1;
+int g_iSmiteAbility[ST_MAXTYPES + 1], g_iSmiteAbility2[ST_MAXTYPES + 1], g_iSmiteChance[ST_MAXTYPES + 1], g_iSmiteChance2[ST_MAXTYPES + 1], g_iSmiteHit[ST_MAXTYPES + 1],
+	g_iSmiteHit2[ST_MAXTYPES + 1], g_iSmiteRangeChance[ST_MAXTYPES + 1], g_iSmiteRangeChance2[ST_MAXTYPES + 1], g_iSmiteSprite = -1;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -133,9 +130,7 @@ void vSmiteHit(int client, int chance, int enabled)
 		float flPosition[3], flStartPosition[3], flDirection[3] = {0.0, 0.0, 0.0};
 		GetClientAbsOrigin(client, flPosition);
 		flPosition[2] -= 26;
-		flStartPosition[0] = flPosition[0] + GetRandomInt(-500, 500);
-		flStartPosition[1] = flPosition[1] + GetRandomInt(-500, 500);
-		flStartPosition[2] = flPosition[2] + 800;
+		flStartPosition[0] = flPosition[0] + GetRandomInt(-500, 500), flStartPosition[1] = flPosition[1] + GetRandomInt(-500, 500), flStartPosition[2] = flPosition[2] + 800;
 		int iColor[4] = {255, 255, 255, 255};
 		TE_SetupBeamPoints(flStartPosition, flPosition, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
 		TE_SendToAll();

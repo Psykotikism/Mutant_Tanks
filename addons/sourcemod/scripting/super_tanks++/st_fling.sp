@@ -17,10 +17,8 @@ public Plugin myinfo =
 bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flFlingRange[ST_MAXTYPES + 1], g_flFlingRange2[ST_MAXTYPES + 1];
 Handle g_hSDKFlingPlayer, g_hSDKPukePlayer;
-int g_iFlingAbility[ST_MAXTYPES + 1], g_iFlingAbility2[ST_MAXTYPES + 1],
-	g_iFlingChance[ST_MAXTYPES + 1], g_iFlingChance2[ST_MAXTYPES + 1], g_iFlingHit[ST_MAXTYPES + 1],
-	g_iFlingHit2[ST_MAXTYPES + 1], g_iFlingRangeChance[ST_MAXTYPES + 1],
-	g_iFlingRangeChance2[ST_MAXTYPES + 1];
+int g_iFlingAbility[ST_MAXTYPES + 1], g_iFlingAbility2[ST_MAXTYPES + 1], g_iFlingChance[ST_MAXTYPES + 1], g_iFlingChance2[ST_MAXTYPES + 1],
+	g_iFlingHit[ST_MAXTYPES + 1], g_iFlingHit2[ST_MAXTYPES + 1], g_iFlingRangeChance[ST_MAXTYPES + 1], g_iFlingRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -168,8 +166,8 @@ void vFlingHit(int client, int owner, int chance, int enabled)
 			flDistance[1] = (flTankPos[1] - flSurvivorPos[1]);
 			flDistance[2] = (flTankPos[2] - flSurvivorPos[2]);
 			GetEntPropVector(client, Prop_Data, "m_vecVelocity", flSurvivorVelocity);
-			flRatio[0] = flDistance[0] / (SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
-			flRatio[1] = flDistance[1] / (SquareRoot(flDistance[1] * flDistance[1] + flDistance[0] * flDistance[0]));
+			flRatio[0] = flDistance[0] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
+			flRatio[1] = flDistance[1] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
 			flVelocity[0] = (flRatio[0] * -1) * 500.0;
 			flVelocity[1] = (flRatio[1] * -1) * 500.0;
 			flVelocity[2] = 500.0;

@@ -15,13 +15,9 @@ public Plugin myinfo =
 };
 
 bool g_bBlind[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-float g_flBlindDuration[ST_MAXTYPES + 1], g_flBlindDuration2[ST_MAXTYPES + 1],
-	g_flBlindRange[ST_MAXTYPES + 1], g_flBlindRange2[ST_MAXTYPES + 1];
-int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1],
-	g_iBlindChance[ST_MAXTYPES + 1], g_iBlindChance2[ST_MAXTYPES + 1],
-	g_iBlindHit[ST_MAXTYPES + 1], g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1],
-	g_iBlindIntensity2[ST_MAXTYPES + 1], g_iBlindRangeChance[ST_MAXTYPES + 1],
-	g_iBlindRangeChance2[ST_MAXTYPES + 1];
+float g_flBlindDuration[ST_MAXTYPES + 1], g_flBlindDuration2[ST_MAXTYPES + 1], g_flBlindRange[ST_MAXTYPES + 1], g_flBlindRange2[ST_MAXTYPES + 1];
+int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1], g_iBlindChance[ST_MAXTYPES + 1], g_iBlindChance2[ST_MAXTYPES + 1], g_iBlindHit[ST_MAXTYPES + 1],
+	g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1], g_iBlindIntensity2[ST_MAXTYPES + 1], g_iBlindRangeChance[ST_MAXTYPES + 1], g_iBlindRangeChance2[ST_MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -205,10 +201,10 @@ void vBlindHit(int client, int owner, int chance, int enabled)
 		int iBlindIntensity = !g_bTankConfig[ST_TankType(owner)] ? g_iBlindIntensity[ST_TankType(owner)] : g_iBlindIntensity2[ST_TankType(owner)];
 		vBlind(client, iBlindIntensity);
 		float flBlindDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flBlindDuration[ST_TankType(owner)] : g_flBlindDuration2[ST_TankType(owner)];
-		DataPack dpDataPack = new DataPack();
-		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-		dpDataPack.WriteCell(GetClientUserId(client));
-		dpDataPack.WriteCell(GetClientUserId(owner));
+		DataPack dpStopBlindness = new DataPack();
+		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
+		dpStopBlindness.WriteCell(GetClientUserId(client));
+		dpStopBlindness.WriteCell(GetClientUserId(owner));
 	}
 }
 
@@ -218,10 +214,10 @@ void vRemoveBlind(int client)
 	{
 		if (bIsSurvivor(iSurvivor) && g_bBlind[iSurvivor])
 		{
-			DataPack dpDataPack = new DataPack();
-			CreateDataTimer(0.1, tTimerStopBlindness, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-			dpDataPack.WriteCell(GetClientUserId(client));
+			DataPack dpStopBlindness = new DataPack();
+			CreateDataTimer(0.1, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
+			dpStopBlindness.WriteCell(GetClientUserId(iSurvivor));
+			dpStopBlindness.WriteCell(GetClientUserId(client));
 		}
 	}
 }

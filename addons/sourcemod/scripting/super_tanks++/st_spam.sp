@@ -16,9 +16,7 @@ public Plugin myinfo =
 
 bool g_bSpam[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 float g_flSpamDuration[ST_MAXTYPES + 1], g_flSpamDuration2[ST_MAXTYPES + 1];
-int g_iSpamAbility[ST_MAXTYPES + 1], g_iSpamAbility2[ST_MAXTYPES + 1],
-	g_iSpamChance[ST_MAXTYPES + 1], g_iSpamChance2[ST_MAXTYPES + 1], g_iSpamDamage[ST_MAXTYPES + 1],
-	g_iSpamDamage2[ST_MAXTYPES + 1];
+int g_iSpamAbility[ST_MAXTYPES + 1], g_iSpamAbility2[ST_MAXTYPES + 1], g_iSpamChance[ST_MAXTYPES + 1], g_iSpamChance2[ST_MAXTYPES + 1], g_iSpamDamage[ST_MAXTYPES + 1], g_iSpamDamage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -78,10 +76,10 @@ public void ST_Ability(int client)
 	if (iSpamAbility == 1 && GetRandomInt(1, iSpamChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bSpam[client])
 	{
 		g_bSpam[client] = true;
-		DataPack dpDataPack = new DataPack();
-		CreateDataTimer(0.5, tTimerSpam, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDataPack.WriteCell(GetClientUserId(client));
-		dpDataPack.WriteFloat(GetEngineTime());
+		DataPack dpSpam = new DataPack();
+		CreateDataTimer(0.5, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpSpam.WriteCell(GetClientUserId(client));
+		dpSpam.WriteFloat(GetEngineTime());
 	}
 }
 

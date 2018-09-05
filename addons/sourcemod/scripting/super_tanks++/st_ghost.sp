@@ -15,16 +15,10 @@ public Plugin myinfo =
 };
 
 bool g_bGhost[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-char g_sGhostWeaponSlots[ST_MAXTYPES + 1][6], g_sGhostWeaponSlots2[ST_MAXTYPES + 1][6],
-	g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80],
-	g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
-float g_flGhostCloakRange[ST_MAXTYPES + 1], g_flGhostCloakRange2[ST_MAXTYPES + 1],
-	g_flGhostRange[ST_MAXTYPES + 1], g_flGhostRange2[ST_MAXTYPES + 1];
-int g_iGhostAbility[ST_MAXTYPES + 1], g_iGhostAbility2[ST_MAXTYPES + 1],
-	g_iGhostAlpha[MAXPLAYERS + 1], g_iGhostChance[ST_MAXTYPES + 1],
-	g_iGhostChance2[ST_MAXTYPES + 1], g_iGhostFade[ST_MAXTYPES + 1],
-	g_iGhostFade2[ST_MAXTYPES + 1], g_iGhostHit[ST_MAXTYPES + 1], g_iGhostHit2[ST_MAXTYPES + 1],
-	g_iGhostRangeChance[ST_MAXTYPES + 1], g_iGhostRangeChance2[ST_MAXTYPES + 1];
+char g_sGhostWeaponSlots[ST_MAXTYPES + 1][6], g_sGhostWeaponSlots2[ST_MAXTYPES + 1][6], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
+float g_flGhostCloakRange[ST_MAXTYPES + 1], g_flGhostCloakRange2[ST_MAXTYPES + 1], g_flGhostRange[ST_MAXTYPES + 1], g_flGhostRange2[ST_MAXTYPES + 1];
+int g_iGhostAbility[ST_MAXTYPES + 1], g_iGhostAbility2[ST_MAXTYPES + 1], g_iGhostAlpha[MAXPLAYERS + 1], g_iGhostChance[ST_MAXTYPES + 1], g_iGhostChance2[ST_MAXTYPES + 1], g_iGhostFade[ST_MAXTYPES + 1],
+	g_iGhostFade2[ST_MAXTYPES + 1], g_iGhostHit[ST_MAXTYPES + 1], g_iGhostHit2[ST_MAXTYPES + 1], g_iGhostRangeChance[ST_MAXTYPES + 1], g_iGhostRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -228,27 +222,27 @@ public void ST_Ability(int client)
 		{
 			g_iGhostAlpha[client] = 255;
 			g_bGhost[client] = true;
-			DataPack dpDataPack = new DataPack();
-			CreateDataTimer(0.1, tTimerGhost, dpDataPack, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-			dpDataPack.WriteCell(GetClientUserId(client));
-			dpDataPack.WriteCell(iRed);
-			dpDataPack.WriteCell(iGreen);
-			dpDataPack.WriteCell(iBlue);
-			dpDataPack.WriteCell(iRed2);
-			dpDataPack.WriteCell(iGreen2);
-			dpDataPack.WriteCell(iBlue2);
-			dpDataPack.WriteCell(iRed3);
-			dpDataPack.WriteCell(iGreen3);
-			dpDataPack.WriteCell(iBlue3);
-			dpDataPack.WriteCell(iRed4);
-			dpDataPack.WriteCell(iGreen4);
-			dpDataPack.WriteCell(iBlue4);
-			dpDataPack.WriteCell(iRed5);
-			dpDataPack.WriteCell(iGreen5);
-			dpDataPack.WriteCell(iBlue5);
-			dpDataPack.WriteCell(iRed6);
-			dpDataPack.WriteCell(iGreen6);
-			dpDataPack.WriteCell(iBlue6);
+			DataPack dpGhost = new DataPack();
+			CreateDataTimer(0.1, tTimerGhost, dpGhost, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			dpGhost.WriteCell(GetClientUserId(client));
+			dpGhost.WriteCell(iRed);
+			dpGhost.WriteCell(iGreen);
+			dpGhost.WriteCell(iBlue);
+			dpGhost.WriteCell(iRed2);
+			dpGhost.WriteCell(iGreen2);
+			dpGhost.WriteCell(iBlue2);
+			dpGhost.WriteCell(iRed3);
+			dpGhost.WriteCell(iGreen3);
+			dpGhost.WriteCell(iBlue3);
+			dpGhost.WriteCell(iRed4);
+			dpGhost.WriteCell(iGreen4);
+			dpGhost.WriteCell(iBlue4);
+			dpGhost.WriteCell(iRed5);
+			dpGhost.WriteCell(iGreen5);
+			dpGhost.WriteCell(iBlue5);
+			dpGhost.WriteCell(iRed6);
+			dpGhost.WriteCell(iGreen6);
+			dpGhost.WriteCell(iBlue6);
 			SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		}
 		float flGhostRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostRange[ST_TankType(client)] : g_flGhostRange2[ST_TankType(client)],
@@ -316,12 +310,9 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 		g_bGhost[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iRed = pack.ReadCell(), iGreen = pack.ReadCell(), iBlue = pack.ReadCell(),
-		iRed2 = pack.ReadCell(), iGreen2 = pack.ReadCell(), iBlue2 = pack.ReadCell(),
-		iRed3 = pack.ReadCell(), iGreen3 = pack.ReadCell(), iBlue3 = pack.ReadCell(),
-		iRed4 = pack.ReadCell(), iGreen4 = pack.ReadCell(), iBlue4 = pack.ReadCell(),
-		iRed5 = pack.ReadCell(), iGreen5 = pack.ReadCell(), iBlue5 = pack.ReadCell(),
-		iRed6 = pack.ReadCell(), iGreen6 = pack.ReadCell(), iBlue6 = pack.ReadCell(),
+	int iRed = pack.ReadCell(), iGreen = pack.ReadCell(), iBlue = pack.ReadCell(), iRed2 = pack.ReadCell(), iGreen2 = pack.ReadCell(), iBlue2 = pack.ReadCell(),
+		iRed3 = pack.ReadCell(), iGreen3 = pack.ReadCell(), iBlue3 = pack.ReadCell(), iRed4 = pack.ReadCell(), iGreen4 = pack.ReadCell(), iBlue4 = pack.ReadCell(),
+		iRed5 = pack.ReadCell(), iGreen5 = pack.ReadCell(), iBlue5 = pack.ReadCell(), iRed6 = pack.ReadCell(), iGreen6 = pack.ReadCell(), iBlue6 = pack.ReadCell(),
 		iGhostFade = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFade[ST_TankType(iTank)] : g_iGhostFade2[ST_TankType(iTank)];
 	g_iGhostAlpha[iTank] -= 2;
 	if (g_iGhostAlpha[iTank] < iGhostFade)
