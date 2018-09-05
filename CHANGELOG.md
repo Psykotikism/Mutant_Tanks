@@ -19,7 +19,7 @@ Changes:
 
 Files:
 
-1. Updated include file to add new natives and remove some stocks.
+1. Updated include file to add new natives, remove some stocks, and remove support for auto-config generation.
 2. Smaller file sizes.
 
 ## Version 8.37 (August 30, 2018)

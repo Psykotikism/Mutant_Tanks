@@ -82,11 +82,7 @@ By default, Super Tanks++ can create and execute the following types of configur
 #### Features
 1. Create custom config files (can be based on difficulty, map, game mode, day, player count, or custom name).
 2. Execute custom config files (can be based on difficulty, map, game mode, day, player count, or custom name).
-3. Automatically generate config files for all difficulties specified by z_difficulty.
-4. Automatically generate config files for all maps installed on the server.
-5. Automatically generate config files for all game modes specified by sv_gametypes and mp_gamemode.
-6. Automatically generate config files for all days.
-7. Automatically generate config files for up to 66 players.
+3. Automatically generate config files for up to 66 players, all difficulties specified by z_difficulty, maps installed on the server, game modes specified by sv_gametypes and mp_gamemode, and days.
 
 ## Questions You May Have
 > If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140).

@@ -155,7 +155,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		"General"
 		{
@@ -380,7 +380,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank absorbs most of the damage it receives.
 		// Requires "st_absorb.smx" to be installed.
@@ -449,7 +449,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank creates acid puddles.
 		// "Ability Enabled" - When a survivor is within range of the Tank, an acid puddle is created underneath the survivor.
@@ -508,7 +508,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank receives more damage from bullets and explosions than usual.
 		// The Super Tank takes away survivors' ammunition.
@@ -567,7 +567,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank blinds survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is blinded.
@@ -631,7 +631,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank creates explosions.
 		// "Ability Enabled" - When a survivor is within range of the Tank, an explosion is created around the survivor.
@@ -689,7 +689,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank buries survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is buried.
@@ -753,7 +753,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank gives survivors cancer.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is given cancer.
@@ -805,7 +805,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank creates clones of itself.
 		// Requires "st_clone.smx" to be installed.
@@ -844,7 +844,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank drops weapons upon death.
 		// Requires "st_drop.smx" to be installed.
@@ -891,7 +891,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank drugs survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is drugged.
@@ -949,7 +949,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank electrocutes survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is electrocuted.
@@ -1025,7 +1025,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank forces survivors to only use a certain weapon slot.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is forced to only use a certain weapon slot.
@@ -1094,7 +1094,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank creates fires.
 		// "Ability Enabled" - When a survivor is within range of the Tank, a fire is created around the survivor.
@@ -1152,7 +1152,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank runs really fast like the Flash.
 		// Requires "st_flash.smx" to be installed.
@@ -1191,7 +1191,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank flings survivors high into the air.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is flung into the air.
@@ -1243,7 +1243,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank takes more damage.
 		// Requires "st_fragile.smx" to be installed.
@@ -1312,7 +1312,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank makes itself and any other nearby special infected invisible, and disarms survivors.
 		// "Ability Enabled" - Any nearby special infected turns invisible.
@@ -1390,7 +1390,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank gains temporary immunity to all damage.
 		// Requires "st_god.smx" to be installed.
@@ -1423,7 +1423,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank pulls in or pushes away survivors and any other nearby infected, and changes the survivors' gravity.
 		// "Ability Enabled" - Any nearby infected and survivors are pulled in or pushed away.
@@ -1497,7 +1497,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank gains health from other nearby infected and sets survivors to black and white with temporary health.
 		// "Ability Enabled" - Any nearby infected can give the Tank some health.
@@ -1576,7 +1576,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank hurts survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor gets hurt repeatedly.
@@ -1640,7 +1640,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank hypnotizes survivors to damage themselves or teammates.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is hypnotized.
@@ -1704,7 +1704,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank freezes survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is frozen in place.
@@ -1762,7 +1762,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank forces survivors to go idle.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor goes idle.
@@ -1814,7 +1814,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank inverts the survivors' movement keys.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's movement keys are inverted.
@@ -1871,7 +1871,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank gives survivors items upon death.
 		// Requires "st_item.smx" to be installed.
@@ -1909,7 +1909,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank jumps really high.
 		// Requires "st_jump.smx" to be installed.
@@ -1935,7 +1935,7 @@
 
 ```"Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank heals special infected upon death.
 		// Requires "st_medic.smx" to be installed.
@@ -1998,7 +1998,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank creates meteor showers.
 		// Requires "st_meteor.smx" to be installed.
@@ -2042,7 +2042,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank spawns minions.
 		// Requires "st_minion.smx" to be installed.
@@ -2088,7 +2088,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank nullifies all of the survivors' damage.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor does not do any damage.
@@ -2145,7 +2145,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank starts panic events.
 		// "Ability Enabled" - The Tank starts a panic event periodically.
@@ -2190,7 +2190,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank pimp slaps survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is repeatedly pimp slapped.
@@ -2254,7 +2254,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank pukes on survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank pukes on the survivor.
@@ -2306,7 +2306,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank gains speed when on fire.
 		// Requires "st_pyro.smx" to be installed.
@@ -2334,7 +2334,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank regenerates health.
 		// Requires "st_regen.smx" to be installed.
@@ -2379,7 +2379,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank respawns.
 		// Requires "st_respawn.smx" to be installed.
@@ -2419,7 +2419,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank forces survivors to restart at the beginning of the map with a new loadout.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor respawns at the start of the map or near a teammate.
@@ -2481,7 +2481,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank creates rock showers.
 		// Requires "st_rock.smx" to be installed.
@@ -2531,7 +2531,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank sends survivors into space.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is sent into space.
@@ -2582,7 +2582,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank shakes the survivors' screens.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's screen is shaken.
@@ -2640,7 +2640,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank protects itself with a shield and traps survivors inside their own shields.
 		// Requires "st_shield.smx" to be installed.
@@ -2677,7 +2677,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank shoves survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is shoved repeatedly.
@@ -2735,7 +2735,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank smashes survivors or crushes them to death.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is smashed.
@@ -2787,7 +2787,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank smites survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is smitten.
@@ -2839,7 +2839,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank spams rocks at survivors.
 		// Requires "st_spam.smx" to be installed.
@@ -2878,7 +2878,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank constantly deals splash damage to nearby survivors.
 		// Requires "st_splash.smx" to be installed.
@@ -2923,7 +2923,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank slows survivors down.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is slowed down.
@@ -2987,7 +2987,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank throws things.
 		// Requires "st_throw.smx" to be installed.
@@ -3034,7 +3034,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank throws a heat-seeking rock that will track down the nearest survivor.
 		// Requires "st_track.smx" to be installed.
@@ -3074,7 +3074,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank gains health from hurting survivors.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank gains health.
@@ -3138,7 +3138,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank changes the survivors' field of views.
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's vision changes.
@@ -3202,7 +3202,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank warps to survivors and warps survivors back to teammates.
 		// "Ability Enabled" - The Tank warps to a random survivor.
@@ -3252,7 +3252,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank converts nearby common infected into Witch minions.
 		// Requires "st_witch.smx" to be installed.
@@ -3291,7 +3291,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 0"
+	"Tank 1"
 	{
 		// The Super Tank spawns common infected.
 		// Requires "st_zombie.smx" to be installed.
