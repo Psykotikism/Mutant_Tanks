@@ -1,5 +1,5 @@
 # Information
-> There is information about each setting and ability below.
+> There is information about each setting and ability below. All of these settings have default values if they are left incomplete or empty.
 
 ## Plugin Settings
 
