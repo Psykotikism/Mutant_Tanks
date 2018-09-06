@@ -1,5 +1,5 @@
 # Information
-> There is information about each setting and ability below. All of these settings have default values if they are left incomplete or empty.
+> There is information about each setting and ability below. All of these settings use default values if they are left incomplete or empty.
 
 ## Plugin Settings
 
@@ -8,7 +8,6 @@
 {
 	// These are the general plugin settings.
 	// Note: The following settings will not work in custom config files:
-	// "Config Mode"
 	// "Game Mode Types"
 	// "Enabled Game Modes"
 	// "Disabled Game Modes"
