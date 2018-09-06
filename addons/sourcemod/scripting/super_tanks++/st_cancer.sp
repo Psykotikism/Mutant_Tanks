@@ -18,8 +18,7 @@ bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 ConVar g_cvSTMaxIncapCount;
 float g_flCancerRange[ST_MAXTYPES + 1], g_flCancerRange2[ST_MAXTYPES + 1];
-int g_iCancerAbility[ST_MAXTYPES + 1], g_iCancerAbility2[ST_MAXTYPES + 1], g_iCancerChance[ST_MAXTYPES + 1], g_iCancerChance2[ST_MAXTYPES + 1],
-	g_iCancerHit[ST_MAXTYPES + 1], g_iCancerHit2[ST_MAXTYPES + 1], g_iCancerRangeChance[ST_MAXTYPES + 1], g_iCancerRangeChance2[ST_MAXTYPES + 1];
+int g_iCancerAbility[ST_MAXTYPES + 1], g_iCancerAbility2[ST_MAXTYPES + 1], g_iCancerChance[ST_MAXTYPES + 1], g_iCancerChance2[ST_MAXTYPES + 1], g_iCancerHit[ST_MAXTYPES + 1], g_iCancerHit2[ST_MAXTYPES + 1], g_iCancerRangeChance[ST_MAXTYPES + 1], g_iCancerRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
