@@ -823,6 +823,10 @@ Examples:
 
 **ReCreator** - For reporting issues.
 
+**Princess LadyRain** - For reporting issues.
+
+**Zytheus** - For reporting issues.
+
 **AngelAce113** - For the default colors, testing each Tank type, giving me ideas, and overall support.
 
 **Sipow** - For the default colors and overall support.
