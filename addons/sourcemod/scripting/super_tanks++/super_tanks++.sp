@@ -1011,7 +1011,7 @@ void vBoss(int client, int limit, int stages, int stage)
 		for (int iIndex = iMinType; iIndex <= iMaxType; iIndex++)
 		{
 			int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
-			if (iTankEnabled == 0 || g_iTankType[client] == iIndex || g_iBossTypes[client][0] == iIndex || g_iBossTypes[client][1] == iIndex || g_iBossTypes[client][2] == iIndex || g_iBossTypes[client][3] == iIndex || g_iBossTypes[client][4] == iIndex)
+			if (iTankEnabled == 0 || g_iTankType[client] == iIndex)
 			{
 				continue;
 			}
