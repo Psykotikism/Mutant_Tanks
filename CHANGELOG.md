@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.38 (August 6, 2018)
+## Version 8.38 (September 6, 2018)
 
 Bug fixes:
 
