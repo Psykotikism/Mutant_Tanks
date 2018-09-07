@@ -719,6 +719,12 @@ native bool ST_TankAllowed(int client);
  * @return				The Tank's Super Tank type.
  */
 native int ST_TankType(int client);
+
+/* Returns the current finale wave.
+ *
+ * @return				The current finale wave.
+ */
+native int ST_TankWave();
 ```
 
 Target filters:

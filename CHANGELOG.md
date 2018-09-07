@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 8.39 (September 10, 2018)
+
+Bug fixes:
+
+1. Fixed some abilities not working when their "Ability Enabled" setting is disabled. (Thanks huwong!)
+
+Changes:
+
+1. Added the "Finale Tank" setting to determine if a Super Tank only spawns during finales.
+2. Added the "Tank Note" setting which is displayed in chat after a Super Tank spawns.
+3. Added a new native: ST_TankWave() - Returns the current finale wave.
+
 ## Version 8.38 (September 6, 2018)
 
 Bug fixes:

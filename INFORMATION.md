@@ -171,6 +171,11 @@
 			// 1: ON
 			"Tank Enabled"					"0"
 
+			// The note to display for the Super Tank when it spawns.
+			// Note: This note is also displayed for clones so the chat could be spammed if multiple clones spawn.
+			// Character limit: 244
+			"Tank Note"						""
+
 			// The health of bosses needed for each stage.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
 			// Note: The values will be added to the boss's new health on every new stage.
@@ -207,6 +212,12 @@
 			// 1: Spawn as Super Tank bosses.
 			// 2: Spawn as Super Tanks that switch randomly between each type.
 			"Spawn Mode"					"0"
+
+			// The Super Tank will only spawn on finale maps.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Finale Tank"					"0"
 
 			// These are the Super Tank's skin and glow outline colors.
 			// Separate colors with "|".
