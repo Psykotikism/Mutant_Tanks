@@ -7,6 +7,7 @@ Bug fixes:
 1. Fixed some modules not working properly for custom configs.
 2. Fixed custom configs not working.
 3. Fixed Tanks having the "unnamed" name when Boss mode is enabled. (Thanks Zytheus!)
+4. Fixed the Splash ability creating multiple timers.
 
 Changes:
 
