@@ -826,13 +826,15 @@ Examples:
 
 **KasperH** - For reporting issues, giving me ideas, and overall support.
 
-**emsit** - For reporting issues and helping with parts of the code.
+**emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
-**ReCreator** - For reporting issues.
+**ReCreator** - For reporting issues and suggesting ideas.
 
 **Princess LadyRain** - For reporting issues.
 
-**Zytheus** - For reporting issues.
+**Zytheus** - For reporting issues and suggesting ideas.
+
+**huwong** - For reporting issues and suggesting ideas.
 
 **AngelAce113** - For the default colors, testing each Tank type, giving me ideas, and overall support.
 
