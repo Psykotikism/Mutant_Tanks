@@ -12,6 +12,10 @@ Changes:
 2. Added the "Tank Note" setting which is displayed in chat after a Super Tank spawns.
 3. Added a new native: ST_TankWave() - Returns the current finale wave.
 
+Files:
+
+1. Added a translation file for the plugin. (Filename is "super_tanks++.phrases.txt")
+
 ## Version 8.38 (September 6, 2018)
 
 Bug fixes:
