@@ -9,6 +9,9 @@
 #include <sdktools>
 #include <adminmenu>
 #define ST_PREFIX "[ST++]"
+#define ST_PREFIX2 "\x04[ST++]\x01"
+#define ST_PREFIX3 "\x04[ST++]\x03"
+#define ST_PREFIX4 "\x04[ST++]\x05"
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"

@@ -124,6 +124,7 @@ public void OnPluginStart()
 	vLoadConfigs(g_sSavePath, true);
 	vMultiTargetFilters(1);
 	LoadTranslations("common.phrases");
+	LoadTranslations("super_tanks++.phrases");
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
 	RegAdminCmd("sm_tanklist", cmdTankList, ADMFLAG_ROOT, "View the Super Tanks list.");
 	g_cvSTEnable = CreateConVar("st_enableplugin", "1", "Enable Super Tanks++.\n0: OFF\n1: ON");
@@ -582,16 +583,16 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				{
 					switch (GetRandomInt(1, 10))
 					{
-						case 1: PrintToChatAll("\x04%s\x05 %s\x01 is defeated!", ST_PREFIX, sName);
-						case 2: PrintToChatAll("\x04%s\x01 The survivors defeated\x05 %s\x01!", ST_PREFIX, sName);
-						case 3: PrintToChatAll("\x04%s\x05 %s\x01 goes to hell!", ST_PREFIX, sName);
-						case 4: PrintToChatAll("\x04%s\x01 Is\x05 %s\x01 really dead...?", ST_PREFIX, sName);
-						case 5: PrintToChatAll("\x04%s\x05 %s\x01 lost the challenge against the survivors!", ST_PREFIX, sName);
-						case 6: PrintToChatAll("\x04%s\x01 The\x05 %s\x01 failed to kill the survivors!", ST_PREFIX, sName);
-						case 7: PrintToChatAll("\x04%s\x05 %s\x01 has met their demise!", ST_PREFIX, sName);
-						case 8: PrintToChatAll("\x04%s\x01 Yay!\x05 %s\x01 is dead!", ST_PREFIX, sName);
-						case 9: PrintToChatAll("\x04%s\x05 %s\x01 left the game...", ST_PREFIX, sName);
-						case 10: PrintToChatAll("\x04%s\x01 It seems\x05 %s\x01 could not beat the survivors after all...", ST_PREFIX, sName);
+						case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Death1", sName);
+						case 2: PrintToChatAll("%s %t", ST_PREFIX2, "Death2", sName);
+						case 3: PrintToChatAll("%s %t", ST_PREFIX2, "Death3", sName);
+						case 4: PrintToChatAll("%s %t", ST_PREFIX2, "Death4", sName);
+						case 5: PrintToChatAll("%s %t", ST_PREFIX2, "Death5", sName);
+						case 6: PrintToChatAll("%s %t", ST_PREFIX2, "Death6", sName);
+						case 7: PrintToChatAll("%s %t", ST_PREFIX2, "Death7", sName);
+						case 8: PrintToChatAll("%s %t", ST_PREFIX2, "Death8", sName);
+						case 9: PrintToChatAll("%s %t", ST_PREFIX2, "Death9", sName);
+						case 10: PrintToChatAll("%s %t", ST_PREFIX2, "Death10", sName);
 					}
 				}
 				vRemoveProps(iPlayer);
@@ -679,7 +680,7 @@ public Action cmdTank(int client, int args)
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
 	if (iPluginEnabled == 0 || !g_bPluginEnabled)
 	{
-		ReplyToCommand(client, "\x04%s\x05 Super Tanks++\x01 is disabled.", ST_PREFIX);
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_PREFIX4);
 		return Plugin_Handled;
 	}
 	if (!bIsValidHumanClient(client))
@@ -701,12 +702,12 @@ public Action cmdTank(int client, int args)
 	iMaxType = iSetCellLimit(iMaxType, 1, ST_MAXTYPES);
 	if (args < 1)
 	{
-		IsVoteInProgress() ? ReplyToCommand(client, "\x04%s\x01 %t", ST_PREFIX, "Vote in Progress") : vTankMenu(client, 0);
+		IsVoteInProgress() ? ReplyToCommand(client, "%s %t", ST_PREFIX2, "Vote in Progress") : vTankMenu(client, 0);
 		return Plugin_Handled;
 	}
 	else if (iType < iMinType || iType > iMaxType || iMode < 0 || iMode > 1 || args > 2)
 	{
-		ReplyToCommand(client, "\x04%s\x01 Usage: sm_tank <type %d-%d> <0: spawn at crosshair|1: spawn automatically>", ST_PREFIX, iMinType, iMaxType);
+		ReplyToCommand(client, "%s Usage: sm_tank <type %d-%d> <0: spawn at crosshair|1: spawn automatically>", ST_PREFIX2, iMinType, iMaxType);
 		return Plugin_Handled;
 	}
 	int iTankEnabled = !g_bTankConfig[iType] ? g_iTankEnabled[iType] : g_iTankEnabled2[iType];
@@ -714,7 +715,7 @@ public Action cmdTank(int client, int args)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
 		sName = !g_bTankConfig[iType] ? g_sCustomName[iType] : g_sCustomName2[iType];
-		ReplyToCommand(client, "\x04%s\x05 %s\x04 (Tank #%d)\x01 is disabled.", ST_PREFIX, sName, iType);
+		ReplyToCommand(client, "%s %s\x04 (Tank #%d)\x01 is disabled.", ST_PREFIX4, sName, iType);
 		return Plugin_Handled;
 	}
 	vTank(client, iType, iMode);
@@ -803,18 +804,18 @@ public Action cmdTankList(int client, int args)
 	int iPluginEnabled = !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
 	if (iPluginEnabled == 0 || !g_bPluginEnabled)
 	{
-		ReplyToCommand(client, "\x04%s\x05 Super Tanks++\x01 is disabled.", ST_PREFIX);
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_PREFIX4);
 		return Plugin_Handled;
 	}
 	if (args > 0)
 	{
-		ReplyToCommand(client, "\x04%s\x01 Usage: sm_tanklist", ST_PREFIX);
+		ReplyToCommand(client, "%s Usage: sm_tanklist", ST_PREFIX2);
 		return Plugin_Handled;
 	}
 	vTankList(client);
 	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
 	{
-		PrintToChat(client, "\x04%s\x01 See console for output.", ST_PREFIX);
+		PrintToChat(client, "%s See console for output.", ST_PREFIX2);
 	}
 	return Plugin_Handled;
 }
@@ -1517,26 +1518,26 @@ void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mod
 				{
 					switch (GetRandomInt(1, 10))
 					{
-						case 1: PrintToChatAll("\x04%s\x05 %s\x01 has appeared!", ST_PREFIX, name);
-						case 2: PrintToChatAll("\x04%s\x01 Here comes\x05 %s\x01!", ST_PREFIX, name);
-						case 3: PrintToChatAll("\x04%s\x05 %s\x01 is ready to kill!", ST_PREFIX, name);
-						case 4: PrintToChatAll("\x04%s\x01 Are you ready to face\x05 %s\x01?", ST_PREFIX, name);
-						case 5: PrintToChatAll("\x04%s\x05 %s\x01 came for a challenge!", ST_PREFIX, name);
-						case 6: PrintToChatAll("\x04%s\x01 Get ready!\x05 %s\x01 is coming!", ST_PREFIX, name);
-						case 7: PrintToChatAll("\x04%s\x05 %s\x01 is here!", ST_PREFIX, name);
-						case 8: PrintToChatAll("\x04%s\x01 Oh no!\x05 %s\x01 is nearing!", ST_PREFIX, name);
-						case 9: PrintToChatAll("\x04%s\x05 %s\x01 joined the game...", ST_PREFIX, name);
-						case 10: PrintToChatAll("\x04%s\x01 It seems\x05 %s\x01 is joining your company...", ST_PREFIX, name);
+						case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival1", name);
+						case 2: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival2", name);
+						case 3: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival3", name);
+						case 4: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival4", name);
+						case 5: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival5", name);
+						case 6: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival6", name);
+						case 7: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival7", name);
+						case 8: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival8", name);
+						case 9: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival9", name);
+						case 10: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival10", name);
 					}
 				}
-				case 1: PrintToChatAll("\x04%s\x05 %s\x03 evolved into\x05 %s\x04 (Stage %d)\x03!", ST_PREFIX, oldname, name, g_iBossStageCount[client]);
-				case 2: PrintToChatAll("\x04%s\x05 %s\x03 transformed into\x05 %s\x03!", ST_PREFIX, oldname, name);
+				case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Evolved", oldname, name, g_iBossStageCount[client]);
+				case 2: PrintToChatAll("%s %t", ST_PREFIX2, "Randomized", oldname, name);
 			}
 			char sTankNote[256];
 			sTankNote = !g_bTankConfig[g_iTankType[client]] ? g_sTankNote[g_iTankType[client]] : g_sTankNote2[g_iTankType[client]];
 			if (sTankNote[0] != '\0')
 			{
-				PrintToChatAll("\x04%s\x03 %s", ST_PREFIX, sTankNote);
+				PrintToChatAll("%s %s", ST_PREFIX3, sTankNote);
 			}
 		}
 	}
