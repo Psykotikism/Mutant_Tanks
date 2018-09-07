@@ -174,6 +174,9 @@
 			// The note to display for the Super Tank when it spawns.
 			// Note: This note is also displayed for clones so the chat could be spammed if multiple clones spawn.
 			// Character limit: 244
+			// --
+			// Empty: OFF
+			// Not empty: ON, display this note.
 			"Tank Note"						""
 
 			// The health of bosses needed for each stage.
