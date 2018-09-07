@@ -196,6 +196,7 @@ void vInvertHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flInvertDuration, tTimerStopInvert, dpStopInvert, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopInvert.WriteCell(GetClientUserId(client));
 		dpStopInvert.WriteCell(GetClientUserId(owner));
+		dpStopInvert.WriteCell(enabled);
 	}
 }
 
@@ -236,7 +237,7 @@ public Action tTimerStopInvert(Handle timer, DataPack pack)
 		g_bInvert[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iInvertAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iInvertAbility[ST_TankType(iTank)] : g_iInvertAbility2[ST_TankType(iTank)];
+	int iInvertAbility = pack.ReadCell();
 	if (iInvertAbility == 0)
 	{
 		g_bInvert[iSurvivor] = false;

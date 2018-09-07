@@ -205,6 +205,7 @@ void vBlindHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopBlindness.WriteCell(GetClientUserId(client));
 		dpStopBlindness.WriteCell(GetClientUserId(owner));
+		dpStopBlindness.WriteCell(enabled);
 	}
 }
 
@@ -218,6 +219,7 @@ void vRemoveBlind(int client)
 			CreateDataTimer(0.1, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopBlindness.WriteCell(GetClientUserId(iSurvivor));
 			dpStopBlindness.WriteCell(GetClientUserId(client));
+			dpStopBlindness.WriteCell(1);
 		}
 	}
 }
@@ -249,7 +251,7 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 		vBlind(iSurvivor, 0);
 		return Plugin_Stop;
 	}
-	int iBlindAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindAbility[ST_TankType(iTank)] : g_iBlindAbility2[ST_TankType(iTank)];
+	int iBlindAbility = pack.ReadCell();
 	if (iBlindAbility == 0)
 	{
 		g_bBlind[iSurvivor] = false;

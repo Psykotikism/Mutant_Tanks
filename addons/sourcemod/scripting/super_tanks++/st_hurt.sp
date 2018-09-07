@@ -141,6 +141,7 @@ void vHurtHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(1.0, tTimerHurt, dpHurt, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpHurt.WriteCell(GetClientUserId(client));
 		dpHurt.WriteCell(GetClientUserId(owner));
+		dpHurt.WriteCell(enabled);
 		dpHurt.WriteFloat(GetEngineTime());
 	}
 }
@@ -171,9 +172,9 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 		g_bHurt[iSurvivor] = false;
 		return Plugin_Stop;
 	}
+	int iHurtAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flHurtDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flHurtDuration[ST_TankType(iTank)] : g_flHurtDuration2[ST_TankType(iTank)];
-	int iHurtAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHurtAbility[ST_TankType(iTank)] : g_iHurtAbility2[ST_TankType(iTank)];
 	if (iHurtAbility == 0 || (flTime + flHurtDuration) < GetEngineTime())
 	{
 		g_bHurt[iSurvivor] = false;

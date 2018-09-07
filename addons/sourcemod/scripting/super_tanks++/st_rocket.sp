@@ -159,10 +159,12 @@ void vRocketHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(2.0, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
 		dpRocketLaunch.WriteCell(GetClientUserId(client));
 		dpRocketLaunch.WriteCell(GetClientUserId(owner));
+		dpRocketLaunch.WriteCell(enabled);
 		DataPack dpRocketDetonate = new DataPack();
 		CreateDataTimer(3.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
 		dpRocketDetonate.WriteCell(GetClientUserId(client));
 		dpRocketDetonate.WriteCell(GetClientUserId(owner));
+		dpRocketDetonate.WriteCell(enabled);
 	}
 }
 
@@ -179,7 +181,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	int iRocketAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRocketAbility[ST_TankType(iTank)] : g_iRocketAbility2[ST_TankType(iTank)];
+	int iRocketAbility = pack.ReadCell();
 	if (iRocketAbility == 0)
 	{
 		return Plugin_Stop;
@@ -206,7 +208,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	int iRocketAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRocketAbility[ST_TankType(iTank)] : g_iRocketAbility2[ST_TankType(iTank)];
+	int iRocketAbility = pack.ReadCell();
 	if (iRocketAbility == 0)
 	{
 		return Plugin_Stop;

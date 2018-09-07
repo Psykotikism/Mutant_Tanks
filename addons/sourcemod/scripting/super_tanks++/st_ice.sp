@@ -170,6 +170,7 @@ void vIceHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flIceDuration, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopIce.WriteCell(GetClientUserId(client));
 		dpStopIce.WriteCell(GetClientUserId(owner));
+		dpStopIce.WriteCell(enabled);
 	}
 }
 
@@ -183,6 +184,7 @@ void vRemoveIce(int client)
 			CreateDataTimer(0.1, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopIce.WriteCell(GetClientUserId(iSurvivor));
 			dpStopIce.WriteCell(GetClientUserId(client));
+			dpStopIce.WriteCell(1);
 		}
 	}
 }
@@ -229,7 +231,7 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 		vStopIce(iSurvivor);
 		return Plugin_Stop;
 	}
-	int iIceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iIceAbility[ST_TankType(iTank)] : g_iIceAbility2[ST_TankType(iTank)];
+	int iIceAbility = pack.ReadCell();
 	if (iIceAbility == 0)
 	{
 		vStopIce(iSurvivor);

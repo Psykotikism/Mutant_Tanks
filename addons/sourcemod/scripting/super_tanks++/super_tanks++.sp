@@ -13,17 +13,16 @@ public Plugin myinfo =
 };
 
 bool g_bBoss[MAXPLAYERS + 1], g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-char g_sBossHealthStages[ST_MAXTYPES + 1][34], g_sBossHealthStages2[ST_MAXTYPES + 1][34], g_sConfigCreate[6], g_sConfigExecute[6], g_sCustomName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sCustomName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sDisabledGameModes[513], g_sEnabledGameModes[513],
-	g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][12], g_sPropsChance2[ST_MAXTYPES + 1][12], g_sPropsColors[ST_MAXTYPES + 1][80],
-	g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[255], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankWaves[12], g_sTankWaves2[12], g_sTypeRange[10], g_sTypeRange2[10];
+char g_sBossHealthStages[ST_MAXTYPES + 1][34], g_sBossHealthStages2[ST_MAXTYPES + 1][34], g_sConfigCreate[6], g_sConfigExecute[6], g_sCustomName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sCustomName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sParticleEffects[ST_MAXTYPES + 1][8],
+	g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][12], g_sPropsChance2[ST_MAXTYPES + 1][12], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5],
+	g_sSavePath[255], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankNote[ST_MAXTYPES + 1][256], g_sTankNote2[ST_MAXTYPES + 1][256], g_sTankWaves[12], g_sTankWaves2[12], g_sTypeRange[10], g_sTypeRange2[10];
 ConVar g_cvSTEnable, g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1];
 Handle g_hAbilityForward, g_hBossStageForward, g_hConfigsForward, g_hEventForward, g_hRockBreakForward, g_hRockThrowForward, g_hSpawnForward;
-int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBossTypes[MAXPLAYERS + 1][5], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1],
-	g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2, g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2,
-	g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGameModeTypes, g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2,
-	g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1],
-	g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType;
+int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBossTypes[MAXPLAYERS + 1][5], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2,
+	g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1],
+	g_iGameModeTypes, g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRockEffect[ST_MAXTYPES + 1],
+	g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType;
 TopMenu g_tmSTMenu;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -40,6 +39,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("ST_SpawnTank", iNative_SpawnTank);
 	CreateNative("ST_TankAllowed", iNative_TankAllowed);
 	CreateNative("ST_TankType", iNative_TankType);
+	CreateNative("ST_TankWave", iNative_TankWave);
 	RegPluginLibrary("super_tanks++");
 	g_bLateLoad = late;
 	return APLRes_Success;
@@ -50,7 +50,7 @@ public int iNative_MaxType(Handle plugin, int numParams)
 	char sTypeRange[10], sRange[2][5];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
-	int iMaxType = sRange[1][0] != '\0' ? StringToInt(sRange[1]) : ST_MAXTYPES;
+	int iMaxType = (sRange[1][0] != '\0') ? StringToInt(sRange[1]) : ST_MAXTYPES;
 	iMaxType = iSetCellLimit(iMaxType, 1, ST_MAXTYPES);
 	return iMaxType;
 }
@@ -60,7 +60,7 @@ public int iNative_MinType(Handle plugin, int numParams)
 	char sTypeRange[10], sRange[2][5];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
-	int iMinType = sRange[0][0] != '\0' ? StringToInt(sRange[0]) : 1;
+	int iMinType = (sRange[0][0] != '\0') ? StringToInt(sRange[0]) : 1;
 	iMinType = iSetCellLimit(iMinType, 1, ST_MAXTYPES);
 	return iMinType;
 }
@@ -102,6 +102,11 @@ public int iNative_TankType(Handle plugin, int numParams)
 		return g_iTankType[iTank];
 	}
 	return 0;
+}
+
+public int iNative_TankWave(Handle plugin, int numParams)
+{
+	return g_iTankWave;
 }
 
 public void OnPluginStart()
@@ -345,15 +350,17 @@ public void OnPluginEnd()
 
 public void OnAdminMenuReady(Handle topmenu)
 {
+	TopMenu tmSTMenu = TopMenu.FromHandle(topmenu);
 	if (topmenu == g_tmSTMenu)
 	{
 		return;
 	}
-	g_tmSTMenu = view_as<TopMenu>(topmenu);
+	g_tmSTMenu = tmSTMenu;
 	TopMenuObject st_commands = g_tmSTMenu.AddCategory("SuperTanks++", iSTAdminMenuHandler);
 	if (st_commands != INVALID_TOPMENUOBJECT)
 	{
 		g_tmSTMenu.AddItem("sm_tank", vSuperTankMenu, st_commands, "sm_tank", ADMFLAG_ROOT);
+		g_tmSTMenu.AddItem("sm_tanklist", vSuperTankListMenu, st_commands, "sm_tanklist", ADMFLAG_ROOT);
 	}
 }
 
@@ -371,6 +378,15 @@ public void vSuperTankMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 	{
 		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tanks++ Menu");
 		case TopMenuAction_SelectOption: vTankMenu(param, 0);
+	}
+}
+
+public void vSuperTankListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
+{
+	switch (action)
+	{
+		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tanks++ List");
+		case TopMenuAction_SelectOption: vTankList(param);
 	}
 }
 
@@ -608,14 +624,15 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				char sTypeRange[10], sRange[2][5];
 				sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 				ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
-				int iMinType = sRange[0][0] != '\0' ? StringToInt(sRange[0]) : 1;
+				int iMinType = (sRange[0][0] != '\0') ? StringToInt(sRange[0]) : 1;
 				iMinType = iSetCellLimit(iMinType, 1, ST_MAXTYPES);
-				int iMaxType = sRange[1][0] != '\0' ? StringToInt(sRange[1]) : ST_MAXTYPES;
+				int iMaxType = (sRange[1][0] != '\0') ? StringToInt(sRange[1]) : ST_MAXTYPES;
 				iMaxType = iSetCellLimit(iMaxType, 1, ST_MAXTYPES);
 				for (int iIndex = iMinType; iIndex <= iMaxType; iIndex++)
 				{
-					int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
-					if (iTankEnabled == 0 || g_iTankType[iTank] == iIndex)
+					int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex],
+						iFinaleTank = !g_bTankConfig[iIndex] ? g_iFinaleTank[iIndex] : g_iFinaleTank2[iIndex];
+					if (iTankEnabled == 0 || (iFinaleTank == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
 					{
 						continue;
 					}
@@ -678,9 +695,9 @@ public Action cmdTank(int client, int args)
 	char sTypeRange[10], sRange[2][5];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
-	int iMinType = sRange[0][0] != '\0' ? StringToInt(sRange[0]) : 1;
+	int iMinType = (sRange[0][0] != '\0') ? StringToInt(sRange[0]) : 1;
 	iMinType = iSetCellLimit(iMinType, 1, ST_MAXTYPES);
-	int iMaxType = sRange[1][0] != '\0' ? StringToInt(sRange[1]) : ST_MAXTYPES;
+	int iMaxType = (sRange[1][0] != '\0') ? StringToInt(sRange[1]) : ST_MAXTYPES;
 	iMaxType = iSetCellLimit(iMaxType, 1, ST_MAXTYPES);
 	if (args < 1)
 	{
@@ -723,14 +740,15 @@ void vTankMenu(int client, int item)
 	char sTypeRange[10], sRange[2][5];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
-	int iMinType = sRange[0][0] != '\0' ? StringToInt(sRange[0]) : 1;
+	int iMinType = (sRange[0][0] != '\0') ? StringToInt(sRange[0]) : 1;
 	iMinType = iSetCellLimit(iMinType, 1, ST_MAXTYPES);
-	int iMaxType = sRange[1][0] != '\0' ? StringToInt(sRange[1]) : ST_MAXTYPES;
+	int iMaxType = (sRange[1][0] != '\0') ? StringToInt(sRange[1]) : ST_MAXTYPES;
 	iMaxType = iSetCellLimit(iMaxType, 1, ST_MAXTYPES);
 	for (int iIndex = iMinType; iIndex <= iMaxType; iIndex++)
 	{
-		int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
-		if (iTankEnabled == 0)
+		int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex],
+			iFinaleTank = !g_bTankConfig[iIndex] ? g_iFinaleTank[iIndex] : g_iFinaleTank2[iIndex];
+		if (iTankEnabled == 0 || (iFinaleTank == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)))
 		{
 			continue;
 		}
@@ -753,14 +771,15 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
 			sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 			ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
-			int iMinType = sRange[0][0] != '\0' ? StringToInt(sRange[0]) : 1;
+			int iMinType = (sRange[0][0] != '\0') ? StringToInt(sRange[0]) : 1;
 			iMinType = iSetCellLimit(iMinType, 1, ST_MAXTYPES);
-			int iMaxType = sRange[1][0] != '\0' ? StringToInt(sRange[1]) : ST_MAXTYPES;
+			int iMaxType = (sRange[1][0] != '\0') ? StringToInt(sRange[1]) : ST_MAXTYPES;
 			iMaxType = iSetCellLimit(iMaxType, 1, ST_MAXTYPES);
 			for (int iIndex = iMinType; iIndex <= iMaxType; iIndex++)
 			{
-				int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
-				if (iTankEnabled == 0)
+				int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex],
+					iFinaleTank = !g_bTankConfig[iIndex] ? g_iFinaleTank[iIndex] : g_iFinaleTank2[iIndex];
+				if (iTankEnabled == 0 || (iFinaleTank == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)))
 				{
 					continue;
 				}
@@ -792,12 +811,22 @@ public Action cmdTankList(int client, int args)
 		ReplyToCommand(client, "\x04%s\x01 Usage: sm_tanklist", ST_PREFIX);
 		return Plugin_Handled;
 	}
+	vTankList(client);
+	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
+	{
+		PrintToChat(client, "\x04%s\x01 See console for output.", ST_PREFIX);
+	}
+	return Plugin_Handled;
+}
+
+void vTankList(int client)
+{
 	char sTypeRange[10], sRange[2][5];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
-	int iMinType = sRange[0][0] != '\0' ? StringToInt(sRange[0]) : 1;
+	int iMinType = (sRange[0][0] != '\0') ? StringToInt(sRange[0]) : 1;
 	iMinType = iSetCellLimit(iMinType, 1, ST_MAXTYPES);
-	int iMaxType = sRange[1][0] != '\0' ? StringToInt(sRange[1]) : ST_MAXTYPES;
+	int iMaxType = (sRange[1][0] != '\0') ? StringToInt(sRange[1]) : ST_MAXTYPES;
 	iMaxType = iSetCellLimit(iMaxType, 1, ST_MAXTYPES);
 	for (int iIndex = iMinType; iIndex <= iMaxType; iIndex++)
 	{
@@ -818,11 +847,6 @@ public Action cmdTankList(int client, int args)
 		}
 		PrintToConsole(client, "%d. Name: %s, Status: %s, Mode: %s", iIndex, sName, sStatus, sMode);
 	}
-	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
-	{
-		PrintToChat(client, "\x04%s\x01 See console for output.", ST_PREFIX);
-	}
-	return Plugin_Handled;
 }
 
 void vPluginStatus()
@@ -916,9 +940,9 @@ void vLoadConfigs(char[] savepath, bool main = false)
 	char sTypeRange[10], sRange[2][5];
 	sTypeRange = main ? g_sTypeRange : g_sTypeRange2;
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
-	int iMinType = sRange[0][0] != '\0' ? StringToInt(sRange[0]) : 1;
+	int iMinType = (sRange[0][0] != '\0') ? StringToInt(sRange[0]) : 1;
 	iMinType = iSetCellLimit(iMinType, 1, ST_MAXTYPES);
-	int iMaxType = sRange[1][0] != '\0' ? StringToInt(sRange[1]) : ST_MAXTYPES;
+	int iMaxType = (sRange[1][0] != '\0') ? StringToInt(sRange[1]) : ST_MAXTYPES;
 	iMaxType = iSetCellLimit(iMaxType, 1, ST_MAXTYPES);
 	for (int iIndex = iMinType; iIndex <= iMaxType; iIndex++)
 	{
@@ -930,6 +954,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (kvSuperTanks.GetString("General/Tank Name", g_sCustomName[iIndex], sizeof(g_sCustomName[]), sName)) : (kvSuperTanks.GetString("General/Tank Name", g_sCustomName2[iIndex], sizeof(g_sCustomName2[]), g_sCustomName[iIndex]));
 			main ? (g_iTankEnabled[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", 0)) : (g_iTankEnabled2[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", g_iTankEnabled[iIndex]));
 			main ? (g_iTankEnabled[iIndex] = iSetCellLimit(g_iTankEnabled[iIndex], 0, 1)) : (g_iTankEnabled2[iIndex] = iSetCellLimit(g_iTankEnabled2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("General/Tank Note", g_sTankNote[iIndex], sizeof(g_sTankNote[]), "")) : (kvSuperTanks.GetString("General/Tank Note", g_sTankNote2[iIndex], sizeof(g_sTankNote2[]), g_sTankNote[iIndex]));
 			main ? (kvSuperTanks.GetString("General/Boss Health Stages", g_sBossHealthStages[iIndex], sizeof(g_sBossHealthStages[]), "5000,2500,1500,1000,500")) : (kvSuperTanks.GetString("General/Boss Health Stages", g_sBossHealthStages2[iIndex], sizeof(g_sBossHealthStages2[]), g_sBossHealthStages[iIndex]));
 			main ? (g_iBossStages[iIndex] = kvSuperTanks.GetNum("General/Boss Stages", 3)) : (g_iBossStages2[iIndex] = kvSuperTanks.GetNum("General/Boss Stages", g_iBossStages[iIndex]));
 			main ? (g_iBossStages[iIndex] = iSetCellLimit(g_iBossStages[iIndex], 1, 5)) : (g_iBossStages2[iIndex] = iSetCellLimit(g_iBossStages2[iIndex], 1, 5));
@@ -937,6 +962,8 @@ void vLoadConfigs(char[] savepath, bool main = false)
 			main ? (g_flRandomInterval[iIndex] = flSetFloatLimit(g_flRandomInterval[iIndex], 0.1, 9999999999.0)) : (g_flRandomInterval2[iIndex] = flSetFloatLimit(g_flRandomInterval2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iSpawnMode[iIndex] = kvSuperTanks.GetNum("General/Spawn Mode", 0)) : (g_iSpawnMode2[iIndex] = kvSuperTanks.GetNum("General/Spawn Mode", g_iSpawnMode[iIndex]));
 			main ? (g_iSpawnMode[iIndex] = iSetCellLimit(g_iSpawnMode[iIndex], 0, 2)) : (g_iSpawnMode2[iIndex] = iSetCellLimit(g_iSpawnMode2[iIndex], 0, 2));
+			main ? (g_iFinaleTank[iIndex] = kvSuperTanks.GetNum("General/Finale Tank", 0)) : (g_iFinaleTank2[iIndex] = kvSuperTanks.GetNum("General/Finale Tank", g_iFinaleTank[iIndex]));
+			main ? (g_iFinaleTank[iIndex] = iSetCellLimit(g_iFinaleTank[iIndex], 0, 1)) : (g_iFinaleTank2[iIndex] = iSetCellLimit(g_iFinaleTank2[iIndex], 0, 1));
 			main ? (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
 			main ? (g_iGlowEffect[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", 1)) : (g_iGlowEffect2[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", g_iGlowEffect[iIndex]));
 			main ? (g_iGlowEffect[iIndex] = iSetCellLimit(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iSetCellLimit(g_iGlowEffect2[iIndex], 0, 1));
@@ -1004,14 +1031,15 @@ void vBoss(int client, int limit, int stages, int stage)
 		char sTypeRange[10], sRange[2][5];
 		sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 		ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
-		int iMinType = sRange[0][0] != '\0' ? StringToInt(sRange[0]) : 1;
+		int iMinType = (sRange[0][0] != '\0') ? StringToInt(sRange[0]) : 1;
 		iMinType = iSetCellLimit(iMinType, 1, ST_MAXTYPES);
-		int iMaxType = sRange[1][0] != '\0' ? StringToInt(sRange[1]) : ST_MAXTYPES;
+		int iMaxType = (sRange[1][0] != '\0') ? StringToInt(sRange[1]) : ST_MAXTYPES;
 		iMaxType = iSetCellLimit(iMaxType, 1, ST_MAXTYPES);
 		for (int iIndex = iMinType; iIndex <= iMaxType; iIndex++)
 		{
-			int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
-			if (iTankEnabled == 0 || g_iTankType[client] == iIndex)
+			int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex],
+				iFinaleTank = !g_bTankConfig[iIndex] ? g_iFinaleTank[iIndex] : g_iFinaleTank2[iIndex];
+			if (iTankEnabled == 0 || (iFinaleTank == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[client] == iIndex)
 			{
 				continue;
 			}
@@ -1479,33 +1507,36 @@ void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mod
 				}
 			}
 		}
-		if (IsFakeClient(client))
+		SetClientName(client, name);
+		int iAnnounceArrival = !g_bGeneralConfig ? g_iAnnounceArrival : g_iAnnounceArrival2;
+		if (iAnnounceArrival == 1)
 		{
-			SetClientName(client, name);
-			int iAnnounceArrival = !g_bGeneralConfig ? g_iAnnounceArrival : g_iAnnounceArrival2;
-			if (iAnnounceArrival == 1)
+			switch (mode)
 			{
-				switch (mode)
+				case 0:
 				{
-					case 0:
+					switch (GetRandomInt(1, 10))
 					{
-						switch (GetRandomInt(1, 10))
-						{
-							case 1: PrintToChatAll("\x04%s\x05 %s\x01 has appeared!", ST_PREFIX, name);
-							case 2: PrintToChatAll("\x04%s\x01 Here comes\x05 %s\x01!", ST_PREFIX, name);
-							case 3: PrintToChatAll("\x04%s\x05 %s\x01 is ready to kill!", ST_PREFIX, name);
-							case 4: PrintToChatAll("\x04%s\x01 Are you ready to face\x05 %s\x01?", ST_PREFIX, name);
-							case 5: PrintToChatAll("\x04%s\x05 %s\x01 came for a challenge!", ST_PREFIX, name);
-							case 6: PrintToChatAll("\x04%s\x01 Get ready!\x05 %s\x01 is coming!", ST_PREFIX, name);
-							case 7: PrintToChatAll("\x04%s\x05 %s\x01 is here!", ST_PREFIX, name);
-							case 8: PrintToChatAll("\x04%s\x01 Oh no!\x05 %s\x01 is nearing!", ST_PREFIX, name);
-							case 9: PrintToChatAll("\x04%s\x05 %s\x01 joined the game...", ST_PREFIX, name);
-							case 10: PrintToChatAll("\x04%s\x01 It seems\x05 %s\x01 is joining your company...", ST_PREFIX, name);
-						}
+						case 1: PrintToChatAll("\x04%s\x05 %s\x01 has appeared!", ST_PREFIX, name);
+						case 2: PrintToChatAll("\x04%s\x01 Here comes\x05 %s\x01!", ST_PREFIX, name);
+						case 3: PrintToChatAll("\x04%s\x05 %s\x01 is ready to kill!", ST_PREFIX, name);
+						case 4: PrintToChatAll("\x04%s\x01 Are you ready to face\x05 %s\x01?", ST_PREFIX, name);
+						case 5: PrintToChatAll("\x04%s\x05 %s\x01 came for a challenge!", ST_PREFIX, name);
+						case 6: PrintToChatAll("\x04%s\x01 Get ready!\x05 %s\x01 is coming!", ST_PREFIX, name);
+						case 7: PrintToChatAll("\x04%s\x05 %s\x01 is here!", ST_PREFIX, name);
+						case 8: PrintToChatAll("\x04%s\x01 Oh no!\x05 %s\x01 is nearing!", ST_PREFIX, name);
+						case 9: PrintToChatAll("\x04%s\x05 %s\x01 joined the game...", ST_PREFIX, name);
+						case 10: PrintToChatAll("\x04%s\x01 It seems\x05 %s\x01 is joining your company...", ST_PREFIX, name);
 					}
-					case 1: PrintToChatAll("\x04%s\x05 %s\x03 evolved into\x05 %s\x04 (Stage %d)\x03!", ST_PREFIX, oldname, name, g_iBossStageCount[client]);
-					case 2: PrintToChatAll("\x04%s\x05 %s\x03 transformed into\x05 %s\x03!", ST_PREFIX, oldname, name);
 				}
+				case 1: PrintToChatAll("\x04%s\x05 %s\x03 evolved into\x05 %s\x04 (Stage %d)\x03!", ST_PREFIX, oldname, name, g_iBossStageCount[client]);
+				case 2: PrintToChatAll("\x04%s\x05 %s\x03 transformed into\x05 %s\x03!", ST_PREFIX, oldname, name);
+			}
+			char sTankNote[256];
+			sTankNote = !g_bTankConfig[g_iTankType[client]] ? g_sTankNote[g_iTankType[client]] : g_sTankNote2[g_iTankType[client]];
+			if (sTankNote[0] != '\0')
+			{
+				PrintToChatAll("\x04%s\x03 %s", ST_PREFIX, sTankNote);
 			}
 		}
 	}
@@ -1762,14 +1793,15 @@ public Action tTimerRandomize(Handle timer, any userid)
 	char sTypeRange[10], sRange[2][5];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
-	int iMinType = sRange[0][0] != '\0' ? StringToInt(sRange[0]) : 1;
+	int iMinType = (sRange[0][0] != '\0') ? StringToInt(sRange[0]) : 1;
 	iMinType = iSetCellLimit(iMinType, 1, ST_MAXTYPES);
-	int iMaxType = sRange[1][0] != '\0' ? StringToInt(sRange[1]) : ST_MAXTYPES;
+	int iMaxType = (sRange[1][0] != '\0') ? StringToInt(sRange[1]) : ST_MAXTYPES;
 	iMaxType = iSetCellLimit(iMaxType, 1, ST_MAXTYPES);
 	for (int iIndex = iMinType; iIndex <= iMaxType; iIndex++)
 	{
-		int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex];
-		if (iTankEnabled == 0 || g_iTankType[iTank] == iIndex)
+		int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex],
+			iFinaleTank = !g_bTankConfig[iIndex] ? g_iFinaleTank[iIndex] : g_iFinaleTank2[iIndex];
+		if (iTankEnabled == 0 || (iFinaleTank == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
 		{
 			continue;
 		}

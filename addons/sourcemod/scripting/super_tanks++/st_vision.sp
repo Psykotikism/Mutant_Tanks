@@ -152,6 +152,7 @@ void vVisionHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(0.1, tTimerVision, dpVision, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpVision.WriteCell(GetClientUserId(client));
 		dpVision.WriteCell(GetClientUserId(owner));
+		dpVision.WriteCell(enabled);
 		dpVision.WriteFloat(GetEngineTime());
 	}
 }
@@ -173,9 +174,9 @@ public Action tTimerVision(Handle timer, DataPack pack)
 		SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", 90);
 		return Plugin_Stop;
 	}
+	int iVisionAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flVisionDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flVisionDuration[ST_TankType(iTank)] : g_flVisionDuration2[ST_TankType(iTank)];
-	int iVisionAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iVisionAbility[ST_TankType(iTank)] : g_iVisionAbility2[ST_TankType(iTank)];
 	if (iVisionAbility == 0 || (flTime + flVisionDuration) < GetEngineTime())
 	{
 		g_bVision[iSurvivor] = false;

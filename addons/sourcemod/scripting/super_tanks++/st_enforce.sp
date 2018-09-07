@@ -187,6 +187,7 @@ void vEnforceHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flEnforceDuration, tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopEnforce.WriteCell(GetClientUserId(client));
 		dpStopEnforce.WriteCell(GetClientUserId(owner));
+		dpStopEnforce.WriteCell(enabled);
 	}
 }
 
@@ -228,7 +229,7 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 		g_bEnforce[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iEnforceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iEnforceAbility[ST_TankType(iTank)] : g_iEnforceAbility2[ST_TankType(iTank)];
+	int iEnforceAbility = pack.ReadCell();
 	if (iEnforceAbility == 0)
 	{
 		g_bEnforce[iSurvivor] = false;

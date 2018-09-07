@@ -179,6 +179,7 @@ void vDrugHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(1.0, tTimerDrug, dpDrug, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDrug.WriteCell(GetClientUserId(client));
 		dpDrug.WriteCell(GetClientUserId(owner));
+		dpDrug.WriteCell(enabled);
 		dpDrug.WriteFloat(GetEngineTime());
 	}
 }
@@ -210,9 +211,9 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 		vDrug(iSurvivor, false, g_flDrugAngles);
 		return Plugin_Stop;
 	}
+	int iDrugAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flDrugDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flDrugDuration[ST_TankType(iTank)] : g_flDrugDuration2[ST_TankType(iTank)];
-	int iDrugAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iDrugAbility[ST_TankType(iTank)] : g_iDrugAbility2[ST_TankType(iTank)];
 	if (iDrugAbility == 0 || (flTime + flDrugDuration) < GetEngineTime())
 	{
 		g_bDrug[iSurvivor] = false;

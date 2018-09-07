@@ -149,6 +149,7 @@ void vShakeHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(1.0, tTimerShake, dpShake, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpShake.WriteCell(GetClientUserId(client));
 		dpShake.WriteCell(GetClientUserId(owner));
+		dpShake.WriteCell(enabled);
 		dpShake.WriteFloat(GetEngineTime());
 	}
 }
@@ -168,9 +169,9 @@ public Action tTimerShake(Handle timer, DataPack pack)
 		g_bShake[iSurvivor] = false;
 		return Plugin_Stop;
 	}
+	int iShakeAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flShakeDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShakeDuration[ST_TankType(iTank)] : g_flShakeDuration2[ST_TankType(iTank)];
-	int iShakeAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShakeAbility[ST_TankType(iTank)] : g_iShakeAbility2[ST_TankType(iTank)];
 	if (iShakeAbility == 0 || (flTime + flShakeDuration) < GetEngineTime())
 	{
 		g_bShake[iSurvivor] = false;

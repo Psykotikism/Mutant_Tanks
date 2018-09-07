@@ -167,6 +167,7 @@ void vNullifyHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flNullifyDuration, tTimerStopNullify, dpStopNullify, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopNullify.WriteCell(GetClientUserId(client));
 		dpStopNullify.WriteCell(GetClientUserId(owner));
+		dpStopNullify.WriteCell(enabled);
 	}
 }
 
@@ -207,7 +208,7 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 		g_bNullify[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iNullifyAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iNullifyAbility[ST_TankType(iTank)] : g_iNullifyAbility2[ST_TankType(iTank)];
+	int iNullifyAbility = pack.ReadCell();
 	if (iNullifyAbility == 0)
 	{
 		g_bNullify[iSurvivor] = false;

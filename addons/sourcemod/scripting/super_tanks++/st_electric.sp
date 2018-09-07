@@ -174,6 +174,7 @@ void vElectricHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flElectricInterval, tTimerElectric, dpElectric, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpElectric.WriteCell(GetClientUserId(client));
 		dpElectric.WriteCell(GetClientUserId(owner));
+		dpElectric.WriteCell(enabled);
 		dpElectric.WriteFloat(GetEngineTime());
 		vAttachParticle(client, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	}
@@ -217,9 +218,9 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		return Plugin_Stop;
 	}
+	int iElectricAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flElectricDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flElectricDuration[ST_TankType(iTank)] : g_flElectricDuration2[ST_TankType(iTank)];
-	int iElectricAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iElectricAbility[ST_TankType(iTank)] : g_iElectricAbility2[ST_TankType(iTank)];
 	if (iElectricAbility == 0 || (flTime + flElectricDuration) < GetEngineTime())
 	{
 		g_bElectric[iSurvivor] = false;

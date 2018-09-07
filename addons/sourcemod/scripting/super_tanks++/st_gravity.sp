@@ -193,6 +193,7 @@ void vGravityHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flGravityDuration, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopGravity.WriteCell(GetClientUserId(client));
 		dpStopGravity.WriteCell(GetClientUserId(owner));
+		dpStopGravity.WriteCell(enabled);
 	}
 }
 
@@ -255,7 +256,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 		SetEntityGravity(iSurvivor, 1.0);
 		return Plugin_Stop;
 	}
-	int iGravityAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGravityAbility[ST_TankType(iTank)] : g_iGravityAbility2[ST_TankType(iTank)];
+	int iGravityAbility = pack.ReadCell();
 	if (iGravityAbility == 0)
 	{
 		g_bGravity2[iSurvivor] = false;

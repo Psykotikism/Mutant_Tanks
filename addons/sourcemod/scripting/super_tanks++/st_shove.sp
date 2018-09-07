@@ -164,6 +164,7 @@ void vShoveHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(1.0, tTimerShove, dpShove, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpShove.WriteCell(GetClientUserId(client));
 		dpShove.WriteCell(GetClientUserId(owner));
+		dpShove.WriteCell(enabled);
 		dpShove.WriteFloat(GetEngineTime());
 	}
 }
@@ -183,9 +184,9 @@ public Action tTimerShove(Handle timer, DataPack pack)
 		g_bShove[iSurvivor] = false;
 		return Plugin_Stop;
 	}
+	int iShoveAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flShoveDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShoveDuration[ST_TankType(iTank)] : g_flShoveDuration2[ST_TankType(iTank)];
-	int iShoveAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShoveAbility[ST_TankType(iTank)] : g_iShoveAbility2[ST_TankType(iTank)];
 	if (iShoveAbility == 0 || (flTime + flShoveDuration) < GetEngineTime())
 	{
 		g_bShove[iSurvivor] = false;

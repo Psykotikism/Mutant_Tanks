@@ -163,6 +163,7 @@ void vRemoveStun(int client)
 			CreateDataTimer(0.1, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopStun.WriteCell(GetClientUserId(iSurvivor));
 			dpStopStun.WriteCell(GetClientUserId(client));
+			dpStopStun.WriteCell(1);
 		}
 	}
 }
@@ -190,6 +191,7 @@ void vStunHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flStunDuration, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopStun.WriteCell(GetClientUserId(client));
 		dpStopStun.WriteCell(GetClientUserId(owner));
+		dpStopStun.WriteCell(enabled);
 	}
 }
 
@@ -209,7 +211,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		return Plugin_Stop;
 	}
-	int iStunAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iStunAbility[ST_TankType(iTank)] : g_iStunAbility2[ST_TankType(iTank)];
+	int iStunAbility = pack.ReadCell();
 	if (iStunAbility == 0)
 	{
 		g_bStun[iSurvivor] = false;

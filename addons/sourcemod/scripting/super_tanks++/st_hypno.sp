@@ -180,6 +180,7 @@ void vHypnoHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flHypnoDuration, tTimerStopHypno, dpStopHypno, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopHypno.WriteCell(GetClientUserId(client));
 		dpStopHypno.WriteCell(GetClientUserId(owner));
+		dpStopHypno.WriteCell(enabled);
 	}
 }
 
@@ -220,7 +221,7 @@ public Action tTimerStopHypno(Handle timer, DataPack pack)
 		g_bHypno[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iHypnoAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHypnoAbility[ST_TankType(iTank)] : g_iHypnoAbility2[ST_TankType(iTank)];
+	int iHypnoAbility = pack.ReadCell();
 	if (iHypnoAbility == 0)
 	{
 		g_bHypno[iSurvivor] = false;

@@ -142,6 +142,7 @@ void vPimpHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(0.5, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpPimp.WriteCell(GetClientUserId(client));
 		dpPimp.WriteCell(GetClientUserId(owner));
+		dpPimp.WriteCell(enabled);
 	}
 }
 
@@ -174,7 +175,7 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		g_iPimpCount[iSurvivor] = 0;
 		return Plugin_Stop;
 	}
-	int iPimpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAbility[ST_TankType(iTank)] : g_iPimpAbility2[ST_TankType(iTank)],
+	int iPimpAbility = pack.ReadCell(),
 		iPimpAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAmount[ST_TankType(iTank)] : g_iPimpAmount2[ST_TankType(iTank)];
 	if (iPimpAbility == 0 || g_iPimpCount[iSurvivor] >= iPimpAmount)
 	{

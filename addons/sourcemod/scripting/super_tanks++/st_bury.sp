@@ -191,6 +191,7 @@ void vBuryHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flBuryDuration, tTimerStopBury, dpStopBury, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopBury.WriteCell(GetClientUserId(client));
 		dpStopBury.WriteCell(GetClientUserId(owner));
+		dpStopBury.WriteCell(enabled);
 	}
 }
 
@@ -204,6 +205,7 @@ void vRemoveBury(int client)
 			CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
 			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
 			dpDataPack.WriteCell(GetClientUserId(client));
+			dpDataPack.WriteCell(1);
 		}
 	}
 }
@@ -265,7 +267,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 		vStopBury(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
-	int iBuryAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBuryAbility[ST_TankType(iTank)] : g_iBuryAbility2[ST_TankType(iTank)];
+	int iBuryAbility = pack.ReadCell();
 	if (iBuryAbility == 0)
 	{
 		vStopBury(iSurvivor, iTank);

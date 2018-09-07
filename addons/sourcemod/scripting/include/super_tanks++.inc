@@ -12,7 +12,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.38"
+#define ST_VERSION "8.39"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 5000
 #define ST_MAXHEALTH 65535
@@ -240,6 +240,12 @@ native bool ST_TankAllowed(int client);
  * @return				The Tank's Super Tank type.
  */
 native int ST_TankType(int client);
+
+/* Returns the current finale wave.
+ *
+ * @return				The current finale wave.
+ */
+native int ST_TankWave();
 
 // Checks
 stock bool bHasIdlePlayer(int client)
