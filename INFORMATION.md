@@ -847,6 +847,12 @@
 			// Minimum: 1
 			// Maximum: 65535
 			"Clone Health"					"1000"
+
+			// The Super Tank's clones will be treated as real Super Tanks.
+			// --
+			// 0: OFF, clones cannot use abilities like real Super Tanks.
+			// 1: ON, clones can use abilities like real Super Tanks.
+			"Clone Mode"					"0"
 		}
 	}
 }

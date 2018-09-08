@@ -17,7 +17,7 @@ Super Tanks++ makes fighting Tanks great again!
 > Super Tanks++ will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
 ### What makes Super Tanks++ viable in Left 4 Dead/Left 4 Dead 2?
-Super Tanks++ enhances the experience and fun that players get from Tank fights by 5000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
+Super Tanks++ enhances the experience and fun that players get from Tank fights by 5,000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
 1. SourceMod 1.8+
@@ -38,10 +38,11 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 2. Delete super_tanks++.txt from addons/sourcemod/gamedata folder.
 3. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/scripting folder.
 4. Delete super_tanks++.inc from addons/sourcemod/scripting/include folder.
-5. Delete super_tanks++ folder from cfg/sourcemod folder.
-6. Delete super_tanks++.cfg from cfg/sourcemod folder.
-7. Delete super_tanks++.phrases.txt from addons/sourcemod/translations folder.
-8. Follow the Installation guide above. (Only for upgrading to newer versions.)
+5. Delete st_clone.inc from addons/sourcemod/scripting/include folder.
+6. Delete super_tanks++ folder from cfg/sourcemod folder.
+7. Delete super_tanks++.cfg from cfg/sourcemod folder.
+8. Delete super_tanks++.phrases.txt from addons/sourcemod/translations folder.
+9. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
 ### Disabling
 1. Move super_tanks++ folder (super_tanks++.smx and all of its modules) to plugins/disabled folder.
@@ -51,7 +52,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 1. Supports multiple game modes - Provides the option to enable/disable the plugin in certain game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
 3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the auto-generated KeyValue config file and user-made Super Tanks.
-4. Create and save up to 5000 Super Tank types - Provides the ability to store up to 5000 Super Tank types that users can enable/disable.
+4. Create and save up to 5,000 Super Tank types - Provides the ability to store up to 5,000 Super Tank types that users can enable/disable.
 5. Easy-to-use config file - Provides a user-friendly KeyValues config file that users can easily understand and edit.
 6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
 7. Optional abilities - Provides the option to choose which abilities to install.
@@ -335,7 +336,7 @@ It may be due to one or more of the following:
 - You are still using the "Tank Character" KeyValue which is no longer used since v8.16.
 - You didn't set up the Super Tank properly.
 - You are missing quotation marks.
-- You have more than 5000 Super Tanks in your config file.
+- You have more than 5,000 Super Tanks in your config file.
 - You didn't format your config file properly.
 
 5. How do I kill the Tanks depending on what abilities they have?
@@ -374,7 +375,7 @@ Set the value in the "Extra Health" KeyValue.
 Example:
 
 ```
-"Extra Health" "5000" // Add 5000 to the Super Tank's health.
+"Extra Health" "5000" // Add 5,000 to the Super Tank's health.
 ```
 
 10. How do I adjust each Tank's run speed?
@@ -675,6 +676,17 @@ forward void ST_Spawn(int client);
 
 Natives:
 ```
+/* Returns whether the clone can use abilities.
+ *
+ * @param client		Client index of the Tank.
+ * @param clone			Checks whether "st_clone.smx"
+ *							is installed.
+ * @return				True on success, false if
+ *							clone is not allowed
+ *							to have abilities.
+ */
+native bool ST_CloneAllowed(int client, bool clone);
+
 /* Returns the maximum value of the "Type Range" setting.
  *
  * @return				The maximum value of the
@@ -744,7 +756,7 @@ Target filters:
 Commands:
 
 ```
-1. sm_tank <type 1-*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 5000 though.)
+1. sm_tank <type 1-*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 5,000 though.)
 2. sm_tanklist
 ```
 

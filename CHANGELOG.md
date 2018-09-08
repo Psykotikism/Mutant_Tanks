@@ -11,7 +11,9 @@ Changes:
 1. Added the "Finale Tank" setting to determine if a Super Tank only spawns during finales.
 2. Added the "Tank Note" setting which is displayed in chat after a Super Tank spawns.
 3. Added a new native: ST_TankWave() - Returns the current finale wave.
-4. Updated the Super Tanks++ category in the admin menu.
+4. Added the "Clone Mode" setting to determine if a Super Tank's clone can use abilities like real Super Tanks.
+5. Added the ST_CloneAllowed(int client, bool clone) native to check if a Super Tank's clone is allowed to use abilities like real Super Tanks.
+6. Updated the Super Tanks++ category in the admin menu.
 
 Files:
 
