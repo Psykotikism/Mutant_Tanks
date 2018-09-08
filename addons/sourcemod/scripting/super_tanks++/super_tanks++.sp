@@ -1054,7 +1054,7 @@ void vParticleEffects(int client)
 	int iParticleEffect = !g_bTankConfig[g_iTankType[client]] ? g_iParticleEffect[g_iTankType[client]] : g_iParticleEffect2[g_iTankType[client]];
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[client]] ? g_sParticleEffects[g_iTankType[client]] : g_sParticleEffects2[g_iTankType[client]];
-	if (iParticleEffect == 1 && bIsTankAllowed(client) && IsPlayerAlive(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iParticleEffect == 1 && bIsTankAllowed(client) && IsPlayerAlive(client))
 	{
 		if (StrContains(sParticleEffects, "1") != -1)
 		{
@@ -1173,7 +1173,7 @@ void vSetColor(int client, int value)
 
 void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mode)
 {
-	if (bIsTankAllowed(client) && IsPlayerAlive(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (bIsTankAllowed(client) && IsPlayerAlive(client))
 	{
 		char sSet[5][16], sPropsColors[80], sRGB[4][4], sRGB2[4][4], sRGB3[4][4], sRGB4[4][4], sRGB5[4][4];
 		sPropsColors = !g_bTankConfig[g_iTankType[client]] ? g_sPropsColors[g_iTankType[client]] : g_sPropsColors2[g_iTankType[client]];
@@ -1531,7 +1531,7 @@ void vTankCountCheck(int client, int wave)
 
 void vThrowInterval(int client, float time)
 {
-	if (bIsTankAllowed(client) && IsPlayerAlive(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (bIsTankAllowed(client) && IsPlayerAlive(client))
 	{
 		int iAbility = GetEntPropEnt(client, Prop_Send, "m_customAbility");
 		if (iAbility > 0)
@@ -1602,7 +1602,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 public Action tTimerBloodEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1620,7 +1620,7 @@ public Action tTimerBloodEffect(Handle timer, any userid)
 public Action tTimerBlurEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1671,7 +1671,7 @@ public Action tTimerBlurEffect(Handle timer, any userid)
 public Action tTimerElectricEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1689,7 +1689,7 @@ public Action tTimerElectricEffect(Handle timer, any userid)
 public Action tTimerFireEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1707,7 +1707,7 @@ public Action tTimerFireEffect(Handle timer, any userid)
 public Action tTimerIceEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1736,7 +1736,7 @@ public Action tTimerKillStuckTank(Handle timer, any userid)
 public Action tTimerMeteorEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1794,7 +1794,7 @@ public Action tTimerRandomize(Handle timer, any userid)
 public Action tTimerSmokeEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -1812,7 +1812,7 @@ public Action tTimerSmokeEffect(Handle timer, any userid)
 public Action tTimerSpitEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -2019,7 +2019,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -2062,7 +2062,7 @@ public Action tTimerRockThrow(Handle timer, any entity)
 		return Plugin_Stop;
 	}
 	int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-	if (iThrower == 0 || !bIsTankAllowed(iThrower) || !IsPlayerAlive(iThrower) || !ST_CloneAllowed(iThrower, g_bCloneInstalled))
+	if (iThrower == 0 || !bIsTankAllowed(iThrower) || !IsPlayerAlive(iThrower))
 	{
 		return Plugin_Stop;
 	}

@@ -120,7 +120,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -171,7 +171,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
