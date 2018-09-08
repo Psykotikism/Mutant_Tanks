@@ -132,8 +132,7 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iWarpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iWarpAbility[ST_TankType(client)] : g_iWarpAbility2[ST_TankType(client)];
-	if (iWarpAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bWarp[client])
+	if (iWarpAbility(client) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bWarp[client])
 	{
 		g_bWarp[client] = true;
 		float flWarpInterval = !g_bTankConfig[ST_TankType(client)] ? g_flWarpInterval[ST_TankType(client)] : g_flWarpInterval2[ST_TankType(client)];
@@ -171,6 +170,11 @@ void vWarpHit(int client, int owner)
 	}
 }
 
+int iWarpAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iWarpAbility[ST_TankType(client)] : g_iWarpAbility2[ST_TankType(client)];
+}
+
 public Action tTimerWarp(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -178,8 +182,7 @@ public Action tTimerWarp(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	int iWarpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpAbility[ST_TankType(iTank)] : g_iWarpAbility2[ST_TankType(iTank)];
-	if (iWarpAbility == 0)
+	if (iWarpAbility(iTank) == 0)
 	{
 		return Plugin_Stop;
 	}

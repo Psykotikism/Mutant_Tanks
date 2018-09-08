@@ -85,7 +85,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		return Plugin_Continue;
 	}
-	if (bIsSurvivor(client) && g_bInvert[client])
+	if (g_bInvert[client])
 	{
 		vel[0] = -vel[0];
 		if (buttons & IN_FORWARD)

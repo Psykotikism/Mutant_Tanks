@@ -150,7 +150,7 @@ public void ST_Ability(int client)
 		}
 		if (iVampireCount > 0)
 		{
-			if (iVampireAbility == 1 && GetRandomInt(1, iVampireRangeChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
+			if (GetRandomInt(1, iVampireRangeChance) == 1)
 			{
 				int iHealth = GetClientHealth(client),
 					iVampireHealth = !g_bTankConfig[ST_TankType(client)] ? (iHealth + g_iVampireHealth[ST_TankType(client)]) : (iHealth + g_iVampireHealth2[ST_TankType(client)]),

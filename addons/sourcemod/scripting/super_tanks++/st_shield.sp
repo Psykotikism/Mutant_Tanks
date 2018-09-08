@@ -137,9 +137,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
-		if (iShieldAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iShieldAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveShield(iTank);
 		}
@@ -148,8 +147,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_BossStage(int client)
 {
-	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (iShieldAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iShieldAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vRemoveShield(client);
 	}
@@ -157,8 +155,7 @@ public void ST_BossStage(int client)
 
 public void ST_Spawn(int client)
 {
-	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (iShieldAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bShield[client])
+	if (iShieldAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bShield[client])
 	{
 		vShield(client, true);
 	}
@@ -166,8 +163,7 @@ public void ST_Spawn(int client)
 
 public void ST_RockThrow(int client, int entity)
 {
-	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (iShieldAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (iShieldAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		DataPack dpShieldThrow = new DataPack();
 		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -261,6 +257,11 @@ void vShield(int client, bool shield)
 	}
 }
 
+int iShieldAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
+}
+
 public Action tTimerShield(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -268,8 +269,7 @@ public Action tTimerShield(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	int iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
-	if (iShieldAbility == 0)
+	if (iShieldAbility(iTank) == 0)
 	{
 		return Plugin_Stop;
 	}
@@ -290,8 +290,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	int iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
-	if (iShieldAbility == 0)
+	if (iShieldAbility(iTank) == 0)
 	{
 		return Plugin_Stop;
 	}

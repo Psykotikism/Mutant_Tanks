@@ -87,9 +87,8 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_RockThrow(int client, int entity)
 {
-	int iTrackAbility = !g_bTankConfig[ST_TankType(client)] ? g_iTrackAbility[ST_TankType(client)] : g_iTrackAbility2[ST_TankType(client)],
-		iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
-	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	int iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
+	if (iTrackAbility(client) == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		DataPack dpTrack = new DataPack();
 		CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
@@ -328,6 +327,11 @@ void vTrack(int entity)
 	}
 }
 
+int iTrackAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iTrackAbility[ST_TankType(client)] : g_iTrackAbility2[ST_TankType(client)];
+}
+
 public Action tTimerTrack(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -341,8 +345,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	int iTrackAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackAbility[ST_TankType(iTank)] : g_iTrackAbility2[ST_TankType(iTank)];
-	if (iTrackAbility == 0)
+	if (iTrackAbility(iTank) == 0)
 	{
 		return Plugin_Stop;
 	}
