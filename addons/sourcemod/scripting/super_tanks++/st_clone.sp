@@ -91,7 +91,7 @@ public void ST_Event(Event event, const char[] name)
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iCloneAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iCloneAbility[ST_TankType(iTank)] : g_iCloneAbility2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank) && iCloneAbility == 1)
+		if (iCloneAbility == 1 && ST_TankAllowed(iTank))
 		{
 			g_iCloneCount[iTank] = 0;
 		}
