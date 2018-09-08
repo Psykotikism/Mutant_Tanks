@@ -1,7 +1,8 @@
 // Super Tanks++: Medic Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sMedicHealth[ST_MAXTYPES + 1][36], g_sMedicHealth2[ST_MAXTYPES + 1][36], g_sMedicMaxHealth[ST_MAXTYPES + 1][36], g_sMedicMaxHealth2[ST_MAXTYPES + 1][36];
 float g_flMedicRange[ST_MAXTYPES + 1], g_flMedicRange2[ST_MAXTYPES + 1];
 int g_iMedicAbility[ST_MAXTYPES + 1], g_iMedicAbility2[ST_MAXTYPES + 1], g_iMedicChance[ST_MAXTYPES + 1], g_iMedicChance2[ST_MAXTYPES + 1];
@@ -28,6 +29,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void ST_Configs(char[] savepath, bool main)
@@ -62,7 +84,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iMedicAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iMedicAbility[ST_TankType(iTank)] : g_iMedicAbility2[ST_TankType(iTank)],
 			iMedicChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iMedicChance[ST_TankType(iTank)] : g_iMedicChance2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank) && iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1)
+		if (iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vMedic(iTank);
 		}
@@ -73,7 +95,7 @@ public void ST_BossStage(int client)
 {
 	int iMedicAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMedicAbility[ST_TankType(client)] : g_iMedicAbility2[ST_TankType(client)],
 		iMedicChance = !g_bTankConfig[ST_TankType(client)] ? g_iMedicChance[ST_TankType(client)] : g_iMedicChance2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1)
+	if (iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vMedic(client);
 	}

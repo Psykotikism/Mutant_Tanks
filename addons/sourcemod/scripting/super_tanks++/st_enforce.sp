@@ -1,7 +1,8 @@
 // Super Tanks++: Enforce Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bEnforce[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bEnforce[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sEnforceSlot[ST_MAXTYPES + 1][6], g_sEnforceSlot2[ST_MAXTYPES + 1][6];
 float g_flEnforceDuration[ST_MAXTYPES + 1], g_flEnforceDuration2[ST_MAXTYPES + 1], g_flEnforceRange[ST_MAXTYPES + 1], g_flEnforceRange2[ST_MAXTYPES + 1];
 int g_iEnforceAbility[ST_MAXTYPES + 1], g_iEnforceAbility2[ST_MAXTYPES + 1], g_iEnforceChance[ST_MAXTYPES + 1], g_iEnforceChance2[ST_MAXTYPES + 1], g_iEnforceHit[ST_MAXTYPES + 1], g_iEnforceHit2[ST_MAXTYPES + 1], g_iEnforceRangeChance[ST_MAXTYPES + 1], g_iEnforceRangeChance2[ST_MAXTYPES + 1], g_iEnforceSlot[MAXPLAYERS + 1];
@@ -29,6 +30,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	g_bLateLoad = late;
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnMapStart()
@@ -77,7 +99,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -127,7 +149,7 @@ public void ST_Event(Event event, const char[] name)
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iEnforceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iEnforceAbility[ST_TankType(iTank)] : g_iEnforceAbility2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank) && iEnforceAbility == 1)
+		if (iEnforceAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveEnforce();
 		}
@@ -136,7 +158,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		int iEnforceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceAbility[ST_TankType(client)] : g_iEnforceAbility2[ST_TankType(client)],
 			iEnforceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceChance[ST_TankType(client)] : g_iEnforceChance2[ST_TankType(client)];
@@ -162,7 +184,7 @@ public void ST_Ability(int client)
 public void ST_BossStage(int client)
 {
 	int iEnforceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceAbility[ST_TankType(client)] : g_iEnforceAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iEnforceAbility == 1)
+	if (iEnforceAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vRemoveEnforce();
 	}
@@ -224,7 +246,7 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bEnforce[iSurvivor] = false;
 		return Plugin_Stop;

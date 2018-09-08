@@ -1,7 +1,8 @@
 // Super Tanks++: Track Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 float g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
 int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
@@ -28,6 +29,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void Think(int entity)
@@ -67,7 +89,7 @@ public void ST_RockThrow(int client, int entity)
 {
 	int iTrackAbility = !g_bTankConfig[ST_TankType(client)] ? g_iTrackAbility[ST_TankType(client)] : g_iTrackAbility2[ST_TankType(client)],
 		iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
-	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (iTrackAbility == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		DataPack dpTrack = new DataPack();
 		CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
@@ -315,7 +337,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}

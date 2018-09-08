@@ -1,7 +1,8 @@
 // Super Tanks++: Pyro Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flPyroBoost[ST_MAXTYPES + 1], g_flPyroBoost2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1];
 int g_iPyroAbility[ST_MAXTYPES + 1], g_iPyroAbility2[ST_MAXTYPES + 1];
 
@@ -28,6 +29,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	g_bLateLoad = late;
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnMapStart()
@@ -54,7 +76,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && IsPlayerAlive(victim))
+		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim))
 		{
 			int iPyroAbility = !g_bTankConfig[ST_TankType(victim)] ? g_iPyroAbility[ST_TankType(victim)] : g_iPyroAbility2[ST_TankType(victim)];
 			float flPyroBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroBoost[ST_TankType(victim)] : g_flPyroBoost2[ST_TankType(victim)],

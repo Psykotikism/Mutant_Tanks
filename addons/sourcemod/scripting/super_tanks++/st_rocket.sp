@@ -1,7 +1,8 @@
 // Super Tanks++: Rocket Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flRocketRange[ST_MAXTYPES + 1], g_flRocketRange2[ST_MAXTYPES + 1];
 int g_iRocket[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketAbility2[ST_MAXTYPES + 1], g_iRocketChance[ST_MAXTYPES + 1], g_iRocketChance2[ST_MAXTYPES + 1],
 	g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHit2[ST_MAXTYPES + 1], g_iRocketRangeChance[ST_MAXTYPES + 1], g_iRocketRangeChance2[ST_MAXTYPES + 1], g_iRocketSprite = -1;
@@ -29,6 +30,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	g_bLateLoad = late;
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnMapStart()
@@ -59,7 +81,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -102,7 +124,7 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		int iRocketAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRocketAbility[ST_TankType(client)] : g_iRocketAbility2[ST_TankType(client)],
 			iRocketRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iRocketChance[ST_TankType(client)] : g_iRocketChance2[ST_TankType(client)];
@@ -177,7 +199,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -204,7 +226,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}

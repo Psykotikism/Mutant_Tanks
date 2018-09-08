@@ -1,7 +1,8 @@
 // Super Tanks++: Drop Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bDrop[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bDrop[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sWeaponClass[32][128], g_sWeaponModel[32][128];
 ConVar g_cvSTAssaultRifleAmmo, g_cvSTAutoShotgunAmmo, g_cvSTGrenadeLauncherAmmo, g_cvSTHuntingRifleAmmo, g_cvSTShotgunAmmo, g_cvSTSMGAmmo, g_cvSTSniperRifleAmmo;
 float g_flDropWeaponScale[ST_MAXTYPES + 1], g_flDropWeaponScale2[ST_MAXTYPES + 1];
@@ -30,6 +31,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnPluginStart()
@@ -183,16 +205,6 @@ public void OnMapEnd()
 	vReset();
 }
 
-public Action SetTransmit(int entity, int client)
-{
-	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (iOwner == client)
-	{
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
-
 public void ST_Configs(char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -227,7 +239,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iDropAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropAbility[ST_TankType(iTank)] : g_iDropAbility2[ST_TankType(iTank)],
 			iDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropChance[ST_TankType(iTank)] : g_iDropChance2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank) && iDropAbility == 1 && GetRandomInt(1, iDropChance) == 1 && bIsValidEntity(g_iDrop[iTank]))
+		if (iDropAbility == 1 && GetRandomInt(1, iDropChance) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsValidEntity(g_iDrop[iTank]))
 		{
 			int iDropMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMode[ST_TankType(iTank)] : g_iDropMode2[ST_TankType(iTank)];
 			float flDropWeaponScale = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropWeaponScale[ST_TankType(iTank)] : g_flDropWeaponScale[ST_TankType(iTank)],
@@ -316,7 +328,7 @@ public void ST_BossStage(int client)
 public void ST_Spawn(int client)
 {
 	int iDropAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
-	if (iDropAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bDrop[client])
+	if (iDropAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bDrop[client])
 	{
 		g_bDrop[client] = true;
 		CreateTimer(1.0, tTimerDrop, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
@@ -327,7 +339,6 @@ void vDeleteDrop(int client)
 {
 	if (bIsValidEntity(g_iDrop[client]))
 	{
-		SDKUnhook(g_iDrop[client], SDKHook_SetTransmit, SetTransmit);
 		AcceptEntityInput(g_iDrop[client], "Kill");
 	}
 	g_iDrop[client] = 0;
@@ -354,7 +365,7 @@ void vResetDrop(int client)
 public Action tTimerDrop(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bDrop[iTank] = false;
 		return Plugin_Stop;
@@ -483,7 +494,6 @@ public Action tTimerDrop(Handle timer, any userid)
 		}
 		g_iDrop[iTank] = iDrop;
 		g_iDropWeapon[iTank] = iWeapon;
-		SDKHook(g_iDrop[iTank], SDKHook_SetTransmit, SetTransmit);
 	}
 	return Plugin_Continue;
 }

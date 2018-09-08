@@ -1,7 +1,8 @@
 // Super Tanks++: Shield Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad, g_bShield[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLateLoad, g_bShield[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sShieldColor[ST_MAXTYPES + 1][12], g_sShieldColor2[ST_MAXTYPES + 1][12];
 ConVar g_cvSTTankThrowForce;
 float g_flShieldDelay[ST_MAXTYPES + 1], g_flShieldDelay2[ST_MAXTYPES + 1];
@@ -30,6 +31,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	g_bLateLoad = late;
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnPluginStart()
@@ -70,7 +92,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (g_bShield[victim])
 			{
@@ -85,16 +107,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 			}
 		}
-	}
-	return Plugin_Continue;
-}
-
-public Action SetTransmit(int entity, int client)
-{
-	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (iOwner == client)
-	{
-		return Plugin_Handled;
 	}
 	return Plugin_Continue;
 }
@@ -123,33 +135,11 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "ability_use") == 0)
-	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank) && IsPlayerAlive(iTank))
-		{
-			int iProp = -1;
-			while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-			{
-				char sModel[128];
-				GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (strcmp(sModel, MODEL_SHIELD, false) == 0)
-				{
-					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iTank)
-					{
-						SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
-					}
-				}
-			}
-		}
-	}
-	else if (strcmp(name, "player_death") == 0)
+	if (strcmp(name, "player_death") == 0)
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iShieldAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iShieldAbility[ST_TankType(iTank)] : g_iShieldAbility2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank) && iShieldAbility == 1)
+		if (iShieldAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveShield(iTank);
 		}
@@ -159,7 +149,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_BossStage(int client)
 {
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iShieldAbility == 1)
+	if (iShieldAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vRemoveShield(client);
 	}
@@ -168,7 +158,7 @@ public void ST_BossStage(int client)
 public void ST_Spawn(int client)
 {
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (iShieldAbility == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bShield[client])
+	if (iShieldAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bShield[client])
 	{
 		vShield(client, true);
 	}
@@ -177,7 +167,7 @@ public void ST_Spawn(int client)
 public void ST_RockThrow(int client, int entity)
 {
 	int iShieldAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && IsPlayerAlive(client) && iShieldAbility == 1)
+	if (iShieldAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		DataPack dpShieldThrow = new DataPack();
 		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -198,7 +188,6 @@ void vRemoveShield(int client)
 			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 			if (iOwner == client)
 			{
-				SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
 				AcceptEntityInput(iProp, "Kill");
 			}
 		}
@@ -247,7 +236,6 @@ void vShield(int client, bool shield)
 			SetEntityRenderColor(iShield, iRed, iGreen, iBlue, 50);
 			SetEntProp(iShield, Prop_Send, "m_CollisionGroup", 1);
 			SetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity", client);
-			SDKHook(iShield, SDKHook_SetTransmit, SetTransmit);
 		}
 		g_bShield[client] = true;
 	}
@@ -263,7 +251,6 @@ void vShield(int client, bool shield)
 				int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == client)
 				{
-					SDKUnhook(iShield, SDKHook_SetTransmit, SetTransmit);
 					AcceptEntityInput(iShield, "Kill");
 				}
 			}
@@ -277,7 +264,7 @@ void vShield(int client, bool shield)
 public Action tTimerShield(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || g_bShield[iTank])
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || g_bShield[iTank] || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -299,7 +286,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -327,15 +314,5 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		}
 		return Plugin_Stop;
 	}
-	return Plugin_Continue;
-}
-
-public Action tTimerSetTransmit(Handle timer, any entity)
-{
-	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE || !bIsValidEntity(entity))
-	{
-		return Plugin_Stop;
-	}
-	SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
 	return Plugin_Continue;
 }

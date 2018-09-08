@@ -1,7 +1,8 @@
 // Super Tanks++: Meteor Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bMeteor[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bMeteor[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80];
 int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorChance[ST_MAXTYPES + 1], g_iMeteorChance2[ST_MAXTYPES + 1], g_iMeteorDamage[ST_MAXTYPES + 1], g_iMeteorDamage2[ST_MAXTYPES + 1];
 
@@ -27,6 +28,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnMapStart()
@@ -74,7 +96,7 @@ public void ST_Ability(int client)
 {
 	int iMeteorAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorAbility[ST_TankType(client)] : g_iMeteorAbility2[ST_TankType(client)],
 		iMeteorChance = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorChance[ST_TankType(client)] : g_iMeteorChance2[ST_TankType(client)];
-	if (iMeteorAbility == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bMeteor[client])
+	if (iMeteorAbility == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bMeteor[client])
 	{
 		g_bMeteor[client] = true;
 		float flPos[3];
@@ -91,7 +113,7 @@ public void ST_Ability(int client)
 
 void vMeteor(int client, int entity)
 {
-	if (!ST_TankAllowed(client) || !IsPlayerAlive(client) || !bIsValidEntity(entity))
+	if (!ST_TankAllowed(client) || !IsPlayerAlive(client) || !ST_CloneAllowed(client, g_bCloneInstalled) || !bIsValidEntity(entity))
 	{
 		return;
 	}
@@ -164,7 +186,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bMeteor[iTank] = false;
 		return Plugin_Stop;

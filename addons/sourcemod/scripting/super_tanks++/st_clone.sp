@@ -1,4 +1,5 @@
 // Super Tanks++: Clone Ability
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
 #undef REQUIRE_PLUGIN
@@ -15,7 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneChance[ST_MAXTYPES + 1], g_iCloneChance2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1];
+int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneChance[ST_MAXTYPES + 1], g_iCloneChance2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -25,7 +26,20 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		strcopy(error, err_max, "[ST++] Clone Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
+	CreateNative("ST_CloneAllowed", iNative_CloneAllowed);
+	RegPluginLibrary("st_clone");
 	return APLRes_Success;
+}
+
+public int iNative_CloneAllowed(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	bool bCloneInstalled = GetNativeCell(2);
+	if (ST_TankAllowed(iTank) && bIsCloneAllowed(iTank, bCloneInstalled))
+	{
+		return true;
+	}
+	return false;
 }
 
 public void OnMapStart()
@@ -63,6 +77,8 @@ public void ST_Configs(char[] savepath, bool main)
 			main ? (g_iCloneChance[iIndex] = iSetCellLimit(g_iCloneChance[iIndex], 1, 9999999999)) : (g_iCloneChance2[iIndex] = iSetCellLimit(g_iCloneChance2[iIndex], 1, 9999999999));
 			main ? (g_iCloneHealth[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", 1000)) : (g_iCloneHealth2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", g_iCloneHealth[iIndex]));
 			main ? (g_iCloneHealth[iIndex] = iSetCellLimit(g_iCloneHealth[iIndex], 1, ST_MAXHEALTH)) : (g_iCloneHealth2[iIndex] = iSetCellLimit(g_iCloneHealth2[iIndex], 1, ST_MAXHEALTH));
+			main ? (g_iCloneMode[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", 0)) : (g_iCloneMode2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", g_iCloneMode[iIndex]));
+			main ? (g_iCloneMode[iIndex] = iSetCellLimit(g_iCloneMode[iIndex], 0, 1)) : (g_iCloneMode2[iIndex] = iSetCellLimit(g_iCloneMode2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -151,7 +167,7 @@ public void ST_Ability(int client)
 public void ST_BossStage(int client)
 {
 	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iCloneAbility == 1)
+	if (iCloneAbility == 1 && ST_TankAllowed(client) && !g_bCloned[client])
 	{
 		g_iCloneCount[client] = 0;
 	}
@@ -167,4 +183,14 @@ void vReset()
 			g_iCloneCount[iPlayer] = 0;
 		}
 	}
+}
+
+bool bIsCloneAllowed(int client, bool clone)
+{
+	int iCloneMode = !g_bTankConfig[ST_TankType(client)] ? g_iCloneMode[ST_TankType(client)] : g_iCloneMode2[ST_TankType(client)];
+	if (clone && iCloneMode == 0 && g_bCloned[client])
+	{
+		return false;
+	}
+	return true;
 }

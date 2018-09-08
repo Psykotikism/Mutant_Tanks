@@ -1,7 +1,8 @@
 // Super Tanks++: Splash Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bSplash[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bSplash[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 float g_flSplashInterval[ST_MAXTYPES + 1], g_flSplashInterval2[ST_MAXTYPES + 1], g_flSplashRange[ST_MAXTYPES + 1], g_flSplashRange2[ST_MAXTYPES + 1];
 int g_iSplashAbility[ST_MAXTYPES + 1], g_iSplashAbility2[ST_MAXTYPES + 1], g_iSplashChance[ST_MAXTYPES + 1], g_iSplashChance2[ST_MAXTYPES + 1], g_iSplashDamage[ST_MAXTYPES + 1], g_iSplashDamage2[ST_MAXTYPES + 1];
 
@@ -27,6 +28,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnMapStart()
@@ -78,7 +100,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iSplashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashAbility[ST_TankType(iTank)] : g_iSplashAbility2[ST_TankType(iTank)],
 			iSplashChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashChance[ST_TankType(iTank)] : g_iSplashChance2[ST_TankType(iTank)];
-		if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && ST_TankAllowed(iTank))
+		if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			g_bSplash[iTank] = false;
 			CreateTimer(0.4, tTimerSplash, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
@@ -90,7 +112,7 @@ public void ST_Ability(int client)
 {
 	int iSplashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSplashAbility[ST_TankType(client)] : g_iSplashAbility2[ST_TankType(client)],
 		iSplashChance = !g_bTankConfig[ST_TankType(client)] ? g_iSplashChance[ST_TankType(client)] : g_iSplashChance2[ST_TankType(client)];
-	if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bSplash[client])
+	if (iSplashAbility == 1 && GetRandomInt(1, iSplashChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bSplash[client])
 	{
 		g_bSplash[client] = true;
 		float flSplashInterval = !g_bTankConfig[ST_TankType(client)] ? g_flSplashInterval[ST_TankType(client)] : g_flSplashInterval2[ST_TankType(client)];
@@ -112,7 +134,7 @@ void vReset()
 public Action tTimerSplash(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bSplash[iTank] = false;
 		return Plugin_Stop;

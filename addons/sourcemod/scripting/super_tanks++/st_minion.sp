@@ -1,7 +1,8 @@
 // Super Tanks++: Minion Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bMinion[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bMinion[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sMinionTypes[ST_MAXTYPES + 1][13], g_sMinionTypes2[ST_MAXTYPES + 1][13];
 int g_iMinionAbility[ST_MAXTYPES + 1], g_iMinionAbility2[ST_MAXTYPES + 1], g_iMinionAmount[ST_MAXTYPES + 1], g_iMinionAmount2[ST_MAXTYPES + 1], g_iMinionChance[ST_MAXTYPES + 1], g_iMinionChance2[ST_MAXTYPES + 1], g_iMinionCount[MAXPLAYERS + 1];
 
@@ -27,6 +28,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnMapStart()
@@ -75,7 +97,7 @@ public void ST_Event(Event event, const char[] name)
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iMinionAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iMinionAbility[ST_TankType(iTank)] : g_iMinionAbility2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank) && iMinionAbility == 1)
+		if (iMinionAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			g_bMinion[iTank] = false;
 			g_iMinionCount[iTank] = 0;
@@ -87,7 +109,7 @@ public void ST_Ability(int client)
 {
 	int iMinionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAbility[ST_TankType(client)] : g_iMinionAbility2[ST_TankType(client)],
 		iMinionChance = !g_bTankConfig[ST_TankType(client)] ? g_iMinionChance[ST_TankType(client)] : g_iMinionChance2[ST_TankType(client)];
-	if (iMinionAbility == 1 && GetRandomInt(1, iMinionChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (iMinionAbility == 1 && GetRandomInt(1, iMinionChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		int iMinionAmount = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAmount[ST_TankType(client)] : g_iMinionAmount2[ST_TankType(client)];
 		if (g_iMinionCount[client] < iMinionAmount)
@@ -159,7 +181,7 @@ public void ST_Ability(int client)
 public void ST_BossStage(int client)
 {
 	int iMinionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAbility[ST_TankType(client)] : g_iMinionAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iMinionAbility == 1)
+	if (iMinionAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		g_bMinion[client] = false;
 		g_iMinionCount[client] = 0;

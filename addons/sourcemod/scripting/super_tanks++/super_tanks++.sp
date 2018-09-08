@@ -1,5 +1,8 @@
 // Super Tanks++
 #include <super_tanks++>
+#undef REQUIRE_PLUGIN
+#include <st_clone>
+#define REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -12,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bBoss[MAXPLAYERS + 1], g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sBossHealthStages[ST_MAXTYPES + 1][34], g_sBossHealthStages2[ST_MAXTYPES + 1][34], g_sConfigCreate[6], g_sConfigExecute[6], g_sCustomName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sCustomName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sParticleEffects[ST_MAXTYPES + 1][8],
 	g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][12], g_sPropsChance2[ST_MAXTYPES + 1][12], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5],
 	g_sSavePath[255], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankNote[ST_MAXTYPES + 1][256], g_sTankNote2[ST_MAXTYPES + 1][256], g_sTankWaves[12], g_sTankWaves2[12], g_sTypeRange[10], g_sTypeRange2[10];
@@ -107,6 +110,11 @@ public int iNative_TankType(Handle plugin, int numParams)
 public int iNative_TankWave(Handle plugin, int numParams)
 {
 	return g_iTankWave;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
 }
 
 public void OnPluginStart()
@@ -391,11 +399,23 @@ public void vSuperTankListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObj
 	}
 }
 
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
 public void OnLibraryRemoved(const char[] name)
 {
 	if (strcmp(name, "adminmenu", false) == 0)
 	{
 		g_tmSTMenu = null;
+	}
+	else if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
 	}
 }
 
@@ -493,16 +513,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public Action SetTransmit(int entity, int client)
-{
-	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (iOwner == client)
-	{
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
-
 public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	Call_StartForward(g_hEventForward);
@@ -514,39 +524,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		int iUserId = event.GetInt("userid"), iTank = GetClientOfUserId(iUserId);
 		if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 		{
-			int iProp = -1;
-			while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-			{
-				char sModel[128];
-				GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-				if (strcmp(sModel, MODEL_JETPACK, false) == 0 || strcmp(sModel, MODEL_CONCRETE, false) == 0 || strcmp(sModel, MODEL_TIRES, false) == 0 || strcmp(sModel, MODEL_TANK, false) == 0)
-				{
-					int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-					if (iOwner == iTank)
-					{
-						SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-						CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
-					}
-				}
-			}
-			while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
-			{
-				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == iTank)
-				{
-					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
-				}
-			}
-			while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
-			{
-				int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == iTank)
-				{
-					SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
-					CreateTimer(3.5, tTimerSetTransmit, EntIndexToEntRef(iProp), TIMER_FLAG_NO_MAPCHANGE);
-				}
-			}
 			float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
 			vThrowInterval(iTank, flThrowInterval);
 		}
@@ -579,7 +556,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				char sName[MAX_NAME_LENGTH + 1];
 				sName = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sCustomName[g_iTankType[iPlayer]] : g_sCustomName2[g_iTankType[iPlayer]];
 				int iAnnounceDeath = !g_bGeneralConfig ? g_iAnnounceDeath : g_iAnnounceDeath2;
-				if (iAnnounceDeath == 1)
+				if (iAnnounceDeath == 1 && ST_CloneAllowed(iPlayer, g_bCloneInstalled))
 				{
 					switch (GetRandomInt(1, 10))
 					{
@@ -813,10 +790,6 @@ public Action cmdTankList(int client, int args)
 		return Plugin_Handled;
 	}
 	vTankList(client);
-	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
-	{
-		PrintToChat(client, "%s See console for output.", ST_PREFIX2);
-	}
 	return Plugin_Handled;
 }
 
@@ -847,6 +820,10 @@ void vTankList(int client)
 			case 2: sMode = "Randomized";
 		}
 		PrintToConsole(client, "%d. Name: %s, Status: %s, Mode: %s", iIndex, sName, sStatus, sMode);
+	}
+	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
+	{
+		PrintToChat(client, "%s See console for output.", ST_PREFIX2);
 	}
 }
 
@@ -1077,7 +1054,7 @@ void vParticleEffects(int client)
 	int iParticleEffect = !g_bTankConfig[g_iTankType[client]] ? g_iParticleEffect[g_iTankType[client]] : g_iParticleEffect2[g_iTankType[client]];
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[client]] ? g_sParticleEffects[g_iTankType[client]] : g_sParticleEffects2[g_iTankType[client]];
-	if (iParticleEffect == 1 && bIsTankAllowed(client) && IsPlayerAlive(client))
+	if (iParticleEffect == 1 && bIsTankAllowed(client) && IsPlayerAlive(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		if (StrContains(sParticleEffects, "1") != -1)
 		{
@@ -1122,7 +1099,6 @@ void vRemoveProps(int client)
 			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 			if (iOwner == client)
 			{
-				SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
 				AcceptEntityInput(iProp, "Kill");
 			}
 		}
@@ -1132,7 +1108,6 @@ void vRemoveProps(int client)
 		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 		if (iOwner == client)
 		{
-			SDKUnhook(iProp, SDKHook_SetTransmit, SetTransmit);
 			AcceptEntityInput(iProp, "Kill");
 		}
 	}
@@ -1198,77 +1173,77 @@ void vSetColor(int client, int value)
 
 void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mode)
 {
-	char sSet[5][16], sPropsColors[80], sRGB[4][4], sRGB2[4][4], sRGB3[4][4], sRGB4[4][4], sRGB5[4][4];
-	sPropsColors = !g_bTankConfig[g_iTankType[client]] ? g_sPropsColors[g_iTankType[client]] : g_sPropsColors2[g_iTankType[client]];
-	TrimString(sPropsColors);
-	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
-	TrimString(sRGB[0]);
-	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-	iRed = iSetCellLimit(iRed, 0, 255);
-	TrimString(sRGB[1]);
-	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-	iGreen = iSetCellLimit(iGreen, 0, 255);
-	TrimString(sRGB[2]);
-	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-	iBlue = iSetCellLimit(iBlue, 0, 255);
-	TrimString(sRGB[3]);
-	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
-	iAlpha = iSetCellLimit(iAlpha, 0, 255);
-	ExplodeString(sSet[1], ",", sRGB2, sizeof(sRGB2), sizeof(sRGB2[]));
-	TrimString(sRGB2[0]);
-	int iRed2 = (sRGB2[0][0] != '\0') ? StringToInt(sRGB2[0]) : 255;
-	iRed2 = iSetCellLimit(iRed2, 0, 255);
-	TrimString(sRGB2[1]);
-	int iGreen2 = (sRGB2[1][0] != '\0') ? StringToInt(sRGB2[1]) : 255;
-	iGreen2 = iSetCellLimit(iGreen2, 0, 255);
-	TrimString(sRGB2[2]);
-	int iBlue2 = (sRGB2[2][0] != '\0') ? StringToInt(sRGB2[2]) : 255;
-	iBlue2 = iSetCellLimit(iBlue2, 0, 255);
-	TrimString(sRGB2[3]);
-	int iAlpha2 = (sRGB2[3][0] != '\0') ? StringToInt(sRGB2[3]) : 255;
-	iAlpha2 = iSetCellLimit(iAlpha2, 0, 255);
-	ExplodeString(sSet[2], ",", sRGB3, sizeof(sRGB3), sizeof(sRGB3[]));
-	TrimString(sRGB3[0]);
-	int iRed3 = (sRGB3[0][0] != '\0') ? StringToInt(sRGB3[0]) : 255;
-	iRed3 = iSetCellLimit(iRed3, 0, 255);
-	TrimString(sRGB3[1]);
-	int iGreen3 = (sRGB3[1][0] != '\0') ? StringToInt(sRGB3[1]) : 255;
-	iGreen3 = iSetCellLimit(iGreen3, 0, 255);
-	TrimString(sRGB3[2]);
-	int iBlue3 = (sRGB3[2][0] != '\0') ? StringToInt(sRGB3[2]) : 255;
-	iBlue3 = iSetCellLimit(iBlue3, 0, 255);
-	TrimString(sRGB3[3]);
-	int iAlpha3 = (sRGB3[3][0] != '\0') ? StringToInt(sRGB3[3]) : 255;
-	iAlpha3 = iSetCellLimit(iAlpha3, 0, 255);
-	ExplodeString(sSet[3], ",", sRGB4, sizeof(sRGB4), sizeof(sRGB4[]));
-	TrimString(sRGB4[0]);
-	int iRed4 = (sRGB4[0][0] != '\0') ? StringToInt(sRGB4[0]) : 255;
-	iRed4 = iSetCellLimit(iRed4, 0, 255);
-	TrimString(sRGB4[1]);
-	int iGreen4 = (sRGB4[1][0] != '\0') ? StringToInt(sRGB4[1]) : 255;
-	iGreen4 = iSetCellLimit(iGreen4, 0, 255);
-	TrimString(sRGB4[2]);
-	int iBlue4 = (sRGB4[2][0] != '\0') ? StringToInt(sRGB4[2]) : 255;
-	iBlue4 = iSetCellLimit(iBlue4, 0, 255);
-	TrimString(sRGB4[3]);
-	int iAlpha4 = (sRGB4[3][0] != '\0') ? StringToInt(sRGB4[3]) : 255;
-	iAlpha4 = iSetCellLimit(iAlpha4, 0, 255);
-	ExplodeString(sSet[4], ",", sRGB5, sizeof(sRGB5), sizeof(sRGB5[]));
-	TrimString(sRGB5[0]);
-	int iRed5 = (sRGB5[0][0] != '\0') ? StringToInt(sRGB5[0]) : 255;
-	iRed5 = iSetCellLimit(iRed5, 0, 255);
-	TrimString(sRGB5[1]);
-	int iGreen5 = (sRGB5[1][0] != '\0') ? StringToInt(sRGB5[1]) : 255;
-	iGreen5 = iSetCellLimit(iGreen5, 0, 255);
-	TrimString(sRGB5[2]);
-	int iBlue5 = (sRGB5[2][0] != '\0') ? StringToInt(sRGB5[2]) : 255;
-	iBlue5 = iSetCellLimit(iBlue5, 0, 255);
-	TrimString(sRGB5[3]);
-	int iAlpha5 = (sRGB5[3][0] != '\0') ? StringToInt(sRGB5[3]) : 255;
-	iAlpha5 = iSetCellLimit(iAlpha5, 0, 255);
-	if (bIsTankAllowed(client) && IsPlayerAlive(client))
+	if (bIsTankAllowed(client) && IsPlayerAlive(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
+		char sSet[5][16], sPropsColors[80], sRGB[4][4], sRGB2[4][4], sRGB3[4][4], sRGB4[4][4], sRGB5[4][4];
+		sPropsColors = !g_bTankConfig[g_iTankType[client]] ? g_sPropsColors[g_iTankType[client]] : g_sPropsColors2[g_iTankType[client]];
+		TrimString(sPropsColors);
+		ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+		TrimString(sRGB[0]);
+		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+		iRed = iSetCellLimit(iRed, 0, 255);
+		TrimString(sRGB[1]);
+		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+		iGreen = iSetCellLimit(iGreen, 0, 255);
+		TrimString(sRGB[2]);
+		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+		iBlue = iSetCellLimit(iBlue, 0, 255);
+		TrimString(sRGB[3]);
+		int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
+		iAlpha = iSetCellLimit(iAlpha, 0, 255);
+		ExplodeString(sSet[1], ",", sRGB2, sizeof(sRGB2), sizeof(sRGB2[]));
+		TrimString(sRGB2[0]);
+		int iRed2 = (sRGB2[0][0] != '\0') ? StringToInt(sRGB2[0]) : 255;
+		iRed2 = iSetCellLimit(iRed2, 0, 255);
+		TrimString(sRGB2[1]);
+		int iGreen2 = (sRGB2[1][0] != '\0') ? StringToInt(sRGB2[1]) : 255;
+		iGreen2 = iSetCellLimit(iGreen2, 0, 255);
+		TrimString(sRGB2[2]);
+		int iBlue2 = (sRGB2[2][0] != '\0') ? StringToInt(sRGB2[2]) : 255;
+		iBlue2 = iSetCellLimit(iBlue2, 0, 255);
+		TrimString(sRGB2[3]);
+		int iAlpha2 = (sRGB2[3][0] != '\0') ? StringToInt(sRGB2[3]) : 255;
+		iAlpha2 = iSetCellLimit(iAlpha2, 0, 255);
+		ExplodeString(sSet[2], ",", sRGB3, sizeof(sRGB3), sizeof(sRGB3[]));
+		TrimString(sRGB3[0]);
+		int iRed3 = (sRGB3[0][0] != '\0') ? StringToInt(sRGB3[0]) : 255;
+		iRed3 = iSetCellLimit(iRed3, 0, 255);
+		TrimString(sRGB3[1]);
+		int iGreen3 = (sRGB3[1][0] != '\0') ? StringToInt(sRGB3[1]) : 255;
+		iGreen3 = iSetCellLimit(iGreen3, 0, 255);
+		TrimString(sRGB3[2]);
+		int iBlue3 = (sRGB3[2][0] != '\0') ? StringToInt(sRGB3[2]) : 255;
+		iBlue3 = iSetCellLimit(iBlue3, 0, 255);
+		TrimString(sRGB3[3]);
+		int iAlpha3 = (sRGB3[3][0] != '\0') ? StringToInt(sRGB3[3]) : 255;
+		iAlpha3 = iSetCellLimit(iAlpha3, 0, 255);
+		ExplodeString(sSet[3], ",", sRGB4, sizeof(sRGB4), sizeof(sRGB4[]));
+		TrimString(sRGB4[0]);
+		int iRed4 = (sRGB4[0][0] != '\0') ? StringToInt(sRGB4[0]) : 255;
+		iRed4 = iSetCellLimit(iRed4, 0, 255);
+		TrimString(sRGB4[1]);
+		int iGreen4 = (sRGB4[1][0] != '\0') ? StringToInt(sRGB4[1]) : 255;
+		iGreen4 = iSetCellLimit(iGreen4, 0, 255);
+		TrimString(sRGB4[2]);
+		int iBlue4 = (sRGB4[2][0] != '\0') ? StringToInt(sRGB4[2]) : 255;
+		iBlue4 = iSetCellLimit(iBlue4, 0, 255);
+		TrimString(sRGB4[3]);
+		int iAlpha4 = (sRGB4[3][0] != '\0') ? StringToInt(sRGB4[3]) : 255;
+		iAlpha4 = iSetCellLimit(iAlpha4, 0, 255);
+		ExplodeString(sSet[4], ",", sRGB5, sizeof(sRGB5), sizeof(sRGB5[]));
+		TrimString(sRGB5[0]);
+		int iRed5 = (sRGB5[0][0] != '\0') ? StringToInt(sRGB5[0]) : 255;
+		iRed5 = iSetCellLimit(iRed5, 0, 255);
+		TrimString(sRGB5[1]);
+		int iGreen5 = (sRGB5[1][0] != '\0') ? StringToInt(sRGB5[1]) : 255;
+		iGreen5 = iSetCellLimit(iGreen5, 0, 255);
+		TrimString(sRGB5[2]);
+		int iBlue5 = (sRGB5[2][0] != '\0') ? StringToInt(sRGB5[2]) : 255;
+		iBlue5 = iSetCellLimit(iBlue5, 0, 255);
+		TrimString(sRGB5[3]);
+		int iAlpha5 = (sRGB5[3][0] != '\0') ? StringToInt(sRGB5[3]) : 255;
+		iAlpha5 = iSetCellLimit(iAlpha5, 0, 255);
 		char sSet2[6][4], sPropsChance[12], sPropsAttached[7];
 		sPropsChance = !g_bTankConfig[g_iTankType[client]] ? g_sPropsChance[g_iTankType[client]] : g_sPropsChance2[g_iTankType[client]];
 		TrimString(sPropsChance);
@@ -1342,7 +1317,6 @@ void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mod
 					SetEntPropEnt(iBeam[iLight], Prop_Send, "m_hOwnerEntity", client);
 					TeleportEntity(iBeam[iLight], NULL_VECTOR, flAngles, NULL_VECTOR);
 					DispatchSpawn(iBeam[iLight]);
-					SDKHook(iBeam[iLight], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
 		}
@@ -1421,10 +1395,8 @@ void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mod
 							TeleportEntity(iFlame, flOrigin2, flAngles3, NULL_VECTOR);
 							DispatchSpawn(iFlame);
 							AcceptEntityInput(iFlame, "TurnOn");
-							SDKHook(iFlame, SDKHook_SetTransmit, SetTransmit);
 						}
 					}
-					SDKHook(iJetpack[iOzTank], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
 		}
@@ -1467,7 +1439,6 @@ void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mod
 					flAngles[2] = flAngles[2] + GetRandomFloat(-90.0, 90.0);
 					TeleportEntity(iConcrete[iRock], NULL_VECTOR, flAngles, NULL_VECTOR);
 					DispatchSpawn(iConcrete[iRock]);
-					SDKHook(iConcrete[iRock], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
 		}
@@ -1504,7 +1475,6 @@ void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mod
 					SetEntPropEnt(iWheel[iTire], Prop_Send, "m_hOwnerEntity", client);
 					TeleportEntity(iWheel[iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
 					DispatchSpawn(iWheel[iTire]);
-					SDKHook(iWheel[iTire], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
 		}
@@ -1561,7 +1531,7 @@ void vTankCountCheck(int client, int wave)
 
 void vThrowInterval(int client, float time)
 {
-	if (bIsTankAllowed(client) && IsPlayerAlive(client))
+	if (bIsTankAllowed(client) && IsPlayerAlive(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		int iAbility = GetEntPropEnt(client, Prop_Send, "m_customAbility");
 		if (iAbility > 0)
@@ -1610,7 +1580,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !g_bBoss[iTank])
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !g_bBoss[iTank] || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bBoss[iTank] = false;
 		return Plugin_Stop;
@@ -1632,7 +1602,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 public Action tTimerBloodEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -1650,7 +1620,7 @@ public Action tTimerBloodEffect(Handle timer, any userid)
 public Action tTimerBlurEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -1701,7 +1671,7 @@ public Action tTimerBlurEffect(Handle timer, any userid)
 public Action tTimerElectricEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -1719,7 +1689,7 @@ public Action tTimerElectricEffect(Handle timer, any userid)
 public Action tTimerFireEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -1737,7 +1707,7 @@ public Action tTimerFireEffect(Handle timer, any userid)
 public Action tTimerIceEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -1766,7 +1736,7 @@ public Action tTimerKillStuckTank(Handle timer, any userid)
 public Action tTimerMeteorEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -1784,7 +1754,7 @@ public Action tTimerMeteorEffect(Handle timer, any userid)
 public Action tTimerRandomize(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !g_bRandomized[iTank])
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bRandomized[iTank] = false;
 		return Plugin_Stop;
@@ -1824,7 +1794,7 @@ public Action tTimerRandomize(Handle timer, any userid)
 public Action tTimerSmokeEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -1842,7 +1812,7 @@ public Action tTimerSmokeEffect(Handle timer, any userid)
 public Action tTimerSpitEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -1854,16 +1824,6 @@ public Action tTimerSpitEffect(Handle timer, any userid)
 		return Plugin_Stop;
 	}
 	vAttachParticle(iTank, PARTICLE_SPIT, 2.0, 30.0);
-	return Plugin_Continue;
-}
-
-public Action tTimerSetTransmit(Handle timer, any entity)
-{
-	if ((entity = EntRefToEntIndex(entity)) == INVALID_ENT_REFERENCE || !bIsValidEntity(entity))
-	{
-		return Plugin_Stop;
-	}
-	SDKHook(entity, SDKHook_SetTransmit, SetTransmit);
 	return Plugin_Continue;
 }
 
@@ -1929,7 +1889,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 	g_cvSTMaxPlayerZombies.SetString("32");
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank) && g_iTankType[iTank] > 0)
+		if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank) && g_iTankType[iTank] > 0 && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			int iSpawnMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iSpawnMode[g_iTankType[iTank]] : g_iSpawnMode2[g_iTankType[iTank]];
 			switch (iSpawnMode)
@@ -2017,7 +1977,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	GetClientName(iTank, sCurrentName, sizeof(sCurrentName));
 	sName = !g_bTankConfig[g_iTankType[iTank]] ? g_sCustomName[g_iTankType[iTank]] : g_sCustomName2[g_iTankType[iTank]];
 	vSetName(iTank, sCurrentName, sName, iMode);
-	if (iMode == 0)
+	if (iMode == 0 && ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		int iHealth = GetClientHealth(iTank),
 			iMultiHealth = !g_bGeneralConfig ? g_iMultiHealth : g_iMultiHealth2,
@@ -2059,7 +2019,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -2102,7 +2062,7 @@ public Action tTimerRockThrow(Handle timer, any entity)
 		return Plugin_Stop;
 	}
 	int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-	if (iThrower == 0 || !bIsTankAllowed(iThrower) || !IsPlayerAlive(iThrower))
+	if (iThrower == 0 || !bIsTankAllowed(iThrower) || !IsPlayerAlive(iThrower) || !ST_CloneAllowed(iThrower, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}

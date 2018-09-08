@@ -1,7 +1,8 @@
 // Super Tanks++: Respawn Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 int g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iRespawnAbility[ST_MAXTYPES + 1], g_iRespawnAbility2[ST_MAXTYPES + 1], g_iRespawnAmount[ST_MAXTYPES + 1], g_iRespawnAmount2[ST_MAXTYPES + 1], g_iRespawnChance[ST_MAXTYPES + 1], g_iRespawnChance2[ST_MAXTYPES + 1], g_iRespawnCount[MAXPLAYERS + 1], g_iRespawnRandom[ST_MAXTYPES + 1], g_iRespawnRandom2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -26,6 +27,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void ST_Configs(char[] savepath, bool main)
@@ -64,7 +86,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iRespawnAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAbility[ST_TankType(iTank)] : g_iRespawnAbility2[ST_TankType(iTank)],
 			iRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnChance[ST_TankType(iTank)] : g_iRespawnChance2[ST_TankType(iTank)];
-		if (iRespawnAbility == 1 && GetRandomInt(1, iRespawnChance) == 1 && ST_TankAllowed(iTank))
+		if (iRespawnAbility == 1 && GetRandomInt(1, iRespawnChance) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			float flPos[3], flAngles[3];
 			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags"), iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
@@ -92,7 +114,7 @@ int iRespawn(int client, int count)
 	for (int iNewTank = 1; iNewTank <= MaxClients; iNewTank++)
 	{
 		bExists[iNewTank] = false;
-		if (ST_TankAllowed(iNewTank) && IsPlayerAlive(iNewTank))
+		if (ST_TankAllowed(iNewTank) && ST_CloneAllowed(iNewTank, g_bCloneInstalled) && IsPlayerAlive(iNewTank))
 		{
 			bExists[iNewTank] = true;
 		}
@@ -124,7 +146,7 @@ int iRespawn(int client, int count)
 	}
 	for (int iNewTank = 1; iNewTank <= MaxClients; iNewTank++)
 	{
-		if (ST_TankAllowed(iNewTank) && IsPlayerAlive(iNewTank))
+		if (ST_TankAllowed(iNewTank) && ST_CloneAllowed(iNewTank, g_bCloneInstalled) && IsPlayerAlive(iNewTank))
 		{
 			if (!bExists[iNewTank])
 			{
@@ -141,7 +163,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !bIsPlayerIncapacitated(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !bIsPlayerIncapacitated(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_iRespawnCount[iTank] = 0;
 		return Plugin_Stop;
@@ -160,7 +182,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	{
 		g_iRespawnCount[iTank]++;
 		int iNewTank = iRespawn(iTank, g_iRespawnCount[iTank]);
-		if (ST_TankAllowed(iNewTank) && IsPlayerAlive(iNewTank))
+		if (ST_TankAllowed(iNewTank) && ST_CloneAllowed(iNewTank, g_bCloneInstalled) && IsPlayerAlive(iNewTank))
 		{
 			SetEntProp(iNewTank, Prop_Send, "m_fFlags", iFlags);
 			SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);

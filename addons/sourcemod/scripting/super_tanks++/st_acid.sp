@@ -1,7 +1,8 @@
 // Super Tanks++: Acid Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flAcidRange[ST_MAXTYPES + 1], g_flAcidRange2[ST_MAXTYPES + 1];
 Handle g_hSDKAcidPlayer, g_hSDKPukePlayer;
 int g_iAcidAbility[ST_MAXTYPES + 1], g_iAcidAbility2[ST_MAXTYPES + 1], g_iAcidChance[ST_MAXTYPES + 1], g_iAcidChance2[ST_MAXTYPES + 1], g_iAcidHit[ST_MAXTYPES + 1],
@@ -30,6 +31,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	g_bLateLoad = late;
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnPluginStart()
@@ -92,7 +114,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
@@ -101,7 +123,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				vAcidHit(victim, attacker, iAcidChance, iAcidHit);
 			}
 		}
-		else if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
@@ -148,7 +170,7 @@ public void ST_Event(Event event, const char[] name)
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iAcidAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iAcidAbility[ST_TankType(iTank)] : g_iAcidAbility2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank) && iAcidAbility == 1 && bIsL4D2Game())
+		if (iAcidAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsL4D2Game())
 		{
 			vAcid(iTank, iTank);
 		}
@@ -157,7 +179,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)],
 			iAcidRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAcidChance[ST_TankType(client)] : g_iAcidChance2[ST_TankType(client)];
@@ -183,7 +205,7 @@ public void ST_Ability(int client)
 public void ST_BossStage(int client)
 {
 	int iAcidAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iAcidAbility == 1 && bIsL4D2Game())
+	if (iAcidAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && bIsL4D2Game())
 	{
 		vAcid(client, client);
 	}
@@ -192,7 +214,7 @@ public void ST_BossStage(int client)
 public void ST_RockBreak(int client, int entity)
 {
 	int iAcidRock = !g_bTankConfig[ST_TankType(client)] ? g_iAcidRock[ST_TankType(client)] : g_iAcidRock2[ST_TankType(client)];
-	if (iAcidRock == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && bIsL4D2Game())
+	if (iAcidRock == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && bIsL4D2Game())
 	{
 		float flOrigin[3], flAngles[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
