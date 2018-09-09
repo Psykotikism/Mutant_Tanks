@@ -1087,7 +1087,7 @@ stock void vSetColor(int client, int value)
 	g_iTankType[client] = value;
 }
 
-stock void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mode)
+stock void vSetName(int client, const char[] oldname = "Tank", const char[] name = "Tank", int mode)
 {
 	if (bIsTankAllowed(client) && IsPlayerAlive(client))
 	{
