@@ -17,8 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flAmmoRange[ST_MAXTYPES + 1], g_flAmmoRange2[ST_MAXTYPES + 1];
-int g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAbility2[ST_MAXTYPES + 1], g_iAmmoChance[ST_MAXTYPES + 1], g_iAmmoChance2[ST_MAXTYPES + 1], g_iAmmoCount[ST_MAXTYPES + 1],
-	g_iAmmoCount2[ST_MAXTYPES + 1], g_iAmmoHit[ST_MAXTYPES + 1], g_iAmmoHit2[ST_MAXTYPES + 1], g_iAmmoRangeChance[ST_MAXTYPES + 1], g_iAmmoRangeChance2[ST_MAXTYPES + 1];
+int g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAbility2[ST_MAXTYPES + 1], g_iAmmoChance[ST_MAXTYPES + 1], g_iAmmoChance2[ST_MAXTYPES + 1], g_iAmmoCount[ST_MAXTYPES + 1], g_iAmmoCount2[ST_MAXTYPES + 1], g_iAmmoHit[ST_MAXTYPES + 1], g_iAmmoHit2[ST_MAXTYPES + 1], g_iAmmoHitMode[ST_MAXTYPES + 1], g_iAmmoHitMode2[ST_MAXTYPES + 1], g_iAmmoRangeChance[ST_MAXTYPES + 1], g_iAmmoRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -77,15 +76,20 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		if ((iAmmoHitMode(attacker) == 0 || iAmmoHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
-			char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iAmmoChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iAmmoChance[ST_TankType(attacker)] : g_iAmmoChance2[ST_TankType(attacker)],
-					iAmmoHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iAmmoHit[ST_TankType(attacker)] : g_iAmmoHit2[ST_TankType(attacker)];
-				vAmmoHit(victim, attacker, iAmmoChance, iAmmoHit);
+				vAmmoHit(victim, attacker, iAmmoChance(attacker), iAmmoHit(attacker));
+			}
+		}
+		else if ((iAmmoHitMode(victim) == 0 || iAmmoHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		{
+			if (strcmp(sClassname, "weapon_melee") == 0)
+			{
+				vAmmoHit(attacker, victim, iAmmoChance(victim), iAmmoHit(victim));
 			}
 		}
 	}
@@ -110,6 +114,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iAmmoCount[iIndex] = iSetCellLimit(g_iAmmoCount[iIndex], 0, 25)) : (g_iAmmoCount2[iIndex] = iSetCellLimit(g_iAmmoCount2[iIndex], 0, 25));
 			main ? (g_iAmmoHit[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Hit", 0)) : (g_iAmmoHit2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Hit", g_iAmmoHit[iIndex]));
 			main ? (g_iAmmoHit[iIndex] = iSetCellLimit(g_iAmmoHit[iIndex], 0, 1)) : (g_iAmmoHit2[iIndex] = iSetCellLimit(g_iAmmoHit2[iIndex], 0, 1));
+			main ? (g_iAmmoHitMode[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Hit Mode", 0)) : (g_iAmmoHitMode2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Hit Mode", g_iAmmoHitMode[iIndex]));
+			main ? (g_iAmmoHitMode[iIndex] = iSetCellLimit(g_iAmmoHitMode[iIndex], 0, 2)) : (g_iAmmoHitMode2[iIndex] = iSetCellLimit(g_iAmmoHitMode2[iIndex], 0, 2));
 			main ? (g_flAmmoRange[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Range", 150.0)) : (g_flAmmoRange2[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Range", g_flAmmoRange[iIndex]));
 			main ? (g_flAmmoRange[iIndex] = flSetFloatLimit(g_flAmmoRange[iIndex], 1.0, 9999999999.0)) : (g_flAmmoRange2[iIndex] = flSetFloatLimit(g_flAmmoRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iAmmoRangeChance[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Range Chance", 16)) : (g_iAmmoRangeChance2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Range Chance", g_iAmmoRangeChance[iIndex]));
@@ -194,4 +200,19 @@ stock void vAmmoHit(int client, int owner, int chance, int enabled)
 		}
 		SetEntProp(GetPlayerWeaponSlot(client, 0), Prop_Data, "m_iClip1", iAmmo, 1);
 	}
+}
+
+stock int iAmmoChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iAmmoChance[ST_TankType(client)] : g_iAmmoChance2[ST_TankType(client)];
+}
+
+stock int iAmmoHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iAmmoHit[ST_TankType(client)] : g_iAmmoHit2[ST_TankType(client)];
+}
+
+stock int iAmmoHitMode(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iAmmoHitMode[ST_TankType(client)] : g_iAmmoHitMode2[ST_TankType(client)];
 }

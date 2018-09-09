@@ -18,7 +18,7 @@ public Plugin myinfo =
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flFlingRange[ST_MAXTYPES + 1], g_flFlingRange2[ST_MAXTYPES + 1];
 Handle g_hSDKFlingPlayer, g_hSDKPukePlayer;
-int g_iFlingAbility[ST_MAXTYPES + 1], g_iFlingAbility2[ST_MAXTYPES + 1], g_iFlingChance[ST_MAXTYPES + 1], g_iFlingChance2[ST_MAXTYPES + 1], g_iFlingHit[ST_MAXTYPES + 1], g_iFlingHit2[ST_MAXTYPES + 1], g_iFlingRangeChance[ST_MAXTYPES + 1], g_iFlingRangeChance2[ST_MAXTYPES + 1];
+int g_iFlingAbility[ST_MAXTYPES + 1], g_iFlingAbility2[ST_MAXTYPES + 1], g_iFlingChance[ST_MAXTYPES + 1], g_iFlingChance2[ST_MAXTYPES + 1], g_iFlingHit[ST_MAXTYPES + 1], g_iFlingHit2[ST_MAXTYPES + 1], g_iFlingHitMode[ST_MAXTYPES + 1], g_iFlingHitMode2[ST_MAXTYPES + 1], g_iFlingRangeChance[ST_MAXTYPES + 1], g_iFlingRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -108,15 +108,20 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		if ((iFlingHitMode(attacker) == 0 || iFlingHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
-			char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iFlingChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iFlingChance[ST_TankType(attacker)] : g_iFlingChance2[ST_TankType(attacker)],
-					iFlingHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iFlingHit[ST_TankType(attacker)] : g_iFlingHit2[ST_TankType(attacker)];
-				vFlingHit(victim, attacker, iFlingChance, iFlingHit);
+				vFlingHit(victim, attacker, iFlingChance(attacker), iFlingHit(attacker));
+			}
+		}
+		else if ((iFlingHitMode(victim) == 0 || iFlingHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		{
+			if (strcmp(sClassname, "weapon_melee") == 0)
+			{
+				vFlingHit(attacker, victim, iFlingChance(victim), iFlingHit(victim));
 			}
 		}
 	}
@@ -139,6 +144,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iFlingChance[iIndex] = iSetCellLimit(g_iFlingChance[iIndex], 1, 9999999999)) : (g_iFlingChance2[iIndex] = iSetCellLimit(g_iFlingChance2[iIndex], 1, 9999999999));
 			main ? (g_iFlingHit[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", 0)) : (g_iFlingHit2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", g_iFlingHit[iIndex]));
 			main ? (g_iFlingHit[iIndex] = iSetCellLimit(g_iFlingHit[iIndex], 0, 1)) : (g_iFlingHit2[iIndex] = iSetCellLimit(g_iFlingHit2[iIndex], 0, 1));
+			main ? (g_iFlingHitMode[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", 0)) : (g_iFlingHitMode2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", g_iFlingHitMode[iIndex]));
+			main ? (g_iFlingHitMode[iIndex] = iSetCellLimit(g_iFlingHitMode[iIndex], 0, 2)) : (g_iFlingHitMode2[iIndex] = iSetCellLimit(g_iFlingHitMode2[iIndex], 0, 2));
 			main ? (g_flFlingRange[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", 150.0)) : (g_flFlingRange2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", g_flFlingRange[iIndex]));
 			main ? (g_flFlingRange[iIndex] = flSetFloatLimit(g_flFlingRange[iIndex], 1.0, 9999999999.0)) : (g_flFlingRange2[iIndex] = flSetFloatLimit(g_flFlingRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iFlingRangeChance[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Range Chance", 16)) : (g_iFlingRangeChance2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Range Chance", g_iFlingRangeChance[iIndex]));
@@ -199,4 +206,19 @@ stock void vFlingHit(int client, int owner, int chance, int enabled)
 			SDKCall(g_hSDKPukePlayer, client, owner, true);
 		}
 	}
+}
+
+stock int iFlingChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iFlingChance[ST_TankType(client)] : g_iFlingChance2[ST_TankType(client)];
+}
+
+stock int iFlingHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iFlingHit[ST_TankType(client)] : g_iFlingHit2[ST_TankType(client)];
+}
+
+stock int iFlingHitMode(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iFlingHitMode[ST_TankType(client)] : g_iFlingHitMode2[ST_TankType(client)];
 }

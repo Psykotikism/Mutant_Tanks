@@ -92,12 +92,12 @@ public void ST_Ability(int client)
 	if (iZombieAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		int iZombieAmount = !g_bTankConfig[ST_TankType(client)] ? g_iZombieAmount[ST_TankType(client)] : g_iZombieAmount2[ST_TankType(client)];
+		g_iZombieInterval[client]++;
 		if (g_iZombieInterval[client] >= iZombieAmount)
 		{
 			for (int iZombie = 1; iZombie <= iZombieAmount; iZombie++)
 			{
 				vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", "zombie area");
-				g_iZombieInterval[client]++;
 			}
 			g_iZombieInterval[client] = 0;
 		}

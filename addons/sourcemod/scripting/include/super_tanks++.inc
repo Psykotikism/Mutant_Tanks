@@ -851,7 +851,7 @@ stock int iSetCellLimit(int value, int min, int max)
 	return value;
 }
 
-stock void vAttachParticle(int client, char[] particlename, float time = 0.0, float origin = 0.0)
+stock void vAttachParticle(int client, const char[] particlename, float time = 0.0, float origin = 0.0)
 {
 	if (bIsValidClient(client))
 	{
@@ -875,7 +875,7 @@ stock void vAttachParticle(int client, char[] particlename, float time = 0.0, fl
 	}
 }
 
-stock void vCheatCommand(int client, char[] command, char[] arguments = "", any ...)
+stock void vCheatCommand(int client, const char[] command, const char[] arguments = "", any ...)
 {
 	int iCmdFlags = GetCommandFlags(command);
 	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
@@ -907,7 +907,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 	}
 }
 
-stock void vCreateParticle(int client, char[] particlename, float time, float origin)
+stock void vCreateParticle(int client, const char[] particlename, float time, float origin)
 {
 	if (bIsValidClient(client))
 	{
@@ -929,7 +929,7 @@ stock void vCreateParticle(int client, char[] particlename, float time, float or
 	}
 }
 
-stock void vDamage(int client, char[] damage)
+stock void vDamage(int client, const char[] damage)
 {
 	int iPointHurt = CreateEntityByName("point_hurt");
 	if (bIsValidEntity(iPointHurt))
@@ -998,7 +998,7 @@ stock void vGhost(int client, int slot)
 	}
 }
 
-stock void vGhostDrop(int client, char[] slots, char[] number, int slot)
+stock void vGhostDrop(int client, const char[] slots, const char[] number, int slot)
 {
 	if (StrContains(slots, number) != -1)
 	{
@@ -1080,14 +1080,14 @@ stock void vShake(int client, float duration = 1.0)
 	}
 }
 
-stock void vSpawnInfected(int client, char[] infected)
+stock void vSpawnInfected(int client, const char[] infected)
 {
 	ChangeClientTeam(client, 3);
 	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", infected);
 	KickClient(client);
 }
 
-stock void vSpecialAttack(int client, float pos[3], char[] model)
+stock void vSpecialAttack(int client, float pos[3], const char[] model)
 {
 	int iProp = CreateEntityByName("prop_physics");
 	if (bIsValidEntity(iProp))

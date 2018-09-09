@@ -19,8 +19,7 @@ bool g_bCloneInstalled, g_bLateLoad, g_bRestartValid, g_bTankConfig[ST_MAXTYPES 
 char g_sRestartLoadout[ST_MAXTYPES + 1][325], g_sRestartLoadout2[ST_MAXTYPES + 1][325];
 float g_flRestartPosition[3], g_flRestartRange[ST_MAXTYPES + 1], g_flRestartRange2[ST_MAXTYPES + 1];
 Handle g_hSDKRespawnPlayer;
-int g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1], g_iRestartChance[ST_MAXTYPES + 1], g_iRestartChance2[ST_MAXTYPES + 1], g_iRestartHit[ST_MAXTYPES + 1],
-	g_iRestartHit2[ST_MAXTYPES + 1], g_iRestartMode[ST_MAXTYPES + 1], g_iRestartMode2[ST_MAXTYPES + 1], g_iRestartRangeChance[ST_MAXTYPES + 1], g_iRestartRangeChance2[ST_MAXTYPES + 1];
+int g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1], g_iRestartChance[ST_MAXTYPES + 1], g_iRestartChance2[ST_MAXTYPES + 1], g_iRestartHit[ST_MAXTYPES + 1], g_iRestartHit2[ST_MAXTYPES + 1], g_iRestartHitMode[ST_MAXTYPES + 1], g_iRestartHitMode2[ST_MAXTYPES + 1], g_iRestartMode[ST_MAXTYPES + 1], g_iRestartMode2[ST_MAXTYPES + 1], g_iRestartRangeChance[ST_MAXTYPES + 1], g_iRestartRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -96,15 +95,20 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		if ((iRestartHitMode(attacker) == 0 || iRestartHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
-			char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iRestartChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iRestartChance[ST_TankType(attacker)] : g_iRestartChance2[ST_TankType(attacker)],
-					iRestartHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iRestartHit[ST_TankType(attacker)] : g_iRestartHit2[ST_TankType(attacker)];
-				vRestartHit(victim, attacker, iRestartChance, iRestartHit);
+				vRestartHit(victim, attacker, iRestartChance(attacker), iRestartHit(attacker));
+			}
+		}
+		else if ((iRestartHitMode(victim) == 0 || iRestartHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		{
+			if (strcmp(sClassname, "weapon_melee") == 0)
+			{
+				vRestartHit(attacker, victim, iRestartChance(victim), iRestartHit(victim));
 			}
 		}
 	}
@@ -127,6 +131,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iRestartChance[iIndex] = iSetCellLimit(g_iRestartChance[iIndex], 1, 9999999999)) : (g_iRestartChance2[iIndex] = iSetCellLimit(g_iRestartChance2[iIndex], 1, 9999999999));
 			main ? (g_iRestartHit[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", 0)) : (g_iRestartHit2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", g_iRestartHit[iIndex]));
 			main ? (g_iRestartHit[iIndex] = iSetCellLimit(g_iRestartHit[iIndex], 0, 1)) : (g_iRestartHit2[iIndex] = iSetCellLimit(g_iRestartHit2[iIndex], 0, 1));
+			main ? (g_iRestartHitMode[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit Mode", 0)) : (g_iRestartHitMode2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit Mode", g_iRestartHitMode[iIndex]));
+			main ? (g_iRestartHitMode[iIndex] = iSetCellLimit(g_iRestartHitMode[iIndex], 0, 2)) : (g_iRestartHitMode2[iIndex] = iSetCellLimit(g_iRestartHitMode2[iIndex], 0, 2));
 			main ? (kvSuperTanks.GetString("Restart Ability/Restart Loadout", g_sRestartLoadout[iIndex], sizeof(g_sRestartLoadout[]), "smg,pistol,pain_pills")) : (kvSuperTanks.GetString("Restart Ability/Restart Loadout", g_sRestartLoadout2[iIndex], sizeof(g_sRestartLoadout2[]), g_sRestartLoadout[iIndex]));
 			main ? (g_iRestartMode[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Mode", 1)) : (g_iRestartMode2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Mode", g_iRestartMode[iIndex]));
 			main ? (g_iRestartMode[iIndex] = iSetCellLimit(g_iRestartMode[iIndex], 0, 1)) : (g_iRestartMode2[iIndex] = iSetCellLimit(g_iRestartMode2[iIndex], 0, 1));
@@ -208,6 +214,21 @@ stock void vRestartHit(int client, int owner, int chance, int enabled)
 			}
 		}
 	}
+}
+
+stock int iRestartChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iRestartChance[ST_TankType(client)] : g_iRestartChance2[ST_TankType(client)];
+}
+
+stock int iRestartHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iRestartHit[ST_TankType(client)] : g_iRestartHit2[ST_TankType(client)];
+}
+
+stock int iRestartHitMode(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iRestartHitMode[ST_TankType(client)] : g_iRestartHitMode2[ST_TankType(client)];
 }
 
 public Action tTimerRestartCoordinates(Handle timer)
