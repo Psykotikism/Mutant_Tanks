@@ -15,8 +15,9 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
-int g_iZombieAbility[ST_MAXTYPES + 1], g_iZombieAbility2[ST_MAXTYPES + 1], g_iZombieAmount[ST_MAXTYPES + 1], g_iZombieAmount2[ST_MAXTYPES + 1], g_iZombieInterval[MAXPLAYERS + 1];
+bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1], g_bZombie[MAXPLAYERS + 1];
+float g_flZombieInterval[ST_MAXTYPES + 1], g_flZombieInterval2[ST_MAXTYPES + 1];
+int g_iZombieAbility[ST_MAXTYPES + 1], g_iZombieAbility2[ST_MAXTYPES + 1], g_iZombieAmount[ST_MAXTYPES + 1], g_iZombieAmount2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -50,21 +51,6 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public void OnMapStart()
-{
-	vReset();
-}
-
-public void OnClientPostAdminCheck(int client)
-{
-	g_iZombieInterval[client] = 0;
-}
-
-public void OnMapEnd()
-{
-	vReset();
-}
-
 public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -80,6 +66,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iZombieAbility[iIndex] = iSetCellLimit(g_iZombieAbility[iIndex], 0, 1)) : (g_iZombieAbility2[iIndex] = iSetCellLimit(g_iZombieAbility2[iIndex], 0, 1));
 			main ? (g_iZombieAmount[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", 10)) : (g_iZombieAmount2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", g_iZombieAmount[iIndex]));
 			main ? (g_iZombieAmount[iIndex] = iSetCellLimit(g_iZombieAmount[iIndex], 1, 100)) : (g_iZombieAmount2[iIndex] = iSetCellLimit(g_iZombieAmount2[iIndex], 1, 100));
+			main ? (g_flZombieInterval[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Interval", 5.0)) : (g_flZombieInterval2[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Interval", g_flZombieInterval[iIndex]));
+			main ? (g_flZombieInterval[iIndex] = flSetFloatLimit(g_flZombieInterval[iIndex], 0.1, 9999999999.0)) : (g_flZombieInterval2[iIndex] = flSetFloatLimit(g_flZombieInterval2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -88,29 +76,36 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iZombieAbility = !g_bTankConfig[ST_TankType(client)] ? g_iZombieAbility[ST_TankType(client)] : g_iZombieAbility2[ST_TankType(client)];
-	if (iZombieAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (iZombieAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bZombie[client])
 	{
-		int iZombieAmount = !g_bTankConfig[ST_TankType(client)] ? g_iZombieAmount[ST_TankType(client)] : g_iZombieAmount2[ST_TankType(client)];
-		g_iZombieInterval[client]++;
-		if (g_iZombieInterval[client] >= iZombieAmount)
-		{
-			for (int iZombie = 1; iZombie <= iZombieAmount; iZombie++)
-			{
-				vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", "zombie area");
-			}
-			g_iZombieInterval[client] = 0;
-		}
+		g_bZombie[client] = true;
+		float flZombieInterval = !g_bTankConfig[ST_TankType(client)] ? g_flZombieInterval[ST_TankType(client)] : g_flZombieInterval2[ST_TankType(client)];
+		CreateTimer(flZombieInterval, tTimerZombie, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 }
 
-stock void vReset()
+stock int iZombieAbility(int client)
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	return !g_bTankConfig[ST_TankType(client)] ? g_iZombieAbility[ST_TankType(client)] : g_iZombieAbility2[ST_TankType(client)];
+}
+
+public Action tTimerZombie(Handle timer, any userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		if (bIsValidClient(iPlayer))
-		{
-			g_iZombieInterval[iPlayer] = 0;
-		}
+		g_bZombie[iTank] = false;
+		return Plugin_Stop;
 	}
+	if (iZombieAbility(iTank) == 0)
+	{
+		g_bZombie[iTank] = false;
+		return Plugin_Stop;
+	}
+	int iZombieAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iZombieAmount[ST_TankType(iTank)] : g_iZombieAmount2[ST_TankType(iTank)];
+	for (int iZombie = 1; iZombie <= iZombieAmount; iZombie++)
+	{
+		vCheatCommand(iTank, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", "zombie area");
+	}
+	return Plugin_Continue;
 }

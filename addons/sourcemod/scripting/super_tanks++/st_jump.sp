@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+float g_flJumpRange[ST_MAXTYPES + 1], g_flJumpRange2[ST_MAXTYPES + 1];
 int g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpAbility2[ST_MAXTYPES + 1], g_iJumpChance[ST_MAXTYPES + 1], g_iJumpChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -65,63 +66,75 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iJumpAbility[iIndex] = iSetCellLimit(g_iJumpAbility[iIndex], 0, 1)) : (g_iJumpAbility2[iIndex] = iSetCellLimit(g_iJumpAbility2[iIndex], 0, 1));
 			main ? (g_iJumpChance[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", 4)) : (g_iJumpChance2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", g_iJumpChance[iIndex]));
 			main ? (g_iJumpChance[iIndex] = iSetCellLimit(g_iJumpChance[iIndex], 1, 9999999999)) : (g_iJumpChance2[iIndex] = iSetCellLimit(g_iJumpChance2[iIndex], 1, 9999999999));
+			main ? (g_flJumpRange[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range", 500.0)) : (g_flJumpRange2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range", g_flJumpRange[iIndex]));
+			main ? (g_flJumpRange[iIndex] = flSetFloatLimit(g_flJumpRange[iIndex], 1.0, 9999999999.0)) : (g_flJumpRange2[iIndex] = flSetFloatLimit(g_flJumpRange2[iIndex], 1.0, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}
 	delete kvSuperTanks;
 }
 
-public void ST_Spawn(int client)
+public void ST_Event(Event event, const char[] name)
 {
-	if (iJumpAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (strcmp(name, "player_incapacitated") == 0)
 	{
-		CreateTimer(1.0, tTimerJump, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iJumpAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && IsPlayerAlive(iTank))
+		{
+			vJump(iTank);
+		}
+	}
+}
+
+public void ST_Ability(int client)
+{
+	int iJumpChance = !g_bTankConfig[ST_TankType(client)] ? g_iJumpChance[ST_TankType(client)] : g_iJumpChance2[ST_TankType(client)];
+	if (iJumpAbility(client) == 1 && GetRandomInt(1, iJumpChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	{
+		vJump(client);
+	}
+}
+
+stock void vJump(int client)
+{
+	float flJumpRange = !g_bTankConfig[ST_TankType(client)] ? g_flJumpRange[ST_TankType(client)] : g_flJumpRange2[ST_TankType(client)],
+		flTankPos[3];
+	GetClientAbsOrigin(client, flTankPos);
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor))
+		{
+			float flSurvivorPos[3];
+			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+			float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+			if (flDistance <= flJumpRange)
+			{
+				float flVelocity[3];
+				GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
+				if (flVelocity[0] > 0.0 && flVelocity[0] < 500.0)
+				{
+					flVelocity[0] += 500.0;
+				}
+				else if (flVelocity[0] < 0.0 && flVelocity[0] > -500.0)
+				{
+					flVelocity[0] += -500.0;
+				}
+				if (flVelocity[1] > 0.0 && flVelocity[1] < 500.0)
+				{
+					flVelocity[1] += 500.0;
+				}
+				else if (flVelocity[1] < 0.0 && flVelocity[1] > -500.0)
+				{
+					flVelocity[1] += -500.0;
+				}
+				flVelocity[2] += 750.0;
+				TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
+			}
+		}
 	}
 }
 
 stock int iJumpAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iJumpAbility[ST_TankType(client)] : g_iJumpAbility2[ST_TankType(client)];
-}
-
-public Action tTimerJump(Handle timer, any userid)
-{
-	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
-	{
-		return Plugin_Stop;
-	}
-	if (iJumpAbility(iTank) == 0)
-	{
-		return Plugin_Stop;
-	}
-	int iJumpChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iJumpChance[ST_TankType(iTank)] : g_iJumpChance2[ST_TankType(iTank)];
-	if (GetRandomInt(1, iJumpChance) == 1)
-	{
-		int iNearestSurvivor = iGetNearestSurvivor(iTank);
-		if (iNearestSurvivor > 200 && iNearestSurvivor < 2000)
-		{
-			float flVelocity[3];
-			GetEntPropVector(iTank, Prop_Data, "m_vecVelocity", flVelocity);
-			if (flVelocity[0] > 0.0 && flVelocity[0] < 500.0)
-			{
-				flVelocity[0] += 500.0;
-			}
-			else if (flVelocity[0] < 0.0 && flVelocity[0] > -500.0)
-			{
-				flVelocity[0] += -500.0;
-			}
-			if (flVelocity[1] > 0.0 && flVelocity[1] < 500.0)
-			{
-				flVelocity[1] += 500.0;
-			}
-			else if (flVelocity[1] < 0.0 && flVelocity[1] > -500.0)
-			{
-				flVelocity[1] += -500.0;
-			}
-			flVelocity[2] += 750.0;
-			TeleportEntity(iTank, NULL_VECTOR, NULL_VECTOR, flVelocity);
-		}
-	}
-	return Plugin_Continue;
 }

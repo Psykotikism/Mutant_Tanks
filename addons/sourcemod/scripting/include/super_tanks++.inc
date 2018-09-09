@@ -727,28 +727,6 @@ stock int iGetIdlePlayer(int client)
 	return 0;
 }
 
-stock int iGetNearestSurvivor(int client)
-{
-	float flDistance = 0.0, flNearest = 0.0, flPlayerPos[3], flTargetPos[3];
-	if (bIsValidClient(client))
-	{
-		GetClientAbsOrigin(client, flPlayerPos);
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor))
-			{
-				GetClientAbsOrigin(iSurvivor, flTargetPos);
-				flDistance = GetVectorDistance(flPlayerPos, flTargetPos);
-				if (flNearest == 0.0 || flNearest > flDistance)
-				{
-					flNearest = flDistance;
-				}
-			}
-		}
-	}
-	return RoundFloat(flDistance);
-}
-
 stock int iGetPlayerCount()
 {
 	int iPlayerCount;

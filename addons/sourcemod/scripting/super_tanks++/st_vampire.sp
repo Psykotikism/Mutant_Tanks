@@ -87,7 +87,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
 						iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
 					SetEntityHealth(attacker, iFinalHealth);
-					return Plugin_Changed;
 				}
 			}
 		}
@@ -97,16 +96,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				if (iVampireHit(victim) == 1 && GetRandomInt(1, iVampireChance(victim)) == 1)
 				{
-					int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth - iDamage,
-						iFinalHealth = (iNewHealth < 1) ? 1 : iNewHealth;
-					SetEntityHealth(attacker, iFinalHealth);
-					damage = 0.0;
-					return Plugin_Changed;
+					int iHealth = GetClientHealth(attacker);
+					SetEntityHealth(attacker, iHealth - 5);
 				}
 			}
 		}
 	}
-	return Plugin_Continue;
 }
 
 public void ST_Configs(const char[] savepath, bool main)
