@@ -113,7 +113,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -147,9 +147,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iEnforceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iEnforceAbility[ST_TankType(iTank)] : g_iEnforceAbility2[ST_TankType(iTank)];
-		if (iEnforceAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iEnforceAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveEnforce();
 		}
@@ -160,8 +159,7 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iEnforceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceAbility[ST_TankType(client)] : g_iEnforceAbility2[ST_TankType(client)],
-			iEnforceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceChance[ST_TankType(client)] : g_iEnforceChance2[ST_TankType(client)];
+		int iEnforceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceChance[ST_TankType(client)] : g_iEnforceChance2[ST_TankType(client)];
 		float flEnforceRange = !g_bTankConfig[ST_TankType(client)] ? g_flEnforceRange[ST_TankType(client)] : g_flEnforceRange2[ST_TankType(client)],
 			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -174,7 +172,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flEnforceRange)
 				{
-					vEnforceHit(iSurvivor, client, iEnforceRangeChance, iEnforceAbility);
+					vEnforceHit(iSurvivor, client, iEnforceRangeChance, iEnforceAbility(client));
 				}
 			}
 		}
@@ -183,14 +181,13 @@ public void ST_Ability(int client)
 
 public void ST_BossStage(int client)
 {
-	int iEnforceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceAbility[ST_TankType(client)] : g_iEnforceAbility2[ST_TankType(client)];
-	if (iEnforceAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iEnforceAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vRemoveEnforce();
 	}
 }
 
-void vEnforceHit(int client, int owner, int chance, int enabled)
+stock void vEnforceHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bEnforce[client])
 	{
@@ -207,13 +204,11 @@ void vEnforceHit(int client, int owner, int chance, int enabled)
 		float flEnforceDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flEnforceDuration[ST_TankType(owner)] : g_flEnforceDuration2[ST_TankType(owner)];
 		DataPack dpStopEnforce = new DataPack();
 		CreateDataTimer(flEnforceDuration, tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopEnforce.WriteCell(GetClientUserId(client));
-		dpStopEnforce.WriteCell(GetClientUserId(owner));
-		dpStopEnforce.WriteCell(enabled);
+		dpStopEnforce.WriteCell(GetClientUserId(client)), dpStopEnforce.WriteCell(GetClientUserId(owner)), dpStopEnforce.WriteCell(enabled);
 	}
 }
 
-void vRemoveEnforce()
+stock void vRemoveEnforce()
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -224,7 +219,7 @@ void vRemoveEnforce()
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -234,6 +229,11 @@ void vReset()
 			g_iEnforceSlot[iPlayer] = -1;
 		}
 	}
+}
+
+stock int iEnforceAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iEnforceAbility[ST_TankType(client)] : g_iEnforceAbility2[ST_TankType(client)];
 }
 
 public Action tTimerStopEnforce(Handle timer, DataPack pack)
@@ -251,8 +251,8 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 		g_bEnforce[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iEnforceAbility = pack.ReadCell();
-	if (iEnforceAbility == 0)
+	int iEnforceEnabled = pack.ReadCell();
+	if (iEnforceEnabled == 0)
 	{
 		g_bEnforce[iSurvivor] = false;
 		return Plugin_Stop;

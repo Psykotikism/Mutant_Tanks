@@ -58,7 +58,7 @@ public void OnMapEnd()
 	vReset();
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -89,9 +89,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iCloneAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iCloneAbility[ST_TankType(iTank)] : g_iCloneAbility2[ST_TankType(iTank)];
-		if (iCloneAbility == 1 && ST_TankAllowed(iTank))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iCloneAbility(iTank) == 1 && ST_TankAllowed(iTank))
 		{
 			g_iCloneCount[iTank] = 0;
 		}
@@ -100,9 +99,8 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)],
-		iCloneChance = !g_bTankConfig[ST_TankType(client)] ? g_iCloneChance[ST_TankType(client)] : g_iCloneChance2[ST_TankType(client)];
-	if (iCloneAbility == 1 && GetRandomInt(1, iCloneChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bCloned[client])
+	int iCloneChance = !g_bTankConfig[ST_TankType(client)] ? g_iCloneChance[ST_TankType(client)] : g_iCloneChance2[ST_TankType(client)];
+	if (iCloneAbility(client) == 1 && GetRandomInt(1, iCloneChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bCloned[client])
 	{
 		int iCloneAmount = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAmount[ST_TankType(client)] : g_iCloneAmount2[ST_TankType(client)];
 		if (g_iCloneCount[client] < iCloneAmount)
@@ -166,14 +164,13 @@ public void ST_Ability(int client)
 
 public void ST_BossStage(int client)
 {
-	int iCloneAbility = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
-	if (iCloneAbility == 1 && ST_TankAllowed(client) && !g_bCloned[client])
+	if (iCloneAbility(client) == 1 && ST_TankAllowed(client) && !g_bCloned[client])
 	{
 		g_iCloneCount[client] = 0;
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -185,7 +182,7 @@ void vReset()
 	}
 }
 
-bool bIsCloneAllowed(int client, bool clone)
+stock bool bIsCloneAllowed(int client, bool clone)
 {
 	int iCloneMode = !g_bTankConfig[ST_TankType(client)] ? g_iCloneMode[ST_TankType(client)] : g_iCloneMode2[ST_TankType(client)];
 	if (clone && iCloneMode == 0 && g_bCloned[client])
@@ -193,4 +190,9 @@ bool bIsCloneAllowed(int client, bool clone)
 		return false;
 	}
 	return true;
+}
+
+stock int iCloneAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
 }

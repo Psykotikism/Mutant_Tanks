@@ -93,7 +93,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -125,9 +125,8 @@ public void ST_Event(Event event, const char[] name)
 	if (strcmp(name, "player_death") == 0)
 	{
 		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId),
-			iTankId = event.GetInt("attacker"), iTank = GetClientOfUserId(iTankId),
-			iSmashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iSmashAbility[ST_TankType(iTank)] : g_iSmashAbility2[ST_TankType(iTank)];
-		if (iSmashAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsSurvivor(iSurvivor))
+			iTankId = event.GetInt("attacker"), iTank = GetClientOfUserId(iTankId);
+		if (iSmashAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsSurvivor(iSurvivor))
 		{
 			int iCorpse = -1;
 			while ((iCorpse = FindEntityByClassname(iCorpse, "survivor_death_model")) != INVALID_ENT_REFERENCE)
@@ -146,8 +145,7 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iSmashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSmashAbility[ST_TankType(client)] : g_iSmashAbility2[ST_TankType(client)],
-			iSmashRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iSmashChance[ST_TankType(client)] : g_iSmashChance2[ST_TankType(client)];
+		int iSmashRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iSmashChance[ST_TankType(client)] : g_iSmashChance2[ST_TankType(client)];
 		float flSmashRange = !g_bTankConfig[ST_TankType(client)] ? g_flSmashRange[ST_TankType(client)] : g_flSmashRange2[ST_TankType(client)],
 			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -160,14 +158,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flSmashRange)
 				{
-					vSmashHit(iSurvivor, iSmashRangeChance, iSmashAbility);
+					vSmashHit(iSurvivor, iSmashRangeChance, iSmashAbility(client));
 				}
 			}
 		}
 	}
 }
 
-void vSmashHit(int client, int chance, int enabled)
+stock void vSmashHit(int client, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -175,4 +173,9 @@ void vSmashHit(int client, int chance, int enabled)
 		vAttachParticle(client, PARTICLE_BLOOD, 0.1, 0.0);
 		ForcePlayerSuicide(client);
 	}
+}
+
+stock int iSmashAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iSmashAbility[ST_TankType(client)] : g_iSmashAbility2[ST_TankType(client)];
 }

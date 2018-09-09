@@ -89,25 +89,21 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iCancerChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iCancerChance[ST_TankType(attacker)] : g_iCancerChance2[ST_TankType(attacker)],
-					iCancerHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iCancerHit[ST_TankType(attacker)] : g_iCancerHit2[ST_TankType(attacker)];
-				vCancerHit(victim, attacker, iCancerChance, iCancerHit);
+				vCancerHit(victim, attacker, iCancerChance(attacker), iCancerHit(attacker));
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				int iCancerChance = !g_bTankConfig[ST_TankType(victim)] ? g_iCancerChance[ST_TankType(victim)] : g_iCancerChance2[ST_TankType(victim)],
-					iCancerHit = !g_bTankConfig[ST_TankType(victim)] ? g_iCancerHit[ST_TankType(victim)] : g_iCancerHit2[ST_TankType(victim)];
-				vCancerHit(attacker, victim, iCancerChance, iCancerHit);
+				vCancerHit(attacker, victim, iCancerChance(victim), iCancerHit(victim));
 			}
 		}
 	}
 	return Plugin_Continue;
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -160,7 +156,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vCancerHit(int client, int owner, int chance, int enabled)
+stock void vCancerHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -181,4 +177,14 @@ void vCancerHit(int client, int owner, int chance, int enabled)
 		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
 		vFade(client, 800, 300, iRed, iGreen, iBlue);
 	}
+}
+
+stock int iCancerChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iCancerChance[ST_TankType(client)] : g_iCancerChance2[ST_TankType(client)];
+}
+
+stock int iCancerHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iCancerHit[ST_TankType(client)] : g_iCancerHit2[ST_TankType(client)];
 }

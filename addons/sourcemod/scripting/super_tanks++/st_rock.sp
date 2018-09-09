@@ -67,7 +67,7 @@ public void OnMapEnd()
 	vReset();
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -95,9 +95,8 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iRockAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRockAbility[ST_TankType(client)] : g_iRockAbility2[ST_TankType(client)],
-		iRockChance = !g_bTankConfig[ST_TankType(client)] ? g_iRockChance[ST_TankType(client)] : g_iRockChance2[ST_TankType(client)];
-	if (iRockAbility == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bRock[client])
+	int iRockChance = !g_bTankConfig[ST_TankType(client)] ? g_iRockChance[ST_TankType(client)] : g_iRockChance2[ST_TankType(client)];
+	if (iRockAbility(client) == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bRock[client])
 	{
 		int iRock = CreateEntityByName("env_rock_launcher");
 		if (!bIsValidEntity(iRock))
@@ -115,16 +114,11 @@ public void ST_Ability(int client)
 		DispatchKeyValue(iRock, "rockdamageoverride", sDamage);
 		DataPack dpRockUpdate = new DataPack();
 		CreateDataTimer(0.2, tTimerRockUpdate, dpRockUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpRockUpdate.WriteCell(EntIndexToEntRef(iRock));
-		dpRockUpdate.WriteCell(GetClientUserId(client));
-		dpRockUpdate.WriteFloat(flPos[0]);
-		dpRockUpdate.WriteFloat(flPos[1]);
-		dpRockUpdate.WriteFloat(flPos[2]);
-		dpRockUpdate.WriteFloat(GetEngineTime());
+		dpRockUpdate.WriteCell(EntIndexToEntRef(iRock)), dpRockUpdate.WriteCell(GetClientUserId(client)), dpRockUpdate.WriteFloat(flPos[0]), dpRockUpdate.WriteFloat(flPos[1]), dpRockUpdate.WriteFloat(flPos[2]), dpRockUpdate.WriteFloat(GetEngineTime());
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -133,6 +127,11 @@ void vReset()
 			g_bRock[iPlayer] = false;
 		}
 	}
+}
+
+stock int iRockAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iRockAbility[ST_TankType(client)] : g_iRockAbility2[ST_TankType(client)];
 }
 
 public Action tTimerRockUpdate(Handle timer, DataPack pack)
@@ -154,8 +153,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	flPos[0] = pack.ReadFloat(), flPos[1] = pack.ReadFloat(), flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat(),
 		flRockDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flRockDuration[ST_TankType(iTank)] : g_flRockDuration2[ST_TankType(iTank)];
-	int iRockAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRockAbility[ST_TankType(iTank)] : g_iRockAbility2[ST_TankType(iTank)];
-	if (iRockAbility == 0 || (flTime + flRockDuration) < GetEngineTime())
+	if (iRockAbility(iTank) == 0 || (flTime + flRockDuration) < GetEngineTime())
 	{
 		g_bRock[iTank] = false;
 		AcceptEntityInput(iRock, "Kill");
@@ -169,8 +167,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -5.0;
 	TrimString(sRadius[1]);
 	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 5.0;
-	flMin = flSetFloatLimit(flMin, -5.0, 0.0);
-	flMax = flSetFloatLimit(flMax, 0.0, 5.0);
+	flMin = flSetFloatLimit(flMin, -5.0, 0.0), flMax = flSetFloatLimit(flMax, 0.0, 5.0);
 	float flAngles[3], flHitPos[3];
 	flAngles[0] = GetRandomFloat(-1.0, 1.0), flAngles[1] = GetRandomFloat(-1.0, 1.0), flAngles[2] = 2.0;
 	GetVectorAngles(flAngles, flAngles);

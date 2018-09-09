@@ -95,7 +95,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -120,10 +120,21 @@ public void ST_Configs(char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_Event(Event event, const char[] name)
+{
+	if (strcmp(name, "player_death") == 0)
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iPanicAbility(iTank) == 1 && GetRandomInt(1, iPanicChance(iTank)) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && IsPlayerAlive(iTank))
+		{
+			vCheatCommand(iTank, "director_force_panic_event");
+		}
+	}
+}
+
 public void ST_Ability(int client)
 {
-	int iPanicAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPanicAbility[ST_TankType(client)] : g_iPanicAbility2[ST_TankType(client)];
-	if (iPanicAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bPanic[client])
+	if (iPanicAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bPanic[client])
 	{
 		g_bPanic[client] = true;
 		float flPanicInterval = !g_bTankConfig[ST_TankType(client)] ? g_flPanicInterval[ST_TankType(client)] : g_flPanicInterval2[ST_TankType(client)];
@@ -131,17 +142,16 @@ public void ST_Ability(int client)
 	}
 }
 
-void vPanicHit(int client)
+stock void vPanicHit(int client)
 {
-	int iPanicChance = !g_bTankConfig[ST_TankType(client)] ? g_iPanicChance[ST_TankType(client)] : g_iPanicChance2[ST_TankType(client)],
-		iPanicHit = !g_bTankConfig[ST_TankType(client)] ? g_iPanicHit[ST_TankType(client)] : g_iPanicHit2[ST_TankType(client)];
-	if (iPanicHit == 1 && GetRandomInt(1, iPanicChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	int iPanicHit = !g_bTankConfig[ST_TankType(client)] ? g_iPanicHit[ST_TankType(client)] : g_iPanicHit2[ST_TankType(client)];
+	if (iPanicHit == 1 && GetRandomInt(1, iPanicChance(client)) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		vCheatCommand(client, "director_force_panic_event");
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -152,6 +162,16 @@ void vReset()
 	}
 }
 
+stock int iPanicAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iPanicAbility[ST_TankType(client)] : g_iPanicAbility2[ST_TankType(client)];
+}
+
+stock int iPanicChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iPanicChance[ST_TankType(client)] : g_iPanicChance2[ST_TankType(client)];
+}
+
 public Action tTimerPanic(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -160,8 +180,7 @@ public Action tTimerPanic(Handle timer, any userid)
 		g_bPanic[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iPanicAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iPanicAbility[ST_TankType(iTank)] : g_iPanicAbility2[ST_TankType(iTank)];
-	if (iPanicAbility == 0)
+	if (iPanicAbility(iTank) == 0)
 	{
 		g_bPanic[iTank] = false;
 		return Plugin_Stop;

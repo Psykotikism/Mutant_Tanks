@@ -50,7 +50,7 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -73,11 +73,15 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Spawn(int client)
 {
-	int iJumpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iJumpAbility[ST_TankType(client)] : g_iJumpAbility2[ST_TankType(client)];
-	if (iJumpAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (iJumpAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		CreateTimer(1.0, tTimerJump, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
+}
+
+stock int iJumpAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iJumpAbility[ST_TankType(client)] : g_iJumpAbility2[ST_TankType(client)];
 }
 
 public Action tTimerJump(Handle timer, any userid)
@@ -87,8 +91,7 @@ public Action tTimerJump(Handle timer, any userid)
 	{
 		return Plugin_Stop;
 	}
-	int iJumpAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iJumpAbility[ST_TankType(iTank)] : g_iJumpAbility2[ST_TankType(iTank)];
-	if (iJumpAbility == 0)
+	if (iJumpAbility(iTank) == 0)
 	{
 		return Plugin_Stop;
 	}

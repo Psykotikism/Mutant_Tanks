@@ -98,7 +98,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -131,9 +131,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iIceAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iIceAbility[ST_TankType(iTank)] : g_iIceAbility2[ST_TankType(iTank)];
-		if (iIceAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iIceAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveIce(iTank);
 		}
@@ -144,8 +143,7 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iIceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIceAbility[ST_TankType(client)] : g_iIceAbility2[ST_TankType(client)],
-			iIceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iIceChance[ST_TankType(client)] : g_iIceChance2[ST_TankType(client)];
+		int iIceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iIceChance[ST_TankType(client)] : g_iIceChance2[ST_TankType(client)];
 		float flIceRange = !g_bTankConfig[ST_TankType(client)] ? g_flIceRange[ST_TankType(client)] : g_flIceRange2[ST_TankType(client)],
 			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -158,7 +156,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIceRange)
 				{
-					vIceHit(iSurvivor, client, iIceRangeChance, iIceAbility);
+					vIceHit(iSurvivor, client, iIceRangeChance, iIceAbility(client));
 				}
 			}
 		}
@@ -167,14 +165,13 @@ public void ST_Ability(int client)
 
 public void ST_BossStage(int client)
 {
-	int iIceAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIceAbility[ST_TankType(client)] : g_iIceAbility2[ST_TankType(client)];
-	if (iIceAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iIceAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vRemoveIce(client);
 	}
 }
 
-void vIceHit(int client, int owner, int chance, int enabled)
+stock void vIceHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bIce[client])
 	{
@@ -190,13 +187,11 @@ void vIceHit(int client, int owner, int chance, int enabled)
 		float flIceDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flIceDuration[ST_TankType(owner)] : g_flIceDuration2[ST_TankType(owner)];
 		DataPack dpStopIce = new DataPack();
 		CreateDataTimer(flIceDuration, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopIce.WriteCell(GetClientUserId(client));
-		dpStopIce.WriteCell(GetClientUserId(owner));
-		dpStopIce.WriteCell(enabled);
+		dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(GetClientUserId(owner)), dpStopIce.WriteCell(enabled);
 	}
 }
 
-void vRemoveIce(int client)
+stock void vRemoveIce(int client)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -204,14 +199,12 @@ void vRemoveIce(int client)
 		{
 			DataPack dpStopIce = new DataPack();
 			CreateDataTimer(0.1, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopIce.WriteCell(GetClientUserId(iSurvivor));
-			dpStopIce.WriteCell(GetClientUserId(client));
-			dpStopIce.WriteCell(1);
+			dpStopIce.WriteCell(GetClientUserId(iSurvivor)), dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(1);
 		}
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -222,7 +215,7 @@ void vReset()
 	}
 }
 
-void vStopIce(int client)
+stock void vStopIce(int client)
 {
 	if (g_bIce[client])
 	{
@@ -236,6 +229,11 @@ void vStopIce(int client)
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 		EmitAmbientSound(SOUND_BULLET, flPos, client, SNDLEVEL_RAIDSIREN);
 	}
+}
+
+stock int iIceAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iIceAbility[ST_TankType(client)] : g_iIceAbility2[ST_TankType(client)];
 }
 
 public Action tTimerStopIce(Handle timer, DataPack pack)
@@ -253,8 +251,8 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 		vStopIce(iSurvivor);
 		return Plugin_Stop;
 	}
-	int iIceAbility = pack.ReadCell();
-	if (iIceAbility == 0)
+	int iIceEnabled = pack.ReadCell();
+	if (iIceEnabled == 0)
 	{
 		vStopIce(iSurvivor);
 		return Plugin_Stop;

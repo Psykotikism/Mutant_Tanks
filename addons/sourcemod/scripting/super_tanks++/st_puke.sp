@@ -97,24 +97,20 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iPukeChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iPukeChance[ST_TankType(attacker)] : g_iPukeChance2[ST_TankType(attacker)],
-					iPukeHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iPukeHit[ST_TankType(attacker)] : g_iPukeHit2[ST_TankType(attacker)];
-				vPukeHit(victim, attacker, iPukeChance, iPukeHit);
+				vPukeHit(victim, attacker, iPukeChance(attacker), iPukeHit(attacker));
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				int iPukeChance = !g_bTankConfig[ST_TankType(victim)] ? g_iPukeChance[ST_TankType(victim)] : g_iPukeChance2[ST_TankType(victim)],
-					iPukeHit = !g_bTankConfig[ST_TankType(victim)] ? g_iPukeHit[ST_TankType(victim)] : g_iPukeHit2[ST_TankType(victim)];
-				vPukeHit(attacker, victim, iPukeChance, iPukeHit);
+				vPukeHit(attacker, victim, iPukeChance(victim), iPukeHit(victim));
 			}
 		}
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -166,10 +162,20 @@ public void ST_Ability(int client)
 	}
 }
 
-void vPukeHit(int client, int owner, int chance, int enabled)
+stock void vPukeHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		SDKCall(g_hSDKPukePlayer, client, owner, true);
 	}
+}
+
+stock int iPukeChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iPukeChance[ST_TankType(client)] : g_iPukeChance2[ST_TankType(client)];
+}
+
+stock int iPukeHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iPukeHit[ST_TankType(client)] : g_iPukeHit2[ST_TankType(client)];
 }

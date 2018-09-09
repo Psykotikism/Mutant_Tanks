@@ -52,7 +52,7 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -81,10 +81,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iMedicAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iMedicAbility[ST_TankType(iTank)] : g_iMedicAbility2[ST_TankType(iTank)],
-			iMedicChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iMedicChance[ST_TankType(iTank)] : g_iMedicChance2[ST_TankType(iTank)];
-		if (iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iMedicAbility(iTank) == 1 && GetRandomInt(1, iMedicChance(iTank)) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vMedic(iTank);
 		}
@@ -93,22 +91,20 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_BossStage(int client)
 {
-	int iMedicAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMedicAbility[ST_TankType(client)] : g_iMedicAbility2[ST_TankType(client)],
-		iMedicChance = !g_bTankConfig[ST_TankType(client)] ? g_iMedicChance[ST_TankType(client)] : g_iMedicChance2[ST_TankType(client)];
-	if (iMedicAbility == 1 && GetRandomInt(1, iMedicChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iMedicAbility(client) == 1 && GetRandomInt(1, iMedicChance(client)) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vMedic(client);
 	}
 }
 
-void vMedic(int client)
+stock void vMedic(int client)
 {
 	float flMedicRange = !g_bTankConfig[ST_TankType(client)] ? g_flMedicRange[ST_TankType(client)] : g_flMedicRange2[ST_TankType(client)],
 		flTankPos[3];
 	GetClientAbsOrigin(client, flTankPos);
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
-		if (bIsSpecialInfected(iInfected))
+		if (bIsSpecialInfected(iInfected) && IsPlayerAlive(iInfected))
 		{
 			float flInfectedPos[3];
 			GetClientAbsOrigin(iInfected, flInfectedPos);
@@ -147,31 +143,32 @@ void vMedic(int client)
 				iJockeyMaxHealth = iSetCellLimit(iJockeyMaxHealth, 1, ST_MAXHEALTH);
 				iChargerHealth = iSetCellLimit(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				iChargerMaxHealth = iSetCellLimit(iChargerMaxHealth, 1, ST_MAXHEALTH);
-				if (bIsSmoker(iInfected) && IsPlayerAlive(iInfected))
+				switch (GetEntProp(client, Prop_Send, "m_zombieClass"))
 				{
-					vHeal(iInfected, iHealth, iHealth + iSmokerHealth, iSmokerMaxHealth);
-				}
-				else if (bIsBoomer(iInfected) && IsPlayerAlive(iInfected))
-				{
-					vHeal(iInfected, iHealth, iHealth + iBoomerHealth, iBoomerMaxHealth);
-				}
-				else if (bIsHunter(iInfected) && IsPlayerAlive(iInfected))
-				{
-					vHeal(iInfected, iHealth, iHealth + iHunterHealth, iHunterMaxHealth);
-				}
-				else if (bIsSpitter(iInfected) && IsPlayerAlive(iInfected))
-				{
-					vHeal(iInfected, iHealth, iHealth + iSpitterHealth, iSpitterMaxHealth);
-				}
-				else if (bIsJockey(iInfected) && IsPlayerAlive(iInfected))
-				{
-					vHeal(iInfected, iHealth, iHealth + iJockeyHealth, iJockeyMaxHealth);
-				}
-				else if (bIsCharger(iInfected) && IsPlayerAlive(iInfected))
-				{
-					vHeal(iInfected, iHealth, iHealth + iChargerHealth, iChargerMaxHealth);
+					case 1: vHeal(iInfected, iHealth, iHealth + iSmokerHealth, iSmokerMaxHealth);
+					case 2: vHeal(iInfected, iHealth, iHealth + iBoomerHealth, iBoomerMaxHealth);
+					case 3: vHeal(iInfected, iHealth, iHealth + iHunterHealth, iHunterMaxHealth);
+					case 4: vHeal(iInfected, iHealth, iHealth + iSpitterHealth, iSpitterMaxHealth);
+					case 5:
+					{
+						if (bIsL4D2Game())
+						{
+							vHeal(iInfected, iHealth, iHealth + iJockeyHealth, iJockeyMaxHealth);
+						}
+					}
+					case 6: vHeal(iInfected, iHealth, iHealth + iChargerHealth, iChargerMaxHealth);
 				}
 			}
 		}
 	}
+}
+
+stock int iMedicAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iMedicAbility[ST_TankType(client)] : g_iMedicAbility2[ST_TankType(client)];
+}
+
+stock int iMedicChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iMedicChance[ST_TankType(client)] : g_iMedicChance2[ST_TankType(client)];
 }

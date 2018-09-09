@@ -110,7 +110,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -173,7 +173,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vRestartHit(int client, int owner, int chance, int enabled)
+stock void vRestartHit(int client, int owner, int chance, int enabled)
 {
 	int iRestartMode = !g_bTankConfig[ST_TankType(owner)] ? g_iRestartMode[ST_TankType(owner)] : g_iRestartMode2[ST_TankType(owner)];
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))

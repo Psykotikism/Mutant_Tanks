@@ -111,7 +111,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -167,12 +167,11 @@ public void ST_RockThrow(int client, int entity)
 	{
 		DataPack dpShieldThrow = new DataPack();
 		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpShieldThrow.WriteCell(EntIndexToEntRef(entity));
-		dpShieldThrow.WriteCell(GetClientUserId(client));
+		dpShieldThrow.WriteCell(EntIndexToEntRef(entity)), dpShieldThrow.WriteCell(GetClientUserId(client));
 	}
 }
 
-void vRemoveShield(int client)
+stock void vRemoveShield(int client)
 {
 	int iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
@@ -190,7 +189,7 @@ void vRemoveShield(int client)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -201,7 +200,7 @@ void vReset()
 	}
 }
 
-void vShield(int client, bool shield)
+stock void vShield(int client, bool shield)
 {
 	if (shield)
 	{
@@ -257,7 +256,7 @@ void vShield(int client, bool shield)
 	}
 }
 
-int iShieldAbility(int client)
+stock int iShieldAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
 }

@@ -163,7 +163,7 @@ forward void ST_BossStage(int client);
  *							or a custom config
  *							is being used.
  */
-forward void ST_Configs(char[] savepath, bool main);
+forward void ST_Configs(const char[] savepath, bool main);
 
 /* Called when an event hooked by the core plugin is fired.
  * Use this forward to trigger something on any of those events.
@@ -964,13 +964,8 @@ stock void vFade(int client, int duration, int unknown, int red, int green, int 
 	if (hFadeTarget != null)
 	{
 		BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
-		bfWrite.WriteShort(duration);
-		bfWrite.WriteShort(unknown);
-		bfWrite.WriteShort((0x0010|0x0001));
-		bfWrite.WriteByte(red);
-		bfWrite.WriteByte(green);
-		bfWrite.WriteByte(blue);
-		bfWrite.WriteByte(150);
+		bfWrite.WriteShort(duration), bfWrite.WriteShort(unknown), bfWrite.WriteShort((0x0010|0x0001));
+		bfWrite.WriteByte(red), bfWrite.WriteByte(green), bfWrite.WriteByte(blue), bfWrite.WriteByte(150);
 		EndMessage();
 	}
 }
@@ -1047,7 +1042,7 @@ stock void vMultiTargetFilters(int toggle)
 	}
 }
 
-stock void vPrecacheParticle(char[] particlename)
+stock void vPrecacheParticle(const char[] particlename)
 {
 	int iParticle = CreateEntityByName("info_particle_system");
 	if (IsValidEntity(iParticle))
@@ -1080,9 +1075,7 @@ stock void vShake(int client, float duration = 1.0)
 	{
 		BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
 		bfWrite.WriteByte(0);
-		bfWrite.WriteFloat(16.0);
-		bfWrite.WriteFloat(0.5);
-		bfWrite.WriteFloat(duration);
+		bfWrite.WriteFloat(16.0), bfWrite.WriteFloat(0.5), bfWrite.WriteFloat(duration);
 		EndMessage();
 	}
 }

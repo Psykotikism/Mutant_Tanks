@@ -67,7 +67,7 @@ public void OnMapEnd()
 	vReset();
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -94,24 +94,19 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iMeteorAbility = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorAbility[ST_TankType(client)] : g_iMeteorAbility2[ST_TankType(client)],
-		iMeteorChance = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorChance[ST_TankType(client)] : g_iMeteorChance2[ST_TankType(client)];
-	if (iMeteorAbility == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bMeteor[client])
+	int iMeteorChance = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorChance[ST_TankType(client)] : g_iMeteorChance2[ST_TankType(client)];
+	if (iMeteorAbility(client) == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bMeteor[client])
 	{
 		g_bMeteor[client] = true;
 		float flPos[3];
 		GetClientEyePosition(client, flPos);
 		DataPack dpMeteorUpdate = new DataPack();
 		CreateDataTimer(0.6, tTimerMeteorUpdate, dpMeteorUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpMeteorUpdate.WriteCell(GetClientUserId(client));
-		dpMeteorUpdate.WriteFloat(flPos[0]);
-		dpMeteorUpdate.WriteFloat(flPos[1]);
-		dpMeteorUpdate.WriteFloat(flPos[2]);
-		dpMeteorUpdate.WriteFloat(GetEngineTime());
+		dpMeteorUpdate.WriteCell(GetClientUserId(client)), dpMeteorUpdate.WriteFloat(flPos[0]), dpMeteorUpdate.WriteFloat(flPos[1]), dpMeteorUpdate.WriteFloat(flPos[2]), dpMeteorUpdate.WriteFloat(GetEngineTime());
 	}
 }
 
-void vMeteor(int client, int entity)
+stock void vMeteor(int client, int entity)
 {
 	if (!ST_TankAllowed(client) || !IsPlayerAlive(client) || !ST_CloneAllowed(client, g_bCloneInstalled) || !bIsValidEntity(entity))
 	{
@@ -171,7 +166,7 @@ void vMeteor(int client, int entity)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -180,6 +175,11 @@ void vReset()
 			g_bMeteor[iPlayer] = false;
 		}
 	}
+}
+
+stock int iMeteorAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iMeteorAbility[ST_TankType(client)] : g_iMeteorAbility2[ST_TankType(client)];
 }
 
 public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
@@ -194,8 +194,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	float flPos[3];
 	flPos[0] = pack.ReadFloat(), flPos[1] = pack.ReadFloat(), flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
-	int iMeteorAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iMeteorAbility[ST_TankType(iTank)] : g_iMeteorAbility2[ST_TankType(iTank)];
-	if (iMeteorAbility == 0)
+	if (iMeteorAbility(iTank) == 0)
 	{
 		g_bMeteor[iTank] = false;
 		return Plugin_Stop;
@@ -208,8 +207,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -200.0;
 	TrimString(sRadius[1]);
 	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
-	flMin = flSetFloatLimit(flMin, -200.0, 0.0);
-	flMax = flSetFloatLimit(flMax, 0.0, 200.0);
+	flMin = flSetFloatLimit(flMin, -200.0, 0.0), flMax = flSetFloatLimit(flMax, 0.0, 200.0);
 	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
 	TrimString(sPropsColors);
 	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));

@@ -336,8 +336,7 @@ public void OnPluginEnd()
 	{
 		if (bIsTank(iTank) && IsPlayerAlive(iTank))
 		{
-			int iGlowEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_iGlowEffect[g_iTankType[iTank]] : g_iGlowEffect2[g_iTankType[iTank]];
-			if (iGlowEffect == 1 && bIsL4D2Game())
+			if (iGlowEffect(g_iTankType[iTank]) == 1 && bIsL4D2Game())
 			{
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
 				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
@@ -464,9 +463,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				int iBulletImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iBulletImmunity[g_iTankType[victim]] : g_iBulletImmunity2[g_iTankType[victim]],
 					iExplosiveImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iExplosiveImmunity[g_iTankType[victim]] : g_iExplosiveImmunity2[g_iTankType[victim]],
-					iFireImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iFireImmunity[g_iTankType[victim]] : g_iFireImmunity2[g_iTankType[victim]],
 					iMeleeImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iMeleeImmunity[g_iTankType[victim]] : g_iMeleeImmunity2[g_iTankType[victim]];
-				if ((damagetype & DMG_BULLET && iBulletImmunity == 1) || ((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && iExplosiveImmunity == 1) || (damagetype & DMG_BURN && iFireImmunity == 1) || ((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && iMeleeImmunity == 1))
+				if ((damagetype & DMG_BULLET && iBulletImmunity == 1) || ((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && iExplosiveImmunity == 1) || (damagetype & DMG_BURN && iFireImmunity(victim) == 1) || ((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && iMeleeImmunity == 1))
 				{
 					damage = 0.0;
 					return Plugin_Handled;
@@ -510,8 +508,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		int iUserId = event.GetInt("userid"), iTank = GetClientOfUserId(iUserId);
 		if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
 		{
-			float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
-			vThrowInterval(iTank, flThrowInterval);
+			vThrowInterval(iTank, flThrowInterval(iTank));
 		}
 	}
 	else if (strcmp(name, "finale_escape_start") == 0 || strcmp(name, "finale_vehicle_ready") == 0)
@@ -533,8 +530,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (bIsTankAllowed(iPlayer))
 			{
-				int iGlowEffect = !g_bTankConfig[g_iTankType[iPlayer]] ? g_iGlowEffect[g_iTankType[iPlayer]] : g_iGlowEffect2[g_iTankType[iPlayer]];
-				if (iGlowEffect == 1 && bIsL4D2Game())
+				if (iGlowEffect(g_iTankType[iPlayer]) == 1 && bIsL4D2Game())
 				{
 					SetEntProp(iPlayer, Prop_Send, "m_iGlowType", 0);
 					SetEntProp(iPlayer, Prop_Send, "m_glowColorOverride", 0);
@@ -622,8 +618,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 				DataPack dpTankSpawn = new DataPack();
 				CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
-				dpTankSpawn.WriteCell(GetClientUserId(iTank));
-				dpTankSpawn.WriteCell(0);
+				dpTankSpawn.WriteCell(GetClientUserId(iTank)), dpTankSpawn.WriteCell(0);
 			}
 		}
 	}
@@ -667,7 +662,7 @@ public Action cmdTank(int client, int args)
 	return Plugin_Handled;
 }
 
-void vTank(int client, int type, int mode = 0)
+stock void vTank(int client, int type, int mode = 0)
 {
 	g_iType = type;
 	char sParameter[32];
@@ -679,7 +674,7 @@ void vTank(int client, int type, int mode = 0)
 	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", sParameter);
 }
 
-void vTankMenu(int client, int item)
+stock void vTankMenu(int client, int item)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler);
 	mTankMenu.SetTitle("Super Tanks++ Menu");
@@ -743,7 +738,7 @@ public Action cmdTankList(int client, int args)
 	return Plugin_Handled;
 }
 
-void vTankList(int client)
+stock void vTankList(int client)
 {
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
@@ -754,8 +749,7 @@ void vTankList(int client)
 			case 0: sStatus = "Disabled";
 			case 1: sStatus = "Enabled";
 		}
-		int iSpawnMode = !g_bTankConfig[iIndex] ? g_iSpawnMode[iIndex] : g_iSpawnMode2[iIndex];
-		switch (iSpawnMode)
+		switch (iGetSpawnMode(iIndex))
 		{
 			case 0: sMode = "Normal";
 			case 1: sMode = "Boss";
@@ -769,7 +763,7 @@ void vTankList(int client)
 	}
 }
 
-void vPluginStatus()
+stock void vPluginStatus()
 {
 	bool bIsPluginAllowed = bIsPluginEnabled(g_cvSTGameMode, g_iGameModeTypes, g_sEnabledGameModes, g_sDisabledGameModes);
 	if (iPluginEnabled() == 1)
@@ -789,7 +783,7 @@ void vPluginStatus()
 	}
 }
 
-void vHookEvents(bool hook)
+stock void vHookEvents(bool hook)
 {
 	static bool bHooked;
 	if (hook && !bHooked)
@@ -822,7 +816,7 @@ void vHookEvents(bool hook)
 	}
 }
 
-void vLoadConfigs(char[] savepath, bool main = false)
+stock void vLoadConfigs(const char[] savepath, bool main = false)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -916,7 +910,7 @@ void vLoadConfigs(char[] savepath, bool main = false)
 	Call_Finish();
 }
 
-void vLateLoad(bool late)
+stock void vLateLoad(bool late)
 {
 	if (late)
 	{
@@ -931,7 +925,7 @@ void vLateLoad(bool late)
 	}
 }
 
-void vBoss(int client, int limit, int stages, int stage)
+stock void vBoss(int client, int limit, int stages, int stage)
 {
 	int iHealth = GetClientHealth(client);
 	if (iHealth <= limit && stages >= stage)
@@ -956,14 +950,13 @@ void vBoss(int client, int limit, int stages, int stage)
 		}
 		DataPack dpTankSpawn = new DataPack();
 		CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
-		dpTankSpawn.WriteCell(GetClientUserId(client));
-		dpTankSpawn.WriteCell(1);
+		dpTankSpawn.WriteCell(GetClientUserId(client)), dpTankSpawn.WriteCell(1);
 		int iNewHealth = g_iTankHealth[client] + limit, iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
 		SetEntityHealth(client, iFinalHealth);
 	}
 }
 
-void vNewTankSettings(int client)
+stock void vNewTankSettings(int client)
 {
 	ExtinguishEntity(client);
 	vAttachParticle(client, PARTICLE_ELECTRICITY, 2.0, 30.0);
@@ -974,7 +967,7 @@ void vNewTankSettings(int client)
 	vRemoveProps(client);
 }
 
-void vParticleEffects(int client)
+stock void vParticleEffects(int client)
 {
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[client]] ? g_sParticleEffects[g_iTankType[client]] : g_sParticleEffects2[g_iTankType[client]];
@@ -1011,7 +1004,7 @@ void vParticleEffects(int client)
 	}
 }
 
-void vRemoveProps(int client)
+stock void vRemoveProps(int client)
 {
 	int iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
@@ -1037,7 +1030,7 @@ void vRemoveProps(int client)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -1055,7 +1048,7 @@ void vReset()
 	}
 }
 
-void vSetColor(int client, int value)
+stock void vSetColor(int client, int value)
 {
 	char sSet[2][16], sTankColors[28], sRGB[4][4], sGlow[3][4];
 	sTankColors = !g_bTankConfig[value] ? g_sTankColors[value] : g_sTankColors2[value];
@@ -1084,8 +1077,7 @@ void vSetColor(int client, int value)
 	TrimString(sGlow[2]);
 	int iBlue2 = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
 	iBlue2 = iSetCellLimit(iBlue2, 0, 255);
-	int iGlowEffect = !g_bTankConfig[value] ? g_iGlowEffect[value] : g_iGlowEffect2[value];
-	if (iGlowEffect == 1 && bIsL4D2Game())
+	if (iGlowEffect(value) == 1 && bIsL4D2Game())
 	{
 		SetEntProp(client, Prop_Send, "m_iGlowType", 3);
 		SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
@@ -1095,7 +1087,7 @@ void vSetColor(int client, int value)
 	g_iTankType[client] = value;
 }
 
-void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mode)
+stock void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mode)
 {
 	if (bIsTankAllowed(client) && IsPlayerAlive(client))
 	{
@@ -1437,7 +1429,7 @@ void vSetName(int client, char[] oldname = "Tank", char[] name = "Tank", int mod
 	}
 }
 
-void vTankCountCheck(int client, int wave)
+stock void vTankCountCheck(int client, int wave)
 {
 	if (iGetTankCount() == wave)
 	{
@@ -1453,7 +1445,7 @@ void vTankCountCheck(int client, int wave)
 	}
 }
 
-void vThrowInterval(int client, float time)
+stock void vThrowInterval(int client, float time)
 {
 	if (bIsTankAllowed(client) && IsPlayerAlive(client))
 	{
@@ -1466,12 +1458,27 @@ void vThrowInterval(int client, float time)
 	}
 }
 
-int iFinaleTank(int value)
+stock bool bIsTankAllowed(int client)
+{
+	return bIsTank(client) && IsFakeClient(client);
+}
+
+stock float flThrowInterval(int client)
+{
+	return !g_bTankConfig[g_iTankType[client]] ? g_flThrowInterval[g_iTankType[client]] : g_flThrowInterval2[g_iTankType[client]];
+}
+
+stock int iFinaleTank(int value)
 {
 	return !g_bTankConfig[value] ? g_iFinaleTank[value] : g_iFinaleTank2[value];
 }
 
-int iGetMaxType()
+stock int iFireImmunity(int client)
+{
+	return !g_bTankConfig[g_iTankType[client]] ? g_iFireImmunity[g_iTankType[client]] : g_iFireImmunity2[g_iTankType[client]];
+}
+
+stock int iGetMaxType()
 {
 	char sTypeRange[10], sRange[2][5];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
@@ -1481,7 +1488,7 @@ int iGetMaxType()
 	return iMaxType;
 }
 
-int iGetMinType()
+stock int iGetMinType()
 {
 	char sTypeRange[10], sRange[2][5];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
@@ -1491,7 +1498,12 @@ int iGetMinType()
 	return iMinType;
 }
 
-int iGetTankCount()
+stock int iGetSpawnMode(int value)
+{
+	return !g_bTankConfig[value] ? g_iSpawnMode[value] : g_iSpawnMode2[value];
+}
+
+stock int iGetTankCount()
 {
 	int iTankCount;
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
@@ -1504,24 +1516,29 @@ int iGetTankCount()
 	return iTankCount;
 }
 
-int iParticleEffect(int client)
+stock int iGlowEffect(int value)
+{
+	return !g_bTankConfig[value] ? g_iGlowEffect[value] : g_iGlowEffect2[value];
+}
+
+stock int iParticleEffect(int client)
 {
 	return !g_bTankConfig[g_iTankType[client]] ? g_iParticleEffect[g_iTankType[client]] : g_iParticleEffect2[g_iTankType[client]];
 }
 
-int iPluginEnabled()
+stock int iPluginEnabled()
 {
 	return !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
 }
 
-int iTankEnabled(int value)
+stock int iRockEffect(int client)
 {
-	return !g_bTankConfig[value] ? g_iTankEnabled[value] : g_iTankEnabled2[value];
+	return !g_bTankConfig[g_iTankType[client]] ? g_iRockEffect[g_iTankType[client]] : g_iRockEffect2[g_iTankType[client]];
 }
 
-bool bIsTankAllowed(int client)
+stock int iTankEnabled(int value)
 {
-	return bIsTank(client) && IsFakeClient(client);
+	return !g_bTankConfig[value] ? g_iTankEnabled[value] : g_iTankEnabled2[value];
 }
 
 public void vSTEnableCvar(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -1736,8 +1753,7 @@ public Action tTimerRandomize(Handle timer, any userid)
 	}
 	DataPack dpTankSpawn = new DataPack();
 	CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
-	dpTankSpawn.WriteCell(GetClientUserId(iTank));
-	dpTankSpawn.WriteCell(2);
+	dpTankSpawn.WriteCell(GetClientUserId(iTank)), dpTankSpawn.WriteCell(2);
 	return Plugin_Continue;
 }
 
@@ -1836,8 +1852,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 	{
 		if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank) && g_iTankType[iTank] > 0 && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			int iSpawnMode = !g_bTankConfig[g_iTankType[iTank]] ? g_iSpawnMode[g_iTankType[iTank]] : g_iSpawnMode2[g_iTankType[iTank]];
-			switch (iSpawnMode)
+			switch (iGetSpawnMode(g_iTankType[iTank]))
 			{
 				case 1:
 				{
@@ -1867,13 +1882,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 						int iBossStages = !g_bTankConfig[g_iTankType[iTank]] ? g_iBossStages[g_iTankType[iTank]] : g_iBossStages2[g_iTankType[iTank]];
 						DataPack dpBoss = new DataPack();
 						CreateDataTimer(1.0, tTimerBoss, dpBoss, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-						dpBoss.WriteCell(GetClientUserId(iTank));
-						dpBoss.WriteCell(iBossHealth);
-						dpBoss.WriteCell(iBossHealth2);
-						dpBoss.WriteCell(iBossHealth3);
-						dpBoss.WriteCell(iBossHealth4);
-						dpBoss.WriteCell(iBossHealth5);
-						dpBoss.WriteCell(iBossStages);
+						dpBoss.WriteCell(GetClientUserId(iTank)), dpBoss.WriteCell(iBossHealth), dpBoss.WriteCell(iBossHealth2), dpBoss.WriteCell(iBossHealth3), dpBoss.WriteCell(iBossHealth4), dpBoss.WriteCell(iBossHealth5), dpBoss.WriteCell(iBossStages);
 					}
 				}
 				case 2:
@@ -1890,8 +1899,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 			Call_StartForward(g_hAbilityForward);
 			Call_PushCell(iTank);
 			Call_Finish();
-			int iFireImmunity = !g_bTankConfig[g_iTankType[iTank]] ? g_iFireImmunity[g_iTankType[iTank]] : g_iFireImmunity2[g_iTankType[iTank]];
-			if (iFireImmunity == 1 && bIsPlayerBurning(iTank))
+			if (iFireImmunity(iTank) == 1 && bIsPlayerBurning(iTank))
 			{
 				ExtinguishEntity(iTank);
 				SetEntPropFloat(iTank, Prop_Send, "m_burnPercent", 1.0);
@@ -1916,8 +1924,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	Call_PushCell(iTank);
 	Call_Finish();
 	vParticleEffects(iTank);
-	float flThrowInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flThrowInterval[g_iTankType[iTank]] : g_flThrowInterval2[g_iTankType[iTank]];
-	vThrowInterval(iTank, flThrowInterval);
+	vThrowInterval(iTank, flThrowInterval(iTank));
 	char sCurrentName[MAX_NAME_LENGTH + 1], sTankName[MAX_NAME_LENGTH + 1];
 	GetClientName(iTank, sCurrentName, sizeof(sCurrentName));
 	sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
@@ -1970,8 +1977,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 	}
 	char sRockEffects[5];
 	pack.ReadString(sRockEffects, sizeof(sRockEffects));
-	int iRockEffect = !g_bTankConfig[g_iTankType[iTank]] ? g_iRockEffect[g_iTankType[iTank]] : g_iRockEffect2[g_iTankType[iTank]];
-	if (iRockEffect == 0)
+	if (iRockEffect(iTank) == 0)
 	{
 		return Plugin_Stop;
 	}
@@ -2030,14 +2036,11 @@ public Action tTimerRockThrow(Handle timer, any entity)
 	iAlpha = iSetCellLimit(iAlpha, 0, 255);
 	SetEntityRenderColor(entity, iRed, iGreen, iBlue, iAlpha);
 	sRockEffects = !g_bTankConfig[g_iTankType[iThrower]] ? g_sRockEffects[g_iTankType[iThrower]] : g_sRockEffects2[g_iTankType[iThrower]];
-	int iRockEffect = !g_bTankConfig[g_iTankType[iThrower]] ? g_iRockEffect[g_iTankType[iThrower]] : g_iRockEffect2[g_iTankType[iThrower]];
-	if (iRockEffect == 1 && sRockEffects[0] != '\0')
+	if (iRockEffect(iThrower) == 1 && sRockEffects[0] != '\0')
 	{
 		DataPack dpRockEffects = new DataPack();
 		CreateDataTimer(0.75, tTimerRockEffects, dpRockEffects, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpRockEffects.WriteCell(EntIndexToEntRef(entity));
-		dpRockEffects.WriteCell(GetClientUserId(iThrower));
-		dpRockEffects.WriteString(sRockEffects);
+		dpRockEffects.WriteCell(EntIndexToEntRef(entity)), dpRockEffects.WriteCell(GetClientUserId(iThrower)), dpRockEffects.WriteString(sRockEffects);
 	}
 	Call_StartForward(g_hRockThrowForward);
 	Call_PushCell(iThrower);

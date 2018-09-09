@@ -66,7 +66,7 @@ public void OnMapEnd()
 	vReset();
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -93,8 +93,7 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iRegenAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRegenAbility[ST_TankType(client)] : g_iRegenAbility2[ST_TankType(client)];
-	if (iRegenAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bRegen[client])
+	if (iRegenAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bRegen[client])
 	{
 		g_bRegen[client] = true;
 		float flRegenInterval = !g_bTankConfig[ST_TankType(client)] ? g_flRegenInterval[ST_TankType(client)] : g_flRegenInterval2[ST_TankType(client)];
@@ -102,7 +101,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -113,6 +112,11 @@ void vReset()
 	}
 }
 
+stock int iRegenAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iRegenAbility[ST_TankType(client)] : g_iRegenAbility2[ST_TankType(client)];
+}
+
 public Action tTimerRegen(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -121,8 +125,7 @@ public Action tTimerRegen(Handle timer, any userid)
 		g_bRegen[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iRegenAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iRegenAbility[ST_TankType(iTank)] : g_iRegenAbility2[ST_TankType(iTank)];
-	if (iRegenAbility == 0)
+	if (iRegenAbility(iTank) == 0)
 	{
 		g_bRegen[iTank] = false;
 		return Plugin_Stop;

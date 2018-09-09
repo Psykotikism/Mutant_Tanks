@@ -103,7 +103,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -157,7 +157,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vDrug(int client, bool toggle, float angles[20])
+stock void vDrug(int client, bool toggle, float angles[20])
 {
 	float flAngles[3];
 	GetClientEyeAngles(client, flAngles);
@@ -173,40 +173,30 @@ void vDrug(int client, bool toggle, float angles[20])
 	if (GetUserMessageType() == UM_Protobuf)
 	{
 		Protobuf pbSet = UserMessageToProtobuf(hDrugTarget);
-		pbSet.SetInt("duration", toggle ? 255: 1536);
-		pbSet.SetInt("hold_time", toggle ? 255 : 1536);
-		pbSet.SetInt("flags", iFlags);
+		pbSet.SetInt("duration", toggle ? 255: 1536), pbSet.SetInt("hold_time", toggle ? 255 : 1536), pbSet.SetInt("flags", iFlags);
 		pbSet.SetColor("clr", toggle ? iColor : iColor2);
 	}
 	else
 	{
 		BfWrite bfWrite = UserMessageToBfWrite(hDrugTarget);
-		bfWrite.WriteShort(toggle ? 255 : 1536);
-		bfWrite.WriteShort(toggle ? 255 : 1536);
-		bfWrite.WriteShort(iFlags);
-		bfWrite.WriteByte(toggle ? iColor[0] : iColor2[0]);
-		bfWrite.WriteByte(toggle ? iColor[1] : iColor2[1]);
-		bfWrite.WriteByte(toggle ? iColor[2] : iColor2[2]);
-		bfWrite.WriteByte(toggle ? iColor[3] : iColor2[3]);
+		bfWrite.WriteShort(toggle ? 255 : 1536), bfWrite.WriteShort(toggle ? 255 : 1536), bfWrite.WriteShort(iFlags);
+		bfWrite.WriteByte(toggle ? iColor[0] : iColor2[0]), bfWrite.WriteByte(toggle ? iColor[1] : iColor2[1]), bfWrite.WriteByte(toggle ? iColor[2] : iColor2[2]), bfWrite.WriteByte(toggle ? iColor[3] : iColor2[3]);
 	}
 	EndMessage();
 }
 
-void vDrugHit(int client, int owner, int chance, int enabled)
+stock void vDrugHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bDrug[client])
 	{
 		g_bDrug[client] = true;
 		DataPack dpDrug = new DataPack();
 		CreateDataTimer(1.0, tTimerDrug, dpDrug, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDrug.WriteCell(GetClientUserId(client));
-		dpDrug.WriteCell(GetClientUserId(owner));
-		dpDrug.WriteCell(enabled);
-		dpDrug.WriteFloat(GetEngineTime());
+		dpDrug.WriteCell(GetClientUserId(client)), dpDrug.WriteCell(GetClientUserId(owner)), dpDrug.WriteCell(enabled), dpDrug.WriteFloat(GetEngineTime());
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{

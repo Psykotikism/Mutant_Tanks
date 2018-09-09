@@ -98,7 +98,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -135,9 +135,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iGravityAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGravityAbility[ST_TankType(iTank)] : g_iGravityAbility2[ST_TankType(iTank)];
-		if (iGravityAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iGravityAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveGravity(iTank);
 		}
@@ -146,9 +145,8 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)],
-		iGravityRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
-	if (iGravityAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	int iGravityRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
+	if (iGravityAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		if (!g_bGravity[client])
 		{
@@ -187,7 +185,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flGravityRange)
 				{
-					vGravityHit(iSurvivor, client, iGravityRangeChance, iGravityAbility);
+					vGravityHit(iSurvivor, client, iGravityRangeChance, iGravityAbility(client));
 				}
 			}
 		}
@@ -196,14 +194,13 @@ public void ST_Ability(int client)
 
 public void ST_BossStage(int client)
 {
-	int iGravityAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
-	if (iGravityAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iGravityAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vRemoveGravity(client);
 	}
 }
 
-void vGravityHit(int client, int owner, int chance, int enabled)
+stock void vGravityHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bGravity2[client])
 	{
@@ -213,13 +210,11 @@ void vGravityHit(int client, int owner, int chance, int enabled)
 		SetEntityGravity(client, flGravityValue);
 		DataPack dpStopGravity = new DataPack();
 		CreateDataTimer(flGravityDuration, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopGravity.WriteCell(GetClientUserId(client));
-		dpStopGravity.WriteCell(GetClientUserId(owner));
-		dpStopGravity.WriteCell(enabled);
+		dpStopGravity.WriteCell(GetClientUserId(client)), dpStopGravity.WriteCell(GetClientUserId(owner)), dpStopGravity.WriteCell(enabled);
 	}
 }
 
-void vRemoveGravity(int client)
+stock void vRemoveGravity(int client)
 {
 	int iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
@@ -244,13 +239,12 @@ void vRemoveGravity(int client)
 		{
 			DataPack dpStopGravity = new DataPack();
 			CreateDataTimer(0.1, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopGravity.WriteCell(GetClientUserId(iSurvivor));
-			dpStopGravity.WriteCell(GetClientUserId(client));
+			dpStopGravity.WriteCell(GetClientUserId(iSurvivor)), dpStopGravity.WriteCell(GetClientUserId(client)), dpStopGravity.WriteCell(1);
 		}
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -260,6 +254,11 @@ void vReset()
 			g_bGravity2[iPlayer] = false;
 		}
 	}
+}
+
+stock int iGravityAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
 }
 
 public Action tTimerStopGravity(Handle timer, DataPack pack)
@@ -278,8 +277,8 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 		SetEntityGravity(iSurvivor, 1.0);
 		return Plugin_Stop;
 	}
-	int iGravityAbility = pack.ReadCell();
-	if (iGravityAbility == 0)
+	int iGravityEnabled = pack.ReadCell();
+	if (iGravityEnabled == 0)
 	{
 		g_bGravity2[iSurvivor] = false;
 		SetEntityGravity(iSurvivor, 1.0);

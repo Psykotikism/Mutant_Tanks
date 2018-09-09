@@ -132,7 +132,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -165,9 +165,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iInvertAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iInvertAbility[ST_TankType(iTank)] : g_iInvertAbility2[ST_TankType(iTank)];
-		if (iInvertAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iInvertAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveInvert();
 		}
@@ -178,8 +177,7 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iInvertAbility = !g_bTankConfig[ST_TankType(client)] ? g_iInvertAbility[ST_TankType(client)] : g_iInvertAbility2[ST_TankType(client)],
-			iInvertRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iInvertChance[ST_TankType(client)] : g_iInvertChance2[ST_TankType(client)];
+		int iInvertRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iInvertChance[ST_TankType(client)] : g_iInvertChance2[ST_TankType(client)];
 		float flInvertRange = !g_bTankConfig[ST_TankType(client)] ? g_flInvertRange[ST_TankType(client)] : g_flInvertRange2[ST_TankType(client)],
 			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -192,7 +190,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flInvertRange)
 				{
-					vInvertHit(iSurvivor, client, iInvertRangeChance, iInvertAbility);
+					vInvertHit(iSurvivor, client, iInvertRangeChance, iInvertAbility(client));
 				}
 			}
 		}
@@ -201,14 +199,13 @@ public void ST_Ability(int client)
 
 public void ST_BossStage(int client)
 {
-	int iInvertAbility = !g_bTankConfig[ST_TankType(client)] ? g_iInvertAbility[ST_TankType(client)] : g_iInvertAbility2[ST_TankType(client)];
-	if (iInvertAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iInvertAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vRemoveInvert();
 	}
 }
 
-void vInvertHit(int client, int owner, int chance, int enabled)
+stock void vInvertHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bInvert[client])
 	{
@@ -216,13 +213,11 @@ void vInvertHit(int client, int owner, int chance, int enabled)
 		float flInvertDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flInvertDuration[ST_TankType(owner)] : g_flInvertDuration2[ST_TankType(owner)];
 		DataPack dpStopInvert = new DataPack();
 		CreateDataTimer(flInvertDuration, tTimerStopInvert, dpStopInvert, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopInvert.WriteCell(GetClientUserId(client));
-		dpStopInvert.WriteCell(GetClientUserId(owner));
-		dpStopInvert.WriteCell(enabled);
+		dpStopInvert.WriteCell(GetClientUserId(client)), dpStopInvert.WriteCell(GetClientUserId(owner)), dpStopInvert.WriteCell(enabled);
 	}
 }
 
-void vRemoveInvert()
+stock void vRemoveInvert()
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -233,7 +228,7 @@ void vRemoveInvert()
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -242,6 +237,11 @@ void vReset()
 			g_bInvert[iPlayer] = false;
 		}
 	}
+}
+
+stock int iInvertAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iInvertAbility[ST_TankType(client)] : g_iInvertAbility2[ST_TankType(client)];
 }
 
 public Action tTimerStopInvert(Handle timer, DataPack pack)
@@ -259,8 +259,8 @@ public Action tTimerStopInvert(Handle timer, DataPack pack)
 		g_bInvert[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iInvertAbility = pack.ReadCell();
-	if (iInvertAbility == 0)
+	int iInvertEnabled = pack.ReadCell();
+	if (iInvertEnabled == 0)
 	{
 		g_bInvert[iSurvivor] = false;
 		return Plugin_Stop;

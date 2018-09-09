@@ -112,7 +112,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -166,7 +166,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -177,17 +177,14 @@ void vReset()
 	}
 }
 
-void vShoveHit(int client, int owner, int chance, int enabled)
+stock void vShoveHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bShove[client])
 	{
 		g_bShove[client] = true;
 		DataPack dpShove = new DataPack();
 		CreateDataTimer(1.0, tTimerShove, dpShove, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpShove.WriteCell(GetClientUserId(client));
-		dpShove.WriteCell(GetClientUserId(owner));
-		dpShove.WriteCell(enabled);
-		dpShove.WriteFloat(GetEngineTime());
+		dpShove.WriteCell(GetClientUserId(client)), dpShove.WriteCell(GetClientUserId(owner)), dpShove.WriteCell(enabled), dpShove.WriteFloat(GetEngineTime());
 	}
 }
 

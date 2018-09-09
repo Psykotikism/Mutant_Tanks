@@ -120,7 +120,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -158,8 +158,7 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iHealAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHealAbility[ST_TankType(client)] : g_iHealAbility2[ST_TankType(client)];
-	if (iHealAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bHeal[client])
+	if (iHealAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bHeal[client])
 	{
 		g_bHeal[client] = true;
 		float flHealInterval = !g_bTankConfig[ST_TankType(client)] ? g_flHealInterval[ST_TankType(client)] : g_flHealInterval2[ST_TankType(client)];
@@ -167,7 +166,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vHealHit(int client, int owner)
+stock void vHealHit(int client, int owner)
 {
 	int iHealChance = !g_bTankConfig[ST_TankType(owner)] ? g_iHealChance[ST_TankType(owner)] : g_iHealChance2[ST_TankType(owner)],
 		iHealHit = !g_bTankConfig[ST_TankType(owner)] ? g_iHealHit[ST_TankType(owner)] : g_iHealHit2[ST_TankType(owner)];
@@ -181,7 +180,7 @@ void vHealHit(int client, int owner)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -192,6 +191,11 @@ void vReset()
 	}
 }
 
+stock int iHealAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iHealAbility[ST_TankType(client)] : g_iHealAbility2[ST_TankType(client)];
+}
+
 public Action tTimerHeal(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -200,8 +204,7 @@ public Action tTimerHeal(Handle timer, any userid)
 		g_bHeal[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iHealAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iHealAbility[ST_TankType(iTank)] : g_iHealAbility2[ST_TankType(iTank)];
-	if (iHealAbility == 0)
+	if (iHealAbility(iTank) == 0)
 	{
 		g_bHeal[iTank] = false;
 		return Plugin_Stop;

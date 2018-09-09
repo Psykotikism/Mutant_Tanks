@@ -119,7 +119,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -161,8 +161,7 @@ public void ST_Event(Event event, const char[] name)
 		{
 			DataPack dpIdleFix = new DataPack();
 			CreateDataTimer(0.2, tTimerIdleFix, dpIdleFix, TIMER_FLAG_NO_MAPCHANGE);
-			dpIdleFix.WriteCell(iSurvivorId);
-			dpIdleFix.WriteCell(iBotId);
+			dpIdleFix.WriteCell(iSurvivorId), dpIdleFix.WriteCell(iBotId);
 			if (g_bIdle[iSurvivor])
 			{
 				g_bIdle[iSurvivor] = false;
@@ -196,7 +195,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vIdleHit(int client, int chance, int enabled)
+stock void vIdleHit(int client, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsHumanSurvivor(client) && !g_bIdle[client])
 	{
@@ -209,7 +208,7 @@ void vIdleHit(int client, int chance, int enabled)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{

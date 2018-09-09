@@ -57,7 +57,7 @@ public void Think(int entity)
 	bIsValidEntity(entity) ? vTrack(entity) : SDKUnhook(entity, SDKHook_Think, Think);
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -92,12 +92,11 @@ public void ST_RockThrow(int client, int entity)
 	{
 		DataPack dpTrack = new DataPack();
 		CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
-		dpTrack.WriteCell(EntIndexToEntRef(entity));
-		dpTrack.WriteCell(GetClientUserId(client));
+		dpTrack.WriteCell(EntIndexToEntRef(entity)), dpTrack.WriteCell(GetClientUserId(client));
 	}
 }
 
-void vTrack(int entity)
+stock void vTrack(int entity)
 {
 	int iTank = GetEntPropEnt(entity, Prop_Data, "m_hThrower"),
 		iTrackMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackMode[ST_TankType(iTank)] : g_iTrackMode2[ST_TankType(iTank)];

@@ -66,7 +66,7 @@ public void OnMapEnd()
 	vReset();
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -95,8 +95,7 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iFlashAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFlashAbility[ST_TankType(client)] : g_iFlashAbility2[ST_TankType(client)];
-	if (iFlashAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (iFlashAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		if (!g_bFlash[client])
 		{
@@ -118,7 +117,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -129,6 +128,11 @@ void vReset()
 	}
 }
 
+stock int iFlashAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iFlashAbility[ST_TankType(client)] : g_iFlashAbility2[ST_TankType(client)];
+}
+
 public Action tTimerStopFlash(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -137,8 +141,7 @@ public Action tTimerStopFlash(Handle timer, any userid)
 		g_bFlash[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iFlashAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFlashAbility[ST_TankType(iTank)] : g_iFlashAbility2[ST_TankType(iTank)];
-	if (iFlashAbility == 0)
+	if (iFlashAbility(iTank) == 0)
 	{
 		g_bFlash[iTank] = false;
 		return Plugin_Stop;

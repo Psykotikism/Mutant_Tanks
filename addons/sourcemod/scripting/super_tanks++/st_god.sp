@@ -66,7 +66,7 @@ public void OnMapEnd()
 	vReset();
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -93,9 +93,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_incapacitated") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iGodAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGodAbility[ST_TankType(iTank)] : g_iGodAbility2[ST_TankType(iTank)];
-		if (iGodAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bGod[iTank])
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iGodAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bGod[iTank])
 		{
 			tTimerStopGod(null, GetClientUserId(iTank));
 		}
@@ -104,9 +103,8 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	int iGodAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGodAbility[ST_TankType(client)] : g_iGodAbility2[ST_TankType(client)],
-		iGodChance = !g_bTankConfig[ST_TankType(client)] ? g_iGodChance[ST_TankType(client)] : g_iGodChance2[ST_TankType(client)];
-	if (iGodAbility == 1 && GetRandomInt(1, iGodChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bGod[client])
+	int iGodChance = !g_bTankConfig[ST_TankType(client)] ? g_iGodChance[ST_TankType(client)] : g_iGodChance2[ST_TankType(client)];
+	if (iGodAbility(client) == 1 && GetRandomInt(1, iGodChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bGod[client])
 	{
 		g_bGod[client] = true;
 		SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
@@ -115,7 +113,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -126,6 +124,11 @@ void vReset()
 	}
 }
 
+stock int iGodAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iGodAbility[ST_TankType(client)] : g_iGodAbility2[ST_TankType(client)];
+}
+
 public Action tTimerStopGod(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -134,8 +137,7 @@ public Action tTimerStopGod(Handle timer, any userid)
 		g_bGod[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iGodAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGodAbility[ST_TankType(iTank)] : g_iGodAbility2[ST_TankType(iTank)];
-	if (iGodAbility == 0)
+	if (iGodAbility(iTank) == 0)
 	{
 		g_bGod[iTank] = false;
 		return Plugin_Stop;

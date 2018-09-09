@@ -84,24 +84,20 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iFireChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iFireChance[ST_TankType(attacker)] : g_iFireChance2[ST_TankType(attacker)],
-					iFireHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iFireHit[ST_TankType(attacker)] : g_iFireHit2[ST_TankType(attacker)];
-				vFireHit(victim, attacker, iFireChance, iFireHit);
+				vFireHit(victim, attacker, iFireChance(attacker), iFireHit(attacker));
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				int iFireChance = !g_bTankConfig[ST_TankType(victim)] ? g_iFireChance[ST_TankType(victim)] : g_iFireChance2[ST_TankType(victim)],
-					iFireHit = !g_bTankConfig[ST_TankType(victim)] ? g_iFireHit[ST_TankType(victim)] : g_iFireHit2[ST_TankType(victim)];
-				vFireHit(attacker, victim, iFireChance, iFireHit);
+				vFireHit(attacker, victim, iFireChance(victim), iFireHit(victim));
 			}
 		}
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -134,9 +130,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iFireAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iFireAbility[ST_TankType(iTank)] : g_iFireAbility2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank) && iFireAbility == 1 && bIsL4D2Game())
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iFireAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			float flPos[3];
 			GetClientAbsOrigin(iTank, flPos);
@@ -149,8 +144,7 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iFireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFireAbility[ST_TankType(client)] : g_iFireAbility2[ST_TankType(client)],
-			iFireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFireChance[ST_TankType(client)] : g_iFireChance2[ST_TankType(client)];
+		int iFireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFireChance[ST_TankType(client)] : g_iFireChance2[ST_TankType(client)];
 		float flFireRange = !g_bTankConfig[ST_TankType(client)] ? g_flFireRange[ST_TankType(client)] : g_flFireRange2[ST_TankType(client)],
 			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -163,7 +157,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flFireRange)
 				{
-					vFireHit(iSurvivor, client, iFireRangeChance, iFireAbility);
+					vFireHit(iSurvivor, client, iFireRangeChance, iFireAbility(client));
 				}
 			}
 		}
@@ -172,8 +166,7 @@ public void ST_Ability(int client)
 
 public void ST_BossStage(int client)
 {
-	int iFireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFireAbility[ST_TankType(client)] : g_iFireAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iFireAbility == 1 && bIsL4D2Game())
+	if (iFireAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		float flPos[3];
 		GetClientAbsOrigin(client, flPos);
@@ -192,7 +185,7 @@ public void ST_RockBreak(int client, int entity)
 	}
 }
 
-void vFireHit(int client, int owner, int chance, int enabled)
+stock void vFireHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -200,4 +193,19 @@ void vFireHit(int client, int owner, int chance, int enabled)
 		GetClientAbsOrigin(client, flPos);
 		vSpecialAttack(owner, flPos, MODEL_GASCAN);
 	}
+}
+
+stock int iFireAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iFireAbility[ST_TankType(client)] : g_iFireAbility2[ST_TankType(client)];
+}
+
+stock int iFireChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iFireChance[ST_TankType(client)] : g_iFireChance2[ST_TankType(client)];
+}
+
+stock int iFireHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iFireHit[ST_TankType(client)] : g_iFireHit2[ST_TankType(client)];
 }

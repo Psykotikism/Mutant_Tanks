@@ -94,24 +94,20 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iGhostChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iGhostChance[ST_TankType(attacker)] : g_iGhostChance2[ST_TankType(attacker)],
-					iGhostHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iGhostHit[ST_TankType(attacker)] : g_iGhostHit2[ST_TankType(attacker)];
-				vGhostHit(victim, attacker, iGhostChance, iGhostHit);
+				vGhostHit(victim, attacker, iGhostChance(attacker), iGhostHit(attacker));
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				int iGhostChance = !g_bTankConfig[ST_TankType(victim)] ? g_iGhostChance[ST_TankType(victim)] : g_iGhostChance2[ST_TankType(victim)],
-					iGhostHit = !g_bTankConfig[ST_TankType(victim)] ? g_iGhostHit[ST_TankType(victim)] : g_iGhostHit2[ST_TankType(victim)];
-				vGhostHit(attacker, victim, iGhostChance, iGhostHit);
+				vGhostHit(attacker, victim, iGhostChance(victim), iGhostHit(victim));
 			}
 		}
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -147,8 +143,7 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	int iGhostAbility = !g_bTankConfig[ST_TankType(client)] ? g_iGhostAbility[ST_TankType(client)] : g_iGhostAbility2[ST_TankType(client)];
-	if (iGhostAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (iGhostAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		char sSet[2][16], sTankColors[28], sRGB[4][4], sSet2[5][16], sPropsColors[80], sProps[4][4],
 			sProps2[4][4], sProps3[4][4], sProps4[4][4], sProps5[4][4];
@@ -247,24 +242,9 @@ public void ST_Ability(int client)
 			DataPack dpGhost = new DataPack();
 			CreateDataTimer(0.1, tTimerGhost, dpGhost, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			dpGhost.WriteCell(GetClientUserId(client));
-			dpGhost.WriteCell(iRed);
-			dpGhost.WriteCell(iGreen);
-			dpGhost.WriteCell(iBlue);
-			dpGhost.WriteCell(iRed2);
-			dpGhost.WriteCell(iGreen2);
-			dpGhost.WriteCell(iBlue2);
-			dpGhost.WriteCell(iRed3);
-			dpGhost.WriteCell(iGreen3);
-			dpGhost.WriteCell(iBlue3);
-			dpGhost.WriteCell(iRed4);
-			dpGhost.WriteCell(iGreen4);
-			dpGhost.WriteCell(iBlue4);
-			dpGhost.WriteCell(iRed5);
-			dpGhost.WriteCell(iGreen5);
-			dpGhost.WriteCell(iBlue5);
-			dpGhost.WriteCell(iRed6);
-			dpGhost.WriteCell(iGreen6);
-			dpGhost.WriteCell(iBlue6);
+			dpGhost.WriteCell(iRed), dpGhost.WriteCell(iGreen), dpGhost.WriteCell(iBlue), dpGhost.WriteCell(iRed2), dpGhost.WriteCell(iGreen2), dpGhost.WriteCell(iBlue2);
+			dpGhost.WriteCell(iRed3), dpGhost.WriteCell(iGreen3), dpGhost.WriteCell(iBlue3), dpGhost.WriteCell(iRed4), dpGhost.WriteCell(iGreen4), dpGhost.WriteCell(iBlue4);
+			dpGhost.WriteCell(iRed5), dpGhost.WriteCell(iGreen5), dpGhost.WriteCell(iBlue5), dpGhost.WriteCell(iRed6), dpGhost.WriteCell(iGreen6), dpGhost.WriteCell(iBlue6);
 			SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		}
 		float flGhostRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostRange[ST_TankType(client)] : g_flGhostRange2[ST_TankType(client)],
@@ -279,14 +259,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flGhostRange)
 				{
-					vGhostHit(iSurvivor, client, iGhostRangeChance, iGhostAbility);
+					vGhostHit(iSurvivor, client, iGhostRangeChance, iGhostAbility(client));
 				}
 			}
 		}
 	}
 }
 
-void vGhostHit(int client, int owner, int chance, int enabled)
+stock void vGhostHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -305,7 +285,7 @@ void vGhostHit(int client, int owner, int chance, int enabled)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -317,6 +297,21 @@ void vReset()
 	}
 }
 
+stock int iGhostAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iGhostAbility[ST_TankType(client)] : g_iGhostAbility2[ST_TankType(client)];
+}
+
+stock int iGhostChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iGhostChance[ST_TankType(client)] : g_iGhostChance2[ST_TankType(client)];
+}
+
+stock int iGhostHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iGhostHit[ST_TankType(client)] : g_iGhostHit2[ST_TankType(client)];
+}
+
 public Action tTimerGhost(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -326,8 +321,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 		g_bGhost[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iGhostAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostAbility[ST_TankType(iTank)] : g_iGhostAbility2[ST_TankType(iTank)];
-	if (iGhostAbility == 0)
+	if (iGhostAbility(iTank) == 0)
 	{
 		g_bGhost[iTank] = false;
 		return Plugin_Stop;

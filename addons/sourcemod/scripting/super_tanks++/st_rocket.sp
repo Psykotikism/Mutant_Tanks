@@ -95,7 +95,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -147,7 +147,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vRocketHit(int client, int owner, int chance, int enabled)
+stock void vRocketHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -179,14 +179,10 @@ void vRocketHit(int client, int owner, int chance, int enabled)
 		EmitSoundToAll(SOUND_FIRE, client, _, _, _, 1.0);
 		DataPack dpRocketLaunch = new DataPack();
 		CreateDataTimer(2.0, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
-		dpRocketLaunch.WriteCell(GetClientUserId(client));
-		dpRocketLaunch.WriteCell(GetClientUserId(owner));
-		dpRocketLaunch.WriteCell(enabled);
+		dpRocketLaunch.WriteCell(GetClientUserId(client)), dpRocketLaunch.WriteCell(GetClientUserId(owner)), dpRocketLaunch.WriteCell(enabled);
 		DataPack dpRocketDetonate = new DataPack();
 		CreateDataTimer(3.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
-		dpRocketDetonate.WriteCell(GetClientUserId(client));
-		dpRocketDetonate.WriteCell(GetClientUserId(owner));
-		dpRocketDetonate.WriteCell(enabled);
+		dpRocketDetonate.WriteCell(GetClientUserId(client)), dpRocketDetonate.WriteCell(GetClientUserId(owner)), dpRocketDetonate.WriteCell(enabled);
 	}
 }
 

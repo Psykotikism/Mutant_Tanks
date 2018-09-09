@@ -103,7 +103,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -136,9 +136,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iNullifyAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iNullifyAbility[ST_TankType(iTank)] : g_iNullifyAbility2[ST_TankType(iTank)];
-		if (iNullifyAbility == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iNullifyAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveNullify();
 		}
@@ -149,8 +148,7 @@ public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)],
-			iNullifyRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyChance[ST_TankType(client)] : g_iNullifyChance2[ST_TankType(client)];
+		int iNullifyRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyChance[ST_TankType(client)] : g_iNullifyChance2[ST_TankType(client)];
 		float flNullifyRange = !g_bTankConfig[ST_TankType(client)] ? g_flNullifyRange[ST_TankType(client)] : g_flNullifyRange2[ST_TankType(client)],
 			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -163,7 +161,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flNullifyRange)
 				{
-					vNullifyHit(iSurvivor, client, iNullifyRangeChance, iNullifyAbility);
+					vNullifyHit(iSurvivor, client, iNullifyRangeChance, iNullifyAbility(client));
 				}
 			}
 		}
@@ -172,14 +170,13 @@ public void ST_Ability(int client)
 
 public void ST_BossStage(int client)
 {
-	int iNullifyAbility = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
-	if (iNullifyAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iNullifyAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vRemoveNullify();
 	}
 }
 
-void vNullifyHit(int client, int owner, int chance, int enabled)
+stock void vNullifyHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bNullify[client])
 	{
@@ -187,13 +184,11 @@ void vNullifyHit(int client, int owner, int chance, int enabled)
 		float flNullifyDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flNullifyDuration[ST_TankType(owner)] : g_flNullifyDuration2[ST_TankType(owner)];
 		DataPack dpStopNullify = new DataPack();
 		CreateDataTimer(flNullifyDuration, tTimerStopNullify, dpStopNullify, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopNullify.WriteCell(GetClientUserId(client));
-		dpStopNullify.WriteCell(GetClientUserId(owner));
-		dpStopNullify.WriteCell(enabled);
+		dpStopNullify.WriteCell(GetClientUserId(client)), dpStopNullify.WriteCell(GetClientUserId(owner)), dpStopNullify.WriteCell(enabled);
 	}
 }
 
-void vRemoveNullify()
+stock void vRemoveNullify()
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -204,7 +199,7 @@ void vRemoveNullify()
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -213,6 +208,11 @@ void vReset()
 			g_bNullify[iPlayer] = false;
 		}
 	}
+}
+
+stock int iNullifyAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
 }
 
 public Action tTimerStopNullify(Handle timer, DataPack pack)
@@ -230,8 +230,8 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 		g_bNullify[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iNullifyAbility = pack.ReadCell();
-	if (iNullifyAbility == 0)
+	int iNullifyEnabled = pack.ReadCell();
+	if (iNullifyEnabled == 0)
 	{
 		g_bNullify[iSurvivor] = false;
 		return Plugin_Stop;

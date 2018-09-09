@@ -98,7 +98,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -154,7 +154,7 @@ public void ST_Ability(int client)
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -165,17 +165,14 @@ void vReset()
 	}
 }
 
-void vVisionHit(int client, int owner, int chance, int enabled)
+stock void vVisionHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bVision[client])
 	{
 		g_bVision[client] = true;
 		DataPack dpVision = new DataPack();
 		CreateDataTimer(0.1, tTimerVision, dpVision, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpVision.WriteCell(GetClientUserId(client));
-		dpVision.WriteCell(GetClientUserId(owner));
-		dpVision.WriteCell(enabled);
-		dpVision.WriteFloat(GetEngineTime());
+		dpVision.WriteCell(GetClientUserId(client)), dpVision.WriteCell(GetClientUserId(owner)), dpVision.WriteCell(enabled), dpVision.WriteFloat(GetEngineTime());
 	}
 }
 
@@ -206,8 +203,8 @@ public Action tTimerVision(Handle timer, DataPack pack)
 		SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", 90);
 		return Plugin_Stop;
 	}
-	int iFov = !g_bTankConfig[ST_TankType(iTank)] ? g_iVisionFOV[ST_TankType(iTank)] : g_iVisionFOV2[ST_TankType(iTank)];
-	SetEntProp(iSurvivor, Prop_Send, "m_iFOV", iFov);
-	SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", iFov);
+	int iVisionFov = !g_bTankConfig[ST_TankType(iTank)] ? g_iVisionFOV[ST_TankType(iTank)] : g_iVisionFOV2[ST_TankType(iTank)];
+	SetEntProp(iSurvivor, Prop_Send, "m_iFOV", iVisionFov);
+	SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", iVisionFov);
 	return Plugin_Continue;
 }
