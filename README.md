@@ -21,7 +21,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 
 ### Requirements
 1. SourceMod 1.8+
-2. A dedicated server
+2. A dedicated server (Local/listen servers are NOT supported!)
 
 ### Installation
 1. Delete files from old versions of the plugin.

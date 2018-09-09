@@ -493,6 +493,13 @@
 			// 1: ON
 			"Acid Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Acid Hit Mode"					"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -506,7 +513,8 @@
 			"Acid Range Chance"				"16"
 
 			// The Super Tank's rock creates an acid puddle when it breaks.
-			// Only available in Left 4 Dead 2.
+			// Note: Only available in Left 4 Dead 2.
+			// Note: This does not need "Ability Enabled" or "Acid Hit" set to 1.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -558,6 +566,13 @@
 			// 0: OFF
 			// 1: ON
 			"Ammo Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Ammo Hit Mode"					"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -617,6 +632,13 @@
 			// 1: ON
 			"Blind Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Blind Hit Mode"				"0"
+
 			// The intensity of the Super Tank's blind effect.
 			// --
 			// Minimum: 0 (No effect)
@@ -675,6 +697,13 @@
 			// 1: ON
 			"Bomb Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Bomb Hit Mode"					"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -688,6 +717,7 @@
 			"Bomb Range Chance"				"16"
 
 			// The Super Tank's rock creates an explosion when it breaks.
+			// Note: This does not need "Ability Enabled" or "Bomb Hit" set to 1.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -745,6 +775,13 @@
 			// 1: ON
 			"Bury Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Bury Hit Mode"					"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -796,6 +833,13 @@
 			// 0: OFF
 			// 1: ON
 			"Cancer Hit"					"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Cancer Hit Mode"				"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -947,6 +991,13 @@
 			// 1: ON
 			"Drug Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Drug Hit Mode"					"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -1010,6 +1061,13 @@
 			// 0: OFF
 			// 1: ON
 			"Electric Hit"					"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Electric Hit Mode"				"0"
 
 			// The Super Tank electrocutes survivors every time this many seconds passes.
 			// --
@@ -1081,6 +1139,13 @@
 			// 1: ON
 			"Enforce Hit"					"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Enforce Hit Mode"				"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -1144,6 +1209,13 @@
 			// 1: ON
 			"Fire Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Fire Hit Mode"					"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -1157,6 +1229,7 @@
 			"Fire Range Chance"				"16"
 
 			// The Super Tank's rock creates a fire when it breaks.
+			// Note: This does not need "Ability Enabled" or "Fire Hit" set to 1.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -1240,6 +1313,13 @@
 			// 0: OFF
 			// 1: ON
 			"Fling Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Fling Hit Mode"				"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -1377,6 +1457,13 @@
 			// 1: ON
 			"Ghost Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Ghost Hit Mode"				"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -1489,6 +1576,13 @@
 			// 1: ON
 			"Gravity Hit"					"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Gravity Hit Mode"				"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -1546,6 +1640,13 @@
 			// 0: OFF
 			// 1: ON
 			"Heal Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Heal Hit Mode"					"0"
 
 			// The Super Tank receives health from nearby infected every time this many seconds passes.
 			// --
@@ -1638,6 +1739,13 @@
 			// 1: ON
 			"Hurt Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Hurt Hit Mode"					"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -1695,6 +1803,13 @@
 			// 0: OFF
 			// 1: ON
 			"Hypno Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Hypno Hit Mode"				"0"
 
 			// The mode of the Super Tank's hypno ability.
 			// --
@@ -1760,6 +1875,13 @@
 			// 1: ON
 			"Ice Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Ice Hit Mode"					"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -1811,6 +1933,13 @@
 			// 0: OFF
 			// 1: ON
 			"Idle Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Idle Hit Mode"					"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -1868,6 +1997,13 @@
 			// 0: OFF
 			// 1: ON
 			"Invert Hit"					"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Invert Hit Mode"				"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -2143,6 +2279,13 @@
 			// 1: ON
 			"Nullify Hit"					"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Nullify Hit Mode"				"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -2193,6 +2336,13 @@
 			// 0: OFF
 			// 1: ON
 			"Panic Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Panic Hit Mode"				"0"
 
 			// The Super Tank starts a panic event every time this many seconds passes.
 			// --
@@ -2252,6 +2402,13 @@
 			// 1: ON
 			"Pimp Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Pimp Hit Mode"					"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -2303,6 +2460,13 @@
 			// 0: OFF
 			// 1: ON
 			"Puke Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Puke Hit Mode"					"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -2468,6 +2632,13 @@
 			// 1: ON
 			"Restart Hit"					"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Restart Hit Mode"				"0"
+
 			// The Super Tank makes survivors restart with this loadout.
 			// Item limit: 5
 			// Character limit for each item: 64
@@ -2580,6 +2751,13 @@
 			// 1: ON
 			"Rocket Hit"					"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Rocket Hit Mode"				"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -2637,6 +2815,13 @@
 			// 0: OFF
 			// 1: ON
 			"Shake Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Shake Hit Mode"				"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -2733,6 +2918,13 @@
 			// 1: ON
 			"Shove Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Shove Hit Mode"				"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -2785,6 +2977,13 @@
 			// 1: ON
 			"Smash Hit"						"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Smash Hit Mode"				"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -2836,6 +3035,13 @@
 			// 0: OFF
 			// 1: ON
 			"Smite Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Smite Hit Mode"				"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -2978,6 +3184,13 @@
 			// 0: OFF
 			// 1: ON
 			"Stun Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Stun Hit Mode"					"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -3136,6 +3349,13 @@
 			// 1: ON
 			"Vampire Hit"					"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Vampire Hit Mode"				"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -3200,6 +3420,13 @@
 			// 1: ON
 			"Vision Hit"					"0"
 
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Vision Hit Mode"				"0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -3249,6 +3476,13 @@
 			// 0: OFF
 			// 1: ON
 			"Warp Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Warp Hit Mode"					"0"
 
 			// The Super Tank warps to a random survivor every time this many seconds passes.
 			// --

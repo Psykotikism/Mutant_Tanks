@@ -7,22 +7,26 @@ Bug fixes:
 1. Fixed some abilities not working when their "Ability Enabled" setting is disabled. (Thanks huwong!)
 2. Fixed the Gravity ability returning a datapack error.
 3. Fixed the Bomb and Fire abilities not working in L4D1.
+4. Fixed the Ice ability flinging survivors back at a high velocity after being unfrozen.
+5. Fixed the Zombie ability not working properly.
 
 Changes:
 
 1. Added the "Finale Tank" setting to determine if a Super Tank only spawns during finales.
-2. Added the "Tank Note" setting which is displayed in chat after a Super Tank spawns.
-3. Added a new native: ST_TankWave() - Returns the current finale wave.
-4. Added the "Clone Mode" setting to determine if a Super Tank's clone can use abilities like real Super Tanks.
-5. Added the ST_CloneAllowed(int client, bool clone) native to check if a Super Tank's clone is allowed to use abilities like real Super Tanks.
-6. The Panic ability now allows the Tank to have a chance to start a panic event upon death.
-7. Updated the Super Tanks++ category in the admin menu.
-8. Made some code optimizations.
+2. Added the "Tank Note" setting which is displayed in chat after a Super Tank spawns. (Character limit: 244)
+3. Added a "X Hit Mode" (X = Name of ability) setting for various abilities.
+4. Added a new native: ST_TankWave() - Returns the current finale wave.
+5. Added a new native: ST_CloneAllowed(int client, bool clone) - Checks if a Super Tank's clone is allowed to use abilities like real Super Tanks.
+6. Added the "Clone Mode" setting to determine if a Super Tank's clone can use abilities like real Super Tanks.
+7. The Panic ability now allows the Tank to have a chance to start a panic event upon death.
+8. Updated the Super Tanks++ category in the admin menu.
+9. Made some code optimizations.
 
 Files:
 
 1. Added a translation file for the plugin. (Filename is "super_tanks++.phrases.txt")
-2. New file: st_clone.inc (Used for the Clone ability.)
+2. New file: st_clone.inc (Used for the Clone ability's library.)
+3. Updated config file with all the new settings.
 
 ## Version 8.38 (September 6, 2018)
 
