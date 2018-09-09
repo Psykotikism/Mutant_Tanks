@@ -639,7 +639,7 @@ forward void ST_BossStage(int client);
  *							or a custom config
  *							is being used.
  */
-forward void ST_Configs(char[] savepath, bool main);
+forward void ST_Configs(const char[] savepath, bool main);
 
 /* Called when an event hooked by the core plugin is fired.
  * Use this forward to trigger something on any of those events.
