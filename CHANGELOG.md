@@ -12,21 +12,25 @@ Bug fixes:
 
 Changes:
 
-1. Added the "Finale Tank" setting to determine if a Super Tank only spawns during finales.
-2. Added the "Tank Note" setting which is displayed in chat after a Super Tank spawns. (Character limit: 244)
-3. Added a "X Hit Mode" (X = Name of ability) setting for various abilities.
-4. Added a new native: ST_TankWave() - Returns the current finale wave.
-5. Added a new native: ST_CloneAllowed(int client, bool clone) - Checks if a Super Tank's clone is allowed to use abilities like real Super Tanks.
-6. Added the "Clone Mode" setting to determine if a Super Tank's clone can use abilities like real Super Tanks.
-7. The Panic ability now allows the Tank to have a chance to start a panic event upon death.
-8. Updated the Super Tanks++ category in the admin menu.
-9. Made some code optimizations.
+1. Added a new native: ST_TankWave() - Returns the current finale wave.
+2. Added a new native: ST_CloneAllowed(int client, bool clone) - Checks if a Super Tank's clone is allowed to use abilities like real Super Tanks.
+3. Added the "Clone Mode" setting to determine if a Super Tank's clone can use abilities like real Super Tanks.
+4. Added the "Finale Tank" setting to determine if a Super Tank only spawns during finales.
+5. Added the "Tank Note" setting which is displayed in chat after a Super Tank spawns. (Character limit: 244)
+6. Added a "X Hit Mode" (X = Name of ability) setting for various abilities.
+7. Added the "Jump Range" setting to determine how close a Super Tank must be to a survivor before it can jump in the air.
+8. Added the "Zombie Interval" setting to determine how often a Super Tank can spawn zombie mobs.
+9. The Jump ability's code has been slightly modified.
+10. The Panic ability now allows the Tank to have a chance to start a panic event upon death.
+11. Updated the Super Tanks++ category in the admin menu.
+12. Made some code optimizations.
 
 Files:
 
 1. Added a translation file for the plugin. (Filename is "super_tanks++.phrases.txt")
 2. New file: st_clone.inc (Used for the Clone ability's library.)
 3. Updated config file with all the new settings.
+4. Updated include file to add/remove code.
 
 ## Version 8.38 (September 6, 2018)
 

@@ -2081,6 +2081,12 @@
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
 			"Jump Chance"					"4"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Jump Range"					"500.0"
 		}
 	}
 }
@@ -3561,6 +3567,12 @@
 			// Minimum: 1
 			// Maximum: 100
 			"Zombie Amount"					"10"
+
+			// The interval between each zombie mob.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Zombie Interval"				"5.0"
 		}
 	}
 }
