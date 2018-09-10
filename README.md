@@ -227,6 +227,7 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 		{
 			"Ability Enabled"		"1"
 			"Jump Chance"			"1"
+			"Jump Range"			"500.0"
 		}
 	}
 }
@@ -256,7 +257,7 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 		"Ghost Ability"
 		{
 			"Ability Enabled"		"1"
-			"Fade Limit"			"0"
+			"Ghost Fade Limit"		"0"
 		}
 	}
 	"Tank 10" // Checked by the plugin.
@@ -796,23 +797,23 @@ Examples:
 
 **Spirit_12** - For the L4D signatures for the gamedata file.
 
-**honorcode** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?p=1251446) plugin.
+**honorcode** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
 
-**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?p=1262968) plugins.
+**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537) plugins.
 
-**strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?p=702913), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?p=702914), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?p=702918) plugins.
+**strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324) plugins.
 
 **Hipster** - For the [Admin Smite](https://forums.alliedmods.net/showthread.php?t=118534) plugin.
 
 **Marcus101RR** - For the code to set a player's weapon's ammo.
 
-**AtomicStryker** - For the [SM Respawn Command](https://forums.alliedmods.net/showthread.php?p=862618) and [Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?p=884839) plugins.
+**AtomicStryker** - For the [SM Respawn Command](https://forums.alliedmods.net/showthread.php?t=96249) and [Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?t=98794) plugins.
 
-**ivailosp and V10** - For the [[L4D] Away](https://forums.alliedmods.net/showthread.php?p=760339) and [[L4D2] Away](https://forums.alliedmods.net/showthread.php?p=2005618) plugins.
+**ivailosp and V10** - For the [[L4D] Away](https://forums.alliedmods.net/showthread.php?t=85537) and [[L4D2] Away](https://forums.alliedmods.net/showthread.php?t=222590) plugins.
 
-**mi123645** - For the [4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?p=1239549) plugin.
+**mi123645** - For the [4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409) plugin.
 
-**Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?p=2402076) plugin.
+**Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
 **ztar** - For the [Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
 
@@ -820,13 +821,13 @@ Examples:
 
 **Uncle Jessie** - For the Tremor Tank in his [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
 
-**Drixevel** - For the [Force Active Weapon](https://forums.alliedmods.net/showthread.php?p=2493284) plugin.
+**Drixevel** - For the [Force Active Weapon](https://forums.alliedmods.net/showthread.php?t=293645) plugin.
 
-**pRED** - For the [SM Super Commands](https://forums.alliedmods.net/showthread.php?p=498802) plugin.
+**pRED** - For the [SM Super Commands](https://forums.alliedmods.net/showthread.php?t=57448) plugin.
 
-**sheo** - For the [Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?p=2133193) plugin.
+**sheo** - For the [Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809) plugin.
 
-**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and helping to optimize/fix various parts of the code.
+**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, for the [Silenced Infected](https://forums.alliedmods.net/showthread.php?t=137397) plugin, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and helping to optimize/fix various parts of the code.
 
 **Lux** - For helping to optimize/fix various parts of the code.
 

@@ -12,18 +12,25 @@ Bug fixes:
 
 Changes:
 
-1. Added a new native: ST_TankWave() - Returns the current finale wave.
-2. Added a new native: ST_CloneAllowed(int client, bool clone) - Checks if a Super Tank's clone is allowed to use abilities like real Super Tanks.
-3. Added the "Clone Mode" setting to determine if a Super Tank's clone can use abilities like real Super Tanks.
-4. Added the "Finale Tank" setting to determine if a Super Tank only spawns during finales.
-5. Added the "Tank Note" setting which is displayed in chat after a Super Tank spawns. (Character limit: 244)
-6. Added a "X Hit Mode" (X = Name of ability) setting for various abilities.
-7. Added the "Jump Range" setting to determine how close a Super Tank must be to a survivor before it can jump in the air.
-8. Added the "Zombie Interval" setting to determine how often a Super Tank can spawn zombie mobs.
-9. The Jump ability's code has been slightly modified.
-10. The Panic ability now allows the Tank to have a chance to start a panic event upon death.
-11. Updated the Super Tanks++ category in the admin menu.
-12. Made some code optimizations.
+1. Added a new ability: Leap ability - The Super Tank leaps periodically. (Taken from Last Boss Extended.)
+2. Added a new ability: Quiet ability - The Super Tank can silence itself around survivors. (Useful for ninja-themed Super Tanks.)
+3. Added a new native: ST_TankWave() - Returns the current finale wave.
+4. Added a new native: ST_CloneAllowed(int client, bool clone) - Checks if a Super Tank's clone is allowed to use abilities like real Super Tanks.
+5. Added the "Clone Mode" setting to determine if a Super Tank's clone can use abilities like real Super Tanks.
+6. Added the "Finale Tank" setting to determine if a Super Tank only spawns during finales.
+7. Added the "Tank Note" setting which is displayed in chat after a Super Tank spawns. (Character limit: 244)
+8. Added a "X Hit Mode" (X = Name of ability) setting for various abilities.
+9. Added the "Jump Range" setting to determine how close a Super Tank must be to a survivor before it can jump in the air.
+10. Added the "Pyro Mode" setting to determine what kind of speed boost a Super Tank receives.
+11. Added the "Zombie Interval" setting to determine how often a Super Tank can spawn zombie mobs.
+12. The Ghost ability's "Ability Enabled" setting now has more options.
+13. The Ghost ability no longer allows a Super Tank to cloak nearby special infected.
+14. Removed the "Ghost Cloak Range" setting.
+15. The Panic ability now allows the Tank to have a chance to start a panic event upon death.
+16. The Warp ability's electricity particle effect now requires the "Particle Effect" and "Particle Effects" settings to allow it.
+17. The code for various abilities have been slightly modified.
+18. Updated the Super Tanks++ category in the admin menu.
+19. Made some code optimizations.
 
 Files:
 

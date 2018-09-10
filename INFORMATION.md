@@ -1413,9 +1413,8 @@
 {
 	"Tank 1"
 	{
-		// The Super Tank makes itself and any other nearby special infected invisible, and disarms survivors.
-		// "Ability Enabled" - Any nearby special infected turns invisible.
-		// - "Ghost Cloak Range"
+		// The Super Tank cloaks itself and disarms survivors.
+		// "Ability Enabled" - When a Super Tank spawns, it becomes invisible.
 		// - "Ghost Fade Limit"
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is disarmed.
 		// - "Ghost Range"
@@ -1437,12 +1436,6 @@
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
 			"Ghost Chance"					"4"
-
-			// The distance between a special infected and the Super Tank needed to trigger the cloak ability.
-			// --
-			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
-			"Ghost Cloak Range"				"500.0"
 
 			// The limit of the Super Tank's ghost fade effect.
 			// --
@@ -2092,6 +2085,39 @@
 }
 ```
 
+#### Leap Ability
+
+```
+"Super Tanks++"
+{
+	"Tank 1"
+	{
+		// The Super Tank leaps periodically.
+		// Requires "st_leap.smx" to be installed.
+		"Leap Ability"
+		{
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank leaps this high off a surface.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Leap Height"					"50.0"
+
+			// The Super Tank leaps every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Leap Interval"					"5.0"
+		}
+	}
+}
+```
+
 #### Medic Ability
 
 ```"Super Tanks++"
@@ -2497,7 +2523,7 @@
 {
 	"Tank 1"
 	{
-		// The Super Tank gains speed when on fire.
+		// The Super Tank gains a speed boost when on fire.
 		// Requires "st_pyro.smx" to be installed.
 		"Pyro Ability"
 		{
@@ -2508,11 +2534,80 @@
 			"Ability Enabled"				"0"
 
 			// The Super Tank's speed boost value when on fire.
-			// Note: This is a speed boost, not the overall speed. (Current speed + Pyro boost)
 			// --
 			// Minimum: 0.1
 			// Maximum: 3.0
 			"Pyro Boost"					"1.0"
+
+			// The mode of the Super Tank's speed boost.
+			// --
+			// 0: Super Tank's speed = Run speed + Pyro boost
+			// 1: Super Tank's speed = Pyro boost
+			"Pyro Mode"						"0"
+		}
+	}
+}
+```
+
+#### Quiet Ability
+
+```
+"Super Tanks++"
+{
+	"Tank 1"
+	{
+		// The Super Tank silences itself around survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor cannot hear the Tank's noises.
+		// - "Quiet Range"
+		// - "Quiet Range Chance"
+		// "Quiet Hit" - When a survivor is hit by a Tank's claw or rock, the survivor cannot hear the Tank's noises.
+		// - "Quiet Chance"
+		// Requires "st_quiet.smx" to be installed.
+		"Quiet Ability"
+		{
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Quiet Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Quiet Duration"				"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Quiet Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Quiet Hit Mode"				"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Quiet Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Quiet Range Chance"			"16"
 		}
 	}
 }
