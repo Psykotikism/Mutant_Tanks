@@ -74,22 +74,11 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
-{
-	if (strcmp(name, "player_incapacitated") == 0)
-	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iJumpAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && IsPlayerAlive(iTank))
-		{
-			vJump(iTank);
-		}
-	}
-}
-
 public void ST_Ability(int client)
 {
-	int iJumpChance = !g_bTankConfig[ST_TankType(client)] ? g_iJumpChance[ST_TankType(client)] : g_iJumpChance2[ST_TankType(client)];
-	if (iJumpAbility(client) == 1 && GetRandomInt(1, iJumpChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	int iJumpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iJumpAbility[ST_TankType(client)] : g_iJumpAbility2[ST_TankType(client)],
+		iJumpChance = !g_bTankConfig[ST_TankType(client)] ? g_iJumpChance[ST_TankType(client)] : g_iJumpChance2[ST_TankType(client)];
+	if (iJumpAbility == 1 && GetRandomInt(1, iJumpChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		vJump(client);
 	}
@@ -132,9 +121,4 @@ stock void vJump(int client)
 			}
 		}
 	}
-}
-
-stock int iJumpAbility(int client)
-{
-	return !g_bTankConfig[ST_TankType(client)] ? g_iJumpAbility[ST_TankType(client)] : g_iJumpAbility2[ST_TankType(client)];
 }

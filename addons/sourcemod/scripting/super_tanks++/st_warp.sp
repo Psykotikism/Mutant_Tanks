@@ -16,8 +16,9 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1], g_bWarp[MAXPLAYERS + 1];
+char g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8];
 float g_flWarpInterval[ST_MAXTYPES + 1], g_flWarpInterval2[ST_MAXTYPES + 1];
-int g_iWarpAbility[ST_MAXTYPES + 1], g_iWarpAbility2[ST_MAXTYPES + 1], g_iWarpChance[ST_MAXTYPES + 1], g_iWarpChance2[ST_MAXTYPES + 1], g_iWarpHit[ST_MAXTYPES + 1], g_iWarpHit2[ST_MAXTYPES + 1], g_iWarpHitMode[ST_MAXTYPES + 1], g_iWarpHitMode2[ST_MAXTYPES + 1], g_iWarpMode[ST_MAXTYPES + 1], g_iWarpMode2[ST_MAXTYPES + 1];
+int g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iWarpAbility[ST_MAXTYPES + 1], g_iWarpAbility2[ST_MAXTYPES + 1], g_iWarpChance[ST_MAXTYPES + 1], g_iWarpChance2[ST_MAXTYPES + 1], g_iWarpHit[ST_MAXTYPES + 1], g_iWarpHit2[ST_MAXTYPES + 1], g_iWarpHitMode[ST_MAXTYPES + 1], g_iWarpHitMode2[ST_MAXTYPES + 1], g_iWarpMode[ST_MAXTYPES + 1], g_iWarpMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -114,6 +115,9 @@ public void ST_Configs(const char[] savepath, bool main)
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
+			main ? (g_iParticleEffect[iIndex] = kvSuperTanks.GetNum("General/Particle Effect", 0)) : (g_iParticleEffect2[iIndex] = kvSuperTanks.GetNum("General/Particle Effect", g_iParticleEffect[iIndex]));
+			main ? (g_iParticleEffect[iIndex] = iSetCellLimit(g_iParticleEffect[iIndex], 0, 1)) : (g_iParticleEffect2[iIndex] = iSetCellLimit(g_iParticleEffect2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("General/Particle Effects", g_sParticleEffects[iIndex], sizeof(g_sParticleEffects[]), "1234567")) : (kvSuperTanks.GetString("General/Particle Effects", g_sParticleEffects2[iIndex], sizeof(g_sParticleEffects2[]), g_sParticleEffects[iIndex]));
 			main ? (g_iWarpAbility[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", 0)) : (g_iWarpAbility2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", g_iWarpAbility[iIndex]));
 			main ? (g_iWarpAbility[iIndex] = iSetCellLimit(g_iWarpAbility[iIndex], 0, 1)) : (g_iWarpAbility2[iIndex] = iSetCellLimit(g_iWarpAbility2[iIndex], 0, 1));
 			main ? (g_iWarpChance[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Chance", 4)) : (g_iWarpChance2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Chance", g_iWarpChance[iIndex]));
@@ -187,13 +191,18 @@ public Action tTimerWarp(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
+		g_bWarp[iTank] = false;
 		return Plugin_Stop;
 	}
 	if (iWarpAbility(iTank) == 0)
 	{
+		g_bWarp[iTank] = false;
 		return Plugin_Stop;
 	}
-	int iWarpMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpMode[ST_TankType(iTank)] : g_iWarpMode2[ST_TankType(iTank)],
+	char sParticleEffects[8];
+	sParticleEffects = !g_bTankConfig[ST_TankType(iTank)] ? g_sParticleEffects[ST_TankType(iTank)] : g_sParticleEffects2[ST_TankType(iTank)];
+	int iParticleEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iParticleEffect[ST_TankType(iTank)] : g_iParticleEffect2[ST_TankType(iTank)],
+		iWarpMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpMode[ST_TankType(iTank)] : g_iWarpMode2[ST_TankType(iTank)],
 		iSurvivor = iGetRandomSurvivor(iTank);
 	if (iSurvivor > 0)
 	{
@@ -202,10 +211,13 @@ public Action tTimerWarp(Handle timer, any userid)
 		GetClientAbsAngles(iTank, flTankAngles);
 		GetClientAbsOrigin(iSurvivor, flSurvivorOrigin);
 		GetClientAbsAngles(iSurvivor, flSurvivorAngles);
-		vCreateParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
-		if (iWarpMode == 1)
+		if (iParticleEffect == 1 && StrContains(sParticleEffects, "2") != -1)
 		{
-			vCreateParticle(iSurvivor, PARTICLE_ELECTRICITY, 1.0, 0.0);
+			vCreateParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
+			if (iWarpMode == 1)
+			{
+				vCreateParticle(iSurvivor, PARTICLE_ELECTRICITY, 1.0, 0.0);
+			}
 		}
 		EmitSoundToAll(SOUND_ELECTRICITY, iTank);
 		EmitSoundToAll(SOUND_ELECTRICITY2, iSurvivor);

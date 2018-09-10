@@ -51,6 +51,21 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
+public void OnMapStart()
+{
+	vReset();
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	g_bZombie[client] = false;
+}
+
+public void OnMapEnd()
+{
+	vReset();
+}
+
 public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -81,6 +96,17 @@ public void ST_Ability(int client)
 		g_bZombie[client] = true;
 		float flZombieInterval = !g_bTankConfig[ST_TankType(client)] ? g_flZombieInterval[ST_TankType(client)] : g_flZombieInterval2[ST_TankType(client)];
 		CreateTimer(flZombieInterval, tTimerZombie, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	}
+}
+
+stock void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bZombie[iPlayer] = false;
+		}
 	}
 }
 

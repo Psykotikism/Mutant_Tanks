@@ -145,19 +145,19 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
+public void ST_Ability(int client)
+{
+	if (iShieldAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bShield[client])
+	{
+		vShield(client, true);
+	}
+}
+
 public void ST_BossStage(int client)
 {
 	if (iShieldAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vRemoveShield(client);
-	}
-}
-
-public void ST_Spawn(int client)
-{
-	if (iShieldAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bShield[client])
-	{
-		vShield(client, true);
 	}
 }
 

@@ -100,7 +100,6 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (iSplashAbility(iTank) == 1 && GetRandomInt(1, iSplashChance(iTank)) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			g_bSplash[iTank] = false;
 			CreateTimer(0.4, tTimerSplash, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}

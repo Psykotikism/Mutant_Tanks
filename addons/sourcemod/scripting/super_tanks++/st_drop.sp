@@ -322,7 +322,7 @@ public void ST_BossStage(int client)
 	vDeleteDrop(client);
 }
 
-public void ST_Spawn(int client)
+public void ST_Ability(int client)
 {
 	if (iDropAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bDrop[client])
 	{

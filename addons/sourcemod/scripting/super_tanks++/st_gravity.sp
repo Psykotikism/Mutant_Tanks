@@ -152,10 +152,26 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	int iGravityRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
-	if (iGravityAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		if (!g_bGravity[client])
+		int iGravityRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
+		float flGravityRange = !g_bTankConfig[ST_TankType(client)] ? g_flGravityRange[ST_TankType(client)] : g_flGravityRange2[ST_TankType(client)],
+			flTankPos[3];
+		GetClientAbsOrigin(client, flTankPos);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flGravityRange)
+				{
+					vGravityHit(iSurvivor, client, iGravityRangeChance, iGravityAbility(client));
+				}
+			}
+		}
+		if (iGravityAbility(client) == 1 && !g_bGravity[client])
 		{
 			g_bGravity[client] = true;
 			float flGravityForce = !g_bTankConfig[ST_TankType(client)] ? g_flGravityForce[ST_TankType(client)] : g_flGravityForce2[ST_TankType(client)];
@@ -177,22 +193,6 @@ public void ST_Ability(int client)
 				if (bIsL4D2Game())
 				{
 					SetEntProp(iBlackhole, Prop_Send, "m_glowColorOverride", client);
-				}
-			}
-		}
-		float flGravityRange = !g_bTankConfig[ST_TankType(client)] ? g_flGravityRange[ST_TankType(client)] : g_flGravityRange2[ST_TankType(client)],
-			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor))
-			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flGravityRange)
-				{
-					vGravityHit(iSurvivor, client, iGravityRangeChance, iGravityAbility(client));
 				}
 			}
 		}
