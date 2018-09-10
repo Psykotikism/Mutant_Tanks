@@ -79,9 +79,9 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iLeapAbility[iIndex] = kvSuperTanks.GetNum("Leap Ability/Ability Enabled", 0)) : (g_iLeapAbility2[iIndex] = kvSuperTanks.GetNum("Leap Ability/Ability Enabled", g_iLeapAbility[iIndex]));
 			main ? (g_iLeapAbility[iIndex] = iSetCellLimit(g_iLeapAbility[iIndex], 0, 1)) : (g_iLeapAbility2[iIndex] = iSetCellLimit(g_iLeapAbility2[iIndex], 0, 1));
-			main ? (g_flLeapHeight[iIndex] = kvSuperTanks.GetFloat("Leap Ability/Leap Height", 50.0)) : (g_flLeapHeight2[iIndex] = kvSuperTanks.GetFloat("Leap Ability/Leap Height", g_flLeapHeight[iIndex]));
+			main ? (g_flLeapHeight[iIndex] = kvSuperTanks.GetFloat("Leap Ability/Leap Height", 500.0)) : (g_flLeapHeight2[iIndex] = kvSuperTanks.GetFloat("Leap Ability/Leap Height", g_flLeapHeight[iIndex]));
 			main ? (g_flLeapHeight[iIndex] = flSetFloatLimit(g_flLeapHeight[iIndex], 0.1, 9999999999.0)) : (g_flLeapHeight2[iIndex] = flSetFloatLimit(g_flLeapHeight2[iIndex], 0.1, 9999999999.0));
-			main ? (g_flLeapInterval[iIndex] = kvSuperTanks.GetFloat("Leap Ability/Leap Interval", 5.0)) : (g_flLeapInterval2[iIndex] = kvSuperTanks.GetFloat("Leap Ability/Leap Interval", g_flLeapInterval[iIndex]));
+			main ? (g_flLeapInterval[iIndex] = kvSuperTanks.GetFloat("Leap Ability/Leap Interval", 1.0)) : (g_flLeapInterval2[iIndex] = kvSuperTanks.GetFloat("Leap Ability/Leap Interval", g_flLeapInterval[iIndex]));
 			main ? (g_flLeapInterval[iIndex] = flSetFloatLimit(g_flLeapInterval[iIndex], 0.1, 9999999999.0)) : (g_flLeapInterval2[iIndex] = flSetFloatLimit(g_flLeapInterval2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
