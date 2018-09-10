@@ -1428,9 +1428,9 @@
 			// Note: This setting does not affect the "Ghost Hit" setting.
 			// --
 			// 0: OFF
-			// 1: The Super Tank can disarm survivors.
-			// 2: The Super Tank cloaks itself.
-			// 3: Both
+			// 1: ON, the Super Tank can disarm survivors.
+			// 2: ON, the Super Tank can cloak itself.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
