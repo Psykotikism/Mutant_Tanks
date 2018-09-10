@@ -1428,7 +1428,9 @@
 			// Note: This setting does not affect the "Ghost Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: The Super Tank can disarm survivors.
+			// 2: The Super Tank cloaks itself.
+			// 3: Both
 			"Ability Enabled"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -2106,13 +2108,13 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Leap Height"					"50.0"
+			"Leap Height"					"500.0"
 
 			// The Super Tank leaps every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Leap Interval"					"5.0"
+			"Leap Interval"					"1.0"
 		}
 	}
 }
