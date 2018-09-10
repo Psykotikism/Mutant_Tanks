@@ -30,7 +30,8 @@ Changes:
 16. The Warp ability's electricity particle effect now requires the "Particle Effect" and "Particle Effects" settings to allow it.
 17. The code for various abilities have been slightly modified.
 18. Updated the Super Tanks++ category in the admin menu.
-19. Made some code optimizations.
+19. Removed old code that was used for human support.
+20. Made some code optimizations.
 
 Files:
 
