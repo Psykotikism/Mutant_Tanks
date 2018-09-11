@@ -470,6 +470,7 @@
 		// - "Acid Range Chance"
 		// "Acid Hit" - When a survivor is hit by a Tank's claw or rock, an acid puddle is created underneath the survivor.
 		// - "Acid Chance"
+		// - "Acid Hit Mode"
 		// Requires "st_acid.smx" to be installed.
 		"Acid Ability"
 		{
@@ -538,6 +539,7 @@
 		// - "Ammo Range Chance"
 		// "Ammo Hit" - When a survivor is hit by a Tank's claw or rock, their ammunition is taken away.
 		// - "Ammo Chance"
+		// - "Ammo Hit Mode"
 		// Requires "st_ammo.smx" to be installed.
 		"Ammo Ability"
 		{
@@ -603,6 +605,7 @@
 		// - "Blind Range Chance"
 		// "Blind Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is blinded.
 		// - "Blind Chance"
+		// - "Blind Hit Mode"
 		// Requires "st_blind.smx" to be installed.
 		"Blind Ability"
 		{
@@ -674,6 +677,7 @@
 		// - "Bomb Range Chance"
 		// "Bomb Hit" - When a survivor is hit by a Tank's claw or rock, an explosion is created around the survivor.
 		// - "Bomb Chance"
+		// - "Bomb Hit Mode"
 		// Requires "st_bomb.smx" to be installed.
 		"Bomb Ability"
 		{
@@ -740,6 +744,7 @@
 		// - "Bury Range Chance"
 		// "Bury Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is buried.
 		// - "Bury Chance"
+		// - "Bury Hit Mode"
 		// Requires "st_bury.smx" to be installed.
 		"Bury Ability"
 		{
@@ -811,6 +816,7 @@
 		// - "Cancer Range Chance"
 		// "Cancer Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is given cancer.
 		// - "Cancer Chance"
+		// - "Cancer Hit Mode"
 		// Requires "st_cancer.smx" to be installed.
 		"Cancer Ability"
 		{
@@ -962,6 +968,7 @@
 		// - "Drug Range Chance"
 		// "Drug Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is drugged.
 		// - "Drug Chance"
+		// - "Drug Hit Mode"
 		// Requires "st_drug.smx" to be installed.
 		"Drug Ability"
 		{
@@ -1027,6 +1034,7 @@
 		// - "Electric Range Chance"
 		// "Electric Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is electrocuted.
 		// - "Electric Chance"
+		// - "Electric Hit Mode"
 		// Requires "st_electric.smx" to be installed.
 		"Electric Ability"
 		{
@@ -1110,6 +1118,7 @@
 		// - "Enforce Range Chance"
 		// "Enforce Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is forced to only use a certain weapon slot.
 		// - "Enforce Chance"
+		// - "Enforce Hit Mode"
 		// Requires "st_enforce.smx" to be installed.
 		"Enforce Ability"
 		{
@@ -1186,6 +1195,7 @@
 		// - "Fire Range Chance"
 		// "Fire Hit" - When a survivor is hit by a Tank's claw or rock, a fire is created around the survivor.
 		// - "Fire Chance"
+		// - "Fire Hit Mode"
 		// Requires "st_fire.smx" to be installed.
 		"Fire Ability"
 		{
@@ -1291,6 +1301,7 @@
 		// - "Fling Range Chance"
 		// "Fling Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is flung into the air.
 		// - "Fling Chance"
+		// - "Fling Hit Mode"
 		// Requires "st_fling.smx" to be installed.
 		"Fling Ability"
 		{
@@ -1421,6 +1432,7 @@
 		// - "Ghost Range Chance"
 		// "Ghost Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is disarmed.
 		// - "Ghost Chance"
+		// - "Ghost Hit Mode"
 		// Requires "st_ghost.smx" to be installed.
 		"Ghost Ability"
 		{
@@ -1533,6 +1545,7 @@
 		// - "Gravity Range Chance"
 		// "Gravity Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's gravity changes.
 		// - "Gravity Chance"
+		// - "Gravity Hit Mode"
 		// Requires "st_gravity.smx" to be installed.
 		"Gravity Ability"
 		{
@@ -1613,6 +1626,7 @@
 		// - "Heal Range"
 		// "Heal Hit" - When a survivor is hit by a Tank's claw or rock, the survivor can go black and white and have temporary health.
 		// - "Heal Chance"
+		// - "Heal Hit Mode"
 		// Requires "st_heal.smx" to be installed.
 		"Heal Ability"
 		{
@@ -1699,6 +1713,7 @@
 		// - "Hurt Range Chance"
 		// "Hurt Hit" - When a survivor is hit by a Tank's claw or rock, the survivor gets hurt repeatedly.
 		// - "Hurt Chance"
+		// - "Hurt Hit Mode"
 		// Requires "st_hurt.smx" to be installed.
 		"Hurt Ability"
 		{
@@ -1770,6 +1785,7 @@
 		// - "Hypno Range Chance"
 		// "Hypno Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is hypnotized.
 		// - "Hypno Chance"
+		// - "Hypno Hit Mode"
 		// Requires "st_hypno.smx" to be installed.
 		"Hypno Ability"
 		{
@@ -1841,6 +1857,7 @@
 		// - "Ice Range Chance"
 		// "Ice Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is frozen in place.
 		// - "Ice Chance"
+		// - "Ice Hit Mode"
 		// Requires "st_ice.smx" to be installed.
 		"Ice Ability"
 		{
@@ -1906,6 +1923,7 @@
 		// - "Idle Range Chance"
 		// "Idle Hit" - When a survivor is hit by a Tank's claw or rock, the survivor goes idle.
 		// - "Idle Chance"
+		// - "Idle Hit Mode"
 		// Requires "st_idle.smx" to be installed.
 		"Idle Ability"
 		{
@@ -1965,6 +1983,7 @@
 		// - "Invert Range Chance"
 		// "Invert Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's movement keys are inverted.
 		// - "Invert Chance"
+		// - "Invert Hit Mode"
 		// Requires "st_invert.smx" to be installed.
 		"Invert Ability"
 		{
@@ -2100,6 +2119,7 @@
 		// - "Kamikaze Range Chance"
 		// "Kamikaze Hit" - When a survivor is hit by a Tank's claw or rock, the survivor dies along with the Tank.
 		// - "Kamikaze Chance"
+		// - "Kamikaze Hit Mode"
 		// Requires "st_kamikaze.smx" to be installed.
 		"Kamikaze Ability"
 		{
@@ -2159,6 +2179,7 @@
 		// - "Leech Range Chance"
 		// "Leech Hit" - When a survivor is hit by a Tank's claw or rock, the Tank leeches health off of the survivor.
 		// - "Leech Chance"
+		// - "Leech Hit Mode"
 		// Requires "st_leech.smx" to be installed.
 		"Leech Ability"
 		{
@@ -2416,6 +2437,7 @@
 		// - "Nullify Range Chance"
 		// "Nullify Hit" - When a survivor is hit by a Tank's claw or rock, the survivor does not do any damage.
 		// - "Nullify Chance"
+		// - "Nullify Hit Mode"
 		// Requires "st_nullify.smx" to be installed.
 		"Nullify Ability"
 		{
@@ -2479,6 +2501,7 @@
 		// - "Panic Interval"
 		// "Panic Hit" - When a survivor is hit by a Tank's claw or rock, a panic event starts.
 		// - "Panic Chance"
+		// - "Panic Hit Mode"
 		// Requires "st_panic.smx" to be installed.
 		"Panic Ability"
 		{
@@ -2532,6 +2555,7 @@
 		// - "Pimp Range Chance"
 		// "Pimp Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is repeatedly pimp slapped.
 		// - "Pimp Chance"
+		// - "Pimp Hit Mode"
 		// Requires "st_pimp.smx" to be installed.
 		"Pimp Ability"
 		{
@@ -2603,6 +2627,7 @@
 		// - "Puke Range Chance"
 		// "Puke Hit" - When a survivor is hit by a Tank's claw or rock, the Tank pukes on the survivor.
 		// - "Puke Chance"
+		// - "Puke Hit Mode"
 		// Requires "st_puke.smx" to be installed.
 		"Puke Ability"
 		{
@@ -2695,6 +2720,7 @@
 		// - "Quiet Range Chance"
 		// "Quiet Hit" - When a survivor is hit by a Tank's claw or rock, the survivor cannot hear the Tank's noises.
 		// - "Quiet Chance"
+		// - "Quiet Hit Mode"
 		// Requires "st_quiet.smx" to be installed.
 		"Quiet Ability"
 		{
@@ -2844,6 +2870,7 @@
 		// - "Restart Range Chance"
 		// "Restart Hit" - When a survivor is hit by a Tank's claw or rock, the survivor respawns at the start of the map or near a teammate.
 		// - "Restart Chance"
+		// - "Restart Hit Mode"
 		// Requires "st_restart.smx" to be installed.
 		"Restart Ability"
 		{
@@ -2963,6 +2990,7 @@
 		// - "Rocket Range Chance"
 		// "Rocket Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is sent into space.
 		// - "Rocket Chance"
+		// - "Rocket Hit Mode"
 		// Requires "st_rocket.smx" to be installed.
 		"Rocket Ability"
 		{
@@ -3021,6 +3049,7 @@
 		// - "Shake Range Chance"
 		// "Shake Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's screen is shaken.
 		// - "Shake Chance"
+		// - "Shake Hit Mode"
 		// Requires "st_shake.smx" to be installed.
 		"Shake Ability"
 		{
@@ -3123,6 +3152,7 @@
 		// - "Shove Range Chance"
 		// "Shove Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is shoved repeatedly.
 		// - "Shove Chance"
+		// - "Shove Hit Mode"
 		// Requires "st_shove.smx" to be installed.
 		"Shove Ability"
 		{
@@ -3188,6 +3218,7 @@
 		// - "Smash Range Chance"
 		// "Smash Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is crushed to death.
 		// - "Smash Chance"
+		// - "Smash Hit Mode"
 		// Requires "st_smash.smx" to be installed.
 		"Smash Ability"
 		{
@@ -3247,6 +3278,7 @@
 		// - "Smite Range Chance"
 		// "Smite Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is smitten.
 		// - "Smite Chance"
+		// - "Smite Hit Mode"
 		// Requires "st_smite.smx" to be installed.
 		"Smite Ability"
 		{
@@ -3390,6 +3422,7 @@
 		// - "Stun Range Chance"
 		// "Stun Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is slowed down.
 		// - "Stun Chance"
+		// - "Stun Hit Mode"
 		// Requires "st_stun.smx" to be installed.
 		"Stun Ability"
 		{
@@ -3549,6 +3582,7 @@
 		// - "Vampire Range Chance"
 		// "Vampire Hit" - When a survivor is hit by a Tank's claw or rock, the Tank gains health.
 		// - "Vampire Chance"
+		// - "Vampire Hit Mode"
 		// Requires "st_vampire.smx" to be installed.
 		"Vampire Ability"
 		{
@@ -3619,6 +3653,7 @@
 		// - "Vision Range Chance"
 		// "Vision Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's vision changes.
 		// - "Vision Chance"
+		// - "Vision Hit Mode"
 		// Requires "st_vision.smx" to be installed.
 		"Vision Ability"
 		{
@@ -3689,6 +3724,7 @@
 		// - "Warp Interval"
 		// "Warp Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is warped to a random teammate.
 		// - "Warp Chance"
+		// - "Warp Hit Mode"
 		// Requires "st_warp.smx" to be installed.
 		"Warp Ability"
 		{
