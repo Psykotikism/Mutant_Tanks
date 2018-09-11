@@ -35,7 +35,7 @@
 			// 2: Versus modes only.
 			// 4: Survival modes only.
 			// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
-			"Game Mode Types"				"0"
+			"Game Mode Types"				"5"
 
 			// Enable Super Tanks++ in these game modes.
 			// Separate game modes with commas.
@@ -43,7 +43,7 @@
 			// --
 			// Empty: All
 			// Not empty: Enabled only in these game modes.
-			"Enabled Game Modes"			""
+			"Enabled Game Modes"			"coop,survival"
 
 			// Disable Super Tanks++ in these game modes.
 			// Separate game modes with commas.
@@ -51,7 +51,7 @@
 			// --
 			// Empty: None
 			// Not empty: Disabled only in these game modes.
-			"Disabled Game Modes"			""
+			"Disabled Game Modes"			"versus,scavenge"
 
 			// Announce each Super Tank's arrival.
 			// --
@@ -2061,9 +2061,101 @@
 {
 	"Tank 1"
 	{
-		// The Super Tank jumps really high.
+		// The Super Tank jumps periodically.
 		// Requires "st_jump.smx" to be installed.
 		"Jump Ability"
+		{
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank jumps this high off a surface.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Jump Height"					"500.0"
+
+			// The Super Tank jumps every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Jump Interval"					"1.0"
+		}
+	}
+}
+```
+
+#### Kamikaze Ability
+
+```
+"Super Tanks++"
+{
+	"Tank 1"
+	{
+		// The Super Tank kills itself along with a survivor victim.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor dies along with the Tank.
+		// - "Kamikaze Range"
+		// - "Kamikaze Range Chance"
+		// "Kamikaze Hit" - When a survivor is hit by a Tank's claw or rock, the survivor dies along with the Tank.
+		// - "Kamikaze Chance"
+		// Requires "st_kamikaze.smx" to be installed.
+		"Kamikaze Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Kamikaze Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Kamikaze Chance"				"4"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Kamikaze Hit"					"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Kamikaze Hit Mode"				"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Kamikaze Range"				"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Kamikaze Range Chance"			"16"
+		}
+	}
+}
+```
+
+#### Leech Ability
+
+```
+"Super Tanks++"
+{
+	"Tank 1"
+	{
+		// The Super Tank leeches health off of survivors.
+		// Requires "st_leech.smx" to be installed.
+		"Leech Ability"
 		{
 			// Enable this ability.
 			// --
@@ -2075,46 +2167,45 @@
 			// --
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
-			"Jump Chance"					"4"
+			"Leech Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Leech Duration"				"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Leech Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Leech Hit Mode"				"0"
+
+			// The Super Tank electrocutes survivors every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Leech Interval"				"1.0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
-			"Jump Range"					"500.0"
-		}
-	}
-}
-```
+			"Leech Range"					"150.0"
 
-#### Leap Ability
-
-```
-"Super Tanks++"
-{
-	"Tank 1"
-	{
-		// The Super Tank leaps periodically.
-		// Requires "st_leap.smx" to be installed.
-		"Leap Ability"
-		{
-			// Enable this ability.
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Ability Enabled"				"0"
-
-			// The Super Tank leaps this high off a surface.
-			// --
-			// Minimum: 0.1
-			// Maximum: 9999999999.0
-			"Leap Height"					"500.0"
-
-			// The Super Tank leaps every time this many seconds passes.
-			// --
-			// Minimum: 0.1
-			// Maximum: 9999999999.0
-			"Leap Interval"					"1.0"
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Leech Range Chance"			"16"
 		}
 	}
 }
@@ -2122,7 +2213,8 @@
 
 #### Medic Ability
 
-```"Super Tanks++"
+```
+"Super Tanks++"
 {
 	"Tank 1"
 	{
@@ -2267,6 +2359,39 @@
 			// 5: Jockey (Switches to Hunter in L4D1.)
 			// 6: Charger (Switches to Smoker in L4D1.)
 			"Minion Types"					"123456"
+		}
+	}
+}
+```
+
+#### Necro Ability
+
+```
+"Super Tanks++"
+{
+	"Tank 1"
+	{
+		// The Super Tank resurrects dead special infected.
+		// Requires "st_necro.smx" to be installed.
+		"Necro Ability"
+		{
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Necro Chance"					"4"
+
+			// The distance between a special infected and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Necro Range"					"500.0"
 		}
 	}
 }
