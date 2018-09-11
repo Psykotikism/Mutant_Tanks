@@ -1,7 +1,8 @@
 // Super Tanks++: Puke Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,10 +15,10 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flPukeRange[ST_MAXTYPES + 1], g_flPukeRange2[ST_MAXTYPES + 1];
 Handle g_hSDKPukePlayer;
-int g_iPukeAbility[ST_MAXTYPES + 1], g_iPukeAbility2[ST_MAXTYPES + 1], g_iPukeChance[ST_MAXTYPES + 1], g_iPukeChance2[ST_MAXTYPES + 1], g_iPukeHit[ST_MAXTYPES + 1], g_iPukeHit2[ST_MAXTYPES + 1], g_iPukeRangeChance[ST_MAXTYPES + 1], g_iPukeRangeChance2[ST_MAXTYPES + 1];
+int g_iPukeAbility[ST_MAXTYPES + 1], g_iPukeAbility2[ST_MAXTYPES + 1], g_iPukeChance[ST_MAXTYPES + 1], g_iPukeChance2[ST_MAXTYPES + 1], g_iPukeHit[ST_MAXTYPES + 1], g_iPukeHit2[ST_MAXTYPES + 1], g_iPukeHitMode[ST_MAXTYPES + 1], g_iPukeHitMode2[ST_MAXTYPES + 1], g_iPukeRangeChance[ST_MAXTYPES + 1], g_iPukeRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -29,6 +30,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	g_bLateLoad = late;
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnPluginStart()
@@ -71,28 +93,24 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iPukeHitMode(attacker) == 0 || iPukeHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iPukeChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iPukeChance[ST_TankType(attacker)] : g_iPukeChance2[ST_TankType(attacker)],
-					iPukeHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iPukeHit[ST_TankType(attacker)] : g_iPukeHit2[ST_TankType(attacker)];
-				vPukeHit(victim, attacker, iPukeChance, iPukeHit);
+				vPukeHit(victim, attacker, iPukeChance(attacker), iPukeHit(attacker));
 			}
 		}
-		else if (ST_TankAllowed(victim) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iPukeHitMode(victim) == 0 || iPukeHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				int iPukeChance = !g_bTankConfig[ST_TankType(victim)] ? g_iPukeChance[ST_TankType(victim)] : g_iPukeChance2[ST_TankType(victim)],
-					iPukeHit = !g_bTankConfig[ST_TankType(victim)] ? g_iPukeHit[ST_TankType(victim)] : g_iPukeHit2[ST_TankType(victim)];
-				vPukeHit(attacker, victim, iPukeChance, iPukeHit);
+				vPukeHit(attacker, victim, iPukeChance(victim), iPukeHit(victim));
 			}
 		}
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -109,6 +127,8 @@ public void ST_Configs(char[] savepath, bool main)
 			main ? (g_iPukeChance[iIndex] = iSetCellLimit(g_iPukeChance[iIndex], 1, 9999999999)) : (g_iPukeChance2[iIndex] = iSetCellLimit(g_iPukeChance2[iIndex], 1, 9999999999));
 			main ? (g_iPukeHit[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", 0)) : (g_iPukeHit2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", g_iPukeHit[iIndex]));
 			main ? (g_iPukeHit[iIndex] = iSetCellLimit(g_iPukeHit[iIndex], 0, 1)) : (g_iPukeHit2[iIndex] = iSetCellLimit(g_iPukeHit2[iIndex], 0, 1));
+			main ? (g_iPukeHitMode[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit Mode", 0)) : (g_iPukeHitMode2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit Mode", g_iPukeHitMode[iIndex]));
+			main ? (g_iPukeHitMode[iIndex] = iSetCellLimit(g_iPukeHitMode[iIndex], 0, 2)) : (g_iPukeHitMode2[iIndex] = iSetCellLimit(g_iPukeHitMode2[iIndex], 0, 2));
 			main ? (g_flPukeRange[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range", 150.0)) : (g_flPukeRange2[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range", g_flPukeRange[iIndex]));
 			main ? (g_flPukeRange[iIndex] = flSetFloatLimit(g_flPukeRange[iIndex], 1.0, 9999999999.0)) : (g_flPukeRange2[iIndex] = flSetFloatLimit(g_flPukeRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iPukeRangeChance[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Range Chance", 16)) : (g_iPukeRangeChance2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Range Chance", g_iPukeRangeChance[iIndex]));
@@ -121,7 +141,7 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		int iPukeAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPukeAbility[ST_TankType(client)] : g_iPukeAbility2[ST_TankType(client)],
 			iPukeRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPukeChance[ST_TankType(client)] : g_iPukeChance2[ST_TankType(client)];
@@ -144,10 +164,25 @@ public void ST_Ability(int client)
 	}
 }
 
-void vPukeHit(int client, int owner, int chance, int enabled)
+stock void vPukeHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		SDKCall(g_hSDKPukePlayer, client, owner, true);
 	}
+}
+
+stock int iPukeChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iPukeChance[ST_TankType(client)] : g_iPukeChance2[ST_TankType(client)];
+}
+
+stock int iPukeHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iPukeHit[ST_TankType(client)] : g_iPukeHit2[ST_TankType(client)];
+}
+
+stock int iPukeHitMode(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iPukeHitMode[ST_TankType(client)] : g_iPukeHitMode2[ST_TankType(client)];
 }

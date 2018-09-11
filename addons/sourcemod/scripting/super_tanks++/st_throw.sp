@@ -1,7 +1,8 @@
 // Super Tanks++: Throw Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7], g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15];
 ConVar g_cvSTTankThrowForce;
 int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1];
@@ -30,6 +31,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
+}
+
 public void OnPluginStart()
 {
 	g_cvSTTankThrowForce = FindConVar("z_tank_throw_force");
@@ -42,7 +64,7 @@ public void OnMapStart()
 	PrecacheModel(MODEL_CAR3, true);
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -65,28 +87,29 @@ public void ST_Configs(char[] savepath, bool main)
 
 public void ST_RockThrow(int client, int entity)
 {
-	int iThrowAbility = !g_bTankConfig[ST_TankType(client)] ? g_iThrowAbility[ST_TankType(client)] : g_iThrowAbility2[ST_TankType(client)];
-	if (iThrowAbility == 1)
+	if (iThrowAbility(client) == 1)
 	{
 		DataPack dpCarThrow = new DataPack();
 		CreateDataTimer(0.1, tTimerCarThrow, dpCarThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpCarThrow.WriteCell(EntIndexToEntRef(entity));
-		dpCarThrow.WriteCell(GetClientUserId(client));
+		dpCarThrow.WriteCell(EntIndexToEntRef(entity)), dpCarThrow.WriteCell(GetClientUserId(client));
 	}
-	else if (iThrowAbility == 2)
+	else if (iThrowAbility(client) == 2)
 	{
 		DataPack dpInfectedThrow = new DataPack();
 		CreateDataTimer(0.1, tTimerInfectedThrow, dpInfectedThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpInfectedThrow.WriteCell(EntIndexToEntRef(entity));
-		dpInfectedThrow.WriteCell(GetClientUserId(client));
+		dpInfectedThrow.WriteCell(EntIndexToEntRef(entity)), dpInfectedThrow.WriteCell(GetClientUserId(client));
 	}
-	else if (iThrowAbility == 3)
+	else if (iThrowAbility(client) == 3)
 	{
 		DataPack dpSelfThrow = new DataPack();
 		CreateDataTimer(0.1, tTimerSelfThrow, dpSelfThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpSelfThrow.WriteCell(EntIndexToEntRef(entity));
-		dpSelfThrow.WriteCell(GetClientUserId(client));
+		dpSelfThrow.WriteCell(EntIndexToEntRef(entity)), dpSelfThrow.WriteCell(GetClientUserId(client));
 	}
+}
+
+stock int iThrowAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iThrowAbility[ST_TankType(client)] : g_iThrowAbility2[ST_TankType(client)];
 }
 
 public Action tTimerCarThrow(Handle timer, DataPack pack)
@@ -98,12 +121,11 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
-	int iThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iThrowAbility[ST_TankType(iTank)] : g_iThrowAbility2[ST_TankType(iTank)];
-	if (iThrowAbility != 1)
+	if (iThrowAbility(iTank) != 1)
 	{
 		return Plugin_Stop;
 	}
@@ -149,12 +171,11 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
-	int iThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iThrowAbility[ST_TankType(iTank)] : g_iThrowAbility2[ST_TankType(iTank)];
-	if (iThrowAbility != 2)
+	if (iThrowAbility(iTank) != 2)
 	{
 		return Plugin_Stop;
 	}
@@ -199,12 +220,11 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
-	int iThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iThrowAbility[ST_TankType(iTank)] : g_iThrowAbility2[ST_TankType(iTank)];
-	if (iThrowAbility != 3)
+	if (iThrowAbility(iTank) != 3)
 	{
 		return Plugin_Stop;
 	}

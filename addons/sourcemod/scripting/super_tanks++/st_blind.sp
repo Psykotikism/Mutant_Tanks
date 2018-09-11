@@ -1,7 +1,8 @@
 // Super Tanks++: Blind Ability
+#undef REQUIRE_PLUGIN
+#include <st_clone>
 #define REQUIRE_PLUGIN
 #include <super_tanks++>
-#undef REQUIRE_PLUGIN
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -14,10 +15,9 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bBlind[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bBlind[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flBlindDuration[ST_MAXTYPES + 1], g_flBlindDuration2[ST_MAXTYPES + 1], g_flBlindRange[ST_MAXTYPES + 1], g_flBlindRange2[ST_MAXTYPES + 1];
-int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1], g_iBlindChance[ST_MAXTYPES + 1], g_iBlindChance2[ST_MAXTYPES + 1], g_iBlindHit[ST_MAXTYPES + 1],
-	g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1], g_iBlindIntensity2[ST_MAXTYPES + 1], g_iBlindRangeChance[ST_MAXTYPES + 1], g_iBlindRangeChance2[ST_MAXTYPES + 1];
+int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1], g_iBlindChance[ST_MAXTYPES + 1], g_iBlindChance2[ST_MAXTYPES + 1], g_iBlindHit[ST_MAXTYPES + 1], g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindHitMode[ST_MAXTYPES + 1], g_iBlindHitMode2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1], g_iBlindIntensity2[ST_MAXTYPES + 1], g_iBlindRangeChance[ST_MAXTYPES + 1], g_iBlindRangeChance2[ST_MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -30,6 +30,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	g_bLateLoad = late;
 	return APLRes_Success;
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("st_clone");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
 }
 
 public void OnPluginStart()
@@ -68,21 +89,26 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(attacker) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		if ((iBlindHitMode(attacker) == 0 || iBlindHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
-			char sClassname[32];
-			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				int iBlindChance = !g_bTankConfig[ST_TankType(attacker)] ? g_iBlindChance[ST_TankType(attacker)] : g_iBlindChance2[ST_TankType(attacker)],
-					iBlindHit = !g_bTankConfig[ST_TankType(attacker)] ? g_iBlindHit[ST_TankType(attacker)] : g_iBlindHit2[ST_TankType(attacker)];
-				vBlindHit(victim, attacker, iBlindChance, iBlindHit);
+				vBlindHit(victim, attacker, iBlindChance(attacker), iBlindHit(attacker));
+			}
+		}
+		else if ((iBlindHitMode(victim) == 0 || iBlindHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		{
+			if (strcmp(sClassname, "weapon_melee") == 0)
+			{
+				vBlindHit(attacker, victim, iBlindChance(victim), iBlindHit(victim));
 			}
 		}
 	}
 }
 
-public void ST_Configs(char[] savepath, bool main)
+public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -101,6 +127,8 @@ public void ST_Configs(char[] savepath, bool main)
 			main ? (g_flBlindDuration[iIndex] = flSetFloatLimit(g_flBlindDuration[iIndex], 0.1, 9999999999.0)) : (g_flBlindDuration2[iIndex] = flSetFloatLimit(g_flBlindDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iBlindHit[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Hit", 0)) : (g_iBlindHit2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Hit", g_iBlindHit[iIndex]));
 			main ? (g_iBlindHit[iIndex] = iSetCellLimit(g_iBlindHit[iIndex], 0, 1)) : (g_iBlindHit2[iIndex] = iSetCellLimit(g_iBlindHit2[iIndex], 0, 1));
+			main ? (g_iBlindHitMode[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Hit Mode", 0)) : (g_iBlindHitMode2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Hit Mode", g_iBlindHitMode[iIndex]));
+			main ? (g_iBlindHitMode[iIndex] = iSetCellLimit(g_iBlindHitMode[iIndex], 0, 2)) : (g_iBlindHitMode2[iIndex] = iSetCellLimit(g_iBlindHitMode2[iIndex], 0, 2));
 			main ? (g_iBlindIntensity[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Intensity", 255)) : (g_iBlindIntensity2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Intensity", g_iBlindIntensity[iIndex]));
 			main ? (g_iBlindIntensity[iIndex] = iSetCellLimit(g_iBlindIntensity[iIndex], 0, 255)) : (g_iBlindIntensity2[iIndex] = iSetCellLimit(g_iBlindIntensity2[iIndex], 0, 255));
 			main ? (g_flBlindRange[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range", 150.0)) : (g_flBlindRange2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range", g_flBlindRange[iIndex]));
@@ -117,9 +145,8 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (strcmp(name, "player_death") == 0)
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iBlindAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindAbility[ST_TankType(iTank)] : g_iBlindAbility2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank) && iBlindAbility == 1)
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iBlindAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveBlind(iTank);
 		}
@@ -128,10 +155,9 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int client)
 {
-	if (ST_TankAllowed(client) && IsPlayerAlive(client))
+	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iBlindAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)],
-			iBlindRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBlindChance[ST_TankType(client)] : g_iBlindChance2[ST_TankType(client)];
+		int iBlindRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBlindChance[ST_TankType(client)] : g_iBlindChance2[ST_TankType(client)];
 		float flBlindRange = !g_bTankConfig[ST_TankType(client)] ? g_flBlindRange[ST_TankType(client)] : g_flBlindRange2[ST_TankType(client)],
 			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -144,7 +170,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBlindRange)
 				{
-					vBlindHit(iSurvivor, client, iBlindRangeChance, iBlindAbility);
+					vBlindHit(iSurvivor, client, iBlindRangeChance, iBlindAbility(client));
 				}
 			}
 		}
@@ -153,14 +179,13 @@ public void ST_Ability(int client)
 
 public void ST_BossStage(int client)
 {
-	int iBlindAbility = !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
-	if (ST_TankAllowed(client) && iBlindAbility == 1)
+	if (iBlindAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
 	{
 		vRemoveBlind(client);
 	}
 }
 
-void vBlind(int client, int amount)
+stock void vBlind(int client, int amount)
 {
 	int iTargets[2], iFlags;
 	iTargets[0] = client;
@@ -173,27 +198,20 @@ void vBlind(int client, int amount)
 		if (GetUserMessageType() == UM_Protobuf)
 		{
 			Protobuf pbSet = UserMessageToProtobuf(hBlindTarget);
-			pbSet.SetInt("duration", 1536);
-			pbSet.SetInt("hold_time", 1536);
-			pbSet.SetInt("flags", iFlags);
+			pbSet.SetInt("duration", 1536), pbSet.SetInt("hold_time", 1536), pbSet.SetInt("flags", iFlags);
 			pbSet.SetColor("clr", iColor);
 		}
 		else
 		{
 			BfWrite bfWrite = UserMessageToBfWrite(hBlindTarget);
-			bfWrite.WriteShort(1536);
-			bfWrite.WriteShort(1536);
-			bfWrite.WriteShort(iFlags);
-			bfWrite.WriteByte(iColor[0]);
-			bfWrite.WriteByte(iColor[1]);
-			bfWrite.WriteByte(iColor[2]);
-			bfWrite.WriteByte(iColor[3]);
+			bfWrite.WriteShort(1536), bfWrite.WriteShort(1536), bfWrite.WriteShort(iFlags);
+			bfWrite.WriteByte(iColor[0]), bfWrite.WriteByte(iColor[1]), bfWrite.WriteByte(iColor[2]), bfWrite.WriteByte(iColor[3]);
 		}
 		EndMessage();
 	}
 }
 
-void vBlindHit(int client, int owner, int chance, int enabled)
+stock void vBlindHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBlind[client])
 	{
@@ -203,12 +221,11 @@ void vBlindHit(int client, int owner, int chance, int enabled)
 		float flBlindDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flBlindDuration[ST_TankType(owner)] : g_flBlindDuration2[ST_TankType(owner)];
 		DataPack dpStopBlindness = new DataPack();
 		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopBlindness.WriteCell(GetClientUserId(client));
-		dpStopBlindness.WriteCell(GetClientUserId(owner));
+		dpStopBlindness.WriteCell(GetClientUserId(client)), dpStopBlindness.WriteCell(GetClientUserId(owner)), dpStopBlindness.WriteCell(enabled);
 	}
 }
 
-void vRemoveBlind(int client)
+stock void vRemoveBlind(int client)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -216,13 +233,12 @@ void vRemoveBlind(int client)
 		{
 			DataPack dpStopBlindness = new DataPack();
 			CreateDataTimer(0.1, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopBlindness.WriteCell(GetClientUserId(iSurvivor));
-			dpStopBlindness.WriteCell(GetClientUserId(client));
+			dpStopBlindness.WriteCell(GetClientUserId(iSurvivor)), dpStopBlindness.WriteCell(GetClientUserId(client)), dpStopBlindness.WriteCell(1);
 		}
 	}
 }
 
-void vReset()
+stock void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -231,6 +247,26 @@ void vReset()
 			g_bBlind[iPlayer] = false;
 		}
 	}
+}
+
+stock int iBlindAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
+}
+
+stock int iBlindChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindChance[ST_TankType(client)] : g_iBlindChance2[ST_TankType(client)];
+}
+
+stock int iBlindHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindHit[ST_TankType(client)] : g_iBlindHit2[ST_TankType(client)];
+}
+
+stock int iBlindHitMode(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindHitMode[ST_TankType(client)] : g_iBlindHitMode2[ST_TankType(client)];
 }
 
 public Action tTimerStopBlindness(Handle timer, DataPack pack)
@@ -243,14 +279,14 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bBlind[iSurvivor] = false;
 		vBlind(iSurvivor, 0);
 		return Plugin_Stop;
 	}
-	int iBlindAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindAbility[ST_TankType(iTank)] : g_iBlindAbility2[ST_TankType(iTank)];
-	if (iBlindAbility == 0)
+	int iBlindEnabled = pack.ReadCell();
+	if (iBlindEnabled == 0)
 	{
 		g_bBlind[iSurvivor] = false;
 		vBlind(iSurvivor, 0);

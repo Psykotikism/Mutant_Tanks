@@ -9,10 +9,13 @@
 #include <sdktools>
 #include <adminmenu>
 #define ST_PREFIX "[ST++]"
+#define ST_PREFIX2 "\x04[ST++]\x01"
+#define ST_PREFIX3 "\x04[ST++]\x03"
+#define ST_PREFIX4 "\x04[ST++]\x05"
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.38"
+#define ST_VERSION "8.39"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 5000
 #define ST_MAXHEALTH 65535
@@ -160,7 +163,7 @@ forward void ST_BossStage(int client);
  *							or a custom config
  *							is being used.
  */
-forward void ST_Configs(char[] savepath, bool main);
+forward void ST_Configs(const char[] savepath, bool main);
 
 /* Called when an event hooked by the core plugin is fired.
  * Use this forward to trigger something on any of those events.
@@ -240,6 +243,12 @@ native bool ST_TankAllowed(int client);
  * @return				The Tank's Super Tank type.
  */
 native int ST_TankType(int client);
+
+/* Returns the current finale wave.
+ *
+ * @return				The current finale wave.
+ */
+native int ST_TankWave();
 
 // Checks
 stock bool bHasIdlePlayer(int client)
@@ -718,28 +727,6 @@ stock int iGetIdlePlayer(int client)
 	return 0;
 }
 
-stock int iGetNearestSurvivor(int client)
-{
-	float flDistance = 0.0, flNearest = 0.0, flPlayerPos[3], flTargetPos[3];
-	if (bIsValidClient(client))
-	{
-		GetClientAbsOrigin(client, flPlayerPos);
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor))
-			{
-				GetClientAbsOrigin(iSurvivor, flTargetPos);
-				flDistance = GetVectorDistance(flPlayerPos, flTargetPos);
-				if (flNearest == 0.0 || flNearest > flDistance)
-				{
-					flNearest = flDistance;
-				}
-			}
-		}
-	}
-	return RoundFloat(flDistance);
-}
-
 stock int iGetPlayerCount()
 {
 	int iPlayerCount;
@@ -842,7 +829,7 @@ stock int iSetCellLimit(int value, int min, int max)
 	return value;
 }
 
-stock void vAttachParticle(int client, char[] particlename, float time = 0.0, float origin = 0.0)
+stock void vAttachParticle(int client, const char[] particlename, float time = 0.0, float origin = 0.0)
 {
 	if (bIsValidClient(client))
 	{
@@ -866,7 +853,7 @@ stock void vAttachParticle(int client, char[] particlename, float time = 0.0, fl
 	}
 }
 
-stock void vCheatCommand(int client, char[] command, char[] arguments = "", any ...)
+stock void vCheatCommand(int client, const char[] command, const char[] arguments = "", any ...)
 {
 	int iCmdFlags = GetCommandFlags(command);
 	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
@@ -898,7 +885,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 	}
 }
 
-stock void vCreateParticle(int client, char[] particlename, float time, float origin)
+stock void vCreateParticle(int client, const char[] particlename, float time, float origin)
 {
 	if (bIsValidClient(client))
 	{
@@ -920,7 +907,7 @@ stock void vCreateParticle(int client, char[] particlename, float time, float or
 	}
 }
 
-stock void vDamage(int client, char[] damage)
+stock void vDamage(int client, const char[] damage)
 {
 	int iPointHurt = CreateEntityByName("point_hurt");
 	if (bIsValidEntity(iPointHurt))
@@ -955,13 +942,8 @@ stock void vFade(int client, int duration, int unknown, int red, int green, int 
 	if (hFadeTarget != null)
 	{
 		BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
-		bfWrite.WriteShort(duration);
-		bfWrite.WriteShort(unknown);
-		bfWrite.WriteShort((0x0010|0x0001));
-		bfWrite.WriteByte(red);
-		bfWrite.WriteByte(green);
-		bfWrite.WriteByte(blue);
-		bfWrite.WriteByte(150);
+		bfWrite.WriteShort(duration), bfWrite.WriteShort(unknown), bfWrite.WriteShort((0x0010|0x0001));
+		bfWrite.WriteByte(red), bfWrite.WriteByte(green), bfWrite.WriteByte(blue), bfWrite.WriteByte(150);
 		EndMessage();
 	}
 }
@@ -994,7 +976,7 @@ stock void vGhost(int client, int slot)
 	}
 }
 
-stock void vGhostDrop(int client, char[] slots, char[] number, int slot)
+stock void vGhostDrop(int client, const char[] slots, const char[] number, int slot)
 {
 	if (StrContains(slots, number) != -1)
 	{
@@ -1038,7 +1020,7 @@ stock void vMultiTargetFilters(int toggle)
 	}
 }
 
-stock void vPrecacheParticle(char[] particlename)
+stock void vPrecacheParticle(const char[] particlename)
 {
 	int iParticle = CreateEntityByName("info_particle_system");
 	if (IsValidEntity(iParticle))
@@ -1071,21 +1053,19 @@ stock void vShake(int client, float duration = 1.0)
 	{
 		BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
 		bfWrite.WriteByte(0);
-		bfWrite.WriteFloat(16.0);
-		bfWrite.WriteFloat(0.5);
-		bfWrite.WriteFloat(duration);
+		bfWrite.WriteFloat(16.0), bfWrite.WriteFloat(0.5), bfWrite.WriteFloat(duration);
 		EndMessage();
 	}
 }
 
-stock void vSpawnInfected(int client, char[] infected)
+stock void vSpawnInfected(int client, const char[] infected)
 {
 	ChangeClientTeam(client, 3);
 	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", infected);
 	KickClient(client);
 }
 
-stock void vSpecialAttack(int client, float pos[3], char[] model)
+stock void vSpecialAttack(int client, float pos[3], const char[] model)
 {
 	int iProp = CreateEntityByName("prop_physics");
 	if (bIsValidEntity(iProp))

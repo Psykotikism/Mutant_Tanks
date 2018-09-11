@@ -17,11 +17,11 @@ Super Tanks++ makes fighting Tanks great again!
 > Super Tanks++ will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
 ### What makes Super Tanks++ viable in Left 4 Dead/Left 4 Dead 2?
-Super Tanks++ enhances the experience and fun that players get from Tank fights by 5000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
+Super Tanks++ enhances the experience and fun that players get from Tank fights by 5,000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
 1. SourceMod 1.8+
-2. A dedicated server
+2. A dedicated server (Local/listen servers are NOT supported!)
 
 ### Installation
 1. Delete files from old versions of the plugin.
@@ -38,9 +38,11 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 2. Delete super_tanks++.txt from addons/sourcemod/gamedata folder.
 3. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/scripting folder.
 4. Delete super_tanks++.inc from addons/sourcemod/scripting/include folder.
-5. Delete super_tanks++ folder from cfg/sourcemod folder.
-6. Delete super_tanks++.cfg from cfg/sourcemod folder.
-7. Follow the Installation guide above. (Only for upgrading to newer versions.)
+5. Delete st_clone.inc from addons/sourcemod/scripting/include folder.
+6. Delete super_tanks++ folder from cfg/sourcemod folder.
+7. Delete super_tanks++.cfg from cfg/sourcemod folder.
+8. Delete super_tanks++.phrases.txt from addons/sourcemod/translations folder.
+9. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
 ### Disabling
 1. Move super_tanks++ folder (super_tanks++.smx and all of its modules) to plugins/disabled folder.
@@ -50,7 +52,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 1. Supports multiple game modes - Provides the option to enable/disable the plugin in certain game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
 3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the auto-generated KeyValue config file and user-made Super Tanks.
-4. Create and save up to 5000 Super Tank types - Provides the ability to store up to 5000 Super Tank types that users can enable/disable.
+4. Create and save up to 5,000 Super Tank types - Provides the ability to store up to 5,000 Super Tank types that users can enable/disable.
 5. Easy-to-use config file - Provides a user-friendly KeyValues config file that users can easily understand and edit.
 6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
 7. Optional abilities - Provides the option to choose which abilities to install.
@@ -225,6 +227,7 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 		{
 			"Ability Enabled"		"1"
 			"Jump Chance"			"1"
+			"Jump Range"			"500.0"
 		}
 	}
 }
@@ -254,7 +257,7 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 		"Ghost Ability"
 		{
 			"Ability Enabled"		"1"
-			"Fade Limit"			"0"
+			"Ghost Fade Limit"		"0"
 		}
 	}
 	"Tank 10" // Checked by the plugin.
@@ -334,7 +337,7 @@ It may be due to one or more of the following:
 - You are still using the "Tank Character" KeyValue which is no longer used since v8.16.
 - You didn't set up the Super Tank properly.
 - You are missing quotation marks.
-- You have more than 5000 Super Tanks in your config file.
+- You have more than 5,000 Super Tanks in your config file.
 - You didn't format your config file properly.
 
 5. How do I kill the Tanks depending on what abilities they have?
@@ -373,7 +376,7 @@ Set the value in the "Extra Health" KeyValue.
 Example:
 
 ```
-"Extra Health" "5000" // Add 5000 to the Super Tank's health.
+"Extra Health" "5000" // Add 5,000 to the Super Tank's health.
 ```
 
 10. How do I adjust each Tank's run speed?
@@ -637,7 +640,7 @@ forward void ST_BossStage(int client);
  *							or a custom config
  *							is being used.
  */
-forward void ST_Configs(char[] savepath, bool main);
+forward void ST_Configs(const char[] savepath, bool main);
 
 /* Called when an event hooked by the core plugin is fired.
  * Use this forward to trigger something on any of those events.
@@ -674,6 +677,17 @@ forward void ST_Spawn(int client);
 
 Natives:
 ```
+/* Returns whether the clone can use abilities.
+ *
+ * @param client		Client index of the Tank.
+ * @param clone			Checks whether "st_clone.smx"
+ *							is installed.
+ * @return				True on success, false if
+ *							clone is not allowed
+ *							to have abilities.
+ */
+native bool ST_CloneAllowed(int client, bool clone);
+
 /* Returns the maximum value of the "Type Range" setting.
  *
  * @return				The maximum value of the
@@ -719,6 +733,12 @@ native bool ST_TankAllowed(int client);
  * @return				The Tank's Super Tank type.
  */
 native int ST_TankType(int client);
+
+/* Returns the current finale wave.
+ *
+ * @return				The current finale wave.
+ */
+native int ST_TankWave();
 ```
 
 Target filters:
@@ -737,7 +757,7 @@ Target filters:
 Commands:
 
 ```
-1. sm_tank <type 1-*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 5000 though.)
+1. sm_tank <type 1-*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 5,000 though.)
 2. sm_tanklist
 ```
 
@@ -777,23 +797,23 @@ Examples:
 
 **Spirit_12** - For the L4D signatures for the gamedata file.
 
-**honorcode** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?p=1251446) plugin.
+**honorcode** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
 
-**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?p=1262968) plugins.
+**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537) plugins.
 
-**strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?p=702913), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?p=702914), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?p=702918) plugins.
+**strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324) plugins.
 
 **Hipster** - For the [Admin Smite](https://forums.alliedmods.net/showthread.php?t=118534) plugin.
 
 **Marcus101RR** - For the code to set a player's weapon's ammo.
 
-**AtomicStryker** - For the [SM Respawn Command](https://forums.alliedmods.net/showthread.php?p=862618) and [Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?p=884839) plugins.
+**AtomicStryker** - For the [SM Respawn Command](https://forums.alliedmods.net/showthread.php?t=96249) and [Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?t=98794) plugins.
 
-**ivailosp and V10** - For the [[L4D] Away](https://forums.alliedmods.net/showthread.php?p=760339) and [[L4D2] Away](https://forums.alliedmods.net/showthread.php?p=2005618) plugins.
+**ivailosp and V10** - For the [[L4D] Away](https://forums.alliedmods.net/showthread.php?t=85537) and [[L4D2] Away](https://forums.alliedmods.net/showthread.php?t=222590) plugins.
 
-**mi123645** - For the [4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?p=1239549) plugin.
+**mi123645** - For the [4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409) plugin.
 
-**Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?p=2402076) plugin.
+**Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
 **ztar** - For the [Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
 
@@ -801,13 +821,13 @@ Examples:
 
 **Uncle Jessie** - For the Tremor Tank in his [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
 
-**Drixevel** - For the [Force Active Weapon](https://forums.alliedmods.net/showthread.php?p=2493284) plugin.
+**Drixevel** - For the [Force Active Weapon](https://forums.alliedmods.net/showthread.php?t=293645) plugin.
 
-**pRED** - For the [SM Super Commands](https://forums.alliedmods.net/showthread.php?p=498802) plugin.
+**pRED** - For the [SM Super Commands](https://forums.alliedmods.net/showthread.php?t=57448) plugin.
 
-**sheo** - For the [Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?p=2133193) plugin.
+**sheo** - For the [Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809) plugin.
 
-**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and helping to optimize/fix various parts of the code.
+**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, for the [Silenced Infected](https://forums.alliedmods.net/showthread.php?t=137397) plugin, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and helping to optimize/fix various parts of the code.
 
 **Lux** - For helping to optimize/fix various parts of the code.
 
@@ -819,13 +839,15 @@ Examples:
 
 **KasperH** - For reporting issues, giving me ideas, and overall support.
 
-**emsit** - For reporting issues and helping with parts of the code.
+**emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
-**ReCreator** - For reporting issues.
+**ReCreator** - For reporting issues and suggesting ideas.
 
 **Princess LadyRain** - For reporting issues.
 
-**Zytheus** - For reporting issues.
+**Zytheus** - For reporting issues and suggesting ideas.
+
+**huwong** - For reporting issues and suggesting ideas.
 
 **AngelAce113** - For the default colors, testing each Tank type, giving me ideas, and overall support.
 

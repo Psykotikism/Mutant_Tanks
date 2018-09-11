@@ -1,5 +1,47 @@
 # Changelog
 
+## Version 8.39 (September 10, 2018)
+
+Bug fixes:
+
+1. Fixed some abilities not working when their "Ability Enabled" setting is disabled. (Thanks huwong!)
+2. Fixed the Gravity ability returning a datapack error.
+3. Fixed the Bomb and Fire abilities not working in L4D1.
+4. Fixed the Ice ability flinging survivors back at a high velocity after being unfrozen.
+5. Fixed the Zombie ability not working properly.
+
+Changes:
+
+1. Added a new ability: Kamikaze ability - The Super Tank dies while taking a survivor with it.
+2. Added a new ability: Leech ability - The Super Tank leeches health off of survivors.
+3. Added a new ability: Necro ability - The Super Tank can resurrect nearby special infected that die.
+4. Added a new ability: Quiet ability - The Super Tank can silence itself around survivors. (Useful for ninja-themed Super Tanks.)
+5. Added a new native: ST_TankWave() - Returns the current finale wave.
+6. Added a new native: ST_CloneAllowed(int client, bool clone) - Checks if a Super Tank's clone is allowed to use abilities like real Super Tanks.
+7. Added the "Clone Mode" setting to determine if a Super Tank's clone can use abilities like real Super Tanks.
+8. Added the "Finale Tank" setting to determine if a Super Tank only spawns during finales.
+9. Added the "Tank Note" setting which is displayed in chat after a Super Tank spawns. (Character limit: 244)
+10. Added a "X Hit Mode" (X = Name of ability) setting for various abilities.
+11. Added the "Jump Range" setting to determine how close a Super Tank must be to a survivor before it can jump in the air.
+12. Added the "Pyro Mode" setting to determine what kind of speed boost a Super Tank receives.
+13. Added the "Zombie Interval" setting to determine how often a Super Tank can spawn zombie mobs.
+14. The Ghost ability's "Ability Enabled" setting now has more options.
+15. The Ghost ability no longer allows a Super Tank to cloak nearby special infected.
+16. Removed the "Ghost Cloak Range" setting.
+17. The Panic ability now allows the Tank to have a chance to start a panic event upon death.
+18. The Warp ability's electricity particle effect now requires the "Particle Effect" and "Particle Effects" settings to allow it.
+19. The code for various abilities have been slightly modified.
+20. Updated the Super Tanks++ category in the admin menu.
+21. Removed old code that was used for human support.
+22. Made some code optimizations.
+
+Files:
+
+1. Added a translation file for the plugin. (Filename is "super_tanks++.phrases.txt")
+2. New file: st_clone.inc (Used for the Clone ability's library.)
+3. Updated config file with all the new settings.
+4. Updated include file to add/remove code.
+
 ## Version 8.38 (September 6, 2018)
 
 Bug fixes:

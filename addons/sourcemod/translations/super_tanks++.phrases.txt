@@ -1,0 +1,118 @@
+"Phrases"
+{
+	// "" Normal \x01 
+	// "" Sky-green \x03 
+	// "" Yellow-orange \x04 
+	// "" Olive/Yellow-green \x05
+
+	"Arrival1"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} has appeared!"
+	}
+	"Arrival2"
+	{
+		"#format"		"{1:s}"
+		"en"			"Here comes {1}!"
+	}
+	"Arrival3"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} is ready to kill!"
+	}
+	"Arrival4"
+	{
+		"#format"		"{1:s}"
+		"en"			"Are you ready to face {1}?"
+	}
+	"Arrival5"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} came for a challenge!"
+	}
+	"Arrival6"
+	{
+		"#format"		"{1:s}"
+		"en"			"Get ready! {1} is coming!"
+	}
+	"Arrival7"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} is here!"
+	}
+	"Arrival8"
+	{
+		"#format"		"{1:s}"
+		"en"			"Oh no! {1} is nearing!"
+	}
+	"Arrival9"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} joined the game..."
+	}
+	"Arrival10"
+	{
+		"#format"		"{1:s}"
+		"en"			"It seems {1} is joining your company..."
+	}
+	"Death1"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} is defeated!"
+	}
+	"Death2"
+	{
+		"#format"		"{1:s}"
+		"en"			"The survivors defeated {1}!"
+	}
+	"Death3"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} goes to hell!"
+	}
+	"Death4"
+	{
+		"#format"		"{1:s}"
+		"en"			"Is {1} really dead...?"
+	}
+	"Death5"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} lost the challenge against the survivors!"
+	}
+	"Death6"
+	{
+		"#format"		"{1:s}"
+		"en"			"The {1} failed to kill the survivors!"
+	}
+	"Death7"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} has met their demise!"
+	}
+	"Death8"
+	{
+		"#format"		"{1:s}"
+		"en"			"Yay! {1} is dead!"
+	}
+	"Death9"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} left the game..."
+	}
+	"Death10"
+	{
+		"#format"		"{1:s}"
+		"en"			"It seems {1} could not beat the survivors after all..."
+	}
+	"Evolved"
+	{
+		"#format"		"{1:s},{2:s},{3:d}"
+		"en"			"{1} evolved into {2} (Stage {3})!"
+	}
+	"Randomized"
+	{
+		"#format"		"{1:s},{2:s}"
+		"en"			"{1} transformed into {2}!"
+	}
+}
