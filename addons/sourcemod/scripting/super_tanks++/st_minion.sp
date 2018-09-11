@@ -153,13 +153,10 @@ public void ST_Ability(int client)
 					int iSelectedType;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (bIsInfected(iPlayer))
+						if (bIsInfected(iPlayer) && !bSpecialInfected[iPlayer])
 						{
-							if (!bSpecialInfected[iPlayer])
-							{
-								iSelectedType = iPlayer;
-								break;
-							}
+							iSelectedType = iPlayer;
+							break;
 						}
 					}
 					if (iSelectedType > 0)

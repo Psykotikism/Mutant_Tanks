@@ -137,13 +137,10 @@ public void ST_Ability(int client)
 					int iSelectedType;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer))
+						if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer) && !bTankBoss[iPlayer])
 						{
-							if (!bTankBoss[iPlayer])
-							{
-								iSelectedType = iPlayer;
-								break;
-							}
+							iSelectedType = iPlayer;
+							break;
 						}
 					}
 					if (iSelectedType > 0)

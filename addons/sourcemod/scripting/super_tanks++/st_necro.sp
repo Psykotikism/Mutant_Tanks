@@ -120,7 +120,7 @@ stock void vNecro(int client, float pos[3], const char[] type)
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{
 		bExists[iNecro] = false;
-		if (bIsSpecialInfected(iNecro) && IsPlayerAlive(iNecro))
+		if (bIsSpecialInfected(iNecro))
 		{
 			bExists[iNecro] = true;
 		}
@@ -129,13 +129,10 @@ stock void vNecro(int client, float pos[3], const char[] type)
 	int iInfected;
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{
-		if (bIsSpecialInfected(iNecro) && IsPlayerAlive(iNecro))
+		if (bIsSpecialInfected(iNecro) && !bExists[iNecro])
 		{
-			if (!bExists[iNecro])
-			{
-				iInfected = iNecro;
-				break;
-			}
+			iInfected = iNecro;
+			break;
 		}
 	}
 	if (iInfected > 0)

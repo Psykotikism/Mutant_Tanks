@@ -163,14 +163,11 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		int iNewTank;
 		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 		{
-			if (ST_TankAllowed(iRespawn) && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && IsPlayerAlive(iRespawn))
+			if (ST_TankAllowed(iRespawn) && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && IsPlayerAlive(iRespawn) && !bExists[iRespawn])
 			{
-				if (!bExists[iRespawn])
-				{
-					iNewTank = iRespawn;
-					g_iRespawnCount[iNewTank] = g_iRespawnCount[iTank];
-					break;
-				}
+				iNewTank = iRespawn;
+				g_iRespawnCount[iNewTank] = g_iRespawnCount[iTank];
+				break;
 			}
 		}
 		if (iNewTank > 0)
