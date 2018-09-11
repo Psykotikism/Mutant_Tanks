@@ -98,57 +98,7 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-stock int iRespawn(int client, int count)
-{
-	int iTank;
-	bool bExists[MAXPLAYERS + 1];
-	for (int iNewTank = 1; iNewTank <= MaxClients; iNewTank++)
-	{
-		bExists[iNewTank] = false;
-		if (ST_TankAllowed(iNewTank) && ST_CloneAllowed(iNewTank, g_bCloneInstalled) && IsPlayerAlive(iNewTank))
-		{
-			bExists[iNewTank] = true;
-		}
-	}
-	int iRespawnRandom = !g_bTankConfig[ST_TankType(client)] ? g_iRespawnRandom[ST_TankType(client)] : g_iRespawnRandom2[ST_TankType(client)];
-	switch (iRespawnRandom)
-	{
-		case 0: ST_SpawnTank(client, ST_TankType(client));
-		case 1:
-		{
-			int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
-			for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
-			{
-				int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex],
-					iFinaleTank = !g_bTankConfig[iIndex] ? g_iFinaleTank[iIndex] : g_iFinaleTank2[iIndex];
-				if (iTankEnabled == 0 || (iFinaleTank == 1 && (!bIsFinaleMap() || ST_TankWave() <= 0)) || ST_TankType(client) == iIndex)
-				{
-					continue;
-				}
-				iTankTypes[iTypeCount + 1] = iIndex;
-				iTypeCount++;
-			}
-			if (iTypeCount > 0)
-			{
-				int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
-				ST_SpawnTank(client, iChosen);
-			}
-		}
-	}
-	for (int iNewTank = 1; iNewTank <= MaxClients; iNewTank++)
-	{
-		if (ST_TankAllowed(iNewTank) && ST_CloneAllowed(iNewTank, g_bCloneInstalled) && IsPlayerAlive(iNewTank))
-		{
-			if (!bExists[iNewTank])
-			{
-				iTank = iNewTank;
-				g_iRespawnCount[iTank] = count;
-				break;
-			}
-		}
-	}
-	return iTank;
-}
+
 
 stock int iRespawnAbility(int client)
 {
@@ -176,8 +126,54 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	if (g_iRespawnCount[iTank] < iRespawnAmount)
 	{
 		g_iRespawnCount[iTank]++;
-		int iNewTank = iRespawn(iTank, g_iRespawnCount[iTank]);
-		if (ST_TankAllowed(iNewTank) && ST_CloneAllowed(iNewTank, g_bCloneInstalled) && IsPlayerAlive(iNewTank))
+		bool bExists[MAXPLAYERS + 1];
+		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
+		{
+			bExists[iRespawn] = false;
+			if (ST_TankAllowed(iRespawn) && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && IsPlayerAlive(iRespawn))
+			{
+				bExists[iRespawn] = true;
+			}
+		}
+		int iRespawnRandom = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnRandom[ST_TankType(iTank)] : g_iRespawnRandom2[ST_TankType(iTank)];
+		switch (iRespawnRandom)
+		{
+			case 0: ST_SpawnTank(iTank, ST_TankType(iTank));
+			case 1:
+			{
+				int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
+				for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+				{
+					int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex],
+						iFinaleTank = !g_bTankConfig[iIndex] ? g_iFinaleTank[iIndex] : g_iFinaleTank2[iIndex];
+					if (iTankEnabled == 0 || (iFinaleTank == 1 && (!bIsFinaleMap() || ST_TankWave() <= 0)) || ST_TankType(iTank) == iIndex)
+					{
+						continue;
+					}
+					iTankTypes[iTypeCount + 1] = iIndex;
+					iTypeCount++;
+				}
+				if (iTypeCount > 0)
+				{
+					int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
+					ST_SpawnTank(iTank, iChosen);
+				}
+			}
+		}
+		int iNewTank;
+		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
+		{
+			if (ST_TankAllowed(iRespawn) && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && IsPlayerAlive(iRespawn))
+			{
+				if (!bExists[iRespawn])
+				{
+					iNewTank = iRespawn;
+					g_iRespawnCount[iNewTank] = g_iRespawnCount[iTank];
+					break;
+				}
+			}
+		}
+		if (iNewTank > 0)
 		{
 			SetEntProp(iNewTank, Prop_Send, "m_fFlags", iFlags);
 			SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);

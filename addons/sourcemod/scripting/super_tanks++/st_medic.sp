@@ -149,13 +149,7 @@ stock void vMedic(int client)
 					case 2: vHeal(iInfected, iHealth, iHealth + iBoomerHealth, iBoomerMaxHealth);
 					case 3: vHeal(iInfected, iHealth, iHealth + iHunterHealth, iHunterMaxHealth);
 					case 4: vHeal(iInfected, iHealth, iHealth + iSpitterHealth, iSpitterMaxHealth);
-					case 5:
-					{
-						if (bIsL4D2Game())
-						{
-							vHeal(iInfected, iHealth, iHealth + iJockeyHealth, iJockeyMaxHealth);
-						}
-					}
+					case 5: vHeal(iInfected, iHealth, iHealth + iJockeyHealth, iJockeyMaxHealth);
 					case 6: vHeal(iInfected, iHealth, iHealth + iChargerHealth, iChargerMaxHealth);
 				}
 			}

@@ -126,12 +126,32 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_Event(Event event, const char[] name)
+{
+	if (strcmp(name, "player_death") == 0)
+	{
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId),
+			iTankId = event.GetInt("attacker"), iTank = GetClientOfUserId(iTankId);
+		if (iSmiteAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsSurvivor(iSurvivor))
+		{
+			int iCorpse = -1;
+			while ((iCorpse = FindEntityByClassname(iCorpse, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+			{
+				int iOwner = GetEntPropEnt(iCorpse, Prop_Send, "m_hOwnerEntity");
+				if (iSurvivor == iOwner)
+				{
+					AcceptEntityInput(iCorpse, "Kill");
+				}
+			}
+		}
+	}
+}
+
 public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iSmiteAbility = !g_bTankConfig[ST_TankType(client)] ? g_iSmiteAbility[ST_TankType(client)] : g_iSmiteAbility2[ST_TankType(client)],
-			iSmiteRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iSmiteChance[ST_TankType(client)] : g_iSmiteChance2[ST_TankType(client)];
+		int iSmiteRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iSmiteChance[ST_TankType(client)] : g_iSmiteChance2[ST_TankType(client)];
 		float flSmiteRange = !g_bTankConfig[ST_TankType(client)] ? g_flSmiteRange[ST_TankType(client)] : g_flSmiteRange2[ST_TankType(client)],
 			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -144,7 +164,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flSmiteRange)
 				{
-					vSmiteHit(iSurvivor, iSmiteRangeChance, iSmiteAbility);
+					vSmiteHit(iSurvivor, iSmiteRangeChance, iSmiteAbility(client));
 				}
 			}
 		}
@@ -169,6 +189,11 @@ stock void vSmiteHit(int client, int chance, int enabled)
 		EmitAmbientSound(SOUND_EXPLOSION2, flStartPosition, client, SNDLEVEL_RAIDSIREN);
 		ForcePlayerSuicide(client);
 	}
+}
+
+stock int iSmiteAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iSmiteAbility[ST_TankType(client)] : g_iSmiteAbility2[ST_TankType(client)];
 }
 
 stock int iSmiteChance(int client)
