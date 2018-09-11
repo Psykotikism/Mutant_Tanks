@@ -2154,10 +2154,16 @@
 	"Tank 1"
 	{
 		// The Super Tank leeches health off of survivors.
+		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank leeches health off of the survivor.
+		// - "Leech Range"
+		// - "Leech Range Chance"
+		// "Leech Hit" - When a survivor is hit by a Tank's claw or rock, the Tank leeches health off of the survivor.
+		// - "Leech Chance"
 		// Requires "st_leech.smx" to be installed.
 		"Leech Ability"
 		{
 			// Enable this ability.
+			// Note: This setting does not affect the "Leech Hit" setting.
 			// --
 			// 0: OFF
 			// 1: ON
