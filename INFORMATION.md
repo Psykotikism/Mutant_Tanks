@@ -2725,6 +2725,7 @@
 		"Quiet Ability"
 		{
 			// Enable this ability.
+			// Note: This setting does not affect the "Quiet Hit" setting.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -3729,6 +3730,7 @@
 		"Warp Ability"
 		{
 			// Enable this ability.
+			// Note: This setting does not affect the "Warp Hit" setting.
 			// --
 			// 0: OFF
 			// 1: ON
