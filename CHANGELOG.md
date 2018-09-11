@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 8.40 (September 11, 2018)
+
+Bug fixes:
+
+1. Fixed the datapack error with the Ghost ability.
+
+Changes:
+
+1. Changed all OnClientPostAdminCheck() forwards to OnClientPutInServer() instead.
+2. Moved late loading code from OnMapStart() to OnPluginStart().
+
 ## Version 8.39 (September 10, 2018)
 
 Bug fixes:
