@@ -56,7 +56,7 @@ public void OnMapStart()
 	vReset();
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	g_bJump[client] = false;
 }

@@ -53,24 +53,28 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public void OnMapStart()
+public void OnPluginStart()
 {
-	vPrecacheParticle(PARTICLE_ELECTRICITY);
-	vReset();
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+				OnClientPutInServer(iPlayer);
 			}
 		}
 		g_bLateLoad = false;
 	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnMapStart()
+{
+	vPrecacheParticle(PARTICLE_ELECTRICITY);
+	vReset();
+}
+
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bWarp[client] = false;
@@ -214,13 +218,13 @@ public Action tTimerWarp(Handle timer, any userid)
 		if (iParticleEffect == 1 && StrContains(sParticleEffects, "2") != -1)
 		{
 			vCreateParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
+			EmitSoundToAll(SOUND_ELECTRICITY, iTank);
 			if (iWarpMode == 1)
 			{
 				vCreateParticle(iSurvivor, PARTICLE_ELECTRICITY, 1.0, 0.0);
+				EmitSoundToAll(SOUND_ELECTRICITY2, iSurvivor);
 			}
 		}
-		EmitSoundToAll(SOUND_ELECTRICITY, iTank);
-		EmitSoundToAll(SOUND_ELECTRICITY2, iSurvivor);
 		TeleportEntity(iTank, flSurvivorOrigin, flSurvivorAngles, NULL_VECTOR);
 		if (iWarpMode == 1)
 		{

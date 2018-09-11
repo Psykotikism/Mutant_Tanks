@@ -52,26 +52,30 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public void OnMapStart()
+public void OnPluginStart()
 {
-	g_iRocketSprite = PrecacheModel(SPRITE_FIRE, true);
-	PrecacheSound(SOUND_EXPLOSION, true);
-	PrecacheSound(SOUND_FIRE, true);
-	PrecacheSound(SOUND_LAUNCH, true);
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+				OnClientPutInServer(iPlayer);
 			}
 		}
 		g_bLateLoad = false;
 	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnMapStart()
+{
+	g_iRocketSprite = PrecacheModel(SPRITE_FIRE, true);
+	PrecacheSound(SOUND_EXPLOSION, true);
+	PrecacheSound(SOUND_FIRE, true);
+	PrecacheSound(SOUND_LAUNCH, true);
+}
+
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }

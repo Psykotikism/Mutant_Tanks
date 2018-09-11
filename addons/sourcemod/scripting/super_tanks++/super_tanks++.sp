@@ -139,6 +139,17 @@ public void OnPluginStart()
 		OnAdminMenuReady(tmAdminMenu);
 	}
 	AutoExecConfig(true, "super_tanks++");
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+		g_bLateLoad = false;
+	}
 }
 
 public void OnMapStart()
@@ -158,14 +169,9 @@ public void OnMapStart()
 	PrecacheSound(SOUND_BOSS);
 	g_iType = 0;
 	vReset();
-	if (g_bLateLoad)
-	{
-		vLateLoad(true);
-		g_bLateLoad = false;
-	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	for (int iNumber = 0; iNumber <= 4; iNumber++)
@@ -771,13 +777,11 @@ stock void vPluginStatus()
 		if (g_cvSTEnable.BoolValue && bIsPluginAllowed)
 		{
 			vHookEvents(true);
-			vLateLoad(true);
 			g_bPluginEnabled = true;
 		}
 		else
 		{
 			vHookEvents(false);
-			vLateLoad(false);
 			g_bPluginEnabled = false;
 		}
 	}
@@ -908,21 +912,6 @@ stock void vLoadConfigs(const char[] savepath, bool main = false)
 	Call_PushString(savepath);
 	Call_PushCell(main);
 	Call_Finish();
-}
-
-stock void vLateLoad(bool late)
-{
-	if (late)
-	{
-		vLoadConfigs(g_sSavePath, true);
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-	}
 }
 
 stock void vBoss(int client, int limit, int stages, int stage)

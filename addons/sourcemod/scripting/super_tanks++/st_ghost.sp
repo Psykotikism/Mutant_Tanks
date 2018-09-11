@@ -53,25 +53,29 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public void OnMapStart()
+public void OnPluginStart()
 {
-	PrecacheSound(SOUND_INFECTED, true);
-	PrecacheSound(SOUND_INFECTED2, true);
-	vReset();
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+				OnClientPutInServer(iPlayer);
 			}
 		}
 		g_bLateLoad = false;
 	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnMapStart()
+{
+	PrecacheSound(SOUND_INFECTED, true);
+	PrecacheSound(SOUND_INFECTED2, true);
+	vReset();
+}
+
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bGhost[client] = false;
@@ -222,10 +226,9 @@ stock int iGhostHitMode(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iGhostHitMode[ST_TankType(client)] : g_iGhostHitMode2[ST_TankType(client)];
 }
 
-public Action tTimerGhost(Handle timer, DataPack pack)
+public Action tTimerGhost(Handle timer, any userid)
 {
-	pack.Reset();
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bGhost[iTank] = false;

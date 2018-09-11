@@ -52,23 +52,27 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
-public void OnMapStart()
+public void OnPluginStart()
 {
-	vReset();
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+				OnClientPutInServer(iPlayer);
 			}
 		}
 		g_bLateLoad = false;
 	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnMapStart()
+{
+	vReset();
+}
+
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bStun[client] = false;

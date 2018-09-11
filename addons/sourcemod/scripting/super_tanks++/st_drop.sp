@@ -195,7 +195,7 @@ public void OnMapStart()
 	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	vResetDrop(client);
 }

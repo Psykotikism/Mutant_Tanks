@@ -57,6 +57,17 @@ public void OnLibraryRemoved(const char[] name)
 public void OnPluginStart()
 {
 	g_cvSTTankThrowForce = FindConVar("z_tank_throw_force");
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+		g_bLateLoad = false;
+	}
 }
 
 public void OnMapStart()
@@ -64,20 +75,9 @@ public void OnMapStart()
 	PrecacheModel(MODEL_PROPANETANK, true);
 	PrecacheModel(MODEL_SHIELD, true);
 	vReset();
-	if (g_bLateLoad)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer))
-			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
-			}
-		}
-		g_bLateLoad = false;
-	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bShield[client] = false;

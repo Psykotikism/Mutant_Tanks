@@ -56,25 +56,25 @@ public void OnLibraryRemoved(const char[] name)
 public void OnPluginStart()
 {
 	g_umFadeUserMsgId = GetUserMessageId("Fade");
-}
-
-public void OnMapStart()
-{
-	vReset();
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+				OnClientPutInServer(iPlayer);
 			}
 		}
 		g_bLateLoad = false;
 	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnMapStart()
+{
+	vReset();
+}
+
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bDrug[client] = false;

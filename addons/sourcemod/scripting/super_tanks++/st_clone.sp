@@ -47,7 +47,7 @@ public void OnMapStart()
 	vReset();
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	g_bCloned[client] = false;
 	g_iCloneCount[client] = 0;

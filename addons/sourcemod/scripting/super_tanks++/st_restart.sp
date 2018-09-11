@@ -64,31 +64,22 @@ public void OnPluginStart()
 	{
 		PrintToServer("%s Your \"RoundRespawn\" signature is outdated.", ST_PREFIX);
 	}
-}
-
-public void OnMapStart()
-{
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				SDKHook(iPlayer, SDKHook_OnTakeDamage, OnTakeDamage);
+				OnClientPutInServer(iPlayer);
 			}
 		}
 		g_bLateLoad = false;
 	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-public void OnMapEnd()
-{
-	g_bRestartValid = false;
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -242,5 +233,9 @@ public Action tTimerRestartCoordinates(Handle timer)
 			GetClientAbsOrigin(iSurvivor, g_flRestartPosition);
 			break;
 		}
+	}
+	if (g_flRestartPosition[0] == 0.0 && g_flRestartPosition[1] == 0.0 && g_flRestartPosition[2] == 0.0)
+	{
+		g_bRestartValid = false;
 	}
 }
