@@ -228,12 +228,14 @@ stock void vAcidHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(owner, sTankName);
 		if (bIsL4D2Game())
 		{
 			vAcid(client, owner);
 			if (iAcidMessage(owner) == 1)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Acid", owner, client);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Acid", sTankName, client);
 			}
 		}
 		else
@@ -241,7 +243,7 @@ stock void vAcidHit(int client, int owner, int chance, int enabled)
 			SDKCall(g_hSDKPukePlayer, client, owner, true);
 			if (iAcidMessage(owner) == 1)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", owner, client);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
 			}
 		}
 	}

@@ -113,7 +113,9 @@ public void ST_Ability(int client)
 		dpMeteorUpdate.WriteCell(GetClientUserId(client)), dpMeteorUpdate.WriteFloat(flPos[0]), dpMeteorUpdate.WriteFloat(flPos[1]), dpMeteorUpdate.WriteFloat(flPos[2]), dpMeteorUpdate.WriteFloat(GetEngineTime());
 		if (iMeteorMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Meteor", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Meteor", sTankName);
 		}
 	}
 }

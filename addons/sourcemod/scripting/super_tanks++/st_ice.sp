@@ -204,7 +204,9 @@ stock void vIceHit(int client, int owner, int chance, int enabled)
 		dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(GetClientUserId(owner)), dpStopIce.WriteCell(enabled);
 		if (iIceMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ice", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ice", sTankName, client);
 		}
 	}
 }

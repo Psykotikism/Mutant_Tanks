@@ -206,7 +206,9 @@ stock void vShoveHit(int client, int owner, int chance, int enabled)
 		dpShove.WriteCell(GetClientUserId(client)), dpShove.WriteCell(GetClientUserId(owner)), dpShove.WriteCell(enabled), dpShove.WriteFloat(GetEngineTime());
 		if (iShoveMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shove", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Shove", sTankName, client);
 		}
 	}
 }

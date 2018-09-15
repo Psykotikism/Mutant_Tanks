@@ -213,7 +213,9 @@ stock void vHypnoHit(int client, int owner, int chance, int enabled)
 		dpStopHypno.WriteCell(GetClientUserId(client)), dpStopHypno.WriteCell(GetClientUserId(owner)), dpStopHypno.WriteCell(enabled);
 		if (iHypnoMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Hypno", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Hypno", sTankName, client);
 		}
 	}
 }

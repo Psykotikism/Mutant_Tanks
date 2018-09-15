@@ -180,7 +180,9 @@ stock void vCancerHit(int client, int owner, int chance, int enabled)
 		vFade(client, 800, 300, iRed, iGreen, iBlue);
 		if (iCancerMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Cancer", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Cancer", sTankName, client);
 		}
 	}
 }

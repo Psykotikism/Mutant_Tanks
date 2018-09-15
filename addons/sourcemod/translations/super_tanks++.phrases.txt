@@ -107,37 +107,37 @@
 	}
 	"Evolved"
 	{
-		"#format"		"{1:s},{2:N},{3:d}"
+		"#format"		"{1:s},{2:s},{3:d}"
 		"en"			"{1} evolved into {2} (Stage {3})!"
 	}
 	"Randomized"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:s},{2:s}"
 		"en"			"{1} transformed into {2}!"
 	}
 	"Absorb"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is temporarily absorbing most of your damage!"
 	}
 	"Absorb2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is no longer absorbing most of your damage!"
 	}
 	"Acid"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} just created an acid puddle underneath {2}!"
 	}
 	"Ammo"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} took all of {2}'s ammunition!"
 	}
 	"Blind"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} blinded {2}!"
 	}
 	"Blind2"
@@ -147,12 +147,12 @@
 	}
 	"Bomb"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} just created an explosion at {2}'s location!"
 	}
 	"Bury"
 	{
-		"#format"		"{1:N},{2:N},{3:f}"
+		"#format"		"{1:s},{2:N},{3:.2f}"
 		"en"			"{1} buried {2} {3} feet into the ground!"
 	}
 	"Bury2"
@@ -162,27 +162,27 @@
 	}
 	"Cancer"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} gave {2} cancer!"
 	}
 	"Clone"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} created a clone of itself!"
 	}
 	"Drop"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} dropped a gun!"
 	}
 	"Drop2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} dropped a melee weapon!"
 	}
 	"Drug"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} drugged {2}!"
 	}
 	"Drug2"
@@ -192,7 +192,7 @@
 	}
 	"Electric"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} is electrocuting {2}!"
 	}
 	"Electric2"
@@ -202,7 +202,7 @@
 	}
 	"Enforce"
 	{
-		"#format"		"{1:N},{2:N},{3:s}"
+		"#format"		"{1:s},{2:N},{3:s}"
 		"en"			"{1} is forcing {2} to only use their {3} slot!"
 	}
 	"Enforce2"
@@ -212,17 +212,17 @@
 	}
 	"Fire"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} just created a fire underneath {2}!"
 	}
 	"Flash"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1}'s special speed activated!"
 	}
 	"Flash2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1}'s special speed deactivated!"
 	}
 	"Fling"
@@ -232,77 +232,77 @@
 	}
 	"Fragile"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is temporarily fragile to damage!"
 	}
 	"Fragile2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is no longer fragile to damage!"
 	}
 	"Ghost"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} disarmed {2}!"
 	}
 	"Ghost2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is cloaking itself!"
 	}
 	"God"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is temporarily invincible!"
 	}
 	"God2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is no longer invincible!"
 	}
 	"Gravity"
 	{
-		"#format"		"{1:N},{2:N},{3:f}"
+		"#format"		"{1:s},{2:N},{3:.2f}"
 		"en"			"{1} changed {2}'s gravity to {3}!"
 	}
 	"Gravity2"
 	{
-		"#format"		"{1:N},{2:f}"
-		"en"			"{1}'s gravity is back to {2}!"
+		"#format"		"{1:N}"
+		"en"			"{1}'s gravity is back to normal!"
 	}
 	"Gravity3"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} created a gravitational pull!"
 	}
 	"Heal"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} set {2} to black and white!"
 	}
 	"Heal2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is absorbing health from nearby infected!"
 	}
 	"Heal3"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is no longer absorbing health from nearby infected!"
 	}
 	"Hurt"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} is hurting {2}!"
 	}
 	"Hurt2"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} is no longer hurting {2}!"
 	}
 	"Hypno"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} hypnotized {2}!"
 	}
 	"Hypno2"
@@ -312,7 +312,7 @@
 	}
 	"Ice"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} froze {2}!"
 	}
 	"Ice2"
@@ -322,12 +322,12 @@
 	}
 	"Idle"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} made {2} go idle!"
 	}
 	"Invert"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} inverted {2}'s movement keys!"
 	}
 	"Invert2"
@@ -337,52 +337,52 @@
 	}
 	"Item"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} gave the survivors items!"
 	}
 	"Jump"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} just jumped!"
 	}
 	"Kamikaze"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} just went kamikaze on {2}!"
 	}
 	"Leech"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} is leeching health off of {2}!"
 	}
 	"Leech2"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} is no longer leeching health off of {2}!"
 	}
 	"Medic"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} just healed nearby special infected!"
 	}
 	"Meteor"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} started a meteor shower!"
 	}
 	"Minion"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} summoned a minion!"
 	}
 	"Necro"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} resurrected nearby special infected!"
 	}
 	"Nullify"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} temporarily nullified all of {2}'s damage!"
 	}
 	"Nullify2"
@@ -392,12 +392,12 @@
 	}
 	"Panic"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} started a panic event!"
 	}
 	"Pimp"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} is pimp slapping {2}!"
 	}
 	"Pimp2"
@@ -407,127 +407,127 @@
 	}
 	"Puke"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} puked on {2}!"
 	}
 	"Pyro"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is burning and running really fast!"
 	}
 	"Pyro2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is no longer burning and is back to normal speed!"
 	}
 	"Quiet"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} silenced itself around {2}!"
 	}
 	"Quiet2"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} is no longer quiet around {2}!"
 	}
 	"Regen"
 	{
-		"#format"		"{1:N},{2:f}"
+		"#format"		"{1:s},{2:.2f}"
 		"en"			"{1} is regenerating health every {2} second(s)!"
 	}
 	"Regen2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} stopped regenerating health!"
 	}
 	"Respawn"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} just respawned itself!"
 	}
 	"Restart"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} caused {2} to restart with a different loadout!"
 	}
 	"Rock"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} started a rock shower!"
 	}
 	"Rock2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1}'s rock shower ended!"
 	}
 	"Rocket"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} sent {2} into space!"
 	}
 	"Shake"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} is shaking {2}!"
 	}
 	"Shake2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is no longer shaking!"
 	}
 	"Shield"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1}'s shield activated!"
 	}
 	"Shield2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1}'s shield deactivated!"
 	}
 	"Shove"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} is shoving {2}!"
 	}
 	"Shove2"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:N}"
 		"en"			"{1} is no longer being shoved!"
 	}
 	"Smash"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} smashed {2} to death!"
 	}
 	"Smite"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} smited {2}!"
 	}
 	"Spam"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is spamming rocks!"
 	}
 	"Spam2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is no longer spamming rocks!"
 	}
 	"Splash"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is splashing damage at nearby survivors!"
 	}
 	"Splash2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} is no longer splashing damage at nearby survivors!"
 	}
 	"Stun"
 	{
-		"#format"		"{1:N},{2:N},{3:f}"
+		"#format"		"{1:s},{2:N},{3:.2f}"
 		"en"			"{1} stunned {2} and slowed them down to {3}!"
 	}
 	"Stun2"
@@ -537,32 +537,37 @@
 	}
 	"Throw"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} threw a car!"
 	}
 	"Throw2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} threw a special infected!"
 	}
 	"Throw3"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} threw itself!"
 	}
 	"Track"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1}'s rock is tracking a survivor!"
 	}
 	"Vampire"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} stole some health from {2}!"
+	}
+	"Vampire2"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} gained some health from nearby survivors!"
 	}
 	"Vision"
 	{
-		"#format"		"{1:N},{2:N},{3:d}"
+		"#format"		"{1:s},{2:N},{3:d}"
 		"en"			"{1} changed {2}'s vision to {3} FOV!"
 	}
 	"Vision2"
@@ -572,22 +577,22 @@
 	}
 	"Warp"
 	{
-		"#format"		"{1:N},{2:N},{3:N}"
+		"#format"		"{1:s},{2:N},{3:N}"
 		"en"			"{1} warped {2} to {3}!"
 	}
 	"Warp2"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} warped to a survivor!"
 	}
 	"Witch"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} converted some common infected into Witch minions!"
 	}
 	"Zombie"
 	{
-		"#format"		"{1:N}"
+		"#format"		"{1:s}"
 		"en"			"{1} created a zombie mob!"
 	}
 }

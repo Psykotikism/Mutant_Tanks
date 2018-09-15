@@ -41,6 +41,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("ST_PluginEnabled", iNative_PluginEnabled);
 	CreateNative("ST_SpawnTank", iNative_SpawnTank);
 	CreateNative("ST_TankAllowed", iNative_TankAllowed);
+	CreateNative("ST_TankName", iNative_TankName);
 	CreateNative("ST_TankType", iNative_TankType);
 	CreateNative("ST_TankWave", iNative_TankWave);
 	RegPluginLibrary("super_tanks++");
@@ -84,6 +85,17 @@ public int iNative_TankAllowed(Handle plugin, int numParams)
 		return true;
 	}
 	return false;
+}
+
+public int iNative_TankName(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	if (bIsTank(iTank))
+	{
+		char sTankName[MAX_NAME_LENGTH + 1];
+		sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
+		SetNativeString(2, sTankName, sizeof(sTankName));
+	}
 }
 
 public int iNative_TankType(Handle plugin, int numParams)

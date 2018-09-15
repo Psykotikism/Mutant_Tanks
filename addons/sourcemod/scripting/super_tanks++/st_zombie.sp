@@ -106,7 +106,9 @@ public void ST_Ability(int client)
 		CreateTimer(flZombieInterval, tTimerZombie, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		if (iZombieMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Zombie", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Zombie", sTankName);
 		}
 	}
 }

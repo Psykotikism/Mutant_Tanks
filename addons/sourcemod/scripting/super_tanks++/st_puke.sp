@@ -171,7 +171,9 @@ stock void vPukeHit(int client, int owner, int chance, int enabled)
 		SDKCall(g_hSDKPukePlayer, client, owner, true);
 		if (iPukeMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Puke", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
 		}
 	}
 }

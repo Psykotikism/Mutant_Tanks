@@ -238,7 +238,9 @@ stock void vShield(int client, bool shield)
 		g_bShield[client] = true;
 		if (iShieldMessage(client) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shield", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Shield", sTankName);
 		}
 	}
 	else
@@ -262,7 +264,9 @@ stock void vShield(int client, bool shield)
 		g_bShield[client] = false;
 		if (iShieldMessage(client) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shield2", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Shield2", sTankName);
 		}
 	}
 }

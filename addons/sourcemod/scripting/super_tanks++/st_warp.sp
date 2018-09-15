@@ -201,7 +201,9 @@ stock void vWarpHit(int client, int owner, int chance, int enabled)
 				TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
 				if (iWarpMessage(owner) == 1)
 				{
-					PrintToChatAll("%s %t", ST_PREFIX2, "Warp", owner, client, iPlayer);
+					char sTankName[MAX_NAME_LENGTH + 1];
+					ST_TankName(owner, sTankName);
+					PrintToChatAll("%s %t", ST_PREFIX2, "Warp", sTankName, client, iPlayer);
 				}
 				break;
 			}
@@ -276,7 +278,9 @@ public Action tTimerWarp(Handle timer, any userid)
 		}
 		if (iWarpMessage(iTank) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Warp2", iTank);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Warp2", sTankName);
 		}
 	}
 	return Plugin_Continue;

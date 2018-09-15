@@ -208,7 +208,9 @@ stock void vDrugHit(int client, int owner, int chance, int enabled)
 		dpDrug.WriteCell(GetClientUserId(client)), dpDrug.WriteCell(GetClientUserId(owner)), dpDrug.WriteCell(enabled), dpDrug.WriteFloat(GetEngineTime());
 		if (iDrugMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Drug", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Drug", sTankName, client);
 		}
 	}
 }

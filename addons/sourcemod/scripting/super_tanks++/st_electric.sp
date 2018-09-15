@@ -207,7 +207,9 @@ stock void vElectricHit(int client, int owner, int chance, int enabled)
 		vAttachParticle(client, PARTICLE_ELECTRICITY, 2.0, 30.0);
 		if (iElectricMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Electric", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Electric", sTankName, client);
 		}
 	}
 }

@@ -201,7 +201,9 @@ stock void vNullifyHit(int client, int owner, int chance, int enabled)
 		dpStopNullify.WriteCell(GetClientUserId(client)), dpStopNullify.WriteCell(GetClientUserId(owner)), dpStopNullify.WriteCell(enabled);
 		if (iNullifyMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Nullify", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Nullify", sTankName, client);
 		}
 	}
 }

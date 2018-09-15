@@ -300,7 +300,9 @@ public void ST_Event(Event event, const char[] name)
 					}
 					if (iDropMessage(iTank) == 1)
 					{
-						PrintToChatAll("%s %t", ST_PREFIX2, "Drop", iTank);
+						char sTankName[MAX_NAME_LENGTH + 1];
+						ST_TankName(iTank, sTankName);
+						PrintToChatAll("%s %t", ST_PREFIX2, "Drop", sTankName);
 					}
 				}
 			}
@@ -315,7 +317,9 @@ public void ST_Event(Event event, const char[] name)
 					SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale(iTank));
 					if (iDropMessage(iTank) == 1)
 					{
-						PrintToChatAll("%s %t", ST_PREFIX2, "Drop2", iTank);
+						char sTankName[MAX_NAME_LENGTH + 1];
+						ST_TankName(iTank, sTankName);
+						PrintToChatAll("%s %t", ST_PREFIX2, "Drop2", sTankName);
 					}
 				}
 			}

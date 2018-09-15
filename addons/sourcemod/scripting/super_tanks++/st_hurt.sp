@@ -177,7 +177,9 @@ stock void vHurtHit(int client, int owner, int chance, int enabled)
 		dpHurt.WriteCell(GetClientUserId(client)), dpHurt.WriteCell(GetClientUserId(owner)), dpHurt.WriteCell(enabled), dpHurt.WriteFloat(GetEngineTime());
 		if (iHurtMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Hurt", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Hurt", sTankName, client);
 		}
 	}
 }

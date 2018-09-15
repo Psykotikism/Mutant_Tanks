@@ -227,7 +227,9 @@ stock void vGravityHit(int client, int owner, int chance, int enabled)
 		dpStopGravity.WriteCell(GetClientUserId(client)), dpStopGravity.WriteCell(GetClientUserId(owner)), dpStopGravity.WriteCell(enabled);
 		if (iGravityMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Gravity", owner, client, flGravityValue);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Gravity", sTankName, client, flGravityValue);
 		}
 	}
 }

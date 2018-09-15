@@ -88,6 +88,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
 						iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
 					SetEntityHealth(attacker, iFinalHealth);
+					vVampireMessage(victim, attacker);
 				}
 			}
 		}
@@ -99,6 +100,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					int iHealth = GetClientHealth(attacker);
 					SetEntityHealth(attacker, iHealth - 5);
+					vVampireMessage(attacker, victim);
 				}
 			}
 		}
@@ -171,8 +173,24 @@ public void ST_Ability(int client)
 					iExtraHealth2 = (iVampireHealth < iHealth) ? 1 : iVampireHealth,
 					iRealHealth = (iVampireHealth >= 0) ? iExtraHealth : iExtraHealth2;
 				SetEntityHealth(client, iRealHealth);
+				if (iVampireMessage(client) == 1)
+				{
+					char sTankName[MAX_NAME_LENGTH + 1];
+					ST_TankName(client, sTankName);
+					PrintToChatAll("%s %t", ST_PREFIX2, "Vampire2", sTankName);
+				}
 			}
 		}
+	}
+}
+
+stock void vVampireMessage(int client, int owner)
+{
+	if (iVampireMessage(owner) == 1)
+	{
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(owner, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Vampire", sTankName, client);
 	}
 }
 
@@ -189,4 +207,9 @@ stock int iVampireHit(int client)
 stock int iVampireHitMode(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iVampireHitMode[ST_TankType(client)] : g_iVampireHitMode2[ST_TankType(client)];
+}
+
+stock int iVampireMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iVampireMessage[ST_TankType(client)] : g_iVampireMessage2[ST_TankType(client)];
 }

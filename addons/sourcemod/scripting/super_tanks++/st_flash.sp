@@ -114,7 +114,9 @@ public void ST_Ability(int client)
 				g_bFlash[client] = true;
 				if (iFlashMessage(client) == 1)
 				{
-					PrintToChatAll("%s %t", ST_PREFIX2, "Flash", client);
+					char sTankName[MAX_NAME_LENGTH + 1];
+					ST_TankName(client, sTankName);
+					PrintToChatAll("%s %t", ST_PREFIX2, "Flash", sTankName);
 				}
 			}
 		}
@@ -144,7 +146,9 @@ stock void vReset2(int client)
 	g_bFlash[client] = false;
 	if (iFlashMessage(client) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Flash2", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Flash2", sTankName);
 	}
 }
 

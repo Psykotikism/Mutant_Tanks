@@ -189,7 +189,9 @@ stock void vSmashHit(int client, int owner, int chance, int enabled)
 		ForcePlayerSuicide(client);
 		if (iSmashMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Smash", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Smash", sTankName, client);
 		}
 	}
 }

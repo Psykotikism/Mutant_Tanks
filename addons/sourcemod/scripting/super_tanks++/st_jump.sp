@@ -143,7 +143,9 @@ public Action tTimerJump(Handle timer, any userid)
 	TeleportEntity(iTank, NULL_VECTOR, NULL_VECTOR, flVelocity);
 	if (iJumpMessage == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Jump", iTank);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(iTank, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Jump", sTankName);
 	}
 	return Plugin_Continue;
 }

@@ -269,7 +269,9 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	SetEntityGravity(iSurvivor, 1.0);
 	if (iRocketMessage == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Rocket", iTank, iSurvivor);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(iTank, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Rocket", sTankName, iSurvivor);
 	}
 	return Plugin_Handled;
 }

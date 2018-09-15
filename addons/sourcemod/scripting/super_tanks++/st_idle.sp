@@ -217,7 +217,9 @@ stock void vIdleHit(int client, int owner, int chance, int enabled)
 			int iIdleMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iIdleMessage[ST_TankType(owner)] : g_iIdleMessage2[ST_TankType(owner)];
 			if (iIdleMessage == 1)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Idle", owner, client);
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(owner, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Idle", sTankName, client);
 			}
 		}
 	}

@@ -54,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -107,7 +108,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						CreateTimer(1.0, tTimerPyro, GetClientUserId(victim), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 						if (iPyroMessage(victim) == 1)
 						{
-							PrintToChatAll("%s %t", ST_PREFIX2, "Pyro", victim);
+							char sTankName[MAX_NAME_LENGTH + 1];
+							ST_TankName(victim, sTankName);
+							PrintToChatAll("%s %t", ST_PREFIX2, "Pyro", sTankName);
 						}
 					}
 				}
@@ -159,7 +162,9 @@ stock void vReset2(int client)
 	g_bPyro[client] = false;
 	if (iPyroMessage(client) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Pyro2", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Pyro2", sTankName);
 	}
 }
 

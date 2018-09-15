@@ -109,7 +109,9 @@ public void ST_Ability(int client)
 		dpSpam.WriteCell(GetClientUserId(client)), dpSpam.WriteFloat(GetEngineTime());
 		if (iSpamMessage(client) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Spam", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Spam", sTankName);
 		}
 	}
 }
@@ -130,7 +132,9 @@ stock void vReset2(int client)
 	g_bSpam[client] = false;
 	if (iSpamMessage(client) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Spam2", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Spam2", sTankName);
 	}
 }
 

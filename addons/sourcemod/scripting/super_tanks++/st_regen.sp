@@ -107,7 +107,9 @@ public void ST_Ability(int client)
 		CreateTimer(flRegenInterval, tTimerRegen, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		if (iRegenMessage(client) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Regen", client, flRegenInterval);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Regen", sTankName, flRegenInterval);
 		}
 	}
 }
@@ -128,7 +130,9 @@ stock void vReset2(int client)
 	g_bRegen[client] = false;
 	if (iRegenMessage(client) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Regen2", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Regen2", sTankName);
 	}
 }
 

@@ -157,7 +157,9 @@ public void ST_Ability(int client)
 		}
 		if (iWitchMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Witch", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Witch", sTankName);
 		}
 	}
 }

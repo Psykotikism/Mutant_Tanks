@@ -174,7 +174,9 @@ public void ST_Ability(int client)
 						g_iMinionCount[client]++;
 						if (iMinionMessage == 1)
 						{
-							PrintToChatAll("%s %t", ST_PREFIX2, "Minion", client);
+							char sTankName[MAX_NAME_LENGTH + 1];
+							ST_TankName(client, sTankName);
+							PrintToChatAll("%s %t", ST_PREFIX2, "Minion", sTankName);
 						}
 					}
 				}

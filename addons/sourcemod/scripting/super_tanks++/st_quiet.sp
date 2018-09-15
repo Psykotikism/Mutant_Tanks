@@ -219,7 +219,9 @@ stock void vQuietHit(int client, int owner, int chance, int enabled)
 		dpStopQuiet.WriteCell(GetClientUserId(client)), dpStopQuiet.WriteCell(GetClientUserId(owner)), dpStopQuiet.WriteCell(enabled);
 		if (iQuietMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Quiet", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Quiet", sTankName, client);
 		}
 	}
 }
@@ -251,7 +253,9 @@ stock void vReset2(int client, int owner)
 	g_bQuiet[client] = false;
 	if (iQuietMessage(owner) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Quiet2", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(owner, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Quiet2", sTankName, client);
 	}
 }
 

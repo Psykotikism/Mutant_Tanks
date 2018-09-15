@@ -195,7 +195,9 @@ stock void vShakeHit(int client, int owner, int chance, int enabled)
 		dpShake.WriteCell(GetClientUserId(client)), dpShake.WriteCell(GetClientUserId(owner)), dpShake.WriteCell(enabled), dpShake.WriteFloat(GetEngineTime());
 		if (iShakeMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shake", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Shake", sTankName, client);
 		}
 	}
 }

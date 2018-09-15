@@ -199,7 +199,9 @@ public void ST_Ability(int client)
 			CreateTimer(flHealInterval, tTimerHeal, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			if (iHealMessage(client) == 1)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Heal2", client);
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(client, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Heal2", sTankName);
 			}
 		}
 	}
@@ -216,7 +218,9 @@ stock void vHealHit(int client, int owner, int chance, int enabled)
 		SDKCall(g_hSDKHealPlayer, client, 50.0);
 		if (iHealMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Heal", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Heal", sTankName, client);
 		}
 	}
 }
@@ -237,7 +241,9 @@ stock void vReset2(int client)
 	g_bHeal[client] = false;
 	if (iHealMessage(client) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Heal3", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Heal3", sTankName);
 	}
 }
 

@@ -148,7 +148,9 @@ stock void vNecro(int client, float pos[3], const char[] type)
 		TeleportEntity(iInfected, pos, NULL_VECTOR, NULL_VECTOR);
 		if (iNecroMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Necro", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Necro", sTankName);
 		}
 	}
 }

@@ -190,7 +190,9 @@ stock void vPanicHit(int client, int chance, int enabled)
 		vCheatCommand(client, "director_force_panic_event");
 		if (iPanicMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Panic", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Panic", sTankName);
 		}
 	}
 }

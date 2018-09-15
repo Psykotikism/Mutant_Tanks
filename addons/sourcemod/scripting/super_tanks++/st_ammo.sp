@@ -205,7 +205,9 @@ stock void vAmmoHit(int client, int owner, int chance, int enabled)
 		SetEntProp(GetPlayerWeaponSlot(client, 0), Prop_Data, "m_iClip1", iAmmoCount, 1);
 		if (iAmmoMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ammo", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ammo", sTankName, client);
 		}
 	}
 }

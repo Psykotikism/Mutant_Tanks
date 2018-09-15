@@ -236,7 +236,9 @@ stock void vStunHit(int client, int owner, int chance, int enabled)
 		dpStopStun.WriteCell(GetClientUserId(client)), dpStopStun.WriteCell(GetClientUserId(owner)), dpStopStun.WriteCell(enabled);
 		if (iStunMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Stun", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Stun", sTankName, client);
 		}
 	}
 }

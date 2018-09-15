@@ -119,7 +119,9 @@ public void ST_Ability(int client)
 		CreateTimer(flGodDuration, tTimerStopGod, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		if (iGodMessage(client) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "God", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "God", sTankName);
 		}
 		
 	}
@@ -145,7 +147,9 @@ stock void vReset2(int client)
 	}
 	if (iGodMessage(client) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "God2", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "God2", sTankName);
 	}
 }
 

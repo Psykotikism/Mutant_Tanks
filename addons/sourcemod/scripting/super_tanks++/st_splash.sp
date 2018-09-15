@@ -121,7 +121,9 @@ public void ST_Ability(int client)
 		CreateTimer(flSplashInterval, tTimerSplash, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		if (iSplashMessage(client) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Splash", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Splash", sTankName);
 		}
 	}
 }
@@ -142,7 +144,9 @@ stock void vReset2(int client)
 	g_bSplash[client] = false;
 	if (iSplashMessage(client) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Splash2", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Splash2", sTankName);
 	}
 }
 

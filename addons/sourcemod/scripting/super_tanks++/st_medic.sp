@@ -165,7 +165,9 @@ stock void vMedic(int client)
 	}
 	if (iMedicMessage == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Medic", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Medic", sTankName, client);
 	}
 }
 

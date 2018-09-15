@@ -103,7 +103,9 @@ public void ST_RockThrow(int client, int entity)
 		dpTrack.WriteCell(EntIndexToEntRef(entity)), dpTrack.WriteCell(GetClientUserId(client));
 		if (iTrackMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Track", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Track", sTankName);
 		}
 	}
 }

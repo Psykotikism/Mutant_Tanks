@@ -191,7 +191,9 @@ stock void vKamikazeHit(int client, int owner, int chance, int enabled)
 		ForcePlayerSuicide(owner);
 		if (iKamikazeMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Kamikaze", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Kamikaze", sTankName, client);
 		}
 	}
 }

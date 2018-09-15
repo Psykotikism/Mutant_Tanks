@@ -242,7 +242,9 @@ stock void vEnforceHit(int client, int owner, int chance, int enabled)
 		dpStopEnforce.WriteCell(GetClientUserId(client)), dpStopEnforce.WriteCell(GetClientUserId(owner)), dpStopEnforce.WriteCell(enabled);
 		if (iEnforceMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Enforce", owner, client, sSlotNumber);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Enforce", sTankName, client, sSlotNumber);
 		}
 	}
 }

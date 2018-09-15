@@ -162,7 +162,9 @@ public void ST_Ability(int client)
 		CreateTimer(flAbsorbDuration, tTimerStopAbsorb, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		if (iAbsorbMessage(client) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Absorb", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Absorb", sTankName);
 		}
 	}
 }
@@ -183,7 +185,9 @@ stock void vReset2(int client)
 	g_bAbsorb[client] = false;
 	if (iAbsorbMessage(client) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Absorb2", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Absorb2", sTankName);
 	}
 }
 

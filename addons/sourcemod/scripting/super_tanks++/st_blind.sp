@@ -226,7 +226,9 @@ stock void vBlindHit(int client, int owner, int chance, int enabled)
 		dpStopBlindness.WriteCell(GetClientUserId(client)), dpStopBlindness.WriteCell(GetClientUserId(owner)), dpStopBlindness.WriteCell(enabled);
 		if (iBlindMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Blind", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Blind", sTankName, client);
 		}
 	}
 }

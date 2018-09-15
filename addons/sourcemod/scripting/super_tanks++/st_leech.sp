@@ -178,7 +178,9 @@ stock void vLeechHit(int client, int owner, int chance, int enabled)
 		dpLeech.WriteCell(GetClientUserId(client)), dpLeech.WriteCell(GetClientUserId(owner)), dpLeech.WriteCell(enabled), dpLeech.WriteFloat(GetEngineTime());
 		if (iLeechMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Leech", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Leech", sTankName, client);
 		}
 	}
 }
@@ -199,7 +201,9 @@ stock void vReset2(int client, int owner)
 	g_bLeech[client] = false;
 	if (iLeechMessage(owner) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Leech2", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(owner, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Leech2", sTankName, client);
 	}
 }
 

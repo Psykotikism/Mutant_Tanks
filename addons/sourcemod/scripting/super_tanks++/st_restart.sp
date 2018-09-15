@@ -210,7 +210,9 @@ stock void vRestartHit(int client, int owner, int chance, int enabled)
 		}
 		if (iRestartMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Restart", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Restart", sTankName, client);
 		}
 	}
 }

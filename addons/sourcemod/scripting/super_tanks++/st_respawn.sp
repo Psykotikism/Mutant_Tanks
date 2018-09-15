@@ -183,7 +183,9 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			TeleportEntity(iNewTank, flPos, flAngles, NULL_VECTOR);
 			if (iRespawnMessage == 1)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Respawn", iTank);
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(iTank, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Respawn", sTankName);
 			}
 		}
 	}

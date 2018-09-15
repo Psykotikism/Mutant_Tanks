@@ -166,7 +166,9 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 			vDeleteEntity(iCar, 10.0);
 			if (iThrowMessage(iTank) == 1)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Throw", iTank);
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(iTank, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Throw", sTankName);
 			}
 		}
 		return Plugin_Stop;
@@ -219,7 +221,9 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 			TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
 			if (iThrowMessage(iTank) == 1)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Throw2", iTank);
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(iTank, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Throw2", sTankName);
 			}
 		}
 		return Plugin_Stop;
@@ -257,7 +261,9 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 		TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
 		if (iThrowMessage(iTank) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Throw3", iTank);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Throw3", sTankName);
 		}
 		return Plugin_Stop;
 	}

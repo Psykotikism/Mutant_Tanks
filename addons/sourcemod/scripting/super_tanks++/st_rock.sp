@@ -124,7 +124,9 @@ public void ST_Ability(int client)
 		dpRockUpdate.WriteCell(EntIndexToEntRef(iRock)), dpRockUpdate.WriteCell(GetClientUserId(client)), dpRockUpdate.WriteFloat(flPos[0]), dpRockUpdate.WriteFloat(flPos[1]), dpRockUpdate.WriteFloat(flPos[2]), dpRockUpdate.WriteFloat(GetEngineTime());
 		if (iRockMessage(client) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Rock", client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Rock", sTankName);
 		}
 	}
 }
@@ -146,7 +148,9 @@ stock void vReset2(int client, int entity)
 	AcceptEntityInput(entity, "Kill");
 	if (iRockMessage(client) == 1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Rock2", client);
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Rock2", sTankName);
 	}
 }
 

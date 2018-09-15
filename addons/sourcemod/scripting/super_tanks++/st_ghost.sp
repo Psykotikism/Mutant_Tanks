@@ -176,7 +176,9 @@ public void ST_Ability(int client)
 			SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 			if (iGhostMessage(client) == 1)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Ghost2", client);
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(client, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Ghost2", sTankName);
 			}
 		}
 	}
@@ -200,7 +202,9 @@ stock void vGhostHit(int client, int owner, int chance, int enabled)
 		}
 		if (iGhostMessage(client) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ghost", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ghost", sTankName, client);
 		}
 	}
 }

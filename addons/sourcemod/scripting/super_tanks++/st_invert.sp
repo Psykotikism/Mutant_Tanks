@@ -230,7 +230,9 @@ stock void vInvertHit(int client, int owner, int chance, int enabled)
 		dpStopInvert.WriteCell(GetClientUserId(client)), dpStopInvert.WriteCell(GetClientUserId(owner)), dpStopInvert.WriteCell(enabled);
 		if (iInvertMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Invert", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Invert", sTankName, client);
 		}
 	}
 }

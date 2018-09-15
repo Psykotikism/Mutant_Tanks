@@ -220,7 +220,9 @@ stock void vBuryHit(int client, int owner, int chance, int enabled)
 		dpStopBury.WriteCell(GetClientUserId(client)), dpStopBury.WriteCell(GetClientUserId(owner)), dpStopBury.WriteCell(enabled);
 		if (iBuryMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Bury", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Bury", sTankName, client);
 		}
 	}
 }

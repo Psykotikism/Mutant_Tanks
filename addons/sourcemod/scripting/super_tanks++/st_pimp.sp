@@ -178,7 +178,9 @@ stock void vPimpHit(int client, int owner, int chance, int enabled)
 		dpPimp.WriteCell(GetClientUserId(client)), dpPimp.WriteCell(GetClientUserId(owner)), dpPimp.WriteCell(enabled);
 		if (iPimpMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Pimp", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Pimp", sTankName, client);
 		}
 	}
 }

@@ -198,7 +198,9 @@ stock void vSmiteHit(int client, int owner, int chance, int enabled)
 		ForcePlayerSuicide(client);
 		if (iSmiteMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Smite", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Smite", sTankName, client);
 		}
 	}
 }

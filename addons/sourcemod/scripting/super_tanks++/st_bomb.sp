@@ -203,7 +203,9 @@ void vBombHit(int client, int owner, int chance, int enabled)
 		vSpecialAttack(owner, flPos, MODEL_PROPANETANK);
 		if (iBombMessage == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Bomb", owner, client);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Bomb", sTankName, client);
 		}
 	}
 }

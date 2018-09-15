@@ -228,6 +228,14 @@ native void ST_SpawnTank(int client, int type);
  */
 native bool ST_TankAllowed(int client);
 
+/* Returns the custom name given to a Tank.
+ *
+ * @param client		Client index of the Tank.
+ * @param buffer		Buffer to store the custom
+ *							name in.
+ */
+native void ST_TankName(int client, char[] buffer);
+
 /* Returns the Super Tank type of the Tank.
  *
  * @param client		Client index of the Tank.

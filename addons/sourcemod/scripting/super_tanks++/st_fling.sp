@@ -184,6 +184,8 @@ stock void vFlingHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(owner, sTankName);
 		if (bIsL4D2Game())
 		{
 			float flSurvivorPos[3], flSurvivorVelocity[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
@@ -201,7 +203,7 @@ stock void vFlingHit(int client, int owner, int chance, int enabled)
 			SDKCall(g_hSDKFlingPlayer, client, flVelocity, 76, owner, 7.0);
 			if (iFlingMessage(owner) == 1)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Fling", owner, client);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Fling", sTankName, client);
 			}
 		}
 		else
@@ -209,7 +211,7 @@ stock void vFlingHit(int client, int owner, int chance, int enabled)
 			SDKCall(g_hSDKPukePlayer, client, owner, true);
 			if (iFlingMessage(owner) == 1)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", owner, client);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
 			}
 		}
 	}

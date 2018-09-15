@@ -202,7 +202,9 @@ stock void vVisionHit(int client, int owner, int chance, int enabled)
 		dpVision.WriteCell(GetClientUserId(client)), dpVision.WriteCell(GetClientUserId(owner)), dpVision.WriteCell(enabled), dpVision.WriteFloat(GetEngineTime());
 		if (iVisionMessage(owner) == 1)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Vision", owner, client, iVisionFOV(owner));
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Vision", sTankName, client, iVisionFOV(owner));
 		}
 	}
 }
