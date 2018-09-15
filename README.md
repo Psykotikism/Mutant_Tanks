@@ -757,7 +757,7 @@ Target filters:
 Commands:
 
 ```
-1. sm_tank <type 1-*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 5,000 though.)
+1. sm_tank <type 1*-5000*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 5,000 though.)
 2. sm_tanklist
 ```
 
