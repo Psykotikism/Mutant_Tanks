@@ -15,7 +15,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.40"
+#define ST_VERSION "8.41"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 5000
 #define ST_MAXHEALTH 65535
@@ -189,14 +189,6 @@ forward void ST_RockBreak(int client, int entity);
  */
 forward void ST_RockThrow(int client, int entity);
 
-/* Called when the Tank spawns.
- * Use this forward for any one-time abilities
- * or on-spawn presets.
- *
- * @param client		Client index of the Tank.
- */
-forward void ST_Spawn(int client);
-
 // Natives
 /* Returns the maximum value of the "Type Range" setting.
  *
@@ -235,6 +227,14 @@ native void ST_SpawnTank(int client, int type);
  *							by a human.
  */
 native bool ST_TankAllowed(int client);
+
+/* Returns the custom name given to a Tank.
+ *
+ * @param client		Client index of the Tank.
+ * @param buffer		Buffer to store the custom
+ *							name in.
+ */
+native void ST_TankName(int client, char[] buffer);
 
 /* Returns the Super Tank type of the Tank.
  *

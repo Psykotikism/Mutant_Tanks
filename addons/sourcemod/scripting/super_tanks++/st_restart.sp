@@ -19,7 +19,7 @@ bool g_bCloneInstalled, g_bLateLoad, g_bRestartValid, g_bTankConfig[ST_MAXTYPES 
 char g_sRestartLoadout[ST_MAXTYPES + 1][325], g_sRestartLoadout2[ST_MAXTYPES + 1][325];
 float g_flRestartPosition[3], g_flRestartRange[ST_MAXTYPES + 1], g_flRestartRange2[ST_MAXTYPES + 1];
 Handle g_hSDKRespawnPlayer;
-int g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1], g_iRestartChance[ST_MAXTYPES + 1], g_iRestartChance2[ST_MAXTYPES + 1], g_iRestartHit[ST_MAXTYPES + 1], g_iRestartHit2[ST_MAXTYPES + 1], g_iRestartHitMode[ST_MAXTYPES + 1], g_iRestartHitMode2[ST_MAXTYPES + 1], g_iRestartMode[ST_MAXTYPES + 1], g_iRestartMode2[ST_MAXTYPES + 1], g_iRestartRangeChance[ST_MAXTYPES + 1], g_iRestartRangeChance2[ST_MAXTYPES + 1];
+int g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1], g_iRestartChance[ST_MAXTYPES + 1], g_iRestartChance2[ST_MAXTYPES + 1], g_iRestartHit[ST_MAXTYPES + 1], g_iRestartHit2[ST_MAXTYPES + 1], g_iRestartHitMode[ST_MAXTYPES + 1], g_iRestartHitMode2[ST_MAXTYPES + 1], g_iRestartMessage[ST_MAXTYPES + 1], g_iRestartMessage2[ST_MAXTYPES + 1], g_iRestartMode[ST_MAXTYPES + 1], g_iRestartMode2[ST_MAXTYPES + 1], g_iRestartRangeChance[ST_MAXTYPES + 1], g_iRestartRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -56,6 +56,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	StartPrepSDKCall(SDKCall_Player);
 	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "RoundRespawn");
@@ -118,6 +119,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iRestartAbility[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", 0)) : (g_iRestartAbility2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", g_iRestartAbility[iIndex]));
 			main ? (g_iRestartAbility[iIndex] = iSetCellLimit(g_iRestartAbility[iIndex], 0, 1)) : (g_iRestartAbility2[iIndex] = iSetCellLimit(g_iRestartAbility2[iIndex], 0, 1));
+			main ? (g_iRestartMessage[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Message", 0)) : (g_iRestartMessage2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Message", g_iRestartMessage[iIndex]));
+			main ? (g_iRestartMessage[iIndex] = iSetCellLimit(g_iRestartMessage[iIndex], 0, 1)) : (g_iRestartMessage2[iIndex] = iSetCellLimit(g_iRestartMessage2[iIndex], 0, 1));
 			main ? (g_iRestartChance[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Chance", 4)) : (g_iRestartChance2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Chance", g_iRestartChance[iIndex]));
 			main ? (g_iRestartChance[iIndex] = iSetCellLimit(g_iRestartChance[iIndex], 1, 9999999999)) : (g_iRestartChance2[iIndex] = iSetCellLimit(g_iRestartChance2[iIndex], 1, 9999999999));
 			main ? (g_iRestartHit[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", 0)) : (g_iRestartHit2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", g_iRestartHit[iIndex]));
@@ -172,11 +175,12 @@ public void ST_Ability(int client)
 
 stock void vRestartHit(int client, int owner, int chance, int enabled)
 {
-	int iRestartMode = !g_bTankConfig[ST_TankType(owner)] ? g_iRestartMode[ST_TankType(owner)] : g_iRestartMode2[ST_TankType(owner)];
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		SDKCall(g_hSDKRespawnPlayer, client);
 		char sRestartLoadout[325], sItems[5][64];
+		int iRestartMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iRestartMessage[ST_TankType(owner)] : g_iRestartMessage2[ST_TankType(owner)],
+			iRestartMode = !g_bTankConfig[ST_TankType(owner)] ? g_iRestartMode[ST_TankType(owner)] : g_iRestartMode2[ST_TankType(owner)];
 		sRestartLoadout = !g_bTankConfig[ST_TankType(owner)] ? g_sRestartLoadout[ST_TankType(owner)] : g_sRestartLoadout2[ST_TankType(owner)];
 		ExplodeString(sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
 		for (int iItem = 0; iItem < sizeof(sItems); iItem++)
@@ -203,6 +207,12 @@ stock void vRestartHit(int client, int owner, int chance, int enabled)
 				TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
 				break;
 			}
+		}
+		if (iRestartMessage == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Restart", sTankName, client);
 		}
 	}
 }

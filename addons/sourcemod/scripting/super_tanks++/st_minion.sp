@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bMinion[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sMinionTypes[ST_MAXTYPES + 1][13], g_sMinionTypes2[ST_MAXTYPES + 1][13];
-int g_iMinionAbility[ST_MAXTYPES + 1], g_iMinionAbility2[ST_MAXTYPES + 1], g_iMinionAmount[ST_MAXTYPES + 1], g_iMinionAmount2[ST_MAXTYPES + 1], g_iMinionChance[ST_MAXTYPES + 1], g_iMinionChance2[ST_MAXTYPES + 1], g_iMinionCount[MAXPLAYERS + 1];
+int g_iMinionAbility[ST_MAXTYPES + 1], g_iMinionAbility2[ST_MAXTYPES + 1], g_iMinionAmount[ST_MAXTYPES + 1], g_iMinionAmount2[ST_MAXTYPES + 1], g_iMinionChance[ST_MAXTYPES + 1], g_iMinionChance2[ST_MAXTYPES + 1], g_iMinionCount[MAXPLAYERS + 1], g_iMinionMessage[ST_MAXTYPES + 1], g_iMinionMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,6 +51,11 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
+public void OnPluginStart()
+{
+	LoadTranslations("super_tanks++.phrases");
+}
+
 public void OnMapStart()
 {
 	vReset();
@@ -80,6 +85,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iMinionAbility[iIndex] = kvSuperTanks.GetNum("Minion Ability/Ability Enabled", 0)) : (g_iMinionAbility2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Ability Enabled", g_iMinionAbility[iIndex]));
 			main ? (g_iMinionAbility[iIndex] = iSetCellLimit(g_iMinionAbility[iIndex], 0, 1)) : (g_iMinionAbility2[iIndex] = iSetCellLimit(g_iMinionAbility2[iIndex], 0, 1));
+			main ? (g_iMinionMessage[iIndex] = kvSuperTanks.GetNum("Minion Ability/Ability Message", 0)) : (g_iMinionMessage2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Ability Message", g_iMinionMessage[iIndex]));
+			main ? (g_iMinionMessage[iIndex] = iSetCellLimit(g_iMinionMessage[iIndex], 0, 1)) : (g_iMinionMessage2[iIndex] = iSetCellLimit(g_iMinionMessage2[iIndex], 0, 1));
 			main ? (g_iMinionAmount[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Amount", 5)) : (g_iMinionAmount2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Amount", g_iMinionAmount[iIndex]));
 			main ? (g_iMinionAmount[iIndex] = iSetCellLimit(g_iMinionAmount[iIndex], 1, 25)) : (g_iMinionAmount2[iIndex] = iSetCellLimit(g_iMinionAmount2[iIndex], 1, 25));
 			main ? (g_iMinionChance[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Chance", 4)) : (g_iMinionChance2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Chance", g_iMinionChance[iIndex]));
@@ -109,7 +116,8 @@ public void ST_Ability(int client)
 	int iMinionChance = !g_bTankConfig[ST_TankType(client)] ? g_iMinionChance[ST_TankType(client)] : g_iMinionChance2[ST_TankType(client)];
 	if (iMinionAbility(client) == 1 && GetRandomInt(1, iMinionChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iMinionAmount = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAmount[ST_TankType(client)] : g_iMinionAmount2[ST_TankType(client)];
+		int iMinionAmount = !g_bTankConfig[ST_TankType(client)] ? g_iMinionAmount[ST_TankType(client)] : g_iMinionAmount2[ST_TankType(client)],
+			iMinionMessage = !g_bTankConfig[ST_TankType(client)] ? g_iMinionMessage[ST_TankType(client)] : g_iMinionMessage2[ST_TankType(client)];
 		if (g_iMinionCount[client] < iMinionAmount)
 		{
 			float flHitPosition[3], flPosition[3], flAngle[3], flVector[3];
@@ -164,6 +172,12 @@ public void ST_Ability(int client)
 						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 						g_bMinion[iSelectedType] = true;
 						g_iMinionCount[client]++;
+						if (iMinionMessage == 1)
+						{
+							char sTankName[MAX_NAME_LENGTH + 1];
+							ST_TankName(client, sTankName);
+							PrintToChatAll("%s %t", ST_PREFIX2, "Minion", sTankName);
+						}
 					}
 				}
 			}

@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bShake[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 float g_flShakeDuration[ST_MAXTYPES + 1], g_flShakeDuration2[ST_MAXTYPES + 1], g_flShakeRange[ST_MAXTYPES + 1], g_flShakeRange2[ST_MAXTYPES + 1];
-int g_iShakeAbility[ST_MAXTYPES + 1], g_iShakeAbility2[ST_MAXTYPES + 1], g_iShakeChance[ST_MAXTYPES + 1], g_iShakeChance2[ST_MAXTYPES + 1], g_iShakeHit[ST_MAXTYPES + 1], g_iShakeHit2[ST_MAXTYPES + 1], g_iShakeHitMode[ST_MAXTYPES + 1], g_iShakeHitMode2[ST_MAXTYPES + 1], g_iShakeRangeChance[ST_MAXTYPES + 1], g_iShakeRangeChance2[ST_MAXTYPES + 1];
+int g_iShakeAbility[ST_MAXTYPES + 1], g_iShakeAbility2[ST_MAXTYPES + 1], g_iShakeChance[ST_MAXTYPES + 1], g_iShakeChance2[ST_MAXTYPES + 1], g_iShakeHit[ST_MAXTYPES + 1], g_iShakeHit2[ST_MAXTYPES + 1], g_iShakeHitMode[ST_MAXTYPES + 1], g_iShakeHitMode2[ST_MAXTYPES + 1], g_iShakeMessage[ST_MAXTYPES + 1], g_iShakeMessage2[ST_MAXTYPES + 1], g_iShakeRangeChance[ST_MAXTYPES + 1], g_iShakeRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -54,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -119,6 +120,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iShakeAbility[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", 0)) : (g_iShakeAbility2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", g_iShakeAbility[iIndex]));
 			main ? (g_iShakeAbility[iIndex] = iSetCellLimit(g_iShakeAbility[iIndex], 0, 1)) : (g_iShakeAbility2[iIndex] = iSetCellLimit(g_iShakeAbility2[iIndex], 0, 1));
+			main ? (g_iShakeMessage[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Message", 0)) : (g_iShakeMessage2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Message", g_iShakeMessage[iIndex]));
+			main ? (g_iShakeMessage[iIndex] = iSetCellLimit(g_iShakeMessage[iIndex], 0, 1)) : (g_iShakeMessage2[iIndex] = iSetCellLimit(g_iShakeMessage2[iIndex], 0, 1));
 			main ? (g_iShakeChance[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Chance", 4)) : (g_iShakeChance2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Chance", g_iShakeChance[iIndex]));
 			main ? (g_iShakeChance[iIndex] = iSetCellLimit(g_iShakeChance[iIndex], 1, 9999999999)) : (g_iShakeChance2[iIndex] = iSetCellLimit(g_iShakeChance2[iIndex], 1, 9999999999));
 			main ? (g_flShakeDuration[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", 5.0)) : (g_flShakeDuration2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", g_flShakeDuration[iIndex]));
@@ -173,6 +176,15 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client, int owner)
+{
+	g_bShake[client] = false;
+	if (iShakeMessage(owner) == 1)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "Shake2", client);
+	}
+}
+
 stock void vShakeHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bShake[client])
@@ -181,6 +193,12 @@ stock void vShakeHit(int client, int owner, int chance, int enabled)
 		DataPack dpShake = new DataPack();
 		CreateDataTimer(1.0, tTimerShake, dpShake, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpShake.WriteCell(GetClientUserId(client)), dpShake.WriteCell(GetClientUserId(owner)), dpShake.WriteCell(enabled), dpShake.WriteFloat(GetEngineTime());
+		if (iShakeMessage(owner) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Shake", sTankName, client);
+		}
 	}
 }
 
@@ -199,6 +217,11 @@ stock int iShakeHitMode(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iShakeHitMode[ST_TankType(client)] : g_iShakeHitMode2[ST_TankType(client)];
 }
 
+stock int iShakeMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iShakeMessage[ST_TankType(client)] : g_iShakeMessage2[ST_TankType(client)];
+}
+
 public Action tTimerShake(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -211,7 +234,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bShake[iSurvivor] = false;
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	int iShakeAbility = pack.ReadCell();
@@ -219,7 +242,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 		flShakeDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShakeDuration[ST_TankType(iTank)] : g_flShakeDuration2[ST_TankType(iTank)];
 	if (iShakeAbility == 0 || (flTime + flShakeDuration) < GetEngineTime())
 	{
-		g_bShake[iSurvivor] = false;
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	vShake(iSurvivor);

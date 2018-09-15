@@ -18,9 +18,9 @@ public Plugin myinfo =
 bool g_bCloneInstalled, g_bHeal[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 ConVar g_cvSTMaxIncapCount;
-float g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1], g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1];
+float g_flHealAbsorbRange[ST_MAXTYPES + 1], g_flHealAbsorbRange2[ST_MAXTYPES + 1], g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1], g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1];
 Handle g_hSDKHealPlayer, g_hSDKRevivePlayer;
-int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealChance[ST_MAXTYPES + 1], g_iHealChance2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1];
+int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealChance[ST_MAXTYPES + 1], g_iHealChance2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealMessage[ST_MAXTYPES + 1], g_iHealMessage2[ST_MAXTYPES + 1], g_iHealRangeChance[ST_MAXTYPES + 1], g_iHealRangeChance2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -57,6 +57,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	g_cvSTMaxIncapCount = FindConVar("survivor_max_incapacitated_count");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	StartPrepSDKCall(SDKCall_Player);
@@ -113,14 +114,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vHealHit(victim, attacker);
+				vHealHit(victim, attacker, iHealChance(attacker), iHealHit(attacker));
 			}
 		}
 		else if ((iHealHitMode(victim) == 0 || iHealHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vHealHit(attacker, victim);
+				vHealHit(attacker, victim, iHealChance(victim), iHealHit(victim));
 			}
 		}
 	}
@@ -141,7 +142,11 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iGlowEffect[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", 1)) : (g_iGlowEffect2[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", g_iGlowEffect[iIndex]));
 			main ? (g_iGlowEffect[iIndex] = iSetCellLimit(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iSetCellLimit(g_iGlowEffect2[iIndex], 0, 1));
 			main ? (g_iHealAbility[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Enabled", 0)) : (g_iHealAbility2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Enabled", g_iHealAbility[iIndex]));
-			main ? (g_iHealAbility[iIndex] = iSetCellLimit(g_iHealAbility[iIndex], 0, 1)) : (g_iHealAbility2[iIndex] = iSetCellLimit(g_iHealAbility2[iIndex], 0, 1));
+			main ? (g_iHealAbility[iIndex] = iSetCellLimit(g_iHealAbility[iIndex], 0, 3)) : (g_iHealAbility2[iIndex] = iSetCellLimit(g_iHealAbility2[iIndex], 0, 3));
+			main ? (g_iHealMessage[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Message", 0)) : (g_iHealMessage2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Message", g_iHealMessage[iIndex]));
+			main ? (g_iHealMessage[iIndex] = iSetCellLimit(g_iHealMessage[iIndex], 0, 1)) : (g_iHealMessage2[iIndex] = iSetCellLimit(g_iHealMessage2[iIndex], 0, 1));
+			main ? (g_flHealAbsorbRange[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Absorb Range", 500.0)) : (g_flHealAbsorbRange2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Absorb Range", g_flHealAbsorbRange[iIndex]));
+			main ? (g_flHealAbsorbRange[iIndex] = flSetFloatLimit(g_flHealAbsorbRange[iIndex], 1.0, 9999999999.0)) : (g_flHealAbsorbRange2[iIndex] = flSetFloatLimit(g_flHealAbsorbRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iHealChance[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Chance", 4)) : (g_iHealChance2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Chance", g_iHealChance[iIndex]));
 			main ? (g_iHealChance[iIndex] = iSetCellLimit(g_iHealChance[iIndex], 1, 9999999999)) : (g_iHealChance2[iIndex] = iSetCellLimit(g_iHealChance2[iIndex], 1, 9999999999));
 			main ? (g_iHealCommon[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Commons", 50)) : (g_iHealCommon2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Commons", g_iHealCommon[iIndex]));
@@ -152,8 +157,10 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iHealHitMode[iIndex] = iSetCellLimit(g_iHealHitMode[iIndex], 0, 2)) : (g_iHealHitMode2[iIndex] = iSetCellLimit(g_iHealHitMode2[iIndex], 0, 2));
 			main ? (g_flHealInterval[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Interval", 5.0)) : (g_flHealInterval2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Interval", g_flHealInterval[iIndex]));
 			main ? (g_flHealInterval[iIndex] = flSetFloatLimit(g_flHealInterval[iIndex], 0.1, 9999999999.0)) : (g_flHealInterval2[iIndex] = flSetFloatLimit(g_flHealInterval2[iIndex], 0.1, 9999999999.0));
-			main ? (g_flHealRange[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Range", 500.0)) : (g_flHealRange2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Range", g_flHealRange[iIndex]));
+			main ? (g_flHealRange[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Range", 150.0)) : (g_flHealRange2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Range", g_flHealRange[iIndex]));
 			main ? (g_flHealRange[iIndex] = flSetFloatLimit(g_flHealRange[iIndex], 1.0, 9999999999.0)) : (g_flHealRange2[iIndex] = flSetFloatLimit(g_flHealRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_iHealRangeChance[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Range Chance", 16)) : (g_iHealRangeChance2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Range Chance", g_iHealRangeChance[iIndex]));
+			main ? (g_iHealRangeChance[iIndex] = iSetCellLimit(g_iHealRangeChance[iIndex], 1, 9999999999)) : (g_iHealRangeChance2[iIndex] = iSetCellLimit(g_iHealRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_iHealSpecial[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Specials", 100)) : (g_iHealSpecial2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Specials", g_iHealSpecial[iIndex]));
 			main ? (g_iHealSpecial[iIndex] = iSetCellLimit(g_iHealSpecial[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH)) : (g_iHealSpecial2[iIndex] = iSetCellLimit(g_iHealSpecial2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH));
 			main ? (g_iHealTank[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Tanks", 500)) : (g_iHealTank2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Tanks", g_iHealTank[iIndex]));
@@ -166,25 +173,55 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	if (iHealAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bHeal[client])
+	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		g_bHeal[client] = true;
-		float flHealInterval = !g_bTankConfig[ST_TankType(client)] ? g_flHealInterval[ST_TankType(client)] : g_flHealInterval2[ST_TankType(client)];
-		CreateTimer(flHealInterval, tTimerHeal, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		int iHealRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iHealChance[ST_TankType(client)] : g_iHealChance2[ST_TankType(client)];
+		float flHealRange = !g_bTankConfig[ST_TankType(client)] ? g_flHealRange[ST_TankType(client)] : g_flHealRange2[ST_TankType(client)],
+			flTankPos[3];
+		GetClientAbsOrigin(client, flTankPos);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flHealRange)
+				{
+					vHealHit(iSurvivor, client, iHealRangeChance, iHealAbility(client));
+				}
+			}
+		}
+		if ((iHealAbility(client) == 1 || iHealAbility(client) == 3) && !g_bHeal[client])
+		{
+			g_bHeal[client] = true;
+			float flHealInterval = !g_bTankConfig[ST_TankType(client)] ? g_flHealInterval[ST_TankType(client)] : g_flHealInterval2[ST_TankType(client)];
+			CreateTimer(flHealInterval, tTimerHeal, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			if (iHealMessage(client) == 1)
+			{
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(client, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Heal2", sTankName);
+			}
+		}
 	}
 }
 
-stock void vHealHit(int client, int owner)
+stock void vHealHit(int client, int owner, int chance, int enabled)
 {
-	int iHealChance = !g_bTankConfig[ST_TankType(owner)] ? g_iHealChance[ST_TankType(owner)] : g_iHealChance2[ST_TankType(owner)],
-		iHealHit = !g_bTankConfig[ST_TankType(owner)] ? g_iHealHit[ST_TankType(owner)] : g_iHealHit2[ST_TankType(owner)];
-	if (iHealHit == 1 && GetRandomInt(1, iHealChance) == 1 && bIsSurvivor(client))
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue - 1);
 		SetEntProp(client, Prop_Send, "m_isIncapacitated", 1);
 		SDKCall(g_hSDKRevivePlayer, client);
 		SetEntityHealth(client, 1);
 		SDKCall(g_hSDKHealPlayer, client, 50.0);
+		if (iHealMessage(owner) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Heal", sTankName, client);
+		}
 	}
 }
 
@@ -199,9 +236,30 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client)
+{
+	g_bHeal[client] = false;
+	if (iHealMessage(client) == 1)
+	{
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Heal3", sTankName);
+	}
+}
+
 stock int iHealAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iHealAbility[ST_TankType(client)] : g_iHealAbility2[ST_TankType(client)];
+}
+
+stock int iHealChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iHealChance[ST_TankType(client)] : g_iHealChance2[ST_TankType(client)];
+}
+
+stock int iHealHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iHealHit[ST_TankType(client)] : g_iHealHit2[ST_TankType(client)];
 }
 
 stock int iHealHitMode(int client)
@@ -209,28 +267,33 @@ stock int iHealHitMode(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iHealHitMode[ST_TankType(client)] : g_iHealHitMode2[ST_TankType(client)];
 }
 
+stock int iHealMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iHealMessage[ST_TankType(client)] : g_iHealMessage2[ST_TankType(client)];
+}
+
 public Action tTimerHeal(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bHeal[iTank] = false;
+		vReset2(iTank);
 		return Plugin_Stop;
 	}
-	if (iHealAbility(iTank) == 0)
+	if (iHealAbility(iTank) != 2 && iHealAbility(iTank) != 3)
 	{
-		g_bHeal[iTank] = false;
+		vReset2(iTank);
 		return Plugin_Stop;
 	}
 	int iType, iSpecial = -1;
-	float flHealRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flHealRange[ST_TankType(iTank)] : g_flHealRange2[ST_TankType(iTank)];
+	float flHealAbsorbRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flHealAbsorbRange[ST_TankType(iTank)] : g_flHealAbsorbRange2[ST_TankType(iTank)];
 	while ((iSpecial = FindEntityByClassname(iSpecial, "infected")) != INVALID_ENT_REFERENCE)
 	{
 		float flTankPos[3], flInfectedPos[3];
 		GetClientAbsOrigin(iTank, flTankPos);
 		GetEntPropVector(iSpecial, Prop_Send, "m_vecOrigin", flInfectedPos);
 		float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
-		if (flDistance <= flHealRange)
+		if (flDistance <= flHealAbsorbRange)
 		{
 			int iHealth = GetClientHealth(iTank),
 				iCommonHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealCommon[ST_TankType(iTank)]) : (iHealth + g_iHealCommon2[ST_TankType(iTank)]),
@@ -258,7 +321,7 @@ public Action tTimerHeal(Handle timer, any userid)
 			GetClientAbsOrigin(iTank, flTankPos);
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-			if (flDistance <= flHealRange)
+			if (flDistance <= flHealAbsorbRange)
 			{
 				int iHealth = GetClientHealth(iTank),
 					iSpecialHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealSpecial[ST_TankType(iTank)]) : (iHealth + g_iHealSpecial2[ST_TankType(iTank)]),
@@ -284,7 +347,7 @@ public Action tTimerHeal(Handle timer, any userid)
 			GetClientAbsOrigin(iTank, flTankPos);
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-			if (flDistance <= flHealRange)
+			if (flDistance <= flHealAbsorbRange)
 			{
 				int iHealth = GetClientHealth(iTank),
 					iTankHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iHealTank[ST_TankType(iTank)]) : (iHealth + g_iHealTank2[ST_TankType(iTank)]),

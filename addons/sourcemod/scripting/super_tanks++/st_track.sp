@@ -18,7 +18,7 @@ public Plugin myinfo =
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 float g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
-int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
+int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -52,6 +52,11 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
+public void OnPluginStart()
+{
+	LoadTranslations("super_tanks++.phrases");
+}
+
 public void Think(int entity)
 {
 	bIsValidEntity(entity) ? vTrack(entity) : SDKUnhook(entity, SDKHook_Think, Think);
@@ -73,6 +78,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iGlowEffect[iIndex] = iSetCellLimit(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iSetCellLimit(g_iGlowEffect2[iIndex], 0, 1));
 			main ? (g_iTrackAbility[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", 0)) : (g_iTrackAbility2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", g_iTrackAbility[iIndex]));
 			main ? (g_iTrackAbility[iIndex] = iSetCellLimit(g_iTrackAbility[iIndex], 0, 1)) : (g_iTrackAbility2[iIndex] = iSetCellLimit(g_iTrackAbility2[iIndex], 0, 1));
+			main ? (g_iTrackMessage[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", 0)) : (g_iTrackMessage2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", g_iTrackMessage[iIndex]));
+			main ? (g_iTrackMessage[iIndex] = iSetCellLimit(g_iTrackMessage[iIndex], 0, 1)) : (g_iTrackMessage2[iIndex] = iSetCellLimit(g_iTrackMessage2[iIndex], 0, 1));
 			main ? (g_iTrackChance[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Chance", 4)) : (g_iTrackChance2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Chance", g_iTrackChance[iIndex]));
 			main ? (g_iTrackChance[iIndex] = iSetCellLimit(g_iTrackChance[iIndex], 1, 9999999999)) : (g_iTrackChance2[iIndex] = iSetCellLimit(g_iTrackChance2[iIndex], 1, 9999999999));
 			main ? (g_iTrackMode[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", 1)) : (g_iTrackMode2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", g_iTrackMode[iIndex]));
@@ -90,9 +97,16 @@ public void ST_RockThrow(int client, int entity)
 	int iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
 	if (iTrackAbility(client) == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
+		int iTrackMessage = !g_bTankConfig[ST_TankType(client)] ? g_iTrackMessage[ST_TankType(client)] : g_iTrackMessage2[ST_TankType(client)];
 		DataPack dpTrack = new DataPack();
 		CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
 		dpTrack.WriteCell(EntIndexToEntRef(entity)), dpTrack.WriteCell(GetClientUserId(client));
+		if (iTrackMessage == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Track", sTankName);
+		}
 	}
 }
 

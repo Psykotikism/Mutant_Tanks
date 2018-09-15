@@ -19,7 +19,7 @@ bool g_bCloneInstalled, g_bLateLoad, g_bShield[MAXPLAYERS + 1], g_bTankConfig[ST
 char g_sShieldColor[ST_MAXTYPES + 1][12], g_sShieldColor2[ST_MAXTYPES + 1][12];
 ConVar g_cvSTTankThrowForce;
 float g_flShieldDelay[ST_MAXTYPES + 1], g_flShieldDelay2[ST_MAXTYPES + 1];
-int g_iShieldAbility[ST_MAXTYPES + 1], g_iShieldAbility2[ST_MAXTYPES + 1];
+int g_iShieldAbility[ST_MAXTYPES + 1], g_iShieldAbility2[ST_MAXTYPES + 1], g_iShieldMessage[ST_MAXTYPES + 1], g_iShieldMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -56,6 +56,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	g_cvSTTankThrowForce = FindConVar("z_tank_throw_force");
 	if (g_bLateLoad)
 	{
@@ -124,6 +125,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iShieldAbility[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Enabled", 0)) : (g_iShieldAbility2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Enabled", g_iShieldAbility[iIndex]));
 			main ? (g_iShieldAbility[iIndex] = iSetCellLimit(g_iShieldAbility[iIndex], 0, 1)) : (g_iShieldAbility2[iIndex] = iSetCellLimit(g_iShieldAbility2[iIndex], 0, 1));
+			main ? (g_iShieldMessage[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Message", 0)) : (g_iShieldMessage2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Message", g_iShieldMessage[iIndex]));
+			main ? (g_iShieldMessage[iIndex] = iSetCellLimit(g_iShieldMessage[iIndex], 0, 1)) : (g_iShieldMessage2[iIndex] = iSetCellLimit(g_iShieldMessage2[iIndex], 0, 1));
 			main ? (kvSuperTanks.GetString("Shield Ability/Shield Color", g_sShieldColor[iIndex], sizeof(g_sShieldColor[]), "255,255,255")) : (kvSuperTanks.GetString("Shield Ability/Shield Color", g_sShieldColor2[iIndex], sizeof(g_sShieldColor2[]), g_sShieldColor[iIndex]));
 			main ? (g_flShieldDelay[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", 5.0)) : (g_flShieldDelay2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", g_flShieldDelay[iIndex]));
 			main ? (g_flShieldDelay[iIndex] = flSetFloatLimit(g_flShieldDelay[iIndex], 1.0, 9999999999.0)) : (g_flShieldDelay2[iIndex] = flSetFloatLimit(g_flShieldDelay2[iIndex], 1.0, 9999999999.0));
@@ -233,6 +236,12 @@ stock void vShield(int client, bool shield)
 			SetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity", client);
 		}
 		g_bShield[client] = true;
+		if (iShieldMessage(client) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Shield", sTankName);
+		}
 	}
 	else
 	{
@@ -253,12 +262,23 @@ stock void vShield(int client, bool shield)
 		float flShieldDelay = !g_bTankConfig[ST_TankType(client)] ? g_flShieldDelay[ST_TankType(client)] : g_flShieldDelay2[ST_TankType(client)];
 		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		g_bShield[client] = false;
+		if (iShieldMessage(client) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Shield2", sTankName);
+		}
 	}
 }
 
 stock int iShieldAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
+}
+
+stock int iShieldMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iShieldMessage[ST_TankType(client)] : g_iShieldMessage2[ST_TankType(client)];
 }
 
 public Action tTimerShield(Handle timer, any userid)

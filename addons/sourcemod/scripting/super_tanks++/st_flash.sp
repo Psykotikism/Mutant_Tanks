@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bFlash[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 float g_flFlashDuration[ST_MAXTYPES + 1], g_flFlashDuration2[ST_MAXTYPES + 1], g_flFlashSpeed[ST_MAXTYPES + 1], g_flFlashSpeed2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1];
-int g_iFlashAbility[ST_MAXTYPES + 1], g_iFlashAbility2[ST_MAXTYPES + 1], g_iFlashChance[ST_MAXTYPES + 1], g_iFlashChance2[ST_MAXTYPES + 1];
+int g_iFlashAbility[ST_MAXTYPES + 1], g_iFlashAbility2[ST_MAXTYPES + 1], g_iFlashChance[ST_MAXTYPES + 1], g_iFlashChance2[ST_MAXTYPES + 1], g_iFlashMessage[ST_MAXTYPES + 1], g_iFlashMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,6 +51,11 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
+public void OnPluginStart()
+{
+	LoadTranslations("super_tanks++.phrases");
+}
+
 public void OnMapStart()
 {
 	vReset();
@@ -81,6 +86,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_flRunSpeed[iIndex] = flSetFloatLimit(g_flRunSpeed[iIndex], 0.1, 3.0)) : (g_flRunSpeed2[iIndex] = flSetFloatLimit(g_flRunSpeed2[iIndex], 0.1, 3.0));
 			main ? (g_iFlashAbility[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Enabled", 0)) : (g_iFlashAbility2[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Enabled", g_iFlashAbility[iIndex]));
 			main ? (g_iFlashAbility[iIndex] = iSetCellLimit(g_iFlashAbility[iIndex], 0, 1)) : (g_iFlashAbility2[iIndex] = iSetCellLimit(g_iFlashAbility2[iIndex], 0, 1));
+			main ? (g_iFlashMessage[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Message", 0)) : (g_iFlashMessage2[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Message", g_iFlashMessage[iIndex]));
+			main ? (g_iFlashMessage[iIndex] = iSetCellLimit(g_iFlashMessage[iIndex], 0, 1)) : (g_iFlashMessage2[iIndex] = iSetCellLimit(g_iFlashMessage2[iIndex], 0, 1));
 			main ? (g_iFlashChance[iIndex] = kvSuperTanks.GetNum("Flash Ability/Flash Chance", 4)) : (g_iFlashChance2[iIndex] = kvSuperTanks.GetNum("Flash Ability/Flash Chance", g_iFlashChance[iIndex]));
 			main ? (g_iFlashChance[iIndex] = iSetCellLimit(g_iFlashChance[iIndex], 1, 9999999999)) : (g_iFlashChance2[iIndex] = iSetCellLimit(g_iFlashChance2[iIndex], 1, 9999999999));
 			main ? (g_flFlashDuration[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Duration", 5.0)) : (g_flFlashDuration2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Duration", g_flFlashDuration[iIndex]));
@@ -105,6 +112,12 @@ public void ST_Ability(int client)
 			if (GetRandomInt(1, iFlashChance) == 1)
 			{
 				g_bFlash[client] = true;
+				if (iFlashMessage(client) == 1)
+				{
+					char sTankName[MAX_NAME_LENGTH + 1];
+					ST_TankName(client, sTankName);
+					PrintToChatAll("%s %t", ST_PREFIX2, "Flash", sTankName);
+				}
 			}
 		}
 		else
@@ -128,9 +141,25 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client)
+{
+	g_bFlash[client] = false;
+	if (iFlashMessage(client) == 1)
+	{
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Flash2", sTankName);
+	}
+}
+
 stock int iFlashAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iFlashAbility[ST_TankType(client)] : g_iFlashAbility2[ST_TankType(client)];
+}
+
+stock int iFlashMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iFlashMessage[ST_TankType(client)] : g_iFlashMessage2[ST_TankType(client)];
 }
 
 public Action tTimerStopFlash(Handle timer, any userid)
@@ -138,14 +167,14 @@ public Action tTimerStopFlash(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bFlash[iTank] = false;
+		vReset2(iTank);
 		return Plugin_Stop;
 	}
 	if (iFlashAbility(iTank) == 0)
 	{
-		g_bFlash[iTank] = false;
+		vReset2(iTank);
 		return Plugin_Stop;
 	}
-	g_bFlash[iTank] = false;
+	vReset2(iTank);
 	return Plugin_Continue;
 }

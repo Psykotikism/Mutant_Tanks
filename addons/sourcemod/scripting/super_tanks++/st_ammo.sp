@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flAmmoRange[ST_MAXTYPES + 1], g_flAmmoRange2[ST_MAXTYPES + 1];
-int g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAbility2[ST_MAXTYPES + 1], g_iAmmoChance[ST_MAXTYPES + 1], g_iAmmoChance2[ST_MAXTYPES + 1], g_iAmmoCount[ST_MAXTYPES + 1], g_iAmmoCount2[ST_MAXTYPES + 1], g_iAmmoHit[ST_MAXTYPES + 1], g_iAmmoHit2[ST_MAXTYPES + 1], g_iAmmoHitMode[ST_MAXTYPES + 1], g_iAmmoHitMode2[ST_MAXTYPES + 1], g_iAmmoRangeChance[ST_MAXTYPES + 1], g_iAmmoRangeChance2[ST_MAXTYPES + 1];
+int g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAbility2[ST_MAXTYPES + 1], g_iAmmoChance[ST_MAXTYPES + 1], g_iAmmoChance2[ST_MAXTYPES + 1], g_iAmmoCount[ST_MAXTYPES + 1], g_iAmmoCount2[ST_MAXTYPES + 1], g_iAmmoHit[ST_MAXTYPES + 1], g_iAmmoHit2[ST_MAXTYPES + 1], g_iAmmoHitMode[ST_MAXTYPES + 1], g_iAmmoHitMode2[ST_MAXTYPES + 1], g_iAmmoMessage[ST_MAXTYPES + 1], g_iAmmoMessage2[ST_MAXTYPES + 1], g_iAmmoRangeChance[ST_MAXTYPES + 1], g_iAmmoRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -54,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -108,6 +109,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iAmmoAbility[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Enabled", 0)) : (g_iAmmoAbility2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Enabled", g_iAmmoAbility[iIndex]));
 			main ? (g_iAmmoAbility[iIndex] = iSetCellLimit(g_iAmmoAbility[iIndex], 0, 1)) : (g_iAmmoAbility2[iIndex] = iSetCellLimit(g_iAmmoAbility2[iIndex], 0, 1));
+			main ? (g_iAmmoMessage[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Message", 0)) : (g_iAmmoMessage2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Message", g_iAmmoMessage[iIndex]));
+			main ? (g_iAmmoMessage[iIndex] = iSetCellLimit(g_iAmmoMessage[iIndex], 0, 1)) : (g_iAmmoMessage2[iIndex] = iSetCellLimit(g_iAmmoMessage2[iIndex], 0, 1));
 			main ? (g_iAmmoChance[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Chance", 4)) : (g_iAmmoChance2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Chance", g_iAmmoChance[iIndex]));
 			main ? (g_iAmmoChance[iIndex] = iSetCellLimit(g_iAmmoChance[iIndex], 1, 9999999999)) : (g_iAmmoChance2[iIndex] = iSetCellLimit(g_iAmmoChance2[iIndex], 1, 9999999999));
 			main ? (g_iAmmoCount[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Count", 0)) : (g_iAmmoCount2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Count", g_iAmmoCount[iIndex]));
@@ -157,48 +160,55 @@ stock void vAmmoHit(int client, int owner, int chance, int enabled)
 	{
 		char sWeapon[32];
 		int iActiveWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon"),
-			iAmmo = !g_bTankConfig[ST_TankType(owner)] ? g_iAmmoCount[ST_TankType(owner)] : g_iAmmoCount2[ST_TankType(owner)];
+			iAmmoCount = !g_bTankConfig[ST_TankType(owner)] ? g_iAmmoCount[ST_TankType(owner)] : g_iAmmoCount2[ST_TankType(owner)],
+			iAmmoMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iAmmoMessage[ST_TankType(owner)] : g_iAmmoMessage2[ST_TankType(owner)];
 		GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
 		if (bIsValidEntity(iActiveWeapon))
 		{
 			if (strcmp(sWeapon, "weapon_rifle") == 0 || strcmp(sWeapon, "weapon_rifle_desert") == 0 || strcmp(sWeapon, "weapon_rifle_ak47") == 0 || strcmp(sWeapon, "weapon_rifle_sg552") == 0)
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 3);
+				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 3);
 			}
 			else if (strcmp(sWeapon, "weapon_smg") == 0 || strcmp(sWeapon, "weapon_smg_silenced") == 0 || strcmp(sWeapon, "weapon_smg_mp5") == 0)
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 5);
+				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 5);
 			}
 			else if (strcmp(sWeapon, "weapon_pumpshotgun") == 0)
 			{
-				bIsL4D2Game() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 7) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 6);
+				bIsL4D2Game() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 7) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
 			}
 			else if (strcmp(sWeapon, "weapon_shotgun_chrome") == 0)
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 7);
+				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 7);
 			}
 			else if (strcmp(sWeapon, "weapon_autoshotgun") == 0)
 			{
-				bIsL4D2Game() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 8) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 6);
+				bIsL4D2Game() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 8) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
 			}
 			else if (strcmp(sWeapon, "weapon_shotgun_spas") == 0)
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 8);
+				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 8);
 			}
 			else if (strcmp(sWeapon, "weapon_hunting_rifle") == 0)
 			{
-				bIsL4D2Game() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 9) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 2);
+				bIsL4D2Game() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 9) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 2);
 			}
 			else if (strcmp(sWeapon, "weapon_sniper_scout") == 0 || strcmp(sWeapon, "weapon_sniper_military") == 0 || strcmp(sWeapon, "weapon_sniper_awp") == 0)
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 10);
+				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 10);
 			}
 			else if (strcmp(sWeapon, "weapon_grenade_launcher") == 0)
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmo, _, 17);
+				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 17);
 			}
 		}
-		SetEntProp(GetPlayerWeaponSlot(client, 0), Prop_Data, "m_iClip1", iAmmo, 1);
+		SetEntProp(GetPlayerWeaponSlot(client, 0), Prop_Data, "m_iClip1", iAmmoCount, 1);
+		if (iAmmoMessage == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ammo", sTankName, client);
+		}
 	}
 }
 

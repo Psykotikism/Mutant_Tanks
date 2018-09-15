@@ -19,7 +19,7 @@ bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 ConVar g_cvSTMaxIncapCount;
 float g_flCancerRange[ST_MAXTYPES + 1], g_flCancerRange2[ST_MAXTYPES + 1];
-int g_iCancerAbility[ST_MAXTYPES + 1], g_iCancerAbility2[ST_MAXTYPES + 1], g_iCancerChance[ST_MAXTYPES + 1], g_iCancerChance2[ST_MAXTYPES + 1], g_iCancerHit[ST_MAXTYPES + 1], g_iCancerHit2[ST_MAXTYPES + 1], g_iCancerHitMode[ST_MAXTYPES + 1], g_iCancerHitMode2[ST_MAXTYPES + 1], g_iCancerRangeChance[ST_MAXTYPES + 1], g_iCancerRangeChance2[ST_MAXTYPES + 1];
+int g_iCancerAbility[ST_MAXTYPES + 1], g_iCancerAbility2[ST_MAXTYPES + 1], g_iCancerChance[ST_MAXTYPES + 1], g_iCancerChance2[ST_MAXTYPES + 1], g_iCancerHit[ST_MAXTYPES + 1], g_iCancerHit2[ST_MAXTYPES + 1], g_iCancerHitMode[ST_MAXTYPES + 1], g_iCancerHitMode2[ST_MAXTYPES + 1], g_iCancerMessage[ST_MAXTYPES + 1], g_iCancerMessage2[ST_MAXTYPES + 1], g_iCancerRangeChance[ST_MAXTYPES + 1], g_iCancerRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -56,6 +56,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	g_cvSTMaxIncapCount = FindConVar("survivor_max_incapacitated_count");
 	if (g_bLateLoad)
 	{
@@ -113,6 +114,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
 			main ? (g_iCancerAbility[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Enabled", 0)) : (g_iCancerAbility2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Enabled", g_iCancerAbility[iIndex]));
 			main ? (g_iCancerAbility[iIndex] = iSetCellLimit(g_iCancerAbility[iIndex], 0, 1)) : (g_iCancerAbility2[iIndex] = iSetCellLimit(g_iCancerAbility2[iIndex], 0, 1));
+			main ? (g_iCancerMessage[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Message", 0)) : (g_iCancerMessage2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Message", g_iCancerMessage[iIndex]));
+			main ? (g_iCancerMessage[iIndex] = iSetCellLimit(g_iCancerMessage[iIndex], 0, 1)) : (g_iCancerMessage2[iIndex] = iSetCellLimit(g_iCancerMessage2[iIndex], 0, 1));
 			main ? (g_iCancerChance[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Chance", 4)) : (g_iCancerChance2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Chance", g_iCancerChance[iIndex]));
 			main ? (g_iCancerChance[iIndex] = iSetCellLimit(g_iCancerChance[iIndex], 1, 9999999999)) : (g_iCancerChance2[iIndex] = iSetCellLimit(g_iCancerChance2[iIndex], 1, 9999999999));
 			main ? (g_iCancerHit[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Hit", 0)) : (g_iCancerHit2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Hit", g_iCancerHit[iIndex]));
@@ -159,6 +162,7 @@ stock void vCancerHit(int client, int owner, int chance, int enabled)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		char sSet[2][16], sTankColors[28], sRGB[4][4];
+		int iCancerMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iCancerMessage[ST_TankType(owner)] : g_iCancerMessage2[ST_TankType(owner)];
 		sTankColors = !g_bTankConfig[ST_TankType(owner)] ? g_sTankColors[ST_TankType(owner)] : g_sTankColors2[ST_TankType(owner)];
 		TrimString(sTankColors);
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -174,6 +178,12 @@ stock void vCancerHit(int client, int owner, int chance, int enabled)
 		iBlue = iSetCellLimit(iBlue, 0, 255);
 		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
 		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		if (iCancerMessage == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Cancer", sTankName, client);
+		}
 	}
 }
 

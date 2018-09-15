@@ -18,7 +18,7 @@ public Plugin myinfo =
 bool g_bCloneInstalled, g_bLateLoad, g_bShove[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 float g_flShoveDuration[ST_MAXTYPES + 1], g_flShoveDuration2[ST_MAXTYPES + 1], g_flShoveRange[ST_MAXTYPES + 1], g_flShoveRange2[ST_MAXTYPES + 1];
 Handle g_hSDKShovePlayer;
-int g_iShoveAbility[ST_MAXTYPES + 1], g_iShoveAbility2[ST_MAXTYPES + 1], g_iShoveChance[ST_MAXTYPES + 1], g_iShoveChance2[ST_MAXTYPES + 1], g_iShoveHit[ST_MAXTYPES + 1], g_iShoveHit2[ST_MAXTYPES + 1], g_iShoveHitMode[ST_MAXTYPES + 1], g_iShoveHitMode2[ST_MAXTYPES + 1], g_iShoveRangeChance[ST_MAXTYPES + 1], g_iShoveRangeChance2[ST_MAXTYPES + 1];
+int g_iShoveAbility[ST_MAXTYPES + 1], g_iShoveAbility2[ST_MAXTYPES + 1], g_iShoveChance[ST_MAXTYPES + 1], g_iShoveChance2[ST_MAXTYPES + 1], g_iShoveHit[ST_MAXTYPES + 1], g_iShoveHit2[ST_MAXTYPES + 1], g_iShoveHitMode[ST_MAXTYPES + 1], g_iShoveHitMode2[ST_MAXTYPES + 1], g_iShoveMessage[ST_MAXTYPES + 1], g_iShoveMessage2[ST_MAXTYPES + 1], g_iShoveRangeChance[ST_MAXTYPES + 1], g_iShoveRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -55,6 +55,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	StartPrepSDKCall(SDKCall_Player);
 	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnStaggered");
@@ -130,6 +131,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iShoveAbility[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Enabled", 0)) : (g_iShoveAbility2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Enabled", g_iShoveAbility[iIndex]));
 			main ? (g_iShoveAbility[iIndex] = iSetCellLimit(g_iShoveAbility[iIndex], 0, 1)) : (g_iShoveAbility2[iIndex] = iSetCellLimit(g_iShoveAbility2[iIndex], 0, 1));
+			main ? (g_iShoveMessage[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Message", 0)) : (g_iShoveMessage2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Message", g_iShoveMessage[iIndex]));
+			main ? (g_iShoveMessage[iIndex] = iSetCellLimit(g_iShoveMessage[iIndex], 0, 1)) : (g_iShoveMessage2[iIndex] = iSetCellLimit(g_iShoveMessage2[iIndex], 0, 1));
 			main ? (g_iShoveChance[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Chance", 4)) : (g_iShoveChance2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Chance", g_iShoveChance[iIndex]));
 			main ? (g_iShoveChance[iIndex] = iSetCellLimit(g_iShoveChance[iIndex], 1, 9999999999)) : (g_iShoveChance2[iIndex] = iSetCellLimit(g_iShoveChance2[iIndex], 1, 9999999999));
 			main ? (g_flShoveDuration[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Duration", 5.0)) : (g_flShoveDuration2[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Duration", g_flShoveDuration[iIndex]));
@@ -184,6 +187,15 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client, int owner)
+{
+	g_bShove[client] = false;
+	if (iShoveMessage(owner) == 1)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "Shove2", client);
+	}
+}
+
 stock void vShoveHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bShove[client])
@@ -192,6 +204,12 @@ stock void vShoveHit(int client, int owner, int chance, int enabled)
 		DataPack dpShove = new DataPack();
 		CreateDataTimer(1.0, tTimerShove, dpShove, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpShove.WriteCell(GetClientUserId(client)), dpShove.WriteCell(GetClientUserId(owner)), dpShove.WriteCell(enabled), dpShove.WriteFloat(GetEngineTime());
+		if (iShoveMessage(owner) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Shove", sTankName, client);
+		}
 	}
 }
 
@@ -210,6 +228,11 @@ stock int iShoveHitMode(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iShoveHitMode[ST_TankType(client)] : g_iShoveHitMode2[ST_TankType(client)];
 }
 
+stock int iShoveMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iShoveMessage[ST_TankType(client)] : g_iShoveMessage2[ST_TankType(client)];
+}
+
 public Action tTimerShove(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -222,7 +245,7 @@ public Action tTimerShove(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bShove[iSurvivor] = false;
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	int iShoveAbility = pack.ReadCell();
@@ -230,7 +253,7 @@ public Action tTimerShove(Handle timer, DataPack pack)
 		flShoveDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShoveDuration[ST_TankType(iTank)] : g_flShoveDuration2[ST_TankType(iTank)];
 	if (iShoveAbility == 0 || (flTime + flShoveDuration) < GetEngineTime())
 	{
-		g_bShove[iSurvivor] = false;
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	float flOrigin[3];

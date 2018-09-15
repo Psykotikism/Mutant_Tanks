@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bBlind[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flBlindDuration[ST_MAXTYPES + 1], g_flBlindDuration2[ST_MAXTYPES + 1], g_flBlindRange[ST_MAXTYPES + 1], g_flBlindRange2[ST_MAXTYPES + 1];
-int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1], g_iBlindChance[ST_MAXTYPES + 1], g_iBlindChance2[ST_MAXTYPES + 1], g_iBlindHit[ST_MAXTYPES + 1], g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindHitMode[ST_MAXTYPES + 1], g_iBlindHitMode2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1], g_iBlindIntensity2[ST_MAXTYPES + 1], g_iBlindRangeChance[ST_MAXTYPES + 1], g_iBlindRangeChance2[ST_MAXTYPES + 1];
+int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1], g_iBlindChance[ST_MAXTYPES + 1], g_iBlindChance2[ST_MAXTYPES + 1], g_iBlindHit[ST_MAXTYPES + 1], g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindHitMode[ST_MAXTYPES + 1], g_iBlindHitMode2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1], g_iBlindIntensity2[ST_MAXTYPES + 1], g_iBlindMessage[ST_MAXTYPES + 1], g_iBlindMessage2[ST_MAXTYPES + 1], g_iBlindRangeChance[ST_MAXTYPES + 1], g_iBlindRangeChance2[ST_MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -55,6 +55,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	g_umFadeUserMsgId = GetUserMessageId("Fade");
 	if (g_bLateLoad)
 	{
@@ -121,6 +122,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iBlindAbility[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Enabled", 0)) : (g_iBlindAbility2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Enabled", g_iBlindAbility[iIndex]));
 			main ? (g_iBlindAbility[iIndex] = iSetCellLimit(g_iBlindAbility[iIndex], 0, 1)) : (g_iBlindAbility2[iIndex] = iSetCellLimit(g_iBlindAbility2[iIndex], 0, 1));
+			main ? (g_iBlindMessage[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Message", 0)) : (g_iBlindMessage2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Message", g_iBlindMessage[iIndex]));
+			main ? (g_iBlindMessage[iIndex] = iSetCellLimit(g_iBlindMessage[iIndex], 0, 1)) : (g_iBlindMessage2[iIndex] = iSetCellLimit(g_iBlindMessage2[iIndex], 0, 1));
 			main ? (g_iBlindChance[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Chance", 4)) : (g_iBlindChance2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Chance", g_iBlindChance[iIndex]));
 			main ? (g_iBlindChance[iIndex] = iSetCellLimit(g_iBlindChance[iIndex], 1, 9999999999)) : (g_iBlindChance2[iIndex] = iSetCellLimit(g_iBlindChance2[iIndex], 1, 9999999999));
 			main ? (g_flBlindDuration[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Duration", 5.0)) : (g_flBlindDuration2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Duration", g_flBlindDuration[iIndex]));
@@ -185,15 +188,14 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vBlind(int client, int amount)
+stock void vBlind(int client, int owner, int intensity)
 {
-	int iTargets[2], iFlags;
-	iTargets[0] = client;
 	if (bIsSurvivor(client))
 	{
-		amount == 0 ? (iFlags = (0x0001|0x0010)) : (iFlags = (0x0002|0x0008));
-		int iColor[4] = {0, 0, 0, 0};
-		iColor[3] = amount;
+		int iTargets[2], iFlags, iColor[4] = {0, 0, 0, 0};
+		iTargets[0] = client;
+		intensity == 0 ? (iFlags = (0x0001|0x0010)) : (iFlags = (0x0002|0x0008));
+		iColor[3] = intensity;
 		Handle hBlindTarget = StartMessageEx(g_umFadeUserMsgId, iTargets, 1);
 		if (GetUserMessageType() == UM_Protobuf)
 		{
@@ -217,11 +219,17 @@ stock void vBlindHit(int client, int owner, int chance, int enabled)
 	{
 		g_bBlind[client] = true;
 		int iBlindIntensity = !g_bTankConfig[ST_TankType(owner)] ? g_iBlindIntensity[ST_TankType(owner)] : g_iBlindIntensity2[ST_TankType(owner)];
-		vBlind(client, iBlindIntensity);
+		vBlind(client, owner, iBlindIntensity);
 		float flBlindDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flBlindDuration[ST_TankType(owner)] : g_flBlindDuration2[ST_TankType(owner)];
 		DataPack dpStopBlindness = new DataPack();
 		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopBlindness.WriteCell(GetClientUserId(client)), dpStopBlindness.WriteCell(GetClientUserId(owner)), dpStopBlindness.WriteCell(enabled);
+		if (iBlindMessage(owner) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Blind", sTankName, client);
+		}
 	}
 }
 
@@ -249,6 +257,16 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client, int owner)
+{
+	g_bBlind[client] = false;
+	vBlind(client, owner, 0);
+	if (iBlindMessage(owner) == 1)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "Blind2", client);
+	}
+}
+
 stock int iBlindAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
@@ -269,6 +287,11 @@ stock int iBlindHitMode(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindHitMode[ST_TankType(client)] : g_iBlindHitMode2[ST_TankType(client)];
 }
 
+stock int iBlindMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindMessage[ST_TankType(client)] : g_iBlindMessage2[ST_TankType(client)];
+}
+
 public Action tTimerStopBlindness(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -281,18 +304,15 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bBlind[iSurvivor] = false;
-		vBlind(iSurvivor, 0);
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	int iBlindEnabled = pack.ReadCell();
 	if (iBlindEnabled == 0)
 	{
-		g_bBlind[iSurvivor] = false;
-		vBlind(iSurvivor, 0);
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
-	g_bBlind[iSurvivor] = false;
-	vBlind(iSurvivor, 0);
+	vReset2(iSurvivor, iTank);
 	return Plugin_Continue;
 }

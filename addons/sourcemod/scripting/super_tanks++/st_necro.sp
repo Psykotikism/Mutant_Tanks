@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flNecroRange[ST_MAXTYPES + 1], g_flNecroRange2[ST_MAXTYPES + 1];
-int g_iNecroAbility[ST_MAXTYPES + 1], g_iNecroAbility2[ST_MAXTYPES + 1], g_iNecroChance[ST_MAXTYPES + 1], g_iNecroChance2[ST_MAXTYPES + 1];
+int g_iNecroAbility[ST_MAXTYPES + 1], g_iNecroAbility2[ST_MAXTYPES + 1], g_iNecroChance[ST_MAXTYPES + 1], g_iNecroChance2[ST_MAXTYPES + 1], g_iNecroMessage[ST_MAXTYPES + 1], g_iNecroMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,6 +51,11 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
+public void OnPluginStart()
+{
+	LoadTranslations("super_tanks++.phrases");
+}
+
 public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
@@ -64,6 +69,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iNecroAbility[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Enabled", 0)) : (g_iNecroAbility2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Enabled", g_iNecroAbility[iIndex]));
 			main ? (g_iNecroAbility[iIndex] = iSetCellLimit(g_iNecroAbility[iIndex], 0, 1)) : (g_iNecroAbility2[iIndex] = iSetCellLimit(g_iNecroAbility2[iIndex], 0, 1));
+			main ? (g_iNecroMessage[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Message", 0)) : (g_iNecroMessage2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Message", g_iNecroMessage[iIndex]));
+			main ? (g_iNecroMessage[iIndex] = iSetCellLimit(g_iNecroMessage[iIndex], 0, 1)) : (g_iNecroMessage2[iIndex] = iSetCellLimit(g_iNecroMessage2[iIndex], 0, 1));
 			main ? (g_iNecroChance[iIndex] = kvSuperTanks.GetNum("Necro Ability/Necro Chance", 4)) : (g_iNecroChance2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Necro Chance", g_iNecroChance[iIndex]));
 			main ? (g_iNecroChance[iIndex] = iSetCellLimit(g_iNecroChance[iIndex], 1, 9999999999)) : (g_iNecroChance2[iIndex] = iSetCellLimit(g_iNecroChance2[iIndex], 1, 9999999999));
 			main ? (g_flNecroRange[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Range", 500.0)) : (g_flNecroRange2[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Range", g_flNecroRange[iIndex]));
@@ -116,6 +123,7 @@ public void ST_Event(Event event, const char[] name)
 
 stock void vNecro(int client, float pos[3], const char[] type)
 {
+	int iNecroMessage = !g_bTankConfig[ST_TankType(client)] ? g_iNecroMessage[ST_TankType(client)] : g_iNecroMessage2[ST_TankType(client)];
 	bool bExists[MAXPLAYERS + 1];
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{
@@ -138,5 +146,11 @@ stock void vNecro(int client, float pos[3], const char[] type)
 	if (iInfected > 0)
 	{
 		TeleportEntity(iInfected, pos, NULL_VECTOR, NULL_VECTOR);
+		if (iNecroMessage == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Necro", sTankName);
+		}
 	}
 }

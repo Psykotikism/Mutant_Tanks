@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1], g_bVision[MAXPLAYERS + 1];
 float g_flVisionDuration[ST_MAXTYPES + 1], g_flVisionDuration2[ST_MAXTYPES + 1], g_flVisionRange[ST_MAXTYPES + 1], g_flVisionRange2[ST_MAXTYPES + 1];
-int g_iVisionAbility[ST_MAXTYPES + 1], g_iVisionAbility2[ST_MAXTYPES + 1], g_iVisionChance[ST_MAXTYPES + 1], g_iVisionChance2[ST_MAXTYPES + 1], g_iVisionFOV[ST_MAXTYPES + 1], g_iVisionFOV2[ST_MAXTYPES + 1], g_iVisionHit[ST_MAXTYPES + 1], g_iVisionHit2[ST_MAXTYPES + 1], g_iVisionHitMode[ST_MAXTYPES + 1], g_iVisionHitMode2[ST_MAXTYPES + 1], g_iVisionRangeChance[ST_MAXTYPES + 1], g_iVisionRangeChance2[ST_MAXTYPES + 1];
+int g_iVisionAbility[ST_MAXTYPES + 1], g_iVisionAbility2[ST_MAXTYPES + 1], g_iVisionChance[ST_MAXTYPES + 1], g_iVisionChance2[ST_MAXTYPES + 1], g_iVisionFOV[ST_MAXTYPES + 1], g_iVisionFOV2[ST_MAXTYPES + 1], g_iVisionHit[ST_MAXTYPES + 1], g_iVisionHit2[ST_MAXTYPES + 1], g_iVisionHitMode[ST_MAXTYPES + 1], g_iVisionHitMode2[ST_MAXTYPES + 1], g_iVisionMessage[ST_MAXTYPES + 1], g_iVisionMessage2[ST_MAXTYPES + 1], g_iVisionRangeChance[ST_MAXTYPES + 1], g_iVisionRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -54,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -119,6 +120,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iVisionAbility[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Enabled", 0)) : (g_iVisionAbility2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Enabled", g_iVisionAbility[iIndex]));
 			main ? (g_iVisionAbility[iIndex] = iSetCellLimit(g_iVisionAbility[iIndex], 0, 1)) : (g_iVisionAbility2[iIndex] = iSetCellLimit(g_iVisionAbility2[iIndex], 0, 1));
+			main ? (g_iVisionMessage[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Message", 0)) : (g_iVisionMessage2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Message", g_iVisionMessage[iIndex]));
+			main ? (g_iVisionMessage[iIndex] = iSetCellLimit(g_iVisionMessage[iIndex], 0, 1)) : (g_iVisionMessage2[iIndex] = iSetCellLimit(g_iVisionMessage2[iIndex], 0, 1));
 			main ? (g_iVisionChance[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Chance", 4)) : (g_iVisionChance2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Chance", g_iVisionChance[iIndex]));
 			main ? (g_iVisionChance[iIndex] = iSetCellLimit(g_iVisionChance[iIndex], 1, 9999999999)) : (g_iVisionChance2[iIndex] = iSetCellLimit(g_iVisionChance2[iIndex], 1, 9999999999));
 			main ? (g_flVisionDuration[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", 5.0)) : (g_flVisionDuration2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", g_flVisionDuration[iIndex]));
@@ -175,6 +178,20 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client, int owner)
+{
+	g_bVision[client] = false;
+	if (bIsSurvivor(client))
+	{
+		SetEntProp(client, Prop_Send, "m_iFOV", 90);
+		SetEntProp(client, Prop_Send, "m_iDefaultFOV", 90);
+	}
+	if (iVisionMessage(owner) == 1)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "Vision2", client, 90);
+	}
+}
+
 stock void vVisionHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bVision[client])
@@ -183,12 +200,23 @@ stock void vVisionHit(int client, int owner, int chance, int enabled)
 		DataPack dpVision = new DataPack();
 		CreateDataTimer(0.1, tTimerVision, dpVision, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpVision.WriteCell(GetClientUserId(client)), dpVision.WriteCell(GetClientUserId(owner)), dpVision.WriteCell(enabled), dpVision.WriteFloat(GetEngineTime());
+		if (iVisionMessage(owner) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(owner, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Vision", sTankName, client, iVisionFOV(owner));
+		}
 	}
 }
 
 stock int iVisionChance(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iVisionChance[ST_TankType(client)] : g_iVisionChance2[ST_TankType(client)];
+}
+
+stock int iVisionFOV(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iVisionFOV[ST_TankType(client)] : g_iVisionFOV2[ST_TankType(client)];
 }
 
 stock int iVisionHit(int client)
@@ -199,6 +227,11 @@ stock int iVisionHit(int client)
 stock int iVisionHitMode(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iVisionHitMode[ST_TankType(client)] : g_iVisionHitMode2[ST_TankType(client)];
+}
+
+stock int iVisionMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iVisionMessage[ST_TankType(client)] : g_iVisionMessage2[ST_TankType(client)];
 }
 
 public Action tTimerVision(Handle timer, DataPack pack)
@@ -213,9 +246,7 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bVision[iSurvivor] = false;
-		SetEntProp(iSurvivor, Prop_Send, "m_iFOV", 90);
-		SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", 90);
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	int iVisionAbility = pack.ReadCell();
@@ -223,13 +254,10 @@ public Action tTimerVision(Handle timer, DataPack pack)
 		flVisionDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flVisionDuration[ST_TankType(iTank)] : g_flVisionDuration2[ST_TankType(iTank)];
 	if (iVisionAbility == 0 || (flTime + flVisionDuration) < GetEngineTime())
 	{
-		g_bVision[iSurvivor] = false;
-		SetEntProp(iSurvivor, Prop_Send, "m_iFOV", 90);
-		SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", 90);
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
-	int iVisionFov = !g_bTankConfig[ST_TankType(iTank)] ? g_iVisionFOV[ST_TankType(iTank)] : g_iVisionFOV2[ST_TankType(iTank)];
-	SetEntProp(iSurvivor, Prop_Send, "m_iFOV", iVisionFov);
-	SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", iVisionFov);
+	SetEntProp(iSurvivor, Prop_Send, "m_iFOV", iVisionFOV(iTank));
+	SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", iVisionFOV(iTank));
 	return Plugin_Continue;
 }

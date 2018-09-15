@@ -16,9 +16,8 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bAbsorb[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-float g_flAbsorbBulletDamage[ST_MAXTYPES + 1], g_flAbsorbBulletDamage2[ST_MAXTYPES + 1], g_flAbsorbDuration[ST_MAXTYPES + 1], g_flAbsorbDuration2[ST_MAXTYPES + 1],g_flAbsorbExplosiveDamage[ST_MAXTYPES + 1],
-	g_flAbsorbExplosiveDamage2[ST_MAXTYPES + 1], g_flAbsorbFireDamage[ST_MAXTYPES + 1], g_flAbsorbFireDamage2[ST_MAXTYPES + 1], g_flAbsorbMeleeDamage[ST_MAXTYPES + 1], g_flAbsorbMeleeDamage2[ST_MAXTYPES + 1];
-int g_iAbsorbAbility[ST_MAXTYPES + 1], g_iAbsorbAbility2[ST_MAXTYPES + 1], g_iAbsorbChance[ST_MAXTYPES + 1], g_iAbsorbChance2[ST_MAXTYPES + 1];
+float g_flAbsorbBulletDamage[ST_MAXTYPES + 1], g_flAbsorbBulletDamage2[ST_MAXTYPES + 1], g_flAbsorbDuration[ST_MAXTYPES + 1], g_flAbsorbDuration2[ST_MAXTYPES + 1],g_flAbsorbExplosiveDamage[ST_MAXTYPES + 1], g_flAbsorbExplosiveDamage2[ST_MAXTYPES + 1], g_flAbsorbFireDamage[ST_MAXTYPES + 1], g_flAbsorbFireDamage2[ST_MAXTYPES + 1], g_flAbsorbMeleeDamage[ST_MAXTYPES + 1], g_flAbsorbMeleeDamage2[ST_MAXTYPES + 1];
+int g_iAbsorbAbility[ST_MAXTYPES + 1], g_iAbsorbAbility2[ST_MAXTYPES + 1], g_iAbsorbChance[ST_MAXTYPES + 1], g_iAbsorbChance2[ST_MAXTYPES + 1], g_iAbsorbMessage[ST_MAXTYPES + 1], g_iAbsorbMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -55,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -120,6 +120,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iAbsorbAbility[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Enabled", 0)) : (g_iAbsorbAbility2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Enabled", g_iAbsorbAbility[iIndex]));
 			main ? (g_iAbsorbAbility[iIndex] = iSetCellLimit(g_iAbsorbAbility[iIndex], 0, 1)) : (g_iAbsorbAbility2[iIndex] = iSetCellLimit(g_iAbsorbAbility2[iIndex], 0, 1));
+			main ? (g_iAbsorbMessage[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Message", 0)) : (g_iAbsorbMessage2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Message", g_iAbsorbMessage[iIndex]));
+			main ? (g_iAbsorbMessage[iIndex] = iSetCellLimit(g_iAbsorbMessage[iIndex], 0, 1)) : (g_iAbsorbMessage2[iIndex] = iSetCellLimit(g_iAbsorbMessage2[iIndex], 0, 1));
 			main ? (g_flAbsorbBulletDamage[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Bullet Damage", 20.0)) : (g_flAbsorbBulletDamage2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Bullet Damage", g_flAbsorbBulletDamage[iIndex]));
 			main ? (g_flAbsorbBulletDamage[iIndex] = flSetFloatLimit(g_flAbsorbBulletDamage[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbBulletDamage2[iIndex] = flSetFloatLimit(g_flAbsorbBulletDamage2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iAbsorbChance[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Absorb Chance", 4)) : (g_iAbsorbChance2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Absorb Chance", g_iAbsorbChance[iIndex]));
@@ -158,6 +160,12 @@ public void ST_Ability(int client)
 		g_bAbsorb[client] = true;
 		float flAbsorbDuration = !g_bTankConfig[ST_TankType(client)] ? g_flAbsorbDuration[ST_TankType(client)] : g_flAbsorbDuration2[ST_TankType(client)];
 		CreateTimer(flAbsorbDuration, tTimerStopAbsorb, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		if (iAbsorbMessage(client) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Absorb", sTankName);
+		}
 	}
 }
 
@@ -172,9 +180,25 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client)
+{
+	g_bAbsorb[client] = false;
+	if (iAbsorbMessage(client) == 1)
+	{
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(client, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Absorb2", sTankName);
+	}
+}
+
 stock int iAbsorbAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbAbility[ST_TankType(client)] : g_iAbsorbAbility2[ST_TankType(client)];
+}
+
+stock int iAbsorbMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbMessage[ST_TankType(client)] : g_iAbsorbMessage2[ST_TankType(client)];
 }
 
 public Action tTimerStopAbsorb(Handle timer, any userid)
@@ -182,14 +206,14 @@ public Action tTimerStopAbsorb(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bAbsorb[iTank] = false;
+		vReset2(iTank);
 		return Plugin_Stop;
 	}
 	if (iAbsorbAbility(iTank) == 0)
 	{
-		g_bAbsorb[iTank] = false;
+		vReset2(iTank);
 		return Plugin_Stop;
 	}
-	g_bAbsorb[iTank] = false;
+	vReset2(iTank);
 	return Plugin_Continue;
 }
