@@ -1,5 +1,25 @@
 # Changelog
 
+## Version 8.41 (TBA)
+
+Bug fixes:
+
+1. Fixed some abilities not accepting any 6+ digit values for damage settings.
+
+Changes:
+
+1. Removed the "[ST++]" prefix from the Super Tank health display.
+2. Added a message for each ability. (Each message can be configured in the translation file.)
+3. Added an "Ability Message" setting to toggle the messages for each ability.
+4. Added a range feature for some abilities.
+5. Removed the ST_Spawn(int client) forward. (Use ST_Ability(int client) instead for more flexibility.)
+
+Files:
+
+1. Updated config file with the new settings.
+2. Updated include file to remove the ST_Spawn(int client) forward.
+3. Updated translation file with the new messages.
+
 ## Version 8.40 (September 11, 2018)
 
 Bug fixes:

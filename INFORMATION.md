@@ -405,6 +405,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The bullet damage received by the Super Tank is divided by this value.
 			// Note: Damage = Bullet damage/Absorb bullet damage
 			// Example: Damage = 30.0/20.0 (1.5)
@@ -481,6 +487,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -550,6 +562,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -615,6 +633,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -688,6 +712,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -754,6 +784,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -827,6 +863,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -880,6 +922,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The amount of clones the Super Tank can spawn.
 			// --
 			// Minimum: 1
@@ -924,6 +972,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -978,6 +1032,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -1044,6 +1104,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -1129,6 +1195,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -1206,6 +1278,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -1266,6 +1344,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -1311,6 +1395,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -1364,6 +1454,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The bullet damage received by the Super Tank is multiplied by this value.
 			// Note: Damage = Bullet damage x Fragile bullet damage
@@ -1445,6 +1541,12 @@
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the abilities activate/deactivate.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -1515,6 +1617,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -1555,6 +1663,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -1622,8 +1736,11 @@
 	{
 		// The Super Tank gains health from other nearby infected and sets survivors to black and white with temporary health.
 		// "Ability Enabled" - Any nearby infected can give the Tank some health.
+		// - "Heal Absorb Range"
 		// - "Heal Interval"
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor can go black and white and have temporary health.
 		// - "Heal Range"
+		// - "Heal Range Chance"
 		// "Heal Hit" - When a survivor is hit by a Tank's claw or rock, the survivor can go black and white and have temporary health.
 		// - "Heal Chance"
 		// - "Heal Hit Mode"
@@ -1634,8 +1751,22 @@
 			// Note: This setting does not affect the "Heal Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, the Super Tank can set survivors to black and white with temporary health.
+			// 2: ON, the Super Tank can absorb health from nearby infected.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activate/deactivate.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
+			// The distance between an infected and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Heal Absorb Range"				"500.0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -1663,11 +1794,17 @@
 			// Maximum: 9999999999.0
 			"Heal Interval"					"5.0"
 
-			// The distance between an infected and the Super Tank needed to trigger the ability.
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
-			"Heal Range"					"500.0"
+			"Heal Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Heal Range Chance"				"16"
 
 			// The Super Tank receives this much health from nearby common infected.
 			// --
@@ -1723,6 +1860,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -1796,6 +1939,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -1868,6 +2017,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -1934,6 +2089,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -1992,7 +2153,13 @@
 			// --
 			// 0: OFF
 			// 1: ON
-			"Ability Enabled"				"50.0"
+			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -2052,6 +2219,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -2089,6 +2262,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank jumps this high off a surface.
 			// --
@@ -2129,6 +2308,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -2189,6 +2374,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -2255,6 +2446,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -2318,6 +2515,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -2361,6 +2564,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The amount of minions the Super Tank can spawn.
 			// --
@@ -2408,6 +2617,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -2447,6 +2662,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -2499,6 +2720,9 @@
 		// The Super Tank starts panic events.
 		// "Ability Enabled" - The Tank starts a panic event periodically.
 		// - "Panic Interval"
+		// "Ability Enabled" - When a survivor is within range of the Tank, a panic event starts.
+		// - "Panic Range"
+		// - "Panic Range Chance"
 		// "Panic Hit" - When a survivor is hit by a Tank's claw or rock, a panic event starts.
 		// - "Panic Chance"
 		// - "Panic Hit Mode"
@@ -2506,11 +2730,19 @@
 		"Panic Ability"
 		{
 			// Enable this ability.
-			// Note: This setting does not affect the "Panic Hit" setting.
+			// Note: This setting does not affect the "Ghost Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON, the Super Tank can start panic events when a survivor is nearby.
+			// 2: ON, the Super Tank can start panic events periodically.
+			// 3: ON, the Super Tank can do both.
+			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activate/deactivate.
 			// --
 			// 0: OFF
 			// 1: ON
-			"Ability Enabled"				"0"
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -2537,6 +2769,18 @@
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Panic Interval"				"5.0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Panic Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Panic Range Chance"			"16"
 		}
 	}
 }
@@ -2565,6 +2809,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The amount of pimp slaps the Super Tank can give to survivors.
 			// --
@@ -2638,6 +2888,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -2691,6 +2947,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank's speed boost value when on fire.
 			// --
 			// Minimum: 0.1
@@ -2730,6 +2992,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -2790,6 +3058,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank regenerates this much health each time.
 			// --
 			// Minimum: -65535
@@ -2834,6 +3108,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank respawns up to this many times.
 			// Note: This setting only applies if the "Respawn Random" setting is set to 0.
@@ -2881,6 +3161,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -2945,6 +3231,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -3001,6 +3293,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -3061,6 +3359,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -3120,6 +3424,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// This is the Super Tank's shield's color.
 			// --
 			// Minimum value for each color: 0
@@ -3163,6 +3473,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -3230,6 +3546,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -3290,6 +3612,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -3343,6 +3671,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -3381,6 +3715,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -3433,6 +3773,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -3501,6 +3847,12 @@
 			// 3: ON, the Super Tank throws itself.
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activate/deactivate.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank can throw these cars.
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chance of being chosen.
@@ -3545,6 +3897,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -3593,6 +3951,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -3665,6 +4029,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -3723,6 +4093,9 @@
 		// The Super Tank warps to survivors and warps survivors back to teammates.
 		// "Ability Enabled" - The Tank warps to a random survivor.
 		// - "Warp Interval"
+		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is warped to a random teammate.
+		// - "Warp Range"
+		// - "Warp Range Chance"
 		// "Warp Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is warped to a random teammate.
 		// - "Warp Chance"
 		// - "Warp Hit Mode"
@@ -3733,8 +4106,16 @@
 			// Note: This setting does not affect the "Warp Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, the Super Tank can warp a survivor to a random teammate.
+			// 2: ON, the Super Tank can warp itself to a survivor.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activate/deactivate.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -3767,6 +4148,18 @@
 			// 0: The Super Tank warps to a random survivor.
 			// 1: The Super Tank switches places with a random survivor.
 			"Warp Mode"						"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Warp Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Warp Range Chance"				"16"
 		}
 	}
 }
@@ -3789,6 +4182,12 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
 			// The Super Tank converts this many common infected into Witch minions at once.
 			// --
 			// Minimum: 1
@@ -3801,7 +4200,7 @@
 			// Maximum: 9999999999
 			"Witch Minion Damage"			"5"
 
-			// The distance between a common infected and the Super Tank needed to convert the common infected into a Witch minion.
+			// The distance between a common infected and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
@@ -3827,6 +4226,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
 
 			// The Super Tank spawns this many common infected at once.
 			// --
