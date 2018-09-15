@@ -718,6 +718,14 @@ native void ST_SpawnTank(int client, int type);
  */
 native bool ST_TankAllowed(int client);
 
+/* Returns the custom name given to a Tank.
+ *
+ * @param client		Client index of the Tank.
+ * @param buffer		Buffer to store the custom
+ *							name in.
+ */
+native void ST_TankName(int client, char[] buffer);
+
 /* Returns the Super Tank type of the Tank.
  *
  * @param client		Client index of the Tank.
@@ -806,6 +814,8 @@ Examples:
 **mi123645** - For the [4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409) plugin.
 
 **Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
+
+**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?p=1694338) plugin.
 
 **ztar** - For the [Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
 
