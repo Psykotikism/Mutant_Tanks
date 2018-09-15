@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flKamikazeRange[ST_MAXTYPES + 1], g_flKamikazeRange2[ST_MAXTYPES + 1];
-int g_iKamikazeAbility[ST_MAXTYPES + 1], g_iKamikazeAbility2[ST_MAXTYPES + 1], g_iKamikazeChance[ST_MAXTYPES + 1], g_iKamikazeChance2[ST_MAXTYPES + 1], g_iKamikazeHit[ST_MAXTYPES + 1], g_iKamikazeHit2[ST_MAXTYPES + 1], g_iKamikazeHitMode[ST_MAXTYPES + 1], g_iKamikazeHitMode2[ST_MAXTYPES + 1], g_iKamikazeRangeChance[ST_MAXTYPES + 1], g_iKamikazeRangeChance2[ST_MAXTYPES + 1];
+int g_iKamikazeAbility[ST_MAXTYPES + 1], g_iKamikazeAbility2[ST_MAXTYPES + 1], g_iKamikazeChance[ST_MAXTYPES + 1], g_iKamikazeChance2[ST_MAXTYPES + 1], g_iKamikazeHit[ST_MAXTYPES + 1], g_iKamikazeHit2[ST_MAXTYPES + 1], g_iKamikazeHitMode[ST_MAXTYPES + 1], g_iKamikazeHitMode2[ST_MAXTYPES + 1], g_iKamikazeMessage[ST_MAXTYPES + 1], g_iKamikazeMessage2[ST_MAXTYPES + 1], g_iKamikazeRangeChance[ST_MAXTYPES + 1], g_iKamikazeRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -54,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -115,6 +116,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iKamikazeAbility[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Enabled", 0)) : (g_iKamikazeAbility2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Enabled", g_iKamikazeAbility[iIndex]));
 			main ? (g_iKamikazeAbility[iIndex] = iSetCellLimit(g_iKamikazeAbility[iIndex], 0, 1)) : (g_iKamikazeAbility2[iIndex] = iSetCellLimit(g_iKamikazeAbility2[iIndex], 0, 1));
+			main ? (g_iKamikazeMessage[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Message", 0)) : (g_iKamikazeMessage2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Message", g_iKamikazeMessage[iIndex]));
+			main ? (g_iKamikazeMessage[iIndex] = iSetCellLimit(g_iKamikazeMessage[iIndex], 0, 1)) : (g_iKamikazeMessage2[iIndex] = iSetCellLimit(g_iKamikazeMessage2[iIndex], 0, 1));
 			main ? (g_iKamikazeChance[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Chance", 4)) : (g_iKamikazeChance2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Chance", g_iKamikazeChance[iIndex]));
 			main ? (g_iKamikazeChance[iIndex] = iSetCellLimit(g_iKamikazeChance[iIndex], 1, 9999999999)) : (g_iKamikazeChance2[iIndex] = iSetCellLimit(g_iKamikazeChance2[iIndex], 1, 9999999999));
 			main ? (g_iKamikazeHit[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit", 0)) : (g_iKamikazeHit2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit", g_iKamikazeHit[iIndex]));
@@ -178,6 +181,7 @@ public void ST_Ability(int client)
 
 stock void vKamikazeHit(int client, int owner, int chance, int enabled)
 {
+	int iKamikazeMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iKamikazeMessage[ST_TankType(owner)] : g_iKamikazeMessage2[ST_TankType(owner)];
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		EmitSoundToAll(SOUND_SMASH, client);
@@ -185,6 +189,10 @@ stock void vKamikazeHit(int client, int owner, int chance, int enabled)
 		ForcePlayerSuicide(client);
 		vAttachParticle(owner, PARTICLE_BLOOD, 0.1, 0.0);
 		ForcePlayerSuicide(owner);
+		if (iKamikazeMessage == 1)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Kamikaze", owner, client);
+		}
 	}
 }
 

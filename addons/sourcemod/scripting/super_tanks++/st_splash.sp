@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bSplash[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 float g_flSplashInterval[ST_MAXTYPES + 1], g_flSplashInterval2[ST_MAXTYPES + 1], g_flSplashRange[ST_MAXTYPES + 1], g_flSplashRange2[ST_MAXTYPES + 1];
-int g_iSplashAbility[ST_MAXTYPES + 1], g_iSplashAbility2[ST_MAXTYPES + 1], g_iSplashChance[ST_MAXTYPES + 1], g_iSplashChance2[ST_MAXTYPES + 1], g_iSplashDamage[ST_MAXTYPES + 1], g_iSplashDamage2[ST_MAXTYPES + 1];
+int g_iSplashAbility[ST_MAXTYPES + 1], g_iSplashAbility2[ST_MAXTYPES + 1], g_iSplashChance[ST_MAXTYPES + 1], g_iSplashChance2[ST_MAXTYPES + 1], g_iSplashDamage[ST_MAXTYPES + 1], g_iSplashDamage2[ST_MAXTYPES + 1], g_iSplashMessage[ST_MAXTYPES + 1], g_iSplashMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,6 +51,11 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
+public void OnPluginStart()
+{
+	LoadTranslations("super_tanks++.phrases");
+}
+
 public void OnMapStart()
 {
 	vReset();
@@ -79,6 +84,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iSplashAbility[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Enabled", 0)) : (g_iSplashAbility2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Enabled", g_iSplashAbility[iIndex]));
 			main ? (g_iSplashAbility[iIndex] = iSetCellLimit(g_iSplashAbility[iIndex], 0, 1)) : (g_iSplashAbility2[iIndex] = iSetCellLimit(g_iSplashAbility2[iIndex], 0, 1));
+			main ? (g_iSplashMessage[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Message", 0)) : (g_iSplashMessage2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Message", g_iSplashMessage[iIndex]));
+			main ? (g_iSplashMessage[iIndex] = iSetCellLimit(g_iSplashMessage[iIndex], 0, 1)) : (g_iSplashMessage2[iIndex] = iSetCellLimit(g_iSplashMessage2[iIndex], 0, 1));
 			main ? (g_iSplashChance[iIndex] = kvSuperTanks.GetNum("Splash Ability/Splash Chance", 4)) : (g_iSplashChance2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Splash Chance", g_iSplashChance[iIndex]));
 			main ? (g_iSplashChance[iIndex] = iSetCellLimit(g_iSplashChance[iIndex], 1, 9999999999)) : (g_iSplashChance2[iIndex] = iSetCellLimit(g_iSplashChance2[iIndex], 1, 9999999999));
 			main ? (g_iSplashDamage[iIndex] = kvSuperTanks.GetNum("Splash Ability/Splash Damage", 5)) : (g_iSplashDamage2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Splash Damage", g_iSplashDamage[iIndex]));
@@ -112,6 +119,10 @@ public void ST_Ability(int client)
 		g_bSplash[client] = true;
 		float flSplashInterval = !g_bTankConfig[ST_TankType(client)] ? g_flSplashInterval[ST_TankType(client)] : g_flSplashInterval2[ST_TankType(client)];
 		CreateTimer(flSplashInterval, tTimerSplash, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		if (iSplashMessage(client) == 1)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Splash", client);
+		}
 	}
 }
 
@@ -126,6 +137,15 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client)
+{
+	g_bSplash[client] = false;
+	if (iSplashMessage(client) == 1)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "Splash2", client);
+	}
+}
+
 stock int iSplashAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iSplashAbility[ST_TankType(client)] : g_iSplashAbility2[ST_TankType(client)];
@@ -136,17 +156,22 @@ stock int iSplashChance(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iSplashChance[ST_TankType(client)] : g_iSplashChance2[ST_TankType(client)];
 }
 
+stock int iSplashMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iSplashMessage[ST_TankType(client)] : g_iSplashMessage2[ST_TankType(client)];
+}
+
 public Action tTimerSplash(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bSplash[iTank] = false;
+		vReset2(iTank);
 		return Plugin_Stop;
 	}
 	if (iSplashAbility(iTank) == 0)
 	{
-		g_bSplash[iTank] = false;
+		vReset2(iTank);
 		return Plugin_Stop;
 	}
 	float flSplashRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flSplashRange[ST_TankType(iTank)] : g_flSplashRange2[ST_TankType(iTank)],
@@ -161,7 +186,7 @@ public Action tTimerSplash(Handle timer, any userid)
 			float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 			if (flDistance <= flSplashRange)
 			{
-				char sDamage[6];
+				char sDamage[11];
 				int iSplashDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSplashDamage[ST_TankType(iTank)] : g_iSplashDamage2[ST_TankType(iTank)];
 				IntToString(iSplashDamage, sDamage, sizeof(sDamage));
 				int iPointHurt = CreateEntityByName("point_hurt");

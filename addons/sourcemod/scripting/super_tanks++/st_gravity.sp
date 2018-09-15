@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bGravity[MAXPLAYERS + 1], g_bGravity2[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flGravityDuration[ST_MAXTYPES + 1], g_flGravityDuration2[ST_MAXTYPES + 1], g_flGravityForce[ST_MAXTYPES + 1], g_flGravityForce2[ST_MAXTYPES + 1], g_flGravityRange[ST_MAXTYPES + 1], g_flGravityRange2[ST_MAXTYPES + 1], g_flGravityValue[ST_MAXTYPES + 1], g_flGravityValue2[ST_MAXTYPES + 1];
-int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_iGravityChance[ST_MAXTYPES + 1], g_iGravityChance2[ST_MAXTYPES + 1], g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHit2[ST_MAXTYPES + 1], g_iGravityHitMode[ST_MAXTYPES + 1], g_iGravityHitMode2[ST_MAXTYPES + 1], g_iGravityRangeChance[ST_MAXTYPES + 1], g_iGravityRangeChance2[ST_MAXTYPES + 1];
+int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_iGravityChance[ST_MAXTYPES + 1], g_iGravityChance2[ST_MAXTYPES + 1], g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHit2[ST_MAXTYPES + 1], g_iGravityHitMode[ST_MAXTYPES + 1], g_iGravityHitMode2[ST_MAXTYPES + 1], g_iGravityMessage[ST_MAXTYPES + 1], g_iGravityMessage2[ST_MAXTYPES + 1], g_iGravityRangeChance[ST_MAXTYPES + 1], g_iGravityRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -54,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -120,6 +121,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iGravityAbility[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Enabled", 0)) : (g_iGravityAbility2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Enabled", g_iGravityAbility[iIndex]));
 			main ? (g_iGravityAbility[iIndex] = iSetCellLimit(g_iGravityAbility[iIndex], 0, 1)) : (g_iGravityAbility2[iIndex] = iSetCellLimit(g_iGravityAbility2[iIndex], 0, 1));
+			main ? (g_iGravityMessage[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Message", 0)) : (g_iGravityMessage2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Message", g_iGravityMessage[iIndex]));
+			main ? (g_iGravityMessage[iIndex] = iSetCellLimit(g_iGravityMessage[iIndex], 0, 1)) : (g_iGravityMessage2[iIndex] = iSetCellLimit(g_iGravityMessage2[iIndex], 0, 1));
 			main ? (g_iGravityChance[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Chance", 4)) : (g_iGravityChance2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Chance", g_iGravityChance[iIndex]));
 			main ? (g_iGravityChance[iIndex] = iSetCellLimit(g_iGravityChance[iIndex], 1, 9999999999)) : (g_iGravityChance2[iIndex] = iSetCellLimit(g_iGravityChance2[iIndex], 1, 9999999999));
 			main ? (g_flGravityDuration[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", 5.0)) : (g_flGravityDuration2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", g_flGravityDuration[iIndex]));
@@ -222,6 +225,10 @@ stock void vGravityHit(int client, int owner, int chance, int enabled)
 		DataPack dpStopGravity = new DataPack();
 		CreateDataTimer(flGravityDuration, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopGravity.WriteCell(GetClientUserId(client)), dpStopGravity.WriteCell(GetClientUserId(owner)), dpStopGravity.WriteCell(enabled);
+		if (iGravityMessage(owner) == 1)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Gravity", owner, client, flGravityValue);
+		}
 	}
 }
 
@@ -267,6 +274,19 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client, int owner)
+{
+	g_bGravity2[client] = false;
+	if (bIsSurvivor(client))
+	{
+		SetEntityGravity(client, 1.0);
+	}
+	if (iGravityMessage(owner) == 1)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "Gravity2", client);
+	}
+}
+
 stock int iGravityAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
@@ -280,6 +300,11 @@ stock int iGravityChance(int client)
 stock int iGravityHit(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iGravityHit[ST_TankType(client)] : g_iGravityHit2[ST_TankType(client)];
+}
+
+stock int iGravityMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iGravityMessage[ST_TankType(client)] : g_iGravityMessage2[ST_TankType(client)];
 }
 
 stock int iGravityHitMode(int client)
@@ -299,18 +324,15 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bGravity2[iSurvivor] = false;
-		SetEntityGravity(iSurvivor, 1.0);
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	int iGravityEnabled = pack.ReadCell();
 	if (iGravityEnabled == 0)
 	{
-		g_bGravity2[iSurvivor] = false;
-		SetEntityGravity(iSurvivor, 1.0);
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
-	g_bGravity2[iSurvivor] = false;
-	SetEntityGravity(iSurvivor, 1.0);
+	vReset2(iSurvivor, iTank);
 	return Plugin_Continue;
 }

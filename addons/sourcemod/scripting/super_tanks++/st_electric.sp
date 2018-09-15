@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flElectricDuration[ST_MAXTYPES + 1], g_flElectricDuration2[ST_MAXTYPES + 1], g_flElectricInterval[ST_MAXTYPES + 1], g_flElectricInterval2[ST_MAXTYPES + 1], g_flElectricRange[ST_MAXTYPES + 1], g_flElectricRange2[ST_MAXTYPES + 1], g_flElectricSpeed[ST_MAXTYPES + 1], g_flElectricSpeed2[ST_MAXTYPES + 1];
-int g_iElectricAbility[ST_MAXTYPES + 1], g_iElectricAbility2[ST_MAXTYPES + 1], g_iElectricChance[ST_MAXTYPES + 1], g_iElectricChance2[ST_MAXTYPES + 1], g_iElectricDamage[ST_MAXTYPES + 1], g_iElectricDamage2[ST_MAXTYPES + 1], g_iElectricHit[ST_MAXTYPES + 1], g_iElectricHit2[ST_MAXTYPES + 1], g_iElectricHitMode[ST_MAXTYPES + 1], g_iElectricHitMode2[ST_MAXTYPES + 1], g_iElectricRangeChance[ST_MAXTYPES + 1], g_iElectricRangeChance2[ST_MAXTYPES + 1];
+int g_iElectricAbility[ST_MAXTYPES + 1], g_iElectricAbility2[ST_MAXTYPES + 1], g_iElectricChance[ST_MAXTYPES + 1], g_iElectricChance2[ST_MAXTYPES + 1], g_iElectricDamage[ST_MAXTYPES + 1], g_iElectricDamage2[ST_MAXTYPES + 1], g_iElectricHit[ST_MAXTYPES + 1], g_iElectricHit2[ST_MAXTYPES + 1], g_iElectricHitMode[ST_MAXTYPES + 1], g_iElectricHitMode2[ST_MAXTYPES + 1], g_iElectricMessage[ST_MAXTYPES + 1], g_iElectricMessage2[ST_MAXTYPES + 1], g_iElectricRangeChance[ST_MAXTYPES + 1], g_iElectricRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -54,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -122,6 +123,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iElectricAbility[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Enabled", 0)) : (g_iElectricAbility2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Enabled", g_iElectricAbility[iIndex]));
 			main ? (g_iElectricAbility[iIndex] = iSetCellLimit(g_iElectricAbility[iIndex], 0, 1)) : (g_iElectricAbility2[iIndex] = iSetCellLimit(g_iElectricAbility2[iIndex], 0, 1));
+			main ? (g_iElectricMessage[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Message", 0)) : (g_iElectricMessage2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Message", g_iElectricMessage[iIndex]));
+			main ? (g_iElectricMessage[iIndex] = iSetCellLimit(g_iElectricMessage[iIndex], 0, 1)) : (g_iElectricMessage2[iIndex] = iSetCellLimit(g_iElectricMessage2[iIndex], 0, 1));
 			main ? (g_iElectricChance[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Chance", 4)) : (g_iElectricChance2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Chance", g_iElectricChance[iIndex]));
 			main ? (g_iElectricChance[iIndex] = iSetCellLimit(g_iElectricChance[iIndex], 1, 9999999999)) : (g_iElectricChance2[iIndex] = iSetCellLimit(g_iElectricChance2[iIndex], 1, 9999999999));
 			main ? (g_iElectricDamage[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Damage", 5)) : (g_iElectricDamage2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Damage", g_iElectricDamage[iIndex]));
@@ -202,6 +205,10 @@ stock void vElectricHit(int client, int owner, int chance, int enabled)
 		CreateDataTimer(flElectricInterval, tTimerElectric, dpElectric, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpElectric.WriteCell(GetClientUserId(client)), dpElectric.WriteCell(GetClientUserId(owner)), dpElectric.WriteCell(enabled), dpElectric.WriteFloat(GetEngineTime());
 		vAttachParticle(client, PARTICLE_ELECTRICITY, 2.0, 30.0);
+		if (iElectricMessage(owner) == 1)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Electric", owner, client);
+		}
 	}
 }
 
@@ -227,6 +234,19 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client, int owner)
+{
+	g_bElectric[client] = false;
+	if (bIsSurvivor(client))
+	{
+		SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	}
+	if (iElectricMessage(owner) == 1)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "Electric2", client);
+	}
+}
+
 stock int iElectricAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iElectricAbility[ST_TankType(client)] : g_iElectricAbility2[ST_TankType(client)];
@@ -247,6 +267,11 @@ stock int iElectricHitMode(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iElectricHitMode[ST_TankType(client)] : g_iElectricHitMode2[ST_TankType(client)];
 }
 
+stock int iElectricMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iElectricMessage[ST_TankType(client)] : g_iElectricMessage2[ST_TankType(client)];
+}
+
 public Action tTimerElectric(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -259,8 +284,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bElectric[iSurvivor] = false;
-		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	int iElectricEnabled = pack.ReadCell();
@@ -268,17 +292,16 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		flElectricDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flElectricDuration[ST_TankType(iTank)] : g_flElectricDuration2[ST_TankType(iTank)];
 	if (iElectricEnabled == 0 || (flTime + flElectricDuration) < GetEngineTime())
 	{
-		g_bElectric[iSurvivor] = false;
-		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
-	char sDamage[6];
+	char sDamage[11];
 	int iElectricDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iElectricDamage[ST_TankType(iTank)] : g_iElectricDamage2[ST_TankType(iTank)];
 	IntToString(iElectricDamage, sDamage, sizeof(sDamage));
 	vDamage(iSurvivor, sDamage);
 	vShake(iSurvivor);
 	vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
-	switch (GetRandomInt(1, 2)) 
+	switch (GetRandomInt(1, 2))
 	{
 		case 1: EmitSoundToAll(SOUND_ELECTRICITY, iSurvivor);
 		case 2: EmitSoundToAll(SOUND_ELECTRICITY2, iSurvivor);

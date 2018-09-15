@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bPimp[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 float g_flPimpRange[ST_MAXTYPES + 1], g_flPimpRange2[ST_MAXTYPES + 1];
-int g_iPimpAbility[ST_MAXTYPES + 1], g_iPimpAbility2[ST_MAXTYPES + 1], g_iPimpAmount[ST_MAXTYPES + 1], g_iPimpAmount2[ST_MAXTYPES + 1], g_iPimpChance[ST_MAXTYPES + 1], g_iPimpChance2[ST_MAXTYPES + 1], g_iPimpCount[MAXPLAYERS + 1], g_iPimpDamage[ST_MAXTYPES + 1], g_iPimpDamage2[ST_MAXTYPES + 1], g_iPimpHit[ST_MAXTYPES + 1], g_iPimpHit2[ST_MAXTYPES + 1], g_iPimpHitMode[ST_MAXTYPES + 1], g_iPimpHitMode2[ST_MAXTYPES + 1], g_iPimpRangeChance[ST_MAXTYPES + 1], g_iPimpRangeChance2[ST_MAXTYPES + 1];
+int g_iPimpAbility[ST_MAXTYPES + 1], g_iPimpAbility2[ST_MAXTYPES + 1], g_iPimpAmount[ST_MAXTYPES + 1], g_iPimpAmount2[ST_MAXTYPES + 1], g_iPimpChance[ST_MAXTYPES + 1], g_iPimpChance2[ST_MAXTYPES + 1], g_iPimpCount[MAXPLAYERS + 1], g_iPimpDamage[ST_MAXTYPES + 1], g_iPimpDamage2[ST_MAXTYPES + 1], g_iPimpHit[ST_MAXTYPES + 1], g_iPimpHit2[ST_MAXTYPES + 1], g_iPimpHitMode[ST_MAXTYPES + 1], g_iPimpHitMode2[ST_MAXTYPES + 1], g_iPimpMessage[ST_MAXTYPES + 1], g_iPimpMessage2[ST_MAXTYPES + 1], g_iPimpRangeChance[ST_MAXTYPES + 1], g_iPimpRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -54,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -120,6 +121,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iPimpAbility[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", 0)) : (g_iPimpAbility2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", g_iPimpAbility[iIndex]));
 			main ? (g_iPimpAbility[iIndex] = iSetCellLimit(g_iPimpAbility[iIndex], 0, 1)) : (g_iPimpAbility2[iIndex] = iSetCellLimit(g_iPimpAbility2[iIndex], 0, 1));
+			main ? (g_iPimpMessage[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Message", 0)) : (g_iPimpMessage2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Message", g_iPimpMessage[iIndex]));
+			main ? (g_iPimpMessage[iIndex] = iSetCellLimit(g_iPimpMessage[iIndex], 0, 1)) : (g_iPimpMessage2[iIndex] = iSetCellLimit(g_iPimpMessage2[iIndex], 0, 1));
 			main ? (g_iPimpAmount[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", 5)) : (g_iPimpAmount2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", g_iPimpAmount[iIndex]));
 			main ? (g_iPimpAmount[iIndex] = iSetCellLimit(g_iPimpAmount[iIndex], 1, 9999999999)) : (g_iPimpAmount2[iIndex] = iSetCellLimit(g_iPimpAmount2[iIndex], 1, 9999999999));
 			main ? (g_iPimpChance[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Chance", 4)) : (g_iPimpChance2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Chance", g_iPimpChance[iIndex]));
@@ -173,6 +176,10 @@ stock void vPimpHit(int client, int owner, int chance, int enabled)
 		DataPack dpPimp = new DataPack();
 		CreateDataTimer(0.5, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpPimp.WriteCell(GetClientUserId(client)), dpPimp.WriteCell(GetClientUserId(owner)), dpPimp.WriteCell(enabled);
+		if (iPimpMessage(owner) == 1)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Pimp", owner, client);
+		}
 	}
 }
 
@@ -185,6 +192,16 @@ stock void vReset()
 			g_bPimp[iPlayer] = false;
 			g_iPimpCount[iPlayer] = 0;
 		}
+	}
+}
+
+stock void vReset2(int client, int owner)
+{
+	g_bPimp[client] = false;
+	g_iPimpCount[client] = 0;
+	if (iPimpMessage(owner) == 1)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "Pimp2", client);
 	}
 }
 
@@ -203,6 +220,11 @@ stock int iPimpHitMode(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iPimpHitMode[ST_TankType(client)] : g_iPimpHitMode2[ST_TankType(client)];
 }
 
+stock int iPimpMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iPimpMessage[ST_TankType(client)] : g_iPimpMessage2[ST_TankType(client)];
+}
+
 public Action tTimerPimp(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -210,22 +232,19 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bPimp[iSurvivor] = false;
-		g_iPimpCount[iSurvivor] = 0;
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bPimp[iSurvivor] = false;
-		g_iPimpCount[iSurvivor] = 0;
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	int iPimpAbility = pack.ReadCell(),
 		iPimpAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAmount[ST_TankType(iTank)] : g_iPimpAmount2[ST_TankType(iTank)];
 	if (iPimpAbility == 0 || g_iPimpCount[iSurvivor] >= iPimpAmount)
 	{
-		g_bPimp[iSurvivor] = false;
-		g_iPimpCount[iSurvivor] = 0;
+		vReset2(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	int iPimpDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpDamage[ST_TankType(iTank)] : g_iPimpDamage2[ST_TankType(iTank)];

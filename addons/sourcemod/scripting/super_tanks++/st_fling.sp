@@ -18,7 +18,7 @@ public Plugin myinfo =
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flFlingRange[ST_MAXTYPES + 1], g_flFlingRange2[ST_MAXTYPES + 1];
 Handle g_hSDKFlingPlayer, g_hSDKPukePlayer;
-int g_iFlingAbility[ST_MAXTYPES + 1], g_iFlingAbility2[ST_MAXTYPES + 1], g_iFlingChance[ST_MAXTYPES + 1], g_iFlingChance2[ST_MAXTYPES + 1], g_iFlingHit[ST_MAXTYPES + 1], g_iFlingHit2[ST_MAXTYPES + 1], g_iFlingHitMode[ST_MAXTYPES + 1], g_iFlingHitMode2[ST_MAXTYPES + 1], g_iFlingRangeChance[ST_MAXTYPES + 1], g_iFlingRangeChance2[ST_MAXTYPES + 1];
+int g_iFlingAbility[ST_MAXTYPES + 1], g_iFlingAbility2[ST_MAXTYPES + 1], g_iFlingChance[ST_MAXTYPES + 1], g_iFlingChance2[ST_MAXTYPES + 1], g_iFlingHit[ST_MAXTYPES + 1], g_iFlingHit2[ST_MAXTYPES + 1], g_iFlingHitMode[ST_MAXTYPES + 1], g_iFlingHitMode2[ST_MAXTYPES + 1], g_iFlingMessage[ST_MAXTYPES + 1], g_iFlingMessage2[ST_MAXTYPES + 1], g_iFlingRangeChance[ST_MAXTYPES + 1], g_iFlingRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -55,6 +55,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	if (bIsL4D2Game())
 	{
@@ -136,6 +137,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iFlingAbility[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", 0)) : (g_iFlingAbility2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", g_iFlingAbility[iIndex]));
 			main ? (g_iFlingAbility[iIndex] = iSetCellLimit(g_iFlingAbility[iIndex], 0, 1)) : (g_iFlingAbility2[iIndex] = iSetCellLimit(g_iFlingAbility2[iIndex], 0, 1));
+			main ? (g_iFlingMessage[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Message", 0)) : (g_iFlingMessage2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Message", g_iFlingMessage[iIndex]));
+			main ? (g_iFlingMessage[iIndex] = iSetCellLimit(g_iFlingMessage[iIndex], 0, 1)) : (g_iFlingMessage2[iIndex] = iSetCellLimit(g_iFlingMessage2[iIndex], 0, 1));
 			main ? (g_iFlingChance[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Chance", 4)) : (g_iFlingChance2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Chance", g_iFlingChance[iIndex]));
 			main ? (g_iFlingChance[iIndex] = iSetCellLimit(g_iFlingChance[iIndex], 1, 9999999999)) : (g_iFlingChance2[iIndex] = iSetCellLimit(g_iFlingChance2[iIndex], 1, 9999999999));
 			main ? (g_iFlingHit[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", 0)) : (g_iFlingHit2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", g_iFlingHit[iIndex]));
@@ -196,10 +199,18 @@ stock void vFlingHit(int client, int owner, int chance, int enabled)
 			flVelocity[1] = (flRatio[1] * -1) * 500.0;
 			flVelocity[2] = 500.0;
 			SDKCall(g_hSDKFlingPlayer, client, flVelocity, 76, owner, 7.0);
+			if (iFlingMessage(owner) == 1)
+			{
+				PrintToChatAll("%s %t", ST_PREFIX2, "Fling", owner, client);
+			}
 		}
 		else
 		{
 			SDKCall(g_hSDKPukePlayer, client, owner, true);
+			if (iFlingMessage(owner) == 1)
+			{
+				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", owner, client);
+			}
 		}
 	}
 }
@@ -217,4 +228,9 @@ stock int iFlingHit(int client)
 stock int iFlingHitMode(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iFlingHitMode[ST_TankType(client)] : g_iFlingHitMode2[ST_TankType(client)];
+}
+
+stock int iFlingMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iFlingMessage[ST_TankType(client)] : g_iFlingMessage2[ST_TankType(client)];
 }

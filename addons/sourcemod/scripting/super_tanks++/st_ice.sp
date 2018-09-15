@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bIce[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flIceDuration[ST_MAXTYPES + 1], g_flIceDuration2[ST_MAXTYPES + 1], g_flIceRange[ST_MAXTYPES + 1], g_flIceRange2[ST_MAXTYPES + 1];
-int g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceChance[ST_MAXTYPES + 1], g_iIceChance2[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceHitMode2[ST_MAXTYPES + 1], g_iIceRangeChance[ST_MAXTYPES + 1], g_iIceRangeChance2[ST_MAXTYPES + 1];
+int g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceChance[ST_MAXTYPES + 1], g_iIceChance2[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceHitMode2[ST_MAXTYPES + 1], g_iIceMessage[ST_MAXTYPES + 1], g_iIceMessage2[ST_MAXTYPES + 1], g_iIceRangeChance[ST_MAXTYPES + 1], g_iIceRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -54,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -120,6 +121,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iIceAbility[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", 0)) : (g_iIceAbility2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", g_iIceAbility[iIndex]));
 			main ? (g_iIceAbility[iIndex] = iSetCellLimit(g_iIceAbility[iIndex], 0, 1)) : (g_iIceAbility2[iIndex] = iSetCellLimit(g_iIceAbility2[iIndex], 0, 1));
+			main ? (g_iIceMessage[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Message", 0)) : (g_iIceMessage2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Message", g_iIceMessage[iIndex]));
+			main ? (g_iIceMessage[iIndex] = iSetCellLimit(g_iIceMessage[iIndex], 0, 1)) : (g_iIceMessage2[iIndex] = iSetCellLimit(g_iIceMessage2[iIndex], 0, 1));
 			main ? (g_iIceChance[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Chance", 4)) : (g_iIceChance2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Chance", g_iIceChance[iIndex]));
 			main ? (g_iIceChance[iIndex] = iSetCellLimit(g_iIceChance[iIndex], 1, 9999999999)) : (g_iIceChance2[iIndex] = iSetCellLimit(g_iIceChance2[iIndex], 1, 9999999999));
 			main ? (g_flIceDuration[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", 5.0)) : (g_flIceDuration2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", g_flIceDuration[iIndex]));
@@ -199,6 +202,10 @@ stock void vIceHit(int client, int owner, int chance, int enabled)
 		DataPack dpStopIce = new DataPack();
 		CreateDataTimer(flIceDuration, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(GetClientUserId(owner)), dpStopIce.WriteCell(enabled);
+		if (iIceMessage(owner) == 1)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ice", owner, client);
+		}
 	}
 }
 
@@ -226,7 +233,7 @@ stock void vReset()
 	}
 }
 
-stock void vStopIce(int client)
+stock void vStopIce(int client, int owner)
 {
 	if (g_bIce[client])
 	{
@@ -240,6 +247,10 @@ stock void vStopIce(int client)
 		TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 		EmitAmbientSound(SOUND_BULLET, flPos, client, SNDLEVEL_RAIDSIREN);
+		if (iIceMessage(owner))
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ice2", client);
+		}
 	}
 }
 
@@ -263,6 +274,11 @@ stock int iIceHitMode(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iIceHitMode[ST_TankType(client)] : g_iIceHitMode2[ST_TankType(client)];
 }
 
+stock int iIceMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iIceMessage[ST_TankType(client)] : g_iIceMessage2[ST_TankType(client)];
+}
+
 public Action tTimerStopIce(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -275,15 +291,15 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vStopIce(iSurvivor);
+		vStopIce(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
 	int iIceEnabled = pack.ReadCell();
 	if (iIceEnabled == 0)
 	{
-		vStopIce(iSurvivor);
+		vStopIce(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
-	vStopIce(iSurvivor);
+	vStopIce(iSurvivor, iTank);
 	return Plugin_Continue;
 }

@@ -18,7 +18,7 @@ public Plugin myinfo =
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7], g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15];
 ConVar g_cvSTTankThrowForce;
-int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1];
+int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1], g_iThrowMessage[ST_MAXTYPES + 1], g_iThrowMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -54,6 +54,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	g_cvSTTankThrowForce = FindConVar("z_tank_throw_force");
 }
 
@@ -77,6 +78,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iThrowAbility[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", 0)) : (g_iThrowAbility2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", g_iThrowAbility[iIndex]));
 			main ? (g_iThrowAbility[iIndex] = iSetCellLimit(g_iThrowAbility[iIndex], 0, 3)) : (g_iThrowAbility2[iIndex] = iSetCellLimit(g_iThrowAbility2[iIndex], 0, 3));
+			main ? (g_iThrowMessage[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Message", 0)) : (g_iThrowMessage2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Message", g_iThrowMessage[iIndex]));
+			main ? (g_iThrowMessage[iIndex] = iSetCellLimit(g_iThrowMessage[iIndex], 0, 1)) : (g_iThrowMessage2[iIndex] = iSetCellLimit(g_iThrowMessage2[iIndex], 0, 1));
 			main ? (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions[iIndex], sizeof(g_sThrowCarOptions[]), "123")) : (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions2[iIndex], sizeof(g_sThrowCarOptions2[]), g_sThrowCarOptions[iIndex]));
 			main ? (kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions[iIndex], sizeof(g_sThrowInfectedOptions[]), "1234567")) : (kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions2[iIndex], sizeof(g_sThrowInfectedOptions2[]), g_sThrowInfectedOptions[iIndex]));
 			kvSuperTanks.Rewind();
@@ -110,6 +113,11 @@ public void ST_RockThrow(int client, int entity)
 stock int iThrowAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iThrowAbility[ST_TankType(client)] : g_iThrowAbility2[ST_TankType(client)];
+}
+
+stock int iThrowMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iThrowMessage[ST_TankType(client)] : g_iThrowMessage2[ST_TankType(client)];
 }
 
 public Action tTimerCarThrow(Handle timer, DataPack pack)
@@ -156,6 +164,10 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 			TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
 			iCar = EntIndexToEntRef(iCar);
 			vDeleteEntity(iCar, 10.0);
+			if (iThrowMessage(iTank) == 1)
+			{
+				PrintToChatAll("%s %t", ST_PREFIX2, "Throw", iTank);
+			}
 		}
 		return Plugin_Stop;
 	}
@@ -205,6 +217,10 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 			TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
+			if (iThrowMessage(iTank) == 1)
+			{
+				PrintToChatAll("%s %t", ST_PREFIX2, "Throw2", iTank);
+			}
 		}
 		return Plugin_Stop;
 	}
@@ -239,6 +255,10 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 		NormalizeVector(flVelocity, flVelocity);
 		ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 		TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
+		if (iThrowMessage(iTank) == 1)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Throw3", iTank);
+		}
 		return Plugin_Stop;
 	}
 	return Plugin_Continue;

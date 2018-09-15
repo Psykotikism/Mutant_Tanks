@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bGod[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 float g_flGodDuration[ST_MAXTYPES + 1], g_flGodDuration2[ST_MAXTYPES + 1];
-int g_iGodAbility[ST_MAXTYPES + 1], g_iGodAbility2[ST_MAXTYPES + 1], g_iGodChance[ST_MAXTYPES + 1], g_iGodChance2[ST_MAXTYPES + 1];
+int g_iGodAbility[ST_MAXTYPES + 1], g_iGodAbility2[ST_MAXTYPES + 1], g_iGodChance[ST_MAXTYPES + 1], g_iGodChance2[ST_MAXTYPES + 1], g_iGodMessage[ST_MAXTYPES + 1], g_iGodMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,6 +51,11 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
+public void OnPluginStart()
+{
+	LoadTranslations("super_tanks++.phrases");
+}
+
 public void OnMapStart()
 {
 	vReset();
@@ -79,6 +84,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iGodAbility[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Enabled", 0)) : (g_iGodAbility2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Enabled", g_iGodAbility[iIndex]));
 			main ? (g_iGodAbility[iIndex] = iSetCellLimit(g_iGodAbility[iIndex], 0, 1)) : (g_iGodAbility2[iIndex] = iSetCellLimit(g_iGodAbility2[iIndex], 0, 1));
+			main ? (g_iGodMessage[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", 0)) : (g_iGodMessage2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", g_iGodMessage[iIndex]));
+			main ? (g_iGodMessage[iIndex] = iSetCellLimit(g_iGodMessage[iIndex], 0, 1)) : (g_iGodMessage2[iIndex] = iSetCellLimit(g_iGodMessage2[iIndex], 0, 1));
 			main ? (g_iGodChance[iIndex] = kvSuperTanks.GetNum("God Ability/God Chance", 4)) : (g_iGodChance2[iIndex] = kvSuperTanks.GetNum("God Ability/God Chance", g_iGodChance[iIndex]));
 			main ? (g_iGodChance[iIndex] = iSetCellLimit(g_iGodChance[iIndex], 1, 9999999999)) : (g_iGodChance2[iIndex] = iSetCellLimit(g_iGodChance2[iIndex], 1, 9999999999));
 			main ? (g_flGodDuration[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", 5.0)) : (g_flGodDuration2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", g_flGodDuration[iIndex]));
@@ -110,6 +117,11 @@ public void ST_Ability(int client)
 		SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 		float flGodDuration = !g_bTankConfig[ST_TankType(client)] ? g_flGodDuration[ST_TankType(client)] : g_flGodDuration2[ST_TankType(client)];
 		CreateTimer(flGodDuration, tTimerStopGod, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		if (iGodMessage(client) == 1)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "God", client);
+		}
+		
 	}
 }
 
@@ -124,9 +136,27 @@ stock void vReset()
 	}
 }
 
+stock void vReset2(int client)
+{
+	g_bGod[client] = false;
+	if (IsPlayerAlive(client))
+	{
+		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+	}
+	if (iGodMessage(client) == 1)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "God2", client);
+	}
+}
+
 stock int iGodAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iGodAbility[ST_TankType(client)] : g_iGodAbility2[ST_TankType(client)];
+}
+
+stock int iGodMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iGodMessage[ST_TankType(client)] : g_iGodMessage2[ST_TankType(client)];
 }
 
 public Action tTimerStopGod(Handle timer, any userid)
@@ -134,15 +164,14 @@ public Action tTimerStopGod(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bGod[iTank] = false;
+		vReset2(iTank);
 		return Plugin_Stop;
 	}
 	if (iGodAbility(iTank) == 0)
 	{
-		g_bGod[iTank] = false;
+		vReset2(iTank);
 		return Plugin_Stop;
 	}
-	g_bGod[iTank] = false;
-	SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
+	vReset2(iTank);
 	return Plugin_Continue;
 }

@@ -18,7 +18,7 @@ public Plugin myinfo =
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flPukeRange[ST_MAXTYPES + 1], g_flPukeRange2[ST_MAXTYPES + 1];
 Handle g_hSDKPukePlayer;
-int g_iPukeAbility[ST_MAXTYPES + 1], g_iPukeAbility2[ST_MAXTYPES + 1], g_iPukeChance[ST_MAXTYPES + 1], g_iPukeChance2[ST_MAXTYPES + 1], g_iPukeHit[ST_MAXTYPES + 1], g_iPukeHit2[ST_MAXTYPES + 1], g_iPukeHitMode[ST_MAXTYPES + 1], g_iPukeHitMode2[ST_MAXTYPES + 1], g_iPukeRangeChance[ST_MAXTYPES + 1], g_iPukeRangeChance2[ST_MAXTYPES + 1];
+int g_iPukeAbility[ST_MAXTYPES + 1], g_iPukeAbility2[ST_MAXTYPES + 1], g_iPukeChance[ST_MAXTYPES + 1], g_iPukeChance2[ST_MAXTYPES + 1], g_iPukeHit[ST_MAXTYPES + 1], g_iPukeHit2[ST_MAXTYPES + 1], g_iPukeHitMode[ST_MAXTYPES + 1], g_iPukeHitMode2[ST_MAXTYPES + 1], g_iPukeMessage[ST_MAXTYPES + 1], g_iPukeMessage2[ST_MAXTYPES + 1], g_iPukeRangeChance[ST_MAXTYPES + 1], g_iPukeRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -55,6 +55,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("super_tanks++.phrases");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
 	StartPrepSDKCall(SDKCall_Player);
 	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon");
@@ -119,6 +120,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iPukeAbility[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", 0)) : (g_iPukeAbility2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", g_iPukeAbility[iIndex]));
 			main ? (g_iPukeAbility[iIndex] = iSetCellLimit(g_iPukeAbility[iIndex], 0, 1)) : (g_iPukeAbility2[iIndex] = iSetCellLimit(g_iPukeAbility2[iIndex], 0, 1));
+			main ? (g_iPukeMessage[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Message", 0)) : (g_iPukeMessage2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Message", g_iPukeMessage[iIndex]));
+			main ? (g_iPukeMessage[iIndex] = iSetCellLimit(g_iPukeMessage[iIndex], 0, 1)) : (g_iPukeMessage2[iIndex] = iSetCellLimit(g_iPukeMessage2[iIndex], 0, 1));
 			main ? (g_iPukeChance[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Chance", 4)) : (g_iPukeChance2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Chance", g_iPukeChance[iIndex]));
 			main ? (g_iPukeChance[iIndex] = iSetCellLimit(g_iPukeChance[iIndex], 1, 9999999999)) : (g_iPukeChance2[iIndex] = iSetCellLimit(g_iPukeChance2[iIndex], 1, 9999999999));
 			main ? (g_iPukeHit[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", 0)) : (g_iPukeHit2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", g_iPukeHit[iIndex]));
@@ -164,7 +167,12 @@ stock void vPukeHit(int client, int owner, int chance, int enabled)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
+		int iPukeMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iPukeMessage[ST_TankType(owner)] : g_iPukeMessage2[ST_TankType(owner)];
 		SDKCall(g_hSDKPukePlayer, client, owner, true);
+		if (iPukeMessage == 1)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Puke", owner, client);
+		}
 	}
 }
 

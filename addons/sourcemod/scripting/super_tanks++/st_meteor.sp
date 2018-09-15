@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bMeteor[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80];
-int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorChance[ST_MAXTYPES + 1], g_iMeteorChance2[ST_MAXTYPES + 1], g_iMeteorDamage[ST_MAXTYPES + 1], g_iMeteorDamage2[ST_MAXTYPES + 1];
+int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorChance[ST_MAXTYPES + 1], g_iMeteorChance2[ST_MAXTYPES + 1], g_iMeteorDamage[ST_MAXTYPES + 1], g_iMeteorDamage2[ST_MAXTYPES + 1], g_iMeteorMessage[ST_MAXTYPES + 1], g_iMeteorMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,6 +51,11 @@ public void OnLibraryRemoved(const char[] name)
 	}
 }
 
+public void OnPluginStart()
+{
+	LoadTranslations("super_tanks++.phrases");
+}
+
 public void OnMapStart()
 {
 	PrecacheModel(MODEL_PROPANETANK, true);
@@ -81,6 +86,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (kvSuperTanks.GetString("General/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255")) : (kvSuperTanks.GetString("General/Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]));
 			main ? (g_iMeteorAbility[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", 0)) : (g_iMeteorAbility2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", g_iMeteorAbility[iIndex]));
 			main ? (g_iMeteorAbility[iIndex] = iSetCellLimit(g_iMeteorAbility[iIndex], 0, 1)) : (g_iMeteorAbility2[iIndex] = iSetCellLimit(g_iMeteorAbility2[iIndex], 0, 1));
+			main ? (g_iMeteorMessage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", 0)) : (g_iMeteorMessage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", g_iMeteorMessage[iIndex]));
+			main ? (g_iMeteorMessage[iIndex] = iSetCellLimit(g_iMeteorMessage[iIndex], 0, 1)) : (g_iMeteorMessage2[iIndex] = iSetCellLimit(g_iMeteorMessage2[iIndex], 0, 1));
 			main ? (g_iMeteorChance[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", 4)) : (g_iMeteorChance2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", g_iMeteorChance[iIndex]));
 			main ? (g_iMeteorChance[iIndex] = iSetCellLimit(g_iMeteorChance[iIndex], 1, 9999999999)) : (g_iMeteorChance2[iIndex] = iSetCellLimit(g_iMeteorChance2[iIndex], 1, 9999999999));
 			main ? (g_iMeteorDamage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Damage", 5)) : (g_iMeteorDamage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Damage", g_iMeteorDamage[iIndex]));
@@ -99,10 +106,15 @@ public void ST_Ability(int client)
 	{
 		g_bMeteor[client] = true;
 		float flPos[3];
+		int iMeteorMessage = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorMessage[ST_TankType(client)] : g_iMeteorMessage2[ST_TankType(client)];
 		GetClientEyePosition(client, flPos);
 		DataPack dpMeteorUpdate = new DataPack();
 		CreateDataTimer(0.6, tTimerMeteorUpdate, dpMeteorUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpMeteorUpdate.WriteCell(GetClientUserId(client)), dpMeteorUpdate.WriteFloat(flPos[0]), dpMeteorUpdate.WriteFloat(flPos[1]), dpMeteorUpdate.WriteFloat(flPos[2]), dpMeteorUpdate.WriteFloat(GetEngineTime());
+		if (iMeteorMessage == 1)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Meteor", client);
+		}
 	}
 }
 
@@ -117,7 +129,7 @@ stock void vMeteor(int client, int entity)
 	if (strcmp(sClassname, "tank_rock") == 0)
 	{
 		AcceptEntityInput(entity, "Kill");
-		char sDamage[6];
+		char sDamage[11];
 		int iMeteorDamage = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorDamage[ST_TankType(client)] : g_iMeteorDamage2[ST_TankType(client)];
 		IntToString(iMeteorDamage, sDamage, sizeof(sDamage));
 		float flPos[3];
