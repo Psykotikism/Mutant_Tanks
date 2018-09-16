@@ -1214,7 +1214,6 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
 			// 1: ON, display message only when "Enforce Hit" is on.
 			// 2: ON, display message only when "Ability Enabled" is on.
 			// 3: ON, display message when both are on.
@@ -1300,7 +1299,6 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
 			// 1: ON, display message only when "Fire Hit" is on.
 			// 2: ON, display message only when "Ability Enabled" is on.
 			// 3: ON, display message when both are on.
@@ -2211,7 +2209,6 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
 			// 1: ON, display message only when "Invert Hit" is on.
 			// 2: ON, display message only when "Ability Enabled" is on.
 			// 3: ON, display message when both are on.
