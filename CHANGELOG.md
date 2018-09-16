@@ -17,7 +17,7 @@ Changes:
 
 Files:
 
-1. Updated config file with the new settings.
+1. Updated config file with the new settings and modified some presets.
 2. Updated include file to remove the ST_Spawn(int client) forward and add the new ST_TankName(int client, char[] buffer) native.
 3. Updated translation file with the new messages.
 
