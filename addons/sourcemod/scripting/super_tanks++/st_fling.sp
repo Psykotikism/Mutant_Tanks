@@ -111,14 +111,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vFlingHit(victim, attacker, iFlingChance(attacker), iFlingHit(attacker));
+				vFlingHit(victim, attacker, iFlingChance(attacker), iFlingHit(attacker), 1);
 			}
 		}
 		else if ((iFlingHitMode(victim) == 0 || iFlingHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vFlingHit(attacker, victim, iFlingChance(victim), iFlingHit(victim));
+				vFlingHit(attacker, victim, iFlingChance(victim), iFlingHit(victim), 1);
 			}
 		}
 	}
@@ -138,7 +138,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iFlingAbility[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", 0)) : (g_iFlingAbility2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", g_iFlingAbility[iIndex]));
 			main ? (g_iFlingAbility[iIndex] = iSetCellLimit(g_iFlingAbility[iIndex], 0, 1)) : (g_iFlingAbility2[iIndex] = iSetCellLimit(g_iFlingAbility2[iIndex], 0, 1));
 			main ? (g_iFlingMessage[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Message", 0)) : (g_iFlingMessage2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Message", g_iFlingMessage[iIndex]));
-			main ? (g_iFlingMessage[iIndex] = iSetCellLimit(g_iFlingMessage[iIndex], 0, 1)) : (g_iFlingMessage2[iIndex] = iSetCellLimit(g_iFlingMessage2[iIndex], 0, 1));
+			main ? (g_iFlingMessage[iIndex] = iSetCellLimit(g_iFlingMessage[iIndex], 0, 3)) : (g_iFlingMessage2[iIndex] = iSetCellLimit(g_iFlingMessage2[iIndex], 0, 3));
 			main ? (g_iFlingChance[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Chance", 4)) : (g_iFlingChance2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Chance", g_iFlingChance[iIndex]));
 			main ? (g_iFlingChance[iIndex] = iSetCellLimit(g_iFlingChance[iIndex], 1, 9999999999)) : (g_iFlingChance2[iIndex] = iSetCellLimit(g_iFlingChance2[iIndex], 1, 9999999999));
 			main ? (g_iFlingHit[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", 0)) : (g_iFlingHit2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", g_iFlingHit[iIndex]));
@@ -173,18 +173,19 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flFlingRange)
 				{
-					vFlingHit(iSurvivor, client, iFlingRangeChance, iFlingAbility);
+					vFlingHit(iSurvivor, client, iFlingRangeChance, iFlingAbility, 2);
 				}
 			}
 		}
 	}
 }
 
-stock void vFlingHit(int client, int owner, int chance, int enabled)
+stock void vFlingHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
+		int iFlingMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iFlingMessage[ST_TankType(owner)] : g_iFlingMessage2[ST_TankType(owner)];
 		ST_TankName(owner, sTankName);
 		if (bIsL4D2Game())
 		{
@@ -201,7 +202,7 @@ stock void vFlingHit(int client, int owner, int chance, int enabled)
 			flVelocity[1] = (flRatio[1] * -1) * 500.0;
 			flVelocity[2] = 500.0;
 			SDKCall(g_hSDKFlingPlayer, client, flVelocity, 76, owner, 7.0);
-			if (iFlingMessage(owner) == 1)
+			if (iFlingMessage == message || iFlingMessage == 3)
 			{
 				PrintToChatAll("%s %t", ST_PREFIX2, "Fling", sTankName, client);
 			}
@@ -209,7 +210,7 @@ stock void vFlingHit(int client, int owner, int chance, int enabled)
 		else
 		{
 			SDKCall(g_hSDKPukePlayer, client, owner, true);
-			if (iFlingMessage(owner) == 1)
+			if (iFlingMessage == message || iFlingMessage == 3)
 			{
 				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
 			}
@@ -230,9 +231,4 @@ stock int iFlingHit(int client)
 stock int iFlingHitMode(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iFlingHitMode[ST_TankType(client)] : g_iFlingHitMode2[ST_TankType(client)];
-}
-
-stock int iFlingMessage(int client)
-{
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFlingMessage[ST_TankType(client)] : g_iFlingMessage2[ST_TankType(client)];
 }

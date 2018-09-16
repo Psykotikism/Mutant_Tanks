@@ -79,7 +79,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iThrowAbility[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", 0)) : (g_iThrowAbility2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", g_iThrowAbility[iIndex]));
 			main ? (g_iThrowAbility[iIndex] = iSetCellLimit(g_iThrowAbility[iIndex], 0, 3)) : (g_iThrowAbility2[iIndex] = iSetCellLimit(g_iThrowAbility2[iIndex], 0, 3));
 			main ? (g_iThrowMessage[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Message", 0)) : (g_iThrowMessage2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Message", g_iThrowMessage[iIndex]));
-			main ? (g_iThrowMessage[iIndex] = iSetCellLimit(g_iThrowMessage[iIndex], 0, 1)) : (g_iThrowMessage2[iIndex] = iSetCellLimit(g_iThrowMessage2[iIndex], 0, 1));
+			main ? (g_iThrowMessage[iIndex] = iSetCellLimit(g_iThrowMessage[iIndex], 0, 7)) : (g_iThrowMessage2[iIndex] = iSetCellLimit(g_iThrowMessage2[iIndex], 0, 7));
 			main ? (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions[iIndex], sizeof(g_sThrowCarOptions[]), "123")) : (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions2[iIndex], sizeof(g_sThrowCarOptions2[]), g_sThrowCarOptions[iIndex]));
 			main ? (kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions[iIndex], sizeof(g_sThrowInfectedOptions[]), "1234567")) : (kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions2[iIndex], sizeof(g_sThrowInfectedOptions2[]), g_sThrowInfectedOptions[iIndex]));
 			kvSuperTanks.Rewind();
@@ -164,11 +164,14 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 			TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
 			iCar = EntIndexToEntRef(iCar);
 			vDeleteEntity(iCar, 10.0);
-			if (iThrowMessage(iTank) == 1)
+			switch (iThrowMessage(iTank))
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Throw", sTankName);
+				case 1, 4, 5, 7:
+				{
+					char sTankName[MAX_NAME_LENGTH + 1];
+					ST_TankName(iTank, sTankName);
+					PrintToChatAll("%s %t", ST_PREFIX2, "Throw", sTankName);
+				}
 			}
 		}
 		return Plugin_Stop;
@@ -219,11 +222,14 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 			TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
-			if (iThrowMessage(iTank) == 1)
+			switch (iThrowMessage(iTank))
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Throw2", sTankName);
+				case 2, 4, 6, 7:
+				{
+					char sTankName[MAX_NAME_LENGTH + 1];
+					ST_TankName(iTank, sTankName);
+					PrintToChatAll("%s %t", ST_PREFIX2, "Throw2", sTankName);
+				}
 			}
 		}
 		return Plugin_Stop;
@@ -259,11 +265,14 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 		NormalizeVector(flVelocity, flVelocity);
 		ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 		TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
-		if (iThrowMessage(iTank) == 1)
+		switch (iThrowMessage(iTank))
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Throw3", sTankName);
+			case 3, 5, 6, 7:
+			{
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(iTank, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Throw3", sTankName);
+			}
 		}
 		return Plugin_Stop;
 	}

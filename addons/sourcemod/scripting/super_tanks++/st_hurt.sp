@@ -94,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vHurtHit(victim, attacker, iHurtChance(attacker), iHurtHit(attacker));
+				vHurtHit(victim, attacker, iHurtChance(attacker), iHurtHit(attacker), 1);
 			}
 		}
 		else if ((iHurtHitMode(victim) == 0 || iHurtHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vHurtHit(attacker, victim, iHurtChance(victim), iHurtHit(victim));
+				vHurtHit(attacker, victim, iHurtChance(victim), iHurtHit(victim), 1);
 			}
 		}
 	}
@@ -121,7 +121,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iHurtAbility[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", 0)) : (g_iHurtAbility2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", g_iHurtAbility[iIndex]));
 			main ? (g_iHurtAbility[iIndex] = iSetCellLimit(g_iHurtAbility[iIndex], 0, 1)) : (g_iHurtAbility2[iIndex] = iSetCellLimit(g_iHurtAbility2[iIndex], 0, 1));
 			main ? (g_iHurtMessage[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Message", 0)) : (g_iHurtMessage2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Message", g_iHurtMessage[iIndex]));
-			main ? (g_iHurtMessage[iIndex] = iSetCellLimit(g_iHurtMessage[iIndex], 0, 1)) : (g_iHurtMessage2[iIndex] = iSetCellLimit(g_iHurtMessage2[iIndex], 0, 1));
+			main ? (g_iHurtMessage[iIndex] = iSetCellLimit(g_iHurtMessage[iIndex], 0, 3)) : (g_iHurtMessage2[iIndex] = iSetCellLimit(g_iHurtMessage2[iIndex], 0, 3));
 			main ? (g_iHurtChance[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Chance", 4)) : (g_iHurtChance2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Chance", g_iHurtChance[iIndex]));
 			main ? (g_iHurtChance[iIndex] = iSetCellLimit(g_iHurtChance[iIndex], 1, 9999999999)) : (g_iHurtChance2[iIndex] = iSetCellLimit(g_iHurtChance2[iIndex], 1, 9999999999));
 			main ? (g_iHurtDamage[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Damage", 1)) : (g_iHurtDamage2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Damage", g_iHurtDamage[iIndex]));
@@ -160,22 +160,22 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHurtRange)
 				{
-					vHurtHit(iSurvivor, client, iHurtRangeChance, iHurtAbility);
+					vHurtHit(iSurvivor, client, iHurtRangeChance, iHurtAbility, 2);
 				}
 			}
 		}
 	}
 }
 
-stock void vHurtHit(int client, int owner, int chance, int enabled)
+stock void vHurtHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bHurt[client])
 	{
 		g_bHurt[client] = true;
 		DataPack dpHurt = new DataPack();
 		CreateDataTimer(1.0, tTimerHurt, dpHurt, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpHurt.WriteCell(GetClientUserId(client)), dpHurt.WriteCell(GetClientUserId(owner)), dpHurt.WriteCell(enabled), dpHurt.WriteFloat(GetEngineTime());
-		if (iHurtMessage(owner) == 1)
+		dpHurt.WriteCell(GetClientUserId(client)), dpHurt.WriteCell(GetClientUserId(owner)), dpHurt.WriteCell(message), dpHurt.WriteCell(enabled), dpHurt.WriteFloat(GetEngineTime());
+		if (iHurtMessage(owner) == message || iHurtMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
@@ -195,10 +195,10 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner)
+stock void vReset2(int client, int owner, int message)
 {
 	g_bHurt[client] = false;
-	if (iHurtMessage(owner) == 1)
+	if (iHurtMessage(owner) == message || iHurtMessage(owner) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Hurt2", client);
 	}
@@ -233,10 +233,10 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 		g_bHurt[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iHurtChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iHurtChat);
 		return Plugin_Stop;
 	}
 	int iHurtAbility = pack.ReadCell();
@@ -244,7 +244,7 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 		flHurtDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flHurtDuration[ST_TankType(iTank)] : g_flHurtDuration2[ST_TankType(iTank)];
 	if (iHurtAbility == 0 || (flTime + flHurtDuration) < GetEngineTime())
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iHurtChat);
 		return Plugin_Stop;
 	}
 	char sDamage[11];

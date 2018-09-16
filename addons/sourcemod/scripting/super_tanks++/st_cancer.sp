@@ -86,14 +86,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vCancerHit(victim, attacker, iCancerChance(attacker), iCancerHit(attacker));
+				vCancerHit(victim, attacker, iCancerChance(attacker), iCancerHit(attacker), 1);
 			}
 		}
 		else if ((iCancerHitMode(victim) == 0 || iCancerHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vCancerHit(attacker, victim, iCancerChance(victim), iCancerHit(victim));
+				vCancerHit(attacker, victim, iCancerChance(victim), iCancerHit(victim), 1);
 			}
 		}
 	}
@@ -115,7 +115,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iCancerAbility[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Enabled", 0)) : (g_iCancerAbility2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Enabled", g_iCancerAbility[iIndex]));
 			main ? (g_iCancerAbility[iIndex] = iSetCellLimit(g_iCancerAbility[iIndex], 0, 1)) : (g_iCancerAbility2[iIndex] = iSetCellLimit(g_iCancerAbility2[iIndex], 0, 1));
 			main ? (g_iCancerMessage[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Message", 0)) : (g_iCancerMessage2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Message", g_iCancerMessage[iIndex]));
-			main ? (g_iCancerMessage[iIndex] = iSetCellLimit(g_iCancerMessage[iIndex], 0, 1)) : (g_iCancerMessage2[iIndex] = iSetCellLimit(g_iCancerMessage2[iIndex], 0, 1));
+			main ? (g_iCancerMessage[iIndex] = iSetCellLimit(g_iCancerMessage[iIndex], 0, 3)) : (g_iCancerMessage2[iIndex] = iSetCellLimit(g_iCancerMessage2[iIndex], 0, 3));
 			main ? (g_iCancerChance[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Chance", 4)) : (g_iCancerChance2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Chance", g_iCancerChance[iIndex]));
 			main ? (g_iCancerChance[iIndex] = iSetCellLimit(g_iCancerChance[iIndex], 1, 9999999999)) : (g_iCancerChance2[iIndex] = iSetCellLimit(g_iCancerChance2[iIndex], 1, 9999999999));
 			main ? (g_iCancerHit[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Hit", 0)) : (g_iCancerHit2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Hit", g_iCancerHit[iIndex]));
@@ -150,14 +150,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flCancerRange)
 				{
-					vCancerHit(iSurvivor, client, iCancerRangeChance, iCancerAbility);
+					vCancerHit(iSurvivor, client, iCancerRangeChance, iCancerAbility, 2);
 				}
 			}
 		}
 	}
 }
 
-stock void vCancerHit(int client, int owner, int chance, int enabled)
+stock void vCancerHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -178,7 +178,7 @@ stock void vCancerHit(int client, int owner, int chance, int enabled)
 		iBlue = iSetCellLimit(iBlue, 0, 255);
 		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
 		vFade(client, 800, 300, iRed, iGreen, iBlue);
-		if (iCancerMessage == 1)
+		if (iCancerMessage == message || iCancerMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);

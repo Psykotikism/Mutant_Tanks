@@ -88,14 +88,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vBombHit(victim, attacker, iBombChance(attacker), iBombHit(attacker));
+				vBombHit(victim, attacker, iBombChance(attacker), iBombHit(attacker), 1);
 			}
 		}
 		else if ((iBombHitMode(victim) == 0 || iBombHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vBombHit(attacker, victim, iBombChance(victim), iBombHit(victim));
+				vBombHit(attacker, victim, iBombChance(victim), iBombHit(victim), 1);
 			}
 		}
 	}
@@ -115,7 +115,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iBombAbility[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", 0)) : (g_iBombAbility2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", g_iBombAbility[iIndex]));
 			main ? (g_iBombAbility[iIndex] = iSetCellLimit(g_iBombAbility[iIndex], 0, 1)) : (g_iBombAbility2[iIndex] = iSetCellLimit(g_iBombAbility2[iIndex], 0, 1));
 			main ? (g_iBombMessage[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Message", 0)) : (g_iBombMessage2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Message", g_iBombMessage[iIndex]));
-			main ? (g_iBombMessage[iIndex] = iSetCellLimit(g_iBombMessage[iIndex], 0, 1)) : (g_iBombMessage2[iIndex] = iSetCellLimit(g_iBombMessage2[iIndex], 0, 1));
+			main ? (g_iBombMessage[iIndex] = iSetCellLimit(g_iBombMessage[iIndex], 0, 3)) : (g_iBombMessage2[iIndex] = iSetCellLimit(g_iBombMessage2[iIndex], 0, 3));
 			main ? (g_iBombChance[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Chance", 4)) : (g_iBombChance2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Chance", g_iBombChance[iIndex]));
 			main ? (g_iBombChance[iIndex] = iSetCellLimit(g_iBombChance[iIndex], 1, 9999999999)) : (g_iBombChance2[iIndex] = iSetCellLimit(g_iBombChance2[iIndex], 1, 9999999999));
 			main ? (g_iBombHit[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit", 0)) : (g_iBombHit2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit", g_iBombHit[iIndex]));
@@ -165,7 +165,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBombRange)
 				{
-					vBombHit(iSurvivor, client, iBombRangeChance, iBombAbility(client));
+					vBombHit(iSurvivor, client, iBombRangeChance, iBombAbility(client), 2);
 				}
 			}
 		}
@@ -193,7 +193,7 @@ public void ST_RockBreak(int client, int entity)
 	}
 }
 
-void vBombHit(int client, int owner, int chance, int enabled)
+void vBombHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -201,7 +201,7 @@ void vBombHit(int client, int owner, int chance, int enabled)
 		int iBombMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iBombMessage[ST_TankType(owner)] : g_iBombMessage2[ST_TankType(owner)];
 		GetClientAbsOrigin(client, flPos);
 		vSpecialAttack(owner, flPos, MODEL_PROPANETANK);
-		if (iBombMessage == 1)
+		if (iBombMessage == message || iBombMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);

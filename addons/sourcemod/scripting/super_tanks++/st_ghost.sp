@@ -98,14 +98,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vGhostHit(victim, attacker, iGhostChance(attacker), iGhostHit(attacker));
+				vGhostHit(victim, attacker, iGhostChance(attacker), iGhostHit(attacker), 1);
 			}
 		}
 		else if ((iGhostHitMode(victim) == 0 || iGhostHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vGhostHit(attacker, victim, iGhostChance(victim), iGhostHit(victim));
+				vGhostHit(attacker, victim, iGhostChance(victim), iGhostHit(victim), 1);
 			}
 		}
 	}
@@ -127,7 +127,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iGhostAbility[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", 0)) : (g_iGhostAbility2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", g_iGhostAbility[iIndex]));
 			main ? (g_iGhostAbility[iIndex] = iSetCellLimit(g_iGhostAbility[iIndex], 0, 3)) : (g_iGhostAbility2[iIndex] = iSetCellLimit(g_iGhostAbility2[iIndex], 0, 3));
 			main ? (g_iGhostMessage[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Message", 0)) : (g_iGhostMessage2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Message", g_iGhostMessage[iIndex]));
-			main ? (g_iGhostMessage[iIndex] = iSetCellLimit(g_iGhostMessage[iIndex], 0, 1)) : (g_iGhostMessage2[iIndex] = iSetCellLimit(g_iGhostMessage2[iIndex], 0, 1));
+			main ? (g_iGhostMessage[iIndex] = iSetCellLimit(g_iGhostMessage[iIndex], 0, 7)) : (g_iGhostMessage2[iIndex] = iSetCellLimit(g_iGhostMessage2[iIndex], 0, 7));
 			main ? (g_iGhostChance[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Chance", 4)) : (g_iGhostChance2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Chance", g_iGhostChance[iIndex]));
 			main ? (g_iGhostChance[iIndex] = iSetCellLimit(g_iGhostChance[iIndex], 1, 9999999999)) : (g_iGhostChance2[iIndex] = iSetCellLimit(g_iGhostChance2[iIndex], 1, 9999999999));
 			main ? (g_iGhostFade[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", 0)) : (g_iGhostFade2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", g_iGhostFade[iIndex]));
@@ -164,7 +164,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flGhostRange)
 				{
-					vGhostHit(iSurvivor, client, iGhostRangeChance, iGhostAbility(client));
+					vGhostHit(iSurvivor, client, iGhostRangeChance, iGhostAbility(client), 2);
 				}
 			}
 		}
@@ -174,17 +174,20 @@ public void ST_Ability(int client)
 			g_iGhostAlpha[client] = 255;
 			CreateTimer(0.1, tTimerGhost, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			SetEntityRenderMode(client, RENDER_TRANSCOLOR);
-			if (iGhostMessage(client) == 1)
+			switch (iGhostMessage(client))
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(client, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Ghost2", sTankName);
+				case 3, 5, 6, 7:
+				{
+					char sTankName[MAX_NAME_LENGTH + 1];
+					ST_TankName(client, sTankName);
+					PrintToChatAll("%s %t", ST_PREFIX2, "Ghost2", sTankName);
+				}
 			}
 		}
 	}
 }
 
-stock void vGhostHit(int client, int owner, int chance, int enabled)
+stock void vGhostHit(int client, int owner, int chance, int enabled, int message)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -200,7 +203,7 @@ stock void vGhostHit(int client, int owner, int chance, int enabled)
 			case 1: EmitSoundToClient(client, SOUND_INFECTED, owner);
 			case 2: EmitSoundToClient(client, SOUND_INFECTED2, owner);
 		}
-		if (iGhostMessage(client) == 1)
+		if (iGhostMessage(owner) == message || iGhostMessage(owner) == 4 || iGhostMessage(owner) == 5 || iGhostMessage(owner) == 6 || iGhostMessage(owner) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);

@@ -96,14 +96,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vWarpHit(victim, attacker, iWarpChance(attacker), iWarpHit(attacker));
+				vWarpHit(victim, attacker, iWarpChance(attacker), iWarpHit(attacker), 1);
 			}
 		}
 		else if ((iWarpHitMode(victim) == 0 || iWarpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vWarpHit(attacker, victim, iWarpChance(victim), iWarpHit(victim));
+				vWarpHit(attacker, victim, iWarpChance(victim), iWarpHit(victim), 1);
 			}
 		}
 	}
@@ -126,7 +126,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iWarpAbility[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", 0)) : (g_iWarpAbility2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", g_iWarpAbility[iIndex]));
 			main ? (g_iWarpAbility[iIndex] = iSetCellLimit(g_iWarpAbility[iIndex], 0, 3)) : (g_iWarpAbility2[iIndex] = iSetCellLimit(g_iWarpAbility2[iIndex], 0, 3));
 			main ? (g_iWarpMessage[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Message", 0)) : (g_iWarpMessage2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Message", g_iWarpMessage[iIndex]));
-			main ? (g_iWarpMessage[iIndex] = iSetCellLimit(g_iWarpMessage[iIndex], 0, 1)) : (g_iWarpMessage2[iIndex] = iSetCellLimit(g_iWarpMessage2[iIndex], 0, 1));
+			main ? (g_iWarpMessage[iIndex] = iSetCellLimit(g_iWarpMessage[iIndex], 0, 7)) : (g_iWarpMessage2[iIndex] = iSetCellLimit(g_iWarpMessage2[iIndex], 0, 7));
 			main ? (g_iWarpChance[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Chance", 4)) : (g_iWarpChance2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Chance", g_iWarpChance[iIndex]));
 			main ? (g_iWarpChance[iIndex] = iSetCellLimit(g_iWarpChance[iIndex], 1, 9999999999)) : (g_iWarpChance2[iIndex] = iSetCellLimit(g_iWarpChance2[iIndex], 1, 9999999999));
 			main ? (g_iWarpHit[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", 0)) : (g_iWarpHit2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", g_iWarpHit[iIndex]));
@@ -164,7 +164,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flWarpRange)
 				{
-					vWarpHit(iSurvivor, client, iWarpRangeChance, iWarpAbility(client));
+					vWarpHit(iSurvivor, client, iWarpRangeChance, iWarpAbility(client), 2);
 				}
 			}
 		}
@@ -188,7 +188,7 @@ stock void vReset()
 	}
 }
 
-stock void vWarpHit(int client, int owner, int chance, int enabled)
+stock void vWarpHit(int client, int owner, int chance, int enabled, int message)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -199,7 +199,7 @@ stock void vWarpHit(int client, int owner, int chance, int enabled)
 			{
 				GetClientAbsOrigin(iPlayer, flCurrentOrigin);
 				TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
-				if (iWarpMessage(owner) == 1)
+				if (iWarpMessage(owner) == message || iWarpMessage(owner) == 4 || iWarpMessage(owner) == 5 || iWarpMessage(owner) == 6 || iWarpMessage(owner) == 7)
 				{
 					char sTankName[MAX_NAME_LENGTH + 1];
 					ST_TankName(owner, sTankName);
@@ -276,11 +276,14 @@ public Action tTimerWarp(Handle timer, any userid)
 		{
 			TeleportEntity(iSurvivor, flTankOrigin, flTankAngles, NULL_VECTOR);
 		}
-		if (iWarpMessage(iTank) == 1)
+		switch (iWarpMessage(iTank))
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Warp2", sTankName);
+			case 3, 5, 6, 7:
+			{
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(iTank, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Warp2", sTankName);
+			}
 		}
 	}
 	return Plugin_Continue;

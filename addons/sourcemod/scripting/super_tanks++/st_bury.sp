@@ -103,14 +103,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vBuryHit(victim, attacker, iBuryChance(attacker), iBuryHit(attacker));
+				vBuryHit(victim, attacker, iBuryChance(attacker), iBuryHit(attacker), 1);
 			}
 		}
 		else if ((iBuryHitMode(victim) == 0 || iBuryHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vBuryHit(attacker, victim, iBuryChance(victim), iBuryHit(victim));
+				vBuryHit(attacker, victim, iBuryChance(victim), iBuryHit(victim), 1);
 			}
 		}
 	}
@@ -130,7 +130,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iBuryAbility[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", 0)) : (g_iBuryAbility2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", g_iBuryAbility[iIndex]));
 			main ? (g_iBuryAbility[iIndex] = iSetCellLimit(g_iBuryAbility[iIndex], 0, 1)) : (g_iBuryAbility2[iIndex] = iSetCellLimit(g_iBuryAbility2[iIndex], 0, 1));
 			main ? (g_iBuryMessage[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Message", 0)) : (g_iBuryMessage2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Message", g_iBuryMessage[iIndex]));
-			main ? (g_iBuryMessage[iIndex] = iSetCellLimit(g_iBuryMessage[iIndex], 0, 1)) : (g_iBuryMessage2[iIndex] = iSetCellLimit(g_iBuryMessage2[iIndex], 0, 1));
+			main ? (g_iBuryMessage[iIndex] = iSetCellLimit(g_iBuryMessage[iIndex], 0, 3)) : (g_iBuryMessage2[iIndex] = iSetCellLimit(g_iBuryMessage2[iIndex], 0, 3));
 			main ? (g_iBuryChance[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Chance", 4)) : (g_iBuryChance2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Chance", g_iBuryChance[iIndex]));
 			main ? (g_iBuryChance[iIndex] = iSetCellLimit(g_iBuryChance[iIndex], 1, 9999999999)) : (g_iBuryChance2[iIndex] = iSetCellLimit(g_iBuryChance2[iIndex], 1, 9999999999));
 			main ? (g_flBuryDuration[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Duration", 5.0)) : (g_flBuryDuration2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Duration", g_flBuryDuration[iIndex]));
@@ -180,7 +180,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBuryRange)
 				{
-					vBuryHit(iSurvivor, client, iBuryRangeChance, iBuryAbility(client));
+					vBuryHit(iSurvivor, client, iBuryRangeChance, iBuryAbility(client), 2);
 				}
 			}
 		}
@@ -195,7 +195,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vBuryHit(int client, int owner, int chance, int enabled)
+stock void vBuryHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBury[client] && bIsPlayerGrounded(client))
 	{
@@ -217,8 +217,8 @@ stock void vBuryHit(int client, int owner, int chance, int enabled)
 		}
 		DataPack dpStopBury = new DataPack();
 		CreateDataTimer(flBuryDuration, tTimerStopBury, dpStopBury, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopBury.WriteCell(GetClientUserId(client)), dpStopBury.WriteCell(GetClientUserId(owner)), dpStopBury.WriteCell(enabled);
-		if (iBuryMessage(owner) == 1)
+		dpStopBury.WriteCell(GetClientUserId(client)), dpStopBury.WriteCell(GetClientUserId(owner)), dpStopBury.WriteCell(message), dpStopBury.WriteCell(enabled);
+		if (iBuryMessage(owner) == message || iBuryMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
@@ -235,9 +235,7 @@ stock void vRemoveBury(int client)
 		{
 			DataPack dpDataPack = new DataPack();
 			CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-			dpDataPack.WriteCell(GetClientUserId(iSurvivor));
-			dpDataPack.WriteCell(GetClientUserId(client));
-			dpDataPack.WriteCell(1);
+			dpDataPack.WriteCell(GetClientUserId(iSurvivor)), dpDataPack.WriteCell(GetClientUserId(client)), dpDataPack.WriteCell(0), dpDataPack.WriteCell(1);
 		}
 	}
 }
@@ -253,7 +251,7 @@ stock void vReset()
 	}
 }
 
-stock void vStopBury(int client, int owner)
+stock void vStopBury(int client, int owner, int message)
 {
 	if (g_bBury[client])
 	{
@@ -280,7 +278,7 @@ stock void vStopBury(int client, int owner)
 		{
 			SetEntityMoveType(client, MOVETYPE_WALK);
 		}
-		if (iBuryMessage(owner) == 1)
+		if (iBuryMessage(owner) == message || iBuryMessage(owner) == 3)
 		{
 			PrintToChatAll("%s %t", ST_PREFIX2, "Bury2", client);
 		}
@@ -326,18 +324,18 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 		g_bBury[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iBuryChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vStopBury(iSurvivor, iTank);
+		vStopBury(iSurvivor, iTank, iBuryChat);
 		return Plugin_Stop;
 	}
 	int iBuryEnabled = pack.ReadCell();
 	if (iBuryEnabled == 0)
 	{
-		vStopBury(iSurvivor, iTank);
+		vStopBury(iSurvivor, iTank, iBuryChat);
 		return Plugin_Stop;
 	}
-	vStopBury(iSurvivor, iTank);
+	vStopBury(iSurvivor, iTank, iBuryChat);
 	return Plugin_Continue;
 }

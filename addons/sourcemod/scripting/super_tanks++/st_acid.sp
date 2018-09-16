@@ -114,14 +114,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vAcidHit(victim, attacker, iAcidChance(attacker), iAcidHit(attacker));
+				vAcidHit(victim, attacker, iAcidChance(attacker), iAcidHit(attacker), 1);
 			}
 		}
 		else if ((iAcidHitMode(victim) == 0 || iAcidHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vAcidHit(attacker, victim, iAcidChance(victim), iAcidHit(victim));
+				vAcidHit(attacker, victim, iAcidChance(victim), iAcidHit(victim), 1);
 			}
 		}
 	}
@@ -141,7 +141,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iAcidAbility[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", 0)) : (g_iAcidAbility2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", g_iAcidAbility[iIndex]));
 			main ? (g_iAcidAbility[iIndex] = iSetCellLimit(g_iAcidAbility[iIndex], 0, 1)) : (g_iAcidAbility2[iIndex] = iSetCellLimit(g_iAcidAbility2[iIndex], 0, 1));
 			main ? (g_iAcidMessage[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", 0)) : (g_iAcidMessage2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", g_iAcidMessage[iIndex]));
-			main ? (g_iAcidMessage[iIndex] = iSetCellLimit(g_iAcidMessage[iIndex], 0, 1)) : (g_iAcidMessage2[iIndex] = iSetCellLimit(g_iAcidMessage2[iIndex], 0, 1));
+			main ? (g_iAcidMessage[iIndex] = iSetCellLimit(g_iAcidMessage[iIndex], 0, 3)) : (g_iAcidMessage2[iIndex] = iSetCellLimit(g_iAcidMessage2[iIndex], 0, 3));
 			main ? (g_iAcidChance[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", 4)) : (g_iAcidChance2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", g_iAcidChance[iIndex]));
 			main ? (g_iAcidChance[iIndex] = iSetCellLimit(g_iAcidChance[iIndex], 1, 9999999999)) : (g_iAcidChance2[iIndex] = iSetCellLimit(g_iAcidChance2[iIndex], 1, 9999999999));
 			main ? (g_iAcidHit[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", 0)) : (g_iAcidHit2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", g_iAcidHit[iIndex]));
@@ -189,7 +189,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flAcidRange)
 				{
-					vAcidHit(iSurvivor, client, iAcidRangeChance, iAcidAbility(client));
+					vAcidHit(iSurvivor, client, iAcidRangeChance, iAcidAbility(client), 2);
 				}
 			}
 		}
@@ -224,16 +224,17 @@ stock void vAcid(int client, int owner)
 	SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, owner, 2.0);
 }
 
-stock void vAcidHit(int client, int owner, int chance, int enabled)
+stock void vAcidHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
+		int iAcidMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iAcidMessage[ST_TankType(owner)] : g_iAcidMessage2[ST_TankType(owner)];
 		ST_TankName(owner, sTankName);
 		if (bIsL4D2Game())
 		{
 			vAcid(client, owner);
-			if (iAcidMessage(owner) == 1)
+			if (iAcidMessage == message || iAcidMessage == 3)
 			{
 				PrintToChatAll("%s %t", ST_PREFIX2, "Acid", sTankName, client);
 			}
@@ -241,7 +242,7 @@ stock void vAcidHit(int client, int owner, int chance, int enabled)
 		else
 		{
 			SDKCall(g_hSDKPukePlayer, client, owner, true);
-			if (iAcidMessage(owner) == 1)
+			if (iAcidMessage == message || iAcidMessage == 3)
 			{
 				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
 			}
@@ -267,9 +268,4 @@ stock int iAcidHit(int client)
 stock int iAcidHitMode(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iAcidHitMode[ST_TankType(client)] : g_iAcidHitMode2[ST_TankType(client)];
-}
-
-stock int iAcidMessage(int client)
-{
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAcidMessage[ST_TankType(client)] : g_iAcidMessage2[ST_TankType(client)];
 }

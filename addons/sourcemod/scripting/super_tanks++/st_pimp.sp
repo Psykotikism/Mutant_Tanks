@@ -95,14 +95,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vPimpHit(victim, attacker, iPimpChance(attacker), iPimpHit(attacker));
+				vPimpHit(victim, attacker, iPimpChance(attacker), iPimpHit(attacker), 1);
 			}
 		}
 		else if ((iPimpHitMode(victim) == 0 || iPimpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vPimpHit(attacker, victim, iPimpChance(victim), iPimpHit(victim));
+				vPimpHit(attacker, victim, iPimpChance(victim), iPimpHit(victim), 1);
 			}
 		}
 	}
@@ -122,7 +122,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iPimpAbility[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", 0)) : (g_iPimpAbility2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", g_iPimpAbility[iIndex]));
 			main ? (g_iPimpAbility[iIndex] = iSetCellLimit(g_iPimpAbility[iIndex], 0, 1)) : (g_iPimpAbility2[iIndex] = iSetCellLimit(g_iPimpAbility2[iIndex], 0, 1));
 			main ? (g_iPimpMessage[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Message", 0)) : (g_iPimpMessage2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Message", g_iPimpMessage[iIndex]));
-			main ? (g_iPimpMessage[iIndex] = iSetCellLimit(g_iPimpMessage[iIndex], 0, 1)) : (g_iPimpMessage2[iIndex] = iSetCellLimit(g_iPimpMessage2[iIndex], 0, 1));
+			main ? (g_iPimpMessage[iIndex] = iSetCellLimit(g_iPimpMessage[iIndex], 0, 3)) : (g_iPimpMessage2[iIndex] = iSetCellLimit(g_iPimpMessage2[iIndex], 0, 3));
 			main ? (g_iPimpAmount[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", 5)) : (g_iPimpAmount2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", g_iPimpAmount[iIndex]));
 			main ? (g_iPimpAmount[iIndex] = iSetCellLimit(g_iPimpAmount[iIndex], 1, 9999999999)) : (g_iPimpAmount2[iIndex] = iSetCellLimit(g_iPimpAmount2[iIndex], 1, 9999999999));
 			main ? (g_iPimpChance[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Chance", 4)) : (g_iPimpChance2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Chance", g_iPimpChance[iIndex]));
@@ -161,22 +161,22 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPimpRange)
 				{
-					vPimpHit(iSurvivor, client, iPimpRangeChance, iPimpAbility);
+					vPimpHit(iSurvivor, client, iPimpRangeChance, iPimpAbility, 2);
 				}
 			}
 		}
 	}
 }
 
-stock void vPimpHit(int client, int owner, int chance, int enabled)
+stock void vPimpHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bPimp[client])
 	{
 		g_bPimp[client] = true;
 		DataPack dpPimp = new DataPack();
 		CreateDataTimer(0.5, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpPimp.WriteCell(GetClientUserId(client)), dpPimp.WriteCell(GetClientUserId(owner)), dpPimp.WriteCell(enabled);
-		if (iPimpMessage(owner) == 1)
+		dpPimp.WriteCell(GetClientUserId(client)), dpPimp.WriteCell(GetClientUserId(owner)), dpPimp.WriteCell(message), dpPimp.WriteCell(enabled);
+		if (iPimpMessage(owner) == message || iPimpMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
@@ -197,11 +197,11 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner)
+stock void vReset2(int client, int owner, int message)
 {
 	g_bPimp[client] = false;
 	g_iPimpCount[client] = 0;
-	if (iPimpMessage(owner) == 1)
+	if (iPimpMessage(owner) == message || iPimpMessage(owner) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Pimp2", client);
 	}
@@ -236,17 +236,17 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		g_bPimp[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iPimpChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iPimpChat);
 		return Plugin_Stop;
 	}
 	int iPimpAbility = pack.ReadCell(),
 		iPimpAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAmount[ST_TankType(iTank)] : g_iPimpAmount2[ST_TankType(iTank)];
 	if (iPimpAbility == 0 || g_iPimpCount[iSurvivor] >= iPimpAmount)
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iPimpChat);
 		return Plugin_Stop;
 	}
 	int iPimpDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpDamage[ST_TankType(iTank)] : g_iPimpDamage2[ST_TankType(iTank)];

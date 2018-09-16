@@ -243,6 +243,7 @@ public void ST_Event(Event event, const char[] name)
 		if (iDropAbility(iTank) == 1 && GetRandomInt(1, iDropChance) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsValidEntity(g_iDrop[iTank]))
 		{
 			float flPos[3], flAngle[3];
+			int iDropMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMessage[ST_TankType(iTank)] : g_iDropMessage2[ST_TankType(iTank)];
 			GetClientEyePosition(iTank, flPos);
 			GetClientAbsAngles(iTank, flAngle);
 			if (iDropMode(iTank) != 2 && StrContains(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon") != -1)
@@ -298,7 +299,7 @@ public void ST_Event(Event event, const char[] name)
 					{
 						SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
 					}
-					if (iDropMessage(iTank) == 1)
+					if (iDropMessage == 1)
 					{
 						char sTankName[MAX_NAME_LENGTH + 1];
 						ST_TankName(iTank, sTankName);
@@ -315,7 +316,7 @@ public void ST_Event(Event event, const char[] name)
 					TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
 					DispatchSpawn(iDrop);
 					SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale(iTank));
-					if (iDropMessage(iTank) == 1)
+					if (iDropMessage == 1)
 					{
 						char sTankName[MAX_NAME_LENGTH + 1];
 						ST_TankName(iTank, sTankName);
@@ -377,11 +378,6 @@ stock float flDropWeaponScale(int client)
 stock int iDropAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
-}
-
-stock int iDropMessage(int client)
-{
-	return !g_bTankConfig[ST_TankType(client)] ? g_iDropMessage[ST_TankType(client)] : g_iDropMessage2[ST_TankType(client)];
 }
 
 stock int iDropMode(int client)

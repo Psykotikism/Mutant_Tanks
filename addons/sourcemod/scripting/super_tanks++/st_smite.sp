@@ -89,14 +89,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vSmiteHit(victim, attacker, iSmiteChance(attacker), iSmiteHit(attacker));
+				vSmiteHit(victim, attacker, iSmiteChance(attacker), iSmiteHit(attacker), 1);
 			}
 		}
 		else if ((iSmiteHitMode(victim) == 0 || iSmiteHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vSmiteHit(attacker, victim, iSmiteChance(victim), iSmiteHit(victim));
+				vSmiteHit(attacker, victim, iSmiteChance(victim), iSmiteHit(victim), 1);
 			}
 		}
 	}
@@ -116,7 +116,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iSmiteAbility[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", 0)) : (g_iSmiteAbility2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", g_iSmiteAbility[iIndex]));
 			main ? (g_iSmiteAbility[iIndex] = iSetCellLimit(g_iSmiteAbility[iIndex], 0, 1)) : (g_iSmiteAbility2[iIndex] = iSetCellLimit(g_iSmiteAbility2[iIndex], 0, 1));
 			main ? (g_iSmiteMessage[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Message", 0)) : (g_iSmiteMessage2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Message", g_iSmiteMessage[iIndex]));
-			main ? (g_iSmiteMessage[iIndex] = iSetCellLimit(g_iSmiteMessage[iIndex], 0, 1)) : (g_iSmiteMessage2[iIndex] = iSetCellLimit(g_iSmiteMessage2[iIndex], 0, 1));
+			main ? (g_iSmiteMessage[iIndex] = iSetCellLimit(g_iSmiteMessage[iIndex], 0, 3)) : (g_iSmiteMessage2[iIndex] = iSetCellLimit(g_iSmiteMessage2[iIndex], 0, 3));
 			main ? (g_iSmiteChance[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Chance", 4)) : (g_iSmiteChance2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Chance", g_iSmiteChance[iIndex]));
 			main ? (g_iSmiteChance[iIndex] = iSetCellLimit(g_iSmiteChance[iIndex], 1, 9999999999)) : (g_iSmiteChance2[iIndex] = iSetCellLimit(g_iSmiteChance2[iIndex], 1, 9999999999));
 			main ? (g_iSmiteHit[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit", 0)) : (g_iSmiteHit2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit", g_iSmiteHit[iIndex]));
@@ -171,14 +171,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flSmiteRange)
 				{
-					vSmiteHit(iSurvivor, client, iSmiteRangeChance, iSmiteAbility(client));
+					vSmiteHit(iSurvivor, client, iSmiteRangeChance, iSmiteAbility(client), 2);
 				}
 			}
 		}
 	}
 }
 
-stock void vSmiteHit(int client, int owner, int chance, int enabled)
+stock void vSmiteHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -196,7 +196,7 @@ stock void vSmiteHit(int client, int owner, int chance, int enabled)
 		TE_SendToAll();
 		EmitAmbientSound(SOUND_EXPLOSION2, flStartPosition, client, SNDLEVEL_RAIDSIREN);
 		ForcePlayerSuicide(client);
-		if (iSmiteMessage == 1)
+		if (iSmiteMessage == message || iSmiteMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);

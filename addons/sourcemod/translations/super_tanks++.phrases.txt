@@ -345,6 +345,11 @@
 		"#format"		"{1:s}"
 		"en"			"{1} will jump periodically!"
 	}
+	"Jump2"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} just jumped!"
+	}
 	"Kamikaze"
 	{
 		"#format"		"{1:s},{2:N}"

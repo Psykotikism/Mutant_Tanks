@@ -96,14 +96,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vDrugHit(victim, attacker, iDrugChance(attacker), iDrugHit(attacker));
+				vDrugHit(victim, attacker, iDrugChance(attacker), iDrugHit(attacker), 1);
 			}
 		}
 		else if ((iDrugHitMode(victim) == 0 || iDrugHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vDrugHit(attacker, victim, iDrugChance(victim), iDrugHit(victim));
+				vDrugHit(attacker, victim, iDrugChance(victim), iDrugHit(victim), 1);
 			}
 		}
 	}
@@ -123,7 +123,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iDrugAbility[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Enabled", 0)) : (g_iDrugAbility2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Enabled", g_iDrugAbility[iIndex]));
 			main ? (g_iDrugAbility[iIndex] = iSetCellLimit(g_iDrugAbility[iIndex], 0, 1)) : (g_iDrugAbility2[iIndex] = iSetCellLimit(g_iDrugAbility2[iIndex], 0, 1));
 			main ? (g_iDrugMessage[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Message", 0)) : (g_iDrugMessage2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Message", g_iDrugMessage[iIndex]));
-			main ? (g_iDrugMessage[iIndex] = iSetCellLimit(g_iDrugMessage[iIndex], 0, 1)) : (g_iDrugMessage2[iIndex] = iSetCellLimit(g_iDrugMessage2[iIndex], 0, 1));
+			main ? (g_iDrugMessage[iIndex] = iSetCellLimit(g_iDrugMessage[iIndex], 0, 3)) : (g_iDrugMessage2[iIndex] = iSetCellLimit(g_iDrugMessage2[iIndex], 0, 3));
 			main ? (g_iDrugChance[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Chance", 4)) : (g_iDrugChance2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Chance", g_iDrugChance[iIndex]));
 			main ? (g_iDrugChance[iIndex] = iSetCellLimit(g_iDrugChance[iIndex], 1, 9999999999)) : (g_iDrugChance2[iIndex] = iSetCellLimit(g_iDrugChance2[iIndex], 1, 9999999999));
 			main ? (g_flDrugDuration[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Duration", 5.0)) : (g_flDrugDuration2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Duration", g_flDrugDuration[iIndex]));
@@ -160,7 +160,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flDrugRange)
 				{
-					vDrugHit(iSurvivor, client, iDrugRangeChance, iDrugAbility);
+					vDrugHit(iSurvivor, client, iDrugRangeChance, iDrugAbility, 2);
 				}
 			}
 		}
@@ -198,15 +198,15 @@ stock void vDrug(int client, bool toggle, float angles[20])
 	}
 }
 
-stock void vDrugHit(int client, int owner, int chance, int enabled)
+stock void vDrugHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bDrug[client])
 	{
 		g_bDrug[client] = true;
 		DataPack dpDrug = new DataPack();
 		CreateDataTimer(1.0, tTimerDrug, dpDrug, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDrug.WriteCell(GetClientUserId(client)), dpDrug.WriteCell(GetClientUserId(owner)), dpDrug.WriteCell(enabled), dpDrug.WriteFloat(GetEngineTime());
-		if (iDrugMessage(owner) == 1)
+		dpDrug.WriteCell(GetClientUserId(client)), dpDrug.WriteCell(GetClientUserId(owner)), dpDrug.WriteCell(message), dpDrug.WriteCell(enabled), dpDrug.WriteFloat(GetEngineTime());
+		if (iDrugMessage(owner) == message || iDrugMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
@@ -226,11 +226,11 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner)
+stock void vReset2(int client, int owner, int message)
 {
 	g_bDrug[client] = false;
 	vDrug(client, false, g_flDrugAngles);
-	if (iDrugMessage(owner) == 1)
+	if (iDrugMessage(owner) == message || iDrugMessage(owner) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Drug2", client);
 	}
@@ -265,10 +265,10 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 		g_bDrug[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iDrugChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iDrugChat);
 		return Plugin_Stop;
 	}
 	int iDrugAbility = pack.ReadCell();
@@ -276,7 +276,7 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 		flDrugDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flDrugDuration[ST_TankType(iTank)] : g_flDrugDuration2[ST_TankType(iTank)];
 	if (iDrugAbility == 0 || (flTime + flDrugDuration) < GetEngineTime())
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iDrugChat);
 		return Plugin_Stop;
 	}
 	vDrug(iSurvivor, true, g_flDrugAngles);

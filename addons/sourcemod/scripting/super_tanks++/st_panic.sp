@@ -94,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vPanicHit(attacker, iPanicChance(attacker), iPanicHit(attacker));
+				vPanicHit(attacker, iPanicChance(attacker), iPanicHit(attacker), 1);
 			}
 		}
 		else if ((iPanicHitMode(victim) == 0 || iPanicHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vPanicHit(victim, iPanicChance(victim), iPanicHit(victim));
+				vPanicHit(victim, iPanicChance(victim), iPanicHit(victim), 1);
 			}
 		}
 	}
@@ -121,7 +121,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iPanicAbility[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", 0)) : (g_iPanicAbility2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", g_iPanicAbility[iIndex]));
 			main ? (g_iPanicAbility[iIndex] = iSetCellLimit(g_iPanicAbility[iIndex], 0, 3)) : (g_iPanicAbility2[iIndex] = iSetCellLimit(g_iPanicAbility2[iIndex], 0, 3));
 			main ? (g_iPanicMessage[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Message", 0)) : (g_iPanicMessage2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Message", g_iPanicMessage[iIndex]));
-			main ? (g_iPanicMessage[iIndex] = iSetCellLimit(g_iPanicMessage[iIndex], 0, 1)) : (g_iPanicMessage2[iIndex] = iSetCellLimit(g_iPanicMessage2[iIndex], 0, 1));
+			main ? (g_iPanicMessage[iIndex] = iSetCellLimit(g_iPanicMessage[iIndex], 0, 7)) : (g_iPanicMessage2[iIndex] = iSetCellLimit(g_iPanicMessage2[iIndex], 0, 7));
 			main ? (g_iPanicChance[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Chance", 4)) : (g_iPanicChance2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Chance", g_iPanicChance[iIndex]));
 			main ? (g_iPanicChance[iIndex] = iSetCellLimit(g_iPanicChance[iIndex], 1, 9999999999)) : (g_iPanicChance2[iIndex] = iSetCellLimit(g_iPanicChance2[iIndex], 1, 9999999999));
 			main ? (g_iPanicHit[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", 0)) : (g_iPanicHit2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", g_iPanicHit[iIndex]));
@@ -169,11 +169,11 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPanicRange)
 				{
-					vPanicHit(client, iPanicRangeChance, iPanicAbility(client));
+					vPanicHit(client, iPanicRangeChance, iPanicAbility(client), 2);
 				}
 			}
 		}
-		if ((iPanicAbility(client) == 1 || iPanicAbility(client) == 3) && !g_bPanic[client])
+		if ((iPanicAbility(client) == 2 || iPanicAbility(client) == 3) && !g_bPanic[client])
 		{
 			g_bPanic[client] = true;
 			float flPanicInterval = !g_bTankConfig[ST_TankType(client)] ? g_flPanicInterval[ST_TankType(client)] : g_flPanicInterval2[ST_TankType(client)];
@@ -182,13 +182,12 @@ public void ST_Ability(int client)
 	}
 }
 
-stock void vPanicHit(int client, int chance, int enabled)
+stock void vPanicHit(int client, int chance, int enabled, int message)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iPanicMessage = !g_bTankConfig[ST_TankType(client)] ? g_iPanicMessage[ST_TankType(client)] : g_iPanicMessage2[ST_TankType(client)];
 		vCheatCommand(client, "director_force_panic_event");
-		if (iPanicMessage == 1)
+		if (iPanicMessage(client) == message || iPanicMessage(client) == 4 || iPanicMessage(client) == 5 || iPanicMessage(client) == 6 || iPanicMessage(client) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(client, sTankName);
@@ -228,6 +227,11 @@ stock int iPanicHitMode(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iPanicHitMode[ST_TankType(client)] : g_iPanicHitMode2[ST_TankType(client)];
 }
 
+stock int iPanicMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iPanicMessage[ST_TankType(client)] : g_iPanicMessage2[ST_TankType(client)];
+}
+
 public Action tTimerPanic(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -242,5 +246,14 @@ public Action tTimerPanic(Handle timer, any userid)
 		return Plugin_Stop;
 	}
 	vCheatCommand(iTank, "director_force_panic_event");
+	switch (iPanicMessage(iTank))
+	{
+		case 3, 5, 6, 7:
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Panic", sTankName);
+		}
+	}
 	return Plugin_Continue;
 }

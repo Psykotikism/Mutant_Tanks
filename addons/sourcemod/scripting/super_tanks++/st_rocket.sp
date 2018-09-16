@@ -91,14 +91,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vRocketHit(victim, attacker, iRocketChance(attacker), iRocketHit(attacker));
+				vRocketHit(victim, attacker, iRocketChance(attacker), iRocketHit(attacker), 1);
 			}
 		}
 		else if ((iRocketHitMode(victim) == 0 || iRocketHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vRocketHit(attacker, victim, iRocketChance(victim), iRocketHit(victim));
+				vRocketHit(attacker, victim, iRocketChance(victim), iRocketHit(victim), 1);
 			}
 		}
 	}
@@ -118,7 +118,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iRocketAbility[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", 0)) : (g_iRocketAbility2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", g_iRocketAbility[iIndex]));
 			main ? (g_iRocketAbility[iIndex] = iSetCellLimit(g_iRocketAbility[iIndex], 0, 1)) : (g_iRocketAbility2[iIndex] = iSetCellLimit(g_iRocketAbility2[iIndex], 0, 1));
 			main ? (g_iRocketMessage[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Message", 0)) : (g_iRocketMessage2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Message", g_iRocketMessage[iIndex]));
-			main ? (g_iRocketMessage[iIndex] = iSetCellLimit(g_iRocketMessage[iIndex], 0, 1)) : (g_iRocketMessage2[iIndex] = iSetCellLimit(g_iRocketMessage2[iIndex], 0, 1));
+			main ? (g_iRocketMessage[iIndex] = iSetCellLimit(g_iRocketMessage[iIndex], 0, 3)) : (g_iRocketMessage2[iIndex] = iSetCellLimit(g_iRocketMessage2[iIndex], 0, 3));
 			main ? (g_iRocketChance[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Chance", 4)) : (g_iRocketChance2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Chance", g_iRocketChance[iIndex]));
 			main ? (g_iRocketChance[iIndex] = iSetCellLimit(g_iRocketChance[iIndex], 1, 9999999999)) : (g_iRocketChance2[iIndex] = iSetCellLimit(g_iRocketChance2[iIndex], 1, 9999999999));
 			main ? (g_iRocketHit[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit", 0)) : (g_iRocketHit2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit", g_iRocketHit[iIndex]));
@@ -153,14 +153,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRocketRange)
 				{
-					vRocketHit(iSurvivor, client, iRocketRangeChance, iRocketAbility);
+					vRocketHit(iSurvivor, client, iRocketRangeChance, iRocketAbility, 2);
 				}
 			}
 		}
 	}
 }
 
-stock void vRocketHit(int client, int owner, int chance, int enabled)
+stock void vRocketHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -195,7 +195,7 @@ stock void vRocketHit(int client, int owner, int chance, int enabled)
 		dpRocketLaunch.WriteCell(GetClientUserId(client)), dpRocketLaunch.WriteCell(GetClientUserId(owner)), dpRocketLaunch.WriteCell(enabled);
 		DataPack dpRocketDetonate = new DataPack();
 		CreateDataTimer(3.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
-		dpRocketDetonate.WriteCell(GetClientUserId(client)), dpRocketDetonate.WriteCell(GetClientUserId(owner)), dpRocketDetonate.WriteCell(enabled);
+		dpRocketDetonate.WriteCell(GetClientUserId(client)), dpRocketDetonate.WriteCell(GetClientUserId(owner)), dpRocketDetonate.WriteCell(message), dpRocketDetonate.WriteCell(enabled);
 	}
 }
 
@@ -249,7 +249,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	{
 		return Plugin_Stop;
 	}
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iRocketChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
@@ -267,7 +267,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	g_iRocket[iSurvivor] = 0;
 	ForcePlayerSuicide(iSurvivor);
 	SetEntityGravity(iSurvivor, 1.0);
-	if (iRocketMessage == 1)
+	if (iRocketMessage == iRocketChat || iRocketMessage == 3)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
 		ST_TankName(iTank, sTankName);

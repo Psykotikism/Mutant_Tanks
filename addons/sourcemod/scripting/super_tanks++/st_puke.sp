@@ -94,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vPukeHit(victim, attacker, iPukeChance(attacker), iPukeHit(attacker));
+				vPukeHit(victim, attacker, iPukeChance(attacker), iPukeHit(attacker), 1);
 			}
 		}
 		else if ((iPukeHitMode(victim) == 0 || iPukeHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vPukeHit(attacker, victim, iPukeChance(victim), iPukeHit(victim));
+				vPukeHit(attacker, victim, iPukeChance(victim), iPukeHit(victim), 1);
 			}
 		}
 	}
@@ -121,7 +121,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iPukeAbility[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", 0)) : (g_iPukeAbility2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", g_iPukeAbility[iIndex]));
 			main ? (g_iPukeAbility[iIndex] = iSetCellLimit(g_iPukeAbility[iIndex], 0, 1)) : (g_iPukeAbility2[iIndex] = iSetCellLimit(g_iPukeAbility2[iIndex], 0, 1));
 			main ? (g_iPukeMessage[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Message", 0)) : (g_iPukeMessage2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Message", g_iPukeMessage[iIndex]));
-			main ? (g_iPukeMessage[iIndex] = iSetCellLimit(g_iPukeMessage[iIndex], 0, 1)) : (g_iPukeMessage2[iIndex] = iSetCellLimit(g_iPukeMessage2[iIndex], 0, 1));
+			main ? (g_iPukeMessage[iIndex] = iSetCellLimit(g_iPukeMessage[iIndex], 0, 3)) : (g_iPukeMessage2[iIndex] = iSetCellLimit(g_iPukeMessage2[iIndex], 0, 3));
 			main ? (g_iPukeChance[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Chance", 4)) : (g_iPukeChance2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Chance", g_iPukeChance[iIndex]));
 			main ? (g_iPukeChance[iIndex] = iSetCellLimit(g_iPukeChance[iIndex], 1, 9999999999)) : (g_iPukeChance2[iIndex] = iSetCellLimit(g_iPukeChance2[iIndex], 1, 9999999999));
 			main ? (g_iPukeHit[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", 0)) : (g_iPukeHit2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", g_iPukeHit[iIndex]));
@@ -156,20 +156,20 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPukeRange)
 				{
-					vPukeHit(iSurvivor, client, iPukeRangeChance, iPukeAbility);
+					vPukeHit(iSurvivor, client, iPukeRangeChance, iPukeAbility, 2);
 				}
 			}
 		}
 	}
 }
 
-stock void vPukeHit(int client, int owner, int chance, int enabled)
+stock void vPukeHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		int iPukeMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iPukeMessage[ST_TankType(owner)] : g_iPukeMessage2[ST_TankType(owner)];
 		SDKCall(g_hSDKPukePlayer, client, owner, true);
-		if (iPukeMessage == 1)
+		if (iPukeMessage == message, iPukeMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
