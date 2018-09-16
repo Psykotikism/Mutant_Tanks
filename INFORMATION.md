@@ -490,7 +490,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Acid Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -565,7 +567,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Ammo Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -637,7 +641,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Blind Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -715,7 +721,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Bomb Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -788,7 +796,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Bury Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -866,7 +876,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Cancer Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1036,7 +1048,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Drug Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1108,7 +1122,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Electric Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1199,6 +1215,9 @@
 			// --
 			// 0: OFF
 			// 1: ON
+			// 1: ON, display message only when "Enforce Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1282,6 +1301,9 @@
 			// --
 			// 0: OFF
 			// 1: ON
+			// 1: ON, display message only when "Fire Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1399,7 +1421,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Fling Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1544,7 +1568,13 @@
 			// Display a message whenever the abilities activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Ghost Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1670,7 +1700,13 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Gravity Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1762,7 +1798,13 @@
 			// Display a message whenever the ability activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Heal Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The distance between an infected and the Super Tank needed to trigger the ability.
@@ -1867,7 +1909,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Hurt Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1945,7 +1989,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Hypno Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -2023,7 +2069,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Ice Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -2095,7 +2143,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Idle Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -2162,6 +2212,9 @@
 			// --
 			// 0: OFF
 			// 1: ON
+			// 1: ON, display message only when "Invert Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -2315,7 +2368,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Kamikaze Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -2381,7 +2436,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Leech Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -2669,7 +2726,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Nullify Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -2744,7 +2803,13 @@
 			// Display a message whenever the ability activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Panic Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -2816,7 +2881,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Pimp Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The amount of pimp slaps the Super Tank can give to survivors.
@@ -2894,7 +2961,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Puke Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -2999,7 +3068,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Quiet Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -3168,7 +3239,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Restart Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -3300,7 +3373,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Rocket Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -3365,7 +3440,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Shake Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -3480,7 +3557,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Shove Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -3552,7 +3631,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Smash Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -3618,7 +3699,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Smite Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -3780,7 +3863,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Stun Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -3853,7 +3938,13 @@
 			// Display a message whenever the ability activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Ability Enabled" is set to 1.
+			// 2: ON, display message only when "Ability Enabled" is set to 2.
+			// 3: ON, display message only when "Ability Enabled" is set to 3.
+			// 4: ON, display message when 1 or 2 apply.
+			// 5: ON, display message when 1 or 3 apply.
+			// 6: ON, display message when 2 or 3 apply.
+			// 7: ON, display message when 1, 2, or 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank can throw these cars.
@@ -3958,7 +4049,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Vampire Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -4035,7 +4128,9 @@
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Vision Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -4117,7 +4212,13 @@
 			// Display a message whenever the ability activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Warp Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
