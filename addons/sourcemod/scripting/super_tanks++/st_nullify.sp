@@ -94,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vNullifyHit(victim, attacker, iNullifyChance(attacker), iNullifyHit(attacker));
+				vNullifyHit(victim, attacker, iNullifyChance(attacker), iNullifyHit(attacker), 1);
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if ((iNullifyHitMode(victim) == 0 || iNullifyHitMode(victim) == 2) && strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vNullifyHit(attacker, victim, iNullifyChance(victim), iNullifyHit(victim));
+				vNullifyHit(attacker, victim, iNullifyChance(victim), iNullifyHit(victim), 1);
 			}
 			if (g_bNullify[attacker])
 			{
@@ -127,7 +127,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iNullifyAbility[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Enabled", 0)) : (g_iNullifyAbility2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Enabled", g_iNullifyAbility[iIndex]));
 			main ? (g_iNullifyAbility[iIndex] = iSetCellLimit(g_iNullifyAbility[iIndex], 0, 1)) : (g_iNullifyAbility2[iIndex] = iSetCellLimit(g_iNullifyAbility2[iIndex], 0, 1));
 			main ? (g_iNullifyMessage[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Message", 0)) : (g_iNullifyMessage2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Message", g_iNullifyMessage[iIndex]));
-			main ? (g_iNullifyMessage[iIndex] = iSetCellLimit(g_iNullifyMessage[iIndex], 0, 1)) : (g_iNullifyMessage2[iIndex] = iSetCellLimit(g_iNullifyMessage2[iIndex], 0, 1));
+			main ? (g_iNullifyMessage[iIndex] = iSetCellLimit(g_iNullifyMessage[iIndex], 0, 3)) : (g_iNullifyMessage2[iIndex] = iSetCellLimit(g_iNullifyMessage2[iIndex], 0, 3));
 			main ? (g_iNullifyChance[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Chance", 4)) : (g_iNullifyChance2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Chance", g_iNullifyChance[iIndex]));
 			main ? (g_iNullifyChance[iIndex] = iSetCellLimit(g_iNullifyChance[iIndex], 1, 9999999999)) : (g_iNullifyChance2[iIndex] = iSetCellLimit(g_iNullifyChance2[iIndex], 1, 9999999999));
 			main ? (g_flNullifyDuration[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Duration", 5.0)) : (g_flNullifyDuration2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Duration", g_flNullifyDuration[iIndex]));
@@ -175,7 +175,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flNullifyRange)
 				{
-					vNullifyHit(iSurvivor, client, iNullifyRangeChance, iNullifyAbility(client));
+					vNullifyHit(iSurvivor, client, iNullifyRangeChance, iNullifyAbility(client), 2);
 				}
 			}
 		}
@@ -190,7 +190,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vNullifyHit(int client, int owner, int chance, int enabled)
+stock void vNullifyHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bNullify[client])
 	{
@@ -198,8 +198,8 @@ stock void vNullifyHit(int client, int owner, int chance, int enabled)
 		float flNullifyDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flNullifyDuration[ST_TankType(owner)] : g_flNullifyDuration2[ST_TankType(owner)];
 		DataPack dpStopNullify = new DataPack();
 		CreateDataTimer(flNullifyDuration, tTimerStopNullify, dpStopNullify, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopNullify.WriteCell(GetClientUserId(client)), dpStopNullify.WriteCell(GetClientUserId(owner)), dpStopNullify.WriteCell(enabled);
-		if (iNullifyMessage(owner) == 1)
+		dpStopNullify.WriteCell(GetClientUserId(client)), dpStopNullify.WriteCell(GetClientUserId(owner)), dpStopNullify.WriteCell(message), dpStopNullify.WriteCell(enabled);
+		if (iNullifyMessage(owner) == message || iNullifyMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
@@ -230,10 +230,10 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner)
+stock void vReset2(int client, int owner, int message)
 {
 	g_bNullify[client] = false;
-	if (iNullifyMessage(owner) == 1)
+	if (iNullifyMessage(owner) == message || iNullifyMessage(owner) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Nullify2", client);
 	}
@@ -273,18 +273,18 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 		g_bNullify[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iNullifyChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iNullifyChat);
 		return Plugin_Stop;
 	}
 	int iNullifyEnabled = pack.ReadCell();
 	if (iNullifyEnabled == 0)
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iNullifyChat);
 		return Plugin_Stop;
 	}
-	vReset2(iSurvivor, iTank);
+	vReset2(iSurvivor, iTank, iNullifyChat);
 	return Plugin_Continue;
 }

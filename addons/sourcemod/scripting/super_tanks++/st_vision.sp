@@ -94,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vVisionHit(victim, attacker, iVisionChance(attacker), iVisionHit(attacker));
+				vVisionHit(victim, attacker, iVisionChance(attacker), iVisionHit(attacker), 1);
 			}
 		}
 		else if ((iVisionHitMode(victim) == 0 || iVisionHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vVisionHit(attacker, victim, iVisionChance(victim), iVisionHit(victim));
+				vVisionHit(attacker, victim, iVisionChance(victim), iVisionHit(victim), 1);
 			}
 		}
 	}
@@ -121,7 +121,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iVisionAbility[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Enabled", 0)) : (g_iVisionAbility2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Enabled", g_iVisionAbility[iIndex]));
 			main ? (g_iVisionAbility[iIndex] = iSetCellLimit(g_iVisionAbility[iIndex], 0, 1)) : (g_iVisionAbility2[iIndex] = iSetCellLimit(g_iVisionAbility2[iIndex], 0, 1));
 			main ? (g_iVisionMessage[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Message", 0)) : (g_iVisionMessage2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Message", g_iVisionMessage[iIndex]));
-			main ? (g_iVisionMessage[iIndex] = iSetCellLimit(g_iVisionMessage[iIndex], 0, 1)) : (g_iVisionMessage2[iIndex] = iSetCellLimit(g_iVisionMessage2[iIndex], 0, 1));
+			main ? (g_iVisionMessage[iIndex] = iSetCellLimit(g_iVisionMessage[iIndex], 0, 3)) : (g_iVisionMessage2[iIndex] = iSetCellLimit(g_iVisionMessage2[iIndex], 0, 3));
 			main ? (g_iVisionChance[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Chance", 4)) : (g_iVisionChance2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Chance", g_iVisionChance[iIndex]));
 			main ? (g_iVisionChance[iIndex] = iSetCellLimit(g_iVisionChance[iIndex], 1, 9999999999)) : (g_iVisionChance2[iIndex] = iSetCellLimit(g_iVisionChance2[iIndex], 1, 9999999999));
 			main ? (g_flVisionDuration[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", 5.0)) : (g_flVisionDuration2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", g_flVisionDuration[iIndex]));
@@ -160,7 +160,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flVisionRange)
 				{
-					vVisionHit(iSurvivor, client, iVisionRangeChance, iVisionAbility);
+					vVisionHit(iSurvivor, client, iVisionRangeChance, iVisionAbility, 2);
 				}
 			}
 		}
@@ -178,7 +178,7 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner)
+stock void vReset2(int client, int owner, int message)
 {
 	g_bVision[client] = false;
 	if (bIsSurvivor(client))
@@ -186,21 +186,21 @@ stock void vReset2(int client, int owner)
 		SetEntProp(client, Prop_Send, "m_iFOV", 90);
 		SetEntProp(client, Prop_Send, "m_iDefaultFOV", 90);
 	}
-	if (iVisionMessage(owner) == 1)
+	if (iVisionMessage(owner) == message || iVisionMessage(owner) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Vision2", client, 90);
 	}
 }
 
-stock void vVisionHit(int client, int owner, int chance, int enabled)
+stock void vVisionHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bVision[client])
 	{
 		g_bVision[client] = true;
 		DataPack dpVision = new DataPack();
 		CreateDataTimer(0.1, tTimerVision, dpVision, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpVision.WriteCell(GetClientUserId(client)), dpVision.WriteCell(GetClientUserId(owner)), dpVision.WriteCell(enabled), dpVision.WriteFloat(GetEngineTime());
-		if (iVisionMessage(owner) == 1)
+		dpVision.WriteCell(GetClientUserId(client)), dpVision.WriteCell(GetClientUserId(owner)), dpVision.WriteCell(message), dpVision.WriteCell(enabled), dpVision.WriteFloat(GetEngineTime());
+		if (iVisionMessage(owner) == message || iVisionMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
@@ -243,10 +243,10 @@ public Action tTimerVision(Handle timer, DataPack pack)
 		g_bVision[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iVisionChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iVisionChat);
 		return Plugin_Stop;
 	}
 	int iVisionAbility = pack.ReadCell();
@@ -254,7 +254,7 @@ public Action tTimerVision(Handle timer, DataPack pack)
 		flVisionDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flVisionDuration[ST_TankType(iTank)] : g_flVisionDuration2[ST_TankType(iTank)];
 	if (iVisionAbility == 0 || (flTime + flVisionDuration) < GetEngineTime())
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iVisionChat);
 		return Plugin_Stop;
 	}
 	SetEntProp(iSurvivor, Prop_Send, "m_iFOV", iVisionFOV(iTank));

@@ -90,14 +90,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vKamikazeHit(victim, attacker, iKamikazeChance(attacker), iKamikazeHit(attacker));
+				vKamikazeHit(victim, attacker, iKamikazeChance(attacker), iKamikazeHit(attacker), 1);
 			}
 		}
 		else if ((iKamikazeHitMode(victim) == 0 || iKamikazeHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vKamikazeHit(attacker, victim, iKamikazeChance(victim), iKamikazeHit(victim));
+				vKamikazeHit(attacker, victim, iKamikazeChance(victim), iKamikazeHit(victim), 1);
 			}
 		}
 	}
@@ -117,7 +117,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iKamikazeAbility[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Enabled", 0)) : (g_iKamikazeAbility2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Enabled", g_iKamikazeAbility[iIndex]));
 			main ? (g_iKamikazeAbility[iIndex] = iSetCellLimit(g_iKamikazeAbility[iIndex], 0, 1)) : (g_iKamikazeAbility2[iIndex] = iSetCellLimit(g_iKamikazeAbility2[iIndex], 0, 1));
 			main ? (g_iKamikazeMessage[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Message", 0)) : (g_iKamikazeMessage2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Message", g_iKamikazeMessage[iIndex]));
-			main ? (g_iKamikazeMessage[iIndex] = iSetCellLimit(g_iKamikazeMessage[iIndex], 0, 1)) : (g_iKamikazeMessage2[iIndex] = iSetCellLimit(g_iKamikazeMessage2[iIndex], 0, 1));
+			main ? (g_iKamikazeMessage[iIndex] = iSetCellLimit(g_iKamikazeMessage[iIndex], 0, 3)) : (g_iKamikazeMessage2[iIndex] = iSetCellLimit(g_iKamikazeMessage2[iIndex], 0, 3));
 			main ? (g_iKamikazeChance[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Chance", 4)) : (g_iKamikazeChance2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Chance", g_iKamikazeChance[iIndex]));
 			main ? (g_iKamikazeChance[iIndex] = iSetCellLimit(g_iKamikazeChance[iIndex], 1, 9999999999)) : (g_iKamikazeChance2[iIndex] = iSetCellLimit(g_iKamikazeChance2[iIndex], 1, 9999999999));
 			main ? (g_iKamikazeHit[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit", 0)) : (g_iKamikazeHit2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit", g_iKamikazeHit[iIndex]));
@@ -172,14 +172,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flKamikazeRange)
 				{
-					vKamikazeHit(iSurvivor, client, iKamikazeRangeChance, iKamikazeAbility(client));
+					vKamikazeHit(iSurvivor, client, iKamikazeRangeChance, iKamikazeAbility(client), 2);
 				}
 			}
 		}
 	}
 }
 
-stock void vKamikazeHit(int client, int owner, int chance, int enabled)
+stock void vKamikazeHit(int client, int owner, int chance, int enabled, int message)
 {
 	int iKamikazeMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iKamikazeMessage[ST_TankType(owner)] : g_iKamikazeMessage2[ST_TankType(owner)];
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
@@ -189,7 +189,7 @@ stock void vKamikazeHit(int client, int owner, int chance, int enabled)
 		ForcePlayerSuicide(client);
 		vAttachParticle(owner, PARTICLE_BLOOD, 0.1, 0.0);
 		ForcePlayerSuicide(owner);
-		if (iKamikazeMessage == 1)
+		if (iKamikazeMessage == message || iKamikazeMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);

@@ -110,14 +110,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vEnforceHit(victim, attacker, iEnforceChance(attacker), iEnforceHit(attacker));
+				vEnforceHit(victim, attacker, iEnforceChance(attacker), iEnforceHit(attacker), 1);
 			}
 		}
 		else if ((iEnforceHitMode(victim) == 0 || iEnforceHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vEnforceHit(attacker, victim, iEnforceChance(victim), iEnforceHit(victim));
+				vEnforceHit(attacker, victim, iEnforceChance(victim), iEnforceHit(victim), 1);
 			}
 		}
 	}
@@ -137,7 +137,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iEnforceAbility[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Enabled", 0)) : (g_iEnforceAbility2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Enabled", g_iEnforceAbility[iIndex]));
 			main ? (g_iEnforceAbility[iIndex] = iSetCellLimit(g_iEnforceAbility[iIndex], 0, 1)) : (g_iEnforceAbility2[iIndex] = iSetCellLimit(g_iEnforceAbility2[iIndex], 0, 1));
 			main ? (g_iEnforceMessage[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Message", 0)) : (g_iEnforceMessage2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Message", g_iEnforceMessage[iIndex]));
-			main ? (g_iEnforceMessage[iIndex] = iSetCellLimit(g_iEnforceMessage[iIndex], 0, 1)) : (g_iEnforceMessage2[iIndex] = iSetCellLimit(g_iEnforceMessage2[iIndex], 0, 1));
+			main ? (g_iEnforceMessage[iIndex] = iSetCellLimit(g_iEnforceMessage[iIndex], 0, 3)) : (g_iEnforceMessage2[iIndex] = iSetCellLimit(g_iEnforceMessage2[iIndex], 0, 3));
 			main ? (g_iEnforceChance[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Chance", 4)) : (g_iEnforceChance2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Chance", g_iEnforceChance[iIndex]));
 			main ? (g_iEnforceChance[iIndex] = iSetCellLimit(g_iEnforceChance[iIndex], 1, 9999999999)) : (g_iEnforceChance2[iIndex] = iSetCellLimit(g_iEnforceChance2[iIndex], 1, 9999999999));
 			main ? (g_flEnforceDuration[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Duration", 5.0)) : (g_flEnforceDuration2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Duration", g_flEnforceDuration[iIndex]));
@@ -186,7 +186,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flEnforceRange)
 				{
-					vEnforceHit(iSurvivor, client, iEnforceRangeChance, iEnforceAbility(client));
+					vEnforceHit(iSurvivor, client, iEnforceRangeChance, iEnforceAbility(client), 2);
 				}
 			}
 		}
@@ -201,7 +201,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vEnforceHit(int client, int owner, int chance, int enabled)
+stock void vEnforceHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bEnforce[client])
 	{
@@ -239,8 +239,8 @@ stock void vEnforceHit(int client, int owner, int chance, int enabled)
 		float flEnforceDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flEnforceDuration[ST_TankType(owner)] : g_flEnforceDuration2[ST_TankType(owner)];
 		DataPack dpStopEnforce = new DataPack();
 		CreateDataTimer(flEnforceDuration, tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopEnforce.WriteCell(GetClientUserId(client)), dpStopEnforce.WriteCell(GetClientUserId(owner)), dpStopEnforce.WriteCell(enabled);
-		if (iEnforceMessage(owner) == 1)
+		dpStopEnforce.WriteCell(GetClientUserId(client)), dpStopEnforce.WriteCell(GetClientUserId(owner)), dpStopEnforce.WriteCell(message), dpStopEnforce.WriteCell(enabled);
+		if (iEnforceMessage(owner) == message || iEnforceMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
@@ -256,6 +256,7 @@ stock void vRemoveEnforce()
 		if (bIsSurvivor(iSurvivor) && g_bEnforce[iSurvivor])
 		{
 			g_bEnforce[iSurvivor] = false;
+			g_iEnforceSlot[iSurvivor] = -1;
 		}
 	}
 }
@@ -272,11 +273,11 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner)
+stock void vReset2(int client, int owner, int message)
 {
 	g_bEnforce[client] = false;
 	g_iEnforceSlot[client] = -1;
-	if (iEnforceMessage(owner) == 1)
+	if (iEnforceMessage(owner) == message || iEnforceMessage(owner) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Enforce2", client);
 	}
@@ -316,18 +317,18 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 		g_bEnforce[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iEnforceChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iEnforceChat);
 		return Plugin_Stop;
 	}
 	int iEnforceEnabled = pack.ReadCell();
 	if (iEnforceEnabled == 0)
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iEnforceChat);
 		return Plugin_Stop;
 	}
-	vReset2(iSurvivor, iTank);
+	vReset2(iSurvivor, iTank, iEnforceChat);
 	return Plugin_Continue;
 }

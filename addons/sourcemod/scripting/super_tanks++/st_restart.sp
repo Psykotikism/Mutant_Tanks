@@ -93,14 +93,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vRestartHit(victim, attacker, iRestartChance(attacker), iRestartHit(attacker));
+				vRestartHit(victim, attacker, iRestartChance(attacker), iRestartHit(attacker), 1);
 			}
 		}
 		else if ((iRestartHitMode(victim) == 0 || iRestartHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vRestartHit(attacker, victim, iRestartChance(victim), iRestartHit(victim));
+				vRestartHit(attacker, victim, iRestartChance(victim), iRestartHit(victim), 1);
 			}
 		}
 	}
@@ -120,7 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iRestartAbility[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", 0)) : (g_iRestartAbility2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", g_iRestartAbility[iIndex]));
 			main ? (g_iRestartAbility[iIndex] = iSetCellLimit(g_iRestartAbility[iIndex], 0, 1)) : (g_iRestartAbility2[iIndex] = iSetCellLimit(g_iRestartAbility2[iIndex], 0, 1));
 			main ? (g_iRestartMessage[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Message", 0)) : (g_iRestartMessage2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Message", g_iRestartMessage[iIndex]));
-			main ? (g_iRestartMessage[iIndex] = iSetCellLimit(g_iRestartMessage[iIndex], 0, 1)) : (g_iRestartMessage2[iIndex] = iSetCellLimit(g_iRestartMessage2[iIndex], 0, 1));
+			main ? (g_iRestartMessage[iIndex] = iSetCellLimit(g_iRestartMessage[iIndex], 0, 3)) : (g_iRestartMessage2[iIndex] = iSetCellLimit(g_iRestartMessage2[iIndex], 0, 3));
 			main ? (g_iRestartChance[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Chance", 4)) : (g_iRestartChance2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Chance", g_iRestartChance[iIndex]));
 			main ? (g_iRestartChance[iIndex] = iSetCellLimit(g_iRestartChance[iIndex], 1, 9999999999)) : (g_iRestartChance2[iIndex] = iSetCellLimit(g_iRestartChance2[iIndex], 1, 9999999999));
 			main ? (g_iRestartHit[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", 0)) : (g_iRestartHit2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", g_iRestartHit[iIndex]));
@@ -166,14 +166,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRestartRange)
 				{
-					vRestartHit(iSurvivor, client, iRestartRangeChance, iRestartAbility);
+					vRestartHit(iSurvivor, client, iRestartRangeChance, iRestartAbility, 2);
 				}
 			}
 		}
 	}
 }
 
-stock void vRestartHit(int client, int owner, int chance, int enabled)
+stock void vRestartHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -208,7 +208,7 @@ stock void vRestartHit(int client, int owner, int chance, int enabled)
 				break;
 			}
 		}
-		if (iRestartMessage == 1)
+		if (iRestartMessage == message || iRestartMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);

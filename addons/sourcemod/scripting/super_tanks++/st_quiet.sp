@@ -97,14 +97,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vQuietHit(victim, attacker, iQuietChance(attacker), iQuietHit(attacker));
+				vQuietHit(victim, attacker, iQuietChance(attacker), iQuietHit(attacker), 1);
 			}
 		}
 		else if ((iQuietHitMode(victim) == 0 || iQuietHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vQuietHit(attacker, victim, iQuietChance(victim), iQuietHit(victim));
+				vQuietHit(attacker, victim, iQuietChance(victim), iQuietHit(victim), 1);
 			}
 		}
 	}
@@ -145,7 +145,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iQuietAbility[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Enabled", 0)) : (g_iQuietAbility2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Enabled", g_iQuietAbility[iIndex]));
 			main ? (g_iQuietAbility[iIndex] = iSetCellLimit(g_iQuietAbility[iIndex], 0, 1)) : (g_iQuietAbility2[iIndex] = iSetCellLimit(g_iQuietAbility2[iIndex], 0, 1));
 			main ? (g_iQuietMessage[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Message", 0)) : (g_iQuietMessage2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Message", g_iQuietMessage[iIndex]));
-			main ? (g_iQuietMessage[iIndex] = iSetCellLimit(g_iQuietMessage[iIndex], 0, 1)) : (g_iQuietMessage2[iIndex] = iSetCellLimit(g_iQuietMessage2[iIndex], 0, 1));
+			main ? (g_iQuietMessage[iIndex] = iSetCellLimit(g_iQuietMessage[iIndex], 0, 3)) : (g_iQuietMessage2[iIndex] = iSetCellLimit(g_iQuietMessage2[iIndex], 0, 3));
 			main ? (g_iQuietChance[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Chance", 4)) : (g_iQuietChance2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Chance", g_iQuietChance[iIndex]));
 			main ? (g_iQuietChance[iIndex] = iSetCellLimit(g_iQuietChance[iIndex], 1, 9999999999)) : (g_iQuietChance2[iIndex] = iSetCellLimit(g_iQuietChance2[iIndex], 1, 9999999999));
 			main ? (g_flQuietDuration[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Duration", 5.0)) : (g_flQuietDuration2[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Duration", g_flQuietDuration[iIndex]));
@@ -193,7 +193,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flQuietRange)
 				{
-					vQuietHit(iSurvivor, client, iQuietRangeChance, iQuietAbility(client));
+					vQuietHit(iSurvivor, client, iQuietRangeChance, iQuietAbility(client), 2);
 				}
 			}
 		}
@@ -208,7 +208,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vQuietHit(int client, int owner, int chance, int enabled)
+stock void vQuietHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bQuiet[client])
 	{
@@ -216,8 +216,8 @@ stock void vQuietHit(int client, int owner, int chance, int enabled)
 		float flQuietDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flQuietDuration[ST_TankType(owner)] : g_flQuietDuration2[ST_TankType(owner)];
 		DataPack dpStopQuiet = new DataPack();
 		CreateDataTimer(flQuietDuration, tTimerStopQuiet, dpStopQuiet, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopQuiet.WriteCell(GetClientUserId(client)), dpStopQuiet.WriteCell(GetClientUserId(owner)), dpStopQuiet.WriteCell(enabled);
-		if (iQuietMessage(owner) == 1)
+		dpStopQuiet.WriteCell(GetClientUserId(client)), dpStopQuiet.WriteCell(GetClientUserId(owner)), dpStopQuiet.WriteCell(message), dpStopQuiet.WriteCell(enabled);
+		if (iQuietMessage(owner) == message || iQuietMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
@@ -248,10 +248,10 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner)
+stock void vReset2(int client, int owner, int message)
 {
 	g_bQuiet[client] = false;
-	if (iQuietMessage(owner) == 1)
+	if (iQuietMessage(owner) == message || iQuietMessage(owner) == 3)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
 		ST_TankName(owner, sTankName);
@@ -293,18 +293,18 @@ public Action tTimerStopQuiet(Handle timer, DataPack pack)
 		g_bQuiet[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iQuietChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iQuietChat);
 		return Plugin_Stop;
 	}
 	int iQuietEnabled = pack.ReadCell();
 	if (iQuietEnabled == 0)
 	{
-		vReset2(iSurvivor, iTank);
+		vReset2(iSurvivor, iTank, iQuietChat);
 		return Plugin_Stop;
 	}
-	vReset2(iSurvivor, iTank);
+	vReset2(iSurvivor, iTank, iQuietChat);
 	return Plugin_Continue;
 }

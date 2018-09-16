@@ -95,14 +95,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
 			{
-				vIceHit(victim, attacker, iIceChance(attacker), iIceHit(attacker));
+				vIceHit(victim, attacker, iIceChance(attacker), iIceHit(attacker), 1);
 			}
 		}
 		else if ((iIceHitMode(victim) == 0 || iIceHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (strcmp(sClassname, "weapon_melee") == 0)
 			{
-				vIceHit(attacker, victim, iIceChance(victim), iIceHit(victim));
+				vIceHit(attacker, victim, iIceChance(victim), iIceHit(victim), 1);
 			}
 		}
 	}
@@ -122,7 +122,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iIceAbility[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", 0)) : (g_iIceAbility2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", g_iIceAbility[iIndex]));
 			main ? (g_iIceAbility[iIndex] = iSetCellLimit(g_iIceAbility[iIndex], 0, 1)) : (g_iIceAbility2[iIndex] = iSetCellLimit(g_iIceAbility2[iIndex], 0, 1));
 			main ? (g_iIceMessage[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Message", 0)) : (g_iIceMessage2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Message", g_iIceMessage[iIndex]));
-			main ? (g_iIceMessage[iIndex] = iSetCellLimit(g_iIceMessage[iIndex], 0, 1)) : (g_iIceMessage2[iIndex] = iSetCellLimit(g_iIceMessage2[iIndex], 0, 1));
+			main ? (g_iIceMessage[iIndex] = iSetCellLimit(g_iIceMessage[iIndex], 0, 3)) : (g_iIceMessage2[iIndex] = iSetCellLimit(g_iIceMessage2[iIndex], 0, 3));
 			main ? (g_iIceChance[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Chance", 4)) : (g_iIceChance2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Chance", g_iIceChance[iIndex]));
 			main ? (g_iIceChance[iIndex] = iSetCellLimit(g_iIceChance[iIndex], 1, 9999999999)) : (g_iIceChance2[iIndex] = iSetCellLimit(g_iIceChance2[iIndex], 1, 9999999999));
 			main ? (g_flIceDuration[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", 5.0)) : (g_flIceDuration2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", g_flIceDuration[iIndex]));
@@ -170,7 +170,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIceRange)
 				{
-					vIceHit(iSurvivor, client, iIceRangeChance, iIceAbility(client));
+					vIceHit(iSurvivor, client, iIceRangeChance, iIceAbility(client), 2);
 				}
 			}
 		}
@@ -185,7 +185,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vIceHit(int client, int owner, int chance, int enabled)
+stock void vIceHit(int client, int owner, int chance, int enabled, int message)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bIce[client])
 	{
@@ -201,8 +201,8 @@ stock void vIceHit(int client, int owner, int chance, int enabled)
 		float flIceDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flIceDuration[ST_TankType(owner)] : g_flIceDuration2[ST_TankType(owner)];
 		DataPack dpStopIce = new DataPack();
 		CreateDataTimer(flIceDuration, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(GetClientUserId(owner)), dpStopIce.WriteCell(enabled);
-		if (iIceMessage(owner) == 1)
+		dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(GetClientUserId(owner)), dpStopIce.WriteCell(message), dpStopIce.WriteCell(enabled);
+		if (iIceMessage(owner) == message || iIceMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
@@ -219,7 +219,7 @@ stock void vRemoveIce(int client)
 		{
 			DataPack dpStopIce = new DataPack();
 			CreateDataTimer(0.1, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopIce.WriteCell(GetClientUserId(iSurvivor)), dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(1);
+			dpStopIce.WriteCell(GetClientUserId(iSurvivor)), dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(0), dpStopIce.WriteCell(1);
 		}
 	}
 }
@@ -235,7 +235,7 @@ stock void vReset()
 	}
 }
 
-stock void vStopIce(int client, int owner)
+stock void vStopIce(int client, int owner, int message)
 {
 	if (g_bIce[client])
 	{
@@ -249,7 +249,7 @@ stock void vStopIce(int client, int owner)
 		TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 		EmitAmbientSound(SOUND_BULLET, flPos, client, SNDLEVEL_RAIDSIREN);
-		if (iIceMessage(owner))
+		if (iIceMessage(owner) == message || iIceMessage(owner) == 3)
 		{
 			PrintToChatAll("%s %t", ST_PREFIX2, "Ice2", client);
 		}
@@ -290,18 +290,18 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 		g_bIce[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iIceChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vStopIce(iSurvivor, iTank);
+		vStopIce(iSurvivor, iTank, iIceChat);
 		return Plugin_Stop;
 	}
 	int iIceEnabled = pack.ReadCell();
 	if (iIceEnabled == 0)
 	{
-		vStopIce(iSurvivor, iTank);
+		vStopIce(iSurvivor, iTank, iIceChat);
 		return Plugin_Stop;
 	}
-	vStopIce(iSurvivor, iTank);
+	vStopIce(iSurvivor, iTank, iIceChat);
 	return Plugin_Continue;
 }
