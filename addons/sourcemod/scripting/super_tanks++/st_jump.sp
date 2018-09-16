@@ -102,7 +102,14 @@ public void ST_Ability(int client)
 	{
 		g_bJump[client] = true;
 		float flJumpInterval = !g_bTankConfig[ST_TankType(client)] ? g_flJumpInterval[ST_TankType(client)] : g_flJumpInterval2[ST_TankType(client)];
+		int iJumpMessage = !g_bTankConfig[ST_TankType(client)] ? g_iJumpMessage[ST_TankType(client)] : g_iJumpMessage2[ST_TankType(client)];
 		CreateTimer(flJumpInterval, tTimerJump, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		if (iJumpMessage == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Jump", sTankName);
+		}
 	}
 }
 
@@ -137,15 +144,8 @@ public Action tTimerJump(Handle timer, any userid)
 	}
 	float flJumpHeight = !g_bTankConfig[ST_TankType(iTank)] ? g_flJumpHeight[ST_TankType(iTank)] : g_flJumpHeight2[ST_TankType(iTank)],
 		flVelocity[3];
-	int iJumpMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iJumpMessage[ST_TankType(iTank)] : g_iJumpMessage2[ST_TankType(iTank)];
 	GetEntPropVector(iTank, Prop_Data, "m_vecVelocity", flVelocity);
 	flVelocity[2] += flJumpHeight;
 	TeleportEntity(iTank, NULL_VECTOR, NULL_VECTOR, flVelocity);
-	if (iJumpMessage == 1)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Jump", sTankName);
-	}
 	return Plugin_Continue;
 }

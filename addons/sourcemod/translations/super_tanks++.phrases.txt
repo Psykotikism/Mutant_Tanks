@@ -227,7 +227,7 @@
 	}
 	"Fling"
 	{
-		"#format"		"{1:N},{2:N}"
+		"#format"		"{1:s},{2:N}"
 		"en"			"{1} flung {2} into the air!"
 	}
 	"Fragile"
@@ -297,8 +297,8 @@
 	}
 	"Hurt2"
 	{
-		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is no longer hurting {2}!"
+		"#format"		"{1:N}"
+		"en"			"{1} is no longer hurting!"
 	}
 	"Hypno"
 	{
@@ -343,7 +343,7 @@
 	"Jump"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} just jumped!"
+		"en"			"{1} will jump periodically!"
 	}
 	"Kamikaze"
 	{
