@@ -1560,7 +1560,7 @@
 			"Ghost Fade Limit"				"0"
 
 			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" to be on.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -1648,6 +1648,7 @@
 	{
 		// The Super Tank pulls in or pushes away survivors and any other nearby infected, and changes the survivors' gravity.
 		// "Ability Enabled" - Any nearby infected and survivors are pulled in or pushed away.
+		// - "Gravity Force"
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's gravity changes.
 		// - "Gravity Range"
 		// - "Gravity Range Chance"
@@ -1661,7 +1662,9 @@
 			// Note: This setting does not affect the "Gravity Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, the Super Tank can change survivors' gravity value.
+			// 2: ON, the Super Tank can pull in or push away survivors.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -1692,7 +1695,7 @@
 			"Gravity Force"					"-50.0"
 
 			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" to be on.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -1775,7 +1778,7 @@
 			"Heal Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" to be on.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -2751,7 +2754,7 @@
 			"Panic Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" to be on.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -4124,7 +4127,7 @@
 			"Warp Chance"					"4"
 
 			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" to be on.
 			// --
 			// 0: OFF
 			// 1: ON
