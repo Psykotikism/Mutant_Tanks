@@ -222,7 +222,7 @@ stock void vBuryHit(int client, int owner, int chance, int enabled)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Bury", sTankName, client);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Bury", sTankName, client, flOrigin);
 		}
 	}
 }
