@@ -16,7 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bFlash[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-float g_flFlashDuration[ST_MAXTYPES + 1], g_flFlashDuration2[ST_MAXTYPES + 1], g_flFlashSpeed[ST_MAXTYPES + 1], g_flFlashSpeed2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1];
+float g_flFlashDuration[ST_MAXTYPES + 1], g_flFlashDuration2[ST_MAXTYPES + 1], g_flFlashInterval[ST_MAXTYPES + 1], g_flFlashInterval2[ST_MAXTYPES + 1], g_flFlashSpeed[ST_MAXTYPES + 1], g_flFlashSpeed2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1];
 int g_iFlashAbility[ST_MAXTYPES + 1], g_iFlashAbility2[ST_MAXTYPES + 1], g_iFlashChance[ST_MAXTYPES + 1], g_iFlashChance2[ST_MAXTYPES + 1], g_iFlashMessage[ST_MAXTYPES + 1], g_iFlashMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -92,6 +92,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iFlashChance[iIndex] = iSetCellLimit(g_iFlashChance[iIndex], 1, 9999999999)) : (g_iFlashChance2[iIndex] = iSetCellLimit(g_iFlashChance2[iIndex], 1, 9999999999));
 			main ? (g_flFlashDuration[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Duration", 5.0)) : (g_flFlashDuration2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Duration", g_flFlashDuration[iIndex]));
 			main ? (g_flFlashDuration[iIndex] = flSetFloatLimit(g_flFlashDuration[iIndex], 0.1, 9999999999.0)) : (g_flFlashDuration2[iIndex] = flSetFloatLimit(g_flFlashDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFlashInterval[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Interval", 1.0)) : (g_flFlashInterval2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Interval", g_flFlashInterval[iIndex]));
+			main ? (g_flFlashInterval[iIndex] = flSetFloatLimit(g_flFlashInterval[iIndex], 0.1, 9999999999.0)) : (g_flFlashInterval2[iIndex] = flSetFloatLimit(g_flFlashInterval2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flFlashSpeed[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Speed", 5.0)) : (g_flFlashSpeed2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Speed", g_flFlashSpeed[iIndex]));
 			main ? (g_flFlashSpeed[iIndex] = flSetFloatLimit(g_flFlashSpeed[iIndex], 3.0, 10.0)) : (g_flFlashSpeed2[iIndex] = flSetFloatLimit(g_flFlashSpeed2[iIndex], 3.0, 10.0));
 			kvSuperTanks.Rewind();
@@ -102,30 +104,20 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Ability(int client)
 {
-	if (iFlashAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	int iFlashChance = !g_bTankConfig[ST_TankType(client)] ? g_iFlashChance[ST_TankType(client)] : g_iFlashChance2[ST_TankType(client)];
+	if (iFlashAbility(client) == 1 && GetRandomInt(1, iFlashChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bFlash[client])
 	{
-		if (!g_bFlash[client])
+		g_bFlash[client] = true;
+		float flFlashInterval = !g_bTankConfig[ST_TankType(client)] ? g_flFlashInterval[ST_TankType(client)] : g_flFlashInterval2[ST_TankType(client)];
+		DataPack dpFlash = new DataPack();
+		CreateDataTimer(flFlashInterval, tTimerFlash, dpFlash, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpFlash.WriteCell(GetClientUserId(client));
+		dpFlash.WriteFloat(GetEngineTime());
+		if (iFlashMessage(client) == 1)
 		{
-			float flRunSpeed = !g_bTankConfig[ST_TankType(client)] ? g_flRunSpeed[ST_TankType(client)] : g_flRunSpeed2[ST_TankType(client)];
-			SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
-			int iFlashChance = !g_bTankConfig[ST_TankType(client)] ? g_iFlashChance[ST_TankType(client)] : g_iFlashChance2[ST_TankType(client)];
-			if (GetRandomInt(1, iFlashChance) == 1)
-			{
-				g_bFlash[client] = true;
-				if (iFlashMessage(client) == 1)
-				{
-					char sTankName[MAX_NAME_LENGTH + 1];
-					ST_TankName(client, sTankName);
-					PrintToChatAll("%s %t", ST_PREFIX2, "Flash", sTankName);
-				}
-			}
-		}
-		else
-		{
-			float flFlashSpeed = !g_bTankConfig[ST_TankType(client)] ? g_flFlashSpeed[ST_TankType(client)] : g_flFlashSpeed2[ST_TankType(client)],
-				flFlashDuration = !g_bTankConfig[ST_TankType(client)] ? g_flFlashDuration[ST_TankType(client)] : g_flFlashDuration2[ST_TankType(client)];
-			SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", flFlashSpeed);
-			CreateTimer(flFlashDuration, tTimerStopFlash, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Flash", sTankName);
 		}
 	}
 }
@@ -162,19 +154,23 @@ stock int iFlashMessage(int client)
 	return !g_bTankConfig[ST_TankType(client)] ? g_iFlashMessage[ST_TankType(client)] : g_iFlashMessage2[ST_TankType(client)];
 }
 
-public Action tTimerStopFlash(Handle timer, any userid)
+public Action tTimerFlash(Handle timer, DataPack pack)
 {
-	int iTank = GetClientOfUserId(userid);
+	pack.Reset();
+	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		vReset2(iTank);
 		return Plugin_Stop;
 	}
-	if (iFlashAbility(iTank) == 0)
+	float flTime = pack.ReadFloat(),
+		flFlashDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flFlashDuration[ST_TankType(iTank)] : g_flFlashDuration2[ST_TankType(iTank)];
+	if (iFlashAbility(iTank) == 0 || (flTime + flFlashDuration) < GetEngineTime())
 	{
 		vReset2(iTank);
 		return Plugin_Stop;
 	}
-	vReset2(iTank);
+	float flFlashSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flFlashSpeed[ST_TankType(iTank)] : g_flFlashSpeed2[ST_TankType(iTank)];
+	SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flFlashSpeed);
 	return Plugin_Continue;
 }
