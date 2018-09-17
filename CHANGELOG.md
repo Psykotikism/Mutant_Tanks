@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.41 (September 16, 2018)
+## Version 8.41 (September 18, 2018)
 
 Bug fixes:
 
@@ -14,6 +14,7 @@ Changes:
 4. Added a range feature for some abilities.
 5. Added a new native: ST_TankName(int client, char[] buffer) - Returns a Tank's custom name.
 6. Removed the ST_Spawn(int client) forward. (Use ST_Ability(int client) instead for more flexibility.)
+7. Added the "Flash Interval" setting for the Flash ability.
 
 Files:
 

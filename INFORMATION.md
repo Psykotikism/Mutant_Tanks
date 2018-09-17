@@ -1382,6 +1382,12 @@
 			// Maximum: 9999999999.0
 			"Flash Duration"				"5.0"
 
+			// The Super Tank can run fast every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Flash Interval"				"1.0"
+
 			// The Super Tank's special speed.
 			// --
 			// Minimum: 3.0
@@ -2464,7 +2470,7 @@
 			// 2: Ability activates when the Super Tank is hit by a survivor.
 			"Leech Hit Mode"				"0"
 
-			// The Super Tank electrocutes survivors every time this many seconds passes.
+			// The Super Tank leeches health off of survivors every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -4340,7 +4346,7 @@
 			// Maximum: 100
 			"Zombie Amount"					"10"
 
-			// The interval between each zombie mob.
+			// The Super Tank spawns a zombie mob every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
