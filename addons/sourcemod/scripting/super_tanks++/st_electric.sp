@@ -239,10 +239,7 @@ stock void vReset()
 stock void vReset2(int client, int owner, int message)
 {
 	g_bElectric[client] = false;
-	if (bIsSurvivor(client))
-	{
-		SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", 1.0);
-	}
+	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", 1.0);
 	if (iElectricMessage(owner) == message || iElectricMessage(owner) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Electric2", client);

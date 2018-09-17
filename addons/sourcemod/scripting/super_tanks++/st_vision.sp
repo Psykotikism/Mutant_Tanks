@@ -181,11 +181,8 @@ stock void vReset()
 stock void vReset2(int client, int owner, int message)
 {
 	g_bVision[client] = false;
-	if (bIsSurvivor(client))
-	{
-		SetEntProp(client, Prop_Send, "m_iFOV", 90);
-		SetEntProp(client, Prop_Send, "m_iDefaultFOV", 90);
-	}
+	SetEntProp(client, Prop_Send, "m_iFOV", 90);
+	SetEntProp(client, Prop_Send, "m_iDefaultFOV", 90);
 	if (iVisionMessage(owner) == message || iVisionMessage(owner) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Vision2", client, 90);

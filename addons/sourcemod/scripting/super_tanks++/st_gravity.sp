@@ -288,10 +288,7 @@ stock void vReset()
 stock void vReset2(int client, int owner, int message)
 {
 	g_bGravity2[client] = false;
-	if (bIsSurvivor(client))
-	{
-		SetEntityGravity(client, 1.0);
-	}
+	SetEntityGravity(client, 1.0);
 	if (iGravityMessage(owner) == message || iGravityMessage(owner) == 4 || iGravityMessage(owner) == 5 || iGravityMessage(owner) == 6 || iGravityMessage(owner) == 7)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Gravity2", client);

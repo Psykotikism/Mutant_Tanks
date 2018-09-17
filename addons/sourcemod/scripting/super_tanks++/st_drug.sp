@@ -169,33 +169,30 @@ public void ST_Ability(int client)
 
 stock void vDrug(int client, bool toggle, float angles[20])
 {
-	if (bIsSurvivor(client))
+	float flAngles[3];
+	GetClientEyeAngles(client, flAngles);
+	flAngles[2] = toggle ? angles[GetRandomInt(0, 100) % 20] : 0.0;
+	TeleportEntity(client, NULL_VECTOR, flAngles, NULL_VECTOR);
+	int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags = toggle ? 0x0002 : (0x0001|0x0010);
+	iClients[0] = client;
+	if (toggle)
 	{
-		float flAngles[3];
-		GetClientEyeAngles(client, flAngles);
-		flAngles[2] = toggle ? angles[GetRandomInt(0, 100) % 20] : 0.0;
-		TeleportEntity(client, NULL_VECTOR, flAngles, NULL_VECTOR);
-		int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags = toggle ? 0x0002 : (0x0001|0x0010);
-		iClients[0] = client;
-		if (toggle)
-		{
-			iColor[0] = GetRandomInt(0, 255), iColor[1] = GetRandomInt(0, 255), iColor[2] = GetRandomInt(0, 255);
-		}
-		Handle hDrugTarget = StartMessageEx(g_umFadeUserMsgId, iClients, 1);
-		if (GetUserMessageType() == UM_Protobuf)
-		{
-			Protobuf pbSet = UserMessageToProtobuf(hDrugTarget);
-			pbSet.SetInt("duration", toggle ? 255: 1536), pbSet.SetInt("hold_time", toggle ? 255 : 1536), pbSet.SetInt("flags", iFlags);
-			pbSet.SetColor("clr", toggle ? iColor : iColor2);
-		}
-		else
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hDrugTarget);
-			bfWrite.WriteShort(toggle ? 255 : 1536), bfWrite.WriteShort(toggle ? 255 : 1536), bfWrite.WriteShort(iFlags);
-			bfWrite.WriteByte(toggle ? iColor[0] : iColor2[0]), bfWrite.WriteByte(toggle ? iColor[1] : iColor2[1]), bfWrite.WriteByte(toggle ? iColor[2] : iColor2[2]), bfWrite.WriteByte(toggle ? iColor[3] : iColor2[3]);
-		}
-		EndMessage();
+		iColor[0] = GetRandomInt(0, 255), iColor[1] = GetRandomInt(0, 255), iColor[2] = GetRandomInt(0, 255);
 	}
+	Handle hDrugTarget = StartMessageEx(g_umFadeUserMsgId, iClients, 1);
+	if (GetUserMessageType() == UM_Protobuf)
+	{
+		Protobuf pbSet = UserMessageToProtobuf(hDrugTarget);
+		pbSet.SetInt("duration", toggle ? 255: 1536), pbSet.SetInt("hold_time", toggle ? 255 : 1536), pbSet.SetInt("flags", iFlags);
+		pbSet.SetColor("clr", toggle ? iColor : iColor2);
+	}
+	else
+	{
+		BfWrite bfWrite = UserMessageToBfWrite(hDrugTarget);
+		bfWrite.WriteShort(toggle ? 255 : 1536), bfWrite.WriteShort(toggle ? 255 : 1536), bfWrite.WriteShort(iFlags);
+		bfWrite.WriteByte(toggle ? iColor[0] : iColor2[0]), bfWrite.WriteByte(toggle ? iColor[1] : iColor2[1]), bfWrite.WriteByte(toggle ? iColor[2] : iColor2[2]), bfWrite.WriteByte(toggle ? iColor[3] : iColor2[3]);
+	}
+	EndMessage();
 }
 
 stock void vDrugHit(int client, int owner, int chance, int enabled, int message)

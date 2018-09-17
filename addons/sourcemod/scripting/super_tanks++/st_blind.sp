@@ -190,27 +190,24 @@ public void ST_BossStage(int client)
 
 stock void vBlind(int client, int owner, int intensity)
 {
-	if (bIsSurvivor(client))
+	int iTargets[2], iFlags, iColor[4] = {0, 0, 0, 0};
+	iTargets[0] = client;
+	intensity == 0 ? (iFlags = (0x0001|0x0010)) : (iFlags = (0x0002|0x0008));
+	iColor[3] = intensity;
+	Handle hBlindTarget = StartMessageEx(g_umFadeUserMsgId, iTargets, 1);
+	if (GetUserMessageType() == UM_Protobuf)
 	{
-		int iTargets[2], iFlags, iColor[4] = {0, 0, 0, 0};
-		iTargets[0] = client;
-		intensity == 0 ? (iFlags = (0x0001|0x0010)) : (iFlags = (0x0002|0x0008));
-		iColor[3] = intensity;
-		Handle hBlindTarget = StartMessageEx(g_umFadeUserMsgId, iTargets, 1);
-		if (GetUserMessageType() == UM_Protobuf)
-		{
-			Protobuf pbSet = UserMessageToProtobuf(hBlindTarget);
-			pbSet.SetInt("duration", 1536), pbSet.SetInt("hold_time", 1536), pbSet.SetInt("flags", iFlags);
-			pbSet.SetColor("clr", iColor);
-		}
-		else
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hBlindTarget);
-			bfWrite.WriteShort(1536), bfWrite.WriteShort(1536), bfWrite.WriteShort(iFlags);
-			bfWrite.WriteByte(iColor[0]), bfWrite.WriteByte(iColor[1]), bfWrite.WriteByte(iColor[2]), bfWrite.WriteByte(iColor[3]);
-		}
-		EndMessage();
+		Protobuf pbSet = UserMessageToProtobuf(hBlindTarget);
+		pbSet.SetInt("duration", 1536), pbSet.SetInt("hold_time", 1536), pbSet.SetInt("flags", iFlags);
+		pbSet.SetColor("clr", iColor);
 	}
+	else
+	{
+		BfWrite bfWrite = UserMessageToBfWrite(hBlindTarget);
+		bfWrite.WriteShort(1536), bfWrite.WriteShort(1536), bfWrite.WriteShort(iFlags);
+		bfWrite.WriteByte(iColor[0]), bfWrite.WriteByte(iColor[1]), bfWrite.WriteByte(iColor[2]), bfWrite.WriteByte(iColor[3]);
+	}
+	EndMessage();
 }
 
 stock void vBlindHit(int client, int owner, int chance, int enabled, int message)
