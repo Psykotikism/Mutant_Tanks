@@ -2295,6 +2295,8 @@
 			// Character limit for each item: 64
 			// --
 			// Example: "rifle_m60,pistol,adrenaline,defibrillator"
+			// Example: "katana,pain_pills,vomitjar"
+			// Example: "first_aid_kit,defibrillator,knife,adrenaline"
 			"Item Loadout"					"rifle,pistol,first_aid_kit,pain_pills"
 
 			// The mode of the Super Tank's item ability.
@@ -3273,6 +3275,8 @@
 			// Character limit for each item: 64
 			// --
 			// Example: "smg_silenced,pistol,adrenaline,defibrillator"
+			// Example: "katana,pain_pills,vomitjar"
+			// Example: "first_aid_kit,defibrillator,knife,adrenaline"
 			"Restart Loadout"				"smg,pistol,pain_pills"
 
 			// The mode of the Super Tank's restart ability.
