@@ -226,8 +226,8 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 		"Jump Ability"
 		{
 			"Ability Enabled"		"1"
-			"Jump Chance"			"1"
-			"Jump Range"			"500.0"
+			"Jump Height"			"500.0"
+			"Jump Interval"			"1.0"
 		}
 	}
 }

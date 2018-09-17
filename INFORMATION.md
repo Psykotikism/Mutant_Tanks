@@ -2293,6 +2293,8 @@
 			// The Super Tank gives survivors this loadout.
 			// Item limit: 5
 			// Character limit for each item: 64
+			// --
+			// Example: "rifle_m60,pistol,adrenaline,defibrillator"
 			"Item Loadout"					"rifle,pistol,first_aid_kit,pain_pills"
 
 			// The mode of the Super Tank's item ability.
@@ -3269,6 +3271,8 @@
 			// The Super Tank makes survivors restart with this loadout.
 			// Item limit: 5
 			// Character limit for each item: 64
+			// --
+			// Example: "smg_silenced,pistol,adrenaline,defibrillator"
 			"Restart Loadout"				"smg,pistol,pain_pills"
 
 			// The mode of the Super Tank's restart ability.
