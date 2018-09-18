@@ -584,11 +584,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			CreateTimer(0.5, tTimerKillStuckTank, iUserId, TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
-	else if (strcmp(name, "round_start") == 0)
-	{
-		g_iTankWave = 0;
-	}
-	else if (strcmp(name, "tank_spawn") == 0)
+	else if (strcmp(name, "player_spawn") == 0)
 	{
 		int iUserId = event.GetInt("userid"), iTank = GetClientOfUserId(iUserId);
 		if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank))
@@ -638,6 +634,10 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				dpTankSpawn.WriteCell(GetClientUserId(iTank)), dpTankSpawn.WriteCell(0);
 			}
 		}
+	}
+	else if (strcmp(name, "round_start") == 0)
+	{
+		g_iTankWave = 0;
 	}
 }
 
@@ -812,7 +812,7 @@ stock void vHookEvents(bool hook)
 		HookEvent("player_bot_replace", vEventHandler);
 		HookEvent("player_death", vEventHandler);
 		HookEvent("player_incapacitated", vEventHandler);
-		HookEvent("tank_spawn", vEventHandler);
+		HookEvent("player_spawn", vEventHandler);
 		bHooked = true;
 	}
 	else if (!hook && bHooked)
@@ -826,7 +826,7 @@ stock void vHookEvents(bool hook)
 		UnhookEvent("player_bot_replace", vEventHandler);
 		UnhookEvent("player_death", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
-		UnhookEvent("tank_spawn", vEventHandler);
+		UnhookEvent("player_spawn", vEventHandler);
 		bHooked = false;
 	}
 }
