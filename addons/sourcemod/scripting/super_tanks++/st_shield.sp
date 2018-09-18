@@ -15,7 +15,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bCloneInstalled, g_bLateLoad, g_bShield[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLateLoad, g_bShield[MAXPLAYERS + 1], g_bShield2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sShieldColor[ST_MAXTYPES + 1][12], g_sShieldColor2[ST_MAXTYPES + 1][12];
 ConVar g_cvSTTankThrowForce;
 float g_flShieldDelay[ST_MAXTYPES + 1], g_flShieldDelay2[ST_MAXTYPES + 1];
@@ -82,6 +82,7 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bShield[client] = false;
+	g_bShield2[client] = false;
 }
 
 public void OnMapEnd()
@@ -95,7 +96,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
-			if (g_bShield[victim])
+			if (g_bShield2[victim])
 			{
 				if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 				{
@@ -199,6 +200,7 @@ stock void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bShield[iPlayer] = false;
+			g_bShield2[iPlayer] = false;
 		}
 	}
 }
@@ -236,6 +238,7 @@ stock void vShield(int client, bool shield)
 			SetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity", client);
 		}
 		g_bShield[client] = true;
+		g_bShield2[client] = true;
 		if (iShieldMessage(client) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
@@ -261,7 +264,7 @@ stock void vShield(int client, bool shield)
 		}
 		float flShieldDelay = !g_bTankConfig[ST_TankType(client)] ? g_flShieldDelay[ST_TankType(client)] : g_flShieldDelay2[ST_TankType(client)];
 		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-		g_bShield[client] = false;
+		g_bShield2[client] = false;
 		if (iShieldMessage(client) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
@@ -284,12 +287,14 @@ stock int iShieldMessage(int client)
 public Action tTimerShield(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || g_bShield[iTank] || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || g_bShield2[iTank] || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
 	if (iShieldAbility(iTank) == 0)
 	{
+		g_bShield[iTank] = false;
+		g_bShield2[iTank] = false;
 		return Plugin_Stop;
 	}
 	vShield(iTank, true);
@@ -311,6 +316,8 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	}
 	if (iShieldAbility(iTank) == 0)
 	{
+		g_bShield[iTank] = false;
+		g_bShield2[iTank] = false;
 		return Plugin_Stop;
 	}
 	float flVelocity[3];
