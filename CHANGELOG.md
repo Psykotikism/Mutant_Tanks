@@ -5,6 +5,7 @@
 Bug fixes:
 
 1. Fixed some abilities not accepting any 6+ digit values for damage settings.
+2. Fixed the issue with the Shield ability not keeping the shield disabled when it's deactivated. (Thanks Mi.Cura for reporting!)
 
 Changes:
 
