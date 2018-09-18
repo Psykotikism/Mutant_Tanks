@@ -912,14 +912,15 @@ stock void vDamage(int client, const char[] damage)
 	int iPointHurt = CreateEntityByName("point_hurt");
 	if (bIsValidEntity(iPointHurt))
 	{
-		DispatchKeyValue(client, "targetname", "hurtme");
+		char sTargetName[32];
+		Format(sTargetName, sizeof(sTargetName), "HurtTarget%d", GetClientUserId(client));
+		DispatchKeyValue(client, "targetname", sTargetName);
 		DispatchKeyValue(iPointHurt, "Damage", damage);
-		DispatchKeyValue(iPointHurt, "DamageTarget", "hurtme");
-		DispatchKeyValue(iPointHurt, "DamageType", "2");
+		DispatchKeyValue(iPointHurt, "DamageTarget", sTargetName);
+		DispatchKeyValue(iPointHurt, "DamageType", "65536");
 		DispatchSpawn(iPointHurt);
 		AcceptEntityInput(iPointHurt, "Hurt", client);
 		AcceptEntityInput(iPointHurt, "Kill");
-		DispatchKeyValue(client, "targetname", "donthurtme");
 	}
 }
 
