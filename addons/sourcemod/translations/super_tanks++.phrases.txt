@@ -202,7 +202,7 @@
 	"Enforce"
 	{
 		"#format"		"{1:s},{2:N},{3:s}"
-		"en"			"{1} is forcing {2} to only use their {3} slot!"
+		"en"			"{1} is forcing {2} to only use their {3} slot!"
 	}
 	"Enforce2"
 	{
