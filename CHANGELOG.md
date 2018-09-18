@@ -15,12 +15,14 @@ Changes:
 5. Added a new native: ST_TankName(int client, char[] buffer) - Returns a Tank's custom name.
 6. Removed the ST_Spawn(int client) forward. (Use ST_Ability(int client) instead for more flexibility.)
 7. Added the "Flash Interval" setting for the Flash ability.
+8. The "Tank Note" setting now only accepts 0 and 1 as values.
+9. Tank Notes must now be created inside the translation file.
 
 Files:
 
 1. Updated config file with the new settings and modified some presets.
 2. Updated include file to remove the ST_Spawn(int client) forward and add the new ST_TankName(int client, char[] buffer) native.
-3. Updated translation file with the new messages.
+3. Updated translation file with the new messages and Tank Notes.
 
 ## Version 8.40 (September 11, 2018)
 
