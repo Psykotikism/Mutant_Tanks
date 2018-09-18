@@ -18,14 +18,14 @@ public Plugin myinfo =
 bool g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 char g_sBossHealthStages[ST_MAXTYPES + 1][34], g_sBossHealthStages2[ST_MAXTYPES + 1][34], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7],
 	g_sPropsChance[ST_MAXTYPES + 1][12], g_sPropsChance2[ST_MAXTYPES + 1][12], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[255], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28],
-	g_sTankName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankNote[ST_MAXTYPES + 1][256], g_sTankNote2[ST_MAXTYPES + 1][256], g_sTankWaves[12], g_sTankWaves2[12], g_sTypeRange[10], g_sTypeRange2[10];
+	g_sTankName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankWaves[12], g_sTankWaves2[12], g_sTypeRange[10], g_sTypeRange2[10];
 ConVar g_cvSTEnable, g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1];
 Handle g_hAbilityForward, g_hBossStageForward, g_hConfigsForward, g_hEventForward, g_hRockBreakForward, g_hRockThrowForward;
 int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBossTypes[MAXPLAYERS + 1][5], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2,
 	g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1],
 	g_iGameModeTypes, g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRockEffect[ST_MAXTYPES + 1],
-	g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType;
+	g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType;
 TopMenu g_tmSTMenu;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -875,7 +875,8 @@ stock void vLoadConfigs(const char[] savepath, bool main = false)
 			main ? (kvSuperTanks.GetString("General/Tank Name", g_sTankName[iIndex], sizeof(g_sTankName[]), sTankName)) : (kvSuperTanks.GetString("General/Tank Name", g_sTankName2[iIndex], sizeof(g_sTankName2[]), g_sTankName[iIndex]));
 			main ? (g_iTankEnabled[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", 0)) : (g_iTankEnabled2[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", g_iTankEnabled[iIndex]));
 			main ? (g_iTankEnabled[iIndex] = iSetCellLimit(g_iTankEnabled[iIndex], 0, 1)) : (g_iTankEnabled2[iIndex] = iSetCellLimit(g_iTankEnabled2[iIndex], 0, 1));
-			main ? (kvSuperTanks.GetString("General/Tank Note", g_sTankNote[iIndex], sizeof(g_sTankNote[]), "")) : (kvSuperTanks.GetString("General/Tank Note", g_sTankNote2[iIndex], sizeof(g_sTankNote2[]), g_sTankNote[iIndex]));
+			main ? (g_iTankNote[iIndex] = kvSuperTanks.GetNum("General/Tank Note", 0)) : (g_iTankNote2[iIndex] = kvSuperTanks.GetNum("General/Tank Note", g_iTankNote[iIndex]));
+			main ? (g_iTankNote[iIndex] = iSetCellLimit(g_iTankNote[iIndex], 0, 1)) : (g_iTankNote2[iIndex] = iSetCellLimit(g_iTankNote2[iIndex], 0, 1));
 			main ? (kvSuperTanks.GetString("General/Boss Health Stages", g_sBossHealthStages[iIndex], sizeof(g_sBossHealthStages[]), "5000,2500,1500,1000,500")) : (kvSuperTanks.GetString("General/Boss Health Stages", g_sBossHealthStages2[iIndex], sizeof(g_sBossHealthStages2[]), g_sBossHealthStages[iIndex]));
 			main ? (g_iBossStages[iIndex] = kvSuperTanks.GetNum("General/Boss Stages", 3)) : (g_iBossStages2[iIndex] = kvSuperTanks.GetNum("General/Boss Stages", g_iBossStages[iIndex]));
 			main ? (g_iBossStages[iIndex] = iSetCellLimit(g_iBossStages[iIndex], 1, 5)) : (g_iBossStages2[iIndex] = iSetCellLimit(g_iBossStages2[iIndex], 1, 5));
@@ -1419,11 +1420,12 @@ stock void vSetName(int client, const char[] oldname = "Tank", const char[] name
 				case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Evolved", oldname, name, g_iBossStageCount[client]);
 				case 2: PrintToChatAll("%s %t", ST_PREFIX2, "Randomized", oldname, name);
 			}
-			char sTankNote[256];
-			sTankNote = !g_bTankConfig[g_iTankType[client]] ? g_sTankNote[g_iTankType[client]] : g_sTankNote2[g_iTankType[client]];
-			if (sTankNote[0] != '\0')
+			int iTankNote = !g_bTankConfig[g_iTankType[client]] ? g_iTankNote[g_iTankType[client]] : g_iTankNote2[g_iTankType[client]];
+			if (iTankNote == 1 && ST_CloneAllowed(client, g_bCloneInstalled))
 			{
-				PrintToChatAll("%s %s", ST_PREFIX3, sTankNote);
+				char sTankNote[32];
+				Format(sTankNote, sizeof(sTankNote), "Tank%d", g_iTankType[client]);
+				PrintToChatAll("%s %t", ST_PREFIX3, sTankNote);
 			}
 		}
 	}
