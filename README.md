@@ -31,7 +31,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 5. Load up Super Tanks++ by restarting the server.
 6. Customize Super Tanks++ in:
 - cfg/sourcemod/super_tanks++.cfg
-- cfg/sourcemod/super_tanks++/super_tanks++.cfg.
+- addons/sourcemod/data/super_tanks++/super_tanks++.cfg.
 
 ### Uninstalling/Upgrading to Newer Versions
 1. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/plugins folder.
@@ -39,8 +39,8 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 3. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/scripting folder.
 4. Delete super_tanks++.inc from addons/sourcemod/scripting/include folder.
 5. Delete st_clone.inc from addons/sourcemod/scripting/include folder.
-6. Delete super_tanks++ folder from cfg/sourcemod folder.
-7. Delete super_tanks++.cfg from cfg/sourcemod folder.
+6. Delete super_tanks++ folder from addons/sourcemod/data folder.
+7. Delete super_tanks++.cfg from addons/sourcemod/data folder.
 8. Delete super_tanks++.phrases.txt from addons/sourcemod/translations folder.
 9. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
@@ -497,7 +497,7 @@ Yes, you can do that with custom configs.
 Example:
 
 ```
-// Settings for cfg/sourcemod/super_tanks++/super_tanks++.cfg
+// Settings for addons/sourcemod/data/super_tanks++/super_tanks++.cfg
 "Super Tanks++"
 {
 	"Plugin Settings"
@@ -527,7 +527,7 @@ Example:
 	}
 }
 
-// Settings for cfg/sourcemod/super_tanks++/difficulty_configs/impossible.cfg
+// Settings for addons/sourcemod/data/super_tanks++/difficulty_configs/impossible.cfg
 "Super Tanks++"
 {
 	"Tank 69"
