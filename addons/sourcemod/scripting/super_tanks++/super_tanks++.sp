@@ -118,6 +118,26 @@ public void OnAllPluginsLoaded()
 	g_bCloneInstalled = LibraryExists("st_clone");
 }
 
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (strcmp(name, "adminmenu", false) == 0)
+	{
+		g_tmSTMenu = null;
+	}
+	else if (strcmp(name, "st_clone", false) == 0)
+	{
+		g_bCloneInstalled = false;
+	}
+}
+
 public void OnPluginStart()
 {
 	g_hAbilityForward = CreateGlobalForward("ST_Ability", ET_Ignore, Param_Cell);
@@ -401,26 +421,6 @@ public void vSuperTankListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObj
 	{
 		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tanks++ List");
 		case TopMenuAction_SelectOption: vTankList(param);
-	}
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "st_clone", false) == 0)
-	{
-		g_bCloneInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "adminmenu", false) == 0)
-	{
-		g_tmSTMenu = null;
-	}
-	else if (strcmp(name, "st_clone", false) == 0)
-	{
-		g_bCloneInstalled = false;
 	}
 }
 
