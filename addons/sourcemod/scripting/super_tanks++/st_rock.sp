@@ -145,7 +145,7 @@ stock void vReset()
 stock void vReset2(int client, int entity)
 {
 	g_bRock[client] = false;
-	AcceptEntityInput(entity, "Kill");
+	RemoveEntity(entity);
 	if (iRockMessage(client) == 1)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];

@@ -142,7 +142,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
 				if (flDistance <= flWitchRange)
 				{
-					AcceptEntityInput(iInfected, "Kill");
+					RemoveEntity(iInfected);
 					int iWitch = CreateEntityByName("witch");
 					if (bIsValidEntity(iWitch))
 					{

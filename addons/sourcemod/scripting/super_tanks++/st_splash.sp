@@ -202,7 +202,7 @@ public Action tTimerSplash(Handle timer, any userid)
 					DispatchKeyValue(iPointHurt, "DamageType", "2");
 					DispatchSpawn(iPointHurt);
 					AcceptEntityInput(iPointHurt, "Hurt", iSurvivor);
-					AcceptEntityInput(iPointHurt, "Kill");
+					RemoveEntity(iPointHurt);
 					DispatchKeyValue(iSurvivor, "targetname", "donthurtme");
 				}
 			}

@@ -187,7 +187,7 @@ stock void vRemoveShield(int client)
 			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 			if (iOwner == client)
 			{
-				AcceptEntityInput(iProp, "Kill");
+				RemoveEntity(iProp);
 			}
 		}
 	}
@@ -258,7 +258,7 @@ stock void vShield(int client, bool shield)
 				int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == client)
 				{
-					AcceptEntityInput(iShield, "Kill");
+					RemoveEntity(iShield);
 				}
 			}
 		}
@@ -331,7 +331,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 			SetEntityModel(iPropane, MODEL_PROPANETANK);
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			AcceptEntityInput(iRock, "Kill");
+			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 			DispatchSpawn(iPropane);

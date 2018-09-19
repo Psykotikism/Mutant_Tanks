@@ -183,6 +183,7 @@ stock void vRestartHit(int client, int owner, int chance, int enabled, int messa
 			iRestartMode = !g_bTankConfig[ST_TankType(owner)] ? g_iRestartMode[ST_TankType(owner)] : g_iRestartMode2[ST_TankType(owner)];
 		sRestartLoadout = !g_bTankConfig[ST_TankType(owner)] ? g_sRestartLoadout[ST_TankType(owner)] : g_sRestartLoadout2[ST_TankType(owner)];
 		ExplodeString(sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
+		vRemoveWeapon(client, 0), vRemoveWeapon(client, 1), vRemoveWeapon(client, 2), vRemoveWeapon(client, 3), vRemoveWeapon(client, 4);
 		for (int iItem = 0; iItem < sizeof(sItems); iItem++)
 		{
 			if (StrContains(sRestartLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')

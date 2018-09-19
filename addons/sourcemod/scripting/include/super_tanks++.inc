@@ -15,7 +15,7 @@
 #define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.41"
+#define ST_VERSION "8.42"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 5000
 #define ST_MAXHEALTH 65535
@@ -401,7 +401,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 		HookSingleEntityOutput(iGameMode, "OnScavenge", vGameMode, true);
 		ActivateEntity(iGameMode);
 		AcceptEntityInput(iGameMode, "PostSpawnActivate");
-		AcceptEntityInput(iGameMode, "Kill");
+		RemoveEntity(iGameMode);
 		if (g_iCurrentMode == 0 || !(mode & g_iCurrentMode))
 		{
 			return false;
@@ -868,7 +868,7 @@ stock void vCopyVector(float source[3], float target[3])
 
 stock void vCreateConfigFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
 {
-	char sConfigFilename[128], sConfigLabel[128];
+	char sConfigFilename[PLATFORM_MAX_PATH], sConfigLabel[PLATFORM_MAX_PATH];
 	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.cfg", filepath, folder, filename);
 	if (FileExists(sConfigFilename))
 	{
@@ -920,7 +920,7 @@ stock void vDamage(int client, const char[] damage)
 		DispatchKeyValue(iPointHurt, "DamageType", "65536");
 		DispatchSpawn(iPointHurt);
 		AcceptEntityInput(iPointHurt, "Hurt", client);
-		AcceptEntityInput(iPointHurt, "Kill");
+		RemoveEntity(iPointHurt);
 	}
 }
 
@@ -934,6 +934,17 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 		SetVariantString(sVariant);
 		AcceptEntityInput(entity, "AddOutput");
 		AcceptEntityInput(entity, "FireUser1");
+	}
+}
+
+stock void vDropWeapon(int client, const char[] slots, const char[] number, int slot)
+{
+	if (StrContains(slots, number) != -1)
+	{
+		if (bIsSurvivor(client) && GetPlayerWeaponSlot(client, slot) > 0)
+		{
+			SDKHooks_DropWeapon(client, GetPlayerWeaponSlot(client, slot), NULL_VECTOR, NULL_VECTOR);
+		}
 	}
 }
 
@@ -966,22 +977,6 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 	else if (strcmp(output, "OnScavenge") == 0)
 	{
 		g_iCurrentMode = 8;
-	}
-}
-
-stock void vGhost(int client, int slot)
-{
-	if (bIsSurvivor(client) && GetPlayerWeaponSlot(client, slot) > 0)
-	{
-		SDKHooks_DropWeapon(client, GetPlayerWeaponSlot(client, slot), NULL_VECTOR, NULL_VECTOR);
-	}
-}
-
-stock void vGhostDrop(int client, const char[] slots, const char[] number, int slot)
-{
-	if (StrContains(slots, number) != -1)
-	{
-		vGhost(client, slot);
 	}
 }
 
@@ -1033,6 +1028,16 @@ stock void vPrecacheParticle(const char[] particlename)
 		vSetEntityParent(iParticle, iParticle);
 		iParticle = EntIndexToEntRef(iParticle);
 		vDeleteEntity(iParticle);
+	}
+}
+
+stock void vRemoveWeapon(int client, int slot)
+{
+	int iSlot = GetPlayerWeaponSlot(client, slot);
+	if (iSlot > 0)
+	{
+		RemovePlayerItem(client, iSlot);
+		RemoveEntity(iSlot);
 	}
 }
 
@@ -1104,6 +1109,7 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 	MarkNativeAsOptional("ST_PluginEnabled");
 	MarkNativeAsOptional("ST_SpawnTank");
 	MarkNativeAsOptional("ST_TankAllowed");
+	MarkNativeAsOptional("ST_TankName");
 	MarkNativeAsOptional("ST_TankType");
 }
 #endif

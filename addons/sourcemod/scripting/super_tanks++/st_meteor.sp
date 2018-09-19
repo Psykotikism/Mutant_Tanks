@@ -130,7 +130,7 @@ stock void vMeteor(int client, int entity)
 	GetEntityClassname(entity, sClassname, sizeof(sClassname));
 	if (strcmp(sClassname, "tank_rock") == 0)
 	{
-		AcceptEntityInput(entity, "Kill");
+		RemoveEntity(entity);
 		char sDamage[11];
 		int iMeteorDamage = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorDamage[ST_TankType(client)] : g_iMeteorDamage2[ST_TankType(client)];
 		IntToString(iMeteorDamage, sDamage, sizeof(sDamage));
@@ -162,7 +162,7 @@ stock void vMeteor(int client, int entity)
 			TeleportEntity(iPointHurt, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iPointHurt);
 			AcceptEntityInput(iPointHurt, "Hurt", client);
-			AcceptEntityInput(iPointHurt, "Kill");
+			RemoveEntity(iPointHurt);
 		}
 		int iPointPush = CreateEntityByName("point_push");
 		if (bIsValidEntity(iPointPush))

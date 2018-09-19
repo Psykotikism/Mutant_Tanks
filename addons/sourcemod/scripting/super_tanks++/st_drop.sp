@@ -347,7 +347,7 @@ stock void vDeleteDrop(int client)
 {
 	if (bIsValidEntity(g_iDrop[client]))
 	{
-		AcceptEntityInput(g_iDrop[client], "Kill");
+		RemoveEntity(g_iDrop[client]);
 	}
 	g_iDrop[client] = 0;
 }

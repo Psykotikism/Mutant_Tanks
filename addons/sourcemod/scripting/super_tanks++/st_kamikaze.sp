@@ -148,7 +148,7 @@ public void ST_Event(Event event, const char[] name)
 				int iOwner = GetEntPropEnt(iCorpse, Prop_Send, "m_hOwnerEntity");
 				if (iSurvivor == iOwner)
 				{
-					AcceptEntityInput(iCorpse, "Kill");
+					RemoveEntity(iCorpse);
 				}
 			}
 		}

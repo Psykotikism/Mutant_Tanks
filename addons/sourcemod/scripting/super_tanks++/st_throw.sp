@@ -157,7 +157,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 			SetEntityRenderColor(iCar, iRed, iGreen, iBlue, 255);
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			AcceptEntityInput(iRock, "Kill");
+			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 			DispatchSpawn(iCar);
@@ -218,7 +218,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 			}
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			AcceptEntityInput(iRock, "Kill");
+			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 			TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
@@ -261,7 +261,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 	{
 		float flPos[3];
 		GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-		AcceptEntityInput(iRock, "Kill");
+		RemoveEntity(iRock);
 		NormalizeVector(flVelocity, flVelocity);
 		ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 		TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);

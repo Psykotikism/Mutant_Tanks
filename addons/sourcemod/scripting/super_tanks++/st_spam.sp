@@ -178,7 +178,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 		TeleportEntity(iSpammer, flPos, flAngle, NULL_VECTOR);
 		DispatchSpawn(iSpammer);
 		AcceptEntityInput(iSpammer, "LaunchRock");
-		AcceptEntityInput(iSpammer, "Kill");
+		RemoveEntity(iSpammer);
 	}
 	return Plugin_Continue;
 }

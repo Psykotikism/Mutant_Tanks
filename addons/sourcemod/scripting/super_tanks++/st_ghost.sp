@@ -193,11 +193,11 @@ stock void vGhostHit(int client, int owner, int chance, int enabled, int message
 	{
 		char sGhostWeaponSlots[6];
 		sGhostWeaponSlots = !g_bTankConfig[ST_TankType(owner)] ? g_sGhostWeaponSlots[ST_TankType(owner)] : g_sGhostWeaponSlots2[ST_TankType(owner)];
-		vGhostDrop(client, sGhostWeaponSlots, "1", 0);
-		vGhostDrop(client, sGhostWeaponSlots, "2", 1);
-		vGhostDrop(client, sGhostWeaponSlots, "3", 2);
-		vGhostDrop(client, sGhostWeaponSlots, "4", 3);
-		vGhostDrop(client, sGhostWeaponSlots, "5", 4);
+		vDropWeapon(client, sGhostWeaponSlots, "1", 0);
+		vDropWeapon(client, sGhostWeaponSlots, "2", 1);
+		vDropWeapon(client, sGhostWeaponSlots, "3", 2);
+		vDropWeapon(client, sGhostWeaponSlots, "4", 3);
+		vDropWeapon(client, sGhostWeaponSlots, "5", 4);
 		switch (GetRandomInt(1, 2))
 		{
 			case 1: EmitSoundToClient(client, SOUND_INFECTED, owner);

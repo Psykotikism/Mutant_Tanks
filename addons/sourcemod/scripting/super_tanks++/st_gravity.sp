@@ -253,13 +253,13 @@ stock void vRemoveGravity(int client)
 			int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
 			if (iOwner == client)
 			{
-				AcceptEntityInput(iProp, "Kill");
+				RemoveEntity(iProp);
 			}
 		}
 		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 		if (iOwner == client)
 		{
-			AcceptEntityInput(iProp, "Kill");
+			RemoveEntity(iProp);
 		}
 	}
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)

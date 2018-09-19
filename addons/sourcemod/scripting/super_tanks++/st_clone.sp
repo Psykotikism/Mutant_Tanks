@@ -26,12 +26,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		strcopy(error, err_max, "[ST++] Clone Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
 	}
-	CreateNative("ST_CloneAllowed", iNative_CloneAllowed);
+	CreateNative("ST_CloneAllowed", aNative_CloneAllowed);
 	RegPluginLibrary("st_clone");
 	return APLRes_Success;
 }
 
-public int iNative_CloneAllowed(Handle plugin, int numParams)
+public any aNative_CloneAllowed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	bool bCloneInstalled = GetNativeCell(2);
