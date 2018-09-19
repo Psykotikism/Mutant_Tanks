@@ -12,11 +12,11 @@ Changes:
 2. The plugin and its modules now requires SM 1.10.0.6317 or higher.
 3. The Tank Notes now display a different message when the phrase for a Super Tank is not found.
 4. The Restart ability now removes all weapons from survivors before giving them new loadouts.
-5. Changed the directory of the configs from "cfg/sourcemod/" to "addons/sourcemod/data".
+5. Changed the directory of the configs from "cfg/sourcemod" to "addons/sourcemod/data".
 
 Files:
 
-1. Updated include file to use new natives introduced in SM 1.9+.
+1. Updated include file to use new natives introduced in SM 1.9 and SM 1.10.
 
 ## Version 8.41 (September 18, 2018)
 
