@@ -141,10 +141,6 @@ stock void vReset()
 stock void vReset2(int client)
 {
 	g_bGod[client] = false;
-	if (IsPlayerAlive(client))
-	{
-		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-	}
 	if (iGodMessage(client) == 1)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
@@ -173,9 +169,11 @@ public Action tTimerStopGod(Handle timer, any userid)
 	}
 	if (iGodAbility(iTank) == 0)
 	{
+		SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
 		vReset2(iTank);
 		return Plugin_Stop;
 	}
+	SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
 	vReset2(iTank);
 	return Plugin_Continue;
 }

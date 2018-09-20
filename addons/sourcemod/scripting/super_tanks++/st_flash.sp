@@ -136,8 +136,6 @@ stock void vReset()
 stock void vReset2(int client)
 {
 	g_bFlash[client] = false;
-	float flRunSpeed = !g_bTankConfig[ST_TankType(client)] ? g_flRunSpeed[ST_TankType(client)] : g_flRunSpeed2[ST_TankType(client)];
-	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
 	if (iFlashMessage(client) == 1)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
@@ -170,6 +168,8 @@ public Action tTimerFlash(Handle timer, DataPack pack)
 	if (iFlashAbility(iTank) == 0 || (flTime + flFlashDuration) < GetEngineTime())
 	{
 		vReset2(iTank);
+		float flRunSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flRunSpeed[ST_TankType(iTank)] : g_flRunSpeed2[ST_TankType(iTank)];
+		SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
 		return Plugin_Stop;
 	}
 	float flFlashSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flFlashSpeed[ST_TankType(iTank)] : g_flFlashSpeed2[ST_TankType(iTank)];
