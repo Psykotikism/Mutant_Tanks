@@ -15,10 +15,10 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bCloneInstalled, g_bGhost[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bGhost[MAXPLAYERS + 1], g_bGhost2[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sGhostWeaponSlots[ST_MAXTYPES + 1][6], g_sGhostWeaponSlots2[ST_MAXTYPES + 1][6], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
-float g_flGhostRange[ST_MAXTYPES + 1], g_flGhostRange2[ST_MAXTYPES + 1];
-int g_iGhostAbility[ST_MAXTYPES + 1], g_iGhostAbility2[ST_MAXTYPES + 1], g_iGhostAlpha[MAXPLAYERS + 1], g_iGhostChance[ST_MAXTYPES + 1], g_iGhostChance2[ST_MAXTYPES + 1], g_iGhostFade[ST_MAXTYPES + 1], g_iGhostFade2[ST_MAXTYPES + 1], g_iGhostHit[ST_MAXTYPES + 1], g_iGhostHit2[ST_MAXTYPES + 1], g_iGhostHitMode[ST_MAXTYPES + 1], g_iGhostHitMode2[ST_MAXTYPES + 1], g_iGhostMessage[ST_MAXTYPES + 1], g_iGhostMessage2[ST_MAXTYPES + 1], g_iGhostRangeChance[ST_MAXTYPES + 1], g_iGhostRangeChance2[ST_MAXTYPES + 1];
+float g_flGhostFadeDelay[ST_MAXTYPES + 1], g_flGhostFadeDelay2[ST_MAXTYPES + 1], g_flGhostRange[ST_MAXTYPES + 1], g_flGhostRange2[ST_MAXTYPES + 1];
+int g_iGhostAbility[ST_MAXTYPES + 1], g_iGhostAbility2[ST_MAXTYPES + 1], g_iGhostAlpha[MAXPLAYERS + 1], g_iGhostChance[ST_MAXTYPES + 1], g_iGhostChance2[ST_MAXTYPES + 1], g_iGhostFadeLimit[ST_MAXTYPES + 1], g_iGhostFade2[ST_MAXTYPES + 1], g_iGhostHit[ST_MAXTYPES + 1], g_iGhostHit2[ST_MAXTYPES + 1], g_iGhostHitMode[ST_MAXTYPES + 1], g_iGhostHitMode2[ST_MAXTYPES + 1], g_iGhostMessage[ST_MAXTYPES + 1], g_iGhostMessage2[ST_MAXTYPES + 1], g_iGhostRangeChance[ST_MAXTYPES + 1], g_iGhostRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -80,6 +80,7 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	g_bGhost[client] = false;
+	g_bGhost2[client] = false;
 	g_iGhostAlpha[client] = 255;
 }
 
@@ -130,8 +131,10 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iGhostMessage[iIndex] = iClamp(g_iGhostMessage[iIndex], 0, 7)) : (g_iGhostMessage2[iIndex] = iClamp(g_iGhostMessage2[iIndex], 0, 7));
 			main ? (g_iGhostChance[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Chance", 4)) : (g_iGhostChance2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Chance", g_iGhostChance[iIndex]));
 			main ? (g_iGhostChance[iIndex] = iClamp(g_iGhostChance[iIndex], 1, 9999999999)) : (g_iGhostChance2[iIndex] = iClamp(g_iGhostChance2[iIndex], 1, 9999999999));
-			main ? (g_iGhostFade[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", 0)) : (g_iGhostFade2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", g_iGhostFade[iIndex]));
-			main ? (g_iGhostFade[iIndex] = iClamp(g_iGhostFade[iIndex], 0, 255)) : (g_iGhostFade2[iIndex] = iClamp(g_iGhostFade2[iIndex], 0, 255));
+			main ? (g_flGhostFadeDelay[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Fade Delay", 5.0)) : (g_flGhostFadeDelay2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Fade Delay", g_flGhostFadeDelay[iIndex]));
+			main ? (g_flGhostFadeDelay[iIndex] = flClamp(g_flGhostFadeDelay[iIndex], 0.1, 9999999999.0)) : (g_flGhostFadeDelay2[iIndex] = flClamp(g_flGhostFadeDelay2[iIndex], 0.1, 9999999999.0));
+			main ? (g_iGhostFadeLimit[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", 0)) : (g_iGhostFade2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Limit", g_iGhostFadeLimit[iIndex]));
+			main ? (g_iGhostFadeLimit[iIndex] = iClamp(g_iGhostFadeLimit[iIndex], 0, 255)) : (g_iGhostFade2[iIndex] = iClamp(g_iGhostFade2[iIndex], 0, 255));
 			main ? (g_iGhostHit[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Hit", 0)) : (g_iGhostHit2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Hit", g_iGhostHit[iIndex]));
 			main ? (g_iGhostHit[iIndex] = iClamp(g_iGhostHit[iIndex], 0, 1)) : (g_iGhostHit2[iIndex] = iClamp(g_iGhostHit2[iIndex], 0, 1));
 			main ? (g_iGhostHitMode[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Hit Mode", 0)) : (g_iGhostHitMode2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Hit Mode", g_iGhostHitMode[iIndex]));
@@ -219,7 +222,23 @@ stock void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bGhost[iPlayer] = false;
+			g_bGhost2[iPlayer] = false;
 			g_iGhostAlpha[iPlayer] = 255;
+		}
+	}
+}
+
+stock void vReset2(int client)
+{
+	g_bGhost2[client] = false;
+	g_iGhostAlpha[client] = 255;
+	switch (iGhostMessage(client))
+	{
+		case 3, 5, 6, 7:
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(client, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ghost3", sTankName);
 		}
 	}
 }
@@ -330,11 +349,17 @@ public Action tTimerGhost(Handle timer, any userid)
 	TrimString(sProps5[2]);
 	int iBlue6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[2]) : 255;
 	iBlue6 = iClamp(iBlue6, 0, 255);
-	int iGhostFade = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFade[ST_TankType(iTank)] : g_iGhostFade2[ST_TankType(iTank)];
+	int iGhostFade = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFadeLimit[ST_TankType(iTank)] : g_iGhostFade2[ST_TankType(iTank)];
 	g_iGhostAlpha[iTank] -= 2;
 	if (g_iGhostAlpha[iTank] < iGhostFade)
 	{
 		g_iGhostAlpha[iTank] = iGhostFade;
+		if (!g_bGhost2[iTank])
+		{
+			g_bGhost2[iTank] = true;
+			float flGhostFadeDelay = !g_bTankConfig[ST_TankType(iTank)] ? g_flGhostFadeDelay[ST_TankType(iTank)] : g_flGhostFadeDelay2[ST_TankType(iTank)];
+			CreateTimer(flGhostFadeDelay, tTimerStopGhost, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+		}
 	}
 	int iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
@@ -389,5 +414,22 @@ public Action tTimerGhost(Handle timer, any userid)
 	}
 	SetEntityRenderMode(iTank, RENDER_TRANSCOLOR);
 	SetEntityRenderColor(iTank, iRed, iGreen, iBlue, g_iGhostAlpha[iTank]);
+	return Plugin_Continue;
+}
+
+public Action tTimerStopGhost(Handle timer, any userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	{
+		vReset2(iTank);
+		return Plugin_Stop;
+	}
+	if (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3)
+	{
+		vReset2(iTank);
+		return Plugin_Stop;
+	}
+	vReset2(iTank);
 	return Plugin_Continue;
 }

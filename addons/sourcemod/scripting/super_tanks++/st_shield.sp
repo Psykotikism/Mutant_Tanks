@@ -130,7 +130,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iShieldMessage[iIndex] = iClamp(g_iShieldMessage[iIndex], 0, 1)) : (g_iShieldMessage2[iIndex] = iClamp(g_iShieldMessage2[iIndex], 0, 1));
 			main ? (kvSuperTanks.GetString("Shield Ability/Shield Color", g_sShieldColor[iIndex], sizeof(g_sShieldColor[]), "255,255,255")) : (kvSuperTanks.GetString("Shield Ability/Shield Color", g_sShieldColor2[iIndex], sizeof(g_sShieldColor2[]), g_sShieldColor[iIndex]));
 			main ? (g_flShieldDelay[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", 5.0)) : (g_flShieldDelay2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", g_flShieldDelay[iIndex]));
-			main ? (g_flShieldDelay[iIndex] = flClamp(g_flShieldDelay[iIndex], 1.0, 9999999999.0)) : (g_flShieldDelay2[iIndex] = flClamp(g_flShieldDelay2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flShieldDelay[iIndex] = flClamp(g_flShieldDelay[iIndex], 0.1, 9999999999.0)) : (g_flShieldDelay2[iIndex] = flClamp(g_flShieldDelay2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}

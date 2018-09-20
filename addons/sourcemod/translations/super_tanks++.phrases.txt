@@ -249,6 +249,11 @@
 		"#format"		"{1:s}"
 		"en"			"{1} is cloaking itself!"
 	}
+	"Ghost3"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1}'s is visible again!"
+	}
 	"God"
 	{
 		"#format"		"{1:s}"

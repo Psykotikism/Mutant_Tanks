@@ -476,7 +476,7 @@ stock bool bIsValidHumanClient(int client)
 
 stock bool bIsWitch(int client)
 {
-	if (IsValidEntity(client))
+	if (bIsValidEntity(client))
 	{
 		char sClassname[32];
 		GetEntityClassname(client, sClassname, sizeof(sClassname));
@@ -834,7 +834,7 @@ stock void vAttachParticle(int client, const char[] particlename, float time = 0
 	if (bIsValidClient(client))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
-		if (IsValidEntity(iParticle))
+		if (bIsValidEntity(iParticle))
 		{
 			float flPos[3];
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
@@ -890,7 +890,7 @@ stock void vCreateParticle(int client, const char[] particlename, float time, fl
 	if (bIsValidClient(client))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
-		if (IsValidEntity(iParticle))
+		if (bIsValidEntity(iParticle))
 		{
 			float flPos[3];
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
@@ -1019,7 +1019,7 @@ stock void vMultiTargetFilters(int toggle)
 stock void vPrecacheParticle(const char[] particlename)
 {
 	int iParticle = CreateEntityByName("info_particle_system");
-	if (IsValidEntity(iParticle))
+	if (bIsValidEntity(iParticle))
 	{
 		DispatchKeyValue(iParticle, "effect_name", particlename);
 		DispatchSpawn(iParticle);
