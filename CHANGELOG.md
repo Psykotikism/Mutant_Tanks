@@ -5,6 +5,7 @@
 Bug fixes:
 
 1. Marked the ST_TankName native as optional to avoid potential issues.
+2. Fixed the Flash ability errors. (Thanks Mi.Cura for reporting!)
 
 Changes:
 
