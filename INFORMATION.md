@@ -1586,6 +1586,12 @@
 			// Maximum: 9999999999 (Less chance)
 			"Ghost Chance"					"4"
 
+			// The Super Tank's invisibility cloak starts all over after this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Ghost Fade Delay"				"5.0"
+
 			// The limit of the Super Tank's ghost fade effect.
 			// --
 			// Minimum: 0 (Fully faded)
@@ -3532,7 +3538,7 @@
 
 			// The Super Tank's shield reactivates after this many seconds passes.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Shield Delay"					"5.0"
 		}

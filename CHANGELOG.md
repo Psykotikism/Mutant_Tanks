@@ -14,10 +14,13 @@ Changes:
 3. The Tank Notes now display a different message when the phrase for a Super Tank is not found.
 4. The Restart ability now removes all weapons from survivors before giving them new loadouts.
 5. Changed the directory of the configs from "cfg/sourcemod" to "addons/sourcemod/data".
+6. Added the "Ghost Fade Delay" setting which determines the interval of a Super Tank's invisibility cloak.
+7. Added the "Ghost3" phrase to notify players of when a Super Tank's invisibility cloak resets.
 
 Files:
 
 1. Updated include file to use new natives introduced in SM 1.9 and SM 1.10.
+2. Updated translation file with the new "Ghost3" phrase.
 
 ## Version 8.41 (September 18, 2018)
 
