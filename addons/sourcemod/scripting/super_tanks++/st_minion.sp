@@ -84,13 +84,13 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iMinionAbility[iIndex] = kvSuperTanks.GetNum("Minion Ability/Ability Enabled", 0)) : (g_iMinionAbility2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Ability Enabled", g_iMinionAbility[iIndex]));
-			main ? (g_iMinionAbility[iIndex] = iSetCellLimit(g_iMinionAbility[iIndex], 0, 1)) : (g_iMinionAbility2[iIndex] = iSetCellLimit(g_iMinionAbility2[iIndex], 0, 1));
+			main ? (g_iMinionAbility[iIndex] = iClamp(g_iMinionAbility[iIndex], 0, 1)) : (g_iMinionAbility2[iIndex] = iClamp(g_iMinionAbility2[iIndex], 0, 1));
 			main ? (g_iMinionMessage[iIndex] = kvSuperTanks.GetNum("Minion Ability/Ability Message", 0)) : (g_iMinionMessage2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Ability Message", g_iMinionMessage[iIndex]));
-			main ? (g_iMinionMessage[iIndex] = iSetCellLimit(g_iMinionMessage[iIndex], 0, 1)) : (g_iMinionMessage2[iIndex] = iSetCellLimit(g_iMinionMessage2[iIndex], 0, 1));
+			main ? (g_iMinionMessage[iIndex] = iClamp(g_iMinionMessage[iIndex], 0, 1)) : (g_iMinionMessage2[iIndex] = iClamp(g_iMinionMessage2[iIndex], 0, 1));
 			main ? (g_iMinionAmount[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Amount", 5)) : (g_iMinionAmount2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Amount", g_iMinionAmount[iIndex]));
-			main ? (g_iMinionAmount[iIndex] = iSetCellLimit(g_iMinionAmount[iIndex], 1, 25)) : (g_iMinionAmount2[iIndex] = iSetCellLimit(g_iMinionAmount2[iIndex], 1, 25));
+			main ? (g_iMinionAmount[iIndex] = iClamp(g_iMinionAmount[iIndex], 1, 25)) : (g_iMinionAmount2[iIndex] = iClamp(g_iMinionAmount2[iIndex], 1, 25));
 			main ? (g_iMinionChance[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Chance", 4)) : (g_iMinionChance2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Chance", g_iMinionChance[iIndex]));
-			main ? (g_iMinionChance[iIndex] = iSetCellLimit(g_iMinionChance[iIndex], 1, 9999999999)) : (g_iMinionChance2[iIndex] = iSetCellLimit(g_iMinionChance2[iIndex], 1, 9999999999));
+			main ? (g_iMinionChance[iIndex] = iClamp(g_iMinionChance[iIndex], 1, 9999999999)) : (g_iMinionChance2[iIndex] = iClamp(g_iMinionChance2[iIndex], 1, 9999999999));
 			main ? (kvSuperTanks.GetString("Minion Ability/Minion Types", g_sMinionTypes[iIndex], sizeof(g_sMinionTypes[]), "123456")) : (kvSuperTanks.GetString("Minion Ability/Minion Types", g_sMinionTypes2[iIndex], sizeof(g_sMinionTypes2[]), g_sMinionTypes[iIndex]));
 			kvSuperTanks.Rewind();
 		}

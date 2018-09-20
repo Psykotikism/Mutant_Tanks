@@ -125,21 +125,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iNullifyAbility[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Enabled", 0)) : (g_iNullifyAbility2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Enabled", g_iNullifyAbility[iIndex]));
-			main ? (g_iNullifyAbility[iIndex] = iSetCellLimit(g_iNullifyAbility[iIndex], 0, 1)) : (g_iNullifyAbility2[iIndex] = iSetCellLimit(g_iNullifyAbility2[iIndex], 0, 1));
+			main ? (g_iNullifyAbility[iIndex] = iClamp(g_iNullifyAbility[iIndex], 0, 1)) : (g_iNullifyAbility2[iIndex] = iClamp(g_iNullifyAbility2[iIndex], 0, 1));
 			main ? (g_iNullifyMessage[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Message", 0)) : (g_iNullifyMessage2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Message", g_iNullifyMessage[iIndex]));
-			main ? (g_iNullifyMessage[iIndex] = iSetCellLimit(g_iNullifyMessage[iIndex], 0, 3)) : (g_iNullifyMessage2[iIndex] = iSetCellLimit(g_iNullifyMessage2[iIndex], 0, 3));
+			main ? (g_iNullifyMessage[iIndex] = iClamp(g_iNullifyMessage[iIndex], 0, 3)) : (g_iNullifyMessage2[iIndex] = iClamp(g_iNullifyMessage2[iIndex], 0, 3));
 			main ? (g_iNullifyChance[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Chance", 4)) : (g_iNullifyChance2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Chance", g_iNullifyChance[iIndex]));
-			main ? (g_iNullifyChance[iIndex] = iSetCellLimit(g_iNullifyChance[iIndex], 1, 9999999999)) : (g_iNullifyChance2[iIndex] = iSetCellLimit(g_iNullifyChance2[iIndex], 1, 9999999999));
+			main ? (g_iNullifyChance[iIndex] = iClamp(g_iNullifyChance[iIndex], 1, 9999999999)) : (g_iNullifyChance2[iIndex] = iClamp(g_iNullifyChance2[iIndex], 1, 9999999999));
 			main ? (g_flNullifyDuration[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Duration", 5.0)) : (g_flNullifyDuration2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Duration", g_flNullifyDuration[iIndex]));
-			main ? (g_flNullifyDuration[iIndex] = flSetFloatLimit(g_flNullifyDuration[iIndex], 0.1, 9999999999.0)) : (g_flNullifyDuration2[iIndex] = flSetFloatLimit(g_flNullifyDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flNullifyDuration[iIndex] = flClamp(g_flNullifyDuration[iIndex], 0.1, 9999999999.0)) : (g_flNullifyDuration2[iIndex] = flClamp(g_flNullifyDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iNullifyHit[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Hit", 0)) : (g_iNullifyHit2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Hit", g_iNullifyHit[iIndex]));
-			main ? (g_iNullifyHit[iIndex] = iSetCellLimit(g_iNullifyHit[iIndex], 0, 1)) : (g_iNullifyHit2[iIndex] = iSetCellLimit(g_iNullifyHit2[iIndex], 0, 1));
+			main ? (g_iNullifyHit[iIndex] = iClamp(g_iNullifyHit[iIndex], 0, 1)) : (g_iNullifyHit2[iIndex] = iClamp(g_iNullifyHit2[iIndex], 0, 1));
 			main ? (g_iNullifyHitMode[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Hit Mode", 0)) : (g_iNullifyHitMode2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Hit Mode", g_iNullifyHitMode[iIndex]));
-			main ? (g_iNullifyHitMode[iIndex] = iSetCellLimit(g_iNullifyHitMode[iIndex], 0, 2)) : (g_iNullifyHitMode2[iIndex] = iSetCellLimit(g_iNullifyHitMode2[iIndex], 0, 2));
+			main ? (g_iNullifyHitMode[iIndex] = iClamp(g_iNullifyHitMode[iIndex], 0, 2)) : (g_iNullifyHitMode2[iIndex] = iClamp(g_iNullifyHitMode2[iIndex], 0, 2));
 			main ? (g_flNullifyRange[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range", 150.0)) : (g_flNullifyRange2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range", g_flNullifyRange[iIndex]));
-			main ? (g_flNullifyRange[iIndex] = flSetFloatLimit(g_flNullifyRange[iIndex], 1.0, 9999999999.0)) : (g_flNullifyRange2[iIndex] = flSetFloatLimit(g_flNullifyRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flNullifyRange[iIndex] = flClamp(g_flNullifyRange[iIndex], 1.0, 9999999999.0)) : (g_flNullifyRange2[iIndex] = flClamp(g_flNullifyRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iNullifyRangeChance[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Range Chance", 16)) : (g_iNullifyRangeChance2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Range Chance", g_iNullifyRangeChance[iIndex]));
-			main ? (g_iNullifyRangeChance[iIndex] = iSetCellLimit(g_iNullifyRangeChance[iIndex], 1, 9999999999)) : (g_iNullifyRangeChance2[iIndex] = iSetCellLimit(g_iNullifyRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iNullifyRangeChance[iIndex] = iClamp(g_iNullifyRangeChance[iIndex], 1, 9999999999)) : (g_iNullifyRangeChance2[iIndex] = iClamp(g_iNullifyRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

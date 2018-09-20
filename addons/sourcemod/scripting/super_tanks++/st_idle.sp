@@ -137,19 +137,19 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iIdleAbility[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Enabled", 0)) : (g_iIdleAbility2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Enabled", g_iIdleAbility[iIndex]));
-			main ? (g_iIdleAbility[iIndex] = iSetCellLimit(g_iIdleAbility[iIndex], 0, 1)) : (g_iIdleAbility2[iIndex] = iSetCellLimit(g_iIdleAbility2[iIndex], 0, 1));
+			main ? (g_iIdleAbility[iIndex] = iClamp(g_iIdleAbility[iIndex], 0, 1)) : (g_iIdleAbility2[iIndex] = iClamp(g_iIdleAbility2[iIndex], 0, 1));
 			main ? (g_iIdleMessage[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Message", 0)) : (g_iIdleMessage2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Message", g_iIdleMessage[iIndex]));
-			main ? (g_iIdleMessage[iIndex] = iSetCellLimit(g_iIdleMessage[iIndex], 0, 3)) : (g_iIdleMessage2[iIndex] = iSetCellLimit(g_iIdleMessage2[iIndex], 0, 3));
+			main ? (g_iIdleMessage[iIndex] = iClamp(g_iIdleMessage[iIndex], 0, 3)) : (g_iIdleMessage2[iIndex] = iClamp(g_iIdleMessage2[iIndex], 0, 3));
 			main ? (g_iIdleChance[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Chance", 4)) : (g_iIdleChance2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Chance", g_iIdleChance[iIndex]));
-			main ? (g_iIdleChance[iIndex] = iSetCellLimit(g_iIdleChance[iIndex], 1, 9999999999)) : (g_iIdleChance2[iIndex] = iSetCellLimit(g_iIdleChance2[iIndex], 1, 9999999999));
+			main ? (g_iIdleChance[iIndex] = iClamp(g_iIdleChance[iIndex], 1, 9999999999)) : (g_iIdleChance2[iIndex] = iClamp(g_iIdleChance2[iIndex], 1, 9999999999));
 			main ? (g_iIdleHit[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", 0)) : (g_iIdleHit2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", g_iIdleHit[iIndex]));
-			main ? (g_iIdleHit[iIndex] = iSetCellLimit(g_iIdleHit[iIndex], 0, 1)) : (g_iIdleHit2[iIndex] = iSetCellLimit(g_iIdleHit2[iIndex], 0, 1));
+			main ? (g_iIdleHit[iIndex] = iClamp(g_iIdleHit[iIndex], 0, 1)) : (g_iIdleHit2[iIndex] = iClamp(g_iIdleHit2[iIndex], 0, 1));
 			main ? (g_iIdleHitMode[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit Mode", 0)) : (g_iIdleHitMode2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit Mode", g_iIdleHitMode[iIndex]));
-			main ? (g_iIdleHitMode[iIndex] = iSetCellLimit(g_iIdleHitMode[iIndex], 0, 2)) : (g_iIdleHitMode2[iIndex] = iSetCellLimit(g_iIdleHitMode2[iIndex], 0, 2));
+			main ? (g_iIdleHitMode[iIndex] = iClamp(g_iIdleHitMode[iIndex], 0, 2)) : (g_iIdleHitMode2[iIndex] = iClamp(g_iIdleHitMode2[iIndex], 0, 2));
 			main ? (g_flIdleRange[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", 150.0)) : (g_flIdleRange2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", g_flIdleRange[iIndex]));
-			main ? (g_flIdleRange[iIndex] = flSetFloatLimit(g_flIdleRange[iIndex], 1.0, 9999999999.0)) : (g_flIdleRange2[iIndex] = flSetFloatLimit(g_flIdleRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flIdleRange[iIndex] = flClamp(g_flIdleRange[iIndex], 1.0, 9999999999.0)) : (g_flIdleRange2[iIndex] = flClamp(g_flIdleRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iIdleRangeChance[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Range Chance", 16)) : (g_iIdleRangeChance2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Range Chance", g_iIdleRangeChance[iIndex]));
-			main ? (g_iIdleRangeChance[iIndex] = iSetCellLimit(g_iIdleRangeChance[iIndex], 1, 9999999999)) : (g_iIdleRangeChance2[iIndex] = iSetCellLimit(g_iIdleRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iIdleRangeChance[iIndex] = iClamp(g_iIdleRangeChance[iIndex], 1, 9999999999)) : (g_iIdleRangeChance2[iIndex] = iClamp(g_iIdleRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

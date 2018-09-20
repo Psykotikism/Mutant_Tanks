@@ -113,21 +113,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iBombAbility[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", 0)) : (g_iBombAbility2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", g_iBombAbility[iIndex]));
-			main ? (g_iBombAbility[iIndex] = iSetCellLimit(g_iBombAbility[iIndex], 0, 1)) : (g_iBombAbility2[iIndex] = iSetCellLimit(g_iBombAbility2[iIndex], 0, 1));
+			main ? (g_iBombAbility[iIndex] = iClamp(g_iBombAbility[iIndex], 0, 1)) : (g_iBombAbility2[iIndex] = iClamp(g_iBombAbility2[iIndex], 0, 1));
 			main ? (g_iBombMessage[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Message", 0)) : (g_iBombMessage2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Message", g_iBombMessage[iIndex]));
-			main ? (g_iBombMessage[iIndex] = iSetCellLimit(g_iBombMessage[iIndex], 0, 3)) : (g_iBombMessage2[iIndex] = iSetCellLimit(g_iBombMessage2[iIndex], 0, 3));
+			main ? (g_iBombMessage[iIndex] = iClamp(g_iBombMessage[iIndex], 0, 3)) : (g_iBombMessage2[iIndex] = iClamp(g_iBombMessage2[iIndex], 0, 3));
 			main ? (g_iBombChance[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Chance", 4)) : (g_iBombChance2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Chance", g_iBombChance[iIndex]));
-			main ? (g_iBombChance[iIndex] = iSetCellLimit(g_iBombChance[iIndex], 1, 9999999999)) : (g_iBombChance2[iIndex] = iSetCellLimit(g_iBombChance2[iIndex], 1, 9999999999));
+			main ? (g_iBombChance[iIndex] = iClamp(g_iBombChance[iIndex], 1, 9999999999)) : (g_iBombChance2[iIndex] = iClamp(g_iBombChance2[iIndex], 1, 9999999999));
 			main ? (g_iBombHit[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit", 0)) : (g_iBombHit2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit", g_iBombHit[iIndex]));
-			main ? (g_iBombHit[iIndex] = iSetCellLimit(g_iBombHit[iIndex], 0, 1)) : (g_iBombHit2[iIndex] = iSetCellLimit(g_iBombHit2[iIndex], 0, 1));
+			main ? (g_iBombHit[iIndex] = iClamp(g_iBombHit[iIndex], 0, 1)) : (g_iBombHit2[iIndex] = iClamp(g_iBombHit2[iIndex], 0, 1));
 			main ? (g_iBombHitMode[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit Mode", 0)) : (g_iBombHitMode2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit Mode", g_iBombHitMode[iIndex]));
-			main ? (g_iBombHitMode[iIndex] = iSetCellLimit(g_iBombHitMode[iIndex], 0, 2)) : (g_iBombHitMode2[iIndex] = iSetCellLimit(g_iBombHitMode2[iIndex], 0, 2));
+			main ? (g_iBombHitMode[iIndex] = iClamp(g_iBombHitMode[iIndex], 0, 2)) : (g_iBombHitMode2[iIndex] = iClamp(g_iBombHitMode2[iIndex], 0, 2));
 			main ? (g_flBombRange[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range", 150.0)) : (g_flBombRange2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range", g_flBombRange[iIndex]));
-			main ? (g_flBombRange[iIndex] = flSetFloatLimit(g_flBombRange[iIndex], 1.0, 9999999999.0)) : (g_flBombRange2[iIndex] = flSetFloatLimit(g_flBombRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flBombRange[iIndex] = flClamp(g_flBombRange[iIndex], 1.0, 9999999999.0)) : (g_flBombRange2[iIndex] = flClamp(g_flBombRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iBombRangeChance[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Range Chance", 16)) : (g_iBombRangeChance2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Range Chance", g_iBombRangeChance[iIndex]));
-			main ? (g_iBombRangeChance[iIndex] = iSetCellLimit(g_iBombRangeChance[iIndex], 1, 9999999999)) : (g_iBombRangeChance2[iIndex] = iSetCellLimit(g_iBombRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iBombRangeChance[iIndex] = iClamp(g_iBombRangeChance[iIndex], 1, 9999999999)) : (g_iBombRangeChance2[iIndex] = iClamp(g_iBombRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_iBombRock[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Rock Break", 0)) : (g_iBombRock2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Rock Break", g_iBombRock[iIndex]));
-			main ? (g_iBombRock[iIndex] = iSetCellLimit(g_iBombRock[iIndex], 0, 1)) : (g_iBombRock2[iIndex] = iSetCellLimit(g_iBombRock2[iIndex], 0, 1));
+			main ? (g_iBombRock[iIndex] = iClamp(g_iBombRock[iIndex], 0, 1)) : (g_iBombRock2[iIndex] = iClamp(g_iBombRock2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
 		}
 	}

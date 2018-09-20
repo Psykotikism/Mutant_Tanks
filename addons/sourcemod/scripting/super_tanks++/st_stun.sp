@@ -119,23 +119,23 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iStunAbility[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Enabled", 0)) : (g_iStunAbility2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Enabled", g_iStunAbility[iIndex]));
-			main ? (g_iStunAbility[iIndex] = iSetCellLimit(g_iStunAbility[iIndex], 0, 1)) : (g_iStunAbility2[iIndex] = iSetCellLimit(g_iStunAbility2[iIndex], 0, 1));
+			main ? (g_iStunAbility[iIndex] = iClamp(g_iStunAbility[iIndex], 0, 1)) : (g_iStunAbility2[iIndex] = iClamp(g_iStunAbility2[iIndex], 0, 1));
 			main ? (g_iStunMessage[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Message", 0)) : (g_iStunMessage2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Message", g_iStunMessage[iIndex]));
-			main ? (g_iStunMessage[iIndex] = iSetCellLimit(g_iStunMessage[iIndex], 0, 3)) : (g_iStunMessage2[iIndex] = iSetCellLimit(g_iStunMessage2[iIndex], 0, 3));
+			main ? (g_iStunMessage[iIndex] = iClamp(g_iStunMessage[iIndex], 0, 3)) : (g_iStunMessage2[iIndex] = iClamp(g_iStunMessage2[iIndex], 0, 3));
 			main ? (g_iStunChance[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Chance", 4)) : (g_iStunChance2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Chance", g_iStunChance[iIndex]));
-			main ? (g_iStunChance[iIndex] = iSetCellLimit(g_iStunChance[iIndex], 1, 9999999999)) : (g_iStunChance2[iIndex] = iSetCellLimit(g_iStunChance2[iIndex], 1, 9999999999));
+			main ? (g_iStunChance[iIndex] = iClamp(g_iStunChance[iIndex], 1, 9999999999)) : (g_iStunChance2[iIndex] = iClamp(g_iStunChance2[iIndex], 1, 9999999999));
 			main ? (g_flStunDuration[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Duration", 5.0)) : (g_flStunDuration2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Duration", g_flStunDuration[iIndex]));
-			main ? (g_flStunDuration[iIndex] = flSetFloatLimit(g_flStunDuration[iIndex], 0.1, 9999999999.0)) : (g_flStunDuration2[iIndex] = flSetFloatLimit(g_flStunDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flStunDuration[iIndex] = flClamp(g_flStunDuration[iIndex], 0.1, 9999999999.0)) : (g_flStunDuration2[iIndex] = flClamp(g_flStunDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iStunHit[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Hit", 0)) : (g_iStunHit2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Hit", g_iStunHit[iIndex]));
-			main ? (g_iStunHit[iIndex] = iSetCellLimit(g_iStunHit[iIndex], 0, 1)) : (g_iStunHit2[iIndex] = iSetCellLimit(g_iStunHit2[iIndex], 0, 1));
+			main ? (g_iStunHit[iIndex] = iClamp(g_iStunHit[iIndex], 0, 1)) : (g_iStunHit2[iIndex] = iClamp(g_iStunHit2[iIndex], 0, 1));
 			main ? (g_iStunHitMode[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Hit Mode", 0)) : (g_iStunHitMode2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Hit Mode", g_iStunHitMode[iIndex]));
-			main ? (g_iStunHitMode[iIndex] = iSetCellLimit(g_iStunHitMode[iIndex], 0, 2)) : (g_iStunHitMode2[iIndex] = iSetCellLimit(g_iStunHitMode2[iIndex], 0, 2));
+			main ? (g_iStunHitMode[iIndex] = iClamp(g_iStunHitMode[iIndex], 0, 2)) : (g_iStunHitMode2[iIndex] = iClamp(g_iStunHitMode2[iIndex], 0, 2));
 			main ? (g_flStunRange[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Range", 150.0)) : (g_flStunRange2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Range", g_flStunRange[iIndex]));
-			main ? (g_flStunRange[iIndex] = flSetFloatLimit(g_flStunRange[iIndex], 1.0, 9999999999.0)) : (g_flStunRange2[iIndex] = flSetFloatLimit(g_flStunRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flStunRange[iIndex] = flClamp(g_flStunRange[iIndex], 1.0, 9999999999.0)) : (g_flStunRange2[iIndex] = flClamp(g_flStunRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iStunRangeChance[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Range Chance", 16)) : (g_iStunRangeChance2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Range Chance", g_iStunRangeChance[iIndex]));
-			main ? (g_iStunRangeChance[iIndex] = iSetCellLimit(g_iStunRangeChance[iIndex], 1, 9999999999)) : (g_iStunRangeChance2[iIndex] = iSetCellLimit(g_iStunRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iStunRangeChance[iIndex] = iClamp(g_iStunRangeChance[iIndex], 1, 9999999999)) : (g_iStunRangeChance2[iIndex] = iClamp(g_iStunRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_flStunSpeed[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Speed", 0.25)) : (g_flStunSpeed2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Speed", g_flStunSpeed[iIndex]));
-			main ? (g_flStunSpeed[iIndex] = flSetFloatLimit(g_flStunSpeed[iIndex], 0.1, 0.9)) : (g_flStunSpeed2[iIndex] = flSetFloatLimit(g_flStunSpeed2[iIndex], 0.1, 0.9));
+			main ? (g_flStunSpeed[iIndex] = flClamp(g_flStunSpeed[iIndex], 0.1, 0.9)) : (g_flStunSpeed2[iIndex] = flClamp(g_flStunSpeed2[iIndex], 0.1, 0.9));
 			kvSuperTanks.Rewind();
 		}
 	}

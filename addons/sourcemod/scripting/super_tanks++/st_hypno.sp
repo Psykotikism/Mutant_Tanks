@@ -135,23 +135,23 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iHypnoAbility[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Enabled", 0)) : (g_iHypnoAbility2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Enabled", g_iHypnoAbility[iIndex]));
-			main ? (g_iHypnoAbility[iIndex] = iSetCellLimit(g_iHypnoAbility[iIndex], 0, 1)) : (g_iHypnoAbility2[iIndex] = iSetCellLimit(g_iHypnoAbility2[iIndex], 0, 1));
+			main ? (g_iHypnoAbility[iIndex] = iClamp(g_iHypnoAbility[iIndex], 0, 1)) : (g_iHypnoAbility2[iIndex] = iClamp(g_iHypnoAbility2[iIndex], 0, 1));
 			main ? (g_iHypnoMessage[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Message", 0)) : (g_iHypnoMessage2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Message", g_iHypnoMessage[iIndex]));
-			main ? (g_iHypnoMessage[iIndex] = iSetCellLimit(g_iHypnoMessage[iIndex], 0, 3)) : (g_iHypnoMessage2[iIndex] = iSetCellLimit(g_iHypnoMessage2[iIndex], 0, 3));
+			main ? (g_iHypnoMessage[iIndex] = iClamp(g_iHypnoMessage[iIndex], 0, 3)) : (g_iHypnoMessage2[iIndex] = iClamp(g_iHypnoMessage2[iIndex], 0, 3));
 			main ? (g_iHypnoChance[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Chance", 4)) : (g_iHypnoChance2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Chance", g_iHypnoChance[iIndex]));
-			main ? (g_iHypnoChance[iIndex] = iSetCellLimit(g_iHypnoChance[iIndex], 1, 9999999999)) : (g_iHypnoChance2[iIndex] = iSetCellLimit(g_iHypnoChance2[iIndex], 1, 9999999999));
+			main ? (g_iHypnoChance[iIndex] = iClamp(g_iHypnoChance[iIndex], 1, 9999999999)) : (g_iHypnoChance2[iIndex] = iClamp(g_iHypnoChance2[iIndex], 1, 9999999999));
 			main ? (g_flHypnoDuration[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Duration", 5.0)) : (g_flHypnoDuration2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Duration", g_flHypnoDuration[iIndex]));
-			main ? (g_flHypnoDuration[iIndex] = flSetFloatLimit(g_flHypnoDuration[iIndex], 0.1, 9999999999.0)) : (g_flHypnoDuration2[iIndex] = flSetFloatLimit(g_flHypnoDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flHypnoDuration[iIndex] = flClamp(g_flHypnoDuration[iIndex], 0.1, 9999999999.0)) : (g_flHypnoDuration2[iIndex] = flClamp(g_flHypnoDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iHypnoHit[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Hit", 0)) : (g_iHypnoHit2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Hit", g_iHypnoHit[iIndex]));
-			main ? (g_iHypnoHit[iIndex] = iSetCellLimit(g_iHypnoHit[iIndex], 0, 1)) : (g_iHypnoHit2[iIndex] = iSetCellLimit(g_iHypnoHit2[iIndex], 0, 1));
+			main ? (g_iHypnoHit[iIndex] = iClamp(g_iHypnoHit[iIndex], 0, 1)) : (g_iHypnoHit2[iIndex] = iClamp(g_iHypnoHit2[iIndex], 0, 1));
 			main ? (g_iHypnoHitMode[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Hit Mode", 0)) : (g_iHypnoHitMode2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Hit Mode", g_iHypnoHitMode[iIndex]));
-			main ? (g_iHypnoHitMode[iIndex] = iSetCellLimit(g_iHypnoHitMode[iIndex], 0, 2)) : (g_iHypnoHitMode2[iIndex] = iSetCellLimit(g_iHypnoHitMode2[iIndex], 0, 2));
+			main ? (g_iHypnoHitMode[iIndex] = iClamp(g_iHypnoHitMode[iIndex], 0, 2)) : (g_iHypnoHitMode2[iIndex] = iClamp(g_iHypnoHitMode2[iIndex], 0, 2));
 			main ? (g_iHypnoMode[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Mode", 0)) : (g_iHypnoMode2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Mode", g_iHypnoMode[iIndex]));
-			main ? (g_iHypnoMode[iIndex] = iSetCellLimit(g_iHypnoMode[iIndex], 0, 1)) : (g_iHypnoMode2[iIndex] = iSetCellLimit(g_iHypnoMode2[iIndex], 0, 1));
+			main ? (g_iHypnoMode[iIndex] = iClamp(g_iHypnoMode[iIndex], 0, 1)) : (g_iHypnoMode2[iIndex] = iClamp(g_iHypnoMode2[iIndex], 0, 1));
 			main ? (g_flHypnoRange[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range", 150.0)) : (g_flHypnoRange2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range", g_flHypnoRange[iIndex]));
-			main ? (g_flHypnoRange[iIndex] = flSetFloatLimit(g_flHypnoRange[iIndex], 1.0, 9999999999.0)) : (g_flHypnoRange2[iIndex] = flSetFloatLimit(g_flHypnoRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flHypnoRange[iIndex] = flClamp(g_flHypnoRange[iIndex], 1.0, 9999999999.0)) : (g_flHypnoRange2[iIndex] = flClamp(g_flHypnoRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iHypnoRangeChance[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Range Chance", 16)) : (g_iHypnoRangeChance2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Range Chance", g_iHypnoRangeChance[iIndex]));
-			main ? (g_iHypnoRangeChance[iIndex] = iSetCellLimit(g_iHypnoRangeChance[iIndex], 1, 9999999999)) : (g_iHypnoRangeChance2[iIndex] = iSetCellLimit(g_iHypnoRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iHypnoRangeChance[iIndex] = iClamp(g_iHypnoRangeChance[iIndex], 1, 9999999999)) : (g_iHypnoRangeChance2[iIndex] = iClamp(g_iHypnoRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

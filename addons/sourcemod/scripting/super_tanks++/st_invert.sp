@@ -154,21 +154,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iInvertAbility[iIndex] = kvSuperTanks.GetNum("Invert Ability/Ability Enabled", 0)) : (g_iInvertAbility2[iIndex] = kvSuperTanks.GetNum("Invert Ability/Ability Enabled", g_iInvertAbility[iIndex]));
-			main ? (g_iInvertAbility[iIndex] = iSetCellLimit(g_iInvertAbility[iIndex], 0, 1)) : (g_iInvertAbility2[iIndex] = iSetCellLimit(g_iInvertAbility2[iIndex], 0, 1));
+			main ? (g_iInvertAbility[iIndex] = iClamp(g_iInvertAbility[iIndex], 0, 1)) : (g_iInvertAbility2[iIndex] = iClamp(g_iInvertAbility2[iIndex], 0, 1));
 			main ? (g_iInvertMessage[iIndex] = kvSuperTanks.GetNum("Invert Ability/Ability Message", 0)) : (g_iInvertMessage2[iIndex] = kvSuperTanks.GetNum("Invert Ability/Ability Message", g_iInvertMessage[iIndex]));
-			main ? (g_iInvertMessage[iIndex] = iSetCellLimit(g_iInvertMessage[iIndex], 0, 3)) : (g_iInvertMessage2[iIndex] = iSetCellLimit(g_iInvertMessage2[iIndex], 0, 3));
+			main ? (g_iInvertMessage[iIndex] = iClamp(g_iInvertMessage[iIndex], 0, 3)) : (g_iInvertMessage2[iIndex] = iClamp(g_iInvertMessage2[iIndex], 0, 3));
 			main ? (g_iInvertChance[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Chance", 4)) : (g_iInvertChance2[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Chance", g_iInvertChance[iIndex]));
-			main ? (g_iInvertChance[iIndex] = iSetCellLimit(g_iInvertChance[iIndex], 1, 9999999999)) : (g_iInvertChance2[iIndex] = iSetCellLimit(g_iInvertChance2[iIndex], 1, 9999999999));
+			main ? (g_iInvertChance[iIndex] = iClamp(g_iInvertChance[iIndex], 1, 9999999999)) : (g_iInvertChance2[iIndex] = iClamp(g_iInvertChance2[iIndex], 1, 9999999999));
 			main ? (g_flInvertDuration[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Duration", 5.0)) : (g_flInvertDuration2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Duration", g_flInvertDuration[iIndex]));
-			main ? (g_flInvertDuration[iIndex] = flSetFloatLimit(g_flInvertDuration[iIndex], 0.1, 9999999999.0)) : (g_flInvertDuration2[iIndex] = flSetFloatLimit(g_flInvertDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flInvertDuration[iIndex] = flClamp(g_flInvertDuration[iIndex], 0.1, 9999999999.0)) : (g_flInvertDuration2[iIndex] = flClamp(g_flInvertDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iInvertHit[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Hit", 0)) : (g_iInvertHit2[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Hit", g_iInvertHit[iIndex]));
-			main ? (g_iInvertHit[iIndex] = iSetCellLimit(g_iInvertHit[iIndex], 0, 1)) : (g_iInvertHit2[iIndex] = iSetCellLimit(g_iInvertHit2[iIndex], 0, 1));
+			main ? (g_iInvertHit[iIndex] = iClamp(g_iInvertHit[iIndex], 0, 1)) : (g_iInvertHit2[iIndex] = iClamp(g_iInvertHit2[iIndex], 0, 1));
 			main ? (g_iInvertHitMode[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Hit Mode", 0)) : (g_iInvertHitMode2[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Hit Mode", g_iInvertHitMode[iIndex]));
-			main ? (g_iInvertHitMode[iIndex] = iSetCellLimit(g_iInvertHitMode[iIndex], 0, 2)) : (g_iInvertHitMode2[iIndex] = iSetCellLimit(g_iInvertHitMode2[iIndex], 0, 2));
+			main ? (g_iInvertHitMode[iIndex] = iClamp(g_iInvertHitMode[iIndex], 0, 2)) : (g_iInvertHitMode2[iIndex] = iClamp(g_iInvertHitMode2[iIndex], 0, 2));
 			main ? (g_flInvertRange[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range", 150.0)) : (g_flInvertRange2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range", g_flInvertRange[iIndex]));
-			main ? (g_flInvertRange[iIndex] = flSetFloatLimit(g_flInvertRange[iIndex], 1.0, 9999999999.0)) : (g_flInvertRange2[iIndex] = flSetFloatLimit(g_flInvertRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flInvertRange[iIndex] = flClamp(g_flInvertRange[iIndex], 1.0, 9999999999.0)) : (g_flInvertRange2[iIndex] = flClamp(g_flInvertRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iInvertRangeChance[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Range Chance", 16)) : (g_iInvertRangeChance2[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Range Chance", g_iInvertRangeChance[iIndex]));
-			main ? (g_iInvertRangeChance[iIndex] = iSetCellLimit(g_iInvertRangeChance[iIndex], 1, 9999999999)) : (g_iInvertRangeChance2[iIndex] = iSetCellLimit(g_iInvertRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iInvertRangeChance[iIndex] = iClamp(g_iInvertRangeChance[iIndex], 1, 9999999999)) : (g_iInvertRangeChance2[iIndex] = iClamp(g_iInvertRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

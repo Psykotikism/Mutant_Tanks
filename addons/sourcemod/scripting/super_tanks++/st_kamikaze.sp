@@ -115,19 +115,19 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iKamikazeAbility[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Enabled", 0)) : (g_iKamikazeAbility2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Enabled", g_iKamikazeAbility[iIndex]));
-			main ? (g_iKamikazeAbility[iIndex] = iSetCellLimit(g_iKamikazeAbility[iIndex], 0, 1)) : (g_iKamikazeAbility2[iIndex] = iSetCellLimit(g_iKamikazeAbility2[iIndex], 0, 1));
+			main ? (g_iKamikazeAbility[iIndex] = iClamp(g_iKamikazeAbility[iIndex], 0, 1)) : (g_iKamikazeAbility2[iIndex] = iClamp(g_iKamikazeAbility2[iIndex], 0, 1));
 			main ? (g_iKamikazeMessage[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Message", 0)) : (g_iKamikazeMessage2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Message", g_iKamikazeMessage[iIndex]));
-			main ? (g_iKamikazeMessage[iIndex] = iSetCellLimit(g_iKamikazeMessage[iIndex], 0, 3)) : (g_iKamikazeMessage2[iIndex] = iSetCellLimit(g_iKamikazeMessage2[iIndex], 0, 3));
+			main ? (g_iKamikazeMessage[iIndex] = iClamp(g_iKamikazeMessage[iIndex], 0, 3)) : (g_iKamikazeMessage2[iIndex] = iClamp(g_iKamikazeMessage2[iIndex], 0, 3));
 			main ? (g_iKamikazeChance[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Chance", 4)) : (g_iKamikazeChance2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Chance", g_iKamikazeChance[iIndex]));
-			main ? (g_iKamikazeChance[iIndex] = iSetCellLimit(g_iKamikazeChance[iIndex], 1, 9999999999)) : (g_iKamikazeChance2[iIndex] = iSetCellLimit(g_iKamikazeChance2[iIndex], 1, 9999999999));
+			main ? (g_iKamikazeChance[iIndex] = iClamp(g_iKamikazeChance[iIndex], 1, 9999999999)) : (g_iKamikazeChance2[iIndex] = iClamp(g_iKamikazeChance2[iIndex], 1, 9999999999));
 			main ? (g_iKamikazeHit[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit", 0)) : (g_iKamikazeHit2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit", g_iKamikazeHit[iIndex]));
-			main ? (g_iKamikazeHit[iIndex] = iSetCellLimit(g_iKamikazeHit[iIndex], 0, 1)) : (g_iKamikazeHit2[iIndex] = iSetCellLimit(g_iKamikazeHit2[iIndex], 0, 1));
+			main ? (g_iKamikazeHit[iIndex] = iClamp(g_iKamikazeHit[iIndex], 0, 1)) : (g_iKamikazeHit2[iIndex] = iClamp(g_iKamikazeHit2[iIndex], 0, 1));
 			main ? (g_iKamikazeHitMode[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit Mode", 0)) : (g_iKamikazeHitMode2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit Mode", g_iKamikazeHitMode[iIndex]));
-			main ? (g_iKamikazeHitMode[iIndex] = iSetCellLimit(g_iKamikazeHitMode[iIndex], 0, 2)) : (g_iKamikazeHitMode2[iIndex] = iSetCellLimit(g_iKamikazeHitMode2[iIndex], 0, 2));
+			main ? (g_iKamikazeHitMode[iIndex] = iClamp(g_iKamikazeHitMode[iIndex], 0, 2)) : (g_iKamikazeHitMode2[iIndex] = iClamp(g_iKamikazeHitMode2[iIndex], 0, 2));
 			main ? (g_flKamikazeRange[iIndex] = kvSuperTanks.GetFloat("Kamikaze Ability/Kamikaze Range", 150.0)) : (g_flKamikazeRange2[iIndex] = kvSuperTanks.GetFloat("Kamikaze Ability/Kamikaze Range", g_flKamikazeRange[iIndex]));
-			main ? (g_flKamikazeRange[iIndex] = flSetFloatLimit(g_flKamikazeRange[iIndex], 1.0, 9999999999.0)) : (g_flKamikazeRange2[iIndex] = flSetFloatLimit(g_flKamikazeRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flKamikazeRange[iIndex] = flClamp(g_flKamikazeRange[iIndex], 1.0, 9999999999.0)) : (g_flKamikazeRange2[iIndex] = flClamp(g_flKamikazeRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iKamikazeRangeChance[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Range Chance", 16)) : (g_iKamikazeRangeChance2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Range Chance", g_iKamikazeRangeChance[iIndex]));
-			main ? (g_iKamikazeRangeChance[iIndex] = iSetCellLimit(g_iKamikazeRangeChance[iIndex], 1, 9999999999)) : (g_iKamikazeRangeChance2[iIndex] = iSetCellLimit(g_iKamikazeRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iKamikazeRangeChance[iIndex] = iClamp(g_iKamikazeRangeChance[iIndex], 1, 9999999999)) : (g_iKamikazeRangeChance2[iIndex] = iClamp(g_iKamikazeRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

@@ -119,19 +119,19 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iPukeAbility[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", 0)) : (g_iPukeAbility2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", g_iPukeAbility[iIndex]));
-			main ? (g_iPukeAbility[iIndex] = iSetCellLimit(g_iPukeAbility[iIndex], 0, 1)) : (g_iPukeAbility2[iIndex] = iSetCellLimit(g_iPukeAbility2[iIndex], 0, 1));
+			main ? (g_iPukeAbility[iIndex] = iClamp(g_iPukeAbility[iIndex], 0, 1)) : (g_iPukeAbility2[iIndex] = iClamp(g_iPukeAbility2[iIndex], 0, 1));
 			main ? (g_iPukeMessage[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Message", 0)) : (g_iPukeMessage2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Message", g_iPukeMessage[iIndex]));
-			main ? (g_iPukeMessage[iIndex] = iSetCellLimit(g_iPukeMessage[iIndex], 0, 3)) : (g_iPukeMessage2[iIndex] = iSetCellLimit(g_iPukeMessage2[iIndex], 0, 3));
+			main ? (g_iPukeMessage[iIndex] = iClamp(g_iPukeMessage[iIndex], 0, 3)) : (g_iPukeMessage2[iIndex] = iClamp(g_iPukeMessage2[iIndex], 0, 3));
 			main ? (g_iPukeChance[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Chance", 4)) : (g_iPukeChance2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Chance", g_iPukeChance[iIndex]));
-			main ? (g_iPukeChance[iIndex] = iSetCellLimit(g_iPukeChance[iIndex], 1, 9999999999)) : (g_iPukeChance2[iIndex] = iSetCellLimit(g_iPukeChance2[iIndex], 1, 9999999999));
+			main ? (g_iPukeChance[iIndex] = iClamp(g_iPukeChance[iIndex], 1, 9999999999)) : (g_iPukeChance2[iIndex] = iClamp(g_iPukeChance2[iIndex], 1, 9999999999));
 			main ? (g_iPukeHit[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", 0)) : (g_iPukeHit2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", g_iPukeHit[iIndex]));
-			main ? (g_iPukeHit[iIndex] = iSetCellLimit(g_iPukeHit[iIndex], 0, 1)) : (g_iPukeHit2[iIndex] = iSetCellLimit(g_iPukeHit2[iIndex], 0, 1));
+			main ? (g_iPukeHit[iIndex] = iClamp(g_iPukeHit[iIndex], 0, 1)) : (g_iPukeHit2[iIndex] = iClamp(g_iPukeHit2[iIndex], 0, 1));
 			main ? (g_iPukeHitMode[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit Mode", 0)) : (g_iPukeHitMode2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit Mode", g_iPukeHitMode[iIndex]));
-			main ? (g_iPukeHitMode[iIndex] = iSetCellLimit(g_iPukeHitMode[iIndex], 0, 2)) : (g_iPukeHitMode2[iIndex] = iSetCellLimit(g_iPukeHitMode2[iIndex], 0, 2));
+			main ? (g_iPukeHitMode[iIndex] = iClamp(g_iPukeHitMode[iIndex], 0, 2)) : (g_iPukeHitMode2[iIndex] = iClamp(g_iPukeHitMode2[iIndex], 0, 2));
 			main ? (g_flPukeRange[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range", 150.0)) : (g_flPukeRange2[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range", g_flPukeRange[iIndex]));
-			main ? (g_flPukeRange[iIndex] = flSetFloatLimit(g_flPukeRange[iIndex], 1.0, 9999999999.0)) : (g_flPukeRange2[iIndex] = flSetFloatLimit(g_flPukeRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flPukeRange[iIndex] = flClamp(g_flPukeRange[iIndex], 1.0, 9999999999.0)) : (g_flPukeRange2[iIndex] = flClamp(g_flPukeRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iPukeRangeChance[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Range Chance", 16)) : (g_iPukeRangeChance2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Range Chance", g_iPukeRangeChance[iIndex]));
-			main ? (g_iPukeRangeChance[iIndex] = iSetCellLimit(g_iPukeRangeChance[iIndex], 1, 9999999999)) : (g_iPukeRangeChance2[iIndex] = iSetCellLimit(g_iPukeRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iPukeRangeChance[iIndex] = iClamp(g_iPukeRangeChance[iIndex], 1, 9999999999)) : (g_iPukeRangeChance2[iIndex] = iClamp(g_iPukeRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

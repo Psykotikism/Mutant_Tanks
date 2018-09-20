@@ -116,19 +116,19 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iRocketAbility[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", 0)) : (g_iRocketAbility2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", g_iRocketAbility[iIndex]));
-			main ? (g_iRocketAbility[iIndex] = iSetCellLimit(g_iRocketAbility[iIndex], 0, 1)) : (g_iRocketAbility2[iIndex] = iSetCellLimit(g_iRocketAbility2[iIndex], 0, 1));
+			main ? (g_iRocketAbility[iIndex] = iClamp(g_iRocketAbility[iIndex], 0, 1)) : (g_iRocketAbility2[iIndex] = iClamp(g_iRocketAbility2[iIndex], 0, 1));
 			main ? (g_iRocketMessage[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Message", 0)) : (g_iRocketMessage2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Message", g_iRocketMessage[iIndex]));
-			main ? (g_iRocketMessage[iIndex] = iSetCellLimit(g_iRocketMessage[iIndex], 0, 3)) : (g_iRocketMessage2[iIndex] = iSetCellLimit(g_iRocketMessage2[iIndex], 0, 3));
+			main ? (g_iRocketMessage[iIndex] = iClamp(g_iRocketMessage[iIndex], 0, 3)) : (g_iRocketMessage2[iIndex] = iClamp(g_iRocketMessage2[iIndex], 0, 3));
 			main ? (g_iRocketChance[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Chance", 4)) : (g_iRocketChance2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Chance", g_iRocketChance[iIndex]));
-			main ? (g_iRocketChance[iIndex] = iSetCellLimit(g_iRocketChance[iIndex], 1, 9999999999)) : (g_iRocketChance2[iIndex] = iSetCellLimit(g_iRocketChance2[iIndex], 1, 9999999999));
+			main ? (g_iRocketChance[iIndex] = iClamp(g_iRocketChance[iIndex], 1, 9999999999)) : (g_iRocketChance2[iIndex] = iClamp(g_iRocketChance2[iIndex], 1, 9999999999));
 			main ? (g_iRocketHit[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit", 0)) : (g_iRocketHit2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit", g_iRocketHit[iIndex]));
-			main ? (g_iRocketHit[iIndex] = iSetCellLimit(g_iRocketHit[iIndex], 0, 1)) : (g_iRocketHit2[iIndex] = iSetCellLimit(g_iRocketHit2[iIndex], 0, 1));
+			main ? (g_iRocketHit[iIndex] = iClamp(g_iRocketHit[iIndex], 0, 1)) : (g_iRocketHit2[iIndex] = iClamp(g_iRocketHit2[iIndex], 0, 1));
 			main ? (g_iRocketHitMode[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit Mode", 0)) : (g_iRocketHitMode2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit Mode", g_iRocketHitMode[iIndex]));
-			main ? (g_iRocketHitMode[iIndex] = iSetCellLimit(g_iRocketHitMode[iIndex], 0, 2)) : (g_iRocketHitMode2[iIndex] = iSetCellLimit(g_iRocketHitMode2[iIndex], 0, 2));
+			main ? (g_iRocketHitMode[iIndex] = iClamp(g_iRocketHitMode[iIndex], 0, 2)) : (g_iRocketHitMode2[iIndex] = iClamp(g_iRocketHitMode2[iIndex], 0, 2));
 			main ? (g_flRocketRange[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range", 150.0)) : (g_flRocketRange2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range", g_flRocketRange[iIndex]));
-			main ? (g_flRocketRange[iIndex] = flSetFloatLimit(g_flRocketRange[iIndex], 1.0, 9999999999.0)) : (g_flRocketRange2[iIndex] = flSetFloatLimit(g_flRocketRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flRocketRange[iIndex] = flClamp(g_flRocketRange[iIndex], 1.0, 9999999999.0)) : (g_flRocketRange2[iIndex] = flClamp(g_flRocketRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iRocketRangeChance[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Range Chance", 16)) : (g_iRocketRangeChance2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Range Chance", g_iRocketRangeChance[iIndex]));
-			main ? (g_iRocketRangeChance[iIndex] = iSetCellLimit(g_iRocketRangeChance[iIndex], 1, 9999999999)) : (g_iRocketRangeChance2[iIndex] = iSetCellLimit(g_iRocketRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iRocketRangeChance[iIndex] = iClamp(g_iRocketRangeChance[iIndex], 1, 9999999999)) : (g_iRocketRangeChance2[iIndex] = iClamp(g_iRocketRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

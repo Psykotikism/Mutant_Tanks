@@ -143,21 +143,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iQuietAbility[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Enabled", 0)) : (g_iQuietAbility2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Enabled", g_iQuietAbility[iIndex]));
-			main ? (g_iQuietAbility[iIndex] = iSetCellLimit(g_iQuietAbility[iIndex], 0, 1)) : (g_iQuietAbility2[iIndex] = iSetCellLimit(g_iQuietAbility2[iIndex], 0, 1));
+			main ? (g_iQuietAbility[iIndex] = iClamp(g_iQuietAbility[iIndex], 0, 1)) : (g_iQuietAbility2[iIndex] = iClamp(g_iQuietAbility2[iIndex], 0, 1));
 			main ? (g_iQuietMessage[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Message", 0)) : (g_iQuietMessage2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Message", g_iQuietMessage[iIndex]));
-			main ? (g_iQuietMessage[iIndex] = iSetCellLimit(g_iQuietMessage[iIndex], 0, 3)) : (g_iQuietMessage2[iIndex] = iSetCellLimit(g_iQuietMessage2[iIndex], 0, 3));
+			main ? (g_iQuietMessage[iIndex] = iClamp(g_iQuietMessage[iIndex], 0, 3)) : (g_iQuietMessage2[iIndex] = iClamp(g_iQuietMessage2[iIndex], 0, 3));
 			main ? (g_iQuietChance[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Chance", 4)) : (g_iQuietChance2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Chance", g_iQuietChance[iIndex]));
-			main ? (g_iQuietChance[iIndex] = iSetCellLimit(g_iQuietChance[iIndex], 1, 9999999999)) : (g_iQuietChance2[iIndex] = iSetCellLimit(g_iQuietChance2[iIndex], 1, 9999999999));
+			main ? (g_iQuietChance[iIndex] = iClamp(g_iQuietChance[iIndex], 1, 9999999999)) : (g_iQuietChance2[iIndex] = iClamp(g_iQuietChance2[iIndex], 1, 9999999999));
 			main ? (g_flQuietDuration[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Duration", 5.0)) : (g_flQuietDuration2[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Duration", g_flQuietDuration[iIndex]));
-			main ? (g_flQuietDuration[iIndex] = flSetFloatLimit(g_flQuietDuration[iIndex], 0.1, 9999999999.0)) : (g_flQuietDuration2[iIndex] = flSetFloatLimit(g_flQuietDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flQuietDuration[iIndex] = flClamp(g_flQuietDuration[iIndex], 0.1, 9999999999.0)) : (g_flQuietDuration2[iIndex] = flClamp(g_flQuietDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iQuietHit[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Hit", 0)) : (g_iQuietHit2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Hit", g_iQuietHit[iIndex]));
-			main ? (g_iQuietHit[iIndex] = iSetCellLimit(g_iQuietHit[iIndex], 0, 1)) : (g_iQuietHit2[iIndex] = iSetCellLimit(g_iQuietHit2[iIndex], 0, 1));
+			main ? (g_iQuietHit[iIndex] = iClamp(g_iQuietHit[iIndex], 0, 1)) : (g_iQuietHit2[iIndex] = iClamp(g_iQuietHit2[iIndex], 0, 1));
 			main ? (g_iQuietHitMode[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Hit Mode", 0)) : (g_iQuietHitMode2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Hit Mode", g_iQuietHitMode[iIndex]));
-			main ? (g_iQuietHitMode[iIndex] = iSetCellLimit(g_iQuietHitMode[iIndex], 0, 2)) : (g_iQuietHitMode2[iIndex] = iSetCellLimit(g_iQuietHitMode2[iIndex], 0, 2));
+			main ? (g_iQuietHitMode[iIndex] = iClamp(g_iQuietHitMode[iIndex], 0, 2)) : (g_iQuietHitMode2[iIndex] = iClamp(g_iQuietHitMode2[iIndex], 0, 2));
 			main ? (g_flQuietRange[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Range", 150.0)) : (g_flQuietRange2[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Range", g_flQuietRange[iIndex]));
-			main ? (g_flQuietRange[iIndex] = flSetFloatLimit(g_flQuietRange[iIndex], 1.0, 9999999999.0)) : (g_flQuietRange2[iIndex] = flSetFloatLimit(g_flQuietRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flQuietRange[iIndex] = flClamp(g_flQuietRange[iIndex], 1.0, 9999999999.0)) : (g_flQuietRange2[iIndex] = flClamp(g_flQuietRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iQuietRangeChance[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Range Chance", 16)) : (g_iQuietRangeChance2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Range Chance", g_iQuietRangeChance[iIndex]));
-			main ? (g_iQuietRangeChance[iIndex] = iSetCellLimit(g_iQuietRangeChance[iIndex], 1, 9999999999)) : (g_iQuietRangeChance2[iIndex] = iSetCellLimit(g_iQuietRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iQuietRangeChance[iIndex] = iClamp(g_iQuietRangeChance[iIndex], 1, 9999999999)) : (g_iQuietRangeChance2[iIndex] = iClamp(g_iQuietRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

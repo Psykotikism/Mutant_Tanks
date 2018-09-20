@@ -115,19 +115,19 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iSmashAbility[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Enabled", 0)) : (g_iSmashAbility2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Enabled", g_iSmashAbility[iIndex]));
-			main ? (g_iSmashAbility[iIndex] = iSetCellLimit(g_iSmashAbility[iIndex], 0, 1)) : (g_iSmashAbility2[iIndex] = iSetCellLimit(g_iSmashAbility2[iIndex], 0, 1));
+			main ? (g_iSmashAbility[iIndex] = iClamp(g_iSmashAbility[iIndex], 0, 1)) : (g_iSmashAbility2[iIndex] = iClamp(g_iSmashAbility2[iIndex], 0, 1));
 			main ? (g_iSmashMessage[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Message", 0)) : (g_iSmashMessage2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Message", g_iSmashMessage[iIndex]));
-			main ? (g_iSmashMessage[iIndex] = iSetCellLimit(g_iSmashMessage[iIndex], 0, 3)) : (g_iSmashMessage2[iIndex] = iSetCellLimit(g_iSmashMessage2[iIndex], 0, 3));
+			main ? (g_iSmashMessage[iIndex] = iClamp(g_iSmashMessage[iIndex], 0, 3)) : (g_iSmashMessage2[iIndex] = iClamp(g_iSmashMessage2[iIndex], 0, 3));
 			main ? (g_iSmashChance[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Chance", 4)) : (g_iSmashChance2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Chance", g_iSmashChance[iIndex]));
-			main ? (g_iSmashChance[iIndex] = iSetCellLimit(g_iSmashChance[iIndex], 1, 9999999999)) : (g_iSmashChance2[iIndex] = iSetCellLimit(g_iSmashChance2[iIndex], 1, 9999999999));
+			main ? (g_iSmashChance[iIndex] = iClamp(g_iSmashChance[iIndex], 1, 9999999999)) : (g_iSmashChance2[iIndex] = iClamp(g_iSmashChance2[iIndex], 1, 9999999999));
 			main ? (g_iSmashHit[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit", 0)) : (g_iSmashHit2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit", g_iSmashHit[iIndex]));
-			main ? (g_iSmashHit[iIndex] = iSetCellLimit(g_iSmashHit[iIndex], 0, 1)) : (g_iSmashHit2[iIndex] = iSetCellLimit(g_iSmashHit2[iIndex], 0, 1));
+			main ? (g_iSmashHit[iIndex] = iClamp(g_iSmashHit[iIndex], 0, 1)) : (g_iSmashHit2[iIndex] = iClamp(g_iSmashHit2[iIndex], 0, 1));
 			main ? (g_iSmashHitMode[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit Mode", 0)) : (g_iSmashHitMode2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit Mode", g_iSmashHitMode[iIndex]));
-			main ? (g_iSmashHitMode[iIndex] = iSetCellLimit(g_iSmashHitMode[iIndex], 0, 2)) : (g_iSmashHitMode2[iIndex] = iSetCellLimit(g_iSmashHitMode2[iIndex], 0, 2));
+			main ? (g_iSmashHitMode[iIndex] = iClamp(g_iSmashHitMode[iIndex], 0, 2)) : (g_iSmashHitMode2[iIndex] = iClamp(g_iSmashHitMode2[iIndex], 0, 2));
 			main ? (g_flSmashRange[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range", 150.0)) : (g_flSmashRange2[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range", g_flSmashRange[iIndex]));
-			main ? (g_flSmashRange[iIndex] = flSetFloatLimit(g_flSmashRange[iIndex], 1.0, 9999999999.0)) : (g_flSmashRange2[iIndex] = flSetFloatLimit(g_flSmashRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flSmashRange[iIndex] = flClamp(g_flSmashRange[iIndex], 1.0, 9999999999.0)) : (g_flSmashRange2[iIndex] = flClamp(g_flSmashRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iSmashRangeChance[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Range Chance", 16)) : (g_iSmashRangeChance2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Range Chance", g_iSmashRangeChance[iIndex]));
-			main ? (g_iSmashRangeChance[iIndex] = iSetCellLimit(g_iSmashRangeChance[iIndex], 1, 9999999999)) : (g_iSmashRangeChance2[iIndex] = iSetCellLimit(g_iSmashRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iSmashRangeChance[iIndex] = iClamp(g_iSmashRangeChance[iIndex], 1, 9999999999)) : (g_iSmashRangeChance2[iIndex] = iClamp(g_iSmashRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

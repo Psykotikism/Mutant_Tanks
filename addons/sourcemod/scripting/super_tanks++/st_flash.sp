@@ -83,19 +83,19 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", 1.0)) : (g_flRunSpeed2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", g_flRunSpeed[iIndex]));
-			main ? (g_flRunSpeed[iIndex] = flSetFloatLimit(g_flRunSpeed[iIndex], 0.1, 3.0)) : (g_flRunSpeed2[iIndex] = flSetFloatLimit(g_flRunSpeed2[iIndex], 0.1, 3.0));
+			main ? (g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], 0.1, 3.0)) : (g_flRunSpeed2[iIndex] = flClamp(g_flRunSpeed2[iIndex], 0.1, 3.0));
 			main ? (g_iFlashAbility[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Enabled", 0)) : (g_iFlashAbility2[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Enabled", g_iFlashAbility[iIndex]));
-			main ? (g_iFlashAbility[iIndex] = iSetCellLimit(g_iFlashAbility[iIndex], 0, 1)) : (g_iFlashAbility2[iIndex] = iSetCellLimit(g_iFlashAbility2[iIndex], 0, 1));
+			main ? (g_iFlashAbility[iIndex] = iClamp(g_iFlashAbility[iIndex], 0, 1)) : (g_iFlashAbility2[iIndex] = iClamp(g_iFlashAbility2[iIndex], 0, 1));
 			main ? (g_iFlashMessage[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Message", 0)) : (g_iFlashMessage2[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Message", g_iFlashMessage[iIndex]));
-			main ? (g_iFlashMessage[iIndex] = iSetCellLimit(g_iFlashMessage[iIndex], 0, 1)) : (g_iFlashMessage2[iIndex] = iSetCellLimit(g_iFlashMessage2[iIndex], 0, 1));
+			main ? (g_iFlashMessage[iIndex] = iClamp(g_iFlashMessage[iIndex], 0, 1)) : (g_iFlashMessage2[iIndex] = iClamp(g_iFlashMessage2[iIndex], 0, 1));
 			main ? (g_iFlashChance[iIndex] = kvSuperTanks.GetNum("Flash Ability/Flash Chance", 4)) : (g_iFlashChance2[iIndex] = kvSuperTanks.GetNum("Flash Ability/Flash Chance", g_iFlashChance[iIndex]));
-			main ? (g_iFlashChance[iIndex] = iSetCellLimit(g_iFlashChance[iIndex], 1, 9999999999)) : (g_iFlashChance2[iIndex] = iSetCellLimit(g_iFlashChance2[iIndex], 1, 9999999999));
+			main ? (g_iFlashChance[iIndex] = iClamp(g_iFlashChance[iIndex], 1, 9999999999)) : (g_iFlashChance2[iIndex] = iClamp(g_iFlashChance2[iIndex], 1, 9999999999));
 			main ? (g_flFlashDuration[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Duration", 5.0)) : (g_flFlashDuration2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Duration", g_flFlashDuration[iIndex]));
-			main ? (g_flFlashDuration[iIndex] = flSetFloatLimit(g_flFlashDuration[iIndex], 0.1, 9999999999.0)) : (g_flFlashDuration2[iIndex] = flSetFloatLimit(g_flFlashDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFlashDuration[iIndex] = flClamp(g_flFlashDuration[iIndex], 0.1, 9999999999.0)) : (g_flFlashDuration2[iIndex] = flClamp(g_flFlashDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flFlashInterval[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Interval", 1.0)) : (g_flFlashInterval2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Interval", g_flFlashInterval[iIndex]));
-			main ? (g_flFlashInterval[iIndex] = flSetFloatLimit(g_flFlashInterval[iIndex], 0.1, 9999999999.0)) : (g_flFlashInterval2[iIndex] = flSetFloatLimit(g_flFlashInterval2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFlashInterval[iIndex] = flClamp(g_flFlashInterval[iIndex], 0.1, 9999999999.0)) : (g_flFlashInterval2[iIndex] = flClamp(g_flFlashInterval2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flFlashSpeed[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Speed", 5.0)) : (g_flFlashSpeed2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Speed", g_flFlashSpeed[iIndex]));
-			main ? (g_flFlashSpeed[iIndex] = flSetFloatLimit(g_flFlashSpeed[iIndex], 3.0, 10.0)) : (g_flFlashSpeed2[iIndex] = flSetFloatLimit(g_flFlashSpeed2[iIndex], 3.0, 10.0));
+			main ? (g_flFlashSpeed[iIndex] = flClamp(g_flFlashSpeed[iIndex], 3.0, 10.0)) : (g_flFlashSpeed2[iIndex] = flClamp(g_flFlashSpeed2[iIndex], 3.0, 10.0));
 			kvSuperTanks.Rewind();
 		}
 	}

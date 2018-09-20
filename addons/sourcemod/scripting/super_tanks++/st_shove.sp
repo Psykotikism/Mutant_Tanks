@@ -130,21 +130,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iShoveAbility[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Enabled", 0)) : (g_iShoveAbility2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Enabled", g_iShoveAbility[iIndex]));
-			main ? (g_iShoveAbility[iIndex] = iSetCellLimit(g_iShoveAbility[iIndex], 0, 1)) : (g_iShoveAbility2[iIndex] = iSetCellLimit(g_iShoveAbility2[iIndex], 0, 1));
+			main ? (g_iShoveAbility[iIndex] = iClamp(g_iShoveAbility[iIndex], 0, 1)) : (g_iShoveAbility2[iIndex] = iClamp(g_iShoveAbility2[iIndex], 0, 1));
 			main ? (g_iShoveMessage[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Message", 0)) : (g_iShoveMessage2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Message", g_iShoveMessage[iIndex]));
-			main ? (g_iShoveMessage[iIndex] = iSetCellLimit(g_iShoveMessage[iIndex], 0, 3)) : (g_iShoveMessage2[iIndex] = iSetCellLimit(g_iShoveMessage2[iIndex], 0, 3));
+			main ? (g_iShoveMessage[iIndex] = iClamp(g_iShoveMessage[iIndex], 0, 3)) : (g_iShoveMessage2[iIndex] = iClamp(g_iShoveMessage2[iIndex], 0, 3));
 			main ? (g_iShoveChance[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Chance", 4)) : (g_iShoveChance2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Chance", g_iShoveChance[iIndex]));
-			main ? (g_iShoveChance[iIndex] = iSetCellLimit(g_iShoveChance[iIndex], 1, 9999999999)) : (g_iShoveChance2[iIndex] = iSetCellLimit(g_iShoveChance2[iIndex], 1, 9999999999));
+			main ? (g_iShoveChance[iIndex] = iClamp(g_iShoveChance[iIndex], 1, 9999999999)) : (g_iShoveChance2[iIndex] = iClamp(g_iShoveChance2[iIndex], 1, 9999999999));
 			main ? (g_flShoveDuration[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Duration", 5.0)) : (g_flShoveDuration2[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Duration", g_flShoveDuration[iIndex]));
-			main ? (g_flShoveDuration[iIndex] = flSetFloatLimit(g_flShoveDuration[iIndex], 0.1, 9999999999.0)) : (g_flShoveDuration2[iIndex] = flSetFloatLimit(g_flShoveDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flShoveDuration[iIndex] = flClamp(g_flShoveDuration[iIndex], 0.1, 9999999999.0)) : (g_flShoveDuration2[iIndex] = flClamp(g_flShoveDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iShoveHit[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Hit", 0)) : (g_iShoveHit2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Hit", g_iShoveHit[iIndex]));
-			main ? (g_iShoveHit[iIndex] = iSetCellLimit(g_iShoveHit[iIndex], 0, 1)) : (g_iShoveHit2[iIndex] = iSetCellLimit(g_iShoveHit2[iIndex], 0, 1));
+			main ? (g_iShoveHit[iIndex] = iClamp(g_iShoveHit[iIndex], 0, 1)) : (g_iShoveHit2[iIndex] = iClamp(g_iShoveHit2[iIndex], 0, 1));
 			main ? (g_iShoveHitMode[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Hit Mode", 0)) : (g_iShoveHitMode2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Hit Mode", g_iShoveHitMode[iIndex]));
-			main ? (g_iShoveHitMode[iIndex] = iSetCellLimit(g_iShoveHitMode[iIndex], 0, 2)) : (g_iShoveHitMode2[iIndex] = iSetCellLimit(g_iShoveHitMode2[iIndex], 0, 2));
+			main ? (g_iShoveHitMode[iIndex] = iClamp(g_iShoveHitMode[iIndex], 0, 2)) : (g_iShoveHitMode2[iIndex] = iClamp(g_iShoveHitMode2[iIndex], 0, 2));
 			main ? (g_flShoveRange[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Range", 150.0)) : (g_flShoveRange2[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Range", g_flShoveRange[iIndex]));
-			main ? (g_flShoveRange[iIndex] = flSetFloatLimit(g_flShoveRange[iIndex], 1.0, 9999999999.0)) : (g_flShoveRange2[iIndex] = flSetFloatLimit(g_flShoveRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flShoveRange[iIndex] = flClamp(g_flShoveRange[iIndex], 1.0, 9999999999.0)) : (g_flShoveRange2[iIndex] = flClamp(g_flShoveRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iShoveRangeChance[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Range Chance", 16)) : (g_iShoveRangeChance2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Shove Range Chance", g_iShoveRangeChance[iIndex]));
-			main ? (g_iShoveRangeChance[iIndex] = iSetCellLimit(g_iShoveRangeChance[iIndex], 1, 9999999999)) : (g_iShoveRangeChance2[iIndex] = iSetCellLimit(g_iShoveRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iShoveRangeChance[iIndex] = iClamp(g_iShoveRangeChance[iIndex], 1, 9999999999)) : (g_iShoveRangeChance2[iIndex] = iClamp(g_iShoveRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

@@ -83,15 +83,15 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iSpamAbility[iIndex] = kvSuperTanks.GetNum("Spam Ability/Ability Enabled", 0)) : (g_iSpamAbility2[iIndex] = kvSuperTanks.GetNum("Spam Ability/Ability Enabled", g_iSpamAbility[iIndex]));
-			main ? (g_iSpamAbility[iIndex] = iSetCellLimit(g_iSpamAbility[iIndex], 0, 1)) : (g_iSpamAbility2[iIndex] = iSetCellLimit(g_iSpamAbility2[iIndex], 0, 1));
+			main ? (g_iSpamAbility[iIndex] = iClamp(g_iSpamAbility[iIndex], 0, 1)) : (g_iSpamAbility2[iIndex] = iClamp(g_iSpamAbility2[iIndex], 0, 1));
 			main ? (g_iSpamMessage[iIndex] = kvSuperTanks.GetNum("Spam Ability/Ability Message", 0)) : (g_iSpamMessage2[iIndex] = kvSuperTanks.GetNum("Spam Ability/Ability Message", g_iSpamMessage[iIndex]));
-			main ? (g_iSpamMessage[iIndex] = iSetCellLimit(g_iSpamMessage[iIndex], 0, 1)) : (g_iSpamMessage2[iIndex] = iSetCellLimit(g_iSpamMessage2[iIndex], 0, 1));
+			main ? (g_iSpamMessage[iIndex] = iClamp(g_iSpamMessage[iIndex], 0, 1)) : (g_iSpamMessage2[iIndex] = iClamp(g_iSpamMessage2[iIndex], 0, 1));
 			main ? (g_iSpamChance[iIndex] = kvSuperTanks.GetNum("Spam Ability/Spam Chance", 4)) : (g_iSpamChance2[iIndex] = kvSuperTanks.GetNum("Spam Ability/Spam Chance", g_iSpamChance[iIndex]));
-			main ? (g_iSpamChance[iIndex] = iSetCellLimit(g_iSpamChance[iIndex], 1, 9999999999)) : (g_iSpamChance2[iIndex] = iSetCellLimit(g_iSpamChance2[iIndex], 1, 9999999999));
+			main ? (g_iSpamChance[iIndex] = iClamp(g_iSpamChance[iIndex], 1, 9999999999)) : (g_iSpamChance2[iIndex] = iClamp(g_iSpamChance2[iIndex], 1, 9999999999));
 			main ? (g_iSpamDamage[iIndex] = kvSuperTanks.GetNum("Spam Ability/Spam Damage", 5)) : (g_iSpamDamage2[iIndex] = kvSuperTanks.GetNum("Spam Ability/Spam Damage", g_iSpamDamage[iIndex]));
-			main ? (g_iSpamDamage[iIndex] = iSetCellLimit(g_iSpamDamage[iIndex], 1, 9999999999)) : (g_iSpamDamage2[iIndex] = iSetCellLimit(g_iSpamDamage2[iIndex], 1, 9999999999));
+			main ? (g_iSpamDamage[iIndex] = iClamp(g_iSpamDamage[iIndex], 1, 9999999999)) : (g_iSpamDamage2[iIndex] = iClamp(g_iSpamDamage2[iIndex], 1, 9999999999));
 			main ? (g_flSpamDuration[iIndex] = kvSuperTanks.GetFloat("Spam Ability/Spam Duration", 5.0)) : (g_flSpamDuration2[iIndex] = kvSuperTanks.GetFloat("Spam Ability/Spam Duration", g_flSpamDuration[iIndex]));
-			main ? (g_flSpamDuration[iIndex] = flSetFloatLimit(g_flSpamDuration[iIndex], 0.1, 9999999999.0)) : (g_flSpamDuration2[iIndex] = flSetFloatLimit(g_flSpamDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flSpamDuration[iIndex] = flClamp(g_flSpamDuration[iIndex], 0.1, 9999999999.0)) : (g_flSpamDuration2[iIndex] = flClamp(g_flSpamDuration2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}

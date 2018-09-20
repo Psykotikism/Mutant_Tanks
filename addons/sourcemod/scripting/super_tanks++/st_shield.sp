@@ -125,12 +125,12 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iShieldAbility[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Enabled", 0)) : (g_iShieldAbility2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Enabled", g_iShieldAbility[iIndex]));
-			main ? (g_iShieldAbility[iIndex] = iSetCellLimit(g_iShieldAbility[iIndex], 0, 1)) : (g_iShieldAbility2[iIndex] = iSetCellLimit(g_iShieldAbility2[iIndex], 0, 1));
+			main ? (g_iShieldAbility[iIndex] = iClamp(g_iShieldAbility[iIndex], 0, 1)) : (g_iShieldAbility2[iIndex] = iClamp(g_iShieldAbility2[iIndex], 0, 1));
 			main ? (g_iShieldMessage[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Message", 0)) : (g_iShieldMessage2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Message", g_iShieldMessage[iIndex]));
-			main ? (g_iShieldMessage[iIndex] = iSetCellLimit(g_iShieldMessage[iIndex], 0, 1)) : (g_iShieldMessage2[iIndex] = iSetCellLimit(g_iShieldMessage2[iIndex], 0, 1));
+			main ? (g_iShieldMessage[iIndex] = iClamp(g_iShieldMessage[iIndex], 0, 1)) : (g_iShieldMessage2[iIndex] = iClamp(g_iShieldMessage2[iIndex], 0, 1));
 			main ? (kvSuperTanks.GetString("Shield Ability/Shield Color", g_sShieldColor[iIndex], sizeof(g_sShieldColor[]), "255,255,255")) : (kvSuperTanks.GetString("Shield Ability/Shield Color", g_sShieldColor2[iIndex], sizeof(g_sShieldColor2[]), g_sShieldColor[iIndex]));
 			main ? (g_flShieldDelay[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", 5.0)) : (g_flShieldDelay2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", g_flShieldDelay[iIndex]));
-			main ? (g_flShieldDelay[iIndex] = flSetFloatLimit(g_flShieldDelay[iIndex], 1.0, 9999999999.0)) : (g_flShieldDelay2[iIndex] = flSetFloatLimit(g_flShieldDelay2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flShieldDelay[iIndex] = flClamp(g_flShieldDelay[iIndex], 1.0, 9999999999.0)) : (g_flShieldDelay2[iIndex] = flClamp(g_flShieldDelay2[iIndex], 1.0, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -215,13 +215,13 @@ stock void vShield(int client, bool shield)
 		ExplodeString(sShieldColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 		TrimString(sSet[0]);
 		int iRed = (sSet[0][0] != '\0') ? StringToInt(sSet[0]) : 255;
-		iRed = iSetCellLimit(iRed, 0, 255);
+		iRed = iClamp(iRed, 0, 255);
 		TrimString(sSet[1]);
 		int iGreen = (sSet[1][0] != '\0') ? StringToInt(sSet[1]) : 255;
-		iGreen = iSetCellLimit(iGreen, 0, 255);
+		iGreen = iClamp(iGreen, 0, 255);
 		TrimString(sSet[2]);
 		int iBlue = (sSet[2][0] != '\0') ? StringToInt(sSet[2]) : 255;
-		iBlue = iSetCellLimit(iBlue, 0, 255);
+		iBlue = iClamp(iBlue, 0, 255);
 		float flOrigin[3];
 		GetClientAbsOrigin(client, flOrigin);
 		flOrigin[2] -= 120.0;

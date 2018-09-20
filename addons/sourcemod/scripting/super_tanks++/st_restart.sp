@@ -118,22 +118,22 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iRestartAbility[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", 0)) : (g_iRestartAbility2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", g_iRestartAbility[iIndex]));
-			main ? (g_iRestartAbility[iIndex] = iSetCellLimit(g_iRestartAbility[iIndex], 0, 1)) : (g_iRestartAbility2[iIndex] = iSetCellLimit(g_iRestartAbility2[iIndex], 0, 1));
+			main ? (g_iRestartAbility[iIndex] = iClamp(g_iRestartAbility[iIndex], 0, 1)) : (g_iRestartAbility2[iIndex] = iClamp(g_iRestartAbility2[iIndex], 0, 1));
 			main ? (g_iRestartMessage[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Message", 0)) : (g_iRestartMessage2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Message", g_iRestartMessage[iIndex]));
-			main ? (g_iRestartMessage[iIndex] = iSetCellLimit(g_iRestartMessage[iIndex], 0, 3)) : (g_iRestartMessage2[iIndex] = iSetCellLimit(g_iRestartMessage2[iIndex], 0, 3));
+			main ? (g_iRestartMessage[iIndex] = iClamp(g_iRestartMessage[iIndex], 0, 3)) : (g_iRestartMessage2[iIndex] = iClamp(g_iRestartMessage2[iIndex], 0, 3));
 			main ? (g_iRestartChance[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Chance", 4)) : (g_iRestartChance2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Chance", g_iRestartChance[iIndex]));
-			main ? (g_iRestartChance[iIndex] = iSetCellLimit(g_iRestartChance[iIndex], 1, 9999999999)) : (g_iRestartChance2[iIndex] = iSetCellLimit(g_iRestartChance2[iIndex], 1, 9999999999));
+			main ? (g_iRestartChance[iIndex] = iClamp(g_iRestartChance[iIndex], 1, 9999999999)) : (g_iRestartChance2[iIndex] = iClamp(g_iRestartChance2[iIndex], 1, 9999999999));
 			main ? (g_iRestartHit[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", 0)) : (g_iRestartHit2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", g_iRestartHit[iIndex]));
-			main ? (g_iRestartHit[iIndex] = iSetCellLimit(g_iRestartHit[iIndex], 0, 1)) : (g_iRestartHit2[iIndex] = iSetCellLimit(g_iRestartHit2[iIndex], 0, 1));
+			main ? (g_iRestartHit[iIndex] = iClamp(g_iRestartHit[iIndex], 0, 1)) : (g_iRestartHit2[iIndex] = iClamp(g_iRestartHit2[iIndex], 0, 1));
 			main ? (g_iRestartHitMode[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit Mode", 0)) : (g_iRestartHitMode2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit Mode", g_iRestartHitMode[iIndex]));
-			main ? (g_iRestartHitMode[iIndex] = iSetCellLimit(g_iRestartHitMode[iIndex], 0, 2)) : (g_iRestartHitMode2[iIndex] = iSetCellLimit(g_iRestartHitMode2[iIndex], 0, 2));
+			main ? (g_iRestartHitMode[iIndex] = iClamp(g_iRestartHitMode[iIndex], 0, 2)) : (g_iRestartHitMode2[iIndex] = iClamp(g_iRestartHitMode2[iIndex], 0, 2));
 			main ? (kvSuperTanks.GetString("Restart Ability/Restart Loadout", g_sRestartLoadout[iIndex], sizeof(g_sRestartLoadout[]), "smg,pistol,pain_pills")) : (kvSuperTanks.GetString("Restart Ability/Restart Loadout", g_sRestartLoadout2[iIndex], sizeof(g_sRestartLoadout2[]), g_sRestartLoadout[iIndex]));
 			main ? (g_iRestartMode[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Mode", 1)) : (g_iRestartMode2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Mode", g_iRestartMode[iIndex]));
-			main ? (g_iRestartMode[iIndex] = iSetCellLimit(g_iRestartMode[iIndex], 0, 1)) : (g_iRestartMode2[iIndex] = iSetCellLimit(g_iRestartMode2[iIndex], 0, 1));
+			main ? (g_iRestartMode[iIndex] = iClamp(g_iRestartMode[iIndex], 0, 1)) : (g_iRestartMode2[iIndex] = iClamp(g_iRestartMode2[iIndex], 0, 1));
 			main ? (g_flRestartRange[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range", 150.0)) : (g_flRestartRange2[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range", g_flRestartRange[iIndex]));
-			main ? (g_flRestartRange[iIndex] = flSetFloatLimit(g_flRestartRange[iIndex], 1.0, 9999999999.0)) : (g_flRestartRange2[iIndex] = flSetFloatLimit(g_flRestartRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flRestartRange[iIndex] = flClamp(g_flRestartRange[iIndex], 1.0, 9999999999.0)) : (g_flRestartRange2[iIndex] = flClamp(g_flRestartRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iRestartRangeChance[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Range Chance", 16)) : (g_iRestartRangeChance2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Range Chance", g_iRestartRangeChance[iIndex]));
-			main ? (g_iRestartRangeChance[iIndex] = iSetCellLimit(g_iRestartRangeChance[iIndex], 1, 9999999999)) : (g_iRestartRangeChance2[iIndex] = iSetCellLimit(g_iRestartRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iRestartRangeChance[iIndex] = iClamp(g_iRestartRangeChance[iIndex], 1, 9999999999)) : (g_iRestartRangeChance2[iIndex] = iClamp(g_iRestartRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

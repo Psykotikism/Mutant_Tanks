@@ -69,15 +69,15 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iMedicAbility[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", 0)) : (g_iMedicAbility2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", g_iMedicAbility[iIndex]));
-			main ? (g_iMedicAbility[iIndex] = iSetCellLimit(g_iMedicAbility[iIndex], 0, 1)) : (g_iMedicAbility2[iIndex] = iSetCellLimit(g_iMedicAbility2[iIndex], 0, 1));
+			main ? (g_iMedicAbility[iIndex] = iClamp(g_iMedicAbility[iIndex], 0, 1)) : (g_iMedicAbility2[iIndex] = iClamp(g_iMedicAbility2[iIndex], 0, 1));
 			main ? (g_iMedicMessage[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Message", 0)) : (g_iMedicMessage2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Message", g_iMedicMessage[iIndex]));
-			main ? (g_iMedicMessage[iIndex] = iSetCellLimit(g_iMedicMessage[iIndex], 0, 1)) : (g_iMedicMessage2[iIndex] = iSetCellLimit(g_iMedicMessage2[iIndex], 0, 1));
+			main ? (g_iMedicMessage[iIndex] = iClamp(g_iMedicMessage[iIndex], 0, 1)) : (g_iMedicMessage2[iIndex] = iClamp(g_iMedicMessage2[iIndex], 0, 1));
 			main ? (g_iMedicChance[iIndex] = kvSuperTanks.GetNum("Medic Ability/Medic Chance", 4)) : (g_iMedicChance2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Medic Chance", g_iMedicChance[iIndex]));
-			main ? (g_iMedicChance[iIndex] = iSetCellLimit(g_iMedicChance[iIndex], 1, 9999999999)) : (g_iMedicChance2[iIndex] = iSetCellLimit(g_iMedicChance2[iIndex], 1, 9999999999));
+			main ? (g_iMedicChance[iIndex] = iClamp(g_iMedicChance[iIndex], 1, 9999999999)) : (g_iMedicChance2[iIndex] = iClamp(g_iMedicChance2[iIndex], 1, 9999999999));
 			main ? (kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth[iIndex], sizeof(g_sMedicHealth[]), "25,25,25,25,25,25")) : (kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth2[iIndex], sizeof(g_sMedicHealth2[]), g_sMedicHealth[iIndex]));
 			main ? (kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth[iIndex], sizeof(g_sMedicMaxHealth[]), "250,50,250,100,325,600")) : (kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth2[iIndex], sizeof(g_sMedicMaxHealth2[]), g_sMedicMaxHealth[iIndex]));
 			main ? (g_flMedicRange[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", 500.0)) : (g_flMedicRange2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", g_flMedicRange[iIndex]));
-			main ? (g_flMedicRange[iIndex] = flSetFloatLimit(g_flMedicRange[iIndex], 1.0, 9999999999.0)) : (g_flMedicRange2[iIndex] = flSetFloatLimit(g_flMedicRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flMedicRange[iIndex] = flClamp(g_flMedicRange[iIndex], 1.0, 9999999999.0)) : (g_flMedicRange2[iIndex] = flClamp(g_flMedicRange2[iIndex], 1.0, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -139,18 +139,18 @@ stock void vMedic(int client)
 					iJockeyMaxHealth = (sMaxHealth[4][0] != '\0') ? StringToInt(sMaxHealth[4]) : 325,
 					iChargerHealth = (sHealth[5][0] != '\0') ? StringToInt(sHealth[5]) : 25,
 					iChargerMaxHealth = (sMaxHealth[5][0] != '\0') ? StringToInt(sMaxHealth[5]) : 600;
-				iSmokerHealth = iSetCellLimit(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iSmokerMaxHealth = iSetCellLimit(iSmokerMaxHealth, 1, ST_MAXHEALTH);
-				iBoomerHealth = iSetCellLimit(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iBoomerMaxHealth = iSetCellLimit(iBoomerMaxHealth, 1, ST_MAXHEALTH);
-				iHunterHealth = iSetCellLimit(iHunterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iHunterMaxHealth = iSetCellLimit(iHunterMaxHealth, 1, ST_MAXHEALTH);
-				iSpitterHealth = iSetCellLimit(iSpitterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iSpitterMaxHealth = iSetCellLimit(iSpitterMaxHealth, 1, ST_MAXHEALTH);
-				iJockeyHealth = iSetCellLimit(iJockeyHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iJockeyMaxHealth = iSetCellLimit(iJockeyMaxHealth, 1, ST_MAXHEALTH);
-				iChargerHealth = iSetCellLimit(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iChargerMaxHealth = iSetCellLimit(iChargerMaxHealth, 1, ST_MAXHEALTH);
+				iSmokerHealth = iClamp(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iSmokerMaxHealth = iClamp(iSmokerMaxHealth, 1, ST_MAXHEALTH);
+				iBoomerHealth = iClamp(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iBoomerMaxHealth = iClamp(iBoomerMaxHealth, 1, ST_MAXHEALTH);
+				iHunterHealth = iClamp(iHunterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iHunterMaxHealth = iClamp(iHunterMaxHealth, 1, ST_MAXHEALTH);
+				iSpitterHealth = iClamp(iSpitterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iSpitterMaxHealth = iClamp(iSpitterMaxHealth, 1, ST_MAXHEALTH);
+				iJockeyHealth = iClamp(iJockeyHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iJockeyMaxHealth = iClamp(iJockeyMaxHealth, 1, ST_MAXHEALTH);
+				iChargerHealth = iClamp(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iChargerMaxHealth = iClamp(iChargerMaxHealth, 1, ST_MAXHEALTH);
 				switch (GetEntProp(client, Prop_Send, "m_zombieClass"))
 				{
 					case 1: vHeal(iInfected, iHealth, iHealth + iSmokerHealth, iSmokerMaxHealth);

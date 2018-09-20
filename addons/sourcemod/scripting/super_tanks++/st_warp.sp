@@ -121,26 +121,26 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iParticleEffect[iIndex] = kvSuperTanks.GetNum("General/Particle Effect", 0)) : (g_iParticleEffect2[iIndex] = kvSuperTanks.GetNum("General/Particle Effect", g_iParticleEffect[iIndex]));
-			main ? (g_iParticleEffect[iIndex] = iSetCellLimit(g_iParticleEffect[iIndex], 0, 1)) : (g_iParticleEffect2[iIndex] = iSetCellLimit(g_iParticleEffect2[iIndex], 0, 1));
+			main ? (g_iParticleEffect[iIndex] = iClamp(g_iParticleEffect[iIndex], 0, 1)) : (g_iParticleEffect2[iIndex] = iClamp(g_iParticleEffect2[iIndex], 0, 1));
 			main ? (kvSuperTanks.GetString("General/Particle Effects", g_sParticleEffects[iIndex], sizeof(g_sParticleEffects[]), "1234567")) : (kvSuperTanks.GetString("General/Particle Effects", g_sParticleEffects2[iIndex], sizeof(g_sParticleEffects2[]), g_sParticleEffects[iIndex]));
 			main ? (g_iWarpAbility[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", 0)) : (g_iWarpAbility2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", g_iWarpAbility[iIndex]));
-			main ? (g_iWarpAbility[iIndex] = iSetCellLimit(g_iWarpAbility[iIndex], 0, 3)) : (g_iWarpAbility2[iIndex] = iSetCellLimit(g_iWarpAbility2[iIndex], 0, 3));
+			main ? (g_iWarpAbility[iIndex] = iClamp(g_iWarpAbility[iIndex], 0, 3)) : (g_iWarpAbility2[iIndex] = iClamp(g_iWarpAbility2[iIndex], 0, 3));
 			main ? (g_iWarpMessage[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Message", 0)) : (g_iWarpMessage2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Message", g_iWarpMessage[iIndex]));
-			main ? (g_iWarpMessage[iIndex] = iSetCellLimit(g_iWarpMessage[iIndex], 0, 7)) : (g_iWarpMessage2[iIndex] = iSetCellLimit(g_iWarpMessage2[iIndex], 0, 7));
+			main ? (g_iWarpMessage[iIndex] = iClamp(g_iWarpMessage[iIndex], 0, 7)) : (g_iWarpMessage2[iIndex] = iClamp(g_iWarpMessage2[iIndex], 0, 7));
 			main ? (g_iWarpChance[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Chance", 4)) : (g_iWarpChance2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Chance", g_iWarpChance[iIndex]));
-			main ? (g_iWarpChance[iIndex] = iSetCellLimit(g_iWarpChance[iIndex], 1, 9999999999)) : (g_iWarpChance2[iIndex] = iSetCellLimit(g_iWarpChance2[iIndex], 1, 9999999999));
+			main ? (g_iWarpChance[iIndex] = iClamp(g_iWarpChance[iIndex], 1, 9999999999)) : (g_iWarpChance2[iIndex] = iClamp(g_iWarpChance2[iIndex], 1, 9999999999));
 			main ? (g_iWarpHit[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", 0)) : (g_iWarpHit2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", g_iWarpHit[iIndex]));
-			main ? (g_iWarpHit[iIndex] = iSetCellLimit(g_iWarpHit[iIndex], 0, 1)) : (g_iWarpHit2[iIndex] = iSetCellLimit(g_iWarpHit2[iIndex], 0, 1));
+			main ? (g_iWarpHit[iIndex] = iClamp(g_iWarpHit[iIndex], 0, 1)) : (g_iWarpHit2[iIndex] = iClamp(g_iWarpHit2[iIndex], 0, 1));
 			main ? (g_iWarpHitMode[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit Mode", 0)) : (g_iWarpHitMode2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit Mode", g_iWarpHitMode[iIndex]));
-			main ? (g_iWarpHitMode[iIndex] = iSetCellLimit(g_iWarpHitMode[iIndex], 0, 2)) : (g_iWarpHitMode2[iIndex] = iSetCellLimit(g_iWarpHitMode2[iIndex], 0, 2));
+			main ? (g_iWarpHitMode[iIndex] = iClamp(g_iWarpHitMode[iIndex], 0, 2)) : (g_iWarpHitMode2[iIndex] = iClamp(g_iWarpHitMode2[iIndex], 0, 2));
 			main ? (g_iWarpMode[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Mode", 0)) : (g_iWarpMode2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Mode", g_iWarpMode[iIndex]));
-			main ? (g_iWarpMode[iIndex] = iSetCellLimit(g_iWarpMode[iIndex], 0, 1)) : (g_iWarpMode2[iIndex] = iSetCellLimit(g_iWarpMode2[iIndex], 0, 1));
+			main ? (g_iWarpMode[iIndex] = iClamp(g_iWarpMode[iIndex], 0, 1)) : (g_iWarpMode2[iIndex] = iClamp(g_iWarpMode2[iIndex], 0, 1));
 			main ? (g_flWarpInterval[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Interval", 5.0)) : (g_flWarpInterval2[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Interval", g_flWarpInterval[iIndex]));
-			main ? (g_flWarpInterval[iIndex] = flSetFloatLimit(g_flWarpInterval[iIndex], 0.1, 9999999999.0)) : (g_flWarpInterval2[iIndex] = flSetFloatLimit(g_flWarpInterval2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flWarpInterval[iIndex] = flClamp(g_flWarpInterval[iIndex], 0.1, 9999999999.0)) : (g_flWarpInterval2[iIndex] = flClamp(g_flWarpInterval2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flWarpRange[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Range", 150.0)) : (g_flWarpRange2[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Range", g_flWarpRange[iIndex]));
-			main ? (g_flWarpRange[iIndex] = flSetFloatLimit(g_flWarpRange[iIndex], 1.0, 9999999999.0)) : (g_flWarpRange2[iIndex] = flSetFloatLimit(g_flWarpRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flWarpRange[iIndex] = flClamp(g_flWarpRange[iIndex], 1.0, 9999999999.0)) : (g_flWarpRange2[iIndex] = flClamp(g_flWarpRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iWarpRangeChance[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Range Chance", 16)) : (g_iWarpRangeChance2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Range Chance", g_iWarpRangeChance[iIndex]));
-			main ? (g_iWarpRangeChance[iIndex] = iSetCellLimit(g_iWarpRangeChance[iIndex], 1, 9999999999)) : (g_iWarpRangeChance2[iIndex] = iSetCellLimit(g_iWarpRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iWarpRangeChance[iIndex] = iClamp(g_iWarpRangeChance[iIndex], 1, 9999999999)) : (g_iWarpRangeChance2[iIndex] = iClamp(g_iWarpRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

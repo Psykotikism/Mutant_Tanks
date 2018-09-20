@@ -120,25 +120,25 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iGravityAbility[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Enabled", 0)) : (g_iGravityAbility2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Enabled", g_iGravityAbility[iIndex]));
-			main ? (g_iGravityAbility[iIndex] = iSetCellLimit(g_iGravityAbility[iIndex], 0, 3)) : (g_iGravityAbility2[iIndex] = iSetCellLimit(g_iGravityAbility2[iIndex], 0, 3));
+			main ? (g_iGravityAbility[iIndex] = iClamp(g_iGravityAbility[iIndex], 0, 3)) : (g_iGravityAbility2[iIndex] = iClamp(g_iGravityAbility2[iIndex], 0, 3));
 			main ? (g_iGravityMessage[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Message", 0)) : (g_iGravityMessage2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Message", g_iGravityMessage[iIndex]));
-			main ? (g_iGravityMessage[iIndex] = iSetCellLimit(g_iGravityMessage[iIndex], 0, 7)) : (g_iGravityMessage2[iIndex] = iSetCellLimit(g_iGravityMessage2[iIndex], 0, 7));
+			main ? (g_iGravityMessage[iIndex] = iClamp(g_iGravityMessage[iIndex], 0, 7)) : (g_iGravityMessage2[iIndex] = iClamp(g_iGravityMessage2[iIndex], 0, 7));
 			main ? (g_iGravityChance[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Chance", 4)) : (g_iGravityChance2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Chance", g_iGravityChance[iIndex]));
-			main ? (g_iGravityChance[iIndex] = iSetCellLimit(g_iGravityChance[iIndex], 1, 9999999999)) : (g_iGravityChance2[iIndex] = iSetCellLimit(g_iGravityChance2[iIndex], 1, 9999999999));
+			main ? (g_iGravityChance[iIndex] = iClamp(g_iGravityChance[iIndex], 1, 9999999999)) : (g_iGravityChance2[iIndex] = iClamp(g_iGravityChance2[iIndex], 1, 9999999999));
 			main ? (g_flGravityDuration[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", 5.0)) : (g_flGravityDuration2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", g_flGravityDuration[iIndex]));
-			main ? (g_flGravityDuration[iIndex] = flSetFloatLimit(g_flGravityDuration[iIndex], 0.1, 9999999999.0)) : (g_flGravityDuration2[iIndex] = flSetFloatLimit(g_flGravityDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flGravityDuration[iIndex] = flClamp(g_flGravityDuration[iIndex], 0.1, 9999999999.0)) : (g_flGravityDuration2[iIndex] = flClamp(g_flGravityDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flGravityForce[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", -50.0)) : (g_flGravityForce2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", g_flGravityForce[iIndex]));
-			main ? (g_flGravityForce[iIndex] = flSetFloatLimit(g_flGravityForce[iIndex], -100.0, 100.0)) : (g_flGravityForce2[iIndex] = flSetFloatLimit(g_flGravityForce2[iIndex], -100.0, 100.0));
+			main ? (g_flGravityForce[iIndex] = flClamp(g_flGravityForce[iIndex], -100.0, 100.0)) : (g_flGravityForce2[iIndex] = flClamp(g_flGravityForce2[iIndex], -100.0, 100.0));
 			main ? (g_iGravityHit[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Hit", 0)) : (g_iGravityHit2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Hit", g_iGravityHit[iIndex]));
-			main ? (g_iGravityHit[iIndex] = iSetCellLimit(g_iGravityHit[iIndex], 0, 1)) : (g_iGravityHit2[iIndex] = iSetCellLimit(g_iGravityHit2[iIndex], 0, 1));
+			main ? (g_iGravityHit[iIndex] = iClamp(g_iGravityHit[iIndex], 0, 1)) : (g_iGravityHit2[iIndex] = iClamp(g_iGravityHit2[iIndex], 0, 1));
 			main ? (g_iGravityHitMode[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Hit Mode", 0)) : (g_iGravityHitMode2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Hit Mode", g_iGravityHitMode[iIndex]));
-			main ? (g_iGravityHitMode[iIndex] = iSetCellLimit(g_iGravityHitMode[iIndex], 0, 2)) : (g_iGravityHitMode2[iIndex] = iSetCellLimit(g_iGravityHitMode2[iIndex], 0, 2));
+			main ? (g_iGravityHitMode[iIndex] = iClamp(g_iGravityHitMode[iIndex], 0, 2)) : (g_iGravityHitMode2[iIndex] = iClamp(g_iGravityHitMode2[iIndex], 0, 2));
 			main ? (g_flGravityRange[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", 150.0)) : (g_flGravityRange2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", g_flGravityRange[iIndex]));
-			main ? (g_flGravityRange[iIndex] = flSetFloatLimit(g_flGravityRange[iIndex], 1.0, 9999999999.0)) : (g_flGravityRange2[iIndex] = flSetFloatLimit(g_flGravityRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flGravityRange[iIndex] = flClamp(g_flGravityRange[iIndex], 1.0, 9999999999.0)) : (g_flGravityRange2[iIndex] = flClamp(g_flGravityRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iGravityRangeChance[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Range Chance", 16)) : (g_iGravityRangeChance2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Range Chance", g_iGravityRangeChance[iIndex]));
-			main ? (g_iGravityRangeChance[iIndex] = iSetCellLimit(g_iGravityRangeChance[iIndex], 1, 9999999999)) : (g_iGravityRangeChance2[iIndex] = iSetCellLimit(g_iGravityRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iGravityRangeChance[iIndex] = iClamp(g_iGravityRangeChance[iIndex], 1, 9999999999)) : (g_iGravityRangeChance2[iIndex] = iClamp(g_iGravityRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_flGravityValue[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", 0.3)) : (g_flGravityValue2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", g_flGravityValue[iIndex]));
-			main ? (g_flGravityValue[iIndex] = flSetFloatLimit(g_flGravityValue[iIndex], 0.1, 0.99)) : (g_flGravityValue2[iIndex] = flSetFloatLimit(g_flGravityValue2[iIndex], 0.1, 0.99));
+			main ? (g_flGravityValue[iIndex] = flClamp(g_flGravityValue[iIndex], 0.1, 0.99)) : (g_flGravityValue2[iIndex] = flClamp(g_flGravityValue2[iIndex], 0.1, 0.99));
 			kvSuperTanks.Rewind();
 		}
 	}

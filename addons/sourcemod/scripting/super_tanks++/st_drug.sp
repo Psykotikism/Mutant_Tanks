@@ -121,21 +121,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iDrugAbility[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Enabled", 0)) : (g_iDrugAbility2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Enabled", g_iDrugAbility[iIndex]));
-			main ? (g_iDrugAbility[iIndex] = iSetCellLimit(g_iDrugAbility[iIndex], 0, 1)) : (g_iDrugAbility2[iIndex] = iSetCellLimit(g_iDrugAbility2[iIndex], 0, 1));
+			main ? (g_iDrugAbility[iIndex] = iClamp(g_iDrugAbility[iIndex], 0, 1)) : (g_iDrugAbility2[iIndex] = iClamp(g_iDrugAbility2[iIndex], 0, 1));
 			main ? (g_iDrugMessage[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Message", 0)) : (g_iDrugMessage2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Message", g_iDrugMessage[iIndex]));
-			main ? (g_iDrugMessage[iIndex] = iSetCellLimit(g_iDrugMessage[iIndex], 0, 3)) : (g_iDrugMessage2[iIndex] = iSetCellLimit(g_iDrugMessage2[iIndex], 0, 3));
+			main ? (g_iDrugMessage[iIndex] = iClamp(g_iDrugMessage[iIndex], 0, 3)) : (g_iDrugMessage2[iIndex] = iClamp(g_iDrugMessage2[iIndex], 0, 3));
 			main ? (g_iDrugChance[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Chance", 4)) : (g_iDrugChance2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Chance", g_iDrugChance[iIndex]));
-			main ? (g_iDrugChance[iIndex] = iSetCellLimit(g_iDrugChance[iIndex], 1, 9999999999)) : (g_iDrugChance2[iIndex] = iSetCellLimit(g_iDrugChance2[iIndex], 1, 9999999999));
+			main ? (g_iDrugChance[iIndex] = iClamp(g_iDrugChance[iIndex], 1, 9999999999)) : (g_iDrugChance2[iIndex] = iClamp(g_iDrugChance2[iIndex], 1, 9999999999));
 			main ? (g_flDrugDuration[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Duration", 5.0)) : (g_flDrugDuration2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Duration", g_flDrugDuration[iIndex]));
-			main ? (g_flDrugDuration[iIndex] = flSetFloatLimit(g_flDrugDuration[iIndex], 0.1, 9999999999.0)) : (g_flDrugDuration2[iIndex] = flSetFloatLimit(g_flDrugDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flDrugDuration[iIndex] = flClamp(g_flDrugDuration[iIndex], 0.1, 9999999999.0)) : (g_flDrugDuration2[iIndex] = flClamp(g_flDrugDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iDrugHit[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Hit", 0)) : (g_iDrugHit2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Hit", g_iDrugHit[iIndex]));
-			main ? (g_iDrugHit[iIndex] = iSetCellLimit(g_iDrugHit[iIndex], 0, 1)) : (g_iDrugHit2[iIndex] = iSetCellLimit(g_iDrugHit2[iIndex], 0, 1));
+			main ? (g_iDrugHit[iIndex] = iClamp(g_iDrugHit[iIndex], 0, 1)) : (g_iDrugHit2[iIndex] = iClamp(g_iDrugHit2[iIndex], 0, 1));
 			main ? (g_iDrugHitMode[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Hit Mode", 0)) : (g_iDrugHitMode2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Hit Mode", g_iDrugHitMode[iIndex]));
-			main ? (g_iDrugHitMode[iIndex] = iSetCellLimit(g_iDrugHitMode[iIndex], 0, 2)) : (g_iDrugHitMode2[iIndex] = iSetCellLimit(g_iDrugHitMode2[iIndex], 0, 2));
+			main ? (g_iDrugHitMode[iIndex] = iClamp(g_iDrugHitMode[iIndex], 0, 2)) : (g_iDrugHitMode2[iIndex] = iClamp(g_iDrugHitMode2[iIndex], 0, 2));
 			main ? (g_flDrugRange[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range", 150.0)) : (g_flDrugRange2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range", g_flDrugRange[iIndex]));
-			main ? (g_flDrugRange[iIndex] = flSetFloatLimit(g_flDrugRange[iIndex], 1.0, 9999999999.0)) : (g_flDrugRange2[iIndex] = flSetFloatLimit(g_flDrugRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flDrugRange[iIndex] = flClamp(g_flDrugRange[iIndex], 1.0, 9999999999.0)) : (g_flDrugRange2[iIndex] = flClamp(g_flDrugRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iDrugRangeChance[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Range Chance", 16)) : (g_iDrugRangeChance2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Range Chance", g_iDrugRangeChance[iIndex]));
-			main ? (g_iDrugRangeChance[iIndex] = iSetCellLimit(g_iDrugRangeChance[iIndex], 1, 9999999999)) : (g_iDrugRangeChance2[iIndex] = iSetCellLimit(g_iDrugRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iDrugRangeChance[iIndex] = iClamp(g_iDrugRangeChance[iIndex], 1, 9999999999)) : (g_iDrugRangeChance2[iIndex] = iClamp(g_iDrugRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

@@ -616,6 +616,19 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int flag)
 }
 
 // Functions
+stock float flClamp(float value, float min, float max)
+{
+	if (value < min)
+	{
+		value = min;
+	}
+	else if (value > max)
+	{
+		value = max;
+	}
+	return value;
+}
+
 stock float flGetAngle(float angle1[3], float angle2[3])
 {
 	return ArcCosine(GetVectorDotProduct(angle1, angle2) / (GetVectorLength(angle1) * GetVectorLength(angle2)));
@@ -659,7 +672,7 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace
 	return GetVectorDistance(pos, flHitPos);
 }
 
-stock float flSetFloatLimit(float value, float min, float max)
+stock int iClamp(int value, int min, int max)
 {
 	if (value < min)
 	{
@@ -816,19 +829,6 @@ stock int iGetWitchCount()
 	return iWitchCount;
 }
 
-stock int iSetCellLimit(int value, int min, int max)
-{
-	if (value < min)
-	{
-		value = min;
-	}
-	else if (value > max)
-	{
-		value = max;
-	}
-	return value;
-}
-
 stock void vAttachParticle(int client, const char[] particlename, float time = 0.0, float origin = 0.0)
 {
 	if (bIsValidClient(client))
@@ -982,7 +982,7 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 
 stock void vHeal(int client, int health, int extrahealth, int maxhealth)
 {
-	maxhealth = iSetCellLimit(maxhealth, 1, ST_MAXHEALTH);
+	maxhealth = iClamp(maxhealth, 1, ST_MAXHEALTH);
 	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth,
 		iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth,
 		iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;

@@ -136,19 +136,19 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iFlingAbility[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", 0)) : (g_iFlingAbility2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", g_iFlingAbility[iIndex]));
-			main ? (g_iFlingAbility[iIndex] = iSetCellLimit(g_iFlingAbility[iIndex], 0, 1)) : (g_iFlingAbility2[iIndex] = iSetCellLimit(g_iFlingAbility2[iIndex], 0, 1));
+			main ? (g_iFlingAbility[iIndex] = iClamp(g_iFlingAbility[iIndex], 0, 1)) : (g_iFlingAbility2[iIndex] = iClamp(g_iFlingAbility2[iIndex], 0, 1));
 			main ? (g_iFlingMessage[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Message", 0)) : (g_iFlingMessage2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Message", g_iFlingMessage[iIndex]));
-			main ? (g_iFlingMessage[iIndex] = iSetCellLimit(g_iFlingMessage[iIndex], 0, 3)) : (g_iFlingMessage2[iIndex] = iSetCellLimit(g_iFlingMessage2[iIndex], 0, 3));
+			main ? (g_iFlingMessage[iIndex] = iClamp(g_iFlingMessage[iIndex], 0, 3)) : (g_iFlingMessage2[iIndex] = iClamp(g_iFlingMessage2[iIndex], 0, 3));
 			main ? (g_iFlingChance[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Chance", 4)) : (g_iFlingChance2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Chance", g_iFlingChance[iIndex]));
-			main ? (g_iFlingChance[iIndex] = iSetCellLimit(g_iFlingChance[iIndex], 1, 9999999999)) : (g_iFlingChance2[iIndex] = iSetCellLimit(g_iFlingChance2[iIndex], 1, 9999999999));
+			main ? (g_iFlingChance[iIndex] = iClamp(g_iFlingChance[iIndex], 1, 9999999999)) : (g_iFlingChance2[iIndex] = iClamp(g_iFlingChance2[iIndex], 1, 9999999999));
 			main ? (g_iFlingHit[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", 0)) : (g_iFlingHit2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", g_iFlingHit[iIndex]));
-			main ? (g_iFlingHit[iIndex] = iSetCellLimit(g_iFlingHit[iIndex], 0, 1)) : (g_iFlingHit2[iIndex] = iSetCellLimit(g_iFlingHit2[iIndex], 0, 1));
+			main ? (g_iFlingHit[iIndex] = iClamp(g_iFlingHit[iIndex], 0, 1)) : (g_iFlingHit2[iIndex] = iClamp(g_iFlingHit2[iIndex], 0, 1));
 			main ? (g_iFlingHitMode[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", 0)) : (g_iFlingHitMode2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", g_iFlingHitMode[iIndex]));
-			main ? (g_iFlingHitMode[iIndex] = iSetCellLimit(g_iFlingHitMode[iIndex], 0, 2)) : (g_iFlingHitMode2[iIndex] = iSetCellLimit(g_iFlingHitMode2[iIndex], 0, 2));
+			main ? (g_iFlingHitMode[iIndex] = iClamp(g_iFlingHitMode[iIndex], 0, 2)) : (g_iFlingHitMode2[iIndex] = iClamp(g_iFlingHitMode2[iIndex], 0, 2));
 			main ? (g_flFlingRange[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", 150.0)) : (g_flFlingRange2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", g_flFlingRange[iIndex]));
-			main ? (g_flFlingRange[iIndex] = flSetFloatLimit(g_flFlingRange[iIndex], 1.0, 9999999999.0)) : (g_flFlingRange2[iIndex] = flSetFloatLimit(g_flFlingRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flFlingRange[iIndex] = flClamp(g_flFlingRange[iIndex], 1.0, 9999999999.0)) : (g_flFlingRange2[iIndex] = flClamp(g_flFlingRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iFlingRangeChance[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Range Chance", 16)) : (g_iFlingRangeChance2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Range Chance", g_iFlingRangeChance[iIndex]));
-			main ? (g_iFlingRangeChance[iIndex] = iSetCellLimit(g_iFlingRangeChance[iIndex], 1, 9999999999)) : (g_iFlingRangeChance2[iIndex] = iSetCellLimit(g_iFlingRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iFlingRangeChance[iIndex] = iClamp(g_iFlingRangeChance[iIndex], 1, 9999999999)) : (g_iFlingRangeChance2[iIndex] = iClamp(g_iFlingRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

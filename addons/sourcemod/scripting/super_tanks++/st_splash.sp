@@ -83,17 +83,17 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iSplashAbility[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Enabled", 0)) : (g_iSplashAbility2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Enabled", g_iSplashAbility[iIndex]));
-			main ? (g_iSplashAbility[iIndex] = iSetCellLimit(g_iSplashAbility[iIndex], 0, 1)) : (g_iSplashAbility2[iIndex] = iSetCellLimit(g_iSplashAbility2[iIndex], 0, 1));
+			main ? (g_iSplashAbility[iIndex] = iClamp(g_iSplashAbility[iIndex], 0, 1)) : (g_iSplashAbility2[iIndex] = iClamp(g_iSplashAbility2[iIndex], 0, 1));
 			main ? (g_iSplashMessage[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Message", 0)) : (g_iSplashMessage2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Message", g_iSplashMessage[iIndex]));
-			main ? (g_iSplashMessage[iIndex] = iSetCellLimit(g_iSplashMessage[iIndex], 0, 1)) : (g_iSplashMessage2[iIndex] = iSetCellLimit(g_iSplashMessage2[iIndex], 0, 1));
+			main ? (g_iSplashMessage[iIndex] = iClamp(g_iSplashMessage[iIndex], 0, 1)) : (g_iSplashMessage2[iIndex] = iClamp(g_iSplashMessage2[iIndex], 0, 1));
 			main ? (g_iSplashChance[iIndex] = kvSuperTanks.GetNum("Splash Ability/Splash Chance", 4)) : (g_iSplashChance2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Splash Chance", g_iSplashChance[iIndex]));
-			main ? (g_iSplashChance[iIndex] = iSetCellLimit(g_iSplashChance[iIndex], 1, 9999999999)) : (g_iSplashChance2[iIndex] = iSetCellLimit(g_iSplashChance2[iIndex], 1, 9999999999));
+			main ? (g_iSplashChance[iIndex] = iClamp(g_iSplashChance[iIndex], 1, 9999999999)) : (g_iSplashChance2[iIndex] = iClamp(g_iSplashChance2[iIndex], 1, 9999999999));
 			main ? (g_iSplashDamage[iIndex] = kvSuperTanks.GetNum("Splash Ability/Splash Damage", 5)) : (g_iSplashDamage2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Splash Damage", g_iSplashDamage[iIndex]));
-			main ? (g_iSplashDamage[iIndex] = iSetCellLimit(g_iSplashDamage[iIndex], 1, 9999999999)) : (g_iSplashDamage2[iIndex] = iSetCellLimit(g_iSplashDamage2[iIndex], 1, 9999999999));
+			main ? (g_iSplashDamage[iIndex] = iClamp(g_iSplashDamage[iIndex], 1, 9999999999)) : (g_iSplashDamage2[iIndex] = iClamp(g_iSplashDamage2[iIndex], 1, 9999999999));
 			main ? (g_flSplashInterval[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Interval", 5.0)) : (g_flSplashInterval2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Interval", g_flSplashInterval[iIndex]));
-			main ? (g_flSplashInterval[iIndex] = flSetFloatLimit(g_flSplashInterval[iIndex], 0.1, 9999999999.0)) : (g_flSplashInterval2[iIndex] = flSetFloatLimit(g_flSplashInterval2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flSplashInterval[iIndex] = flClamp(g_flSplashInterval[iIndex], 0.1, 9999999999.0)) : (g_flSplashInterval2[iIndex] = flClamp(g_flSplashInterval2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flSplashRange[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Range", 500.0)) : (g_flSplashRange2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Range", g_flSplashRange[iIndex]));
-			main ? (g_flSplashRange[iIndex] = flSetFloatLimit(g_flSplashRange[iIndex], 1.0, 9999999999.0)) : (g_flSplashRange2[iIndex] = flSetFloatLimit(g_flSplashRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flSplashRange[iIndex] = flClamp(g_flSplashRange[iIndex], 1.0, 9999999999.0)) : (g_flSplashRange2[iIndex] = flClamp(g_flSplashRange2[iIndex], 1.0, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}

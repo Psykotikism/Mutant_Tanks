@@ -108,21 +108,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iAmmoAbility[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Enabled", 0)) : (g_iAmmoAbility2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Enabled", g_iAmmoAbility[iIndex]));
-			main ? (g_iAmmoAbility[iIndex] = iSetCellLimit(g_iAmmoAbility[iIndex], 0, 1)) : (g_iAmmoAbility2[iIndex] = iSetCellLimit(g_iAmmoAbility2[iIndex], 0, 1));
+			main ? (g_iAmmoAbility[iIndex] = iClamp(g_iAmmoAbility[iIndex], 0, 1)) : (g_iAmmoAbility2[iIndex] = iClamp(g_iAmmoAbility2[iIndex], 0, 1));
 			main ? (g_iAmmoMessage[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Message", 0)) : (g_iAmmoMessage2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Message", g_iAmmoMessage[iIndex]));
-			main ? (g_iAmmoMessage[iIndex] = iSetCellLimit(g_iAmmoMessage[iIndex], 0, 3)) : (g_iAmmoMessage2[iIndex] = iSetCellLimit(g_iAmmoMessage2[iIndex], 0, 3));
+			main ? (g_iAmmoMessage[iIndex] = iClamp(g_iAmmoMessage[iIndex], 0, 3)) : (g_iAmmoMessage2[iIndex] = iClamp(g_iAmmoMessage2[iIndex], 0, 3));
 			main ? (g_iAmmoChance[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Chance", 4)) : (g_iAmmoChance2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Chance", g_iAmmoChance[iIndex]));
-			main ? (g_iAmmoChance[iIndex] = iSetCellLimit(g_iAmmoChance[iIndex], 1, 9999999999)) : (g_iAmmoChance2[iIndex] = iSetCellLimit(g_iAmmoChance2[iIndex], 1, 9999999999));
+			main ? (g_iAmmoChance[iIndex] = iClamp(g_iAmmoChance[iIndex], 1, 9999999999)) : (g_iAmmoChance2[iIndex] = iClamp(g_iAmmoChance2[iIndex], 1, 9999999999));
 			main ? (g_iAmmoCount[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Count", 0)) : (g_iAmmoCount2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Count", g_iAmmoCount[iIndex]));
-			main ? (g_iAmmoCount[iIndex] = iSetCellLimit(g_iAmmoCount[iIndex], 0, 25)) : (g_iAmmoCount2[iIndex] = iSetCellLimit(g_iAmmoCount2[iIndex], 0, 25));
+			main ? (g_iAmmoCount[iIndex] = iClamp(g_iAmmoCount[iIndex], 0, 25)) : (g_iAmmoCount2[iIndex] = iClamp(g_iAmmoCount2[iIndex], 0, 25));
 			main ? (g_iAmmoHit[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Hit", 0)) : (g_iAmmoHit2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Hit", g_iAmmoHit[iIndex]));
-			main ? (g_iAmmoHit[iIndex] = iSetCellLimit(g_iAmmoHit[iIndex], 0, 1)) : (g_iAmmoHit2[iIndex] = iSetCellLimit(g_iAmmoHit2[iIndex], 0, 1));
+			main ? (g_iAmmoHit[iIndex] = iClamp(g_iAmmoHit[iIndex], 0, 1)) : (g_iAmmoHit2[iIndex] = iClamp(g_iAmmoHit2[iIndex], 0, 1));
 			main ? (g_iAmmoHitMode[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Hit Mode", 0)) : (g_iAmmoHitMode2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Hit Mode", g_iAmmoHitMode[iIndex]));
-			main ? (g_iAmmoHitMode[iIndex] = iSetCellLimit(g_iAmmoHitMode[iIndex], 0, 2)) : (g_iAmmoHitMode2[iIndex] = iSetCellLimit(g_iAmmoHitMode2[iIndex], 0, 2));
+			main ? (g_iAmmoHitMode[iIndex] = iClamp(g_iAmmoHitMode[iIndex], 0, 2)) : (g_iAmmoHitMode2[iIndex] = iClamp(g_iAmmoHitMode2[iIndex], 0, 2));
 			main ? (g_flAmmoRange[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Range", 150.0)) : (g_flAmmoRange2[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Range", g_flAmmoRange[iIndex]));
-			main ? (g_flAmmoRange[iIndex] = flSetFloatLimit(g_flAmmoRange[iIndex], 1.0, 9999999999.0)) : (g_flAmmoRange2[iIndex] = flSetFloatLimit(g_flAmmoRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flAmmoRange[iIndex] = flClamp(g_flAmmoRange[iIndex], 1.0, 9999999999.0)) : (g_flAmmoRange2[iIndex] = flClamp(g_flAmmoRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iAmmoRangeChance[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Range Chance", 16)) : (g_iAmmoRangeChance2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Range Chance", g_iAmmoRangeChance[iIndex]));
-			main ? (g_iAmmoRangeChance[iIndex] = iSetCellLimit(g_iAmmoRangeChance[iIndex], 1, 9999999999)) : (g_iAmmoRangeChance2[iIndex] = iSetCellLimit(g_iAmmoRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iAmmoRangeChance[iIndex] = iClamp(g_iAmmoRangeChance[iIndex], 1, 9999999999)) : (g_iAmmoRangeChance2[iIndex] = iClamp(g_iAmmoRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

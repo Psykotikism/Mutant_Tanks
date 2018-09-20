@@ -119,21 +119,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iVampireAbility[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Enabled", 0)) : (g_iVampireAbility2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Enabled", g_iVampireAbility[iIndex]));
-			main ? (g_iVampireAbility[iIndex] = iSetCellLimit(g_iVampireAbility[iIndex], 0, 1)) : (g_iVampireAbility2[iIndex] = iSetCellLimit(g_iVampireAbility2[iIndex], 0, 1));
+			main ? (g_iVampireAbility[iIndex] = iClamp(g_iVampireAbility[iIndex], 0, 1)) : (g_iVampireAbility2[iIndex] = iClamp(g_iVampireAbility2[iIndex], 0, 1));
 			main ? (g_iVampireMessage[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Message", 0)) : (g_iVampireMessage2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Message", g_iVampireMessage[iIndex]));
-			main ? (g_iVampireMessage[iIndex] = iSetCellLimit(g_iVampireMessage[iIndex], 0, 3)) : (g_iVampireMessage2[iIndex] = iSetCellLimit(g_iVampireMessage2[iIndex], 0, 3));
+			main ? (g_iVampireMessage[iIndex] = iClamp(g_iVampireMessage[iIndex], 0, 3)) : (g_iVampireMessage2[iIndex] = iClamp(g_iVampireMessage2[iIndex], 0, 3));
 			main ? (g_iVampireChance[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Chance", 4)) : (g_iVampireChance2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Chance", g_iVampireChance[iIndex]));
-			main ? (g_iVampireChance[iIndex] = iSetCellLimit(g_iVampireChance[iIndex], 1, 9999999999)) : (g_iVampireChance2[iIndex] = iSetCellLimit(g_iVampireChance2[iIndex], 1, 9999999999));
+			main ? (g_iVampireChance[iIndex] = iClamp(g_iVampireChance[iIndex], 1, 9999999999)) : (g_iVampireChance2[iIndex] = iClamp(g_iVampireChance2[iIndex], 1, 9999999999));
 			main ? (g_iVampireHealth[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Health", 100)) : (g_iVampireHealth2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Health", g_iVampireHealth[iIndex]));
-			main ? (g_iVampireHealth[iIndex] = iSetCellLimit(g_iVampireHealth[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH)) : (g_iVampireHealth2[iIndex] = iSetCellLimit(g_iVampireHealth2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH));
+			main ? (g_iVampireHealth[iIndex] = iClamp(g_iVampireHealth[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH)) : (g_iVampireHealth2[iIndex] = iClamp(g_iVampireHealth2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH));
 			main ? (g_iVampireHit[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Hit", 0)) : (g_iVampireHit2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Hit", g_iVampireHit[iIndex]));
-			main ? (g_iVampireHit[iIndex] = iSetCellLimit(g_iVampireHit[iIndex], 0, 1)) : (g_iVampireHit2[iIndex] = iSetCellLimit(g_iVampireHit2[iIndex], 0, 1));
+			main ? (g_iVampireHit[iIndex] = iClamp(g_iVampireHit[iIndex], 0, 1)) : (g_iVampireHit2[iIndex] = iClamp(g_iVampireHit2[iIndex], 0, 1));
 			main ? (g_iVampireHitMode[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Hit Mode", 0)) : (g_iVampireHitMode2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Hit Mode", g_iVampireHitMode[iIndex]));
-			main ? (g_iVampireHitMode[iIndex] = iSetCellLimit(g_iVampireHitMode[iIndex], 0, 2)) : (g_iVampireHitMode2[iIndex] = iSetCellLimit(g_iVampireHitMode2[iIndex], 0, 2));
+			main ? (g_iVampireHitMode[iIndex] = iClamp(g_iVampireHitMode[iIndex], 0, 2)) : (g_iVampireHitMode2[iIndex] = iClamp(g_iVampireHitMode2[iIndex], 0, 2));
 			main ? (g_flVampireRange[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range", 500.0)) : (g_flVampireRange2[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range", g_flVampireRange[iIndex]));
-			main ? (g_flVampireRange[iIndex] = flSetFloatLimit(g_flVampireRange[iIndex], 1.0, 9999999999.0)) : (g_flVampireRange2[iIndex] = flSetFloatLimit(g_flVampireRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flVampireRange[iIndex] = flClamp(g_flVampireRange[iIndex], 1.0, 9999999999.0)) : (g_flVampireRange2[iIndex] = flClamp(g_flVampireRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iVampireRangeChance[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Range Chance", 16)) : (g_iVampireRangeChance2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Range Chance", g_iVampireRangeChance[iIndex]));
-			main ? (g_iVampireRangeChance[iIndex] = iSetCellLimit(g_iVampireRangeChance[iIndex], 1, 9999999999)) : (g_iVampireRangeChance2[iIndex] = iSetCellLimit(g_iVampireRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iVampireRangeChance[iIndex] = iClamp(g_iVampireRangeChance[iIndex], 1, 9999999999)) : (g_iVampireRangeChance2[iIndex] = iClamp(g_iVampireRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

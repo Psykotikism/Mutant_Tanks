@@ -119,21 +119,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iShakeAbility[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", 0)) : (g_iShakeAbility2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", g_iShakeAbility[iIndex]));
-			main ? (g_iShakeAbility[iIndex] = iSetCellLimit(g_iShakeAbility[iIndex], 0, 1)) : (g_iShakeAbility2[iIndex] = iSetCellLimit(g_iShakeAbility2[iIndex], 0, 1));
+			main ? (g_iShakeAbility[iIndex] = iClamp(g_iShakeAbility[iIndex], 0, 1)) : (g_iShakeAbility2[iIndex] = iClamp(g_iShakeAbility2[iIndex], 0, 1));
 			main ? (g_iShakeMessage[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Message", 0)) : (g_iShakeMessage2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Message", g_iShakeMessage[iIndex]));
-			main ? (g_iShakeMessage[iIndex] = iSetCellLimit(g_iShakeMessage[iIndex], 0, 3)) : (g_iShakeMessage2[iIndex] = iSetCellLimit(g_iShakeMessage2[iIndex], 0, 3));
+			main ? (g_iShakeMessage[iIndex] = iClamp(g_iShakeMessage[iIndex], 0, 3)) : (g_iShakeMessage2[iIndex] = iClamp(g_iShakeMessage2[iIndex], 0, 3));
 			main ? (g_iShakeChance[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Chance", 4)) : (g_iShakeChance2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Chance", g_iShakeChance[iIndex]));
-			main ? (g_iShakeChance[iIndex] = iSetCellLimit(g_iShakeChance[iIndex], 1, 9999999999)) : (g_iShakeChance2[iIndex] = iSetCellLimit(g_iShakeChance2[iIndex], 1, 9999999999));
+			main ? (g_iShakeChance[iIndex] = iClamp(g_iShakeChance[iIndex], 1, 9999999999)) : (g_iShakeChance2[iIndex] = iClamp(g_iShakeChance2[iIndex], 1, 9999999999));
 			main ? (g_flShakeDuration[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", 5.0)) : (g_flShakeDuration2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", g_flShakeDuration[iIndex]));
-			main ? (g_flShakeDuration[iIndex] = flSetFloatLimit(g_flShakeDuration[iIndex], 0.1, 9999999999.0)) : (g_flShakeDuration2[iIndex] = flSetFloatLimit(g_flShakeDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flShakeDuration[iIndex] = flClamp(g_flShakeDuration[iIndex], 0.1, 9999999999.0)) : (g_flShakeDuration2[iIndex] = flClamp(g_flShakeDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iShakeHit[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit", 0)) : (g_iShakeHit2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit", g_iShakeHit[iIndex]));
-			main ? (g_iShakeHit[iIndex] = iSetCellLimit(g_iShakeHit[iIndex], 0, 1)) : (g_iShakeHit2[iIndex] = iSetCellLimit(g_iShakeHit2[iIndex], 0, 1));
+			main ? (g_iShakeHit[iIndex] = iClamp(g_iShakeHit[iIndex], 0, 1)) : (g_iShakeHit2[iIndex] = iClamp(g_iShakeHit2[iIndex], 0, 1));
 			main ? (g_iShakeHitMode[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit Mode", 0)) : (g_iShakeHitMode2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit Mode", g_iShakeHitMode[iIndex]));
-			main ? (g_iShakeHitMode[iIndex] = iSetCellLimit(g_iShakeHitMode[iIndex], 0, 2)) : (g_iShakeHitMode2[iIndex] = iSetCellLimit(g_iShakeHitMode2[iIndex], 0, 2));
+			main ? (g_iShakeHitMode[iIndex] = iClamp(g_iShakeHitMode[iIndex], 0, 2)) : (g_iShakeHitMode2[iIndex] = iClamp(g_iShakeHitMode2[iIndex], 0, 2));
 			main ? (g_flShakeRange[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range", 150.0)) : (g_flShakeRange2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range", g_flShakeRange[iIndex]));
-			main ? (g_flShakeRange[iIndex] = flSetFloatLimit(g_flShakeRange[iIndex], 1.0, 9999999999.0)) : (g_flShakeRange2[iIndex] = flSetFloatLimit(g_flShakeRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flShakeRange[iIndex] = flClamp(g_flShakeRange[iIndex], 1.0, 9999999999.0)) : (g_flShakeRange2[iIndex] = flClamp(g_flShakeRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iShakeRangeChance[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Range Chance", 16)) : (g_iShakeRangeChance2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Range Chance", g_iShakeRangeChance[iIndex]));
-			main ? (g_iShakeRangeChance[iIndex] = iSetCellLimit(g_iShakeRangeChance[iIndex], 1, 9999999999)) : (g_iShakeRangeChance2[iIndex] = iSetCellLimit(g_iShakeRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iShakeRangeChance[iIndex] = iClamp(g_iShakeRangeChance[iIndex], 1, 9999999999)) : (g_iShakeRangeChance2[iIndex] = iClamp(g_iShakeRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

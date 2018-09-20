@@ -119,21 +119,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iFragileAbility[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Ability Enabled", 0)) : (g_iFragileAbility2[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Ability Enabled", g_iFragileAbility[iIndex]));
-			main ? (g_iFragileAbility[iIndex] = iSetCellLimit(g_iFragileAbility[iIndex], 0, 1)) : (g_iFragileAbility2[iIndex] = iSetCellLimit(g_iFragileAbility2[iIndex], 0, 1));
+			main ? (g_iFragileAbility[iIndex] = iClamp(g_iFragileAbility[iIndex], 0, 1)) : (g_iFragileAbility2[iIndex] = iClamp(g_iFragileAbility2[iIndex], 0, 1));
 			main ? (g_iFragileMessage[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Ability Message", 0)) : (g_iFragileMessage2[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Ability Message", g_iFragileMessage[iIndex]));
-			main ? (g_iFragileMessage[iIndex] = iSetCellLimit(g_iFragileMessage[iIndex], 0, 1)) : (g_iFragileMessage2[iIndex] = iSetCellLimit(g_iFragileMessage2[iIndex], 0, 1));
+			main ? (g_iFragileMessage[iIndex] = iClamp(g_iFragileMessage[iIndex], 0, 1)) : (g_iFragileMessage2[iIndex] = iClamp(g_iFragileMessage2[iIndex], 0, 1));
 			main ? (g_flFragileBulletDamage[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Bullet Damage", 5.0)) : (g_flFragileBulletDamage2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Bullet Damage", g_flFragileBulletDamage[iIndex]));
-			main ? (g_flFragileBulletDamage[iIndex] = flSetFloatLimit(g_flFragileBulletDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileBulletDamage2[iIndex] = flSetFloatLimit(g_flFragileBulletDamage2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFragileBulletDamage[iIndex] = flClamp(g_flFragileBulletDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileBulletDamage2[iIndex] = flClamp(g_flFragileBulletDamage2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iFragileChance[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Fragile Chance", 4)) : (g_iFragileChance2[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Fragile Chance", g_iFragileChance[iIndex]));
-			main ? (g_iFragileChance[iIndex] = iSetCellLimit(g_iFragileChance[iIndex], 1, 9999999999)) : (g_iFragileChance2[iIndex] = iSetCellLimit(g_iFragileChance2[iIndex], 1, 9999999999));
+			main ? (g_iFragileChance[iIndex] = iClamp(g_iFragileChance[iIndex], 1, 9999999999)) : (g_iFragileChance2[iIndex] = iClamp(g_iFragileChance2[iIndex], 1, 9999999999));
 			main ? (g_flFragileDuration[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Duration", 5.0)) : (g_flFragileDuration2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Duration", g_flFragileDuration[iIndex]));
-			main ? (g_flFragileDuration[iIndex] = flSetFloatLimit(g_flFragileDuration[iIndex], 0.1, 9999999999.0)) : (g_flFragileDuration2[iIndex] = flSetFloatLimit(g_flFragileDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFragileDuration[iIndex] = flClamp(g_flFragileDuration[iIndex], 0.1, 9999999999.0)) : (g_flFragileDuration2[iIndex] = flClamp(g_flFragileDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flFragileExplosiveDamage[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Explosive Damage", 5.0)) : (g_flFragileExplosiveDamage2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Explosive Damage", g_flFragileExplosiveDamage[iIndex]));
-			main ? (g_flFragileExplosiveDamage[iIndex] = flSetFloatLimit(g_flFragileExplosiveDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileExplosiveDamage2[iIndex] = flSetFloatLimit(g_flFragileExplosiveDamage2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFragileExplosiveDamage[iIndex] = flClamp(g_flFragileExplosiveDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileExplosiveDamage2[iIndex] = flClamp(g_flFragileExplosiveDamage2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flFragileFireDamage[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Fire Damage", 3.0)) : (g_flFragileFireDamage2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Fire Damage", g_flFragileFireDamage[iIndex]));
-			main ? (g_flFragileFireDamage[iIndex] = flSetFloatLimit(g_flFragileFireDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileFireDamage2[iIndex] = flSetFloatLimit(g_flFragileFireDamage2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFragileFireDamage[iIndex] = flClamp(g_flFragileFireDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileFireDamage2[iIndex] = flClamp(g_flFragileFireDamage2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flFragileMeleeDamage[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Melee Damage", 1.5)) : (g_flFragileMeleeDamage2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Melee Damage", g_flFragileMeleeDamage[iIndex]));
-			main ? (g_flFragileMeleeDamage[iIndex] = flSetFloatLimit(g_flFragileMeleeDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileMeleeDamage2[iIndex] = flSetFloatLimit(g_flFragileMeleeDamage2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flFragileMeleeDamage[iIndex] = flClamp(g_flFragileMeleeDamage[iIndex], 0.1, 9999999999.0)) : (g_flFragileMeleeDamage2[iIndex] = flClamp(g_flFragileMeleeDamage2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}

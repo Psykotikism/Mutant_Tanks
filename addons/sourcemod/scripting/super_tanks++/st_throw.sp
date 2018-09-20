@@ -77,9 +77,9 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iThrowAbility[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", 0)) : (g_iThrowAbility2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", g_iThrowAbility[iIndex]));
-			main ? (g_iThrowAbility[iIndex] = iSetCellLimit(g_iThrowAbility[iIndex], 0, 3)) : (g_iThrowAbility2[iIndex] = iSetCellLimit(g_iThrowAbility2[iIndex], 0, 3));
+			main ? (g_iThrowAbility[iIndex] = iClamp(g_iThrowAbility[iIndex], 0, 3)) : (g_iThrowAbility2[iIndex] = iClamp(g_iThrowAbility2[iIndex], 0, 3));
 			main ? (g_iThrowMessage[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Message", 0)) : (g_iThrowMessage2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Message", g_iThrowMessage[iIndex]));
-			main ? (g_iThrowMessage[iIndex] = iSetCellLimit(g_iThrowMessage[iIndex], 0, 7)) : (g_iThrowMessage2[iIndex] = iSetCellLimit(g_iThrowMessage2[iIndex], 0, 7));
+			main ? (g_iThrowMessage[iIndex] = iClamp(g_iThrowMessage[iIndex], 0, 7)) : (g_iThrowMessage2[iIndex] = iClamp(g_iThrowMessage2[iIndex], 0, 7));
 			main ? (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions[iIndex], sizeof(g_sThrowCarOptions[]), "123")) : (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions2[iIndex], sizeof(g_sThrowCarOptions2[]), g_sThrowCarOptions[iIndex]));
 			main ? (kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions[iIndex], sizeof(g_sThrowInfectedOptions[]), "1234567")) : (kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions2[iIndex], sizeof(g_sThrowInfectedOptions2[]), g_sThrowInfectedOptions[iIndex]));
 			kvSuperTanks.Rewind();

@@ -122,27 +122,27 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iElectricAbility[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Enabled", 0)) : (g_iElectricAbility2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Enabled", g_iElectricAbility[iIndex]));
-			main ? (g_iElectricAbility[iIndex] = iSetCellLimit(g_iElectricAbility[iIndex], 0, 1)) : (g_iElectricAbility2[iIndex] = iSetCellLimit(g_iElectricAbility2[iIndex], 0, 1));
+			main ? (g_iElectricAbility[iIndex] = iClamp(g_iElectricAbility[iIndex], 0, 1)) : (g_iElectricAbility2[iIndex] = iClamp(g_iElectricAbility2[iIndex], 0, 1));
 			main ? (g_iElectricMessage[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Message", 0)) : (g_iElectricMessage2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Message", g_iElectricMessage[iIndex]));
-			main ? (g_iElectricMessage[iIndex] = iSetCellLimit(g_iElectricMessage[iIndex], 0, 3)) : (g_iElectricMessage2[iIndex] = iSetCellLimit(g_iElectricMessage2[iIndex], 0, 3));
+			main ? (g_iElectricMessage[iIndex] = iClamp(g_iElectricMessage[iIndex], 0, 3)) : (g_iElectricMessage2[iIndex] = iClamp(g_iElectricMessage2[iIndex], 0, 3));
 			main ? (g_iElectricChance[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Chance", 4)) : (g_iElectricChance2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Chance", g_iElectricChance[iIndex]));
-			main ? (g_iElectricChance[iIndex] = iSetCellLimit(g_iElectricChance[iIndex], 1, 9999999999)) : (g_iElectricChance2[iIndex] = iSetCellLimit(g_iElectricChance2[iIndex], 1, 9999999999));
+			main ? (g_iElectricChance[iIndex] = iClamp(g_iElectricChance[iIndex], 1, 9999999999)) : (g_iElectricChance2[iIndex] = iClamp(g_iElectricChance2[iIndex], 1, 9999999999));
 			main ? (g_iElectricDamage[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Damage", 5)) : (g_iElectricDamage2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Damage", g_iElectricDamage[iIndex]));
-			main ? (g_iElectricDamage[iIndex] = iSetCellLimit(g_iElectricDamage[iIndex], 1, 9999999999)) : (g_iElectricDamage2[iIndex] = iSetCellLimit(g_iElectricDamage2[iIndex], 1, 9999999999));
+			main ? (g_iElectricDamage[iIndex] = iClamp(g_iElectricDamage[iIndex], 1, 9999999999)) : (g_iElectricDamage2[iIndex] = iClamp(g_iElectricDamage2[iIndex], 1, 9999999999));
 			main ? (g_flElectricDuration[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Duration", 5.0)) : (g_flElectricDuration2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Duration", g_flElectricDuration[iIndex]));
-			main ? (g_flElectricDuration[iIndex] = flSetFloatLimit(g_flElectricDuration[iIndex], 0.1, 9999999999.0)) : (g_flElectricDuration2[iIndex] = flSetFloatLimit(g_flElectricDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flElectricDuration[iIndex] = flClamp(g_flElectricDuration[iIndex], 0.1, 9999999999.0)) : (g_flElectricDuration2[iIndex] = flClamp(g_flElectricDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iElectricHit[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Hit", 0)) : (g_iElectricHit2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Hit", g_iElectricHit[iIndex]));
-			main ? (g_iElectricHit[iIndex] = iSetCellLimit(g_iElectricHit[iIndex], 0, 1)) : (g_iElectricHit2[iIndex] = iSetCellLimit(g_iElectricHit2[iIndex], 0, 1));
+			main ? (g_iElectricHit[iIndex] = iClamp(g_iElectricHit[iIndex], 0, 1)) : (g_iElectricHit2[iIndex] = iClamp(g_iElectricHit2[iIndex], 0, 1));
 			main ? (g_iElectricHitMode[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Hit Mode", 0)) : (g_iElectricHitMode2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Hit Mode", g_iElectricHitMode[iIndex]));
-			main ? (g_iElectricHitMode[iIndex] = iSetCellLimit(g_iElectricHitMode[iIndex], 0, 2)) : (g_iElectricHitMode2[iIndex] = iSetCellLimit(g_iElectricHitMode2[iIndex], 0, 2));
+			main ? (g_iElectricHitMode[iIndex] = iClamp(g_iElectricHitMode[iIndex], 0, 2)) : (g_iElectricHitMode2[iIndex] = iClamp(g_iElectricHitMode2[iIndex], 0, 2));
 			main ? (g_flElectricInterval[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Interval", 1.0)) : (g_flElectricInterval2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Interval", g_flElectricInterval[iIndex]));
-			main ? (g_flElectricInterval[iIndex] = flSetFloatLimit(g_flElectricInterval[iIndex], 0.1, 9999999999.0)) : (g_flElectricInterval2[iIndex] = flSetFloatLimit(g_flElectricInterval2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flElectricInterval[iIndex] = flClamp(g_flElectricInterval[iIndex], 0.1, 9999999999.0)) : (g_flElectricInterval2[iIndex] = flClamp(g_flElectricInterval2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flElectricRange[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Range", 150.0)) : (g_flElectricRange2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Range", g_flElectricRange[iIndex]));
-			main ? (g_flElectricRange[iIndex] = flSetFloatLimit(g_flElectricRange[iIndex], 1.0, 9999999999.0)) : (g_flElectricRange2[iIndex] = flSetFloatLimit(g_flElectricRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flElectricRange[iIndex] = flClamp(g_flElectricRange[iIndex], 1.0, 9999999999.0)) : (g_flElectricRange2[iIndex] = flClamp(g_flElectricRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iElectricRangeChance[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Range Chance", 16)) : (g_iElectricRangeChance2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Range Chance", g_iElectricRangeChance[iIndex]));
-			main ? (g_iElectricRangeChance[iIndex] = iSetCellLimit(g_iElectricRangeChance[iIndex], 1, 9999999999)) : (g_iElectricRangeChance2[iIndex] = iSetCellLimit(g_iElectricRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iElectricRangeChance[iIndex] = iClamp(g_iElectricRangeChance[iIndex], 1, 9999999999)) : (g_iElectricRangeChance2[iIndex] = iClamp(g_iElectricRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_flElectricSpeed[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Speed", 0.75)) : (g_flElectricSpeed2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Speed", g_flElectricSpeed[iIndex]));
-			main ? (g_flElectricSpeed[iIndex] = flSetFloatLimit(g_flElectricSpeed[iIndex], 0.1, 0.9)) : (g_flElectricSpeed2[iIndex] = flSetFloatLimit(g_flElectricSpeed2[iIndex], 0.1, 0.9));
+			main ? (g_flElectricSpeed[iIndex] = flClamp(g_flElectricSpeed[iIndex], 0.1, 0.9)) : (g_flElectricSpeed2[iIndex] = flClamp(g_flElectricSpeed2[iIndex], 0.1, 0.9));
 			kvSuperTanks.Rewind();
 		}
 	}

@@ -113,21 +113,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iFireAbility[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", 0)) : (g_iFireAbility2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", g_iFireAbility[iIndex]));
-			main ? (g_iFireAbility[iIndex] = iSetCellLimit(g_iFireAbility[iIndex], 0, 1)) : (g_iFireAbility2[iIndex] = iSetCellLimit(g_iFireAbility2[iIndex], 0, 1));
+			main ? (g_iFireAbility[iIndex] = iClamp(g_iFireAbility[iIndex], 0, 1)) : (g_iFireAbility2[iIndex] = iClamp(g_iFireAbility2[iIndex], 0, 1));
 			main ? (g_iFireMessage[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Message", 0)) : (g_iFireMessage2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Message", g_iFireMessage[iIndex]));
-			main ? (g_iFireMessage[iIndex] = iSetCellLimit(g_iFireMessage[iIndex], 0, 3)) : (g_iFireMessage2[iIndex] = iSetCellLimit(g_iFireMessage2[iIndex], 0, 3));
+			main ? (g_iFireMessage[iIndex] = iClamp(g_iFireMessage[iIndex], 0, 3)) : (g_iFireMessage2[iIndex] = iClamp(g_iFireMessage2[iIndex], 0, 3));
 			main ? (g_iFireChance[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Chance", 4)) : (g_iFireChance2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Chance", g_iFireChance[iIndex]));
-			main ? (g_iFireChance[iIndex] = iSetCellLimit(g_iFireChance[iIndex], 1, 9999999999)) : (g_iFireChance2[iIndex] = iSetCellLimit(g_iFireChance2[iIndex], 1, 9999999999));
+			main ? (g_iFireChance[iIndex] = iClamp(g_iFireChance[iIndex], 1, 9999999999)) : (g_iFireChance2[iIndex] = iClamp(g_iFireChance2[iIndex], 1, 9999999999));
 			main ? (g_iFireHit[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit", 0)) : (g_iFireHit2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit", g_iFireHit[iIndex]));
-			main ? (g_iFireHit[iIndex] = iSetCellLimit(g_iFireHit[iIndex], 0, 1)) : (g_iFireHit2[iIndex] = iSetCellLimit(g_iFireHit2[iIndex], 0, 1));
+			main ? (g_iFireHit[iIndex] = iClamp(g_iFireHit[iIndex], 0, 1)) : (g_iFireHit2[iIndex] = iClamp(g_iFireHit2[iIndex], 0, 1));
 			main ? (g_iFireHitMode[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit Mode", 0)) : (g_iFireHitMode2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit Mode", g_iFireHitMode[iIndex]));
-			main ? (g_iFireHitMode[iIndex] = iSetCellLimit(g_iFireHitMode[iIndex], 0, 2)) : (g_iFireHitMode2[iIndex] = iSetCellLimit(g_iFireHitMode2[iIndex], 0, 2));
+			main ? (g_iFireHitMode[iIndex] = iClamp(g_iFireHitMode[iIndex], 0, 2)) : (g_iFireHitMode2[iIndex] = iClamp(g_iFireHitMode2[iIndex], 0, 2));
 			main ? (g_flFireRange[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Range", 150.0)) : (g_flFireRange2[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Range", g_flFireRange[iIndex]));
-			main ? (g_flFireRange[iIndex] = flSetFloatLimit(g_flFireRange[iIndex], 1.0, 9999999999.0)) : (g_flFireRange2[iIndex] = flSetFloatLimit(g_flFireRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flFireRange[iIndex] = flClamp(g_flFireRange[iIndex], 1.0, 9999999999.0)) : (g_flFireRange2[iIndex] = flClamp(g_flFireRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iFireRangeChance[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Range Chance", 16)) : (g_iFireRangeChance2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Range Chance", g_iFireRangeChance[iIndex]));
-			main ? (g_iFireRangeChance[iIndex] = iSetCellLimit(g_iFireRangeChance[iIndex], 1, 9999999999)) : (g_iFireRangeChance2[iIndex] = iSetCellLimit(g_iFireRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iFireRangeChance[iIndex] = iClamp(g_iFireRangeChance[iIndex], 1, 9999999999)) : (g_iFireRangeChance2[iIndex] = iClamp(g_iFireRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_iFireRock[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Rock Break", 0)) : (g_iFireRock2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Rock Break", g_iFireRock[iIndex]));
-			main ? (g_iFireRock[iIndex] = iSetCellLimit(g_iFireRock[iIndex], 0, 1)) : (g_iFireRock2[iIndex] = iSetCellLimit(g_iFireRock2[iIndex], 0, 1));
+			main ? (g_iFireRock[iIndex] = iClamp(g_iFireRock[iIndex], 0, 1)) : (g_iFireRock2[iIndex] = iClamp(g_iFireRock2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
 		}
 	}

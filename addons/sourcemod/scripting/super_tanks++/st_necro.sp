@@ -68,13 +68,13 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iNecroAbility[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Enabled", 0)) : (g_iNecroAbility2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Enabled", g_iNecroAbility[iIndex]));
-			main ? (g_iNecroAbility[iIndex] = iSetCellLimit(g_iNecroAbility[iIndex], 0, 1)) : (g_iNecroAbility2[iIndex] = iSetCellLimit(g_iNecroAbility2[iIndex], 0, 1));
+			main ? (g_iNecroAbility[iIndex] = iClamp(g_iNecroAbility[iIndex], 0, 1)) : (g_iNecroAbility2[iIndex] = iClamp(g_iNecroAbility2[iIndex], 0, 1));
 			main ? (g_iNecroMessage[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Message", 0)) : (g_iNecroMessage2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Message", g_iNecroMessage[iIndex]));
-			main ? (g_iNecroMessage[iIndex] = iSetCellLimit(g_iNecroMessage[iIndex], 0, 1)) : (g_iNecroMessage2[iIndex] = iSetCellLimit(g_iNecroMessage2[iIndex], 0, 1));
+			main ? (g_iNecroMessage[iIndex] = iClamp(g_iNecroMessage[iIndex], 0, 1)) : (g_iNecroMessage2[iIndex] = iClamp(g_iNecroMessage2[iIndex], 0, 1));
 			main ? (g_iNecroChance[iIndex] = kvSuperTanks.GetNum("Necro Ability/Necro Chance", 4)) : (g_iNecroChance2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Necro Chance", g_iNecroChance[iIndex]));
-			main ? (g_iNecroChance[iIndex] = iSetCellLimit(g_iNecroChance[iIndex], 1, 9999999999)) : (g_iNecroChance2[iIndex] = iSetCellLimit(g_iNecroChance2[iIndex], 1, 9999999999));
+			main ? (g_iNecroChance[iIndex] = iClamp(g_iNecroChance[iIndex], 1, 9999999999)) : (g_iNecroChance2[iIndex] = iClamp(g_iNecroChance2[iIndex], 1, 9999999999));
 			main ? (g_flNecroRange[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Range", 500.0)) : (g_flNecroRange2[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Range", g_flNecroRange[iIndex]));
-			main ? (g_flNecroRange[iIndex] = flSetFloatLimit(g_flNecroRange[iIndex], 1.0, 9999999999.0)) : (g_flNecroRange2[iIndex] = flSetFloatLimit(g_flNecroRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flNecroRange[iIndex] = flClamp(g_flNecroRange[iIndex], 1.0, 9999999999.0)) : (g_flNecroRange2[iIndex] = flClamp(g_flNecroRange2[iIndex], 1.0, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}

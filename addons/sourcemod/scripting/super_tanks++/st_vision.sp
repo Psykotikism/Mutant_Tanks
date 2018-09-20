@@ -119,23 +119,23 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iVisionAbility[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Enabled", 0)) : (g_iVisionAbility2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Enabled", g_iVisionAbility[iIndex]));
-			main ? (g_iVisionAbility[iIndex] = iSetCellLimit(g_iVisionAbility[iIndex], 0, 1)) : (g_iVisionAbility2[iIndex] = iSetCellLimit(g_iVisionAbility2[iIndex], 0, 1));
+			main ? (g_iVisionAbility[iIndex] = iClamp(g_iVisionAbility[iIndex], 0, 1)) : (g_iVisionAbility2[iIndex] = iClamp(g_iVisionAbility2[iIndex], 0, 1));
 			main ? (g_iVisionMessage[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Message", 0)) : (g_iVisionMessage2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Message", g_iVisionMessage[iIndex]));
-			main ? (g_iVisionMessage[iIndex] = iSetCellLimit(g_iVisionMessage[iIndex], 0, 3)) : (g_iVisionMessage2[iIndex] = iSetCellLimit(g_iVisionMessage2[iIndex], 0, 3));
+			main ? (g_iVisionMessage[iIndex] = iClamp(g_iVisionMessage[iIndex], 0, 3)) : (g_iVisionMessage2[iIndex] = iClamp(g_iVisionMessage2[iIndex], 0, 3));
 			main ? (g_iVisionChance[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Chance", 4)) : (g_iVisionChance2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Chance", g_iVisionChance[iIndex]));
-			main ? (g_iVisionChance[iIndex] = iSetCellLimit(g_iVisionChance[iIndex], 1, 9999999999)) : (g_iVisionChance2[iIndex] = iSetCellLimit(g_iVisionChance2[iIndex], 1, 9999999999));
+			main ? (g_iVisionChance[iIndex] = iClamp(g_iVisionChance[iIndex], 1, 9999999999)) : (g_iVisionChance2[iIndex] = iClamp(g_iVisionChance2[iIndex], 1, 9999999999));
 			main ? (g_flVisionDuration[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", 5.0)) : (g_flVisionDuration2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", g_flVisionDuration[iIndex]));
-			main ? (g_flVisionDuration[iIndex] = flSetFloatLimit(g_flVisionDuration[iIndex], 0.1, 9999999999.0)) : (g_flVisionDuration2[iIndex] = flSetFloatLimit(g_flVisionDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flVisionDuration[iIndex] = flClamp(g_flVisionDuration[iIndex], 0.1, 9999999999.0)) : (g_flVisionDuration2[iIndex] = flClamp(g_flVisionDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iVisionFOV[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision FOV", 160)) : (g_iVisionFOV2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision FOV", g_iVisionFOV[iIndex]));
-			main ? (g_iVisionFOV[iIndex] = iSetCellLimit(g_iVisionFOV[iIndex], 1, 160)) : (g_iVisionFOV2[iIndex] = iSetCellLimit(g_iVisionFOV2[iIndex], 1, 160));
+			main ? (g_iVisionFOV[iIndex] = iClamp(g_iVisionFOV[iIndex], 1, 160)) : (g_iVisionFOV2[iIndex] = iClamp(g_iVisionFOV2[iIndex], 1, 160));
 			main ? (g_iVisionHit[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Hit", 0)) : (g_iVisionHit2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Hit", g_iVisionHit[iIndex]));
-			main ? (g_iVisionHit[iIndex] = iSetCellLimit(g_iVisionHit[iIndex], 0, 1)) : (g_iVisionHit2[iIndex] = iSetCellLimit(g_iVisionHit2[iIndex], 0, 1));
+			main ? (g_iVisionHit[iIndex] = iClamp(g_iVisionHit[iIndex], 0, 1)) : (g_iVisionHit2[iIndex] = iClamp(g_iVisionHit2[iIndex], 0, 1));
 			main ? (g_iVisionHitMode[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Hit Mode", 0)) : (g_iVisionHitMode2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Hit Mode", g_iVisionHitMode[iIndex]));
-			main ? (g_iVisionHitMode[iIndex] = iSetCellLimit(g_iVisionHitMode[iIndex], 0, 2)) : (g_iVisionHitMode2[iIndex] = iSetCellLimit(g_iVisionHitMode2[iIndex], 0, 2));
+			main ? (g_iVisionHitMode[iIndex] = iClamp(g_iVisionHitMode[iIndex], 0, 2)) : (g_iVisionHitMode2[iIndex] = iClamp(g_iVisionHitMode2[iIndex], 0, 2));
 			main ? (g_flVisionRange[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range", 150.0)) : (g_flVisionRange2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range", g_flVisionRange[iIndex]));
-			main ? (g_flVisionRange[iIndex] = flSetFloatLimit(g_flVisionRange[iIndex], 1.0, 9999999999.0)) : (g_flVisionRange2[iIndex] = flSetFloatLimit(g_flVisionRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flVisionRange[iIndex] = flClamp(g_flVisionRange[iIndex], 1.0, 9999999999.0)) : (g_flVisionRange2[iIndex] = flClamp(g_flVisionRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iVisionRangeChance[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Range Chance", 16)) : (g_iVisionRangeChance2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision Range Chance", g_iVisionRangeChance[iIndex]));
-			main ? (g_iVisionRangeChance[iIndex] = iSetCellLimit(g_iVisionRangeChance[iIndex], 1, 9999999999)) : (g_iVisionRangeChance2[iIndex] = iSetCellLimit(g_iVisionRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iVisionRangeChance[iIndex] = iClamp(g_iVisionRangeChance[iIndex], 1, 9999999999)) : (g_iVisionRangeChance2[iIndex] = iClamp(g_iVisionRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

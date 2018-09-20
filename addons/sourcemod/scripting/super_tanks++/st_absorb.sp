@@ -119,21 +119,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iAbsorbAbility[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Enabled", 0)) : (g_iAbsorbAbility2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Enabled", g_iAbsorbAbility[iIndex]));
-			main ? (g_iAbsorbAbility[iIndex] = iSetCellLimit(g_iAbsorbAbility[iIndex], 0, 1)) : (g_iAbsorbAbility2[iIndex] = iSetCellLimit(g_iAbsorbAbility2[iIndex], 0, 1));
+			main ? (g_iAbsorbAbility[iIndex] = iClamp(g_iAbsorbAbility[iIndex], 0, 1)) : (g_iAbsorbAbility2[iIndex] = iClamp(g_iAbsorbAbility2[iIndex], 0, 1));
 			main ? (g_iAbsorbMessage[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Message", 0)) : (g_iAbsorbMessage2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Message", g_iAbsorbMessage[iIndex]));
-			main ? (g_iAbsorbMessage[iIndex] = iSetCellLimit(g_iAbsorbMessage[iIndex], 0, 1)) : (g_iAbsorbMessage2[iIndex] = iSetCellLimit(g_iAbsorbMessage2[iIndex], 0, 1));
+			main ? (g_iAbsorbMessage[iIndex] = iClamp(g_iAbsorbMessage[iIndex], 0, 1)) : (g_iAbsorbMessage2[iIndex] = iClamp(g_iAbsorbMessage2[iIndex], 0, 1));
 			main ? (g_flAbsorbBulletDamage[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Bullet Damage", 20.0)) : (g_flAbsorbBulletDamage2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Bullet Damage", g_flAbsorbBulletDamage[iIndex]));
-			main ? (g_flAbsorbBulletDamage[iIndex] = flSetFloatLimit(g_flAbsorbBulletDamage[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbBulletDamage2[iIndex] = flSetFloatLimit(g_flAbsorbBulletDamage2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flAbsorbBulletDamage[iIndex] = flClamp(g_flAbsorbBulletDamage[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbBulletDamage2[iIndex] = flClamp(g_flAbsorbBulletDamage2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iAbsorbChance[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Absorb Chance", 4)) : (g_iAbsorbChance2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Absorb Chance", g_iAbsorbChance[iIndex]));
-			main ? (g_iAbsorbChance[iIndex] = iSetCellLimit(g_iAbsorbChance[iIndex], 1, 9999999999)) : (g_iAbsorbChance2[iIndex] = iSetCellLimit(g_iAbsorbChance2[iIndex], 1, 9999999999));
+			main ? (g_iAbsorbChance[iIndex] = iClamp(g_iAbsorbChance[iIndex], 1, 9999999999)) : (g_iAbsorbChance2[iIndex] = iClamp(g_iAbsorbChance2[iIndex], 1, 9999999999));
 			main ? (g_flAbsorbDuration[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Duration", 5.0)) : (g_flAbsorbDuration2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Duration", g_flAbsorbDuration[iIndex]));
-			main ? (g_flAbsorbDuration[iIndex] = flSetFloatLimit(g_flAbsorbDuration[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbDuration2[iIndex] = flSetFloatLimit(g_flAbsorbDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flAbsorbDuration[iIndex] = flClamp(g_flAbsorbDuration[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbDuration2[iIndex] = flClamp(g_flAbsorbDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flAbsorbExplosiveDamage[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Explosive Damage", 20.0)) : (g_flAbsorbExplosiveDamage2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Explosive Damage", g_flAbsorbExplosiveDamage[iIndex]));
-			main ? (g_flAbsorbExplosiveDamage[iIndex] = flSetFloatLimit(g_flAbsorbExplosiveDamage[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbExplosiveDamage2[iIndex] = flSetFloatLimit(g_flAbsorbExplosiveDamage2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flAbsorbExplosiveDamage[iIndex] = flClamp(g_flAbsorbExplosiveDamage[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbExplosiveDamage2[iIndex] = flClamp(g_flAbsorbExplosiveDamage2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flAbsorbFireDamage[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Fire Damage", 200.0)) : (g_flAbsorbFireDamage2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Fire Damage", g_flAbsorbFireDamage[iIndex]));
-			main ? (g_flAbsorbFireDamage[iIndex] = flSetFloatLimit(g_flAbsorbFireDamage[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbFireDamage2[iIndex] = flSetFloatLimit(g_flAbsorbFireDamage2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flAbsorbFireDamage[iIndex] = flClamp(g_flAbsorbFireDamage[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbFireDamage2[iIndex] = flClamp(g_flAbsorbFireDamage2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flAbsorbMeleeDamage[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Melee Damage", 200.0)) : (g_flAbsorbMeleeDamage2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Melee Damage", g_flAbsorbMeleeDamage[iIndex]));
-			main ? (g_flAbsorbMeleeDamage[iIndex] = flSetFloatLimit(g_flAbsorbMeleeDamage[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbMeleeDamage2[iIndex] = flSetFloatLimit(g_flAbsorbMeleeDamage2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flAbsorbMeleeDamage[iIndex] = flClamp(g_flAbsorbMeleeDamage[iIndex], 0.1, 9999999999.0)) : (g_flAbsorbMeleeDamage2[iIndex] = flClamp(g_flAbsorbMeleeDamage2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}

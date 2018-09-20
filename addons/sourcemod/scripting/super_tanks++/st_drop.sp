@@ -217,17 +217,17 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iDropAbility[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Enabled", 0)) : (g_iDropAbility2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Enabled", g_iDropAbility[iIndex]));
-			main ? (g_iDropAbility[iIndex] = iSetCellLimit(g_iDropAbility[iIndex], 0, 1)) : (g_iDropAbility2[iIndex] = iSetCellLimit(g_iDropAbility2[iIndex], 0, 1));
+			main ? (g_iDropAbility[iIndex] = iClamp(g_iDropAbility[iIndex], 0, 1)) : (g_iDropAbility2[iIndex] = iClamp(g_iDropAbility2[iIndex], 0, 1));
 			main ? (g_iDropMessage[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Message", 0)) : (g_iDropMessage2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Message", g_iDropMessage[iIndex]));
-			main ? (g_iDropMessage[iIndex] = iSetCellLimit(g_iDropMessage[iIndex], 0, 1)) : (g_iDropMessage2[iIndex] = iSetCellLimit(g_iDropMessage2[iIndex], 0, 1));
+			main ? (g_iDropMessage[iIndex] = iClamp(g_iDropMessage[iIndex], 0, 1)) : (g_iDropMessage2[iIndex] = iClamp(g_iDropMessage2[iIndex], 0, 1));
 			main ? (g_iDropChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Chance", 4)) : (g_iDropChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Chance", g_iDropChance[iIndex]));
-			main ? (g_iDropChance[iIndex] = iSetCellLimit(g_iDropChance[iIndex], 1, 9999999999)) : (g_iDropChance2[iIndex] = iSetCellLimit(g_iDropChance2[iIndex], 1, 9999999999));
+			main ? (g_iDropChance[iIndex] = iClamp(g_iDropChance[iIndex], 1, 9999999999)) : (g_iDropChance2[iIndex] = iClamp(g_iDropChance2[iIndex], 1, 9999999999));
 			main ? (g_iDropClipChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", 4)) : (g_iDropClipChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", g_iDropClipChance[iIndex]));
-			main ? (g_iDropClipChance[iIndex] = iSetCellLimit(g_iDropClipChance[iIndex], 1, 9999999999)) : (g_iDropClipChance2[iIndex] = iSetCellLimit(g_iDropClipChance2[iIndex], 1, 9999999999));
+			main ? (g_iDropClipChance[iIndex] = iClamp(g_iDropClipChance[iIndex], 1, 9999999999)) : (g_iDropClipChance2[iIndex] = iClamp(g_iDropClipChance2[iIndex], 1, 9999999999));
 			main ? (g_iDropMode[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", 0)) : (g_iDropMode2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", g_iDropMode[iIndex]));
-			main ? (g_iDropMode[iIndex] = iSetCellLimit(g_iDropMode[iIndex], 0, 2)) : (g_iDropMode2[iIndex] = iSetCellLimit(g_iDropMode2[iIndex], 0, 2));
+			main ? (g_iDropMode[iIndex] = iClamp(g_iDropMode[iIndex], 0, 2)) : (g_iDropMode2[iIndex] = iClamp(g_iDropMode2[iIndex], 0, 2));
 			main ? (g_flDropWeaponScale[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", 1.0)) : (g_flDropWeaponScale2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", g_flDropWeaponScale[iIndex]));
-			main ? (g_flDropWeaponScale[iIndex] = flSetFloatLimit(g_flDropWeaponScale[iIndex], 1.0, 2.0)) : (g_flDropWeaponScale2[iIndex] = flSetFloatLimit(g_flDropWeaponScale2[iIndex], 1.0, 2.0));
+			main ? (g_flDropWeaponScale[iIndex] = flClamp(g_flDropWeaponScale[iIndex], 1.0, 2.0)) : (g_flDropWeaponScale2[iIndex] = flClamp(g_flDropWeaponScale2[iIndex], 1.0, 2.0));
 			kvSuperTanks.Rewind();
 		}
 	}

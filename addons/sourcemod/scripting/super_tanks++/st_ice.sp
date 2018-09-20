@@ -120,21 +120,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iIceAbility[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", 0)) : (g_iIceAbility2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", g_iIceAbility[iIndex]));
-			main ? (g_iIceAbility[iIndex] = iSetCellLimit(g_iIceAbility[iIndex], 0, 1)) : (g_iIceAbility2[iIndex] = iSetCellLimit(g_iIceAbility2[iIndex], 0, 1));
+			main ? (g_iIceAbility[iIndex] = iClamp(g_iIceAbility[iIndex], 0, 1)) : (g_iIceAbility2[iIndex] = iClamp(g_iIceAbility2[iIndex], 0, 1));
 			main ? (g_iIceMessage[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Message", 0)) : (g_iIceMessage2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Message", g_iIceMessage[iIndex]));
-			main ? (g_iIceMessage[iIndex] = iSetCellLimit(g_iIceMessage[iIndex], 0, 3)) : (g_iIceMessage2[iIndex] = iSetCellLimit(g_iIceMessage2[iIndex], 0, 3));
+			main ? (g_iIceMessage[iIndex] = iClamp(g_iIceMessage[iIndex], 0, 3)) : (g_iIceMessage2[iIndex] = iClamp(g_iIceMessage2[iIndex], 0, 3));
 			main ? (g_iIceChance[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Chance", 4)) : (g_iIceChance2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Chance", g_iIceChance[iIndex]));
-			main ? (g_iIceChance[iIndex] = iSetCellLimit(g_iIceChance[iIndex], 1, 9999999999)) : (g_iIceChance2[iIndex] = iSetCellLimit(g_iIceChance2[iIndex], 1, 9999999999));
+			main ? (g_iIceChance[iIndex] = iClamp(g_iIceChance[iIndex], 1, 9999999999)) : (g_iIceChance2[iIndex] = iClamp(g_iIceChance2[iIndex], 1, 9999999999));
 			main ? (g_flIceDuration[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", 5.0)) : (g_flIceDuration2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", g_flIceDuration[iIndex]));
-			main ? (g_flIceDuration[iIndex] = flSetFloatLimit(g_flIceDuration[iIndex], 0.1, 9999999999.0)) : (g_flIceDuration2[iIndex] = flSetFloatLimit(g_flIceDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flIceDuration[iIndex] = flClamp(g_flIceDuration[iIndex], 0.1, 9999999999.0)) : (g_flIceDuration2[iIndex] = flClamp(g_flIceDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iIceHit[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Hit", 0)) : (g_iIceHit2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Hit", g_iIceHit[iIndex]));
-			main ? (g_iIceHit[iIndex] = iSetCellLimit(g_iIceHit[iIndex], 0, 1)) : (g_iIceHit2[iIndex] = iSetCellLimit(g_iIceHit2[iIndex], 0, 1));
+			main ? (g_iIceHit[iIndex] = iClamp(g_iIceHit[iIndex], 0, 1)) : (g_iIceHit2[iIndex] = iClamp(g_iIceHit2[iIndex], 0, 1));
 			main ? (g_iIceHitMode[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Hit Mode", 0)) : (g_iIceHitMode2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Hit Mode", g_iIceHitMode[iIndex]));
-			main ? (g_iIceHitMode[iIndex] = iSetCellLimit(g_iIceHitMode[iIndex], 0, 2)) : (g_iIceHitMode2[iIndex] = iSetCellLimit(g_iIceHitMode2[iIndex], 0, 2));
+			main ? (g_iIceHitMode[iIndex] = iClamp(g_iIceHitMode[iIndex], 0, 2)) : (g_iIceHitMode2[iIndex] = iClamp(g_iIceHitMode2[iIndex], 0, 2));
 			main ? (g_flIceRange[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range", 150.0)) : (g_flIceRange2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range", g_flIceRange[iIndex]));
-			main ? (g_flIceRange[iIndex] = flSetFloatLimit(g_flIceRange[iIndex], 1.0, 9999999999.0)) : (g_flIceRange2[iIndex] = flSetFloatLimit(g_flIceRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flIceRange[iIndex] = flClamp(g_flIceRange[iIndex], 1.0, 9999999999.0)) : (g_flIceRange2[iIndex] = flClamp(g_flIceRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iIceRangeChance[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Range Chance", 16)) : (g_iIceRangeChance2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Range Chance", g_iIceRangeChance[iIndex]));
-			main ? (g_iIceRangeChance[iIndex] = iSetCellLimit(g_iIceRangeChance[iIndex], 1, 9999999999)) : (g_iIceRangeChance2[iIndex] = iSetCellLimit(g_iIceRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iIceRangeChance[iIndex] = iClamp(g_iIceRangeChance[iIndex], 1, 9999999999)) : (g_iIceRangeChance2[iIndex] = iClamp(g_iIceRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

@@ -75,17 +75,17 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iCloneAbility[iIndex] = kvSuperTanks.GetNum("Clone Ability/Ability Enabled", 0)) : (g_iCloneAbility2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Ability Enabled", g_iCloneAbility[iIndex]));
-			main ? (g_iCloneAbility[iIndex] = iSetCellLimit(g_iCloneAbility[iIndex], 0, 1)) : (g_iCloneAbility2[iIndex] = iSetCellLimit(g_iCloneAbility2[iIndex], 0, 1));
+			main ? (g_iCloneAbility[iIndex] = iClamp(g_iCloneAbility[iIndex], 0, 1)) : (g_iCloneAbility2[iIndex] = iClamp(g_iCloneAbility2[iIndex], 0, 1));
 			main ? (g_iCloneMessage[iIndex] = kvSuperTanks.GetNum("Clone Ability/Ability Message", 0)) : (g_iCloneMessage2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Ability Message", g_iCloneMessage[iIndex]));
-			main ? (g_iCloneMessage[iIndex] = iSetCellLimit(g_iCloneMessage[iIndex], 0, 1)) : (g_iCloneMessage2[iIndex] = iSetCellLimit(g_iCloneMessage2[iIndex], 0, 1));
+			main ? (g_iCloneMessage[iIndex] = iClamp(g_iCloneMessage[iIndex], 0, 1)) : (g_iCloneMessage2[iIndex] = iClamp(g_iCloneMessage2[iIndex], 0, 1));
 			main ? (g_iCloneAmount[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Amount", 2)) : (g_iCloneAmount2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Amount", g_iCloneAmount[iIndex]));
-			main ? (g_iCloneAmount[iIndex] = iSetCellLimit(g_iCloneAmount[iIndex], 1, 25)) : (g_iCloneAmount2[iIndex] = iSetCellLimit(g_iCloneAmount2[iIndex], 1, 25));
+			main ? (g_iCloneAmount[iIndex] = iClamp(g_iCloneAmount[iIndex], 1, 25)) : (g_iCloneAmount2[iIndex] = iClamp(g_iCloneAmount2[iIndex], 1, 25));
 			main ? (g_iCloneChance[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Chance", 4)) : (g_iCloneChance2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Chance", g_iCloneChance[iIndex]));
-			main ? (g_iCloneChance[iIndex] = iSetCellLimit(g_iCloneChance[iIndex], 1, 9999999999)) : (g_iCloneChance2[iIndex] = iSetCellLimit(g_iCloneChance2[iIndex], 1, 9999999999));
+			main ? (g_iCloneChance[iIndex] = iClamp(g_iCloneChance[iIndex], 1, 9999999999)) : (g_iCloneChance2[iIndex] = iClamp(g_iCloneChance2[iIndex], 1, 9999999999));
 			main ? (g_iCloneHealth[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", 1000)) : (g_iCloneHealth2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", g_iCloneHealth[iIndex]));
-			main ? (g_iCloneHealth[iIndex] = iSetCellLimit(g_iCloneHealth[iIndex], 1, ST_MAXHEALTH)) : (g_iCloneHealth2[iIndex] = iSetCellLimit(g_iCloneHealth2[iIndex], 1, ST_MAXHEALTH));
+			main ? (g_iCloneHealth[iIndex] = iClamp(g_iCloneHealth[iIndex], 1, ST_MAXHEALTH)) : (g_iCloneHealth2[iIndex] = iClamp(g_iCloneHealth2[iIndex], 1, ST_MAXHEALTH));
 			main ? (g_iCloneMode[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", 0)) : (g_iCloneMode2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", g_iCloneMode[iIndex]));
-			main ? (g_iCloneMode[iIndex] = iSetCellLimit(g_iCloneMode[iIndex], 0, 1)) : (g_iCloneMode2[iIndex] = iSetCellLimit(g_iCloneMode2[iIndex], 0, 1));
+			main ? (g_iCloneMode[iIndex] = iClamp(g_iCloneMode[iIndex], 0, 1)) : (g_iCloneMode2[iIndex] = iClamp(g_iCloneMode2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
 		}
 	}

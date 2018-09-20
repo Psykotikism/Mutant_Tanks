@@ -75,17 +75,17 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
 			main ? (g_iGlowEffect[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", 1)) : (g_iGlowEffect2[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", g_iGlowEffect[iIndex]));
-			main ? (g_iGlowEffect[iIndex] = iSetCellLimit(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iSetCellLimit(g_iGlowEffect2[iIndex], 0, 1));
+			main ? (g_iGlowEffect[iIndex] = iClamp(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iClamp(g_iGlowEffect2[iIndex], 0, 1));
 			main ? (g_iTrackAbility[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", 0)) : (g_iTrackAbility2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", g_iTrackAbility[iIndex]));
-			main ? (g_iTrackAbility[iIndex] = iSetCellLimit(g_iTrackAbility[iIndex], 0, 1)) : (g_iTrackAbility2[iIndex] = iSetCellLimit(g_iTrackAbility2[iIndex], 0, 1));
+			main ? (g_iTrackAbility[iIndex] = iClamp(g_iTrackAbility[iIndex], 0, 1)) : (g_iTrackAbility2[iIndex] = iClamp(g_iTrackAbility2[iIndex], 0, 1));
 			main ? (g_iTrackMessage[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", 0)) : (g_iTrackMessage2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", g_iTrackMessage[iIndex]));
-			main ? (g_iTrackMessage[iIndex] = iSetCellLimit(g_iTrackMessage[iIndex], 0, 1)) : (g_iTrackMessage2[iIndex] = iSetCellLimit(g_iTrackMessage2[iIndex], 0, 1));
+			main ? (g_iTrackMessage[iIndex] = iClamp(g_iTrackMessage[iIndex], 0, 1)) : (g_iTrackMessage2[iIndex] = iClamp(g_iTrackMessage2[iIndex], 0, 1));
 			main ? (g_iTrackChance[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Chance", 4)) : (g_iTrackChance2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Chance", g_iTrackChance[iIndex]));
-			main ? (g_iTrackChance[iIndex] = iSetCellLimit(g_iTrackChance[iIndex], 1, 9999999999)) : (g_iTrackChance2[iIndex] = iSetCellLimit(g_iTrackChance2[iIndex], 1, 9999999999));
+			main ? (g_iTrackChance[iIndex] = iClamp(g_iTrackChance[iIndex], 1, 9999999999)) : (g_iTrackChance2[iIndex] = iClamp(g_iTrackChance2[iIndex], 1, 9999999999));
 			main ? (g_iTrackMode[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", 1)) : (g_iTrackMode2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", g_iTrackMode[iIndex]));
-			main ? (g_iTrackMode[iIndex] = iSetCellLimit(g_iTrackMode[iIndex], 0, 1)) : (g_iTrackMode2[iIndex] = iSetCellLimit(g_iTrackMode2[iIndex], 0, 1));
+			main ? (g_iTrackMode[iIndex] = iClamp(g_iTrackMode[iIndex], 0, 1)) : (g_iTrackMode2[iIndex] = iClamp(g_iTrackMode2[iIndex], 0, 1));
 			main ? (g_flTrackSpeed[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", 500.0)) : (g_flTrackSpeed2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[iIndex]));
-			main ? (g_flTrackSpeed[iIndex] = flSetFloatLimit(g_flTrackSpeed[iIndex], 0.1, 9999999999.0)) : (g_flTrackSpeed2[iIndex] = flSetFloatLimit(g_flTrackSpeed2[iIndex], 100.0, 500.0));
+			main ? (g_flTrackSpeed[iIndex] = flClamp(g_flTrackSpeed[iIndex], 0.1, 9999999999.0)) : (g_flTrackSpeed2[iIndex] = flClamp(g_flTrackSpeed2[iIndex], 100.0, 500.0));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -322,13 +322,13 @@ stock void vTrack(int entity)
 			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 			TrimString(sGlow[0]);
 			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
-			iRed = iSetCellLimit(iRed, 0, 255);
+			iRed = iClamp(iRed, 0, 255);
 			TrimString(sGlow[1]);
 			int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
-			iGreen = iSetCellLimit(iGreen, 0, 255);
+			iGreen = iClamp(iGreen, 0, 255);
 			TrimString(sGlow[2]);
 			int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
-			iBlue = iSetCellLimit(iBlue, 0, 255);
+			iBlue = iClamp(iBlue, 0, 255);
 			int iGlowEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEffect[ST_TankType(iTank)] : g_iGlowEffect2[ST_TankType(iTank)];
 			if (iGlowEffect == 1 && bIsL4D2Game())
 			{

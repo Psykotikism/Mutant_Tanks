@@ -120,23 +120,23 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iPimpAbility[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", 0)) : (g_iPimpAbility2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", g_iPimpAbility[iIndex]));
-			main ? (g_iPimpAbility[iIndex] = iSetCellLimit(g_iPimpAbility[iIndex], 0, 1)) : (g_iPimpAbility2[iIndex] = iSetCellLimit(g_iPimpAbility2[iIndex], 0, 1));
+			main ? (g_iPimpAbility[iIndex] = iClamp(g_iPimpAbility[iIndex], 0, 1)) : (g_iPimpAbility2[iIndex] = iClamp(g_iPimpAbility2[iIndex], 0, 1));
 			main ? (g_iPimpMessage[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Message", 0)) : (g_iPimpMessage2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Message", g_iPimpMessage[iIndex]));
-			main ? (g_iPimpMessage[iIndex] = iSetCellLimit(g_iPimpMessage[iIndex], 0, 3)) : (g_iPimpMessage2[iIndex] = iSetCellLimit(g_iPimpMessage2[iIndex], 0, 3));
+			main ? (g_iPimpMessage[iIndex] = iClamp(g_iPimpMessage[iIndex], 0, 3)) : (g_iPimpMessage2[iIndex] = iClamp(g_iPimpMessage2[iIndex], 0, 3));
 			main ? (g_iPimpAmount[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", 5)) : (g_iPimpAmount2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", g_iPimpAmount[iIndex]));
-			main ? (g_iPimpAmount[iIndex] = iSetCellLimit(g_iPimpAmount[iIndex], 1, 9999999999)) : (g_iPimpAmount2[iIndex] = iSetCellLimit(g_iPimpAmount2[iIndex], 1, 9999999999));
+			main ? (g_iPimpAmount[iIndex] = iClamp(g_iPimpAmount[iIndex], 1, 9999999999)) : (g_iPimpAmount2[iIndex] = iClamp(g_iPimpAmount2[iIndex], 1, 9999999999));
 			main ? (g_iPimpChance[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Chance", 4)) : (g_iPimpChance2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Chance", g_iPimpChance[iIndex]));
-			main ? (g_iPimpChance[iIndex] = iSetCellLimit(g_iPimpChance[iIndex], 1, 9999999999)) : (g_iPimpChance2[iIndex] = iSetCellLimit(g_iPimpChance2[iIndex], 1, 9999999999));
+			main ? (g_iPimpChance[iIndex] = iClamp(g_iPimpChance[iIndex], 1, 9999999999)) : (g_iPimpChance2[iIndex] = iClamp(g_iPimpChance2[iIndex], 1, 9999999999));
 			main ? (g_iPimpDamage[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Damage", 1)) : (g_iPimpDamage2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Damage", g_iPimpDamage[iIndex]));
-			main ? (g_iPimpDamage[iIndex] = iSetCellLimit(g_iPimpDamage[iIndex], 1, 9999999999)) : (g_iPimpDamage2[iIndex] = iSetCellLimit(g_iPimpDamage2[iIndex], 1, 9999999999));
+			main ? (g_iPimpDamage[iIndex] = iClamp(g_iPimpDamage[iIndex], 1, 9999999999)) : (g_iPimpDamage2[iIndex] = iClamp(g_iPimpDamage2[iIndex], 1, 9999999999));
 			main ? (g_iPimpHit[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit", 0)) : (g_iPimpHit2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit", g_iPimpHit[iIndex]));
-			main ? (g_iPimpHit[iIndex] = iSetCellLimit(g_iPimpHit[iIndex], 0, 1)) : (g_iPimpHit2[iIndex] = iSetCellLimit(g_iPimpHit2[iIndex], 0, 1));
+			main ? (g_iPimpHit[iIndex] = iClamp(g_iPimpHit[iIndex], 0, 1)) : (g_iPimpHit2[iIndex] = iClamp(g_iPimpHit2[iIndex], 0, 1));
 			main ? (g_iPimpHitMode[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit Mode", 0)) : (g_iPimpHitMode2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit Mode", g_iPimpHitMode[iIndex]));
-			main ? (g_iPimpHitMode[iIndex] = iSetCellLimit(g_iPimpHitMode[iIndex], 0, 2)) : (g_iPimpHitMode2[iIndex] = iSetCellLimit(g_iPimpHitMode2[iIndex], 0, 2));
+			main ? (g_iPimpHitMode[iIndex] = iClamp(g_iPimpHitMode[iIndex], 0, 2)) : (g_iPimpHitMode2[iIndex] = iClamp(g_iPimpHitMode2[iIndex], 0, 2));
 			main ? (g_flPimpRange[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range", 150.0)) : (g_flPimpRange2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range", g_flPimpRange[iIndex]));
-			main ? (g_flPimpRange[iIndex] = flSetFloatLimit(g_flPimpRange[iIndex], 1.0, 9999999999.0)) : (g_flPimpRange2[iIndex] = flSetFloatLimit(g_flPimpRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flPimpRange[iIndex] = flClamp(g_flPimpRange[iIndex], 1.0, 9999999999.0)) : (g_flPimpRange2[iIndex] = flClamp(g_flPimpRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iPimpRangeChance[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Range Chance", 16)) : (g_iPimpRangeChance2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Range Chance", g_iPimpRangeChance[iIndex]));
-			main ? (g_iPimpRangeChance[iIndex] = iSetCellLimit(g_iPimpRangeChance[iIndex], 1, 9999999999)) : (g_iPimpRangeChance2[iIndex] = iSetCellLimit(g_iPimpRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iPimpRangeChance[iIndex] = iClamp(g_iPimpRangeChance[iIndex], 1, 9999999999)) : (g_iPimpRangeChance2[iIndex] = iClamp(g_iPimpRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

@@ -119,21 +119,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iPanicAbility[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", 0)) : (g_iPanicAbility2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", g_iPanicAbility[iIndex]));
-			main ? (g_iPanicAbility[iIndex] = iSetCellLimit(g_iPanicAbility[iIndex], 0, 3)) : (g_iPanicAbility2[iIndex] = iSetCellLimit(g_iPanicAbility2[iIndex], 0, 3));
+			main ? (g_iPanicAbility[iIndex] = iClamp(g_iPanicAbility[iIndex], 0, 3)) : (g_iPanicAbility2[iIndex] = iClamp(g_iPanicAbility2[iIndex], 0, 3));
 			main ? (g_iPanicMessage[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Message", 0)) : (g_iPanicMessage2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Message", g_iPanicMessage[iIndex]));
-			main ? (g_iPanicMessage[iIndex] = iSetCellLimit(g_iPanicMessage[iIndex], 0, 7)) : (g_iPanicMessage2[iIndex] = iSetCellLimit(g_iPanicMessage2[iIndex], 0, 7));
+			main ? (g_iPanicMessage[iIndex] = iClamp(g_iPanicMessage[iIndex], 0, 7)) : (g_iPanicMessage2[iIndex] = iClamp(g_iPanicMessage2[iIndex], 0, 7));
 			main ? (g_iPanicChance[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Chance", 4)) : (g_iPanicChance2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Chance", g_iPanicChance[iIndex]));
-			main ? (g_iPanicChance[iIndex] = iSetCellLimit(g_iPanicChance[iIndex], 1, 9999999999)) : (g_iPanicChance2[iIndex] = iSetCellLimit(g_iPanicChance2[iIndex], 1, 9999999999));
+			main ? (g_iPanicChance[iIndex] = iClamp(g_iPanicChance[iIndex], 1, 9999999999)) : (g_iPanicChance2[iIndex] = iClamp(g_iPanicChance2[iIndex], 1, 9999999999));
 			main ? (g_iPanicHit[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", 0)) : (g_iPanicHit2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", g_iPanicHit[iIndex]));
-			main ? (g_iPanicHit[iIndex] = iSetCellLimit(g_iPanicHit[iIndex], 0, 1)) : (g_iPanicHit2[iIndex] = iSetCellLimit(g_iPanicHit2[iIndex], 0, 1));
+			main ? (g_iPanicHit[iIndex] = iClamp(g_iPanicHit[iIndex], 0, 1)) : (g_iPanicHit2[iIndex] = iClamp(g_iPanicHit2[iIndex], 0, 1));
 			main ? (g_iPanicHitMode[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit Mode", 0)) : (g_iPanicHitMode2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit Mode", g_iPanicHitMode[iIndex]));
-			main ? (g_iPanicHitMode[iIndex] = iSetCellLimit(g_iPanicHitMode[iIndex], 0, 2)) : (g_iPanicHitMode2[iIndex] = iSetCellLimit(g_iPanicHitMode2[iIndex], 0, 2));
+			main ? (g_iPanicHitMode[iIndex] = iClamp(g_iPanicHitMode[iIndex], 0, 2)) : (g_iPanicHitMode2[iIndex] = iClamp(g_iPanicHitMode2[iIndex], 0, 2));
 			main ? (g_flPanicInterval[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Interval", 5.0)) : (g_flPanicInterval2[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Interval", g_flPanicInterval[iIndex]));
-			main ? (g_flPanicInterval[iIndex] = flSetFloatLimit(g_flPanicInterval[iIndex], 0.1, 9999999999.0)) : (g_flPanicInterval2[iIndex] = flSetFloatLimit(g_flPanicInterval2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flPanicInterval[iIndex] = flClamp(g_flPanicInterval[iIndex], 0.1, 9999999999.0)) : (g_flPanicInterval2[iIndex] = flClamp(g_flPanicInterval2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flPanicRange[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Range", 150.0)) : (g_flPanicRange2[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Range", g_flPanicRange[iIndex]));
-			main ? (g_flPanicRange[iIndex] = flSetFloatLimit(g_flPanicRange[iIndex], 1.0, 9999999999.0)) : (g_flPanicRange2[iIndex] = flSetFloatLimit(g_flPanicRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flPanicRange[iIndex] = flClamp(g_flPanicRange[iIndex], 1.0, 9999999999.0)) : (g_flPanicRange2[iIndex] = flClamp(g_flPanicRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iPanicRangeChance[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Range Chance", 16)) : (g_iPanicRangeChance2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Range Chance", g_iPanicRangeChance[iIndex]));
-			main ? (g_iPanicRangeChance[iIndex] = iSetCellLimit(g_iPanicRangeChance[iIndex], 1, 9999999999)) : (g_iPanicRangeChance2[iIndex] = iSetCellLimit(g_iPanicRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iPanicRangeChance[iIndex] = iClamp(g_iPanicRangeChance[iIndex], 1, 9999999999)) : (g_iPanicRangeChance2[iIndex] = iClamp(g_iPanicRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

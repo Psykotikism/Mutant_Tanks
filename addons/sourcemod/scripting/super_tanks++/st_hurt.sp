@@ -119,23 +119,23 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iHurtAbility[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", 0)) : (g_iHurtAbility2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", g_iHurtAbility[iIndex]));
-			main ? (g_iHurtAbility[iIndex] = iSetCellLimit(g_iHurtAbility[iIndex], 0, 1)) : (g_iHurtAbility2[iIndex] = iSetCellLimit(g_iHurtAbility2[iIndex], 0, 1));
+			main ? (g_iHurtAbility[iIndex] = iClamp(g_iHurtAbility[iIndex], 0, 1)) : (g_iHurtAbility2[iIndex] = iClamp(g_iHurtAbility2[iIndex], 0, 1));
 			main ? (g_iHurtMessage[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Message", 0)) : (g_iHurtMessage2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Message", g_iHurtMessage[iIndex]));
-			main ? (g_iHurtMessage[iIndex] = iSetCellLimit(g_iHurtMessage[iIndex], 0, 3)) : (g_iHurtMessage2[iIndex] = iSetCellLimit(g_iHurtMessage2[iIndex], 0, 3));
+			main ? (g_iHurtMessage[iIndex] = iClamp(g_iHurtMessage[iIndex], 0, 3)) : (g_iHurtMessage2[iIndex] = iClamp(g_iHurtMessage2[iIndex], 0, 3));
 			main ? (g_iHurtChance[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Chance", 4)) : (g_iHurtChance2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Chance", g_iHurtChance[iIndex]));
-			main ? (g_iHurtChance[iIndex] = iSetCellLimit(g_iHurtChance[iIndex], 1, 9999999999)) : (g_iHurtChance2[iIndex] = iSetCellLimit(g_iHurtChance2[iIndex], 1, 9999999999));
+			main ? (g_iHurtChance[iIndex] = iClamp(g_iHurtChance[iIndex], 1, 9999999999)) : (g_iHurtChance2[iIndex] = iClamp(g_iHurtChance2[iIndex], 1, 9999999999));
 			main ? (g_iHurtDamage[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Damage", 1)) : (g_iHurtDamage2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Damage", g_iHurtDamage[iIndex]));
-			main ? (g_iHurtDamage[iIndex] = iSetCellLimit(g_iHurtDamage[iIndex], 1, 9999999999)) : (g_iHurtDamage2[iIndex] = iSetCellLimit(g_iHurtDamage2[iIndex], 1, 9999999999));
+			main ? (g_iHurtDamage[iIndex] = iClamp(g_iHurtDamage[iIndex], 1, 9999999999)) : (g_iHurtDamage2[iIndex] = iClamp(g_iHurtDamage2[iIndex], 1, 9999999999));
 			main ? (g_flHurtDuration[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Duration", 5.0)) : (g_flHurtDuration2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Duration", g_flHurtDuration[iIndex]));
-			main ? (g_flHurtDuration[iIndex] = flSetFloatLimit(g_flHurtDuration[iIndex], 0.1, 9999999999.0)) : (g_flHurtDuration2[iIndex] = flSetFloatLimit(g_flHurtDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flHurtDuration[iIndex] = flClamp(g_flHurtDuration[iIndex], 0.1, 9999999999.0)) : (g_flHurtDuration2[iIndex] = flClamp(g_flHurtDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iHurtHit[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit", 0)) : (g_iHurtHit2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit", g_iHurtHit[iIndex]));
-			main ? (g_iHurtHit[iIndex] = iSetCellLimit(g_iHurtHit[iIndex], 0, 1)) : (g_iHurtHit2[iIndex] = iSetCellLimit(g_iHurtHit2[iIndex], 0, 1));
+			main ? (g_iHurtHit[iIndex] = iClamp(g_iHurtHit[iIndex], 0, 1)) : (g_iHurtHit2[iIndex] = iClamp(g_iHurtHit2[iIndex], 0, 1));
 			main ? (g_iHurtHitMode[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit Mode", 0)) : (g_iHurtHitMode2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit Mode", g_iHurtHitMode[iIndex]));
-			main ? (g_iHurtHitMode[iIndex] = iSetCellLimit(g_iHurtHitMode[iIndex], 0, 2)) : (g_iHurtHitMode2[iIndex] = iSetCellLimit(g_iHurtHitMode2[iIndex], 0, 2));
+			main ? (g_iHurtHitMode[iIndex] = iClamp(g_iHurtHitMode[iIndex], 0, 2)) : (g_iHurtHitMode2[iIndex] = iClamp(g_iHurtHitMode2[iIndex], 0, 2));
 			main ? (g_flHurtRange[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Range", 150.0)) : (g_flHurtRange2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Range", g_flHurtRange[iIndex]));
-			main ? (g_flHurtRange[iIndex] = flSetFloatLimit(g_flHurtRange[iIndex], 1.0, 9999999999.0)) : (g_flHurtRange2[iIndex] = flSetFloatLimit(g_flHurtRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flHurtRange[iIndex] = flClamp(g_flHurtRange[iIndex], 1.0, 9999999999.0)) : (g_flHurtRange2[iIndex] = flClamp(g_flHurtRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iHurtRangeChance[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Range Chance", 16)) : (g_iHurtRangeChance2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Range Chance", g_iHurtRangeChance[iIndex]));
-			main ? (g_iHurtRangeChance[iIndex] = iSetCellLimit(g_iHurtRangeChance[iIndex], 1, 9999999999)) : (g_iHurtRangeChance2[iIndex] = iSetCellLimit(g_iHurtRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iHurtRangeChance[iIndex] = iClamp(g_iHurtRangeChance[iIndex], 1, 9999999999)) : (g_iHurtRangeChance2[iIndex] = iClamp(g_iHurtRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

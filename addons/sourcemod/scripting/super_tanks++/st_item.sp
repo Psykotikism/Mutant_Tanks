@@ -68,14 +68,14 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iItemAbility[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Enabled", 0)) : (g_iItemAbility2[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Enabled", g_iItemAbility[iIndex]));
-			main ? (g_iItemAbility[iIndex] = iSetCellLimit(g_iItemAbility[iIndex], 0, 1)) : (g_iItemAbility2[iIndex] = iSetCellLimit(g_iItemAbility2[iIndex], 0, 1));
+			main ? (g_iItemAbility[iIndex] = iClamp(g_iItemAbility[iIndex], 0, 1)) : (g_iItemAbility2[iIndex] = iClamp(g_iItemAbility2[iIndex], 0, 1));
 			main ? (g_iItemMessage[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Message", 0)) : (g_iItemMessage2[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Message", g_iItemMessage[iIndex]));
-			main ? (g_iItemMessage[iIndex] = iSetCellLimit(g_iItemMessage[iIndex], 0, 1)) : (g_iItemMessage2[iIndex] = iSetCellLimit(g_iItemMessage2[iIndex], 0, 1));
+			main ? (g_iItemMessage[iIndex] = iClamp(g_iItemMessage[iIndex], 0, 1)) : (g_iItemMessage2[iIndex] = iClamp(g_iItemMessage2[iIndex], 0, 1));
 			main ? (g_iItemChance[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Chance", 4)) : (g_iItemChance2[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Chance", g_iItemChance[iIndex]));
-			main ? (g_iItemChance[iIndex] = iSetCellLimit(g_iItemChance[iIndex], 1, 9999999999)) : (g_iItemChance2[iIndex] = iSetCellLimit(g_iItemChance2[iIndex], 1, 9999999999));
+			main ? (g_iItemChance[iIndex] = iClamp(g_iItemChance[iIndex], 1, 9999999999)) : (g_iItemChance2[iIndex] = iClamp(g_iItemChance2[iIndex], 1, 9999999999));
 			main ? (kvSuperTanks.GetString("Item Ability/Item Loadout", g_sItemLoadout[iIndex], sizeof(g_sItemLoadout[]), "rifle,pistol,first_aid_kit,pain_pills")) : (kvSuperTanks.GetString("Item Ability/Item Loadout", g_sItemLoadout2[iIndex], sizeof(g_sItemLoadout2[]), g_sItemLoadout[iIndex]));
 			main ? (g_iItemMode[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Mode", 0)) : (g_iItemMode2[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Mode", g_iItemMode[iIndex]));
-			main ? (g_iItemMode[iIndex] = iSetCellLimit(g_iItemMode[iIndex], 0, 1)) : (g_iItemMode2[iIndex] = iSetCellLimit(g_iItemMode2[iIndex], 0, 1));
+			main ? (g_iItemMode[iIndex] = iClamp(g_iItemMode[iIndex], 0, 1)) : (g_iItemMode2[iIndex] = iClamp(g_iItemMode2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
 		}
 	}

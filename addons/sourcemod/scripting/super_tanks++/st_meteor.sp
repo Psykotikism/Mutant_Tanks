@@ -85,13 +85,13 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (kvSuperTanks.GetString("General/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255")) : (kvSuperTanks.GetString("General/Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]));
 			main ? (g_iMeteorAbility[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", 0)) : (g_iMeteorAbility2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", g_iMeteorAbility[iIndex]));
-			main ? (g_iMeteorAbility[iIndex] = iSetCellLimit(g_iMeteorAbility[iIndex], 0, 1)) : (g_iMeteorAbility2[iIndex] = iSetCellLimit(g_iMeteorAbility2[iIndex], 0, 1));
+			main ? (g_iMeteorAbility[iIndex] = iClamp(g_iMeteorAbility[iIndex], 0, 1)) : (g_iMeteorAbility2[iIndex] = iClamp(g_iMeteorAbility2[iIndex], 0, 1));
 			main ? (g_iMeteorMessage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", 0)) : (g_iMeteorMessage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", g_iMeteorMessage[iIndex]));
-			main ? (g_iMeteorMessage[iIndex] = iSetCellLimit(g_iMeteorMessage[iIndex], 0, 1)) : (g_iMeteorMessage2[iIndex] = iSetCellLimit(g_iMeteorMessage2[iIndex], 0, 1));
+			main ? (g_iMeteorMessage[iIndex] = iClamp(g_iMeteorMessage[iIndex], 0, 1)) : (g_iMeteorMessage2[iIndex] = iClamp(g_iMeteorMessage2[iIndex], 0, 1));
 			main ? (g_iMeteorChance[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", 4)) : (g_iMeteorChance2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", g_iMeteorChance[iIndex]));
-			main ? (g_iMeteorChance[iIndex] = iSetCellLimit(g_iMeteorChance[iIndex], 1, 9999999999)) : (g_iMeteorChance2[iIndex] = iSetCellLimit(g_iMeteorChance2[iIndex], 1, 9999999999));
+			main ? (g_iMeteorChance[iIndex] = iClamp(g_iMeteorChance[iIndex], 1, 9999999999)) : (g_iMeteorChance2[iIndex] = iClamp(g_iMeteorChance2[iIndex], 1, 9999999999));
 			main ? (g_iMeteorDamage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Damage", 5)) : (g_iMeteorDamage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Damage", g_iMeteorDamage[iIndex]));
-			main ? (g_iMeteorDamage[iIndex] = iSetCellLimit(g_iMeteorDamage[iIndex], 1, 9999999999)) : (g_iMeteorDamage2[iIndex] = iSetCellLimit(g_iMeteorDamage2[iIndex], 1, 9999999999));
+			main ? (g_iMeteorDamage[iIndex] = iClamp(g_iMeteorDamage[iIndex], 1, 9999999999)) : (g_iMeteorDamage2[iIndex] = iClamp(g_iMeteorDamage2[iIndex], 1, 9999999999));
 			main ? (kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius[iIndex], sizeof(g_sMeteorRadius[]), "-180.0,180.0")) : (kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius2[iIndex], sizeof(g_sMeteorRadius2[]), g_sMeteorRadius[iIndex]));
 			kvSuperTanks.Rewind();
 		}
@@ -221,23 +221,23 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -200.0;
 	TrimString(sRadius[1]);
 	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
-	flMin = flSetFloatLimit(flMin, -200.0, 0.0), flMax = flSetFloatLimit(flMax, 0.0, 200.0);
+	flMin = flClamp(flMin, -200.0, 0.0), flMax = flClamp(flMax, 0.0, 200.0);
 	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
 	TrimString(sPropsColors);
 	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 	ExplodeString(sSet[3], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 	TrimString(sRGB[0]);
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-	iRed = iSetCellLimit(iRed, 0, 255);
+	iRed = iClamp(iRed, 0, 255);
 	TrimString(sRGB[1]);
 	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-	iGreen = iSetCellLimit(iGreen, 0, 255);
+	iGreen = iClamp(iGreen, 0, 255);
 	TrimString(sRGB[2]);
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-	iBlue = iSetCellLimit(iBlue, 0, 255);
+	iBlue = iClamp(iBlue, 0, 255);
 	TrimString(sRGB[3]);
 	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
-	iAlpha = iSetCellLimit(iAlpha, 0, 255);
+	iAlpha = iClamp(iAlpha, 0, 255);
 	if ((GetEngineTime() - flTime) > 5.0)
 	{
 		g_bMeteor[iTank] = false;

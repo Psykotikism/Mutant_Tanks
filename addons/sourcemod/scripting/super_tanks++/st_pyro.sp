@@ -131,15 +131,15 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", 1.0)) : (g_flRunSpeed2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", g_flRunSpeed[iIndex]));
-			main ? (g_flRunSpeed[iIndex] = flSetFloatLimit(g_flRunSpeed[iIndex], 0.1, 3.0)) : (g_flRunSpeed2[iIndex] = flSetFloatLimit(g_flRunSpeed2[iIndex], 0.1, 3.0));
+			main ? (g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], 0.1, 3.0)) : (g_flRunSpeed2[iIndex] = flClamp(g_flRunSpeed2[iIndex], 0.1, 3.0));
 			main ? (g_iPyroAbility[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Enabled", 0)) : (g_iPyroAbility2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Enabled", g_iPyroAbility[iIndex]));
-			main ? (g_iPyroAbility[iIndex] = iSetCellLimit(g_iPyroAbility[iIndex], 0, 1)) : (g_iPyroAbility2[iIndex] = iSetCellLimit(g_iPyroAbility2[iIndex], 0, 1));
+			main ? (g_iPyroAbility[iIndex] = iClamp(g_iPyroAbility[iIndex], 0, 1)) : (g_iPyroAbility2[iIndex] = iClamp(g_iPyroAbility2[iIndex], 0, 1));
 			main ? (g_iPyroMessage[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Message", 0)) : (g_iPyroMessage2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Message", g_iPyroMessage[iIndex]));
-			main ? (g_iPyroMessage[iIndex] = iSetCellLimit(g_iPyroMessage[iIndex], 0, 1)) : (g_iPyroMessage2[iIndex] = iSetCellLimit(g_iPyroMessage2[iIndex], 0, 1));
+			main ? (g_iPyroMessage[iIndex] = iClamp(g_iPyroMessage[iIndex], 0, 1)) : (g_iPyroMessage2[iIndex] = iClamp(g_iPyroMessage2[iIndex], 0, 1));
 			main ? (g_flPyroBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", 1.0)) : (g_flPyroBoost2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", g_flPyroBoost[iIndex]));
-			main ? (g_flPyroBoost[iIndex] = flSetFloatLimit(g_flPyroBoost[iIndex], 0.1, 3.0)) : (g_flPyroBoost2[iIndex] = flSetFloatLimit(g_flPyroBoost2[iIndex], 0.1, 3.0));
+			main ? (g_flPyroBoost[iIndex] = flClamp(g_flPyroBoost[iIndex], 0.1, 3.0)) : (g_flPyroBoost2[iIndex] = flClamp(g_flPyroBoost2[iIndex], 0.1, 3.0));
 			main ? (g_iPyroMode[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Pyro Mode", 0)) : (g_iPyroMode2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Pyro Mode", g_iPyroMode[iIndex]));
-			main ? (g_iPyroMode[iIndex] = iSetCellLimit(g_iPyroMode[iIndex], 0, 1)) : (g_iPyroMode2[iIndex] = iSetCellLimit(g_iPyroMode2[iIndex], 0, 1));
+			main ? (g_iPyroMode[iIndex] = iClamp(g_iPyroMode[iIndex], 0, 1)) : (g_iPyroMode2[iIndex] = iClamp(g_iPyroMode2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
 		}
 	}

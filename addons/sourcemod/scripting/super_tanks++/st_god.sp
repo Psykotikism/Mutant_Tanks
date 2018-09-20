@@ -83,13 +83,13 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iGodAbility[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Enabled", 0)) : (g_iGodAbility2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Enabled", g_iGodAbility[iIndex]));
-			main ? (g_iGodAbility[iIndex] = iSetCellLimit(g_iGodAbility[iIndex], 0, 1)) : (g_iGodAbility2[iIndex] = iSetCellLimit(g_iGodAbility2[iIndex], 0, 1));
+			main ? (g_iGodAbility[iIndex] = iClamp(g_iGodAbility[iIndex], 0, 1)) : (g_iGodAbility2[iIndex] = iClamp(g_iGodAbility2[iIndex], 0, 1));
 			main ? (g_iGodMessage[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", 0)) : (g_iGodMessage2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", g_iGodMessage[iIndex]));
-			main ? (g_iGodMessage[iIndex] = iSetCellLimit(g_iGodMessage[iIndex], 0, 1)) : (g_iGodMessage2[iIndex] = iSetCellLimit(g_iGodMessage2[iIndex], 0, 1));
+			main ? (g_iGodMessage[iIndex] = iClamp(g_iGodMessage[iIndex], 0, 1)) : (g_iGodMessage2[iIndex] = iClamp(g_iGodMessage2[iIndex], 0, 1));
 			main ? (g_iGodChance[iIndex] = kvSuperTanks.GetNum("God Ability/God Chance", 4)) : (g_iGodChance2[iIndex] = kvSuperTanks.GetNum("God Ability/God Chance", g_iGodChance[iIndex]));
-			main ? (g_iGodChance[iIndex] = iSetCellLimit(g_iGodChance[iIndex], 1, 9999999999)) : (g_iGodChance2[iIndex] = iSetCellLimit(g_iGodChance2[iIndex], 1, 9999999999));
+			main ? (g_iGodChance[iIndex] = iClamp(g_iGodChance[iIndex], 1, 9999999999)) : (g_iGodChance2[iIndex] = iClamp(g_iGodChance2[iIndex], 1, 9999999999));
 			main ? (g_flGodDuration[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", 5.0)) : (g_flGodDuration2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", g_flGodDuration[iIndex]));
-			main ? (g_flGodDuration[iIndex] = flSetFloatLimit(g_flGodDuration[iIndex], 0.1, 9999999999.0)) : (g_flGodDuration2[iIndex] = flSetFloatLimit(g_flGodDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flGodDuration[iIndex] = flClamp(g_flGodDuration[iIndex], 0.1, 9999999999.0)) : (g_flGodDuration2[iIndex] = flClamp(g_flGodDuration2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}

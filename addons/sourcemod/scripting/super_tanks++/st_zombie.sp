@@ -83,13 +83,13 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iZombieAbility[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Enabled", 0)) : (g_iZombieAbility2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Enabled", g_iZombieAbility[iIndex]));
-			main ? (g_iZombieAbility[iIndex] = iSetCellLimit(g_iZombieAbility[iIndex], 0, 1)) : (g_iZombieAbility2[iIndex] = iSetCellLimit(g_iZombieAbility2[iIndex], 0, 1));
+			main ? (g_iZombieAbility[iIndex] = iClamp(g_iZombieAbility[iIndex], 0, 1)) : (g_iZombieAbility2[iIndex] = iClamp(g_iZombieAbility2[iIndex], 0, 1));
 			main ? (g_iZombieMessage[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Message", 0)) : (g_iZombieMessage2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Message", g_iZombieMessage[iIndex]));
-			main ? (g_iZombieMessage[iIndex] = iSetCellLimit(g_iZombieMessage[iIndex], 0, 1)) : (g_iZombieMessage2[iIndex] = iSetCellLimit(g_iZombieMessage2[iIndex], 0, 1));
+			main ? (g_iZombieMessage[iIndex] = iClamp(g_iZombieMessage[iIndex], 0, 1)) : (g_iZombieMessage2[iIndex] = iClamp(g_iZombieMessage2[iIndex], 0, 1));
 			main ? (g_iZombieAmount[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", 10)) : (g_iZombieAmount2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", g_iZombieAmount[iIndex]));
-			main ? (g_iZombieAmount[iIndex] = iSetCellLimit(g_iZombieAmount[iIndex], 1, 100)) : (g_iZombieAmount2[iIndex] = iSetCellLimit(g_iZombieAmount2[iIndex], 1, 100));
+			main ? (g_iZombieAmount[iIndex] = iClamp(g_iZombieAmount[iIndex], 1, 100)) : (g_iZombieAmount2[iIndex] = iClamp(g_iZombieAmount2[iIndex], 1, 100));
 			main ? (g_flZombieInterval[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Interval", 5.0)) : (g_flZombieInterval2[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Interval", g_flZombieInterval[iIndex]));
-			main ? (g_flZombieInterval[iIndex] = flSetFloatLimit(g_flZombieInterval[iIndex], 0.1, 9999999999.0)) : (g_flZombieInterval2[iIndex] = flSetFloatLimit(g_flZombieInterval2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flZombieInterval[iIndex] = flClamp(g_flZombieInterval[iIndex], 0.1, 9999999999.0)) : (g_flZombieInterval2[iIndex] = flClamp(g_flZombieInterval2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}

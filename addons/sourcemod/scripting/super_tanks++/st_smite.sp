@@ -114,19 +114,19 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iSmiteAbility[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", 0)) : (g_iSmiteAbility2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", g_iSmiteAbility[iIndex]));
-			main ? (g_iSmiteAbility[iIndex] = iSetCellLimit(g_iSmiteAbility[iIndex], 0, 1)) : (g_iSmiteAbility2[iIndex] = iSetCellLimit(g_iSmiteAbility2[iIndex], 0, 1));
+			main ? (g_iSmiteAbility[iIndex] = iClamp(g_iSmiteAbility[iIndex], 0, 1)) : (g_iSmiteAbility2[iIndex] = iClamp(g_iSmiteAbility2[iIndex], 0, 1));
 			main ? (g_iSmiteMessage[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Message", 0)) : (g_iSmiteMessage2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Message", g_iSmiteMessage[iIndex]));
-			main ? (g_iSmiteMessage[iIndex] = iSetCellLimit(g_iSmiteMessage[iIndex], 0, 3)) : (g_iSmiteMessage2[iIndex] = iSetCellLimit(g_iSmiteMessage2[iIndex], 0, 3));
+			main ? (g_iSmiteMessage[iIndex] = iClamp(g_iSmiteMessage[iIndex], 0, 3)) : (g_iSmiteMessage2[iIndex] = iClamp(g_iSmiteMessage2[iIndex], 0, 3));
 			main ? (g_iSmiteChance[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Chance", 4)) : (g_iSmiteChance2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Chance", g_iSmiteChance[iIndex]));
-			main ? (g_iSmiteChance[iIndex] = iSetCellLimit(g_iSmiteChance[iIndex], 1, 9999999999)) : (g_iSmiteChance2[iIndex] = iSetCellLimit(g_iSmiteChance2[iIndex], 1, 9999999999));
+			main ? (g_iSmiteChance[iIndex] = iClamp(g_iSmiteChance[iIndex], 1, 9999999999)) : (g_iSmiteChance2[iIndex] = iClamp(g_iSmiteChance2[iIndex], 1, 9999999999));
 			main ? (g_iSmiteHit[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit", 0)) : (g_iSmiteHit2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit", g_iSmiteHit[iIndex]));
-			main ? (g_iSmiteHit[iIndex] = iSetCellLimit(g_iSmiteHit[iIndex], 0, 1)) : (g_iSmiteHit2[iIndex] = iSetCellLimit(g_iSmiteHit2[iIndex], 0, 1));
+			main ? (g_iSmiteHit[iIndex] = iClamp(g_iSmiteHit[iIndex], 0, 1)) : (g_iSmiteHit2[iIndex] = iClamp(g_iSmiteHit2[iIndex], 0, 1));
 			main ? (g_iSmiteHitMode[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit Mode", 0)) : (g_iSmiteHitMode2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit Mode", g_iSmiteHitMode[iIndex]));
-			main ? (g_iSmiteHitMode[iIndex] = iSetCellLimit(g_iSmiteHitMode[iIndex], 0, 2)) : (g_iSmiteHitMode2[iIndex] = iSetCellLimit(g_iSmiteHitMode2[iIndex], 0, 2));
+			main ? (g_iSmiteHitMode[iIndex] = iClamp(g_iSmiteHitMode[iIndex], 0, 2)) : (g_iSmiteHitMode2[iIndex] = iClamp(g_iSmiteHitMode2[iIndex], 0, 2));
 			main ? (g_flSmiteRange[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range", 150.0)) : (g_flSmiteRange2[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range", g_flSmiteRange[iIndex]));
-			main ? (g_flSmiteRange[iIndex] = flSetFloatLimit(g_flSmiteRange[iIndex], 1.0, 9999999999.0)) : (g_flSmiteRange2[iIndex] = flSetFloatLimit(g_flSmiteRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flSmiteRange[iIndex] = flClamp(g_flSmiteRange[iIndex], 1.0, 9999999999.0)) : (g_flSmiteRange2[iIndex] = flClamp(g_flSmiteRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iSmiteRangeChance[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Range Chance", 16)) : (g_iSmiteRangeChance2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Range Chance", g_iSmiteRangeChance[iIndex]));
-			main ? (g_iSmiteRangeChance[iIndex] = iSetCellLimit(g_iSmiteRangeChance[iIndex], 1, 9999999999)) : (g_iSmiteRangeChance2[iIndex] = iSetCellLimit(g_iSmiteRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iSmiteRangeChance[iIndex] = iClamp(g_iSmiteRangeChance[iIndex], 1, 9999999999)) : (g_iSmiteRangeChance2[iIndex] = iClamp(g_iSmiteRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}

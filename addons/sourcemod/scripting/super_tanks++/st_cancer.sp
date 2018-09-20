@@ -113,19 +113,19 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
 			main ? (g_iCancerAbility[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Enabled", 0)) : (g_iCancerAbility2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Enabled", g_iCancerAbility[iIndex]));
-			main ? (g_iCancerAbility[iIndex] = iSetCellLimit(g_iCancerAbility[iIndex], 0, 1)) : (g_iCancerAbility2[iIndex] = iSetCellLimit(g_iCancerAbility2[iIndex], 0, 1));
+			main ? (g_iCancerAbility[iIndex] = iClamp(g_iCancerAbility[iIndex], 0, 1)) : (g_iCancerAbility2[iIndex] = iClamp(g_iCancerAbility2[iIndex], 0, 1));
 			main ? (g_iCancerMessage[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Message", 0)) : (g_iCancerMessage2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Ability Message", g_iCancerMessage[iIndex]));
-			main ? (g_iCancerMessage[iIndex] = iSetCellLimit(g_iCancerMessage[iIndex], 0, 3)) : (g_iCancerMessage2[iIndex] = iSetCellLimit(g_iCancerMessage2[iIndex], 0, 3));
+			main ? (g_iCancerMessage[iIndex] = iClamp(g_iCancerMessage[iIndex], 0, 3)) : (g_iCancerMessage2[iIndex] = iClamp(g_iCancerMessage2[iIndex], 0, 3));
 			main ? (g_iCancerChance[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Chance", 4)) : (g_iCancerChance2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Chance", g_iCancerChance[iIndex]));
-			main ? (g_iCancerChance[iIndex] = iSetCellLimit(g_iCancerChance[iIndex], 1, 9999999999)) : (g_iCancerChance2[iIndex] = iSetCellLimit(g_iCancerChance2[iIndex], 1, 9999999999));
+			main ? (g_iCancerChance[iIndex] = iClamp(g_iCancerChance[iIndex], 1, 9999999999)) : (g_iCancerChance2[iIndex] = iClamp(g_iCancerChance2[iIndex], 1, 9999999999));
 			main ? (g_iCancerHit[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Hit", 0)) : (g_iCancerHit2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Hit", g_iCancerHit[iIndex]));
-			main ? (g_iCancerHit[iIndex] = iSetCellLimit(g_iCancerHit[iIndex], 0, 1)) : (g_iCancerHit2[iIndex] = iSetCellLimit(g_iCancerHit2[iIndex], 0, 1));
+			main ? (g_iCancerHit[iIndex] = iClamp(g_iCancerHit[iIndex], 0, 1)) : (g_iCancerHit2[iIndex] = iClamp(g_iCancerHit2[iIndex], 0, 1));
 			main ? (g_iCancerHitMode[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Hit Mode", 0)) : (g_iCancerHitMode2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Hit Mode", g_iCancerHitMode[iIndex]));
-			main ? (g_iCancerHitMode[iIndex] = iSetCellLimit(g_iCancerHitMode[iIndex], 0, 2)) : (g_iCancerHitMode2[iIndex] = iSetCellLimit(g_iCancerHitMode2[iIndex], 0, 2));
+			main ? (g_iCancerHitMode[iIndex] = iClamp(g_iCancerHitMode[iIndex], 0, 2)) : (g_iCancerHitMode2[iIndex] = iClamp(g_iCancerHitMode2[iIndex], 0, 2));
 			main ? (g_flCancerRange[iIndex] = kvSuperTanks.GetFloat("Cancer Ability/Cancer Range", 150.0)) : (g_flCancerRange2[iIndex] = kvSuperTanks.GetFloat("Cancer Ability/Cancer Range", g_flCancerRange[iIndex]));
-			main ? (g_flCancerRange[iIndex] = flSetFloatLimit(g_flCancerRange[iIndex], 1.0, 9999999999.0)) : (g_flCancerRange2[iIndex] = flSetFloatLimit(g_flCancerRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flCancerRange[iIndex] = flClamp(g_flCancerRange[iIndex], 1.0, 9999999999.0)) : (g_flCancerRange2[iIndex] = flClamp(g_flCancerRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iCancerRangeChance[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Range Chance", 16)) : (g_iCancerRangeChance2[iIndex] = kvSuperTanks.GetNum("Cancer Ability/Cancer Range Chance", g_iCancerRangeChance[iIndex]));
-			main ? (g_iCancerRangeChance[iIndex] = iSetCellLimit(g_iCancerRangeChance[iIndex], 1, 9999999999)) : (g_iCancerRangeChance2[iIndex] = iSetCellLimit(g_iCancerRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iCancerRangeChance[iIndex] = iClamp(g_iCancerRangeChance[iIndex], 1, 9999999999)) : (g_iCancerRangeChance2[iIndex] = iClamp(g_iCancerRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -169,13 +169,13 @@ stock void vCancerHit(int client, int owner, int chance, int enabled, int messag
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 		TrimString(sRGB[0]);
 		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-		iRed = iSetCellLimit(iRed, 0, 255);
+		iRed = iClamp(iRed, 0, 255);
 		TrimString(sRGB[1]);
 		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-		iGreen = iSetCellLimit(iGreen, 0, 255);
+		iGreen = iClamp(iGreen, 0, 255);
 		TrimString(sRGB[2]);
 		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-		iBlue = iSetCellLimit(iBlue, 0, 255);
+		iBlue = iClamp(iBlue, 0, 255);
 		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
 		vFade(client, 800, 300, iRed, iGreen, iBlue);
 		if (iCancerMessage == message || iCancerMessage == 3)

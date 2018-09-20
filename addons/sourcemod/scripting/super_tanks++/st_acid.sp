@@ -139,21 +139,21 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iAcidAbility[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", 0)) : (g_iAcidAbility2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", g_iAcidAbility[iIndex]));
-			main ? (g_iAcidAbility[iIndex] = iSetCellLimit(g_iAcidAbility[iIndex], 0, 1)) : (g_iAcidAbility2[iIndex] = iSetCellLimit(g_iAcidAbility2[iIndex], 0, 1));
+			main ? (g_iAcidAbility[iIndex] = iClamp(g_iAcidAbility[iIndex], 0, 1)) : (g_iAcidAbility2[iIndex] = iClamp(g_iAcidAbility2[iIndex], 0, 1));
 			main ? (g_iAcidMessage[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", 0)) : (g_iAcidMessage2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", g_iAcidMessage[iIndex]));
-			main ? (g_iAcidMessage[iIndex] = iSetCellLimit(g_iAcidMessage[iIndex], 0, 3)) : (g_iAcidMessage2[iIndex] = iSetCellLimit(g_iAcidMessage2[iIndex], 0, 3));
+			main ? (g_iAcidMessage[iIndex] = iClamp(g_iAcidMessage[iIndex], 0, 3)) : (g_iAcidMessage2[iIndex] = iClamp(g_iAcidMessage2[iIndex], 0, 3));
 			main ? (g_iAcidChance[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", 4)) : (g_iAcidChance2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", g_iAcidChance[iIndex]));
-			main ? (g_iAcidChance[iIndex] = iSetCellLimit(g_iAcidChance[iIndex], 1, 9999999999)) : (g_iAcidChance2[iIndex] = iSetCellLimit(g_iAcidChance2[iIndex], 1, 9999999999));
+			main ? (g_iAcidChance[iIndex] = iClamp(g_iAcidChance[iIndex], 1, 9999999999)) : (g_iAcidChance2[iIndex] = iClamp(g_iAcidChance2[iIndex], 1, 9999999999));
 			main ? (g_iAcidHit[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", 0)) : (g_iAcidHit2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", g_iAcidHit[iIndex]));
-			main ? (g_iAcidHit[iIndex] = iSetCellLimit(g_iAcidHit[iIndex], 0, 1)) : (g_iAcidHit2[iIndex] = iSetCellLimit(g_iAcidHit2[iIndex], 0, 1));
+			main ? (g_iAcidHit[iIndex] = iClamp(g_iAcidHit[iIndex], 0, 1)) : (g_iAcidHit2[iIndex] = iClamp(g_iAcidHit2[iIndex], 0, 1));
 			main ? (g_iAcidHitMode[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit Mode", 0)) : (g_iAcidHitMode2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit Mode", g_iAcidHitMode[iIndex]));
-			main ? (g_iAcidHitMode[iIndex] = iSetCellLimit(g_iAcidHitMode[iIndex], 0, 2)) : (g_iAcidHitMode2[iIndex] = iSetCellLimit(g_iAcidHitMode2[iIndex], 0, 2));
+			main ? (g_iAcidHitMode[iIndex] = iClamp(g_iAcidHitMode[iIndex], 0, 2)) : (g_iAcidHitMode2[iIndex] = iClamp(g_iAcidHitMode2[iIndex], 0, 2));
 			main ? (g_flAcidRange[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", 150.0)) : (g_flAcidRange2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", g_flAcidRange[iIndex]));
-			main ? (g_flAcidRange[iIndex] = flSetFloatLimit(g_flAcidRange[iIndex], 1.0, 9999999999.0)) : (g_flAcidRange2[iIndex] = flSetFloatLimit(g_flAcidRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flAcidRange[iIndex] = flClamp(g_flAcidRange[iIndex], 1.0, 9999999999.0)) : (g_flAcidRange2[iIndex] = flClamp(g_flAcidRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iAcidRangeChance[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Range Chance", 16)) : (g_iAcidRangeChance2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Range Chance", g_iAcidRangeChance[iIndex]));
-			main ? (g_iAcidRangeChance[iIndex] = iSetCellLimit(g_iAcidRangeChance[iIndex], 1, 9999999999)) : (g_iAcidRangeChance2[iIndex] = iSetCellLimit(g_iAcidRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iAcidRangeChance[iIndex] = iClamp(g_iAcidRangeChance[iIndex], 1, 9999999999)) : (g_iAcidRangeChance2[iIndex] = iClamp(g_iAcidRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_iAcidRock[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", 0)) : (g_iAcidRock2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", g_iAcidRock[iIndex]));
-			main ? (g_iAcidRock[iIndex] = iSetCellLimit(g_iAcidRock[iIndex], 0, 1)) : (g_iAcidRock2[iIndex] = iSetCellLimit(g_iAcidRock2[iIndex], 0, 1));
+			main ? (g_iAcidRock[iIndex] = iClamp(g_iAcidRock[iIndex], 0, 1)) : (g_iAcidRock2[iIndex] = iClamp(g_iAcidRock2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
 		}
 	}

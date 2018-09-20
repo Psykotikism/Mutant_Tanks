@@ -128,23 +128,23 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iBuryAbility[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", 0)) : (g_iBuryAbility2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", g_iBuryAbility[iIndex]));
-			main ? (g_iBuryAbility[iIndex] = iSetCellLimit(g_iBuryAbility[iIndex], 0, 1)) : (g_iBuryAbility2[iIndex] = iSetCellLimit(g_iBuryAbility2[iIndex], 0, 1));
+			main ? (g_iBuryAbility[iIndex] = iClamp(g_iBuryAbility[iIndex], 0, 1)) : (g_iBuryAbility2[iIndex] = iClamp(g_iBuryAbility2[iIndex], 0, 1));
 			main ? (g_iBuryMessage[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Message", 0)) : (g_iBuryMessage2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Message", g_iBuryMessage[iIndex]));
-			main ? (g_iBuryMessage[iIndex] = iSetCellLimit(g_iBuryMessage[iIndex], 0, 3)) : (g_iBuryMessage2[iIndex] = iSetCellLimit(g_iBuryMessage2[iIndex], 0, 3));
+			main ? (g_iBuryMessage[iIndex] = iClamp(g_iBuryMessage[iIndex], 0, 3)) : (g_iBuryMessage2[iIndex] = iClamp(g_iBuryMessage2[iIndex], 0, 3));
 			main ? (g_iBuryChance[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Chance", 4)) : (g_iBuryChance2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Chance", g_iBuryChance[iIndex]));
-			main ? (g_iBuryChance[iIndex] = iSetCellLimit(g_iBuryChance[iIndex], 1, 9999999999)) : (g_iBuryChance2[iIndex] = iSetCellLimit(g_iBuryChance2[iIndex], 1, 9999999999));
+			main ? (g_iBuryChance[iIndex] = iClamp(g_iBuryChance[iIndex], 1, 9999999999)) : (g_iBuryChance2[iIndex] = iClamp(g_iBuryChance2[iIndex], 1, 9999999999));
 			main ? (g_flBuryDuration[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Duration", 5.0)) : (g_flBuryDuration2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Duration", g_flBuryDuration[iIndex]));
-			main ? (g_flBuryDuration[iIndex] = flSetFloatLimit(g_flBuryDuration[iIndex], 0.1, 9999999999.0)) : (g_flBuryDuration2[iIndex] = flSetFloatLimit(g_flBuryDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flBuryDuration[iIndex] = flClamp(g_flBuryDuration[iIndex], 0.1, 9999999999.0)) : (g_flBuryDuration2[iIndex] = flClamp(g_flBuryDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flBuryHeight[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Height", 50.0)) : (g_flBuryHeight2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Height", g_flBuryHeight[iIndex]));
-			main ? (g_flBuryHeight[iIndex] = flSetFloatLimit(g_flBuryHeight[iIndex], 0.1, 9999999999.0)) : (g_flBuryHeight2[iIndex] = flSetFloatLimit(g_flBuryHeight2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flBuryHeight[iIndex] = flClamp(g_flBuryHeight[iIndex], 0.1, 9999999999.0)) : (g_flBuryHeight2[iIndex] = flClamp(g_flBuryHeight2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iBuryHit[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Hit", 0)) : (g_iBuryHit2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Hit", g_iBuryHit[iIndex]));
-			main ? (g_iBuryHit[iIndex] = iSetCellLimit(g_iBuryHit[iIndex], 0, 1)) : (g_iBuryHit2[iIndex] = iSetCellLimit(g_iBuryHit2[iIndex], 0, 1));
+			main ? (g_iBuryHit[iIndex] = iClamp(g_iBuryHit[iIndex], 0, 1)) : (g_iBuryHit2[iIndex] = iClamp(g_iBuryHit2[iIndex], 0, 1));
 			main ? (g_iBuryHitMode[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Hit Mode", 0)) : (g_iBuryHitMode2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Hit Mode", g_iBuryHitMode[iIndex]));
-			main ? (g_iBuryHitMode[iIndex] = iSetCellLimit(g_iBuryHitMode[iIndex], 0, 2)) : (g_iBuryHitMode2[iIndex] = iSetCellLimit(g_iBuryHitMode2[iIndex], 0, 2));
+			main ? (g_iBuryHitMode[iIndex] = iClamp(g_iBuryHitMode[iIndex], 0, 2)) : (g_iBuryHitMode2[iIndex] = iClamp(g_iBuryHitMode2[iIndex], 0, 2));
 			main ? (g_flBuryRange[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Range", 150.0)) : (g_flBuryRange2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Range", g_flBuryRange[iIndex]));
-			main ? (g_flBuryRange[iIndex] = flSetFloatLimit(g_flBuryRange[iIndex], 1.0, 9999999999.0)) : (g_flBuryRange2[iIndex] = flSetFloatLimit(g_flBuryRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flBuryRange[iIndex] = flClamp(g_flBuryRange[iIndex], 1.0, 9999999999.0)) : (g_flBuryRange2[iIndex] = flClamp(g_flBuryRange2[iIndex], 1.0, 9999999999.0));
 			main ? (g_iBuryRangeChance[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Range Chance", 16)) : (g_iBuryRangeChance2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Range Chance", g_iBuryRangeChance[iIndex]));
-			main ? (g_iBuryRangeChance[iIndex] = iSetCellLimit(g_iBuryRangeChance[iIndex], 1, 9999999999)) : (g_iBuryRangeChance2[iIndex] = iSetCellLimit(g_iBuryRangeChance2[iIndex], 1, 9999999999));
+			main ? (g_iBuryRangeChance[iIndex] = iClamp(g_iBuryRangeChance[iIndex], 1, 9999999999)) : (g_iBuryRangeChance2[iIndex] = iClamp(g_iBuryRangeChance2[iIndex], 1, 9999999999));
 			kvSuperTanks.Rewind();
 		}
 	}
