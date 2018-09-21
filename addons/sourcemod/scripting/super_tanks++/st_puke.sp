@@ -66,6 +66,7 @@ public void OnPluginStart()
 	{
 		PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", ST_PREFIX);
 	}
+	vPrecacheParticle(PARTICLE_BLOOD);
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -145,6 +146,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (iPukeAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
+			vAttachParticle(iTank, PARTICLE_BLOOD, 0.1, 0.0);
 			float flTankPos[3];
 			GetClientAbsOrigin(iTank, flTankPos);
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
