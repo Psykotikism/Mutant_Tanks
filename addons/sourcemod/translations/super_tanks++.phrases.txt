@@ -252,7 +252,7 @@
 	"Ghost3"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1}'s is visible again!"
+		"en"			"{1} is visible again!"
 	}
 	"God"
 	{

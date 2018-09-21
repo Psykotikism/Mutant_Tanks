@@ -142,18 +142,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int entity)
-{
-	g_bRock[client] = false;
-	RemoveEntity(entity);
-	if (iRockMessage(client) == 1)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(client, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Rock2", sTankName);
-	}
-}
-
 stock int iRockAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iRockAbility[ST_TankType(client)] : g_iRockAbility2[ST_TankType(client)];
@@ -175,7 +163,6 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iTank, iRock);
 		return Plugin_Stop;
 	}
 	float flPos[3];
@@ -184,7 +171,14 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 		flRockDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flRockDuration[ST_TankType(iTank)] : g_flRockDuration2[ST_TankType(iTank)];
 	if (iRockAbility(iTank) == 0 || (flTime + flRockDuration) < GetEngineTime())
 	{
-		vReset2(iTank, iRock);
+		g_bRock[iTank] = false;
+		RemoveEntity(iRock);
+		if (iRockMessage(iTank) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Rock2", sTankName);
+		}
 		return Plugin_Stop;
 	}
 	char sRadius[2][6], sRockRadius[11];

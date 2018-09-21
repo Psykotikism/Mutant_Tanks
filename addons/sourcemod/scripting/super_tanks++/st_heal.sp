@@ -239,20 +239,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client)
-{
-	g_bHeal[client] = false;
-	switch (iHealMessage(client))
-	{
-		case 3, 5, 6, 7:
-		{
-			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Heal3", sTankName);
-		}
-	}
-}
-
 stock int iHealAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iHealAbility[ST_TankType(client)] : g_iHealAbility2[ST_TankType(client)];
@@ -283,12 +269,21 @@ public Action tTimerHeal(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iTank);
+		g_bHeal[iTank] = false;
 		return Plugin_Stop;
 	}
 	if (iHealAbility(iTank) != 2 && iHealAbility(iTank) != 3)
 	{
-		vReset2(iTank);
+		g_bHeal[iTank] = false;
+		switch (iHealMessage(iTank))
+		{
+			case 3, 5, 6, 7:
+			{
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(iTank, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Heal3", sTankName);
+			}
+		}
 		return Plugin_Stop;
 	}
 	int iType, iSpecial = -1;

@@ -125,17 +125,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client)
-{
-	g_bRegen[client] = false;
-	if (iRegenMessage(client) == 1)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(client, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Regen2", sTankName);
-	}
-}
-
 stock int iRegenAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iRegenAbility[ST_TankType(client)] : g_iRegenAbility2[ST_TankType(client)];
@@ -151,12 +140,18 @@ public Action tTimerRegen(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iTank);
+		g_bRegen[iTank] = false;
 		return Plugin_Stop;
 	}
 	if (iRegenAbility(iTank) == 0)
 	{
-		vReset2(iTank);
+		g_bRegen[iTank] = false;
+		if (iRegenMessage(iTank) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Regen2", sTankName);
+		}
 		return Plugin_Stop;
 	}
 	int iHealth = GetClientHealth(iTank),

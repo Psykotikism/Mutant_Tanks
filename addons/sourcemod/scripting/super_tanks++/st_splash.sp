@@ -139,17 +139,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client)
-{
-	g_bSplash[client] = false;
-	if (iSplashMessage(client) == 1)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(client, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Splash2", sTankName);
-	}
-}
-
 stock int iSplashAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iSplashAbility[ST_TankType(client)] : g_iSplashAbility2[ST_TankType(client)];
@@ -170,12 +159,18 @@ public Action tTimerSplash(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iTank);
+		g_bSplash[iTank] = false;
 		return Plugin_Stop;
 	}
 	if (iSplashAbility(iTank) == 0)
 	{
-		vReset2(iTank);
+		g_bSplash[iTank] = false;
+		if (iSplashMessage(iTank) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Splash2", sTankName);
+		}
 		return Plugin_Stop;
 	}
 	float flSplashRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flSplashRange[ST_TankType(iTank)] : g_flSplashRange2[ST_TankType(iTank)],

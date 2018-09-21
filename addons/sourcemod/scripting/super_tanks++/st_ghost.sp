@@ -422,7 +422,8 @@ public Action tTimerStopGhost(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iTank);
+		g_bGhost2[iTank] = false;
+		g_iGhostAlpha[iTank] = 255;
 		return Plugin_Stop;
 	}
 	if (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3)

@@ -133,17 +133,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client)
-{
-	g_bFlash[client] = false;
-	if (iFlashMessage(client) == 1)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(client, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Flash2", sTankName);
-	}
-}
-
 stock int iFlashAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iFlashAbility[ST_TankType(client)] : g_iFlashAbility2[ST_TankType(client)];
@@ -160,16 +149,22 @@ public Action tTimerFlash(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iTank);
+		g_bFlash[iTank] = false;
 		return Plugin_Stop;
 	}
 	float flTime = pack.ReadFloat(),
 		flFlashDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flFlashDuration[ST_TankType(iTank)] : g_flFlashDuration2[ST_TankType(iTank)];
 	if (iFlashAbility(iTank) == 0 || (flTime + flFlashDuration) < GetEngineTime())
 	{
-		vReset2(iTank);
+		g_bFlash[iTank] = false;
 		float flRunSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flRunSpeed[ST_TankType(iTank)] : g_flRunSpeed2[ST_TankType(iTank)];
 		SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
+		if (iFlashMessage(iTank) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Flash2", sTankName);
+		}
 		return Plugin_Stop;
 	}
 	float flFlashSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flFlashSpeed[ST_TankType(iTank)] : g_flFlashSpeed2[ST_TankType(iTank)];

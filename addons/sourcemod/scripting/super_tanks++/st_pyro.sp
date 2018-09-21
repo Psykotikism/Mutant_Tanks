@@ -157,17 +157,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client)
-{
-	g_bPyro[client] = false;
-	if (iPyroMessage(client) == 1)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(client, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Pyro2", sTankName);
-	}
-}
-
 stock int iPyroAbility(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iPyroAbility[ST_TankType(client)] : g_iPyroAbility2[ST_TankType(client)];
@@ -183,12 +172,18 @@ public Action tTimerPyro(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iTank);
+		g_bPyro[iTank] = false;
 		return Plugin_Stop;
 	}
 	if (iPyroAbility(iTank) == 0 || !bIsPlayerBurning(iTank))
 	{
-		vReset2(iTank);
+		g_bPyro[iTank] = false;
+		if (iPyroMessage(iTank) == 1)
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Pyro2", sTankName);
+		}
 		return Plugin_Stop;
 	}
 	return Plugin_Continue;

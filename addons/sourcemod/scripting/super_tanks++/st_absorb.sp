@@ -206,7 +206,7 @@ public Action tTimerStopAbsorb(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iTank);
+		g_bAbsorb[iTank] = false;
 		return Plugin_Stop;
 	}
 	if (iAbsorbAbility(iTank) == 0)
