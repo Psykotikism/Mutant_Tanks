@@ -1549,6 +1549,7 @@
 	{
 		// The Super Tank cloaks itself and disarms survivors.
 		// "Ability Enabled" - When a Super Tank spawns, it becomes invisible.
+		// - "Ghost Fade Delay"
 		// - "Ghost Fade Limit"
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is disarmed.
 		// - "Ghost Range"
