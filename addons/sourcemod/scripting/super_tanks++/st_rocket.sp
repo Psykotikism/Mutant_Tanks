@@ -15,8 +15,8 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-float g_flRocketRange[ST_MAXTYPES + 1], g_flRocketRange2[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLateLoad, g_bRocket[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+float g_flRocketDelay[ST_MAXTYPES + 1], g_flRocketDelay2[ST_MAXTYPES + 1], g_flRocketRange[ST_MAXTYPES + 1], g_flRocketRange2[ST_MAXTYPES + 1];
 int g_iRocket[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketAbility2[ST_MAXTYPES + 1], g_iRocketChance[ST_MAXTYPES + 1], g_iRocketChance2[ST_MAXTYPES + 1], g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHit2[ST_MAXTYPES + 1], g_iRocketHitMode[ST_MAXTYPES + 1], g_iRocketHitMode2[ST_MAXTYPES + 1], g_iRocketMessage[ST_MAXTYPES + 1], g_iRocketMessage2[ST_MAXTYPES + 1], g_iRocketRangeChance[ST_MAXTYPES + 1], g_iRocketRangeChance2[ST_MAXTYPES + 1], g_iRocketSprite = -1;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -74,11 +74,18 @@ public void OnMapStart()
 	PrecacheSound(SOUND_EXPLOSION, true);
 	PrecacheSound(SOUND_FIRE, true);
 	PrecacheSound(SOUND_LAUNCH, true);
+	vReset();
 }
 
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	g_bRocket[client] = false;
+}
+
+public void OnMapEnd()
+{
+	vReset();
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -121,6 +128,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iRocketMessage[iIndex] = iClamp(g_iRocketMessage[iIndex], 0, 3)) : (g_iRocketMessage2[iIndex] = iClamp(g_iRocketMessage2[iIndex], 0, 3));
 			main ? (g_iRocketChance[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Chance", 4)) : (g_iRocketChance2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Chance", g_iRocketChance[iIndex]));
 			main ? (g_iRocketChance[iIndex] = iClamp(g_iRocketChance[iIndex], 1, 9999999999)) : (g_iRocketChance2[iIndex] = iClamp(g_iRocketChance2[iIndex], 1, 9999999999));
+			main ? (g_flRocketDelay[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Delay", 1.0)) : (g_flRocketDelay2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Delay", g_flRocketDelay[iIndex]));
+			main ? (g_flRocketDelay[iIndex] = flClamp(g_flRocketDelay[iIndex], 0.1, 9999999999.0)) : (g_flRocketDelay2[iIndex] = flClamp(g_flRocketDelay2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iRocketHit[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit", 0)) : (g_iRocketHit2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit", g_iRocketHit[iIndex]));
 			main ? (g_iRocketHit[iIndex] = iClamp(g_iRocketHit[iIndex], 0, 1)) : (g_iRocketHit2[iIndex] = iClamp(g_iRocketHit2[iIndex], 0, 1));
 			main ? (g_iRocketHitMode[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit Mode", 0)) : (g_iRocketHitMode2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit Mode", g_iRocketHitMode[iIndex]));
@@ -160,16 +169,29 @@ public void ST_Ability(int client)
 	}
 }
 
+stock void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_bRocket[iPlayer] = false;
+		}
+	}
+}
+
 stock void vRocketHit(int client, int owner, int chance, int enabled, int message)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bRocket[client])
 	{
 		int iFlame = CreateEntityByName("env_steam");
 		if (!bIsValidEntity(iFlame))
 		{
 			return;
 		}
-		float flPosition[3], flAngles[3];
+		g_bRocket[client] = true;
+		float flRocketDelay = !g_bTankConfig[ST_TankType(owner)] ? g_flRocketDelay[ST_TankType(owner)] : g_flRocketDelay2[ST_TankType(owner)],
+			flPosition[3], flAngles[3];
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPosition);
 		flPosition[2] += 30.0;
 		flAngles[0] = 90.0, flAngles[1] = 0.0, flAngles[2] = 0.0;
@@ -191,10 +213,10 @@ stock void vRocketHit(int client, int owner, int chance, int enabled, int messag
 		g_iRocket[client] = iFlame;
 		EmitSoundToAll(SOUND_FIRE, client, _, _, _, 1.0);
 		DataPack dpRocketLaunch = new DataPack();
-		CreateDataTimer(2.0, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
+		CreateDataTimer(flRocketDelay, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
 		dpRocketLaunch.WriteCell(GetClientUserId(client)), dpRocketLaunch.WriteCell(GetClientUserId(owner)), dpRocketLaunch.WriteCell(enabled);
 		DataPack dpRocketDetonate = new DataPack();
-		CreateDataTimer(3.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
+		CreateDataTimer(flRocketDelay + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
 		dpRocketDetonate.WriteCell(GetClientUserId(client)), dpRocketDetonate.WriteCell(GetClientUserId(owner)), dpRocketDetonate.WriteCell(message), dpRocketDetonate.WriteCell(enabled);
 	}
 }
@@ -247,16 +269,19 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
+		g_bRocket[iSurvivor] = false;
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell()), iRocketChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
+		g_bRocket[iSurvivor] = false;
 		return Plugin_Stop;
 	}
 	int iRocketAbility = pack.ReadCell();
 	if (iRocketAbility == 0)
 	{
+		g_bRocket[iSurvivor] = false;
 		return Plugin_Stop;
 	}
 	float flPosition[3];
@@ -273,5 +298,6 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		ST_TankName(iTank, sTankName);
 		PrintToChatAll("%s %t", ST_PREFIX2, "Rocket", sTankName, iSurvivor);
 	}
+	g_bRocket[iSurvivor] = false;
 	return Plugin_Handled;
 }
