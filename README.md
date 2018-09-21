@@ -256,8 +256,10 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 		}
 		"Ghost Ability"
 		{
-			"Ability Enabled"		"1"
+			"Ability Enabled"		"2"
+			"Ghost Fade Delay"		"5.0"
 			"Ghost Fade Limit"		"0"
+			"Ghost Fade Rate"		"0.1"
 		}
 	}
 	"Tank 10" // Checked by the plugin.
