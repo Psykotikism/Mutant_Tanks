@@ -1602,8 +1602,8 @@
 
 			// The rate of the Super Tank's ghost fade effect.
 			// --
-			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Minimum: 0.1 (Fastest)
+			// Maximum: 9999999999.0 (Slowest)
 			"Ghost Fade Rate"				"0.1"
 
 			// Enable the Super Tank's claw/rock attack.
