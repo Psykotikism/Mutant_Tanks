@@ -1549,6 +1549,7 @@
 	{
 		// The Super Tank cloaks itself and disarms survivors.
 		// "Ability Enabled" - When a Super Tank spawns, it becomes invisible.
+		// - "Ghost Fade Alpha"
 		// - "Ghost Fade Delay"
 		// - "Ghost Fade Limit"
 		// - "Ghost Fade Rate"
@@ -1587,6 +1588,13 @@
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
 			"Ghost Chance"					"4"
+
+			// The amount of alpha to take from the Super Tank's alpha every X seconds until the limit set by the "Ghost Fade Limit" is reached.
+			// Note: The rate at which the Super Tank's alpha is reduced depends on the "Ghost Fade Rate" setting.
+			// --
+			// Minimum: 0 (No effect)
+			// Maximum: 255 (Fully faded)
+			"Ghost Fade Alpha"				"2"
 
 			// The Super Tank's ghost fade effect starts all over after this many seconds passes upon reaching the limit set by the "Ghost Fade Limit" setting.
 			// --

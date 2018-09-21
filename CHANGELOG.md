@@ -16,11 +16,12 @@ Changes:
 3. The Tank Notes now display a different message when the phrase for a Super Tank is not found.
 4. The Restart ability now removes all weapons from survivors before giving them new loadouts.
 5. Changed the directory of the configs from "cfg/sourcemod" to "addons/sourcemod/data".
-6. Added the "Ghost Fade Delay" setting which determines the interval of a Super Tank's invisibility cloak.
-7. Added the "Ghost Fade Rate" setting which determines how fast a Super Tank can fade into invisibility.
-8. Added the "Ghost3" phrase to notify players of when a Super Tank's invisibility cloak resets.
-9. Added the "Rocket Delay" setting which determines how long until a survivor is sent into space.
-10. Added several new settings for the Zombie ability.
+6. Added the "Ghost Fade Alpha" setting which determines how much alpha to take from a Super Tank as it is cloaking.
+7. Added the "Ghost Fade Delay" setting which determines the interval of a Super Tank's invisibility cloak.
+8. Added the "Ghost Fade Rate" setting which determines how fast a Super Tank can fade into invisibility.
+9. Added the "Ghost3" phrase to notify players of when a Super Tank's invisibility cloak resets.
+10. Added the "Rocket Delay" setting which determines how long until a survivor is sent into space.
+11. Added several new settings for the Zombie ability.
 
 Files:
 
