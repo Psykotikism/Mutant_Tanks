@@ -138,12 +138,37 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_Event(Event event, const char[] name)
+{
+	if (strcmp(name, "player_death") == 0)
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (iPukeAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		{
+			float flTankPos[3];
+			GetClientAbsOrigin(iTank, flTankPos);
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+			{
+				if (bIsSurvivor(iSurvivor))
+				{
+					float flSurvivorPos[3];
+					GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+					float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+					if (flDistance <= 250.0)
+					{
+						SDKCall(g_hSDKPukePlayer, iSurvivor, iTank, true);
+					}
+				}
+			}
+		}
+	}
+}
+
 public void ST_Ability(int client)
 {
 	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iPukeAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPukeAbility[ST_TankType(client)] : g_iPukeAbility2[ST_TankType(client)],
-			iPukeRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPukeChance[ST_TankType(client)] : g_iPukeChance2[ST_TankType(client)];
+		int iPukeRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPukeChance[ST_TankType(client)] : g_iPukeChance2[ST_TankType(client)];
 		float flPukeRange = !g_bTankConfig[ST_TankType(client)] ? g_flPukeRange[ST_TankType(client)] : g_flPukeRange2[ST_TankType(client)],
 			flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
@@ -156,7 +181,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPukeRange)
 				{
-					vPukeHit(iSurvivor, client, iPukeRangeChance, iPukeAbility, 2);
+					vPukeHit(iSurvivor, client, iPukeRangeChance, iPukeAbility(client), 2);
 				}
 			}
 		}
@@ -176,6 +201,11 @@ stock void vPukeHit(int client, int owner, int chance, int enabled, int message)
 			PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
 		}
 	}
+}
+
+stock int iPukeAbility(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iPukeAbility[ST_TankType(client)] : g_iPukeAbility2[ST_TankType(client)];
 }
 
 stock int iPukeChance(int client)

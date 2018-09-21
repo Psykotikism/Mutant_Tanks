@@ -154,7 +154,7 @@ public void ST_Event(Event event, const char[] name)
 	if (strcmp(name, "player_death") == 0)
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iElectricAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveElectric();
 		}
