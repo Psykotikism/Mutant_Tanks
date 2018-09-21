@@ -1551,6 +1551,7 @@
 		// "Ability Enabled" - When a Super Tank spawns, it becomes invisible.
 		// - "Ghost Fade Delay"
 		// - "Ghost Fade Limit"
+		// - "Ghost Fade Rate"
 		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is disarmed.
 		// - "Ghost Range"
 		// - "Ghost Range Chance"
@@ -1587,7 +1588,7 @@
 			// Maximum: 9999999999 (Less chance)
 			"Ghost Chance"					"4"
 
-			// The Super Tank's invisibility cloak starts all over after this many seconds passes.
+			// The Super Tank's ghost fade effect starts all over after this many seconds passes upon reaching the limit set by the "Ghost Fade Limit" setting.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -1598,6 +1599,12 @@
 			// Minimum: 0 (Fully faded)
 			// Maximum: 255 (No effect)
 			"Ghost Fade Limit"				"0"
+
+			// The rate of the Super Tank's ghost fade effect.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Ghost Fade Rate"				"0.1"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
@@ -3401,6 +3408,12 @@
 			// Maximum: 9999999999 (Less chance)
 			"Rocket Chance"					"4"
 
+			// The Super Tank sends survivors into space after this many seconds passes upon triggering the ability.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Rocket Delay"					"1.0"
+
 			// Enable the Super Tank's claw/rock attack.
 			// --
 			// 0: OFF
@@ -3537,7 +3550,7 @@
 			// 3rd number = Blue
 			"Shield Color"					"255,255,255"
 
-			// The Super Tank's shield reactivates after this many seconds passes.
+			// The Super Tank's shield reactivates after this many seconds passes upon destroying the shield.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0

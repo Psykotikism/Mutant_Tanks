@@ -6,6 +6,7 @@ Bug fixes:
 
 1. Marked the ST_TankName native as optional to avoid potential issues.
 2. Fixed the Flash ability errors. (Thanks Mi.Cura for reporting!)
+3. Fixed the Rocket ability creating multiple timers for survivors who are getting sent into space.
 
 Changes:
 
@@ -15,7 +16,9 @@ Changes:
 4. The Restart ability now removes all weapons from survivors before giving them new loadouts.
 5. Changed the directory of the configs from "cfg/sourcemod" to "addons/sourcemod/data".
 6. Added the "Ghost Fade Delay" setting which determines the interval of a Super Tank's invisibility cloak.
-7. Added the "Ghost3" phrase to notify players of when a Super Tank's invisibility cloak resets.
+7. Added the "Ghost Fade Rate" setting which determines how fast a Super Tank can fade into invisibility.
+8. Added the "Ghost3" phrase to notify players of when a Super Tank's invisibility cloak resets.
+9. Added the "Rocket Delay" setting which determines how long until a survivor is sent into space.
 
 Files:
 
