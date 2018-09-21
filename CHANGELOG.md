@@ -19,11 +19,13 @@ Changes:
 7. Added the "Ghost Fade Rate" setting which determines how fast a Super Tank can fade into invisibility.
 8. Added the "Ghost3" phrase to notify players of when a Super Tank's invisibility cloak resets.
 9. Added the "Rocket Delay" setting which determines how long until a survivor is sent into space.
+10. Added several new settings for the Zombie ability.
 
 Files:
 
-1. Updated include file to use new natives introduced in SM 1.9 and SM 1.10.
-2. Updated translation file with the new "Ghost3" phrase.
+1. Updated config file with all the new settings.
+2. Updated include file to use new natives introduced in SM 1.9 and SM 1.10.
+3. Updated translation file with the new "Ghost3" phrase.
 
 ## Version 8.41 (September 18, 2018)
 

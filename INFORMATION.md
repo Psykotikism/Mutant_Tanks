@@ -2812,7 +2812,7 @@
 		"Panic Ability"
 		{
 			// Enable this ability.
-			// Note: This setting does not affect the "Ghost Hit" setting.
+			// Note: This setting does not affect the "Panic Hit" setting.
 			// --
 			// 0: OFF
 			// 1: ON, the Super Tank can start panic events when a survivor is nearby.
@@ -4352,19 +4352,36 @@
 	"Tank 1"
 	{
 		// The Super Tank spawns common infected.
+		// "Ability Enabled" - The Tank creates a zombie mob periodically.
+		// - "Zombie Interval"
+		// "Ability Enabled" - When a survivor is within range of the Tank, a zombie mob appears.
+		// - "Zombie Range"
+		// - "Zombie Range Chance"
+		// "Panic Hit" - When a survivor is hit by a Tank's claw or rock, a zombie mob appears.
+		// - "Zombie Chance"
+		// - "Zombie Hit Mode"
 		// Requires "st_zombie.smx" to be installed.
 		"Zombie Ability"
 		{
 			// Enable this ability.
+			// Note: This setting does not affect the "Zombie Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, the Super Tank can create zombie mobs when a survivor is nearby.
+			// 2: ON, the Super Tank can create zombie mobs periodically.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Display a message whenever the ability activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Zombie Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank spawns this many common infected at once.
@@ -4373,11 +4390,43 @@
 			// Maximum: 100
 			"Zombie Amount"					"10"
 
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Zombie Chance"					"4"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" to be on.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Zombie Hit"					"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Zombie Hit Mode"				"0"
+
 			// The Super Tank spawns a zombie mob every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Zombie Interval"				"5.0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Zombie Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Zombie Range Chance"			"16"
 		}
 	}
 }
