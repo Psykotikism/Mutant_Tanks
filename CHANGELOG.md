@@ -21,6 +21,7 @@ Changes:
 8. Added the "Ghost3" phrase to notify players of when a Super Tank's invisibility cloak resets.
 9. Added the "Rocket Delay" setting which determines how long until a survivor is sent into space.
 10. Added several new settings for the Zombie ability.
+11. The Puke ability now allows a Super Tank to puke on nearby survivors upon death.
 
 Files:
 
