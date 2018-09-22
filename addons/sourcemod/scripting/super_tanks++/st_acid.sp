@@ -141,7 +141,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iAcidAbility[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", 0)) : (g_iAcidAbility2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", g_iAcidAbility[iIndex]));
 			main ? (g_iAcidAbility[iIndex] = iClamp(g_iAcidAbility[iIndex], 0, 1)) : (g_iAcidAbility2[iIndex] = iClamp(g_iAcidAbility2[iIndex], 0, 1));
 			main ? (g_iAcidMessage[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", 0)) : (g_iAcidMessage2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", g_iAcidMessage[iIndex]));
-			main ? (g_iAcidMessage[iIndex] = iClamp(g_iAcidMessage[iIndex], 0, 3)) : (g_iAcidMessage2[iIndex] = iClamp(g_iAcidMessage2[iIndex], 0, 3));
+			main ? (g_iAcidMessage[iIndex] = iClamp(g_iAcidMessage[iIndex], 0, 7)) : (g_iAcidMessage2[iIndex] = iClamp(g_iAcidMessage2[iIndex], 0, 3));
 			main ? (g_iAcidChance[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", 4)) : (g_iAcidChance2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", g_iAcidChance[iIndex]));
 			main ? (g_iAcidChance[iIndex] = iClamp(g_iAcidChance[iIndex], 1, 9999999999)) : (g_iAcidChance2[iIndex] = iClamp(g_iAcidChance2[iIndex], 1, 9999999999));
 			main ? (g_iAcidHit[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", 0)) : (g_iAcidHit2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", g_iAcidHit[iIndex]));
@@ -213,6 +213,15 @@ public void ST_RockBreak(int client, int entity)
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] += 40.0;
 		SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, client, 2.0);
+		switch (iAcidMessage(client))
+		{
+			case 3, 5, 6, 7:
+			{
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(client, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Acid2", sTankName);
+			}
+		}
 	}
 }
 
@@ -229,12 +238,11 @@ stock void vAcidHit(int client, int owner, int chance, int enabled, int message)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		int iAcidMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iAcidMessage[ST_TankType(owner)] : g_iAcidMessage2[ST_TankType(owner)];
 		ST_TankName(owner, sTankName);
 		if (bIsL4D2Game())
 		{
 			vAcid(client, owner);
-			if (iAcidMessage == message || iAcidMessage == 3)
+			if (iAcidMessage(owner) == message || iAcidMessage(client) == 4 || iAcidMessage(client) == 5 || iAcidMessage(client) == 6 || iAcidMessage(client) == 7)
 			{
 				PrintToChatAll("%s %t", ST_PREFIX2, "Acid", sTankName, client);
 			}
@@ -242,7 +250,7 @@ stock void vAcidHit(int client, int owner, int chance, int enabled, int message)
 		else
 		{
 			SDKCall(g_hSDKPukePlayer, client, owner, true);
-			if (iAcidMessage == message || iAcidMessage == 3)
+			if (iAcidMessage(owner) == message || iAcidMessage(client) == 4 || iAcidMessage(client) == 5 || iAcidMessage(client) == 6 || iAcidMessage(client) == 7)
 			{
 				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
 			}
@@ -268,4 +276,9 @@ stock int iAcidHit(int client)
 stock int iAcidHitMode(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iAcidHitMode[ST_TankType(client)] : g_iAcidHitMode2[ST_TankType(client)];
+}
+
+stock int iAcidMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iAcidMessage[ST_TankType(client)] : g_iAcidMessage2[ST_TankType(client)];
 }

@@ -17,9 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bHeal[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
-ConVar g_cvSTMaxIncapCount;
-float g_flHealAbsorbRange[ST_MAXTYPES + 1], g_flHealAbsorbRange2[ST_MAXTYPES + 1], g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1], g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1];
-Handle g_hSDKHealPlayer, g_hSDKRevivePlayer;
+float g_flHealAbsorbRange[ST_MAXTYPES + 1], g_flHealAbsorbRange2[ST_MAXTYPES + 1], g_flHealBuffer[ST_MAXTYPES + 1], g_flHealBuffer2[ST_MAXTYPES + 1], g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1], g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1];
 int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealChance[ST_MAXTYPES + 1], g_iHealChance2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealMessage[ST_MAXTYPES + 1], g_iHealMessage2[ST_MAXTYPES + 1], g_iHealRangeChance[ST_MAXTYPES + 1], g_iHealRangeChance2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -58,23 +56,6 @@ public void OnLibraryRemoved(const char[] name)
 public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
-	g_cvSTMaxIncapCount = FindConVar("survivor_max_incapacitated_count");
-	Handle hGameData = LoadGameConfigFile("super_tanks++");
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_SetHealthBuffer");
-	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-	g_hSDKHealPlayer = EndPrepSDKCall();
-	if (g_hSDKHealPlayer == null)
-	{
-		PrintToServer("%s Your \"CTerrorPlayer_SetHealthBuffer\" signature is outdated.", ST_PREFIX);
-	}
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnRevived");
-	g_hSDKRevivePlayer = EndPrepSDKCall();
-	if (g_hSDKRevivePlayer == null)
-	{
-		PrintToServer("%s Your \"CTerrorPlayer_OnRevived\" signature is outdated.", ST_PREFIX);
-	}
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -147,6 +128,8 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iHealMessage[iIndex] = iClamp(g_iHealMessage[iIndex], 0, 7)) : (g_iHealMessage2[iIndex] = iClamp(g_iHealMessage2[iIndex], 0, 7));
 			main ? (g_flHealAbsorbRange[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Absorb Range", 500.0)) : (g_flHealAbsorbRange2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Absorb Range", g_flHealAbsorbRange[iIndex]));
 			main ? (g_flHealAbsorbRange[iIndex] = flClamp(g_flHealAbsorbRange[iIndex], 1.0, 9999999999.0)) : (g_flHealAbsorbRange2[iIndex] = flClamp(g_flHealAbsorbRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flHealBuffer[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Buffer", 25.0)) : (g_flHealBuffer2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Buffer", g_flHealBuffer[iIndex]));
+			main ? (g_flHealBuffer[iIndex] = flClamp(g_flHealBuffer[iIndex], 1.0, float(ST_MAXHEALTH))) : (g_flHealBuffer2[iIndex] = flClamp(g_flHealBuffer2[iIndex], 1.0, float(ST_MAXHEALTH)));
 			main ? (g_iHealChance[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Chance", 4)) : (g_iHealChance2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Chance", g_iHealChance[iIndex]));
 			main ? (g_iHealChance[iIndex] = iClamp(g_iHealChance[iIndex], 1, 9999999999)) : (g_iHealChance2[iIndex] = iClamp(g_iHealChance2[iIndex], 1, 9999999999));
 			main ? (g_iHealCommon[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Commons", 50)) : (g_iHealCommon2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Commons", g_iHealCommon[iIndex]));
@@ -214,16 +197,19 @@ stock void vHealHit(int client, int owner, int chance, int enabled, int message)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
-		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue - 1);
-		SetEntProp(client, Prop_Send, "m_isIncapacitated", 1);
-		SDKCall(g_hSDKRevivePlayer, client);
-		SetEntityHealth(client, 1);
-		SDKCall(g_hSDKHealPlayer, client, 50.0);
-		if (iHealMessage(owner) == message || iHealMessage(owner) == 4 || iHealMessage(owner) == 5 || iHealMessage(owner) == 6 || iHealMessage(owner) == 7)
+		int iHealth = GetClientHealth(client);
+		if (iHealth > 0 && !bIsPlayerIncapacitated(client))
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Heal", sTankName, client);
+			float flHealBuffer = !g_bTankConfig[ST_TankType(owner)] ? g_flHealBuffer[ST_TankType(owner)] : g_flHealBuffer2[ST_TankType(owner)];
+			SetEntityHealth(client, 1);
+			SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", GetGameTime());
+			SetEntPropFloat(client, Prop_Send, "m_healthBuffer", flHealBuffer);
+			if (iHealMessage(owner) == message || iHealMessage(owner) == 4 || iHealMessage(owner) == 5 || iHealMessage(owner) == 6 || iHealMessage(owner) == 7)
+			{
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(owner, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Heal", sTankName, client);
+			}
 		}
 	}
 }

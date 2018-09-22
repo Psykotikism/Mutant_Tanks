@@ -16,16 +16,16 @@ public Plugin myinfo =
 };
 
 bool g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-char g_sBossHealthStages[ST_MAXTYPES + 1][34], g_sBossHealthStages2[ST_MAXTYPES + 1][34], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7],
+char g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7],
 	g_sPropsChance[ST_MAXTYPES + 1][12], g_sPropsChance2[ST_MAXTYPES + 1][12], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28],
 	g_sTankName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankWaves[12], g_sTankWaves2[12], g_sTypeRange[10], g_sTypeRange2[10];
 ConVar g_cvSTEnable, g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1];
 Handle g_hAbilityForward, g_hBossStageForward, g_hConfigsForward, g_hEventForward, g_hRockBreakForward, g_hRockThrowForward;
-int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBossTypes[MAXPLAYERS + 1][5], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2,
-	g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1],
-	g_iGameModeTypes, g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRockEffect[ST_MAXTYPES + 1],
-	g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType;
+int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2, g_iExplosiveImmunity[ST_MAXTYPES + 1],
+	g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGameModeTypes,
+	g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1],
+	g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType;
 TopMenu g_tmSTMenu;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -205,10 +205,6 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-	for (int iNumber = 0; iNumber <= 4; iNumber++)
-	{
-		g_iBossTypes[client][iNumber] = 0;
-	}
 	g_iBossStageCount[client] = 0;
 	g_iTankType[client] = 0;
 	g_bBoss[client] = false;
@@ -877,9 +873,10 @@ stock void vLoadConfigs(const char[] savepath, bool main = false)
 			main ? (g_iTankEnabled[iIndex] = iClamp(g_iTankEnabled[iIndex], 0, 1)) : (g_iTankEnabled2[iIndex] = iClamp(g_iTankEnabled2[iIndex], 0, 1));
 			main ? (g_iTankNote[iIndex] = kvSuperTanks.GetNum("General/Tank Note", 0)) : (g_iTankNote2[iIndex] = kvSuperTanks.GetNum("General/Tank Note", g_iTankNote[iIndex]));
 			main ? (g_iTankNote[iIndex] = iClamp(g_iTankNote[iIndex], 0, 1)) : (g_iTankNote2[iIndex] = iClamp(g_iTankNote2[iIndex], 0, 1));
-			main ? (kvSuperTanks.GetString("General/Boss Health Stages", g_sBossHealthStages[iIndex], sizeof(g_sBossHealthStages[]), "5000,2500,1500,1000,500")) : (kvSuperTanks.GetString("General/Boss Health Stages", g_sBossHealthStages2[iIndex], sizeof(g_sBossHealthStages2[]), g_sBossHealthStages[iIndex]));
+			main ? (kvSuperTanks.GetString("General/Boss Health Stages", g_sBossHealthStages[iIndex], sizeof(g_sBossHealthStages[]), "5000,2500,1500,1000")) : (kvSuperTanks.GetString("General/Boss Health Stages", g_sBossHealthStages2[iIndex], sizeof(g_sBossHealthStages2[]), g_sBossHealthStages[iIndex]));
 			main ? (g_iBossStages[iIndex] = kvSuperTanks.GetNum("General/Boss Stages", 3)) : (g_iBossStages2[iIndex] = kvSuperTanks.GetNum("General/Boss Stages", g_iBossStages[iIndex]));
-			main ? (g_iBossStages[iIndex] = iClamp(g_iBossStages[iIndex], 1, 5)) : (g_iBossStages2[iIndex] = iClamp(g_iBossStages2[iIndex], 1, 5));
+			main ? (g_iBossStages[iIndex] = iClamp(g_iBossStages[iIndex], 1, 4)) : (g_iBossStages2[iIndex] = iClamp(g_iBossStages2[iIndex], 1, 4));
+			main ? (kvSuperTanks.GetString("General/Boss Types", g_sBossTypes[iIndex], sizeof(g_sBossTypes[]), "2,3,4,5")) : (kvSuperTanks.GetString("General/Boss Types", g_sBossTypes2[iIndex], sizeof(g_sBossTypes2[]), g_sBossTypes[iIndex]));
 			main ? (g_flRandomInterval[iIndex] = kvSuperTanks.GetFloat("General/Random Interval", 5.0)) : (g_flRandomInterval2[iIndex] = kvSuperTanks.GetFloat("General/Random Interval", g_flRandomInterval[iIndex]));
 			main ? (g_flRandomInterval[iIndex] = flClamp(g_flRandomInterval[iIndex], 0.1, 9999999999.0)) : (g_flRandomInterval2[iIndex] = flClamp(g_flRandomInterval2[iIndex], 0.1, 9999999999.0));
 			main ? (g_iSpawnMode[iIndex] = kvSuperTanks.GetNum("General/Spawn Mode", 0)) : (g_iSpawnMode2[iIndex] = kvSuperTanks.GetNum("General/Spawn Mode", g_iSpawnMode[iIndex]));
@@ -926,29 +923,22 @@ stock void vLoadConfigs(const char[] savepath, bool main = false)
 	Call_Finish();
 }
 
-stock void vBoss(int client, int limit, int stages, int stage)
+stock void vBoss(int client, int limit, int stages, int type, int stage)
 {
-	int iHealth = GetClientHealth(client);
-	if (iHealth <= limit && stages >= stage)
+	if (stages < stage)
 	{
-		g_iBossTypes[client][stage - 1] = g_iTankType[client];
+		return;
+	}
+	int iHealth = GetClientHealth(client);
+	if (iHealth <= limit)
+	{
 		g_iBossStageCount[client] = stage;
+		if (iTankEnabled(type) == 0)
+		{
+			return;
+		}
 		vNewTankSettings(client);
-		int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
-		for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
-		{
-			if (iTankEnabled(iIndex) == 0 || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[client] == iIndex)
-			{
-				continue;
-			}
-			iTankTypes[iTypeCount + 1] = iIndex;
-			iTypeCount++;
-		}
-		if (iTypeCount > 0)
-		{
-			int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
-			vSetColor(client, iChosen);
-		}
+		vSetColor(client, type);
 		DataPack dpTankSpawn = new DataPack();
 		CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
 		dpTankSpawn.WriteCell(GetClientUserId(client)), dpTankSpawn.WriteCell(1);
@@ -1037,10 +1027,6 @@ stock void vReset()
 	{
 		if (bIsValidClient(iPlayer))
 		{
-			for (int iNumber = 0; iNumber <= 4; iNumber++)
-			{
-				g_iBossTypes[iPlayer][iNumber] = 0;
-			}
 			g_iBossStageCount[iPlayer] = 0;
 			g_iTankType[iPlayer] = 0;
 			g_bBoss[iPlayer] = false;
@@ -1417,7 +1403,7 @@ stock void vSetName(int client, const char[] oldname = "Tank", const char[] name
 						case 10: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival10", name);
 					}
 				}
-				case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Evolved", oldname, name, g_iBossStageCount[client]);
+				case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Evolved", oldname, name, g_iBossStageCount[client] + 1);
 				case 2: PrintToChatAll("%s %t", ST_PREFIX2, "Randomized", oldname, name);
 			}
 			int iTankNote = !g_bTankConfig[g_iTankType[client]] ? g_iTankNote[g_iTankType[client]] : g_iTankNote2[g_iTankType[client]];
@@ -1570,14 +1556,15 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 	}
 	int iBossHealth = pack.ReadCell(), iBossHealth2 = pack.ReadCell(),
 		iBossHealth3 = pack.ReadCell(), iBossHealth4 = pack.ReadCell(),
-		iBossHealth5 = pack.ReadCell(), iBossStages = pack.ReadCell();
+		iBossStages = pack.ReadCell(), iType = pack.ReadCell(),
+		iType2 = pack.ReadCell(), iType3 = pack.ReadCell(),
+		iType4 = pack.ReadCell();
 	switch (g_iBossStageCount[iTank])
 	{
-		case 0: vBoss(iTank, iBossHealth, iBossStages, 1);
-		case 1: vBoss(iTank, iBossHealth2, iBossStages, 2);
-		case 2: vBoss(iTank, iBossHealth3, iBossStages, 3);
-		case 3: vBoss(iTank, iBossHealth4, iBossStages, 4);
-		case 4: vBoss(iTank, iBossHealth5, iBossStages, 5);
+		case 0: vBoss(iTank, iBossHealth, iBossStages, iType, 1);
+		case 1: vBoss(iTank, iBossHealth2, iBossStages, iType2, 2);
+		case 2: vBoss(iTank, iBossHealth3, iBossStages, iType3, 3);
+		case 3: vBoss(iTank, iBossHealth4, iBossStages, iType4, 4);
 	}
 	return Plugin_Continue;
 }
@@ -1862,7 +1849,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 					{
 						g_bBoss[iTank] = true;
 						g_bRandomized[iTank] = true;
-						char sSet[5][6], sBossHealthStages[34];
+						char sSet[4][6], sBossHealthStages[25], sSet2[4][5], sBossTypes[20];
 						sBossHealthStages = !g_bTankConfig[g_iTankType[iTank]] ? g_sBossHealthStages[g_iTankType[iTank]] : g_sBossHealthStages2[g_iTankType[iTank]];
 						TrimString(sBossHealthStages);
 						ExplodeString(sBossHealthStages, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -1878,13 +1865,25 @@ public Action tTimerTankTypeUpdate(Handle timer)
 						TrimString(sSet[3]);
 						int iBossHealth4 = (sSet[3][0] != '\0') ? StringToInt(sSet[3]) : 1000;
 						iBossHealth4 = iClamp(iBossHealth4, 1, ST_MAXHEALTH);
-						TrimString(sSet[4]);
-						int iBossHealth5 = (sSet[4][0] != '\0') ? StringToInt(sSet[4]) : 500;
-						iBossHealth5 = iClamp(iBossHealth5, 1, ST_MAXHEALTH);
 						int iBossStages = !g_bTankConfig[g_iTankType[iTank]] ? g_iBossStages[g_iTankType[iTank]] : g_iBossStages2[g_iTankType[iTank]];
+						sBossTypes = !g_bTankConfig[ST_TankType(iTank)] ? g_sBossTypes[ST_TankType(iTank)] : g_sBossTypes2[ST_TankType(iTank)];
+						TrimString(sBossTypes);
+						ExplodeString(sBossTypes, ",", sSet2, sizeof(sSet2), sizeof(sSet2[]));
+						TrimString(sSet2[0]);
+						int iType = (sSet2[0][0] != '\0') ? StringToInt(sSet2[0]) : 2;
+						iType = iClamp(iType, 1, 5000);
+						TrimString(sSet2[1]);
+						int iType2 = (sSet2[1][0] != '\0') ? StringToInt(sSet2[1]) : 3;
+						iType2 = iClamp(iType2, 1, 5000);
+						TrimString(sSet2[2]);
+						int iType3 = (sSet2[2][0] != '\0') ? StringToInt(sSet2[2]) : 4;
+						iType3 = iClamp(iType3, 1, 5000);
+						TrimString(sSet2[3]);
+						int iType4 = (sSet2[3][0] != '\0') ? StringToInt(sSet2[3]) : 5;
+						iType4 = iClamp(iType4, 1, 5000);
 						DataPack dpBoss = new DataPack();
 						CreateDataTimer(1.0, tTimerBoss, dpBoss, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-						dpBoss.WriteCell(GetClientUserId(iTank)), dpBoss.WriteCell(iBossHealth), dpBoss.WriteCell(iBossHealth2), dpBoss.WriteCell(iBossHealth3), dpBoss.WriteCell(iBossHealth4), dpBoss.WriteCell(iBossHealth5), dpBoss.WriteCell(iBossStages);
+						dpBoss.WriteCell(GetClientUserId(iTank)), dpBoss.WriteCell(iBossHealth), dpBoss.WriteCell(iBossHealth2), dpBoss.WriteCell(iBossHealth3), dpBoss.WriteCell(iBossHealth4), dpBoss.WriteCell(iBossStages), dpBoss.WriteCell(iType), dpBoss.WriteCell(iType2), dpBoss.WriteCell(iType3), dpBoss.WriteCell(iType4);
 					}
 				}
 				case 2:

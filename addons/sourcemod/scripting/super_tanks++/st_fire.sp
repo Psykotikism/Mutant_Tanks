@@ -115,7 +115,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iFireAbility[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", 0)) : (g_iFireAbility2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", g_iFireAbility[iIndex]));
 			main ? (g_iFireAbility[iIndex] = iClamp(g_iFireAbility[iIndex], 0, 1)) : (g_iFireAbility2[iIndex] = iClamp(g_iFireAbility2[iIndex], 0, 1));
 			main ? (g_iFireMessage[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Message", 0)) : (g_iFireMessage2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Message", g_iFireMessage[iIndex]));
-			main ? (g_iFireMessage[iIndex] = iClamp(g_iFireMessage[iIndex], 0, 3)) : (g_iFireMessage2[iIndex] = iClamp(g_iFireMessage2[iIndex], 0, 3));
+			main ? (g_iFireMessage[iIndex] = iClamp(g_iFireMessage[iIndex], 0, 7)) : (g_iFireMessage2[iIndex] = iClamp(g_iFireMessage2[iIndex], 0, 3));
 			main ? (g_iFireChance[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Chance", 4)) : (g_iFireChance2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Chance", g_iFireChance[iIndex]));
 			main ? (g_iFireChance[iIndex] = iClamp(g_iFireChance[iIndex], 1, 9999999999)) : (g_iFireChance2[iIndex] = iClamp(g_iFireChance2[iIndex], 1, 9999999999));
 			main ? (g_iFireHit[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit", 0)) : (g_iFireHit2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit", g_iFireHit[iIndex]));
@@ -190,6 +190,15 @@ public void ST_RockBreak(int client, int entity)
 		float flPos[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 		vSpecialAttack(client, flPos, MODEL_GASCAN);
+		switch (iFireMessage(client))
+		{
+			case 3, 5, 6, 7:
+			{
+				char sTankName[MAX_NAME_LENGTH + 1];
+				ST_TankName(client, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Fire2", sTankName);
+			}
+		}
 	}
 }
 
@@ -198,10 +207,9 @@ stock void vFireHit(int client, int owner, int chance, int enabled, int message)
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		float flPos[3];
-		int iFireMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iFireMessage[ST_TankType(owner)] : g_iFireMessage2[ST_TankType(owner)];
 		GetClientAbsOrigin(client, flPos);
 		vSpecialAttack(owner, flPos, MODEL_GASCAN);
-		if (iFireMessage == message || iFireMessage == 3)
+		if (iFireMessage(owner) == message || iFireMessage(client) == 4 || iFireMessage(client) == 5 || iFireMessage(client) == 6 || iFireMessage(client) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
@@ -228,4 +236,9 @@ stock int iFireHit(int client)
 stock int iFireHitMode(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iFireHitMode[ST_TankType(client)] : g_iFireHitMode2[ST_TankType(client)];
+}
+
+stock int iFireMessage(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iFireMessage[ST_TankType(client)] : g_iFireMessage2[ST_TankType(client)];
 }
