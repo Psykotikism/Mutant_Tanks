@@ -297,7 +297,7 @@
 	"Heal"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} set {2} to black and white!"
+		"en"			"{1} gave {2} temporary health!"
 	}
 	"Heal2"
 	{
@@ -717,7 +717,7 @@
 	}
 	"Tank25"
 	{
-		"en"			"This Tank can set survivors to black and white with temporary health, and it can absorb health from nearby infected."
+		"en"			"This Tank can give survivors temporary health, and it can absorb health from nearby infected."
 	}
 	"Tank26"
 	{
@@ -921,7 +921,7 @@
 	}
 	"Tank76"
 	{
-		"en"			"Fire immunity, moves slowly, sets survivors to black and white, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+		"en"			"Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
 	}
 	"Tank77"
 	{
@@ -941,7 +941,7 @@
 	}
 	"Tank81"
 	{
-		"en"			"This Tank can set survivors to black and white, absorb health from nearby infected, jump really high, start meteor showers, spawn with a shield, and warp to survivors."
+		"en"			"This Tank can give survivors temporary health, absorb health from nearby infected, jump really high, start meteor showers, spawn with a shield, and warp to survivors."
 	}
 	"Tank82"
 	{
@@ -1009,6 +1009,6 @@
 	}
 	"Tank98"
 	{
-		"en"			"This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, set survivors to black and white, jump periodically, and periodically warps to survivors."
+		"en"			"This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
 	}
 }
