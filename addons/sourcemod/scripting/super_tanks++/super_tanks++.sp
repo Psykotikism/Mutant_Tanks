@@ -693,7 +693,7 @@ stock void vTankMenu(int client, int item)
 	mTankMenu.SetTitle("Super Tanks++ Menu");
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
-		if (iTankEnabled(iIndex) == 0 || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)))
+		if (iTankEnabled(iIndex) == 0)
 		{
 			continue;
 		}
@@ -716,7 +716,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
 			for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 			{
-				if (iTankEnabled(iIndex) == 0 || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)))
+				if (iTankEnabled(iIndex) == 0)
 				{
 					continue;
 				}
