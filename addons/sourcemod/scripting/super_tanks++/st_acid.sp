@@ -141,7 +141,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iAcidAbility[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", 0)) : (g_iAcidAbility2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", g_iAcidAbility[iIndex]));
 			main ? (g_iAcidAbility[iIndex] = iClamp(g_iAcidAbility[iIndex], 0, 1)) : (g_iAcidAbility2[iIndex] = iClamp(g_iAcidAbility2[iIndex], 0, 1));
 			main ? (g_iAcidMessage[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", 0)) : (g_iAcidMessage2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", g_iAcidMessage[iIndex]));
-			main ? (g_iAcidMessage[iIndex] = iClamp(g_iAcidMessage[iIndex], 0, 7)) : (g_iAcidMessage2[iIndex] = iClamp(g_iAcidMessage2[iIndex], 0, 3));
+			main ? (g_iAcidMessage[iIndex] = iClamp(g_iAcidMessage[iIndex], 0, 7)) : (g_iAcidMessage2[iIndex] = iClamp(g_iAcidMessage2[iIndex], 0, 7));
 			main ? (g_iAcidChance[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", 4)) : (g_iAcidChance2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", g_iAcidChance[iIndex]));
 			main ? (g_iAcidChance[iIndex] = iClamp(g_iAcidChance[iIndex], 1, 9999999999)) : (g_iAcidChance2[iIndex] = iClamp(g_iAcidChance2[iIndex], 1, 9999999999));
 			main ? (g_iAcidHit[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", 0)) : (g_iAcidHit2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", g_iAcidHit[iIndex]));

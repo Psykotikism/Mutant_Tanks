@@ -115,7 +115,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iBombAbility[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", 0)) : (g_iBombAbility2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", g_iBombAbility[iIndex]));
 			main ? (g_iBombAbility[iIndex] = iClamp(g_iBombAbility[iIndex], 0, 1)) : (g_iBombAbility2[iIndex] = iClamp(g_iBombAbility2[iIndex], 0, 1));
 			main ? (g_iBombMessage[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Message", 0)) : (g_iBombMessage2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Message", g_iBombMessage[iIndex]));
-			main ? (g_iBombMessage[iIndex] = iClamp(g_iBombMessage[iIndex], 0, 7)) : (g_iBombMessage2[iIndex] = iClamp(g_iBombMessage2[iIndex], 0, 3));
+			main ? (g_iBombMessage[iIndex] = iClamp(g_iBombMessage[iIndex], 0, 7)) : (g_iBombMessage2[iIndex] = iClamp(g_iBombMessage2[iIndex], 0, 7));
 			main ? (g_iBombChance[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Chance", 4)) : (g_iBombChance2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Chance", g_iBombChance[iIndex]));
 			main ? (g_iBombChance[iIndex] = iClamp(g_iBombChance[iIndex], 1, 9999999999)) : (g_iBombChance2[iIndex] = iClamp(g_iBombChance2[iIndex], 1, 9999999999));
 			main ? (g_iBombHit[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit", 0)) : (g_iBombHit2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit", g_iBombHit[iIndex]));

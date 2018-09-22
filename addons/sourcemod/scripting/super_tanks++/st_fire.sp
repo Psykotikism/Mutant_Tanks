@@ -115,7 +115,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iFireAbility[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", 0)) : (g_iFireAbility2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", g_iFireAbility[iIndex]));
 			main ? (g_iFireAbility[iIndex] = iClamp(g_iFireAbility[iIndex], 0, 1)) : (g_iFireAbility2[iIndex] = iClamp(g_iFireAbility2[iIndex], 0, 1));
 			main ? (g_iFireMessage[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Message", 0)) : (g_iFireMessage2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Message", g_iFireMessage[iIndex]));
-			main ? (g_iFireMessage[iIndex] = iClamp(g_iFireMessage[iIndex], 0, 7)) : (g_iFireMessage2[iIndex] = iClamp(g_iFireMessage2[iIndex], 0, 3));
+			main ? (g_iFireMessage[iIndex] = iClamp(g_iFireMessage[iIndex], 0, 7)) : (g_iFireMessage2[iIndex] = iClamp(g_iFireMessage2[iIndex], 0, 7));
 			main ? (g_iFireChance[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Chance", 4)) : (g_iFireChance2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Chance", g_iFireChance[iIndex]));
 			main ? (g_iFireChance[iIndex] = iClamp(g_iFireChance[iIndex], 1, 9999999999)) : (g_iFireChance2[iIndex] = iClamp(g_iFireChance2[iIndex], 1, 9999999999));
 			main ? (g_iFireHit[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit", 0)) : (g_iFireHit2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit", g_iFireHit[iIndex]));
