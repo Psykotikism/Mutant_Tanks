@@ -129,6 +129,11 @@
 		"#format"		"{1:s},{2:N}"
 		"en"			"{1} just created an acid puddle underneath {2}!"
 	}
+	"Acid2"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1}'s rock created an acid puddle."
+	}
 	"Ammo"
 	{
 		"#format"		"{1:s},{2:N}"
@@ -148,6 +153,11 @@
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{1} just created an explosion at {2}'s location!"
+	}
+	"Bomb2"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1}'s rock created an explosion."
 	}
 	"Bury"
 	{
@@ -213,6 +223,11 @@
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{1} just created a fire underneath {2}!"
+	}
+	"Fire2"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1}'s rock created a fire."
 	}
 	"Flash"
 	{
@@ -979,5 +994,21 @@
 	"Tank94"
 	{
 		"en"			"This Tank is too busy meditating to care about you."
+	}
+	"Tank95"
+	{
+		"en"			"This Tank throws explosive rocks and periodically warps to survivors."
+	}
+	"Tank96"
+	{
+		"en"			"This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
+	}
+	"Tank97"
+	{
+		"en"			"This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
+	}
+	"Tank98"
+	{
+		"en"			"This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, set survivors to black and white, jump periodically, and periodically warps to survivors."
 	}
 }
