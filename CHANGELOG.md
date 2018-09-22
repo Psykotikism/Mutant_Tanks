@@ -19,15 +19,19 @@ Changes:
 6. Added the "Ghost Fade Alpha" setting which determines how much alpha to take from a Super Tank as it is cloaking.
 7. Added the "Ghost Fade Delay" setting which determines the interval of a Super Tank's invisibility cloak.
 8. Added the "Ghost Fade Rate" setting which determines how fast a Super Tank can fade into invisibility.
-9. Added the "Ghost3" phrase to notify players of when a Super Tank's invisibility cloak resets.
-10. Added the "Rocket Delay" setting which determines how long until a survivor is sent into space.
-11. Added several new settings for the Zombie ability.
+9. The Health ability no longer allows a Super Tank to set survivors to black and white.
+10. Added the "Heal Buffer" setting which decides the amount of temporary health given to survivors.
+11. Added the "Rocket Delay" setting which determines how long until a survivor is sent into space.
+12. Added several new settings for the Zombie ability.
+13. Added the "Boss Types" setting so users can specify what Super Tank types that bosses can evolve into.
+14. Lowered the amount of boss stages from 5 to 4. Any boss that spawns automatically starts at stage 1.
 
 Files:
 
 1. Updated config file with all the new settings.
-2. Updated include file to use new natives introduced in SM 1.9 and SM 1.10.
-3. Updated translation file with the new "Ghost3" phrase.
+2. Updated gamedata file to remove unused signatures.
+3. Updated include file to use new natives introduced in SM 1.9 and SM 1.10.
+4. Updated translation file with new phrases.
 
 ## Version 8.41 (September 18, 2018)
 

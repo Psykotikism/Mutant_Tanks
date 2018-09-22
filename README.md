@@ -20,8 +20,8 @@ Super Tanks++ makes fighting Tanks great again!
 Super Tanks++ enhances the experience and fun that players get from Tank fights by 5,000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
-1. SourceMod 1.10.0.6317 or higher
-2. A dedicated server (Local/listen servers are NOT supported!)
+1. You must have at least SourceMod 1.10.0.6317 or higher.
+2. You must have a dedicated server. (Local/listen servers are NOT supported!)
 
 ### Installation
 1. Delete files from old versions of the plugin.

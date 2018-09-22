@@ -182,24 +182,43 @@
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
 			// Note: The values will be added to the boss's new health on every new stage.
 			// Note: The values will determine when the boss evolves to the next stage.
-			// Example: When Stage 1 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
+			// Example: When Stage 2 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
+			// --
+			// Character limit: 25
+			// Character limit for each health stage: 5
 			// --
 			// Minimum value for each health stage: 1
 			// Maximum value for each health stage: 65535
 			// --
-			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 1 boss. (The "Boss Stages" setting must be set to "1" or higher.)
-			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "2" or higher.)
-			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "3" or higher.)
-			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "4" or higher.)
-			// 5th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "5" or higher.)
-			"Boss Health Stages"			"5000,2500,1500,1000,500"
+			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "1" or higher.)
+			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "2" or higher.)
+			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "3" or higher.)
+			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "4" or higher.)
+			"Boss Health Stages"			"5000,2500,1500,1000"
 
 			// The number of stages for Super Tank bosses.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
 			// --
 			// Minimum: 1
-			// Maximum: 5
+			// Maximum: 4
 			"Boss Stages"					"3"
+
+			// The Super Tank types that the boss will evolve into.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// Note: Make sure that the Super Tank types that the boss will evolve into are enabled.
+			// Example: When Stage 1 boss evolves into Stage 2, it will evolve into Tank #2.
+			// --
+			// Character limit: 20
+			// Character limit for each stage type: 4
+			// --
+			// Minimum: 1
+			// Maximum: 5000
+			// --
+			// 1st number = 2nd stage type
+			// 2nd number = 3rd stage type
+			// 3rd number = 4th stage type
+			// 4th number = 5th stage type
+			"Boss Types"					"2,3,4,5"
 
 			// The interval between each random switch.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
@@ -222,6 +241,10 @@
 			"Finale Tank"					"0"
 
 			// These are the Super Tank's skin and glow outline colors.
+			// --
+			// Character limit: 28
+			// Character limit for each color: 3
+			// --
 			// Separate colors with "|".
 			// Separate RGBAs with commas.
 			// --
@@ -491,7 +514,11 @@
 			// 0: OFF
 			// 1: ON, display message only when "Acid Hit" is on.
 			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// 3: ON, display message only when "Acid Rock Break" is on.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -722,7 +749,11 @@
 			// 0: OFF
 			// 1: ON, display message only when "Bomb Hit" is on.
 			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// 3: ON, display message only when "Bomb Rock Break" is on.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1300,7 +1331,11 @@
 			// 0: OFF
 			// 1: ON, display message only when "Fire Hit" is on.
 			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// 3: ON, display message only when "Fire Rock Break" is on.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1798,14 +1833,14 @@
 {
 	"Tank 1"
 	{
-		// The Super Tank gains health from other nearby infected and sets survivors to black and white with temporary health.
+		// The Super Tank gains health from other nearby infected and gives survivors temporary health.
 		// "Ability Enabled" - Any nearby infected can give the Super Tank some health.
 		// - "Heal Absorb Range"
 		// - "Heal Interval"
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor can go black and white and have temporary health.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor can have temporary health.
 		// - "Heal Range"
 		// - "Heal Range Chance"
-		// "Heal Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor can go black and white and have temporary health.
+		// "Heal Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor can have temporary health.
 		// - "Heal Chance"
 		// - "Heal Hit Mode"
 		// Requires "st_heal.smx" to be installed.
@@ -1815,7 +1850,7 @@
 			// Note: This setting does not affect the "Heal Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON, the Super Tank can set survivors to black and white with temporary health.
+			// 1: ON, the Super Tank can give survivors temporary health.
 			// 2: ON, the Super Tank can absorb health from nearby infected.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
@@ -1837,6 +1872,12 @@
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Heal Absorb Range"				"500.0"
+
+			// The amount of temporary health given to survivors.
+			// --
+			// Minimum: 1.0
+			// Maximum: 65535.0
+			"Heal Buffer"					"25.0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
