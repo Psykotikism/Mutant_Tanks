@@ -8,12 +8,8 @@
 {
 	// These are the general plugin settings.
 	// Note: The following settings will not work in custom config files:
-	// "Game Mode Types"
-	// "Enabled Game Modes"
-	// "Disabled Game Modes"
-	// "Enable Custom Configs"
-	// "Create Config Types"
-	// "Execute Config Types"
+	// Any setting under the "Game Modes" section.
+	// Any setting under the "Custom" section.
 	"Plugin Settings"
 	{
 		"General"
@@ -23,35 +19,6 @@
 			// 0: OFF
 			// 1: ON
 			"Plugin Enabled"				"1"
-
-			// Enable Super Tanks++ in these game mode types.
-			// Add up numbers together for different results.
-			// --
-			// Minimum: 0
-			// Maximum: 15
-			// --
-			// 0: All game mode types.
-			// 1: Co-Op modes only.
-			// 2: Versus modes only.
-			// 4: Survival modes only.
-			// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
-			"Game Mode Types"				"5"
-
-			// Enable Super Tanks++ in these game modes.
-			// Separate game modes with commas.
-			// Character limit: 512 (including commas)
-			// --
-			// Empty: All
-			// Not empty: Enabled only in these game modes.
-			"Enabled Game Modes"			"coop,survival"
-
-			// Disable Super Tanks++ in these game modes.
-			// Separate game modes with commas.
-			// Character limit: 512 (including commas)
-			// --
-			// Empty: None
-			// Not empty: Disabled only in these game modes.
-			"Disabled Game Modes"			"versus,scavenge"
 
 			// Announce each Super Tank's arrival.
 			// --
@@ -88,19 +55,6 @@
 			// 3: Multiply both.
 			"Multiply Health"				"0"
 
-			// Amount of Tanks to spawn for each finale wave.
-			// Separate waves with commas.
-			// Wave limit: 3
-			// Character limit for each wave: 3
-			// --
-			// Minimum value for each wave: 1
-			// Maximum value for each wave: 999
-			// --
-			// 1st number = 1st wave
-			// 2nd number = 2nd wave
-			// 3rd number = 3rd wave
-			"Tank Waves"					"2,3,4"
-
 			// The range of types to check for.
 			// Separate values with "-".
 			// Value limit: 2
@@ -112,6 +66,70 @@
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			"Type Range"					"1-5000"
+		}
+		"Waves"
+		{
+			// Spawn this many Tanks on non-finale maps periodically.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Regular Amount"				"2"
+
+			// Spawn Tanks on non-finale maps every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Regular Interval"				"300.0"
+
+			// Spawn Tanks on non-finale maps periodically.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Regular Wave"					"0"
+
+			// Amount of Tanks to spawn for each finale wave.
+			// Separate waves with commas.
+			// Wave limit: 3
+			// Character limit for each wave: 3
+			// --
+			// Minimum value for each wave: 1
+			// Maximum value for each wave: 9999999999
+			// --
+			// 1st number = 1st wave
+			// 2nd number = 2nd wave
+			// 3rd number = 3rd wave
+			"Finale Waves"					"2,3,4"
+		}
+		"Game Modes"
+		{
+			// Enable Super Tanks++ in these game mode types.
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0: All game mode types.
+			// 1: Co-Op modes only.
+			// 2: Versus modes only.
+			// 4: Survival modes only.
+			// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
+			"Game Mode Types"				"5"
+
+			// Enable Super Tanks++ in these game modes.
+			// Separate game modes with commas.
+			// Character limit: 512 (including commas)
+			// --
+			// Empty: All
+			// Not empty: Enabled only in these game modes.
+			"Enabled Game Modes"			"coop,survival"
+
+			// Disable Super Tanks++ in these game modes.
+			// Separate game modes with commas.
+			// Character limit: 512 (including commas)
+			// --
+			// Empty: None
+			// Not empty: Disabled only in these game modes.
+			"Disabled Game Modes"			"versus,scavenge"
 		}
 		"Custom"
 		{
@@ -149,7 +167,7 @@
 
 ## Tank Settings
 
-### General, Enhancements, Immunities
+### General, Spawn, Props, Particles, Enhancements, Immunities
 
 ```
 "Super Tanks++"
@@ -178,12 +196,42 @@
 			// 1: ON
 			"Tank Note"						"0"
 
+			// These are the Super Tank's skin and glow outline colors.
+			// --
+			// Character limit: 28
+			// Character limit for each color: 3
+			// --
+			// Separate colors with "|".
+			// Separate RGBAs with commas.
+			// --
+			// Minimum value for each color: 0
+			// Maximum value for each color: 255
+			// --
+			// 1st set = skin color (RGBA)
+			// 2nd set = glow color (RGB)
+			"Skin-Glow Colors"				"255,255,255,255|255,255,255"
+
+			// The Super Tank will have a glow outline.
+			// Only available in Left 4 Dead 2.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Glow Outline"					"1"
+		}
+		"Spawn"
+		{
 			// The number of Super Tanks with this type that can be alive at any given time.
 			// Note: Clones, respawned Super Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
 			// Minimum: 0
 			// Maximum: 9999999999
 			"Type Limit"					"32"
+
+			// The Super Tank will only spawn on finale maps.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Finale Tank"					"0"
 
 			// The health of bosses needed for each stage.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
@@ -240,35 +288,9 @@
 			// 1: Spawn as Super Tank bosses.
 			// 2: Spawn as Super Tanks that switch randomly between each type.
 			"Spawn Mode"					"0"
-
-			// The Super Tank will only spawn on finale maps.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Finale Tank"					"0"
-
-			// These are the Super Tank's skin and glow outline colors.
-			// --
-			// Character limit: 28
-			// Character limit for each color: 3
-			// --
-			// Separate colors with "|".
-			// Separate RGBAs with commas.
-			// --
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
-			// --
-			// 1st set = skin color (RGBA)
-			// 2nd set = glow color (RGB)
-			"Skin-Glow Colors"				"255,255,255,255|255,255,255"
-
-			// The Super Tank will have a glow outline.
-			// Only available in Left 4 Dead 2.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Glow Effect"					"1"
-
+		}
+		"Props"
+		{
 			// Props that the Super Tank can spawn with.
 			// Combine numbers in any order for different results.
 			// Character limit: 6
@@ -287,7 +309,7 @@
 			// Character limit for each chance: 3
 			// --
 			// Minimum value for each chance: 1
-			// Maximum value for each chance: 999
+			// Maximum value for each chance: 9999999999
 			// --
 			// 1st number = Chance for a blur effect to appear.
 			// 2nd number = Chance for lights to appear.
@@ -310,14 +332,16 @@
 			// 4th set = rocks color (RGBA)
 			// 5th set = tires color (RGBA)
 			"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255"
-
-			// The Super Tank will spawn with a particle effect.
+		}
+		"Particles"
+		{
+			// The Super Tank's body will have a particle effect.
 			// --
 			// 0: OFF
 			// 1: ON
-			"Particle Effect"				"0"
+			"Body Particle"					"0"
 
-			// The particle effects for the Super Tank.
+			// The particle effects for the Super Tank's body.
 			// Combine numbers in any order for different results.
 			// Character limit: 7
 			// --
@@ -328,13 +352,13 @@
 			// 5: Meteor Smoke
 			// 6: Smoker Cloud
 			// 7: Acid Trail (Only available in Left 4 Dead 2.)
-			"Particle Effects"				"1234567"
+			"Body Effects"					"1234567"
 
 			// The Super Tank's rock will have a particle effect.
 			// --
 			// 0: OFF
 			// 1: ON
-			"Rock Effect"					"0"
+			"Rock Particle"					"0"
 
 			// The particle effects for the Super Tank's rock.
 			// Combine numbers in any order for different results.
@@ -2405,7 +2429,7 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Jump Height"					"500.0"
+			"Jump Height"					"300.0"
 
 			// The Super Tank jumps every time this many seconds passes.
 			// --
