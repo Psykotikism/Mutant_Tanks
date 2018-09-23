@@ -856,7 +856,7 @@ Examples:
 
 **AngelAce113** - For the default colors, testing each Tank type, giving me ideas, and overall support.
 
-**Sipow** - For the default colors and overall support.
+**Sipow** - For the default colors, giving me ideas, and overall support.
 
 **SourceMod Team** - For the blind, drug, and ice source codes.
 

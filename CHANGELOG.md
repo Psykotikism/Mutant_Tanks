@@ -14,21 +14,13 @@ Changes:
 1. Renamed/removed some stocks.
 2. The plugin and its modules now requires SM 1.10.0.6317 or higher.
 3. The Tank Notes now display a different message when the phrase for a Super Tank is not found.
-4. The Restart ability now removes all weapons from survivors before giving them new loadouts.
-5. Changed the directory of the configs from "cfg/sourcemod" to "addons/sourcemod/data".
-6. Added the "Ghost Fade Alpha" setting which determines how much alpha to take from a Super Tank as it is cloaking.
-7. Added the "Ghost Fade Delay" setting which determines the interval of a Super Tank's invisibility cloak.
-8. Added the "Ghost Fade Rate" setting which determines how fast a Super Tank can fade into invisibility.
-9. The Health ability no longer allows a Super Tank to set survivors to black and white.
-10. Added the "Heal Buffer" setting which decides the amount of temporary health given to survivors.
-11. Added the "Rocket Delay" setting which determines how long until a survivor is sent into space.
-12. Added several new settings for the Zombie ability.
-13. Added the "Boss Types" setting so users can specify what Super Tank types that bosses can evolve into.
-14. Lowered the amount of boss stages from 5 to 4. Any boss that spawns automatically starts at stage 1.
-15. Added the "Type Limit" setting which limits how many times a Super Tank type can be alive at once. (Clones, respawned Super Tanks, and Super Tanks spawned through the Super Tanks++ menu aren't affected.)
-16. Moved various settings under new sections.
-17. Added new settings that allow users to spawn Tanks periodically on non-finale maps.
-18. Renamed several settings.
+4. Changed the directory of the configs from "cfg/sourcemod" to "addons/sourcemod/data".
+5. The Health ability no longer allows a Super Tank to set survivors to black and white.
+6. The Restart ability now removes all weapons from survivors before giving them new loadouts.
+7. Lowered the amount of boss stages from 5 to 4. Any boss that spawns automatically starts at stage 1.
+8. Moved various settings under new sections.
+9. Added several new settings.
+10. Renamed several settings.
 
 Files:
 

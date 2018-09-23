@@ -4412,7 +4412,7 @@
 			// --
 			// Minimum: 1
 			// Maximum: 9999999999
-			"Witch Minion Damage"			"5"
+			"Witch Damage"					"5"
 
 			// The distance between a common infected and the Super Tank needed to trigger the ability.
 			// --
