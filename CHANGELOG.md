@@ -25,6 +25,7 @@ Changes:
 12. Added several new settings for the Zombie ability.
 13. Added the "Boss Types" setting so users can specify what Super Tank types that bosses can evolve into.
 14. Lowered the amount of boss stages from 5 to 4. Any boss that spawns automatically starts at stage 1.
+15. Added the "Type Limit" setting which limits how many times a Super Tank type can be alive at once. (Clones, respawned Super Tanks, and Super Tanks spawned through the Super Tanks++ menu aren't affected.)
 
 Files:
 

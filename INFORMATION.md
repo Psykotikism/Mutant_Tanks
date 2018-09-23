@@ -178,6 +178,13 @@
 			// 1: ON
 			"Tank Note"						"0"
 
+			// The number of Super Tanks with this type that can be alive at any given time.
+			// Note: Clones, respawned Super Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
+			// --
+			// Minimum: 0
+			// Maximum: 9999999999
+			"Type Limit"					"32"
+
 			// The health of bosses needed for each stage.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
 			// Note: The values will be added to the boss's new health on every new stage.
@@ -954,7 +961,7 @@
 {
 	"Tank 1"
 	{
-		// The Super Tank creates clones of itself.
+		// The Super Tank creates a clone of itself.
 		// Requires "st_clone.smx" to be installed.
 		"Clone Ability"
 		{
@@ -970,7 +977,7 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The amount of clones the Super Tank can spawn.
+			// The amount of clones the Super Tank can create.
 			// --
 			// Minimum: 1
 			// Maximum: 25
@@ -982,16 +989,16 @@
 			// Maximum: 9999999999 (Less chance)
 			"Clone Chance"					"4"
 
-			// The Super Tank's clones' health.
+			// The Super Tank's clone's health.
 			// --
 			// Minimum: 1
 			// Maximum: 65535
 			"Clone Health"					"1000"
 
-			// The Super Tank's clones will be treated as real Super Tanks.
+			// The Super Tank's clone will be treated as a real Super Tank.
 			// --
-			// 0: OFF, clones cannot use abilities like real Super Tanks.
-			// 1: ON, clones can use abilities like real Super Tanks.
+			// 0: OFF, the clone cannot use abilities like real Super Tanks.
+			// 1: ON, the clone can use abilities like real Super Tanks.
 			"Clone Mode"					"0"
 		}
 	}

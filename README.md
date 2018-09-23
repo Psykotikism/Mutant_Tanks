@@ -106,6 +106,7 @@ This is okay:
 		{
 			"Tank Name"				"Test Tank" // Tank has a name.
 			"Tank Enabled"			"1" // Tank is enabled.
+			"Type Limit"			"1" // Only 1 Test Tank can be alive at any given time.
 			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
@@ -122,6 +123,7 @@ This is not okay:
 		{
 			// "Tank Enabled" is missing so this entry is disabled.
 			"Tank Name"				"Test Tank" // Tank has a name.
+			"Type Limit"			"1" // Only 1 Test Tank can be alive at any given time.
 			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
@@ -138,6 +140,7 @@ This is okay:
 		{
 			// Since "Tank Name" is missing, the default name for this entry will be "Tank"
 			"Tank Enabled"			"1" // Tank is enabled.
+			"Type Limit"			"1" // Only 1 of this Tank type can be alive at any given time.
 			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
@@ -154,6 +157,7 @@ This is not okay:
 		{
 			"Tank Name"				"Test Tank" // Tank has a name.
 			"Tank Enabled"			"1" // Tank is enabled.
+			"Type Limit"			"1" // Only 1 Test Tank can be alive at any given time.
 			"Skin-Glow Colors"		"255, 0, 0, 255 | 255, 255, 0" // The string should not contain any spaces.
 		}
 	}
@@ -172,6 +176,7 @@ Here's our final entry:
 		{
 			"Tank Name"				"Test Tank" // Named "Test Tank".
 			"Tank Enabled"			"1" // Entry is enabled.
+			"Type Limit"			"1" // Only 1 Test Tank can be alive at any given time.
 			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Has red/yellow color scheme.
 		}
 		"Immunities"
