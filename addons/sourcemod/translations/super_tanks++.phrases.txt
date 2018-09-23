@@ -625,7 +625,7 @@
 	}
 	"Tank2"
 	{
-		"en"			"This Tank can spawn acid puddles underneath survivors."
+		"en"			"This Tank can create acid puddles underneath survivors."
 	}
 	"Tank3"
 	{
