@@ -112,7 +112,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iWitchMessage[iIndex] = iClamp(g_iWitchMessage[iIndex], 0, 1)) : (g_iWitchMessage2[iIndex] = iClamp(g_iWitchMessage2[iIndex], 0, 1));
 			main ? (g_iWitchAmount[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Amount", 3)) : (g_iWitchAmount2[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Amount", g_iWitchAmount[iIndex]));
 			main ? (g_iWitchAmount[iIndex] = iClamp(g_iWitchAmount[iIndex], 1, 25)) : (g_iWitchAmount2[iIndex] = iClamp(g_iWitchAmount2[iIndex], 1, 25));
-			main ? (g_iWitchDamage[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Minion Damage", 5)) : (g_iWitchDamage2[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Minion Damage", g_iWitchDamage[iIndex]));
+			main ? (g_iWitchDamage[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Damage", 5)) : (g_iWitchDamage2[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Damage", g_iWitchDamage[iIndex]));
 			main ? (g_iWitchDamage[iIndex] = iClamp(g_iWitchDamage[iIndex], 1, 9999999999)) : (g_iWitchDamage2[iIndex] = iClamp(g_iWitchDamage2[iIndex], 1, 9999999999));
 			main ? (g_flWitchRange[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Range", 500.0)) : (g_flWitchRange2[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Range", g_flWitchRange[iIndex]));
 			main ? (g_flWitchRange[iIndex] = flClamp(g_flWitchRange[iIndex], 1.0, 9999999999.0)) : (g_flWitchRange2[iIndex] = flClamp(g_flWitchRange2[iIndex], 1.0, 9999999999.0));
