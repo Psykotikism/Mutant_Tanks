@@ -25,7 +25,7 @@ Handle g_hAbilityForward, g_hBossStageForward, g_hConfigsForward, g_hEventForwar
 int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2, g_iExplosiveImmunity[ST_MAXTYPES + 1],
 	g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGameModeTypes,
 	g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1],
-	g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType;
+	g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType, g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
 TopMenu g_tmSTMenu;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -592,7 +592,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 				for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 				{
-					if (iTankEnabled(iIndex) == 0 || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
+					if (iTankEnabled(iIndex) == 0 || iGetTypeCount(iIndex) >= iTypeLimit(iIndex) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
 					{
 						continue;
 					}
@@ -762,7 +762,7 @@ stock void vTankList(int client)
 			case 0: sStatus = "Disabled";
 			case 1: sStatus = "Enabled";
 		}
-		switch (iGetSpawnMode(iIndex))
+		switch (iSpawnMode(iIndex))
 		{
 			case 0: sMode = "Normal";
 			case 1: sMode = "Boss";
@@ -873,6 +873,8 @@ stock void vLoadConfigs(const char[] savepath, bool main = false)
 			main ? (g_iTankEnabled[iIndex] = iClamp(g_iTankEnabled[iIndex], 0, 1)) : (g_iTankEnabled2[iIndex] = iClamp(g_iTankEnabled2[iIndex], 0, 1));
 			main ? (g_iTankNote[iIndex] = kvSuperTanks.GetNum("General/Tank Note", 0)) : (g_iTankNote2[iIndex] = kvSuperTanks.GetNum("General/Tank Note", g_iTankNote[iIndex]));
 			main ? (g_iTankNote[iIndex] = iClamp(g_iTankNote[iIndex], 0, 1)) : (g_iTankNote2[iIndex] = iClamp(g_iTankNote2[iIndex], 0, 1));
+			main ? (g_iTypeLimit[iIndex] = kvSuperTanks.GetNum("General/Type Limit", 32)) : (g_iTypeLimit2[iIndex] = kvSuperTanks.GetNum("General/Type Limit", g_iTypeLimit[iIndex]));
+			main ? (g_iTypeLimit[iIndex] = iClamp(g_iTypeLimit[iIndex], 0, 9999999999)) : (g_iTypeLimit2[iIndex] = iClamp(g_iTypeLimit2[iIndex], 0, 9999999999));
 			main ? (kvSuperTanks.GetString("General/Boss Health Stages", g_sBossHealthStages[iIndex], sizeof(g_sBossHealthStages[]), "5000,2500,1500,1000")) : (kvSuperTanks.GetString("General/Boss Health Stages", g_sBossHealthStages2[iIndex], sizeof(g_sBossHealthStages2[]), g_sBossHealthStages[iIndex]));
 			main ? (g_iBossStages[iIndex] = kvSuperTanks.GetNum("General/Boss Stages", 3)) : (g_iBossStages2[iIndex] = kvSuperTanks.GetNum("General/Boss Stages", g_iBossStages[iIndex]));
 			main ? (g_iBossStages[iIndex] = iClamp(g_iBossStages[iIndex], 1, 4)) : (g_iBossStages2[iIndex] = iClamp(g_iBossStages2[iIndex], 1, 4));
@@ -933,10 +935,6 @@ stock void vBoss(int client, int limit, int stages, int type, int stage)
 	if (iHealth <= limit)
 	{
 		g_iBossStageCount[client] = stage;
-		if (iTankEnabled(type) == 0)
-		{
-			return;
-		}
 		vNewTankSettings(client);
 		vSetColor(client, type);
 		DataPack dpTankSpawn = new DataPack();
@@ -1486,11 +1484,6 @@ stock int iGetMinType()
 	return iMinType;
 }
 
-stock int iGetSpawnMode(int value)
-{
-	return !g_bTankConfig[value] ? g_iSpawnMode[value] : g_iSpawnMode2[value];
-}
-
 stock int iGetTankCount()
 {
 	int iTankCount;
@@ -1502,6 +1495,19 @@ stock int iGetTankCount()
 		}
 	}
 	return iTankCount;
+}
+
+stock int iGetTypeCount(int type)
+{
+	int iType;
+	for (int iTank = iGetMinType(); iTank <= iGetMaxType(); iTank++)
+	{
+		if (bIsTankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_iTankType[iTank] == type)
+		{
+			iType++;
+		}
+	}
+	return iType;
 }
 
 stock int iGlowEffect(int value)
@@ -1524,9 +1530,19 @@ stock int iRockEffect(int client)
 	return !g_bTankConfig[g_iTankType[client]] ? g_iRockEffect[g_iTankType[client]] : g_iRockEffect2[g_iTankType[client]];
 }
 
+stock int iSpawnMode(int value)
+{
+	return !g_bTankConfig[value] ? g_iSpawnMode[value] : g_iSpawnMode2[value];
+}
+
 stock int iTankEnabled(int value)
 {
 	return !g_bTankConfig[value] ? g_iTankEnabled[value] : g_iTankEnabled2[value];
+}
+
+stock int iTypeLimit(int type)
+{
+	return !g_bTankConfig[type] ? g_iTypeLimit[type] : g_iTypeLimit2[type];
 }
 
 public void vSTEnableCvar(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -1728,7 +1744,7 @@ public Action tTimerRandomize(Handle timer, any userid)
 	int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
-		if (iTankEnabled(iIndex) == 0 || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
+		if (iTankEnabled(iIndex) == 0 || iGetTypeCount(iIndex) >= iTypeLimit(iIndex) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
 		{
 			continue;
 		}
@@ -1841,7 +1857,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 	{
 		if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank) && g_iTankType[iTank] > 0 && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			switch (iGetSpawnMode(g_iTankType[iTank]))
+			switch (iSpawnMode(g_iTankType[iTank]))
 			{
 				case 1:
 				{
