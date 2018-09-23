@@ -118,7 +118,7 @@ public void ST_Event(Event event, const char[] name)
 						{
 							for (int iItem = 0; iItem < sizeof(sItems); iItem++)
 							{
-								if (StrContains(sItemLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
+								if (StrContains(sItemLoadout, sItems[iItem]) != -1 && strcmp(sItems[iItem], "") == 1)
 								{
 									vCheatCommand(iSurvivor, "give", sItems[iItem]);
 								}

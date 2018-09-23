@@ -86,7 +86,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iJumpAbility[iIndex] = iClamp(g_iJumpAbility[iIndex], 0, 1)) : (g_iJumpAbility2[iIndex] = iClamp(g_iJumpAbility2[iIndex], 0, 1));
 			main ? (g_iJumpMessage[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Message", 0)) : (g_iJumpMessage2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Message", g_iJumpMessage[iIndex]));
 			main ? (g_iJumpMessage[iIndex] = iClamp(g_iJumpMessage[iIndex], 0, 1)) : (g_iJumpMessage2[iIndex] = iClamp(g_iJumpMessage2[iIndex], 0, 1));
-			main ? (g_flJumpHeight[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Height", 500.0)) : (g_flJumpHeight2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Height", g_flJumpHeight[iIndex]));
+			main ? (g_flJumpHeight[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Height", 300.0)) : (g_flJumpHeight2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Height", g_flJumpHeight[iIndex]));
 			main ? (g_flJumpHeight[iIndex] = flClamp(g_flJumpHeight[iIndex], 0.1, 9999999999.0)) : (g_flJumpHeight2[iIndex] = flClamp(g_flJumpHeight2[iIndex], 0.1, 9999999999.0));
 			main ? (g_flJumpInterval[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Interval", 1.0)) : (g_flJumpInterval2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Interval", g_flJumpInterval[iIndex]));
 			main ? (g_flJumpInterval[iIndex] = flClamp(g_flJumpInterval[iIndex], 0.1, 9999999999.0)) : (g_flJumpInterval2[iIndex] = flClamp(g_flJumpInterval2[iIndex], 0.1, 9999999999.0));

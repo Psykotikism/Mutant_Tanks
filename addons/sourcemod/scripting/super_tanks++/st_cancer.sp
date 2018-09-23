@@ -168,13 +168,13 @@ stock void vCancerHit(int client, int owner, int chance, int enabled, int messag
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 		TrimString(sRGB[0]);
-		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+		int iRed = (strcmp(sRGB[0], "") == 1) ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		TrimString(sRGB[1]);
-		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+		int iGreen = (strcmp(sRGB[1], "") == 1) ? StringToInt(sRGB[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 		TrimString(sRGB[2]);
-		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+		int iBlue = (strcmp(sRGB[2], "") == 1) ? StringToInt(sRGB[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
 		vFade(client, 800, 300, iRed, iGreen, iBlue);

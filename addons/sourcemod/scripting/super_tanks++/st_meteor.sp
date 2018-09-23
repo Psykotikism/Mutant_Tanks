@@ -83,7 +83,7 @@ public void ST_Configs(const char[] savepath, bool main)
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
-			main ? (kvSuperTanks.GetString("General/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255")) : (kvSuperTanks.GetString("General/Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]));
+			main ? (kvSuperTanks.GetString("Props/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255")) : (kvSuperTanks.GetString("Props/Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]));
 			main ? (g_iMeteorAbility[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", 0)) : (g_iMeteorAbility2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", g_iMeteorAbility[iIndex]));
 			main ? (g_iMeteorAbility[iIndex] = iClamp(g_iMeteorAbility[iIndex], 0, 1)) : (g_iMeteorAbility2[iIndex] = iClamp(g_iMeteorAbility2[iIndex], 0, 1));
 			main ? (g_iMeteorMessage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", 0)) : (g_iMeteorMessage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", g_iMeteorMessage[iIndex]));
@@ -218,25 +218,25 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	TrimString(sMeteorRadius);
 	ExplodeString(sMeteorRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
 	TrimString(sRadius[0]);
-	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -200.0;
+	float flMin = (strcmp(sRadius[0], "") == 1) ? StringToFloat(sRadius[0]) : -200.0;
 	TrimString(sRadius[1]);
-	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
+	float flMax = (strcmp(sRadius[1], "") == 1) ? StringToFloat(sRadius[1]) : 200.0;
 	flMin = flClamp(flMin, -200.0, 0.0), flMax = flClamp(flMax, 0.0, 200.0);
 	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
 	TrimString(sPropsColors);
 	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 	ExplodeString(sSet[3], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 	TrimString(sRGB[0]);
-	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+	int iRed = (strcmp(sRGB[0], "") == 1) ? StringToInt(sRGB[0]) : 255;
 	iRed = iClamp(iRed, 0, 255);
 	TrimString(sRGB[1]);
-	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+	int iGreen = (strcmp(sRGB[1], "") == 1) ? StringToInt(sRGB[1]) : 255;
 	iGreen = iClamp(iGreen, 0, 255);
 	TrimString(sRGB[2]);
-	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+	int iBlue = (strcmp(sRGB[2], "") == 1) ? StringToInt(sRGB[2]) : 255;
 	iBlue = iClamp(iBlue, 0, 255);
 	TrimString(sRGB[3]);
-	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
+	int iAlpha = (strcmp(sRGB[3], "") == 1) ? StringToInt(sRGB[3]) : 255;
 	iAlpha = iClamp(iAlpha, 0, 255);
 	if ((GetEngineTime() - flTime) > 5.0)
 	{

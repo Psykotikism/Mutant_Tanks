@@ -68,7 +68,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iTankEnabled[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", 0)) : (g_iTankEnabled2[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", g_iTankEnabled[iIndex]));
 			main ? (g_iTankEnabled[iIndex] = iClamp(g_iTankEnabled[iIndex], 0, 1)) : (g_iTankEnabled2[iIndex] = iClamp(g_iTankEnabled2[iIndex], 0, 1));
-			main ? (g_iFinaleTank[iIndex] = kvSuperTanks.GetNum("General/Finale Tank", 0)) : (g_iFinaleTank2[iIndex] = kvSuperTanks.GetNum("General/Finale Tank", g_iFinaleTank[iIndex]));
+			main ? (g_iFinaleTank[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", 0)) : (g_iFinaleTank2[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", g_iFinaleTank[iIndex]));
 			main ? (g_iFinaleTank[iIndex] = iClamp(g_iFinaleTank[iIndex], 0, 1)) : (g_iFinaleTank2[iIndex] = iClamp(g_iFinaleTank2[iIndex], 0, 1));
 			main ? (g_iRespawnAbility[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Enabled", 0)) : (g_iRespawnAbility2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Enabled", g_iRespawnAbility[iIndex]));
 			main ? (g_iRespawnAbility[iIndex] = iClamp(g_iRespawnAbility[iIndex], 0, 1)) : (g_iRespawnAbility2[iIndex] = iClamp(g_iRespawnAbility2[iIndex], 0, 1));

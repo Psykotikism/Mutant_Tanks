@@ -186,7 +186,7 @@ stock void vRestartHit(int client, int owner, int chance, int enabled, int messa
 		vRemoveWeapon(client, 0), vRemoveWeapon(client, 1), vRemoveWeapon(client, 2), vRemoveWeapon(client, 3), vRemoveWeapon(client, 4);
 		for (int iItem = 0; iItem < sizeof(sItems); iItem++)
 		{
-			if (StrContains(sRestartLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
+			if (StrContains(sRestartLoadout, sItems[iItem]) != -1 && strcmp(sItems[iItem], "") == 1)
 			{
 				vCheatCommand(client, "give", sItems[iItem]);
 			}

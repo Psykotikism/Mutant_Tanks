@@ -127,18 +127,18 @@ stock void vMedic(int client)
 				TrimString(sMedicMaxHealth);
 				ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
 				int iHealth = GetClientHealth(iInfected),
-					iSmokerHealth = (sHealth[0][0] != '\0') ? StringToInt(sHealth[0]) : 25,
-					iSmokerMaxHealth = (sMaxHealth[0][0] != '\0') ? StringToInt(sMaxHealth[0]) : 250,
-					iBoomerHealth = (sHealth[1][0] != '\0') ? StringToInt(sHealth[1]) : 25,
-					iBoomerMaxHealth = (sMaxHealth[1][0] != '\0') ? StringToInt(sMaxHealth[1]) : 50,
-					iHunterHealth = (sHealth[2][0] != '\0') ? StringToInt(sHealth[2]) : 25,
-					iHunterMaxHealth = (sMaxHealth[2][0] != '\0') ? StringToInt(sMaxHealth[2]) : 250,
-					iSpitterHealth = (sHealth[3][0] != '\0') ? StringToInt(sHealth[3]) : 25,
-					iSpitterMaxHealth = (sMaxHealth[3][0] != '\0') ? StringToInt(sMaxHealth[3]) : 100,
-					iJockeyHealth = (sHealth[4][0] != '\0') ? StringToInt(sHealth[4]) : 25,
-					iJockeyMaxHealth = (sMaxHealth[4][0] != '\0') ? StringToInt(sMaxHealth[4]) : 325,
-					iChargerHealth = (sHealth[5][0] != '\0') ? StringToInt(sHealth[5]) : 25,
-					iChargerMaxHealth = (sMaxHealth[5][0] != '\0') ? StringToInt(sMaxHealth[5]) : 600;
+					iSmokerHealth = (strcmp(sHealth[0], "") == 1) ? StringToInt(sHealth[0]) : 25,
+					iSmokerMaxHealth = (strcmp(sMaxHealth[0], "") == 1) ? StringToInt(sMaxHealth[0]) : 250,
+					iBoomerHealth = (strcmp(sHealth[1], "") == 1) ? StringToInt(sHealth[1]) : 25,
+					iBoomerMaxHealth = (strcmp(sMaxHealth[1], "") == 1) ? StringToInt(sMaxHealth[1]) : 50,
+					iHunterHealth = (strcmp(sHealth[2], "") == 1) ? StringToInt(sHealth[2]) : 25,
+					iHunterMaxHealth = (strcmp(sMaxHealth[2], "") == 1) ? StringToInt(sMaxHealth[2]) : 250,
+					iSpitterHealth = (strcmp(sHealth[3], "") == 1) ? StringToInt(sHealth[3]) : 25,
+					iSpitterMaxHealth = (strcmp(sMaxHealth[3], "") == 1) ? StringToInt(sMaxHealth[3]) : 100,
+					iJockeyHealth = (strcmp(sHealth[4], "") == 1) ? StringToInt(sHealth[4]) : 25,
+					iJockeyMaxHealth = (strcmp(sMaxHealth[4], "") == 1) ? StringToInt(sMaxHealth[4]) : 325,
+					iChargerHealth = (strcmp(sHealth[5], "") == 1) ? StringToInt(sHealth[5]) : 25,
+					iChargerMaxHealth = (strcmp(sMaxHealth[5], "") == 1) ? StringToInt(sMaxHealth[5]) : 600;
 				iSmokerHealth = iClamp(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				iSmokerMaxHealth = iClamp(iSmokerMaxHealth, 1, ST_MAXHEALTH);
 				iBoomerHealth = iClamp(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);

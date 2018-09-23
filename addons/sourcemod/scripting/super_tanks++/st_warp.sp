@@ -120,9 +120,9 @@ public void ST_Configs(const char[] savepath, bool main)
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
-			main ? (g_iParticleEffect[iIndex] = kvSuperTanks.GetNum("General/Particle Effect", 0)) : (g_iParticleEffect2[iIndex] = kvSuperTanks.GetNum("General/Particle Effect", g_iParticleEffect[iIndex]));
+			main ? (g_iParticleEffect[iIndex] = kvSuperTanks.GetNum("Particles/Body Particle", 0)) : (g_iParticleEffect2[iIndex] = kvSuperTanks.GetNum("Particles/Body Particle", g_iParticleEffect[iIndex]));
 			main ? (g_iParticleEffect[iIndex] = iClamp(g_iParticleEffect[iIndex], 0, 1)) : (g_iParticleEffect2[iIndex] = iClamp(g_iParticleEffect2[iIndex], 0, 1));
-			main ? (kvSuperTanks.GetString("General/Particle Effects", g_sParticleEffects[iIndex], sizeof(g_sParticleEffects[]), "1234567")) : (kvSuperTanks.GetString("General/Particle Effects", g_sParticleEffects2[iIndex], sizeof(g_sParticleEffects2[]), g_sParticleEffects[iIndex]));
+			main ? (kvSuperTanks.GetString("Particles/Body Effects", g_sParticleEffects[iIndex], sizeof(g_sParticleEffects[]), "1234567")) : (kvSuperTanks.GetString("Particles/Body Effects", g_sParticleEffects2[iIndex], sizeof(g_sParticleEffects2[]), g_sParticleEffects[iIndex]));
 			main ? (g_iWarpAbility[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", 0)) : (g_iWarpAbility2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", g_iWarpAbility[iIndex]));
 			main ? (g_iWarpAbility[iIndex] = iClamp(g_iWarpAbility[iIndex], 0, 3)) : (g_iWarpAbility2[iIndex] = iClamp(g_iWarpAbility2[iIndex], 0, 3));
 			main ? (g_iWarpMessage[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Message", 0)) : (g_iWarpMessage2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Message", g_iWarpMessage[iIndex]));

@@ -214,13 +214,13 @@ stock void vShield(int client, bool shield)
 		TrimString(sShieldColor);
 		ExplodeString(sShieldColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 		TrimString(sSet[0]);
-		int iRed = (sSet[0][0] != '\0') ? StringToInt(sSet[0]) : 255;
+		int iRed = (strcmp(sSet[0], "") == 1) ? StringToInt(sSet[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		TrimString(sSet[1]);
-		int iGreen = (sSet[1][0] != '\0') ? StringToInt(sSet[1]) : 255;
+		int iGreen = (strcmp(sSet[1], "") == 1) ? StringToInt(sSet[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 		TrimString(sSet[2]);
-		int iBlue = (sSet[2][0] != '\0') ? StringToInt(sSet[2]) : 255;
+		int iBlue = (strcmp(sSet[2], "") == 1) ? StringToInt(sSet[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 		float flOrigin[3];
 		GetClientAbsOrigin(client, flOrigin);

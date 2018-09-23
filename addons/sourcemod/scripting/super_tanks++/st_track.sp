@@ -18,7 +18,7 @@ public Plugin myinfo =
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 float g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
-int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
+int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -74,8 +74,8 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
-			main ? (g_iGlowEffect[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", 1)) : (g_iGlowEffect2[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", g_iGlowEffect[iIndex]));
-			main ? (g_iGlowEffect[iIndex] = iClamp(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iClamp(g_iGlowEffect2[iIndex], 0, 1));
+			main ? (g_iGlowOutline[iIndex] = kvSuperTanks.GetNum("General/Glow Outline", 1)) : (g_iGlowOutline2[iIndex] = kvSuperTanks.GetNum("General/Glow Outline", g_iGlowOutline[iIndex]));
+			main ? (g_iGlowOutline[iIndex] = iClamp(g_iGlowOutline[iIndex], 0, 1)) : (g_iGlowOutline2[iIndex] = iClamp(g_iGlowOutline2[iIndex], 0, 1));
 			main ? (g_iTrackAbility[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", 0)) : (g_iTrackAbility2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", g_iTrackAbility[iIndex]));
 			main ? (g_iTrackAbility[iIndex] = iClamp(g_iTrackAbility[iIndex], 0, 1)) : (g_iTrackAbility2[iIndex] = iClamp(g_iTrackAbility2[iIndex], 0, 1));
 			main ? (g_iTrackMessage[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", 0)) : (g_iTrackMessage2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", g_iTrackMessage[iIndex]));
@@ -321,16 +321,16 @@ stock void vTrack(int entity)
 			ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 			TrimString(sGlow[0]);
-			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
+			int iRed = (strcmp(sGlow[0], "") == 1) ? StringToInt(sGlow[0]) : 255;
 			iRed = iClamp(iRed, 0, 255);
 			TrimString(sGlow[1]);
-			int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
+			int iGreen = (strcmp(sGlow[1], "") == 1) ? StringToInt(sGlow[1]) : 255;
 			iGreen = iClamp(iGreen, 0, 255);
 			TrimString(sGlow[2]);
-			int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
+			int iBlue = (strcmp(sGlow[2], "") == 1) ? StringToInt(sGlow[2]) : 255;
 			iBlue = iClamp(iBlue, 0, 255);
-			int iGlowEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEffect[ST_TankType(iTank)] : g_iGlowEffect2[ST_TankType(iTank)];
-			if (iGlowEffect == 1 && bIsL4D2Game())
+			int iGlowOutline = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowOutline[ST_TankType(iTank)] : g_iGlowOutline2[ST_TankType(iTank)];
+			if (iGlowOutline == 1 && bIsL4D2Game())
 			{
 				SetEntProp(entity, Prop_Send, "m_iGlowType", 3);
 				SetEntProp(entity, Prop_Send, "m_nGlowRange", 0);

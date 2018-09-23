@@ -18,7 +18,7 @@ public Plugin myinfo =
 bool g_bCloneInstalled, g_bHeal[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 float g_flHealAbsorbRange[ST_MAXTYPES + 1], g_flHealAbsorbRange2[ST_MAXTYPES + 1], g_flHealBuffer[ST_MAXTYPES + 1], g_flHealBuffer2[ST_MAXTYPES + 1], g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1], g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1];
-int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealChance[ST_MAXTYPES + 1], g_iHealChance2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealMessage[ST_MAXTYPES + 1], g_iHealMessage2[ST_MAXTYPES + 1], g_iHealRangeChance[ST_MAXTYPES + 1], g_iHealRangeChance2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1];
+int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealChance[ST_MAXTYPES + 1], g_iHealChance2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealMessage[ST_MAXTYPES + 1], g_iHealMessage2[ST_MAXTYPES + 1], g_iHealRangeChance[ST_MAXTYPES + 1], g_iHealRangeChance2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -120,8 +120,8 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
-			main ? (g_iGlowEffect[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", 1)) : (g_iGlowEffect2[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", g_iGlowEffect[iIndex]));
-			main ? (g_iGlowEffect[iIndex] = iClamp(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iClamp(g_iGlowEffect2[iIndex], 0, 1));
+			main ? (g_iGlowOutline[iIndex] = kvSuperTanks.GetNum("General/Glow Outline", 1)) : (g_iGlowOutline2[iIndex] = kvSuperTanks.GetNum("General/Glow Outline", g_iGlowOutline[iIndex]));
+			main ? (g_iGlowOutline[iIndex] = iClamp(g_iGlowOutline[iIndex], 0, 1)) : (g_iGlowOutline2[iIndex] = iClamp(g_iGlowOutline2[iIndex], 0, 1));
 			main ? (g_iHealAbility[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Enabled", 0)) : (g_iHealAbility2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Enabled", g_iHealAbility[iIndex]));
 			main ? (g_iHealAbility[iIndex] = iClamp(g_iHealAbility[iIndex], 0, 3)) : (g_iHealAbility2[iIndex] = iClamp(g_iHealAbility2[iIndex], 0, 3));
 			main ? (g_iHealMessage[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Message", 0)) : (g_iHealMessage2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Message", g_iHealMessage[iIndex]));
@@ -363,16 +363,16 @@ public Action tTimerHeal(Handle timer, any userid)
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 		ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 		TrimString(sGlow[0]);
-		int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
+		int iRed = (strcmp(sGlow[0], "") == 1) ? StringToInt(sGlow[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		TrimString(sGlow[1]);
-		int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
+		int iGreen = (strcmp(sGlow[1], "") == 1) ? StringToInt(sGlow[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 		TrimString(sGlow[2]);
-		int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
+		int iBlue = (strcmp(sGlow[2], "") == 1) ? StringToInt(sGlow[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
-		int iGlowEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEffect[ST_TankType(iTank)] : g_iGlowEffect2[ST_TankType(iTank)];
-		if (iGlowEffect == 1 && bIsL4D2Game())
+		int iGlowOutline = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowOutline[ST_TankType(iTank)] : g_iGlowOutline2[ST_TankType(iTank)];
+		if (iGlowOutline == 1 && bIsL4D2Game())
 		{
 			SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 			SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));
