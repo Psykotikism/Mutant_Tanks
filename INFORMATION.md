@@ -1019,6 +1019,7 @@
 			"Clone Health"					"1000"
 
 			// The Super Tank's clone will be treated as a real Super Tank.
+			// Note: Clones cannot clone themselves for obvious safety reasons.
 			// --
 			// 0: OFF, the clone cannot use abilities like real Super Tanks.
 			// 1: ON, the clone can use abilities like real Super Tanks.
