@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Necro Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank resurrects dead special infected.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -21,8 +21,7 @@ int g_iNecroAbility[ST_MAXTYPES + 1], g_iNecroAbility2[ST_MAXTYPES + 1], g_iNecr
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
 	{
 		strcopy(error, err_max, "[ST++] Necro Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -133,7 +132,7 @@ stock void vNecro(int client, float pos[3], const char[] type)
 			bExists[iNecro] = true;
 		}
 	}
-	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", type);
+	vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", type);
 	int iInfected;
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{

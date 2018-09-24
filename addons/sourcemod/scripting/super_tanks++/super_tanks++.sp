@@ -8,9 +8,9 @@
 
 public Plugin myinfo =
 {
-	name = ST_NAME,
+	name = "Super Tanks++",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "Super Tanks++ makes fighting Tanks great again!",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -22,17 +22,15 @@ char g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES 
 ConVar g_cvSTEnable, g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRegularInterval, g_flRegularInterval2, g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1];
 Handle g_hAbilityForward, g_hBossStageForward, g_hConfigsForward, g_hEventForward, g_hRockBreakForward, g_hRockThrowForward;
-int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2, g_iExplosiveImmunity[ST_MAXTYPES + 1],
-	g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGameModeTypes,
-	g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRegularAmount, g_iRegularAmount2, g_iRegularWave,
-	g_iRegularWave2, g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1],
-	g_iTankWave, g_iType, g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
+int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2, g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[ST_MAXTYPES + 1],
+	g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGameModeTypes, g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1],
+	g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRegularAmount, g_iRegularAmount2, g_iRegularWave, g_iRegularWave2, g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1],
+	g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType, g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
 TopMenu g_tmSTMenu;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
 	{
 		strcopy(error, err_max, "Super Tanks++ only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -246,7 +244,7 @@ public void OnConfigsExecuted()
 	}
 	if (StrContains(g_sConfigCreate, "2") != -1 && g_iConfigEnable == 1)
 	{
-		CreateDirectory((bIsL4D2Game() ? "addons/sourcemod/data/super_tanks++/l4d2_map_configs/" : "addons/sourcemod/data/super_tanks++/l4d_map_configs/"), 511);
+		CreateDirectory((bIsL4D2() ? "addons/sourcemod/data/super_tanks++/l4d2_map_configs/" : "addons/sourcemod/data/super_tanks++/l4d_map_configs/"), 511);
 		char sMapNames[128];
 		ArrayList alADTMaps = new ArrayList(16, 0);
 		int iSerial = -1;
@@ -258,14 +256,14 @@ public void OnConfigsExecuted()
 			for (int iMap = 0; iMap < iMapCount; iMap++)
 			{
 				alADTMaps.GetString(iMap, sMapNames, sizeof(sMapNames));
-				vCreateConfigFile("addons/sourcemod/data/super_tanks++/", (bIsL4D2Game() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapNames, sMapNames);
+				vCreateConfigFile("addons/sourcemod/data/super_tanks++/", (bIsL4D2() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapNames, sMapNames);
 			}
 		}
 		delete alADTMaps;
 	}
 	if (StrContains(g_sConfigCreate, "3") != -1 && g_iConfigEnable == 1)
 	{
-		CreateDirectory((bIsL4D2Game() ? "addons/sourcemod/data/super_tanks++/l4d2_gamemode_configs/" : "addons/sourcemod/data/super_tanks++/l4d_gamemode_configs/"), 511);
+		CreateDirectory((bIsL4D2() ? "addons/sourcemod/data/super_tanks++/l4d2_gamemode_configs/" : "addons/sourcemod/data/super_tanks++/l4d_gamemode_configs/"), 511);
 		char sGameType[2049], sTypes[64][32];
 		g_cvSTGameTypes.GetString(sGameType, sizeof(sGameType));
 		TrimString(sGameType);
@@ -274,7 +272,7 @@ public void OnConfigsExecuted()
 		{
 			if (StrContains(sGameType, sTypes[iMode]) != -1 && strcmp(sTypes[iMode], "") == 1)
 			{
-				vCreateConfigFile("addons/sourcemod/data/super_tanks++/", (bIsL4D2Game() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode], sTypes[iMode]);
+				vCreateConfigFile("addons/sourcemod/data/super_tanks++/", (bIsL4D2() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode], sTypes[iMode]);
 			}
 		}
 	}
@@ -286,12 +284,12 @@ public void OnConfigsExecuted()
 		{
 			switch (iDay)
 			{
-				case 6: sWeekday = "saturday";
-				case 5: sWeekday = "friday";
-				case 4: sWeekday = "thursday";
-				case 3: sWeekday = "wednesday";
-				case 2: sWeekday = "tuesday";
 				case 1: sWeekday = "monday";
+				case 2: sWeekday = "tuesday";
+				case 3: sWeekday = "wednesday";
+				case 4: sWeekday = "thursday";
+				case 5: sWeekday = "friday";
+				case 6: sWeekday = "saturday";
 				default: sWeekday = "sunday";
 			}
 			vCreateConfigFile("addons/sourcemod/data/super_tanks++/", "daily_configs/", sWeekday, sWeekday);
@@ -319,7 +317,7 @@ public void OnConfigsExecuted()
 	{
 		char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
-		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsL4D2Game() ? "data/super_tanks++/l4d2_map_configs/%s.cfg" : "data/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
+		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsL4D2() ? "data/super_tanks++/l4d2_map_configs/%s.cfg" : "data/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
 		vLoadConfigs(sMapConfig);
 		g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 	}
@@ -327,7 +325,7 @@ public void OnConfigsExecuted()
 	{
 		char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_cvSTGameMode.GetString(sMode, sizeof(sMode));
-		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsL4D2Game() ? "data/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "data/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
+		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsL4D2() ? "data/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "data/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
 		vLoadConfigs(sModeConfig);
 		g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 	}
@@ -338,12 +336,12 @@ public void OnConfigsExecuted()
 		int iDayNumber = StringToInt(sDayNumber);
 		switch (iDayNumber)
 		{
-			case 6: sDay = "saturday";
-			case 5: sDay = "friday";
-			case 4: sDay = "thursday";
-			case 3: sDay = "wednesday";
-			case 2: sDay = "tuesday";
 			case 1: sDay = "monday";
+			case 2: sDay = "tuesday";
+			case 3: sDay = "wednesday";
+			case 4: sDay = "thursday";
+			case 5: sDay = "friday";
+			case 6: sDay = "saturday";
 			default: sDay = "sunday";
 		}
 		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/super_tanks++/daily_configs/%s.cfg", sDay);
@@ -372,7 +370,7 @@ public void OnPluginEnd()
 	{
 		if (bIsTank(iTank) && IsPlayerAlive(iTank))
 		{
-			if (iGlowOutline(g_iTankType[iTank]) == 1 && bIsL4D2Game())
+			if (iGlowOutline(g_iTankType[iTank]) == 1 && bIsL4D2())
 			{
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
 				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
@@ -515,10 +513,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 {
-	Call_StartForward(g_hEventForward);
-	Call_PushCell(event);
-	Call_PushString(name);
-	Call_Finish();
 	if (strcmp(name, "ability_use") == 0)
 	{
 		int iUserId = event.GetInt("userid"), iTank = GetClientOfUserId(iUserId);
@@ -546,7 +540,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (bIsTankAllowed(iPlayer))
 			{
-				if (iGlowOutline(g_iTankType[iPlayer]) == 1 && bIsL4D2Game())
+				if (iGlowOutline(g_iTankType[iPlayer]) == 1 && bIsL4D2())
 				{
 					SetEntProp(iPlayer, Prop_Send, "m_iGlowType", 0);
 					SetEntProp(iPlayer, Prop_Send, "m_glowColorOverride", 0);
@@ -638,6 +632,10 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 	{
 		g_iTankWave = 0;
 	}
+	Call_StartForward(g_hEventForward);
+	Call_PushCell(event);
+	Call_PushString(name);
+	Call_Finish();
 }
 
 public Action cmdTank(int client, int args)
@@ -687,7 +685,7 @@ stock void vTank(int client, int type, int mode = 0)
 		case 0: sParameter = "tank";
 		case 1: sParameter = "tank auto";
 	}
-	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", sParameter);
+	vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", sParameter);
 }
 
 stock void vTankMenu(int client, int item)
@@ -959,10 +957,10 @@ stock void vNewTankSettings(int client)
 	ExtinguishEntity(client);
 	vAttachParticle(client, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(SOUND_BOSS, client);
+	vRemoveProps(client);
 	Call_StartForward(g_hBossStageForward);
 	Call_PushCell(client);
 	Call_Finish();
-	vRemoveProps(client);
 }
 
 stock void vParticleEffects(int client)
@@ -995,7 +993,7 @@ stock void vParticleEffects(int client)
 		{
 			CreateTimer(1.5, tTimerSmokeEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
-		if (StrContains(sParticleEffects, "7") != -1 && bIsL4D2Game())
+		if (StrContains(sParticleEffects, "7") != -1 && bIsL4D2())
 		{
 			CreateTimer(2.0, tTimerSpitEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
@@ -1071,7 +1069,7 @@ stock void vSetColor(int client, int value)
 	TrimString(sGlow[2]);
 	int iBlue2 = (strcmp(sGlow[2], "") == 1) ? StringToInt(sGlow[2]) : 255;
 	iBlue2 = iClamp(iBlue2, 0, 255);
-	if (iGlowOutline(value) == 1 && bIsL4D2Game())
+	if (iGlowOutline(value) == 1 && bIsL4D2())
 	{
 		SetEntProp(client, Prop_Send, "m_iGlowType", 3);
 		SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
@@ -1335,7 +1333,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 					AcceptEntityInput(iConcrete[iRock], "SetParentAttachment");
 					AcceptEntityInput(iConcrete[iRock], "Enable");
 					AcceptEntityInput(iConcrete[iRock], "DisableCollision");
-					if (bIsL4D2Game())
+					if (bIsL4D2())
 					{
 						switch (iRock)
 						{
@@ -1378,7 +1376,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 					AcceptEntityInput(iWheel[iTire], "SetParentAttachment");
 					AcceptEntityInput(iWheel[iTire], "Enable");
 					AcceptEntityInput(iWheel[iTire], "DisableCollision");
-					if (bIsL4D2Game())
+					if (bIsL4D2())
 					{
 						SetEntPropFloat(iWheel[iTire], Prop_Data, "m_flModelScale", 1.5);
 					}
@@ -1922,9 +1920,6 @@ public Action tTimerTankTypeUpdate(Handle timer)
 					}
 				}
 			}
-			Call_StartForward(g_hAbilityForward);
-			Call_PushCell(iTank);
-			Call_Finish();
 			if (iFireImmunity(iTank) == 1 && bIsPlayerBurning(iTank))
 			{
 				ExtinguishEntity(iTank);
@@ -1932,6 +1927,9 @@ public Action tTimerTankTypeUpdate(Handle timer)
 			}
 			float flRunSpeed = !g_bTankConfig[g_iTankType[iTank]] ? g_flRunSpeed[g_iTankType[iTank]] : g_flRunSpeed2[g_iTankType[iTank]];
 			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
+			Call_StartForward(g_hAbilityForward);
+			Call_PushCell(iTank);
+			Call_Finish();
 		}
 	}
 	return Plugin_Continue;
@@ -2098,7 +2096,7 @@ public Action tTimerRegularWaves(Handle timer)
 		{
 			if (bIsValidClient(iTank))
 			{
-				vCheatCommand(iTank, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", "tank auto");
+				vCheatCommand(iTank, bIsL4D2() ? "z_spawn_old" : "z_spawn", "tank auto");
 				break;
 			}
 		}
@@ -2116,7 +2114,7 @@ public Action tTimerSpawnTanks(Handle timer, any wave)
 	{
 		if (bIsValidClient(iTank))
 		{
-			vCheatCommand(iTank, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", "tank auto");
+			vCheatCommand(iTank, bIsL4D2() ? "z_spawn_old" : "z_spawn", "tank auto");
 			break;
 		}
 	}
@@ -2163,7 +2161,7 @@ public Action tTimerReloadConfigs(Handle timer)
 	{
 		char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
-		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsL4D2Game() ? "data/super_tanks++/l4d2_map_configs/%s.cfg" : "data/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
+		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsL4D2() ? "data/super_tanks++/l4d2_map_configs/%s.cfg" : "data/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
 		g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[2] != g_iFileTimeNew[2])
 		{
@@ -2176,7 +2174,7 @@ public Action tTimerReloadConfigs(Handle timer)
 	{
 		char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_cvSTGameMode.GetString(sMode, sizeof(sMode));
-		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsL4D2Game() ? "data/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "data/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
+		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsL4D2() ? "data/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "data/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
 		g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[3] != g_iFileTimeNew[3])
 		{
@@ -2192,12 +2190,12 @@ public Action tTimerReloadConfigs(Handle timer)
 		int iDayNumber = StringToInt(sDayNumber);
 		switch (iDayNumber)
 		{
-			case 6: sDay = "saturday";
-			case 5: sDay = "friday";
-			case 4: sDay = "thursday";
-			case 3: sDay = "wednesday";
-			case 2: sDay = "tuesday";
 			case 1: sDay = "monday";
+			case 2: sDay = "tuesday";
+			case 3: sDay = "wednesday";
+			case 4: sDay = "thursday";
+			case 5: sDay = "friday";
+			case 6: sDay = "saturday";
 			default: sDay = "sunday";
 		}
 		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/super_tanks++/daily_configs/%s.cfg", sDay);

@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Stun Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank stuns and slows survivors down.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -21,8 +21,7 @@ int g_iStunAbility[ST_MAXTYPES + 1], g_iStunAbility2[ST_MAXTYPES + 1], g_iStunCh
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
 	{
 		strcopy(error, err_max, "[ST++] Stun Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;

@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Heal Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank gains health from other nearby infected and gives survivors temporary health.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -22,8 +22,7 @@ int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iHealAb
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
 	{
 		strcopy(error, err_max, "[ST++] Heal Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -290,7 +289,7 @@ public Action tTimerHeal(Handle timer, any userid)
 			if (iHealth > 500)
 			{
 				SetEntityHealth(iTank, iRealHealth);
-				if (bIsL4D2Game())
+				if (bIsL4D2())
 				{
 					SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 					SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 185, 0));
@@ -318,7 +317,7 @@ public Action tTimerHeal(Handle timer, any userid)
 				if (iHealth > 500)
 				{
 					SetEntityHealth(iTank, iRealHealth);
-					if (iType < 2 && bIsL4D2Game())
+					if (iType < 2 && bIsL4D2())
 					{
 						SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 						SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 220, 0));
@@ -344,7 +343,7 @@ public Action tTimerHeal(Handle timer, any userid)
 				if (iHealth > 500)
 				{
 					SetEntityHealth(iTank, iRealHealth);
-					if (bIsL4D2Game())
+					if (bIsL4D2())
 					{
 						SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 						SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 255, 0));
@@ -355,7 +354,7 @@ public Action tTimerHeal(Handle timer, any userid)
 			}
 		}
 	}
-	if (iType == 0 && bIsL4D2Game())
+	if (iType == 0 && bIsL4D2())
 	{
 		char sSet[2][16], sTankColors[28], sGlow[3][4];
 		sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
@@ -372,7 +371,7 @@ public Action tTimerHeal(Handle timer, any userid)
 		int iBlue = (strcmp(sGlow[2], "") == 1) ? StringToInt(sGlow[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 		int iGlowOutline = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowOutline[ST_TankType(iTank)] : g_iGlowOutline2[ST_TankType(iTank)];
-		if (iGlowOutline == 1 && bIsL4D2Game())
+		if (iGlowOutline == 1 && bIsL4D2())
 		{
 			SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 			SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));

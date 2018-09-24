@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Acid Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank creates acid puddles.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -22,8 +22,7 @@ int g_iAcidAbility[ST_MAXTYPES + 1], g_iAcidAbility2[ST_MAXTYPES + 1], g_iAcidCh
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
 	{
 		strcopy(error, err_max, "[ST++] Acid Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -57,7 +56,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
-	if (bIsL4D2Game())
+	if (bIsL4D2())
 	{
 		StartPrepSDKCall(SDKCall_Static);
 		PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CSpitterProjectile_Create");
@@ -165,7 +164,7 @@ public void ST_Event(Event event, const char[] name)
 	if (strcmp(name, "player_death") == 0)
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iAcidAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsL4D2Game())
+		if (iAcidAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsL4D2())
 		{
 			vAcid(iTank, iTank);
 		}
@@ -198,7 +197,7 @@ public void ST_Ability(int client)
 
 public void ST_BossStage(int client)
 {
-	if (iAcidAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && bIsL4D2Game())
+	if (iAcidAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && bIsL4D2())
 	{
 		vAcid(client, client);
 	}
@@ -207,7 +206,7 @@ public void ST_BossStage(int client)
 public void ST_RockBreak(int client, int entity)
 {
 	int iAcidRock = !g_bTankConfig[ST_TankType(client)] ? g_iAcidRock[ST_TankType(client)] : g_iAcidRock2[ST_TankType(client)];
-	if (iAcidRock == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && bIsL4D2Game())
+	if (iAcidRock == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && bIsL4D2())
 	{
 		float flOrigin[3], flAngles[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
@@ -239,7 +238,7 @@ stock void vAcidHit(int client, int owner, int chance, int enabled, int message)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
 		ST_TankName(owner, sTankName);
-		if (bIsL4D2Game())
+		if (bIsL4D2())
 		{
 			vAcid(client, owner);
 			if (iAcidMessage(owner) == message || iAcidMessage(client) == 4 || iAcidMessage(client) == 5 || iAcidMessage(client) == 6 || iAcidMessage(client) == 7)

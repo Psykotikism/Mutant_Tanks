@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Ammo Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank takes away survivors' ammunition.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -21,8 +21,7 @@ int g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAbility2[ST_MAXTYPES + 1], g_iAmmoCh
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
 	{
 		strcopy(error, err_max, "[ST++] Ammo Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -175,7 +174,7 @@ stock void vAmmoHit(int client, int owner, int chance, int enabled, int message)
 			}
 			else if (strcmp(sWeapon, "weapon_pumpshotgun") == 0)
 			{
-				bIsL4D2Game() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 7) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
+				bIsL4D2() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 7) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
 			}
 			else if (strcmp(sWeapon, "weapon_shotgun_chrome") == 0)
 			{
@@ -183,7 +182,7 @@ stock void vAmmoHit(int client, int owner, int chance, int enabled, int message)
 			}
 			else if (strcmp(sWeapon, "weapon_autoshotgun") == 0)
 			{
-				bIsL4D2Game() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 8) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
+				bIsL4D2() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 8) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
 			}
 			else if (strcmp(sWeapon, "weapon_shotgun_spas") == 0)
 			{
@@ -191,7 +190,7 @@ stock void vAmmoHit(int client, int owner, int chance, int enabled, int message)
 			}
 			else if (strcmp(sWeapon, "weapon_hunting_rifle") == 0)
 			{
-				bIsL4D2Game() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 9) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 2);
+				bIsL4D2() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 9) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 2);
 			}
 			else if (strcmp(sWeapon, "weapon_sniper_scout") == 0 || strcmp(sWeapon, "weapon_sniper_military") == 0 || strcmp(sWeapon, "weapon_sniper_awp") == 0)
 			{

@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Shield Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank protects itself with a shield and traps survivors inside their own shields.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -23,8 +23,7 @@ int g_iShieldAbility[ST_MAXTYPES + 1], g_iShieldAbility2[ST_MAXTYPES + 1], g_iSh
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
 	{
 		strcopy(error, err_max, "[ST++] Shield Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;

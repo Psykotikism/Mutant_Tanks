@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Restart Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank forces survivors to restart at the beginning of the map with a new loadout.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -23,8 +23,7 @@ int g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1], g_i
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
 	{
 		strcopy(error, err_max, "[ST++] Restart Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;

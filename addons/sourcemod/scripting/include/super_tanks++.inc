@@ -12,9 +12,7 @@
 #define ST_PREFIX2 "\x04[ST++]\x01"
 #define ST_PREFIX3 "\x04[ST++]\x03"
 #define ST_PREFIX4 "\x04[ST++]\x05"
-#define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
 #define ST_VERSION "8.42"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 5000
@@ -322,10 +320,10 @@ stock bool bIsInfected(int client)
 
 stock bool bIsJockey(int client)
 {
-	return bIsInfected(client) && bIsL4D2Game() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5;
+	return bIsInfected(client) && bIsL4D2() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5;
 }
 
-stock bool bIsL4D2Game()
+stock bool bIsL4D2()
 {
 	return GetEngineVersion() == Engine_Left4Dead2;
 }
@@ -451,7 +449,7 @@ stock bool bIsSurvivor(int client)
 
 stock bool bIsTank(int client)
 {
-	return bIsInfected(client) && (bIsL4D2Game() ? GetEntProp(client, Prop_Send, "m_zombieClass") == 8 : GetEntProp(client, Prop_Send, "m_zombieClass") == 5);
+	return bIsInfected(client) && (bIsL4D2() ? GetEntProp(client, Prop_Send, "m_zombieClass") == 8 : GetEntProp(client, Prop_Send, "m_zombieClass") == 5);
 }
 
 stock bool bIsValidClient(int client)
@@ -1067,7 +1065,7 @@ stock void vShake(int client, float duration = 1.0)
 stock void vSpawnInfected(int client, const char[] infected)
 {
 	ChangeClientTeam(client, 3);
-	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", infected);
+	vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", infected);
 	KickClient(client);
 }
 

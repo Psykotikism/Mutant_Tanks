@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Minion Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank spawns minions.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -21,8 +21,7 @@ int g_iMinionAbility[ST_MAXTYPES + 1], g_iMinionAbility2[ST_MAXTYPES + 1], g_iMi
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
 	{
 		strcopy(error, err_max, "[ST++] Minion Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -150,13 +149,13 @@ public void ST_Ability(int client)
 					char sNumbers = !g_bTankConfig[ST_TankType(client)] ? g_sMinionTypes[ST_TankType(client)][GetRandomInt(0, strlen(g_sMinionTypes[ST_TankType(client)]) - 1)] : g_sMinionTypes2[ST_TankType(client)][GetRandomInt(0, strlen(g_sMinionTypes2[ST_TankType(client)]) - 1)];
 					switch (sNumbers)
 					{
-						case '1': vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", "smoker");
-						case '2': vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", "boomer");
-						case '3': vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", "hunter");
-						case '4': vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", bIsL4D2Game() ? "spitter" : "boomer");
-						case '5': vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", bIsL4D2Game() ? "jockey" : "hunter");
-						case '6': vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", bIsL4D2Game() ? "charger" : "smoker");
-						default: vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", "hunter");
+						case '1': vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", "smoker");
+						case '2': vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", "boomer");
+						case '3': vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", "hunter");
+						case '4': vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", bIsL4D2() ? "spitter" : "boomer");
+						case '5': vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", bIsL4D2() ? "jockey" : "hunter");
+						case '6': vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", bIsL4D2() ? "charger" : "smoker");
+						default: vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", "hunter");
 					}
 					int iSelectedType;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)

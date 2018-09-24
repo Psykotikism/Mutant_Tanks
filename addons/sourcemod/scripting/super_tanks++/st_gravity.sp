@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Gravity Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank pulls in or pushes away survivors and any other nearby infected, and changes the survivors' gravity.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -21,8 +21,7 @@ int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_i
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
 	{
 		strcopy(error, err_max, "[ST++] Gravity Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -197,7 +196,7 @@ public void ST_Ability(int client)
 				vSetEntityParent(iBlackhole, client);
 				AcceptEntityInput(iBlackhole, "Enable");
 				SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
-				if (bIsL4D2Game())
+				if (bIsL4D2())
 				{
 					SetEntProp(iBlackhole, Prop_Send, "m_glowColorOverride", client);
 				}
@@ -248,7 +247,7 @@ stock void vRemoveGravity(int client)
 	int iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
 	{
-		if (bIsL4D2Game())
+		if (bIsL4D2())
 		{
 			int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
 			if (iOwner == client)
