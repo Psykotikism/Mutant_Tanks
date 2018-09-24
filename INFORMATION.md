@@ -603,7 +603,6 @@
 {
 	"Tank 1"
 	{
-		// The Super Tank receives more damage from bullets and explosions than usual.
 		// The Super Tank takes away survivors' ammunition.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, their ammunition is taken away.
 		// - "Ammo Range"
@@ -3273,7 +3272,7 @@
 {
 	"Tank 1"
 	{
-		// The Super Tank respawns.
+		// The Super Tank respawns upon death.
 		// Requires "st_respawn.smx" to be installed.
 		"Respawn Ability"
 		{
@@ -3721,7 +3720,7 @@
 {
 	"Tank 1"
 	{
-		// The Super Tank smashes survivors or crushes them to death.
+		// The Super Tank smashes survivors to death.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is smashed.
 		// - "Smash Range"
 		// - "Smash Range Chance"
@@ -3953,7 +3952,7 @@
 {
 	"Tank 1"
 	{
-		// The Super Tank slows survivors down.
+		// The Super Tank stuns and slows survivors down.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is slowed down.
 		// - "Stun Range"
 		// - "Stun Range Chance"
@@ -4431,7 +4430,7 @@
 {
 	"Tank 1"
 	{
-		// The Super Tank spawns common infected.
+		// The Super Tank spawns zombies.
 		// "Ability Enabled" - The Tank creates a zombie mob periodically.
 		// - "Zombie Interval"
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, a zombie mob appears.
