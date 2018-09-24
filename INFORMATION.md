@@ -177,7 +177,7 @@
 		"General"
 		{
 			// Name of the Super Tank.
-			// Character limit: 32
+			// Character limit: 128
 			// --
 			// Empty: "Tank"
 			// Not Empty: Tank's custom name
