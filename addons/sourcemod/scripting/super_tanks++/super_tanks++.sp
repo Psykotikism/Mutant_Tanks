@@ -589,7 +589,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 				for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 				{
-					if (iTankEnabled(iIndex) == 0 || iGetTypeCount(iIndex) >= iTypeLimit(iIndex) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
+					if (iTankEnabled(iIndex) == 0 || (iTypeLimit(iIndex) > 0 && iGetTypeCount(iIndex) >= iTypeLimit(iIndex)) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
 					{
 						continue;
 					}
@@ -1572,7 +1572,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !g_bBoss[iTank] || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bBoss[iTank] = false;
 		return Plugin_Stop;
@@ -1751,7 +1751,7 @@ public Action tTimerRandomize(Handle timer, any userid)
 	int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
-		if (iTankEnabled(iIndex) == 0 || iGetTypeCount(iIndex) >= iTypeLimit(iIndex) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
+		if (iTankEnabled(iIndex) == 0 || (iTypeLimit(iIndex) > 0 && iGetTypeCount(iIndex) >= iTypeLimit(iIndex)) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
 		{
 			continue;
 		}
