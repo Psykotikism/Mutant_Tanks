@@ -161,15 +161,15 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	char sDamage[11];
 	int iSpamDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamDamage[ST_TankType(iTank)] : g_iSpamDamage2[ST_TankType(iTank)];
 	IntToString(iSpamDamage, sDamage, sizeof(sDamage));
-	float flPos[3], flAngle[3];
+	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
-	GetClientEyeAngles(iTank, flAngle);
+	GetClientEyeAngles(iTank, flAngles);
 	flPos[2] += 80.0;
 	int iSpammer = CreateEntityByName("env_rock_launcher");
 	if (bIsValidEntity(iSpammer))
 	{
 		DispatchKeyValue(iSpammer, "rockdamageoverride", sDamage);
-		TeleportEntity(iSpammer, flPos, flAngle, NULL_VECTOR);
+		TeleportEntity(iSpammer, flPos, flAngles, NULL_VECTOR);
 		DispatchSpawn(iSpammer);
 		AcceptEntityInput(iSpammer, "LaunchRock");
 		RemoveEntity(iSpammer);

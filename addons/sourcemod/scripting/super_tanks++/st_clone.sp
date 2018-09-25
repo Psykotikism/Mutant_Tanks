@@ -112,16 +112,16 @@ public void ST_Ability(int client)
 			iCloneMessage = !g_bTankConfig[ST_TankType(client)] ? g_iCloneMessage[ST_TankType(client)] : g_iCloneMessage2[ST_TankType(client)];
 		if (g_iCloneCount[client] < iCloneAmount)
 		{
-			float flHitPosition[3], flPosition[3], flAngle[3], flVector[3];
+			float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
 			GetClientEyePosition(client, flPosition);
-			GetClientEyeAngles(client, flAngle);
-			flAngle[0] = -25.0;
-			GetAngleVectors(flAngle, flAngle, NULL_VECTOR, NULL_VECTOR);
-			NormalizeVector(flAngle, flAngle);
-			ScaleVector(flAngle, -1.0);
-			vCopyVector(flAngle, flVector);
-			GetVectorAngles(flAngle, flAngle);
-			Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, client);
+			GetClientEyeAngles(client, flAngles);
+			flAngles[0] = -25.0;
+			GetAngleVectors(flAngles, flAngles, NULL_VECTOR, NULL_VECTOR);
+			NormalizeVector(flAngles, flAngles);
+			ScaleVector(flAngles, -1.0);
+			vCopyVector(flAngles, flVector);
+			GetVectorAngles(flAngles, flAngles);
+			Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, client);
 			if (TR_DidHit(hTrace))
 			{
 				TR_GetEndPosition(flHitPosition, hTrace);

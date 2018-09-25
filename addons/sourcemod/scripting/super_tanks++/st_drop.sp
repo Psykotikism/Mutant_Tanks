@@ -241,16 +241,16 @@ public void ST_Event(Event event, const char[] name)
 			iDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropChance[ST_TankType(iTank)] : g_iDropChance2[ST_TankType(iTank)];
 		if (iDropAbility(iTank) == 1 && GetRandomInt(1, iDropChance) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsValidEntity(g_iDrop[iTank]))
 		{
-			float flPos[3], flAngle[3];
+			float flPos[3], flAngles[3];
 			int iDropMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMessage[ST_TankType(iTank)] : g_iDropMessage2[ST_TankType(iTank)];
 			GetClientEyePosition(iTank, flPos);
-			GetClientAbsAngles(iTank, flAngle);
+			GetClientAbsAngles(iTank, flAngles);
 			if (iDropMode(iTank) != 2 && StrContains(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon") != -1)
 			{
 				int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[iTank]]);
 				if (bIsValidEntity(iDrop))
 				{
-					TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
+					TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 					DispatchSpawn(iDrop);
 					if (bIsL4D2())
 					{
@@ -312,7 +312,7 @@ public void ST_Event(Event event, const char[] name)
 				if (bIsValidEntity(iDrop))
 				{
 					DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[iTank]]);
-					TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
+					TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 					DispatchSpawn(iDrop);
 					SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale(iTank));
 					if (iDropMessage == 1)
@@ -415,10 +415,10 @@ public Action tTimerDrop(Handle timer, any userid)
 	int iDrop = CreateEntityByName("prop_dynamic_override");
 	if (bIsValidEntity(iDrop))
 	{
-		float flPos[3], flAngle[3];
+		float flPos[3], flAngles[3];
 		char sPosition[32];
 		SetEntityModel(iDrop, g_sWeaponModel[iWeapon]);
-		TeleportEntity(iDrop, flPos, flAngle, NULL_VECTOR);
+		TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 		DispatchSpawn(iDrop);
 		vSetEntityParent(iDrop, iTank);
 		switch (iPosition)
@@ -437,12 +437,12 @@ public Action tTimerDrop(Handle timer, any userid)
 					case 1:
 					{
 						vSetVector(flPos, -23.0, -30.0, -5.0);
-						vSetVector(flAngle, 0.0, 60.0, 180.0);
+						vSetVector(flAngles, 0.0, 60.0, 180.0);
 					}
 					case 2:
 					{
 						vSetVector(flPos, -9.0, -32.0, -1.0);
-						vSetVector(flAngle, 0.0, 60.0, 180.0);
+						vSetVector(flAngles, 0.0, 60.0, 180.0);
 					}
 				}
 			}
@@ -453,12 +453,12 @@ public Action tTimerDrop(Handle timer, any userid)
 					case 1:
 					{
 						vSetVector(flPos, 1.0, -5.0, 3.0);
-						vSetVector(flAngle, 0.0, -90.0, 90.0);
+						vSetVector(flAngles, 0.0, -90.0, 90.0);
 					}
 					case 2:
 					{
 						vSetVector(flPos, 4.0, -5.0, -3.0);
-						vSetVector(flAngle, 0.0, -90.0, 90.0);
+						vSetVector(flAngles, 0.0, -90.0, 90.0);
 					}
 				}
 			}
@@ -469,12 +469,12 @@ public Action tTimerDrop(Handle timer, any userid)
 					case 1:
 					{
 						vSetVector(flPos, -4.0, 0.0, 3.0);
-						vSetVector(flAngle, 0.0, -11.0, 100.0);
+						vSetVector(flAngles, 0.0, -11.0, 100.0);
 					}
 					case 2:
 					{
 						vSetVector(flPos, 4.0, 0.0, -3.0);
-						vSetVector(flAngle, 0.0, -11.0, 100.0);
+						vSetVector(flAngles, 0.0, -11.0, 100.0);
 					}
 				}
 			}
@@ -497,12 +497,12 @@ public Action tTimerDrop(Handle timer, any userid)
 				case 1:
 				{
 					vSetVector(flPos, 1.0, -5.0, 3.0);
-					vSetVector(flAngle, 0.0, -90.0, 90.0);
+					vSetVector(flAngles, 0.0, -90.0, 90.0);
 				}
 				case 2:
 				{
 					vSetVector(flPos, 4.0, -5.0, -3.0);
-					vSetVector(flAngle, 0.0, -90.0, 90.0);
+					vSetVector(flAngles, 0.0, -90.0, 90.0);
 				}
 			}
 		}

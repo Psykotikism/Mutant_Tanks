@@ -161,7 +161,7 @@ stock void vTrack(int entity)
 			}
 			NormalizeVector(flVelocity, flVelocity);
 			int iTarget = iGetRandomTarget(flPos, flVelocity);
-			float flVelocity2[3], flVector[3], flAngle[3], flDistance = 1000.0;
+			float flVelocity2[3], flVector[3], flAngles[3], flDistance = 1000.0;
 			flVector[0] = flVector[1] = flVector[2] = 0.0;
 			bool bVisible;
 			if (iTarget > 0)
@@ -174,26 +174,26 @@ stock void vTrack(int entity)
 				AddVectors(flPos2, flVelocity2, flPos2);
 				MakeVectorFromPoints(flPos, flPos2, flVector);
 			}
-			GetVectorAngles(flVelocity, flAngle);
+			GetVectorAngles(flVelocity, flAngles);
 			float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
 				flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0;
 			flFront[0] = flFront[1] = flFront[2] = 0.0;
 			if (bVisible)
 			{
 				flBase = 80.0;
-				float flFront2 = flGetDistance(flPos, flAngle, 0.0, 0.0, flFront, entity, 3),
-					flDown2 = flGetDistance(flPos, flAngle, 90.0, 0.0, flDown, entity, 3),
-					flUp2 = flGetDistance(flPos, flAngle, -90.0, 0.0, flUp, entity, 3),
-					flLeft2 = flGetDistance(flPos, flAngle, 0.0, 90.0, flLeft, entity, 3),
-					flRight2 = flGetDistance(flPos, flAngle, 0.0, -90.0, flRight, entity, 3),
-					flDistance2 = flGetDistance(flPos, flAngle, 30.0, 0.0, flVector1, entity, 3),
-					flDistance3 = flGetDistance(flPos, flAngle, 30.0, 45.0, flVector2, entity, 3),
-					flDistance4 = flGetDistance(flPos, flAngle, 0.0, 45.0, flVector3, entity, 3),
-					flDistance5 = flGetDistance(flPos, flAngle, -30.0, 45.0, flVector4, entity, 3),
-					flDistance6 = flGetDistance(flPos, flAngle, -30.0, 0.0, flVector5, entity, 3),
-					flDistance7 = flGetDistance(flPos, flAngle, -30.0, -45.0, flVector6, entity, 3),
-					flDistance8 = flGetDistance(flPos, flAngle, 0.0, -45.0, flVector7, entity, 3),
-					flDistance9 = flGetDistance(flPos, flAngle, 30.0, -45.0, flVector8, entity, 3);
+				float flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, entity, 3),
+					flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, entity, 3),
+					flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, entity, 3),
+					flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, entity, 3),
+					flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, entity, 3),
+					flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, entity, 3),
+					flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, entity, 3),
+					flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, entity, 3),
+					flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, entity, 3),
+					flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, entity, 3),
+					flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, entity, 3),
+					flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, entity, 3),
+					flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, entity, 3);
 				NormalizeVector(flFront, flFront);
 				NormalizeVector(flUp, flUp);
 				NormalizeVector(flDown, flDown);
@@ -307,8 +307,8 @@ stock void vTrack(int entity)
 				AddVectors(flFront, flVector, flFront);
 				NormalizeVector(flFront, flFront);
 			}
-			float flAngle2 = flGetAngle(flFront, flVelocity), flVelocity3[3];
-			ScaleVector(flFront, flAngle2);
+			float flAngles2 = flGetAngle(flFront, flVelocity), flVelocity3[3];
+			ScaleVector(flFront, flAngles2);
 			AddVectors(flVelocity, flFront, flVelocity3);
 			NormalizeVector(flVelocity3, flVelocity3);
 			ScaleVector(flVelocity3, flTrackSpeed);
