@@ -112,7 +112,7 @@
 	"Randomized"
 	{
 		"#format"		"{1:s},{2:s}"
-		"en"			"{1} transformed into {2}!"
+		"en"			"{1} randomized into {2}!"
 	}
 	"Absorb"
 	{
