@@ -100,7 +100,7 @@ This is okay:
 ```
 "Super Tanks++"
 {
-	"Tank 25"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -116,7 +116,7 @@ This is not okay:
 ```
 "Super Tanks++"
 {
-	"Tank 25"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -132,7 +132,7 @@ This is okay:
 ```
 "Super Tanks++"
 {
-	"Tank 25"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -148,7 +148,7 @@ This is not okay:
 ```
 "Super Tanks++"
 {
-	"Tank 25"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -166,7 +166,7 @@ Here's our final entry:
 ```
 "Super Tanks++"
 {
-	"Tank 25"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -197,7 +197,7 @@ To make sure that this entry can be chosen, we must go to the "Plugin Settings" 
 }
 ```
 
-Now, assuming that "Tank 25" is our highest entry, we just raise the maximum value of "Type Range" by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to "Tank 25" it will stop reading the rest.
+Now, assuming that "Tank #25" is our highest entry, we just raise the maximum value of "Type Range" by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to "Tank #25" it will stop reading the rest.
 
 - Advanced Entry Examples
 
@@ -208,10 +208,10 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 	{
 		"General"
 		{
-			"Type Range"			"1-5" // Check "Tank 1" to "Tank 5"
+			"Type Range"			"1-5" // Check "Tank #1" to "Tank #5"
 		}
 	}
-	"Tank 5" // Checked by the plugin.
+	"Tank #5" // Checked by the plugin.
 	{
 		"General"
 		{
@@ -238,10 +238,10 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 	{
 		"General"
 		{
-			"Type Range"			"1-11" // Only check for the first 11 Tank types. ("Tank 1" to "Tank 11")
+			"Type Range"			"1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
 		}
 	}
-	"Tank 13" // This will not be checked by the plugin.
+	"Tank #13" // This will not be checked by the plugin.
 	{
 		"General"
 		{
@@ -263,7 +263,7 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 			"Ghost Fade Rate"		"0.1"
 		}
 	}
-	"Tank 10" // Checked by the plugin.
+	"Tank #10" // Checked by the plugin.
 	{
 		"General"
 		{
@@ -443,11 +443,11 @@ Example:
 			"Type Range"		"1-69" // The plugin will check for 69 entries when loading the config file.
 		}
 	}
-	"Tank 69"
+	"Tank #69"
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank 69 is enabled and can be chosen.
+			"Tank Enabled"		"1" // Tank #69 is enabled and can be chosen.
 		}
 	}
 }
@@ -462,32 +462,32 @@ Example:
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank 1 can be chosen.
+			"Tank Enabled"		"1" // Tank #1 can be chosen.
 		}
 	}
-	"Tank 2"
+	"Tank #2"
 	{
 		"General"
 		{
-			"Tank Enabled"		"0" // Tank 2 cannot be chosen.
+			"Tank Enabled"		"0" // Tank #2 cannot be chosen.
 		}
 	}
-	"Tank 3"
+	"Tank #3"
 	{
 		"General"
 		{
-			"Tank Enabled"		"0" // Tank 3 cannot be chosen.
+			"Tank Enabled"		"0" // Tank #3 cannot be chosen.
 		}
 	}
-	"Tank 4"
+	"Tank #4"
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank 4 can be chosen.
+			"Tank Enabled"		"1" // Tank #4 can be chosen.
 		}
 	}
 }
@@ -511,7 +511,7 @@ Example:
 			"Execute Config Types"			"1" // 1: Difficulty configs (easy, normal, hard, impossible)
 		}
 	}
-	"Tank 69"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -533,7 +533,7 @@ Example:
 // Settings for addons/sourcemod/data/super_tanks++/difficulty_configs/impossible.cfg
 "Super Tanks++"
 {
-	"Tank 69"
+	"Tank #69"
 	{
 		"General"
 		{

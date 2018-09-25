@@ -18,13 +18,13 @@ Changes:
 5. The Health ability no longer allows a Super Tank to set survivors to black and white.
 6. The Restart ability now removes all weapons from survivors before giving them new loadouts.
 7. Lowered the amount of boss stages from 5 to 4. Any boss that spawns automatically starts at stage 1.
-8. Moved various settings under new sections.
+8. Moved various settings under new sections and reorganized/restructured the config file.
 9. Added several new settings.
 10. Renamed several settings.
 
 Files:
 
-1. Updated config file with all the new settings.
+1. Updated config file with all the new settings and new organization/structure.
 2. Updated gamedata file to remove unused signatures.
 3. Updated include file to use new natives introduced in SM 1.9 and SM 1.10.
 4. Updated translation file with new phrases.
