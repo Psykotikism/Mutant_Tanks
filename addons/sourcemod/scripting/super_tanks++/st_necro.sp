@@ -21,7 +21,7 @@ int g_iNecroAbility[ST_MAXTYPES + 1], g_iNecroAbility2[ST_MAXTYPES + 1], g_iNecr
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Necro Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -132,7 +132,7 @@ stock void vNecro(int client, float pos[3], const char[] type)
 			bExists[iNecro] = true;
 		}
 	}
-	vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", type);
+	vCheatCommand(client, bIsValidGame() ? "z_spawn_old" : "z_spawn", type);
 	int iInfected;
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{

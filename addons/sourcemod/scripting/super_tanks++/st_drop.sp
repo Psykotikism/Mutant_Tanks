@@ -23,7 +23,7 @@ int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropAbility2[ST
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Drop Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -56,10 +56,10 @@ public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
 	g_cvSTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
-	g_cvSTAutoShotgunAmmo = bIsL4D2() ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
+	g_cvSTAutoShotgunAmmo = bIsValidGame() ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
 	g_cvSTGrenadeLauncherAmmo = FindConVar("ammo_grenadelauncher_max");
 	g_cvSTHuntingRifleAmmo = FindConVar("ammo_huntingrifle_max");
-	g_cvSTShotgunAmmo = bIsL4D2() ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
+	g_cvSTShotgunAmmo = bIsValidGame() ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
 	g_cvSTSMGAmmo = FindConVar("ammo_smg_max");
 	g_cvSTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
 }
@@ -112,7 +112,7 @@ public void OnMapStart()
 	PrecacheModel(WEAPON2_SCOUT_W, true);
 	PrecacheModel(WEAPON2_SG552_V, true);
 	PrecacheModel(WEAPON2_SG552_W, true);
-	if (bIsL4D2())
+	if (bIsValidGame())
 	{
 		g_sWeaponModel[1] = WEAPON2_AK47_W;
 		g_sWeaponModel[2] = WEAPON2_AUTO_W;
@@ -252,7 +252,7 @@ public void ST_Event(Event event, const char[] name)
 				{
 					TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 					DispatchSpawn(iDrop);
-					if (bIsL4D2())
+					if (bIsValidGame())
 					{
 						SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale(iTank));
 					}
@@ -306,7 +306,7 @@ public void ST_Event(Event event, const char[] name)
 					}
 				}
 			}
-			else if (iDropMode(iTank) != 1 && bIsL4D2())
+			else if (iDropMode(iTank) != 1 && bIsValidGame())
 			{
 				int iDrop = CreateEntityByName("weapon_melee");
 				if (bIsValidEntity(iDrop))
@@ -405,7 +405,7 @@ public Action tTimerDrop(Handle timer, any userid)
 		case 1: iDropValue = GetRandomInt(1, 19);
 		case 2: iDropValue = GetRandomInt(20, 31);
 	}
-	int iWeapon = bIsL4D2() ? iDropValue : GetRandomInt(1, 6);
+	int iWeapon = bIsValidGame() ? iDropValue : GetRandomInt(1, 6);
 	switch (GetRandomInt(1, 2))
 	{
 		case 1: iPosition = 1;
@@ -428,7 +428,7 @@ public Action tTimerDrop(Handle timer, any userid)
 		}
 		SetVariantString(sPosition);
 		AcceptEntityInput(iDrop, "SetParentAttachment");
-		if (bIsL4D2())
+		if (bIsValidGame())
 		{
 			if (iWeapon == 22)
 			{
@@ -507,7 +507,7 @@ public Action tTimerDrop(Handle timer, any userid)
 			}
 		}
 		SetEntProp(iDrop, Prop_Send, "m_CollisionGroup", 2);
-		if (bIsL4D2())
+		if (bIsValidGame())
 		{
 			SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flScale);
 		}

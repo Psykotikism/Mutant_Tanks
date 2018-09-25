@@ -21,7 +21,7 @@ int g_iGodAbility[ST_MAXTYPES + 1], g_iGodAbility2[ST_MAXTYPES + 1], g_iGodChanc
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] God Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;

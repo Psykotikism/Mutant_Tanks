@@ -320,12 +320,7 @@ stock bool bIsInfected(int client)
 
 stock bool bIsJockey(int client)
 {
-	return bIsInfected(client) && bIsL4D2() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5;
-}
-
-stock bool bIsL4D2()
-{
-	return GetEngineVersion() == Engine_Left4Dead2;
+	return bIsInfected(client) && bIsValidGame() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5;
 }
 
 stock bool bIsPlayerBurning(int client)
@@ -449,7 +444,7 @@ stock bool bIsSurvivor(int client)
 
 stock bool bIsTank(int client)
 {
-	return bIsInfected(client) && (bIsL4D2() ? GetEntProp(client, Prop_Send, "m_zombieClass") == 8 : GetEntProp(client, Prop_Send, "m_zombieClass") == 5);
+	return bIsInfected(client) && (bIsValidGame() ? GetEntProp(client, Prop_Send, "m_zombieClass") == 8 : GetEntProp(client, Prop_Send, "m_zombieClass") == 5);
 }
 
 stock bool bIsValidClient(int client)
@@ -465,6 +460,12 @@ stock bool bIsValidEntity(int entity)
 stock bool bIsValidEntRef(int entity)
 {
 	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
+}
+
+stock bool bIsValidGame(bool l4d2 = true)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	return l4d2 ? evEngine == Engine_Left4Dead2 : evEngine == Engine_Left4Dead;
 }
 
 stock bool bIsValidHumanClient(int client)
@@ -1065,7 +1066,7 @@ stock void vShake(int client, float duration = 1.0)
 stock void vSpawnInfected(int client, const char[] infected)
 {
 	ChangeClientTeam(client, 3);
-	vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", infected);
+	vCheatCommand(client, bIsValidGame() ? "z_spawn_old" : "z_spawn", infected);
 	KickClient(client);
 }
 

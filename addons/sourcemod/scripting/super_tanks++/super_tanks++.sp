@@ -30,7 +30,7 @@ TopMenu g_tmSTMenu;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "Super Tanks++ only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -244,7 +244,7 @@ public void OnConfigsExecuted()
 	}
 	if (StrContains(g_sConfigCreate, "2") != -1 && g_iConfigEnable == 1)
 	{
-		CreateDirectory((bIsL4D2() ? "addons/sourcemod/data/super_tanks++/l4d2_map_configs/" : "addons/sourcemod/data/super_tanks++/l4d_map_configs/"), 511);
+		CreateDirectory((bIsValidGame() ? "addons/sourcemod/data/super_tanks++/l4d2_map_configs/" : "addons/sourcemod/data/super_tanks++/l4d_map_configs/"), 511);
 		char sMapNames[128];
 		ArrayList alADTMaps = new ArrayList(16, 0);
 		int iSerial = -1;
@@ -256,14 +256,14 @@ public void OnConfigsExecuted()
 			for (int iMap = 0; iMap < iMapCount; iMap++)
 			{
 				alADTMaps.GetString(iMap, sMapNames, sizeof(sMapNames));
-				vCreateConfigFile("addons/sourcemod/data/super_tanks++/", (bIsL4D2() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapNames, sMapNames);
+				vCreateConfigFile("addons/sourcemod/data/super_tanks++/", (bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapNames, sMapNames);
 			}
 		}
 		delete alADTMaps;
 	}
 	if (StrContains(g_sConfigCreate, "3") != -1 && g_iConfigEnable == 1)
 	{
-		CreateDirectory((bIsL4D2() ? "addons/sourcemod/data/super_tanks++/l4d2_gamemode_configs/" : "addons/sourcemod/data/super_tanks++/l4d_gamemode_configs/"), 511);
+		CreateDirectory((bIsValidGame() ? "addons/sourcemod/data/super_tanks++/l4d2_gamemode_configs/" : "addons/sourcemod/data/super_tanks++/l4d_gamemode_configs/"), 511);
 		char sGameType[2049], sTypes[64][32];
 		g_cvSTGameTypes.GetString(sGameType, sizeof(sGameType));
 		TrimString(sGameType);
@@ -272,7 +272,7 @@ public void OnConfigsExecuted()
 		{
 			if (StrContains(sGameType, sTypes[iMode]) != -1 && strcmp(sTypes[iMode], "") == 1)
 			{
-				vCreateConfigFile("addons/sourcemod/data/super_tanks++/", (bIsL4D2() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode], sTypes[iMode]);
+				vCreateConfigFile("addons/sourcemod/data/super_tanks++/", (bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode], sTypes[iMode]);
 			}
 		}
 	}
@@ -317,7 +317,7 @@ public void OnConfigsExecuted()
 	{
 		char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
-		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsL4D2() ? "data/super_tanks++/l4d2_map_configs/%s.cfg" : "data/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
+		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/super_tanks++/l4d2_map_configs/%s.cfg" : "data/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
 		vLoadConfigs(sMapConfig);
 		g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 	}
@@ -325,7 +325,7 @@ public void OnConfigsExecuted()
 	{
 		char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_cvSTGameMode.GetString(sMode, sizeof(sMode));
-		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsL4D2() ? "data/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "data/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
+		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "data/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
 		vLoadConfigs(sModeConfig);
 		g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 	}
@@ -370,7 +370,7 @@ public void OnPluginEnd()
 	{
 		if (bIsTank(iTank) && IsPlayerAlive(iTank))
 		{
-			if (iGlowOutline(g_iTankType[iTank]) == 1 && bIsL4D2())
+			if (iGlowOutline(g_iTankType[iTank]) == 1 && bIsValidGame())
 			{
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
 				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
@@ -540,7 +540,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (bIsTankAllowed(iPlayer))
 			{
-				if (iGlowOutline(g_iTankType[iPlayer]) == 1 && bIsL4D2())
+				if (iGlowOutline(g_iTankType[iPlayer]) == 1 && bIsValidGame())
 				{
 					SetEntProp(iPlayer, Prop_Send, "m_iGlowType", 0);
 					SetEntProp(iPlayer, Prop_Send, "m_glowColorOverride", 0);
@@ -685,7 +685,7 @@ stock void vTank(int client, int type, int mode = 0)
 		case 0: sParameter = "tank";
 		case 1: sParameter = "tank auto";
 	}
-	vCheatCommand(client, bIsL4D2() ? "z_spawn_old" : "z_spawn", sParameter);
+	vCheatCommand(client, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
 }
 
 stock void vTankMenu(int client, int item)
@@ -993,7 +993,7 @@ stock void vParticleEffects(int client)
 		{
 			CreateTimer(1.5, tTimerSmokeEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
-		if (StrContains(sParticleEffects, "7") != -1 && bIsL4D2())
+		if (StrContains(sParticleEffects, "7") != -1 && bIsValidGame())
 		{
 			CreateTimer(2.0, tTimerSpitEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
@@ -1069,7 +1069,7 @@ stock void vSetColor(int client, int value)
 	TrimString(sGlow[2]);
 	int iBlue2 = (strcmp(sGlow[2], "") == 1) ? StringToInt(sGlow[2]) : 255;
 	iBlue2 = iClamp(iBlue2, 0, 255);
-	if (iGlowOutline(value) == 1 && bIsL4D2())
+	if (iGlowOutline(value) == 1 && bIsValidGame())
 	{
 		SetEntProp(client, Prop_Send, "m_iGlowType", 3);
 		SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
@@ -1333,7 +1333,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 					AcceptEntityInput(iConcrete[iRock], "SetParentAttachment");
 					AcceptEntityInput(iConcrete[iRock], "Enable");
 					AcceptEntityInput(iConcrete[iRock], "DisableCollision");
-					if (bIsL4D2())
+					if (bIsValidGame())
 					{
 						switch (iRock)
 						{
@@ -1376,7 +1376,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 					AcceptEntityInput(iWheel[iTire], "SetParentAttachment");
 					AcceptEntityInput(iWheel[iTire], "Enable");
 					AcceptEntityInput(iWheel[iTire], "DisableCollision");
-					if (bIsL4D2())
+					if (bIsValidGame())
 					{
 						SetEntPropFloat(iWheel[iTire], Prop_Data, "m_flModelScale", 1.5);
 					}
@@ -2096,7 +2096,7 @@ public Action tTimerRegularWaves(Handle timer)
 		{
 			if (bIsValidClient(iTank))
 			{
-				vCheatCommand(iTank, bIsL4D2() ? "z_spawn_old" : "z_spawn", "tank auto");
+				vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank auto");
 				break;
 			}
 		}
@@ -2114,7 +2114,7 @@ public Action tTimerSpawnTanks(Handle timer, any wave)
 	{
 		if (bIsValidClient(iTank))
 		{
-			vCheatCommand(iTank, bIsL4D2() ? "z_spawn_old" : "z_spawn", "tank auto");
+			vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank auto");
 			break;
 		}
 	}
@@ -2161,7 +2161,7 @@ public Action tTimerReloadConfigs(Handle timer)
 	{
 		char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
-		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsL4D2() ? "data/super_tanks++/l4d2_map_configs/%s.cfg" : "data/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
+		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/super_tanks++/l4d2_map_configs/%s.cfg" : "data/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
 		g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[2] != g_iFileTimeNew[2])
 		{
@@ -2174,7 +2174,7 @@ public Action tTimerReloadConfigs(Handle timer)
 	{
 		char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_cvSTGameMode.GetString(sMode, sizeof(sMode));
-		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsL4D2() ? "data/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "data/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
+		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "data/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
 		g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[3] != g_iFileTimeNew[3])
 		{

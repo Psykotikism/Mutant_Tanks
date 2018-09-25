@@ -21,7 +21,7 @@ int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_i
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Gravity Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -196,7 +196,7 @@ public void ST_Ability(int client)
 				vSetEntityParent(iBlackhole, client);
 				AcceptEntityInput(iBlackhole, "Enable");
 				SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
-				if (bIsL4D2())
+				if (bIsValidGame())
 				{
 					SetEntProp(iBlackhole, Prop_Send, "m_glowColorOverride", client);
 				}
@@ -247,7 +247,7 @@ stock void vRemoveGravity(int client)
 	int iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
 	{
-		if (bIsL4D2())
+		if (bIsValidGame())
 		{
 			int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
 			if (iOwner == client)

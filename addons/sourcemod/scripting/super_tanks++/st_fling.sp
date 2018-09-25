@@ -22,7 +22,7 @@ int g_iFlingAbility[ST_MAXTYPES + 1], g_iFlingAbility2[ST_MAXTYPES + 1], g_iFlin
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Fling Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -56,7 +56,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
 	Handle hGameData = LoadGameConfigFile("super_tanks++");
-	if (bIsL4D2())
+	if (bIsValidGame())
 	{
 		StartPrepSDKCall(SDKCall_Player);
 		PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_Fling");
@@ -186,7 +186,7 @@ stock void vFlingHit(int client, int owner, int chance, int enabled, int message
 		char sTankName[MAX_NAME_LENGTH + 1];
 		int iFlingMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iFlingMessage[ST_TankType(owner)] : g_iFlingMessage2[ST_TankType(owner)];
 		ST_TankName(owner, sTankName);
-		if (bIsL4D2())
+		if (bIsValidGame())
 		{
 			float flSurvivorPos[3], flSurvivorVelocity[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
 			GetClientAbsOrigin(client, flSurvivorPos);

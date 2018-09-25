@@ -22,7 +22,7 @@ int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1], g_iThro
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (GetEngineVersion() != Engine_Left4Dead && !bIsL4D2())
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Throw Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -209,9 +209,9 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 				case '1': vSpawnInfected(iInfected, "smoker");
 				case '2': vSpawnInfected(iInfected, "boomer");
 				case '3': vSpawnInfected(iInfected, "hunter");
-				case '4': bIsL4D2() ? vSpawnInfected(iInfected, "spitter") : vSpawnInfected(iInfected, "boomer");
-				case '5': bIsL4D2() ? vSpawnInfected(iInfected, "jockey") : vSpawnInfected(iInfected, "hunter");
-				case '6': bIsL4D2() ? vSpawnInfected(iInfected, "charger") : vSpawnInfected(iInfected, "smoker");
+				case '4': bIsValidGame() ? vSpawnInfected(iInfected, "spitter") : vSpawnInfected(iInfected, "boomer");
+				case '5': bIsValidGame() ? vSpawnInfected(iInfected, "jockey") : vSpawnInfected(iInfected, "hunter");
+				case '6': bIsValidGame() ? vSpawnInfected(iInfected, "charger") : vSpawnInfected(iInfected, "smoker");
 				case '7': vSpawnInfected(iInfected, "tank");
 				default: vSpawnInfected(iInfected, "hunter");
 			}
