@@ -871,7 +871,7 @@ stock void vLoadConfigs(const char[] savepath, bool main = false)
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		Format(sTankName, sizeof(sTankName), "Tank %d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
