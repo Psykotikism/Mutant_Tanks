@@ -282,11 +282,39 @@
 			// Maximum: 9999999999.0
 			"Random Interval"				"5.0"
 
-			// The mode of the Super Tanks' spawn status.
+			// The Super Tank is able to transform again after this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Transform Delay"				"10.0"
+
+			// The Super Tank's transformations last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Transform Duration"			"10.0"
+
+			// The types that the Super Tank can transform into.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
+			// --
+			// Separate game modes with commas.
+			// Character limit: 80 (including commas)
+			// Character limit for each type: 4
+			// --
+			// Example: "1,35,26,4"
+			// Example: "4,9,49,449,4449,499,4999"
+			// Example: "1997,1998,1999,2000,2001,2002,2003,2004,2005,2006"
+			// --
+			// Minimum: 1
+			// Maximum: 5000
+			"Transform Types"				"1,2,3,4,5,6,7,8,9,10"
+
+			// The mode of the Super Tank's spawn status.
 			// --
 			// 0: Spawn as normal Super Tanks.
-			// 1: Spawn as Super Tank bosses.
-			// 2: Spawn as Super Tanks that switch randomly between each type.
+			// 1: Spawn as a Super Tank boss.
+			// 2: Spawn as a Super Tank that switch randomly between each type.
+			// 3: Spawn as a Super Tank that temporarily transforms into a different type and reverts back after awhile.
 			"Spawn Mode"					"0"
 		}
 		"Props"
