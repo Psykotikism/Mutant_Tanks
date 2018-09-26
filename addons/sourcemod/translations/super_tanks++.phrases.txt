@@ -114,6 +114,16 @@
 		"#format"		"{1:s},{2:s}"
 		"en"			"{1} randomized into {2}!"
 	}
+	"Transformed"
+	{
+		"#format"		"{1:s},{2:s}"
+		"en"			"{1} transformed into {2}!"
+	}
+	"Untransformed"
+	{
+		"#format"		"{1:s},{2:s}"
+		"en"			"{1} reverted back into {2}!"
+	}
 	"Absorb"
 	{
 		"#format"		"{1:s}"
@@ -1010,5 +1020,13 @@
 	"Tank98"
 	{
 		"en"			"This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+	"Tank99"
+	{
+		"en"			"This Tank can transform into different Super Tank types. Be careful..."
+	}
+	"Tank100"
+	{
+		"en"			"This Tank can shapeshift into different Super Tank types. Don't underestimate it..."
 	}
 }
