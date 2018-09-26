@@ -3302,11 +3302,18 @@
 			// Maximum: 9999999999 (Less chance)
 			"Respawn Chance"				"4"
 
-			// The Super Tank respawns as a random Super Tank.
+			// The mode of the Super Tank's respawns.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Respawn Random"				"0"
+			// 0: The Super Tank respawns as the same type.
+			// 1: The Super Tank respawns as the type used in the "Respawn Type" setting.
+			// 2: The Super Tank respawns as a random type.
+			"Respawn Mode"					"0"
+
+			// The type that the Super Tank will respawn as.
+			// --
+			// 0: OFF, use the randomization feature.
+			// 1-5000: ON, the type to respawn as.
+			"Respawn Type"					"0"
 		}
 	}
 }
