@@ -38,7 +38,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -46,7 +46,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -109,14 +109,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if ((iIdleHitMode(attacker) == 0 || iIdleHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
-			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vIdleHit(victim, attacker, iIdleChance(attacker), iIdleHit(attacker), 1);
 			}
 		}
 		else if ((iIdleHitMode(victim) == 0 || iIdleHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
-			if (strcmp(sClassname, "weapon_melee") == 0)
+			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vIdleHit(attacker, victim, iIdleChance(victim), iIdleHit(victim), 1);
 			}
@@ -157,12 +157,12 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "player_afk") == 0)
+	if (StrEqual(name, "player_afk"))
 	{
 		int iPlayerId = event.GetInt("player"), iIdler = GetClientOfUserId(iPlayerId);
 		g_bIdled[iIdler] = true;
 	}
-	else if (strcmp(name, "player_bot_replace") == 0)
+	else if (StrEqual(name, "player_bot_replace"))
 	{
 		int iSurvivorId = event.GetInt("player"), iSurvivor = GetClientOfUserId(iSurvivorId),
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);

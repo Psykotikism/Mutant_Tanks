@@ -37,7 +37,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -45,7 +45,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -320,13 +320,13 @@ stock void vTrack(int entity)
 			ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 			TrimString(sGlow[0]);
-			int iRed = (strcmp(sGlow[0], "") == 1) ? StringToInt(sGlow[0]) : 255;
+			int iRed = (!StrEqual(sGlow[0], "")) ? StringToInt(sGlow[0]) : 255;
 			iRed = iClamp(iRed, 0, 255);
 			TrimString(sGlow[1]);
-			int iGreen = (strcmp(sGlow[1], "") == 1) ? StringToInt(sGlow[1]) : 255;
+			int iGreen = (!StrEqual(sGlow[1], "")) ? StringToInt(sGlow[1]) : 255;
 			iGreen = iClamp(iGreen, 0, 255);
 			TrimString(sGlow[2]);
-			int iBlue = (strcmp(sGlow[2], "") == 1) ? StringToInt(sGlow[2]) : 255;
+			int iBlue = (!StrEqual(sGlow[2], "")) ? StringToInt(sGlow[2]) : 255;
 			iBlue = iClamp(iBlue, 0, 255);
 			int iGlowOutline = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowOutline[ST_TankType(iTank)] : g_iGlowOutline2[ST_TankType(iTank)];
 			if (iGlowOutline == 1 && bIsValidGame())

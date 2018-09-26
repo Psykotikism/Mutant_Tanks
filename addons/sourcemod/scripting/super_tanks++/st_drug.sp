@@ -38,7 +38,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -46,7 +46,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -93,14 +93,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if ((iDrugHitMode(attacker) == 0 || iDrugHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
-			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vDrugHit(victim, attacker, iDrugChance(attacker), iDrugHit(attacker), 1);
 			}
 		}
 		else if ((iDrugHitMode(victim) == 0 || iDrugHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
-			if (strcmp(sClassname, "weapon_melee") == 0)
+			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vDrugHit(attacker, victim, iDrugChance(victim), iDrugHit(victim), 1);
 			}

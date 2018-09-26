@@ -37,7 +37,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -45,7 +45,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -80,14 +80,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if ((iAmmoHitMode(attacker) == 0 || iAmmoHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
-			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vAmmoHit(victim, attacker, iAmmoChance(attacker), iAmmoHit(attacker), 1);
 			}
 		}
 		else if ((iAmmoHitMode(victim) == 0 || iAmmoHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
-			if (strcmp(sClassname, "weapon_melee") == 0)
+			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vAmmoHit(attacker, victim, iAmmoChance(victim), iAmmoHit(victim), 1);
 			}
@@ -164,39 +164,39 @@ stock void vAmmoHit(int client, int owner, int chance, int enabled, int message)
 		GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
 		if (bIsValidEntity(iActiveWeapon))
 		{
-			if (strcmp(sWeapon, "weapon_rifle") == 0 || strcmp(sWeapon, "weapon_rifle_desert") == 0 || strcmp(sWeapon, "weapon_rifle_ak47") == 0 || strcmp(sWeapon, "weapon_rifle_sg552") == 0)
+			if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_sg552"))
 			{
 				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 3);
 			}
-			else if (strcmp(sWeapon, "weapon_smg") == 0 || strcmp(sWeapon, "weapon_smg_silenced") == 0 || strcmp(sWeapon, "weapon_smg_mp5") == 0)
+			else if (StrEqual(sWeapon, "weapon_smg") || StrEqual(sWeapon, "weapon_smg_silenced") || StrEqual(sWeapon, "weapon_smg_mp5"))
 			{
 				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 5);
 			}
-			else if (strcmp(sWeapon, "weapon_pumpshotgun") == 0)
+			else if (StrEqual(sWeapon, "weapon_pumpshotgun"))
 			{
 				bIsValidGame() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 7) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
 			}
-			else if (strcmp(sWeapon, "weapon_shotgun_chrome") == 0)
+			else if (StrEqual(sWeapon, "weapon_shotgun_chrome"))
 			{
 				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 7);
 			}
-			else if (strcmp(sWeapon, "weapon_autoshotgun") == 0)
+			else if (StrEqual(sWeapon, "weapon_autoshotgun"))
 			{
 				bIsValidGame() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 8) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
 			}
-			else if (strcmp(sWeapon, "weapon_shotgun_spas") == 0)
+			else if (StrEqual(sWeapon, "weapon_shotgun_spas"))
 			{
 				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 8);
 			}
-			else if (strcmp(sWeapon, "weapon_hunting_rifle") == 0)
+			else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
 			{
 				bIsValidGame() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 9) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 2);
 			}
-			else if (strcmp(sWeapon, "weapon_sniper_scout") == 0 || strcmp(sWeapon, "weapon_sniper_military") == 0 || strcmp(sWeapon, "weapon_sniper_awp") == 0)
+			else if (StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_awp"))
 			{
 				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 10);
 			}
-			else if (strcmp(sWeapon, "weapon_grenade_launcher") == 0)
+			else if (StrEqual(sWeapon, "weapon_grenade_launcher"))
 			{
 				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 17);
 			}

@@ -36,7 +36,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -44,7 +44,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -127,7 +127,7 @@ stock void vMeteor(int client, int entity)
 	}
 	char sClassname[16];
 	GetEntityClassname(entity, sClassname, sizeof(sClassname));
-	if (strcmp(sClassname, "tank_rock") == 0)
+	if (StrEqual(sClassname, "tank_rock"))
 	{
 		RemoveEntity(entity);
 		char sDamage[11];
@@ -217,25 +217,25 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	TrimString(sMeteorRadius);
 	ExplodeString(sMeteorRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
 	TrimString(sRadius[0]);
-	float flMin = (strcmp(sRadius[0], "") == 1) ? StringToFloat(sRadius[0]) : -200.0;
+	float flMin = (!StrEqual(sRadius[0], "")) ? StringToFloat(sRadius[0]) : -200.0;
 	TrimString(sRadius[1]);
-	float flMax = (strcmp(sRadius[1], "") == 1) ? StringToFloat(sRadius[1]) : 200.0;
+	float flMax = (!StrEqual(sRadius[1], "")) ? StringToFloat(sRadius[1]) : 200.0;
 	flMin = flClamp(flMin, -200.0, 0.0), flMax = flClamp(flMax, 0.0, 200.0);
 	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
 	TrimString(sPropsColors);
 	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 	ExplodeString(sSet[3], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 	TrimString(sRGB[0]);
-	int iRed = (strcmp(sRGB[0], "") == 1) ? StringToInt(sRGB[0]) : 255;
+	int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
 	iRed = iClamp(iRed, 0, 255);
 	TrimString(sRGB[1]);
-	int iGreen = (strcmp(sRGB[1], "") == 1) ? StringToInt(sRGB[1]) : 255;
+	int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
 	iGreen = iClamp(iGreen, 0, 255);
 	TrimString(sRGB[2]);
-	int iBlue = (strcmp(sRGB[2], "") == 1) ? StringToInt(sRGB[2]) : 255;
+	int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
 	iBlue = iClamp(iBlue, 0, 255);
 	TrimString(sRGB[3]);
-	int iAlpha = (strcmp(sRGB[3], "") == 1) ? StringToInt(sRGB[3]) : 255;
+	int iAlpha = (!StrEqual(sRGB[3], "")) ? StringToInt(sRGB[3]) : 255;
 	iAlpha = iClamp(iAlpha, 0, 255);
 	if ((GetEngineTime() - flTime) > 5.0)
 	{

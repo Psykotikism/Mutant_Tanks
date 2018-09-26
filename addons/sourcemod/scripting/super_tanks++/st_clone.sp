@@ -93,7 +93,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "player_death") == 0)
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (iCloneAbility(iTank) == 1 && ST_TankAllowed(iTank))

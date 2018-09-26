@@ -36,7 +36,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -44,7 +44,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -83,7 +83,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "player_death") == 0)
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iItemAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemAbility[ST_TankType(iTank)] : g_iItemAbility2[ST_TankType(iTank)],
@@ -117,7 +117,7 @@ public void ST_Event(Event event, const char[] name)
 						{
 							for (int iItem = 0; iItem < sizeof(sItems); iItem++)
 							{
-								if (StrContains(sItemLoadout, sItems[iItem]) != -1 && strcmp(sItems[iItem], "") == 1)
+								if (StrContains(sItemLoadout, sItems[iItem]) != -1 && !StrEqual(sItems[iItem], ""))
 								{
 									vCheatCommand(iSurvivor, "give", sItems[iItem]);
 								}

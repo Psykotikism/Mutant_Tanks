@@ -37,7 +37,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -45,7 +45,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -85,7 +85,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "player_death") == 0)
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (iMedicAbility(iTank) == 1 && GetRandomInt(1, iMedicChance(iTank)) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
@@ -126,18 +126,18 @@ stock void vMedic(int client)
 				TrimString(sMedicMaxHealth);
 				ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
 				int iHealth = GetClientHealth(iInfected),
-					iSmokerHealth = (strcmp(sHealth[0], "") == 1) ? StringToInt(sHealth[0]) : 25,
-					iSmokerMaxHealth = (strcmp(sMaxHealth[0], "") == 1) ? StringToInt(sMaxHealth[0]) : 250,
-					iBoomerHealth = (strcmp(sHealth[1], "") == 1) ? StringToInt(sHealth[1]) : 25,
-					iBoomerMaxHealth = (strcmp(sMaxHealth[1], "") == 1) ? StringToInt(sMaxHealth[1]) : 50,
-					iHunterHealth = (strcmp(sHealth[2], "") == 1) ? StringToInt(sHealth[2]) : 25,
-					iHunterMaxHealth = (strcmp(sMaxHealth[2], "") == 1) ? StringToInt(sMaxHealth[2]) : 250,
-					iSpitterHealth = (strcmp(sHealth[3], "") == 1) ? StringToInt(sHealth[3]) : 25,
-					iSpitterMaxHealth = (strcmp(sMaxHealth[3], "") == 1) ? StringToInt(sMaxHealth[3]) : 100,
-					iJockeyHealth = (strcmp(sHealth[4], "") == 1) ? StringToInt(sHealth[4]) : 25,
-					iJockeyMaxHealth = (strcmp(sMaxHealth[4], "") == 1) ? StringToInt(sMaxHealth[4]) : 325,
-					iChargerHealth = (strcmp(sHealth[5], "") == 1) ? StringToInt(sHealth[5]) : 25,
-					iChargerMaxHealth = (strcmp(sMaxHealth[5], "") == 1) ? StringToInt(sMaxHealth[5]) : 600;
+					iSmokerHealth = (!StrEqual(sHealth[0], "")) ? StringToInt(sHealth[0]) : 25,
+					iSmokerMaxHealth = (!StrEqual(sMaxHealth[0], "")) ? StringToInt(sMaxHealth[0]) : 250,
+					iBoomerHealth = (!StrEqual(sHealth[1], "")) ? StringToInt(sHealth[1]) : 25,
+					iBoomerMaxHealth = (!StrEqual(sMaxHealth[1], "")) ? StringToInt(sMaxHealth[1]) : 50,
+					iHunterHealth = (!StrEqual(sHealth[2], "")) ? StringToInt(sHealth[2]) : 25,
+					iHunterMaxHealth = (!StrEqual(sMaxHealth[2], "")) ? StringToInt(sMaxHealth[2]) : 250,
+					iSpitterHealth = (!StrEqual(sHealth[3], "")) ? StringToInt(sHealth[3]) : 25,
+					iSpitterMaxHealth = (!StrEqual(sMaxHealth[3], "")) ? StringToInt(sMaxHealth[3]) : 100,
+					iJockeyHealth = (!StrEqual(sHealth[4], "")) ? StringToInt(sHealth[4]) : 25,
+					iJockeyMaxHealth = (!StrEqual(sMaxHealth[4], "")) ? StringToInt(sMaxHealth[4]) : 325,
+					iChargerHealth = (!StrEqual(sHealth[5], "")) ? StringToInt(sHealth[5]) : 25,
+					iChargerMaxHealth = (!StrEqual(sMaxHealth[5], "")) ? StringToInt(sMaxHealth[5]) : 600;
 				iSmokerHealth = iClamp(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				iSmokerMaxHealth = iClamp(iSmokerMaxHealth, 1, ST_MAXHEALTH);
 				iBoomerHealth = iClamp(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);

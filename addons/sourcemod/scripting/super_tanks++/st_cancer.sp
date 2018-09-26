@@ -39,7 +39,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -47,7 +47,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -83,14 +83,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if ((iCancerHitMode(attacker) == 0 || iCancerHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
-			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vCancerHit(victim, attacker, iCancerChance(attacker), iCancerHit(attacker), 1);
 			}
 		}
 		else if ((iCancerHitMode(victim) == 0 || iCancerHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
-			if (strcmp(sClassname, "weapon_melee") == 0)
+			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vCancerHit(attacker, victim, iCancerChance(victim), iCancerHit(victim), 1);
 			}
@@ -167,13 +167,13 @@ stock void vCancerHit(int client, int owner, int chance, int enabled, int messag
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 		TrimString(sRGB[0]);
-		int iRed = (strcmp(sRGB[0], "") == 1) ? StringToInt(sRGB[0]) : 255;
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		TrimString(sRGB[1]);
-		int iGreen = (strcmp(sRGB[1], "") == 1) ? StringToInt(sRGB[1]) : 255;
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 		TrimString(sRGB[2]);
-		int iBlue = (strcmp(sRGB[2], "") == 1) ? StringToInt(sRGB[2]) : 255;
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
 		vFade(client, 800, 300, iRed, iGreen, iBlue);

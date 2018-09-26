@@ -38,7 +38,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -46,7 +46,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -235,7 +235,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "player_death") == 0)
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropChance[ST_TankType(iTank)] : g_iDropChance2[ST_TankType(iTank)];
@@ -257,31 +257,31 @@ public void ST_Event(Event event, const char[] name)
 						SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale(iTank));
 					}
 					int iAmmo, iClip;
-					if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_ak47") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_desert") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_sg552") == 0)
+					if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_ak47") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_desert") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_sg552"))
 					{
 						iAmmo = g_cvSTAssaultRifleAmmo.IntValue;
 					}
-					else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_autoshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_spas") == 0)
+					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_autoshotgun") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_spas"))
 					{
 						iAmmo = g_cvSTAutoShotgunAmmo.IntValue;
 					}
-					else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_grenade_launcher") == 0)
+					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_grenade_launcher"))
 					{
 						iAmmo = g_cvSTGrenadeLauncherAmmo.IntValue;
 					}
-					else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_hunting_rifle") == 0)
+					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_hunting_rifle"))
 					{
 						iAmmo = g_cvSTHuntingRifleAmmo.IntValue;
 					}
-					else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_pumpshotgun") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_chrome") == 0)
+					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_pumpshotgun") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_chrome"))
 					{
 						iAmmo = g_cvSTShotgunAmmo.IntValue;
 					}
-					else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg_silenced") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg_mp5") == 0)
+					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg_silenced") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg_mp5"))
 					{
 						iAmmo = g_cvSTSMGAmmo.IntValue;
 					}
-					else if (strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_scout") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_military") == 0 || strcmp(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_awp") == 0)
+					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_scout") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_military") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_awp"))
 					{
 						iAmmo = g_cvSTSniperRifleAmmo.IntValue;
 					}

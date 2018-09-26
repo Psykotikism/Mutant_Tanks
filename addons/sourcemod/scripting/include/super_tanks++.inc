@@ -253,7 +253,7 @@ stock bool bHasIdlePlayer(int client)
 {
 	char sClassname[12];
 	GetEntityNetClass(client, sClassname, sizeof(sClassname));
-	if (strcmp(sClassname, "SurvivorBot") == 0)
+	if (StrEqual(sClassname, "SurvivorBot"))
 	{
 		int iSpectatorUserId = GetEntProp(client, Prop_Send, "m_humanSpectatorUserID");
 		if (iSpectatorUserId > 0)
@@ -351,7 +351,7 @@ stock bool bIsPlayerIdle(int client)
 		}
 		char sClassname[12];
 		GetEntityNetClass(iPlayer, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "SurvivorBot") == 0)
+		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
 			if (iSpectatorUserId > 0)
@@ -403,7 +403,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 	char sGameMode[32], sGameModes[513];
 	convar.GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
-	if (strcmp(enabled, ""))
+	if (!StrEqual(enabled, ""))
 	{
 		Format(sGameModes, sizeof(sGameModes), ",%s,", enabled);
 		if (StrContains(sGameModes, sGameMode, false) == -1)
@@ -411,7 +411,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 			return false;
 		}
 	}
-	if (strcmp(disabled, ""))
+	if (!StrEqual(disabled, ""))
 	{
 		Format(sGameModes, sizeof(sGameModes), ",%s,", disabled);
 		if (StrContains(sGameModes, sGameMode, false) != -1)
@@ -479,7 +479,7 @@ stock bool bIsWitch(int client)
 	{
 		char sClassname[32];
 		GetEntityClassname(client, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "witch") == 0)
+		if (StrEqual(sClassname, "witch"))
 		{
 			return true;
 		}
@@ -727,7 +727,7 @@ stock int iGetIdlePlayer(int client)
 	{
 		char sClassname[12];
 		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "SurvivorBot") == 0)
+		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iIdler = GetClientOfUserId(GetEntProp(client, Prop_Send, "m_humanSpectatorUserID"));
 			if (iIdler > 0 && IsClientInGame(iIdler) && GetClientTeam(iIdler) == 1)
@@ -961,19 +961,19 @@ stock void vFade(int client, int duration, int unknown, int red, int green, int 
 
 public void vGameMode(const char[] output, int caller, int activator, float delay)
 {
-	if (strcmp(output, "OnCoop") == 0)
+	if (StrEqual(output, "OnCoop"))
 	{
 		g_iCurrentMode = 1;
 	}
-	else if (strcmp(output, "OnVersus") == 0)
+	else if (StrEqual(output, "OnVersus"))
 	{
 		g_iCurrentMode = 2;
 	}
-	else if (strcmp(output, "OnSurvival") == 0)
+	else if (StrEqual(output, "OnSurvival"))
 	{
 		g_iCurrentMode = 4;
 	}
-	else if (strcmp(output, "OnScavenge") == 0)
+	else if (StrEqual(output, "OnScavenge"))
 	{
 		g_iCurrentMode = 8;
 	}

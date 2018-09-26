@@ -39,7 +39,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -47,7 +47,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -138,7 +138,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "player_death") == 0)
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (iShieldAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
@@ -181,7 +181,7 @@ stock void vRemoveShield(int client)
 	{
 		char sModel[128];
 		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-		if (strcmp(sModel, MODEL_SHIELD, false) == 0)
+		if (StrEqual(sModel, MODEL_SHIELD, false))
 		{
 			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 			if (iOwner == client)
@@ -213,13 +213,13 @@ stock void vShield(int client, bool shield)
 		TrimString(sShieldColor);
 		ExplodeString(sShieldColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 		TrimString(sSet[0]);
-		int iRed = (strcmp(sSet[0], "") == 1) ? StringToInt(sSet[0]) : 255;
+		int iRed = (!StrEqual(sSet[0], "")) ? StringToInt(sSet[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		TrimString(sSet[1]);
-		int iGreen = (strcmp(sSet[1], "") == 1) ? StringToInt(sSet[1]) : 255;
+		int iGreen = (!StrEqual(sSet[1], "")) ? StringToInt(sSet[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 		TrimString(sSet[2]);
-		int iBlue = (strcmp(sSet[2], "") == 1) ? StringToInt(sSet[2]) : 255;
+		int iBlue = (!StrEqual(sSet[2], "")) ? StringToInt(sSet[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 		float flOrigin[3];
 		GetClientAbsOrigin(client, flOrigin);
@@ -252,7 +252,7 @@ stock void vShield(int client, bool shield)
 		{
 			char sModel[128];
 			GetEntPropString(iShield, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-			if (strcmp(sModel, MODEL_SHIELD, false) == 0)
+			if (StrEqual(sModel, MODEL_SHIELD, false))
 			{
 				int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == client)

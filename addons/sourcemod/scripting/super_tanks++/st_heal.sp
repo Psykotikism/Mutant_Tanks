@@ -38,7 +38,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -46,7 +46,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -92,14 +92,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if ((iHealHitMode(attacker) == 0 || iHealHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
-			if (strcmp(sClassname, "weapon_tank_claw") == 0 || strcmp(sClassname, "tank_rock") == 0)
+			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vHealHit(victim, attacker, iHealChance(attacker), iHealHit(attacker), 1);
 			}
 		}
 		else if ((iHealHitMode(victim) == 0 || iHealHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
-			if (strcmp(sClassname, "weapon_melee") == 0)
+			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vHealHit(attacker, victim, iHealChance(victim), iHealHit(victim), 1);
 			}
@@ -362,13 +362,13 @@ public Action tTimerHeal(Handle timer, any userid)
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 		ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 		TrimString(sGlow[0]);
-		int iRed = (strcmp(sGlow[0], "") == 1) ? StringToInt(sGlow[0]) : 255;
+		int iRed = (!StrEqual(sGlow[0], "")) ? StringToInt(sGlow[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		TrimString(sGlow[1]);
-		int iGreen = (strcmp(sGlow[1], "") == 1) ? StringToInt(sGlow[1]) : 255;
+		int iGreen = (!StrEqual(sGlow[1], "")) ? StringToInt(sGlow[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 		TrimString(sGlow[2]);
-		int iBlue = (strcmp(sGlow[2], "") == 1) ? StringToInt(sGlow[2]) : 255;
+		int iBlue = (!StrEqual(sGlow[2], "")) ? StringToInt(sGlow[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 		int iGlowOutline = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowOutline[ST_TankType(iTank)] : g_iGlowOutline2[ST_TankType(iTank)];
 		if (iGlowOutline == 1 && bIsValidGame())

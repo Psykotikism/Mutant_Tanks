@@ -37,7 +37,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -45,7 +45,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -185,9 +185,9 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	TrimString(sRockRadius);
 	ExplodeString(sRockRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
 	TrimString(sRadius[0]);
-	float flMin = (strcmp(sRadius[0], "") == 1) ? StringToFloat(sRadius[0]) : -5.0;
+	float flMin = (!StrEqual(sRadius[0], "")) ? StringToFloat(sRadius[0]) : -5.0;
 	TrimString(sRadius[1]);
-	float flMax = (strcmp(sRadius[1], "") == 1) ? StringToFloat(sRadius[1]) : 5.0;
+	float flMax = (!StrEqual(sRadius[1], "")) ? StringToFloat(sRadius[1]) : 5.0;
 	flMin = flClamp(flMin, -5.0, 0.0), flMax = flClamp(flMax, 0.0, 5.0);
 	float flAngles[3], flHitPos[3];
 	flAngles[0] = GetRandomFloat(-1.0, 1.0), flAngles[1] = GetRandomFloat(-1.0, 1.0), flAngles[2] = 2.0;
