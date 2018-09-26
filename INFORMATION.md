@@ -283,12 +283,14 @@
 			"Random Interval"				"5.0"
 
 			// The Super Tank is able to transform again after this many seconds passes.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Transform Delay"				"10.0"
 
 			// The Super Tank's transformations last this long.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
