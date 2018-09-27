@@ -1428,7 +1428,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 			if (iTankNote == 1 && ST_CloneAllowed(client, g_bCloneInstalled))
 			{
 				char sTankNote[32];
-				Format(sTankNote, sizeof(sTankNote), "Tank%d", g_iTankType[client]);
+				Format(sTankNote, sizeof(sTankNote), "Tank #%d", g_iTankType[client]);
 				TranslationPhraseExists(sTankNote) ? PrintToChatAll("%s %t", ST_PREFIX3, sTankNote) : PrintToChatAll("%s No note found for this Super Tank.", ST_PREFIX3);
 			}
 		}
