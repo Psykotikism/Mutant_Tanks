@@ -97,7 +97,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				case DMG_BULLET: damage = damage / flAbsorbBulletDamage;
 				case DMG_BLAST, DMG_BLAST_SURFACE, DMG_AIRBOAT, DMG_PLASMA: damage = damage / flAbsorbExplosiveDamage;
-				case DMG_BURN: damage = damage / flAbsorbFireDamage;
+				case DMG_BURN, 2056, 268435464: damage = damage / flAbsorbFireDamage;
 				case DMG_SLASH, DMG_CLUB: damage = damage / flAbsorbMeleeDamage;
 			}
 			return Plugin_Changed;

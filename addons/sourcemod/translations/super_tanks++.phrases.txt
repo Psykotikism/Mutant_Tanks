@@ -447,9 +447,14 @@
 	"Pyro"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is burning and running really fast!"
+		"en"			"{1} ignited itself!"
 	}
 	"Pyro2"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} is burning and running really fast!"
+	}
+	"Pyro3"
 	{
 		"#format"		"{1:s}"
 		"en"			"{1} is no longer burning and is back to normal speed!"

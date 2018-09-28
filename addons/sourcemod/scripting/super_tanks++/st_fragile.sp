@@ -97,7 +97,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				case DMG_BULLET: damage = damage * flFragileBulletDamage;
 				case DMG_BLAST, DMG_BLAST_SURFACE, DMG_AIRBOAT, DMG_PLASMA: damage = damage * flFragileExplosiveDamage;
-				case DMG_BURN: damage = damage * flFragileFireDamage;
+				case DMG_BURN, 2056, 268435464: damage = damage * flFragileFireDamage;
 				case DMG_SLASH, DMG_CLUB: damage = damage * flFragileMeleeDamage;
 			}
 			return Plugin_Changed;

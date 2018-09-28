@@ -110,7 +110,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					case DMG_BULLET: damage = damage / 20.0;
 					case DMG_BLAST, DMG_BLAST_SURFACE, DMG_AIRBOAT, DMG_PLASMA: damage = damage / 20.0;
-					case DMG_BURN: damage = damage / 200.0;
+					case DMG_BURN, 2056, 268435464: damage = damage / 200.0;
 					case DMG_SLASH, DMG_CLUB: damage = damage / 200.0;
 				}
 				(iHealth > damage) ? ((iHypnoMode == 1 && iTarget > 0) ? SetEntityHealth(iTarget, iHealth - RoundToNearest(damage)) : SetEntityHealth(attacker, iHealth - RoundToNearest(damage))) : ((iHypnoMode == 1 && iTarget > 0) ? SetEntProp(iTarget, Prop_Send, "m_isIncapacitated", 1) : SetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1));
