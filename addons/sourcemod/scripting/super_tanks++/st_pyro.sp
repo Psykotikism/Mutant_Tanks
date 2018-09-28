@@ -106,7 +106,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			int iPyroMode = !g_bTankConfig[ST_TankType(victim)] ? g_iPyroMode[ST_TankType(victim)] : g_iPyroMode2[ST_TankType(victim)];
 			float flPyroBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroBoost[ST_TankType(victim)] : g_flPyroBoost2[ST_TankType(victim)],
 				flRunSpeed = !g_bTankConfig[ST_TankType(victim)] ? g_flRunSpeed[ST_TankType(victim)] : g_flRunSpeed2[ST_TankType(victim)];
-			if (iPyroAbility(victim) == 1)
+			if (iPyroAbility(victim) == 2 || iPyroAbility(victim) == 3)
 			{
 				if (damagetype & DMG_BURN)
 				{
@@ -200,7 +200,7 @@ public void ST_Ability(int client)
 
 stock void vPyroHit(int client, int owner, int chance, int enabled, int message)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bPyro[client])
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bPyro[client])
 	{
 		g_bPyro[client] = true;
 		float flPyroDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flPyroDuration[ST_TankType(owner)] : g_flPyroDuration2[ST_TankType(owner)];
