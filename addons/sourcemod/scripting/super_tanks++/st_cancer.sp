@@ -160,22 +160,16 @@ stock void vCancerHit(int client, int owner, int chance, int enabled, int messag
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
-		char sSet[2][16], sTankColors[28], sRGB[4][4];
 		int iCancerMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iCancerMessage[ST_TankType(owner)] : g_iCancerMessage2[ST_TankType(owner)];
-		sTankColors = !g_bTankConfig[ST_TankType(owner)] ? g_sTankColors[ST_TankType(owner)] : g_sTankColors2[ST_TankType(owner)];
-		TrimString(sTankColors);
-		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
-		TrimString(sRGB[0]);
+		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
+		char sRGB[4][4];
+		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
 		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
-		TrimString(sRGB[1]);
 		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
-		TrimString(sRGB[2]);
 		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
-		SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
 		vFade(client, 800, 300, iRed, iGreen, iBlue);
 		if (iCancerMessage == message || iCancerMessage == 3)
 		{

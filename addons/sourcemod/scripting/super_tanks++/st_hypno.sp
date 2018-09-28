@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bHypno[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 float g_flHypnoDuration[ST_MAXTYPES + 1], g_flHypnoDuration2[ST_MAXTYPES + 1], g_flHypnoRange[ST_MAXTYPES + 1], g_flHypnoRange2[ST_MAXTYPES + 1];
-int g_iHypnoAbility[ST_MAXTYPES + 1], g_iHypnoAbility2[ST_MAXTYPES + 1], g_iHypnoChance[ST_MAXTYPES + 1], g_iHypnoChance2[ST_MAXTYPES + 1], g_iHypnoHit[ST_MAXTYPES + 1], g_iHypnoHit2[ST_MAXTYPES + 1], g_iHypnoHitMode[ST_MAXTYPES + 1], g_iHypnoHitMode2[ST_MAXTYPES + 1], g_iHypnoMode[ST_MAXTYPES + 1], g_iHypnoMode2[ST_MAXTYPES + 1], g_iHypnoMessage[ST_MAXTYPES + 1], g_iHypnoMessage2[ST_MAXTYPES + 1], g_iHypnoRangeChance[ST_MAXTYPES + 1], g_iHypnoRangeChance2[ST_MAXTYPES + 1];
+int g_iHypnoAbility[ST_MAXTYPES + 1], g_iHypnoAbility2[ST_MAXTYPES + 1], g_iHypnoChance[ST_MAXTYPES + 1], g_iHypnoChance2[ST_MAXTYPES + 1], g_iHypnoHit[ST_MAXTYPES + 1], g_iHypnoHit2[ST_MAXTYPES + 1], g_iHypnoHitMode[ST_MAXTYPES + 1], g_iHypnoHitMode2[ST_MAXTYPES + 1], g_iHypnoMessage[ST_MAXTYPES + 1], g_iHypnoMessage2[ST_MAXTYPES + 1], g_iHypnoMode[ST_MAXTYPES + 1], g_iHypnoMode2[ST_MAXTYPES + 1], g_iHypnoRangeChance[ST_MAXTYPES + 1], g_iHypnoRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -210,6 +210,15 @@ stock void vHypnoHit(int client, int owner, int chance, int enabled, int message
 		DataPack dpStopHypno = new DataPack();
 		CreateDataTimer(flHypnoDuration, tTimerStopHypno, dpStopHypno, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopHypno.WriteCell(GetClientUserId(client)), dpStopHypno.WriteCell(GetClientUserId(owner)), dpStopHypno.WriteCell(message), dpStopHypno.WriteCell(enabled);
+		char sRGB[4][4];
+		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
+		iRed = iClamp(iRed, 0, 255);
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
+		iGreen = iClamp(iGreen, 0, 255);
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
+		iBlue = iClamp(iBlue, 0, 255);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
 		if (iHypnoMessage(owner) == message || iHypnoMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

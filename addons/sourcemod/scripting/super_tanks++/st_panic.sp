@@ -186,6 +186,15 @@ stock void vPanicHit(int client, int chance, int enabled, int message)
 	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
 		vCheatCommand(client, "director_force_panic_event");
+		char sRGB[4][4];
+		ST_TankColors(client, sRGB[0], sRGB[1], sRGB[2]);
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
+		iRed = iClamp(iRed, 0, 255);
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
+		iGreen = iClamp(iGreen, 0, 255);
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
+		iBlue = iClamp(iBlue, 0, 255);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
 		if (iPanicMessage(client) == message || iPanicMessage(client) == 4 || iPanicMessage(client) == 5 || iPanicMessage(client) == 6 || iPanicMessage(client) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

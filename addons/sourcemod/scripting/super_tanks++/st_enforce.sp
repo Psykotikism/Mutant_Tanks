@@ -209,36 +209,25 @@ stock void vEnforceHit(int client, int owner, int chance, int enabled, int messa
 			sSlotNumber[32];
 		switch (sNumbers)
 		{
-			case '1':
-			{
-				sSlotNumber = "1st";
-				g_iEnforceSlot[client] = 0;
-			}
-			case '2':
-			{
-				sSlotNumber = "2nd";
-				g_iEnforceSlot[client] = 1;
-			}
-			case '3':
-			{
-				sSlotNumber = "3rd";
-				g_iEnforceSlot[client] = 2;
-			}
-			case '4':
-			{
-				sSlotNumber = "4th";
-				g_iEnforceSlot[client] = 3;
-			}
-			case '5':
-			{
-				sSlotNumber = "5th";
-				g_iEnforceSlot[client] = 4;
-			}
+			case '1': sSlotNumber = "1st", g_iEnforceSlot[client] = 0;
+			case '2': sSlotNumber = "2nd", g_iEnforceSlot[client] = 1;
+			case '3': sSlotNumber = "3rd", g_iEnforceSlot[client] = 2;
+			case '4': sSlotNumber = "4th", g_iEnforceSlot[client] = 3;
+			case '5': sSlotNumber = "5th", g_iEnforceSlot[client] = 4;
 		}
 		float flEnforceDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flEnforceDuration[ST_TankType(owner)] : g_flEnforceDuration2[ST_TankType(owner)];
 		DataPack dpStopEnforce = new DataPack();
 		CreateDataTimer(flEnforceDuration, tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopEnforce.WriteCell(GetClientUserId(client)), dpStopEnforce.WriteCell(GetClientUserId(owner)), dpStopEnforce.WriteCell(message), dpStopEnforce.WriteCell(enabled);
+		char sRGB[4][4];
+		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
+		iRed = iClamp(iRed, 0, 255);
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
+		iGreen = iClamp(iGreen, 0, 255);
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
+		iBlue = iClamp(iBlue, 0, 255);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
 		if (iEnforceMessage(owner) == message || iEnforceMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

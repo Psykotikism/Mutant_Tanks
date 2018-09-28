@@ -40,6 +40,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("ST_PluginEnabled", aNative_PluginEnabled);
 	CreateNative("ST_SpawnTank", aNative_SpawnTank);
 	CreateNative("ST_TankAllowed", aNative_TankAllowed);
+	CreateNative("ST_TankColors", aNative_TankColors);
 	CreateNative("ST_TankName", aNative_TankName);
 	CreateNative("ST_TankType", aNative_TankType);
 	CreateNative("ST_TankWave", aNative_TankWave);
@@ -84,6 +85,25 @@ public any aNative_TankAllowed(Handle plugin, int numParams)
 		return true;
 	}
 	return false;
+}
+
+public any aNative_TankColors(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	if (bIsTank(iTank))
+	{
+		char sSet[2][16], sTankColors[28], sRGB[4][4];
+		sTankColors = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankColors[g_iTankType[iTank]] : g_sTankColors2[g_iTankType[iTank]];
+		TrimString(sTankColors);
+		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+		TrimString(sRGB[0]);
+		TrimString(sRGB[1]);
+		TrimString(sRGB[2]);
+		SetNativeString(2, sRGB[0], sizeof(sRGB[]));
+		SetNativeString(3, sRGB[1], sizeof(sRGB[]));
+		SetNativeString(4, sRGB[2], sizeof(sRGB[]));
+	}
 }
 
 public any aNative_TankName(Handle plugin, int numParams)

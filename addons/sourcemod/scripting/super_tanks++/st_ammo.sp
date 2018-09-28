@@ -202,6 +202,15 @@ stock void vAmmoHit(int client, int owner, int chance, int enabled, int message)
 			}
 		}
 		SetEntProp(GetPlayerWeaponSlot(client, 0), Prop_Data, "m_iClip1", iAmmoCount, 1);
+		char sRGB[4][4];
+		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
+		iRed = iClamp(iRed, 0, 255);
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
+		iGreen = iClamp(iGreen, 0, 255);
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
+		iBlue = iClamp(iBlue, 0, 255);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
 		if (iAmmoMessage == message || iAmmoMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

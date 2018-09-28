@@ -210,6 +210,15 @@ stock void vGhostHit(int client, int owner, int chance, int enabled, int message
 			case 1: EmitSoundToClient(client, SOUND_INFECTED, owner);
 			case 2: EmitSoundToClient(client, SOUND_INFECTED2, owner);
 		}
+		char sRGB[4][4];
+		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
+		iRed = iClamp(iRed, 0, 255);
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
+		iGreen = iClamp(iGreen, 0, 255);
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
+		iBlue = iClamp(iBlue, 0, 255);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
 		if (iGhostMessage(owner) == message || iGhostMessage(owner) == 4 || iGhostMessage(owner) == 5 || iGhostMessage(owner) == 6 || iGhostMessage(owner) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

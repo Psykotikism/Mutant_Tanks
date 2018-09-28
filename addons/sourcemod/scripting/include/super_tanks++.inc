@@ -226,6 +226,18 @@ native void ST_SpawnTank(int client, int type);
  */
 native bool ST_TankAllowed(int client);
 
+/* Returns the RGB colors given to a Tank.
+ *
+ * @param client		Client index of the Tank.
+ * @param red			Buffer to store the red
+ *							color in.
+ * @param green			Buffer to store the green
+ *							color in.
+ * @param blue			Buffer to store the blue
+ *							color in.
+ */
+native void ST_TankColors(int client, char[] red, char[] green, char[] blue);
+
 /* Returns the custom name given to a Tank.
  *
  * @param client		Client index of the Tank.

@@ -82,25 +82,17 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				if (iVampireHit(attacker) == 1 && GetRandomInt(1, iVampireChance(attacker)) == 1)
-				{
-					int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
-						iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
-					SetEntityHealth(attacker, iFinalHealth);
-					vVampireMessage(victim, attacker);
-				}
+				int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
+					iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
+				vVampireHit(victim, attacker, iFinalHealth, 1);
 			}
 		}
 		else if ((iVampireHitMode(victim) == 0 || iVampireHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				if (iVampireHit(victim) == 1 && GetRandomInt(1, iVampireChance(victim)) == 1)
-				{
-					int iHealth = GetClientHealth(attacker);
-					SetEntityHealth(attacker, iHealth - 5);
-					vVampireMessage(attacker, victim);
-				}
+				int iHealth = GetClientHealth(attacker);
+				vVampireHit(attacker, victim, iHealth, 2);
 			}
 		}
 	}
@@ -183,6 +175,37 @@ public void ST_Ability(int client)
 	}
 }
 
+stock void vVampireHit(int client, int owner, int health, int mode)
+{
+	int iVampireChance = !g_bTankConfig[ST_TankType(owner)] ? g_iVampireChance[ST_TankType(owner)] : g_iVampireChance2[ST_TankType(owner)],
+		iVampireHit = !g_bTankConfig[ST_TankType(owner)] ? g_iVampireHit[ST_TankType(owner)] : g_iVampireHit2[ST_TankType(owner)];
+	if (iVampireHit == 1 && GetRandomInt(1, iVampireChance) == 1)
+	{
+		switch (mode)
+		{
+			case 1:
+			{
+				SetEntityHealth(owner, health);
+				vVampireMessage(owner, client);
+			}
+			case 2:
+			{
+				SetEntityHealth(client, health - 5);
+				vVampireMessage(owner, client);
+			}
+		}
+		char sRGB[4][4];
+		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
+		iRed = iClamp(iRed, 0, 255);
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
+		iGreen = iClamp(iGreen, 0, 255);
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
+		iBlue = iClamp(iBlue, 0, 255);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
+	}
+}
+
 stock void vVampireMessage(int client, int owner)
 {
 	if (iVampireMessage(owner) == 1 || iVampireMessage(owner) == 3)
@@ -191,16 +214,6 @@ stock void vVampireMessage(int client, int owner)
 		ST_TankName(owner, sTankName);
 		PrintToChatAll("%s %t", ST_PREFIX2, "Vampire", sTankName, client);
 	}
-}
-
-stock int iVampireChance(int client)
-{
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVampireChance[ST_TankType(client)] : g_iVampireChance2[ST_TankType(client)];
-}
-
-stock int iVampireHit(int client)
-{
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVampireHit[ST_TankType(client)] : g_iVampireHit2[ST_TankType(client)];
 }
 
 stock int iVampireHitMode(int client)

@@ -16,7 +16,6 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bQuiet[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-char g_sTankSounds[12] = "player/tank";
 float g_flQuietDuration[ST_MAXTYPES + 1], g_flQuietDuration2[ST_MAXTYPES + 1], g_flQuietRange[ST_MAXTYPES + 1], g_flQuietRange2[ST_MAXTYPES + 1];
 int g_iQuietAbility[ST_MAXTYPES + 1], g_iQuietAbility2[ST_MAXTYPES + 1], g_iQuietChance[ST_MAXTYPES + 1], g_iQuietChance2[ST_MAXTYPES + 1], g_iQuietHit[ST_MAXTYPES + 1], g_iQuietHit2[ST_MAXTYPES + 1], g_iQuietHitMode[ST_MAXTYPES + 1], g_iQuietHitMode2[ST_MAXTYPES + 1], g_iQuietMessage[ST_MAXTYPES + 1], g_iQuietMessage2[ST_MAXTYPES + 1], g_iQuietRangeChance[ST_MAXTYPES + 1], g_iQuietRangeChance2[ST_MAXTYPES + 1];
 
@@ -111,7 +110,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
-	if (StrContains(sample, g_sTankSounds, false) != -1)
+	if (StrContains(sample, "player/tank", false) != -1)
 	{
 		for (int iSurvivor = 0; iSurvivor < numClients; iSurvivor++)
 		{
@@ -216,6 +215,15 @@ stock void vQuietHit(int client, int owner, int chance, int enabled, int message
 		DataPack dpStopQuiet = new DataPack();
 		CreateDataTimer(flQuietDuration, tTimerStopQuiet, dpStopQuiet, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopQuiet.WriteCell(GetClientUserId(client)), dpStopQuiet.WriteCell(GetClientUserId(owner)), dpStopQuiet.WriteCell(message), dpStopQuiet.WriteCell(enabled);
+		char sRGB[4][4];
+		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
+		iRed = iClamp(iRed, 0, 255);
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
+		iGreen = iClamp(iGreen, 0, 255);
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
+		iBlue = iClamp(iBlue, 0, 255);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
 		if (iQuietMessage(owner) == message || iQuietMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

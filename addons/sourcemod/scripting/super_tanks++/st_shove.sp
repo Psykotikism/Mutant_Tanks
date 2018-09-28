@@ -203,6 +203,15 @@ stock void vShoveHit(int client, int owner, int chance, int enabled, int message
 		DataPack dpShove = new DataPack();
 		CreateDataTimer(1.0, tTimerShove, dpShove, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpShove.WriteCell(GetClientUserId(client)), dpShove.WriteCell(GetClientUserId(owner)), dpShove.WriteCell(message), dpShove.WriteCell(enabled), dpShove.WriteFloat(GetEngineTime());
+		char sRGB[4][4];
+		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
+		iRed = iClamp(iRed, 0, 255);
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
+		iGreen = iClamp(iGreen, 0, 255);
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
+		iBlue = iClamp(iBlue, 0, 255);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
 		if (iShoveMessage(owner) == message || iShoveMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
