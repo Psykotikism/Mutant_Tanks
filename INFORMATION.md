@@ -557,7 +557,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, an acid puddle is created underneath the survivor. When the Super Tank dies, an acid puddle is created underneath the Super Tank.
 		// - "Acid Range"
 		// - "Acid Range Chance"
-		// "Acid Hit" - When a survivor is hit by the Super Tank's claw or rock, an acid puddle is created underneath the survivor.
+		// "Acid Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, an acid puddle is created underneath the survivor.
 		// - "Acid Chance"
 		// - "Acid Hit Mode"
 		// Requires "st_acid.smx" to be installed.
@@ -637,7 +637,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, their ammunition is taken away.
 		// - "Ammo Range"
 		// - "Ammo Range Chance"
-		// "Ammo Hit" - When a survivor is hit by the Super Tank's claw or rock, their ammunition is taken away.
+		// "Ammo Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, their ammunition is taken away.
 		// - "Ammo Chance"
 		// - "Ammo Hit Mode"
 		// Requires "st_ammo.smx" to be installed.
@@ -711,7 +711,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is blinded.
 		// - "Blind Range"
 		// - "Blind Range Chance"
-		// "Blind Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is blinded.
+		// "Blind Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is blinded.
 		// - "Blind Chance"
 		// - "Blind Hit Mode"
 		// Requires "st_blind.smx" to be installed.
@@ -791,7 +791,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, an explosion is created around the survivor.  When the Super Tank dies, an explosion is created around the Super Tank.
 		// - "Bomb Range"
 		// - "Bomb Range Chance"
-		// "Bomb Hit" - When a survivor is hit by the Super Tank's claw or rock, an explosion is created around the survivor.
+		// "Bomb Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, an explosion is created around the survivor.
 		// - "Bomb Chance"
 		// - "Bomb Hit Mode"
 		// Requires "st_bomb.smx" to be installed.
@@ -870,7 +870,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is buried.
 		// - "Bury Range"
 		// - "Bury Range Chance"
-		// "Bury Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is buried.
+		// "Bury Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is buried.
 		// - "Bury Chance"
 		// - "Bury Hit Mode"
 		// Requires "st_bury.smx" to be installed.
@@ -950,7 +950,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is given cancer.
 		// - "Cancer Range"
 		// - "Cancer Range Chance"
-		// "Cancer Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is given cancer.
+		// "Cancer Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is given cancer.
 		// - "Cancer Chance"
 		// - "Cancer Hit Mode"
 		// Requires "st_cancer.smx" to be installed.
@@ -1123,7 +1123,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is drugged.
 		// - "Drug Range"
 		// - "Drug Range Chance"
-		// "Drug Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is drugged.
+		// "Drug Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is drugged.
 		// - "Drug Chance"
 		// - "Drug Hit Mode"
 		// Requires "st_drug.smx" to be installed.
@@ -1197,7 +1197,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is electrocuted.
 		// - "Electric Range"
 		// - "Electric Range Chance"
-		// "Electric Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is electrocuted.
+		// "Electric Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is electrocuted.
 		// - "Electric Chance"
 		// - "Electric Hit Mode"
 		// Requires "st_electric.smx" to be installed.
@@ -1289,7 +1289,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is forced to only use a certain weapon slot.
 		// - "Enforce Range"
 		// - "Enforce Range Chance"
-		// "Enforce Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is forced to only use a certain weapon slot.
+		// "Enforce Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is forced to only use a certain weapon slot.
 		// - "Enforce Chance"
 		// - "Enforce Hit Mode"
 		// Requires "st_enforce.smx" to be installed.
@@ -1374,7 +1374,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, a fire is created around the survivor. When the Super Tank dies, a fire is created around the Super Tank.
 		// - "Fire Range"
 		// - "Fire Range Chance"
-		// "Fire Hit" - When a survivor is hit by the Super Tank's claw or rock, a fire is created around the survivor.
+		// "Fire Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, a fire is created around the survivor.
 		// - "Fire Chance"
 		// - "Fire Hit Mode"
 		// Requires "st_fire.smx" to be installed.
@@ -1504,7 +1504,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is flung into the air.
 		// - "Fling Range"
 		// - "Fling Range Chance"
-		// "Fling Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is flung into the air.
+		// "Fling Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is flung into the air.
 		// - "Fling Chance"
 		// - "Fling Hit Mode"
 		// Requires "st_fling.smx" to be installed.
@@ -1652,7 +1652,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is disarmed.
 		// - "Ghost Range"
 		// - "Ghost Range Chance"
-		// "Ghost Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is disarmed.
+		// "Ghost Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is disarmed.
 		// - "Ghost Chance"
 		// - "Ghost Hit Mode"
 		// Requires "st_ghost.smx" to be installed.
@@ -1803,7 +1803,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's gravity changes.
 		// - "Gravity Range"
 		// - "Gravity Range Chance"
-		// "Gravity Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor's gravity changes.
+		// "Gravity Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor's gravity changes.
 		// - "Gravity Chance"
 		// - "Gravity Hit Mode"
 		// Requires "st_gravity.smx" to be installed.
@@ -1901,7 +1901,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor can have temporary health.
 		// - "Heal Range"
 		// - "Heal Range Chance"
-		// "Heal Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor can have temporary health.
+		// "Heal Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor can have temporary health.
 		// - "Heal Chance"
 		// - "Heal Hit Mode"
 		// Requires "st_heal.smx" to be installed.
@@ -2020,7 +2020,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor gets hurt repeatedly.
 		// - "Hurt Range"
 		// - "Hurt Range Chance"
-		// "Hurt Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor gets hurt repeatedly.
+		// "Hurt Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor gets hurt repeatedly.
 		// - "Hurt Chance"
 		// - "Hurt Hit Mode"
 		// Requires "st_hurt.smx" to be installed.
@@ -2100,7 +2100,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is hypnotized.
 		// - "Hypno Range"
 		// - "Hypno Range Chance"
-		// "Hypno Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is hypnotized.
+		// "Hypno Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is hypnotized.
 		// - "Hypno Chance"
 		// - "Hypno Hit Mode"
 		// Requires "st_hypno.smx" to be installed.
@@ -2180,7 +2180,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is frozen in place.
 		// - "Ice Range"
 		// - "Ice Range Chance"
-		// "Ice Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is frozen in place.
+		// "Ice Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is frozen in place.
 		// - "Ice Chance"
 		// - "Ice Hit Mode"
 		// Requires "st_ice.smx" to be installed.
@@ -2254,7 +2254,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor goes idle.
 		// - "Idle Range"
 		// - "Idle Range Chance"
-		// "Idle Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor goes idle.
+		// "Idle Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor goes idle.
 		// - "Idle Chance"
 		// - "Idle Hit Mode"
 		// Requires "st_idle.smx" to be installed.
@@ -2322,7 +2322,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's movement keys are inverted.
 		// - "Invert Range"
 		// - "Invert Range Chance"
-		// "Invert Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor's movement keys are inverted.
+		// "Invert Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor's movement keys are inverted.
 		// - "Invert Chance"
 		// - "Invert Hit Mode"
 		// Requires "st_invert.smx" to be installed.
@@ -2482,7 +2482,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor dies along with the Super Tank.
 		// - "Kamikaze Range"
 		// - "Kamikaze Range Chance"
-		// "Kamikaze Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor dies along with the Super Tank.
+		// "Kamikaze Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor dies along with the Super Tank.
 		// - "Kamikaze Chance"
 		// - "Kamikaze Hit Mode"
 		// Requires "st_kamikaze.smx" to be installed.
@@ -2550,7 +2550,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the Super Tank leeches health off of the survivor.
 		// - "Leech Range"
 		// - "Leech Range Chance"
-		// "Leech Hit" - When a survivor is hit by the Super Tank's claw or rock, the Super Tank leeches health off of the survivor.
+		// "Leech Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the Super Tank leeches health off of the survivor.
 		// - "Leech Chance"
 		// - "Leech Hit Mode"
 		// Requires "st_leech.smx" to be installed.
@@ -2840,7 +2840,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor does not do any damage.
 		// - "Nullify Range"
 		// - "Nullify Range Chance"
-		// "Nullify Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor does not do any damage.
+		// "Nullify Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor does not do any damage.
 		// - "Nullify Chance"
 		// - "Nullify Hit Mode"
 		// Requires "st_nullify.smx" to be installed.
@@ -2915,7 +2915,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, a panic event starts.
 		// - "Panic Range"
 		// - "Panic Range Chance"
-		// "Panic Hit" - When a survivor is hit by the Super Tank's claw or rock, a panic event starts.
+		// "Panic Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, a panic event starts.
 		// - "Panic Chance"
 		// - "Panic Hit Mode"
 		// Requires "st_panic.smx" to be installed.
@@ -2995,7 +2995,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is repeatedly pimp slapped.
 		// - "Pimp Range"
 		// - "Pimp Range Chance"
-		// "Pimp Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is repeatedly pimp slapped.
+		// "Pimp Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is repeatedly pimp slapped.
 		// - "Pimp Chance"
 		// - "Pimp Hit Mode"
 		// Requires "st_pimp.smx" to be installed.
@@ -3075,7 +3075,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the Super Tank pukes on the survivor.
 		// - "Puke Range"
 		// - "Puke Range Chance"
-		// "Puke Hit" - When a survivor is hit by the Super Tank's claw or rock, the Super Tank pukes on the survivor.
+		// "Puke Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the Super Tank pukes on the survivor.
 		// - "Puke Chance"
 		// - "Puke Hit Mode"
 		// Requires "st_puke.smx" to be installed.
@@ -3140,19 +3140,35 @@
 	"Tank #1"
 	{
 		// The Super Tank gains a speed boost when on fire.
+		// "Ability Enabled" - When a Super Tank is on fire, it gains a speed boost.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the Super Tank ignites itself.
+		// - "Pyro Range"
+		// - "Pyro Range Chance"
+		// "Pyro Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is disarmed.
+		// - "Pyro Chance"
+		// - "Pyro Hit Mode"
 		// Requires "st_pyro.smx" to be installed.
 		"Pyro Ability"
 		{
 			// Enable this ability.
+			// Note: This setting does not affect the "Pyro Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, the Super Tank can ignite itself.
+			// 2: ON, the Super Tank can gain a speed boost while on fire.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Display a message whenever the abilities activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Pyro Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank's speed boost value when on fire.
@@ -3161,11 +3177,49 @@
 			// Maximum: 3.0
 			"Pyro Boost"					"1.0"
 
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Pyro Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Pyro Duration"					"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" to be on.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Pyro Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Pyro Hit Mode"					"0"
+
 			// The mode of the Super Tank's speed boost.
 			// --
 			// 0: Super Tank's speed = Run speed + Pyro boost
 			// 1: Super Tank's speed = Pyro boost
 			"Pyro Mode"						"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Pyro Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Pyro Range Chance"				"16"
 		}
 	}
 }
@@ -3182,7 +3236,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor cannot hear the Super Tank's noises.
 		// - "Quiet Range"
 		// - "Quiet Range Chance"
-		// "Quiet Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor cannot hear the Super Tank's noises.
+		// "Quiet Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor cannot hear the Super Tank's noises.
 		// - "Quiet Chance"
 		// - "Quiet Hit Mode"
 		// Requires "st_quiet.smx" to be installed.
@@ -3360,7 +3414,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor respawns at the start of the map or near a teammate.
 		// - "Restart Range"
 		// - "Restart Range Chance"
-		// "Restart Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor respawns at the start of the map or near a teammate.
+		// "Restart Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor respawns at the start of the map or near a teammate.
 		// - "Restart Chance"
 		// - "Restart Hit Mode"
 		// Requires "st_restart.smx" to be installed.
@@ -3498,7 +3552,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is sent into space.
 		// - "Rocket Range"
 		// - "Rocket Range Chance"
-		// "Rocket Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is sent into space.
+		// "Rocket Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is sent into space.
 		// - "Rocket Chance"
 		// - "Rocket Hit Mode"
 		// Requires "st_rocket.smx" to be installed.
@@ -3571,7 +3625,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's screen is shaken.
 		// - "Shake Range"
 		// - "Shake Range Chance"
-		// "Shake Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor's screen is shaken.
+		// "Shake Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor's screen is shaken.
 		// - "Shake Chance"
 		// - "Shake Hit Mode"
 		// Requires "st_shake.smx" to be installed.
@@ -3688,7 +3742,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is shoved repeatedly.
 		// - "Shove Range"
 		// - "Shove Range Chance"
-		// "Shove Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is shoved repeatedly.
+		// "Shove Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is shoved repeatedly.
 		// - "Shove Chance"
 		// - "Shove Hit Mode"
 		// Requires "st_shove.smx" to be installed.
@@ -3762,7 +3816,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is smashed.
 		// - "Smash Range"
 		// - "Smash Range Chance"
-		// "Smash Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is crushed to death.
+		// "Smash Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is crushed to death.
 		// - "Smash Chance"
 		// - "Smash Hit Mode"
 		// Requires "st_smash.smx" to be installed.
@@ -3830,7 +3884,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is smitten.
 		// - "Smite Range"
 		// - "Smite Range Chance"
-		// "Smite Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is smitten.
+		// "Smite Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is smitten.
 		// - "Smite Chance"
 		// - "Smite Hit Mode"
 		// Requires "st_smite.smx" to be installed.
@@ -3994,7 +4048,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is slowed down.
 		// - "Stun Range"
 		// - "Stun Range Chance"
-		// "Stun Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is slowed down.
+		// "Stun Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is slowed down.
 		// - "Stun Chance"
 		// - "Stun Hit Mode"
 		// Requires "st_stun.smx" to be installed.
@@ -4180,7 +4234,7 @@
 		// - "Vampire Health"
 		// - "Vampire Range"
 		// - "Vampire Range Chance"
-		// "Vampire Hit" - When a survivor is hit by the Super Tank's claw or rock, the Super Tank gains health.
+		// "Vampire Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the Super Tank gains health.
 		// - "Vampire Chance"
 		// - "Vampire Hit Mode"
 		// Requires "st_vampire.smx" to be installed.
@@ -4259,7 +4313,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's vision changes.
 		// - "Vision Range"
 		// - "Vision Range Chance"
-		// "Vision Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor's vision changes.
+		// "Vision Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor's vision changes.
 		// - "Vision Chance"
 		// - "Vision Hit Mode"
 		// Requires "st_vision.smx" to be installed.
@@ -4341,7 +4395,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is warped to a random teammate.
 		// - "Warp Range"
 		// - "Warp Range Chance"
-		// "Warp Hit" - When a survivor is hit by the Super Tank's claw or rock, the survivor is warped to a random teammate.
+		// "Warp Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is warped to a random teammate.
 		// - "Warp Chance"
 		// - "Warp Hit Mode"
 		// Requires "st_warp.smx" to be installed.
@@ -4474,7 +4528,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, a zombie mob appears.
 		// - "Zombie Range"
 		// - "Zombie Range Chance"
-		// "Panic Hit" - When a survivor is hit by the Super Tank's claw or rock, a zombie mob appears.
+		// "Panic Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, a zombie mob appears.
 		// - "Zombie Chance"
 		// - "Zombie Hit Mode"
 		// Requires "st_zombie.smx" to be installed.
