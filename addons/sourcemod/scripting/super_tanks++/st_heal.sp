@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Heal Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank gains health from other nearby infected and gives survivors temporary health.",
+	description = "The Super Tank gains health from other nearby infected and sets survivors to temporary health who will die when they reach 0 HP.",
 	version = ST_VERSION,
 	url = ST_URL
 };

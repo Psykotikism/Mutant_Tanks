@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Jump Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank jumps periodically.",
+	description = "The Super Tank jumps periodically and makes survivors jump uncontrollably.",
 	version = ST_VERSION,
 	url = ST_URL
 };

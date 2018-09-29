@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Throw Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank throws things.",
+	description = "The Super Tank throws cars, special infected, or itself.",
 	version = ST_VERSION,
 	url = ST_URL
 };

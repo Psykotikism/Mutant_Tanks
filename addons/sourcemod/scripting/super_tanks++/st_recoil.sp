@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Recoil Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank can give survivors high gun recoil.",
+	description = "The Super Tank gives survivors strong gun recoil.",
 	version = ST_VERSION,
 	url = ST_URL
 };

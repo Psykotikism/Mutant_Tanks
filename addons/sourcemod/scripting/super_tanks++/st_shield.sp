@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Shield Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank protects itself with a shield and traps survivors inside their own shields.",
+	description = "The Super Tank protects itself with a shield and throws propane tanks.",
 	version = ST_VERSION,
 	url = ST_URL
 };

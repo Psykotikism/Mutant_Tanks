@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Lag Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank can lag survivors.",
+	description = "The Super Tank makes survivors lag.",
 	version = ST_VERSION,
 	url = ST_URL
 };

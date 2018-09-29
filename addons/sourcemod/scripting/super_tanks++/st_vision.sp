@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Vision Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank changes the survivors' field of views.",
+	description = "The Super Tank changes the survivors' vision.",
 	version = ST_VERSION,
 	url = ST_URL
 };

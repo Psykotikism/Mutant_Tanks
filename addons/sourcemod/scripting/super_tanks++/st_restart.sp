@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Restart Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank forces survivors to restart at the beginning of the map with a new loadout.",
+	description = "The Super Tank forces survivors to restart at the beginning of the map or near a teammate with a new loadout.",
 	version = ST_VERSION,
 	url = ST_URL
 };

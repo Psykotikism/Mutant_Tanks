@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Warp Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank warps to survivors and warps survivors back to teammates.",
+	description = "The Super Tank warps to survivors and warps survivors to random teammates.",
 	version = ST_VERSION,
 	url = ST_URL
 };

@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Zombie Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank spawns zombies.",
+	description = "The Super Tank creates zombie mobs.",
 	version = ST_VERSION,
 	url = ST_URL
 };

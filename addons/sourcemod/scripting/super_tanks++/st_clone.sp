@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Clone Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank creates a clone of itself.",
+	description = "The Super Tank creates clones of itself.",
 	version = ST_VERSION,
 	url = ST_URL
 };
