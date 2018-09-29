@@ -225,16 +225,10 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		}
 		"Jump Ability"
 		{
-			"Ability Enabled"		"3"
+			"Ability Enabled"		"2"
 			"Ability Message"		"5"
-			"Jump Chance"			"4"
-			"Jump Duration"			"5.0"
 			"Jump Height"			"300.0"
-			"Jump Hit"				"1"
-			"Jump Hit Mode"			"0"
 			"Jump Interval"			"1.0"
-			"Jump Range"			"150.0"
-			"Jump Range Chance"		"16"
 		}
 	}
 }

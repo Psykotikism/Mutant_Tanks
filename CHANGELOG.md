@@ -25,8 +25,8 @@ Changes:
 12. Moved various settings under new sections and reorganized/restructured the config file.
 13. Merged the Cancer ability with the Health ability.
 14. Added 2 new abilities: Lag and Recoil
-16. Added several new settings.
-17. Renamed several settings.
+15. Added several new settings.
+16. Renamed several settings.
 
 Files:
 

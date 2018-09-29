@@ -2533,7 +2533,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank can give survivors high gun recoil.
+		// The Super Tank can make survivors lag.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor lags.
 		// - "Lag Range"
 		// - "Lag Range Chance"
