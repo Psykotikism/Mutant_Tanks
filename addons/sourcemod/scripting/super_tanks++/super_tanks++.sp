@@ -389,11 +389,7 @@ public void OnPluginEnd()
 	{
 		if (bIsTank(iTank) && IsPlayerAlive(iTank))
 		{
-			if (iGlowOutline(g_iTankType[iTank]) == 1 && bIsValidGame())
-			{
-				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
-				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
-			}
+			vRemoveProps(iTank);
 		}
 	}
 }
@@ -1050,6 +1046,11 @@ stock void vRemoveProps(int client)
 		{
 			RemoveEntity(iProp);
 		}
+	}
+	if (bIsValidGame())
+	{
+		SetEntProp(client, Prop_Send, "m_iGlowType", 0);
+		SetEntProp(client, Prop_Send, "m_glowColorOverride", 0);
 	}
 }
 
@@ -1804,18 +1805,6 @@ public Action tTimerRandomize(Handle timer, any userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerRetransform(Handle timer, any userid)
-{
-	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
-	{
-		vSpawnModes(iTank, false);
-		return Plugin_Stop;
-	}
-	vSpawnModes(iTank, false);
-	return Plugin_Continue;
-}
-
 public Action tTimerSmokeEffect(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -1898,8 +1887,6 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 	DataPack dpTankSpawn = new DataPack();
 	CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
 	dpTankSpawn.WriteCell(GetClientUserId(iTank)), dpTankSpawn.WriteCell(4);
-	float flTransformDelay = !g_bTankConfig[iTankType] ? g_flTransformDelay[iTankType] : g_flTransformDelay2[iTankType];
-	CreateTimer(flTransformDelay, tTimerRetransform, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 	return Plugin_Continue;
 }
 
@@ -2022,10 +2009,11 @@ public Action tTimerTankTypeUpdate(Handle timer)
 					if (!g_bTransformed[iTank])
 					{
 						vSpawnModes(iTank, true);
-						CreateTimer(1.0, tTimerTransform, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
-						float flTransformDuration = !g_bTankConfig[g_iTankType[iTank]] ? g_flTransformDuration[g_iTankType[iTank]] : g_flTransformDuration2[g_iTankType[iTank]];
+						float flTransformDelay = !g_bTankConfig[g_iTankType[iTank]] ? g_flTransformDelay[g_iTankType[iTank]] : g_flTransformDelay2[g_iTankType[iTank]],
+							flTransformDuration = !g_bTankConfig[g_iTankType[iTank]] ? g_flTransformDuration[g_iTankType[iTank]] : g_flTransformDuration2[g_iTankType[iTank]];
+						CreateTimer(flTransformDelay, tTimerTransform, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 						DataPack dpUntransform = new DataPack();
-						CreateDataTimer(flTransformDuration + 1.0, tTimerUntransform, dpUntransform, TIMER_FLAG_NO_MAPCHANGE);
+						CreateDataTimer(flTransformDuration + flTransformDelay, tTimerUntransform, dpUntransform, TIMER_FLAG_NO_MAPCHANGE);
 						dpUntransform.WriteCell(GetClientUserId(iTank)), dpUntransform.WriteCell(g_iTankType[iTank]);
 					}
 				}
