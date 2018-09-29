@@ -936,7 +936,7 @@
 	}
 	"Tank #71"
 	{
-		"en"			"This Tank can spawn a mob of zombies within the area."
+		"en"			"This Tank can create a mob of zombies within the area."
 	}
 	"Tank #72"
 	{
