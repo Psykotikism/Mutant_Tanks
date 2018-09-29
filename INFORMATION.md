@@ -1812,7 +1812,7 @@
 			// The Super Tank sets the survivors' gravity to this value.
 			// --
 			// Minimum: 0.1
-			// Maximum: 0.99
+			// Maximum: 9999999999.0
 			"Gravity Value"					"0.3"
 		}
 	}
