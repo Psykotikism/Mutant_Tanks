@@ -103,9 +103,9 @@ public any aNative_TankColors(Handle plugin, int numParams)
 			case 2: ExplodeString(sSet[1], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 		}
 		TrimString(sRGB[0]), TrimString(sRGB[1]), TrimString(sRGB[2]);
-		SetNativeString(2, sRGB[0], sizeof(sRGB[]));
-		SetNativeString(3, sRGB[1], sizeof(sRGB[]));
-		SetNativeString(4, sRGB[2], sizeof(sRGB[]));
+		SetNativeString(3, sRGB[0], sizeof(sRGB[]));
+		SetNativeString(4, sRGB[1], sizeof(sRGB[]));
+		SetNativeString(5, sRGB[2], sizeof(sRGB[]));
 	}
 }
 
