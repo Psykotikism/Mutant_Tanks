@@ -2526,6 +2526,79 @@
 }
 ```
 
+#### Lag Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank can give survivors high gun recoil.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor lags.
+		// - "Lag Range"
+		// - "Lag Range Chance"
+		// "Lag Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor lags.
+		// - "Lag Chance"
+		// - "Lag Hit Mode"
+		// Requires "st_lag.smx" to be installed.
+		"Lag Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Lag Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON, display message only when "Lag Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
+			"Ability Message"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Lag Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Lag Duration"					"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Lag Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Lag Hit Mode"					"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Lag Range"						"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Lag Range Chance"				"16"
+		}
+	}
+}
+```
+
 #### Leech Ability
 
 ```

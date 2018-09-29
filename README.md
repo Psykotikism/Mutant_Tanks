@@ -827,7 +827,7 @@ Examples:
 
 **GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?p=1694338) plugin.
 
-**Phil25** - For the [[TF2] RTD Revamped](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
+**Phil25** - For the [RTD Revamped](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
 
 **ztar** - For the [Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
 

@@ -24,13 +24,13 @@ Changes:
 11. Lowered the amount of boss stages from 5 to 4. Any boss that spawns automatically starts at stage 1.
 12. Moved various settings under new sections and reorganized/restructured the config file.
 13. Merged the Cancer ability with the Health ability.
-14. Added a new ability: Recoil - The Super Tank can give survivors high gun recoil.
-15. Added several new settings.
-16. Renamed several settings.
+14. Added 2 new abilities: Lag and Recoil
+16. Added several new settings.
+17. Renamed several settings.
 
 Files:
 
-1. Updated config file with all the new settings and new organization/structure.
+1. Updated config file with all the new settings, new presets, and new organization/structure.
 2. Updated gamedata file to remove unused signatures.
 3. Updated include file to use new natives introduced in SM 1.9 and SM 1.10.
 4. Updated translation file with new phrases and reformatted the phrase name of the Tank Note phrases.
