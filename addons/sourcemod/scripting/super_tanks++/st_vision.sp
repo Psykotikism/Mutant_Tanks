@@ -197,7 +197,7 @@ stock void vVisionHit(int client, int owner, int chance, int enabled, int messag
 		CreateDataTimer(0.1, tTimerVision, dpVision, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpVision.WriteCell(GetClientUserId(client)), dpVision.WriteCell(GetClientUserId(owner)), dpVision.WriteCell(message), dpVision.WriteCell(enabled), dpVision.WriteFloat(GetEngineTime());
 		char sRGB[4][4];
-		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
 		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;

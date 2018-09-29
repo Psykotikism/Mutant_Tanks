@@ -175,7 +175,7 @@ stock void vHurtHit(int client, int owner, int chance, int enabled, int message)
 		CreateDataTimer(1.0, tTimerHurt, dpHurt, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpHurt.WriteCell(GetClientUserId(client)), dpHurt.WriteCell(GetClientUserId(owner)), dpHurt.WriteCell(message), dpHurt.WriteCell(enabled), dpHurt.WriteFloat(GetEngineTime());
 		char sRGB[4][4];
-		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
 		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;

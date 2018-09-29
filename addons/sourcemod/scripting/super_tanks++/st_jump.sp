@@ -189,7 +189,7 @@ stock void vJumpHit(int client, int owner, int chance, int enabled, int message)
 		CreateDataTimer(0.25, tTimerJump2, dpJump, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpJump.WriteCell(GetClientUserId(client)), dpJump.WriteCell(GetClientUserId(owner)), dpJump.WriteCell(message), dpJump.WriteCell(enabled), dpJump.WriteFloat(GetEngineTime());
 		char sRGB[4][4];
-		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
 		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;

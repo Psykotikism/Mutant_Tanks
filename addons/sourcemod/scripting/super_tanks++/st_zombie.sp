@@ -209,7 +209,7 @@ stock void vZombieHit(int client, int chance, int enabled, int message)
 	{
 		vZombie(client);
 		char sRGB[4][4];
-		ST_TankColors(client, sRGB[0], sRGB[1], sRGB[2]);
+		ST_TankColors(client, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
 		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;

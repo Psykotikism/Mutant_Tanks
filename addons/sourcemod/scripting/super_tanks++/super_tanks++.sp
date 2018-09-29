@@ -96,10 +96,13 @@ public any aNative_TankColors(Handle plugin, int numParams)
 		sTankColors = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankColors[g_iTankType[iTank]] : g_sTankColors2[g_iTankType[iTank]];
 		TrimString(sTankColors);
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
-		TrimString(sRGB[0]);
-		TrimString(sRGB[1]);
-		TrimString(sRGB[2]);
+		int iMode = GetNativeCell(2);
+		switch (iMode)
+		{
+			case 1: ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+			case 2: ExplodeString(sSet[1], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+		}
+		TrimString(sRGB[0]), TrimString(sRGB[1]), TrimString(sRGB[2]);
 		SetNativeString(2, sRGB[0], sizeof(sRGB[]));
 		SetNativeString(3, sRGB[1], sizeof(sRGB[]));
 		SetNativeString(4, sRGB[2], sizeof(sRGB[]));

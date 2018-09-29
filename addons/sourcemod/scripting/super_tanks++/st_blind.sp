@@ -221,7 +221,7 @@ stock void vBlindHit(int client, int owner, int chance, int enabled, int message
 		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopBlindness.WriteCell(GetClientUserId(client)), dpStopBlindness.WriteCell(GetClientUserId(owner)), dpStopBlindness.WriteCell(message), dpStopBlindness.WriteCell(enabled);
 		char sRGB[4][4];
-		ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
+		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
 		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
