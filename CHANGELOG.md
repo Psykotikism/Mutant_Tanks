@@ -30,7 +30,7 @@ Changes:
 
 Files:
 
-1. Updated config file with all the new settings, new presets, and new organization/structure.
+1. Updated config file with all the new settings, presets, and organization/structure.
 2. Updated gamedata file to remove unused signatures.
 3. Updated include file to use new natives introduced in SM 1.9 and SM 1.10.
 4. Updated translation file with new phrases and reformatted the phrase name of the Tank Note phrases.

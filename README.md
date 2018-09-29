@@ -215,7 +215,7 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Tank Name"				"Airborne Tank"
+			"Tank Name"				"Leaper Tank"
 			"Tank Enabled"			"1"
 			"Skin-Glow Colors"		"255,255,0,255|255,255,0"
 		}
@@ -225,10 +225,10 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		}
 		"Jump Ability"
 		{
-			"Ability Enabled"		"2"
-			"Ability Message"		"5"
-			"Jump Height"			"300.0"
-			"Jump Interval"			"1.0"
+			"Ability Enabled"		"2" // The Tank jumps periodically and makes survivors jump uncontrollably.
+			"Ability Message"		"5" // Notify players when they jump uncontrollably and when the Tank is jumping periodically.
+			"Jump Height"			"300.0" // How high off the ground the Tank can jump.
+			"Jump Interval"			"1.0" // How often the Tank jumps.
 		}
 	}
 }

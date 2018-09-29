@@ -788,7 +788,7 @@
 	"Tank #1"
 	{
 		// The Super Tank creates explosions.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, an explosion is created around the survivor.  When the Super Tank dies, an explosion is created around the Super Tank.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, an explosion is created around the survivor. When the Super Tank dies, an explosion is created around the Super Tank.
 		// - "Bomb Range"
 		// - "Bomb Range Chance"
 		// "Bomb Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, an explosion is created around the survivor.
@@ -946,7 +946,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank creates a clone of itself.
+		// The Super Tank creates clones of itself.
 		// Requires "st_clone.smx" to be installed.
 		"Clone Ability"
 		{
@@ -1409,7 +1409,7 @@
 			// Maximum: 9999999999.0
 			"Flash Duration"				"5.0"
 
-			// The Super Tank can run fast every time this many seconds passes.
+			// The Super Tank runs fast every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -1830,10 +1830,10 @@
 		// "Ability Enabled" - Any nearby infected can give the Super Tank some health.
 		// - "Heal Absorb Range"
 		// - "Heal Interval"
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is set to temporary health who will die when they reach 0 HP.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is set to temporary health and will die when they reach 0 HP.
 		// - "Heal Range"
 		// - "Heal Range Chance"
-		// "Heal Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is set to temporary health who will die when they reach 0 HP.
+		// "Heal Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is set to temporary health and will die when they reach 0 HP.
 		// - "Heal Chance"
 		// - "Heal Hit Mode"
 		// Requires "st_heal.smx" to be installed.
@@ -2371,7 +2371,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank jumps periodically.
+		// The Super Tank jumps periodically and makes survivors jump uncontrollably.
 		// "Ability Enabled" - The Super Tank jumps periodically.
 		// - "Jump Interval"
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor jumps uncontrollably.
@@ -2533,7 +2533,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank can make survivors lag.
+		// The Super Tank makes survivors lag.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor lags.
 		// - "Lag Range"
 		// - "Lag Range Chance"
@@ -2833,7 +2833,7 @@
 			// Maximum: 9999999999 (Less chance)
 			"Minion Chance"					"4"
 
-			// The Super Tank can spawn these minions.
+			// The Super Tank spawns these minions.
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chance of being chosen.
 			// Character limit: 12
@@ -3204,7 +3204,7 @@
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the Super Tank ignites itself.
 		// - "Pyro Range"
 		// - "Pyro Range Chance"
-		// "Pyro Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is disarmed.
+		// "Pyro Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the Super Tank ignites itself.
 		// - "Pyro Chance"
 		// - "Pyro Hit Mode"
 		// Requires "st_pyro.smx" to be installed.
@@ -3293,10 +3293,10 @@
 	"Tank #1"
 	{
 		// The Super Tank silences itself around survivors.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor cannot hear the Super Tank's noises.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor cannot hear the Super Tank's sounds.
 		// - "Quiet Range"
 		// - "Quiet Range Chance"
-		// "Quiet Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor cannot hear the Super Tank's noises.
+		// "Quiet Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor cannot hear the Super Tank's sounds.
 		// - "Quiet Chance"
 		// - "Quiet Hit Mode"
 		// Requires "st_quiet.smx" to be installed.
@@ -3366,7 +3366,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank can give survivors high gun recoil.
+		// The Super Tank gives survivors strong gun recoil.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor experiences strong recoil.
 		// - "Recoil Range"
 		// - "Recoil Range Chance"
@@ -3543,7 +3543,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank forces survivors to restart at the beginning of the map with a new loadout.
+		// The Super Tank forces survivors to restart at the beginning of the map or near a teammate with a new loadout.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor respawns at the start of the map or near a teammate.
 		// - "Restart Range"
 		// - "Restart Range Chance"
@@ -3828,7 +3828,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank protects itself with a shield and traps survivors inside their own shields.
+		// The Super Tank protects itself with a shield and throws propane tanks.
 		// Requires "st_shield.smx" to be installed.
 		"Shield Ability"
 		{
@@ -3946,10 +3946,10 @@
 	"Tank #1"
 	{
 		// The Super Tank smashes survivors to death.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is smashed.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is smashed to death.
 		// - "Smash Range"
 		// - "Smash Range Chance"
-		// "Smash Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is crushed to death.
+		// "Smash Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is smashed to death.
 		// - "Smash Chance"
 		// - "Smash Hit Mode"
 		// Requires "st_smash.smx" to be installed.
@@ -4257,7 +4257,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank throws things.
+		// The Super Tank throws cars, special infected, or itself.
 		// Requires "st_throw.smx" to be installed.
 		"Throw Ability"
 		{
@@ -4281,7 +4281,7 @@
 			// 7: ON, display message when 1, 2, or 3 apply.
 			"Ability Message"				"0"
 
-			// The Super Tank can throw these cars.
+			// The Super Tank throws these cars.
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chance of being chosen.
 			// Character limit: 6
@@ -4291,7 +4291,7 @@
 			// 3: Car that looks like a Sixth Generation Chevrolet Impala.
 			"Throw Car Options"				"123"
 
-			// The Super Tank can throw these special infected.
+			// The Super Tank throws these special infected.
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chance of being chosen.
 			// Character limit: 14
@@ -4442,7 +4442,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank changes the survivors' field of views.
+		// The Super Tank changes the survivors' vision.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's vision changes.
 		// - "Vision Range"
 		// - "Vision Range Chance"
@@ -4522,7 +4522,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank warps to survivors and warps survivors back to teammates.
+		// The Super Tank warps to survivors and warps survivors to random teammates.
 		// "Ability Enabled" - The Tank warps to a random survivor.
 		// - "Warp Interval"
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is warped to a random teammate.
@@ -4655,7 +4655,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank spawns zombies.
+		// The Super Tank creates zombie mobs.
 		// "Ability Enabled" - The Tank creates a zombie mob periodically.
 		// - "Zombie Interval"
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, a zombie mob appears.
