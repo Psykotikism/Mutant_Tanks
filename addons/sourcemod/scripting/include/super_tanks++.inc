@@ -310,6 +310,17 @@ stock bool bIsFinaleMap()
 	return FindEntityByClassname(-1, "trigger_finale") != -1;
 }
 
+stock bool bIsGunWeapon(int client)
+{
+	char sWeapon[32];
+	GetClientWeapon(client, sWeapon, sizeof(sWeapon));
+	if (GetPlayerWeaponSlot(client, 0) > 0 || (GetPlayerWeaponSlot(client, 1) > 0 && StrContains(sWeapon, "pistol", false) != -1))
+	{
+		return true;
+	}
+	return false;
+}
+
 stock bool bIsHumanSurvivor(int client)
 {
 	return bIsSurvivor(client) && !IsFakeClient(client) && !bHasIdlePlayer(client) && !bIsPlayerIdle(client);

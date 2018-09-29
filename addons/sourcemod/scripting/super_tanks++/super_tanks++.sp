@@ -830,6 +830,7 @@ stock void vHookEvents(bool hook)
 		HookEvent("player_death", vEventHandler);
 		HookEvent("player_incapacitated", vEventHandler);
 		HookEvent("player_spawn", vEventHandler);
+		HookEvent("weapon_fire", vEventHandler);
 		bHooked = true;
 	}
 	else if (!hook && bHooked)
@@ -844,6 +845,7 @@ stock void vHookEvents(bool hook)
 		UnhookEvent("player_death", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
 		UnhookEvent("player_spawn", vEventHandler);
+		UnhookEvent("weapon_fire", vEventHandler);
 		bHooked = false;
 	}
 }

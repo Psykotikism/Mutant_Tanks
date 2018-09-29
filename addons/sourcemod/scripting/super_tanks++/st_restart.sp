@@ -248,7 +248,6 @@ public Action tTimerRestartCoordinates(Handle timer)
 		if (bIsSurvivor(iSurvivor))
 		{
 			g_bRestartValid = true;
-			g_flRestartPosition[0] = 0.0, g_flRestartPosition[1] = 0.0, g_flRestartPosition[2] = 0.0;
 			GetClientAbsOrigin(iSurvivor, g_flRestartPosition);
 			break;
 		}

@@ -137,7 +137,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iGravityRangeChance[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Range Chance", 16)) : (g_iGravityRangeChance2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Range Chance", g_iGravityRangeChance[iIndex]));
 			main ? (g_iGravityRangeChance[iIndex] = iClamp(g_iGravityRangeChance[iIndex], 1, 9999999999)) : (g_iGravityRangeChance2[iIndex] = iClamp(g_iGravityRangeChance2[iIndex], 1, 9999999999));
 			main ? (g_flGravityValue[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", 0.3)) : (g_flGravityValue2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", g_flGravityValue[iIndex]));
-			main ? (g_flGravityValue[iIndex] = flClamp(g_flGravityValue[iIndex], 0.1, 0.99)) : (g_flGravityValue2[iIndex] = flClamp(g_flGravityValue2[iIndex], 0.1, 0.99));
+			main ? (g_flGravityValue[iIndex] = flClamp(g_flGravityValue[iIndex], 0.1, 9999999999.0)) : (g_flGravityValue2[iIndex] = flClamp(g_flGravityValue2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}

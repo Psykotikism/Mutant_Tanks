@@ -17,6 +17,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bHeal[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
+ConVar g_cvSTMaxIncapCount;
 float g_flHealAbsorbRange[ST_MAXTYPES + 1], g_flHealAbsorbRange2[ST_MAXTYPES + 1], g_flHealBuffer[ST_MAXTYPES + 1], g_flHealBuffer2[ST_MAXTYPES + 1], g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1], g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1];
 int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealChance[ST_MAXTYPES + 1], g_iHealChance2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealMessage[ST_MAXTYPES + 1], g_iHealMessage2[ST_MAXTYPES + 1], g_iHealRangeChance[ST_MAXTYPES + 1], g_iHealRangeChance2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1];
 
@@ -55,6 +56,7 @@ public void OnLibraryRemoved(const char[] name)
 public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
+	g_cvSTMaxIncapCount = FindConVar("survivor_max_incapacitated_count");
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -203,6 +205,7 @@ stock void vHealHit(int client, int owner, int chance, int enabled, int message)
 			SetEntityHealth(client, 1);
 			SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", GetGameTime());
 			SetEntPropFloat(client, Prop_Send, "m_healthBuffer", flHealBuffer);
+			SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
 			char sRGB[4][4];
 			ST_TankColors(owner, sRGB[0], sRGB[1], sRGB[2]);
 			int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
