@@ -300,7 +300,6 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 	float flPos[3];
 	flPos[0] = g_flLagPosition[iSurvivor][1], flPos[1] = g_flLagPosition[iSurvivor][2], flPos[2] = g_flLagPosition[iSurvivor][3];
 	TeleportEntity(iSurvivor, flPos, NULL_VECTOR, NULL_VECTOR);
-	PrintToChatAll("Teleported %N to %f %f %f", iSurvivor, flPos[0], flPos[1], flPos[2]);
 	return Plugin_Continue;
 }
 
@@ -326,6 +325,5 @@ public Action tTimerLagPosition(Handle timer, DataPack pack)
 	float flPos[3];
 	GetClientAbsOrigin(iSurvivor, flPos);
 	g_flLagPosition[iSurvivor][1] = flPos[0], g_flLagPosition[iSurvivor][2] = flPos[1], g_flLagPosition[iSurvivor][3] = flPos[2];
-	PrintToChatAll("Saving coordinates: %f %f %f", g_flLagPosition[iSurvivor][1], g_flLagPosition[iSurvivor][2], g_flLagPosition[iSurvivor][3]);
 	return Plugin_Continue;
 }
