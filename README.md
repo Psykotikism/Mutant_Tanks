@@ -225,9 +225,16 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		}
 		"Jump Ability"
 		{
-			"Ability Enabled"		"1"
+			"Ability Enabled"		"3"
+			"Ability Message"		"5"
+			"Jump Chance"			"4"
+			"Jump Duration"			"5.0"
 			"Jump Height"			"300.0"
+			"Jump Hit"				"1"
+			"Jump Hit Mode"			"0"
 			"Jump Interval"			"1.0"
+			"Jump Range"			"150.0"
+			"Jump Range Chance"		"16"
 		}
 	}
 }
@@ -819,6 +826,8 @@ Examples:
 **Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
 **GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?p=1694338) plugin.
+
+**Phil25** - For the [[TF2] RTD Revamped](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
 
 **ztar** - For the [Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
 

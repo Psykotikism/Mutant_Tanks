@@ -939,74 +939,6 @@
 }
 ```
 
-#### Cancer Ability
-
-```
-"Super Tanks++"
-{
-	"Tank #1"
-	{
-		// The Super Tank gives survivors cancer.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is given cancer.
-		// - "Cancer Range"
-		// - "Cancer Range Chance"
-		// "Cancer Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is given cancer.
-		// - "Cancer Chance"
-		// - "Cancer Hit Mode"
-		// Requires "st_cancer.smx" to be installed.
-		"Cancer Ability"
-		{
-			// Enable this ability.
-			// Note: This setting does not affect the "Cancer Hit" setting.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Ability Enabled"				"0"
-
-			// Display a message whenever the ability activates/deactivates.
-			// --
-			// 0: OFF
-			// 1: ON, display message only when "Cancer Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
-			"Ability Message"				"0"
-
-			// The Super Tank has 1 out of this many chances to trigger the ability.
-			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Cancer Chance"					"4"
-
-			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Cancer Hit"					"0"
-
-			// The mode of the Super Tank's claw/rock attack.
-			// --
-			// 0: Both
-			// 1: Ability activates when the Super Tank hits a survivor.
-			// 2: Ability activates when the Super Tank is hit by a survivor.
-			"Cancer Hit Mode"				"0"
-
-			// The distance between a survivor and the Super Tank needed to trigger the ability.
-			// --
-			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
-			"Cancer Range"					"150.0"
-
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
-			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Cancer Range Chance"			"16"
-		}
-	}
-}
-```
-
 #### Clone Ability
 
 ```
@@ -1894,14 +1826,14 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank gains health from other nearby infected and gives survivors temporary health.
+		// The Super Tank gains health from other nearby infected and sets survivors to temporary health who will die when they reach 0 HP.
 		// "Ability Enabled" - Any nearby infected can give the Super Tank some health.
 		// - "Heal Absorb Range"
 		// - "Heal Interval"
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor can have temporary health.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is set to temporary health who will die when they reach 0 HP.
 		// - "Heal Range"
 		// - "Heal Range Chance"
-		// "Heal Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor can have temporary health.
+		// "Heal Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is set to temporary health who will die when they reach 0 HP.
 		// - "Heal Chance"
 		// - "Heal Hit Mode"
 		// Requires "st_heal.smx" to be installed.
@@ -2440,20 +2372,49 @@
 	"Tank #1"
 	{
 		// The Super Tank jumps periodically.
+		// "Ability Enabled" - The Super Tank jumps periodically.
+		// - "Jump Interval"
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor jumps uncontrollably.
+		// - "Jump Range"
+		// - "Jump Range Chance"
+		// "Jump Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor jumps uncontrollably.
+		// - "Jump Chance"
+		// - "Jump Hit Mode"
 		// Requires "st_jump.smx" to be installed.
 		"Jump Ability"
 		{
 			// Enable this ability.
+			// Note: This setting does not affect the "Jump Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, the Super Tank can force survivors to jump uncontrollably.
+			// 2: ON, the Super Tank can jump periodically.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Display a message whenever the abilities activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Jump Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Jump Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Jump Duration"					"5.0"
 
 			// The Super Tank jumps this high off a surface.
 			// --
@@ -2461,11 +2422,37 @@
 			// Maximum: 9999999999.0
 			"Jump Height"					"300.0"
 
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" to be on.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Jump Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Jump Hit Mode"					"0"
+
 			// The Super Tank jumps every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Jump Interval"					"1.0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Jump Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Jump Range Chance"				"16"
 		}
 	}
 }
@@ -3294,6 +3281,79 @@
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
 			"Quiet Range Chance"			"16"
+		}
+	}
+}
+```
+
+#### Recoil Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank can give survivors high gun recoil.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor experiences strong recoil.
+		// - "Recoil Range"
+		// - "Recoil Range Chance"
+		// "Recoil Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor experiences strong recoil.
+		// - "Recoil Chance"
+		// - "Recoil Hit Mode"
+		// Requires "st_recoil.smx" to be installed.
+		"Recoil Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Recoil Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON, display message only when "Recoil Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
+			"Ability Message"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Recoil Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Recoil Duration"				"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Recoil Hit"					"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Recoil Hit Mode"				"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Recoil Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Recoil Range Chance"			"16"
 		}
 	}
 }

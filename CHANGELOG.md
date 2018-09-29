@@ -15,12 +15,18 @@ Changes:
 2. The plugin and its modules now requires SM 1.10.0.6317 or higher.
 3. The Tank Notes now display a different message when the phrase for a Super Tank is not found.
 4. Changed the directory of the configs from "cfg/sourcemod" to "addons/sourcemod/data".
-5. The Health ability no longer allows a Super Tank to set survivors to black and white.
-6. The Restart ability now removes all weapons from survivors before giving them new loadouts.
-7. Lowered the amount of boss stages from 5 to 4. Any boss that spawns automatically starts at stage 1.
-8. Moved various settings under new sections and reorganized/restructured the config file.
-9. Added several new settings.
-10. Renamed several settings.
+5. Added a new native: ST_TankColors - Retrieves a Super Tank's colors.
+6. The Gravity ability's "Gravity Value" now accepts higher values.
+7. The Health ability no longer allows a Super Tank to set survivors to black and white.
+8. The Jump ability now provides more features.
+9. The Pyro ability now provides more features.
+10. The Restart ability now removes all weapons from survivors before giving them new loadouts.
+11. Lowered the amount of boss stages from 5 to 4. Any boss that spawns automatically starts at stage 1.
+12. Moved various settings under new sections and reorganized/restructured the config file.
+13. Merged the Cancer ability with the Health ability.
+14. Added a new ability: Recoil - The Super Tank can give survivors high gun recoil.
+15. Added several new settings.
+16. Renamed several settings.
 
 Files:
 
