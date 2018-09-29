@@ -4,7 +4,7 @@
 
 Bug fixes:
 
-1. Marked the ST_TankName native as optional to avoid potential issues.
+1. Marked the ST_TankName and ST_TankWave natives as optional to avoid potential issues.
 2. Fixed the Flash ability errors. (Thanks Mi.Cura for reporting!)
 3. Fixed the Rocket ability creating multiple timers for survivors who are getting sent into space.
 4. Fixed several abilities not resetting when a Super Tank dies.
