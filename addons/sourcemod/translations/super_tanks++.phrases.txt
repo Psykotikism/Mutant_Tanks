@@ -1,9 +1,9 @@
 "Phrases"
 {
-	// "" Normal \x01 
-	// "" Sky-green \x03 
-	// "" Yellow-orange \x04 
-	// "" Olive/Yellow-green \x05
+	// "" Normal - \x01 
+	// "" Sky-green - \x03 
+	// "" Yellow-orange - \x04 
+	// "" Olive/Yellow-green - \x05
 	"Arrival1"
 	{
 		"#format"		"{1:s}"
