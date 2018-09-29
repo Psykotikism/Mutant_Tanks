@@ -229,6 +229,8 @@ native bool ST_TankAllowed(int client);
 /* Returns the RGB colors given to a Tank.
  *
  * @param client		Client index of the Tank.
+ * @param mode			1 = Skin color, 2 = Glow
+ *							outline color
  * @param red			Buffer to store the red
  *							color in.
  * @param green			Buffer to store the green
@@ -236,7 +238,7 @@ native bool ST_TankAllowed(int client);
  * @param blue			Buffer to store the blue
  *							color in.
  */
-native void ST_TankColors(int client, char[] red, char[] green, char[] blue);
+native void ST_TankColors(int client, int mode, char[] red, char[] green, char[] blue);
 
 /* Returns the custom name given to a Tank.
  *
@@ -1131,7 +1133,9 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 	MarkNativeAsOptional("ST_PluginEnabled");
 	MarkNativeAsOptional("ST_SpawnTank");
 	MarkNativeAsOptional("ST_TankAllowed");
+	MarkNativeAsOptional("ST_TankColors");
 	MarkNativeAsOptional("ST_TankName");
 	MarkNativeAsOptional("ST_TankType");
+	MarkNativeAsOptional("ST_TankWave");
 }
 #endif
