@@ -1887,6 +1887,7 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 	DataPack dpTankSpawn = new DataPack();
 	CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
 	dpTankSpawn.WriteCell(GetClientUserId(iTank)), dpTankSpawn.WriteCell(4);
+	vSpawnModes(iTank, false);
 	return Plugin_Continue;
 }
 
