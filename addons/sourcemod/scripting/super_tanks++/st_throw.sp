@@ -6,6 +6,10 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
+#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
+#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Throw Ability",

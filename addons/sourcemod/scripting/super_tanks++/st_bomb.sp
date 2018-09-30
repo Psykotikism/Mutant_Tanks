@@ -6,6 +6,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Bomb Ability",

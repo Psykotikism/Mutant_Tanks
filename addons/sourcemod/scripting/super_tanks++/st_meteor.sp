@@ -6,6 +6,9 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Meteor Ability",

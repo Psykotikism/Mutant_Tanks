@@ -6,6 +6,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Fire Ability",
@@ -177,7 +179,7 @@ public void ST_BossStage(int client)
 	{
 		float flPos[3];
 		GetClientAbsOrigin(client, flPos);
-		vSpecialAttack(client, flPos, MODEL_PROPANETANK);
+		vSpecialAttack(client, flPos, MODEL_GASCAN);
 	}
 }
 

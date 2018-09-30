@@ -6,6 +6,11 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
+#define SOUND_EXPLOSION "ambient/explosions/exp2.wav"
+#define SOUND_FIRE "weapons/rpg/rocketfire1.wav"
+#define SOUND_LAUNCH "npc/env_headcrabcanister/launch.wav"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Rocket Ability",

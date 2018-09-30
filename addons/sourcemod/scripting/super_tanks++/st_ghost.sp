@@ -6,6 +6,13 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
+#define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
+#define MODEL_TANK "models/infected/hulk.mdl"
+#define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
+#define SOUND_INFECTED "npc/infected/action/die/male/death_42.wav"
+#define SOUND_INFECTED2 "npc/infected/action/die/male/death_43.wav"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Ghost Ability",

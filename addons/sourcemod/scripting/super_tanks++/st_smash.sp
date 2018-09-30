@@ -6,6 +6,10 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define PARTICLE_BLOOD "boomer_explode_D"
+#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav"
+#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Smash Ability",
@@ -184,6 +188,7 @@ stock void vSmashHit(int client, int owner, int chance, int enabled, int message
 	{
 		int iSmashMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iSmashMessage[ST_TankType(owner)] : g_iSmashMessage2[ST_TankType(owner)];
 		EmitSoundToAll(SOUND_SMASH, client);
+		EmitSoundToAll(SOUND_GROWL, owner);
 		vAttachParticle(client, PARTICLE_BLOOD, 0.1, 0.0);
 		ForcePlayerSuicide(client);
 		char sRGB[4][4];

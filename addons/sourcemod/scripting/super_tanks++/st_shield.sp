@@ -6,6 +6,9 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
+#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Shield Ability",

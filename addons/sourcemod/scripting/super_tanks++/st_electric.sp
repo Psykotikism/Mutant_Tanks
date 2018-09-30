@@ -6,6 +6,10 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
+#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
+#define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Electric Ability",

@@ -6,6 +6,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Ice Ability",

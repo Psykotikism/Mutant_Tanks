@@ -6,6 +6,9 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define SPRITE_GLOW "sprites/glow.vmt"
+#define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Smite Ability",
@@ -70,7 +73,7 @@ public void OnPluginStart()
 public void OnMapStart()
 {
 	g_iSmiteSprite = PrecacheModel(SPRITE_GLOW, true);
-	PrecacheSound(SOUND_EXPLOSION2, true);
+	PrecacheSound(SOUND_EXPLOSION, true);
 }
 
 public void OnClientPutInServer(int client)
@@ -193,7 +196,7 @@ stock void vSmiteHit(int client, int owner, int chance, int enabled, int message
 		TE_SendToAll();
 		TE_SetupEnergySplash(flPosition, flDirection, false);
 		TE_SendToAll();
-		EmitAmbientSound(SOUND_EXPLOSION2, flStartPosition, client, SNDLEVEL_RAIDSIREN);
+		EmitAmbientSound(SOUND_EXPLOSION, flStartPosition, client, SNDLEVEL_RAIDSIREN);
 		ForcePlayerSuicide(client);
 		char sRGB[4][4];
 		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);

@@ -18,124 +18,6 @@
 #define ST_MAXTYPES 5000
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
-#define MELEE_AXE_V "models/weapons/melee/v_fireaxe.mdl"
-#define MELEE_AXE_W "models/weapons/melee/w_fireaxe.mdl"
-#define MELEE_BAT_V "models/weapons/melee/v_bat.mdl"
-#define MELEE_BAT_W "models/weapons/melee/w_bat.mdl"
-#define MELEE_CHAINSAW_V "models/weapons/melee/v_chainsaw.mdl"
-#define MELEE_CHAINSAW_W "models/weapons/melee/w_chainsaw.mdl"
-#define MELEE_CRICKET_V "models/weapons/melee/v_cricket_bat.mdl"
-#define MELEE_CRICKET_W "models/weapons/melee/w_cricket_bat.mdl"
-#define MELEE_CROWBAR_V "models/weapons/melee/v_crowbar.mdl"
-#define MELEE_CROWBAR_W "models/weapons/melee/w_crowbar.mdl"
-#define MELEE_GOLFCLUB_V "models/weapons/melee/v_golfclub.mdl"
-#define MELEE_GOLFCLUB_W "models/weapons/melee/w_golfclub.mdl"
-#define MELEE_GUITAR_V "models/weapons/melee/v_electric_guitar.mdl"
-#define MELEE_GUITAR_W "models/weapons/melee/w_electric_guitar.mdl"
-#define MELEE_KATANA_V "models/weapons/melee/v_katana.mdl"
-#define MELEE_KATANA_W "models/weapons/melee/w_katana.mdl"
-#define MELEE_KNIFE_V "models/v_models/v_knife_t.mdl"
-#define MELEE_KNIFE_W "models/w_models/weapons/w_knife_t.mdl"
-#define MELEE_MACHETE_V "models/weapons/melee/v_machete.mdl"
-#define MELEE_MACHETE_W "models/weapons/melee/w_machete.mdl"
-#define MELEE_PAN_V "models/weapons/melee/v_frying_pan.mdl"
-#define MELEE_PAN_W "models/weapons/melee/w_frying_pan.mdl"
-#define MELEE_TONFA_V "models/weapons/melee/v_tonfa.mdl"
-#define MELEE_TONFA_W "models/weapons/melee/w_tonfa.mdl"
-#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
-#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
-#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
-#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
-#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
-#define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
-#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
-#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
-#define MODEL_TANK "models/infected/hulk.mdl"
-#define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
-#define MODEL_WITCH "models/infected/witch.mdl"
-#define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl"
-#define PARTICLE_BLOOD "boomer_explode_D"
-#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
-#define PARTICLE_FIRE "aircraft_destroy_fastFireTrail"
-#define PARTICLE_ICE "steam_manhole"
-#define PARTICLE_METEOR "smoke_medium_01"
-#define PARTICLE_SMOKE "smoker_smokecloud"
-#define PARTICLE_SPIT "spitter_projectile"
-#define SCRIPT_AXE "scripts/melee/fireaxe.txt"
-#define SCRIPT_BAT "scripts/melee/baseball_bat.txt"
-#define SCRIPT_CRICKET "scripts/melee/cricket_bat.txt"
-#define SCRIPT_CROWBAR "scripts/melee/crowbar.txt"
-#define SCRIPT_GOLFCLUB "scripts/melee/golfclub.txt"
-#define SCRIPT_GUITAR "scripts/melee/electric_guitar.txt"
-#define SCRIPT_KATANA "scripts/melee/katana.txt"
-#define SCRIPT_KNIFE "scripts/melee/knife.txt"
-#define SCRIPT_MACHETE "scripts/melee/machete.txt"
-#define SCRIPT_PAN "scripts/melee/frying_pan.txt"
-#define SCRIPT_TONFA "scripts/melee/tonfa.txt"
-#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
-#define SPRITE_GLOW "sprites/glow.vmt"
-#define SOUND_BOSS "items/suitchargeok1.wav"
-#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
-#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
-#define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
-#define SOUND_EXPLOSION2 "ambient/explosions/explode_2.wav"
-#define SOUND_EXPLOSION "ambient/explosions/exp2.wav"
-#define SOUND_FIRE "weapons/rpg/rocketfire1.wav"
-#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav"
-#define SOUND_INFECTED "npc/infected/action/die/male/death_42.wav"
-#define SOUND_INFECTED2 "npc/infected/action/die/male/death_43.wav"
-#define SOUND_LAUNCH "npc/env_headcrabcanister/launch.wav"
-#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav"
-#define WEAPON_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
-#define WEAPON_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
-#define WEAPON_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
-#define WEAPON_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
-#define WEAPON_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
-#define WEAPON_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
-#define WEAPON_PISTOL_V "models/v_models/weapons/v_pistol_1911.mdl"
-#define WEAPON_PISTOL_W "models/w_models/weapons/w_pistol_1911.mdl"
-#define WEAPON_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
-#define WEAPON_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
-#define WEAPON_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
-#define WEAPON_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
-#define WEAPON2_AK47_V "models/v_models/weapons/v_rifle_ak47.mdl"
-#define WEAPON2_AK47_W "models/w_models/weapons/w_rifle_ak47.mdl"
-#define WEAPON2_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
-#define WEAPON2_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
-#define WEAPON2_AWP_V "models/v_models/weapons/v_sniper_awp.mdl"
-#define WEAPON2_AWP_W "models/w_models/weapons/w_sniper_awp.mdl"
-#define WEAPON2_CHROME_V "models/v_models/weapons/v_shotgun.mdl"
-#define WEAPON2_CHROME_W "models/w_models/weapons/w_shotgun.mdl"
-#define WEAPON2_DESERT_V "models/v_models/weapons/v_desert_rifle.mdl"
-#define WEAPON2_DESERT_W "models/w_models/weapons/w_desert_rifle.mdl"
-#define WEAPON2_GRENADE_V "models/v_models/weapons/v_grenade_launcher.mdl"
-#define WEAPON2_GRENADE_W "models/w_models/weapons/w_grenade_launcher.mdl"
-#define WEAPON2_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
-#define WEAPON2_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
-#define WEAPON2_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
-#define WEAPON2_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
-#define WEAPON2_M60_V "models/v_models/weapons/v_m60.mdl"
-#define WEAPON2_M60_W "models/w_models/weapons/w_m60.mdl"
-#define WEAPON2_MAGNUM_V "models/v_models/weapons/v_desert_eagle.mdl"
-#define WEAPON2_MAGNUM_W "models/w_models/weapons/w_desert_eagle.mdl"
-#define WEAPON2_MILITARY_V "models/v_models/weapons/v_sniper_military.mdl"
-#define WEAPON2_MILITARY_W "models/w_models/weapons/w_sniper_military.mdl"
-#define WEAPON2_MP5_V "models/v_models/weapons/v_smg_mp5.mdl"
-#define WEAPON2_MP5_W "models/w_models/weapons/w_smg_mp5.mdl"
-#define WEAPON2_PISTOL_V "models/v_models/weapons/v_pistol_a.mdl"
-#define WEAPON2_PISTOL_W "models/w_models/weapons/w_pistol_a.mdl"
-#define WEAPON2_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
-#define WEAPON2_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
-#define WEAPON2_SCOUT_V "models/v_models/weapons/v_sniper_scout.mdl"
-#define WEAPON2_SCOUT_W "models/w_models/weapons/w_sniper_scout.mdl"
-#define WEAPON2_SG552_V "models/v_models/weapons/v_rifle_sg552.mdl"
-#define WEAPON2_SG552_W "models/w_models/weapons/w_rifle_sg552.mdl"
-#define WEAPON2_SILENCED_V "models/v_models/weapons/v_smg_a.mdl"
-#define WEAPON2_SILENCED_W "models/w_models/weapons/w_smg_a.mdl"
-#define WEAPON2_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
-#define WEAPON2_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
-#define WEAPON2_SPAS_V "models/v_models/weapons/v_shotgun_spas.mdl"
-#define WEAPON2_SPAS_W "models/w_models/weapons/w_shotgun_spas.mdl"
 
 // Forwards
 /* Called every second to trigger the Super Tank's ability.
@@ -171,6 +53,15 @@ forward void ST_Configs(const char[] savepath, bool main);
  */
 forward void ST_Event(Event event, const char[] name);
 
+/* Called when the Tank spawns.
+ * Use this forward for any on-spawn presets.
+ * If you plan on using this to activate an ability,
+ * use ST_Ability() instead.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_Preset(int client);
+
 /* Called when the Tank's rock breaks.
  * Use this forward for any after-effects.
  *
@@ -186,6 +77,15 @@ forward void ST_RockBreak(int client, int entity);
  * @param entity		Entity index of the rock.
  */
 forward void ST_RockThrow(int client, int entity);
+
+/* Called when the Tank spawns.
+ * Use this forward for any one-time abilities
+ * or on-spawn presets.
+ *
+ * @param client		Client index of the Tank.
+ */
+#pragma deprecated Use ST_Preset() instead
+forward void ST_Spawn(int client);
 
 // Natives
 /* Returns the maximum value of the "Type Range" setting.
