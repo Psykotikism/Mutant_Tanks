@@ -654,6 +654,15 @@ forward void ST_Configs(const char[] savepath, bool main);
  */
 forward void ST_Event(Event event, const char[] name);
 
+/* Called when the Tank spawns.
+ * Use this forward for any on-spawn presets.
+ * If you plan on using this to activate an ability,
+ * use ST_Ability() instead.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_Preset(int client);
+
 /* Called when the Tank's rock breaks.
  * Use this forward for any after-effects.
  *
@@ -669,21 +678,19 @@ forward void ST_RockBreak(int client, int entity);
  * @param entity		Entity index of the rock.
  */
 forward void ST_RockThrow(int client, int entity);
+
+/* Called when the Tank spawns.
+ * Use this forward for any one-time abilities
+ * or on-spawn presets.
+ *
+ * @param client		Client index of the Tank.
+ */
+#pragma deprecated Use ST_Preset() instead
+forward void ST_Spawn(int client);
 ```
 
 Natives:
 ```
-/* Returns whether the clone can use abilities.
- *
- * @param client		Client index of the Tank.
- * @param clone			Checks whether "st_clone.smx"
- *							is installed.
- * @return				True on success, false if
- *							clone is not allowed
- *							to have abilities.
- */
-native bool ST_CloneAllowed(int client, bool clone);
-
 /* Returns the maximum value of the "Type Range" setting.
  *
  * @return				The maximum value of the

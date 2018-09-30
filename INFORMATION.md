@@ -1,6 +1,9 @@
 # Information
 > There is information about each setting and ability below. All of these settings use default values if they are left incomplete or empty.
 
+Max Types: 5,000
+Abilities Count: 60
+
 ## Plugin Settings
 
 ```

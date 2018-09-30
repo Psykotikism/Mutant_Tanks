@@ -25,14 +25,16 @@ Changes:
 12. Moved various settings under new sections and reorganized/restructured the config file.
 13. Merged the Cancer ability with the Health ability.
 14. Added 2 new abilities: Lag and Recoil
-15. Added several new settings.
-16. Renamed several settings.
+15. Re-added the ST_Spawn() forward and marked it as deprecated.
+16. Added the ST_Preset() forward to replace ST_Spawn().
+17. Added several new settings.
+18. Renamed several settings.
 
 Files:
 
 1. Updated config file with all the new settings, presets, and organization/structure.
 2. Updated gamedata file to remove unused signatures.
-3. Updated include file to use new natives introduced in SM 1.9 and SM 1.10.
+3. Updated include file to use new natives introduced in SM 1.9 and SM 1.10, and to add new forwards and natives.
 4. Updated translation file with new phrases and reformatted the phrase name of the Tank Note phrases.
 
 ## Version 8.41 (September 18, 2018)
