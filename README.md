@@ -348,8 +348,8 @@ It may be due to one or more of the following:
 
 The following abilities require different strategies:
 
-- Absorb Ability: The Super Tank takes way less damage.
-- God Ability: The Super Tank will have god mode temporarily and will not take any damage at all until the effect ends.
+- Absorb Ability: The Super Tank takes way less damage. Conserve your ammo and maintain distance between you and the Super Tank.
+- God Ability: The Super Tank will have god mode temporarily and will not take any damage at all until the effect ends. Maintain distance between you and the Super Tank.
 - Bullet Immunity: Forget your guns. Just spam your grenade launcher at it, slash it with an axe or crowbar, or burn it to death.
 - Explosive Immunity: Forget explosives and just focus on gunfire, melee weapons, and molotovs/gascans.
 - Fire Immunity: No more barbecued Tanks.
@@ -357,11 +357,7 @@ The following abilities require different strategies:
 - Nullify Hit: The Super Tank can mark players as useless, which means as long as that player is nullified, they will not do any damage.
 - Shield Ability: Wait for the Tank to throw propane tanks at you and then throw it back at the Tank. Then shoot the propane tank to deactivate the Tank's shield.
 
-6. How do I make the plugin work on only finale maps?
-
-Set the value of the "Finales Only" KeyValue to 1.
-
-7. How can I change the amount of Tanks that spawn on each finale wave?
+6. How can I change the amount of Tanks that spawn on each finale wave?
 
 Here's an example:
 
@@ -369,65 +365,19 @@ Here's an example:
 "Tank Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
 ```
 
-8. How can I decide whether to display each Tank's health?
+7. How can I decide whether to display each Tank's health?
 
 Set the value in the "Display Health" KeyValue.
 
-9. How do I give each Tank more health?
-
-Set the value in the "Extra Health" KeyValue.
-
-Example:
-
-```
-"Extra Health" "5000" // Add 5,000 to the Super Tank's health.
-```
-
-10. How do I adjust each Tank's run speed?
-
-Set the value in the "Run Speed" KeyValue.
-
-Example:
-
-```
-"Run Speed" "3.0" // Add 2.0 to the Super Tank's run speed. Default run speed is 1.0.
-```
-
-11. How can I give each Tank bullet immunity?
-
-Set the value of the "Bullet Immunity" KeyValue to 1.
-
-12. How can I give each Tank explosive immunity?
-
-Set the value of the "Explosive Immunity" KeyValue to 1.
-
-13. How can I give each Tank fire immunity?
-
-Set the value of the "Fire Immunity" KeyValue to 1.
-
-14. How can I give each Tank melee immunity?
-
-Set the value of the "Melee Immunity" KeyValue to 1.
-
-15. How can I delay the throw interval of each Tank?
-
-Set the value in the "Throw Interval" KeyValue.
-
-Example:
-
-```
-"Throw Interval" "8.0" // Add 3.0 to the Super Tank's throw interval. Default throw interval is 5.0.
-```
-
-16. Why do some Tanks spawn with different props?
+8. Why do some Tanks spawn with different props?
 
 Each prop has 1 out of X chances to appear on Super Tanks when they spawn. Configure the chances for each prop in the "Props Chance" KeyValue.
 
-17. Why are the Tanks spawning with more than the extra health given to them?
+9. Why are the Tanks spawning with more than the extra health given to them?
 
 Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
-18. How do I add more Super Tanks?
+10. How do I add more Super Tanks?
 
 - Add a new entry in the config file.
 - Raise the maximum value of the "Type Range" KeyValue.
@@ -454,7 +404,7 @@ Example:
 }
 ```
 
-19. How do I filter out certain Super Tanks that I made without deleting them?
+11. How do I filter out certain Super Tanks that I made without deleting them?
 
 Enable/disable them with the "Tank Enabled" KeyValue.
 
@@ -494,7 +444,7 @@ Example:
 }
 ```
 
-20. Can I create temporary Tanks without removing or replacing them?
+12. Can I create temporary Tanks without removing or replacing them?
 
 Yes, you can do that with custom configs.
 
@@ -558,7 +508,7 @@ Output: When the current difficulty is Expert mode (impossible), the Idiot Tank 
 These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
 
-21. How can I move the Super Tanks++ category around on the admin menu?
+13. How can I move the Super Tanks++ category around on the admin menu?
 
 - You have to open up addons/sourcemod/configs/adminmenu_sorting.txt.
 - Enter the "SuperTanks++" category.
@@ -615,7 +565,7 @@ Example:
 }
 ```
 
-22. Are there any developer/tester features available in the plugin?
+14. Are there any developer/tester features available in the plugin?
 
 Yes, there are forwards, natives, stocks, target filters for each special infected, and admin commands that allow developers/testers to spawn each Super Tank and see their statuses.
 

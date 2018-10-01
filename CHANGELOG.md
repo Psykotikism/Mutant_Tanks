@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.42 (TBA)
+## Version 8.42 (October 2, 2018)
 
 Bug fixes:
 

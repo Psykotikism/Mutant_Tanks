@@ -1,8 +1,7 @@
 # Information
 > There is information about each setting and ability below. All of these settings use default values if they are left incomplete or empty.
-
-Max Types: 5,000
-Abilities Count: 60
+> Max Types: 5,000
+> Abilities Count: 60
 
 ## Plugin Settings
 
@@ -573,6 +572,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -653,6 +663,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -726,6 +747,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -807,6 +839,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -885,6 +928,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1071,6 +1125,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -1144,6 +1209,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1237,6 +1313,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -1321,6 +1408,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1451,6 +1549,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1601,6 +1710,17 @@ Abilities Count: 60
 			// 2: ON, the Super Tank can cloak itself.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
@@ -1753,6 +1873,17 @@ Abilities Count: 60
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -1850,6 +1981,17 @@ Abilities Count: 60
 			// 2: ON, the Super Tank can absorb health from nearby infected.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -1968,6 +2110,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -2047,6 +2200,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2128,6 +2292,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -2202,6 +2377,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -2269,6 +2455,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2395,6 +2592,17 @@ Abilities Count: 60
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the abilities activate/deactivate.
 			// --
 			// 0: OFF
@@ -2485,6 +2693,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -2552,6 +2771,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2625,6 +2855,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2916,6 +3157,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -2992,6 +3244,17 @@ Abilities Count: 60
 			// 2: ON, the Super Tank can start panic events periodically.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -3070,6 +3333,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3151,6 +3425,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -3221,6 +3506,17 @@ Abilities Count: 60
 			// 2: ON, the Super Tank can gain a speed boost while on fire.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
@@ -3312,6 +3608,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -3385,6 +3692,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3563,6 +3881,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -3701,6 +4030,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -3773,6 +4113,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3891,6 +4242,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -3965,6 +4327,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -4032,6 +4405,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4196,6 +4580,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4383,6 +4778,17 @@ Abilities Count: 60
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
@@ -4461,6 +4867,17 @@ Abilities Count: 60
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4545,6 +4962,17 @@ Abilities Count: 60
 			// 2: ON, the Super Tank can warp itself to a survivor.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -4678,6 +5106,17 @@ Abilities Count: 60
 			// 2: ON, the Super Tank can create zombie mobs periodically.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
