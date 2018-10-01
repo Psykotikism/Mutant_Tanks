@@ -216,11 +216,12 @@ stock void vBlindHit(int client, int owner, int chance, int enabled, int message
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBlind[client])
 	{
 		g_bBlind[client] = true;
-		int iBlindIntensity = !g_bTankConfig[ST_TankType(owner)] ? g_iBlindIntensity[ST_TankType(owner)] : g_iBlindIntensity2[ST_TankType(owner)];
-		vBlind(client, owner, iBlindIntensity);
+		DataPack dpBlind = new DataPack();
+		CreateDataTimer(1.0, tTimerBlind, dpBlind, TIMER_FLAG_NO_MAPCHANGE);
+		dpBlind.WriteCell(GetClientUserId(client)), dpBlind.WriteCell(GetClientUserId(owner)), dpBlind.WriteCell(enabled);
 		float flBlindDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flBlindDuration[ST_TankType(owner)] : g_flBlindDuration2[ST_TankType(owner)];
 		DataPack dpStopBlindness = new DataPack();
-		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
+		CreateDataTimer(flBlindDuration + 1.0, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopBlindness.WriteCell(GetClientUserId(client)), dpStopBlindness.WriteCell(GetClientUserId(owner)), dpStopBlindness.WriteCell(message), dpStopBlindness.WriteCell(enabled);
 		char sBlindEffect[4];
 		sBlindEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sBlindEffect[ST_TankType(owner)] : g_sBlindEffect2[ST_TankType(owner)];
@@ -291,6 +292,32 @@ stock int iBlindHitMode(int client)
 stock int iBlindMessage(int client)
 {
 	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindMessage[ST_TankType(client)] : g_iBlindMessage2[ST_TankType(client)];
+}
+
+public Action tTimerBlind(Handle timer, DataPack pack)
+{
+	pack.Reset();
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsSurvivor(iSurvivor))
+	{
+		g_bBlind[iSurvivor] = false;
+		return Plugin_Stop;
+	}
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	{
+		g_bBlind[iSurvivor] = false;
+		return Plugin_Stop;
+	}
+	int iBlindEnabled = pack.ReadCell();
+	if (iBlindEnabled == 0)
+	{
+		g_bBlind[iSurvivor] = false;
+		return Plugin_Stop;
+	}
+	int iBlindIntensity = !g_bTankConfig[ST_TankType(iTank)] ? g_iBlindIntensity[ST_TankType(iTank)] : g_iBlindIntensity2[ST_TankType(iTank)];
+	vBlind(iSurvivor, iTank, iBlindIntensity);
+	return Plugin_Continue;
 }
 
 public Action tTimerStopBlindness(Handle timer, DataPack pack)
