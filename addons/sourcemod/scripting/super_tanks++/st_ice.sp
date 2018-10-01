@@ -18,6 +18,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bIce[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sIceEffect[ST_MAXTYPES + 1][4], g_sIceEffect2[ST_MAXTYPES + 1][4];
 float g_flIceDuration[ST_MAXTYPES + 1], g_flIceDuration2[ST_MAXTYPES + 1], g_flIceRange[ST_MAXTYPES + 1], g_flIceRange2[ST_MAXTYPES + 1];
 int g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceChance[ST_MAXTYPES + 1], g_iIceChance2[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceHitMode2[ST_MAXTYPES + 1], g_iIceMessage[ST_MAXTYPES + 1], g_iIceMessage2[ST_MAXTYPES + 1], g_iIceRangeChance[ST_MAXTYPES + 1], g_iIceRangeChance2[ST_MAXTYPES + 1];
 
@@ -96,14 +97,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIceHit(victim, attacker, iIceChance(attacker), iIceHit(attacker), 1);
+				vIceHit(victim, attacker, iIceChance(attacker), iIceHit(attacker), 1, "1");
 			}
 		}
 		else if ((iIceHitMode(victim) == 0 || iIceHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vIceHit(attacker, victim, iIceChance(victim), iIceHit(victim), 1);
+				vIceHit(attacker, victim, iIceChance(victim), iIceHit(victim), 1, "2");
 			}
 		}
 	}
@@ -122,6 +123,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iIceAbility[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", 0)) : (g_iIceAbility2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", g_iIceAbility[iIndex]));
 			main ? (g_iIceAbility[iIndex] = iClamp(g_iIceAbility[iIndex], 0, 1)) : (g_iIceAbility2[iIndex] = iClamp(g_iIceAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect[iIndex], sizeof(g_sIceEffect[]), "123")) : (kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect2[iIndex], sizeof(g_sIceEffect2[]), g_sIceEffect[iIndex]));
 			main ? (g_iIceMessage[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Message", 0)) : (g_iIceMessage2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Message", g_iIceMessage[iIndex]));
 			main ? (g_iIceMessage[iIndex] = iClamp(g_iIceMessage[iIndex], 0, 3)) : (g_iIceMessage2[iIndex] = iClamp(g_iIceMessage2[iIndex], 0, 3));
 			main ? (g_iIceChance[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Chance", 4)) : (g_iIceChance2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Chance", g_iIceChance[iIndex]));
@@ -171,7 +173,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIceRange)
 				{
-					vIceHit(iSurvivor, client, iIceRangeChance, iIceAbility(client), 2);
+					vIceHit(iSurvivor, client, iIceRangeChance, iIceAbility(client), 2, "3");
 				}
 			}
 		}
@@ -186,7 +188,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vIceHit(int client, int owner, int chance, int enabled, int message)
+stock void vIceHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bIce[client])
 	{
@@ -203,15 +205,9 @@ stock void vIceHit(int client, int owner, int chance, int enabled, int message)
 		DataPack dpStopIce = new DataPack();
 		CreateDataTimer(flIceDuration, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(GetClientUserId(owner)), dpStopIce.WriteCell(message), dpStopIce.WriteCell(enabled);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sIceEffect[4];
+		sIceEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sIceEffect[ST_TankType(owner)] : g_sIceEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sIceEffect, mode);
 		if (iIceMessage(owner) == message || iIceMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

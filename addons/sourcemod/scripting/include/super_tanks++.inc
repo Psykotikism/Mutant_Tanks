@@ -872,6 +872,22 @@ stock void vDropWeapon(int client, const char[] slots, const char[] number, int 
 	}
 }
 
+stock void vEffect(int client, int owner, const char[] enabled, const char[] mode)
+{
+	if (StrContains(enabled, mode) != -1)
+	{
+		char sRGB[4][4];
+		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
+		iRed = iClamp(iRed, 0, 255);
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
+		iGreen = iClamp(iGreen, 0, 255);
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
+		iBlue = iClamp(iBlue, 0, 255);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
+	}
+}
+
 stock void vFade(int client, int duration, int unknown, int red, int green, int blue)
 {
 	Handle hFadeTarget = StartMessageOne("Fade", client);

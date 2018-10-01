@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bStun[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sStunEffect[ST_MAXTYPES + 1][4], g_sStunEffect2[ST_MAXTYPES + 1][4];
 float g_flStunDuration[ST_MAXTYPES + 1], g_flStunDuration2[ST_MAXTYPES + 1], g_flStunRange[ST_MAXTYPES + 1], g_flStunRange2[ST_MAXTYPES + 1], g_flStunSpeed[ST_MAXTYPES + 1], g_flStunSpeed2[ST_MAXTYPES + 1];
 int g_iStunAbility[ST_MAXTYPES + 1], g_iStunAbility2[ST_MAXTYPES + 1], g_iStunChance[ST_MAXTYPES + 1], g_iStunChance2[ST_MAXTYPES + 1], g_iStunHit[ST_MAXTYPES + 1], g_iStunHit2[ST_MAXTYPES + 1], g_iStunHitMode[ST_MAXTYPES + 1], g_iStunHitMode2[ST_MAXTYPES + 1], g_iStunMessage[ST_MAXTYPES + 1], g_iStunMessage2[ST_MAXTYPES + 1], g_iStunRangeChance[ST_MAXTYPES + 1], g_iStunRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vStunHit(victim, attacker, iStunChance(attacker), iStunHit(attacker), 1);
+				vStunHit(victim, attacker, iStunChance(attacker), iStunHit(attacker), 1, "1");
 			}
 		}
 		else if ((iStunHitMode(victim) == 0 || iStunHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vStunHit(attacker, victim, iStunChance(victim), iStunHit(victim), 1);
+				vStunHit(attacker, victim, iStunChance(victim), iStunHit(victim), 1, "2");
 			}
 		}
 	}
@@ -119,6 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iStunAbility[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Enabled", 0)) : (g_iStunAbility2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Enabled", g_iStunAbility[iIndex]));
 			main ? (g_iStunAbility[iIndex] = iClamp(g_iStunAbility[iIndex], 0, 1)) : (g_iStunAbility2[iIndex] = iClamp(g_iStunAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Stun Ability/Ability Effect", g_sStunEffect[iIndex], sizeof(g_sStunEffect[]), "123")) : (kvSuperTanks.GetString("Stun Ability/Ability Effect", g_sStunEffect2[iIndex], sizeof(g_sStunEffect2[]), g_sStunEffect[iIndex]));
 			main ? (g_iStunMessage[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Message", 0)) : (g_iStunMessage2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Message", g_iStunMessage[iIndex]));
 			main ? (g_iStunMessage[iIndex] = iClamp(g_iStunMessage[iIndex], 0, 3)) : (g_iStunMessage2[iIndex] = iClamp(g_iStunMessage2[iIndex], 0, 3));
 			main ? (g_iStunChance[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Chance", 4)) : (g_iStunChance2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Chance", g_iStunChance[iIndex]));
@@ -170,7 +172,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flStunRange)
 				{
-					vStunHit(iSurvivor, client, iStunRangeChance, iStunAbility(client), 2);
+					vStunHit(iSurvivor, client, iStunRangeChance, iStunAbility(client), 2, "3");
 				}
 			}
 		}
@@ -219,7 +221,7 @@ stock void vReset2(int client, int owner, int message)
 	}
 }
 
-stock void vStunHit(int client, int owner, int chance, int enabled, int message)
+stock void vStunHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bStun[client])
 	{
@@ -230,15 +232,9 @@ stock void vStunHit(int client, int owner, int chance, int enabled, int message)
 		DataPack dpStopStun = new DataPack();
 		CreateDataTimer(flStunDuration, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopStun.WriteCell(GetClientUserId(client)), dpStopStun.WriteCell(GetClientUserId(owner)), dpStopStun.WriteCell(message), dpStopStun.WriteCell(enabled);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sStunEffect[4];
+		sStunEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sStunEffect[ST_TankType(owner)] : g_sStunEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sStunEffect, mode);
 		if (iStunMessage(owner) == message || iStunMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

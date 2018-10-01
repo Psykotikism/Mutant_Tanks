@@ -20,7 +20,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1], g_bWarp[MAXPLAYERS + 1];
-char g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8];
+char g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sWarpEffect[ST_MAXTYPES + 1][4], g_sWarpEffect2[ST_MAXTYPES + 1][4];
 float g_flWarpInterval[ST_MAXTYPES + 1], g_flWarpInterval2[ST_MAXTYPES + 1], g_flWarpRange[ST_MAXTYPES + 1], g_flWarpRange2[ST_MAXTYPES + 1];
 int g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iWarpAbility[ST_MAXTYPES + 1], g_iWarpAbility2[ST_MAXTYPES + 1], g_iWarpChance[ST_MAXTYPES + 1], g_iWarpChance2[ST_MAXTYPES + 1], g_iWarpHit[ST_MAXTYPES + 1], g_iWarpHit2[ST_MAXTYPES + 1], g_iWarpHitMode[ST_MAXTYPES + 1], g_iWarpHitMode2[ST_MAXTYPES + 1], g_iWarpMessage[ST_MAXTYPES + 1], g_iWarpMessage2[ST_MAXTYPES + 1], g_iWarpMode[ST_MAXTYPES + 1], g_iWarpMode2[ST_MAXTYPES + 1], g_iWarpRangeChance[ST_MAXTYPES + 1], g_iWarpRangeChance2[ST_MAXTYPES + 1];
 
@@ -101,14 +101,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vWarpHit(victim, attacker, iWarpChance(attacker), iWarpHit(attacker), 1);
+				vWarpHit(victim, attacker, iWarpChance(attacker), iWarpHit(attacker), 1, "1");
 			}
 		}
 		else if ((iWarpHitMode(victim) == 0 || iWarpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vWarpHit(attacker, victim, iWarpChance(victim), iWarpHit(victim), 1);
+				vWarpHit(attacker, victim, iWarpChance(victim), iWarpHit(victim), 1, "2");
 			}
 		}
 	}
@@ -130,6 +130,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (kvSuperTanks.GetString("Particles/Body Effects", g_sParticleEffects[iIndex], sizeof(g_sParticleEffects[]), "1234567")) : (kvSuperTanks.GetString("Particles/Body Effects", g_sParticleEffects2[iIndex], sizeof(g_sParticleEffects2[]), g_sParticleEffects[iIndex]));
 			main ? (g_iWarpAbility[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", 0)) : (g_iWarpAbility2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", g_iWarpAbility[iIndex]));
 			main ? (g_iWarpAbility[iIndex] = iClamp(g_iWarpAbility[iIndex], 0, 3)) : (g_iWarpAbility2[iIndex] = iClamp(g_iWarpAbility2[iIndex], 0, 3));
+			main ? (kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect[iIndex], sizeof(g_sWarpEffect[]), "123")) : (kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect2[iIndex], sizeof(g_sWarpEffect2[]), g_sWarpEffect[iIndex]));
 			main ? (g_iWarpMessage[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Message", 0)) : (g_iWarpMessage2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Message", g_iWarpMessage[iIndex]));
 			main ? (g_iWarpMessage[iIndex] = iClamp(g_iWarpMessage[iIndex], 0, 7)) : (g_iWarpMessage2[iIndex] = iClamp(g_iWarpMessage2[iIndex], 0, 7));
 			main ? (g_iWarpChance[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Chance", 4)) : (g_iWarpChance2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Chance", g_iWarpChance[iIndex]));
@@ -169,7 +170,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flWarpRange)
 				{
-					vWarpHit(iSurvivor, client, iWarpRangeChance, iWarpAbility(client), 2);
+					vWarpHit(iSurvivor, client, iWarpRangeChance, iWarpAbility(client), 2, "3");
 				}
 			}
 		}
@@ -193,7 +194,7 @@ stock void vReset()
 	}
 }
 
-stock void vWarpHit(int client, int owner, int chance, int enabled, int message)
+stock void vWarpHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -213,15 +214,9 @@ stock void vWarpHit(int client, int owner, int chance, int enabled, int message)
 				break;
 			}
 		}
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sWarpEffect[4];
+		sWarpEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sWarpEffect[ST_TankType(owner)] : g_sWarpEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sWarpEffect, mode);
 	}
 }
 

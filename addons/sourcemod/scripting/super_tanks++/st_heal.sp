@@ -16,7 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bHeal[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
+char g_sHealEffect[ST_MAXTYPES + 1][4], g_sHealEffect2[ST_MAXTYPES + 1][4], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 ConVar g_cvSTMaxIncapCount;
 float g_flHealAbsorbRange[ST_MAXTYPES + 1], g_flHealAbsorbRange2[ST_MAXTYPES + 1], g_flHealBuffer[ST_MAXTYPES + 1], g_flHealBuffer2[ST_MAXTYPES + 1], g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1], g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1];
 int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealChance[ST_MAXTYPES + 1], g_iHealChance2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealMessage[ST_MAXTYPES + 1], g_iHealMessage2[ST_MAXTYPES + 1], g_iHealRangeChance[ST_MAXTYPES + 1], g_iHealRangeChance2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1];
@@ -96,14 +96,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHealHit(victim, attacker, iHealChance(attacker), iHealHit(attacker), 1);
+				vHealHit(victim, attacker, iHealChance(attacker), iHealHit(attacker), 1, "1");
 			}
 		}
 		else if ((iHealHitMode(victim) == 0 || iHealHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vHealHit(attacker, victim, iHealChance(victim), iHealHit(victim), 1);
+				vHealHit(attacker, victim, iHealChance(victim), iHealHit(victim), 1, "2");
 			}
 		}
 	}
@@ -125,6 +125,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_iGlowOutline[iIndex] = iClamp(g_iGlowOutline[iIndex], 0, 1)) : (g_iGlowOutline2[iIndex] = iClamp(g_iGlowOutline2[iIndex], 0, 1));
 			main ? (g_iHealAbility[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Enabled", 0)) : (g_iHealAbility2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Enabled", g_iHealAbility[iIndex]));
 			main ? (g_iHealAbility[iIndex] = iClamp(g_iHealAbility[iIndex], 0, 3)) : (g_iHealAbility2[iIndex] = iClamp(g_iHealAbility2[iIndex], 0, 3));
+			main ? (kvSuperTanks.GetString("Heal Ability/Ability Effect", g_sHealEffect[iIndex], sizeof(g_sHealEffect[]), "123")) : (kvSuperTanks.GetString("Heal Ability/Ability Effect", g_sHealEffect2[iIndex], sizeof(g_sHealEffect2[]), g_sHealEffect[iIndex]));
 			main ? (g_iHealMessage[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Message", 0)) : (g_iHealMessage2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Message", g_iHealMessage[iIndex]));
 			main ? (g_iHealMessage[iIndex] = iClamp(g_iHealMessage[iIndex], 0, 7)) : (g_iHealMessage2[iIndex] = iClamp(g_iHealMessage2[iIndex], 0, 7));
 			main ? (g_flHealAbsorbRange[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Absorb Range", 500.0)) : (g_flHealAbsorbRange2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Absorb Range", g_flHealAbsorbRange[iIndex]));
@@ -172,7 +173,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHealRange)
 				{
-					vHealHit(iSurvivor, client, iHealRangeChance, iHealAbility(client), 2);
+					vHealHit(iSurvivor, client, iHealRangeChance, iHealAbility(client), 2, "3");
 				}
 			}
 		}
@@ -194,7 +195,7 @@ public void ST_Ability(int client)
 	}
 }
 
-stock void vHealHit(int client, int owner, int chance, int enabled, int message)
+stock void vHealHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -206,15 +207,9 @@ stock void vHealHit(int client, int owner, int chance, int enabled, int message)
 			SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", GetGameTime());
 			SetEntPropFloat(client, Prop_Send, "m_healthBuffer", flHealBuffer);
 			SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
-			char sRGB[4][4];
-			ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-			int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-			iRed = iClamp(iRed, 0, 255);
-			int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-			iGreen = iClamp(iGreen, 0, 255);
-			int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-			iBlue = iClamp(iBlue, 0, 255);
-			vFade(client, 800, 300, iRed, iGreen, iBlue);
+			char sHealEffect[4];
+			sHealEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sHealEffect[ST_TankType(owner)] : g_sHealEffect2[ST_TankType(owner)];
+			vEffect(client, owner, sHealEffect, mode);
 			if (iHealMessage(owner) == message || iHealMessage(owner) == 4 || iHealMessage(owner) == 5 || iHealMessage(owner) == 6 || iHealMessage(owner) == 7)
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];

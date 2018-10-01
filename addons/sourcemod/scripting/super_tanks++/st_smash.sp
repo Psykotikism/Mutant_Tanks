@@ -20,6 +20,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sSmashEffect[ST_MAXTYPES + 1][4], g_sSmashEffect2[ST_MAXTYPES + 1][4];
 float g_flSmashRange[ST_MAXTYPES + 1], g_flSmashRange2[ST_MAXTYPES + 1];
 int g_iSmashAbility[ST_MAXTYPES + 1], g_iSmashAbility2[ST_MAXTYPES + 1], g_iSmashChance[ST_MAXTYPES + 1], g_iSmashChance2[ST_MAXTYPES + 1], g_iSmashHit[ST_MAXTYPES + 1], g_iSmashHit2[ST_MAXTYPES + 1], g_iSmashHitMode[ST_MAXTYPES + 1], g_iSmashHitMode2[ST_MAXTYPES + 1], g_iSmashMessage[ST_MAXTYPES + 1], g_iSmashMessage2[ST_MAXTYPES + 1], g_iSmashRangeChance[ST_MAXTYPES + 1], g_iSmashRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vSmashHit(victim, attacker, iSmashChance(attacker), iSmashHit(attacker), 1);
+				vSmashHit(victim, attacker, iSmashChance(attacker), iSmashHit(attacker), 1, "1");
 			}
 		}
 		else if ((iSmashHitMode(victim) == 0 || iSmashHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vSmashHit(attacker, victim, iSmashChance(victim), iSmashHit(victim), 1);
+				vSmashHit(attacker, victim, iSmashChance(victim), iSmashHit(victim), 1, "2");
 			}
 		}
 	}
@@ -119,6 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iSmashAbility[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Enabled", 0)) : (g_iSmashAbility2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Enabled", g_iSmashAbility[iIndex]));
 			main ? (g_iSmashAbility[iIndex] = iClamp(g_iSmashAbility[iIndex], 0, 1)) : (g_iSmashAbility2[iIndex] = iClamp(g_iSmashAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Smash Ability/Ability Effect", g_sSmashEffect[iIndex], sizeof(g_sSmashEffect[]), "123")) : (kvSuperTanks.GetString("Smash Ability/Ability Effect", g_sSmashEffect2[iIndex], sizeof(g_sSmashEffect2[]), g_sSmashEffect[iIndex]));
 			main ? (g_iSmashMessage[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Message", 0)) : (g_iSmashMessage2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Message", g_iSmashMessage[iIndex]));
 			main ? (g_iSmashMessage[iIndex] = iClamp(g_iSmashMessage[iIndex], 0, 3)) : (g_iSmashMessage2[iIndex] = iClamp(g_iSmashMessage2[iIndex], 0, 3));
 			main ? (g_iSmashChance[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Chance", 4)) : (g_iSmashChance2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Chance", g_iSmashChance[iIndex]));
@@ -175,14 +177,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flSmashRange)
 				{
-					vSmashHit(iSurvivor, client, iSmashRangeChance, iSmashAbility(client), 2);
+					vSmashHit(iSurvivor, client, iSmashRangeChance, iSmashAbility(client), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vSmashHit(int client, int owner, int chance, int enabled, int message)
+stock void vSmashHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -191,15 +193,9 @@ stock void vSmashHit(int client, int owner, int chance, int enabled, int message
 		EmitSoundToAll(SOUND_GROWL, owner);
 		vAttachParticle(client, PARTICLE_BLOOD, 0.1, 0.0);
 		ForcePlayerSuicide(client);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sSmashEffect[4];
+		sSmashEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sSmashEffect[ST_TankType(owner)] : g_sSmashEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sSmashEffect, mode);
 		if (iSmashMessage == message || iSmashMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

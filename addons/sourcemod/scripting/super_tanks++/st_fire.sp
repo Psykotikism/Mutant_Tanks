@@ -18,6 +18,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sFireEffect[ST_MAXTYPES + 1][4], g_sFireEffect2[ST_MAXTYPES + 1][4];
 float g_flFireRange[ST_MAXTYPES + 1], g_flFireRange2[ST_MAXTYPES + 1];
 int g_iFireAbility[ST_MAXTYPES + 1], g_iFireAbility2[ST_MAXTYPES + 1], g_iFireChance[ST_MAXTYPES + 1], g_iFireChance2[ST_MAXTYPES + 1], g_iFireHit[ST_MAXTYPES + 1], g_iFireHit2[ST_MAXTYPES + 1], g_iFireHitMode[ST_MAXTYPES + 1], g_iFireHitMode2[ST_MAXTYPES + 1], g_iFireMessage[ST_MAXTYPES + 1], g_iFireMessage2[ST_MAXTYPES + 1], g_iFireRangeChance[ST_MAXTYPES + 1], g_iFireRangeChance2[ST_MAXTYPES + 1], g_iFireRock[ST_MAXTYPES + 1], g_iFireRock2[ST_MAXTYPES + 1];
 
@@ -89,14 +90,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vFireHit(victim, attacker, iFireChance(attacker), iFireHit(attacker), 1);
+				vFireHit(victim, attacker, iFireChance(attacker), iFireHit(attacker), 1, "1");
 			}
 		}
 		else if ((iFireHitMode(victim) == 0 || iFireHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vFireHit(attacker, victim, iFireChance(victim), iFireHit(victim), 1);
+				vFireHit(attacker, victim, iFireChance(victim), iFireHit(victim), 1, "2");
 			}
 		}
 	}
@@ -115,6 +116,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iFireAbility[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", 0)) : (g_iFireAbility2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", g_iFireAbility[iIndex]));
 			main ? (g_iFireAbility[iIndex] = iClamp(g_iFireAbility[iIndex], 0, 1)) : (g_iFireAbility2[iIndex] = iClamp(g_iFireAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Fire Ability/Ability Effect", g_sFireEffect[iIndex], sizeof(g_sFireEffect[]), "123")) : (kvSuperTanks.GetString("Fire Ability/Ability Effect", g_sFireEffect2[iIndex], sizeof(g_sFireEffect2[]), g_sFireEffect[iIndex]));
 			main ? (g_iFireMessage[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Message", 0)) : (g_iFireMessage2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Message", g_iFireMessage[iIndex]));
 			main ? (g_iFireMessage[iIndex] = iClamp(g_iFireMessage[iIndex], 0, 7)) : (g_iFireMessage2[iIndex] = iClamp(g_iFireMessage2[iIndex], 0, 7));
 			main ? (g_iFireChance[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Chance", 4)) : (g_iFireChance2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Chance", g_iFireChance[iIndex]));
@@ -166,7 +168,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flFireRange)
 				{
-					vFireHit(iSurvivor, client, iFireRangeChance, iFireAbility(client), 2);
+					vFireHit(iSurvivor, client, iFireRangeChance, iFireAbility(client), 2, "3");
 				}
 			}
 		}
@@ -203,22 +205,16 @@ public void ST_RockBreak(int client, int entity)
 	}
 }
 
-stock void vFireHit(int client, int owner, int chance, int enabled, int message)
+stock void vFireHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		float flPos[3];
 		GetClientAbsOrigin(client, flPos);
 		vSpecialAttack(owner, flPos, MODEL_GASCAN);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sFireEffect[4];
+		sFireEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sFireEffect[ST_TankType(owner)] : g_sFireEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sFireEffect, mode);
 		if (iFireMessage(owner) == message || iFireMessage(client) == 4 || iFireMessage(client) == 5 || iFireMessage(client) == 6 || iFireMessage(client) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

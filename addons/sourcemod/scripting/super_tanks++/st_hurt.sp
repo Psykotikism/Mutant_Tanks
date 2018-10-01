@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bHurt[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sHurtEffect[ST_MAXTYPES + 1][4], g_sHurtEffect2[ST_MAXTYPES + 1][4];
 float g_flHurtDuration[ST_MAXTYPES + 1], g_flHurtDuration2[ST_MAXTYPES + 1], g_flHurtRange[ST_MAXTYPES + 1], g_flHurtRange2[ST_MAXTYPES + 1];
 int g_iHurtAbility[ST_MAXTYPES + 1], g_iHurtAbility2[ST_MAXTYPES + 1], g_iHurtChance[ST_MAXTYPES + 1], g_iHurtChance2[ST_MAXTYPES + 1], g_iHurtDamage[ST_MAXTYPES + 1], g_iHurtDamage2[ST_MAXTYPES + 1], g_iHurtHit[ST_MAXTYPES + 1], g_iHurtHit2[ST_MAXTYPES + 1], g_iHurtHitMode[ST_MAXTYPES + 1], g_iHurtHitMode2[ST_MAXTYPES + 1], g_iHurtMessage[ST_MAXTYPES + 1], g_iHurtMessage2[ST_MAXTYPES + 1], g_iHurtRangeChance[ST_MAXTYPES + 1], g_iHurtRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHurtHit(victim, attacker, iHurtChance(attacker), iHurtHit(attacker), 1);
+				vHurtHit(victim, attacker, iHurtChance(attacker), iHurtHit(attacker), 1, "1");
 			}
 		}
 		else if ((iHurtHitMode(victim) == 0 || iHurtHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vHurtHit(attacker, victim, iHurtChance(victim), iHurtHit(victim), 1);
+				vHurtHit(attacker, victim, iHurtChance(victim), iHurtHit(victim), 1, "2");
 			}
 		}
 	}
@@ -119,6 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iHurtAbility[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", 0)) : (g_iHurtAbility2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", g_iHurtAbility[iIndex]));
 			main ? (g_iHurtAbility[iIndex] = iClamp(g_iHurtAbility[iIndex], 0, 1)) : (g_iHurtAbility2[iIndex] = iClamp(g_iHurtAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Hurt Ability/Ability Effect", g_sHurtEffect[iIndex], sizeof(g_sHurtEffect[]), "123")) : (kvSuperTanks.GetString("Hurt Ability/Ability Effect", g_sHurtEffect2[iIndex], sizeof(g_sHurtEffect2[]), g_sHurtEffect[iIndex]));
 			main ? (g_iHurtMessage[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Message", 0)) : (g_iHurtMessage2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Message", g_iHurtMessage[iIndex]));
 			main ? (g_iHurtMessage[iIndex] = iClamp(g_iHurtMessage[iIndex], 0, 3)) : (g_iHurtMessage2[iIndex] = iClamp(g_iHurtMessage2[iIndex], 0, 3));
 			main ? (g_iHurtChance[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Chance", 4)) : (g_iHurtChance2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Chance", g_iHurtChance[iIndex]));
@@ -159,14 +161,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHurtRange)
 				{
-					vHurtHit(iSurvivor, client, iHurtRangeChance, iHurtAbility, 2);
+					vHurtHit(iSurvivor, client, iHurtRangeChance, iHurtAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vHurtHit(int client, int owner, int chance, int enabled, int message)
+stock void vHurtHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bHurt[client])
 	{
@@ -174,15 +176,9 @@ stock void vHurtHit(int client, int owner, int chance, int enabled, int message)
 		DataPack dpHurt = new DataPack();
 		CreateDataTimer(1.0, tTimerHurt, dpHurt, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpHurt.WriteCell(GetClientUserId(client)), dpHurt.WriteCell(GetClientUserId(owner)), dpHurt.WriteCell(message), dpHurt.WriteCell(enabled), dpHurt.WriteFloat(GetEngineTime());
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sHurtEffect[4];
+		sHurtEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sHurtEffect[ST_TankType(owner)] : g_sHurtEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sHurtEffect, mode);
 		if (iHurtMessage(owner) == message || iHurtMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

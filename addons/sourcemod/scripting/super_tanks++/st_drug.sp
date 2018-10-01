@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bDrug[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sDrugEffect[ST_MAXTYPES + 1][4], g_sDrugEffect2[ST_MAXTYPES + 1][4];
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0}, g_flDrugDuration[ST_MAXTYPES + 1], g_flDrugDuration2[ST_MAXTYPES + 1], g_flDrugRange[ST_MAXTYPES + 1], g_flDrugRange2[ST_MAXTYPES + 1];
 int g_iDrugAbility[ST_MAXTYPES + 1], g_iDrugAbility2[ST_MAXTYPES + 1], g_iDrugChance[ST_MAXTYPES + 1], g_iDrugChance2[ST_MAXTYPES + 1], g_iDrugHit[ST_MAXTYPES + 1], g_iDrugHit2[ST_MAXTYPES + 1], g_iDrugHitMode[ST_MAXTYPES + 1], g_iDrugHitMode2[ST_MAXTYPES + 1], g_iDrugMessage[ST_MAXTYPES + 1], g_iDrugMessage2[ST_MAXTYPES + 1], g_iDrugRangeChance[ST_MAXTYPES + 1], g_iDrugRangeChance2[ST_MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
@@ -95,14 +96,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vDrugHit(victim, attacker, iDrugChance(attacker), iDrugHit(attacker), 1);
+				vDrugHit(victim, attacker, iDrugChance(attacker), iDrugHit(attacker), 1, "1");
 			}
 		}
 		else if ((iDrugHitMode(victim) == 0 || iDrugHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vDrugHit(attacker, victim, iDrugChance(victim), iDrugHit(victim), 1);
+				vDrugHit(attacker, victim, iDrugChance(victim), iDrugHit(victim), 1, "2");
 			}
 		}
 	}
@@ -121,6 +122,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iDrugAbility[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Enabled", 0)) : (g_iDrugAbility2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Enabled", g_iDrugAbility[iIndex]));
 			main ? (g_iDrugAbility[iIndex] = iClamp(g_iDrugAbility[iIndex], 0, 1)) : (g_iDrugAbility2[iIndex] = iClamp(g_iDrugAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Drug Ability/Ability Effect", g_sDrugEffect[iIndex], sizeof(g_sDrugEffect[]), "123")) : (kvSuperTanks.GetString("Drug Ability/Ability Effect", g_sDrugEffect2[iIndex], sizeof(g_sDrugEffect2[]), g_sDrugEffect[iIndex]));
 			main ? (g_iDrugMessage[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Message", 0)) : (g_iDrugMessage2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Message", g_iDrugMessage[iIndex]));
 			main ? (g_iDrugMessage[iIndex] = iClamp(g_iDrugMessage[iIndex], 0, 3)) : (g_iDrugMessage2[iIndex] = iClamp(g_iDrugMessage2[iIndex], 0, 3));
 			main ? (g_iDrugChance[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Chance", 4)) : (g_iDrugChance2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Chance", g_iDrugChance[iIndex]));
@@ -159,7 +161,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flDrugRange)
 				{
-					vDrugHit(iSurvivor, client, iDrugRangeChance, iDrugAbility, 2);
+					vDrugHit(iSurvivor, client, iDrugRangeChance, iDrugAbility, 2, "3");
 				}
 			}
 		}
@@ -194,7 +196,7 @@ stock void vDrug(int client, bool toggle, float angles[20])
 	EndMessage();
 }
 
-stock void vDrugHit(int client, int owner, int chance, int enabled, int message)
+stock void vDrugHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bDrug[client])
 	{
@@ -202,15 +204,9 @@ stock void vDrugHit(int client, int owner, int chance, int enabled, int message)
 		DataPack dpDrug = new DataPack();
 		CreateDataTimer(1.0, tTimerDrug, dpDrug, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDrug.WriteCell(GetClientUserId(client)), dpDrug.WriteCell(GetClientUserId(owner)), dpDrug.WriteCell(message), dpDrug.WriteCell(enabled), dpDrug.WriteFloat(GetEngineTime());
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sDrugEffect[4];
+		sDrugEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sDrugEffect[ST_TankType(owner)] : g_sDrugEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sDrugEffect, mode);
 		if (iDrugMessage(owner) == message || iDrugMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

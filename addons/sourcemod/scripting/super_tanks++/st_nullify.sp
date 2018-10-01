@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bNullify[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sNullifyEffect[ST_MAXTYPES + 1][4], g_sNullifyEffect2[ST_MAXTYPES + 1][4];
 float g_flNullifyDuration[ST_MAXTYPES + 1], g_flNullifyDuration2[ST_MAXTYPES + 1], g_flNullifyRange[ST_MAXTYPES + 1], g_flNullifyRange2[ST_MAXTYPES + 1];
 int g_iNullifyAbility[ST_MAXTYPES + 1], g_iNullifyAbility2[ST_MAXTYPES + 1], g_iNullifyChance[ST_MAXTYPES + 1], g_iNullifyChance2[ST_MAXTYPES + 1], g_iNullifyHit[ST_MAXTYPES + 1], g_iNullifyHit2[ST_MAXTYPES + 1], g_iNullifyHitMode[ST_MAXTYPES + 1], g_iNullifyHitMode2[ST_MAXTYPES + 1], g_iNullifyMessage[ST_MAXTYPES + 1], g_iNullifyMessage2[ST_MAXTYPES + 1], g_iNullifyRangeChance[ST_MAXTYPES + 1], g_iNullifyRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vNullifyHit(victim, attacker, iNullifyChance(attacker), iNullifyHit(attacker), 1);
+				vNullifyHit(victim, attacker, iNullifyChance(attacker), iNullifyHit(attacker), 1, "1");
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if ((iNullifyHitMode(victim) == 0 || iNullifyHitMode(victim) == 2) && StrEqual(sClassname, "weapon_melee"))
 			{
-				vNullifyHit(attacker, victim, iNullifyChance(victim), iNullifyHit(victim), 1);
+				vNullifyHit(attacker, victim, iNullifyChance(victim), iNullifyHit(victim), 1, "2");
 			}
 			if (g_bNullify[attacker])
 			{
@@ -125,6 +126,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iNullifyAbility[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Enabled", 0)) : (g_iNullifyAbility2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Enabled", g_iNullifyAbility[iIndex]));
 			main ? (g_iNullifyAbility[iIndex] = iClamp(g_iNullifyAbility[iIndex], 0, 1)) : (g_iNullifyAbility2[iIndex] = iClamp(g_iNullifyAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Nullify Ability/Ability Effect", g_sNullifyEffect[iIndex], sizeof(g_sNullifyEffect[]), "123")) : (kvSuperTanks.GetString("Nullify Ability/Ability Effect", g_sNullifyEffect2[iIndex], sizeof(g_sNullifyEffect2[]), g_sNullifyEffect[iIndex]));
 			main ? (g_iNullifyMessage[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Message", 0)) : (g_iNullifyMessage2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Message", g_iNullifyMessage[iIndex]));
 			main ? (g_iNullifyMessage[iIndex] = iClamp(g_iNullifyMessage[iIndex], 0, 3)) : (g_iNullifyMessage2[iIndex] = iClamp(g_iNullifyMessage2[iIndex], 0, 3));
 			main ? (g_iNullifyChance[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Chance", 4)) : (g_iNullifyChance2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Chance", g_iNullifyChance[iIndex]));
@@ -174,7 +176,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flNullifyRange)
 				{
-					vNullifyHit(iSurvivor, client, iNullifyRangeChance, iNullifyAbility(client), 2);
+					vNullifyHit(iSurvivor, client, iNullifyRangeChance, iNullifyAbility(client), 2, "3");
 				}
 			}
 		}
@@ -189,7 +191,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vNullifyHit(int client, int owner, int chance, int enabled, int message)
+stock void vNullifyHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bNullify[client])
 	{
@@ -198,15 +200,9 @@ stock void vNullifyHit(int client, int owner, int chance, int enabled, int messa
 		DataPack dpStopNullify = new DataPack();
 		CreateDataTimer(flNullifyDuration, tTimerStopNullify, dpStopNullify, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopNullify.WriteCell(GetClientUserId(client)), dpStopNullify.WriteCell(GetClientUserId(owner)), dpStopNullify.WriteCell(message), dpStopNullify.WriteCell(enabled);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sNullifyEffect[4];
+		sNullifyEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sNullifyEffect[ST_TankType(owner)] : g_sNullifyEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sNullifyEffect, mode);
 		if (iNullifyMessage(owner) == message || iNullifyMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

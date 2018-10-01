@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sPukeEffect[ST_MAXTYPES + 1][4], g_sPukeEffect2[ST_MAXTYPES + 1][4];
 float g_flPukeRange[ST_MAXTYPES + 1], g_flPukeRange2[ST_MAXTYPES + 1];
 Handle g_hSDKPukePlayer;
 int g_iPukeAbility[ST_MAXTYPES + 1], g_iPukeAbility2[ST_MAXTYPES + 1], g_iPukeChance[ST_MAXTYPES + 1], g_iPukeChance2[ST_MAXTYPES + 1], g_iPukeHit[ST_MAXTYPES + 1], g_iPukeHit2[ST_MAXTYPES + 1], g_iPukeHitMode[ST_MAXTYPES + 1], g_iPukeHitMode2[ST_MAXTYPES + 1], g_iPukeMessage[ST_MAXTYPES + 1], g_iPukeMessage2[ST_MAXTYPES + 1], g_iPukeRangeChance[ST_MAXTYPES + 1], g_iPukeRangeChance2[ST_MAXTYPES + 1];
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vPukeHit(victim, attacker, iPukeChance(attacker), iPukeHit(attacker), 1);
+				vPukeHit(victim, attacker, iPukeChance(attacker), iPukeHit(attacker), 1, "1");
 			}
 		}
 		else if ((iPukeHitMode(victim) == 0 || iPukeHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vPukeHit(attacker, victim, iPukeChance(victim), iPukeHit(victim), 1);
+				vPukeHit(attacker, victim, iPukeChance(victim), iPukeHit(victim), 1, "2");
 			}
 		}
 	}
@@ -119,6 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iPukeAbility[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", 0)) : (g_iPukeAbility2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", g_iPukeAbility[iIndex]));
 			main ? (g_iPukeAbility[iIndex] = iClamp(g_iPukeAbility[iIndex], 0, 1)) : (g_iPukeAbility2[iIndex] = iClamp(g_iPukeAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Puke Ability/Ability Effect", g_sPukeEffect[iIndex], sizeof(g_sPukeEffect[]), "123")) : (kvSuperTanks.GetString("Puke Ability/Ability Effect", g_sPukeEffect2[iIndex], sizeof(g_sPukeEffect2[]), g_sPukeEffect[iIndex]));
 			main ? (g_iPukeMessage[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Message", 0)) : (g_iPukeMessage2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Message", g_iPukeMessage[iIndex]));
 			main ? (g_iPukeMessage[iIndex] = iClamp(g_iPukeMessage[iIndex], 0, 3)) : (g_iPukeMessage2[iIndex] = iClamp(g_iPukeMessage2[iIndex], 0, 3));
 			main ? (g_iPukeChance[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Chance", 4)) : (g_iPukeChance2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Chance", g_iPukeChance[iIndex]));
@@ -154,28 +156,22 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPukeRange)
 				{
-					vPukeHit(iSurvivor, client, iPukeRangeChance, iPukeAbility(client), 2);
+					vPukeHit(iSurvivor, client, iPukeRangeChance, iPukeAbility(client), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vPukeHit(int client, int owner, int chance, int enabled, int message)
+stock void vPukeHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		int iPukeMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iPukeMessage[ST_TankType(owner)] : g_iPukeMessage2[ST_TankType(owner)];
 		SDKCall(g_hSDKPukePlayer, client, owner, true);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sPukeEffect[4];
+		sPukeEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sPukeEffect[ST_TankType(owner)] : g_sPukeEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sPukeEffect, mode);
 		if (iPukeMessage == message, iPukeMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

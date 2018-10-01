@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLag[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sLagEffect[ST_MAXTYPES + 1][4], g_sLagEffect2[ST_MAXTYPES + 1][4];
 float g_flLagDuration[ST_MAXTYPES + 1], g_flLagDuration2[ST_MAXTYPES + 1], g_flLagPosition[MAXPLAYERS + 1][4], g_flLagRange[ST_MAXTYPES + 1], g_flLagRange2[ST_MAXTYPES + 1];
 int g_iLagAbility[ST_MAXTYPES + 1], g_iLagAbility2[ST_MAXTYPES + 1], g_iLagChance[ST_MAXTYPES + 1], g_iLagChance2[ST_MAXTYPES + 1], g_iLagHit[ST_MAXTYPES + 1], g_iLagHit2[ST_MAXTYPES + 1], g_iLagHitMode[ST_MAXTYPES + 1], g_iLagHitMode2[ST_MAXTYPES + 1], g_iLagMessage[ST_MAXTYPES + 1], g_iLagMessage2[ST_MAXTYPES + 1], g_iLagRangeChance[ST_MAXTYPES + 1], g_iLagRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vLagHit(victim, attacker, iLagChance(attacker), iLagHit(attacker), 1);
+				vLagHit(victim, attacker, iLagChance(attacker), iLagHit(attacker), 1, "1");
 			}
 		}
 		else if ((iLagHitMode(victim) == 0 || iLagHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vLagHit(attacker, victim, iLagChance(victim), iLagHit(victim), 1);
+				vLagHit(attacker, victim, iLagChance(victim), iLagHit(victim), 1, "2");
 			}
 		}
 	}
@@ -119,6 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iLagAbility[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Enabled", 0)) : (g_iLagAbility2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Enabled", g_iLagAbility[iIndex]));
 			main ? (g_iLagAbility[iIndex] = iClamp(g_iLagAbility[iIndex], 0, 1)) : (g_iLagAbility2[iIndex] = iClamp(g_iLagAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Lag Ability/Ability Effect", g_sLagEffect[iIndex], sizeof(g_sLagEffect[]), "123")) : (kvSuperTanks.GetString("Lag Ability/Ability Effect", g_sLagEffect2[iIndex], sizeof(g_sLagEffect2[]), g_sLagEffect[iIndex]));
 			main ? (g_iLagMessage[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Message", 0)) : (g_iLagMessage2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Message", g_iLagMessage[iIndex]));
 			main ? (g_iLagMessage[iIndex] = iClamp(g_iLagMessage[iIndex], 0, 3)) : (g_iLagMessage2[iIndex] = iClamp(g_iLagMessage2[iIndex], 0, 3));
 			main ? (g_iLagChance[iIndex] = kvSuperTanks.GetNum("Lag Ability/Lag Chance", 4)) : (g_iLagChance2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Lag Chance", g_iLagChance[iIndex]));
@@ -168,7 +170,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flLagRange)
 				{
-					vLagHit(iSurvivor, client, iLagRangeChance, iLagAbility(client), 2);
+					vLagHit(iSurvivor, client, iLagRangeChance, iLagAbility(client), 2, "3");
 				}
 			}
 		}
@@ -183,7 +185,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vLagHit(int client, int owner, int chance, int enabled, int message)
+stock void vLagHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bLag[client])
 	{
@@ -197,15 +199,9 @@ stock void vLagHit(int client, int owner, int chance, int enabled, int message)
 		DataPack dpLagPosition = new DataPack();
 		CreateDataTimer(0.5, tTimerLagPosition, dpLagPosition, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpLagPosition.WriteCell(GetClientUserId(client)), dpLagPosition.WriteCell(GetClientUserId(owner)), dpLagPosition.WriteCell(enabled), dpLagPosition.WriteFloat(GetEngineTime());
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sLagEffect[4];
+		sLagEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sLagEffect[ST_TankType(owner)] : g_sLagEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sLagEffect, mode);
 		if (iLagMessage(owner) == message || iLagMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

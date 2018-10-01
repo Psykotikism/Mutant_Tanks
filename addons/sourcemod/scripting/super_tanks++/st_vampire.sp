@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sVampireEffect[ST_MAXTYPES + 1][4], g_sVampireEffect2[ST_MAXTYPES + 1][4];
 float g_flVampireRange[ST_MAXTYPES + 1], g_flVampireRange2[ST_MAXTYPES + 1];
 int g_iVampireAbility[ST_MAXTYPES + 1], g_iVampireAbility2[ST_MAXTYPES + 1], g_iVampireChance[ST_MAXTYPES + 1], g_iVampireChance2[ST_MAXTYPES + 1], g_iVampireHealth[ST_MAXTYPES + 1], g_iVampireHealth2[ST_MAXTYPES + 1], g_iVampireHit[ST_MAXTYPES + 1], g_iVampireHit2[ST_MAXTYPES + 1], g_iVampireHitMode[ST_MAXTYPES + 1], g_iVampireHitMode2[ST_MAXTYPES + 1], g_iVampireMessage[ST_MAXTYPES + 1], g_iVampireMessage2[ST_MAXTYPES + 1], g_iVampireRangeChance[ST_MAXTYPES + 1], g_iVampireRangeChance2[ST_MAXTYPES + 1];
 
@@ -84,7 +85,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
 					iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
-				vVampireHit(victim, attacker, iFinalHealth, 1);
+				vVampireHit(victim, attacker, iVampireChance(attacker), iVampireHit(attacker), 1, "1", iFinalHealth, 1);
 			}
 		}
 		else if ((iVampireHitMode(victim) == 0 || iVampireHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
@@ -92,7 +93,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				int iHealth = GetClientHealth(attacker);
-				vVampireHit(attacker, victim, iHealth, 2);
+				vVampireHit(attacker, victim, iVampireChance(victim), iVampireHit(victim), 1, "2", iHealth, 2);
 			}
 		}
 	}
@@ -111,6 +112,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iVampireAbility[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Enabled", 0)) : (g_iVampireAbility2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Enabled", g_iVampireAbility[iIndex]));
 			main ? (g_iVampireAbility[iIndex] = iClamp(g_iVampireAbility[iIndex], 0, 1)) : (g_iVampireAbility2[iIndex] = iClamp(g_iVampireAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Vampire Ability/Ability Effect", g_sVampireEffect[iIndex], sizeof(g_sVampireEffect[]), "123")) : (kvSuperTanks.GetString("Vampire Ability/Ability Effect", g_sVampireEffect2[iIndex], sizeof(g_sVampireEffect2[]), g_sVampireEffect[iIndex]));
 			main ? (g_iVampireMessage[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Message", 0)) : (g_iVampireMessage2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Message", g_iVampireMessage[iIndex]));
 			main ? (g_iVampireMessage[iIndex] = iClamp(g_iVampireMessage[iIndex], 0, 3)) : (g_iVampireMessage2[iIndex] = iClamp(g_iVampireMessage2[iIndex], 0, 3));
 			main ? (g_iVampireChance[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Chance", 4)) : (g_iVampireChance2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Chance", g_iVampireChance[iIndex]));
@@ -137,10 +139,14 @@ public void ST_Ability(int client)
 		iVampireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iVampireChance[ST_TankType(client)] : g_iVampireChance2[ST_TankType(client)];
 	if (iVampireAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
 	{
-		int iVampireCount;
 		float flTankPos[3];
 		GetClientAbsOrigin(client, flTankPos);
 		float flVampireRange = !g_bTankConfig[ST_TankType(client)] ? g_flVampireRange[ST_TankType(client)] : g_flVampireRange2[ST_TankType(client)];
+		int iHealth = GetClientHealth(client),
+			iVampireHealth = !g_bTankConfig[ST_TankType(client)] ? (iHealth + g_iVampireHealth[ST_TankType(client)]) : (iHealth + g_iVampireHealth2[ST_TankType(client)]),
+			iExtraHealth = (iVampireHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iVampireHealth,
+			iExtraHealth2 = (iVampireHealth < iHealth) ? 1 : iVampireHealth,
+			iRealHealth = (iVampireHealth >= 0) ? iExtraHealth : iExtraHealth2;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -150,70 +156,46 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flVampireRange)
 				{
-					iVampireCount++;
-				}
-			}
-		}
-		if (iVampireCount > 0)
-		{
-			if (GetRandomInt(1, iVampireRangeChance) == 1)
-			{
-				int iHealth = GetClientHealth(client),
-					iVampireHealth = !g_bTankConfig[ST_TankType(client)] ? (iHealth + g_iVampireHealth[ST_TankType(client)]) : (iHealth + g_iVampireHealth2[ST_TankType(client)]),
-					iExtraHealth = (iVampireHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iVampireHealth,
-					iExtraHealth2 = (iVampireHealth < iHealth) ? 1 : iVampireHealth,
-					iRealHealth = (iVampireHealth >= 0) ? iExtraHealth : iExtraHealth2;
-				SetEntityHealth(client, iRealHealth);
-				if (iVampireMessage(client) == 2 || iVampireMessage(client) == 3)
-				{
-					char sTankName[MAX_NAME_LENGTH + 1];
-					ST_TankName(client, sTankName);
-					PrintToChatAll("%s %t", ST_PREFIX2, "Vampire2", sTankName);
+					vVampireHit(iSurvivor, client, iVampireRangeChance, iVampireAbility, 2, "3", iRealHealth, 1);
 				}
 			}
 		}
 	}
 }
 
-stock void vVampireHit(int client, int owner, int health, int mode)
+stock void vVampireHit(int client, int owner, int chance, int enabled, int message, const char[] mode, int health, int hit)
 {
-	int iVampireChance = !g_bTankConfig[ST_TankType(owner)] ? g_iVampireChance[ST_TankType(owner)] : g_iVampireChance2[ST_TankType(owner)],
-		iVampireHit = !g_bTankConfig[ST_TankType(owner)] ? g_iVampireHit[ST_TankType(owner)] : g_iVampireHit2[ST_TankType(owner)];
-	if (iVampireHit == 1 && GetRandomInt(1, iVampireChance) == 1)
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
-		switch (mode)
+		switch (hit)
 		{
-			case 1:
-			{
-				SetEntityHealth(owner, health);
-				vVampireMessage(owner, client);
-			}
-			case 2:
-			{
-				SetEntityHealth(client, health - 5);
-				vVampireMessage(owner, client);
-			}
+			case 1: SetEntityHealth(owner, health);
+			case 2: SetEntityHealth(client, health - 5);
 		}
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
-	}
-}
-
-stock void vVampireMessage(int client, int owner)
-{
-	if (iVampireMessage(owner) == 1 || iVampireMessage(owner) == 3)
-	{
+		char sVampireEffect[4];
+		sVampireEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sVampireEffect[ST_TankType(owner)] : g_sVampireEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sVampireEffect, mode);
 		char sTankName[MAX_NAME_LENGTH + 1];
 		ST_TankName(owner, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Vampire", sTankName, client);
+		if ((message == 1 && iVampireMessage(owner) == message) || iVampireMessage(owner) == 3)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Vampire", sTankName, client);
+		}
+		else if ((message == 2 && iVampireMessage(owner) == message) || iVampireMessage(owner) == 3)
+		{
+			PrintToChatAll("%s %t", ST_PREFIX2, "Vampire2", sTankName);
+		}
 	}
+}
+
+stock int iVampireChance(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iVampireChance[ST_TankType(client)] : g_iVampireChance2[ST_TankType(client)];
+}
+
+stock int iVampireHit(int client)
+{
+	return !g_bTankConfig[ST_TankType(client)] ? g_iVampireHit[ST_TankType(client)] : g_iVampireHit2[ST_TankType(client)];
 }
 
 stock int iVampireHitMode(int client)

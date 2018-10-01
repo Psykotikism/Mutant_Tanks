@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1], g_bZombie[MAXPLAYERS + 1];
+char g_sZombieEffect[ST_MAXTYPES + 1][4], g_sZombieEffect2[ST_MAXTYPES + 1][4];
 float g_flZombieInterval[ST_MAXTYPES + 1], g_flZombieInterval2[ST_MAXTYPES + 1], g_flZombieRange[ST_MAXTYPES + 1], g_flZombieRange2[ST_MAXTYPES + 1];
 int g_iZombieAbility[ST_MAXTYPES + 1], g_iZombieAbility2[ST_MAXTYPES + 1], g_iZombieAmount[ST_MAXTYPES + 1], g_iZombieAmount2[ST_MAXTYPES + 1], g_iZombieChance[ST_MAXTYPES + 1], g_iZombieChance2[ST_MAXTYPES + 1], g_iZombieHit[ST_MAXTYPES + 1], g_iZombieHit2[ST_MAXTYPES + 1], g_iZombieHitMode[ST_MAXTYPES + 1], g_iZombieHitMode2[ST_MAXTYPES + 1], g_iZombieMessage[ST_MAXTYPES + 1], g_iZombieMessage2[ST_MAXTYPES + 1], g_iZombieRangeChance[ST_MAXTYPES + 1], g_iZombieRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vZombieHit(attacker, iZombieChance(attacker), iZombieHit(attacker), 1);
+				vZombieHit(victim, attacker, iZombieChance(attacker), iZombieHit(attacker), 1, "1");
 			}
 		}
 		else if ((iZombieHitMode(victim) == 0 || iZombieHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vZombieHit(victim, iZombieChance(victim), iZombieHit(victim), 1);
+				vZombieHit(attacker, victim, iZombieChance(victim), iZombieHit(victim), 1, "2");
 			}
 		}
 	}
@@ -119,6 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iZombieAbility[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Enabled", 0)) : (g_iZombieAbility2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Enabled", g_iZombieAbility[iIndex]));
 			main ? (g_iZombieAbility[iIndex] = iClamp(g_iZombieAbility[iIndex], 0, 3)) : (g_iZombieAbility2[iIndex] = iClamp(g_iZombieAbility2[iIndex], 0, 3));
+			main ? (kvSuperTanks.GetString("Zombie Ability/Ability Effect", g_sZombieEffect[iIndex], sizeof(g_sZombieEffect[]), "123")) : (kvSuperTanks.GetString("Zombie Ability/Ability Effect", g_sZombieEffect2[iIndex], sizeof(g_sZombieEffect2[]), g_sZombieEffect[iIndex]));
 			main ? (g_iZombieMessage[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Message", 0)) : (g_iZombieMessage2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Message", g_iZombieMessage[iIndex]));
 			main ? (g_iZombieMessage[iIndex] = iClamp(g_iZombieMessage[iIndex], 0, 7)) : (g_iZombieMessage2[iIndex] = iClamp(g_iZombieMessage2[iIndex], 0, 7));
 			main ? (g_iZombieAmount[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", 10)) : (g_iZombieAmount2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", g_iZombieAmount[iIndex]));
@@ -170,7 +172,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flZombieRange)
 				{
-					vZombieHit(client, iZombieRangeChance, iZombieAbility(client), 2);
+					vZombieHit(iSurvivor, client, iZombieRangeChance, iZombieAbility(client), 2, "3");
 				}
 			}
 		}
@@ -203,24 +205,18 @@ stock void vZombie(int client)
 	}
 }
 
-stock void vZombieHit(int client, int chance, int enabled, int message)
+stock void vZombieHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
-	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		vZombie(client);
-		char sRGB[4][4];
-		ST_TankColors(client, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
-		if (iZombieMessage(client) == message || iZombieMessage(client) == 4 || iZombieMessage(client) == 5 || iZombieMessage(client) == 6 || iZombieMessage(client) == 7)
+		char sZombieEffect[4];
+		sZombieEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sZombieEffect[ST_TankType(owner)] : g_sZombieEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sZombieEffect, mode);
+		if (iZombieMessage(owner) == message || iZombieMessage(owner) == 4 || iZombieMessage(owner) == 5 || iZombieMessage(owner) == 6 || iZombieMessage(owner) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(owner, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Zombie", sTankName);
 		}
 	}

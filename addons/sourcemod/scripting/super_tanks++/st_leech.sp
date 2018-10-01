@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bLeech[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sLeechEffect[ST_MAXTYPES + 1][4], g_sLeechEffect2[ST_MAXTYPES + 1][4];
 float g_flLeechDuration[ST_MAXTYPES + 1], g_flLeechDuration2[ST_MAXTYPES + 1], g_flLeechInterval[ST_MAXTYPES + 1], g_flLeechInterval2[ST_MAXTYPES + 1], g_flLeechRange[ST_MAXTYPES + 1], g_flLeechRange2[ST_MAXTYPES + 1];
 int g_iLeechAbility[ST_MAXTYPES + 1], g_iLeechAbility2[ST_MAXTYPES + 1], g_iLeechChance[ST_MAXTYPES + 1], g_iLeechChance2[ST_MAXTYPES + 1], g_iLeechHit[ST_MAXTYPES + 1], g_iLeechHit2[ST_MAXTYPES + 1], g_iLeechHitMode[ST_MAXTYPES + 1], g_iLeechHitMode2[ST_MAXTYPES + 1], g_iLeechMessage[ST_MAXTYPES + 1], g_iLeechMessage2[ST_MAXTYPES + 1], g_iLeechRangeChance[ST_MAXTYPES + 1], g_iLeechRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vLeechHit(victim, attacker, iLeechChance(attacker), iLeechHit(attacker), 1);
+				vLeechHit(victim, attacker, iLeechChance(attacker), iLeechHit(attacker), 1, "1");
 			}
 		}
 		else if ((iLeechHitMode(victim) == 0 || iLeechHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vLeechHit(attacker, victim, iLeechChance(victim), iLeechHit(victim), 1);
+				vLeechHit(attacker, victim, iLeechChance(victim), iLeechHit(victim), 1, "2");
 			}
 		}
 	}
@@ -119,6 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iLeechAbility[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Enabled", 0)) : (g_iLeechAbility2[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Enabled", g_iLeechAbility[iIndex]));
 			main ? (g_iLeechAbility[iIndex] = iClamp(g_iLeechAbility[iIndex], 0, 1)) : (g_iLeechAbility2[iIndex] = iClamp(g_iLeechAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Leech Ability/Ability Effect", g_sLeechEffect[iIndex], sizeof(g_sLeechEffect[]), "123")) : (kvSuperTanks.GetString("Leech Ability/Ability Effect", g_sLeechEffect2[iIndex], sizeof(g_sLeechEffect2[]), g_sLeechEffect[iIndex]));
 			main ? (g_iLeechMessage[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Message", 0)) : (g_iLeechMessage2[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Message", g_iLeechMessage[iIndex]));
 			main ? (g_iLeechMessage[iIndex] = iClamp(g_iLeechMessage[iIndex], 0, 3)) : (g_iLeechMessage2[iIndex] = iClamp(g_iLeechMessage2[iIndex], 0, 3));
 			main ? (g_iLeechChance[iIndex] = kvSuperTanks.GetNum("Leech Ability/Leech Chance", 4)) : (g_iLeechChance2[iIndex] = kvSuperTanks.GetNum("Leech Ability/Leech Chance", g_iLeechChance[iIndex]));
@@ -159,14 +161,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flLeechRange)
 				{
-					vLeechHit(iSurvivor, client, iLeechRangeChance, iLeechAbility, 2);
+					vLeechHit(iSurvivor, client, iLeechRangeChance, iLeechAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vLeechHit(int client, int owner, int chance, int enabled, int message)
+stock void vLeechHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bLeech[client])
 	{
@@ -175,15 +177,9 @@ stock void vLeechHit(int client, int owner, int chance, int enabled, int message
 		DataPack dpLeech = new DataPack();
 		CreateDataTimer(flLeechInterval, tTimerLeech, dpLeech, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpLeech.WriteCell(GetClientUserId(client)), dpLeech.WriteCell(GetClientUserId(owner)), dpLeech.WriteCell(message), dpLeech.WriteCell(enabled), dpLeech.WriteFloat(GetEngineTime());
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sLeechEffect[4];
+		sLeechEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sLeechEffect[ST_TankType(owner)] : g_sLeechEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sLeechEffect, mode);
 		if (iLeechMessage(owner) == message || iLeechMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

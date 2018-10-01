@@ -21,6 +21,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bRocket[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sRocketEffect[ST_MAXTYPES + 1][4], g_sRocketEffect2[ST_MAXTYPES + 1][4];
 float g_flRocketDelay[ST_MAXTYPES + 1], g_flRocketDelay2[ST_MAXTYPES + 1], g_flRocketRange[ST_MAXTYPES + 1], g_flRocketRange2[ST_MAXTYPES + 1];
 int g_iRocket[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketAbility2[ST_MAXTYPES + 1], g_iRocketChance[ST_MAXTYPES + 1], g_iRocketChance2[ST_MAXTYPES + 1], g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHit2[ST_MAXTYPES + 1], g_iRocketHitMode[ST_MAXTYPES + 1], g_iRocketHitMode2[ST_MAXTYPES + 1], g_iRocketMessage[ST_MAXTYPES + 1], g_iRocketMessage2[ST_MAXTYPES + 1], g_iRocketRangeChance[ST_MAXTYPES + 1], g_iRocketRangeChance2[ST_MAXTYPES + 1], g_iRocketSprite = -1;
 
@@ -102,14 +103,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRocketHit(victim, attacker, iRocketChance(attacker), iRocketHit(attacker), 1);
+				vRocketHit(victim, attacker, iRocketChance(attacker), iRocketHit(attacker), 1, "1");
 			}
 		}
 		else if ((iRocketHitMode(victim) == 0 || iRocketHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vRocketHit(attacker, victim, iRocketChance(victim), iRocketHit(victim), 1);
+				vRocketHit(attacker, victim, iRocketChance(victim), iRocketHit(victim), 1, "2");
 			}
 		}
 	}
@@ -128,6 +129,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iRocketAbility[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", 0)) : (g_iRocketAbility2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", g_iRocketAbility[iIndex]));
 			main ? (g_iRocketAbility[iIndex] = iClamp(g_iRocketAbility[iIndex], 0, 1)) : (g_iRocketAbility2[iIndex] = iClamp(g_iRocketAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Rocket Ability/Ability Effect", g_sRocketEffect[iIndex], sizeof(g_sRocketEffect[]), "123")) : (kvSuperTanks.GetString("Rocket Ability/Ability Effect", g_sRocketEffect2[iIndex], sizeof(g_sRocketEffect2[]), g_sRocketEffect[iIndex]));
 			main ? (g_iRocketMessage[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Message", 0)) : (g_iRocketMessage2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Message", g_iRocketMessage[iIndex]));
 			main ? (g_iRocketMessage[iIndex] = iClamp(g_iRocketMessage[iIndex], 0, 3)) : (g_iRocketMessage2[iIndex] = iClamp(g_iRocketMessage2[iIndex], 0, 3));
 			main ? (g_iRocketChance[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Chance", 4)) : (g_iRocketChance2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Chance", g_iRocketChance[iIndex]));
@@ -166,7 +168,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRocketRange)
 				{
-					vRocketHit(iSurvivor, client, iRocketRangeChance, iRocketAbility, 2);
+					vRocketHit(iSurvivor, client, iRocketRangeChance, iRocketAbility, 2, "3");
 				}
 			}
 		}
@@ -184,7 +186,7 @@ stock void vReset()
 	}
 }
 
-stock void vRocketHit(int client, int owner, int chance, int enabled, int message)
+stock void vRocketHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bRocket[client])
 	{
@@ -222,15 +224,9 @@ stock void vRocketHit(int client, int owner, int chance, int enabled, int messag
 		DataPack dpRocketDetonate = new DataPack();
 		CreateDataTimer(flRocketDelay + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
 		dpRocketDetonate.WriteCell(GetClientUserId(client)), dpRocketDetonate.WriteCell(GetClientUserId(owner)), dpRocketDetonate.WriteCell(message), dpRocketDetonate.WriteCell(enabled);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sRocketEffect[4];
+		sRocketEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sRocketEffect[ST_TankType(owner)] : g_sRocketEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sRocketEffect, mode);
 	}
 }
 

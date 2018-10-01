@@ -16,7 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bRestartValid, g_bTankConfig[ST_MAXTYPES + 1];
-char g_sRestartLoadout[ST_MAXTYPES + 1][325], g_sRestartLoadout2[ST_MAXTYPES + 1][325];
+char g_sRestartEffect[ST_MAXTYPES + 1][4], g_sRestartEffect2[ST_MAXTYPES + 1][4], g_sRestartLoadout[ST_MAXTYPES + 1][325], g_sRestartLoadout2[ST_MAXTYPES + 1][325];
 float g_flRestartPosition[3], g_flRestartRange[ST_MAXTYPES + 1], g_flRestartRange2[ST_MAXTYPES + 1];
 Handle g_hSDKRespawnPlayer;
 int g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1], g_iRestartChance[ST_MAXTYPES + 1], g_iRestartChance2[ST_MAXTYPES + 1], g_iRestartHit[ST_MAXTYPES + 1], g_iRestartHit2[ST_MAXTYPES + 1], g_iRestartHitMode[ST_MAXTYPES + 1], g_iRestartHitMode2[ST_MAXTYPES + 1], g_iRestartMessage[ST_MAXTYPES + 1], g_iRestartMessage2[ST_MAXTYPES + 1], g_iRestartMode[ST_MAXTYPES + 1], g_iRestartMode2[ST_MAXTYPES + 1], g_iRestartRangeChance[ST_MAXTYPES + 1], g_iRestartRangeChance2[ST_MAXTYPES + 1];
@@ -92,14 +92,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRestartHit(victim, attacker, iRestartChance(attacker), iRestartHit(attacker), 1);
+				vRestartHit(victim, attacker, iRestartChance(attacker), iRestartHit(attacker), 1, "1");
 			}
 		}
 		else if ((iRestartHitMode(victim) == 0 || iRestartHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vRestartHit(attacker, victim, iRestartChance(victim), iRestartHit(victim), 1);
+				vRestartHit(attacker, victim, iRestartChance(victim), iRestartHit(victim), 1, "2");
 			}
 		}
 	}
@@ -118,6 +118,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iRestartAbility[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", 0)) : (g_iRestartAbility2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", g_iRestartAbility[iIndex]));
 			main ? (g_iRestartAbility[iIndex] = iClamp(g_iRestartAbility[iIndex], 0, 1)) : (g_iRestartAbility2[iIndex] = iClamp(g_iRestartAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect[iIndex], sizeof(g_sRestartEffect[]), "123")) : (kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect2[iIndex], sizeof(g_sRestartEffect2[]), g_sRestartEffect[iIndex]));
 			main ? (g_iRestartMessage[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Message", 0)) : (g_iRestartMessage2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Message", g_iRestartMessage[iIndex]));
 			main ? (g_iRestartMessage[iIndex] = iClamp(g_iRestartMessage[iIndex], 0, 3)) : (g_iRestartMessage2[iIndex] = iClamp(g_iRestartMessage2[iIndex], 0, 3));
 			main ? (g_iRestartChance[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Chance", 4)) : (g_iRestartChance2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Chance", g_iRestartChance[iIndex]));
@@ -165,14 +166,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRestartRange)
 				{
-					vRestartHit(iSurvivor, client, iRestartRangeChance, iRestartAbility, 2);
+					vRestartHit(iSurvivor, client, iRestartRangeChance, iRestartAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vRestartHit(int client, int owner, int chance, int enabled, int message)
+stock void vRestartHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -208,15 +209,9 @@ stock void vRestartHit(int client, int owner, int chance, int enabled, int messa
 				break;
 			}
 		}
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sRestartEffect[4];
+		sRestartEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sRestartEffect[ST_TankType(owner)] : g_sRestartEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sRestartEffect, mode);
 		if (iRestartMessage == message || iRestartMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

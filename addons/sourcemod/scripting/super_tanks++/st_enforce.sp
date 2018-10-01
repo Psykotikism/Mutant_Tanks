@@ -16,7 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bEnforce[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-char g_sEnforceSlot[ST_MAXTYPES + 1][6], g_sEnforceSlot2[ST_MAXTYPES + 1][6];
+char g_sEnforceEffect[ST_MAXTYPES + 1][4], g_sEnforceEffect2[ST_MAXTYPES + 1][4], g_sEnforceSlot[ST_MAXTYPES + 1][6], g_sEnforceSlot2[ST_MAXTYPES + 1][6];
 float g_flEnforceDuration[ST_MAXTYPES + 1], g_flEnforceDuration2[ST_MAXTYPES + 1], g_flEnforceRange[ST_MAXTYPES + 1], g_flEnforceRange2[ST_MAXTYPES + 1];
 int g_iEnforceAbility[ST_MAXTYPES + 1], g_iEnforceAbility2[ST_MAXTYPES + 1], g_iEnforceChance[ST_MAXTYPES + 1], g_iEnforceChance2[ST_MAXTYPES + 1], g_iEnforceHit[ST_MAXTYPES + 1], g_iEnforceHit2[ST_MAXTYPES + 1], g_iEnforceHitMode[ST_MAXTYPES + 1], g_iEnforceHitMode2[ST_MAXTYPES + 1], g_iEnforceMessage[ST_MAXTYPES + 1], g_iEnforceMessage2[ST_MAXTYPES + 1], g_iEnforceRangeChance[ST_MAXTYPES + 1], g_iEnforceRangeChance2[ST_MAXTYPES + 1], g_iEnforceSlot[MAXPLAYERS + 1];
 
@@ -93,8 +93,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	}
 	if (bIsSurvivor(client) && g_bEnforce[client])
 	{
-		int iActiveWeapon = GetPlayerWeaponSlot(client, g_iEnforceSlot[client]);
-		weapon = iActiveWeapon;
+		weapon = GetPlayerWeaponSlot(client, g_iEnforceSlot[client]);
 	}
 	return Plugin_Continue;
 }
@@ -109,14 +108,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vEnforceHit(victim, attacker, iEnforceChance(attacker), iEnforceHit(attacker), 1);
+				vEnforceHit(victim, attacker, iEnforceChance(attacker), iEnforceHit(attacker), 1, "1");
 			}
 		}
 		else if ((iEnforceHitMode(victim) == 0 || iEnforceHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vEnforceHit(attacker, victim, iEnforceChance(victim), iEnforceHit(victim), 1);
+				vEnforceHit(attacker, victim, iEnforceChance(victim), iEnforceHit(victim), 1, "2");
 			}
 		}
 	}
@@ -135,6 +134,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iEnforceAbility[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Enabled", 0)) : (g_iEnforceAbility2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Enabled", g_iEnforceAbility[iIndex]));
 			main ? (g_iEnforceAbility[iIndex] = iClamp(g_iEnforceAbility[iIndex], 0, 1)) : (g_iEnforceAbility2[iIndex] = iClamp(g_iEnforceAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect[iIndex], sizeof(g_sEnforceEffect[]), "123")) : (kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect2[iIndex], sizeof(g_sEnforceEffect2[]), g_sEnforceEffect[iIndex]));
 			main ? (g_iEnforceMessage[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Message", 0)) : (g_iEnforceMessage2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Message", g_iEnforceMessage[iIndex]));
 			main ? (g_iEnforceMessage[iIndex] = iClamp(g_iEnforceMessage[iIndex], 0, 3)) : (g_iEnforceMessage2[iIndex] = iClamp(g_iEnforceMessage2[iIndex], 0, 3));
 			main ? (g_iEnforceChance[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Chance", 4)) : (g_iEnforceChance2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Chance", g_iEnforceChance[iIndex]));
@@ -185,7 +185,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flEnforceRange)
 				{
-					vEnforceHit(iSurvivor, client, iEnforceRangeChance, iEnforceAbility(client), 2);
+					vEnforceHit(iSurvivor, client, iEnforceRangeChance, iEnforceAbility(client), 2, "3");
 				}
 			}
 		}
@@ -200,7 +200,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vEnforceHit(int client, int owner, int chance, int enabled, int message)
+stock void vEnforceHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bEnforce[client])
 	{
@@ -219,15 +219,9 @@ stock void vEnforceHit(int client, int owner, int chance, int enabled, int messa
 		DataPack dpStopEnforce = new DataPack();
 		CreateDataTimer(flEnforceDuration, tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopEnforce.WriteCell(GetClientUserId(client)), dpStopEnforce.WriteCell(GetClientUserId(owner)), dpStopEnforce.WriteCell(message), dpStopEnforce.WriteCell(enabled);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sEnforceEffect[4];
+		sEnforceEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sEnforceEffect[ST_TankType(owner)] : g_sEnforceEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sEnforceEffect, mode);
 		if (iEnforceMessage(owner) == message || iEnforceMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

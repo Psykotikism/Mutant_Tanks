@@ -18,6 +18,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sBombEffect[ST_MAXTYPES + 1][4], g_sBombEffect2[ST_MAXTYPES + 1][4];
 float g_flBombRange[ST_MAXTYPES + 1], g_flBombRange2[ST_MAXTYPES + 1];
 int g_iBombAbility[ST_MAXTYPES + 1], g_iBombAbility2[ST_MAXTYPES + 1], g_iBombChance[ST_MAXTYPES + 1], g_iBombChance2[ST_MAXTYPES + 1], g_iBombHit[ST_MAXTYPES + 1], g_iBombHit2[ST_MAXTYPES + 1], g_iBombHitMode[ST_MAXTYPES + 1], g_iBombHitMode2[ST_MAXTYPES + 1], g_iBombMessage[ST_MAXTYPES + 1], g_iBombMessage2[ST_MAXTYPES + 1], g_iBombRangeChance[ST_MAXTYPES + 1], g_iBombRangeChance2[ST_MAXTYPES + 1], g_iBombRock[ST_MAXTYPES + 1], g_iBombRock2[ST_MAXTYPES + 1];
 
@@ -89,14 +90,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vBombHit(victim, attacker, iBombChance(attacker), iBombHit(attacker), 1);
+				vBombHit(victim, attacker, iBombChance(attacker), iBombHit(attacker), 1, "1");
 			}
 		}
 		else if ((iBombHitMode(victim) == 0 || iBombHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vBombHit(attacker, victim, iBombChance(victim), iBombHit(victim), 1);
+				vBombHit(attacker, victim, iBombChance(victim), iBombHit(victim), 1, "2");
 			}
 		}
 	}
@@ -115,6 +116,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iBombAbility[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", 0)) : (g_iBombAbility2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", g_iBombAbility[iIndex]));
 			main ? (g_iBombAbility[iIndex] = iClamp(g_iBombAbility[iIndex], 0, 1)) : (g_iBombAbility2[iIndex] = iClamp(g_iBombAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Bomb Ability/Ability Effect", g_sBombEffect[iIndex], sizeof(g_sBombEffect[]), "123")) : (kvSuperTanks.GetString("Bomb Ability/Ability Effect", g_sBombEffect2[iIndex], sizeof(g_sBombEffect2[]), g_sBombEffect[iIndex]));
 			main ? (g_iBombMessage[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Message", 0)) : (g_iBombMessage2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Message", g_iBombMessage[iIndex]));
 			main ? (g_iBombMessage[iIndex] = iClamp(g_iBombMessage[iIndex], 0, 7)) : (g_iBombMessage2[iIndex] = iClamp(g_iBombMessage2[iIndex], 0, 7));
 			main ? (g_iBombChance[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Chance", 4)) : (g_iBombChance2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Chance", g_iBombChance[iIndex]));
@@ -166,7 +168,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBombRange)
 				{
-					vBombHit(iSurvivor, client, iBombRangeChance, iBombAbility(client), 2);
+					vBombHit(iSurvivor, client, iBombRangeChance, iBombAbility(client), 2, "3");
 				}
 			}
 		}
@@ -203,22 +205,16 @@ public void ST_RockBreak(int client, int entity)
 	}
 }
 
-void vBombHit(int client, int owner, int chance, int enabled, int message)
+void vBombHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
 		float flPos[3];
 		GetClientAbsOrigin(client, flPos);
 		vSpecialAttack(owner, flPos, MODEL_PROPANETANK);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sBombEffect[4];
+		sBombEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sBombEffect[ST_TankType(owner)] : g_sBombEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sBombEffect, mode);
 		if (iBombMessage(owner) == message || iBombMessage(client) == 4 || iBombMessage(client) == 5 || iBombMessage(client) == 6 || iBombMessage(client) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

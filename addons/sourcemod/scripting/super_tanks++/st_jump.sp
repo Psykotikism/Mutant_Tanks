@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bJump[MAXPLAYERS + 1], g_bJump2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sJumpEffect[ST_MAXTYPES + 1][4], g_sJumpEffect2[ST_MAXTYPES + 1][4];
 float g_flJumpDuration[ST_MAXTYPES + 1], g_flJumpDuration2[ST_MAXTYPES + 1], g_flJumpHeight[ST_MAXTYPES + 1], g_flJumpHeight2[ST_MAXTYPES + 1], g_flJumpInterval[ST_MAXTYPES + 1], g_flJumpInterval2[ST_MAXTYPES + 1], g_flJumpRange[ST_MAXTYPES + 1], g_flJumpRange2[ST_MAXTYPES + 1];
 int g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpAbility2[ST_MAXTYPES + 1], g_iJumpChance[ST_MAXTYPES + 1], g_iJumpChance2[ST_MAXTYPES + 1], g_iJumpHit[ST_MAXTYPES + 1], g_iJumpHit2[ST_MAXTYPES + 1], g_iJumpHitMode[ST_MAXTYPES + 1], g_iJumpHitMode2[ST_MAXTYPES + 1], g_iJumpMessage[ST_MAXTYPES + 1], g_iJumpMessage2[ST_MAXTYPES + 1], g_iJumpRangeChance[ST_MAXTYPES + 1], g_iJumpRangeChance2[ST_MAXTYPES + 1];
 
@@ -82,14 +83,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vJumpHit(victim, attacker, iJumpChance(attacker), iJumpHit(attacker), 1);
+				vJumpHit(victim, attacker, iJumpChance(attacker), iJumpHit(attacker), 1, "1");
 			}
 		}
 		else if ((iJumpHitMode(victim) == 0 || iJumpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vJumpHit(attacker, victim, iJumpChance(victim), iJumpHit(victim), 1);
+				vJumpHit(attacker, victim, iJumpChance(victim), iJumpHit(victim), 1, "2");
 			}
 		}
 	}
@@ -108,6 +109,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iJumpAbility[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Enabled", 0)) : (g_iJumpAbility2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Enabled", g_iJumpAbility[iIndex]));
 			main ? (g_iJumpAbility[iIndex] = iClamp(g_iJumpAbility[iIndex], 0, 3)) : (g_iJumpAbility2[iIndex] = iClamp(g_iJumpAbility2[iIndex], 0, 3));
+			main ? (kvSuperTanks.GetString("Jump Ability/Ability Effect", g_sJumpEffect[iIndex], sizeof(g_sJumpEffect[]), "123")) : (kvSuperTanks.GetString("Jump Ability/Ability Effect", g_sJumpEffect2[iIndex], sizeof(g_sJumpEffect2[]), g_sJumpEffect[iIndex]));
 			main ? (g_iJumpMessage[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Message", 0)) : (g_iJumpMessage2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Message", g_iJumpMessage[iIndex]));
 			main ? (g_iJumpMessage[iIndex] = iClamp(g_iJumpMessage[iIndex], 0, 7)) : (g_iJumpMessage2[iIndex] = iClamp(g_iJumpMessage2[iIndex], 0, 7));
 			main ? (g_iJumpChance[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", 4)) : (g_iJumpChance2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Chance", g_iJumpChance[iIndex]));
@@ -149,7 +151,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flJumpRange)
 				{
-					vJumpHit(iSurvivor, client, iJumpRangeChance, iJumpAbility(client), 2);
+					vJumpHit(iSurvivor, client, iJumpRangeChance, iJumpAbility(client), 2, "3");
 				}
 			}
 		}
@@ -180,7 +182,7 @@ stock void vJump(int client, int owner)
 	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
 }
 
-stock void vJumpHit(int client, int owner, int chance, int enabled, int message)
+stock void vJumpHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bJump2[client])
 	{
@@ -188,15 +190,9 @@ stock void vJumpHit(int client, int owner, int chance, int enabled, int message)
 		DataPack dpJump = new DataPack();
 		CreateDataTimer(0.25, tTimerJump2, dpJump, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpJump.WriteCell(GetClientUserId(client)), dpJump.WriteCell(GetClientUserId(owner)), dpJump.WriteCell(message), dpJump.WriteCell(enabled), dpJump.WriteFloat(GetEngineTime());
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sJumpEffect[4];
+		sJumpEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sJumpEffect[ST_TankType(owner)] : g_sJumpEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sJumpEffect, mode);
 		if (iJumpMessage(owner) == message || iJumpMessage(owner) == 4 || iJumpMessage(owner) == 5 || iJumpMessage(owner) == 6 || iJumpMessage(owner) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

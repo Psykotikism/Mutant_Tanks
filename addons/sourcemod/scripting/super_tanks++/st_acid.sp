@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sAcidEffect[ST_MAXTYPES + 1][4], g_sAcidEffect2[ST_MAXTYPES + 1][4];
 float g_flAcidRange[ST_MAXTYPES + 1], g_flAcidRange2[ST_MAXTYPES + 1];
 Handle g_hSDKAcidPlayer, g_hSDKPukePlayer;
 int g_iAcidAbility[ST_MAXTYPES + 1], g_iAcidAbility2[ST_MAXTYPES + 1], g_iAcidChance[ST_MAXTYPES + 1], g_iAcidChance2[ST_MAXTYPES + 1], g_iAcidHit[ST_MAXTYPES + 1], g_iAcidHit2[ST_MAXTYPES + 1], g_iAcidHitMode[ST_MAXTYPES + 1], g_iAcidHitMode2[ST_MAXTYPES + 1], g_iAcidMessage[ST_MAXTYPES + 1], g_iAcidMessage2[ST_MAXTYPES + 1], g_iAcidRangeChance[ST_MAXTYPES + 1], g_iAcidRangeChance2[ST_MAXTYPES + 1], g_iAcidRock[ST_MAXTYPES + 1], g_iAcidRock2[ST_MAXTYPES + 1];
@@ -113,14 +114,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAcidHit(victim, attacker, iAcidChance(attacker), iAcidHit(attacker), 1);
+				vAcidHit(victim, attacker, iAcidChance(attacker), iAcidHit(attacker), 1, "1");
 			}
 		}
 		else if ((iAcidHitMode(victim) == 0 || iAcidHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vAcidHit(attacker, victim, iAcidChance(victim), iAcidHit(victim), 1);
+				vAcidHit(attacker, victim, iAcidChance(victim), iAcidHit(victim), 1, "2");
 			}
 		}
 	}
@@ -139,6 +140,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iAcidAbility[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", 0)) : (g_iAcidAbility2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", g_iAcidAbility[iIndex]));
 			main ? (g_iAcidAbility[iIndex] = iClamp(g_iAcidAbility[iIndex], 0, 1)) : (g_iAcidAbility2[iIndex] = iClamp(g_iAcidAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Acid Ability/Ability Effect", g_sAcidEffect[iIndex], sizeof(g_sAcidEffect[]), "123")) : (kvSuperTanks.GetString("Acid Ability/Ability Effect", g_sAcidEffect2[iIndex], sizeof(g_sAcidEffect2[]), g_sAcidEffect[iIndex]));
 			main ? (g_iAcidMessage[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", 0)) : (g_iAcidMessage2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", g_iAcidMessage[iIndex]));
 			main ? (g_iAcidMessage[iIndex] = iClamp(g_iAcidMessage[iIndex], 0, 7)) : (g_iAcidMessage2[iIndex] = iClamp(g_iAcidMessage2[iIndex], 0, 7));
 			main ? (g_iAcidChance[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", 4)) : (g_iAcidChance2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Chance", g_iAcidChance[iIndex]));
@@ -188,7 +190,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flAcidRange)
 				{
-					vAcidHit(iSurvivor, client, iAcidRangeChance, iAcidAbility(client), 2);
+					vAcidHit(iSurvivor, client, iAcidRangeChance, iAcidAbility(client), 2, "3");
 				}
 			}
 		}
@@ -232,7 +234,7 @@ stock void vAcid(int client, int owner)
 	SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, owner, 2.0);
 }
 
-stock void vAcidHit(int client, int owner, int chance, int enabled, int message)
+stock void vAcidHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
 	{
@@ -254,15 +256,9 @@ stock void vAcidHit(int client, int owner, int chance, int enabled, int message)
 				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
 			}
 		}
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sAcidEffect[4];
+		sAcidEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sAcidEffect[ST_TankType(owner)] : g_sAcidEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sAcidEffect, mode);
 	}
 }
 

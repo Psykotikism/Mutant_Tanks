@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bBury[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sBuryEffect[ST_MAXTYPES + 1][4], g_sBuryEffect2[ST_MAXTYPES + 1][4];
 float g_flBuryDuration[ST_MAXTYPES + 1], g_flBuryDuration2[ST_MAXTYPES + 1], g_flBuryHeight[ST_MAXTYPES + 1], g_flBuryHeight2[ST_MAXTYPES + 1], g_flBuryRange[ST_MAXTYPES + 1], g_flBuryRange2[ST_MAXTYPES + 1];
 int g_iBuryAbility[ST_MAXTYPES + 1], g_iBuryAbility2[ST_MAXTYPES + 1], g_iBuryChance[ST_MAXTYPES + 1], g_iBuryChance2[ST_MAXTYPES + 1], g_iBuryHit[ST_MAXTYPES + 1], g_iBuryHit2[ST_MAXTYPES + 1], g_iBuryHitMode[ST_MAXTYPES + 1], g_iBuryHitMode2[ST_MAXTYPES + 1], g_iBuryMessage[ST_MAXTYPES + 1], g_iBuryMessage2[ST_MAXTYPES + 1], g_iBuryRangeChance[ST_MAXTYPES + 1], g_iBuryRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vBuryHit(victim, attacker, iBuryChance(attacker), iBuryHit(attacker), 1);
+				vBuryHit(victim, attacker, iBuryChance(attacker), iBuryHit(attacker), 1, "1");
 			}
 		}
 		else if ((iBuryHitMode(victim) == 0 || iBuryHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vBuryHit(attacker, victim, iBuryChance(victim), iBuryHit(victim), 1);
+				vBuryHit(attacker, victim, iBuryChance(victim), iBuryHit(victim), 1, "2");
 			}
 		}
 	}
@@ -119,6 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iBuryAbility[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", 0)) : (g_iBuryAbility2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", g_iBuryAbility[iIndex]));
 			main ? (g_iBuryAbility[iIndex] = iClamp(g_iBuryAbility[iIndex], 0, 1)) : (g_iBuryAbility2[iIndex] = iClamp(g_iBuryAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Bury Ability/Ability Effect", g_sBuryEffect[iIndex], sizeof(g_sBuryEffect[]), "123")) : (kvSuperTanks.GetString("Bury Ability/Ability Effect", g_sBuryEffect2[iIndex], sizeof(g_sBuryEffect2[]), g_sBuryEffect[iIndex]));
 			main ? (g_iBuryMessage[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Message", 0)) : (g_iBuryMessage2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Message", g_iBuryMessage[iIndex]));
 			main ? (g_iBuryMessage[iIndex] = iClamp(g_iBuryMessage[iIndex], 0, 3)) : (g_iBuryMessage2[iIndex] = iClamp(g_iBuryMessage2[iIndex], 0, 3));
 			main ? (g_iBuryChance[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Chance", 4)) : (g_iBuryChance2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Bury Chance", g_iBuryChance[iIndex]));
@@ -170,7 +172,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBuryRange)
 				{
-					vBuryHit(iSurvivor, client, iBuryRangeChance, iBuryAbility(client), 2);
+					vBuryHit(iSurvivor, client, iBuryRangeChance, iBuryAbility(client), 2, "3");
 				}
 			}
 		}
@@ -185,7 +187,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vBuryHit(int client, int owner, int chance, int enabled, int message)
+stock void vBuryHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBury[client] && bIsPlayerGrounded(client))
 	{
@@ -208,15 +210,9 @@ stock void vBuryHit(int client, int owner, int chance, int enabled, int message)
 		DataPack dpStopBury = new DataPack();
 		CreateDataTimer(flBuryDuration, tTimerStopBury, dpStopBury, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopBury.WriteCell(GetClientUserId(client)), dpStopBury.WriteCell(GetClientUserId(owner)), dpStopBury.WriteCell(message), dpStopBury.WriteCell(enabled);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sBuryEffect[4];
+		sBuryEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sBuryEffect[ST_TankType(owner)] : g_sBuryEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sBuryEffect, mode);
 		if (iBuryMessage(owner) == message || iBuryMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

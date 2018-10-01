@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bBlind[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sBlindEffect[ST_MAXTYPES + 1][4], g_sBlindEffect2[ST_MAXTYPES + 1][4];
 float g_flBlindDuration[ST_MAXTYPES + 1], g_flBlindDuration2[ST_MAXTYPES + 1], g_flBlindRange[ST_MAXTYPES + 1], g_flBlindRange2[ST_MAXTYPES + 1];
 int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1], g_iBlindChance[ST_MAXTYPES + 1], g_iBlindChance2[ST_MAXTYPES + 1], g_iBlindHit[ST_MAXTYPES + 1], g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindHitMode[ST_MAXTYPES + 1], g_iBlindHitMode2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1], g_iBlindIntensity2[ST_MAXTYPES + 1], g_iBlindMessage[ST_MAXTYPES + 1], g_iBlindMessage2[ST_MAXTYPES + 1], g_iBlindRangeChance[ST_MAXTYPES + 1], g_iBlindRangeChance2[ST_MAXTYPES + 1];
 UserMsg g_umFadeUserMsgId;
@@ -95,14 +96,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vBlindHit(victim, attacker, iBlindChance(attacker), iBlindHit(attacker), 1);
+				vBlindHit(victim, attacker, iBlindChance(attacker), iBlindHit(attacker), 1, "1");
 			}
 		}
 		else if ((iBlindHitMode(victim) == 0 || iBlindHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vBlindHit(attacker, victim, iBlindChance(victim), iBlindHit(victim), 1);
+				vBlindHit(attacker, victim, iBlindChance(victim), iBlindHit(victim), 1, "2");
 			}
 		}
 	}
@@ -121,6 +122,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iBlindAbility[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Enabled", 0)) : (g_iBlindAbility2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Enabled", g_iBlindAbility[iIndex]));
 			main ? (g_iBlindAbility[iIndex] = iClamp(g_iBlindAbility[iIndex], 0, 1)) : (g_iBlindAbility2[iIndex] = iClamp(g_iBlindAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Blind Ability/Ability Effect", g_sBlindEffect[iIndex], sizeof(g_sBlindEffect[]), "123")) : (kvSuperTanks.GetString("Blind Ability/Ability Effect", g_sBlindEffect2[iIndex], sizeof(g_sBlindEffect2[]), g_sBlindEffect[iIndex]));
 			main ? (g_iBlindMessage[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Message", 0)) : (g_iBlindMessage2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Message", g_iBlindMessage[iIndex]));
 			main ? (g_iBlindMessage[iIndex] = iClamp(g_iBlindMessage[iIndex], 0, 3)) : (g_iBlindMessage2[iIndex] = iClamp(g_iBlindMessage2[iIndex], 0, 3));
 			main ? (g_iBlindChance[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Chance", 4)) : (g_iBlindChance2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Chance", g_iBlindChance[iIndex]));
@@ -172,7 +174,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBlindRange)
 				{
-					vBlindHit(iSurvivor, client, iBlindRangeChance, iBlindAbility(client), 2);
+					vBlindHit(iSurvivor, client, iBlindRangeChance, iBlindAbility(client), 2, "3");
 				}
 			}
 		}
@@ -209,7 +211,7 @@ stock void vBlind(int client, int owner, int intensity)
 	EndMessage();
 }
 
-stock void vBlindHit(int client, int owner, int chance, int enabled, int message)
+stock void vBlindHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBlind[client])
 	{
@@ -220,15 +222,9 @@ stock void vBlindHit(int client, int owner, int chance, int enabled, int message
 		DataPack dpStopBlindness = new DataPack();
 		CreateDataTimer(flBlindDuration, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopBlindness.WriteCell(GetClientUserId(client)), dpStopBlindness.WriteCell(GetClientUserId(owner)), dpStopBlindness.WriteCell(message), dpStopBlindness.WriteCell(enabled);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sBlindEffect[4];
+		sBlindEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sBlindEffect[ST_TankType(owner)] : g_sBlindEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sBlindEffect, mode);
 		if (iBlindMessage(owner) == message || iBlindMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

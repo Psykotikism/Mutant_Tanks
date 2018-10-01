@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bHypno[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sHypnoEffect[ST_MAXTYPES + 1][4], g_sHypnoEffect2[ST_MAXTYPES + 1][4];
 float g_flHypnoDuration[ST_MAXTYPES + 1], g_flHypnoDuration2[ST_MAXTYPES + 1], g_flHypnoRange[ST_MAXTYPES + 1], g_flHypnoRange2[ST_MAXTYPES + 1];
 int g_iHypnoAbility[ST_MAXTYPES + 1], g_iHypnoAbility2[ST_MAXTYPES + 1], g_iHypnoChance[ST_MAXTYPES + 1], g_iHypnoChance2[ST_MAXTYPES + 1], g_iHypnoHit[ST_MAXTYPES + 1], g_iHypnoHit2[ST_MAXTYPES + 1], g_iHypnoHitMode[ST_MAXTYPES + 1], g_iHypnoHitMode2[ST_MAXTYPES + 1], g_iHypnoMessage[ST_MAXTYPES + 1], g_iHypnoMessage2[ST_MAXTYPES + 1], g_iHypnoMode[ST_MAXTYPES + 1], g_iHypnoMode2[ST_MAXTYPES + 1], g_iHypnoRangeChance[ST_MAXTYPES + 1], g_iHypnoRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHypnoHit(victim, attacker, iHypnoChance(attacker), iHypnoHit(attacker), 1);
+				vHypnoHit(victim, attacker, iHypnoChance(attacker), iHypnoHit(attacker), 1, "1");
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if ((iHypnoHitMode(victim) == 0 || iHypnoHitMode(victim) == 2) && StrEqual(sClassname, "weapon_melee"))
 			{
-				vHypnoHit(attacker, victim, iHypnoChance(victim), iHypnoHit(victim), 1);
+				vHypnoHit(attacker, victim, iHypnoChance(victim), iHypnoHit(victim), 1, "2");
 			}
 			if (g_bHypno[attacker])
 			{
@@ -135,6 +136,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iHypnoAbility[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Enabled", 0)) : (g_iHypnoAbility2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Enabled", g_iHypnoAbility[iIndex]));
 			main ? (g_iHypnoAbility[iIndex] = iClamp(g_iHypnoAbility[iIndex], 0, 1)) : (g_iHypnoAbility2[iIndex] = iClamp(g_iHypnoAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Hypno Ability/Ability Effect", g_sHypnoEffect[iIndex], sizeof(g_sHypnoEffect[]), "123")) : (kvSuperTanks.GetString("Hypno Ability/Ability Effect", g_sHypnoEffect2[iIndex], sizeof(g_sHypnoEffect2[]), g_sHypnoEffect[iIndex]));
 			main ? (g_iHypnoMessage[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Message", 0)) : (g_iHypnoMessage2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Message", g_iHypnoMessage[iIndex]));
 			main ? (g_iHypnoMessage[iIndex] = iClamp(g_iHypnoMessage[iIndex], 0, 3)) : (g_iHypnoMessage2[iIndex] = iClamp(g_iHypnoMessage2[iIndex], 0, 3));
 			main ? (g_iHypnoChance[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Chance", 4)) : (g_iHypnoChance2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Chance", g_iHypnoChance[iIndex]));
@@ -186,7 +188,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHypnoRange)
 				{
-					vHypnoHit(iSurvivor, client, iHypnoRangeChance, iHypnoAbility(client), 2);
+					vHypnoHit(iSurvivor, client, iHypnoRangeChance, iHypnoAbility(client), 2, "3");
 				}
 			}
 		}
@@ -201,7 +203,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vHypnoHit(int client, int owner, int chance, int enabled, int message)
+stock void vHypnoHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bHypno[client])
 	{
@@ -210,15 +212,9 @@ stock void vHypnoHit(int client, int owner, int chance, int enabled, int message
 		DataPack dpStopHypno = new DataPack();
 		CreateDataTimer(flHypnoDuration, tTimerStopHypno, dpStopHypno, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopHypno.WriteCell(GetClientUserId(client)), dpStopHypno.WriteCell(GetClientUserId(owner)), dpStopHypno.WriteCell(message), dpStopHypno.WriteCell(enabled);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sHypnoEffect[4];
+		sHypnoEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sHypnoEffect[ST_TankType(owner)] : g_sHypnoEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sHypnoEffect, mode);
 		if (iHypnoMessage(owner) == message || iHypnoMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

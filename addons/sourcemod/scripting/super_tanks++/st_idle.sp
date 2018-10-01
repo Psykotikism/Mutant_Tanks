@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bIdle[MAXPLAYERS + 1], g_bIdled[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sIdleEffect[ST_MAXTYPES + 1][4], g_sIdleEffect2[ST_MAXTYPES + 1][4];
 float g_flIdleRange[ST_MAXTYPES + 1], g_flIdleRange2[ST_MAXTYPES + 1];
 Handle g_hSDKIdlePlayer, g_hSDKSpecPlayer;
 int g_iIdleAbility[ST_MAXTYPES + 1], g_iIdleAbility2[ST_MAXTYPES + 1], g_iIdleChance[ST_MAXTYPES + 1], g_iIdleChance2[ST_MAXTYPES + 1], g_iIdleHit[ST_MAXTYPES + 1], g_iIdleHit2[ST_MAXTYPES + 1], g_iIdleHitMode[ST_MAXTYPES + 1], g_iIdleHitMode2[ST_MAXTYPES + 1], g_iIdleMessage[ST_MAXTYPES + 1], g_iIdleMessage2[ST_MAXTYPES + 1], g_iIdleRangeChance[ST_MAXTYPES + 1], g_iIdleRangeChance2[ST_MAXTYPES + 1];
@@ -111,14 +112,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIdleHit(victim, attacker, iIdleChance(attacker), iIdleHit(attacker), 1);
+				vIdleHit(victim, attacker, iIdleChance(attacker), iIdleHit(attacker), 1, "1");
 			}
 		}
 		else if ((iIdleHitMode(victim) == 0 || iIdleHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vIdleHit(attacker, victim, iIdleChance(victim), iIdleHit(victim), 1);
+				vIdleHit(attacker, victim, iIdleChance(victim), iIdleHit(victim), 1, "2");
 			}
 		}
 	}
@@ -137,6 +138,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iIdleAbility[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Enabled", 0)) : (g_iIdleAbility2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Enabled", g_iIdleAbility[iIndex]));
 			main ? (g_iIdleAbility[iIndex] = iClamp(g_iIdleAbility[iIndex], 0, 1)) : (g_iIdleAbility2[iIndex] = iClamp(g_iIdleAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect[iIndex], sizeof(g_sIdleEffect[]), "123")) : (kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect2[iIndex], sizeof(g_sIdleEffect2[]), g_sIdleEffect[iIndex]));
 			main ? (g_iIdleMessage[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Message", 0)) : (g_iIdleMessage2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Message", g_iIdleMessage[iIndex]));
 			main ? (g_iIdleMessage[iIndex] = iClamp(g_iIdleMessage[iIndex], 0, 3)) : (g_iIdleMessage2[iIndex] = iClamp(g_iIdleMessage2[iIndex], 0, 3));
 			main ? (g_iIdleChance[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Chance", 4)) : (g_iIdleChance2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Chance", g_iIdleChance[iIndex]));
@@ -197,14 +199,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIdleRange)
 				{
-					vIdleHit(iSurvivor, client, iIdleRangeChance, iIdleAbility, 2);
+					vIdleHit(iSurvivor, client, iIdleRangeChance, iIdleAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vIdleHit(int client, int owner, int chance, int enabled, int message)
+stock void vIdleHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsHumanSurvivor(client) && !g_bIdle[client])
 	{
@@ -214,15 +216,9 @@ stock void vIdleHit(int client, int owner, int chance, int enabled, int message)
 			g_bIdle[client] = true;
 			g_bIdled[client] = true;
 			int iIdleMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iIdleMessage[ST_TankType(owner)] : g_iIdleMessage2[ST_TankType(owner)];
-			char sRGB[4][4];
-			ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-			int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-			iRed = iClamp(iRed, 0, 255);
-			int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-			iGreen = iClamp(iGreen, 0, 255);
-			int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-			iBlue = iClamp(iBlue, 0, 255);
-			vFade(client, 800, 300, iRed, iGreen, iBlue);
+			char sIdleEffect[4];
+			sIdleEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sIdleEffect[ST_TankType(owner)] : g_sIdleEffect2[ST_TankType(owner)];
+			vEffect(client, owner, sIdleEffect, mode);
 			if (iIdleMessage == message || iIdleMessage == 3)
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];

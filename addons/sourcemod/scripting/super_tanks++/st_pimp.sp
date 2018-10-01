@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bPimp[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sPimpEffect[ST_MAXTYPES + 1][4], g_sPimpEffect2[ST_MAXTYPES + 1][4];
 float g_flPimpRange[ST_MAXTYPES + 1], g_flPimpRange2[ST_MAXTYPES + 1];
 int g_iPimpAbility[ST_MAXTYPES + 1], g_iPimpAbility2[ST_MAXTYPES + 1], g_iPimpAmount[ST_MAXTYPES + 1], g_iPimpAmount2[ST_MAXTYPES + 1], g_iPimpChance[ST_MAXTYPES + 1], g_iPimpChance2[ST_MAXTYPES + 1], g_iPimpCount[MAXPLAYERS + 1], g_iPimpDamage[ST_MAXTYPES + 1], g_iPimpDamage2[ST_MAXTYPES + 1], g_iPimpHit[ST_MAXTYPES + 1], g_iPimpHit2[ST_MAXTYPES + 1], g_iPimpHitMode[ST_MAXTYPES + 1], g_iPimpHitMode2[ST_MAXTYPES + 1], g_iPimpMessage[ST_MAXTYPES + 1], g_iPimpMessage2[ST_MAXTYPES + 1], g_iPimpRangeChance[ST_MAXTYPES + 1], g_iPimpRangeChance2[ST_MAXTYPES + 1];
 
@@ -94,14 +95,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vPimpHit(victim, attacker, iPimpChance(attacker), iPimpHit(attacker), 1);
+				vPimpHit(victim, attacker, iPimpChance(attacker), iPimpHit(attacker), 1, "1");
 			}
 		}
 		else if ((iPimpHitMode(victim) == 0 || iPimpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vPimpHit(attacker, victim, iPimpChance(victim), iPimpHit(victim), 1);
+				vPimpHit(attacker, victim, iPimpChance(victim), iPimpHit(victim), 1, "2");
 			}
 		}
 	}
@@ -120,6 +121,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iPimpAbility[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", 0)) : (g_iPimpAbility2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", g_iPimpAbility[iIndex]));
 			main ? (g_iPimpAbility[iIndex] = iClamp(g_iPimpAbility[iIndex], 0, 1)) : (g_iPimpAbility2[iIndex] = iClamp(g_iPimpAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Pimp Ability/Ability Effect", g_sPimpEffect[iIndex], sizeof(g_sPimpEffect[]), "123")) : (kvSuperTanks.GetString("Pimp Ability/Ability Effect", g_sPimpEffect2[iIndex], sizeof(g_sPimpEffect2[]), g_sPimpEffect[iIndex]));
 			main ? (g_iPimpMessage[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Message", 0)) : (g_iPimpMessage2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Message", g_iPimpMessage[iIndex]));
 			main ? (g_iPimpMessage[iIndex] = iClamp(g_iPimpMessage[iIndex], 0, 3)) : (g_iPimpMessage2[iIndex] = iClamp(g_iPimpMessage2[iIndex], 0, 3));
 			main ? (g_iPimpAmount[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", 5)) : (g_iPimpAmount2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", g_iPimpAmount[iIndex]));
@@ -160,14 +162,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPimpRange)
 				{
-					vPimpHit(iSurvivor, client, iPimpRangeChance, iPimpAbility, 2);
+					vPimpHit(iSurvivor, client, iPimpRangeChance, iPimpAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vPimpHit(int client, int owner, int chance, int enabled, int message)
+stock void vPimpHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bPimp[client])
 	{
@@ -175,15 +177,9 @@ stock void vPimpHit(int client, int owner, int chance, int enabled, int message)
 		DataPack dpPimp = new DataPack();
 		CreateDataTimer(0.5, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpPimp.WriteCell(GetClientUserId(client)), dpPimp.WriteCell(GetClientUserId(owner)), dpPimp.WriteCell(message), dpPimp.WriteCell(enabled);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sPimpEffect[4];
+		sPimpEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sPimpEffect[ST_TankType(owner)] : g_sPimpEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sPimpEffect, mode);
 		if (iPimpMessage(owner) == message || iPimpMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

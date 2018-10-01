@@ -20,6 +20,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sElectricEffect[ST_MAXTYPES + 1][4], g_sElectricEffect2[ST_MAXTYPES + 1][4];
 float g_flElectricDuration[ST_MAXTYPES + 1], g_flElectricDuration2[ST_MAXTYPES + 1], g_flElectricInterval[ST_MAXTYPES + 1], g_flElectricInterval2[ST_MAXTYPES + 1], g_flElectricRange[ST_MAXTYPES + 1], g_flElectricRange2[ST_MAXTYPES + 1], g_flElectricSpeed[ST_MAXTYPES + 1], g_flElectricSpeed2[ST_MAXTYPES + 1];
 int g_iElectricAbility[ST_MAXTYPES + 1], g_iElectricAbility2[ST_MAXTYPES + 1], g_iElectricChance[ST_MAXTYPES + 1], g_iElectricChance2[ST_MAXTYPES + 1], g_iElectricDamage[ST_MAXTYPES + 1], g_iElectricDamage2[ST_MAXTYPES + 1], g_iElectricHit[ST_MAXTYPES + 1], g_iElectricHit2[ST_MAXTYPES + 1], g_iElectricHitMode[ST_MAXTYPES + 1], g_iElectricHitMode2[ST_MAXTYPES + 1], g_iElectricMessage[ST_MAXTYPES + 1], g_iElectricMessage2[ST_MAXTYPES + 1], g_iElectricRangeChance[ST_MAXTYPES + 1], g_iElectricRangeChance2[ST_MAXTYPES + 1];
 
@@ -100,14 +101,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vElectricHit(victim, attacker, iElectricChance(attacker), iElectricHit(attacker), 1);
+				vElectricHit(victim, attacker, iElectricChance(attacker), iElectricHit(attacker), 1, "1");
 			}
 		}
 		else if ((iElectricHitMode(victim) == 0 || iElectricHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vElectricHit(attacker, victim, iElectricChance(victim), iElectricHit(victim), 1);
+				vElectricHit(attacker, victim, iElectricChance(victim), iElectricHit(victim), 1, "2");
 			}
 		}
 	}
@@ -126,6 +127,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iElectricAbility[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Enabled", 0)) : (g_iElectricAbility2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Enabled", g_iElectricAbility[iIndex]));
 			main ? (g_iElectricAbility[iIndex] = iClamp(g_iElectricAbility[iIndex], 0, 1)) : (g_iElectricAbility2[iIndex] = iClamp(g_iElectricAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Electric Ability/Ability Effect", g_sElectricEffect[iIndex], sizeof(g_sElectricEffect[]), "123")) : (kvSuperTanks.GetString("Electric Ability/Ability Effect", g_sElectricEffect2[iIndex], sizeof(g_sElectricEffect2[]), g_sElectricEffect[iIndex]));
 			main ? (g_iElectricMessage[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Message", 0)) : (g_iElectricMessage2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Message", g_iElectricMessage[iIndex]));
 			main ? (g_iElectricMessage[iIndex] = iClamp(g_iElectricMessage[iIndex], 0, 3)) : (g_iElectricMessage2[iIndex] = iClamp(g_iElectricMessage2[iIndex], 0, 3));
 			main ? (g_iElectricChance[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Chance", 4)) : (g_iElectricChance2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Electric Chance", g_iElectricChance[iIndex]));
@@ -181,7 +183,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flElectricRange)
 				{
-					vElectricHit(iSurvivor, client, iElectricRangeChance, iElectricAbility(client), 2);
+					vElectricHit(iSurvivor, client, iElectricRangeChance, iElectricAbility(client), 2, "3");
 				}
 			}
 		}
@@ -196,7 +198,7 @@ public void ST_BossStage(int client)
 	}
 }
 
-stock void vElectricHit(int client, int owner, int chance, int enabled, int message)
+stock void vElectricHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bElectric[client])
 	{
@@ -208,15 +210,9 @@ stock void vElectricHit(int client, int owner, int chance, int enabled, int mess
 		CreateDataTimer(flElectricInterval, tTimerElectric, dpElectric, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpElectric.WriteCell(GetClientUserId(client)), dpElectric.WriteCell(GetClientUserId(owner)), dpElectric.WriteCell(message), dpElectric.WriteCell(enabled), dpElectric.WriteFloat(GetEngineTime());
 		vAttachParticle(client, PARTICLE_ELECTRICITY, 2.0, 30.0);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sElectricEffect[4];
+		sElectricEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sElectricEffect[ST_TankType(owner)] : g_sElectricEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sElectricEffect, mode);
 		if (iElectricMessage(owner) == message || iElectricMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

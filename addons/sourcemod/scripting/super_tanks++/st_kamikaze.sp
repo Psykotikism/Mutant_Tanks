@@ -20,6 +20,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+char g_sKamikazeEffect[ST_MAXTYPES + 1][4], g_sKamikazeEffect2[ST_MAXTYPES + 1][4];
 float g_flKamikazeRange[ST_MAXTYPES + 1], g_flKamikazeRange2[ST_MAXTYPES + 1];
 int g_iKamikazeAbility[ST_MAXTYPES + 1], g_iKamikazeAbility2[ST_MAXTYPES + 1], g_iKamikazeChance[ST_MAXTYPES + 1], g_iKamikazeChance2[ST_MAXTYPES + 1], g_iKamikazeHit[ST_MAXTYPES + 1], g_iKamikazeHit2[ST_MAXTYPES + 1], g_iKamikazeHitMode[ST_MAXTYPES + 1], g_iKamikazeHitMode2[ST_MAXTYPES + 1], g_iKamikazeMessage[ST_MAXTYPES + 1], g_iKamikazeMessage2[ST_MAXTYPES + 1], g_iKamikazeRangeChance[ST_MAXTYPES + 1], g_iKamikazeRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vKamikazeHit(victim, attacker, iKamikazeChance(attacker), iKamikazeHit(attacker), 1);
+				vKamikazeHit(victim, attacker, iKamikazeChance(attacker), iKamikazeHit(attacker), 1, "1");
 			}
 		}
 		else if ((iKamikazeHitMode(victim) == 0 || iKamikazeHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vKamikazeHit(attacker, victim, iKamikazeChance(victim), iKamikazeHit(victim), 1);
+				vKamikazeHit(attacker, victim, iKamikazeChance(victim), iKamikazeHit(victim), 1, "2");
 			}
 		}
 	}
@@ -119,6 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iKamikazeAbility[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Enabled", 0)) : (g_iKamikazeAbility2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Enabled", g_iKamikazeAbility[iIndex]));
 			main ? (g_iKamikazeAbility[iIndex] = iClamp(g_iKamikazeAbility[iIndex], 0, 1)) : (g_iKamikazeAbility2[iIndex] = iClamp(g_iKamikazeAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Kamikaze Ability/Ability Effect", g_sKamikazeEffect[iIndex], sizeof(g_sKamikazeEffect[]), "123")) : (kvSuperTanks.GetString("Kamikaze Ability/Ability Effect", g_sKamikazeEffect2[iIndex], sizeof(g_sKamikazeEffect2[]), g_sKamikazeEffect[iIndex]));
 			main ? (g_iKamikazeMessage[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Message", 0)) : (g_iKamikazeMessage2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Message", g_iKamikazeMessage[iIndex]));
 			main ? (g_iKamikazeMessage[iIndex] = iClamp(g_iKamikazeMessage[iIndex], 0, 3)) : (g_iKamikazeMessage2[iIndex] = iClamp(g_iKamikazeMessage2[iIndex], 0, 3));
 			main ? (g_iKamikazeChance[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Chance", 4)) : (g_iKamikazeChance2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Chance", g_iKamikazeChance[iIndex]));
@@ -175,14 +177,14 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flKamikazeRange)
 				{
-					vKamikazeHit(iSurvivor, client, iKamikazeRangeChance, iKamikazeAbility(client), 2);
+					vKamikazeHit(iSurvivor, client, iKamikazeRangeChance, iKamikazeAbility(client), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vKamikazeHit(int client, int owner, int chance, int enabled, int message)
+stock void vKamikazeHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	int iKamikazeMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iKamikazeMessage[ST_TankType(owner)] : g_iKamikazeMessage2[ST_TankType(owner)];
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
@@ -193,15 +195,9 @@ stock void vKamikazeHit(int client, int owner, int chance, int enabled, int mess
 		ForcePlayerSuicide(client);
 		vAttachParticle(owner, PARTICLE_BLOOD, 0.1, 0.0);
 		ForcePlayerSuicide(owner);
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sKamikazeEffect[4];
+		sKamikazeEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sKamikazeEffect[ST_TankType(owner)] : g_sKamikazeEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sKamikazeEffect, mode);
 		if (iKamikazeMessage == message || iKamikazeMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

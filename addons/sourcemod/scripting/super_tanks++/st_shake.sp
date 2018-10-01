@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bShake[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+char g_sShakeEffect[ST_MAXTYPES + 1][4], g_sShakeEffect2[ST_MAXTYPES + 1][4];
 float g_flShakeDuration[ST_MAXTYPES + 1], g_flShakeDuration2[ST_MAXTYPES + 1], g_flShakeRange[ST_MAXTYPES + 1], g_flShakeRange2[ST_MAXTYPES + 1];
 int g_iShakeAbility[ST_MAXTYPES + 1], g_iShakeAbility2[ST_MAXTYPES + 1], g_iShakeChance[ST_MAXTYPES + 1], g_iShakeChance2[ST_MAXTYPES + 1], g_iShakeHit[ST_MAXTYPES + 1], g_iShakeHit2[ST_MAXTYPES + 1], g_iShakeHitMode[ST_MAXTYPES + 1], g_iShakeHitMode2[ST_MAXTYPES + 1], g_iShakeMessage[ST_MAXTYPES + 1], g_iShakeMessage2[ST_MAXTYPES + 1], g_iShakeRangeChance[ST_MAXTYPES + 1], g_iShakeRangeChance2[ST_MAXTYPES + 1];
 
@@ -93,14 +94,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vShakeHit(victim, attacker, iShakeChance(attacker), iShakeHit(attacker), 1);
+				vShakeHit(victim, attacker, iShakeChance(attacker), iShakeHit(attacker), 1, "1");
 			}
 		}
 		else if ((iShakeHitMode(victim) == 0 || iShakeHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vShakeHit(attacker, victim, iShakeChance(victim), iShakeHit(victim), 1);
+				vShakeHit(attacker, victim, iShakeChance(victim), iShakeHit(victim), 1, "2");
 			}
 		}
 	}
@@ -119,6 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iShakeAbility[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", 0)) : (g_iShakeAbility2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", g_iShakeAbility[iIndex]));
 			main ? (g_iShakeAbility[iIndex] = iClamp(g_iShakeAbility[iIndex], 0, 1)) : (g_iShakeAbility2[iIndex] = iClamp(g_iShakeAbility2[iIndex], 0, 1));
+			main ? (kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect[iIndex], sizeof(g_sShakeEffect[]), "123")) : (kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect2[iIndex], sizeof(g_sShakeEffect2[]), g_sShakeEffect[iIndex]));
 			main ? (g_iShakeMessage[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Message", 0)) : (g_iShakeMessage2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Message", g_iShakeMessage[iIndex]));
 			main ? (g_iShakeMessage[iIndex] = iClamp(g_iShakeMessage[iIndex], 0, 3)) : (g_iShakeMessage2[iIndex] = iClamp(g_iShakeMessage2[iIndex], 0, 3));
 			main ? (g_iShakeChance[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Chance", 4)) : (g_iShakeChance2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Chance", g_iShakeChance[iIndex]));
@@ -157,7 +159,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flShakeRange)
 				{
-					vShakeHit(iSurvivor, client, iShakeRangeChance, iShakeAbility, 2);
+					vShakeHit(iSurvivor, client, iShakeRangeChance, iShakeAbility, 2, "3");
 				}
 			}
 		}
@@ -184,7 +186,7 @@ stock void vReset2(int client, int owner, int message)
 	}
 }
 
-stock void vShakeHit(int client, int owner, int chance, int enabled, int message)
+stock void vShakeHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bShake[client])
 	{
@@ -192,15 +194,9 @@ stock void vShakeHit(int client, int owner, int chance, int enabled, int message
 		DataPack dpShake = new DataPack();
 		CreateDataTimer(1.0, tTimerShake, dpShake, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpShake.WriteCell(GetClientUserId(client)), dpShake.WriteCell(GetClientUserId(owner)), dpShake.WriteCell(message), dpShake.WriteCell(enabled), dpShake.WriteFloat(GetEngineTime());
-		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		char sShakeEffect[4];
+		sShakeEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sShakeEffect[ST_TankType(owner)] : g_sShakeEffect2[ST_TankType(owner)];
+		vEffect(client, owner, sShakeEffect, mode);
 		if (iShakeMessage(owner) == message || iShakeMessage(owner) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
