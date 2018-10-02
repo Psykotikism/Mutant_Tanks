@@ -54,7 +54,7 @@ forward void ST_Configs(const char[] savepath, bool main);
 forward void ST_Event(Event event, const char[] name);
 
 /* Called when the core plugin is unloaded/reloaded.
- * Use this forward to get rid of any physical modifications to
+ * Use this forward to get rid of any modifications to
  * Tanks or survivors.
  */
 forward void ST_PluginEnd();
@@ -83,15 +83,6 @@ forward void ST_RockBreak(int client, int entity);
  * @param entity		Entity index of the rock.
  */
 forward void ST_RockThrow(int client, int entity);
-
-/* Called when the Tank spawns.
- * Use this forward for any one-time abilities
- * or on-spawn presets.
- *
- * @param client		Client index of the Tank.
- */
-#pragma deprecated Use ST_Preset() instead
-forward void ST_Spawn(int client);
 
 // Natives
 /* Returns the maximum value of the "Type Range" setting.
