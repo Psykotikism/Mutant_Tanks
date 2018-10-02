@@ -139,6 +139,18 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			vRemoveShield(iPlayer);
+		}
+	}
+	vReset();
+}
+
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -179,17 +191,17 @@ public void ST_RockThrow(int client, int entity)
 
 stock void vRemoveShield(int client)
 {
-	int iProp = -1;
-	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+	int iShield = -1;
+	while ((iShield = FindEntityByClassname(iShield, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 	{
 		char sModel[128];
-		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+		GetEntPropString(iShield, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 		if (StrEqual(sModel, MODEL_SHIELD, false))
 		{
-			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+			int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
 			if (iOwner == client)
 			{
-				RemoveEntity(iProp);
+				RemoveEntity(iShield);
 			}
 		}
 	}
@@ -250,20 +262,7 @@ stock void vShield(int client, bool shield)
 	}
 	else
 	{
-		int iShield = -1;
-		while ((iShield = FindEntityByClassname(iShield, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-		{
-			char sModel[128];
-			GetEntPropString(iShield, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-			if (StrEqual(sModel, MODEL_SHIELD, false))
-			{
-				int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
-				if (iOwner == client)
-				{
-					RemoveEntity(iShield);
-				}
-			}
-		}
+		vRemoveShield(client);
 		float flShieldDelay = !g_bTankConfig[ST_TankType(client)] ? g_flShieldDelay[ST_TankType(client)] : g_flShieldDelay2[ST_TankType(client)];
 		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		g_bShield2[client] = false;
@@ -289,7 +288,7 @@ stock int iShieldMessage(int client)
 public Action tTimerShield(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || g_bShield2[iTank] || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || g_bShield2[iTank] || (!g_bShield[iTank] && !g_bShield2[iTank]))
 	{
 		return Plugin_Stop;
 	}
@@ -312,7 +311,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (!g_bShield[iTank] && !g_bShield2[iTank]))
 	{
 		return Plugin_Stop;
 	}

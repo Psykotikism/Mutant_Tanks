@@ -157,6 +157,11 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	vReset();
+}
+
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_afk"))
@@ -260,7 +265,7 @@ public Action tTimerIdleFix(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell()), iBot = GetClientOfUserId(pack.ReadCell());
-	if (!bIsValidClient(iSurvivor) || !IsPlayerAlive(iSurvivor) || !bIsValidClient(iBot) || !IsPlayerAlive(iSurvivor))
+	if (!bIsValidClient(iSurvivor) || !IsPlayerAlive(iSurvivor) || !bIsValidClient(iBot) || !IsPlayerAlive(iSurvivor) || !g_bIdled[iSurvivor])
 	{
 		return Plugin_Stop;
 	}

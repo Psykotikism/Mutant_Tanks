@@ -145,6 +145,18 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			vRemoveBlind(iPlayer);
+		}
+	}
+	vReset();
+}
+
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -304,7 +316,7 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBlind[iSurvivor])
 	{
 		g_bBlind[iSurvivor] = false;
 		return Plugin_Stop;
@@ -324,7 +336,7 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor) || !g_bBlind[iSurvivor])
 	{
 		g_bBlind[iSurvivor] = false;
 		return Plugin_Stop;

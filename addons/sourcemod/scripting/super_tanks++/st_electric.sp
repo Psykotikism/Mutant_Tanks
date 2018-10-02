@@ -154,16 +154,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_PluginEnd()
 {
-	if (StrEqual(name, "player_death"))
-	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
-		{
-			vRemoveElectric();
-		}
-	}
+	vReset();
 }
 
 public void ST_Ability(int client)
@@ -190,14 +183,6 @@ public void ST_Ability(int client)
 	}
 }
 
-public void ST_BossStage(int client)
-{
-	if (iElectricAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
-	{
-		vRemoveElectric();
-	}
-}
-
 stock void vElectricHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bElectric[client])
@@ -218,17 +203,6 @@ stock void vElectricHit(int client, int owner, int chance, int enabled, int mess
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Electric", sTankName, client);
-		}
-	}
-}
-
-stock void vRemoveElectric()
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor])
-		{
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
 	}
 }
@@ -289,7 +263,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell()), iElectricChat = pack.ReadCell();
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bElectric[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, iElectricChat);
 		return Plugin_Stop;

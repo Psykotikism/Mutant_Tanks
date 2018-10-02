@@ -91,6 +91,17 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (g_bCloned[iPlayer])
+		{
+			IsFakeClient(iPlayer) ? KickClient(iPlayer) : ForcePlayerSuicide(iPlayer);
+		}
+	}
+}
+
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))

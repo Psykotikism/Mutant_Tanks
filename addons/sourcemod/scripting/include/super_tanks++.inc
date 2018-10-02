@@ -53,6 +53,12 @@ forward void ST_Configs(const char[] savepath, bool main);
  */
 forward void ST_Event(Event event, const char[] name);
 
+/* Called when the core plugin is unloaded/reloaded.
+ * Use this forward to get rid of any physical modifications to
+ * Tanks or survivors.
+ */
+forward void ST_PluginEnd();
+
 /* Called when the Tank spawns.
  * Use this forward for any on-spawn presets.
  * If you plan on using this to activate an ability,

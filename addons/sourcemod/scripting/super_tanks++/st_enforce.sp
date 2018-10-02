@@ -156,6 +156,12 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	vRemoveEnforce();
+	vReset();
+}
+
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -294,9 +300,10 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor) || !g_bEnforce[iSurvivor])
 	{
 		g_bEnforce[iSurvivor] = false;
+		g_iEnforceSlot[iSurvivor] = -1;
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell()), iEnforceChat = pack.ReadCell();

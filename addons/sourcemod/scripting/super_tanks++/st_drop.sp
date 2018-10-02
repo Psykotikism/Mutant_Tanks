@@ -319,6 +319,11 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	vReset();
+}
+
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -473,7 +478,7 @@ stock int iDropMode(int client)
 public Action tTimerDrop(Handle timer, any userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bDrop[iTank])
 	{
 		g_bDrop[iTank] = false;
 		return Plugin_Stop;
@@ -520,48 +525,24 @@ public Action tTimerDrop(Handle timer, any userid)
 			{
 				switch (iPosition)
 				{
-					case 1:
-					{
-						vSetVector(flPos, -23.0, -30.0, -5.0);
-						vSetVector(flAngles, 0.0, 60.0, 180.0);
-					}
-					case 2:
-					{
-						vSetVector(flPos, -9.0, -32.0, -1.0);
-						vSetVector(flAngles, 0.0, 60.0, 180.0);
-					}
+					case 1: vSetVector(flPos, -23.0, -30.0, -5.0), vSetVector(flAngles, 0.0, 60.0, 180.0);
+					case 2: vSetVector(flPos, -9.0, -32.0, -1.0), vSetVector(flAngles, 0.0, 60.0, 180.0);
 				}
 			}
 			else if (iWeapon >= 1)
 			{
 				switch (iPosition)
 				{
-					case 1:
-					{
-						vSetVector(flPos, 1.0, -5.0, 3.0);
-						vSetVector(flAngles, 0.0, -90.0, 90.0);
-					}
-					case 2:
-					{
-						vSetVector(flPos, 4.0, -5.0, -3.0);
-						vSetVector(flAngles, 0.0, -90.0, 90.0);
-					}
+					case 1: vSetVector(flPos, 1.0, -5.0, 3.0), vSetVector(flAngles, 0.0, -90.0, 90.0);
+					case 2: vSetVector(flPos, 4.0, -5.0, -3.0), vSetVector(flAngles, 0.0, -90.0, 90.0);
 				}
 			}
 			else
 			{
 				switch (iPosition)
 				{
-					case 1:
-					{
-						vSetVector(flPos, -4.0, 0.0, 3.0);
-						vSetVector(flAngles, 0.0, -11.0, 100.0);
-					}
-					case 2:
-					{
-						vSetVector(flPos, 4.0, 0.0, -3.0);
-						vSetVector(flAngles, 0.0, -11.0, 100.0);
-					}
+					case 1: vSetVector(flPos, -4.0, 0.0, 3.0), vSetVector(flAngles, 0.0, -11.0, 100.0);
+					case 2: vSetVector(flPos, 4.0, 0.0, -3.0), vSetVector(flAngles, 0.0, -11.0, 100.0);
 				}
 			}
 			flScale = 2.5;
@@ -580,16 +561,8 @@ public Action tTimerDrop(Handle timer, any userid)
 		{
 			switch (iPosition)
 			{
-				case 1:
-				{
-					vSetVector(flPos, 1.0, -5.0, 3.0);
-					vSetVector(flAngles, 0.0, -90.0, 90.0);
-				}
-				case 2:
-				{
-					vSetVector(flPos, 4.0, -5.0, -3.0);
-					vSetVector(flAngles, 0.0, -90.0, 90.0);
-				}
+				case 1: vSetVector(flPos, 1.0, -5.0, 3.0), vSetVector(flAngles, 0.0, -90.0, 90.0);
+				case 2: vSetVector(flPos, 4.0, -5.0, -3.0), vSetVector(flAngles, 0.0, -90.0, 90.0);
 			}
 		}
 		SetEntProp(iDrop, Prop_Send, "m_CollisionGroup", 2);

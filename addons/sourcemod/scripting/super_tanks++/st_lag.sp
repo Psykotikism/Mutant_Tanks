@@ -141,16 +141,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_PluginEnd()
 {
-	if (StrEqual(name, "player_death"))
-	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
-		{
-			vRemoveLag();
-		}
-	}
+	vReset();
 }
 
 public void ST_Ability(int client)
@@ -177,14 +170,6 @@ public void ST_Ability(int client)
 	}
 }
 
-public void ST_BossStage(int client)
-{
-	if (iLagAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
-	{
-		vRemoveLag();
-	}
-}
-
 stock void vLagHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bLag[client])
@@ -207,17 +192,6 @@ stock void vLagHit(int client, int owner, int chance, int enabled, int message, 
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(owner, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Lag", sTankName, client);
-		}
-	}
-}
-
-stock void vRemoveLag()
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor) && g_bLag[iSurvivor])
-		{
-			g_bLag[iSurvivor] = false;
 		}
 	}
 }
@@ -276,8 +250,9 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor) || !g_bLag[iSurvivor])
 	{
+		g_bLag[iSurvivor] = false;
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell()), iLagChat = pack.ReadCell();
@@ -303,7 +278,7 @@ public Action tTimerLagPosition(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor) || !g_bLag[iSurvivor])
 	{
 		return Plugin_Stop;
 	}
