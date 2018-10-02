@@ -25,12 +25,10 @@ Changes:
 12. Moved various settings under new sections and reorganized/restructured the config file.
 13. Merged the Cancer ability with the Health ability.
 14. Added 2 new abilities: Lag and Recoil
-15. Re-added the ST_Spawn() forward and marked it as deprecated.
-16. Added the ST_Preset() forward to replace ST_Spawn().
-17. Added the ST_PluginEnd() forward which is called when the core plugin is unloaded/reloaded.
-18. Added several checks for better handling of timers.
-19. Added several new settings.
-20. Renamed several settings.
+15. Added the ST_PluginEnd() and ST_Preset() forwards.
+16. Added several checks for better handling of timers.
+17. Added several new settings.
+18. Renamed several settings.
 
 Files:
 
