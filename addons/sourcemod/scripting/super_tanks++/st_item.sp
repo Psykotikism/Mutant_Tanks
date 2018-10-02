@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Item Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank gives survivors items upon death.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -21,8 +21,7 @@ int g_iItemAbility[ST_MAXTYPES + 1], g_iItemAbility2[ST_MAXTYPES + 1], g_iItemCh
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Item Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -37,7 +36,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -45,7 +44,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -63,19 +62,19 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
-		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		Format(sName, sizeof(sName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iItemAbility[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Enabled", 0)) : (g_iItemAbility2[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Enabled", g_iItemAbility[iIndex]));
-			main ? (g_iItemAbility[iIndex] = iSetCellLimit(g_iItemAbility[iIndex], 0, 1)) : (g_iItemAbility2[iIndex] = iSetCellLimit(g_iItemAbility2[iIndex], 0, 1));
+			main ? (g_iItemAbility[iIndex] = iClamp(g_iItemAbility[iIndex], 0, 1)) : (g_iItemAbility2[iIndex] = iClamp(g_iItemAbility2[iIndex], 0, 1));
 			main ? (g_iItemMessage[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Message", 0)) : (g_iItemMessage2[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Message", g_iItemMessage[iIndex]));
-			main ? (g_iItemMessage[iIndex] = iSetCellLimit(g_iItemMessage[iIndex], 0, 1)) : (g_iItemMessage2[iIndex] = iSetCellLimit(g_iItemMessage2[iIndex], 0, 1));
+			main ? (g_iItemMessage[iIndex] = iClamp(g_iItemMessage[iIndex], 0, 1)) : (g_iItemMessage2[iIndex] = iClamp(g_iItemMessage2[iIndex], 0, 1));
 			main ? (g_iItemChance[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Chance", 4)) : (g_iItemChance2[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Chance", g_iItemChance[iIndex]));
-			main ? (g_iItemChance[iIndex] = iSetCellLimit(g_iItemChance[iIndex], 1, 9999999999)) : (g_iItemChance2[iIndex] = iSetCellLimit(g_iItemChance2[iIndex], 1, 9999999999));
+			main ? (g_iItemChance[iIndex] = iClamp(g_iItemChance[iIndex], 1, 9999999999)) : (g_iItemChance2[iIndex] = iClamp(g_iItemChance2[iIndex], 1, 9999999999));
 			main ? (kvSuperTanks.GetString("Item Ability/Item Loadout", g_sItemLoadout[iIndex], sizeof(g_sItemLoadout[]), "rifle,pistol,first_aid_kit,pain_pills")) : (kvSuperTanks.GetString("Item Ability/Item Loadout", g_sItemLoadout2[iIndex], sizeof(g_sItemLoadout2[]), g_sItemLoadout[iIndex]));
 			main ? (g_iItemMode[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Mode", 0)) : (g_iItemMode2[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Mode", g_iItemMode[iIndex]));
-			main ? (g_iItemMode[iIndex] = iSetCellLimit(g_iItemMode[iIndex], 0, 1)) : (g_iItemMode2[iIndex] = iSetCellLimit(g_iItemMode2[iIndex], 0, 1));
+			main ? (g_iItemMode[iIndex] = iClamp(g_iItemMode[iIndex], 0, 1)) : (g_iItemMode2[iIndex] = iClamp(g_iItemMode2[iIndex], 0, 1));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -84,7 +83,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "player_death") == 0)
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iItemAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemAbility[ST_TankType(iTank)] : g_iItemAbility2[ST_TankType(iTank)],
@@ -118,7 +117,7 @@ public void ST_Event(Event event, const char[] name)
 						{
 							for (int iItem = 0; iItem < sizeof(sItems); iItem++)
 							{
-								if (StrContains(sItemLoadout, sItems[iItem]) != -1 && sItems[iItem][0] != '\0')
+								if (StrContains(sItemLoadout, sItems[iItem]) != -1 && !StrEqual(sItems[iItem], ""))
 								{
 									vCheatCommand(iSurvivor, "give", sItems[iItem]);
 								}

@@ -1,5 +1,42 @@
 # Changelog
 
+## Version 8.42 (October 2, 2018)
+
+Bug fixes:
+
+1. Marked the ST_TankName and ST_TankWave natives as optional to avoid potential issues.
+2. Fixed the Flash ability errors. (Thanks Mi.Cura for reporting!)
+3. Fixed the Rocket ability creating multiple timers for survivors who are getting sent into space.
+4. Fixed several abilities not resetting when a Super Tank dies.
+
+Changes:
+
+1. Renamed/removed some stocks.
+2. The plugin and its modules now requires SM 1.10.0.6317 or higher.
+3. The Tank Notes now display a different message when the phrase for a Super Tank is not found.
+4. Changed the directory of the configs from "cfg/sourcemod" to "addons/sourcemod/data".
+5. Added a new native: ST_TankColors - Retrieves a Super Tank's colors.
+6. The Gravity ability's "Gravity Value" now accepts higher values.
+7. The Health ability no longer allows a Super Tank to set survivors to black and white.
+8. The Jump ability now provides more features.
+9. The Pyro ability now provides more features.
+10. The Restart ability now removes all weapons from survivors before giving them new loadouts.
+11. Lowered the amount of boss stages from 5 to 4. Any boss that spawns automatically starts at stage 1.
+12. Moved various settings under new sections and reorganized/restructured the config file.
+13. Merged the Cancer ability with the Health ability.
+14. Added 2 new abilities: Lag and Recoil
+15. Added the ST_PluginEnd() and ST_Preset() forwards.
+16. Added several checks for better handling of timers.
+17. Added several new settings.
+18. Renamed several settings.
+
+Files:
+
+1. Updated config file with all the new settings, presets, and organization/structure.
+2. Updated gamedata file to remove unused signatures.
+3. Updated include file to use new natives introduced in SM 1.9 and SM 1.10, and to add new forwards and natives.
+4. Updated translation file with new phrases and reformatted the phrase name of the Tank Note phrases.
+
 ## Version 8.41 (September 18, 2018)
 
 Bug fixes:

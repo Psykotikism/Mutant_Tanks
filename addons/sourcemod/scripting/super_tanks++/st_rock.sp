@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Rock Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank creates rock showers.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -22,8 +22,7 @@ int g_iRockAbility[ST_MAXTYPES + 1], g_iRockAbility2[ST_MAXTYPES + 1], g_iRockCh
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Rock Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -38,7 +37,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -46,7 +45,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -79,25 +78,30 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
-		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		Format(sName, sizeof(sName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iRockAbility[iIndex] = kvSuperTanks.GetNum("Rock Ability/Ability Enabled", 0)) : (g_iRockAbility2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Ability Enabled", g_iRockAbility[iIndex]));
-			main ? (g_iRockAbility[iIndex] = iSetCellLimit(g_iRockAbility[iIndex], 0, 1)) : (g_iRockAbility2[iIndex] = iSetCellLimit(g_iRockAbility2[iIndex], 0, 1));
+			main ? (g_iRockAbility[iIndex] = iClamp(g_iRockAbility[iIndex], 0, 1)) : (g_iRockAbility2[iIndex] = iClamp(g_iRockAbility2[iIndex], 0, 1));
 			main ? (g_iRockMessage[iIndex] = kvSuperTanks.GetNum("Rock Ability/Ability Message", 0)) : (g_iRockMessage2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Ability Message", g_iRockMessage[iIndex]));
-			main ? (g_iRockMessage[iIndex] = iSetCellLimit(g_iRockMessage[iIndex], 0, 1)) : (g_iRockMessage2[iIndex] = iSetCellLimit(g_iRockMessage2[iIndex], 0, 1));
+			main ? (g_iRockMessage[iIndex] = iClamp(g_iRockMessage[iIndex], 0, 1)) : (g_iRockMessage2[iIndex] = iClamp(g_iRockMessage2[iIndex], 0, 1));
 			main ? (g_iRockChance[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Chance", 4)) : (g_iRockChance2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Chance", g_iRockChance[iIndex]));
-			main ? (g_iRockChance[iIndex] = iSetCellLimit(g_iRockChance[iIndex], 1, 9999999999)) : (g_iRockChance2[iIndex] = iSetCellLimit(g_iRockChance2[iIndex], 1, 9999999999));
+			main ? (g_iRockChance[iIndex] = iClamp(g_iRockChance[iIndex], 1, 9999999999)) : (g_iRockChance2[iIndex] = iClamp(g_iRockChance2[iIndex], 1, 9999999999));
 			main ? (g_iRockDamage[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Damage", 5)) : (g_iRockDamage2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Damage", g_iRockDamage[iIndex]));
-			main ? (g_iRockDamage[iIndex] = iSetCellLimit(g_iRockDamage[iIndex], 1, 9999999999)) : (g_iRockDamage2[iIndex] = iSetCellLimit(g_iRockDamage2[iIndex], 1, 9999999999));
+			main ? (g_iRockDamage[iIndex] = iClamp(g_iRockDamage[iIndex], 1, 9999999999)) : (g_iRockDamage2[iIndex] = iClamp(g_iRockDamage2[iIndex], 1, 9999999999));
 			main ? (g_flRockDuration[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Duration", 5.0)) : (g_flRockDuration2[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Duration", g_flRockDuration[iIndex]));
-			main ? (g_flRockDuration[iIndex] = flSetFloatLimit(g_flRockDuration[iIndex], 0.1, 9999999999.0)) : (g_flRockDuration2[iIndex] = flSetFloatLimit(g_flRockDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flRockDuration[iIndex] = flClamp(g_flRockDuration[iIndex], 0.1, 9999999999.0)) : (g_flRockDuration2[iIndex] = flClamp(g_flRockDuration2[iIndex], 0.1, 9999999999.0));
 			main ? (kvSuperTanks.GetString("Rock Ability/Rock Radius", g_sRockRadius[iIndex], sizeof(g_sRockRadius[]), "-1.25,1.25")) : (kvSuperTanks.GetString("Rock Ability/Rock Radius", g_sRockRadius2[iIndex], sizeof(g_sRockRadius2[]), g_sRockRadius[iIndex]));
 			kvSuperTanks.Rewind();
 		}
 	}
 	delete kvSuperTanks;
+}
+
+public void ST_PluginEnd()
+{
+	vReset();
 }
 
 public void ST_Ability(int client)
@@ -145,7 +149,7 @@ stock void vReset()
 stock void vReset2(int client, int entity)
 {
 	g_bRock[client] = false;
-	AcceptEntityInput(entity, "Kill");
+	RemoveEntity(entity);
 	if (iRockMessage(client) == 1)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
@@ -173,7 +177,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRock[iTank])
 	{
 		vReset2(iTank, iRock);
 		return Plugin_Stop;
@@ -192,10 +196,10 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	TrimString(sRockRadius);
 	ExplodeString(sRockRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
 	TrimString(sRadius[0]);
-	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -5.0;
+	float flMin = (!StrEqual(sRadius[0], "")) ? StringToFloat(sRadius[0]) : -5.0;
 	TrimString(sRadius[1]);
-	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 5.0;
-	flMin = flSetFloatLimit(flMin, -5.0, 0.0), flMax = flSetFloatLimit(flMax, 0.0, 5.0);
+	float flMax = (!StrEqual(sRadius[1], "")) ? StringToFloat(sRadius[1]) : 5.0;
+	flMin = flClamp(flMin, -5.0, 0.0), flMax = flClamp(flMax, 0.0, 5.0);
 	float flAngles[3], flHitPos[3];
 	flAngles[0] = GetRandomFloat(-1.0, 1.0), flAngles[1] = GetRandomFloat(-1.0, 1.0), flAngles[2] = 2.0;
 	GetVectorAngles(flAngles, flAngles);

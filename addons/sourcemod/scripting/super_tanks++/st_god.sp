@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] God Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank gains temporary immunity to all damage.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -21,8 +21,7 @@ int g_iGodAbility[ST_MAXTYPES + 1], g_iGodAbility2[ST_MAXTYPES + 1], g_iGodChanc
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] God Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -37,7 +36,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -45,7 +44,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -78,27 +77,32 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
-		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		Format(sName, sizeof(sName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iGodAbility[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Enabled", 0)) : (g_iGodAbility2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Enabled", g_iGodAbility[iIndex]));
-			main ? (g_iGodAbility[iIndex] = iSetCellLimit(g_iGodAbility[iIndex], 0, 1)) : (g_iGodAbility2[iIndex] = iSetCellLimit(g_iGodAbility2[iIndex], 0, 1));
+			main ? (g_iGodAbility[iIndex] = iClamp(g_iGodAbility[iIndex], 0, 1)) : (g_iGodAbility2[iIndex] = iClamp(g_iGodAbility2[iIndex], 0, 1));
 			main ? (g_iGodMessage[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", 0)) : (g_iGodMessage2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", g_iGodMessage[iIndex]));
-			main ? (g_iGodMessage[iIndex] = iSetCellLimit(g_iGodMessage[iIndex], 0, 1)) : (g_iGodMessage2[iIndex] = iSetCellLimit(g_iGodMessage2[iIndex], 0, 1));
+			main ? (g_iGodMessage[iIndex] = iClamp(g_iGodMessage[iIndex], 0, 1)) : (g_iGodMessage2[iIndex] = iClamp(g_iGodMessage2[iIndex], 0, 1));
 			main ? (g_iGodChance[iIndex] = kvSuperTanks.GetNum("God Ability/God Chance", 4)) : (g_iGodChance2[iIndex] = kvSuperTanks.GetNum("God Ability/God Chance", g_iGodChance[iIndex]));
-			main ? (g_iGodChance[iIndex] = iSetCellLimit(g_iGodChance[iIndex], 1, 9999999999)) : (g_iGodChance2[iIndex] = iSetCellLimit(g_iGodChance2[iIndex], 1, 9999999999));
+			main ? (g_iGodChance[iIndex] = iClamp(g_iGodChance[iIndex], 1, 9999999999)) : (g_iGodChance2[iIndex] = iClamp(g_iGodChance2[iIndex], 1, 9999999999));
 			main ? (g_flGodDuration[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", 5.0)) : (g_flGodDuration2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", g_flGodDuration[iIndex]));
-			main ? (g_flGodDuration[iIndex] = flSetFloatLimit(g_flGodDuration[iIndex], 0.1, 9999999999.0)) : (g_flGodDuration2[iIndex] = flSetFloatLimit(g_flGodDuration2[iIndex], 0.1, 9999999999.0));
+			main ? (g_flGodDuration[iIndex] = flClamp(g_flGodDuration[iIndex], 0.1, 9999999999.0)) : (g_flGodDuration2[iIndex] = flClamp(g_flGodDuration2[iIndex], 0.1, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	vReset();
+}
+
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "player_incapacitated") == 0)
+	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (iGodAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bGod[iTank])
@@ -141,10 +145,7 @@ stock void vReset()
 stock void vReset2(int client)
 {
 	g_bGod[client] = false;
-	if (IsPlayerAlive(client))
-	{
-		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-	}
+	SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 	if (iGodMessage(client) == 1)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
@@ -168,10 +169,10 @@ public Action tTimerStopGod(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iTank);
+		g_bGod[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (iGodAbility(iTank) == 0)
+	if (iGodAbility(iTank) == 0 || !g_bGod[iTank])
 	{
 		vReset2(iTank);
 		return Plugin_Stop;

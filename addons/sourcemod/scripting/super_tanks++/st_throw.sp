@@ -6,11 +6,15 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
+#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
+#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
+
 public Plugin myinfo =
 {
 	name = "[ST++] Throw Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank throws cars, special infected, or itself.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -22,8 +26,7 @@ int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1], g_iThro
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Throw Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -38,7 +41,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -46,7 +49,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -72,14 +75,14 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
-		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		Format(sName, sizeof(sName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iThrowAbility[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", 0)) : (g_iThrowAbility2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", g_iThrowAbility[iIndex]));
-			main ? (g_iThrowAbility[iIndex] = iSetCellLimit(g_iThrowAbility[iIndex], 0, 3)) : (g_iThrowAbility2[iIndex] = iSetCellLimit(g_iThrowAbility2[iIndex], 0, 3));
+			main ? (g_iThrowAbility[iIndex] = iClamp(g_iThrowAbility[iIndex], 0, 3)) : (g_iThrowAbility2[iIndex] = iClamp(g_iThrowAbility2[iIndex], 0, 3));
 			main ? (g_iThrowMessage[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Message", 0)) : (g_iThrowMessage2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Message", g_iThrowMessage[iIndex]));
-			main ? (g_iThrowMessage[iIndex] = iSetCellLimit(g_iThrowMessage[iIndex], 0, 7)) : (g_iThrowMessage2[iIndex] = iSetCellLimit(g_iThrowMessage2[iIndex], 0, 7));
+			main ? (g_iThrowMessage[iIndex] = iClamp(g_iThrowMessage[iIndex], 0, 7)) : (g_iThrowMessage2[iIndex] = iClamp(g_iThrowMessage2[iIndex], 0, 7));
 			main ? (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions[iIndex], sizeof(g_sThrowCarOptions[]), "123")) : (kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions2[iIndex], sizeof(g_sThrowCarOptions2[]), g_sThrowCarOptions[iIndex]));
 			main ? (kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions[iIndex], sizeof(g_sThrowInfectedOptions[]), "1234567")) : (kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions2[iIndex], sizeof(g_sThrowInfectedOptions2[]), g_sThrowInfectedOptions[iIndex]));
 			kvSuperTanks.Rewind();
@@ -157,7 +160,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 			SetEntityRenderColor(iCar, iRed, iGreen, iBlue, 255);
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			AcceptEntityInput(iRock, "Kill");
+			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 			DispatchSpawn(iCar);
@@ -210,15 +213,15 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 				case '1': vSpawnInfected(iInfected, "smoker");
 				case '2': vSpawnInfected(iInfected, "boomer");
 				case '3': vSpawnInfected(iInfected, "hunter");
-				case '4': bIsL4D2Game() ? vSpawnInfected(iInfected, "spitter") : vSpawnInfected(iInfected, "boomer");
-				case '5': bIsL4D2Game() ? vSpawnInfected(iInfected, "jockey") : vSpawnInfected(iInfected, "hunter");
-				case '6': bIsL4D2Game() ? vSpawnInfected(iInfected, "charger") : vSpawnInfected(iInfected, "smoker");
+				case '4': bIsValidGame() ? vSpawnInfected(iInfected, "spitter") : vSpawnInfected(iInfected, "boomer");
+				case '5': bIsValidGame() ? vSpawnInfected(iInfected, "jockey") : vSpawnInfected(iInfected, "hunter");
+				case '6': bIsValidGame() ? vSpawnInfected(iInfected, "charger") : vSpawnInfected(iInfected, "smoker");
 				case '7': vSpawnInfected(iInfected, "tank");
 				default: vSpawnInfected(iInfected, "hunter");
 			}
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			AcceptEntityInput(iRock, "Kill");
+			RemoveEntity(iRock);
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 			TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
@@ -261,7 +264,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 	{
 		float flPos[3];
 		GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-		AcceptEntityInput(iRock, "Kill");
+		RemoveEntity(iRock);
 		NormalizeVector(flVelocity, flVelocity);
 		ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 		TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);

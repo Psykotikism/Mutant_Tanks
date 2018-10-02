@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Necro Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank resurrects dead special infected.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -21,8 +21,7 @@ int g_iNecroAbility[ST_MAXTYPES + 1], g_iNecroAbility2[ST_MAXTYPES + 1], g_iNecr
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Necro Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -37,7 +36,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -45,7 +44,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -63,18 +62,18 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
-		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		Format(sName, sizeof(sName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iNecroAbility[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Enabled", 0)) : (g_iNecroAbility2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Enabled", g_iNecroAbility[iIndex]));
-			main ? (g_iNecroAbility[iIndex] = iSetCellLimit(g_iNecroAbility[iIndex], 0, 1)) : (g_iNecroAbility2[iIndex] = iSetCellLimit(g_iNecroAbility2[iIndex], 0, 1));
+			main ? (g_iNecroAbility[iIndex] = iClamp(g_iNecroAbility[iIndex], 0, 1)) : (g_iNecroAbility2[iIndex] = iClamp(g_iNecroAbility2[iIndex], 0, 1));
 			main ? (g_iNecroMessage[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Message", 0)) : (g_iNecroMessage2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Message", g_iNecroMessage[iIndex]));
-			main ? (g_iNecroMessage[iIndex] = iSetCellLimit(g_iNecroMessage[iIndex], 0, 1)) : (g_iNecroMessage2[iIndex] = iSetCellLimit(g_iNecroMessage2[iIndex], 0, 1));
+			main ? (g_iNecroMessage[iIndex] = iClamp(g_iNecroMessage[iIndex], 0, 1)) : (g_iNecroMessage2[iIndex] = iClamp(g_iNecroMessage2[iIndex], 0, 1));
 			main ? (g_iNecroChance[iIndex] = kvSuperTanks.GetNum("Necro Ability/Necro Chance", 4)) : (g_iNecroChance2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Necro Chance", g_iNecroChance[iIndex]));
-			main ? (g_iNecroChance[iIndex] = iSetCellLimit(g_iNecroChance[iIndex], 1, 9999999999)) : (g_iNecroChance2[iIndex] = iSetCellLimit(g_iNecroChance2[iIndex], 1, 9999999999));
+			main ? (g_iNecroChance[iIndex] = iClamp(g_iNecroChance[iIndex], 1, 9999999999)) : (g_iNecroChance2[iIndex] = iClamp(g_iNecroChance2[iIndex], 1, 9999999999));
 			main ? (g_flNecroRange[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Range", 500.0)) : (g_flNecroRange2[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Range", g_flNecroRange[iIndex]));
-			main ? (g_flNecroRange[iIndex] = flSetFloatLimit(g_flNecroRange[iIndex], 1.0, 9999999999.0)) : (g_flNecroRange2[iIndex] = flSetFloatLimit(g_flNecroRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flNecroRange[iIndex] = flClamp(g_flNecroRange[iIndex], 1.0, 9999999999.0)) : (g_flNecroRange2[iIndex] = flClamp(g_flNecroRange2[iIndex], 1.0, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -83,7 +82,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "player_death") == 0)
+	if (StrEqual(name, "player_death"))
 	{
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
 		float flInfectedPos[3];
@@ -133,7 +132,7 @@ stock void vNecro(int client, float pos[3], const char[] type)
 			bExists[iNecro] = true;
 		}
 	}
-	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", type);
+	vCheatCommand(client, bIsValidGame() ? "z_spawn_old" : "z_spawn", type);
 	int iInfected;
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{

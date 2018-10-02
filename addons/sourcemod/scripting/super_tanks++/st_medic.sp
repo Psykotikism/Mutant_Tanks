@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Medic Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank heals special infected upon death.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -22,8 +22,7 @@ int g_iMedicAbility[ST_MAXTYPES + 1], g_iMedicAbility2[ST_MAXTYPES + 1], g_iMedi
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Medic Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -38,7 +37,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -46,7 +45,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -64,20 +63,20 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
-		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		Format(sName, sizeof(sName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (g_iMedicAbility[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", 0)) : (g_iMedicAbility2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", g_iMedicAbility[iIndex]));
-			main ? (g_iMedicAbility[iIndex] = iSetCellLimit(g_iMedicAbility[iIndex], 0, 1)) : (g_iMedicAbility2[iIndex] = iSetCellLimit(g_iMedicAbility2[iIndex], 0, 1));
+			main ? (g_iMedicAbility[iIndex] = iClamp(g_iMedicAbility[iIndex], 0, 1)) : (g_iMedicAbility2[iIndex] = iClamp(g_iMedicAbility2[iIndex], 0, 1));
 			main ? (g_iMedicMessage[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Message", 0)) : (g_iMedicMessage2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Message", g_iMedicMessage[iIndex]));
-			main ? (g_iMedicMessage[iIndex] = iSetCellLimit(g_iMedicMessage[iIndex], 0, 1)) : (g_iMedicMessage2[iIndex] = iSetCellLimit(g_iMedicMessage2[iIndex], 0, 1));
+			main ? (g_iMedicMessage[iIndex] = iClamp(g_iMedicMessage[iIndex], 0, 1)) : (g_iMedicMessage2[iIndex] = iClamp(g_iMedicMessage2[iIndex], 0, 1));
 			main ? (g_iMedicChance[iIndex] = kvSuperTanks.GetNum("Medic Ability/Medic Chance", 4)) : (g_iMedicChance2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Medic Chance", g_iMedicChance[iIndex]));
-			main ? (g_iMedicChance[iIndex] = iSetCellLimit(g_iMedicChance[iIndex], 1, 9999999999)) : (g_iMedicChance2[iIndex] = iSetCellLimit(g_iMedicChance2[iIndex], 1, 9999999999));
+			main ? (g_iMedicChance[iIndex] = iClamp(g_iMedicChance[iIndex], 1, 9999999999)) : (g_iMedicChance2[iIndex] = iClamp(g_iMedicChance2[iIndex], 1, 9999999999));
 			main ? (kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth[iIndex], sizeof(g_sMedicHealth[]), "25,25,25,25,25,25")) : (kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth2[iIndex], sizeof(g_sMedicHealth2[]), g_sMedicHealth[iIndex]));
 			main ? (kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth[iIndex], sizeof(g_sMedicMaxHealth[]), "250,50,250,100,325,600")) : (kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth2[iIndex], sizeof(g_sMedicMaxHealth2[]), g_sMedicMaxHealth[iIndex]));
 			main ? (g_flMedicRange[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", 500.0)) : (g_flMedicRange2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", g_flMedicRange[iIndex]));
-			main ? (g_flMedicRange[iIndex] = flSetFloatLimit(g_flMedicRange[iIndex], 1.0, 9999999999.0)) : (g_flMedicRange2[iIndex] = flSetFloatLimit(g_flMedicRange2[iIndex], 1.0, 9999999999.0));
+			main ? (g_flMedicRange[iIndex] = flClamp(g_flMedicRange[iIndex], 1.0, 9999999999.0)) : (g_flMedicRange2[iIndex] = flClamp(g_flMedicRange2[iIndex], 1.0, 9999999999.0));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -86,7 +85,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (strcmp(name, "player_death") == 0)
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (iMedicAbility(iTank) == 1 && GetRandomInt(1, iMedicChance(iTank)) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
@@ -127,30 +126,30 @@ stock void vMedic(int client)
 				TrimString(sMedicMaxHealth);
 				ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
 				int iHealth = GetClientHealth(iInfected),
-					iSmokerHealth = (sHealth[0][0] != '\0') ? StringToInt(sHealth[0]) : 25,
-					iSmokerMaxHealth = (sMaxHealth[0][0] != '\0') ? StringToInt(sMaxHealth[0]) : 250,
-					iBoomerHealth = (sHealth[1][0] != '\0') ? StringToInt(sHealth[1]) : 25,
-					iBoomerMaxHealth = (sMaxHealth[1][0] != '\0') ? StringToInt(sMaxHealth[1]) : 50,
-					iHunterHealth = (sHealth[2][0] != '\0') ? StringToInt(sHealth[2]) : 25,
-					iHunterMaxHealth = (sMaxHealth[2][0] != '\0') ? StringToInt(sMaxHealth[2]) : 250,
-					iSpitterHealth = (sHealth[3][0] != '\0') ? StringToInt(sHealth[3]) : 25,
-					iSpitterMaxHealth = (sMaxHealth[3][0] != '\0') ? StringToInt(sMaxHealth[3]) : 100,
-					iJockeyHealth = (sHealth[4][0] != '\0') ? StringToInt(sHealth[4]) : 25,
-					iJockeyMaxHealth = (sMaxHealth[4][0] != '\0') ? StringToInt(sMaxHealth[4]) : 325,
-					iChargerHealth = (sHealth[5][0] != '\0') ? StringToInt(sHealth[5]) : 25,
-					iChargerMaxHealth = (sMaxHealth[5][0] != '\0') ? StringToInt(sMaxHealth[5]) : 600;
-				iSmokerHealth = iSetCellLimit(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iSmokerMaxHealth = iSetCellLimit(iSmokerMaxHealth, 1, ST_MAXHEALTH);
-				iBoomerHealth = iSetCellLimit(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iBoomerMaxHealth = iSetCellLimit(iBoomerMaxHealth, 1, ST_MAXHEALTH);
-				iHunterHealth = iSetCellLimit(iHunterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iHunterMaxHealth = iSetCellLimit(iHunterMaxHealth, 1, ST_MAXHEALTH);
-				iSpitterHealth = iSetCellLimit(iSpitterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iSpitterMaxHealth = iSetCellLimit(iSpitterMaxHealth, 1, ST_MAXHEALTH);
-				iJockeyHealth = iSetCellLimit(iJockeyHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iJockeyMaxHealth = iSetCellLimit(iJockeyMaxHealth, 1, ST_MAXHEALTH);
-				iChargerHealth = iSetCellLimit(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				iChargerMaxHealth = iSetCellLimit(iChargerMaxHealth, 1, ST_MAXHEALTH);
+					iSmokerHealth = (!StrEqual(sHealth[0], "")) ? StringToInt(sHealth[0]) : 25,
+					iSmokerMaxHealth = (!StrEqual(sMaxHealth[0], "")) ? StringToInt(sMaxHealth[0]) : 250,
+					iBoomerHealth = (!StrEqual(sHealth[1], "")) ? StringToInt(sHealth[1]) : 25,
+					iBoomerMaxHealth = (!StrEqual(sMaxHealth[1], "")) ? StringToInt(sMaxHealth[1]) : 50,
+					iHunterHealth = (!StrEqual(sHealth[2], "")) ? StringToInt(sHealth[2]) : 25,
+					iHunterMaxHealth = (!StrEqual(sMaxHealth[2], "")) ? StringToInt(sMaxHealth[2]) : 250,
+					iSpitterHealth = (!StrEqual(sHealth[3], "")) ? StringToInt(sHealth[3]) : 25,
+					iSpitterMaxHealth = (!StrEqual(sMaxHealth[3], "")) ? StringToInt(sMaxHealth[3]) : 100,
+					iJockeyHealth = (!StrEqual(sHealth[4], "")) ? StringToInt(sHealth[4]) : 25,
+					iJockeyMaxHealth = (!StrEqual(sMaxHealth[4], "")) ? StringToInt(sMaxHealth[4]) : 325,
+					iChargerHealth = (!StrEqual(sHealth[5], "")) ? StringToInt(sHealth[5]) : 25,
+					iChargerMaxHealth = (!StrEqual(sMaxHealth[5], "")) ? StringToInt(sMaxHealth[5]) : 600;
+				iSmokerHealth = iClamp(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iSmokerMaxHealth = iClamp(iSmokerMaxHealth, 1, ST_MAXHEALTH);
+				iBoomerHealth = iClamp(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iBoomerMaxHealth = iClamp(iBoomerMaxHealth, 1, ST_MAXHEALTH);
+				iHunterHealth = iClamp(iHunterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iHunterMaxHealth = iClamp(iHunterMaxHealth, 1, ST_MAXHEALTH);
+				iSpitterHealth = iClamp(iSpitterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iSpitterMaxHealth = iClamp(iSpitterMaxHealth, 1, ST_MAXHEALTH);
+				iJockeyHealth = iClamp(iJockeyHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iJockeyMaxHealth = iClamp(iJockeyMaxHealth, 1, ST_MAXHEALTH);
+				iChargerHealth = iClamp(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+				iChargerMaxHealth = iClamp(iChargerMaxHealth, 1, ST_MAXHEALTH);
 				switch (GetEntProp(client, Prop_Send, "m_zombieClass"))
 				{
 					case 1: vHeal(iInfected, iHealth, iHealth + iSmokerHealth, iSmokerMaxHealth);

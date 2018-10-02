@@ -20,8 +20,8 @@ Super Tanks++ makes fighting Tanks great again!
 Super Tanks++ enhances the experience and fun that players get from Tank fights by 5,000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
-1. SourceMod 1.8+
-2. A dedicated server (Local/listen servers are NOT supported!)
+1. You must have at least SourceMod 1.10.0.6317 or higher.
+2. You must have a dedicated server. (Local/listen servers are NOT supported!)
 
 ### Installation
 1. Delete files from old versions of the plugin.
@@ -31,7 +31,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 5. Load up Super Tanks++ by restarting the server.
 6. Customize Super Tanks++ in:
 - cfg/sourcemod/super_tanks++.cfg
-- cfg/sourcemod/super_tanks++/super_tanks++.cfg.
+- addons/sourcemod/data/super_tanks++/super_tanks++.cfg.
 
 ### Uninstalling/Upgrading to Newer Versions
 1. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/plugins folder.
@@ -39,7 +39,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 3. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/scripting folder.
 4. Delete super_tanks++.inc from addons/sourcemod/scripting/include folder.
 5. Delete st_clone.inc from addons/sourcemod/scripting/include folder.
-6. Delete super_tanks++ folder from cfg/sourcemod folder.
+6. Delete super_tanks++ folder from addons/sourcemod/data folder.
 7. Delete super_tanks++.cfg from cfg/sourcemod folder.
 8. Delete super_tanks++.phrases.txt from addons/sourcemod/translations folder.
 9. Follow the Installation guide above. (Only for upgrading to newer versions.)
@@ -100,7 +100,7 @@ This is okay:
 ```
 "Super Tanks++"
 {
-	"Tank 25"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -116,7 +116,7 @@ This is not okay:
 ```
 "Super Tanks++"
 {
-	"Tank 25"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -132,7 +132,7 @@ This is okay:
 ```
 "Super Tanks++"
 {
-	"Tank 25"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -148,7 +148,7 @@ This is not okay:
 ```
 "Super Tanks++"
 {
-	"Tank 25"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -166,7 +166,7 @@ Here's our final entry:
 ```
 "Super Tanks++"
 {
-	"Tank 25"
+	"Tank #25"
 	{
 		"General"
 		{
@@ -197,7 +197,7 @@ To make sure that this entry can be chosen, we must go to the "Plugin Settings" 
 }
 ```
 
-Now, assuming that "Tank 25" is our highest entry, we just raise the maximum value of "Type Range" by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to "Tank 25" it will stop reading the rest.
+Now, assuming that "Tank #25" is our highest entry, we just raise the maximum value of "Type Range" by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to "Tank #25" it will stop reading the rest.
 
 - Advanced Entry Examples
 
@@ -208,14 +208,14 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 	{
 		"General"
 		{
-			"Type Range"			"1-5" // Check "Tank 1" to "Tank 5"
+			"Type Range"			"1-5" // Check "Tank #1" to "Tank #5"
 		}
 	}
-	"Tank 5" // Checked by the plugin.
+	"Tank #5" // Checked by the plugin.
 	{
 		"General"
 		{
-			"Tank Name"				"Airborne Tank"
+			"Tank Name"				"Leaper Tank"
 			"Tank Enabled"			"1"
 			"Skin-Glow Colors"		"255,255,0,255|255,255,0"
 		}
@@ -225,9 +225,10 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 		}
 		"Jump Ability"
 		{
-			"Ability Enabled"		"1"
-			"Jump Height"			"500.0"
-			"Jump Interval"			"1.0"
+			"Ability Enabled"		"2" // The Tank jumps periodically and makes survivors jump uncontrollably.
+			"Ability Message"		"5" // Notify players when they jump uncontrollably and when the Tank is jumping periodically.
+			"Jump Height"			"300.0" // How high off the ground the Tank can jump.
+			"Jump Interval"			"1.0" // How often the Tank jumps.
 		}
 	}
 }
@@ -238,17 +239,17 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 	{
 		"General"
 		{
-			"Type Range"			"1-11" // Only check for the first 11 Tank types. ("Tank 1" to "Tank 11")
+			"Type Range"			"1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
 		}
 	}
-	"Tank 13" // This will not be checked by the plugin.
+	"Tank #13" // This will not be checked by the plugin.
 	{
 		"General"
 		{
 			"Tank Name"				"Invisible Tank"
 			"Tank Enabled"			"1"
 			"Skin-Glow Colors"		"255,255,255,255|255,255,255"
-			"Glow Effect"			"0" // No glow outline.
+			"Glow Outline"			"0" // No glow outline.
 		}
 		"Immunities"
 		{
@@ -256,11 +257,14 @@ Now, assuming that "Tank 25" is our highest entry, we just raise the maximum val
 		}
 		"Ghost Ability"
 		{
-			"Ability Enabled"		"1"
+			"Ability Enabled"		"2"
+			"Ghost Fade Alpha"		"2"
+			"Ghost Fade Delay"		"5.0"
 			"Ghost Fade Limit"		"0"
+			"Ghost Fade Rate"		"0.1"
 		}
 	}
-	"Tank 10" // Checked by the plugin.
+	"Tank #10" // Checked by the plugin.
 	{
 		"General"
 		{
@@ -344,8 +348,8 @@ It may be due to one or more of the following:
 
 The following abilities require different strategies:
 
-- Absorb Ability: The Super Tank takes way less damage.
-- God Ability: The Super Tank will have god mode temporarily and will not take any damage at all until the effect ends.
+- Absorb Ability: The Super Tank takes way less damage. Conserve your ammo and maintain distance between you and the Super Tank.
+- God Ability: The Super Tank will have god mode temporarily and will not take any damage at all until the effect ends. Maintain distance between you and the Super Tank.
 - Bullet Immunity: Forget your guns. Just spam your grenade launcher at it, slash it with an axe or crowbar, or burn it to death.
 - Explosive Immunity: Forget explosives and just focus on gunfire, melee weapons, and molotovs/gascans.
 - Fire Immunity: No more barbecued Tanks.
@@ -353,11 +357,7 @@ The following abilities require different strategies:
 - Nullify Hit: The Super Tank can mark players as useless, which means as long as that player is nullified, they will not do any damage.
 - Shield Ability: Wait for the Tank to throw propane tanks at you and then throw it back at the Tank. Then shoot the propane tank to deactivate the Tank's shield.
 
-6. How do I make the plugin work on only finale maps?
-
-Set the value of the "Finales Only" KeyValue to 1.
-
-7. How can I change the amount of Tanks that spawn on each finale wave?
+6. How can I change the amount of Tanks that spawn on each finale wave?
 
 Here's an example:
 
@@ -365,65 +365,19 @@ Here's an example:
 "Tank Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
 ```
 
-8. How can I decide whether to display each Tank's health?
+7. How can I decide whether to display each Tank's health?
 
 Set the value in the "Display Health" KeyValue.
 
-9. How do I give each Tank more health?
-
-Set the value in the "Extra Health" KeyValue.
-
-Example:
-
-```
-"Extra Health" "5000" // Add 5,000 to the Super Tank's health.
-```
-
-10. How do I adjust each Tank's run speed?
-
-Set the value in the "Run Speed" KeyValue.
-
-Example:
-
-```
-"Run Speed" "3.0" // Add 2.0 to the Super Tank's run speed. Default run speed is 1.0.
-```
-
-11. How can I give each Tank bullet immunity?
-
-Set the value of the "Bullet Immunity" KeyValue to 1.
-
-12. How can I give each Tank explosive immunity?
-
-Set the value of the "Explosive Immunity" KeyValue to 1.
-
-13. How can I give each Tank fire immunity?
-
-Set the value of the "Fire Immunity" KeyValue to 1.
-
-14. How can I give each Tank melee immunity?
-
-Set the value of the "Melee Immunity" KeyValue to 1.
-
-15. How can I delay the throw interval of each Tank?
-
-Set the value in the "Throw Interval" KeyValue.
-
-Example:
-
-```
-"Throw Interval" "8.0" // Add 3.0 to the Super Tank's throw interval. Default throw interval is 5.0.
-```
-
-16. Why do some Tanks spawn with different props?
+8. Why do some Tanks spawn with different props?
 
 Each prop has 1 out of X chances to appear on Super Tanks when they spawn. Configure the chances for each prop in the "Props Chance" KeyValue.
 
-17. Why are the Tanks spawning with more than the extra health given to them?
+9. Why are the Tanks spawning with more than the extra health given to them?
 
 Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
-18. How do I add more Super Tanks?
+10. How do I add more Super Tanks?
 
 - Add a new entry in the config file.
 - Raise the maximum value of the "Type Range" KeyValue.
@@ -440,17 +394,17 @@ Example:
 			"Type Range"		"1-69" // The plugin will check for 69 entries when loading the config file.
 		}
 	}
-	"Tank 69"
+	"Tank #69"
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank 69 is enabled and can be chosen.
+			"Tank Enabled"		"1" // Tank #69 is enabled and can be chosen.
 		}
 	}
 }
 ```
 
-19. How do I filter out certain Super Tanks that I made without deleting them?
+11. How do I filter out certain Super Tanks that I made without deleting them?
 
 Enable/disable them with the "Tank Enabled" KeyValue.
 
@@ -459,56 +413,56 @@ Example:
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank 1 can be chosen.
+			"Tank Enabled"		"1" // Tank #1 can be chosen.
 		}
 	}
-	"Tank 2"
+	"Tank #2"
 	{
 		"General"
 		{
-			"Tank Enabled"		"0" // Tank 2 cannot be chosen.
+			"Tank Enabled"		"0" // Tank #2 cannot be chosen.
 		}
 	}
-	"Tank 3"
+	"Tank #3"
 	{
 		"General"
 		{
-			"Tank Enabled"		"0" // Tank 3 cannot be chosen.
+			"Tank Enabled"		"0" // Tank #3 cannot be chosen.
 		}
 	}
-	"Tank 4"
+	"Tank #4"
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank 4 can be chosen.
+			"Tank Enabled"		"1" // Tank #4 can be chosen.
 		}
 	}
 }
 ```
 
-20. Can I create temporary Tanks without removing or replacing them?
+12. Can I create temporary Tanks without removing or replacing them?
 
 Yes, you can do that with custom configs.
 
 Example:
 
 ```
-// Settings for cfg/sourcemod/super_tanks++/super_tanks++.cfg
+// Settings for addons/sourcemod/data/super_tanks++/super_tanks++.cfg
 "Super Tanks++"
 {
 	"Plugin Settings"
 	{
-		"General"
+		"Game Modes"
 		{
 			"Enable Custom Configs"			"1" // Enable custom configs
 			"Execute Config Types"			"1" // 1: Difficulty configs (easy, normal, hard, impossible)
 		}
 	}
-	"Tank 69"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -527,10 +481,10 @@ Example:
 	}
 }
 
-// Settings for cfg/sourcemod/super_tanks++/difficulty_configs/impossible.cfg
+// Settings for addons/sourcemod/data/super_tanks++/difficulty_configs/impossible.cfg
 "Super Tanks++"
 {
-	"Tank 69"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -554,7 +508,7 @@ Output: When the current difficulty is Expert mode (impossible), the Idiot Tank 
 These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
 
-21. How can I move the Super Tanks++ category around on the admin menu?
+13. How can I move the Super Tanks++ category around on the admin menu?
 
 - You have to open up addons/sourcemod/configs/adminmenu_sorting.txt.
 - Enter the "SuperTanks++" category.
@@ -611,7 +565,7 @@ Example:
 }
 ```
 
-22. Are there any developer/tester features available in the plugin?
+14. Are there any developer/tester features available in the plugin?
 
 Yes, there are forwards, natives, stocks, target filters for each special infected, and admin commands that allow developers/testers to spawn each Super Tank and see their statuses.
 
@@ -650,6 +604,21 @@ forward void ST_Configs(const char[] savepath, bool main);
  */
 forward void ST_Event(Event event, const char[] name);
 
+/* Called when the core plugin is unloaded/reloaded.
+ * Use this forward to get rid of any physical modifications to
+ * Tanks or survivors.
+ */
+forward void ST_PluginEnd();
+
+/* Called when the Tank spawns.
+ * Use this forward for any on-spawn presets.
+ * If you plan on using this to activate an ability,
+ * use ST_Ability() instead.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_Preset(int client);
+
 /* Called when the Tank's rock breaks.
  * Use this forward for any after-effects.
  *
@@ -669,17 +638,6 @@ forward void ST_RockThrow(int client, int entity);
 
 Natives:
 ```
-/* Returns whether the clone can use abilities.
- *
- * @param client		Client index of the Tank.
- * @param clone			Checks whether "st_clone.smx"
- *							is installed.
- * @return				True on success, false if
- *							clone is not allowed
- *							to have abilities.
- */
-native bool ST_CloneAllowed(int client, bool clone);
-
 /* Returns the maximum value of the "Type Range" setting.
  *
  * @return				The maximum value of the
@@ -717,6 +675,20 @@ native void ST_SpawnTank(int client, int type);
  *							by a human.
  */
 native bool ST_TankAllowed(int client);
+
+/* Returns the RGB colors given to a Tank.
+ *
+ * @param client		Client index of the Tank.
+ * @param mode			1 = Skin color, 2 = Glow
+ *							outline color
+ * @param red			Buffer to store the red
+ *							color in.
+ * @param green			Buffer to store the green
+ *							color in.
+ * @param blue			Buffer to store the blue
+ *							color in.
+ */
+native void ST_TankColors(int client, int mode, char[] red, char[] green, char[] blue);
 
 /* Returns the custom name given to a Tank.
  *
@@ -817,6 +789,8 @@ Examples:
 
 **GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?p=1694338) plugin.
 
+**Phil25** - For the [RTD Revamped](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
+
 **ztar** - For the [Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
 
 **IxAvnoMonvAxI** - For the [Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2) plugin.
@@ -853,9 +827,9 @@ Examples:
 
 **AngelAce113** - For the default colors, testing each Tank type, giving me ideas, and overall support.
 
-**Sipow** - For the default colors and overall support.
+**Sipow** - For the default colors, giving me ideas, and overall support.
 
-**SourceMod Team** - For the beacon, blind, drug, and ice source codes.
+**SourceMod Team** - For the blind, drug, and ice source codes.
 
 # Contact Me
 If you wish to contact me for any questions, concerns, suggestions, or criticism, I can be found here:

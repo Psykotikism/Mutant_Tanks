@@ -1,5 +1,5 @@
 # Information
-> There is information about each setting and ability below. All of these settings use default values if they are left incomplete or empty.
+> There is information about each setting and ability below. All of these settings use default values if they are left incomplete or empty. THIS FILE IS NOT THE CONFIG FILE!
 
 ## Plugin Settings
 
@@ -8,12 +8,8 @@
 {
 	// These are the general plugin settings.
 	// Note: The following settings will not work in custom config files:
-	// "Game Mode Types"
-	// "Enabled Game Modes"
-	// "Disabled Game Modes"
-	// "Enable Custom Configs"
-	// "Create Config Types"
-	// "Execute Config Types"
+	// Any setting under the "Game Modes" section.
+	// Any setting under the "Custom" section.
 	"Plugin Settings"
 	{
 		"General"
@@ -23,35 +19,6 @@
 			// 0: OFF
 			// 1: ON
 			"Plugin Enabled"				"1"
-
-			// Enable Super Tanks++ in these game mode types.
-			// Add up numbers together for different results.
-			// --
-			// Minimum: 0
-			// Maximum: 15
-			// --
-			// 0: All game mode types.
-			// 1: Co-Op modes only.
-			// 2: Versus modes only.
-			// 4: Survival modes only.
-			// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
-			"Game Mode Types"				"5"
-
-			// Enable Super Tanks++ in these game modes.
-			// Separate game modes with commas.
-			// Character limit: 512 (including commas)
-			// --
-			// Empty: All
-			// Not empty: Enabled only in these game modes.
-			"Enabled Game Modes"			"coop,survival"
-
-			// Disable Super Tanks++ in these game modes.
-			// Separate game modes with commas.
-			// Character limit: 512 (including commas)
-			// --
-			// Empty: None
-			// Not empty: Disabled only in these game modes.
-			"Disabled Game Modes"			"versus,scavenge"
 
 			// Announce each Super Tank's arrival.
 			// --
@@ -88,19 +55,6 @@
 			// 3: Multiply both.
 			"Multiply Health"				"0"
 
-			// Amount of Tanks to spawn for each finale wave.
-			// Separate waves with commas.
-			// Wave limit: 3
-			// Character limit for each wave: 3
-			// --
-			// Minimum value for each wave: 1
-			// Maximum value for each wave: 999
-			// --
-			// 1st number = 1st wave
-			// 2nd number = 2nd wave
-			// 3rd number = 3rd wave
-			"Tank Waves"					"2,3,4"
-
 			// The range of types to check for.
 			// Separate values with "-".
 			// Value limit: 2
@@ -112,6 +66,70 @@
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			"Type Range"					"1-5000"
+		}
+		"Waves"
+		{
+			// Spawn this many Tanks on non-finale maps periodically.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Regular Amount"				"2"
+
+			// Spawn Tanks on non-finale maps every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Regular Interval"				"300.0"
+
+			// Spawn Tanks on non-finale maps periodically.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Regular Wave"					"0"
+
+			// Amount of Tanks to spawn for each finale wave.
+			// Separate waves with commas.
+			// Wave limit: 3
+			// Character limit for each wave: 3
+			// --
+			// Minimum value for each wave: 1
+			// Maximum value for each wave: 9999999999
+			// --
+			// 1st number = 1st wave
+			// 2nd number = 2nd wave
+			// 3rd number = 3rd wave
+			"Finale Waves"					"2,3,4"
+		}
+		"Game Modes"
+		{
+			// Enable Super Tanks++ in these game mode types.
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0: All game mode types.
+			// 1: Co-Op modes only.
+			// 2: Versus modes only.
+			// 4: Survival modes only.
+			// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
+			"Game Mode Types"				"5"
+
+			// Enable Super Tanks++ in these game modes.
+			// Separate game modes with commas.
+			// Character limit: 512 (including commas)
+			// --
+			// Empty: All
+			// Not empty: Enabled only in these game modes.
+			"Enabled Game Modes"			"coop,survival"
+
+			// Disable Super Tanks++ in these game modes.
+			// Separate game modes with commas.
+			// Character limit: 512 (including commas)
+			// --
+			// Empty: None
+			// Not empty: Disabled only in these game modes.
+			"Disabled Game Modes"			"versus,scavenge"
 		}
 		"Custom"
 		{
@@ -149,21 +167,21 @@
 
 ## Tank Settings
 
-### General, Enhancements, Immunities
+### General, Spawn, Props, Particles, Enhancements, Immunities
 
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		"General"
 		{
 			// Name of the Super Tank.
-			// Character limit: 32
+			// Character limit: 128
 			// --
 			// Empty: "Tank"
 			// Not Empty: Tank's custom name
-			"Tank Name"						"Tank 1"
+			"Tank Name"						"Tank #1"
 
 			// Enable the Super Tank.
 			// --
@@ -178,50 +196,11 @@
 			// 1: ON
 			"Tank Note"						"0"
 
-			// The health of bosses needed for each stage.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
-			// Note: The values will be added to the boss's new health on every new stage.
-			// Note: The values will determine when the boss evolves to the next stage.
-			// Example: When Stage 1 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
-			// --
-			// Minimum value for each health stage: 1
-			// Maximum value for each health stage: 65535
-			// --
-			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 1 boss. (The "Boss Stages" setting must be set to "1" or higher.)
-			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "2" or higher.)
-			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "3" or higher.)
-			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "4" or higher.)
-			// 5th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "5" or higher.)
-			"Boss Health Stages"			"5000,2500,1500,1000,500"
-
-			// The number of stages for Super Tank bosses.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
-			// --
-			// Minimum: 1
-			// Maximum: 5
-			"Boss Stages"					"3"
-
-			// The interval between each random switch.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
-			// --
-			// Minimum: 0.1
-			// Maximum: 9999999999.0
-			"Random Interval"				"5.0"
-
-			// The mode of the Super Tanks' spawn status.
-			// --
-			// 0: Spawn as normal Super Tanks.
-			// 1: Spawn as Super Tank bosses.
-			// 2: Spawn as Super Tanks that switch randomly between each type.
-			"Spawn Mode"					"0"
-
-			// The Super Tank will only spawn on finale maps.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Finale Tank"					"0"
-
 			// These are the Super Tank's skin and glow outline colors.
+			// --
+			// Character limit: 28
+			// Character limit for each color: 3
+			// --
 			// Separate colors with "|".
 			// Separate RGBAs with commas.
 			// --
@@ -237,8 +216,111 @@
 			// --
 			// 0: OFF
 			// 1: ON
-			"Glow Effect"					"1"
+			"Glow Outline"					"1"
+		}
+		"Spawn"
+		{
+			// The number of Super Tanks with this type that can be alive at any given time.
+			// Note: Clones, respawned Super Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
+			// --
+			// Minimum: 0
+			// Maximum: 9999999999
+			"Type Limit"					"32"
 
+			// The Super Tank will only spawn on finale maps.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Finale Tank"					"0"
+
+			// The health of bosses needed for each stage.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// Note: The values will be added to the boss's new health on every new stage.
+			// Note: The values will determine when the boss evolves to the next stage.
+			// Example: When Stage 2 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
+			// --
+			// Character limit: 25
+			// Character limit for each health stage: 5
+			// --
+			// Minimum value for each health stage: 1
+			// Maximum value for each health stage: 65535
+			// --
+			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "1" or higher.)
+			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "2" or higher.)
+			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "3" or higher.)
+			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "4" or higher.)
+			"Boss Health Stages"			"5000,2500,1500,1000"
+
+			// The number of stages for Super Tank bosses.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// --
+			// Minimum: 1
+			// Maximum: 4
+			"Boss Stages"					"3"
+
+			// The Super Tank types that the boss will evolve into.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// Note: Make sure that the Super Tank types that the boss will evolve into are enabled.
+			// Example: When Stage 1 boss evolves into Stage 2, it will evolve into Tank #2.
+			// --
+			// Character limit: 20
+			// Character limit for each stage type: 4
+			// --
+			// Minimum: 1
+			// Maximum: 5000
+			// --
+			// 1st number = 2nd stage type
+			// 2nd number = 3rd stage type
+			// 3rd number = 4th stage type
+			// 4th number = 5th stage type
+			"Boss Types"					"2,3,4,5"
+
+			// The interval between each random switch.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Random Interval"				"5.0"
+
+			// The Super Tank is able to transform again after this many seconds passes.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Transform Delay"				"10.0"
+
+			// The Super Tank's transformations last this long.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Transform Duration"			"10.0"
+
+			// The types that the Super Tank can transform into.
+			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
+			// --
+			// Separate game modes with commas.
+			// Character limit: 80 (including commas)
+			// Character limit for each type: 4
+			// --
+			// Example: "1,35,26,4"
+			// Example: "4,9,49,449,4449,499,4999"
+			// Example: "1997,1998,1999,2000,2001,2002,2003,2004,2005,2006"
+			// --
+			// Minimum: 1
+			// Maximum: 5000
+			"Transform Types"				"1,2,3,4,5,6,7,8,9,10"
+
+			// The mode of the Super Tank's spawn status.
+			// --
+			// 0: Spawn as normal Super Tanks.
+			// 1: Spawn as a Super Tank boss.
+			// 2: Spawn as a Super Tank that switch randomly between each type.
+			// 3: Spawn as a Super Tank that temporarily transforms into a different type and reverts back after awhile.
+			"Spawn Mode"					"0"
+		}
+		"Props"
+		{
 			// Props that the Super Tank can spawn with.
 			// Combine numbers in any order for different results.
 			// Character limit: 6
@@ -257,7 +339,7 @@
 			// Character limit for each chance: 3
 			// --
 			// Minimum value for each chance: 1
-			// Maximum value for each chance: 999
+			// Maximum value for each chance: 9999999999
 			// --
 			// 1st number = Chance for a blur effect to appear.
 			// 2nd number = Chance for lights to appear.
@@ -280,14 +362,16 @@
 			// 4th set = rocks color (RGBA)
 			// 5th set = tires color (RGBA)
 			"Props Colors"					"255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255"
-
-			// The Super Tank will spawn with a particle effect.
+		}
+		"Particles"
+		{
+			// The Super Tank's body will have a particle effect.
 			// --
 			// 0: OFF
 			// 1: ON
-			"Particle Effect"				"0"
+			"Body Particle"					"0"
 
-			// The particle effects for the Super Tank.
+			// The particle effects for the Super Tank's body.
 			// Combine numbers in any order for different results.
 			// Character limit: 7
 			// --
@@ -298,13 +382,13 @@
 			// 5: Meteor Smoke
 			// 6: Smoker Cloud
 			// 7: Acid Trail (Only available in Left 4 Dead 2.)
-			"Particle Effects"				"1234567"
+			"Body Effects"					"1234567"
 
 			// The Super Tank's rock will have a particle effect.
 			// --
 			// 0: OFF
 			// 1: ON
-			"Rock Effect"					"0"
+			"Rock Particle"					"0"
 
 			// The particle effects for the Super Tank's rock.
 			// Combine numbers in any order for different results.
@@ -392,7 +476,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank absorbs most of the damage it receives.
 		// Requires "st_absorb.smx" to be installed.
@@ -467,13 +551,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank creates acid puddles.
-		// "Ability Enabled" - When a survivor is within range of the Tank, an acid puddle is created underneath the survivor.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, an acid puddle is created underneath the survivor. When the Super Tank dies, an acid puddle is created underneath the Super Tank.
 		// - "Acid Range"
 		// - "Acid Range Chance"
-		// "Acid Hit" - When a survivor is hit by a Tank's claw or rock, an acid puddle is created underneath the survivor.
+		// "Acid Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, an acid puddle is created underneath the survivor.
 		// - "Acid Chance"
 		// - "Acid Hit Mode"
 		// Requires "st_acid.smx" to be installed.
@@ -486,12 +570,27 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
 			// 1: ON, display message only when "Acid Hit" is on.
 			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// 3: ON, display message only when "Acid Rock Break" is on.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -543,14 +642,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank receives more damage from bullets and explosions than usual.
 		// The Super Tank takes away survivors' ammunition.
-		// "Ability Enabled" - When a survivor is within range of the Tank, their ammunition is taken away.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, their ammunition is taken away.
 		// - "Ammo Range"
 		// - "Ammo Range Chance"
-		// "Ammo Hit" - When a survivor is hit by a Tank's claw or rock, their ammunition is taken away.
+		// "Ammo Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, their ammunition is taken away.
 		// - "Ammo Chance"
 		// - "Ammo Hit Mode"
 		// Requires "st_ammo.smx" to be installed.
@@ -562,6 +660,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -618,13 +727,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank blinds survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is blinded.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is blinded.
 		// - "Blind Range"
 		// - "Blind Range Chance"
-		// "Blind Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is blinded.
+		// "Blind Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is blinded.
 		// - "Blind Chance"
 		// - "Blind Hit Mode"
 		// Requires "st_blind.smx" to be installed.
@@ -636,6 +745,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -698,13 +818,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank creates explosions.
-		// "Ability Enabled" - When a survivor is within range of the Tank, an explosion is created around the survivor.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, an explosion is created around the survivor. When the Super Tank dies, an explosion is created around the Super Tank.
 		// - "Bomb Range"
 		// - "Bomb Range Chance"
-		// "Bomb Hit" - When a survivor is hit by a Tank's claw or rock, an explosion is created around the survivor.
+		// "Bomb Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, an explosion is created around the survivor.
 		// - "Bomb Chance"
 		// - "Bomb Hit Mode"
 		// Requires "st_bomb.smx" to be installed.
@@ -717,12 +837,27 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
 			// 1: ON, display message only when "Bomb Hit" is on.
 			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// 3: ON, display message only when "Bomb Rock Break" is on.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -773,13 +908,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank buries survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is buried.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is buried.
 		// - "Bury Range"
 		// - "Bury Range Chance"
-		// "Bury Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is buried.
+		// "Bury Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is buried.
 		// - "Bury Chance"
 		// - "Bury Hit Mode"
 		// Requires "st_bury.smx" to be installed.
@@ -791,6 +926,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -848,80 +994,12 @@
 }
 ```
 
-#### Cancer Ability
-
-```
-"Super Tanks++"
-{
-	"Tank 1"
-	{
-		// The Super Tank gives survivors cancer.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is given cancer.
-		// - "Cancer Range"
-		// - "Cancer Range Chance"
-		// "Cancer Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is given cancer.
-		// - "Cancer Chance"
-		// - "Cancer Hit Mode"
-		// Requires "st_cancer.smx" to be installed.
-		"Cancer Ability"
-		{
-			// Enable this ability.
-			// Note: This setting does not affect the "Cancer Hit" setting.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Ability Enabled"				"0"
-
-			// Display a message whenever the ability activates/deactivates.
-			// --
-			// 0: OFF
-			// 1: ON, display message only when "Cancer Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
-			"Ability Message"				"0"
-
-			// The Super Tank has 1 out of this many chances to trigger the ability.
-			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Cancer Chance"					"4"
-
-			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Cancer Hit"					"0"
-
-			// The mode of the Super Tank's claw/rock attack.
-			// --
-			// 0: Both
-			// 1: Ability activates when the Super Tank hits a survivor.
-			// 2: Ability activates when the Super Tank is hit by a survivor.
-			"Cancer Hit Mode"				"0"
-
-			// The distance between a survivor and the Super Tank needed to trigger the ability.
-			// --
-			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
-			"Cancer Range"					"150.0"
-
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
-			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Cancer Range Chance"			"16"
-		}
-	}
-}
-```
-
 #### Clone Ability
 
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank creates clones of itself.
 		// Requires "st_clone.smx" to be installed.
@@ -939,7 +1017,7 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The amount of clones the Super Tank can spawn.
+			// The amount of clones the Super Tank can create.
 			// --
 			// Minimum: 1
 			// Maximum: 25
@@ -951,16 +1029,17 @@
 			// Maximum: 9999999999 (Less chance)
 			"Clone Chance"					"4"
 
-			// The Super Tank's clones' health.
+			// The Super Tank's clone's health.
 			// --
 			// Minimum: 1
 			// Maximum: 65535
 			"Clone Health"					"1000"
 
-			// The Super Tank's clones will be treated as real Super Tanks.
+			// The Super Tank's clone will be treated as a real Super Tank.
+			// Note: Clones cannot clone themselves for obvious safety reasons.
 			// --
-			// 0: OFF, clones cannot use abilities like real Super Tanks.
-			// 1: ON, clones can use abilities like real Super Tanks.
+			// 0: OFF, the clone cannot use abilities like real Super Tanks.
+			// 1: ON, the clone can use abilities like real Super Tanks.
 			"Clone Mode"					"0"
 		}
 	}
@@ -972,7 +1051,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank drops weapons upon death.
 		// Requires "st_drop.smx" to be installed.
@@ -1025,13 +1104,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank drugs survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is drugged.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is drugged.
 		// - "Drug Range"
 		// - "Drug Range Chance"
-		// "Drug Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is drugged.
+		// "Drug Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is drugged.
 		// - "Drug Chance"
 		// - "Drug Hit Mode"
 		// Requires "st_drug.smx" to be installed.
@@ -1043,6 +1122,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1099,13 +1189,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank electrocutes survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is electrocuted.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is electrocuted.
 		// - "Electric Range"
 		// - "Electric Range Chance"
-		// "Electric Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is electrocuted.
+		// "Electric Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is electrocuted.
 		// - "Electric Chance"
 		// - "Electric Hit Mode"
 		// Requires "st_electric.smx" to be installed.
@@ -1117,6 +1207,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1191,13 +1292,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank forces survivors to only use a certain weapon slot.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is forced to only use a certain weapon slot.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is forced to only use a certain weapon slot.
 		// - "Enforce Range"
 		// - "Enforce Range Chance"
-		// "Enforce Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is forced to only use a certain weapon slot.
+		// "Enforce Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is forced to only use a certain weapon slot.
 		// - "Enforce Chance"
 		// - "Enforce Hit Mode"
 		// Requires "st_enforce.smx" to be installed.
@@ -1209,6 +1310,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1276,13 +1388,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank creates fires.
-		// "Ability Enabled" - When a survivor is within range of the Tank, a fire is created around the survivor.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, a fire is created around the survivor. When the Super Tank dies, a fire is created around the Super Tank.
 		// - "Fire Range"
 		// - "Fire Range Chance"
-		// "Fire Hit" - When a survivor is hit by a Tank's claw or rock, a fire is created around the survivor.
+		// "Fire Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, a fire is created around the survivor.
 		// - "Fire Chance"
 		// - "Fire Hit Mode"
 		// Requires "st_fire.smx" to be installed.
@@ -1295,12 +1407,27 @@
 			// 1: ON
 			"Ability Enabled"				"0"
 
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
 			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
 			// 1: ON, display message only when "Fire Hit" is on.
 			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// 3: ON, display message only when "Fire Rock Break" is on.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
@@ -1351,7 +1478,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank runs really fast like the Flash.
 		// Requires "st_flash.smx" to be installed.
@@ -1381,7 +1508,7 @@
 			// Maximum: 9999999999.0
 			"Flash Duration"				"5.0"
 
-			// The Super Tank can run fast every time this many seconds passes.
+			// The Super Tank runs fast every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -1402,13 +1529,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank flings survivors high into the air.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is flung into the air.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is flung into the air.
 		// - "Fling Range"
 		// - "Fling Range Chance"
-		// "Fling Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is flung into the air.
+		// "Fling Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is flung into the air.
 		// - "Fling Chance"
 		// - "Fling Hit Mode"
 		// Requires "st_fling.smx" to be installed.
@@ -1420,6 +1547,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1470,7 +1608,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank takes more damage.
 		// Requires "st_fragile.smx" to be installed.
@@ -1545,15 +1683,18 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank cloaks itself and disarms survivors.
 		// "Ability Enabled" - When a Super Tank spawns, it becomes invisible.
+		// - "Ghost Fade Alpha"
+		// - "Ghost Fade Delay"
 		// - "Ghost Fade Limit"
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is disarmed.
+		// - "Ghost Fade Rate"
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is disarmed.
 		// - "Ghost Range"
 		// - "Ghost Range Chance"
-		// "Ghost Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is disarmed.
+		// "Ghost Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is disarmed.
 		// - "Ghost Chance"
 		// - "Ghost Hit Mode"
 		// Requires "st_ghost.smx" to be installed.
@@ -1567,6 +1708,17 @@
 			// 2: ON, the Super Tank can cloak itself.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
@@ -1586,11 +1738,30 @@
 			// Maximum: 9999999999 (Less chance)
 			"Ghost Chance"					"4"
 
+			// The amount of alpha to take from the Super Tank's alpha every X seconds until the limit set by the "Ghost Fade Limit" is reached.
+			// Note: The rate at which the Super Tank's alpha is reduced depends on the "Ghost Fade Rate" setting.
+			// --
+			// Minimum: 0 (No effect)
+			// Maximum: 255 (Fully faded)
+			"Ghost Fade Alpha"				"2"
+
+			// The Super Tank's ghost fade effect starts all over after this many seconds passes upon reaching the limit set by the "Ghost Fade Limit" setting.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Ghost Fade Delay"				"5.0"
+
 			// The limit of the Super Tank's ghost fade effect.
 			// --
 			// Minimum: 0 (Fully faded)
 			// Maximum: 255 (No effect)
 			"Ghost Fade Limit"				"0"
+
+			// The rate of the Super Tank's ghost fade effect.
+			// --
+			// Minimum: 0.1 (Fastest)
+			// Maximum: 9999999999.0 (Slowest)
+			"Ghost Fade Rate"				"0.1"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
@@ -1638,7 +1809,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank gains temporary immunity to all damage.
 		// Requires "st_god.smx" to be installed.
@@ -1677,15 +1848,15 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank pulls in or pushes away survivors and any other nearby infected, and changes the survivors' gravity.
 		// "Ability Enabled" - Any nearby infected and survivors are pulled in or pushed away.
 		// - "Gravity Force"
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's gravity changes.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's gravity changes.
 		// - "Gravity Range"
 		// - "Gravity Range Chance"
-		// "Gravity Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's gravity changes.
+		// "Gravity Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor's gravity changes.
 		// - "Gravity Chance"
 		// - "Gravity Hit Mode"
 		// Requires "st_gravity.smx" to be installed.
@@ -1699,6 +1870,17 @@
 			// 2: ON, the Super Tank can pull in or push away survivors.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1762,7 +1944,7 @@
 			// The Super Tank sets the survivors' gravity to this value.
 			// --
 			// Minimum: 0.1
-			// Maximum: 0.99
+			// Maximum: 9999999999.0
 			"Gravity Value"					"0.3"
 		}
 	}
@@ -1774,16 +1956,16 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank gains health from other nearby infected and sets survivors to black and white with temporary health.
-		// "Ability Enabled" - Any nearby infected can give the Tank some health.
+		// The Super Tank gains health from other nearby infected and sets survivors to temporary health who will die when they reach 0 HP.
+		// "Ability Enabled" - Any nearby infected can give the Super Tank some health.
 		// - "Heal Absorb Range"
 		// - "Heal Interval"
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor can go black and white and have temporary health.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is set to temporary health and will die when they reach 0 HP.
 		// - "Heal Range"
 		// - "Heal Range Chance"
-		// "Heal Hit" - When a survivor is hit by a Tank's claw or rock, the survivor can go black and white and have temporary health.
+		// "Heal Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is set to temporary health and will die when they reach 0 HP.
 		// - "Heal Chance"
 		// - "Heal Hit Mode"
 		// Requires "st_heal.smx" to be installed.
@@ -1793,10 +1975,21 @@
 			// Note: This setting does not affect the "Heal Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON, the Super Tank can set survivors to black and white with temporary health.
+			// 1: ON, the Super Tank can give survivors temporary health.
 			// 2: ON, the Super Tank can absorb health from nearby infected.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -1815,6 +2008,12 @@
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Heal Absorb Range"				"500.0"
+
+			// The amount of temporary health given to survivors.
+			// --
+			// Minimum: 1.0
+			// Maximum: 65535.0
+			"Heal Buffer"					"25.0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -1890,13 +2089,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank hurts survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor gets hurt repeatedly.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor gets hurt repeatedly.
 		// - "Hurt Range"
 		// - "Hurt Range Chance"
-		// "Hurt Hit" - When a survivor is hit by a Tank's claw or rock, the survivor gets hurt repeatedly.
+		// "Hurt Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor gets hurt repeatedly.
 		// - "Hurt Chance"
 		// - "Hurt Hit Mode"
 		// Requires "st_hurt.smx" to be installed.
@@ -1908,6 +2107,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1970,13 +2180,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank hypnotizes survivors to damage themselves or teammates.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is hypnotized.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is hypnotized.
 		// - "Hypno Range"
 		// - "Hypno Range Chance"
-		// "Hypno Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is hypnotized.
+		// "Hypno Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is hypnotized.
 		// - "Hypno Chance"
 		// - "Hypno Hit Mode"
 		// Requires "st_hypno.smx" to be installed.
@@ -1988,6 +2198,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2050,13 +2271,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank freezes survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is frozen in place.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is frozen in place.
 		// - "Ice Range"
 		// - "Ice Range Chance"
-		// "Ice Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is frozen in place.
+		// "Ice Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is frozen in place.
 		// - "Ice Chance"
 		// - "Ice Hit Mode"
 		// Requires "st_ice.smx" to be installed.
@@ -2068,6 +2289,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2124,13 +2356,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank forces survivors to go idle.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor goes idle.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor goes idle.
 		// - "Idle Range"
 		// - "Idle Range Chance"
-		// "Idle Hit" - When a survivor is hit by a Tank's claw or rock, the survivor goes idle.
+		// "Idle Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor goes idle.
 		// - "Idle Chance"
 		// - "Idle Hit Mode"
 		// Requires "st_idle.smx" to be installed.
@@ -2142,6 +2374,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2192,13 +2435,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank inverts the survivors' movement keys.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's movement keys are inverted.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's movement keys are inverted.
 		// - "Invert Range"
 		// - "Invert Range Chance"
-		// "Invert Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's movement keys are inverted.
+		// "Invert Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor's movement keys are inverted.
 		// - "Invert Chance"
 		// - "Invert Hit Mode"
 		// Requires "st_invert.smx" to be installed.
@@ -2210,6 +2453,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2265,7 +2519,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank gives survivors items upon death.
 		// Requires "st_item.smx" to be installed.
@@ -2313,35 +2567,101 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank jumps periodically.
+		// The Super Tank jumps periodically and makes survivors jump uncontrollably.
+		// "Ability Enabled" - The Super Tank jumps periodically.
+		// - "Jump Interval"
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor jumps uncontrollably.
+		// - "Jump Range"
+		// - "Jump Range Chance"
+		// "Jump Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor jumps uncontrollably.
+		// - "Jump Chance"
+		// - "Jump Hit Mode"
 		// Requires "st_jump.smx" to be installed.
 		"Jump Ability"
 		{
 			// Enable this ability.
+			// Note: This setting does not affect the "Jump Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, the Super Tank can force survivors to jump uncontrollably.
+			// 2: ON, the Super Tank can jump periodically.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
+			// Display a message whenever the abilities activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Jump Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Jump Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Jump Duration"					"5.0"
 
 			// The Super Tank jumps this high off a surface.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Jump Height"					"500.0"
+			"Jump Height"					"300.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" to be on.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Jump Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Jump Hit Mode"					"0"
 
 			// The Super Tank jumps every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Jump Interval"					"1.0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Jump Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Jump Range Chance"				"16"
 		}
 	}
 }
@@ -2352,13 +2672,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank kills itself along with a survivor victim.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor dies along with the Tank.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor dies along with the Super Tank.
 		// - "Kamikaze Range"
 		// - "Kamikaze Range Chance"
-		// "Kamikaze Hit" - When a survivor is hit by a Tank's claw or rock, the survivor dies along with the Tank.
+		// "Kamikaze Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor dies along with the Super Tank.
 		// - "Kamikaze Chance"
 		// - "Kamikaze Hit Mode"
 		// Requires "st_kamikaze.smx" to be installed.
@@ -2370,6 +2690,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2415,18 +2746,102 @@
 }
 ```
 
+#### Lag Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank makes survivors lag.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor lags.
+		// - "Lag Range"
+		// - "Lag Range Chance"
+		// "Lag Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor lags.
+		// - "Lag Chance"
+		// - "Lag Hit Mode"
+		// Requires "st_lag.smx" to be installed.
+		"Lag Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Lag Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON, display message only when "Lag Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
+			"Ability Message"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Lag Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Lag Duration"					"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Lag Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Lag Hit Mode"					"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Lag Range"						"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Lag Range Chance"				"16"
+		}
+	}
+}
+```
+
 #### Leech Ability
 
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank leeches health off of survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank leeches health off of the survivor.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the Super Tank leeches health off of the survivor.
 		// - "Leech Range"
 		// - "Leech Range Chance"
-		// "Leech Hit" - When a survivor is hit by a Tank's claw or rock, the Tank leeches health off of the survivor.
+		// "Leech Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the Super Tank leeches health off of the survivor.
 		// - "Leech Chance"
 		// - "Leech Hit Mode"
 		// Requires "st_leech.smx" to be installed.
@@ -2438,6 +2853,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2500,7 +2926,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank heals special infected upon death.
 		// Requires "st_medic.smx" to be installed.
@@ -2569,7 +2995,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank creates meteor showers.
 		// Requires "st_meteor.smx" to be installed.
@@ -2619,7 +3045,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank spawns minions.
 		// Requires "st_minion.smx" to be installed.
@@ -2649,7 +3075,7 @@
 			// Maximum: 9999999999 (Less chance)
 			"Minion Chance"					"4"
 
-			// The Super Tank can spawn these minions.
+			// The Super Tank spawns these minions.
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chance of being chosen.
 			// Character limit: 12
@@ -2671,7 +3097,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank resurrects dead special infected.
 		// Requires "st_necro.smx" to be installed.
@@ -2710,13 +3136,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank nullifies all of the survivors' damage.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor does not do any damage.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor does not do any damage.
 		// - "Nullify Range"
 		// - "Nullify Range Chance"
-		// "Nullify Hit" - When a survivor is hit by a Tank's claw or rock, the survivor does not do any damage.
+		// "Nullify Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor does not do any damage.
 		// - "Nullify Chance"
 		// - "Nullify Hit Mode"
 		// Requires "st_nullify.smx" to be installed.
@@ -2728,6 +3154,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2783,28 +3220,39 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank starts panic events.
 		// "Ability Enabled" - The Tank starts a panic event periodically.
 		// - "Panic Interval"
-		// "Ability Enabled" - When a survivor is within range of the Tank, a panic event starts.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, a panic event starts.
 		// - "Panic Range"
 		// - "Panic Range Chance"
-		// "Panic Hit" - When a survivor is hit by a Tank's claw or rock, a panic event starts.
+		// "Panic Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, a panic event starts.
 		// - "Panic Chance"
 		// - "Panic Hit Mode"
 		// Requires "st_panic.smx" to be installed.
 		"Panic Ability"
 		{
 			// Enable this ability.
-			// Note: This setting does not affect the "Ghost Hit" setting.
+			// Note: This setting does not affect the "Panic Hit" setting.
 			// --
 			// 0: OFF
 			// 1: ON, the Super Tank can start panic events when a survivor is nearby.
 			// 2: ON, the Super Tank can start panic events periodically.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -2865,13 +3313,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank pimp slaps survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is repeatedly pimp slapped.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is repeatedly pimp slapped.
 		// - "Pimp Range"
 		// - "Pimp Range Chance"
-		// "Pimp Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is repeatedly pimp slapped.
+		// "Pimp Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is repeatedly pimp slapped.
 		// - "Pimp Chance"
 		// - "Pimp Hit Mode"
 		// Requires "st_pimp.smx" to be installed.
@@ -2883,6 +3331,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2945,13 +3404,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank pukes on survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank pukes on the survivor.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the Super Tank pukes on the survivor.
 		// - "Puke Range"
 		// - "Puke Range Chance"
-		// "Puke Hit" - When a survivor is hit by a Tank's claw or rock, the Tank pukes on the survivor.
+		// "Puke Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the Super Tank pukes on the survivor.
 		// - "Puke Chance"
 		// - "Puke Hit Mode"
 		// Requires "st_puke.smx" to be installed.
@@ -2963,6 +3422,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3013,22 +3483,49 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank gains a speed boost when on fire.
+		// "Ability Enabled" - When a Super Tank is on fire, it gains a speed boost.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the Super Tank ignites itself.
+		// - "Pyro Range"
+		// - "Pyro Range Chance"
+		// "Pyro Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the Super Tank ignites itself.
+		// - "Pyro Chance"
+		// - "Pyro Hit Mode"
 		// Requires "st_pyro.smx" to be installed.
 		"Pyro Ability"
 		{
 			// Enable this ability.
+			// Note: This setting does not affect the "Pyro Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, the Super Tank can ignite itself.
+			// 2: ON, the Super Tank can gain a speed boost while on fire.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
+			// Display a message whenever the abilities activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Pyro Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank's speed boost value when on fire.
@@ -3037,11 +3534,49 @@
 			// Maximum: 3.0
 			"Pyro Boost"					"1.0"
 
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Pyro Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Pyro Duration"					"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" to be on.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Pyro Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Pyro Hit Mode"					"0"
+
 			// The mode of the Super Tank's speed boost.
 			// --
 			// 0: Super Tank's speed = Run speed + Pyro boost
 			// 1: Super Tank's speed = Pyro boost
 			"Pyro Mode"						"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Pyro Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Pyro Range Chance"				"16"
 		}
 	}
 }
@@ -3052,13 +3587,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank silences itself around survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor cannot hear the Tank's noises.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor cannot hear the Super Tank's sounds.
 		// - "Quiet Range"
 		// - "Quiet Range Chance"
-		// "Quiet Hit" - When a survivor is hit by a Tank's claw or rock, the survivor cannot hear the Tank's noises.
+		// "Quiet Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor cannot hear the Super Tank's sounds.
 		// - "Quiet Chance"
 		// - "Quiet Hit Mode"
 		// Requires "st_quiet.smx" to be installed.
@@ -3070,6 +3605,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3121,12 +3667,96 @@
 }
 ```
 
+#### Recoil Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank gives survivors strong gun recoil.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor experiences strong recoil.
+		// - "Recoil Range"
+		// - "Recoil Range Chance"
+		// "Recoil Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor experiences strong recoil.
+		// - "Recoil Chance"
+		// - "Recoil Hit Mode"
+		// Requires "st_recoil.smx" to be installed.
+		"Recoil Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Recoil Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON, display message only when "Recoil Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
+			"Ability Message"				"0"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Recoil Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Recoil Duration"				"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Recoil Hit"					"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Recoil Hit Mode"				"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Recoil Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Recoil Range Chance"			"16"
+		}
+	}
+}
+```
+
 #### Regen Ability
 
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank regenerates health.
 		// Requires "st_regen.smx" to be installed.
@@ -3177,9 +3807,9 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank respawns.
+		// The Super Tank respawns upon death.
 		// Requires "st_respawn.smx" to be installed.
 		"Respawn Ability"
 		{
@@ -3208,11 +3838,18 @@
 			// Maximum: 9999999999 (Less chance)
 			"Respawn Chance"				"4"
 
-			// The Super Tank respawns as a random Super Tank.
+			// The mode of the Super Tank's respawns.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Respawn Random"				"0"
+			// 0: The Super Tank respawns as the same type.
+			// 1: The Super Tank respawns as the type used in the "Respawn Type" setting.
+			// 2: The Super Tank respawns as a random type.
+			"Respawn Mode"					"0"
+
+			// The type that the Super Tank will respawn as.
+			// --
+			// 0: OFF, use the randomization feature.
+			// 1-5000: ON, the type to respawn as.
+			"Respawn Type"					"0"
 		}
 	}
 }
@@ -3223,13 +3860,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank forces survivors to restart at the beginning of the map with a new loadout.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor respawns at the start of the map or near a teammate.
+		// The Super Tank forces survivors to restart at the beginning of the map or near a teammate with a new loadout.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor respawns at the start of the map or near a teammate.
 		// - "Restart Range"
 		// - "Restart Range Chance"
-		// "Restart Hit" - When a survivor is hit by a Tank's claw or rock, the survivor respawns at the start of the map or near a teammate.
+		// "Restart Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor respawns at the start of the map or near a teammate.
 		// - "Restart Chance"
 		// - "Restart Hit Mode"
 		// Requires "st_restart.smx" to be installed.
@@ -3241,6 +3878,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3305,7 +3953,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank creates rock showers.
 		// Requires "st_rock.smx" to be installed.
@@ -3361,13 +4009,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank sends survivors into space.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is sent into space.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is sent into space.
 		// - "Rocket Range"
 		// - "Rocket Range Chance"
-		// "Rocket Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is sent into space.
+		// "Rocket Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is sent into space.
 		// - "Rocket Chance"
 		// - "Rocket Hit Mode"
 		// Requires "st_rocket.smx" to be installed.
@@ -3379,6 +4027,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3393,6 +4052,12 @@
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
 			"Rocket Chance"					"4"
+
+			// The Super Tank sends survivors into space after this many seconds passes upon triggering the ability.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Rocket Delay"					"1.0"
 
 			// Enable the Super Tank's claw/rock attack.
 			// --
@@ -3428,13 +4093,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank shakes the survivors' screens.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's screen is shaken.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's screen is shaken.
 		// - "Shake Range"
 		// - "Shake Range Chance"
-		// "Shake Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's screen is shaken.
+		// "Shake Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor's screen is shaken.
 		// - "Shake Chance"
 		// - "Shake Hit Mode"
 		// Requires "st_shake.smx" to be installed.
@@ -3446,6 +4111,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3502,9 +4178,9 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank protects itself with a shield and traps survivors inside their own shields.
+		// The Super Tank protects itself with a shield and throws propane tanks.
 		// Requires "st_shield.smx" to be installed.
 		"Shield Ability"
 		{
@@ -3530,9 +4206,9 @@
 			// 3rd number = Blue
 			"Shield Color"					"255,255,255"
 
-			// The Super Tank's shield reactivates after this many seconds passes.
+			// The Super Tank's shield reactivates after this many seconds passes upon destroying the shield.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Shield Delay"					"5.0"
 		}
@@ -3545,13 +4221,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank shoves survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is shoved repeatedly.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is shoved repeatedly.
 		// - "Shove Range"
 		// - "Shove Range Chance"
-		// "Shove Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is shoved repeatedly.
+		// "Shove Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is shoved repeatedly.
 		// - "Shove Chance"
 		// - "Shove Hit Mode"
 		// Requires "st_shove.smx" to be installed.
@@ -3563,6 +4239,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3619,13 +4306,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank smashes survivors or crushes them to death.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is smashed.
+		// The Super Tank smashes survivors to death.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is smashed to death.
 		// - "Smash Range"
 		// - "Smash Range Chance"
-		// "Smash Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is crushed to death.
+		// "Smash Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is smashed to death.
 		// - "Smash Chance"
 		// - "Smash Hit Mode"
 		// Requires "st_smash.smx" to be installed.
@@ -3637,6 +4324,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3687,13 +4385,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank smites survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is smitten.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is smitten.
 		// - "Smite Range"
 		// - "Smite Range Chance"
-		// "Smite Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is smitten.
+		// "Smite Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is smitten.
 		// - "Smite Chance"
 		// - "Smite Hit Mode"
 		// Requires "st_smite.smx" to be installed.
@@ -3705,6 +4403,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3755,7 +4464,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank spams rocks at survivors.
 		// Requires "st_spam.smx" to be installed.
@@ -3800,7 +4509,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank constantly deals splash damage to nearby survivors.
 		// Requires "st_splash.smx" to be installed.
@@ -3851,13 +4560,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank slows survivors down.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is slowed down.
+		// The Super Tank stuns and slows survivors down.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is slowed down.
 		// - "Stun Range"
 		// - "Stun Range Chance"
-		// "Stun Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is slowed down.
+		// "Stun Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is slowed down.
 		// - "Stun Chance"
 		// - "Stun Hit Mode"
 		// Requires "st_stun.smx" to be installed.
@@ -3869,6 +4578,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3931,9 +4651,9 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank throws things.
+		// The Super Tank throws cars, special infected, or itself.
 		// Requires "st_throw.smx" to be installed.
 		"Throw Ability"
 		{
@@ -3957,7 +4677,7 @@
 			// 7: ON, display message when 1, 2, or 3 apply.
 			"Ability Message"				"0"
 
-			// The Super Tank can throw these cars.
+			// The Super Tank throws these cars.
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chance of being chosen.
 			// Character limit: 6
@@ -3967,7 +4687,7 @@
 			// 3: Car that looks like a Sixth Generation Chevrolet Impala.
 			"Throw Car Options"				"123"
 
-			// The Super Tank can throw these special infected.
+			// The Super Tank throws these special infected.
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chance of being chosen.
 			// Character limit: 14
@@ -3990,7 +4710,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank throws a heat-seeking rock that will track down the nearest survivor.
 		// Requires "st_track.smx" to be installed.
@@ -4036,14 +4756,14 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank gains health from hurting survivors.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the Tank gains health.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the Super Tank gains health.
 		// - "Vampire Health"
 		// - "Vampire Range"
 		// - "Vampire Range Chance"
-		// "Vampire Hit" - When a survivor is hit by a Tank's claw or rock, the Tank gains health.
+		// "Vampire Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the Super Tank gains health.
 		// - "Vampire Chance"
 		// - "Vampire Hit Mode"
 		// Requires "st_vampire.smx" to be installed.
@@ -4055,6 +4775,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4116,13 +4847,13 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank changes the survivors' field of views.
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor's vision changes.
+		// The Super Tank changes the survivors' vision.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's vision changes.
 		// - "Vision Range"
 		// - "Vision Range Chance"
-		// "Vision Hit" - When a survivor is hit by a Tank's claw or rock, the survivor's vision changes.
+		// "Vision Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor's vision changes.
 		// - "Vision Chance"
 		// - "Vision Hit Mode"
 		// Requires "st_vision.smx" to be installed.
@@ -4134,6 +4865,17 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4196,15 +4938,15 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank warps to survivors and warps survivors back to teammates.
+		// The Super Tank warps to survivors and warps survivors to random teammates.
 		// "Ability Enabled" - The Tank warps to a random survivor.
 		// - "Warp Interval"
-		// "Ability Enabled" - When a survivor is within range of the Tank, the survivor is warped to a random teammate.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is warped to a random teammate.
 		// - "Warp Range"
 		// - "Warp Range Chance"
-		// "Warp Hit" - When a survivor is hit by a Tank's claw or rock, the survivor is warped to a random teammate.
+		// "Warp Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is warped to a random teammate.
 		// - "Warp Chance"
 		// - "Warp Hit Mode"
 		// Requires "st_warp.smx" to be installed.
@@ -4218,6 +4960,17 @@
 			// 2: ON, the Super Tank can warp itself to a survivor.
 			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -4284,7 +5037,7 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
 		// The Super Tank converts nearby common infected into Witch minions.
 		// Requires "st_witch.smx" to be installed.
@@ -4312,7 +5065,7 @@
 			// --
 			// Minimum: 1
 			// Maximum: 9999999999
-			"Witch Minion Damage"			"5"
+			"Witch Damage"					"5"
 
 			// The distance between a common infected and the Super Tank needed to trigger the ability.
 			// --
@@ -4329,22 +5082,50 @@
 ```
 "Super Tanks++"
 {
-	"Tank 1"
+	"Tank #1"
 	{
-		// The Super Tank spawns common infected.
+		// The Super Tank creates zombie mobs.
+		// "Ability Enabled" - The Tank creates a zombie mob periodically.
+		// - "Zombie Interval"
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, a zombie mob appears.
+		// - "Zombie Range"
+		// - "Zombie Range Chance"
+		// "Panic Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, a zombie mob appears.
+		// - "Zombie Chance"
+		// - "Zombie Hit Mode"
 		// Requires "st_zombie.smx" to be installed.
 		"Zombie Ability"
 		{
 			// Enable this ability.
+			// Note: This setting does not affect the "Zombie Hit" setting.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, the Super Tank can create zombie mobs when a survivor is nearby.
+			// 2: ON, the Super Tank can create zombie mobs periodically.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"				"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
+			// Display a message whenever the ability activate/deactivate.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, display message only when "Zombie Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: ON, display message when 1 and 2 apply.
+			// 5: ON, display message when 1 and 3 apply.
+			// 6: ON, display message when 2 and 3 apply.
+			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
 			// The Super Tank spawns this many common infected at once.
@@ -4353,11 +5134,43 @@
 			// Maximum: 100
 			"Zombie Amount"					"10"
 
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Zombie Chance"					"4"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" to be on.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Zombie Hit"					"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Zombie Hit Mode"				"0"
+
 			// The Super Tank spawns a zombie mob every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Zombie Interval"				"5.0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Zombie Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Zombie Range Chance"			"16"
 		}
 	}
 }

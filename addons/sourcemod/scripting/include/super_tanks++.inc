@@ -12,132 +12,12 @@
 #define ST_PREFIX2 "\x04[ST++]\x01"
 #define ST_PREFIX3 "\x04[ST++]\x03"
 #define ST_PREFIX4 "\x04[ST++]\x05"
-#define ST_NAME "Super Tanks++"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_DESCRIPTION "Super Tanks++ makes fighting Tanks great again!"
-#define ST_VERSION "8.41"
+#define ST_VERSION "8.42"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 5000
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
-#define MELEE_AXE_V "models/weapons/melee/v_fireaxe.mdl"
-#define MELEE_AXE_W "models/weapons/melee/w_fireaxe.mdl"
-#define MELEE_BAT_V "models/weapons/melee/v_bat.mdl"
-#define MELEE_BAT_W "models/weapons/melee/w_bat.mdl"
-#define MELEE_CHAINSAW_V "models/weapons/melee/v_chainsaw.mdl"
-#define MELEE_CHAINSAW_W "models/weapons/melee/w_chainsaw.mdl"
-#define MELEE_CRICKET_V "models/weapons/melee/v_cricket_bat.mdl"
-#define MELEE_CRICKET_W "models/weapons/melee/w_cricket_bat.mdl"
-#define MELEE_CROWBAR_V "models/weapons/melee/v_crowbar.mdl"
-#define MELEE_CROWBAR_W "models/weapons/melee/w_crowbar.mdl"
-#define MELEE_GOLFCLUB_V "models/weapons/melee/v_golfclub.mdl"
-#define MELEE_GOLFCLUB_W "models/weapons/melee/w_golfclub.mdl"
-#define MELEE_GUITAR_V "models/weapons/melee/v_electric_guitar.mdl"
-#define MELEE_GUITAR_W "models/weapons/melee/w_electric_guitar.mdl"
-#define MELEE_KATANA_V "models/weapons/melee/v_katana.mdl"
-#define MELEE_KATANA_W "models/weapons/melee/w_katana.mdl"
-#define MELEE_KNIFE_V "models/v_models/v_knife_t.mdl"
-#define MELEE_KNIFE_W "models/w_models/weapons/w_knife_t.mdl"
-#define MELEE_MACHETE_V "models/weapons/melee/v_machete.mdl"
-#define MELEE_MACHETE_W "models/weapons/melee/w_machete.mdl"
-#define MELEE_PAN_V "models/weapons/melee/v_frying_pan.mdl"
-#define MELEE_PAN_W "models/weapons/melee/w_frying_pan.mdl"
-#define MELEE_TONFA_V "models/weapons/melee/v_tonfa.mdl"
-#define MELEE_TONFA_W "models/weapons/melee/w_tonfa.mdl"
-#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
-#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
-#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
-#define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
-#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
-#define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
-#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
-#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
-#define MODEL_TANK "models/infected/hulk.mdl"
-#define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
-#define MODEL_WITCH "models/infected/witch.mdl"
-#define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl"
-#define PARTICLE_BLOOD "boomer_explode_D"
-#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
-#define PARTICLE_FIRE "aircraft_destroy_fastFireTrail"
-#define PARTICLE_ICE "steam_manhole"
-#define PARTICLE_METEOR "smoke_medium_01"
-#define PARTICLE_SMOKE "smoker_smokecloud"
-#define PARTICLE_SPIT "spitter_projectile"
-#define SCRIPT_AXE "scripts/melee/fireaxe.txt"
-#define SCRIPT_BAT "scripts/melee/baseball_bat.txt"
-#define SCRIPT_CRICKET "scripts/melee/cricket_bat.txt"
-#define SCRIPT_CROWBAR "scripts/melee/crowbar.txt"
-#define SCRIPT_GOLFCLUB "scripts/melee/golfclub.txt"
-#define SCRIPT_GUITAR "scripts/melee/electric_guitar.txt"
-#define SCRIPT_KATANA "scripts/melee/katana.txt"
-#define SCRIPT_KNIFE "scripts/melee/knife.txt"
-#define SCRIPT_MACHETE "scripts/melee/machete.txt"
-#define SCRIPT_PAN "scripts/melee/frying_pan.txt"
-#define SCRIPT_TONFA "scripts/melee/tonfa.txt"
-#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
-#define SPRITE_GLOW "sprites/glow.vmt"
-#define SOUND_BOSS "items/suitchargeok1.wav"
-#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
-#define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
-#define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"
-#define SOUND_EXPLOSION2 "ambient/explosions/explode_2.wav"
-#define SOUND_EXPLOSION "ambient/explosions/exp2.wav"
-#define SOUND_FIRE "weapons/rpg/rocketfire1.wav"
-#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav"
-#define SOUND_INFECTED "npc/infected/action/die/male/death_42.wav"
-#define SOUND_INFECTED2 "npc/infected/action/die/male/death_43.wav"
-#define SOUND_LAUNCH "npc/env_headcrabcanister/launch.wav"
-#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav"
-#define WEAPON_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
-#define WEAPON_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
-#define WEAPON_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
-#define WEAPON_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
-#define WEAPON_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
-#define WEAPON_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
-#define WEAPON_PISTOL_V "models/v_models/weapons/v_pistol_1911.mdl"
-#define WEAPON_PISTOL_W "models/w_models/weapons/w_pistol_1911.mdl"
-#define WEAPON_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
-#define WEAPON_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
-#define WEAPON_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
-#define WEAPON_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
-#define WEAPON2_AK47_V "models/v_models/weapons/v_rifle_ak47.mdl"
-#define WEAPON2_AK47_W "models/w_models/weapons/w_rifle_ak47.mdl"
-#define WEAPON2_AUTO_V "models/v_models/weapons/v_autoshot_m4super.mdl"
-#define WEAPON2_AUTO_W "models/w_models/weapons/w_autoshot_m4super.mdl"
-#define WEAPON2_AWP_V "models/v_models/weapons/v_sniper_awp.mdl"
-#define WEAPON2_AWP_W "models/w_models/weapons/w_sniper_awp.mdl"
-#define WEAPON2_CHROME_V "models/v_models/weapons/v_shotgun.mdl"
-#define WEAPON2_CHROME_W "models/w_models/weapons/w_shotgun.mdl"
-#define WEAPON2_DESERT_V "models/v_models/weapons/v_desert_rifle.mdl"
-#define WEAPON2_DESERT_W "models/w_models/weapons/w_desert_rifle.mdl"
-#define WEAPON2_GRENADE_V "models/v_models/weapons/v_grenade_launcher.mdl"
-#define WEAPON2_GRENADE_W "models/w_models/weapons/w_grenade_launcher.mdl"
-#define WEAPON2_HUNT_V "models/v_models/weapons/v_sniper_mini14.mdl"
-#define WEAPON2_HUNT_W "models/w_models/weapons/w_sniper_mini14.mdl"
-#define WEAPON2_M16_V "models/v_models/weapons/v_rifle_m16a2.mdl"
-#define WEAPON2_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
-#define WEAPON2_M60_V "models/v_models/weapons/v_m60.mdl"
-#define WEAPON2_M60_W "models/w_models/weapons/w_m60.mdl"
-#define WEAPON2_MAGNUM_V "models/v_models/weapons/v_desert_eagle.mdl"
-#define WEAPON2_MAGNUM_W "models/w_models/weapons/w_desert_eagle.mdl"
-#define WEAPON2_MILITARY_V "models/v_models/weapons/v_sniper_military.mdl"
-#define WEAPON2_MILITARY_W "models/w_models/weapons/w_sniper_military.mdl"
-#define WEAPON2_MP5_V "models/v_models/weapons/v_smg_mp5.mdl"
-#define WEAPON2_MP5_W "models/w_models/weapons/w_smg_mp5.mdl"
-#define WEAPON2_PISTOL_V "models/v_models/weapons/v_pistol_a.mdl"
-#define WEAPON2_PISTOL_W "models/w_models/weapons/w_pistol_a.mdl"
-#define WEAPON2_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
-#define WEAPON2_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
-#define WEAPON2_SCOUT_V "models/v_models/weapons/v_sniper_scout.mdl"
-#define WEAPON2_SCOUT_W "models/w_models/weapons/w_sniper_scout.mdl"
-#define WEAPON2_SG552_V "models/v_models/weapons/v_rifle_sg552.mdl"
-#define WEAPON2_SG552_W "models/w_models/weapons/w_rifle_sg552.mdl"
-#define WEAPON2_SILENCED_V "models/v_models/weapons/v_smg_a.mdl"
-#define WEAPON2_SILENCED_W "models/w_models/weapons/w_smg_a.mdl"
-#define WEAPON2_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
-#define WEAPON2_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
-#define WEAPON2_SPAS_V "models/v_models/weapons/v_shotgun_spas.mdl"
-#define WEAPON2_SPAS_W "models/w_models/weapons/w_shotgun_spas.mdl"
 
 // Forwards
 /* Called every second to trigger the Super Tank's ability.
@@ -172,6 +52,21 @@ forward void ST_Configs(const char[] savepath, bool main);
  * @param name			String containing the name of the event.
  */
 forward void ST_Event(Event event, const char[] name);
+
+/* Called when the core plugin is unloaded/reloaded.
+ * Use this forward to get rid of any modifications to
+ * Tanks or survivors.
+ */
+forward void ST_PluginEnd();
+
+/* Called when the Tank spawns.
+ * Use this forward for any on-spawn presets.
+ * If you plan on using this to activate an ability,
+ * use ST_Ability() instead.
+ *
+ * @param client		Client index of the Tank.
+ */
+forward void ST_Preset(int client);
 
 /* Called when the Tank's rock breaks.
  * Use this forward for any after-effects.
@@ -228,6 +123,20 @@ native void ST_SpawnTank(int client, int type);
  */
 native bool ST_TankAllowed(int client);
 
+/* Returns the RGB colors given to a Tank.
+ *
+ * @param client		Client index of the Tank.
+ * @param mode			1 = Skin color, 2 = Glow
+ *							outline color
+ * @param red			Buffer to store the red
+ *							color in.
+ * @param green			Buffer to store the green
+ *							color in.
+ * @param blue			Buffer to store the blue
+ *							color in.
+ */
+native void ST_TankColors(int client, int mode, char[] red, char[] green, char[] blue);
+
 /* Returns the custom name given to a Tank.
  *
  * @param client		Client index of the Tank.
@@ -255,7 +164,7 @@ stock bool bHasIdlePlayer(int client)
 {
 	char sClassname[12];
 	GetEntityNetClass(client, sClassname, sizeof(sClassname));
-	if (strcmp(sClassname, "SurvivorBot") == 0)
+	if (StrEqual(sClassname, "SurvivorBot"))
 	{
 		int iSpectatorUserId = GetEntProp(client, Prop_Send, "m_humanSpectatorUserID");
 		if (iSpectatorUserId > 0)
@@ -300,6 +209,17 @@ stock bool bIsFinaleMap()
 	return FindEntityByClassname(-1, "trigger_finale") != -1;
 }
 
+stock bool bIsGunWeapon(int client)
+{
+	char sWeapon[32];
+	GetClientWeapon(client, sWeapon, sizeof(sWeapon));
+	if (GetPlayerWeaponSlot(client, 0) > 0 || (GetPlayerWeaponSlot(client, 1) > 0 && StrContains(sWeapon, "pistol", false) != -1))
+	{
+		return true;
+	}
+	return false;
+}
+
 stock bool bIsHumanSurvivor(int client)
 {
 	return bIsSurvivor(client) && !IsFakeClient(client) && !bHasIdlePlayer(client) && !bIsPlayerIdle(client);
@@ -322,12 +242,7 @@ stock bool bIsInfected(int client)
 
 stock bool bIsJockey(int client)
 {
-	return bIsInfected(client) && bIsL4D2Game() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5;
-}
-
-stock bool bIsL4D2Game()
-{
-	return GetEngineVersion() == Engine_Left4Dead2;
+	return bIsInfected(client) && bIsValidGame() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5;
 }
 
 stock bool bIsPlayerBurning(int client)
@@ -358,7 +273,7 @@ stock bool bIsPlayerIdle(int client)
 		}
 		char sClassname[12];
 		GetEntityNetClass(iPlayer, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "SurvivorBot") == 0)
+		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
 			if (iSpectatorUserId > 0)
@@ -401,7 +316,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 		HookSingleEntityOutput(iGameMode, "OnScavenge", vGameMode, true);
 		ActivateEntity(iGameMode);
 		AcceptEntityInput(iGameMode, "PostSpawnActivate");
-		AcceptEntityInput(iGameMode, "Kill");
+		RemoveEntity(iGameMode);
 		if (g_iCurrentMode == 0 || !(mode & g_iCurrentMode))
 		{
 			return false;
@@ -410,7 +325,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 	char sGameMode[32], sGameModes[513];
 	convar.GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
-	if (strcmp(enabled, ""))
+	if (!StrEqual(enabled, ""))
 	{
 		Format(sGameModes, sizeof(sGameModes), ",%s,", enabled);
 		if (StrContains(sGameModes, sGameMode, false) == -1)
@@ -418,7 +333,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 			return false;
 		}
 	}
-	if (strcmp(disabled, ""))
+	if (!StrEqual(disabled, ""))
 	{
 		Format(sGameModes, sizeof(sGameModes), ",%s,", disabled);
 		if (StrContains(sGameModes, sGameMode, false) != -1)
@@ -451,7 +366,7 @@ stock bool bIsSurvivor(int client)
 
 stock bool bIsTank(int client)
 {
-	return bIsInfected(client) && (bIsL4D2Game() ? GetEntProp(client, Prop_Send, "m_zombieClass") == 8 : GetEntProp(client, Prop_Send, "m_zombieClass") == 5);
+	return bIsInfected(client) && (bIsValidGame() ? GetEntProp(client, Prop_Send, "m_zombieClass") == 8 : GetEntProp(client, Prop_Send, "m_zombieClass") == 5);
 }
 
 stock bool bIsValidClient(int client)
@@ -469,6 +384,12 @@ stock bool bIsValidEntRef(int entity)
 	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
+stock bool bIsValidGame(bool l4d2 = true)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	return l4d2 ? evEngine == Engine_Left4Dead2 : evEngine == Engine_Left4Dead;
+}
+
 stock bool bIsValidHumanClient(int client)
 {
 	return bIsValidClient(client) && !IsFakeClient(client);
@@ -476,11 +397,11 @@ stock bool bIsValidHumanClient(int client)
 
 stock bool bIsWitch(int client)
 {
-	if (IsValidEntity(client))
+	if (bIsValidEntity(client))
 	{
 		char sClassname[32];
 		GetEntityClassname(client, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "witch") == 0)
+		if (StrEqual(sClassname, "witch"))
 		{
 			return true;
 		}
@@ -616,6 +537,19 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int flag)
 }
 
 // Functions
+stock float flClamp(float value, float min, float max)
+{
+	if (value < min)
+	{
+		value = min;
+	}
+	else if (value > max)
+	{
+		value = max;
+	}
+	return value;
+}
+
 stock float flGetAngle(float angle1[3], float angle2[3])
 {
 	return ArcCosine(GetVectorDotProduct(angle1, angle2) / (GetVectorLength(angle1) * GetVectorLength(angle2)));
@@ -659,7 +593,7 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace
 	return GetVectorDistance(pos, flHitPos);
 }
 
-stock float flSetFloatLimit(float value, float min, float max)
+stock int iClamp(int value, int min, int max)
 {
 	if (value < min)
 	{
@@ -715,7 +649,7 @@ stock int iGetIdlePlayer(int client)
 	{
 		char sClassname[12];
 		GetEntityNetClass(client, sClassname, sizeof(sClassname));
-		if (strcmp(sClassname, "SurvivorBot") == 0)
+		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iIdler = GetClientOfUserId(GetEntProp(client, Prop_Send, "m_humanSpectatorUserID"));
 			if (iIdler > 0 && IsClientInGame(iIdler) && GetClientTeam(iIdler) == 1)
@@ -816,25 +750,12 @@ stock int iGetWitchCount()
 	return iWitchCount;
 }
 
-stock int iSetCellLimit(int value, int min, int max)
-{
-	if (value < min)
-	{
-		value = min;
-	}
-	else if (value > max)
-	{
-		value = max;
-	}
-	return value;
-}
-
 stock void vAttachParticle(int client, const char[] particlename, float time = 0.0, float origin = 0.0)
 {
 	if (bIsValidClient(client))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
-		if (IsValidEntity(iParticle))
+		if (bIsValidEntity(iParticle))
 		{
 			float flPos[3];
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
@@ -868,7 +789,7 @@ stock void vCopyVector(float source[3], float target[3])
 
 stock void vCreateConfigFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
 {
-	char sConfigFilename[128], sConfigLabel[128];
+	char sConfigFilename[PLATFORM_MAX_PATH], sConfigLabel[PLATFORM_MAX_PATH];
 	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.cfg", filepath, folder, filename);
 	if (FileExists(sConfigFilename))
 	{
@@ -890,7 +811,7 @@ stock void vCreateParticle(int client, const char[] particlename, float time, fl
 	if (bIsValidClient(client))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
-		if (IsValidEntity(iParticle))
+		if (bIsValidEntity(iParticle))
 		{
 			float flPos[3];
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
@@ -920,7 +841,7 @@ stock void vDamage(int client, const char[] damage)
 		DispatchKeyValue(iPointHurt, "DamageType", "65536");
 		DispatchSpawn(iPointHurt);
 		AcceptEntityInput(iPointHurt, "Hurt", client);
-		AcceptEntityInput(iPointHurt, "Kill");
+		RemoveEntity(iPointHurt);
 	}
 }
 
@@ -934,6 +855,33 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 		SetVariantString(sVariant);
 		AcceptEntityInput(entity, "AddOutput");
 		AcceptEntityInput(entity, "FireUser1");
+	}
+}
+
+stock void vDropWeapon(int client, const char[] slots, const char[] number, int slot)
+{
+	if (StrContains(slots, number) != -1)
+	{
+		if (bIsSurvivor(client) && GetPlayerWeaponSlot(client, slot) > 0)
+		{
+			SDKHooks_DropWeapon(client, GetPlayerWeaponSlot(client, slot), NULL_VECTOR, NULL_VECTOR);
+		}
+	}
+}
+
+stock void vEffect(int client, int owner, const char[] enabled, const char[] mode)
+{
+	if (StrContains(enabled, mode) != -1)
+	{
+		char sRGB[4][4];
+		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
+		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
+		iRed = iClamp(iRed, 0, 255);
+		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
+		iGreen = iClamp(iGreen, 0, 255);
+		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
+		iBlue = iClamp(iBlue, 0, 255);
+		vFade(client, 800, 300, iRed, iGreen, iBlue);
 	}
 }
 
@@ -951,43 +899,27 @@ stock void vFade(int client, int duration, int unknown, int red, int green, int 
 
 public void vGameMode(const char[] output, int caller, int activator, float delay)
 {
-	if (strcmp(output, "OnCoop") == 0)
+	if (StrEqual(output, "OnCoop"))
 	{
 		g_iCurrentMode = 1;
 	}
-	else if (strcmp(output, "OnVersus") == 0)
+	else if (StrEqual(output, "OnVersus"))
 	{
 		g_iCurrentMode = 2;
 	}
-	else if (strcmp(output, "OnSurvival") == 0)
+	else if (StrEqual(output, "OnSurvival"))
 	{
 		g_iCurrentMode = 4;
 	}
-	else if (strcmp(output, "OnScavenge") == 0)
+	else if (StrEqual(output, "OnScavenge"))
 	{
 		g_iCurrentMode = 8;
 	}
 }
 
-stock void vGhost(int client, int slot)
-{
-	if (bIsSurvivor(client) && GetPlayerWeaponSlot(client, slot) > 0)
-	{
-		SDKHooks_DropWeapon(client, GetPlayerWeaponSlot(client, slot), NULL_VECTOR, NULL_VECTOR);
-	}
-}
-
-stock void vGhostDrop(int client, const char[] slots, const char[] number, int slot)
-{
-	if (StrContains(slots, number) != -1)
-	{
-		vGhost(client, slot);
-	}
-}
-
 stock void vHeal(int client, int health, int extrahealth, int maxhealth)
 {
-	maxhealth = iSetCellLimit(maxhealth, 1, ST_MAXHEALTH);
+	maxhealth = iClamp(maxhealth, 1, ST_MAXHEALTH);
 	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth,
 		iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth,
 		iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
@@ -1024,7 +956,7 @@ stock void vMultiTargetFilters(int toggle)
 stock void vPrecacheParticle(const char[] particlename)
 {
 	int iParticle = CreateEntityByName("info_particle_system");
-	if (IsValidEntity(iParticle))
+	if (bIsValidEntity(iParticle))
 	{
 		DispatchKeyValue(iParticle, "effect_name", particlename);
 		DispatchSpawn(iParticle);
@@ -1033,6 +965,16 @@ stock void vPrecacheParticle(const char[] particlename)
 		vSetEntityParent(iParticle, iParticle);
 		iParticle = EntIndexToEntRef(iParticle);
 		vDeleteEntity(iParticle);
+	}
+}
+
+stock void vRemoveWeapon(int client, int slot)
+{
+	int iSlot = GetPlayerWeaponSlot(client, slot);
+	if (iSlot > 0)
+	{
+		RemovePlayerItem(client, iSlot);
+		RemoveEntity(iSlot);
 	}
 }
 
@@ -1062,7 +1004,7 @@ stock void vShake(int client, float duration = 1.0)
 stock void vSpawnInfected(int client, const char[] infected)
 {
 	ChangeClientTeam(client, 3);
-	vCheatCommand(client, bIsL4D2Game() ? "z_spawn_old" : "z_spawn", infected);
+	vCheatCommand(client, bIsValidGame() ? "z_spawn_old" : "z_spawn", infected);
 	KickClient(client);
 }
 
@@ -1104,6 +1046,9 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 	MarkNativeAsOptional("ST_PluginEnabled");
 	MarkNativeAsOptional("ST_SpawnTank");
 	MarkNativeAsOptional("ST_TankAllowed");
+	MarkNativeAsOptional("ST_TankColors");
+	MarkNativeAsOptional("ST_TankName");
 	MarkNativeAsOptional("ST_TankType");
+	MarkNativeAsOptional("ST_TankWave");
 }
 #endif

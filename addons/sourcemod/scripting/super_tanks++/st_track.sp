@@ -10,7 +10,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Track Ability",
 	author = ST_AUTHOR,
-	description = ST_DESCRIPTION,
+	description = "The Super Tank throws a heat-seeking rock that will track down the nearest survivor.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -18,12 +18,11 @@ public Plugin myinfo =
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 float g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
-int g_iGlowEffect[ST_MAXTYPES + 1], g_iGlowEffect2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
+int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Track Ability only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -38,7 +37,7 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = true;
 	}
@@ -46,7 +45,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (strcmp(name, "st_clone", false) == 0)
+	if (StrEqual(name, "st_clone", false))
 	{
 		g_bCloneInstalled = false;
 	}
@@ -69,23 +68,23 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sName[MAX_NAME_LENGTH + 1];
-		Format(sName, sizeof(sName), "Tank %d", iIndex);
+		Format(sName, sizeof(sName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
 			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
 			main ? (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255")) : (kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]));
-			main ? (g_iGlowEffect[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", 1)) : (g_iGlowEffect2[iIndex] = kvSuperTanks.GetNum("General/Glow Effect", g_iGlowEffect[iIndex]));
-			main ? (g_iGlowEffect[iIndex] = iSetCellLimit(g_iGlowEffect[iIndex], 0, 1)) : (g_iGlowEffect2[iIndex] = iSetCellLimit(g_iGlowEffect2[iIndex], 0, 1));
+			main ? (g_iGlowOutline[iIndex] = kvSuperTanks.GetNum("General/Glow Outline", 1)) : (g_iGlowOutline2[iIndex] = kvSuperTanks.GetNum("General/Glow Outline", g_iGlowOutline[iIndex]));
+			main ? (g_iGlowOutline[iIndex] = iClamp(g_iGlowOutline[iIndex], 0, 1)) : (g_iGlowOutline2[iIndex] = iClamp(g_iGlowOutline2[iIndex], 0, 1));
 			main ? (g_iTrackAbility[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", 0)) : (g_iTrackAbility2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", g_iTrackAbility[iIndex]));
-			main ? (g_iTrackAbility[iIndex] = iSetCellLimit(g_iTrackAbility[iIndex], 0, 1)) : (g_iTrackAbility2[iIndex] = iSetCellLimit(g_iTrackAbility2[iIndex], 0, 1));
+			main ? (g_iTrackAbility[iIndex] = iClamp(g_iTrackAbility[iIndex], 0, 1)) : (g_iTrackAbility2[iIndex] = iClamp(g_iTrackAbility2[iIndex], 0, 1));
 			main ? (g_iTrackMessage[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", 0)) : (g_iTrackMessage2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", g_iTrackMessage[iIndex]));
-			main ? (g_iTrackMessage[iIndex] = iSetCellLimit(g_iTrackMessage[iIndex], 0, 1)) : (g_iTrackMessage2[iIndex] = iSetCellLimit(g_iTrackMessage2[iIndex], 0, 1));
+			main ? (g_iTrackMessage[iIndex] = iClamp(g_iTrackMessage[iIndex], 0, 1)) : (g_iTrackMessage2[iIndex] = iClamp(g_iTrackMessage2[iIndex], 0, 1));
 			main ? (g_iTrackChance[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Chance", 4)) : (g_iTrackChance2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Chance", g_iTrackChance[iIndex]));
-			main ? (g_iTrackChance[iIndex] = iSetCellLimit(g_iTrackChance[iIndex], 1, 9999999999)) : (g_iTrackChance2[iIndex] = iSetCellLimit(g_iTrackChance2[iIndex], 1, 9999999999));
+			main ? (g_iTrackChance[iIndex] = iClamp(g_iTrackChance[iIndex], 1, 9999999999)) : (g_iTrackChance2[iIndex] = iClamp(g_iTrackChance2[iIndex], 1, 9999999999));
 			main ? (g_iTrackMode[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", 1)) : (g_iTrackMode2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", g_iTrackMode[iIndex]));
-			main ? (g_iTrackMode[iIndex] = iSetCellLimit(g_iTrackMode[iIndex], 0, 1)) : (g_iTrackMode2[iIndex] = iSetCellLimit(g_iTrackMode2[iIndex], 0, 1));
+			main ? (g_iTrackMode[iIndex] = iClamp(g_iTrackMode[iIndex], 0, 1)) : (g_iTrackMode2[iIndex] = iClamp(g_iTrackMode2[iIndex], 0, 1));
 			main ? (g_flTrackSpeed[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", 500.0)) : (g_flTrackSpeed2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[iIndex]));
-			main ? (g_flTrackSpeed[iIndex] = flSetFloatLimit(g_flTrackSpeed[iIndex], 0.1, 9999999999.0)) : (g_flTrackSpeed2[iIndex] = flSetFloatLimit(g_flTrackSpeed2[iIndex], 100.0, 500.0));
+			main ? (g_flTrackSpeed[iIndex] = flClamp(g_flTrackSpeed[iIndex], 0.1, 9999999999.0)) : (g_flTrackSpeed2[iIndex] = flClamp(g_flTrackSpeed2[iIndex], 100.0, 500.0));
 			kvSuperTanks.Rewind();
 		}
 	}
@@ -162,7 +161,7 @@ stock void vTrack(int entity)
 			}
 			NormalizeVector(flVelocity, flVelocity);
 			int iTarget = iGetRandomTarget(flPos, flVelocity);
-			float flVelocity2[3], flVector[3], flAngle[3], flDistance = 1000.0;
+			float flVelocity2[3], flVector[3], flAngles[3], flDistance = 1000.0;
 			flVector[0] = flVector[1] = flVector[2] = 0.0;
 			bool bVisible;
 			if (iTarget > 0)
@@ -175,26 +174,26 @@ stock void vTrack(int entity)
 				AddVectors(flPos2, flVelocity2, flPos2);
 				MakeVectorFromPoints(flPos, flPos2, flVector);
 			}
-			GetVectorAngles(flVelocity, flAngle);
+			GetVectorAngles(flVelocity, flAngles);
 			float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
 				flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0;
 			flFront[0] = flFront[1] = flFront[2] = 0.0;
 			if (bVisible)
 			{
 				flBase = 80.0;
-				float flFront2 = flGetDistance(flPos, flAngle, 0.0, 0.0, flFront, entity, 3),
-					flDown2 = flGetDistance(flPos, flAngle, 90.0, 0.0, flDown, entity, 3),
-					flUp2 = flGetDistance(flPos, flAngle, -90.0, 0.0, flUp, entity, 3),
-					flLeft2 = flGetDistance(flPos, flAngle, 0.0, 90.0, flLeft, entity, 3),
-					flRight2 = flGetDistance(flPos, flAngle, 0.0, -90.0, flRight, entity, 3),
-					flDistance2 = flGetDistance(flPos, flAngle, 30.0, 0.0, flVector1, entity, 3),
-					flDistance3 = flGetDistance(flPos, flAngle, 30.0, 45.0, flVector2, entity, 3),
-					flDistance4 = flGetDistance(flPos, flAngle, 0.0, 45.0, flVector3, entity, 3),
-					flDistance5 = flGetDistance(flPos, flAngle, -30.0, 45.0, flVector4, entity, 3),
-					flDistance6 = flGetDistance(flPos, flAngle, -30.0, 0.0, flVector5, entity, 3),
-					flDistance7 = flGetDistance(flPos, flAngle, -30.0, -45.0, flVector6, entity, 3),
-					flDistance8 = flGetDistance(flPos, flAngle, 0.0, -45.0, flVector7, entity, 3),
-					flDistance9 = flGetDistance(flPos, flAngle, 30.0, -45.0, flVector8, entity, 3);
+				float flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, entity, 3),
+					flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, entity, 3),
+					flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, entity, 3),
+					flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, entity, 3),
+					flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, entity, 3),
+					flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, entity, 3),
+					flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, entity, 3),
+					flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, entity, 3),
+					flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, entity, 3),
+					flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, entity, 3),
+					flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, entity, 3),
+					flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, entity, 3),
+					flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, entity, 3);
 				NormalizeVector(flFront, flFront);
 				NormalizeVector(flUp, flUp);
 				NormalizeVector(flDown, flDown);
@@ -308,8 +307,8 @@ stock void vTrack(int entity)
 				AddVectors(flFront, flVector, flFront);
 				NormalizeVector(flFront, flFront);
 			}
-			float flAngle2 = flGetAngle(flFront, flVelocity), flVelocity3[3];
-			ScaleVector(flFront, flAngle2);
+			float flAngles2 = flGetAngle(flFront, flVelocity), flVelocity3[3];
+			ScaleVector(flFront, flAngles2);
 			AddVectors(flVelocity, flFront, flVelocity3);
 			NormalizeVector(flVelocity3, flVelocity3);
 			ScaleVector(flVelocity3, flTrackSpeed);
@@ -321,16 +320,16 @@ stock void vTrack(int entity)
 			ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 			TrimString(sGlow[0]);
-			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
-			iRed = iSetCellLimit(iRed, 0, 255);
+			int iRed = (!StrEqual(sGlow[0], "")) ? StringToInt(sGlow[0]) : 255;
+			iRed = iClamp(iRed, 0, 255);
 			TrimString(sGlow[1]);
-			int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
-			iGreen = iSetCellLimit(iGreen, 0, 255);
+			int iGreen = (!StrEqual(sGlow[1], "")) ? StringToInt(sGlow[1]) : 255;
+			iGreen = iClamp(iGreen, 0, 255);
 			TrimString(sGlow[2]);
-			int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
-			iBlue = iSetCellLimit(iBlue, 0, 255);
-			int iGlowEffect = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEffect[ST_TankType(iTank)] : g_iGlowEffect2[ST_TankType(iTank)];
-			if (iGlowEffect == 1 && bIsL4D2Game())
+			int iBlue = (!StrEqual(sGlow[2], "")) ? StringToInt(sGlow[2]) : 255;
+			iBlue = iClamp(iBlue, 0, 255);
+			int iGlowOutline = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowOutline[ST_TankType(iTank)] : g_iGlowOutline2[ST_TankType(iTank)];
+			if (iGlowOutline == 1 && bIsValidGame())
 			{
 				SetEntProp(entity, Prop_Send, "m_iGlowType", 3);
 				SetEntProp(entity, Prop_Send, "m_nGlowRange", 0);
