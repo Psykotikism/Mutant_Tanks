@@ -574,17 +574,17 @@ Forwards:
 /* Called every second to trigger the Super Tank's ability.
  * Use this forward for any passive abilities.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  */
-forward void ST_Ability(int client);
+forward void ST_Ability(int tank);
 
 /* Called when the Super Tank evolves.
  * Use this forward to trigger any features/abilities/settings
  * when a Super Tank evolves.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  */
-forward void ST_BossStage(int client);
+forward void ST_BossStage(int tank);
 
 /* Called when the config file is loaded.
  * Use this forward to load settings for the plugin.
@@ -615,25 +615,25 @@ forward void ST_PluginEnd();
  * If you plan on using this to activate an ability,
  * use ST_Ability() instead.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  */
-forward void ST_Preset(int client);
+forward void ST_Preset(int tank);
 
 /* Called when the Tank's rock breaks.
  * Use this forward for any after-effects.
  *
- * @param client		Client index of the Tank.
- * @param entity		Entity index of the rock.
+ * @param tank			Client index of the Tank.
+ * @param rock			Entity index of the rock.
  */
-forward void ST_RockBreak(int client, int entity);
+forward void ST_RockBreak(int tank, int rock);
 
 /* Called when the Tank throws a rock.
  * Use this forward for any throwing abilities.
  *
- * @param client		Client index of the Tank.
- * @param entity		Entity index of the rock.
+ * @param tank			Client index of the Tank.
+ * @param rock			Entity index of the rock.
  */
-forward void ST_RockThrow(int client, int entity);
+forward void ST_RockThrow(int tank, int rock);
 ```
 
 Natives:
@@ -661,24 +661,24 @@ native bool ST_PluginEnabled();
 
 /* Spawns a Tank with the specified Super Tank type.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  * @param type			Type of Super Tank.
  */
-native void ST_SpawnTank(int client, int type);
+native void ST_SpawnTank(int tank, int type);
 
 /* Returns the status of the Tank.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  *
  * @return				True on success, false if
  *							the Tank is controlled
  *							by a human.
  */
-native bool ST_TankAllowed(int client);
+native bool ST_TankAllowed(int tank);
 
 /* Returns the RGB colors given to a Tank.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  * @param mode			1 = Skin color, 2 = Glow
  *							outline color
  * @param red			Buffer to store the red
@@ -688,23 +688,23 @@ native bool ST_TankAllowed(int client);
  * @param blue			Buffer to store the blue
  *							color in.
  */
-native void ST_TankColors(int client, int mode, char[] red, char[] green, char[] blue);
+native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] blue);
 
 /* Returns the custom name given to a Tank.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom
  *							name in.
  */
-native void ST_TankName(int client, char[] buffer);
+native void ST_TankName(int tank, char[] buffer);
 
 /* Returns the Super Tank type of the Tank.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  *
  * @return				The Tank's Super Tank type.
  */
-native int ST_TankType(int client);
+native int ST_TankType(int tank);
 
 /* Returns the current finale wave.
  *
