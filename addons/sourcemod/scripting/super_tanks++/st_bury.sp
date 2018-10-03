@@ -258,6 +258,32 @@ stock void vReset()
 	}
 }
 
+stock void vStopBury(int survivor, int tank)
+{
+	g_bBury[survivor] = false;
+	float flOrigin[3], flCurrentOrigin[3];
+	GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+	flOrigin[2] = flOrigin[2] + flBuryHeight(tank);
+	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsSurvivor(iPlayer) && !g_bBury[iPlayer] && iPlayer != survivor)
+		{
+			GetClientAbsOrigin(iPlayer, flCurrentOrigin);
+			TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
+			break;
+		}
+	}
+	if (bIsPlayerIncapacitated(survivor))
+	{
+		SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
+	}
+	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
+	{
+		SetEntityMoveType(survivor, MOVETYPE_WALK);
+	}
+}
+
 stock float flBuryHeight(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flBuryHeight[ST_TankType(tank)] : g_flBuryHeight2[ST_TankType(tank)];
@@ -300,31 +326,10 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell()), iBuryChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bBury[iSurvivor] = false;
+		vStopBury(iSurvivor, iTank);
 		return Plugin_Stop;
 	}
-	g_bBury[iSurvivor] = false;
-	float flOrigin[3], flCurrentOrigin[3];
-	GetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
-	flOrigin[2] = flOrigin[2] + flBuryHeight(iTank);
-	SetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsSurvivor(iPlayer) && !g_bBury[iPlayer] && iPlayer != iSurvivor)
-		{
-			GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-			TeleportEntity(iSurvivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
-			break;
-		}
-	}
-	if (bIsPlayerIncapacitated(iSurvivor))
-	{
-		SetEntProp(iSurvivor, Prop_Data, "m_takedamage", 2, 1);
-	}
-	if (GetEntityMoveType(iSurvivor) == MOVETYPE_NONE)
-	{
-		SetEntityMoveType(iSurvivor, MOVETYPE_WALK);
-	}
+	vStopBury(iSurvivor, iTank);
 	if (iBuryMessage(iTank) == iBuryChat || iBuryMessage(iTank) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Bury2", iSurvivor);

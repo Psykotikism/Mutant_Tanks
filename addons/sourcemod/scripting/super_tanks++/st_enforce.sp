@@ -261,11 +261,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int survivor, int tank, int message)
-{
-	
-}
-
 stock int iEnforceAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceAbility[ST_TankType(tank)] : g_iEnforceAbility2[ST_TankType(tank)];

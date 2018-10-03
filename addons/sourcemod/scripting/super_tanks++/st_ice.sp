@@ -253,6 +253,20 @@ stock void vReset()
 	}
 }
 
+stock void vStopIce(int survivor)
+{
+	g_bIce[survivor] = false;
+	float flPos[3], flVelocity[3] = {0.0, 0.0, 0.0};
+	GetClientEyePosition(survivor, flPos);
+	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
+	{
+		SetEntityMoveType(survivor, MOVETYPE_WALK);
+	}
+	TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	SetEntityRenderColor(survivor, 255, 255, 255, 255);
+	EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
+}
+
 stock int iIceAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iIceAbility[ST_TankType(tank)] : g_iIceAbility2[ST_TankType(tank)];
@@ -290,19 +304,10 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell()), iIceChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bIce[iSurvivor])
 	{
-		g_bIce[iSurvivor] = false;
+		vStopIce(iSurvivor);
 		return Plugin_Stop;
 	}
-	g_bIce[iSurvivor] = false;
-	float flPos[3], flVelocity[3] = {0.0, 0.0, 0.0};
-	GetClientEyePosition(iSurvivor, flPos);
-	if (GetEntityMoveType(iSurvivor) == MOVETYPE_NONE)
-	{
-		SetEntityMoveType(iSurvivor, MOVETYPE_WALK);
-	}
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
-	SetEntityRenderColor(iSurvivor, 255, 255, 255, 255);
-	EmitAmbientSound(SOUND_BULLET, flPos, iSurvivor, SNDLEVEL_RAIDSIREN);
+	vStopIce(iSurvivor);
 	if (iIceMessage(iTank) == iIceChat || iIceMessage(iTank) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Ice2", iSurvivor);
