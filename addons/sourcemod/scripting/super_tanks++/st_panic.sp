@@ -158,14 +158,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iPanicRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPanicChance[ST_TankType(client)] : g_iPanicChance2[ST_TankType(client)];
-		float flPanicRange = !g_bTankConfig[ST_TankType(client)] ? g_flPanicRange[ST_TankType(client)] : g_flPanicRange2[ST_TankType(client)],
+		int iPanicRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iPanicChance[ST_TankType(tank)] : g_iPanicChance2[ST_TankType(tank)];
+		float flPanicRange = !g_bTankConfig[ST_TankType(tank)] ? g_flPanicRange[ST_TankType(tank)] : g_flPanicRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -175,31 +175,31 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPanicRange)
 				{
-					vPanicHit(iSurvivor, client, iPanicRangeChance, iPanicAbility(client), 2, "3");
+					vPanicHit(iSurvivor, tank, iPanicRangeChance, iPanicAbility(tank), 2, "3");
 				}
 			}
 		}
-		if ((iPanicAbility(client) == 2 || iPanicAbility(client) == 3) && !g_bPanic[client])
+		if ((iPanicAbility(tank) == 2 || iPanicAbility(tank) == 3) && !g_bPanic[tank])
 		{
-			g_bPanic[client] = true;
-			float flPanicInterval = !g_bTankConfig[ST_TankType(client)] ? g_flPanicInterval[ST_TankType(client)] : g_flPanicInterval2[ST_TankType(client)];
-			CreateTimer(flPanicInterval, tTimerPanic, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			g_bPanic[tank] = true;
+			float flPanicInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flPanicInterval[ST_TankType(tank)] : g_flPanicInterval2[ST_TankType(tank)];
+			CreateTimer(flPanicInterval, tTimerPanic, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
 }
 
-stock void vPanicHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vPanicHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
-		vCheatCommand(client, "director_force_panic_event");
+		vCheatCommand(survivor, "director_force_panic_event");
 		char sPanicEffect[4];
-		sPanicEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sPanicEffect[ST_TankType(owner)] : g_sPanicEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sPanicEffect, mode);
-		if (iPanicMessage(client) == message || iPanicMessage(client) == 4 || iPanicMessage(client) == 5 || iPanicMessage(client) == 6 || iPanicMessage(client) == 7)
+		sPanicEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sPanicEffect[ST_TankType(tank)] : g_sPanicEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sPanicEffect, mode);
+		if (iPanicMessage(tank) == message || iPanicMessage(tank) == 4 || iPanicMessage(tank) == 5 || iPanicMessage(tank) == 6 || iPanicMessage(tank) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Panic", sTankName);
 		}
 	}
@@ -216,29 +216,29 @@ stock void vReset()
 	}
 }
 
-stock int iPanicAbility(int client)
+stock int iPanicAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPanicAbility[ST_TankType(client)] : g_iPanicAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicAbility[ST_TankType(tank)] : g_iPanicAbility2[ST_TankType(tank)];
 }
 
-stock int iPanicChance(int client)
+stock int iPanicChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPanicChance[ST_TankType(client)] : g_iPanicChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicChance[ST_TankType(tank)] : g_iPanicChance2[ST_TankType(tank)];
 }
 
-stock int iPanicHit(int client)
+stock int iPanicHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPanicHit[ST_TankType(client)] : g_iPanicHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicHit[ST_TankType(tank)] : g_iPanicHit2[ST_TankType(tank)];
 }
 
-stock int iPanicHitMode(int client)
+stock int iPanicHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPanicHitMode[ST_TankType(client)] : g_iPanicHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicHitMode[ST_TankType(tank)] : g_iPanicHitMode2[ST_TankType(tank)];
 }
 
-stock int iPanicMessage(int client)
+stock int iPanicMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPanicMessage[ST_TankType(client)] : g_iPanicMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicMessage[ST_TankType(tank)] : g_iPanicMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerPanic(Handle timer, any userid)

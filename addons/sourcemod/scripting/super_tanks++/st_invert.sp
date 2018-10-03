@@ -194,14 +194,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iInvertRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iInvertChance[ST_TankType(client)] : g_iInvertChance2[ST_TankType(client)];
-		float flInvertRange = !g_bTankConfig[ST_TankType(client)] ? g_flInvertRange[ST_TankType(client)] : g_flInvertRange2[ST_TankType(client)],
+		int iInvertRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iInvertChance[ST_TankType(tank)] : g_iInvertChance2[ST_TankType(tank)];
+		float flInvertRange = !g_bTankConfig[ST_TankType(tank)] ? g_flInvertRange[ST_TankType(tank)] : g_flInvertRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -211,38 +211,38 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flInvertRange)
 				{
-					vInvertHit(iSurvivor, client, iInvertRangeChance, iInvertAbility(client), 2, "3");
+					vInvertHit(iSurvivor, tank, iInvertRangeChance, iInvertAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iInvertAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iInvertAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveInvert();
 	}
 }
 
-stock void vInvertHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vInvertHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bInvert[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bInvert[survivor])
 	{
-		g_bInvert[client] = true;
-		float flInvertDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flInvertDuration[ST_TankType(owner)] : g_flInvertDuration2[ST_TankType(owner)];
+		g_bInvert[survivor] = true;
+		float flInvertDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flInvertDuration[ST_TankType(tank)] : g_flInvertDuration2[ST_TankType(tank)];
 		DataPack dpStopInvert = new DataPack();
 		CreateDataTimer(flInvertDuration, tTimerStopInvert, dpStopInvert, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopInvert.WriteCell(GetClientUserId(client)), dpStopInvert.WriteCell(GetClientUserId(owner)), dpStopInvert.WriteCell(message), dpStopInvert.WriteCell(enabled);
+		dpStopInvert.WriteCell(GetClientUserId(survivor)), dpStopInvert.WriteCell(GetClientUserId(tank)), dpStopInvert.WriteCell(message), dpStopInvert.WriteCell(enabled);
 		char sInvertEffect[4];
-		sInvertEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sInvertEffect[ST_TankType(owner)] : g_sInvertEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sInvertEffect, mode);
-		if (iInvertMessage(owner) == message || iInvertMessage(owner) == 3)
+		sInvertEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sInvertEffect[ST_TankType(tank)] : g_sInvertEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sInvertEffect, mode);
+		if (iInvertMessage(tank) == message || iInvertMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Invert", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Invert", sTankName, survivor);
 		}
 	}
 }
@@ -269,38 +269,38 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bInvert[client] = false;
-	if (iInvertMessage(owner) == message || iInvertMessage(owner) == 3)
+	g_bInvert[survivor] = false;
+	if (iInvertMessage(tank) == message || iInvertMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Invert2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Invert2", survivor);
 	}
 }
 
-stock int iInvertAbility(int client)
+stock int iInvertAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iInvertAbility[ST_TankType(client)] : g_iInvertAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iInvertAbility[ST_TankType(tank)] : g_iInvertAbility2[ST_TankType(tank)];
 }
 
-stock int iInvertChance(int client)
+stock int iInvertChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iInvertChance[ST_TankType(client)] : g_iInvertChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iInvertChance[ST_TankType(tank)] : g_iInvertChance2[ST_TankType(tank)];
 }
 
-stock int iInvertHit(int client)
+stock int iInvertHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iInvertHit[ST_TankType(client)] : g_iInvertHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iInvertHit[ST_TankType(tank)] : g_iInvertHit2[ST_TankType(tank)];
 }
 
-stock int iInvertHitMode(int client)
+stock int iInvertHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iInvertHitMode[ST_TankType(client)] : g_iInvertHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iInvertHitMode[ST_TankType(tank)] : g_iInvertHitMode2[ST_TankType(tank)];
 }
 
-stock int iInvertMessage(int client)
+stock int iInvertMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iInvertMessage[ST_TankType(client)] : g_iInvertMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iInvertMessage[ST_TankType(tank)] : g_iInvertMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerStopInvert(Handle timer, DataPack pack)

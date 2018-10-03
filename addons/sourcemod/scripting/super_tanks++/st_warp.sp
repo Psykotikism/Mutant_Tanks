@@ -158,14 +158,14 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iWarpRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iWarpChance[ST_TankType(client)] : g_iWarpChance2[ST_TankType(client)];
-		float flWarpRange = !g_bTankConfig[ST_TankType(client)] ? g_flWarpRange[ST_TankType(client)] : g_flWarpRange2[ST_TankType(client)],
+		int iWarpRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iWarpChance[ST_TankType(tank)] : g_iWarpChance2[ST_TankType(tank)];
+		float flWarpRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWarpRange[ST_TankType(tank)] : g_flWarpRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -175,15 +175,15 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flWarpRange)
 				{
-					vWarpHit(iSurvivor, client, iWarpRangeChance, iWarpAbility(client), 2, "3");
+					vWarpHit(iSurvivor, tank, iWarpRangeChance, iWarpAbility(tank), 2, "3");
 				}
 			}
 		}
-		if ((iWarpAbility(client) == 2 || iWarpAbility(client) == 3) && !g_bWarp[client])
+		if ((iWarpAbility(tank) == 2 || iWarpAbility(tank) == 3) && !g_bWarp[tank])
 		{
-			g_bWarp[client] = true;
-			float flWarpInterval = !g_bTankConfig[ST_TankType(client)] ? g_flWarpInterval[ST_TankType(client)] : g_flWarpInterval2[ST_TankType(client)];
-			CreateTimer(flWarpInterval, tTimerWarp, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			g_bWarp[tank] = true;
+			float flWarpInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flWarpInterval[ST_TankType(tank)] : g_flWarpInterval2[ST_TankType(tank)];
+			CreateTimer(flWarpInterval, tTimerWarp, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
 }
@@ -199,55 +199,55 @@ stock void vReset()
 	}
 }
 
-stock void vWarpHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vWarpHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
 		float flCurrentOrigin[3];
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsSurvivor(iPlayer) && !bIsPlayerIncapacitated(iPlayer) && iPlayer != client)
+			if (bIsSurvivor(iPlayer) && !bIsPlayerIncapacitated(iPlayer) && iPlayer != survivor)
 			{
 				GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-				TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
-				if (iWarpMessage(owner) == message || iWarpMessage(owner) == 4 || iWarpMessage(owner) == 5 || iWarpMessage(owner) == 6 || iWarpMessage(owner) == 7)
+				TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
+				if (iWarpMessage(tank) == message || iWarpMessage(tank) == 4 || iWarpMessage(tank) == 5 || iWarpMessage(tank) == 6 || iWarpMessage(tank) == 7)
 				{
 					char sTankName[MAX_NAME_LENGTH + 1];
-					ST_TankName(owner, sTankName);
-					PrintToChatAll("%s %t", ST_PREFIX2, "Warp", sTankName, client, iPlayer);
+					ST_TankName(tank, sTankName);
+					PrintToChatAll("%s %t", ST_PREFIX2, "Warp", sTankName, survivor, iPlayer);
 				}
 				break;
 			}
 		}
 		char sWarpEffect[4];
-		sWarpEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sWarpEffect[ST_TankType(owner)] : g_sWarpEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sWarpEffect, mode);
+		sWarpEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sWarpEffect[ST_TankType(tank)] : g_sWarpEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sWarpEffect, mode);
 	}
 }
 
-stock int iWarpAbility(int client)
+stock int iWarpAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iWarpAbility[ST_TankType(client)] : g_iWarpAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iWarpAbility[ST_TankType(tank)] : g_iWarpAbility2[ST_TankType(tank)];
 }
 
-stock int iWarpChance(int client)
+stock int iWarpChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iWarpChance[ST_TankType(client)] : g_iWarpChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iWarpChance[ST_TankType(tank)] : g_iWarpChance2[ST_TankType(tank)];
 }
 
-stock int iWarpHit(int client)
+stock int iWarpHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iWarpHit[ST_TankType(client)] : g_iWarpHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iWarpHit[ST_TankType(tank)] : g_iWarpHit2[ST_TankType(tank)];
 }
 
-stock int iWarpHitMode(int client)
+stock int iWarpHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iWarpHitMode[ST_TankType(client)] : g_iWarpHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iWarpHitMode[ST_TankType(tank)] : g_iWarpHitMode2[ST_TankType(tank)];
 }
 
-stock int iWarpMessage(int client)
+stock int iWarpMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iWarpMessage[ST_TankType(client)] : g_iWarpMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iWarpMessage[ST_TankType(tank)] : g_iWarpMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerWarp(Handle timer, any userid)

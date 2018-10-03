@@ -713,7 +713,7 @@ public Action cmdTank(int client, int args)
 	return Plugin_Handled;
 }
 
-stock void vTank(int client, int type, int mode = 0)
+stock void vTank(int admin, int type, int mode = 0)
 {
 	g_iType = type;
 	char sParameter[32];
@@ -722,10 +722,10 @@ stock void vTank(int client, int type, int mode = 0)
 		case 0: sParameter = "tank";
 		case 1: sParameter = "tank auto";
 	}
-	vCheatCommand(client, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
+	vCheatCommand(admin, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
 }
 
-stock void vTankMenu(int client, int item)
+stock void vTankMenu(int admin, int item)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler);
 	mTankMenu.SetTitle("Super Tanks++ Menu");
@@ -740,7 +740,7 @@ stock void vTankMenu(int client, int item)
 		Format(sMenuItem, sizeof(sMenuItem), "%s (Tank #%d)", sTankName, iIndex);
 		mTankMenu.AddItem(sTankName, sMenuItem);
 	}
-	mTankMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+	mTankMenu.DisplayAt(admin, item, MENU_TIME_FOREVER);
 }
 
 public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2)
@@ -977,75 +977,75 @@ stock void vLoadConfigs(const char[] savepath, bool main = false)
 	Call_Finish();
 }
 
-stock void vBoss(int client, int limit, int stages, int type, int stage)
+stock void vBoss(int tank, int limit, int stages, int type, int stage)
 {
 	if (stages < stage)
 	{
 		return;
 	}
-	int iHealth = GetClientHealth(client);
+	int iHealth = GetClientHealth(tank);
 	if (iHealth <= limit)
 	{
-		g_iBossStageCount[client] = stage;
-		vNewTankSettings(client);
-		vSetColor(client, type);
+		g_iBossStageCount[tank] = stage;
+		vNewTankSettings(tank);
+		vSetColor(tank, type);
 		DataPack dpTankSpawn = new DataPack();
 		CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
-		dpTankSpawn.WriteCell(GetClientUserId(client)), dpTankSpawn.WriteCell(1);
-		int iNewHealth = g_iTankHealth[client] + limit, iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
-		SetEntityHealth(client, iFinalHealth);
+		dpTankSpawn.WriteCell(GetClientUserId(tank)), dpTankSpawn.WriteCell(1);
+		int iNewHealth = g_iTankHealth[tank] + limit, iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
+		SetEntityHealth(tank, iFinalHealth);
 	}
 }
 
-stock void vNewTankSettings(int client)
+stock void vNewTankSettings(int tank)
 {
-	ExtinguishEntity(client);
-	vAttachParticle(client, PARTICLE_ELECTRICITY, 2.0, 30.0);
-	EmitSoundToAll(SOUND_BOSS, client);
-	vRemoveProps(client);
+	ExtinguishEntity(tank);
+	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
+	EmitSoundToAll(SOUND_BOSS, tank);
+	vRemoveProps(tank);
 	Call_StartForward(g_hBossStageForward);
-	Call_PushCell(client);
+	Call_PushCell(tank);
 	Call_Finish();
 }
 
-stock void vParticleEffects(int client)
+stock void vParticleEffects(int tank)
 {
 	char sParticleEffects[8];
-	sParticleEffects = !g_bTankConfig[g_iTankType[client]] ? g_sParticleEffects[g_iTankType[client]] : g_sParticleEffects2[g_iTankType[client]];
-	if (iParticleEffect(client) == 1 && bIsTankAllowed(client) && IsPlayerAlive(client))
+	sParticleEffects = !g_bTankConfig[g_iTankType[tank]] ? g_sParticleEffects[g_iTankType[tank]] : g_sParticleEffects2[g_iTankType[tank]];
+	if (iParticleEffect(tank) == 1 && bIsTankAllowed(tank) && IsPlayerAlive(tank))
 	{
 		if (StrContains(sParticleEffects, "1") != -1)
 		{
-			CreateTimer(0.75, tTimerBloodEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateTimer(0.75, tTimerBloodEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 		if (StrContains(sParticleEffects, "2") != -1)
 		{
-			CreateTimer(0.75, tTimerElectricEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateTimer(0.75, tTimerElectricEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 		if (StrContains(sParticleEffects, "3") != -1)
 		{
-			CreateTimer(0.75, tTimerFireEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateTimer(0.75, tTimerFireEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 		if (StrContains(sParticleEffects, "4") != -1)
 		{
-			CreateTimer(2.0, tTimerIceEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateTimer(2.0, tTimerIceEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 		if (StrContains(sParticleEffects, "5") != -1)
 		{
-			CreateTimer(6.0, tTimerMeteorEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateTimer(6.0, tTimerMeteorEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 		if (StrContains(sParticleEffects, "6") != -1)
 		{
-			CreateTimer(1.5, tTimerSmokeEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateTimer(1.5, tTimerSmokeEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 		if (StrContains(sParticleEffects, "7") != -1 && bIsValidGame())
 		{
-			CreateTimer(2.0, tTimerSpitEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateTimer(2.0, tTimerSpitEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
 }
 
-stock void vRemoveProps(int client, bool end = false)
+stock void vRemoveProps(int tank, bool end = false)
 {
 	int iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
@@ -1055,7 +1055,7 @@ stock void vRemoveProps(int client, bool end = false)
 		if (StrEqual(sModel, MODEL_JETPACK, false) || StrEqual(sModel, MODEL_CONCRETE, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_TANK, false))
 		{
 			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-			if (iOwner == client)
+			if (iOwner == tank)
 			{
 				RemoveEntity(iProp);
 			}
@@ -1064,20 +1064,20 @@ stock void vRemoveProps(int client, bool end = false)
 	while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
 	{
 		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-		if (iOwner == client)
+		if (iOwner == tank)
 		{
 			RemoveEntity(iProp);
 		}
 	}
 	if (bIsValidGame())
 	{
-		SetEntProp(client, Prop_Send, "m_iGlowType", 0);
-		SetEntProp(client, Prop_Send, "m_glowColorOverride", 0);
+		SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
+		SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
 	}
 	if (end)
 	{
-		SetEntityRenderMode(client, RENDER_NORMAL);
-		SetEntityRenderColor(client, 255, 255, 255, 255);
+		SetEntityRenderMode(tank, RENDER_NORMAL);
+		SetEntityRenderColor(tank, 255, 255, 255, 255);
 	}
 }
 
@@ -1094,14 +1094,14 @@ stock void vReset()
 	}
 }
 
-stock void vSpawnModes(int client, bool status)
+stock void vSpawnModes(int tank, bool status)
 {
-	g_bBoss[client] = status;
-	g_bRandomized[client] = status;
-	g_bTransformed[client] = status;
+	g_bBoss[tank] = status;
+	g_bRandomized[tank] = status;
+	g_bTransformed[tank] = status;
 }
 
-stock void vSetColor(int client, int value)
+stock void vSetColor(int tank, int value)
 {
 	char sSet[2][16], sTankColors[28], sRGB[4][4], sGlow[3][4];
 	sTankColors = !g_bTankConfig[value] ? g_sTankColors[value] : g_sTankColors2[value];
@@ -1132,20 +1132,20 @@ stock void vSetColor(int client, int value)
 	iBlue2 = iClamp(iBlue2, 0, 255);
 	if (iGlowOutline(value) == 1 && bIsValidGame())
 	{
-		SetEntProp(client, Prop_Send, "m_iGlowType", 3);
-		SetEntProp(client, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
+		SetEntProp(tank, Prop_Send, "m_iGlowType", 3);
+		SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
 	}
-	SetEntityRenderMode(client, RENDER_NORMAL);
-	SetEntityRenderColor(client, iRed, iGreen, iBlue, iAlpha);
-	g_iTankType[client] = value;
+	SetEntityRenderMode(tank, RENDER_NORMAL);
+	SetEntityRenderColor(tank, iRed, iGreen, iBlue, iAlpha);
+	g_iTankType[tank] = value;
 }
 
-stock void vSetName(int client, const char[] oldname, const char[] name, int mode)
+stock void vSetName(int tank, const char[] oldname, const char[] name, int mode)
 {
-	if (bIsTankAllowed(client) && IsPlayerAlive(client))
+	if (bIsTankAllowed(tank) && IsPlayerAlive(tank))
 	{
 		char sSet[5][16], sPropsColors[80], sRGB[4][4], sRGB2[4][4], sRGB3[4][4], sRGB4[4][4], sRGB5[4][4];
-		sPropsColors = !g_bTankConfig[g_iTankType[client]] ? g_sPropsColors[g_iTankType[client]] : g_sPropsColors2[g_iTankType[client]];
+		sPropsColors = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsColors[g_iTankType[tank]] : g_sPropsColors2[g_iTankType[tank]];
 		TrimString(sPropsColors);
 		ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
@@ -1214,7 +1214,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 		int iAlpha5 = (!StrEqual(sRGB5[3], "")) ? StringToInt(sRGB5[3]) : 255;
 		iAlpha5 = iClamp(iAlpha5, 0, 255);
 		char sSet2[6][4], sPropsChance[12], sPropsAttached[7];
-		sPropsChance = !g_bTankConfig[g_iTankType[client]] ? g_sPropsChance[g_iTankType[client]] : g_sPropsChance2[g_iTankType[client]];
+		sPropsChance = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsChance[g_iTankType[tank]] : g_sPropsChance2[g_iTankType[tank]];
 		TrimString(sPropsChance);
 		ExplodeString(sPropsChance, ",", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 		TrimString(sSet2[0]);
@@ -1235,14 +1235,14 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 		TrimString(sSet2[5]);
 		int iChance6 = (!StrEqual(sSet2[5], "")) ? StringToInt(sSet2[5]) : 3;
 		iChance6 = iClamp(iChance6, 1, 9999999999);
-		sPropsAttached = !g_bTankConfig[g_iTankType[client]] ? g_sPropsAttached[g_iTankType[client]] : g_sPropsAttached2[g_iTankType[client]];
+		sPropsAttached = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsAttached[g_iTankType[tank]] : g_sPropsAttached2[g_iTankType[tank]];
 		if (GetRandomInt(1, iChance) == 1 && StrContains(sPropsAttached, "1") != -1)
 		{
-			CreateTimer(0.25, tTimerBlurEffect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateTimer(0.25, tTimerBlurEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 		float flOrigin[3], flAngles[3];
-		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
+		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 		int iBeam[7], iRandom = GetRandomInt(1, 6);
 		for (int iLight = 1; iLight <= iRandom; iLight++)
 		{
@@ -1261,36 +1261,24 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 					DispatchKeyValue(iBeam[iLight], "HDRColorScale", "0.7");
 					DispatchKeyValue(iBeam[iLight], "fadescale", "1");
 					DispatchKeyValue(iBeam[iLight], "fademindist", "-1");
-					vSetEntityParent(iBeam[iLight], client);
+					vSetEntityParent(iBeam[iLight], tank);
 					switch (iLight)
 					{
-						case 1, 4:
-						{
-							SetVariantString("mouth");
-							vSetVector(flAngles, -90.0, 0.0, 0.0);
-						}
-						case 2, 5:
-						{
-							SetVariantString("rhand");
-							vSetVector(flAngles, 90.0, 0.0, 0.0);
-						}
-						case 3, 6:
-						{
-							SetVariantString("lhand");
-							vSetVector(flAngles, -90.0, 0.0, 0.0);
-						}
+						case 1, 4: SetVariantString("mouth"), vSetVector(flAngles, -90.0, 0.0, 0.0);
+						case 2, 5: SetVariantString("rhand"), vSetVector(flAngles, 90.0, 0.0, 0.0);
+						case 3, 6: SetVariantString("lhand"), vSetVector(flAngles, -90.0, 0.0, 0.0);
 					}
 					AcceptEntityInput(iBeam[iLight], "SetParentAttachment");
 					AcceptEntityInput(iBeam[iLight], "Enable");
 					AcceptEntityInput(iBeam[iLight], "DisableCollision");
-					SetEntPropEnt(iBeam[iLight], Prop_Send, "m_hOwnerEntity", client);
+					SetEntPropEnt(iBeam[iLight], Prop_Send, "m_hOwnerEntity", tank);
 					TeleportEntity(iBeam[iLight], NULL_VECTOR, flAngles, NULL_VECTOR);
 					DispatchSpawn(iBeam[iLight]);
 				}
 			}
 		}
-		GetClientEyePosition(client, flOrigin);
-		GetClientAbsAngles(client, flAngles);
+		GetClientEyePosition(tank, flOrigin);
+		GetClientAbsAngles(tank, flAngles);
 		int iJetpack[5], iRandom2 = GetRandomInt(1, 4);
 		for (int iOzTank = 1; iOzTank <= iRandom2; iOzTank++)
 		{
@@ -1303,29 +1291,13 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 					SetEntityRenderColor(iJetpack[iOzTank], iRed2, iGreen2, iBlue2, iAlpha2);
 					SetEntProp(iJetpack[iOzTank], Prop_Data, "m_takedamage", 0, 1);
 					SetEntProp(iJetpack[iOzTank], Prop_Data, "m_CollisionGroup", 2);
-					vSetEntityParent(iJetpack[iOzTank], client);
+					vSetEntityParent(iJetpack[iOzTank], tank);
 					switch (iOzTank)
 					{
-						case 1:
-						{
-							SetVariantString("rshoulder");
-							vSetVector(flOrigin, 0.0, 30.0, 8.0);
-						}
-						case 2:
-						{
-							SetVariantString("lshoulder");
-							vSetVector(flOrigin, 0.0, 30.0, -8.0);
-						}
-						case 3:
-						{
-							SetVariantString("rfoot");
-							vSetVector(flOrigin, 0.0, 30.0, 8.0);
-						}
-						case 4:
-						{
-							SetVariantString("lfoot");
-							vSetVector(flOrigin, 0.0, 30.0, -8.0);
-						}
+						case 1: SetVariantString("rshoulder"), vSetVector(flOrigin, 0.0, 30.0, 8.0);
+						case 2: SetVariantString("lshoulder"), vSetVector(flOrigin, 0.0, 30.0, -8.0);
+						case 3: SetVariantString("rfoot"), vSetVector(flOrigin, 0.0, 30.0, 8.0);
+						case 4: SetVariantString("lfoot"), vSetVector(flOrigin, 0.0, 30.0, -8.0);
 					}
 					AcceptEntityInput(iJetpack[iOzTank], "SetParentAttachment");
 					float flAngles2[3];
@@ -1337,7 +1309,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 					DispatchKeyValueVector(iJetpack[iOzTank], "angles", flAngles2);
 					AcceptEntityInput(iJetpack[iOzTank], "Enable");
 					AcceptEntityInput(iJetpack[iOzTank], "DisableCollision");
-					SetEntPropEnt(iJetpack[iOzTank], Prop_Send, "m_hOwnerEntity", client);
+					SetEntPropEnt(iJetpack[iOzTank], Prop_Send, "m_hOwnerEntity", tank);
 					TeleportEntity(iJetpack[iOzTank], flOrigin, NULL_VECTOR, flAngles2);
 					DispatchSpawn(iJetpack[iOzTank]);
 					if (GetRandomInt(1, iChance4) == 1 && StrContains(sPropsAttached, "4") != -1)
@@ -1356,7 +1328,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 							DispatchKeyValue(iFlame, "Rate", "555");
 							DispatchKeyValue(iFlame, "JetLength", "40");
 							vSetEntityParent(iFlame, iJetpack[iOzTank]);
-							SetEntPropEnt(iFlame, Prop_Send, "m_hOwnerEntity", client);
+							SetEntPropEnt(iFlame, Prop_Send, "m_hOwnerEntity", tank);
 							float flOrigin2[3], flAngles3[3];
 							vSetVector(flOrigin2, -2.0, 0.0, 26.0);
 							vSetVector(flAngles3, 0.0, 0.0, 1.0);
@@ -1369,8 +1341,8 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 				}
 			}
 		}
-		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
+		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 		int iConcrete[41], iRandom3 = GetRandomInt(1, 40);
 		for (int iRock = 1; iRock <= iRandom3; iRock++)
 		{
@@ -1383,7 +1355,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 					SetEntityRenderColor(iConcrete[iRock], iRed4, iGreen4, iBlue4, iAlpha4);
 					DispatchKeyValueVector(iConcrete[iRock], "origin", flOrigin);
 					DispatchKeyValueVector(iConcrete[iRock], "angles", flAngles);
-					vSetEntityParent(iConcrete[iRock], client);
+					vSetEntityParent(iConcrete[iRock], tank);
 					switch (iRock)
 					{
 						case 1, 5, 9, 13, 17, 21, 25, 29, 33, 37: SetVariantString("rshoulder");
@@ -1402,7 +1374,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 							case 3, 4, 7, 8, 11, 12, 15, 16, 19, 20, 23, 24, 27, 28, 31, 32, 35, 36, 39, 40: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.5);
 						}
 					}
-					SetEntPropEnt(iConcrete[iRock], Prop_Send, "m_hOwnerEntity", client);
+					SetEntPropEnt(iConcrete[iRock], Prop_Send, "m_hOwnerEntity", tank);
 					flAngles[0] = flAngles[0] + GetRandomFloat(-90.0, 90.0);
 					flAngles[1] = flAngles[1] + GetRandomFloat(-90.0, 90.0);
 					flAngles[2] = flAngles[2] + GetRandomFloat(-90.0, 90.0);
@@ -1411,8 +1383,8 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 				}
 			}
 		}
-		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-		GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
+		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 		flAngles[0] += 90.0;
 		int iWheel[5], iRandom4 = GetRandomInt(1, 4);
 		for (int iTire = 1; iTire <= iRandom4; iTire++)
@@ -1426,7 +1398,7 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 					SetEntityRenderColor(iWheel[iTire], iRed5, iGreen5, iBlue5, iAlpha5);
 					DispatchKeyValueVector(iWheel[iTire], "origin", flOrigin);
 					DispatchKeyValueVector(iWheel[iTire], "angles", flAngles);
-					vSetEntityParent(iWheel[iTire], client);
+					vSetEntityParent(iWheel[iTire], tank);
 					switch (iTire)
 					{
 						case 1: SetVariantString("relbow");
@@ -1441,13 +1413,13 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 					{
 						SetEntPropFloat(iWheel[iTire], Prop_Data, "m_flModelScale", 1.5);
 					}
-					SetEntPropEnt(iWheel[iTire], Prop_Send, "m_hOwnerEntity", client);
+					SetEntPropEnt(iWheel[iTire], Prop_Send, "m_hOwnerEntity", tank);
 					TeleportEntity(iWheel[iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
 					DispatchSpawn(iWheel[iTire]);
 				}
 			}
 		}
-		SetClientName(client, name);
+		SetClientName(tank, name);
 		int iAnnounceArrival = !g_bGeneralConfig ? g_iAnnounceArrival : g_iAnnounceArrival2;
 		if (iAnnounceArrival == 1)
 		{
@@ -1469,26 +1441,26 @@ stock void vSetName(int client, const char[] oldname, const char[] name, int mod
 						case 10: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival10", name);
 					}
 				}
-				case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Evolved", oldname, name, g_iBossStageCount[client] + 1);
+				case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Evolved", oldname, name, g_iBossStageCount[tank] + 1);
 				case 2: PrintToChatAll("%s %t", ST_PREFIX2, "Randomized", oldname, name);
 				case 3: PrintToChatAll("%s %t", ST_PREFIX2, "Transformed", oldname, name);
 				case 4: PrintToChatAll("%s %t", ST_PREFIX2, "Untransformed", oldname, name);
 			}
-			int iTankNote = !g_bTankConfig[g_iTankType[client]] ? g_iTankNote[g_iTankType[client]] : g_iTankNote2[g_iTankType[client]];
-			if (iTankNote == 1 && ST_CloneAllowed(client, g_bCloneInstalled))
+			int iTankNote = !g_bTankConfig[g_iTankType[tank]] ? g_iTankNote[g_iTankType[tank]] : g_iTankNote2[g_iTankType[tank]];
+			if (iTankNote == 1 && ST_CloneAllowed(tank, g_bCloneInstalled))
 			{
 				char sTankNote[32];
-				Format(sTankNote, sizeof(sTankNote), "Tank #%d", g_iTankType[client]);
+				Format(sTankNote, sizeof(sTankNote), "Tank #%d", g_iTankType[tank]);
 				TranslationPhraseExists(sTankNote) ? PrintToChatAll("%s %t", ST_PREFIX3, sTankNote) : PrintToChatAll("%s No note found for this Super Tank.", ST_PREFIX3);
 			}
 		}
 		Call_StartForward(g_hPresetForward);
-		Call_PushCell(client);
+		Call_PushCell(tank);
 		Call_Finish();
 	}
 }
 
-stock void vTankCountCheck(int client, int wave)
+stock void vTankCountCheck(int tank, int wave)
 {
 	if (iGetTankCount() == wave)
 	{
@@ -1500,15 +1472,15 @@ stock void vTankCountCheck(int client, int wave)
 	}
 	else if (iGetTankCount() > wave)
 	{
-		IsFakeClient(client) ? KickClient(client) : ForcePlayerSuicide(client);
+		IsFakeClient(tank) ? KickClient(tank) : ForcePlayerSuicide(tank);
 	}
 }
 
-stock void vThrowInterval(int client, float time)
+stock void vThrowInterval(int tank, float time)
 {
-	if (bIsTankAllowed(client) && IsPlayerAlive(client))
+	if (bIsTankAllowed(tank) && IsPlayerAlive(tank))
 	{
-		int iAbility = GetEntPropEnt(client, Prop_Send, "m_customAbility");
+		int iAbility = GetEntPropEnt(tank, Prop_Send, "m_customAbility");
 		if (iAbility > 0)
 		{
 			SetEntPropFloat(iAbility, Prop_Send, "m_duration", time);
@@ -1517,14 +1489,14 @@ stock void vThrowInterval(int client, float time)
 	}
 }
 
-stock bool bIsTankAllowed(int client)
+stock bool bIsTankAllowed(int tank)
 {
-	return bIsTank(client) && IsFakeClient(client);
+	return bIsTank(tank) && IsFakeClient(tank);
 }
 
-stock float flThrowInterval(int client)
+stock float flThrowInterval(int tank)
 {
-	return !g_bTankConfig[g_iTankType[client]] ? g_flThrowInterval[g_iTankType[client]] : g_flThrowInterval2[g_iTankType[client]];
+	return !g_bTankConfig[g_iTankType[tank]] ? g_flThrowInterval[g_iTankType[tank]] : g_flThrowInterval2[g_iTankType[tank]];
 }
 
 stock int iFinaleTank(int value)
@@ -1532,9 +1504,9 @@ stock int iFinaleTank(int value)
 	return !g_bTankConfig[value] ? g_iFinaleTank[value] : g_iFinaleTank2[value];
 }
 
-stock int iFireImmunity(int client)
+stock int iFireImmunity(int tank)
 {
-	return !g_bTankConfig[g_iTankType[client]] ? g_iFireImmunity[g_iTankType[client]] : g_iFireImmunity2[g_iTankType[client]];
+	return !g_bTankConfig[g_iTankType[tank]] ? g_iFireImmunity[g_iTankType[tank]] : g_iFireImmunity2[g_iTankType[tank]];
 }
 
 stock int iGetMaxType()
@@ -1588,9 +1560,9 @@ stock int iGlowOutline(int value)
 	return !g_bTankConfig[value] ? g_iGlowOutline[value] : g_iGlowOutline2[value];
 }
 
-stock int iParticleEffect(int client)
+stock int iParticleEffect(int tank)
 {
-	return !g_bTankConfig[g_iTankType[client]] ? g_iParticleEffect[g_iTankType[client]] : g_iParticleEffect2[g_iTankType[client]];
+	return !g_bTankConfig[g_iTankType[tank]] ? g_iParticleEffect[g_iTankType[tank]] : g_iParticleEffect2[g_iTankType[tank]];
 }
 
 stock int iPluginEnabled()
@@ -1598,9 +1570,9 @@ stock int iPluginEnabled()
 	return !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
 }
 
-stock int iRockEffect(int client)
+stock int iRockEffect(int tank)
 {
-	return !g_bTankConfig[g_iTankType[client]] ? g_iRockEffect[g_iTankType[client]] : g_iRockEffect2[g_iTankType[client]];
+	return !g_bTankConfig[g_iTankType[tank]] ? g_iRockEffect[g_iTankType[tank]] : g_iRockEffect2[g_iTankType[tank]];
 }
 
 stock int iSpawnMode(int value)

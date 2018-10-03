@@ -156,15 +156,15 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iFlingAbility = !g_bTankConfig[ST_TankType(client)] ? g_iFlingAbility[ST_TankType(client)] : g_iFlingAbility2[ST_TankType(client)],
-			iFlingRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFlingChance[ST_TankType(client)] : g_iFlingChance2[ST_TankType(client)];
-		float flFlingRange = !g_bTankConfig[ST_TankType(client)] ? g_flFlingRange[ST_TankType(client)] : g_flFlingRange2[ST_TankType(client)],
+		int iFlingAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iFlingAbility[ST_TankType(tank)] : g_iFlingAbility2[ST_TankType(tank)],
+			iFlingRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iFlingChance[ST_TankType(tank)] : g_iFlingChance2[ST_TankType(tank)];
+		float flFlingRange = !g_bTankConfig[ST_TankType(tank)] ? g_flFlingRange[ST_TankType(tank)] : g_flFlingRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -174,61 +174,61 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flFlingRange)
 				{
-					vFlingHit(iSurvivor, client, iFlingRangeChance, iFlingAbility, 2, "3");
+					vFlingHit(iSurvivor, tank, iFlingRangeChance, iFlingAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vFlingHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vFlingHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		int iFlingMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iFlingMessage[ST_TankType(owner)] : g_iFlingMessage2[ST_TankType(owner)];
-		ST_TankName(owner, sTankName);
+		int iFlingMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iFlingMessage[ST_TankType(tank)] : g_iFlingMessage2[ST_TankType(tank)];
+		ST_TankName(tank, sTankName);
 		if (bIsValidGame())
 		{
 			float flSurvivorPos[3], flSurvivorVelocity[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
-			GetClientAbsOrigin(client, flSurvivorPos);
-			GetClientAbsOrigin(owner, flTankPos);
+			GetClientAbsOrigin(survivor, flSurvivorPos);
+			GetClientAbsOrigin(tank, flTankPos);
 			flDistance[0] = (flTankPos[0] - flSurvivorPos[0]), flDistance[1] = (flTankPos[1] - flSurvivorPos[1]), flDistance[2] = (flTankPos[2] - flSurvivorPos[2]);
-			GetEntPropVector(client, Prop_Data, "m_vecVelocity", flSurvivorVelocity);
+			GetEntPropVector(survivor, Prop_Data, "m_vecVelocity", flSurvivorVelocity);
 			flRatio[0] = flDistance[0] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
 			flRatio[1] = flDistance[1] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
 			flVelocity[0] = (flRatio[0] * -1) * 500.0, flVelocity[1] = (flRatio[1] * -1) * 500.0, flVelocity[2] = 500.0;
-			SDKCall(g_hSDKFlingPlayer, client, flVelocity, 76, owner, 7.0);
+			SDKCall(g_hSDKFlingPlayer, survivor, flVelocity, 76, tank, 7.0);
 			if (iFlingMessage == message || iFlingMessage == 3)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Fling", sTankName, client);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Fling", sTankName, survivor);
 			}
 		}
 		else
 		{
-			SDKCall(g_hSDKPukePlayer, client, owner, true);
+			SDKCall(g_hSDKPukePlayer, survivor, tank, true);
 			if (iFlingMessage == message || iFlingMessage == 3)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, survivor);
 			}
 		}
 		char sFlingEffect[4];
-		sFlingEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sFlingEffect[ST_TankType(owner)] : g_sFlingEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sFlingEffect, mode);
+		sFlingEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sFlingEffect[ST_TankType(tank)] : g_sFlingEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sFlingEffect, mode);
 	}
 }
 
-stock int iFlingChance(int client)
+stock int iFlingChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFlingChance[ST_TankType(client)] : g_iFlingChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFlingChance[ST_TankType(tank)] : g_iFlingChance2[ST_TankType(tank)];
 }
 
-stock int iFlingHit(int client)
+stock int iFlingHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFlingHit[ST_TankType(client)] : g_iFlingHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFlingHit[ST_TankType(tank)] : g_iFlingHit2[ST_TankType(tank)];
 }
 
-stock int iFlingHitMode(int client)
+stock int iFlingHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFlingHitMode[ST_TankType(client)] : g_iFlingHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFlingHitMode[ST_TankType(tank)] : g_iFlingHitMode2[ST_TankType(tank)];
 }

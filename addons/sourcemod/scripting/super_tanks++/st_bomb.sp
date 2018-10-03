@@ -151,14 +151,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iBombRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBombChance[ST_TankType(client)] : g_iBombChance2[ST_TankType(client)];
-		float flBombRange = !g_bTankConfig[ST_TankType(client)] ? g_flBombRange[ST_TankType(client)] : g_flBombRange2[ST_TankType(client)],
+		int iBombRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iBombChance[ST_TankType(tank)] : g_iBombChance2[ST_TankType(tank)];
+		float flBombRange = !g_bTankConfig[ST_TankType(tank)] ? g_flBombRange[ST_TankType(tank)] : g_flBombRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -168,83 +168,83 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBombRange)
 				{
-					vBombHit(iSurvivor, client, iBombRangeChance, iBombAbility(client), 2, "3");
+					vBombHit(iSurvivor, tank, iBombRangeChance, iBombAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iBombAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iBombAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flPos[3];
-		GetClientAbsOrigin(client, flPos);
-		vSpecialAttack(client, flPos, MODEL_PROPANETANK);
+		GetClientAbsOrigin(tank, flPos);
+		vSpecialAttack(tank, flPos, MODEL_PROPANETANK);
 	}
 }
 
-public void ST_RockBreak(int client, int entity)
+public void ST_RockBreak(int tank, int rock)
 {
-	int iBombRock = !g_bTankConfig[ST_TankType(client)] ? g_iBombRock[ST_TankType(client)] : g_iBombRock2[ST_TankType(client)];
-	if (iBombRock == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	int iBombRock = !g_bTankConfig[ST_TankType(tank)] ? g_iBombRock[ST_TankType(tank)] : g_iBombRock2[ST_TankType(tank)];
+	if (iBombRock == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
 		float flPos[3];
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
-		vSpecialAttack(client, flPos, MODEL_PROPANETANK);
-		switch (iBombMessage(client))
+		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
+		vSpecialAttack(tank, flPos, MODEL_PROPANETANK);
+		switch (iBombMessage(tank))
 		{
 			case 3, 5, 6, 7:
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(client, sTankName);
+				ST_TankName(tank, sTankName);
 				PrintToChatAll("%s %t", ST_PREFIX2, "Bomb2", sTankName);
 			}
 		}
 	}
 }
 
-void vBombHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+void vBombHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
 		float flPos[3];
-		GetClientAbsOrigin(client, flPos);
-		vSpecialAttack(owner, flPos, MODEL_PROPANETANK);
+		GetClientAbsOrigin(survivor, flPos);
+		vSpecialAttack(tank, flPos, MODEL_PROPANETANK);
 		char sBombEffect[4];
-		sBombEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sBombEffect[ST_TankType(owner)] : g_sBombEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sBombEffect, mode);
-		if (iBombMessage(owner) == message || iBombMessage(client) == 4 || iBombMessage(client) == 5 || iBombMessage(client) == 6 || iBombMessage(client) == 7)
+		sBombEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sBombEffect[ST_TankType(tank)] : g_sBombEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sBombEffect, mode);
+		if (iBombMessage(tank) == message || iBombMessage(tank) == 4 || iBombMessage(tank) == 5 || iBombMessage(tank) == 6 || iBombMessage(tank) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Bomb", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Bomb", sTankName, survivor);
 		}
 	}
 }
 
-stock int iBombAbility(int client)
+stock int iBombAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iBombAbility[ST_TankType(client)] : g_iBombAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iBombAbility[ST_TankType(tank)] : g_iBombAbility2[ST_TankType(tank)];
 }
 
-stock int iBombChance(int client)
+stock int iBombChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iBombChance[ST_TankType(client)] : g_iBombChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iBombChance[ST_TankType(tank)] : g_iBombChance2[ST_TankType(tank)];
 }
 
-stock int iBombHit(int client)
+stock int iBombHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iBombHit[ST_TankType(client)] : g_iBombHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iBombHit[ST_TankType(tank)] : g_iBombHit2[ST_TankType(tank)];
 }
 
-stock int iBombHitMode(int client)
+stock int iBombHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iBombHitMode[ST_TankType(client)] : g_iBombHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iBombHitMode[ST_TankType(tank)] : g_iBombHitMode2[ST_TankType(tank)];
 }
 
-stock int iBombMessage(int client)
+stock int iBombMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iBombMessage[ST_TankType(client)] : g_iBombMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iBombMessage[ST_TankType(tank)] : g_iBombMessage2[ST_TankType(tank)];
 }

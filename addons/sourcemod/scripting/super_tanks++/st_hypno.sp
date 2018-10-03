@@ -177,14 +177,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iHypnoRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iHypnoChance[ST_TankType(client)] : g_iHypnoChance2[ST_TankType(client)];
-		float flHypnoRange = !g_bTankConfig[ST_TankType(client)] ? g_flHypnoRange[ST_TankType(client)] : g_flHypnoRange2[ST_TankType(client)],
+		int iHypnoRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoChance[ST_TankType(tank)] : g_iHypnoChance2[ST_TankType(tank)];
+		float flHypnoRange = !g_bTankConfig[ST_TankType(tank)] ? g_flHypnoRange[ST_TankType(tank)] : g_flHypnoRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -194,38 +194,38 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHypnoRange)
 				{
-					vHypnoHit(iSurvivor, client, iHypnoRangeChance, iHypnoAbility(client), 2, "3");
+					vHypnoHit(iSurvivor, tank, iHypnoRangeChance, iHypnoAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iHypnoAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iHypnoAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveHypno();
 	}
 }
 
-stock void vHypnoHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vHypnoHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bHypno[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bHypno[survivor])
 	{
-		g_bHypno[client] = true;
-		float flHypnoDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flHypnoDuration[ST_TankType(owner)] : g_flHypnoDuration2[ST_TankType(owner)];
+		g_bHypno[survivor] = true;
+		float flHypnoDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flHypnoDuration[ST_TankType(tank)] : g_flHypnoDuration2[ST_TankType(tank)];
 		DataPack dpStopHypno = new DataPack();
 		CreateDataTimer(flHypnoDuration, tTimerStopHypno, dpStopHypno, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopHypno.WriteCell(GetClientUserId(client)), dpStopHypno.WriteCell(GetClientUserId(owner)), dpStopHypno.WriteCell(message), dpStopHypno.WriteCell(enabled);
+		dpStopHypno.WriteCell(GetClientUserId(survivor)), dpStopHypno.WriteCell(GetClientUserId(tank)), dpStopHypno.WriteCell(message), dpStopHypno.WriteCell(enabled);
 		char sHypnoEffect[4];
-		sHypnoEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sHypnoEffect[ST_TankType(owner)] : g_sHypnoEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sHypnoEffect, mode);
-		if (iHypnoMessage(owner) == message || iHypnoMessage(owner) == 3)
+		sHypnoEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sHypnoEffect[ST_TankType(tank)] : g_sHypnoEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sHypnoEffect, mode);
+		if (iHypnoMessage(tank) == message || iHypnoMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Hypno", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Hypno", sTankName, survivor);
 		}
 	}
 }
@@ -252,38 +252,38 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bHypno[client] = false;
-	if (iHypnoMessage(owner) == message || iHypnoMessage(owner) == 3)
+	g_bHypno[survivor] = false;
+	if (iHypnoMessage(tank) == message || iHypnoMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Hypno2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Hypno2", survivor);
 	}
 }
 
-stock int iHypnoAbility(int client)
+stock int iHypnoAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHypnoAbility[ST_TankType(client)] : g_iHypnoAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoAbility[ST_TankType(tank)] : g_iHypnoAbility2[ST_TankType(tank)];
 }
 
-stock int iHypnoChance(int client)
+stock int iHypnoChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHypnoChance[ST_TankType(client)] : g_iHypnoChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoChance[ST_TankType(tank)] : g_iHypnoChance2[ST_TankType(tank)];
 }
 
-stock int iHypnoHit(int client)
+stock int iHypnoHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHypnoHit[ST_TankType(client)] : g_iHypnoHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoHit[ST_TankType(tank)] : g_iHypnoHit2[ST_TankType(tank)];
 }
 
-stock int iHypnoHitMode(int client)
+stock int iHypnoHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHypnoHitMode[ST_TankType(client)] : g_iHypnoHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoHitMode[ST_TankType(tank)] : g_iHypnoHitMode2[ST_TankType(tank)];
 }
 
-stock int iHypnoMessage(int client)
+stock int iHypnoMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHypnoMessage[ST_TankType(client)] : g_iHypnoMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoMessage[ST_TankType(tank)] : g_iHypnoMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerStopHypno(Handle timer, DataPack pack)

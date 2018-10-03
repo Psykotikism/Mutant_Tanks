@@ -104,32 +104,32 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	int iRockChance = !g_bTankConfig[ST_TankType(client)] ? g_iRockChance[ST_TankType(client)] : g_iRockChance2[ST_TankType(client)];
-	if (iRockAbility(client) == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bRock[client])
+	int iRockChance = !g_bTankConfig[ST_TankType(tank)] ? g_iRockChance[ST_TankType(tank)] : g_iRockChance2[ST_TankType(tank)];
+	if (iRockAbility(tank) == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bRock[tank])
 	{
 		int iRock = CreateEntityByName("env_rock_launcher");
 		if (!bIsValidEntity(iRock))
 		{
 			return;
 		}
-		g_bRock[client] = true;
+		g_bRock[tank] = true;
 		float flPos[3];
-		GetClientEyePosition(client, flPos);
+		GetClientEyePosition(tank, flPos);
 		flPos[2] += 20.0;
 		char sDamage[11];
-		int iRockDamage = !g_bTankConfig[ST_TankType(client)] ? g_iRockDamage[ST_TankType(client)] : g_iRockDamage2[ST_TankType(client)];
+		int iRockDamage = !g_bTankConfig[ST_TankType(tank)] ? g_iRockDamage[ST_TankType(tank)] : g_iRockDamage2[ST_TankType(tank)];
 		IntToString(iRockDamage, sDamage, sizeof(sDamage));
 		DispatchSpawn(iRock);
 		DispatchKeyValue(iRock, "rockdamageoverride", sDamage);
 		DataPack dpRockUpdate = new DataPack();
 		CreateDataTimer(0.2, tTimerRockUpdate, dpRockUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpRockUpdate.WriteCell(EntIndexToEntRef(iRock)), dpRockUpdate.WriteCell(GetClientUserId(client)), dpRockUpdate.WriteFloat(flPos[0]), dpRockUpdate.WriteFloat(flPos[1]), dpRockUpdate.WriteFloat(flPos[2]), dpRockUpdate.WriteFloat(GetEngineTime());
-		if (iRockMessage(client) == 1)
+		dpRockUpdate.WriteCell(EntIndexToEntRef(iRock)), dpRockUpdate.WriteCell(GetClientUserId(tank)), dpRockUpdate.WriteFloat(flPos[0]), dpRockUpdate.WriteFloat(flPos[1]), dpRockUpdate.WriteFloat(flPos[2]), dpRockUpdate.WriteFloat(GetEngineTime());
+		if (iRockMessage(tank) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Rock", sTankName);
 		}
 	}
@@ -146,26 +146,26 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int entity)
+stock void vReset2(int tank, int rock)
 {
-	g_bRock[client] = false;
-	RemoveEntity(entity);
-	if (iRockMessage(client) == 1)
+	g_bRock[tank] = false;
+	RemoveEntity(rock);
+	if (iRockMessage(tank) == 1)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(client, sTankName);
+		ST_TankName(tank, sTankName);
 		PrintToChatAll("%s %t", ST_PREFIX2, "Rock2", sTankName);
 	}
 }
 
-stock int iRockAbility(int client)
+stock int iRockAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRockAbility[ST_TankType(client)] : g_iRockAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRockAbility[ST_TankType(tank)] : g_iRockAbility2[ST_TankType(tank)];
 }
 
-stock int iRockMessage(int client)
+stock int iRockMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRockMessage[ST_TankType(client)] : g_iRockMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRockMessage[ST_TankType(tank)] : g_iRockMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerRockUpdate(Handle timer, DataPack pack)

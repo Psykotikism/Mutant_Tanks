@@ -102,17 +102,17 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (iRegenAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bRegen[client])
+	if (iRegenAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bRegen[tank])
 	{
-		g_bRegen[client] = true;
-		float flRegenInterval = !g_bTankConfig[ST_TankType(client)] ? g_flRegenInterval[ST_TankType(client)] : g_flRegenInterval2[ST_TankType(client)];
-		CreateTimer(flRegenInterval, tTimerRegen, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		if (iRegenMessage(client) == 1)
+		g_bRegen[tank] = true;
+		float flRegenInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flRegenInterval[ST_TankType(tank)] : g_flRegenInterval2[ST_TankType(tank)];
+		CreateTimer(flRegenInterval, tTimerRegen, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		if (iRegenMessage(tank) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Regen", sTankName, flRegenInterval);
 		}
 	}
@@ -129,14 +129,14 @@ stock void vReset()
 	}
 }
 
-stock int iRegenAbility(int client)
+stock int iRegenAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRegenAbility[ST_TankType(client)] : g_iRegenAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRegenAbility[ST_TankType(tank)] : g_iRegenAbility2[ST_TankType(tank)];
 }
 
-stock int iRegenMessage(int client)
+stock int iRegenMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRegenMessage[ST_TankType(client)] : g_iRegenMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRegenMessage[ST_TankType(tank)] : g_iRegenMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerRegen(Handle timer, any userid)

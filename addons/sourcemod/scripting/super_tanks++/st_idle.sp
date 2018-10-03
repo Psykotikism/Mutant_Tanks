@@ -186,15 +186,15 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iIdleAbility = !g_bTankConfig[ST_TankType(client)] ? g_iIdleAbility[ST_TankType(client)] : g_iIdleAbility2[ST_TankType(client)],
-			iIdleRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iIdleChance[ST_TankType(client)] : g_iIdleChance2[ST_TankType(client)];
-		float flIdleRange = !g_bTankConfig[ST_TankType(client)] ? g_flIdleRange[ST_TankType(client)] : g_flIdleRange2[ST_TankType(client)],
+		int iIdleAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iIdleAbility[ST_TankType(tank)] : g_iIdleAbility2[ST_TankType(tank)],
+			iIdleRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iIdleChance[ST_TankType(tank)] : g_iIdleChance2[ST_TankType(tank)];
+		float flIdleRange = !g_bTankConfig[ST_TankType(tank)] ? g_flIdleRange[ST_TankType(tank)] : g_flIdleRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -204,31 +204,31 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIdleRange)
 				{
-					vIdleHit(iSurvivor, client, iIdleRangeChance, iIdleAbility, 2, "3");
+					vIdleHit(iSurvivor, tank, iIdleRangeChance, iIdleAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vIdleHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vIdleHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsHumanSurvivor(client) && !g_bIdle[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsHumanSurvivor(survivor) && !g_bIdle[survivor])
 	{
-		iGetHumanCount() > 1 ? FakeClientCommand(client, "go_away_from_keyboard") : SDKCall(g_hSDKIdlePlayer, client);
-		if (bIsBotIdle(client))
+		iGetHumanCount() > 1 ? FakeClientCommand(survivor, "go_away_from_keyboard") : SDKCall(g_hSDKIdlePlayer, survivor);
+		if (bIsBotIdle(survivor))
 		{
-			g_bIdle[client] = true;
-			g_bIdled[client] = true;
-			int iIdleMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iIdleMessage[ST_TankType(owner)] : g_iIdleMessage2[ST_TankType(owner)];
+			g_bIdle[survivor] = true;
+			g_bIdled[survivor] = true;
+			int iIdleMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iIdleMessage[ST_TankType(tank)] : g_iIdleMessage2[ST_TankType(tank)];
 			char sIdleEffect[4];
-			sIdleEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sIdleEffect[ST_TankType(owner)] : g_sIdleEffect2[ST_TankType(owner)];
-			vEffect(client, owner, sIdleEffect, mode);
+			sIdleEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sIdleEffect[ST_TankType(tank)] : g_sIdleEffect2[ST_TankType(tank)];
+			vEffect(survivor, tank, sIdleEffect, mode);
 			if (iIdleMessage == message || iIdleMessage == 3)
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(owner, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Idle", sTankName, client);
+				ST_TankName(tank, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Idle", sTankName, survivor);
 			}
 		}
 	}
@@ -246,19 +246,19 @@ stock void vReset()
 	}
 }
 
-stock int iIdleChance(int client)
+stock int iIdleChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iIdleChance[ST_TankType(client)] : g_iIdleChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iIdleChance[ST_TankType(tank)] : g_iIdleChance2[ST_TankType(tank)];
 }
 
-stock int iIdleHit(int client)
+stock int iIdleHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iIdleHit[ST_TankType(client)] : g_iIdleHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iIdleHit[ST_TankType(tank)] : g_iIdleHit2[ST_TankType(tank)];
 }
 
-stock int iIdleHitMode(int client)
+stock int iIdleHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iIdleHitMode[ST_TankType(client)] : g_iIdleHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iIdleHitMode[ST_TankType(tank)] : g_iIdleHitMode2[ST_TankType(tank)];
 }
 
 public Action tTimerIdleFix(Handle timer, DataPack pack)

@@ -151,14 +151,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iFireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iFireChance[ST_TankType(client)] : g_iFireChance2[ST_TankType(client)];
-		float flFireRange = !g_bTankConfig[ST_TankType(client)] ? g_flFireRange[ST_TankType(client)] : g_flFireRange2[ST_TankType(client)],
+		int iFireRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iFireChance[ST_TankType(tank)] : g_iFireChance2[ST_TankType(tank)];
+		float flFireRange = !g_bTankConfig[ST_TankType(tank)] ? g_flFireRange[ST_TankType(tank)] : g_flFireRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -168,83 +168,83 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flFireRange)
 				{
-					vFireHit(iSurvivor, client, iFireRangeChance, iFireAbility(client), 2, "3");
+					vFireHit(iSurvivor, tank, iFireRangeChance, iFireAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iFireAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iFireAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flPos[3];
-		GetClientAbsOrigin(client, flPos);
-		vSpecialAttack(client, flPos, MODEL_GASCAN);
+		GetClientAbsOrigin(tank, flPos);
+		vSpecialAttack(tank, flPos, MODEL_GASCAN);
 	}
 }
 
-public void ST_RockBreak(int client, int entity)
+public void ST_RockBreak(int tank, int rock)
 {
-	int iFireRock = !g_bTankConfig[ST_TankType(client)] ? g_iFireRock[ST_TankType(client)] : g_iFireRock2[ST_TankType(client)];
-	if (iFireRock == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	int iFireRock = !g_bTankConfig[ST_TankType(tank)] ? g_iFireRock[ST_TankType(tank)] : g_iFireRock2[ST_TankType(tank)];
+	if (iFireRock == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
 		float flPos[3];
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
-		vSpecialAttack(client, flPos, MODEL_GASCAN);
-		switch (iFireMessage(client))
+		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
+		vSpecialAttack(tank, flPos, MODEL_GASCAN);
+		switch (iFireMessage(tank))
 		{
 			case 3, 5, 6, 7:
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(client, sTankName);
+				ST_TankName(tank, sTankName);
 				PrintToChatAll("%s %t", ST_PREFIX2, "Fire2", sTankName);
 			}
 		}
 	}
 }
 
-stock void vFireHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vFireHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
 		float flPos[3];
-		GetClientAbsOrigin(client, flPos);
-		vSpecialAttack(owner, flPos, MODEL_GASCAN);
+		GetClientAbsOrigin(survivor, flPos);
+		vSpecialAttack(tank, flPos, MODEL_GASCAN);
 		char sFireEffect[4];
-		sFireEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sFireEffect[ST_TankType(owner)] : g_sFireEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sFireEffect, mode);
-		if (iFireMessage(owner) == message || iFireMessage(client) == 4 || iFireMessage(client) == 5 || iFireMessage(client) == 6 || iFireMessage(client) == 7)
+		sFireEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sFireEffect[ST_TankType(tank)] : g_sFireEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sFireEffect, mode);
+		if (iFireMessage(tank) == message || iFireMessage(tank) == 4 || iFireMessage(tank) == 5 || iFireMessage(tank) == 6 || iFireMessage(tank) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Fire", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Fire", sTankName, survivor);
 		}
 	}
 }
 
-stock int iFireAbility(int client)
+stock int iFireAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFireAbility[ST_TankType(client)] : g_iFireAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFireAbility[ST_TankType(tank)] : g_iFireAbility2[ST_TankType(tank)];
 }
 
-stock int iFireChance(int client)
+stock int iFireChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFireChance[ST_TankType(client)] : g_iFireChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFireChance[ST_TankType(tank)] : g_iFireChance2[ST_TankType(tank)];
 }
 
-stock int iFireHit(int client)
+stock int iFireHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFireHit[ST_TankType(client)] : g_iFireHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFireHit[ST_TankType(tank)] : g_iFireHit2[ST_TankType(tank)];
 }
 
-stock int iFireHitMode(int client)
+stock int iFireHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFireHitMode[ST_TankType(client)] : g_iFireHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFireHitMode[ST_TankType(tank)] : g_iFireHitMode2[ST_TankType(tank)];
 }
 
-stock int iFireMessage(int client)
+stock int iFireMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFireMessage[ST_TankType(client)] : g_iFireMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFireMessage[ST_TankType(tank)] : g_iFireMessage2[ST_TankType(tank)];
 }

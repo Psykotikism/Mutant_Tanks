@@ -166,14 +166,14 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iGhostRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGhostChance[ST_TankType(client)] : g_iGhostChance2[ST_TankType(client)];
-		float flGhostRange = !g_bTankConfig[ST_TankType(client)] ? g_flGhostRange[ST_TankType(client)] : g_flGhostRange2[ST_TankType(client)],
+		int iGhostRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iGhostChance[ST_TankType(tank)] : g_iGhostChance2[ST_TankType(tank)];
+		float flGhostRange = !g_bTankConfig[ST_TankType(tank)] ? g_flGhostRange[ST_TankType(tank)] : g_flGhostRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -183,23 +183,23 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flGhostRange)
 				{
-					vGhostHit(iSurvivor, client, iGhostRangeChance, iGhostAbility(client), 2, "3");
+					vGhostHit(iSurvivor, tank, iGhostRangeChance, iGhostAbility(tank), 2, "3");
 				}
 			}
 		}
-		if ((iGhostAbility(client) == 2 || iGhostAbility(client) == 3) && !g_bGhost[client])
+		if ((iGhostAbility(tank) == 2 || iGhostAbility(tank) == 3) && !g_bGhost[tank])
 		{
-			g_bGhost[client] = true;
-			g_iGhostAlpha[client] = 255;
-			float flGhostFadeRate = !g_bTankConfig[ST_TankType(client)] ? g_flGhostFadeRate[ST_TankType(client)] : g_flGhostFadeRate2[ST_TankType(client)];
-			CreateTimer(flGhostFadeRate, tTimerGhost, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-			SetEntityRenderMode(client, RENDER_TRANSCOLOR);
-			switch (iGhostMessage(client))
+			g_bGhost[tank] = true;
+			g_iGhostAlpha[tank] = 255;
+			float flGhostFadeRate = !g_bTankConfig[ST_TankType(tank)] ? g_flGhostFadeRate[ST_TankType(tank)] : g_flGhostFadeRate2[ST_TankType(tank)];
+			CreateTimer(flGhostFadeRate, tTimerGhost, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			SetEntityRenderMode(tank, RENDER_TRANSCOLOR);
+			switch (iGhostMessage(tank))
 			{
 				case 3, 5, 6, 7:
 				{
 					char sTankName[MAX_NAME_LENGTH + 1];
-					ST_TankName(client, sTankName);
+					ST_TankName(tank, sTankName);
 					PrintToChatAll("%s %t", ST_PREFIX2, "Ghost2", sTankName);
 				}
 			}
@@ -207,30 +207,30 @@ public void ST_Ability(int client)
 	}
 }
 
-stock void vGhostHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vGhostHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
 		char sGhostWeaponSlots[6];
-		sGhostWeaponSlots = !g_bTankConfig[ST_TankType(owner)] ? g_sGhostWeaponSlots[ST_TankType(owner)] : g_sGhostWeaponSlots2[ST_TankType(owner)];
-		vDropWeapon(client, sGhostWeaponSlots, "1", 0);
-		vDropWeapon(client, sGhostWeaponSlots, "2", 1);
-		vDropWeapon(client, sGhostWeaponSlots, "3", 2);
-		vDropWeapon(client, sGhostWeaponSlots, "4", 3);
-		vDropWeapon(client, sGhostWeaponSlots, "5", 4);
+		sGhostWeaponSlots = !g_bTankConfig[ST_TankType(tank)] ? g_sGhostWeaponSlots[ST_TankType(tank)] : g_sGhostWeaponSlots2[ST_TankType(tank)];
+		vDropWeapon(survivor, sGhostWeaponSlots, "1", 0);
+		vDropWeapon(survivor, sGhostWeaponSlots, "2", 1);
+		vDropWeapon(survivor, sGhostWeaponSlots, "3", 2);
+		vDropWeapon(survivor, sGhostWeaponSlots, "4", 3);
+		vDropWeapon(survivor, sGhostWeaponSlots, "5", 4);
 		switch (GetRandomInt(1, 2))
 		{
-			case 1: EmitSoundToClient(client, SOUND_INFECTED, owner);
-			case 2: EmitSoundToClient(client, SOUND_INFECTED2, owner);
+			case 1: EmitSoundToClient(survivor, SOUND_INFECTED, tank);
+			case 2: EmitSoundToClient(survivor, SOUND_INFECTED2, tank);
 		}
 		char sGhostEffect[4];
-		sGhostEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sGhostEffect[ST_TankType(owner)] : g_sGhostEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sGhostEffect, mode);
-		if (iGhostMessage(owner) == message || iGhostMessage(owner) == 4 || iGhostMessage(owner) == 5 || iGhostMessage(owner) == 6 || iGhostMessage(owner) == 7)
+		sGhostEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sGhostEffect[ST_TankType(tank)] : g_sGhostEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sGhostEffect, mode);
+		if (iGhostMessage(tank) == message || iGhostMessage(tank) == 4 || iGhostMessage(tank) == 5 || iGhostMessage(tank) == 6 || iGhostMessage(tank) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ghost", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ghost", sTankName, survivor);
 		}
 	}
 }
@@ -248,44 +248,44 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client)
+stock void vReset2(int tank)
 {
-	g_bGhost2[client] = false;
-	g_iGhostAlpha[client] = 255;
-	switch (iGhostMessage(client))
+	g_bGhost2[tank] = false;
+	g_iGhostAlpha[tank] = 255;
+	switch (iGhostMessage(tank))
 	{
 		case 3, 5, 6, 7:
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Ghost3", sTankName);
 		}
 	}
 }
 
-stock int iGhostAbility(int client)
+stock int iGhostAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGhostAbility[ST_TankType(client)] : g_iGhostAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostAbility[ST_TankType(tank)] : g_iGhostAbility2[ST_TankType(tank)];
 }
 
-stock int iGhostChance(int client)
+stock int iGhostChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGhostChance[ST_TankType(client)] : g_iGhostChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostChance[ST_TankType(tank)] : g_iGhostChance2[ST_TankType(tank)];
 }
 
-stock int iGhostHit(int client)
+stock int iGhostHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGhostHit[ST_TankType(client)] : g_iGhostHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostHit[ST_TankType(tank)] : g_iGhostHit2[ST_TankType(tank)];
 }
 
-stock int iGhostHitMode(int client)
+stock int iGhostHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGhostHitMode[ST_TankType(client)] : g_iGhostHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostHitMode[ST_TankType(tank)] : g_iGhostHitMode2[ST_TankType(tank)];
 }
 
-stock int iGhostMessage(int client)
+stock int iGhostMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGhostMessage[ST_TankType(client)] : g_iGhostMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostMessage[ST_TankType(tank)] : g_iGhostMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerGhost(Handle timer, any userid)

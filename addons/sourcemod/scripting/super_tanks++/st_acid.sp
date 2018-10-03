@@ -173,14 +173,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iAcidRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAcidChance[ST_TankType(client)] : g_iAcidChance2[ST_TankType(client)];
-		float flAcidRange = !g_bTankConfig[ST_TankType(client)] ? g_flAcidRange[ST_TankType(client)] : g_flAcidRange2[ST_TankType(client)],
+		int iAcidRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iAcidChance[ST_TankType(tank)] : g_iAcidChance2[ST_TankType(tank)];
+		float flAcidRange = !g_bTankConfig[ST_TankType(tank)] ? g_flAcidRange[ST_TankType(tank)] : g_flAcidRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -190,99 +190,99 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flAcidRange)
 				{
-					vAcidHit(iSurvivor, client, iAcidRangeChance, iAcidAbility(client), 2, "3");
+					vAcidHit(iSurvivor, tank, iAcidRangeChance, iAcidAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iAcidAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && bIsValidGame())
+	if (iAcidAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && bIsValidGame())
 	{
-		vAcid(client, client);
+		vAcid(tank, tank);
 	}
 }
 
-public void ST_RockBreak(int client, int entity)
+public void ST_RockBreak(int tank, int rock)
 {
-	int iAcidRock = !g_bTankConfig[ST_TankType(client)] ? g_iAcidRock[ST_TankType(client)] : g_iAcidRock2[ST_TankType(client)];
-	if (iAcidRock == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && bIsValidGame())
+	int iAcidRock = !g_bTankConfig[ST_TankType(tank)] ? g_iAcidRock[ST_TankType(tank)] : g_iAcidRock2[ST_TankType(tank)];
+	if (iAcidRock == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && bIsValidGame())
 	{
 		float flOrigin[3], flAngles[3];
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
+		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] += 40.0;
-		SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, client, 2.0);
-		switch (iAcidMessage(client))
+		SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, tank, 2.0);
+		switch (iAcidMessage(tank))
 		{
 			case 3, 5, 6, 7:
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(client, sTankName);
+				ST_TankName(tank, sTankName);
 				PrintToChatAll("%s %t", ST_PREFIX2, "Acid2", sTankName);
 			}
 		}
 	}
 }
 
-stock void vAcid(int client, int owner)
+stock void vAcid(int survivor, int tank)
 {
 	float flOrigin[3], flAngles[3];
-	GetClientAbsOrigin(client, flOrigin);
-	GetClientAbsAngles(client, flAngles);
-	SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, owner, 2.0);
+	GetClientAbsOrigin(survivor, flOrigin);
+	GetClientAbsAngles(survivor, flAngles);
+	SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, tank, 2.0);
 }
 
-stock void vAcidHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vAcidHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(owner, sTankName);
+		ST_TankName(tank, sTankName);
 		if (bIsValidGame())
 		{
-			vAcid(client, owner);
-			if (iAcidMessage(owner) == message || iAcidMessage(client) == 4 || iAcidMessage(client) == 5 || iAcidMessage(client) == 6 || iAcidMessage(client) == 7)
+			vAcid(survivor, tank);
+			if (iAcidMessage(tank) == message || iAcidMessage(tank) == 4 || iAcidMessage(tank) == 5 || iAcidMessage(tank) == 6 || iAcidMessage(tank) == 7)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Acid", sTankName, client);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Acid", sTankName, survivor);
 			}
 		}
 		else
 		{
-			SDKCall(g_hSDKPukePlayer, client, owner, true);
-			if (iAcidMessage(owner) == message || iAcidMessage(client) == 4 || iAcidMessage(client) == 5 || iAcidMessage(client) == 6 || iAcidMessage(client) == 7)
+			SDKCall(g_hSDKPukePlayer, survivor, tank, true);
+			if (iAcidMessage(tank) == message || iAcidMessage(tank) == 4 || iAcidMessage(tank) == 5 || iAcidMessage(tank) == 6 || iAcidMessage(tank) == 7)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, survivor);
 			}
 		}
 		char sAcidEffect[4];
-		sAcidEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sAcidEffect[ST_TankType(owner)] : g_sAcidEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sAcidEffect, mode);
+		sAcidEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sAcidEffect[ST_TankType(tank)] : g_sAcidEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sAcidEffect, mode);
 	}
 }
 
-stock int iAcidAbility(int client)
+stock int iAcidAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAcidAbility[ST_TankType(client)] : g_iAcidAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iAcidAbility[ST_TankType(tank)] : g_iAcidAbility2[ST_TankType(tank)];
 }
 
-stock int iAcidChance(int client)
+stock int iAcidChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAcidChance[ST_TankType(client)] : g_iAcidChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iAcidChance[ST_TankType(tank)] : g_iAcidChance2[ST_TankType(tank)];
 }
 
-stock int iAcidHit(int client)
+stock int iAcidHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAcidHit[ST_TankType(client)] : g_iAcidHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iAcidHit[ST_TankType(tank)] : g_iAcidHit2[ST_TankType(tank)];
 }
 
-stock int iAcidHitMode(int client)
+stock int iAcidHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAcidHitMode[ST_TankType(client)] : g_iAcidHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iAcidHitMode[ST_TankType(tank)] : g_iAcidHitMode2[ST_TankType(tank)];
 }
 
-stock int iAcidMessage(int client)
+stock int iAcidMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAcidMessage[ST_TankType(client)] : g_iAcidMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iAcidMessage[ST_TankType(tank)] : g_iAcidMessage2[ST_TankType(tank)];
 }

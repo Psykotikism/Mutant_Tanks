@@ -163,33 +163,33 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (iShieldAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bShield[client])
+	if (iShieldAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bShield[tank])
 	{
-		vShield(client, true);
+		vShield(tank, true);
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iShieldAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iShieldAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveShield(client);
+		vRemoveShield(tank);
 	}
 }
 
-public void ST_RockThrow(int client, int entity)
+public void ST_RockThrow(int tank, int rock)
 {
-	if (iShieldAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (iShieldAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
 		DataPack dpShieldThrow = new DataPack();
 		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpShieldThrow.WriteCell(EntIndexToEntRef(entity)), dpShieldThrow.WriteCell(GetClientUserId(client));
+		dpShieldThrow.WriteCell(EntIndexToEntRef(rock)), dpShieldThrow.WriteCell(GetClientUserId(tank));
 	}
 }
 
-stock void vRemoveShield(int client)
+stock void vRemoveShield(int tank)
 {
 	int iShield = -1;
 	while ((iShield = FindEntityByClassname(iShield, "prop_dynamic")) != INVALID_ENT_REFERENCE)
@@ -199,7 +199,7 @@ stock void vRemoveShield(int client)
 		if (StrEqual(sModel, MODEL_SHIELD, false))
 		{
 			int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
-			if (iOwner == client)
+			if (iOwner == tank)
 			{
 				RemoveEntity(iShield);
 			}
@@ -219,12 +219,12 @@ stock void vReset()
 	}
 }
 
-stock void vShield(int client, bool shield)
+stock void vShield(int tank, bool shield)
 {
 	if (shield)
 	{
 		char sSet[3][4], sShieldColor[12];
-		sShieldColor = !g_bTankConfig[ST_TankType(client)] ? g_sShieldColor[ST_TankType(client)] : g_sShieldColor2[ST_TankType(client)];
+		sShieldColor = !g_bTankConfig[ST_TankType(tank)] ? g_sShieldColor[ST_TankType(tank)] : g_sShieldColor2[ST_TankType(tank)];
 		TrimString(sShieldColor);
 		ExplodeString(sShieldColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 		TrimString(sSet[0]);
@@ -237,7 +237,7 @@ stock void vShield(int client, bool shield)
 		int iBlue = (!StrEqual(sSet[2], "")) ? StringToInt(sSet[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 		float flOrigin[3];
-		GetClientAbsOrigin(client, flOrigin);
+		GetClientAbsOrigin(tank, flOrigin);
 		flOrigin[2] -= 120.0;
 		int iShield = CreateEntityByName("prop_dynamic");
 		if (bIsValidEntity(iShield))
@@ -245,44 +245,44 @@ stock void vShield(int client, bool shield)
 			SetEntityModel(iShield, MODEL_SHIELD);
 			DispatchKeyValueVector(iShield, "origin", flOrigin);
 			DispatchSpawn(iShield);
-			vSetEntityParent(iShield, client);
+			vSetEntityParent(iShield, tank);
 			SetEntityRenderMode(iShield, RENDER_TRANSTEXTURE);
 			SetEntityRenderColor(iShield, iRed, iGreen, iBlue, 50);
 			SetEntProp(iShield, Prop_Send, "m_CollisionGroup", 1);
-			SetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity", client);
+			SetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity", tank);
 		}
-		g_bShield[client] = true;
-		g_bShield2[client] = true;
-		if (iShieldMessage(client) == 1)
+		g_bShield[tank] = true;
+		g_bShield2[tank] = true;
+		if (iShieldMessage(tank) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Shield", sTankName);
 		}
 	}
 	else
 	{
-		vRemoveShield(client);
-		float flShieldDelay = !g_bTankConfig[ST_TankType(client)] ? g_flShieldDelay[ST_TankType(client)] : g_flShieldDelay2[ST_TankType(client)];
-		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-		g_bShield2[client] = false;
-		if (iShieldMessage(client) == 1)
+		vRemoveShield(tank);
+		float flShieldDelay = !g_bTankConfig[ST_TankType(tank)] ? g_flShieldDelay[ST_TankType(tank)] : g_flShieldDelay2[ST_TankType(tank)];
+		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		g_bShield2[tank] = false;
+		if (iShieldMessage(tank) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Shield2", sTankName);
 		}
 	}
 }
 
-stock int iShieldAbility(int client)
+stock int iShieldAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iShieldAbility[ST_TankType(client)] : g_iShieldAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShieldAbility[ST_TankType(tank)] : g_iShieldAbility2[ST_TankType(tank)];
 }
 
-stock int iShieldMessage(int client)
+stock int iShieldMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iShieldMessage[ST_TankType(client)] : g_iShieldMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShieldMessage[ST_TankType(tank)] : g_iShieldMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerShield(Handle timer, any userid)

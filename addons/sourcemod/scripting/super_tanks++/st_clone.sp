@@ -114,25 +114,25 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	int iCloneChance = !g_bTankConfig[ST_TankType(client)] ? g_iCloneChance[ST_TankType(client)] : g_iCloneChance2[ST_TankType(client)];
-	if (iCloneAbility(client) == 1 && GetRandomInt(1, iCloneChance) == 1 && ST_TankAllowed(client) && IsPlayerAlive(client) && !g_bCloned[client])
+	int iCloneChance = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneChance[ST_TankType(tank)] : g_iCloneChance2[ST_TankType(tank)];
+	if (iCloneAbility(tank) == 1 && GetRandomInt(1, iCloneChance) == 1 && ST_TankAllowed(tank) && IsPlayerAlive(tank) && !g_bCloned[tank])
 	{
-		int iCloneAmount = !g_bTankConfig[ST_TankType(client)] ? g_iCloneAmount[ST_TankType(client)] : g_iCloneAmount2[ST_TankType(client)],
-			iCloneMessage = !g_bTankConfig[ST_TankType(client)] ? g_iCloneMessage[ST_TankType(client)] : g_iCloneMessage2[ST_TankType(client)];
-		if (g_iCloneCount[client] < iCloneAmount)
+		int iCloneAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneAmount[ST_TankType(tank)] : g_iCloneAmount2[ST_TankType(tank)],
+			iCloneMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneMessage[ST_TankType(tank)] : g_iCloneMessage2[ST_TankType(tank)];
+		if (g_iCloneCount[tank] < iCloneAmount)
 		{
 			float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
-			GetClientEyePosition(client, flPosition);
-			GetClientEyeAngles(client, flAngles);
+			GetClientEyePosition(tank, flPosition);
+			GetClientEyeAngles(tank, flAngles);
 			flAngles[0] = -25.0;
 			GetAngleVectors(flAngles, flAngles, NULL_VECTOR, NULL_VECTOR);
 			NormalizeVector(flAngles, flAngles);
 			ScaleVector(flAngles, -1.0);
 			vCopyVector(flAngles, flVector);
 			GetVectorAngles(flAngles, flAngles);
-			Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, client);
+			Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
 			if (TR_DidHit(hTrace))
 			{
 				TR_GetEndPosition(flHitPosition, hTrace);
@@ -151,7 +151,7 @@ public void ST_Ability(int client)
 							bTankBoss[iPlayer] = true;
 						}
 					}
-					ST_SpawnTank(client, ST_TankType(client));
+					ST_SpawnTank(tank, ST_TankType(tank));
 					int iSelectedType;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
@@ -165,14 +165,14 @@ public void ST_Ability(int client)
 					{
 						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 						g_bCloned[iSelectedType] = true;
-						int iCloneHealth = !g_bTankConfig[ST_TankType(client)] ? g_iCloneHealth[ST_TankType(client)] : g_iCloneHealth2[ST_TankType(client)],
+						int iCloneHealth = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneHealth[ST_TankType(tank)] : g_iCloneHealth2[ST_TankType(tank)],
 							iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
 						SetEntityHealth(iSelectedType, iNewHealth);
-						g_iCloneCount[client]++;
+						g_iCloneCount[tank]++;
 						if (iCloneMessage == 1)
 						{
 							char sTankName[MAX_NAME_LENGTH + 1];
-							ST_TankName(client, sTankName);
+							ST_TankName(tank, sTankName);
 							PrintToChatAll("%s %t", ST_PREFIX2, "Clone", sTankName);
 						}
 					}
@@ -183,11 +183,11 @@ public void ST_Ability(int client)
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iCloneAbility(client) == 1 && ST_TankAllowed(client) && !g_bCloned[client])
+	if (iCloneAbility(tank) == 1 && ST_TankAllowed(tank) && !g_bCloned[tank])
 	{
-		g_iCloneCount[client] = 0;
+		g_iCloneCount[tank] = 0;
 	}
 }
 
@@ -203,17 +203,17 @@ stock void vReset()
 	}
 }
 
-stock bool bIsCloneAllowed(int client, bool clone)
+stock bool bIsCloneAllowed(int tank, bool clone)
 {
-	int iCloneMode = !g_bTankConfig[ST_TankType(client)] ? g_iCloneMode[ST_TankType(client)] : g_iCloneMode2[ST_TankType(client)];
-	if (clone && iCloneMode == 0 && g_bCloned[client])
+	int iCloneMode = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneMode[ST_TankType(tank)] : g_iCloneMode2[ST_TankType(tank)];
+	if (clone && iCloneMode == 0 && g_bCloned[tank])
 	{
 		return false;
 	}
 	return true;
 }
 
-stock int iCloneAbility(int client)
+stock int iCloneAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iCloneAbility[ST_TankType(client)] : g_iCloneAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iCloneAbility[ST_TankType(tank)] : g_iCloneAbility2[ST_TankType(tank)];
 }

@@ -165,14 +165,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iNullifyRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iNullifyChance[ST_TankType(client)] : g_iNullifyChance2[ST_TankType(client)];
-		float flNullifyRange = !g_bTankConfig[ST_TankType(client)] ? g_flNullifyRange[ST_TankType(client)] : g_flNullifyRange2[ST_TankType(client)],
+		int iNullifyRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyChance[ST_TankType(tank)] : g_iNullifyChance2[ST_TankType(tank)];
+		float flNullifyRange = !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyRange[ST_TankType(tank)] : g_flNullifyRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -182,38 +182,38 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flNullifyRange)
 				{
-					vNullifyHit(iSurvivor, client, iNullifyRangeChance, iNullifyAbility(client), 2, "3");
+					vNullifyHit(iSurvivor, tank, iNullifyRangeChance, iNullifyAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iNullifyAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iNullifyAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveNullify();
 	}
 }
 
-stock void vNullifyHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vNullifyHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bNullify[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bNullify[survivor])
 	{
-		g_bNullify[client] = true;
-		float flNullifyDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flNullifyDuration[ST_TankType(owner)] : g_flNullifyDuration2[ST_TankType(owner)];
+		g_bNullify[survivor] = true;
+		float flNullifyDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyDuration[ST_TankType(tank)] : g_flNullifyDuration2[ST_TankType(tank)];
 		DataPack dpStopNullify = new DataPack();
 		CreateDataTimer(flNullifyDuration, tTimerStopNullify, dpStopNullify, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopNullify.WriteCell(GetClientUserId(client)), dpStopNullify.WriteCell(GetClientUserId(owner)), dpStopNullify.WriteCell(message), dpStopNullify.WriteCell(enabled);
+		dpStopNullify.WriteCell(GetClientUserId(survivor)), dpStopNullify.WriteCell(GetClientUserId(tank)), dpStopNullify.WriteCell(message), dpStopNullify.WriteCell(enabled);
 		char sNullifyEffect[4];
-		sNullifyEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sNullifyEffect[ST_TankType(owner)] : g_sNullifyEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sNullifyEffect, mode);
-		if (iNullifyMessage(owner) == message || iNullifyMessage(owner) == 3)
+		sNullifyEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sNullifyEffect[ST_TankType(tank)] : g_sNullifyEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sNullifyEffect, mode);
+		if (iNullifyMessage(tank) == message || iNullifyMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Nullify", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Nullify", sTankName, survivor);
 		}
 	}
 }
@@ -240,38 +240,38 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bNullify[client] = false;
-	if (iNullifyMessage(owner) == message || iNullifyMessage(owner) == 3)
+	g_bNullify[survivor] = false;
+	if (iNullifyMessage(tank) == message || iNullifyMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Nullify2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Nullify2", survivor);
 	}
 }
 
-stock int iNullifyAbility(int client)
+stock int iNullifyAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iNullifyAbility[ST_TankType(client)] : g_iNullifyAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyAbility[ST_TankType(tank)] : g_iNullifyAbility2[ST_TankType(tank)];
 }
 
-stock int iNullifyChance(int client)
+stock int iNullifyChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iNullifyChance[ST_TankType(client)] : g_iNullifyChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyChance[ST_TankType(tank)] : g_iNullifyChance2[ST_TankType(tank)];
 }
 
-stock int iNullifyHit(int client)
+stock int iNullifyHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iNullifyHit[ST_TankType(client)] : g_iNullifyHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyHit[ST_TankType(tank)] : g_iNullifyHit2[ST_TankType(tank)];
 }
 
-stock int iNullifyHitMode(int client)
+stock int iNullifyHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iNullifyHitMode[ST_TankType(client)] : g_iNullifyHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyHitMode[ST_TankType(tank)] : g_iNullifyHitMode2[ST_TankType(tank)];
 }
 
-stock int iNullifyMessage(int client)
+stock int iNullifyMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iNullifyMessage[ST_TankType(client)] : g_iNullifyMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyMessage[ST_TankType(tank)] : g_iNullifyMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerStopNullify(Handle timer, DataPack pack)

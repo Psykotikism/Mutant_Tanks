@@ -148,15 +148,15 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iVisionAbility = !g_bTankConfig[ST_TankType(client)] ? g_iVisionAbility[ST_TankType(client)] : g_iVisionAbility2[ST_TankType(client)],
-			iVisionRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iVisionChance[ST_TankType(client)] : g_iVisionChance2[ST_TankType(client)];
-		float flVisionRange = !g_bTankConfig[ST_TankType(client)] ? g_flVisionRange[ST_TankType(client)] : g_flVisionRange2[ST_TankType(client)],
+		int iVisionAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iVisionAbility[ST_TankType(tank)] : g_iVisionAbility2[ST_TankType(tank)],
+			iVisionRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iVisionChance[ST_TankType(tank)] : g_iVisionChance2[ST_TankType(tank)];
+		float flVisionRange = !g_bTankConfig[ST_TankType(tank)] ? g_flVisionRange[ST_TankType(tank)] : g_flVisionRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -166,7 +166,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flVisionRange)
 				{
-					vVisionHit(iSurvivor, client, iVisionRangeChance, iVisionAbility, 2, "3");
+					vVisionHit(iSurvivor, tank, iVisionRangeChance, iVisionAbility, 2, "3");
 				}
 			}
 		}
@@ -184,60 +184,60 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bVision[client] = false;
-	SetEntProp(client, Prop_Send, "m_iFOV", 90);
-	SetEntProp(client, Prop_Send, "m_iDefaultFOV", 90);
-	if (iVisionMessage(owner) == message || iVisionMessage(owner) == 3)
+	g_bVision[survivor] = false;
+	SetEntProp(survivor, Prop_Send, "m_iFOV", 90);
+	SetEntProp(survivor, Prop_Send, "m_iDefaultFOV", 90);
+	if (iVisionMessage(tank) == message || iVisionMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Vision2", client, 90);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Vision2", survivor, 90);
 	}
 }
 
-stock void vVisionHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vVisionHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bVision[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bVision[survivor])
 	{
-		g_bVision[client] = true;
+		g_bVision[survivor] = true;
 		DataPack dpVision = new DataPack();
 		CreateDataTimer(0.1, tTimerVision, dpVision, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpVision.WriteCell(GetClientUserId(client)), dpVision.WriteCell(GetClientUserId(owner)), dpVision.WriteCell(message), dpVision.WriteCell(enabled), dpVision.WriteFloat(GetEngineTime());
+		dpVision.WriteCell(GetClientUserId(survivor)), dpVision.WriteCell(GetClientUserId(tank)), dpVision.WriteCell(message), dpVision.WriteCell(enabled), dpVision.WriteFloat(GetEngineTime());
 		char sVisionEffect[4];
-		sVisionEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sVisionEffect[ST_TankType(owner)] : g_sVisionEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sVisionEffect, mode);
-		if (iVisionMessage(owner) == message || iVisionMessage(owner) == 3)
+		sVisionEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sVisionEffect[ST_TankType(tank)] : g_sVisionEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sVisionEffect, mode);
+		if (iVisionMessage(tank) == message || iVisionMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Vision", sTankName, client, iVisionFOV(owner));
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Vision", sTankName, survivor, iVisionFOV(tank));
 		}
 	}
 }
 
-stock int iVisionChance(int client)
+stock int iVisionChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVisionChance[ST_TankType(client)] : g_iVisionChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iVisionChance[ST_TankType(tank)] : g_iVisionChance2[ST_TankType(tank)];
 }
 
-stock int iVisionFOV(int client)
+stock int iVisionFOV(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVisionFOV[ST_TankType(client)] : g_iVisionFOV2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iVisionFOV[ST_TankType(tank)] : g_iVisionFOV2[ST_TankType(tank)];
 }
 
-stock int iVisionHit(int client)
+stock int iVisionHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVisionHit[ST_TankType(client)] : g_iVisionHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iVisionHit[ST_TankType(tank)] : g_iVisionHit2[ST_TankType(tank)];
 }
 
-stock int iVisionHitMode(int client)
+stock int iVisionHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVisionHitMode[ST_TankType(client)] : g_iVisionHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iVisionHitMode[ST_TankType(tank)] : g_iVisionHitMode2[ST_TankType(tank)];
 }
 
-stock int iVisionMessage(int client)
+stock int iVisionMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVisionMessage[ST_TankType(client)] : g_iVisionMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iVisionMessage[ST_TankType(tank)] : g_iVisionMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerVision(Handle timer, DataPack pack)

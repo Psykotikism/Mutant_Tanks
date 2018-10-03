@@ -148,15 +148,15 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iHurtAbility = !g_bTankConfig[ST_TankType(client)] ? g_iHurtAbility[ST_TankType(client)] : g_iHurtAbility2[ST_TankType(client)],
-			iHurtRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iHurtChance[ST_TankType(client)] : g_iHurtChance2[ST_TankType(client)];
-		float flHurtRange = !g_bTankConfig[ST_TankType(client)] ? g_flHurtRange[ST_TankType(client)] : g_flHurtRange2[ST_TankType(client)],
+		int iHurtAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iHurtAbility[ST_TankType(tank)] : g_iHurtAbility2[ST_TankType(tank)],
+			iHurtRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iHurtChance[ST_TankType(tank)] : g_iHurtChance2[ST_TankType(tank)];
+		float flHurtRange = !g_bTankConfig[ST_TankType(tank)] ? g_flHurtRange[ST_TankType(tank)] : g_flHurtRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -166,29 +166,29 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHurtRange)
 				{
-					vHurtHit(iSurvivor, client, iHurtRangeChance, iHurtAbility, 2, "3");
+					vHurtHit(iSurvivor, tank, iHurtRangeChance, iHurtAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vHurtHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vHurtHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bHurt[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bHurt[survivor])
 	{
-		g_bHurt[client] = true;
+		g_bHurt[survivor] = true;
 		DataPack dpHurt = new DataPack();
 		CreateDataTimer(1.0, tTimerHurt, dpHurt, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpHurt.WriteCell(GetClientUserId(client)), dpHurt.WriteCell(GetClientUserId(owner)), dpHurt.WriteCell(message), dpHurt.WriteCell(enabled), dpHurt.WriteFloat(GetEngineTime());
+		dpHurt.WriteCell(GetClientUserId(survivor)), dpHurt.WriteCell(GetClientUserId(tank)), dpHurt.WriteCell(message), dpHurt.WriteCell(enabled), dpHurt.WriteFloat(GetEngineTime());
 		char sHurtEffect[4];
-		sHurtEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sHurtEffect[ST_TankType(owner)] : g_sHurtEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sHurtEffect, mode);
-		if (iHurtMessage(owner) == message || iHurtMessage(owner) == 3)
+		sHurtEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sHurtEffect[ST_TankType(tank)] : g_sHurtEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sHurtEffect, mode);
+		if (iHurtMessage(tank) == message || iHurtMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Hurt", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Hurt", sTankName, survivor);
 		}
 	}
 }
@@ -204,33 +204,33 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bHurt[client] = false;
-	if (iHurtMessage(owner) == message || iHurtMessage(owner) == 3)
+	g_bHurt[survivor] = false;
+	if (iHurtMessage(tank) == message || iHurtMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Hurt2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Hurt2", survivor);
 	}
 }
 
-stock int iHurtChance(int client)
+stock int iHurtChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHurtChance[ST_TankType(client)] : g_iHurtChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHurtChance[ST_TankType(tank)] : g_iHurtChance2[ST_TankType(tank)];
 }
 
-stock int iHurtHit(int client)
+stock int iHurtHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHurtHit[ST_TankType(client)] : g_iHurtHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHurtHit[ST_TankType(tank)] : g_iHurtHit2[ST_TankType(tank)];
 }
 
-stock int iHurtHitMode(int client)
+stock int iHurtHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHurtHitMode[ST_TankType(client)] : g_iHurtHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHurtHitMode[ST_TankType(tank)] : g_iHurtHitMode2[ST_TankType(tank)];
 }
 
-stock int iHurtMessage(int client)
+stock int iHurtMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHurtMessage[ST_TankType(client)] : g_iHurtMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHurtMessage[ST_TankType(tank)] : g_iHurtMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerHurt(Handle timer, DataPack pack)

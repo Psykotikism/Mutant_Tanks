@@ -148,15 +148,15 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iLeechAbility = !g_bTankConfig[ST_TankType(client)] ? g_iLeechAbility[ST_TankType(client)] : g_iLeechAbility2[ST_TankType(client)],
-			iLeechRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iLeechChance[ST_TankType(client)] : g_iLeechChance2[ST_TankType(client)];
-		float flLeechRange = !g_bTankConfig[ST_TankType(client)] ? g_flLeechRange[ST_TankType(client)] : g_flLeechRange2[ST_TankType(client)],
+		int iLeechAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iLeechAbility[ST_TankType(tank)] : g_iLeechAbility2[ST_TankType(tank)],
+			iLeechRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iLeechChance[ST_TankType(tank)] : g_iLeechChance2[ST_TankType(tank)];
+		float flLeechRange = !g_bTankConfig[ST_TankType(tank)] ? g_flLeechRange[ST_TankType(tank)] : g_flLeechRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -166,30 +166,30 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flLeechRange)
 				{
-					vLeechHit(iSurvivor, client, iLeechRangeChance, iLeechAbility, 2, "3");
+					vLeechHit(iSurvivor, tank, iLeechRangeChance, iLeechAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vLeechHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vLeechHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bLeech[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bLeech[survivor])
 	{
-		g_bLeech[client] = true;
-		float flLeechInterval = !g_bTankConfig[ST_TankType(owner)] ? g_flLeechInterval[ST_TankType(owner)] : g_flLeechInterval2[ST_TankType(owner)];
+		g_bLeech[survivor] = true;
+		float flLeechInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flLeechInterval[ST_TankType(tank)] : g_flLeechInterval2[ST_TankType(tank)];
 		DataPack dpLeech = new DataPack();
 		CreateDataTimer(flLeechInterval, tTimerLeech, dpLeech, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpLeech.WriteCell(GetClientUserId(client)), dpLeech.WriteCell(GetClientUserId(owner)), dpLeech.WriteCell(message), dpLeech.WriteCell(enabled), dpLeech.WriteFloat(GetEngineTime());
+		dpLeech.WriteCell(GetClientUserId(survivor)), dpLeech.WriteCell(GetClientUserId(tank)), dpLeech.WriteCell(message), dpLeech.WriteCell(enabled), dpLeech.WriteFloat(GetEngineTime());
 		char sLeechEffect[4];
-		sLeechEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sLeechEffect[ST_TankType(owner)] : g_sLeechEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sLeechEffect, mode);
-		if (iLeechMessage(owner) == message || iLeechMessage(owner) == 3)
+		sLeechEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sLeechEffect[ST_TankType(tank)] : g_sLeechEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sLeechEffect, mode);
+		if (iLeechMessage(tank) == message || iLeechMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Leech", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Leech", sTankName, survivor);
 		}
 	}
 }
@@ -205,35 +205,35 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bLeech[client] = false;
-	if (iLeechMessage(owner) == message || iLeechMessage(owner) == 3)
+	g_bLeech[survivor] = false;
+	if (iLeechMessage(tank) == message || iLeechMessage(tank) == 3)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(owner, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Leech2", sTankName, client);
+		ST_TankName(tank, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Leech2", sTankName, survivor);
 	}
 }
 
-stock int iLeechChance(int client)
+stock int iLeechChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iLeechChance[ST_TankType(client)] : g_iLeechChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iLeechChance[ST_TankType(tank)] : g_iLeechChance2[ST_TankType(tank)];
 }
 
-stock int iLeechHit(int client)
+stock int iLeechHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iLeechHit[ST_TankType(client)] : g_iLeechHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iLeechHit[ST_TankType(tank)] : g_iLeechHit2[ST_TankType(tank)];
 }
 
-stock int iLeechHitMode(int client)
+stock int iLeechHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iLeechHitMode[ST_TankType(client)] : g_iLeechHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iLeechHitMode[ST_TankType(tank)] : g_iLeechHitMode2[ST_TankType(tank)];
 }
 
-stock int iLeechMessage(int client)
+stock int iLeechMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iLeechMessage[ST_TankType(client)] : g_iLeechMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iLeechMessage[ST_TankType(tank)] : g_iLeechMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerLeech(Handle timer, DataPack pack)

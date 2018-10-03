@@ -156,18 +156,18 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	int iAbsorbChance = !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbChance[ST_TankType(client)] : g_iAbsorbChance2[ST_TankType(client)];
-	if (iAbsorbAbility(client) == 1 && GetRandomInt(1, iAbsorbChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bAbsorb[client])
+	int iAbsorbChance = !g_bTankConfig[ST_TankType(tank)] ? g_iAbsorbChance[ST_TankType(tank)] : g_iAbsorbChance2[ST_TankType(tank)];
+	if (iAbsorbAbility(tank) == 1 && GetRandomInt(1, iAbsorbChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bAbsorb[tank])
 	{
-		g_bAbsorb[client] = true;
-		float flAbsorbDuration = !g_bTankConfig[ST_TankType(client)] ? g_flAbsorbDuration[ST_TankType(client)] : g_flAbsorbDuration2[ST_TankType(client)];
-		CreateTimer(flAbsorbDuration, tTimerStopAbsorb, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-		if (iAbsorbMessage(client) == 1)
+		g_bAbsorb[tank] = true;
+		float flAbsorbDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flAbsorbDuration[ST_TankType(tank)] : g_flAbsorbDuration2[ST_TankType(tank)];
+		CreateTimer(flAbsorbDuration, tTimerStopAbsorb, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		if (iAbsorbMessage(tank) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Absorb", sTankName);
 		}
 	}
@@ -184,25 +184,25 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client)
+stock void vReset2(int tank)
 {
-	g_bAbsorb[client] = false;
-	if (iAbsorbMessage(client) == 1)
+	g_bAbsorb[tank] = false;
+	if (iAbsorbMessage(tank) == 1)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(client, sTankName);
+		ST_TankName(tank, sTankName);
 		PrintToChatAll("%s %t", ST_PREFIX2, "Absorb2", sTankName);
 	}
 }
 
-stock int iAbsorbAbility(int client)
+stock int iAbsorbAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbAbility[ST_TankType(client)] : g_iAbsorbAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iAbsorbAbility[ST_TankType(tank)] : g_iAbsorbAbility2[ST_TankType(tank)];
 }
 
-stock int iAbsorbMessage(int client)
+stock int iAbsorbMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAbsorbMessage[ST_TankType(client)] : g_iAbsorbMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iAbsorbMessage[ST_TankType(tank)] : g_iAbsorbMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerStopAbsorb(Handle timer, any userid)

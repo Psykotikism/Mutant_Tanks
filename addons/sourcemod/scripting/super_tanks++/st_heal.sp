@@ -161,14 +161,14 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iHealRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iHealChance[ST_TankType(client)] : g_iHealChance2[ST_TankType(client)];
-		float flHealRange = !g_bTankConfig[ST_TankType(client)] ? g_flHealRange[ST_TankType(client)] : g_flHealRange2[ST_TankType(client)],
+		int iHealRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iHealChance[ST_TankType(tank)] : g_iHealChance2[ST_TankType(tank)];
+		float flHealRange = !g_bTankConfig[ST_TankType(tank)] ? g_flHealRange[ST_TankType(tank)] : g_flHealRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -178,21 +178,21 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHealRange)
 				{
-					vHealHit(iSurvivor, client, iHealRangeChance, iHealAbility(client), 2, "3");
+					vHealHit(iSurvivor, tank, iHealRangeChance, iHealAbility(tank), 2, "3");
 				}
 			}
 		}
-		if ((iHealAbility(client) == 2 || iHealAbility(client) == 3) && !g_bHeal[client])
+		if ((iHealAbility(tank) == 2 || iHealAbility(tank) == 3) && !g_bHeal[tank])
 		{
-			g_bHeal[client] = true;
-			float flHealInterval = !g_bTankConfig[ST_TankType(client)] ? g_flHealInterval[ST_TankType(client)] : g_flHealInterval2[ST_TankType(client)];
-			CreateTimer(flHealInterval, tTimerHeal, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-			switch (iHealMessage(client))
+			g_bHeal[tank] = true;
+			float flHealInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flHealInterval[ST_TankType(tank)] : g_flHealInterval2[ST_TankType(tank)];
+			CreateTimer(flHealInterval, tTimerHeal, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			switch (iHealMessage(tank))
 			{
 				case 3, 5, 6, 7:
 				{
 					char sTankName[MAX_NAME_LENGTH + 1];
-					ST_TankName(client, sTankName);
+					ST_TankName(tank, sTankName);
 					PrintToChatAll("%s %t", ST_PREFIX2, "Heal2", sTankName);
 				}
 			}
@@ -200,26 +200,26 @@ public void ST_Ability(int client)
 	}
 }
 
-stock void vHealHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vHealHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
-		int iHealth = GetClientHealth(client);
-		if (iHealth > 0 && !bIsPlayerIncapacitated(client))
+		int iHealth = GetClientHealth(survivor);
+		if (iHealth > 0 && !bIsPlayerIncapacitated(survivor))
 		{
-			float flHealBuffer = !g_bTankConfig[ST_TankType(owner)] ? g_flHealBuffer[ST_TankType(owner)] : g_flHealBuffer2[ST_TankType(owner)];
-			SetEntityHealth(client, 1);
-			SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", GetGameTime());
-			SetEntPropFloat(client, Prop_Send, "m_healthBuffer", flHealBuffer);
-			SetEntProp(client, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
+			float flHealBuffer = !g_bTankConfig[ST_TankType(tank)] ? g_flHealBuffer[ST_TankType(tank)] : g_flHealBuffer2[ST_TankType(tank)];
+			SetEntityHealth(survivor, 1);
+			SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
+			SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", flHealBuffer);
+			SetEntProp(survivor, Prop_Send, "m_currentReviveCount", g_cvSTMaxIncapCount.IntValue);
 			char sHealEffect[4];
-			sHealEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sHealEffect[ST_TankType(owner)] : g_sHealEffect2[ST_TankType(owner)];
-			vEffect(client, owner, sHealEffect, mode);
-			if (iHealMessage(owner) == message || iHealMessage(owner) == 4 || iHealMessage(owner) == 5 || iHealMessage(owner) == 6 || iHealMessage(owner) == 7)
+			sHealEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sHealEffect[ST_TankType(tank)] : g_sHealEffect2[ST_TankType(tank)];
+			vEffect(survivor, tank, sHealEffect, mode);
+			if (iHealMessage(tank) == message || iHealMessage(tank) == 4 || iHealMessage(tank) == 5 || iHealMessage(tank) == 6 || iHealMessage(tank) == 7)
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(owner, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Heal", sTankName, client);
+				ST_TankName(tank, sTankName);
+				PrintToChatAll("%s %t", ST_PREFIX2, "Heal", sTankName, survivor);
 			}
 		}
 	}
@@ -236,29 +236,29 @@ stock void vReset()
 	}
 }
 
-stock int iHealAbility(int client)
+stock int iHealAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHealAbility[ST_TankType(client)] : g_iHealAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHealAbility[ST_TankType(tank)] : g_iHealAbility2[ST_TankType(tank)];
 }
 
-stock int iHealChance(int client)
+stock int iHealChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHealChance[ST_TankType(client)] : g_iHealChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHealChance[ST_TankType(tank)] : g_iHealChance2[ST_TankType(tank)];
 }
 
-stock int iHealHit(int client)
+stock int iHealHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHealHit[ST_TankType(client)] : g_iHealHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHealHit[ST_TankType(tank)] : g_iHealHit2[ST_TankType(tank)];
 }
 
-stock int iHealHitMode(int client)
+stock int iHealHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHealHitMode[ST_TankType(client)] : g_iHealHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHealHitMode[ST_TankType(tank)] : g_iHealHitMode2[ST_TankType(tank)];
 }
 
-stock int iHealMessage(int client)
+stock int iHealMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iHealMessage[ST_TankType(client)] : g_iHealMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHealMessage[ST_TankType(tank)] : g_iHealMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerHeal(Handle timer, any userid)

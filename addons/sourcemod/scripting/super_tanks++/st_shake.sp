@@ -146,15 +146,15 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iShakeAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShakeAbility[ST_TankType(client)] : g_iShakeAbility2[ST_TankType(client)],
-			iShakeRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iShakeChance[ST_TankType(client)] : g_iShakeChance2[ST_TankType(client)];
-		float flShakeRange = !g_bTankConfig[ST_TankType(client)] ? g_flShakeRange[ST_TankType(client)] : g_flShakeRange2[ST_TankType(client)],
+		int iShakeAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iShakeAbility[ST_TankType(tank)] : g_iShakeAbility2[ST_TankType(tank)],
+			iShakeRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iShakeChance[ST_TankType(tank)] : g_iShakeChance2[ST_TankType(tank)];
+		float flShakeRange = !g_bTankConfig[ST_TankType(tank)] ? g_flShakeRange[ST_TankType(tank)] : g_flShakeRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -164,7 +164,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flShakeRange)
 				{
-					vShakeHit(iSurvivor, client, iShakeRangeChance, iShakeAbility, 2, "3");
+					vShakeHit(iSurvivor, tank, iShakeRangeChance, iShakeAbility, 2, "3");
 				}
 			}
 		}
@@ -182,53 +182,53 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bShake[client] = false;
-	if (iShakeMessage(owner) == message || iShakeMessage(owner) == 3)
+	g_bShake[survivor] = false;
+	if (iShakeMessage(tank) == message || iShakeMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Shake2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Shake2", survivor);
 	}
 }
 
-stock void vShakeHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vShakeHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bShake[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bShake[survivor])
 	{
-		g_bShake[client] = true;
+		g_bShake[survivor] = true;
 		DataPack dpShake = new DataPack();
 		CreateDataTimer(1.0, tTimerShake, dpShake, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpShake.WriteCell(GetClientUserId(client)), dpShake.WriteCell(GetClientUserId(owner)), dpShake.WriteCell(message), dpShake.WriteCell(enabled), dpShake.WriteFloat(GetEngineTime());
+		dpShake.WriteCell(GetClientUserId(survivor)), dpShake.WriteCell(GetClientUserId(tank)), dpShake.WriteCell(message), dpShake.WriteCell(enabled), dpShake.WriteFloat(GetEngineTime());
 		char sShakeEffect[4];
-		sShakeEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sShakeEffect[ST_TankType(owner)] : g_sShakeEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sShakeEffect, mode);
-		if (iShakeMessage(owner) == message || iShakeMessage(owner) == 3)
+		sShakeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sShakeEffect[ST_TankType(tank)] : g_sShakeEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sShakeEffect, mode);
+		if (iShakeMessage(tank) == message || iShakeMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shake", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Shake", sTankName, survivor);
 		}
 	}
 }
 
-stock int iShakeChance(int client)
+stock int iShakeChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iShakeChance[ST_TankType(client)] : g_iShakeChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShakeChance[ST_TankType(tank)] : g_iShakeChance2[ST_TankType(tank)];
 }
 
-stock int iShakeHit(int client)
+stock int iShakeHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iShakeHit[ST_TankType(client)] : g_iShakeHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShakeHit[ST_TankType(tank)] : g_iShakeHit2[ST_TankType(tank)];
 }
 
-stock int iShakeHitMode(int client)
+stock int iShakeHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iShakeHitMode[ST_TankType(client)] : g_iShakeHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShakeHitMode[ST_TankType(tank)] : g_iShakeHitMode2[ST_TankType(tank)];
 }
 
-stock int iShakeMessage(int client)
+stock int iShakeMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iShakeMessage[ST_TankType(client)] : g_iShakeMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShakeMessage[ST_TankType(tank)] : g_iShakeMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerShake(Handle timer, DataPack pack)

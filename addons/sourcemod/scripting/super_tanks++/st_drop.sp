@@ -419,27 +419,27 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	vDeleteDrop(client);
+	vDeleteDrop(tank);
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (iDropAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bDrop[client])
+	if (iDropAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bDrop[tank])
 	{
-		g_bDrop[client] = true;
-		CreateTimer(1.0, tTimerDrop, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		g_bDrop[tank] = true;
+		CreateTimer(1.0, tTimerDrop, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
-stock void vDeleteDrop(int client)
+stock void vDeleteDrop(int tank)
 {
-	if (bIsValidEntity(g_iDrop[client]))
+	if (bIsValidEntity(g_iDrop[tank]))
 	{
-		RemoveEntity(g_iDrop[client]);
+		RemoveEntity(g_iDrop[tank]);
 	}
-	g_iDrop[client] = 0;
+	g_iDrop[tank] = 0;
 }
 
 stock void vReset()
@@ -453,26 +453,26 @@ stock void vReset()
 	}
 }
 
-stock void vResetDrop(int client)
+stock void vResetDrop(int tank)
 {
-	g_bDrop[client] = false;
-	g_iDrop[client] = 0;
-	g_iDropWeapon[client] = 0;
+	g_bDrop[tank] = false;
+	g_iDrop[tank] = 0;
+	g_iDropWeapon[tank] = 0;
 }
 
-stock float flDropWeaponScale(int client)
+stock float flDropWeaponScale(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_flDropWeaponScale[ST_TankType(client)] : g_flDropWeaponScale2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flDropWeaponScale[ST_TankType(tank)] : g_flDropWeaponScale2[ST_TankType(tank)];
 }
 
-stock int iDropAbility(int client)
+stock int iDropAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iDropAbility[ST_TankType(client)] : g_iDropAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iDropAbility[ST_TankType(tank)] : g_iDropAbility2[ST_TankType(tank)];
 }
 
-stock int iDropMode(int client)
+stock int iDropMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iDropMode[ST_TankType(client)] : g_iDropMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iDropMode[ST_TankType(tank)] : g_iDropMode2[ST_TankType(tank)];
 }
 
 public Action tTimerDrop(Handle timer, any userid)

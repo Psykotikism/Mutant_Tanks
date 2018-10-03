@@ -149,15 +149,15 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iPimpAbility = !g_bTankConfig[ST_TankType(client)] ? g_iPimpAbility[ST_TankType(client)] : g_iPimpAbility2[ST_TankType(client)],
-			iPimpRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPimpChance[ST_TankType(client)] : g_iPimpChance2[ST_TankType(client)];
-		float flPimpRange = !g_bTankConfig[ST_TankType(client)] ? g_flPimpRange[ST_TankType(client)] : g_flPimpRange2[ST_TankType(client)],
+		int iPimpAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iPimpAbility[ST_TankType(tank)] : g_iPimpAbility2[ST_TankType(tank)],
+			iPimpRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iPimpChance[ST_TankType(tank)] : g_iPimpChance2[ST_TankType(tank)];
+		float flPimpRange = !g_bTankConfig[ST_TankType(tank)] ? g_flPimpRange[ST_TankType(tank)] : g_flPimpRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -167,29 +167,29 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPimpRange)
 				{
-					vPimpHit(iSurvivor, client, iPimpRangeChance, iPimpAbility, 2, "3");
+					vPimpHit(iSurvivor, tank, iPimpRangeChance, iPimpAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vPimpHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vPimpHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bPimp[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bPimp[survivor])
 	{
-		g_bPimp[client] = true;
+		g_bPimp[survivor] = true;
 		DataPack dpPimp = new DataPack();
 		CreateDataTimer(0.5, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpPimp.WriteCell(GetClientUserId(client)), dpPimp.WriteCell(GetClientUserId(owner)), dpPimp.WriteCell(message), dpPimp.WriteCell(enabled);
+		dpPimp.WriteCell(GetClientUserId(survivor)), dpPimp.WriteCell(GetClientUserId(tank)), dpPimp.WriteCell(message), dpPimp.WriteCell(enabled);
 		char sPimpEffect[4];
-		sPimpEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sPimpEffect[ST_TankType(owner)] : g_sPimpEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sPimpEffect, mode);
-		if (iPimpMessage(owner) == message || iPimpMessage(owner) == 3)
+		sPimpEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sPimpEffect[ST_TankType(tank)] : g_sPimpEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sPimpEffect, mode);
+		if (iPimpMessage(tank) == message || iPimpMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Pimp", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Pimp", sTankName, survivor);
 		}
 	}
 }
@@ -206,34 +206,34 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bPimp[client] = false;
-	g_iPimpCount[client] = 0;
-	if (iPimpMessage(owner) == message || iPimpMessage(owner) == 3)
+	g_bPimp[survivor] = false;
+	g_iPimpCount[survivor] = 0;
+	if (iPimpMessage(tank) == message || iPimpMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Pimp2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Pimp2", survivor);
 	}
 }
 
-stock int iPimpChance(int client)
+stock int iPimpChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPimpChance[ST_TankType(client)] : g_iPimpChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPimpChance[ST_TankType(tank)] : g_iPimpChance2[ST_TankType(tank)];
 }
 
-stock int iPimpHit(int client)
+stock int iPimpHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPimpHit[ST_TankType(client)] : g_iPimpHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPimpHit[ST_TankType(tank)] : g_iPimpHit2[ST_TankType(tank)];
 }
 
-stock int iPimpHitMode(int client)
+stock int iPimpHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPimpHitMode[ST_TankType(client)] : g_iPimpHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPimpHitMode[ST_TankType(tank)] : g_iPimpHitMode2[ST_TankType(tank)];
 }
 
-stock int iPimpMessage(int client)
+stock int iPimpMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPimpMessage[ST_TankType(client)] : g_iPimpMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPimpMessage[ST_TankType(tank)] : g_iPimpMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerPimp(Handle timer, DataPack pack)

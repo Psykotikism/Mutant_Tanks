@@ -189,14 +189,14 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iPyroRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPyroChance[ST_TankType(client)] : g_iPyroChance2[ST_TankType(client)];
-		float flPyroRange = !g_bTankConfig[ST_TankType(client)] ? g_flPyroRange[ST_TankType(client)] : g_flPyroRange2[ST_TankType(client)],
+		int iPyroRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iPyroChance[ST_TankType(tank)] : g_iPyroChance2[ST_TankType(tank)];
+		float flPyroRange = !g_bTankConfig[ST_TankType(tank)] ? g_flPyroRange[ST_TankType(tank)] : g_flPyroRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -206,25 +206,25 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPyroRange)
 				{
-					vPyroHit(iSurvivor, client, iPyroRangeChance, iPyroAbility(client), 2, "3");
+					vPyroHit(iSurvivor, tank, iPyroRangeChance, iPyroAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vPyroHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vPyroHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bPyro[owner])
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bPyro[tank])
 	{
-		IgniteEntity(owner, flPyroDuration(owner), true);
+		IgniteEntity(tank, flPyroDuration(tank), true);
 		char sPyroEffect[4];
-		sPyroEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sPyroEffect[ST_TankType(owner)] : g_sPyroEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sPyroEffect, mode);
-		if (iPyroMessage(owner) == message || iPyroMessage(owner) == 4 || iPyroMessage(owner) == 5 || iPyroMessage(owner) == 6 || iPyroMessage(owner) == 7)
+		sPyroEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sPyroEffect[ST_TankType(tank)] : g_sPyroEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sPyroEffect, mode);
+		if (iPyroMessage(tank) == message || iPyroMessage(tank) == 4 || iPyroMessage(tank) == 5 || iPyroMessage(tank) == 6 || iPyroMessage(tank) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Pyro", sTankName);
 		}
 	}
@@ -241,34 +241,34 @@ stock void vReset()
 	}
 }
 
-stock float flPyroDuration(int client)
+stock float flPyroDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_flPyroDuration[ST_TankType(client)] : g_flPyroDuration2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flPyroDuration[ST_TankType(tank)] : g_flPyroDuration2[ST_TankType(tank)];
 }
 
-stock int iPyroAbility(int client)
+stock int iPyroAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPyroAbility[ST_TankType(client)] : g_iPyroAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPyroAbility[ST_TankType(tank)] : g_iPyroAbility2[ST_TankType(tank)];
 }
 
-stock int iPyroChance(int client)
+stock int iPyroChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPyroChance[ST_TankType(client)] : g_iPyroChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPyroChance[ST_TankType(tank)] : g_iPyroChance2[ST_TankType(tank)];
 }
 
-stock int iPyroHit(int client)
+stock int iPyroHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPyroHit[ST_TankType(client)] : g_iPyroHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPyroHit[ST_TankType(tank)] : g_iPyroHit2[ST_TankType(tank)];
 }
 
-stock int iPyroHitMode(int client)
+stock int iPyroHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPyroHitMode[ST_TankType(client)] : g_iPyroHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPyroHitMode[ST_TankType(tank)] : g_iPyroHitMode2[ST_TankType(tank)];
 }
 
-stock int iPyroMessage(int client)
+stock int iPyroMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPyroMessage[ST_TankType(client)] : g_iPyroMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPyroMessage[ST_TankType(tank)] : g_iPyroMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerPyro(Handle timer, DataPack pack)

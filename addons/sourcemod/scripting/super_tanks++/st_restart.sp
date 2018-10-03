@@ -148,15 +148,15 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iRestartAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRestartAbility[ST_TankType(client)] : g_iRestartAbility2[ST_TankType(client)],
-			iRestartRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iRestartChance[ST_TankType(client)] : g_iRestartChance2[ST_TankType(client)];
-		float flRestartRange = !g_bTankConfig[ST_TankType(client)] ? g_flRestartRange[ST_TankType(client)] : g_flRestartRange2[ST_TankType(client)],
+		int iRestartAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartAbility[ST_TankType(tank)] : g_iRestartAbility2[ST_TankType(tank)],
+			iRestartRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartChance[ST_TankType(tank)] : g_iRestartChance2[ST_TankType(tank)];
+		float flRestartRange = !g_bTankConfig[ST_TankType(tank)] ? g_flRestartRange[ST_TankType(tank)] : g_flRestartRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -166,74 +166,74 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRestartRange)
 				{
-					vRestartHit(iSurvivor, client, iRestartRangeChance, iRestartAbility, 2, "3");
+					vRestartHit(iSurvivor, tank, iRestartRangeChance, iRestartAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vRestartHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vRestartHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
-		SDKCall(g_hSDKRespawnPlayer, client);
+		SDKCall(g_hSDKRespawnPlayer, survivor);
 		char sRestartLoadout[325], sItems[5][64];
-		int iRestartMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iRestartMessage[ST_TankType(owner)] : g_iRestartMessage2[ST_TankType(owner)],
-			iRestartMode = !g_bTankConfig[ST_TankType(owner)] ? g_iRestartMode[ST_TankType(owner)] : g_iRestartMode2[ST_TankType(owner)];
-		sRestartLoadout = !g_bTankConfig[ST_TankType(owner)] ? g_sRestartLoadout[ST_TankType(owner)] : g_sRestartLoadout2[ST_TankType(owner)];
+		int iRestartMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMessage[ST_TankType(tank)] : g_iRestartMessage2[ST_TankType(tank)],
+			iRestartMode = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMode[ST_TankType(tank)] : g_iRestartMode2[ST_TankType(tank)];
+		sRestartLoadout = !g_bTankConfig[ST_TankType(tank)] ? g_sRestartLoadout[ST_TankType(tank)] : g_sRestartLoadout2[ST_TankType(tank)];
 		ExplodeString(sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-		vRemoveWeapon(client, 0), vRemoveWeapon(client, 1), vRemoveWeapon(client, 2), vRemoveWeapon(client, 3), vRemoveWeapon(client, 4);
+		vRemoveWeapon(survivor, 0), vRemoveWeapon(survivor, 1), vRemoveWeapon(survivor, 2), vRemoveWeapon(survivor, 3), vRemoveWeapon(survivor, 4);
 		for (int iItem = 0; iItem < sizeof(sItems); iItem++)
 		{
 			if (StrContains(sRestartLoadout, sItems[iItem]) != -1 && !StrEqual(sItems[iItem], ""))
 			{
-				vCheatCommand(client, "give", sItems[iItem]);
+				vCheatCommand(survivor, "give", sItems[iItem]);
 			}
 		}
 		if (g_bRestartValid && iRestartMode == 0)
 		{
-			TeleportEntity(client, g_flRestartPosition, NULL_VECTOR, NULL_VECTOR);
+			TeleportEntity(survivor, g_flRestartPosition, NULL_VECTOR, NULL_VECTOR);
 		}
 		else
 		{
 			float flCurrentOrigin[3];
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (!bIsSurvivor(iPlayer) || bIsPlayerIncapacitated(iPlayer) || iPlayer == client)
+				if (!bIsSurvivor(iPlayer) || bIsPlayerIncapacitated(iPlayer) || iPlayer == survivor)
 				{
 					continue;
 				}
 				GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-				TeleportEntity(client, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
+				TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
 				break;
 			}
 		}
 		char sRestartEffect[4];
-		sRestartEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sRestartEffect[ST_TankType(owner)] : g_sRestartEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sRestartEffect, mode);
+		sRestartEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sRestartEffect[ST_TankType(tank)] : g_sRestartEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sRestartEffect, mode);
 		if (iRestartMessage == message || iRestartMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Restart", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Restart", sTankName, survivor);
 		}
 	}
 }
 
-stock int iRestartChance(int client)
+stock int iRestartChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRestartChance[ST_TankType(client)] : g_iRestartChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRestartChance[ST_TankType(tank)] : g_iRestartChance2[ST_TankType(tank)];
 }
 
-stock int iRestartHit(int client)
+stock int iRestartHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRestartHit[ST_TankType(client)] : g_iRestartHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRestartHit[ST_TankType(tank)] : g_iRestartHit2[ST_TankType(tank)];
 }
 
-stock int iRestartHitMode(int client)
+stock int iRestartHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRestartHitMode[ST_TankType(client)] : g_iRestartHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRestartHitMode[ST_TankType(tank)] : g_iRestartHitMode2[ST_TankType(tank)];
 }
 
 public Action tTimerRestartCoordinates(Handle timer)

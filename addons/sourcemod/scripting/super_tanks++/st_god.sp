@@ -112,19 +112,19 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	int iGodChance = !g_bTankConfig[ST_TankType(client)] ? g_iGodChance[ST_TankType(client)] : g_iGodChance2[ST_TankType(client)];
-	if (iGodAbility(client) == 1 && GetRandomInt(1, iGodChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bGod[client])
+	int iGodChance = !g_bTankConfig[ST_TankType(tank)] ? g_iGodChance[ST_TankType(tank)] : g_iGodChance2[ST_TankType(tank)];
+	if (iGodAbility(tank) == 1 && GetRandomInt(1, iGodChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bGod[tank])
 	{
-		g_bGod[client] = true;
-		SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-		float flGodDuration = !g_bTankConfig[ST_TankType(client)] ? g_flGodDuration[ST_TankType(client)] : g_flGodDuration2[ST_TankType(client)];
-		CreateTimer(flGodDuration, tTimerStopGod, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-		if (iGodMessage(client) == 1)
+		g_bGod[tank] = true;
+		SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
+		float flGodDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flGodDuration[ST_TankType(tank)] : g_flGodDuration2[ST_TankType(tank)];
+		CreateTimer(flGodDuration, tTimerStopGod, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		if (iGodMessage(tank) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "God", sTankName);
 		}
 		
@@ -142,26 +142,26 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client)
+stock void vReset2(int tank)
 {
-	g_bGod[client] = false;
-	SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-	if (iGodMessage(client) == 1)
+	g_bGod[tank] = false;
+	SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
+	if (iGodMessage(tank) == 1)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(client, sTankName);
+		ST_TankName(tank, sTankName);
 		PrintToChatAll("%s %t", ST_PREFIX2, "God2", sTankName);
 	}
 }
 
-stock int iGodAbility(int client)
+stock int iGodAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGodAbility[ST_TankType(client)] : g_iGodAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGodAbility[ST_TankType(tank)] : g_iGodAbility2[ST_TankType(tank)];
 }
 
-stock int iGodMessage(int client)
+stock int iGodMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGodMessage[ST_TankType(client)] : g_iGodMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGodMessage[ST_TankType(tank)] : g_iGodMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerStopGod(Handle timer, any userid)

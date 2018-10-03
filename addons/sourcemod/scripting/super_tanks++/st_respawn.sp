@@ -106,14 +106,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-stock void vRandomRespawn(int client)
+stock void vRandomRespawn(int tank)
 {
 	int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		int iTankEnabled = !g_bTankConfig[iIndex] ? g_iTankEnabled[iIndex] : g_iTankEnabled2[iIndex],
 			iFinaleTank = !g_bTankConfig[iIndex] ? g_iFinaleTank[iIndex] : g_iFinaleTank2[iIndex];
-		if (iTankEnabled == 0 || (iFinaleTank == 1 && (!bIsFinaleMap() || ST_TankWave() <= 0)) || ST_TankType(client) == iIndex)
+		if (iTankEnabled == 0 || (iFinaleTank == 1 && (!bIsFinaleMap() || ST_TankWave() <= 0)) || ST_TankType(tank) == iIndex)
 		{
 			continue;
 		}
@@ -123,13 +123,13 @@ stock void vRandomRespawn(int client)
 	if (iTypeCount > 0)
 	{
 		int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
-		ST_SpawnTank(client, iChosen);
+		ST_SpawnTank(tank, iChosen);
 	}
 }
 
-stock int iRespawnAbility(int client)
+stock int iRespawnAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRespawnAbility[ST_TankType(client)] : g_iRespawnAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRespawnAbility[ST_TankType(tank)] : g_iRespawnAbility2[ST_TankType(tank)];
 }
 
 public Action tTimerRespawn(Handle timer, DataPack pack)

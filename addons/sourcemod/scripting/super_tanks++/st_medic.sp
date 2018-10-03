@@ -95,20 +95,20 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iMedicAbility(client) == 1 && GetRandomInt(1, iMedicChance(client)) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iMedicAbility(tank) == 1 && GetRandomInt(1, iMedicChance(tank)) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vMedic(client);
+		vMedic(tank);
 	}
 }
 
-stock void vMedic(int client)
+stock void vMedic(int tank)
 {
-	float flMedicRange = !g_bTankConfig[ST_TankType(client)] ? g_flMedicRange[ST_TankType(client)] : g_flMedicRange2[ST_TankType(client)],
+	float flMedicRange = !g_bTankConfig[ST_TankType(tank)] ? g_flMedicRange[ST_TankType(tank)] : g_flMedicRange2[ST_TankType(tank)],
 		flTankPos[3];
-	int iMedicMessage = !g_bTankConfig[ST_TankType(client)] ? g_iMedicMessage[ST_TankType(client)] : g_iMedicMessage2[ST_TankType(client)];
-	GetClientAbsOrigin(client, flTankPos);
+	int iMedicMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMedicMessage[ST_TankType(tank)] : g_iMedicMessage2[ST_TankType(tank)];
+	GetClientAbsOrigin(tank, flTankPos);
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
 		if (bIsSpecialInfected(iInfected) && IsPlayerAlive(iInfected))
@@ -119,10 +119,10 @@ stock void vMedic(int client)
 			if (flDistance <= flMedicRange)
 			{
 				char sHealth[6][6], sMedicHealth[36], sMaxHealth[6][6], sMedicMaxHealth[36];
-				sMedicHealth = !g_bTankConfig[ST_TankType(client)] ? g_sMedicHealth[ST_TankType(client)] : g_sMedicHealth2[ST_TankType(client)];
+				sMedicHealth = !g_bTankConfig[ST_TankType(tank)] ? g_sMedicHealth[ST_TankType(tank)] : g_sMedicHealth2[ST_TankType(tank)];
 				TrimString(sMedicHealth);
 				ExplodeString(sMedicHealth, ",", sHealth, sizeof(sHealth), sizeof(sHealth[]));
-				sMedicMaxHealth = !g_bTankConfig[ST_TankType(client)] ? g_sMedicMaxHealth[ST_TankType(client)] : g_sMedicMaxHealth2[ST_TankType(client)];
+				sMedicMaxHealth = !g_bTankConfig[ST_TankType(tank)] ? g_sMedicMaxHealth[ST_TankType(tank)] : g_sMedicMaxHealth2[ST_TankType(tank)];
 				TrimString(sMedicMaxHealth);
 				ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
 				int iHealth = GetClientHealth(iInfected),
@@ -150,7 +150,7 @@ stock void vMedic(int client)
 				iJockeyMaxHealth = iClamp(iJockeyMaxHealth, 1, ST_MAXHEALTH);
 				iChargerHealth = iClamp(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				iChargerMaxHealth = iClamp(iChargerMaxHealth, 1, ST_MAXHEALTH);
-				switch (GetEntProp(client, Prop_Send, "m_zombieClass"))
+				switch (GetEntProp(tank, Prop_Send, "m_zombieClass"))
 				{
 					case 1: vHeal(iInfected, iHealth, iHealth + iSmokerHealth, iSmokerMaxHealth);
 					case 2: vHeal(iInfected, iHealth, iHealth + iBoomerHealth, iBoomerMaxHealth);
@@ -165,17 +165,17 @@ stock void vMedic(int client)
 	if (iMedicMessage == 1)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(client, sTankName);
+		ST_TankName(tank, sTankName);
 		PrintToChatAll("%s %t", ST_PREFIX2, "Medic", sTankName);
 	}
 }
 
-stock int iMedicAbility(int client)
+stock int iMedicAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iMedicAbility[ST_TankType(client)] : g_iMedicAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iMedicAbility[ST_TankType(tank)] : g_iMedicAbility2[ST_TankType(tank)];
 }
 
-stock int iMedicChance(int client)
+stock int iMedicChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iMedicChance[ST_TankType(client)] : g_iMedicChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iMedicChance[ST_TankType(tank)] : g_iMedicChance2[ST_TankType(tank)];
 }

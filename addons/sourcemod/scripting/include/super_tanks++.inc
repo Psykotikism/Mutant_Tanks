@@ -13,7 +13,7 @@
 #define ST_PREFIX3 "\x04[ST++]\x03"
 #define ST_PREFIX4 "\x04[ST++]\x05"
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.42"
+#define ST_VERSION "8.43"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 #define ST_MAXTYPES 5000
 #define ST_MAXHEALTH 65535
@@ -23,17 +23,17 @@
 /* Called every second to trigger the Super Tank's ability.
  * Use this forward for any passive abilities.
  *
- * @param client		Client index of the Tank.
+ * @param tank		Client index of the Tank.
  */
-forward void ST_Ability(int client);
+forward void ST_Ability(int tank);
 
 /* Called when the Super Tank evolves.
  * Use this forward to trigger any features/abilities/settings
  * when a Super Tank evolves.
  *
- * @param client		Client index of the Tank.
+ * @param tank		Client index of the Tank.
  */
-forward void ST_BossStage(int client);
+forward void ST_BossStage(int tank);
 
 /* Called when the config file is loaded.
  * Use this forward to load settings for the plugin.
@@ -64,25 +64,25 @@ forward void ST_PluginEnd();
  * If you plan on using this to activate an ability,
  * use ST_Ability() instead.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  */
-forward void ST_Preset(int client);
+forward void ST_Preset(int tank);
 
 /* Called when the Tank's rock breaks.
  * Use this forward for any after-effects.
  *
- * @param client		Client index of the Tank.
- * @param entity		Entity index of the rock.
+ * @param tank			Client index of the Tank.
+ * @param rock			Entity index of the rock.
  */
-forward void ST_RockBreak(int client, int entity);
+forward void ST_RockBreak(int tank, int rock);
 
 /* Called when the Tank throws a rock.
  * Use this forward for any throwing abilities.
  *
- * @param client		Client index of the Tank.
- * @param entity		Entity index of the rock.
+ * @param tank			Client index of the Tank.
+ * @param rock			Entity index of the rock.
  */
-forward void ST_RockThrow(int client, int entity);
+forward void ST_RockThrow(int tank, int rock);
 
 // Natives
 /* Returns the maximum value of the "Type Range" setting.
@@ -108,24 +108,24 @@ native bool ST_PluginEnabled();
 
 /* Spawns a Tank with the specified Super Tank type.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  * @param type			Type of Super Tank.
  */
-native void ST_SpawnTank(int client, int type);
+native void ST_SpawnTank(int tank, int type);
 
 /* Returns the status of the Tank.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  *
  * @return				True on success, false if
  *							the Tank is controlled
  *							by a human.
  */
-native bool ST_TankAllowed(int client);
+native bool ST_TankAllowed(int tank);
 
 /* Returns the RGB colors given to a Tank.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  * @param mode			1 = Skin color, 2 = Glow
  *							outline color
  * @param red			Buffer to store the red
@@ -135,23 +135,23 @@ native bool ST_TankAllowed(int client);
  * @param blue			Buffer to store the blue
  *							color in.
  */
-native void ST_TankColors(int client, int mode, char[] red, char[] green, char[] blue);
+native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] blue);
 
 /* Returns the custom name given to a Tank.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom
  *							name in.
  */
-native void ST_TankName(int client, char[] buffer);
+native void ST_TankName(int tank, char[] buffer);
 
 /* Returns the Super Tank type of the Tank.
  *
- * @param client		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  *
  * @return				The Tank's Super Tank type.
  */
-native int ST_TankType(int client);
+native int ST_TankType(int tank);
 
 /* Returns the current finale wave.
  *
@@ -160,13 +160,13 @@ native int ST_TankType(int client);
 native int ST_TankWave();
 
 // Checks
-stock bool bHasIdlePlayer(int client)
+stock bool bHasIdlePlayer(int survivor)
 {
 	char sClassname[12];
-	GetEntityNetClass(client, sClassname, sizeof(sClassname));
+	GetEntityNetClass(survivor, sClassname, sizeof(sClassname));
 	if (StrEqual(sClassname, "SurvivorBot"))
 	{
-		int iSpectatorUserId = GetEntProp(client, Prop_Send, "m_humanSpectatorUserID");
+		int iSpectatorUserId = GetEntProp(survivor, Prop_Send, "m_humanSpectatorUserID");
 		if (iSpectatorUserId > 0)
 		{
 			int iIdler = GetClientOfUserId(iSpectatorUserId);
@@ -179,29 +179,29 @@ stock bool bHasIdlePlayer(int client)
 	return false;
 }
 
-stock bool bIsBoomer(int client)
+stock bool bIsBoomer(int boomer)
 {
-	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 2;
+	return bIsInfected(boomer) && GetEntProp(boomer, Prop_Send, "m_zombieClass") == 2;
 }
 
-stock bool bIsBotIdle(int client)
+stock bool bIsBotIdle(int bot)
 {
-	return bIsSurvivor(client) && IsFakeClient(client) && bHasIdlePlayer(client);
+	return bIsSurvivor(bot) && IsFakeClient(bot) && bHasIdlePlayer(bot);
 }
 
-stock bool bIsBotIdleSurvivor(int client)
+stock bool bIsBotIdleSurvivor(int bot)
 {
-	return bIsSurvivor(client) && IsFakeClient(client) && !bHasIdlePlayer(client);
+	return bIsSurvivor(bot) && IsFakeClient(bot) && !bHasIdlePlayer(bot);
 }
 
-stock bool bIsBotSurvivor(int client)
+stock bool bIsBotSurvivor(int bot)
 {
-	return bIsSurvivor(client) && IsFakeClient(client);
+	return bIsSurvivor(bot) && IsFakeClient(bot);
 }
 
-stock bool bIsCharger(int client)
+stock bool bIsCharger(int charger)
 {
-	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 6;
+	return bIsInfected(charger) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
 
 stock bool bIsFinaleMap()
@@ -209,61 +209,61 @@ stock bool bIsFinaleMap()
 	return FindEntityByClassname(-1, "trigger_finale") != -1;
 }
 
-stock bool bIsGunWeapon(int client)
+stock bool bIsGunWeapon(int survivor)
 {
 	char sWeapon[32];
-	GetClientWeapon(client, sWeapon, sizeof(sWeapon));
-	if (GetPlayerWeaponSlot(client, 0) > 0 || (GetPlayerWeaponSlot(client, 1) > 0 && StrContains(sWeapon, "pistol", false) != -1))
+	GetClientWeapon(survivor, sWeapon, sizeof(sWeapon));
+	if (GetPlayerWeaponSlot(survivor, 0) > 0 || (GetPlayerWeaponSlot(survivor, 1) > 0 && StrContains(sWeapon, "pistol", false) != -1))
 	{
 		return true;
 	}
 	return false;
 }
 
-stock bool bIsHumanSurvivor(int client)
+stock bool bIsHumanSurvivor(int survivor)
 {
-	return bIsSurvivor(client) && !IsFakeClient(client) && !bHasIdlePlayer(client) && !bIsPlayerIdle(client);
+	return bIsSurvivor(survivor) && !IsFakeClient(survivor) && !bHasIdlePlayer(survivor) && !bIsPlayerIdle(survivor);
 }
 
-stock bool bIsHunter(int client)
+stock bool bIsHunter(int hunter)
 {
-	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 3;
+	return bIsInfected(hunter) && GetEntProp(hunter, Prop_Send, "m_zombieClass") == 3;
 }
 
-stock bool bIsIdlePlayer(int bot, int client)
+stock bool bIsIdlePlayer(int bot, int survivor)
 {
-	return bIsValidClient(client) && !IsFakeClient(client) && GetClientTeam(bot) == 2;
+	return bIsValidClient(survivor) && !IsFakeClient(survivor) && GetClientTeam(bot) == 2;
 }
 
-stock bool bIsInfected(int client)
+stock bool bIsInfected(int infected)
 {
-	return bIsValidClient(client) && GetClientTeam(client) == 3;
+	return bIsValidClient(infected) && GetClientTeam(infected) == 3;
 }
 
-stock bool bIsJockey(int client)
+stock bool bIsJockey(int jockey)
 {
-	return bIsInfected(client) && bIsValidGame() && GetEntProp(client, Prop_Send, "m_zombieClass") == 5;
+	return bIsInfected(jockey) && bIsValidGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
 }
 
-stock bool bIsPlayerBurning(int client)
+stock bool bIsPlayerBurning(int player)
 {
-	if (GetEntPropFloat(client, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(client, Prop_Data, "m_fFlags") & FL_ONFIRE)
+	if (GetEntPropFloat(player, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(player, Prop_Data, "m_fFlags") & FL_ONFIRE)
 	{
 		return true;
 	}
 	return false;
 }
 
-stock bool bIsPlayerGrounded(int client)
+stock bool bIsPlayerGrounded(int player)
 {
-	if (GetEntProp(client, Prop_Send, "m_fFlags") & FL_ONGROUND)
+	if (GetEntProp(player, Prop_Send, "m_fFlags") & FL_ONGROUND)
 	{
 		return true;
 	}
 	return false;
 }
 
-stock bool bIsPlayerIdle(int client)
+stock bool bIsPlayerIdle(int survivor)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -279,7 +279,7 @@ stock bool bIsPlayerIdle(int client)
 			if (iSpectatorUserId > 0)
 			{
 				int iIdler = GetClientOfUserId(iSpectatorUserId);
-				if (iIdler == client)
+				if (iIdler == survivor)
 				{
 					return true;
 				}
@@ -289,9 +289,9 @@ stock bool bIsPlayerIdle(int client)
 	return false;
 }
 
-stock bool bIsPlayerIncapacitated(int client)
+stock bool bIsPlayerIncapacitated(int survivor)
 {
-	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
+	if (GetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1))
 	{
 		return true;
 	}
@@ -344,34 +344,34 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 	return true;
 }
 
-stock bool bIsSmoker(int client)
+stock bool bIsSmoker(int smoker)
 {
-	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 1;
+	return bIsInfected(smoker) && GetEntProp(smoker, Prop_Send, "m_zombieClass") == 1;
 }
 
-stock bool bIsSpecialInfected(int client)
+stock bool bIsSpecialInfected(int infected)
 {
-	return bIsSmoker(client) || bIsBoomer(client) || bIsHunter(client) || bIsSpitter(client) || bIsJockey(client) || bIsCharger(client);
+	return bIsSmoker(infected) || bIsBoomer(infected) || bIsHunter(infected) || bIsSpitter(infected) || bIsJockey(infected) || bIsCharger(infected);
 }
 
-stock bool bIsSpitter(int client)
+stock bool bIsSpitter(int spitter)
 {
-	return bIsInfected(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 4;
+	return bIsInfected(spitter) && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
 }
 
-stock bool bIsSurvivor(int client)
+stock bool bIsSurvivor(int survivor)
 {
-	return bIsValidClient(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client);
+	return bIsValidClient(survivor) && GetClientTeam(survivor) == 2 && IsPlayerAlive(survivor);
 }
 
-stock bool bIsTank(int client)
+stock bool bIsTank(int tank)
 {
-	return bIsInfected(client) && (bIsValidGame() ? GetEntProp(client, Prop_Send, "m_zombieClass") == 8 : GetEntProp(client, Prop_Send, "m_zombieClass") == 5);
+	return bIsInfected(tank) && (bIsValidGame() ? GetEntProp(tank, Prop_Send, "m_zombieClass") == 8 : GetEntProp(tank, Prop_Send, "m_zombieClass") == 5);
 }
 
-stock bool bIsValidClient(int client)
+stock bool bIsValidClient(int player)
 {
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && !IsClientInKickQueue(client);
+	return player > 0 && player <= MaxClients && IsClientInGame(player) && !IsClientInKickQueue(player);
 }
 
 stock bool bIsValidEntity(int entity)
@@ -390,17 +390,17 @@ stock bool bIsValidGame(bool l4d2 = true)
 	return l4d2 ? evEngine == Engine_Left4Dead2 : evEngine == Engine_Left4Dead;
 }
 
-stock bool bIsValidHumanClient(int client)
+stock bool bIsValidHumanClient(int player)
 {
-	return bIsValidClient(client) && !IsFakeClient(client);
+	return bIsValidClient(player) && !IsFakeClient(player);
 }
 
-stock bool bIsWitch(int client)
+stock bool bIsWitch(int witch)
 {
-	if (bIsValidEntity(client))
+	if (bIsValidEntity(witch))
 	{
 		char sClassname[32];
-		GetEntityClassname(client, sClassname, sizeof(sClassname));
+		GetEntityClassname(witch, sClassname, sizeof(sClassname));
 		if (StrEqual(sClassname, "witch"))
 		{
 			return true;
@@ -631,11 +631,11 @@ stock int iGetHumanCount()
 	return iHumanCount;
 }
 
-stock int iGetIdleBot(int client)
+stock int iGetIdleBot(int bot)
 {
 	for (int iBot = 1; iBot <= MaxClients; iBot++)
 	{
-		if (iGetIdlePlayer(iBot) == client)
+		if (iGetIdlePlayer(iBot) == bot)
 		{
 			return iBot;
 		}
@@ -643,15 +643,15 @@ stock int iGetIdleBot(int client)
 	return 0;
 }
 
-stock int iGetIdlePlayer(int client)
+stock int iGetIdlePlayer(int bot)
 {
-	if (bIsBotSurvivor(client))
+	if (bIsBotSurvivor(bot))
 	{
 		char sClassname[12];
-		GetEntityNetClass(client, sClassname, sizeof(sClassname));
+		GetEntityNetClass(bot, sClassname, sizeof(sClassname));
 		if (StrEqual(sClassname, "SurvivorBot"))
 		{
-			int iIdler = GetClientOfUserId(GetEntProp(client, Prop_Send, "m_humanSpectatorUserID"));
+			int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
 			if (iIdler > 0 && IsClientInGame(iIdler) && GetClientTeam(iIdler) == 1)
 			{
 				return iIdler;
@@ -674,12 +674,12 @@ stock int iGetPlayerCount()
 	return iPlayerCount;
 }
 
-stock int iGetRandomSurvivor(int client)
+stock int iGetRandomSurvivor(int survivor)
 {
 	int iSurvivorCount, iSurvivors[MAXPLAYERS + 1];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && iSurvivor != client)
+		if (bIsSurvivor(iSurvivor) && iSurvivor != survivor)
 		{
 			iSurvivors[iSurvivorCount++] = iSurvivor;
 		}
@@ -750,15 +750,15 @@ stock int iGetWitchCount()
 	return iWitchCount;
 }
 
-stock void vAttachParticle(int client, const char[] particlename, float time = 0.0, float origin = 0.0)
+stock void vAttachParticle(int player, const char[] particlename, float time = 0.0, float origin = 0.0)
 {
-	if (bIsValidClient(client))
+	if (bIsValidClient(player))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
 		{
 			float flPos[3];
-			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
+			GetEntPropVector(player, Prop_Send, "m_vecOrigin", flPos);
 			flPos[2] += origin;
 			DispatchKeyValue(iParticle, "scale", "");
 			DispatchKeyValue(iParticle, "effect_name", particlename);
@@ -767,18 +767,18 @@ stock void vAttachParticle(int client, const char[] particlename, float time = 0
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "Enable");
 			AcceptEntityInput(iParticle, "Start");
-			vSetEntityParent(iParticle, client);
+			vSetEntityParent(iParticle, player);
 			iParticle = EntIndexToEntRef(iParticle);
 			vDeleteEntity(iParticle, time);
 		}
 	}
 }
 
-stock void vCheatCommand(int client, const char[] command, const char[] arguments = "", any ...)
+stock void vCheatCommand(int player, const char[] command, const char[] arguments = "", any ...)
 {
 	int iCmdFlags = GetCommandFlags(command);
 	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
-	FakeClientCommand(client, "%s %s", command, arguments);
+	FakeClientCommand(player, "%s %s", command, arguments);
 	SetCommandFlags(command, iCmdFlags|FCVAR_CHEAT);
 }
 
@@ -806,41 +806,41 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 	}
 }
 
-stock void vCreateParticle(int client, const char[] particlename, float time, float origin)
+stock void vCreateParticle(int player, const char[] particlename, float time, float origin)
 {
-	if (bIsValidClient(client))
+	if (bIsValidClient(player))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
 		{
 			float flPos[3];
-			GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPos);
+			GetEntPropVector(player, Prop_Send, "m_vecOrigin", flPos);
 			flPos[2] += origin;
 			DispatchKeyValue(iParticle, "effect_name", particlename);
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "Start");
-			vSetEntityParent(iParticle, client);
+			vSetEntityParent(iParticle, player);
 			iParticle = EntIndexToEntRef(iParticle);
 			vDeleteEntity(iParticle, time);
 		}
 	}
 }
 
-stock void vDamage(int client, const char[] damage)
+stock void vDamage(int survivor, const char[] damage)
 {
 	int iPointHurt = CreateEntityByName("point_hurt");
 	if (bIsValidEntity(iPointHurt))
 	{
 		char sTargetName[32];
-		Format(sTargetName, sizeof(sTargetName), "HurtTarget%d", GetClientUserId(client));
-		DispatchKeyValue(client, "targetname", sTargetName);
+		Format(sTargetName, sizeof(sTargetName), "HurtTarget%d", GetClientUserId(survivor));
+		DispatchKeyValue(survivor, "targetname", sTargetName);
 		DispatchKeyValue(iPointHurt, "Damage", damage);
 		DispatchKeyValue(iPointHurt, "DamageTarget", sTargetName);
 		DispatchKeyValue(iPointHurt, "DamageType", "65536");
 		DispatchSpawn(iPointHurt);
-		AcceptEntityInput(iPointHurt, "Hurt", client);
+		AcceptEntityInput(iPointHurt, "Hurt", survivor);
 		RemoveEntity(iPointHurt);
 	}
 }
@@ -858,36 +858,36 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 	}
 }
 
-stock void vDropWeapon(int client, const char[] slots, const char[] number, int slot)
+stock void vDropWeapon(int survivor, const char[] slots, const char[] number, int slot)
 {
 	if (StrContains(slots, number) != -1)
 	{
-		if (bIsSurvivor(client) && GetPlayerWeaponSlot(client, slot) > 0)
+		if (bIsSurvivor(survivor) && GetPlayerWeaponSlot(survivor, slot) > 0)
 		{
-			SDKHooks_DropWeapon(client, GetPlayerWeaponSlot(client, slot), NULL_VECTOR, NULL_VECTOR);
+			SDKHooks_DropWeapon(survivor, GetPlayerWeaponSlot(survivor, slot), NULL_VECTOR, NULL_VECTOR);
 		}
 	}
 }
 
-stock void vEffect(int client, int owner, const char[] enabled, const char[] mode)
+stock void vEffect(int survivor, int tank, const char[] enabled, const char[] mode)
 {
 	if (StrContains(enabled, mode) != -1)
 	{
 		char sRGB[4][4];
-		ST_TankColors(owner, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
+		ST_TankColors(tank, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
 		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
-		vFade(client, 800, 300, iRed, iGreen, iBlue);
+		vFade(survivor, 800, 300, iRed, iGreen, iBlue);
 	}
 }
 
-stock void vFade(int client, int duration, int unknown, int red, int green, int blue)
+stock void vFade(int survivor, int duration, int unknown, int red, int green, int blue)
 {
-	Handle hFadeTarget = StartMessageOne("Fade", client);
+	Handle hFadeTarget = StartMessageOne("Fade", survivor);
 	if (hFadeTarget != null)
 	{
 		BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
@@ -917,13 +917,13 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 	}
 }
 
-stock void vHeal(int client, int health, int extrahealth, int maxhealth)
+stock void vHeal(int infected, int health, int extrahealth, int maxhealth)
 {
 	maxhealth = iClamp(maxhealth, 1, ST_MAXHEALTH);
 	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth,
 		iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth,
 		iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
-	SetEntityHealth(client, iRealHealth);
+	SetEntityHealth(infected, iRealHealth);
 }
 
 stock void vMultiTargetFilters(int toggle)
@@ -968,12 +968,12 @@ stock void vPrecacheParticle(const char[] particlename)
 	}
 }
 
-stock void vRemoveWeapon(int client, int slot)
+stock void vRemoveWeapon(int survivor, int slot)
 {
-	int iSlot = GetPlayerWeaponSlot(client, slot);
+	int iSlot = GetPlayerWeaponSlot(survivor, slot);
 	if (iSlot > 0)
 	{
-		RemovePlayerItem(client, iSlot);
+		RemovePlayerItem(survivor, iSlot);
 		RemoveEntity(iSlot);
 	}
 }
@@ -989,9 +989,9 @@ stock void vSetVector(float target[3], float x, float y, float z)
 	target[0] = x, target[1] = y, target[2] = z;
 }
 
-stock void vShake(int client, float duration = 1.0)
+stock void vShake(int survivor, float duration = 1.0)
 {
-	Handle hShakeTarget = StartMessageOne("Shake", client);
+	Handle hShakeTarget = StartMessageOne("Shake", survivor);
 	if (hShakeTarget != null)
 	{
 		BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
@@ -1001,14 +1001,14 @@ stock void vShake(int client, float duration = 1.0)
 	}
 }
 
-stock void vSpawnInfected(int client, const char[] infected)
+stock void vSpawnInfected(int tank, const char[] infected)
 {
-	ChangeClientTeam(client, 3);
-	vCheatCommand(client, bIsValidGame() ? "z_spawn_old" : "z_spawn", infected);
-	KickClient(client);
+	ChangeClientTeam(tank, 3);
+	vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", infected);
+	KickClient(tank);
 }
 
-stock void vSpecialAttack(int client, float pos[3], const char[] model)
+stock void vSpecialAttack(int tank, float pos[3], const char[] model)
 {
 	int iProp = CreateEntityByName("prop_physics");
 	if (bIsValidEntity(iProp))
@@ -1018,7 +1018,7 @@ stock void vSpecialAttack(int client, float pos[3], const char[] model)
 		pos[2] += 10.0;
 		TeleportEntity(iProp, pos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iProp);
-		SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", client);
+		SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", tank);
 		SetEntPropFloat(iProp, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
 		SetEntProp(iProp, Prop_Send, "m_CollisionGroup", 1);
 		SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);

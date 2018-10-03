@@ -167,14 +167,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iStunRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iStunChance[ST_TankType(client)] : g_iStunChance2[ST_TankType(client)];
-		float flStunRange = !g_bTankConfig[ST_TankType(client)] ? g_flStunRange[ST_TankType(client)] : g_flStunRange2[ST_TankType(client)],
+		int iStunRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iStunChance[ST_TankType(tank)] : g_iStunChance2[ST_TankType(tank)];
+		float flStunRange = !g_bTankConfig[ST_TankType(tank)] ? g_flStunRange[ST_TankType(tank)] : g_flStunRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -184,22 +184,22 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flStunRange)
 				{
-					vStunHit(iSurvivor, client, iStunRangeChance, iStunAbility(client), 2, "3");
+					vStunHit(iSurvivor, tank, iStunRangeChance, iStunAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iStunAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iStunAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveStun(client);
+		vRemoveStun(tank);
 	}
 }
 
-stock void vRemoveStun(int client)
+stock void vRemoveStun(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -207,7 +207,7 @@ stock void vRemoveStun(int client)
 		{
 			DataPack dpStopStun = new DataPack();
 			CreateDataTimer(0.1, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopStun.WriteCell(GetClientUserId(iSurvivor)), dpStopStun.WriteCell(GetClientUserId(client)), dpStopStun.WriteCell(0), dpStopStun.WriteCell(1);
+			dpStopStun.WriteCell(GetClientUserId(iSurvivor)), dpStopStun.WriteCell(GetClientUserId(tank)), dpStopStun.WriteCell(0), dpStopStun.WriteCell(1);
 		}
 	}
 }
@@ -223,62 +223,62 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bStun[client] = false;
-	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", 1.0);
-	if (iStunMessage(owner) == message || iStunMessage(owner) == 3)
+	g_bStun[survivor] = false;
+	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	if (iStunMessage(tank) == message || iStunMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Stun2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Stun2", survivor);
 	}
 }
 
-stock void vStunHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vStunHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bStun[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bStun[survivor])
 	{
-		g_bStun[client] = true;
-		float flStunSpeed = !g_bTankConfig[ST_TankType(owner)] ? g_flStunSpeed[ST_TankType(owner)] : g_flStunSpeed2[ST_TankType(owner)],
-			flStunDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flStunDuration[ST_TankType(owner)] : g_flStunDuration2[ST_TankType(owner)];
-		SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", flStunSpeed);
+		g_bStun[survivor] = true;
+		float flStunSpeed = !g_bTankConfig[ST_TankType(tank)] ? g_flStunSpeed[ST_TankType(tank)] : g_flStunSpeed2[ST_TankType(tank)],
+			flStunDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flStunDuration[ST_TankType(tank)] : g_flStunDuration2[ST_TankType(tank)];
+		SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", flStunSpeed);
 		DataPack dpStopStun = new DataPack();
 		CreateDataTimer(flStunDuration, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopStun.WriteCell(GetClientUserId(client)), dpStopStun.WriteCell(GetClientUserId(owner)), dpStopStun.WriteCell(message), dpStopStun.WriteCell(enabled);
+		dpStopStun.WriteCell(GetClientUserId(survivor)), dpStopStun.WriteCell(GetClientUserId(tank)), dpStopStun.WriteCell(message), dpStopStun.WriteCell(enabled);
 		char sStunEffect[4];
-		sStunEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sStunEffect[ST_TankType(owner)] : g_sStunEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sStunEffect, mode);
-		if (iStunMessage(owner) == message || iStunMessage(owner) == 3)
+		sStunEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sStunEffect[ST_TankType(tank)] : g_sStunEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sStunEffect, mode);
+		if (iStunMessage(tank) == message || iStunMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Stun", sTankName, client, flStunSpeed);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Stun", sTankName, survivor, flStunSpeed);
 		}
 	}
 }
 
-stock int iStunAbility(int client)
+stock int iStunAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iStunAbility[ST_TankType(client)] : g_iStunAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iStunAbility[ST_TankType(tank)] : g_iStunAbility2[ST_TankType(tank)];
 }
 
-stock int iStunChance(int client)
+stock int iStunChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iStunChance[ST_TankType(client)] : g_iStunChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iStunChance[ST_TankType(tank)] : g_iStunChance2[ST_TankType(tank)];
 }
 
-stock int iStunHit(int client)
+stock int iStunHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iStunHit[ST_TankType(client)] : g_iStunHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iStunHit[ST_TankType(tank)] : g_iStunHit2[ST_TankType(tank)];
 }
 
-stock int iStunHitMode(int client)
+stock int iStunHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iStunHitMode[ST_TankType(client)] : g_iStunHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iStunHitMode[ST_TankType(tank)] : g_iStunHitMode2[ST_TankType(tank)];
 }
 
-stock int iStunMessage(int client)
+stock int iStunMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iStunMessage[ST_TankType(client)] : g_iStunMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iStunMessage[ST_TankType(tank)] : g_iStunMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerStopStun(Handle timer, DataPack pack)

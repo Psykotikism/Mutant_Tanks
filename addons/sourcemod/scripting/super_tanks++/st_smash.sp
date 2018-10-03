@@ -160,14 +160,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iSmashRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iSmashChance[ST_TankType(client)] : g_iSmashChance2[ST_TankType(client)];
-		float flSmashRange = !g_bTankConfig[ST_TankType(client)] ? g_flSmashRange[ST_TankType(client)] : g_flSmashRange2[ST_TankType(client)],
+		int iSmashRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iSmashChance[ST_TankType(tank)] : g_iSmashChance2[ST_TankType(tank)];
+		float flSmashRange = !g_bTankConfig[ST_TankType(tank)] ? g_flSmashRange[ST_TankType(tank)] : g_flSmashRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -177,50 +177,50 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flSmashRange)
 				{
-					vSmashHit(iSurvivor, client, iSmashRangeChance, iSmashAbility(client), 2, "3");
+					vSmashHit(iSurvivor, tank, iSmashRangeChance, iSmashAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vSmashHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vSmashHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
-		int iSmashMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iSmashMessage[ST_TankType(owner)] : g_iSmashMessage2[ST_TankType(owner)];
-		EmitSoundToAll(SOUND_SMASH, client);
-		EmitSoundToAll(SOUND_GROWL, owner);
-		vAttachParticle(client, PARTICLE_BLOOD, 0.1, 0.0);
-		ForcePlayerSuicide(client);
+		int iSmashMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iSmashMessage[ST_TankType(tank)] : g_iSmashMessage2[ST_TankType(tank)];
+		EmitSoundToAll(SOUND_SMASH, survivor);
+		EmitSoundToAll(SOUND_GROWL, tank);
+		vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
+		ForcePlayerSuicide(survivor);
 		char sSmashEffect[4];
-		sSmashEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sSmashEffect[ST_TankType(owner)] : g_sSmashEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sSmashEffect, mode);
+		sSmashEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sSmashEffect[ST_TankType(tank)] : g_sSmashEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sSmashEffect, mode);
 		if (iSmashMessage == message || iSmashMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Smash", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Smash", sTankName, survivor);
 		}
 	}
 }
 
-stock int iSmashAbility(int client)
+stock int iSmashAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iSmashAbility[ST_TankType(client)] : g_iSmashAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmashAbility[ST_TankType(tank)] : g_iSmashAbility2[ST_TankType(tank)];
 }
 
-stock int iSmashChance(int client)
+stock int iSmashChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iSmashChance[ST_TankType(client)] : g_iSmashChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmashChance[ST_TankType(tank)] : g_iSmashChance2[ST_TankType(tank)];
 }
 
-stock int iSmashHit(int client)
+stock int iSmashHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iSmashHit[ST_TankType(client)] : g_iSmashHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmashHit[ST_TankType(tank)] : g_iSmashHit2[ST_TankType(tank)];
 }
 
-stock int iSmashHitMode(int client)
+stock int iSmashHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iSmashHitMode[ST_TankType(client)] : g_iSmashHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmashHitMode[ST_TankType(tank)] : g_iSmashHitMode2[ST_TankType(tank)];
 }

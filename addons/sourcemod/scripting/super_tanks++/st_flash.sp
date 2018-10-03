@@ -106,21 +106,21 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	int iFlashChance = !g_bTankConfig[ST_TankType(client)] ? g_iFlashChance[ST_TankType(client)] : g_iFlashChance2[ST_TankType(client)];
-	if (iFlashAbility(client) == 1 && GetRandomInt(1, iFlashChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bFlash[client])
+	int iFlashChance = !g_bTankConfig[ST_TankType(tank)] ? g_iFlashChance[ST_TankType(tank)] : g_iFlashChance2[ST_TankType(tank)];
+	if (iFlashAbility(tank) == 1 && GetRandomInt(1, iFlashChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bFlash[tank])
 	{
-		g_bFlash[client] = true;
-		float flFlashInterval = !g_bTankConfig[ST_TankType(client)] ? g_flFlashInterval[ST_TankType(client)] : g_flFlashInterval2[ST_TankType(client)];
+		g_bFlash[tank] = true;
+		float flFlashInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flFlashInterval[ST_TankType(tank)] : g_flFlashInterval2[ST_TankType(tank)];
 		DataPack dpFlash = new DataPack();
 		CreateDataTimer(flFlashInterval, tTimerFlash, dpFlash, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpFlash.WriteCell(GetClientUserId(client));
+		dpFlash.WriteCell(GetClientUserId(tank));
 		dpFlash.WriteFloat(GetEngineTime());
-		if (iFlashMessage(client) == 1)
+		if (iFlashMessage(tank) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Flash", sTankName);
 		}
 	}
@@ -137,14 +137,14 @@ stock void vReset()
 	}
 }
 
-stock int iFlashAbility(int client)
+stock int iFlashAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFlashAbility[ST_TankType(client)] : g_iFlashAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFlashAbility[ST_TankType(tank)] : g_iFlashAbility2[ST_TankType(tank)];
 }
 
-stock int iFlashMessage(int client)
+stock int iFlashMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFlashMessage[ST_TankType(client)] : g_iFlashMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFlashMessage[ST_TankType(tank)] : g_iFlashMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerFlash(Handle timer, DataPack pack)

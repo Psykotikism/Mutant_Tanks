@@ -97,19 +97,19 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	int iSpamChance = !g_bTankConfig[ST_TankType(client)] ? g_iSpamChance[ST_TankType(client)] : g_iSpamChance2[ST_TankType(client)];
-	if (iSpamAbility(client) == 1 && GetRandomInt(1, iSpamChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bSpam[client])
+	int iSpamChance = !g_bTankConfig[ST_TankType(tank)] ? g_iSpamChance[ST_TankType(tank)] : g_iSpamChance2[ST_TankType(tank)];
+	if (iSpamAbility(tank) == 1 && GetRandomInt(1, iSpamChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bSpam[tank])
 	{
-		g_bSpam[client] = true;
+		g_bSpam[tank] = true;
 		DataPack dpSpam = new DataPack();
 		CreateDataTimer(0.5, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpSpam.WriteCell(GetClientUserId(client)), dpSpam.WriteFloat(GetEngineTime());
-		if (iSpamMessage(client) == 1)
+		dpSpam.WriteCell(GetClientUserId(tank)), dpSpam.WriteFloat(GetEngineTime());
+		if (iSpamMessage(tank) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Spam", sTankName);
 		}
 	}
@@ -126,14 +126,14 @@ stock void vReset()
 	}
 }
 
-stock int iSpamAbility(int client)
+stock int iSpamAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iSpamAbility[ST_TankType(client)] : g_iSpamAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iSpamAbility[ST_TankType(tank)] : g_iSpamAbility2[ST_TankType(tank)];
 }
 
-stock int iSpamMessage(int client)
+stock int iSpamMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iSpamMessage[ST_TankType(client)] : g_iSpamMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iSpamMessage[ST_TankType(tank)] : g_iSpamMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerSpam(Handle timer, DataPack pack)

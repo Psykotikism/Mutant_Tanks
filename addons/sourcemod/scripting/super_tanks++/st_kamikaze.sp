@@ -160,14 +160,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iKamikazeRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iKamikazeChance[ST_TankType(client)] : g_iKamikazeChance2[ST_TankType(client)];
-		float flKamikazeRange = !g_bTankConfig[ST_TankType(client)] ? g_flKamikazeRange[ST_TankType(client)] : g_flKamikazeRange2[ST_TankType(client)],
+		int iKamikazeRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeChance[ST_TankType(tank)] : g_iKamikazeChance2[ST_TankType(tank)];
+		float flKamikazeRange = !g_bTankConfig[ST_TankType(tank)] ? g_flKamikazeRange[ST_TankType(tank)] : g_flKamikazeRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -177,52 +177,52 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flKamikazeRange)
 				{
-					vKamikazeHit(iSurvivor, client, iKamikazeRangeChance, iKamikazeAbility(client), 2, "3");
+					vKamikazeHit(iSurvivor, tank, iKamikazeRangeChance, iKamikazeAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vKamikazeHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vKamikazeHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	int iKamikazeMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iKamikazeMessage[ST_TankType(owner)] : g_iKamikazeMessage2[ST_TankType(owner)];
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	int iKamikazeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeMessage[ST_TankType(tank)] : g_iKamikazeMessage2[ST_TankType(tank)];
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
-		EmitSoundToAll(SOUND_SMASH, client);
-		EmitSoundToAll(SOUND_GROWL, owner);
-		vAttachParticle(client, PARTICLE_BLOOD, 0.1, 0.0);
-		ForcePlayerSuicide(client);
-		vAttachParticle(owner, PARTICLE_BLOOD, 0.1, 0.0);
-		ForcePlayerSuicide(owner);
+		EmitSoundToAll(SOUND_SMASH, survivor);
+		EmitSoundToAll(SOUND_GROWL, tank);
+		vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
+		ForcePlayerSuicide(survivor);
+		vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
+		ForcePlayerSuicide(tank);
 		char sKamikazeEffect[4];
-		sKamikazeEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sKamikazeEffect[ST_TankType(owner)] : g_sKamikazeEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sKamikazeEffect, mode);
+		sKamikazeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sKamikazeEffect[ST_TankType(tank)] : g_sKamikazeEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sKamikazeEffect, mode);
 		if (iKamikazeMessage == message || iKamikazeMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Kamikaze", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Kamikaze", sTankName, survivor);
 		}
 	}
 }
 
-stock int iKamikazeAbility(int client)
+stock int iKamikazeAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iKamikazeAbility[ST_TankType(client)] : g_iKamikazeAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeAbility[ST_TankType(tank)] : g_iKamikazeAbility2[ST_TankType(tank)];
 }
 
-stock int iKamikazeChance(int client)
+stock int iKamikazeChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iKamikazeChance[ST_TankType(client)] : g_iKamikazeChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeChance[ST_TankType(tank)] : g_iKamikazeChance2[ST_TankType(tank)];
 }
 
-stock int iKamikazeHit(int client)
+stock int iKamikazeHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iKamikazeHit[ST_TankType(client)] : g_iKamikazeHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeHit[ST_TankType(tank)] : g_iKamikazeHit2[ST_TankType(tank)];
 }
 
-stock int iKamikazeHitMode(int client)
+stock int iKamikazeHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iKamikazeHitMode[ST_TankType(client)] : g_iKamikazeHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeHitMode[ST_TankType(tank)] : g_iKamikazeHitMode2[ST_TankType(tank)];
 }
