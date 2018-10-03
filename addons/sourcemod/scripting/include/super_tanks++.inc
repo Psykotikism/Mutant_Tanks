@@ -23,7 +23,7 @@
 /* Called every second to trigger the Super Tank's ability.
  * Use this forward for any passive abilities.
  *
- * @param tank		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  */
 forward void ST_Ability(int tank);
 
@@ -31,7 +31,7 @@ forward void ST_Ability(int tank);
  * Use this forward to trigger any features/abilities/settings
  * when a Super Tank evolves.
  *
- * @param tank		Client index of the Tank.
+ * @param tank			Client index of the Tank.
  */
 forward void ST_BossStage(int tank);
 

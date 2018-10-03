@@ -8,12 +8,12 @@
 
 /* Returns whether the clone can use abilities.
  *
- * @param tank			Client index of the Tank.
- * @param clone			Checks whether "st_clone.smx"
- *							is installed.
- * @return				True on success, false if
- *							clone is not allowed
- *							to have abilities.
+ * @param tank				Client index of the Tank.
+ * @param clone				Checks whether "st_clone.smx"
+ *								is installed.
+ * @return					True on success, false if
+ *								clone is not allowed
+ *								to have abilities.
  */
 native bool ST_CloneAllowed(int tank, bool clone);
 
