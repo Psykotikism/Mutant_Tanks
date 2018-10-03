@@ -207,7 +207,7 @@ stock void vRemoveStun(int tank)
 		{
 			DataPack dpStopStun = new DataPack();
 			CreateDataTimer(0.1, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopStun.WriteCell(GetClientUserId(iSurvivor)), dpStopStun.WriteCell(GetClientUserId(tank)), dpStopStun.WriteCell(0), dpStopStun.WriteCell(1);
+			dpStopStun.WriteCell(GetClientUserId(iSurvivor)), dpStopStun.WriteCell(GetClientUserId(tank)), dpStopStun.WriteCell(0);
 		}
 	}
 }
@@ -223,16 +223,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int survivor, int tank, int message)
-{
-	g_bStun[survivor] = false;
-	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
-	if (iStunMessage(tank) == message || iStunMessage(tank) == 3)
-	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Stun2", survivor);
-	}
-}
-
 stock void vStunHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bStun[survivor])
@@ -243,7 +233,7 @@ stock void vStunHit(int survivor, int tank, int chance, int enabled, int message
 		SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", flStunSpeed);
 		DataPack dpStopStun = new DataPack();
 		CreateDataTimer(flStunDuration, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopStun.WriteCell(GetClientUserId(survivor)), dpStopStun.WriteCell(GetClientUserId(tank)), dpStopStun.WriteCell(message), dpStopStun.WriteCell(enabled);
+		dpStopStun.WriteCell(GetClientUserId(survivor)), dpStopStun.WriteCell(GetClientUserId(tank)), dpStopStun.WriteCell(message);
 		char sStunEffect[4];
 		sStunEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sStunEffect[ST_TankType(tank)] : g_sStunEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sStunEffect, mode);
@@ -293,15 +283,15 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell()), iStunChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bStun[iSurvivor])
 	{
-		vReset2(iSurvivor, iTank, iStunChat);
+		g_bStun[iSurvivor] = false;
+		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		return Plugin_Stop;
 	}
-	int iStunEnabled = pack.ReadCell();
-	if (iStunEnabled == 0)
+	g_bStun[iSurvivor] = false;
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	if (iStunMessage(iTank) == iStunChat || iStunMessage(iTank) == 3)
 	{
-		vReset2(iSurvivor, iTank, iStunChat);
-		return Plugin_Stop;
+		PrintToChatAll("%s %t", ST_PREFIX2, "Stun2", iSurvivor);
 	}
-	vReset2(iSurvivor, iTank, iStunChat);
 	return Plugin_Continue;
 }

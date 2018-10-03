@@ -216,7 +216,7 @@ stock void vIceHit(int survivor, int tank, int chance, int enabled, int message,
 		float flIceDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flIceDuration[ST_TankType(tank)] : g_flIceDuration2[ST_TankType(tank)];
 		DataPack dpStopIce = new DataPack();
 		CreateDataTimer(flIceDuration, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopIce.WriteCell(GetClientUserId(survivor)), dpStopIce.WriteCell(GetClientUserId(tank)), dpStopIce.WriteCell(message), dpStopIce.WriteCell(enabled);
+		dpStopIce.WriteCell(GetClientUserId(survivor)), dpStopIce.WriteCell(GetClientUserId(tank)), dpStopIce.WriteCell(message);
 		char sIceEffect[4];
 		sIceEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sIceEffect[ST_TankType(tank)] : g_sIceEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sIceEffect, mode);
@@ -237,7 +237,7 @@ stock void vRemoveIce(int tank)
 		{
 			DataPack dpStopIce = new DataPack();
 			CreateDataTimer(0.1, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopIce.WriteCell(GetClientUserId(iSurvivor)), dpStopIce.WriteCell(GetClientUserId(tank)), dpStopIce.WriteCell(0), dpStopIce.WriteCell(1);
+			dpStopIce.WriteCell(GetClientUserId(iSurvivor)), dpStopIce.WriteCell(GetClientUserId(tank)), dpStopIce.WriteCell(0);
 		}
 	}
 }
@@ -249,27 +249,6 @@ stock void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bIce[iPlayer] = false;
-		}
-	}
-}
-
-stock void vStopIce(int survivor, int tank, int message)
-{
-	if (g_bIce[survivor])
-	{
-		g_bIce[survivor] = false;
-		float flPos[3], flVelocity[3] = {0.0, 0.0, 0.0};
-		GetClientEyePosition(survivor, flPos);
-		if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
-		{
-			SetEntityMoveType(survivor, MOVETYPE_WALK);
-		}
-		TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
-		SetEntityRenderColor(survivor, 255, 255, 255, 255);
-		EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
-		if (iIceMessage(tank) == message || iIceMessage(tank) == 3)
-		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ice2", survivor);
 		}
 	}
 }
@@ -311,15 +290,22 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell()), iIceChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bIce[iSurvivor])
 	{
-		vStopIce(iSurvivor, iTank, iIceChat);
+		g_bIce[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iIceEnabled = pack.ReadCell();
-	if (iIceEnabled == 0)
+	g_bIce[iSurvivor] = false;
+	float flPos[3], flVelocity[3] = {0.0, 0.0, 0.0};
+	GetClientEyePosition(iSurvivor, flPos);
+	if (GetEntityMoveType(iSurvivor) == MOVETYPE_NONE)
 	{
-		vStopIce(iSurvivor, iTank, iIceChat);
-		return Plugin_Stop;
+		SetEntityMoveType(iSurvivor, MOVETYPE_WALK);
 	}
-	vStopIce(iSurvivor, iTank, iIceChat);
+	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	SetEntityRenderColor(iSurvivor, 255, 255, 255, 255);
+	EmitAmbientSound(SOUND_BULLET, flPos, iSurvivor, SNDLEVEL_RAIDSIREN);
+	if (iIceMessage(iTank) == iIceChat || iIceMessage(iTank) == 3)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "Ice2", iSurvivor);
+	}
 	return Plugin_Continue;
 }

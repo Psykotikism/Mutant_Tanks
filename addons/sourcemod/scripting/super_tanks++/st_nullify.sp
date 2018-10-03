@@ -205,7 +205,7 @@ stock void vNullifyHit(int survivor, int tank, int chance, int enabled, int mess
 		float flNullifyDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyDuration[ST_TankType(tank)] : g_flNullifyDuration2[ST_TankType(tank)];
 		DataPack dpStopNullify = new DataPack();
 		CreateDataTimer(flNullifyDuration, tTimerStopNullify, dpStopNullify, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopNullify.WriteCell(GetClientUserId(survivor)), dpStopNullify.WriteCell(GetClientUserId(tank)), dpStopNullify.WriteCell(message), dpStopNullify.WriteCell(enabled);
+		dpStopNullify.WriteCell(GetClientUserId(survivor)), dpStopNullify.WriteCell(GetClientUserId(tank)), dpStopNullify.WriteCell(message);
 		char sNullifyEffect[4];
 		sNullifyEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sNullifyEffect[ST_TankType(tank)] : g_sNullifyEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sNullifyEffect, mode);
@@ -237,15 +237,6 @@ stock void vReset()
 		{
 			g_bNullify[iPlayer] = false;
 		}
-	}
-}
-
-stock void vReset2(int survivor, int tank, int message)
-{
-	g_bNullify[survivor] = false;
-	if (iNullifyMessage(tank) == message || iNullifyMessage(tank) == 3)
-	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Nullify2", survivor);
 	}
 }
 
@@ -286,15 +277,13 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell()), iNullifyChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank, iNullifyChat);
+		g_bNullify[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iNullifyEnabled = pack.ReadCell();
-	if (iNullifyEnabled == 0)
+	g_bNullify[iSurvivor] = false;
+	if (iNullifyMessage(iTank) == iNullifyChat || iNullifyMessage(iTank) == 3)
 	{
-		vReset2(iSurvivor, iTank, iNullifyChat);
-		return Plugin_Stop;
+		PrintToChatAll("%s %t", ST_PREFIX2, "Nullify2", iSurvivor);
 	}
-	vReset2(iSurvivor, iTank, iNullifyChat);
 	return Plugin_Continue;
 }

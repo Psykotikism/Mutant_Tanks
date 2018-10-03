@@ -290,6 +290,8 @@ public Action tTimerShield(Handle timer, any userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || g_bShield2[iTank] || (!g_bShield[iTank] && !g_bShield2[iTank]))
 	{
+		g_bShield[iTank] = false;
+		g_bShield2[iTank] = false;
 		return Plugin_Stop;
 	}
 	if (iShieldAbility(iTank) == 0)
@@ -313,6 +315,8 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (!g_bShield[iTank] && !g_bShield2[iTank]))
 	{
+		g_bShield[iTank] = false;
+		g_bShield2[iTank] = false;
 		return Plugin_Stop;
 	}
 	if (iShieldAbility(iTank) == 0)

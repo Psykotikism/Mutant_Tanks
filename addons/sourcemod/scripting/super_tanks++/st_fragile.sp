@@ -184,17 +184,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int tank)
-{
-	g_bFragile[tank] = false;
-	if (iFragileMessage(tank) == 1)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Fragile2", sTankName);
-	}
-}
-
 stock int iFragileAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iFragileAbility[ST_TankType(tank)] : g_iFragileAbility2[ST_TankType(tank)];
@@ -213,11 +202,12 @@ public Action tTimerStopFragile(Handle timer, any userid)
 		g_bFragile[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (iFragileAbility(iTank) == 0)
+	g_bFragile[iTank] = false;
+	if (iFragileMessage(iTank) == 1)
 	{
-		vReset2(iTank);
-		return Plugin_Stop;
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(iTank, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Fragile2", sTankName);
 	}
-	vReset2(iTank);
 	return Plugin_Continue;
 }

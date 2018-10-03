@@ -221,7 +221,7 @@ stock void vBuryHit(int survivor, int tank, int chance, int enabled, int message
 		}
 		DataPack dpStopBury = new DataPack();
 		CreateDataTimer(flBuryDuration, tTimerStopBury, dpStopBury, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopBury.WriteCell(GetClientUserId(survivor)), dpStopBury.WriteCell(GetClientUserId(tank)), dpStopBury.WriteCell(message), dpStopBury.WriteCell(enabled);
+		dpStopBury.WriteCell(GetClientUserId(survivor)), dpStopBury.WriteCell(GetClientUserId(tank)), dpStopBury.WriteCell(message);
 		char sBuryEffect[4];
 		sBuryEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sBuryEffect[ST_TankType(tank)] : g_sBuryEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sBuryEffect, mode);
@@ -242,7 +242,7 @@ stock void vRemoveBury(int tank)
 		{
 			DataPack dpDataPack = new DataPack();
 			CreateDataTimer(0.1, tTimerStopBury, dpDataPack, TIMER_FLAG_NO_MAPCHANGE);
-			dpDataPack.WriteCell(GetClientUserId(iSurvivor)), dpDataPack.WriteCell(GetClientUserId(tank)), dpDataPack.WriteCell(0), dpDataPack.WriteCell(1);
+			dpDataPack.WriteCell(GetClientUserId(iSurvivor)), dpDataPack.WriteCell(GetClientUserId(tank)), dpDataPack.WriteCell(0);
 		}
 	}
 }
@@ -254,39 +254,6 @@ stock void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bBury[iPlayer] = false;
-		}
-	}
-}
-
-stock void vStopBury(int survivor, int tank, int message)
-{
-	if (g_bBury[survivor])
-	{
-		g_bBury[survivor] = false;
-		float flOrigin[3], flCurrentOrigin[3];
-		GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
-		flOrigin[2] = flOrigin[2] + flBuryHeight(tank);
-		SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsSurvivor(iPlayer) && !g_bBury[iPlayer] && iPlayer != survivor)
-			{
-				GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-				TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
-				break;
-			}
-		}
-		if (bIsPlayerIncapacitated(survivor))
-		{
-			SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
-		}
-		if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
-		{
-			SetEntityMoveType(survivor, MOVETYPE_WALK);
-		}
-		if (iBuryMessage(tank) == message || iBuryMessage(tank) == 3)
-		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Bury2", survivor);
 		}
 	}
 }
@@ -325,23 +292,42 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor) || !g_bBury[iSurvivor])
 	{
 		g_bBury[iSurvivor] = false;
 		return Plugin_Stop;
 	}
 	int iTank = GetClientOfUserId(pack.ReadCell()), iBuryChat = pack.ReadCell();
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBury[iSurvivor])
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vStopBury(iSurvivor, iTank, iBuryChat);
+		g_bBury[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iBuryEnabled = pack.ReadCell();
-	if (iBuryEnabled == 0)
+	g_bBury[iSurvivor] = false;
+	float flOrigin[3], flCurrentOrigin[3];
+	GetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
+	flOrigin[2] = flOrigin[2] + flBuryHeight(iTank);
+	SetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		vStopBury(iSurvivor, iTank, iBuryChat);
-		return Plugin_Stop;
+		if (bIsSurvivor(iPlayer) && !g_bBury[iPlayer] && iPlayer != iSurvivor)
+		{
+			GetClientAbsOrigin(iPlayer, flCurrentOrigin);
+			TeleportEntity(iSurvivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
+			break;
+		}
 	}
-	vStopBury(iSurvivor, iTank, iBuryChat);
+	if (bIsPlayerIncapacitated(iSurvivor))
+	{
+		SetEntProp(iSurvivor, Prop_Data, "m_takedamage", 2, 1);
+	}
+	if (GetEntityMoveType(iSurvivor) == MOVETYPE_NONE)
+	{
+		SetEntityMoveType(iSurvivor, MOVETYPE_WALK);
+	}
+	if (iBuryMessage(iTank) == iBuryChat || iBuryMessage(iTank) == 3)
+	{
+		PrintToChatAll("%s %t", ST_PREFIX2, "Bury2", iSurvivor);
+	}
 	return Plugin_Continue;
 }

@@ -222,7 +222,7 @@ stock void vQuietHit(int survivor, int tank, int chance, int enabled, int messag
 		float flQuietDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flQuietDuration[ST_TankType(tank)] : g_flQuietDuration2[ST_TankType(tank)];
 		DataPack dpStopQuiet = new DataPack();
 		CreateDataTimer(flQuietDuration, tTimerStopQuiet, dpStopQuiet, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopQuiet.WriteCell(GetClientUserId(survivor)), dpStopQuiet.WriteCell(GetClientUserId(tank)), dpStopQuiet.WriteCell(message), dpStopQuiet.WriteCell(enabled);
+		dpStopQuiet.WriteCell(GetClientUserId(survivor)), dpStopQuiet.WriteCell(GetClientUserId(tank)), dpStopQuiet.WriteCell(message);
 		char sQuietEffect[4];
 		sQuietEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sQuietEffect[ST_TankType(tank)] : g_sQuietEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sQuietEffect, mode);
@@ -254,17 +254,6 @@ stock void vReset()
 		{
 			g_bQuiet[iPlayer] = false;
 		}
-	}
-}
-
-stock void vReset2(int survivor, int tank, int message)
-{
-	g_bQuiet[survivor] = false;
-	if (iQuietMessage(tank) == message || iQuietMessage(tank) == 3)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Quiet2", sTankName, survivor);
 	}
 }
 
@@ -305,15 +294,15 @@ public Action tTimerStopQuiet(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell()), iQuietChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank, iQuietChat);
+		g_bQuiet[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iQuietEnabled = pack.ReadCell();
-	if (iQuietEnabled == 0)
+	g_bQuiet[iSurvivor] = false;
+	if (iQuietMessage(iTank) == iQuietChat || iQuietMessage(iTank) == 3)
 	{
-		vReset2(iSurvivor, iTank, iQuietChat);
-		return Plugin_Stop;
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(iTank, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Quiet2", sTankName, iSurvivor);
 	}
-	vReset2(iSurvivor, iTank, iQuietChat);
 	return Plugin_Continue;
 }

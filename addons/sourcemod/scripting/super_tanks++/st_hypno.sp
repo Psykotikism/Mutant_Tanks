@@ -217,7 +217,7 @@ stock void vHypnoHit(int survivor, int tank, int chance, int enabled, int messag
 		float flHypnoDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flHypnoDuration[ST_TankType(tank)] : g_flHypnoDuration2[ST_TankType(tank)];
 		DataPack dpStopHypno = new DataPack();
 		CreateDataTimer(flHypnoDuration, tTimerStopHypno, dpStopHypno, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopHypno.WriteCell(GetClientUserId(survivor)), dpStopHypno.WriteCell(GetClientUserId(tank)), dpStopHypno.WriteCell(message), dpStopHypno.WriteCell(enabled);
+		dpStopHypno.WriteCell(GetClientUserId(survivor)), dpStopHypno.WriteCell(GetClientUserId(tank)), dpStopHypno.WriteCell(message);
 		char sHypnoEffect[4];
 		sHypnoEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sHypnoEffect[ST_TankType(tank)] : g_sHypnoEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sHypnoEffect, mode);
@@ -249,15 +249,6 @@ stock void vReset()
 		{
 			g_bHypno[iPlayer] = false;
 		}
-	}
-}
-
-stock void vReset2(int survivor, int tank, int message)
-{
-	g_bHypno[survivor] = false;
-	if (iHypnoMessage(tank) == message || iHypnoMessage(tank) == 3)
-	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Hypno2", survivor);
 	}
 }
 
@@ -298,15 +289,13 @@ public Action tTimerStopHypno(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell()), iHypnoChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank, iHypnoChat);
+		g_bHypno[iSurvivor] = false;
 		return Plugin_Stop;
 	}
-	int iHypnoEnabled = pack.ReadCell();
-	if (iHypnoEnabled == 0)
+	g_bHypno[iSurvivor] = false;
+	if (iHypnoMessage(iTank) == iHypnoChat || iHypnoMessage(iTank) == 3)
 	{
-		vReset2(iSurvivor, iTank, iHypnoChat);
-		return Plugin_Stop;
+		PrintToChatAll("%s %t", ST_PREFIX2, "Hypno2", iSurvivor);
 	}
-	vReset2(iSurvivor, iTank, iHypnoChat);
 	return Plugin_Continue;
 }

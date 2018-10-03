@@ -234,7 +234,7 @@ stock void vBlindHit(int survivor, int tank, int chance, int enabled, int messag
 		float flBlindDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flBlindDuration[ST_TankType(tank)] : g_flBlindDuration2[ST_TankType(tank)];
 		DataPack dpStopBlindness = new DataPack();
 		CreateDataTimer(flBlindDuration + 1.0, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopBlindness.WriteCell(GetClientUserId(survivor)), dpStopBlindness.WriteCell(GetClientUserId(tank)), dpStopBlindness.WriteCell(message), dpStopBlindness.WriteCell(enabled);
+		dpStopBlindness.WriteCell(GetClientUserId(survivor)), dpStopBlindness.WriteCell(GetClientUserId(tank)), dpStopBlindness.WriteCell(message);
 		char sBlindEffect[4];
 		sBlindEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sBlindEffect[ST_TankType(tank)] : g_sBlindEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sBlindEffect, mode);
@@ -255,7 +255,7 @@ stock void vRemoveBlind(int tank)
 		{
 			DataPack dpStopBlindness = new DataPack();
 			CreateDataTimer(0.1, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopBlindness.WriteCell(GetClientUserId(iSurvivor)), dpStopBlindness.WriteCell(GetClientUserId(tank)), dpStopBlindness.WriteCell(0), dpStopBlindness.WriteCell(1);
+			dpStopBlindness.WriteCell(GetClientUserId(iSurvivor)), dpStopBlindness.WriteCell(GetClientUserId(tank)), dpStopBlindness.WriteCell(0);
 		}
 	}
 }
@@ -268,16 +268,6 @@ stock void vReset()
 		{
 			g_bBlind[iPlayer] = false;
 		}
-	}
-}
-
-stock void vReset2(int survivor, int tank, int message)
-{
-	g_bBlind[survivor] = false;
-	vBlind(survivor, tank, 0);
-	if (iBlindMessage(tank) == message || iBlindMessage(tank) == 3)
-	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Blind2", survivor);
 	}
 }
 
@@ -344,15 +334,15 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell()), iBlindChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank, iBlindChat);
+		g_bBlind[iSurvivor] = false;
+		vBlind(iSurvivor, iTank, 0);
 		return Plugin_Stop;
 	}
-	int iBlindEnabled = pack.ReadCell();
-	if (iBlindEnabled == 0)
+	g_bBlind[iSurvivor] = false;
+	vBlind(iSurvivor, iTank, 0);
+	if (iBlindMessage(iTank) == iBlindChat || iBlindMessage(iTank) == 3)
 	{
-		vReset2(iSurvivor, iTank, iBlindChat);
-		return Plugin_Stop;
+		PrintToChatAll("%s %t", ST_PREFIX2, "Blind2", iSurvivor);
 	}
-	vReset2(iSurvivor, iTank, iBlindChat);
 	return Plugin_Continue;
 }

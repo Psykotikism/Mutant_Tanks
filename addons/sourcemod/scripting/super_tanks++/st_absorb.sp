@@ -184,17 +184,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int tank)
-{
-	g_bAbsorb[tank] = false;
-	if (iAbsorbMessage(tank) == 1)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Absorb2", sTankName);
-	}
-}
-
 stock int iAbsorbAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iAbsorbAbility[ST_TankType(tank)] : g_iAbsorbAbility2[ST_TankType(tank)];
@@ -213,11 +202,12 @@ public Action tTimerStopAbsorb(Handle timer, any userid)
 		g_bAbsorb[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (iAbsorbAbility(iTank) == 0)
+	g_bAbsorb[iTank] = false;
+	if (iAbsorbMessage(iTank) == 1)
 	{
-		vReset2(iTank);
-		return Plugin_Stop;
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(iTank, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Absorb2", sTankName);
 	}
-	vReset2(iTank);
 	return Plugin_Continue;
 }

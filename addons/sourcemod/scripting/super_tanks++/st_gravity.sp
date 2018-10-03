@@ -246,7 +246,7 @@ stock void vGravityHit(int survivor, int tank, int chance, int enabled, int mess
 		SetEntityGravity(survivor, flGravityValue);
 		DataPack dpStopGravity = new DataPack();
 		CreateDataTimer(flGravityDuration, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopGravity.WriteCell(GetClientUserId(survivor)), dpStopGravity.WriteCell(GetClientUserId(tank)), dpStopGravity.WriteCell(message), dpStopGravity.WriteCell(enabled);
+		dpStopGravity.WriteCell(GetClientUserId(survivor)), dpStopGravity.WriteCell(GetClientUserId(tank)), dpStopGravity.WriteCell(message);
 		char sGravityEffect[4];
 		sGravityEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sGravityEffect[ST_TankType(tank)] : g_sGravityEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sGravityEffect, mode);
@@ -284,7 +284,7 @@ stock void vRemoveGravity(int tank)
 		{
 			DataPack dpStopGravity = new DataPack();
 			CreateDataTimer(0.1, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopGravity.WriteCell(GetClientUserId(iSurvivor)), dpStopGravity.WriteCell(GetClientUserId(tank)), dpStopGravity.WriteCell(1);
+			dpStopGravity.WriteCell(GetClientUserId(iSurvivor)), dpStopGravity.WriteCell(GetClientUserId(tank));
 		}
 	}
 }
@@ -298,16 +298,6 @@ stock void vReset()
 			g_bGravity[iPlayer] = false;
 			g_bGravity2[iPlayer] = false;
 		}
-	}
-}
-
-stock void vReset2(int survivor, int tank, int message)
-{
-	g_bGravity2[survivor] = false;
-	SetEntityGravity(survivor, 1.0);
-	if (iGravityMessage(tank) == message || iGravityMessage(tank) == 4 || iGravityMessage(tank) == 5 || iGravityMessage(tank) == 6 || iGravityMessage(tank) == 7)
-	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Gravity2", survivor);
 	}
 }
 
@@ -348,15 +338,15 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell()), iGravityChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity2[iSurvivor])
 	{
-		vReset2(iSurvivor, iTank, iGravityChat);
+		g_bGravity2[iSurvivor] = false;
+		SetEntityGravity(iSurvivor, 1.0);
 		return Plugin_Stop;
 	}
-	int iGravityEnabled = pack.ReadCell();
-	if (iGravityEnabled != 1 && iGravityEnabled != 3)
+	g_bGravity2[iSurvivor] = false;
+	SetEntityGravity(iSurvivor, 1.0);
+	if (iGravityMessage(iTank) == iGravityChat || iGravityMessage(iTank) == 4 || iGravityMessage(iTank) == 5 || iGravityMessage(iTank) == 6 || iGravityMessage(iTank) == 7)
 	{
-		vReset2(iSurvivor, iTank, iGravityChat);
-		return Plugin_Stop;
+		PrintToChatAll("%s %t", ST_PREFIX2, "Gravity2", iSurvivor);
 	}
-	vReset2(iSurvivor, iTank, iGravityChat);
 	return Plugin_Continue;
 }

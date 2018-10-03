@@ -142,18 +142,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int tank)
-{
-	g_bGod[tank] = false;
-	SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
-	if (iGodMessage(tank) == 1)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "God2", sTankName);
-	}
-}
-
 stock int iGodAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iGodAbility[ST_TankType(tank)] : g_iGodAbility2[ST_TankType(tank)];
@@ -172,11 +160,13 @@ public Action tTimerStopGod(Handle timer, any userid)
 		g_bGod[iTank] = false;
 		return Plugin_Stop;
 	}
-	if (iGodAbility(iTank) == 0 || !g_bGod[iTank])
+	g_bGod[iTank] = false;
+	SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
+	if (iGodMessage(iTank) == 1)
 	{
-		vReset2(iTank);
-		return Plugin_Stop;
+		char sTankName[MAX_NAME_LENGTH + 1];
+		ST_TankName(iTank, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "God2", sTankName);
 	}
-	vReset2(iTank);
 	return Plugin_Continue;
 }

@@ -248,21 +248,6 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int tank)
-{
-	g_bGhost2[tank] = false;
-	g_iGhostAlpha[tank] = 255;
-	switch (iGhostMessage(tank))
-	{
-		case 3, 5, 6, 7:
-		{
-			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ghost3", sTankName);
-		}
-	}
-}
-
 stock int iGhostAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostAbility[ST_TankType(tank)] : g_iGhostAbility2[ST_TankType(tank)];
@@ -447,11 +432,16 @@ public Action tTimerStopGhost(Handle timer, any userid)
 		g_iGhostAlpha[iTank] = 255;
 		return Plugin_Stop;
 	}
-	if (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3)
+	g_bGhost2[iTank] = false;
+	g_iGhostAlpha[iTank] = 255;
+	switch (iGhostMessage(iTank))
 	{
-		vReset2(iTank);
-		return Plugin_Stop;
+		case 3, 5, 6, 7:
+		{
+			char sTankName[MAX_NAME_LENGTH + 1];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ghost3", sTankName);
+		}
 	}
-	vReset2(iTank);
 	return Plugin_Continue;
 }

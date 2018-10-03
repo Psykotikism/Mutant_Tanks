@@ -224,7 +224,7 @@ stock void vEnforceHit(int survivor, int tank, int chance, int enabled, int mess
 		float flEnforceDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceDuration[ST_TankType(tank)] : g_flEnforceDuration2[ST_TankType(tank)];
 		DataPack dpStopEnforce = new DataPack();
 		CreateDataTimer(flEnforceDuration, tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopEnforce.WriteCell(GetClientUserId(survivor)), dpStopEnforce.WriteCell(GetClientUserId(tank)), dpStopEnforce.WriteCell(message), dpStopEnforce.WriteCell(enabled);
+		dpStopEnforce.WriteCell(GetClientUserId(survivor)), dpStopEnforce.WriteCell(GetClientUserId(tank)), dpStopEnforce.WriteCell(message);
 		char sEnforceEffect[4];
 		sEnforceEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sEnforceEffect[ST_TankType(tank)] : g_sEnforceEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sEnforceEffect, mode);
@@ -263,12 +263,7 @@ stock void vReset()
 
 stock void vReset2(int survivor, int tank, int message)
 {
-	g_bEnforce[survivor] = false;
-	g_iEnforceSlot[survivor] = -1;
-	if (iEnforceMessage(tank) == message || iEnforceMessage(tank) == 3)
-	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Enforce2", survivor);
-	}
+	
 }
 
 stock int iEnforceAbility(int tank)
@@ -309,15 +304,15 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell()), iEnforceChat = pack.ReadCell();
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank, iEnforceChat);
+		g_bEnforce[iSurvivor] = false;
+		g_iEnforceSlot[iSurvivor] = -1;
 		return Plugin_Stop;
 	}
-	int iEnforceEnabled = pack.ReadCell();
-	if (iEnforceEnabled == 0)
+	g_bEnforce[iSurvivor] = false;
+	g_iEnforceSlot[iSurvivor] = -1;
+	if (iEnforceMessage(iTank) == iEnforceChat || iEnforceMessage(iTank) == 3)
 	{
-		vReset2(iSurvivor, iTank, iEnforceChat);
-		return Plugin_Stop;
+		PrintToChatAll("%s %t", ST_PREFIX2, "Enforce2", iSurvivor);
 	}
-	vReset2(iSurvivor, iTank, iEnforceChat);
 	return Plugin_Continue;
 }
