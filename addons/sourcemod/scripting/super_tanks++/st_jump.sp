@@ -139,14 +139,14 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iJumpRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iJumpChance[ST_TankType(client)] : g_iJumpChance2[ST_TankType(client)];
-		float flJumpRange = !g_bTankConfig[ST_TankType(client)] ? g_flJumpRange[ST_TankType(client)] : g_flJumpRange2[ST_TankType(client)],
+		int iJumpRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iJumpChance[ST_TankType(tank)] : g_iJumpChance2[ST_TankType(tank)];
+		float flJumpRange = !g_bTankConfig[ST_TankType(tank)] ? g_flJumpRange[ST_TankType(tank)] : g_flJumpRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -156,21 +156,21 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flJumpRange)
 				{
-					vJumpHit(iSurvivor, client, iJumpRangeChance, iJumpAbility(client), 2, "3");
+					vJumpHit(iSurvivor, tank, iJumpRangeChance, iJumpAbility(tank), 2, "3");
 				}
 			}
 		}
-		if ((iJumpAbility(client) == 2 || iJumpAbility(client) == 3) && !g_bJump[client])
+		if ((iJumpAbility(tank) == 2 || iJumpAbility(tank) == 3) && !g_bJump[tank])
 		{
-			g_bJump[client] = true;
-			float flJumpInterval = !g_bTankConfig[ST_TankType(client)] ? g_flJumpInterval[ST_TankType(client)] : g_flJumpInterval2[ST_TankType(client)];
-			CreateTimer(flJumpInterval, tTimerJump, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-			switch (iJumpMessage(client))
+			g_bJump[tank] = true;
+			float flJumpInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flJumpInterval[ST_TankType(tank)] : g_flJumpInterval2[ST_TankType(tank)];
+			CreateTimer(flJumpInterval, tTimerJump, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			switch (iJumpMessage(tank))
 			{
 				case 3, 5, 6, 7:
 				{
 					char sTankName[MAX_NAME_LENGTH + 1];
-					ST_TankName(client, sTankName);
+					ST_TankName(tank, sTankName);
 					PrintToChatAll("%s %t", ST_PREFIX2, "Jump3", sTankName);
 				}
 			}
@@ -178,31 +178,31 @@ public void ST_Ability(int client)
 	}
 }
 
-stock void vJump(int client, int owner)
+stock void vJump(int survivor, int tank)
 {
-	float flJumpHeight = !g_bTankConfig[ST_TankType(owner)] ? g_flJumpHeight[ST_TankType(owner)] : g_flJumpHeight2[ST_TankType(owner)],
+	float flJumpHeight = !g_bTankConfig[ST_TankType(tank)] ? g_flJumpHeight[ST_TankType(tank)] : g_flJumpHeight2[ST_TankType(tank)],
 		flVelocity[3];
-	GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
+	GetEntPropVector(survivor, Prop_Data, "m_vecVelocity", flVelocity);
 	flVelocity[2] += flJumpHeight;
-	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
 }
 
-stock void vJumpHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vJumpHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bJump2[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bJump2[survivor])
 	{
-		g_bJump2[client] = true;
+		g_bJump2[survivor] = true;
 		DataPack dpJump = new DataPack();
 		CreateDataTimer(0.25, tTimerJump2, dpJump, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpJump.WriteCell(GetClientUserId(client)), dpJump.WriteCell(GetClientUserId(owner)), dpJump.WriteCell(message), dpJump.WriteCell(enabled), dpJump.WriteFloat(GetEngineTime());
+		dpJump.WriteCell(GetClientUserId(survivor)), dpJump.WriteCell(GetClientUserId(tank)), dpJump.WriteCell(message), dpJump.WriteCell(enabled), dpJump.WriteFloat(GetEngineTime());
 		char sJumpEffect[4];
-		sJumpEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sJumpEffect[ST_TankType(owner)] : g_sJumpEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sJumpEffect, mode);
-		if (iJumpMessage(owner) == message || iJumpMessage(owner) == 4 || iJumpMessage(owner) == 5 || iJumpMessage(owner) == 6 || iJumpMessage(owner) == 7)
+		sJumpEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sJumpEffect[ST_TankType(tank)] : g_sJumpEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sJumpEffect, mode);
+		if (iJumpMessage(tank) == message || iJumpMessage(tank) == 4 || iJumpMessage(tank) == 5 || iJumpMessage(tank) == 6 || iJumpMessage(tank) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Jump", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Jump", sTankName, survivor);
 		}
 	}
 }
@@ -219,38 +219,38 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bJump2[client] = false;
-	if (iJumpMessage(owner) == message || iJumpMessage(owner) == 4 || iJumpMessage(owner) == 5 || iJumpMessage(owner) == 6 || iJumpMessage(owner) == 7)
+	g_bJump2[survivor] = false;
+	if (iJumpMessage(tank) == message || iJumpMessage(tank) == 4 || iJumpMessage(tank) == 5 || iJumpMessage(tank) == 6 || iJumpMessage(tank) == 7)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Jump2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Jump2", survivor);
 	}
 }
 
-stock int iJumpAbility(int client)
+stock int iJumpAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iJumpAbility[ST_TankType(client)] : g_iJumpAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iJumpAbility[ST_TankType(tank)] : g_iJumpAbility2[ST_TankType(tank)];
 }
 
-stock int iJumpChance(int client)
+stock int iJumpChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iJumpChance[ST_TankType(client)] : g_iJumpChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iJumpChance[ST_TankType(tank)] : g_iJumpChance2[ST_TankType(tank)];
 }
 
-stock int iJumpHit(int client)
+stock int iJumpHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iJumpHit[ST_TankType(client)] : g_iJumpHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iJumpHit[ST_TankType(tank)] : g_iJumpHit2[ST_TankType(tank)];
 }
 
-stock int iJumpHitMode(int client)
+stock int iJumpHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iJumpHitMode[ST_TankType(client)] : g_iJumpHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iJumpHitMode[ST_TankType(tank)] : g_iJumpHitMode2[ST_TankType(tank)];
 }
 
-stock int iJumpMessage(int client)
+stock int iJumpMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iJumpMessage[ST_TankType(client)] : g_iJumpMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iJumpMessage[ST_TankType(tank)] : g_iJumpMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerJump(Handle timer, any userid)

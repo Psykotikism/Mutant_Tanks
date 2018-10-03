@@ -169,14 +169,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iBlindRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iBlindChance[ST_TankType(client)] : g_iBlindChance2[ST_TankType(client)];
-		float flBlindRange = !g_bTankConfig[ST_TankType(client)] ? g_flBlindRange[ST_TankType(client)] : g_flBlindRange2[ST_TankType(client)],
+		int iBlindRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iBlindChance[ST_TankType(tank)] : g_iBlindChance2[ST_TankType(tank)];
+		float flBlindRange = !g_bTankConfig[ST_TankType(tank)] ? g_flBlindRange[ST_TankType(tank)] : g_flBlindRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -186,25 +186,25 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBlindRange)
 				{
-					vBlindHit(iSurvivor, client, iBlindRangeChance, iBlindAbility(client), 2, "3");
+					vBlindHit(iSurvivor, tank, iBlindRangeChance, iBlindAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iBlindAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iBlindAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveBlind(client);
+		vRemoveBlind(tank);
 	}
 }
 
-stock void vBlind(int client, int owner, int intensity)
+stock void vBlind(int survivor, int tank, int intensity)
 {
 	int iTargets[2], iFlags, iColor[4] = {0, 0, 0, 0};
-	iTargets[0] = client;
+	iTargets[0] = survivor;
 	intensity == 0 ? (iFlags = (0x0001|0x0010)) : (iFlags = (0x0002|0x0008));
 	iColor[3] = intensity;
 	Handle hBlindTarget = StartMessageEx(g_umFadeUserMsgId, iTargets, 1);
@@ -223,31 +223,31 @@ stock void vBlind(int client, int owner, int intensity)
 	EndMessage();
 }
 
-stock void vBlindHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vBlindHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bBlind[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bBlind[survivor])
 	{
-		g_bBlind[client] = true;
+		g_bBlind[survivor] = true;
 		DataPack dpBlind = new DataPack();
 		CreateDataTimer(1.0, tTimerBlind, dpBlind, TIMER_FLAG_NO_MAPCHANGE);
-		dpBlind.WriteCell(GetClientUserId(client)), dpBlind.WriteCell(GetClientUserId(owner)), dpBlind.WriteCell(enabled);
-		float flBlindDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flBlindDuration[ST_TankType(owner)] : g_flBlindDuration2[ST_TankType(owner)];
+		dpBlind.WriteCell(GetClientUserId(survivor)), dpBlind.WriteCell(GetClientUserId(tank)), dpBlind.WriteCell(enabled);
+		float flBlindDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flBlindDuration[ST_TankType(tank)] : g_flBlindDuration2[ST_TankType(tank)];
 		DataPack dpStopBlindness = new DataPack();
 		CreateDataTimer(flBlindDuration + 1.0, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopBlindness.WriteCell(GetClientUserId(client)), dpStopBlindness.WriteCell(GetClientUserId(owner)), dpStopBlindness.WriteCell(message), dpStopBlindness.WriteCell(enabled);
+		dpStopBlindness.WriteCell(GetClientUserId(survivor)), dpStopBlindness.WriteCell(GetClientUserId(tank)), dpStopBlindness.WriteCell(message), dpStopBlindness.WriteCell(enabled);
 		char sBlindEffect[4];
-		sBlindEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sBlindEffect[ST_TankType(owner)] : g_sBlindEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sBlindEffect, mode);
-		if (iBlindMessage(owner) == message || iBlindMessage(owner) == 3)
+		sBlindEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sBlindEffect[ST_TankType(tank)] : g_sBlindEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sBlindEffect, mode);
+		if (iBlindMessage(tank) == message || iBlindMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Blind", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Blind", sTankName, survivor);
 		}
 	}
 }
 
-stock void vRemoveBlind(int client)
+stock void vRemoveBlind(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -255,7 +255,7 @@ stock void vRemoveBlind(int client)
 		{
 			DataPack dpStopBlindness = new DataPack();
 			CreateDataTimer(0.1, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopBlindness.WriteCell(GetClientUserId(iSurvivor)), dpStopBlindness.WriteCell(GetClientUserId(client)), dpStopBlindness.WriteCell(0), dpStopBlindness.WriteCell(1);
+			dpStopBlindness.WriteCell(GetClientUserId(iSurvivor)), dpStopBlindness.WriteCell(GetClientUserId(tank)), dpStopBlindness.WriteCell(0), dpStopBlindness.WriteCell(1);
 		}
 	}
 }
@@ -271,39 +271,39 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bBlind[client] = false;
-	vBlind(client, owner, 0);
-	if (iBlindMessage(owner) == message || iBlindMessage(owner) == 3)
+	g_bBlind[survivor] = false;
+	vBlind(survivor, tank, 0);
+	if (iBlindMessage(tank) == message || iBlindMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Blind2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Blind2", survivor);
 	}
 }
 
-stock int iBlindAbility(int client)
+stock int iBlindAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindAbility[ST_TankType(client)] : g_iBlindAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iBlindAbility[ST_TankType(tank)] : g_iBlindAbility2[ST_TankType(tank)];
 }
 
-stock int iBlindChance(int client)
+stock int iBlindChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindChance[ST_TankType(client)] : g_iBlindChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iBlindChance[ST_TankType(tank)] : g_iBlindChance2[ST_TankType(tank)];
 }
 
-stock int iBlindHit(int client)
+stock int iBlindHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindHit[ST_TankType(client)] : g_iBlindHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iBlindHit[ST_TankType(tank)] : g_iBlindHit2[ST_TankType(tank)];
 }
 
-stock int iBlindHitMode(int client)
+stock int iBlindHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindHitMode[ST_TankType(client)] : g_iBlindHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iBlindHitMode[ST_TankType(tank)] : g_iBlindHitMode2[ST_TankType(tank)];
 }
 
-stock int iBlindMessage(int client)
+stock int iBlindMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iBlindMessage[ST_TankType(client)] : g_iBlindMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iBlindMessage[ST_TankType(tank)] : g_iBlindMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerBlind(Handle timer, DataPack pack)

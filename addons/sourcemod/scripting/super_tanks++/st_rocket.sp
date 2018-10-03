@@ -155,15 +155,15 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iRocketAbility = !g_bTankConfig[ST_TankType(client)] ? g_iRocketAbility[ST_TankType(client)] : g_iRocketAbility2[ST_TankType(client)],
-			iRocketRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iRocketChance[ST_TankType(client)] : g_iRocketChance2[ST_TankType(client)];
-		float flRocketRange = !g_bTankConfig[ST_TankType(client)] ? g_flRocketRange[ST_TankType(client)] : g_flRocketRange2[ST_TankType(client)],
+		int iRocketAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iRocketAbility[ST_TankType(tank)] : g_iRocketAbility2[ST_TankType(tank)],
+			iRocketRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iRocketChance[ST_TankType(tank)] : g_iRocketChance2[ST_TankType(tank)];
+		float flRocketRange = !g_bTankConfig[ST_TankType(tank)] ? g_flRocketRange[ST_TankType(tank)] : g_flRocketRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -173,7 +173,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRocketRange)
 				{
-					vRocketHit(iSurvivor, client, iRocketRangeChance, iRocketAbility, 2, "3");
+					vRocketHit(iSurvivor, tank, iRocketRangeChance, iRocketAbility, 2, "3");
 				}
 			}
 		}
@@ -191,19 +191,19 @@ stock void vReset()
 	}
 }
 
-stock void vRocketHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vRocketHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bRocket[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bRocket[survivor])
 	{
 		int iFlame = CreateEntityByName("env_steam");
 		if (!bIsValidEntity(iFlame))
 		{
 			return;
 		}
-		g_bRocket[client] = true;
-		float flRocketDelay = !g_bTankConfig[ST_TankType(owner)] ? g_flRocketDelay[ST_TankType(owner)] : g_flRocketDelay2[ST_TankType(owner)],
+		g_bRocket[survivor] = true;
+		float flRocketDelay = !g_bTankConfig[ST_TankType(tank)] ? g_flRocketDelay[ST_TankType(tank)] : g_flRocketDelay2[ST_TankType(tank)],
 			flPosition[3], flAngles[3];
-		GetEntPropVector(client, Prop_Send, "m_vecOrigin", flPosition);
+		GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flPosition);
 		flPosition[2] += 30.0;
 		flAngles[0] = 90.0, flAngles[1] = 0.0, flAngles[2] = 0.0;
 		DispatchKeyValue(iFlame, "spawnflags", "1");
@@ -218,36 +218,36 @@ stock void vRocketHit(int client, int owner, int chance, int enabled, int messag
 		SetEntityRenderColor(iFlame, 180, 70, 10, 180);
 		TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
 		DispatchSpawn(iFlame);
-		vSetEntityParent(iFlame, client);
+		vSetEntityParent(iFlame, survivor);
 		iFlame = EntIndexToEntRef(iFlame);
 		vDeleteEntity(iFlame, 3.0);
-		g_iRocket[client] = iFlame;
-		EmitSoundToAll(SOUND_FIRE, client, _, _, _, 1.0);
+		g_iRocket[survivor] = iFlame;
+		EmitSoundToAll(SOUND_FIRE, survivor, _, _, _, 1.0);
 		DataPack dpRocketLaunch = new DataPack();
 		CreateDataTimer(flRocketDelay, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
-		dpRocketLaunch.WriteCell(GetClientUserId(client)), dpRocketLaunch.WriteCell(GetClientUserId(owner)), dpRocketLaunch.WriteCell(enabled);
+		dpRocketLaunch.WriteCell(GetClientUserId(survivor)), dpRocketLaunch.WriteCell(GetClientUserId(tank)), dpRocketLaunch.WriteCell(enabled);
 		DataPack dpRocketDetonate = new DataPack();
 		CreateDataTimer(flRocketDelay + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
-		dpRocketDetonate.WriteCell(GetClientUserId(client)), dpRocketDetonate.WriteCell(GetClientUserId(owner)), dpRocketDetonate.WriteCell(message), dpRocketDetonate.WriteCell(enabled);
+		dpRocketDetonate.WriteCell(GetClientUserId(survivor)), dpRocketDetonate.WriteCell(GetClientUserId(tank)), dpRocketDetonate.WriteCell(message), dpRocketDetonate.WriteCell(enabled);
 		char sRocketEffect[4];
-		sRocketEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sRocketEffect[ST_TankType(owner)] : g_sRocketEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sRocketEffect, mode);
+		sRocketEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sRocketEffect[ST_TankType(tank)] : g_sRocketEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sRocketEffect, mode);
 	}
 }
 
-stock int iRocketChance(int client)
+stock int iRocketChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRocketChance[ST_TankType(client)] : g_iRocketChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRocketChance[ST_TankType(tank)] : g_iRocketChance2[ST_TankType(tank)];
 }
 
-stock int iRocketHit(int client)
+stock int iRocketHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRocketHit[ST_TankType(client)] : g_iRocketHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRocketHit[ST_TankType(tank)] : g_iRocketHit2[ST_TankType(tank)];
 }
 
-stock int iRocketHitMode(int client)
+stock int iRocketHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iRocketHitMode[ST_TankType(client)] : g_iRocketHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iRocketHitMode[ST_TankType(tank)] : g_iRocketHitMode2[ST_TankType(tank)];
 }
 
 public Action tTimerRocketLaunch(Handle timer, DataPack pack)

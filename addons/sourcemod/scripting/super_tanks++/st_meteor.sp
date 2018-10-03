@@ -106,43 +106,43 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	int iMeteorChance = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorChance[ST_TankType(client)] : g_iMeteorChance2[ST_TankType(client)];
-	if (iMeteorAbility(client) == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bMeteor[client])
+	int iMeteorChance = !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorChance[ST_TankType(tank)] : g_iMeteorChance2[ST_TankType(tank)];
+	if (iMeteorAbility(tank) == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bMeteor[tank])
 	{
-		g_bMeteor[client] = true;
+		g_bMeteor[tank] = true;
 		float flPos[3];
-		int iMeteorMessage = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorMessage[ST_TankType(client)] : g_iMeteorMessage2[ST_TankType(client)];
-		GetClientEyePosition(client, flPos);
+		int iMeteorMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorMessage[ST_TankType(tank)] : g_iMeteorMessage2[ST_TankType(tank)];
+		GetClientEyePosition(tank, flPos);
 		DataPack dpMeteorUpdate = new DataPack();
 		CreateDataTimer(0.6, tTimerMeteorUpdate, dpMeteorUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpMeteorUpdate.WriteCell(GetClientUserId(client)), dpMeteorUpdate.WriteFloat(flPos[0]), dpMeteorUpdate.WriteFloat(flPos[1]), dpMeteorUpdate.WriteFloat(flPos[2]), dpMeteorUpdate.WriteFloat(GetEngineTime());
+		dpMeteorUpdate.WriteCell(GetClientUserId(tank)), dpMeteorUpdate.WriteFloat(flPos[0]), dpMeteorUpdate.WriteFloat(flPos[1]), dpMeteorUpdate.WriteFloat(flPos[2]), dpMeteorUpdate.WriteFloat(GetEngineTime());
 		if (iMeteorMessage == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Meteor", sTankName);
 		}
 	}
 }
 
-stock void vMeteor(int client, int entity)
+stock void vMeteor(int tank, int rock)
 {
-	if (!ST_TankAllowed(client) || !IsPlayerAlive(client) || !ST_CloneAllowed(client, g_bCloneInstalled) || !bIsValidEntity(entity))
+	if (!ST_TankAllowed(tank) || !IsPlayerAlive(tank) || !ST_CloneAllowed(tank, g_bCloneInstalled) || !bIsValidEntity(rock))
 	{
 		return;
 	}
 	char sClassname[16];
-	GetEntityClassname(entity, sClassname, sizeof(sClassname));
+	GetEntityClassname(rock, sClassname, sizeof(sClassname));
 	if (StrEqual(sClassname, "tank_rock"))
 	{
-		RemoveEntity(entity);
+		RemoveEntity(rock);
 		char sDamage[11];
-		int iMeteorDamage = !g_bTankConfig[ST_TankType(client)] ? g_iMeteorDamage[ST_TankType(client)] : g_iMeteorDamage2[ST_TankType(client)];
+		int iMeteorDamage = !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorDamage[ST_TankType(tank)] : g_iMeteorDamage2[ST_TankType(tank)];
 		IntToString(iMeteorDamage, sDamage, sizeof(sDamage));
 		float flPos[3];
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
+		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
 		int iPropane = CreateEntityByName("prop_physics");
 		if (bIsValidEntity(iPropane))
 		{
@@ -151,7 +151,7 @@ stock void vMeteor(int client, int entity)
 			TeleportEntity(iPropane, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iPropane);
 			ActivateEntity(iPropane);
-			SetEntPropEnt(iPropane, Prop_Data, "m_hPhysicsAttacker", client);
+			SetEntPropEnt(iPropane, Prop_Data, "m_hPhysicsAttacker", tank);
 			SetEntPropFloat(iPropane, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
 			SetEntProp(iPropane, Prop_Send, "m_CollisionGroup", 1);
 			SetEntityRenderMode(iPropane, RENDER_TRANSCOLOR);
@@ -161,20 +161,20 @@ stock void vMeteor(int client, int entity)
 		int iPointHurt = CreateEntityByName("point_hurt");
 		if (bIsValidEntity(iPointHurt))
 		{
-			SetEntPropEnt(iPointHurt, Prop_Send, "m_hOwnerEntity", client);
+			SetEntPropEnt(iPointHurt, Prop_Send, "m_hOwnerEntity", tank);
 			DispatchKeyValue(iPointHurt, "Damage", sDamage);
 			DispatchKeyValue(iPointHurt, "DamageType", "2");
 			DispatchKeyValue(iPointHurt, "DamageDelay", "0.0");
 			DispatchKeyValueFloat(iPointHurt, "DamageRadius", 200.0);
 			TeleportEntity(iPointHurt, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iPointHurt);
-			AcceptEntityInput(iPointHurt, "Hurt", client);
+			AcceptEntityInput(iPointHurt, "Hurt", tank);
 			RemoveEntity(iPointHurt);
 		}
 		int iPointPush = CreateEntityByName("point_push");
 		if (bIsValidEntity(iPointPush))
 		{
-			SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", client);
+			SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", tank);
 			DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
 			DispatchKeyValueFloat(iPointPush, "radius", 200.0 * 1.0);
 			DispatchKeyValue(iPointPush, "spawnflags", "8");
@@ -198,9 +198,9 @@ stock void vReset()
 	}
 }
 
-stock int iMeteorAbility(int client)
+stock int iMeteorAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iMeteorAbility[ST_TankType(client)] : g_iMeteorAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorAbility[ST_TankType(tank)] : g_iMeteorAbility2[ST_TankType(tank)];
 }
 
 public Action tTimerMeteorUpdate(Handle timer, DataPack pack)

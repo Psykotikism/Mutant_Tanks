@@ -159,14 +159,14 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iElectricRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iElectricChance[ST_TankType(client)] : g_iElectricChance2[ST_TankType(client)];
-		float flElectricRange = !g_bTankConfig[ST_TankType(client)] ? g_flElectricRange[ST_TankType(client)] : g_flElectricRange2[ST_TankType(client)],
+		int iElectricRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iElectricChance[ST_TankType(tank)] : g_iElectricChance2[ST_TankType(tank)];
+		float flElectricRange = !g_bTankConfig[ST_TankType(tank)] ? g_flElectricRange[ST_TankType(tank)] : g_flElectricRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -176,33 +176,33 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flElectricRange)
 				{
-					vElectricHit(iSurvivor, client, iElectricRangeChance, iElectricAbility(client), 2, "3");
+					vElectricHit(iSurvivor, tank, iElectricRangeChance, iElectricAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vElectricHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vElectricHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bElectric[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bElectric[survivor])
 	{
-		g_bElectric[client] = true;
-		float flElectricSpeed = !g_bTankConfig[ST_TankType(owner)] ? g_flElectricSpeed[ST_TankType(owner)] : g_flElectricSpeed2[ST_TankType(owner)],
-			flElectricInterval = !g_bTankConfig[ST_TankType(owner)] ? g_flElectricInterval[ST_TankType(owner)] : g_flElectricInterval2[ST_TankType(owner)];
-		SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", flElectricSpeed);
+		g_bElectric[survivor] = true;
+		float flElectricSpeed = !g_bTankConfig[ST_TankType(tank)] ? g_flElectricSpeed[ST_TankType(tank)] : g_flElectricSpeed2[ST_TankType(tank)],
+			flElectricInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flElectricInterval[ST_TankType(tank)] : g_flElectricInterval2[ST_TankType(tank)];
+		SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", flElectricSpeed);
 		DataPack dpElectric = new DataPack();
 		CreateDataTimer(flElectricInterval, tTimerElectric, dpElectric, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpElectric.WriteCell(GetClientUserId(client)), dpElectric.WriteCell(GetClientUserId(owner)), dpElectric.WriteCell(message), dpElectric.WriteCell(enabled), dpElectric.WriteFloat(GetEngineTime());
-		vAttachParticle(client, PARTICLE_ELECTRICITY, 2.0, 30.0);
+		dpElectric.WriteCell(GetClientUserId(survivor)), dpElectric.WriteCell(GetClientUserId(tank)), dpElectric.WriteCell(message), dpElectric.WriteCell(enabled), dpElectric.WriteFloat(GetEngineTime());
+		vAttachParticle(survivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
 		char sElectricEffect[4];
-		sElectricEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sElectricEffect[ST_TankType(owner)] : g_sElectricEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sElectricEffect, mode);
-		if (iElectricMessage(owner) == message || iElectricMessage(owner) == 3)
+		sElectricEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sElectricEffect[ST_TankType(tank)] : g_sElectricEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sElectricEffect, mode);
+		if (iElectricMessage(tank) == message || iElectricMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Electric", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Electric", sTankName, survivor);
 		}
 	}
 }
@@ -218,39 +218,39 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bElectric[client] = false;
-	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", 1.0);
-	if (iElectricMessage(owner) == message || iElectricMessage(owner) == 3)
+	g_bElectric[survivor] = false;
+	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	if (iElectricMessage(tank) == message || iElectricMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Electric2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Electric2", survivor);
 	}
 }
 
-stock int iElectricAbility(int client)
+stock int iElectricAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iElectricAbility[ST_TankType(client)] : g_iElectricAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iElectricAbility[ST_TankType(tank)] : g_iElectricAbility2[ST_TankType(tank)];
 }
 
-stock int iElectricChance(int client)
+stock int iElectricChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iElectricChance[ST_TankType(client)] : g_iElectricChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iElectricChance[ST_TankType(tank)] : g_iElectricChance2[ST_TankType(tank)];
 }
 
-stock int iElectricHit(int client)
+stock int iElectricHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iElectricHit[ST_TankType(client)] : g_iElectricHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iElectricHit[ST_TankType(tank)] : g_iElectricHit2[ST_TankType(tank)];
 }
 
-stock int iElectricHitMode(int client)
+stock int iElectricHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iElectricHitMode[ST_TankType(client)] : g_iElectricHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iElectricHitMode[ST_TankType(tank)] : g_iElectricHitMode2[ST_TankType(tank)];
 }
 
-stock int iElectricMessage(int client)
+stock int iElectricMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iElectricMessage[ST_TankType(client)] : g_iElectricMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iElectricMessage[ST_TankType(tank)] : g_iElectricMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerElectric(Handle timer, DataPack pack)

@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 8.43 (October 2, 2018)
+
+Bug fixes:
+
+1. Fixed some abilities not displaying messages.
+
+Changes:
+
+1. Renamed function parameters for better understanding.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.42 (October 2, 2018)
 
 Bug fixes:

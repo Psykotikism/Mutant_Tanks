@@ -182,14 +182,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iQuietRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iQuietChance[ST_TankType(client)] : g_iQuietChance2[ST_TankType(client)];
-		float flQuietRange = !g_bTankConfig[ST_TankType(client)] ? g_flQuietRange[ST_TankType(client)] : g_flQuietRange2[ST_TankType(client)],
+		int iQuietRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iQuietChance[ST_TankType(tank)] : g_iQuietChance2[ST_TankType(tank)];
+		float flQuietRange = !g_bTankConfig[ST_TankType(tank)] ? g_flQuietRange[ST_TankType(tank)] : g_flQuietRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -199,38 +199,38 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flQuietRange)
 				{
-					vQuietHit(iSurvivor, client, iQuietRangeChance, iQuietAbility(client), 2, "3");
+					vQuietHit(iSurvivor, tank, iQuietRangeChance, iQuietAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iQuietAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iQuietAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveQuiet();
 	}
 }
 
-stock void vQuietHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vQuietHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bQuiet[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bQuiet[survivor])
 	{
-		g_bQuiet[client] = true;
-		float flQuietDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flQuietDuration[ST_TankType(owner)] : g_flQuietDuration2[ST_TankType(owner)];
+		g_bQuiet[survivor] = true;
+		float flQuietDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flQuietDuration[ST_TankType(tank)] : g_flQuietDuration2[ST_TankType(tank)];
 		DataPack dpStopQuiet = new DataPack();
 		CreateDataTimer(flQuietDuration, tTimerStopQuiet, dpStopQuiet, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopQuiet.WriteCell(GetClientUserId(client)), dpStopQuiet.WriteCell(GetClientUserId(owner)), dpStopQuiet.WriteCell(message), dpStopQuiet.WriteCell(enabled);
+		dpStopQuiet.WriteCell(GetClientUserId(survivor)), dpStopQuiet.WriteCell(GetClientUserId(tank)), dpStopQuiet.WriteCell(message), dpStopQuiet.WriteCell(enabled);
 		char sQuietEffect[4];
-		sQuietEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sQuietEffect[ST_TankType(owner)] : g_sQuietEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sQuietEffect, mode);
-		if (iQuietMessage(owner) == message || iQuietMessage(owner) == 3)
+		sQuietEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sQuietEffect[ST_TankType(tank)] : g_sQuietEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sQuietEffect, mode);
+		if (iQuietMessage(tank) == message || iQuietMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Quiet", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Quiet", sTankName, survivor);
 		}
 	}
 }
@@ -257,40 +257,40 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bQuiet[client] = false;
-	if (iQuietMessage(owner) == message || iQuietMessage(owner) == 3)
+	g_bQuiet[survivor] = false;
+	if (iQuietMessage(tank) == message || iQuietMessage(tank) == 3)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(owner, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Quiet2", sTankName, client);
+		ST_TankName(tank, sTankName);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Quiet2", sTankName, survivor);
 	}
 }
 
-stock int iQuietAbility(int client)
+stock int iQuietAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iQuietAbility[ST_TankType(client)] : g_iQuietAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iQuietAbility[ST_TankType(tank)] : g_iQuietAbility2[ST_TankType(tank)];
 }
 
-stock int iQuietChance(int client)
+stock int iQuietChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iQuietChance[ST_TankType(client)] : g_iQuietChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iQuietChance[ST_TankType(tank)] : g_iQuietChance2[ST_TankType(tank)];
 }
 
-stock int iQuietHit(int client)
+stock int iQuietHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iQuietHit[ST_TankType(client)] : g_iQuietHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iQuietHit[ST_TankType(tank)] : g_iQuietHit2[ST_TankType(tank)];
 }
 
-stock int iQuietHitMode(int client)
+stock int iQuietHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iQuietHitMode[ST_TankType(client)] : g_iQuietHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iQuietHitMode[ST_TankType(tank)] : g_iQuietHitMode2[ST_TankType(tank)];
 }
 
-stock int iQuietMessage(int client)
+stock int iQuietMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iQuietMessage[ST_TankType(client)] : g_iQuietMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iQuietMessage[ST_TankType(tank)] : g_iQuietMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerStopQuiet(Handle timer, DataPack pack)

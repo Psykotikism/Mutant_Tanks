@@ -120,9 +120,9 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-stock void vNecro(int client, float pos[3], const char[] type)
+stock void vNecro(int tank, float pos[3], const char[] type)
 {
-	int iNecroMessage = !g_bTankConfig[ST_TankType(client)] ? g_iNecroMessage[ST_TankType(client)] : g_iNecroMessage2[ST_TankType(client)];
+	int iNecroMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iNecroMessage[ST_TankType(tank)] : g_iNecroMessage2[ST_TankType(tank)];
 	bool bExists[MAXPLAYERS + 1];
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{
@@ -132,7 +132,7 @@ stock void vNecro(int client, float pos[3], const char[] type)
 			bExists[iNecro] = true;
 		}
 	}
-	vCheatCommand(client, bIsValidGame() ? "z_spawn_old" : "z_spawn", type);
+	vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", type);
 	int iInfected;
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{
@@ -148,7 +148,7 @@ stock void vNecro(int client, float pos[3], const char[] type)
 		if (iNecroMessage == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Necro", sTankName);
 		}
 	}

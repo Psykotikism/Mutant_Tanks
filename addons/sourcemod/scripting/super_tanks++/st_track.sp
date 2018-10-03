@@ -56,9 +56,9 @@ public void OnPluginStart()
 	LoadTranslations("super_tanks++.phrases");
 }
 
-public void Think(int entity)
+public void Think(int rock)
 {
-	bIsValidEntity(entity) ? vTrack(entity) : SDKUnhook(entity, SDKHook_Think, Think);
+	bIsValidEntity(rock) ? vTrack(rock) : SDKUnhook(rock, SDKHook_Think, Think);
 }
 
 public void ST_Configs(const char[] savepath, bool main)
@@ -91,27 +91,27 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_RockThrow(int client, int entity)
+public void ST_RockThrow(int tank, int rock)
 {
-	int iTrackChance = !g_bTankConfig[ST_TankType(client)] ? g_iTrackChance[ST_TankType(client)] : g_iTrackChance2[ST_TankType(client)];
-	if (iTrackAbility(client) == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	int iTrackChance = !g_bTankConfig[ST_TankType(tank)] ? g_iTrackChance[ST_TankType(tank)] : g_iTrackChance2[ST_TankType(tank)];
+	if (iTrackAbility(tank) == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iTrackMessage = !g_bTankConfig[ST_TankType(client)] ? g_iTrackMessage[ST_TankType(client)] : g_iTrackMessage2[ST_TankType(client)];
+		int iTrackMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iTrackMessage[ST_TankType(tank)] : g_iTrackMessage2[ST_TankType(tank)];
 		DataPack dpTrack = new DataPack();
 		CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
-		dpTrack.WriteCell(EntIndexToEntRef(entity)), dpTrack.WriteCell(GetClientUserId(client));
+		dpTrack.WriteCell(EntIndexToEntRef(rock)), dpTrack.WriteCell(GetClientUserId(tank));
 		if (iTrackMessage == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Track", sTankName);
 		}
 	}
 }
 
-stock void vTrack(int entity)
+stock void vTrack(int rock)
 {
-	int iTank = GetEntPropEnt(entity, Prop_Data, "m_hThrower"),
+	int iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower"),
 		iTrackMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackMode[ST_TankType(iTank)] : g_iTrackMode2[ST_TankType(iTank)];
 	float flTrackSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flTrackSpeed[ST_TankType(iTank)] : g_flTrackSpeed2[ST_TankType(iTank)];
 	switch (iTrackMode)
@@ -119,8 +119,8 @@ stock void vTrack(int entity)
 		case 0:
 		{
 			float flPos[3], flVelocity[3];
-			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
-			GetEntPropVector(entity, Prop_Data, "m_vecVelocity", flVelocity);
+			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
+			GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
 			float flVector = GetVectorLength(flVelocity);
 			if (flVector < 100.0)
 			{
@@ -133,13 +133,13 @@ stock void vTrack(int entity)
 				float flPos2[3], flVelocity2[3];
 				GetClientEyePosition(iTarget, flPos2);
 				GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
-				bool bVisible = bVisiblePosition(flPos, flPos2, entity, 2);
+				bool bVisible = bVisiblePosition(flPos, flPos2, rock, 2);
 				float flDistance = GetVectorDistance(flPos, flPos2);
 				if (!bVisible || flDistance > 500.0)
 				{
 					return;
 				}
-				SetEntityGravity(entity, 0.01);
+				SetEntityGravity(rock, 0.01);
 				float flDirection[3], flVelocity3[3];
 				SubtractVectors(flPos2, flPos, flDirection);
 				NormalizeVector(flDirection, flDirection);
@@ -147,14 +147,14 @@ stock void vTrack(int entity)
 				AddVectors(flVelocity, flDirection, flVelocity3);
 				NormalizeVector(flVelocity3, flVelocity3);
 				ScaleVector(flVelocity3, flVector);
-				TeleportEntity(entity, NULL_VECTOR, NULL_VECTOR, flVelocity3);
+				TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 			}
 		}
 		case 1:
 		{
 			float flPos[3], flVelocity[3];
-			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
-			GetEntPropVector(entity, Prop_Data, "m_vecVelocity", flVelocity);
+			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
+			GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
 			if (GetVectorLength(flVelocity) < 50.0)
 			{
 				return;
@@ -169,7 +169,7 @@ stock void vTrack(int entity)
 				float flPos2[3];
 				GetClientEyePosition(iTarget, flPos2);
 				flDistance = GetVectorDistance(flPos, flPos2);
-				bVisible = bVisiblePosition(flPos, flPos2, entity, 1);
+				bVisible = bVisiblePosition(flPos, flPos2, rock, 1);
 				GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
 				AddVectors(flPos2, flVelocity2, flPos2);
 				MakeVectorFromPoints(flPos, flPos2, flVector);
@@ -181,19 +181,19 @@ stock void vTrack(int entity)
 			if (bVisible)
 			{
 				flBase = 80.0;
-				float flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, entity, 3),
-					flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, entity, 3),
-					flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, entity, 3),
-					flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, entity, 3),
-					flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, entity, 3),
-					flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, entity, 3),
-					flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, entity, 3),
-					flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, entity, 3),
-					flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, entity, 3),
-					flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, entity, 3),
-					flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, entity, 3),
-					flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, entity, 3),
-					flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, entity, 3);
+				float flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, rock, 3),
+					flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, rock, 3),
+					flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, rock, 3),
+					flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, rock, 3),
+					flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, rock, 3),
+					flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, rock, 3),
+					flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, rock, 3),
+					flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, rock, 3),
+					flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, rock, 3),
+					flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, rock, 3),
+					flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, rock, 3),
+					flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, rock, 3),
+					flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, rock, 3);
 				NormalizeVector(flFront, flFront);
 				NormalizeVector(flUp, flUp);
 				NormalizeVector(flDown, flDown);
@@ -312,8 +312,8 @@ stock void vTrack(int entity)
 			AddVectors(flVelocity, flFront, flVelocity3);
 			NormalizeVector(flVelocity3, flVelocity3);
 			ScaleVector(flVelocity3, flTrackSpeed);
-			SetEntityGravity(entity, 0.01);
-			TeleportEntity(entity, NULL_VECTOR, NULL_VECTOR, flVelocity3);
+			SetEntityGravity(rock, 0.01);
+			TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 			char sSet[2][16], sTankColors[28], sGlow[3][4];
 			sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
 			TrimString(sTankColors);
@@ -331,17 +331,17 @@ stock void vTrack(int entity)
 			int iGlowOutline = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowOutline[ST_TankType(iTank)] : g_iGlowOutline2[ST_TankType(iTank)];
 			if (iGlowOutline == 1 && bIsValidGame())
 			{
-				SetEntProp(entity, Prop_Send, "m_iGlowType", 3);
-				SetEntProp(entity, Prop_Send, "m_nGlowRange", 0);
-				SetEntProp(entity, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));
+				SetEntProp(rock, Prop_Send, "m_iGlowType", 3);
+				SetEntProp(rock, Prop_Send, "m_nGlowRange", 0);
+				SetEntProp(rock, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));
 			}
 		}
 	}
 }
 
-int iTrackAbility(int client)
+int iTrackAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iTrackAbility[ST_TankType(client)] : g_iTrackAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iTrackAbility[ST_TankType(tank)] : g_iTrackAbility2[ST_TankType(tank)];
 }
 
 public Action tTimerTrack(Handle timer, DataPack pack)

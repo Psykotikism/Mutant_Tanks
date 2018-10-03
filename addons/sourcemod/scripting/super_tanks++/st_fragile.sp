@@ -156,18 +156,18 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	int iFragileChance = !g_bTankConfig[ST_TankType(client)] ? g_iFragileChance[ST_TankType(client)] : g_iFragileChance2[ST_TankType(client)];
-	if (iFragileAbility(client) == 1 && GetRandomInt(1, iFragileChance) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bFragile[client])
+	int iFragileChance = !g_bTankConfig[ST_TankType(tank)] ? g_iFragileChance[ST_TankType(tank)] : g_iFragileChance2[ST_TankType(tank)];
+	if (iFragileAbility(tank) == 1 && GetRandomInt(1, iFragileChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bFragile[tank])
 	{
-		g_bFragile[client] = true;
-		float flFragileDuration = !g_bTankConfig[ST_TankType(client)] ? g_flFragileDuration[ST_TankType(client)] : g_flFragileDuration2[ST_TankType(client)];
-		CreateTimer(flFragileDuration, tTimerStopFragile, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-		if (iFragileMessage(client) == 1)
+		g_bFragile[tank] = true;
+		float flFragileDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flFragileDuration[ST_TankType(tank)] : g_flFragileDuration2[ST_TankType(tank)];
+		CreateTimer(flFragileDuration, tTimerStopFragile, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		if (iFragileMessage(tank) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Fragile", sTankName);
 		}
 	}
@@ -184,25 +184,25 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client)
+stock void vReset2(int tank)
 {
-	g_bFragile[client] = false;
-	if (iFragileMessage(client) == 1)
+	g_bFragile[tank] = false;
+	if (iFragileMessage(tank) == 1)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(client, sTankName);
+		ST_TankName(tank, sTankName);
 		PrintToChatAll("%s %t", ST_PREFIX2, "Fragile2", sTankName);
 	}
 }
 
-stock int iFragileAbility(int client)
+stock int iFragileAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFragileAbility[ST_TankType(client)] : g_iFragileAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFragileAbility[ST_TankType(tank)] : g_iFragileAbility2[ST_TankType(tank)];
 }
 
-stock int iFragileMessage(int client)
+stock int iFragileMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iFragileMessage[ST_TankType(client)] : g_iFragileMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iFragileMessage[ST_TankType(tank)] : g_iFragileMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerStopFragile(Handle timer, any userid)

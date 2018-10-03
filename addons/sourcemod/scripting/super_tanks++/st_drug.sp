@@ -148,15 +148,15 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iDrugAbility = !g_bTankConfig[ST_TankType(client)] ? g_iDrugAbility[ST_TankType(client)] : g_iDrugAbility2[ST_TankType(client)],
-			iDrugRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iDrugChance[ST_TankType(client)] : g_iDrugChance2[ST_TankType(client)];
-		float flDrugRange = !g_bTankConfig[ST_TankType(client)] ? g_flDrugRange[ST_TankType(client)] : g_flDrugRange2[ST_TankType(client)],
+		int iDrugAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iDrugAbility[ST_TankType(tank)] : g_iDrugAbility2[ST_TankType(tank)],
+			iDrugRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iDrugChance[ST_TankType(tank)] : g_iDrugChance2[ST_TankType(tank)];
+		float flDrugRange = !g_bTankConfig[ST_TankType(tank)] ? g_flDrugRange[ST_TankType(tank)] : g_flDrugRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -166,21 +166,21 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flDrugRange)
 				{
-					vDrugHit(iSurvivor, client, iDrugRangeChance, iDrugAbility, 2, "3");
+					vDrugHit(iSurvivor, tank, iDrugRangeChance, iDrugAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vDrug(int client, bool toggle, float angles[20])
+stock void vDrug(int survivor, bool toggle, float angles[20])
 {
 	float flAngles[3];
-	GetClientEyeAngles(client, flAngles);
+	GetClientEyeAngles(survivor, flAngles);
 	flAngles[2] = toggle ? angles[GetRandomInt(0, 100) % 20] : 0.0;
-	TeleportEntity(client, NULL_VECTOR, flAngles, NULL_VECTOR);
+	TeleportEntity(survivor, NULL_VECTOR, flAngles, NULL_VECTOR);
 	int iClients[2], iColor[4] = {0, 0, 0, 128}, iColor2[4] = {0, 0, 0, 0}, iFlags = toggle ? 0x0002 : (0x0001|0x0010);
-	iClients[0] = client;
+	iClients[0] = survivor;
 	if (toggle)
 	{
 		iColor[0] = GetRandomInt(0, 255), iColor[1] = GetRandomInt(0, 255), iColor[2] = GetRandomInt(0, 255);
@@ -201,22 +201,22 @@ stock void vDrug(int client, bool toggle, float angles[20])
 	EndMessage();
 }
 
-stock void vDrugHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vDrugHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bDrug[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bDrug[survivor])
 	{
-		g_bDrug[client] = true;
+		g_bDrug[survivor] = true;
 		DataPack dpDrug = new DataPack();
 		CreateDataTimer(1.0, tTimerDrug, dpDrug, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpDrug.WriteCell(GetClientUserId(client)), dpDrug.WriteCell(GetClientUserId(owner)), dpDrug.WriteCell(message), dpDrug.WriteCell(enabled), dpDrug.WriteFloat(GetEngineTime());
+		dpDrug.WriteCell(GetClientUserId(survivor)), dpDrug.WriteCell(GetClientUserId(tank)), dpDrug.WriteCell(message), dpDrug.WriteCell(enabled), dpDrug.WriteFloat(GetEngineTime());
 		char sDrugEffect[4];
-		sDrugEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sDrugEffect[ST_TankType(owner)] : g_sDrugEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sDrugEffect, mode);
-		if (iDrugMessage(owner) == message || iDrugMessage(owner) == 3)
+		sDrugEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sDrugEffect[ST_TankType(tank)] : g_sDrugEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sDrugEffect, mode);
+		if (iDrugMessage(tank) == message || iDrugMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Drug", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Drug", sTankName, survivor);
 		}
 	}
 }
@@ -232,34 +232,34 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bDrug[client] = false;
-	vDrug(client, false, g_flDrugAngles);
-	if (iDrugMessage(owner) == message || iDrugMessage(owner) == 3)
+	g_bDrug[survivor] = false;
+	vDrug(survivor, false, g_flDrugAngles);
+	if (iDrugMessage(tank) == message || iDrugMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Drug2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Drug2", survivor);
 	}
 }
 
-stock int iDrugChance(int client)
+stock int iDrugChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iDrugChance[ST_TankType(client)] : g_iDrugChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iDrugChance[ST_TankType(tank)] : g_iDrugChance2[ST_TankType(tank)];
 }
 
-stock int iDrugHit(int client)
+stock int iDrugHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iDrugHit[ST_TankType(client)] : g_iDrugHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iDrugHit[ST_TankType(tank)] : g_iDrugHit2[ST_TankType(tank)];
 }
 
-stock int iDrugHitMode(int client)
+stock int iDrugHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iDrugHitMode[ST_TankType(client)] : g_iDrugHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iDrugHitMode[ST_TankType(tank)] : g_iDrugHitMode2[ST_TankType(tank)];
 }
 
-stock int iDrugMessage(int client)
+stock int iDrugMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iDrugMessage[ST_TankType(client)] : g_iDrugMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iDrugMessage[ST_TankType(tank)] : g_iDrugMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerDrug(Handle timer, DataPack pack)

@@ -116,17 +116,17 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (iSplashAbility(client) == 1 && GetRandomInt(1, iSplashChance(client)) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bSplash[client])
+	if (iSplashAbility(tank) == 1 && GetRandomInt(1, iSplashChance(tank)) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bSplash[tank])
 	{
-		g_bSplash[client] = true;
-		float flSplashInterval = !g_bTankConfig[ST_TankType(client)] ? g_flSplashInterval[ST_TankType(client)] : g_flSplashInterval2[ST_TankType(client)];
-		CreateTimer(flSplashInterval, tTimerSplash, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		if (iSplashMessage(client) == 1)
+		g_bSplash[tank] = true;
+		float flSplashInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flSplashInterval[ST_TankType(tank)] : g_flSplashInterval2[ST_TankType(tank)];
+		CreateTimer(flSplashInterval, tTimerSplash, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		if (iSplashMessage(tank) == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Splash", sTankName);
 		}
 	}
@@ -143,19 +143,19 @@ stock void vReset()
 	}
 }
 
-stock int iSplashAbility(int client)
+stock int iSplashAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iSplashAbility[ST_TankType(client)] : g_iSplashAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iSplashAbility[ST_TankType(tank)] : g_iSplashAbility2[ST_TankType(tank)];
 }
 
-stock int iSplashChance(int client)
+stock int iSplashChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iSplashChance[ST_TankType(client)] : g_iSplashChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iSplashChance[ST_TankType(tank)] : g_iSplashChance2[ST_TankType(tank)];
 }
 
-stock int iSplashMessage(int client)
+stock int iSplashMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iSplashMessage[ST_TankType(client)] : g_iSplashMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iSplashMessage[ST_TankType(tank)] : g_iSplashMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerSplash(Handle timer, any userid)

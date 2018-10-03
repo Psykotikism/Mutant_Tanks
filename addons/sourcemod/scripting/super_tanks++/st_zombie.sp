@@ -160,14 +160,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client) && !g_bZombie[client])
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bZombie[tank])
 	{
-		int iZombieRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iZombieChance[ST_TankType(client)] : g_iZombieChance2[ST_TankType(client)];
-		float flZombieRange = !g_bTankConfig[ST_TankType(client)] ? g_flZombieRange[ST_TankType(client)] : g_flZombieRange2[ST_TankType(client)],
+		int iZombieRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iZombieChance[ST_TankType(tank)] : g_iZombieChance2[ST_TankType(tank)];
+		float flZombieRange = !g_bTankConfig[ST_TankType(tank)] ? g_flZombieRange[ST_TankType(tank)] : g_flZombieRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -177,15 +177,15 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flZombieRange)
 				{
-					vZombieHit(iSurvivor, client, iZombieRangeChance, iZombieAbility(client), 2, "3");
+					vZombieHit(iSurvivor, tank, iZombieRangeChance, iZombieAbility(tank), 2, "3");
 				}
 			}
 		}
-		if ((iZombieAbility(client) == 2 || iZombieAbility(client) == 3) && !g_bZombie[client])
+		if ((iZombieAbility(tank) == 2 || iZombieAbility(tank) == 3) && !g_bZombie[tank])
 		{
-			g_bZombie[client] = true;
-			float flZombieInterval = !g_bTankConfig[ST_TankType(client)] ? g_flZombieInterval[ST_TankType(client)] : g_flZombieInterval2[ST_TankType(client)];
-			CreateTimer(flZombieInterval, tTimerZombie, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			g_bZombie[tank] = true;
+			float flZombieInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flZombieInterval[ST_TankType(tank)] : g_flZombieInterval2[ST_TankType(tank)];
+			CreateTimer(flZombieInterval, tTimerZombie, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
 }
@@ -201,55 +201,55 @@ stock void vReset()
 	}
 }
 
-stock void vZombie(int client)
+stock void vZombie(int tank)
 {
-	int iZombieAmount = !g_bTankConfig[ST_TankType(client)] ? g_iZombieAmount[ST_TankType(client)] : g_iZombieAmount2[ST_TankType(client)];
+	int iZombieAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iZombieAmount[ST_TankType(tank)] : g_iZombieAmount2[ST_TankType(tank)];
 	for (int iZombie = 1; iZombie <= iZombieAmount; iZombie++)
 	{
-		vCheatCommand(client, bIsValidGame() ? "z_spawn_old" : "z_spawn", "zombie area");
+		vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "zombie area");
 	}
 }
 
-stock void vZombieHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vZombieHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
-		vZombie(client);
+		vZombie(survivor);
 		char sZombieEffect[4];
-		sZombieEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sZombieEffect[ST_TankType(owner)] : g_sZombieEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sZombieEffect, mode);
-		if (iZombieMessage(owner) == message || iZombieMessage(owner) == 4 || iZombieMessage(owner) == 5 || iZombieMessage(owner) == 6 || iZombieMessage(owner) == 7)
+		sZombieEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sZombieEffect[ST_TankType(tank)] : g_sZombieEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sZombieEffect, mode);
+		if (iZombieMessage(tank) == message || iZombieMessage(tank) == 4 || iZombieMessage(tank) == 5 || iZombieMessage(tank) == 6 || iZombieMessage(tank) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Zombie", sTankName);
 		}
 	}
 }
 
-stock int iZombieAbility(int client)
+stock int iZombieAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iZombieAbility[ST_TankType(client)] : g_iZombieAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iZombieAbility[ST_TankType(tank)] : g_iZombieAbility2[ST_TankType(tank)];
 }
 
-stock int iZombieChance(int client)
+stock int iZombieChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iZombieChance[ST_TankType(client)] : g_iZombieChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iZombieChance[ST_TankType(tank)] : g_iZombieChance2[ST_TankType(tank)];
 }
 
-stock int iZombieHit(int client)
+stock int iZombieHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iZombieHit[ST_TankType(client)] : g_iZombieHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iZombieHit[ST_TankType(tank)] : g_iZombieHit2[ST_TankType(tank)];
 }
 
-stock int iZombieHitMode(int client)
+stock int iZombieHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iZombieHitMode[ST_TankType(client)] : g_iZombieHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iZombieHitMode[ST_TankType(tank)] : g_iZombieHitMode2[ST_TankType(tank)];
 }
 
-stock int iZombieMessage(int client)
+stock int iZombieMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iZombieMessage[ST_TankType(client)] : g_iZombieMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iZombieMessage[ST_TankType(tank)] : g_iZombieMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerZombie(Handle timer, any userid)

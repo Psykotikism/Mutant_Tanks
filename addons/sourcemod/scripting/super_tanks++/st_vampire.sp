@@ -133,17 +133,17 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	int iVampireAbility = !g_bTankConfig[ST_TankType(client)] ? g_iVampireAbility[ST_TankType(client)] : g_iVampireAbility2[ST_TankType(client)],
-		iVampireRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iVampireChance[ST_TankType(client)] : g_iVampireChance2[ST_TankType(client)];
-	if (iVampireAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	int iVampireAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iVampireAbility[ST_TankType(tank)] : g_iVampireAbility2[ST_TankType(tank)],
+		iVampireRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iVampireChance[ST_TankType(tank)] : g_iVampireChance2[ST_TankType(tank)];
+	if (iVampireAbility == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
 		float flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
-		float flVampireRange = !g_bTankConfig[ST_TankType(client)] ? g_flVampireRange[ST_TankType(client)] : g_flVampireRange2[ST_TankType(client)];
-		int iHealth = GetClientHealth(client),
-			iVampireHealth = !g_bTankConfig[ST_TankType(client)] ? (iHealth + g_iVampireHealth[ST_TankType(client)]) : (iHealth + g_iVampireHealth2[ST_TankType(client)]),
+		GetClientAbsOrigin(tank, flTankPos);
+		float flVampireRange = !g_bTankConfig[ST_TankType(tank)] ? g_flVampireRange[ST_TankType(tank)] : g_flVampireRange2[ST_TankType(tank)];
+		int iHealth = GetClientHealth(tank),
+			iVampireHealth = !g_bTankConfig[ST_TankType(tank)] ? (iHealth + g_iVampireHealth[ST_TankType(tank)]) : (iHealth + g_iVampireHealth2[ST_TankType(tank)]),
 			iExtraHealth = (iVampireHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iVampireHealth,
 			iExtraHealth2 = (iVampireHealth < iHealth) ? 1 : iVampireHealth,
 			iRealHealth = (iVampireHealth >= 0) ? iExtraHealth : iExtraHealth2;
@@ -156,54 +156,54 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flVampireRange)
 				{
-					vVampireHit(iSurvivor, client, iVampireRangeChance, iVampireAbility, 2, "3", iRealHealth, 1);
+					vVampireHit(iSurvivor, tank, iVampireRangeChance, iVampireAbility, 2, "3", iRealHealth, 1);
 				}
 			}
 		}
 	}
 }
 
-stock void vVampireHit(int client, int owner, int chance, int enabled, int message, const char[] mode, int health, int hit)
+stock void vVampireHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode, int health, int hit)
 {
-	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
 		switch (hit)
 		{
-			case 1: SetEntityHealth(owner, health);
-			case 2: SetEntityHealth(client, health - 5);
+			case 1: SetEntityHealth(tank, health);
+			case 2: SetEntityHealth(survivor, health - 5);
 		}
 		char sVampireEffect[4];
-		sVampireEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sVampireEffect[ST_TankType(owner)] : g_sVampireEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sVampireEffect, mode);
+		sVampireEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sVampireEffect[ST_TankType(tank)] : g_sVampireEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sVampireEffect, mode);
 		char sTankName[MAX_NAME_LENGTH + 1];
-		ST_TankName(owner, sTankName);
-		if ((message == 1 && iVampireMessage(owner) == message) || iVampireMessage(owner) == 3)
+		ST_TankName(tank, sTankName);
+		if ((message == 1 && iVampireMessage(tank) == message) || iVampireMessage(tank) == 3)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Vampire", sTankName, client);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Vampire", sTankName, survivor);
 		}
-		else if ((message == 2 && iVampireMessage(owner) == message) || iVampireMessage(owner) == 3)
+		else if ((message == 2 && iVampireMessage(tank) == message) || iVampireMessage(tank) == 3)
 		{
 			PrintToChatAll("%s %t", ST_PREFIX2, "Vampire2", sTankName);
 		}
 	}
 }
 
-stock int iVampireChance(int client)
+stock int iVampireChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVampireChance[ST_TankType(client)] : g_iVampireChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iVampireChance[ST_TankType(tank)] : g_iVampireChance2[ST_TankType(tank)];
 }
 
-stock int iVampireHit(int client)
+stock int iVampireHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVampireHit[ST_TankType(client)] : g_iVampireHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iVampireHit[ST_TankType(tank)] : g_iVampireHit2[ST_TankType(tank)];
 }
 
-stock int iVampireHitMode(int client)
+stock int iVampireHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVampireHitMode[ST_TankType(client)] : g_iVampireHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iVampireHitMode[ST_TankType(tank)] : g_iVampireHitMode2[ST_TankType(tank)];
 }
 
-stock int iVampireMessage(int client)
+stock int iVampireMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iVampireMessage[ST_TankType(client)] : g_iVampireMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iVampireMessage[ST_TankType(tank)] : g_iVampireMessage2[ST_TankType(tank)];
 }

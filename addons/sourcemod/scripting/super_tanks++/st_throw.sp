@@ -91,36 +91,36 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_RockThrow(int client, int entity)
+public void ST_RockThrow(int tank, int rock)
 {
-	if (iThrowAbility(client) == 1)
+	if (iThrowAbility(tank) == 1)
 	{
 		DataPack dpCarThrow = new DataPack();
 		CreateDataTimer(0.1, tTimerCarThrow, dpCarThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpCarThrow.WriteCell(EntIndexToEntRef(entity)), dpCarThrow.WriteCell(GetClientUserId(client));
+		dpCarThrow.WriteCell(EntIndexToEntRef(rock)), dpCarThrow.WriteCell(GetClientUserId(tank));
 	}
-	else if (iThrowAbility(client) == 2)
+	else if (iThrowAbility(tank) == 2)
 	{
 		DataPack dpInfectedThrow = new DataPack();
 		CreateDataTimer(0.1, tTimerInfectedThrow, dpInfectedThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpInfectedThrow.WriteCell(EntIndexToEntRef(entity)), dpInfectedThrow.WriteCell(GetClientUserId(client));
+		dpInfectedThrow.WriteCell(EntIndexToEntRef(rock)), dpInfectedThrow.WriteCell(GetClientUserId(tank));
 	}
-	else if (iThrowAbility(client) == 3)
+	else if (iThrowAbility(tank) == 3)
 	{
 		DataPack dpSelfThrow = new DataPack();
 		CreateDataTimer(0.1, tTimerSelfThrow, dpSelfThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpSelfThrow.WriteCell(EntIndexToEntRef(entity)), dpSelfThrow.WriteCell(GetClientUserId(client));
+		dpSelfThrow.WriteCell(EntIndexToEntRef(rock)), dpSelfThrow.WriteCell(GetClientUserId(tank));
 	}
 }
 
-stock int iThrowAbility(int client)
+stock int iThrowAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iThrowAbility[ST_TankType(client)] : g_iThrowAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iThrowAbility[ST_TankType(tank)] : g_iThrowAbility2[ST_TankType(tank)];
 }
 
-stock int iThrowMessage(int client)
+stock int iThrowMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iThrowMessage[ST_TankType(client)] : g_iThrowMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iThrowMessage[ST_TankType(tank)] : g_iThrowMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerCarThrow(Handle timer, DataPack pack)

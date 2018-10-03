@@ -157,15 +157,15 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iShoveAbility = !g_bTankConfig[ST_TankType(client)] ? g_iShoveAbility[ST_TankType(client)] : g_iShoveAbility2[ST_TankType(client)],
-			iShoveRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iShoveChance[ST_TankType(client)] : g_iShoveChance2[ST_TankType(client)];
-		float flShoveRange = !g_bTankConfig[ST_TankType(client)] ? g_flShoveRange[ST_TankType(client)] : g_flShoveRange2[ST_TankType(client)],
+		int iShoveAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iShoveAbility[ST_TankType(tank)] : g_iShoveAbility2[ST_TankType(tank)],
+			iShoveRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iShoveChance[ST_TankType(tank)] : g_iShoveChance2[ST_TankType(tank)];
+		float flShoveRange = !g_bTankConfig[ST_TankType(tank)] ? g_flShoveRange[ST_TankType(tank)] : g_flShoveRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -175,7 +175,7 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flShoveRange)
 				{
-					vShoveHit(iSurvivor, client, iShoveRangeChance, iShoveAbility, 2, "3");
+					vShoveHit(iSurvivor, tank, iShoveRangeChance, iShoveAbility, 2, "3");
 				}
 			}
 		}
@@ -193,53 +193,53 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bShove[client] = false;
-	if (iShoveMessage(owner) == message || iShoveMessage(owner) == 3)
+	g_bShove[survivor] = false;
+	if (iShoveMessage(tank) == message || iShoveMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Shove2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Shove2", survivor);
 	}
 }
 
-stock void vShoveHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vShoveHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bShove[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bShove[survivor])
 	{
-		g_bShove[client] = true;
+		g_bShove[survivor] = true;
 		DataPack dpShove = new DataPack();
 		CreateDataTimer(1.0, tTimerShove, dpShove, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpShove.WriteCell(GetClientUserId(client)), dpShove.WriteCell(GetClientUserId(owner)), dpShove.WriteCell(message), dpShove.WriteCell(enabled), dpShove.WriteFloat(GetEngineTime());
+		dpShove.WriteCell(GetClientUserId(survivor)), dpShove.WriteCell(GetClientUserId(tank)), dpShove.WriteCell(message), dpShove.WriteCell(enabled), dpShove.WriteFloat(GetEngineTime());
 		char sShoveEffect[4];
-		sShoveEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sShoveEffect[ST_TankType(owner)] : g_sShoveEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sShoveEffect, mode);
-		if (iShoveMessage(owner) == message || iShoveMessage(owner) == 3)
+		sShoveEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sShoveEffect[ST_TankType(tank)] : g_sShoveEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sShoveEffect, mode);
+		if (iShoveMessage(tank) == message || iShoveMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shove", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Shove", sTankName, survivor);
 		}
 	}
 }
 
-stock int iShoveChance(int client)
+stock int iShoveChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iShoveChance[ST_TankType(client)] : g_iShoveChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShoveChance[ST_TankType(tank)] : g_iShoveChance2[ST_TankType(tank)];
 }
 
-stock int iShoveHit(int client)
+stock int iShoveHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iShoveHit[ST_TankType(client)] : g_iShoveHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShoveHit[ST_TankType(tank)] : g_iShoveHit2[ST_TankType(tank)];
 }
 
-stock int iShoveHitMode(int client)
+stock int iShoveHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iShoveHitMode[ST_TankType(client)] : g_iShoveHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShoveHitMode[ST_TankType(tank)] : g_iShoveHitMode2[ST_TankType(tank)];
 }
 
-stock int iShoveMessage(int client)
+stock int iShoveMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iShoveMessage[ST_TankType(client)] : g_iShoveMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShoveMessage[ST_TankType(tank)] : g_iShoveMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerShove(Handle timer, DataPack pack)

@@ -168,14 +168,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iIceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iIceChance[ST_TankType(client)] : g_iIceChance2[ST_TankType(client)];
-		float flIceRange = !g_bTankConfig[ST_TankType(client)] ? g_flIceRange[ST_TankType(client)] : g_flIceRange2[ST_TankType(client)],
+		int iIceRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iIceChance[ST_TankType(tank)] : g_iIceChance2[ST_TankType(tank)];
+		float flIceRange = !g_bTankConfig[ST_TankType(tank)] ? g_flIceRange[ST_TankType(tank)] : g_flIceRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -185,51 +185,51 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIceRange)
 				{
-					vIceHit(iSurvivor, client, iIceRangeChance, iIceAbility(client), 2, "3");
+					vIceHit(iSurvivor, tank, iIceRangeChance, iIceAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iIceAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iIceAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveIce(client);
+		vRemoveIce(tank);
 	}
 }
 
-stock void vIceHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vIceHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bIce[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bIce[survivor])
 	{
-		g_bIce[client] = true;
+		g_bIce[survivor] = true;
 		float flPos[3];
-		GetClientEyePosition(client, flPos);
-		if (GetEntityMoveType(client) != MOVETYPE_NONE)
+		GetClientEyePosition(survivor, flPos);
+		if (GetEntityMoveType(survivor) != MOVETYPE_NONE)
 		{
-			SetEntityMoveType(client, MOVETYPE_NONE);
+			SetEntityMoveType(survivor, MOVETYPE_NONE);
 		}
-		SetEntityRenderColor(client, 0, 130, 255, 190);
-		EmitAmbientSound(SOUND_BULLET, flPos, client, SNDLEVEL_RAIDSIREN);
-		float flIceDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flIceDuration[ST_TankType(owner)] : g_flIceDuration2[ST_TankType(owner)];
+		SetEntityRenderColor(survivor, 0, 130, 255, 190);
+		EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
+		float flIceDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flIceDuration[ST_TankType(tank)] : g_flIceDuration2[ST_TankType(tank)];
 		DataPack dpStopIce = new DataPack();
 		CreateDataTimer(flIceDuration, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(GetClientUserId(owner)), dpStopIce.WriteCell(message), dpStopIce.WriteCell(enabled);
+		dpStopIce.WriteCell(GetClientUserId(survivor)), dpStopIce.WriteCell(GetClientUserId(tank)), dpStopIce.WriteCell(message), dpStopIce.WriteCell(enabled);
 		char sIceEffect[4];
-		sIceEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sIceEffect[ST_TankType(owner)] : g_sIceEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sIceEffect, mode);
-		if (iIceMessage(owner) == message || iIceMessage(owner) == 3)
+		sIceEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sIceEffect[ST_TankType(tank)] : g_sIceEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sIceEffect, mode);
+		if (iIceMessage(tank) == message || iIceMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ice", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ice", sTankName, survivor);
 		}
 	}
 }
 
-stock void vRemoveIce(int client)
+stock void vRemoveIce(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -237,7 +237,7 @@ stock void vRemoveIce(int client)
 		{
 			DataPack dpStopIce = new DataPack();
 			CreateDataTimer(0.1, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopIce.WriteCell(GetClientUserId(iSurvivor)), dpStopIce.WriteCell(GetClientUserId(client)), dpStopIce.WriteCell(0), dpStopIce.WriteCell(1);
+			dpStopIce.WriteCell(GetClientUserId(iSurvivor)), dpStopIce.WriteCell(GetClientUserId(tank)), dpStopIce.WriteCell(0), dpStopIce.WriteCell(1);
 		}
 	}
 }
@@ -253,50 +253,50 @@ stock void vReset()
 	}
 }
 
-stock void vStopIce(int client, int owner, int message)
+stock void vStopIce(int survivor, int tank, int message)
 {
-	if (g_bIce[client])
+	if (g_bIce[survivor])
 	{
-		g_bIce[client] = false;
+		g_bIce[survivor] = false;
 		float flPos[3], flVelocity[3] = {0.0, 0.0, 0.0};
-		GetClientEyePosition(client, flPos);
-		if (GetEntityMoveType(client) == MOVETYPE_NONE)
+		GetClientEyePosition(survivor, flPos);
+		if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
 		{
-			SetEntityMoveType(client, MOVETYPE_WALK);
+			SetEntityMoveType(survivor, MOVETYPE_WALK);
 		}
-		TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
-		SetEntityRenderColor(client, 255, 255, 255, 255);
-		EmitAmbientSound(SOUND_BULLET, flPos, client, SNDLEVEL_RAIDSIREN);
-		if (iIceMessage(owner) == message || iIceMessage(owner) == 3)
+		TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+		SetEntityRenderColor(survivor, 255, 255, 255, 255);
+		EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
+		if (iIceMessage(tank) == message || iIceMessage(tank) == 3)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ice2", client);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ice2", survivor);
 		}
 	}
 }
 
-stock int iIceAbility(int client)
+stock int iIceAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iIceAbility[ST_TankType(client)] : g_iIceAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iIceAbility[ST_TankType(tank)] : g_iIceAbility2[ST_TankType(tank)];
 }
 
-stock int iIceChance(int client)
+stock int iIceChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iIceChance[ST_TankType(client)] : g_iIceChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iIceChance[ST_TankType(tank)] : g_iIceChance2[ST_TankType(tank)];
 }
 
-stock int iIceHit(int client)
+stock int iIceHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iIceHit[ST_TankType(client)] : g_iIceHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iIceHit[ST_TankType(tank)] : g_iIceHit2[ST_TankType(tank)];
 }
 
-stock int iIceHitMode(int client)
+stock int iIceHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iIceHitMode[ST_TankType(client)] : g_iIceHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iIceHitMode[ST_TankType(tank)] : g_iIceHitMode2[ST_TankType(tank)];
 }
 
-stock int iIceMessage(int client)
+stock int iIceMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iIceMessage[ST_TankType(client)] : g_iIceMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iIceMessage[ST_TankType(tank)] : g_iIceMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerStopIce(Handle timer, DataPack pack)

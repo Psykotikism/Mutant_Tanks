@@ -139,14 +139,14 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iPukeRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iPukeChance[ST_TankType(client)] : g_iPukeChance2[ST_TankType(client)];
-		float flPukeRange = !g_bTankConfig[ST_TankType(client)] ? g_flPukeRange[ST_TankType(client)] : g_flPukeRange2[ST_TankType(client)],
+		int iPukeRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iPukeChance[ST_TankType(tank)] : g_iPukeChance2[ST_TankType(tank)];
+		float flPukeRange = !g_bTankConfig[ST_TankType(tank)] ? g_flPukeRange[ST_TankType(tank)] : g_flPukeRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -156,47 +156,47 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPukeRange)
 				{
-					vPukeHit(iSurvivor, client, iPukeRangeChance, iPukeAbility(client), 2, "3");
+					vPukeHit(iSurvivor, tank, iPukeRangeChance, iPukeAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vPukeHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vPukeHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client))
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
-		int iPukeMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iPukeMessage[ST_TankType(owner)] : g_iPukeMessage2[ST_TankType(owner)];
-		SDKCall(g_hSDKPukePlayer, client, owner, true);
+		int iPukeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iPukeMessage[ST_TankType(tank)] : g_iPukeMessage2[ST_TankType(tank)];
+		SDKCall(g_hSDKPukePlayer, survivor, tank, true);
 		char sPukeEffect[4];
-		sPukeEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sPukeEffect[ST_TankType(owner)] : g_sPukeEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sPukeEffect, mode);
+		sPukeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sPukeEffect[ST_TankType(tank)] : g_sPukeEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sPukeEffect, mode);
 		if (iPukeMessage == message, iPukeMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, survivor);
 		}
 	}
 }
 
-stock int iPukeAbility(int client)
+stock int iPukeAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPukeAbility[ST_TankType(client)] : g_iPukeAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPukeAbility[ST_TankType(tank)] : g_iPukeAbility2[ST_TankType(tank)];
 }
 
-stock int iPukeChance(int client)
+stock int iPukeChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPukeChance[ST_TankType(client)] : g_iPukeChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPukeChance[ST_TankType(tank)] : g_iPukeChance2[ST_TankType(tank)];
 }
 
-stock int iPukeHit(int client)
+stock int iPukeHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPukeHit[ST_TankType(client)] : g_iPukeHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPukeHit[ST_TankType(tank)] : g_iPukeHit2[ST_TankType(tank)];
 }
 
-stock int iPukeHitMode(int client)
+stock int iPukeHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iPukeHitMode[ST_TankType(client)] : g_iPukeHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPukeHitMode[ST_TankType(tank)] : g_iPukeHitMode2[ST_TankType(tank)];
 }

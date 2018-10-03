@@ -174,14 +174,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iEnforceRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iEnforceChance[ST_TankType(client)] : g_iEnforceChance2[ST_TankType(client)];
-		float flEnforceRange = !g_bTankConfig[ST_TankType(client)] ? g_flEnforceRange[ST_TankType(client)] : g_flEnforceRange2[ST_TankType(client)],
+		int iEnforceRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceChance[ST_TankType(tank)] : g_iEnforceChance2[ST_TankType(tank)];
+		float flEnforceRange = !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceRange[ST_TankType(tank)] : g_flEnforceRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -191,48 +191,48 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flEnforceRange)
 				{
-					vEnforceHit(iSurvivor, client, iEnforceRangeChance, iEnforceAbility(client), 2, "3");
+					vEnforceHit(iSurvivor, tank, iEnforceRangeChance, iEnforceAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if (iEnforceAbility(client) == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if (iEnforceAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveEnforce();
 	}
 }
 
-stock void vEnforceHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vEnforceHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bEnforce[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bEnforce[survivor])
 	{
-		g_bEnforce[client] = true;
-		char sNumbers = !g_bTankConfig[ST_TankType(owner)] ? g_sEnforceSlot[ST_TankType(owner)][GetRandomInt(0, strlen(g_sEnforceSlot[ST_TankType(owner)]) - 1)] : g_sEnforceSlot2[ST_TankType(owner)][GetRandomInt(0, strlen(g_sEnforceSlot2[ST_TankType(owner)]) - 1)],
+		g_bEnforce[survivor] = true;
+		char sNumbers = !g_bTankConfig[ST_TankType(tank)] ? g_sEnforceSlot[ST_TankType(tank)][GetRandomInt(0, strlen(g_sEnforceSlot[ST_TankType(tank)]) - 1)] : g_sEnforceSlot2[ST_TankType(tank)][GetRandomInt(0, strlen(g_sEnforceSlot2[ST_TankType(tank)]) - 1)],
 			sSlotNumber[32];
 		switch (sNumbers)
 		{
-			case '1': sSlotNumber = "1st", g_iEnforceSlot[client] = 0;
-			case '2': sSlotNumber = "2nd", g_iEnforceSlot[client] = 1;
-			case '3': sSlotNumber = "3rd", g_iEnforceSlot[client] = 2;
-			case '4': sSlotNumber = "4th", g_iEnforceSlot[client] = 3;
-			case '5': sSlotNumber = "5th", g_iEnforceSlot[client] = 4;
+			case '1': sSlotNumber = "1st", g_iEnforceSlot[survivor] = 0;
+			case '2': sSlotNumber = "2nd", g_iEnforceSlot[survivor] = 1;
+			case '3': sSlotNumber = "3rd", g_iEnforceSlot[survivor] = 2;
+			case '4': sSlotNumber = "4th", g_iEnforceSlot[survivor] = 3;
+			case '5': sSlotNumber = "5th", g_iEnforceSlot[survivor] = 4;
 		}
-		float flEnforceDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flEnforceDuration[ST_TankType(owner)] : g_flEnforceDuration2[ST_TankType(owner)];
+		float flEnforceDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceDuration[ST_TankType(tank)] : g_flEnforceDuration2[ST_TankType(tank)];
 		DataPack dpStopEnforce = new DataPack();
 		CreateDataTimer(flEnforceDuration, tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopEnforce.WriteCell(GetClientUserId(client)), dpStopEnforce.WriteCell(GetClientUserId(owner)), dpStopEnforce.WriteCell(message), dpStopEnforce.WriteCell(enabled);
+		dpStopEnforce.WriteCell(GetClientUserId(survivor)), dpStopEnforce.WriteCell(GetClientUserId(tank)), dpStopEnforce.WriteCell(message), dpStopEnforce.WriteCell(enabled);
 		char sEnforceEffect[4];
-		sEnforceEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sEnforceEffect[ST_TankType(owner)] : g_sEnforceEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sEnforceEffect, mode);
-		if (iEnforceMessage(owner) == message || iEnforceMessage(owner) == 3)
+		sEnforceEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sEnforceEffect[ST_TankType(tank)] : g_sEnforceEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sEnforceEffect, mode);
+		if (iEnforceMessage(tank) == message || iEnforceMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Enforce", sTankName, client, sSlotNumber);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Enforce", sTankName, survivor, sSlotNumber);
 		}
 	}
 }
@@ -261,39 +261,39 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bEnforce[client] = false;
-	g_iEnforceSlot[client] = -1;
-	if (iEnforceMessage(owner) == message || iEnforceMessage(owner) == 3)
+	g_bEnforce[survivor] = false;
+	g_iEnforceSlot[survivor] = -1;
+	if (iEnforceMessage(tank) == message || iEnforceMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Enforce2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Enforce2", survivor);
 	}
 }
 
-stock int iEnforceAbility(int client)
+stock int iEnforceAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iEnforceAbility[ST_TankType(client)] : g_iEnforceAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceAbility[ST_TankType(tank)] : g_iEnforceAbility2[ST_TankType(tank)];
 }
 
-stock int iEnforceChance(int client)
+stock int iEnforceChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iEnforceChance[ST_TankType(client)] : g_iEnforceChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceChance[ST_TankType(tank)] : g_iEnforceChance2[ST_TankType(tank)];
 }
 
-stock int iEnforceHit(int client)
+stock int iEnforceHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iEnforceHit[ST_TankType(client)] : g_iEnforceHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceHit[ST_TankType(tank)] : g_iEnforceHit2[ST_TankType(tank)];
 }
 
-stock int iEnforceHitMode(int client)
+stock int iEnforceHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iEnforceHitMode[ST_TankType(client)] : g_iEnforceHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceHitMode[ST_TankType(tank)] : g_iEnforceHitMode2[ST_TankType(tank)];
 }
 
-stock int iEnforceMessage(int client)
+stock int iEnforceMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iEnforceMessage[ST_TankType(client)] : g_iEnforceMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceMessage[ST_TankType(tank)] : g_iEnforceMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerStopEnforce(Handle timer, DataPack pack)

@@ -170,14 +170,14 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iGravityRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
-		float flGravityRange = !g_bTankConfig[ST_TankType(client)] ? g_flGravityRange[ST_TankType(client)] : g_flGravityRange2[ST_TankType(client)],
+		int iGravityRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iGravityChance[ST_TankType(tank)] : g_iGravityChance2[ST_TankType(tank)];
+		float flGravityRange = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityRange[ST_TankType(tank)] : g_flGravityRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -187,39 +187,39 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flGravityRange)
 				{
-					vGravityHit(iSurvivor, client, iGravityRangeChance, iGravityAbility(client), 2, "3");
+					vGravityHit(iSurvivor, tank, iGravityRangeChance, iGravityAbility(tank), 2, "3");
 				}
 			}
 		}
-		if ((iGravityAbility(client) == 2 || iGravityAbility(client) == 3) && !g_bGravity[client])
+		if ((iGravityAbility(tank) == 2 || iGravityAbility(tank) == 3) && !g_bGravity[tank])
 		{
-			g_bGravity[client] = true;
+			g_bGravity[tank] = true;
 			int iBlackhole = CreateEntityByName("point_push");
 			if (bIsValidEntity(iBlackhole))
 			{
-				float flGravityForce = !g_bTankConfig[ST_TankType(client)] ? g_flGravityForce[ST_TankType(client)] : g_flGravityForce2[ST_TankType(client)],
+				float flGravityForce = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityForce[ST_TankType(tank)] : g_flGravityForce2[ST_TankType(tank)],
 					flOrigin[3], flAngles[3];
-				GetEntPropVector(client, Prop_Send, "m_vecOrigin", flOrigin);
-				GetEntPropVector(client, Prop_Send, "m_angRotation", flAngles);
+				GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
+				GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 				flAngles[0] += -90.0;
 				DispatchKeyValueVector(iBlackhole, "origin", flOrigin);
 				DispatchKeyValueVector(iBlackhole, "angles", flAngles);
 				DispatchKeyValue(iBlackhole, "radius", "750");
 				DispatchKeyValueFloat(iBlackhole, "magnitude", flGravityForce);
 				DispatchKeyValue(iBlackhole, "spawnflags", "8");
-				vSetEntityParent(iBlackhole, client);
+				vSetEntityParent(iBlackhole, tank);
 				AcceptEntityInput(iBlackhole, "Enable");
-				SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", client);
+				SetEntPropEnt(iBlackhole, Prop_Send, "m_hOwnerEntity", tank);
 				if (bIsValidGame())
 				{
-					SetEntProp(iBlackhole, Prop_Send, "m_glowColorOverride", client);
+					SetEntProp(iBlackhole, Prop_Send, "m_glowColorOverride", tank);
 				}
-				switch (iGravityMessage(client))
+				switch (iGravityMessage(tank))
 				{
 					case 3, 5, 6, 7:
 					{
 						char sTankName[MAX_NAME_LENGTH + 1];
-						ST_TankName(client, sTankName);
+						ST_TankName(tank, sTankName);
 						PrintToChatAll("%s %t", ST_PREFIX2, "Gravity3", sTankName);
 					}
 				}
@@ -228,38 +228,38 @@ public void ST_Ability(int client)
 	}
 }
 
-public void ST_BossStage(int client)
+public void ST_BossStage(int tank)
 {
-	if ((iGravityAbility(client) == 2 || iGravityAbility(client) == 3) && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled))
+	if ((iGravityAbility(tank) == 2 || iGravityAbility(tank) == 3) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveGravity(client);
+		vRemoveGravity(tank);
 	}
 }
 
-stock void vGravityHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vGravityHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bGravity2[client])
+	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bGravity2[survivor])
 	{
-		g_bGravity2[client] = true;
-		float flGravityValue = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityValue[ST_TankType(owner)] : g_flGravityValue2[ST_TankType(owner)],
-			flGravityDuration = !g_bTankConfig[ST_TankType(owner)] ? g_flGravityDuration[ST_TankType(owner)] : g_flGravityDuration2[ST_TankType(owner)];
-		SetEntityGravity(client, flGravityValue);
+		g_bGravity2[survivor] = true;
+		float flGravityValue = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityValue[ST_TankType(tank)] : g_flGravityValue2[ST_TankType(tank)],
+			flGravityDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityDuration[ST_TankType(tank)] : g_flGravityDuration2[ST_TankType(tank)];
+		SetEntityGravity(survivor, flGravityValue);
 		DataPack dpStopGravity = new DataPack();
 		CreateDataTimer(flGravityDuration, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopGravity.WriteCell(GetClientUserId(client)), dpStopGravity.WriteCell(GetClientUserId(owner)), dpStopGravity.WriteCell(message), dpStopGravity.WriteCell(enabled);
+		dpStopGravity.WriteCell(GetClientUserId(survivor)), dpStopGravity.WriteCell(GetClientUserId(tank)), dpStopGravity.WriteCell(message), dpStopGravity.WriteCell(enabled);
 		char sGravityEffect[4];
-		sGravityEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sGravityEffect[ST_TankType(owner)] : g_sGravityEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sGravityEffect, mode);
-		if (iGravityMessage(owner) == message || iGravityMessage(owner) == 4 || iGravityMessage(owner) == 5 || iGravityMessage(owner) == 6 || iGravityMessage(owner) == 7)
+		sGravityEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sGravityEffect[ST_TankType(tank)] : g_sGravityEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sGravityEffect, mode);
+		if (iGravityMessage(tank) == message || iGravityMessage(tank) == 4 || iGravityMessage(tank) == 5 || iGravityMessage(tank) == 6 || iGravityMessage(tank) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Gravity", sTankName, client, flGravityValue);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Gravity", sTankName, survivor, flGravityValue);
 		}
 	}
 }
 
-stock void vRemoveGravity(int client)
+stock void vRemoveGravity(int tank)
 {
 	int iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "point_push")) != INVALID_ENT_REFERENCE)
@@ -267,13 +267,13 @@ stock void vRemoveGravity(int client)
 		if (bIsValidGame())
 		{
 			int iOwner = GetEntProp(iProp, Prop_Send, "m_glowColorOverride");
-			if (iOwner == client)
+			if (iOwner == tank)
 			{
 				RemoveEntity(iProp);
 			}
 		}
 		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-		if (iOwner == client)
+		if (iOwner == tank)
 		{
 			RemoveEntity(iProp);
 		}
@@ -284,7 +284,7 @@ stock void vRemoveGravity(int client)
 		{
 			DataPack dpStopGravity = new DataPack();
 			CreateDataTimer(0.1, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopGravity.WriteCell(GetClientUserId(iSurvivor)), dpStopGravity.WriteCell(GetClientUserId(client)), dpStopGravity.WriteCell(1);
+			dpStopGravity.WriteCell(GetClientUserId(iSurvivor)), dpStopGravity.WriteCell(GetClientUserId(tank)), dpStopGravity.WriteCell(1);
 		}
 	}
 }
@@ -301,39 +301,39 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bGravity2[client] = false;
-	SetEntityGravity(client, 1.0);
-	if (iGravityMessage(owner) == message || iGravityMessage(owner) == 4 || iGravityMessage(owner) == 5 || iGravityMessage(owner) == 6 || iGravityMessage(owner) == 7)
+	g_bGravity2[survivor] = false;
+	SetEntityGravity(survivor, 1.0);
+	if (iGravityMessage(tank) == message || iGravityMessage(tank) == 4 || iGravityMessage(tank) == 5 || iGravityMessage(tank) == 6 || iGravityMessage(tank) == 7)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Gravity2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Gravity2", survivor);
 	}
 }
 
-stock int iGravityAbility(int client)
+stock int iGravityAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGravityAbility[ST_TankType(client)] : g_iGravityAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGravityAbility[ST_TankType(tank)] : g_iGravityAbility2[ST_TankType(tank)];
 }
 
-stock int iGravityChance(int client)
+stock int iGravityChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGravityChance[ST_TankType(client)] : g_iGravityChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGravityChance[ST_TankType(tank)] : g_iGravityChance2[ST_TankType(tank)];
 }
 
-stock int iGravityHit(int client)
+stock int iGravityHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGravityHit[ST_TankType(client)] : g_iGravityHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGravityHit[ST_TankType(tank)] : g_iGravityHit2[ST_TankType(tank)];
 }
 
-stock int iGravityMessage(int client)
+stock int iGravityMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGravityMessage[ST_TankType(client)] : g_iGravityMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGravityMessage[ST_TankType(tank)] : g_iGravityMessage2[ST_TankType(tank)];
 }
 
-stock int iGravityHitMode(int client)
+stock int iGravityHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iGravityHitMode[ST_TankType(client)] : g_iGravityHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iGravityHitMode[ST_TankType(tank)] : g_iGravityHitMode2[ST_TankType(tank)];
 }
 
 public Action tTimerStopGravity(Handle timer, DataPack pack)

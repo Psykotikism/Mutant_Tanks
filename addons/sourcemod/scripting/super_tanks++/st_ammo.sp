@@ -130,15 +130,15 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iAmmoAbility = !g_bTankConfig[ST_TankType(client)] ? g_iAmmoAbility[ST_TankType(client)] : g_iAmmoAbility2[ST_TankType(client)],
-			iAmmoRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iAmmoChance[ST_TankType(client)] : g_iAmmoChance2[ST_TankType(client)];
-		float flAmmoRange = !g_bTankConfig[ST_TankType(client)] ? g_flAmmoRange[ST_TankType(client)] : g_flAmmoRange2[ST_TankType(client)],
+		int iAmmoAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoAbility[ST_TankType(tank)] : g_iAmmoAbility2[ST_TankType(tank)],
+			iAmmoRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoChance[ST_TankType(tank)] : g_iAmmoChance2[ST_TankType(tank)];
+		float flAmmoRange = !g_bTankConfig[ST_TankType(tank)] ? g_flAmmoRange[ST_TankType(tank)] : g_flAmmoRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -148,85 +148,85 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flAmmoRange)
 				{
-					vAmmoHit(iSurvivor, client, iAmmoRangeChance, iAmmoAbility, 2, "3");
+					vAmmoHit(iSurvivor, tank, iAmmoRangeChance, iAmmoAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vAmmoHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vAmmoHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && GetPlayerWeaponSlot(client, 0) > 0)
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && GetPlayerWeaponSlot(survivor, 0) > 0)
 	{
 		char sWeapon[32];
-		int iActiveWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon"),
-			iAmmoCount = !g_bTankConfig[ST_TankType(owner)] ? g_iAmmoCount[ST_TankType(owner)] : g_iAmmoCount2[ST_TankType(owner)],
-			iAmmoMessage = !g_bTankConfig[ST_TankType(owner)] ? g_iAmmoMessage[ST_TankType(owner)] : g_iAmmoMessage2[ST_TankType(owner)];
+		int iActiveWeapon = GetEntPropEnt(survivor, Prop_Data, "m_hActiveWeapon"),
+			iAmmoCount = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoCount[ST_TankType(tank)] : g_iAmmoCount2[ST_TankType(tank)],
+			iAmmoMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoMessage[ST_TankType(tank)] : g_iAmmoMessage2[ST_TankType(tank)];
 		GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
 		if (bIsValidEntity(iActiveWeapon))
 		{
 			if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_sg552"))
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 3);
+				SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 3);
 			}
 			else if (StrEqual(sWeapon, "weapon_smg") || StrEqual(sWeapon, "weapon_smg_silenced") || StrEqual(sWeapon, "weapon_smg_mp5"))
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 5);
+				SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 5);
 			}
 			else if (StrEqual(sWeapon, "weapon_pumpshotgun"))
 			{
-				bIsValidGame() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 7) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
+				bIsValidGame() ? SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 7) : SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
 			}
 			else if (StrEqual(sWeapon, "weapon_shotgun_chrome"))
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 7);
+				SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 7);
 			}
 			else if (StrEqual(sWeapon, "weapon_autoshotgun"))
 			{
-				bIsValidGame() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 8) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
+				bIsValidGame() ? SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 8) : SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 6);
 			}
 			else if (StrEqual(sWeapon, "weapon_shotgun_spas"))
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 8);
+				SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 8);
 			}
 			else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
 			{
-				bIsValidGame() ? SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 9) : SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 2);
+				bIsValidGame() ? SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 9) : SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 2);
 			}
 			else if (StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_awp"))
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 10);
+				SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 10);
 			}
 			else if (StrEqual(sWeapon, "weapon_grenade_launcher"))
 			{
-				SetEntProp(client, Prop_Data, "m_iAmmo", iAmmoCount, _, 17);
+				SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoCount, _, 17);
 			}
 		}
-		SetEntProp(GetPlayerWeaponSlot(client, 0), Prop_Data, "m_iClip1", iAmmoCount, 1);
+		SetEntProp(GetPlayerWeaponSlot(survivor, 0), Prop_Data, "m_iClip1", iAmmoCount, 1);
 		char sAmmoEffect[4];
-		sAmmoEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sAmmoEffect[ST_TankType(owner)] : g_sAmmoEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sAmmoEffect, mode);
+		sAmmoEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sAmmoEffect[ST_TankType(tank)] : g_sAmmoEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sAmmoEffect, mode);
 		if (iAmmoMessage == message || iAmmoMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ammo", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Ammo", sTankName, survivor);
 		}
 	}
 }
 
-stock int iAmmoChance(int client)
+stock int iAmmoChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAmmoChance[ST_TankType(client)] : g_iAmmoChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoChance[ST_TankType(tank)] : g_iAmmoChance2[ST_TankType(tank)];
 }
 
-stock int iAmmoHit(int client)
+stock int iAmmoHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAmmoHit[ST_TankType(client)] : g_iAmmoHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoHit[ST_TankType(tank)] : g_iAmmoHit2[ST_TankType(tank)];
 }
 
-stock int iAmmoHitMode(int client)
+stock int iAmmoHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iAmmoHitMode[ST_TankType(client)] : g_iAmmoHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoHitMode[ST_TankType(tank)] : g_iAmmoHitMode2[ST_TankType(tank)];
 }

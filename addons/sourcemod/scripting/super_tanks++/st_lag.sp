@@ -146,14 +146,14 @@ public void ST_PluginEnd()
 	vReset();
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iLagRangeChance = !g_bTankConfig[ST_TankType(client)] ? g_iLagChance[ST_TankType(client)] : g_iLagChance2[ST_TankType(client)];
-		float flLagRange = !g_bTankConfig[ST_TankType(client)] ? g_flLagRange[ST_TankType(client)] : g_flLagRange2[ST_TankType(client)],
+		int iLagRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iLagChance[ST_TankType(tank)] : g_iLagChance2[ST_TankType(tank)];
+		float flLagRange = !g_bTankConfig[ST_TankType(tank)] ? g_flLagRange[ST_TankType(tank)] : g_flLagRange2[ST_TankType(tank)],
 			flTankPos[3];
-		GetClientAbsOrigin(client, flTankPos);
+		GetClientAbsOrigin(tank, flTankPos);
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
@@ -163,35 +163,35 @@ public void ST_Ability(int client)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flLagRange)
 				{
-					vLagHit(iSurvivor, client, iLagRangeChance, iLagAbility(client), 2, "3");
+					vLagHit(iSurvivor, tank, iLagRangeChance, iLagAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-stock void vLagHit(int client, int owner, int chance, int enabled, int message, const char[] mode)
+stock void vLagHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(client) && !g_bLag[client])
+	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bLag[survivor])
 	{
-		g_bLag[client] = true;
+		g_bLag[survivor] = true;
 		float flPos[3];
-		GetClientAbsOrigin(client, flPos);
-		g_flLagPosition[client][1] = flPos[0], g_flLagPosition[client][2] = flPos[1], g_flLagPosition[client][3] = flPos[2];
+		GetClientAbsOrigin(survivor, flPos);
+		g_flLagPosition[survivor][1] = flPos[0], g_flLagPosition[survivor][2] = flPos[1], g_flLagPosition[survivor][3] = flPos[2];
 		DataPack dpLagTeleport = new DataPack();
 		CreateDataTimer(1.0, tTimerLagTeleport, dpLagTeleport, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpLagTeleport.WriteCell(GetClientUserId(client)), dpLagTeleport.WriteCell(GetClientUserId(owner)), dpLagTeleport.WriteCell(message), dpLagTeleport.WriteCell(enabled), dpLagTeleport.WriteFloat(GetEngineTime());
+		dpLagTeleport.WriteCell(GetClientUserId(survivor)), dpLagTeleport.WriteCell(GetClientUserId(tank)), dpLagTeleport.WriteCell(message), dpLagTeleport.WriteCell(enabled), dpLagTeleport.WriteFloat(GetEngineTime());
 		DataPack dpLagPosition = new DataPack();
 		CreateDataTimer(0.5, tTimerLagPosition, dpLagPosition, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpLagPosition.WriteCell(GetClientUserId(client)), dpLagPosition.WriteCell(GetClientUserId(owner)), dpLagPosition.WriteCell(enabled), dpLagPosition.WriteFloat(GetEngineTime());
+		dpLagPosition.WriteCell(GetClientUserId(survivor)), dpLagPosition.WriteCell(GetClientUserId(tank)), dpLagPosition.WriteCell(enabled), dpLagPosition.WriteFloat(GetEngineTime());
 		char sLagEffect[4];
-		sLagEffect = !g_bTankConfig[ST_TankType(owner)] ? g_sLagEffect[ST_TankType(owner)] : g_sLagEffect2[ST_TankType(owner)];
-		vEffect(client, owner, sLagEffect, mode);
-		if (iLagMessage(owner) == message || iLagMessage(owner) == 3)
+		sLagEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sLagEffect[ST_TankType(tank)] : g_sLagEffect2[ST_TankType(tank)];
+		vEffect(survivor, tank, sLagEffect, mode);
+		if (iLagMessage(tank) == message || iLagMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(owner, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Lag", sTankName, client);
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_PREFIX2, "Lag", sTankName, survivor);
 		}
 	}
 }
@@ -207,43 +207,43 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int client, int owner, int message)
+stock void vReset2(int survivor, int tank, int message)
 {
-	g_bLag[client] = false;
-	if (iLagMessage(owner) == message || iLagMessage(owner) == 3)
+	g_bLag[survivor] = false;
+	if (iLagMessage(tank) == message || iLagMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Lag2", client);
+		PrintToChatAll("%s %t", ST_PREFIX2, "Lag2", survivor);
 	}
 }
 
-stock float flLagDuration(int client)
+stock float flLagDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_flLagDuration[ST_TankType(client)] : g_flLagDuration2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flLagDuration[ST_TankType(tank)] : g_flLagDuration2[ST_TankType(tank)];
 }
 
-stock int iLagAbility(int client)
+stock int iLagAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iLagAbility[ST_TankType(client)] : g_iLagAbility2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iLagAbility[ST_TankType(tank)] : g_iLagAbility2[ST_TankType(tank)];
 }
 
-stock int iLagChance(int client)
+stock int iLagChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iLagChance[ST_TankType(client)] : g_iLagChance2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iLagChance[ST_TankType(tank)] : g_iLagChance2[ST_TankType(tank)];
 }
 
-stock int iLagHit(int client)
+stock int iLagHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iLagHit[ST_TankType(client)] : g_iLagHit2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iLagHit[ST_TankType(tank)] : g_iLagHit2[ST_TankType(tank)];
 }
 
-stock int iLagHitMode(int client)
+stock int iLagHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iLagHitMode[ST_TankType(client)] : g_iLagHitMode2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iLagHitMode[ST_TankType(tank)] : g_iLagHitMode2[ST_TankType(tank)];
 }
 
-stock int iLagMessage(int client)
+stock int iLagMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(client)] ? g_iLagMessage[ST_TankType(client)] : g_iLagMessage2[ST_TankType(client)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iLagMessage[ST_TankType(tank)] : g_iLagMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerLagTeleport(Handle timer, DataPack pack)

@@ -121,21 +121,21 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Ability(int client)
+public void ST_Ability(int tank)
 {
-	int iWitchAbility = !g_bTankConfig[ST_TankType(client)] ? g_iWitchAbility[ST_TankType(client)] : g_iWitchAbility2[ST_TankType(client)];
-	if (iWitchAbility == 1 && ST_TankAllowed(client) && ST_CloneAllowed(client, g_bCloneInstalled) && IsPlayerAlive(client))
+	int iWitchAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchAbility[ST_TankType(tank)] : g_iWitchAbility2[ST_TankType(tank)];
+	if (iWitchAbility == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iWitchMessage = !g_bTankConfig[ST_TankType(client)] ? g_iWitchMessage[ST_TankType(client)] : g_iWitchMessage2[ST_TankType(client)],
+		int iWitchMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchMessage[ST_TankType(tank)] : g_iWitchMessage2[ST_TankType(tank)],
 			iWitchCount, iInfected = -1;
 		while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
 		{
-			float flWitchRange = !g_bTankConfig[ST_TankType(client)] ? g_flWitchRange[ST_TankType(client)] : g_flWitchRange[ST_TankType(client)];
-			int iWitchAmount = !g_bTankConfig[ST_TankType(client)] ? g_iWitchAmount[ST_TankType(client)] : g_iWitchAmount2[ST_TankType(client)];
+			float flWitchRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWitchRange[ST_TankType(tank)] : g_flWitchRange[ST_TankType(tank)];
+			int iWitchAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchAmount[ST_TankType(tank)] : g_iWitchAmount2[ST_TankType(tank)];
 			if (iWitchCount < 4 && iGetWitchCount() < iWitchAmount)
 			{
 				float flTankPos[3], flInfectedPos[3], flInfectedAng[3];
-				GetClientAbsOrigin(client, flTankPos);
+				GetClientAbsOrigin(tank, flTankPos);
 				GetEntPropVector(iInfected, Prop_Send, "m_vecOrigin", flInfectedPos);
 				GetEntPropVector(iInfected, Prop_Send, "m_angRotation", flInfectedAng);
 				float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
@@ -148,7 +148,7 @@ public void ST_Ability(int client)
 						TeleportEntity(iWitch, flInfectedPos, flInfectedAng, NULL_VECTOR);
 						DispatchSpawn(iWitch);
 						ActivateEntity(iWitch);
-						SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", client);
+						SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", tank);
 						iWitchCount++;
 					}
 				}
@@ -157,7 +157,7 @@ public void ST_Ability(int client)
 		if (iWitchMessage == 1)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(client, sTankName);
+			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_PREFIX2, "Witch", sTankName);
 		}
 	}
