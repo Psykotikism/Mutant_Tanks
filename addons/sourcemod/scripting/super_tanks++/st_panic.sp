@@ -2,7 +2,9 @@
 #undef REQUIRE_PLUGIN
 #include <st_clone>
 #define REQUIRE_PLUGIN
+
 #include <super_tanks++>
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -16,8 +18,11 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bLateLoad, g_bPanic[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+
 char g_sPanicEffect[ST_MAXTYPES + 1][4], g_sPanicEffect2[ST_MAXTYPES + 1][4];
+
 float g_flPanicInterval[ST_MAXTYPES + 1], g_flPanicInterval2[ST_MAXTYPES + 1], g_flPanicRange[ST_MAXTYPES + 1], g_flPanicRange2[ST_MAXTYPES + 1];
+
 int g_iPanicAbility[ST_MAXTYPES + 1], g_iPanicAbility2[ST_MAXTYPES + 1], g_iPanicChance[ST_MAXTYPES + 1], g_iPanicChance2[ST_MAXTYPES + 1], g_iPanicHit[ST_MAXTYPES + 1], g_iPanicHit2[ST_MAXTYPES + 1], g_iPanicHitMode[ST_MAXTYPES + 1], g_iPanicHitMode2[ST_MAXTYPES + 1], g_iPanicMessage[ST_MAXTYPES + 1], g_iPanicMessage2[ST_MAXTYPES + 1], g_iPanicRangeChance[ST_MAXTYPES + 1], g_iPanicRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -25,9 +30,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Panic Ability only supports Left 4 Dead 1 & 2.");
+
 		return APLRes_SilentFailure;
 	}
+
 	g_bLateLoad = late;
+
 	return APLRes_Success;
 }
 
@@ -55,6 +63,7 @@ public void OnLibraryRemoved(const char[] name)
 public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
+
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -64,6 +73,7 @@ public void OnPluginStart()
 				OnClientPutInServer(iPlayer);
 			}
 		}
+
 		g_bLateLoad = false;
 	}
 }
@@ -76,6 +86,7 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+
 	g_bPanic[client] = false;
 }
 
@@ -90,6 +101,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+
 		if ((iPanicHitMode(attacker) == 0 || iPanicHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
@@ -117,27 +129,55 @@ public void ST_Configs(const char[] savepath, bool main)
 		Format(sName, sizeof(sName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
-			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
-			main ? (g_iPanicAbility[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", 0)) : (g_iPanicAbility2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", g_iPanicAbility[iIndex]));
-			main ? (g_iPanicAbility[iIndex] = iClamp(g_iPanicAbility[iIndex], 0, 3)) : (g_iPanicAbility2[iIndex] = iClamp(g_iPanicAbility2[iIndex], 0, 3));
-			main ? (kvSuperTanks.GetString("Panic Ability/Ability Effect", g_sPanicEffect[iIndex], sizeof(g_sPanicEffect[]), "123")) : (kvSuperTanks.GetString("Panic Ability/Ability Effect", g_sPanicEffect2[iIndex], sizeof(g_sPanicEffect2[]), g_sPanicEffect[iIndex]));
-			main ? (g_iPanicMessage[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Message", 0)) : (g_iPanicMessage2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Message", g_iPanicMessage[iIndex]));
-			main ? (g_iPanicMessage[iIndex] = iClamp(g_iPanicMessage[iIndex], 0, 7)) : (g_iPanicMessage2[iIndex] = iClamp(g_iPanicMessage2[iIndex], 0, 7));
-			main ? (g_iPanicChance[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Chance", 4)) : (g_iPanicChance2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Chance", g_iPanicChance[iIndex]));
-			main ? (g_iPanicChance[iIndex] = iClamp(g_iPanicChance[iIndex], 1, 9999999999)) : (g_iPanicChance2[iIndex] = iClamp(g_iPanicChance2[iIndex], 1, 9999999999));
-			main ? (g_iPanicHit[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", 0)) : (g_iPanicHit2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", g_iPanicHit[iIndex]));
-			main ? (g_iPanicHit[iIndex] = iClamp(g_iPanicHit[iIndex], 0, 1)) : (g_iPanicHit2[iIndex] = iClamp(g_iPanicHit2[iIndex], 0, 1));
-			main ? (g_iPanicHitMode[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit Mode", 0)) : (g_iPanicHitMode2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit Mode", g_iPanicHitMode[iIndex]));
-			main ? (g_iPanicHitMode[iIndex] = iClamp(g_iPanicHitMode[iIndex], 0, 2)) : (g_iPanicHitMode2[iIndex] = iClamp(g_iPanicHitMode2[iIndex], 0, 2));
-			main ? (g_flPanicInterval[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Interval", 5.0)) : (g_flPanicInterval2[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Interval", g_flPanicInterval[iIndex]));
-			main ? (g_flPanicInterval[iIndex] = flClamp(g_flPanicInterval[iIndex], 0.1, 9999999999.0)) : (g_flPanicInterval2[iIndex] = flClamp(g_flPanicInterval2[iIndex], 0.1, 9999999999.0));
-			main ? (g_flPanicRange[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Range", 150.0)) : (g_flPanicRange2[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Range", g_flPanicRange[iIndex]));
-			main ? (g_flPanicRange[iIndex] = flClamp(g_flPanicRange[iIndex], 1.0, 9999999999.0)) : (g_flPanicRange2[iIndex] = flClamp(g_flPanicRange2[iIndex], 1.0, 9999999999.0));
-			main ? (g_iPanicRangeChance[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Range Chance", 16)) : (g_iPanicRangeChance2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Range Chance", g_iPanicRangeChance[iIndex]));
-			main ? (g_iPanicRangeChance[iIndex] = iClamp(g_iPanicRangeChance[iIndex], 1, 9999999999)) : (g_iPanicRangeChance2[iIndex] = iClamp(g_iPanicRangeChance2[iIndex], 1, 9999999999));
+			if (main)
+			{
+				g_bTankConfig[iIndex] = false;
+
+				g_iPanicAbility[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", 0);
+				g_iPanicAbility[iIndex] = iClamp(g_iPanicAbility[iIndex], 0, 3);
+				kvSuperTanks.GetString("Panic Ability/Ability Effect", g_sPanicEffect[iIndex], sizeof(g_sPanicEffect[]), "123");
+				g_iPanicMessage[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Message", 0);
+				g_iPanicMessage[iIndex] = iClamp(g_iPanicMessage[iIndex], 0, 7);
+				g_iPanicChance[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Chance", 4);
+				g_iPanicChance[iIndex] = iClamp(g_iPanicChance[iIndex], 1, 9999999999);
+				g_iPanicHit[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", 0);
+				g_iPanicHit[iIndex] = iClamp(g_iPanicHit[iIndex], 0, 1);
+				g_iPanicHitMode[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit Mode", 0);
+				g_iPanicHitMode[iIndex] = iClamp(g_iPanicHitMode[iIndex], 0, 2);
+				g_flPanicInterval[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Interval", 5.0);
+				g_flPanicInterval[iIndex] = flClamp(g_flPanicInterval[iIndex], 0.1, 9999999999.0);
+				g_flPanicRange[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Range", 150.0);
+				g_flPanicRange[iIndex] = flClamp(g_flPanicRange[iIndex], 1.0, 9999999999.0);
+				g_iPanicRangeChance[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Range Chance", 16);
+				g_iPanicRangeChance[iIndex] = iClamp(g_iPanicRangeChance[iIndex], 1, 9999999999);
+			}
+			else
+			{
+				g_bTankConfig[iIndex] = true;
+
+				g_iPanicAbility2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", g_iPanicAbility[iIndex]);
+				g_iPanicAbility2[iIndex] = iClamp(g_iPanicAbility2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Panic Ability/Ability Effect", g_sPanicEffect2[iIndex], sizeof(g_sPanicEffect2[]), g_sPanicEffect[iIndex]);
+				g_iPanicMessage2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Message", g_iPanicMessage[iIndex]);
+				g_iPanicMessage2[iIndex] = iClamp(g_iPanicMessage2[iIndex], 0, 7);
+				g_iPanicChance2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Chance", g_iPanicChance[iIndex]);
+				g_iPanicChance2[iIndex] = iClamp(g_iPanicChance2[iIndex], 1, 9999999999);
+				g_iPanicHit2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", g_iPanicHit[iIndex]);
+				g_iPanicHit2[iIndex] = iClamp(g_iPanicHit2[iIndex], 0, 1);
+				g_iPanicHitMode2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit Mode", g_iPanicHitMode[iIndex]);
+				g_iPanicHitMode2[iIndex] = iClamp(g_iPanicHitMode2[iIndex], 0, 2);
+				g_flPanicInterval2[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Interval", g_flPanicInterval[iIndex]);
+				g_flPanicInterval2[iIndex] = flClamp(g_flPanicInterval2[iIndex], 0.1, 9999999999.0);
+				g_flPanicRange2[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Range", g_flPanicRange[iIndex]);
+				g_flPanicRange2[iIndex] = flClamp(g_flPanicRange2[iIndex], 1.0, 9999999999.0);
+				g_iPanicRangeChance2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Range Chance", g_iPanicRangeChance[iIndex]);
+				g_iPanicRangeChance2[iIndex] = iClamp(g_iPanicRangeChance2[iIndex], 1, 9999999999);
+			}
+
 			kvSuperTanks.Rewind();
 		}
 	}
+
 	delete kvSuperTanks;
 }
 
@@ -163,15 +203,18 @@ public void ST_Ability(int tank)
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
 		int iPanicRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iPanicChance[ST_TankType(tank)] : g_iPanicChance2[ST_TankType(tank)];
+
 		float flPanicRange = !g_bTankConfig[ST_TankType(tank)] ? g_flPanicRange[ST_TankType(tank)] : g_flPanicRange2[ST_TankType(tank)],
 			flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
+
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPanicRange)
 				{
@@ -179,23 +222,27 @@ public void ST_Ability(int tank)
 				}
 			}
 		}
+
 		if ((iPanicAbility(tank) == 2 || iPanicAbility(tank) == 3) && !g_bPanic[tank])
 		{
 			g_bPanic[tank] = true;
+
 			float flPanicInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flPanicInterval[ST_TankType(tank)] : g_flPanicInterval2[ST_TankType(tank)];
 			CreateTimer(flPanicInterval, tTimerPanic, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
 }
 
-stock void vPanicHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vPanicHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
 		vCheatCommand(survivor, "director_force_panic_event");
+
 		char sPanicEffect[4];
 		sPanicEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sPanicEffect[ST_TankType(tank)] : g_sPanicEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sPanicEffect, mode);
+
 		if (iPanicMessage(tank) == message || iPanicMessage(tank) == 4 || iPanicMessage(tank) == 5 || iPanicMessage(tank) == 6 || iPanicMessage(tank) == 7)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
@@ -205,7 +252,7 @@ stock void vPanicHit(int survivor, int tank, int chance, int enabled, int messag
 	}
 }
 
-stock void vReset()
+static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -216,45 +263,50 @@ stock void vReset()
 	}
 }
 
-stock int iPanicAbility(int tank)
+static int iPanicAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicAbility[ST_TankType(tank)] : g_iPanicAbility2[ST_TankType(tank)];
 }
 
-stock int iPanicChance(int tank)
+static int iPanicChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicChance[ST_TankType(tank)] : g_iPanicChance2[ST_TankType(tank)];
 }
 
-stock int iPanicHit(int tank)
+static int iPanicHit(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicHit[ST_TankType(tank)] : g_iPanicHit2[ST_TankType(tank)];
 }
 
-stock int iPanicHitMode(int tank)
+static int iPanicHitMode(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicHitMode[ST_TankType(tank)] : g_iPanicHitMode2[ST_TankType(tank)];
 }
 
-stock int iPanicMessage(int tank)
+static int iPanicMessage(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicMessage[ST_TankType(tank)] : g_iPanicMessage2[ST_TankType(tank)];
 }
 
-public Action tTimerPanic(Handle timer, any userid)
+public Action tTimerPanic(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPanic[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPanic[iTank])
 	{
 		g_bPanic[iTank] = false;
+
 		return Plugin_Stop;
 	}
+
 	if (iPanicAbility(iTank) != 2 && iPanicAbility(iTank) != 3)
 	{
 		g_bPanic[iTank] = false;
+
 		return Plugin_Stop;
 	}
+
 	vCheatCommand(iTank, "director_force_panic_event");
+
 	switch (iPanicMessage(iTank))
 	{
 		case 3, 5, 6, 7:
@@ -264,5 +316,6 @@ public Action tTimerPanic(Handle timer, any userid)
 			PrintToChatAll("%s %t", ST_PREFIX2, "Panic", sTankName);
 		}
 	}
+
 	return Plugin_Continue;
 }

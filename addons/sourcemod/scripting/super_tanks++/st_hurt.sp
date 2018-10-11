@@ -2,7 +2,9 @@
 #undef REQUIRE_PLUGIN
 #include <st_clone>
 #define REQUIRE_PLUGIN
+
 #include <super_tanks++>
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -16,18 +18,24 @@ public Plugin myinfo =
 };
 
 bool g_bCloneInstalled, g_bHurt[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+
 char g_sHurtEffect[ST_MAXTYPES + 1][4], g_sHurtEffect2[ST_MAXTYPES + 1][4];
-float g_flHurtDuration[ST_MAXTYPES + 1], g_flHurtDuration2[ST_MAXTYPES + 1], g_flHurtRange[ST_MAXTYPES + 1], g_flHurtRange2[ST_MAXTYPES + 1];
-int g_iHurtAbility[ST_MAXTYPES + 1], g_iHurtAbility2[ST_MAXTYPES + 1], g_iHurtChance[ST_MAXTYPES + 1], g_iHurtChance2[ST_MAXTYPES + 1], g_iHurtDamage[ST_MAXTYPES + 1], g_iHurtDamage2[ST_MAXTYPES + 1], g_iHurtHit[ST_MAXTYPES + 1], g_iHurtHit2[ST_MAXTYPES + 1], g_iHurtHitMode[ST_MAXTYPES + 1], g_iHurtHitMode2[ST_MAXTYPES + 1], g_iHurtMessage[ST_MAXTYPES + 1], g_iHurtMessage2[ST_MAXTYPES + 1], g_iHurtRangeChance[ST_MAXTYPES + 1], g_iHurtRangeChance2[ST_MAXTYPES + 1];
+
+float g_flHurtDamage[ST_MAXTYPES + 1], g_flHurtDamage2[ST_MAXTYPES + 1], g_flHurtDuration[ST_MAXTYPES + 1], g_flHurtDuration2[ST_MAXTYPES + 1], g_flHurtInterval[ST_MAXTYPES + 1], g_flHurtInterval2[ST_MAXTYPES + 1], g_flHurtRange[ST_MAXTYPES + 1], g_flHurtRange2[ST_MAXTYPES + 1];
+
+int g_iHurtAbility[ST_MAXTYPES + 1], g_iHurtAbility2[ST_MAXTYPES + 1], g_iHurtChance[ST_MAXTYPES + 1], g_iHurtChance2[ST_MAXTYPES + 1], g_iHurtHit[ST_MAXTYPES + 1], g_iHurtHit2[ST_MAXTYPES + 1], g_iHurtHitMode[ST_MAXTYPES + 1], g_iHurtHitMode2[ST_MAXTYPES + 1], g_iHurtMessage[ST_MAXTYPES + 1], g_iHurtMessage2[ST_MAXTYPES + 1], g_iHurtRangeChance[ST_MAXTYPES + 1], g_iHurtRangeChance2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Hurt Ability only supports Left 4 Dead 1 & 2.");
+
 		return APLRes_SilentFailure;
 	}
+
 	g_bLateLoad = late;
+
 	return APLRes_Success;
 }
 
@@ -55,6 +63,7 @@ public void OnLibraryRemoved(const char[] name)
 public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
+
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -64,6 +73,7 @@ public void OnPluginStart()
 				OnClientPutInServer(iPlayer);
 			}
 		}
+
 		g_bLateLoad = false;
 	}
 }
@@ -76,6 +86,7 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+
 	g_bHurt[client] = false;
 }
 
@@ -90,6 +101,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+
 		if ((iHurtHitMode(attacker) == 0 || iHurtHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
@@ -117,29 +129,63 @@ public void ST_Configs(const char[] savepath, bool main)
 		Format(sName, sizeof(sName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
-			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
-			main ? (g_iHurtAbility[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", 0)) : (g_iHurtAbility2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", g_iHurtAbility[iIndex]));
-			main ? (g_iHurtAbility[iIndex] = iClamp(g_iHurtAbility[iIndex], 0, 1)) : (g_iHurtAbility2[iIndex] = iClamp(g_iHurtAbility2[iIndex], 0, 1));
-			main ? (kvSuperTanks.GetString("Hurt Ability/Ability Effect", g_sHurtEffect[iIndex], sizeof(g_sHurtEffect[]), "123")) : (kvSuperTanks.GetString("Hurt Ability/Ability Effect", g_sHurtEffect2[iIndex], sizeof(g_sHurtEffect2[]), g_sHurtEffect[iIndex]));
-			main ? (g_iHurtMessage[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Message", 0)) : (g_iHurtMessage2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Message", g_iHurtMessage[iIndex]));
-			main ? (g_iHurtMessage[iIndex] = iClamp(g_iHurtMessage[iIndex], 0, 3)) : (g_iHurtMessage2[iIndex] = iClamp(g_iHurtMessage2[iIndex], 0, 3));
-			main ? (g_iHurtChance[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Chance", 4)) : (g_iHurtChance2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Chance", g_iHurtChance[iIndex]));
-			main ? (g_iHurtChance[iIndex] = iClamp(g_iHurtChance[iIndex], 1, 9999999999)) : (g_iHurtChance2[iIndex] = iClamp(g_iHurtChance2[iIndex], 1, 9999999999));
-			main ? (g_iHurtDamage[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Damage", 1)) : (g_iHurtDamage2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Damage", g_iHurtDamage[iIndex]));
-			main ? (g_iHurtDamage[iIndex] = iClamp(g_iHurtDamage[iIndex], 1, 9999999999)) : (g_iHurtDamage2[iIndex] = iClamp(g_iHurtDamage2[iIndex], 1, 9999999999));
-			main ? (g_flHurtDuration[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Duration", 5.0)) : (g_flHurtDuration2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Duration", g_flHurtDuration[iIndex]));
-			main ? (g_flHurtDuration[iIndex] = flClamp(g_flHurtDuration[iIndex], 0.1, 9999999999.0)) : (g_flHurtDuration2[iIndex] = flClamp(g_flHurtDuration2[iIndex], 0.1, 9999999999.0));
-			main ? (g_iHurtHit[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit", 0)) : (g_iHurtHit2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit", g_iHurtHit[iIndex]));
-			main ? (g_iHurtHit[iIndex] = iClamp(g_iHurtHit[iIndex], 0, 1)) : (g_iHurtHit2[iIndex] = iClamp(g_iHurtHit2[iIndex], 0, 1));
-			main ? (g_iHurtHitMode[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit Mode", 0)) : (g_iHurtHitMode2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit Mode", g_iHurtHitMode[iIndex]));
-			main ? (g_iHurtHitMode[iIndex] = iClamp(g_iHurtHitMode[iIndex], 0, 2)) : (g_iHurtHitMode2[iIndex] = iClamp(g_iHurtHitMode2[iIndex], 0, 2));
-			main ? (g_flHurtRange[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Range", 150.0)) : (g_flHurtRange2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Range", g_flHurtRange[iIndex]));
-			main ? (g_flHurtRange[iIndex] = flClamp(g_flHurtRange[iIndex], 1.0, 9999999999.0)) : (g_flHurtRange2[iIndex] = flClamp(g_flHurtRange2[iIndex], 1.0, 9999999999.0));
-			main ? (g_iHurtRangeChance[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Range Chance", 16)) : (g_iHurtRangeChance2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Range Chance", g_iHurtRangeChance[iIndex]));
-			main ? (g_iHurtRangeChance[iIndex] = iClamp(g_iHurtRangeChance[iIndex], 1, 9999999999)) : (g_iHurtRangeChance2[iIndex] = iClamp(g_iHurtRangeChance2[iIndex], 1, 9999999999));
+			if (main)
+			{
+				g_bTankConfig[iIndex] = false;
+
+				g_iHurtAbility[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", 0);
+				g_iHurtAbility[iIndex] = iClamp(g_iHurtAbility[iIndex], 0, 1);
+				kvSuperTanks.GetString("Hurt Ability/Ability Effect", g_sHurtEffect[iIndex], sizeof(g_sHurtEffect[]), "123");
+				g_iHurtMessage[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Message", 0);
+				g_iHurtMessage[iIndex] = iClamp(g_iHurtMessage[iIndex], 0, 3);
+				g_iHurtChance[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Chance", 4);
+				g_iHurtChance[iIndex] = iClamp(g_iHurtChance[iIndex], 1, 9999999999);
+				g_flHurtDamage[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Damage", 5.0);
+				g_flHurtDamage[iIndex] = flClamp(g_flHurtDamage[iIndex], 1.0, 9999999999.0);
+				g_flHurtDuration[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Duration", 5.0);
+				g_flHurtDuration[iIndex] = flClamp(g_flHurtDuration[iIndex], 0.1, 9999999999.0);
+				g_iHurtHit[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit", 0);
+				g_iHurtHit[iIndex] = iClamp(g_iHurtHit[iIndex], 0, 1);
+				g_iHurtHitMode[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit Mode", 0);
+				g_iHurtHitMode[iIndex] = iClamp(g_iHurtHitMode[iIndex], 0, 2);
+				g_flHurtInterval[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Interval", 1.0);
+				g_flHurtInterval[iIndex] = flClamp(g_flHurtInterval[iIndex], 0.1, 9999999999.0);
+				g_flHurtRange[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Range", 150.0);
+				g_flHurtRange[iIndex] = flClamp(g_flHurtRange[iIndex], 1.0, 9999999999.0);
+				g_iHurtRangeChance[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Range Chance", 16);
+				g_iHurtRangeChance[iIndex] = iClamp(g_iHurtRangeChance[iIndex], 1, 9999999999);
+			}
+			else
+			{
+				g_bTankConfig[iIndex] = true;
+
+				g_iHurtAbility2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", g_iHurtAbility[iIndex]);
+				g_iHurtAbility2[iIndex] = iClamp(g_iHurtAbility2[iIndex], 0, 1);
+				kvSuperTanks.GetString("Hurt Ability/Ability Effect", g_sHurtEffect2[iIndex], sizeof(g_sHurtEffect2[]), g_sHurtEffect[iIndex]);
+				g_iHurtMessage2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Message", g_iHurtMessage[iIndex]);
+				g_iHurtMessage2[iIndex] = iClamp(g_iHurtMessage2[iIndex], 0, 3);
+				g_iHurtChance2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Chance", g_iHurtChance[iIndex]);
+				g_iHurtChance2[iIndex] = iClamp(g_iHurtChance2[iIndex], 1, 9999999999);
+				g_flHurtDamage2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Damage", g_flHurtDamage[iIndex]);
+				g_flHurtDamage2[iIndex] = flClamp(g_flHurtDamage2[iIndex], 1.0, 9999999999.0);
+				g_flHurtDuration2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Duration", g_flHurtDuration[iIndex]);
+				g_flHurtDuration2[iIndex] = flClamp(g_flHurtDuration2[iIndex], 0.1, 9999999999.0);
+				g_iHurtHit2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit", g_iHurtHit[iIndex]);
+				g_iHurtHit2[iIndex] = iClamp(g_iHurtHit2[iIndex], 0, 1);
+				g_iHurtHitMode2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Hit Mode", g_iHurtHitMode[iIndex]);
+				g_iHurtHitMode2[iIndex] = iClamp(g_iHurtHitMode2[iIndex], 0, 2);
+				g_flHurtInterval2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Interval", g_flHurtInterval[iIndex]);
+				g_flHurtInterval2[iIndex] = flClamp(g_flHurtInterval2[iIndex], 0.1, 9999999999.0);
+				g_flHurtRange2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Range", g_flHurtRange[iIndex]);
+				g_flHurtRange2[iIndex] = flClamp(g_flHurtRange2[iIndex], 1.0, 9999999999.0);
+				g_iHurtRangeChance2[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Hurt Range Chance", g_iHurtRangeChance[iIndex]);
+				g_iHurtRangeChance2[iIndex] = iClamp(g_iHurtRangeChance2[iIndex], 1, 9999999999);
+			}
+
 			kvSuperTanks.Rewind();
 		}
 	}
+
 	delete kvSuperTanks;
 }
 
@@ -154,15 +200,18 @@ public void ST_Ability(int tank)
 	{
 		int iHurtAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iHurtAbility[ST_TankType(tank)] : g_iHurtAbility2[ST_TankType(tank)],
 			iHurtRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iHurtChance[ST_TankType(tank)] : g_iHurtChance2[ST_TankType(tank)];
+
 		float flHurtRange = !g_bTankConfig[ST_TankType(tank)] ? g_flHurtRange[ST_TankType(tank)] : g_flHurtRange2[ST_TankType(tank)],
 			flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
+
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHurtRange)
 				{
@@ -173,17 +222,25 @@ public void ST_Ability(int tank)
 	}
 }
 
-stock void vHurtHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vHurtHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bHurt[survivor])
 	{
 		g_bHurt[survivor] = true;
-		DataPack dpHurt = new DataPack();
-		CreateDataTimer(1.0, tTimerHurt, dpHurt, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpHurt.WriteCell(GetClientUserId(survivor)), dpHurt.WriteCell(GetClientUserId(tank)), dpHurt.WriteCell(message), dpHurt.WriteCell(enabled), dpHurt.WriteFloat(GetEngineTime());
+
+		float flHurtInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flHurtInterval[ST_TankType(tank)] : g_flHurtInterval2[ST_TankType(tank)];
+		DataPack dpHurt;
+		CreateDataTimer(flHurtInterval, tTimerHurt, dpHurt, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpHurt.WriteCell(GetClientUserId(survivor));
+		dpHurt.WriteCell(GetClientUserId(tank));
+		dpHurt.WriteCell(message);
+		dpHurt.WriteCell(enabled);
+		dpHurt.WriteFloat(GetEngineTime());
+
 		char sHurtEffect[4];
 		sHurtEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sHurtEffect[ST_TankType(tank)] : g_sHurtEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sHurtEffect, mode);
+
 		if (iHurtMessage(tank) == message || iHurtMessage(tank) == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
@@ -193,7 +250,7 @@ stock void vHurtHit(int survivor, int tank, int chance, int enabled, int message
 	}
 }
 
-stock void vReset()
+static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -204,31 +261,32 @@ stock void vReset()
 	}
 }
 
-stock void vReset2(int survivor, int tank, int message)
+static void vReset2(int survivor, int tank, int message)
 {
 	g_bHurt[survivor] = false;
+
 	if (iHurtMessage(tank) == message || iHurtMessage(tank) == 3)
 	{
 		PrintToChatAll("%s %t", ST_PREFIX2, "Hurt2", survivor);
 	}
 }
 
-stock int iHurtChance(int tank)
+static int iHurtChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHurtChance[ST_TankType(tank)] : g_iHurtChance2[ST_TankType(tank)];
 }
 
-stock int iHurtHit(int tank)
+static int iHurtHit(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHurtHit[ST_TankType(tank)] : g_iHurtHit2[ST_TankType(tank)];
 }
 
-stock int iHurtHitMode(int tank)
+static int iHurtHitMode(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHurtHitMode[ST_TankType(tank)] : g_iHurtHitMode2[ST_TankType(tank)];
 }
 
-stock int iHurtMessage(int tank)
+static int iHurtMessage(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHurtMessage[ST_TankType(tank)] : g_iHurtMessage2[ST_TankType(tank)];
 }
@@ -236,29 +294,36 @@ stock int iHurtMessage(int tank)
 public Action tTimerHurt(Handle timer, DataPack pack)
 {
 	pack.Reset();
+
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || !g_bHurt[iSurvivor])
 	{
 		g_bHurt[iSurvivor] = false;
+
 		return Plugin_Stop;
 	}
+
 	int iTank = GetClientOfUserId(pack.ReadCell()), iHurtChat = pack.ReadCell();
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		vReset2(iSurvivor, iTank, iHurtChat);
+
 		return Plugin_Stop;
 	}
+
 	int iHurtAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flHurtDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flHurtDuration[ST_TankType(iTank)] : g_flHurtDuration2[ST_TankType(iTank)];
+
 	if (iHurtAbility == 0 || (flTime + flHurtDuration) < GetEngineTime())
 	{
 		vReset2(iSurvivor, iTank, iHurtChat);
+
 		return Plugin_Stop;
 	}
-	char sDamage[11];
-	int iHurtDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iHurtDamage[ST_TankType(iTank)] : g_iHurtDamage2[ST_TankType(iTank)];
-	IntToString(iHurtDamage, sDamage, sizeof(sDamage));
-	vDamage(iSurvivor, sDamage);
+
+	float flHurtDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_flHurtDamage[ST_TankType(iTank)] : g_flHurtDamage2[ST_TankType(iTank)];
+	SDKHooks_TakeDamage(iSurvivor, iTank, iTank, flHurtDamage);
+
 	return Plugin_Continue;
 }

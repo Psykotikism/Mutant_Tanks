@@ -8,44 +8,48 @@
 #include <sdkhooks>
 #include <sdktools>
 #include <adminmenu>
+
 #define ST_PREFIX "[ST++]"
 #define ST_PREFIX2 "\x04[ST++]\x01"
 #define ST_PREFIX3 "\x04[ST++]\x03"
 #define ST_PREFIX4 "\x04[ST++]\x05"
+
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.43"
+#define ST_VERSION "8.44"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
-#define ST_MAXTYPES 5000
+
+#define ST_MAXTYPES 10000
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
 
 // Forwards
-/* Called every second to trigger the Super Tank's ability.
+/**
+ * Called every second to trigger the Super Tank's ability.
  * Use this forward for any passive abilities.
  *
  * @param tank			Client index of the Tank.
  */
 forward void ST_Ability(int tank);
 
-/* Called when the Super Tank evolves.
- * Use this forward to trigger any features/abilities/settings
- * when a Super Tank evolves.
+/**
+ * Called when the Super Tank evolves.
+ * Use this forward to trigger any features/abilities/settings when a Super Tank evolves.
  *
  * @param tank			Client index of the Tank.
  */
 forward void ST_BossStage(int tank);
 
-/* Called when the config file is loaded.
+/**
+ * Called when the config file is loaded.
  * Use this forward to load settings for the plugin.
  *
  * @param savepath		The savepath of the config.
- * @param main			Checks whether the main config
- *							or a custom config
- *							is being used.
+ * @param main			Checks whether the main config or a custom config is being used.
  */
 forward void ST_Configs(const char[] savepath, bool main);
 
-/* Called when an event hooked by the core plugin is fired.
+/**
+ * Called when an event hooked by the core plugin is fired.
  * Use this forward to trigger something on any of those events.
  *
  * @param event			Handle to the event.
@@ -53,22 +57,23 @@ forward void ST_Configs(const char[] savepath, bool main);
  */
 forward void ST_Event(Event event, const char[] name);
 
-/* Called when the core plugin is unloaded/reloaded.
- * Use this forward to get rid of any modifications to
- * Tanks or survivors.
+/**
+ * Called when the core plugin is unloaded/reloaded.
+ * Use this forward to get rid of any modifications to Tanks or survivors.
  */
 forward void ST_PluginEnd();
 
-/* Called when the Tank spawns.
+/**
+ * Called when the Tank spawns.
  * Use this forward for any on-spawn presets.
- * If you plan on using this to activate an ability,
- * use ST_Ability() instead.
+ * If you plan on using this to activate an ability, use ST_Ability() instead.
  *
  * @param tank			Client index of the Tank.
  */
 forward void ST_Preset(int tank);
 
-/* Called when the Tank's rock breaks.
+/**
+ * Called when the Tank's rock breaks.
  * Use this forward for any after-effects.
  *
  * @param tank			Client index of the Tank.
@@ -76,7 +81,8 @@ forward void ST_Preset(int tank);
  */
 forward void ST_RockBreak(int tank, int rock);
 
-/* Called when the Tank throws a rock.
+/**
+ * Called when the Tank throws a rock.
  * Use this forward for any throwing abilities.
  *
  * @param tank			Client index of the Tank.
@@ -85,85 +91,97 @@ forward void ST_RockBreak(int tank, int rock);
 forward void ST_RockThrow(int tank, int rock);
 
 // Natives
-/* Returns the maximum value of the "Type Range" setting.
+/**
+ * Returns the maximum value of the "Type Range" setting.
  *
- * @return				The maximum value of the
- *							"Type Range" setting.
+ * @return				The maximum value of the "Type Range" setting.
  */
 native int ST_MaxType();
 
-/* Returns the minimum value of the "Type Range" setting.
+/**
+ * Returns the minimum value of the "Type Range" setting.
  *
- * @return				The minimum value of the
- *							"Type Range" setting.
+ * @return				The minimum value of the "Type Range" setting.
  */
 native int ST_MinType();
 
-/* Returns the status of the core plugin.
+/**
+ * Returns if the core plugin is enabled.
  *
- * @return				True on success, false if
- *							core plugin is disabled.
+ * @return				True if core plugin is enabled, false otherwise.
  */
 native bool ST_PluginEnabled();
 
-/* Spawns a Tank with the specified Super Tank type.
+/**
+ * Spawns a Tank with the specified Super Tank type.
  *
  * @param tank			Client index of the Tank.
  * @param type			Type of Super Tank.
+ * @error				Invalid client index or type is 0.
  */
 native void ST_SpawnTank(int tank, int type);
 
-/* Returns the status of the Tank.
+/**
+ * Returns if the Tank is allowed to be a Super Tank.
  *
  * @param tank			Client index of the Tank.
- *
- * @return				True on success, false if
- *							the Tank is controlled
- *							by a human.
+ * @return				True if Tank is allowed to be a Super Tank, false otherwise.
+ * @error				Invalid client index.
  */
 native bool ST_TankAllowed(int tank);
 
-/* Returns the RGB colors given to a Tank.
+/**
+ * Returns the RGB colors given to a Tank.
  *
  * @param tank			Client index of the Tank.
- * @param mode			1 = Skin color, 2 = Glow
- *							outline color
- * @param red			Buffer to store the red
- *							color in.
- * @param green			Buffer to store the green
- *							color in.
- * @param blue			Buffer to store the blue
- *							color in.
+ * @param mode			1 = Skin color, 2 = Glow outline color
+ * @param red			Buffer to store the red color in.
+ * @param green			Buffer to store the green color in.
+ * @param blue			Buffer to store the blue color in.
+ * @error				Invalid client index.
  */
 native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] blue);
 
-/* Returns the custom name given to a Tank.
+/**
+ * Returns the custom name given to a Tank.
  *
  * @param tank			Client index of the Tank.
- * @param buffer		Buffer to store the custom
- *							name in.
+ * @param buffer		Buffer to store the custom name in.
+ * @error				Invalid client index.
  */
 native void ST_TankName(int tank, char[] buffer);
 
-/* Returns the Super Tank type of the Tank.
+/**
+ * Returns the Super Tank type of the Tank.
  *
  * @param tank			Client index of the Tank.
- *
  * @return				The Tank's Super Tank type.
+ * @error				Invalid client index.
  */
 native int ST_TankType(int tank);
 
-/* Returns the current finale wave.
+/**
+ * Returns the current finale wave.
  *
  * @return				The current finale wave.
  */
 native int ST_TankWave();
+
+/**
+ * Returns if a certain Super Tank type is enabled.
+ *
+ * @param type			Super Tank type.
+ * @return				True if the type is enabled, false otherwise.
+ * @error				Type is 0.
+ */
+native bool ST_TypeEnabled(int type);
 
 // Checks
 stock bool bHasIdlePlayer(int survivor)
 {
 	char sClassname[12];
 	GetEntityNetClass(survivor, sClassname, sizeof(sClassname));
+
 	if (StrEqual(sClassname, "SurvivorBot"))
 	{
 		int iSpectatorUserId = GetEntProp(survivor, Prop_Send, "m_humanSpectatorUserID");
@@ -176,6 +194,7 @@ stock bool bHasIdlePlayer(int survivor)
 			}
 		}
 	}
+
 	return false;
 }
 
@@ -213,10 +232,12 @@ stock bool bIsGunWeapon(int survivor)
 {
 	char sWeapon[32];
 	GetClientWeapon(survivor, sWeapon, sizeof(sWeapon));
+
 	if (GetPlayerWeaponSlot(survivor, 0) > 0 || (GetPlayerWeaponSlot(survivor, 1) > 0 && StrContains(sWeapon, "pistol", false) != -1))
 	{
 		return true;
 	}
+
 	return false;
 }
 
@@ -251,6 +272,7 @@ stock bool bIsPlayerBurning(int player)
 	{
 		return true;
 	}
+
 	return false;
 }
 
@@ -260,6 +282,7 @@ stock bool bIsPlayerGrounded(int player)
 	{
 		return true;
 	}
+
 	return false;
 }
 
@@ -271,8 +294,10 @@ stock bool bIsPlayerIdle(int survivor)
 		{
 			continue;
 		}
+
 		char sClassname[12];
 		GetEntityNetClass(iPlayer, sClassname, sizeof(sClassname));
+
 		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
@@ -286,6 +311,7 @@ stock bool bIsPlayerIdle(int survivor)
 			}
 		}
 	}
+
 	return false;
 }
 
@@ -295,36 +321,44 @@ stock bool bIsPlayerIncapacitated(int survivor)
 	{
 		return true;
 	}
+
 	return false;
 }
 
 int g_iCurrentMode;
+
 stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disabled)
 {
 	if (convar == null)
 	{
 		return false;
 	}
+
 	if (mode != 0)
 	{
 		g_iCurrentMode = 0;
 		int iGameMode = CreateEntityByName("info_gamemode");
 		DispatchSpawn(iGameMode);
+
 		HookSingleEntityOutput(iGameMode, "OnCoop", vGameMode, true);
 		HookSingleEntityOutput(iGameMode, "OnSurvival", vGameMode, true);
 		HookSingleEntityOutput(iGameMode, "OnVersus", vGameMode, true);
 		HookSingleEntityOutput(iGameMode, "OnScavenge", vGameMode, true);
+
 		ActivateEntity(iGameMode);
 		AcceptEntityInput(iGameMode, "PostSpawnActivate");
 		RemoveEntity(iGameMode);
+
 		if (g_iCurrentMode == 0 || !(mode & g_iCurrentMode))
 		{
 			return false;
 		}
 	}
+
 	char sGameMode[32], sGameModes[513];
 	convar.GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
+
 	if (!StrEqual(enabled, ""))
 	{
 		Format(sGameModes, sizeof(sGameModes), ",%s,", enabled);
@@ -333,6 +367,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 			return false;
 		}
 	}
+
 	if (!StrEqual(disabled, ""))
 	{
 		Format(sGameModes, sizeof(sGameModes), ",%s,", disabled);
@@ -341,6 +376,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 			return false;
 		}
 	}
+
 	return true;
 }
 
@@ -381,12 +417,13 @@ stock bool bIsValidEntity(int entity)
 
 stock bool bIsValidEntRef(int entity)
 {
-	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
+	return entity > 0 && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
 stock bool bIsValidGame(bool l4d2 = true)
 {
 	EngineVersion evEngine = GetEngineVersion();
+
 	return l4d2 ? evEngine == Engine_Left4Dead2 : evEngine == Engine_Left4Dead;
 }
 
@@ -401,11 +438,13 @@ stock bool bIsWitch(int witch)
 	{
 		char sClassname[32];
 		GetEntityClassname(witch, sClassname, sizeof(sClassname));
+
 		if (StrEqual(sClassname, "witch"))
 		{
 			return true;
 		}
 	}
+
 	return false;
 }
 
@@ -418,6 +457,7 @@ public bool bBoomerFilter(const char[] pattern, Handle clients)
 			PushArrayCell(clients, iPlayer);
 		}
 	}
+
 	return true;
 }
 
@@ -430,6 +470,7 @@ public bool bChargerFilter(const char[] pattern, Handle clients)
 			PushArrayCell(clients, iPlayer);
 		}
 	}
+
 	return true;
 }
 
@@ -442,6 +483,7 @@ public bool bHunterFilter(const char[] pattern, Handle clients)
 			PushArrayCell(clients, iPlayer);
 		}
 	}
+
 	return true;
 }
 
@@ -454,6 +496,7 @@ public bool bJockeyFilter(const char[] pattern, Handle clients)
 			PushArrayCell(clients, iPlayer);
 		}
 	}
+
 	return true;
 }
 
@@ -466,6 +509,7 @@ public bool bSmokerFilter(const char[] pattern, Handle clients)
 			PushArrayCell(clients, iPlayer);
 		}
 	}
+
 	return true;
 }
 
@@ -478,6 +522,7 @@ public bool bSpitterFilter(const char[] pattern, Handle clients)
 			PushArrayCell(clients, iPlayer);
 		}
 	}
+
 	return true;
 }
 
@@ -490,6 +535,7 @@ public bool bTankFilter(const char[] pattern, Handle clients)
 			PushArrayCell(clients, iPlayer);
 		}
 	}
+
 	return true;
 }
 
@@ -499,6 +545,7 @@ public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 	{
 		return false;
 	}
+
 	return true;
 }
 
@@ -508,6 +555,7 @@ public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
 	{
 		return false;
 	}
+
 	return true;
 }
 
@@ -517,22 +565,27 @@ public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 	{
 		return false;
 	}
+
 	return true;
 }
 
 stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int flag)
 {
 	Handle hTrace;
+
 	switch (flag)
 	{
 		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
 		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
 	}
+
 	if (TR_DidHit(hTrace))
 	{
 		return false;
 	}
+
 	delete hTrace;
+
 	return true;
 }
 
@@ -547,6 +600,7 @@ stock float flClamp(float value, float min, float max)
 	{
 		value = max;
 	}
+
 	return value;
 }
 
@@ -559,9 +613,11 @@ stock float flGetDistance(float pos[3], float angle[3], float offset1, float off
 {
 	float flAngle[3];
 	vCopyVector(angle, flAngle);
-	flAngle[0] += offset1, flAngle[1] += offset2;
+	flAngle[0] += offset1;
+	flAngle[1] += offset2;
 	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
 	float flDistance = flGetRayDistance(pos, flAngle, entity, trace);
+
 	return flDistance;
 }
 
@@ -571,6 +627,7 @@ stock float flGetGroundUnits(int entity)
 	{ 
 		Handle hTrace;
 		float flOrigin[3], flPosition[3], flDown[3] = {90.0, 0.0, 0.0};
+
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
 		hTrace = TR_TraceRayFilterEx(flOrigin, flDown, CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
 		if (TR_DidHit(hTrace))
@@ -578,11 +635,15 @@ stock float flGetGroundUnits(int entity)
 			float flUnits;
 			TR_GetEndPosition(flPosition, hTrace);
 			flUnits = flOrigin[2] - flPosition[2];
+
 			delete hTrace;
+
 			return flUnits;
 		}
+
 		delete hTrace;
 	}
+
 	return 0.0;
 }
 
@@ -590,6 +651,7 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace
 {
 	float flHitPos[3];
 	iGetRayHitPos(pos, angle, flHitPos, entity, false, trace);
+
 	return GetVectorDistance(pos, flHitPos);
 }
 
@@ -603,6 +665,7 @@ stock int iClamp(int value, int min, int max)
 	{
 		value = max;
 	}
+
 	return value;
 }
 
@@ -615,6 +678,7 @@ stock int iGetBotSurvivor()
 			return iBot;
 		}
 	}
+
 	return -1;
 }
 
@@ -628,6 +692,7 @@ stock int iGetHumanCount()
 			iHumanCount++;
 		}
 	}
+
 	return iHumanCount;
 }
 
@@ -640,6 +705,7 @@ stock int iGetIdleBot(int bot)
 			return iBot;
 		}
 	}
+
 	return 0;
 }
 
@@ -649,6 +715,7 @@ stock int iGetIdlePlayer(int bot)
 	{
 		char sClassname[12];
 		GetEntityNetClass(bot, sClassname, sizeof(sClassname));
+
 		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
@@ -658,6 +725,7 @@ stock int iGetIdlePlayer(int bot)
 			}
 		}
 	}
+
 	return 0;
 }
 
@@ -671,6 +739,7 @@ stock int iGetPlayerCount()
 			iPlayerCount++;
 		}
 	}
+
 	return iPlayerCount;
 }
 
@@ -684,6 +753,7 @@ stock int iGetRandomSurvivor(int survivor)
 			iSurvivors[iSurvivorCount++] = iSurvivor;
 		}
 	}
+
 	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
 }
 
@@ -691,6 +761,7 @@ stock int iGetRandomTarget(float pos[3], float angle[3])
 {
 	float flMin = 4.0, flPos[3], flAngle;
 	int iTarget;
+
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor))
@@ -698,6 +769,7 @@ stock int iGetRandomTarget(float pos[3], float angle[3])
 			GetClientEyePosition(iSurvivor, flPos);
 			MakeVectorFromPoints(pos, flPos, flPos);
 			flAngle = flGetAngle(angle, flPos);
+
 			if (flAngle <= flMin)
 			{
 				flMin = flAngle;
@@ -705,6 +777,7 @@ stock int iGetRandomTarget(float pos[3], float angle[3])
 			}
 		}
 	}
+
 	return iTarget;
 }
 
@@ -712,18 +785,22 @@ stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entit
 {
 	int iHit = 0;
 	Handle hTrace;
+
 	switch (trace)
 	{
 		case 1: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, entity);
 		case 2: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, entity);
 		case 3: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, entity);
 	}
+
 	if (TR_DidHit(hTrace))
 	{
 		TR_GetEndPosition(hitpos, hTrace);
 		iHit = TR_GetEntityIndex(hTrace);
 	}
+
 	delete hTrace;
+
 	if (offset)
 	{
 		float flVector[3];
@@ -732,6 +809,7 @@ stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entit
 		ScaleVector(flVector, 15.0);
 		AddVectors(hitpos, flVector, hitpos);
 	}
+
 	return iHit;
 }
 
@@ -747,6 +825,7 @@ stock int iGetWitchCount()
 	{
 		iWitchCount++;
 	}
+
 	return iWitchCount;
 }
 
@@ -760,14 +839,17 @@ stock void vAttachParticle(int player, const char[] particlename, float time = 0
 			float flPos[3];
 			GetEntPropVector(player, Prop_Send, "m_vecOrigin", flPos);
 			flPos[2] += origin;
+
 			DispatchKeyValue(iParticle, "scale", "");
 			DispatchKeyValue(iParticle, "effect_name", particlename);
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iParticle);
+
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "Enable");
 			AcceptEntityInput(iParticle, "Start");
 			vSetEntityParent(iParticle, player);
+
 			iParticle = EntIndexToEntRef(iParticle);
 			vDeleteEntity(iParticle, time);
 		}
@@ -784,7 +866,9 @@ stock void vCheatCommand(int player, const char[] command, const char[] argument
 
 stock void vCopyVector(float source[3], float target[3])
 {
-	target[0] = source[0], target[1] = source[1], target[2] = source[2];
+	target[0] = source[0];
+	target[1] = source[1];
+	target[2] = source[2];
 }
 
 stock void vCreateConfigFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
@@ -795,6 +879,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 	{
 		return;
 	}
+
 	File fFilename = OpenFile(sConfigFilename, "w+");
 	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
 	if (fFilename != null)
@@ -802,11 +887,12 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 		fFilename.WriteLine("// This config file was auto-generated by Super Tanks++ v%s (%s)", ST_VERSION, ST_URL);
 		fFilename.WriteLine("");
 		fFilename.WriteLine("");
+
 		delete fFilename;
 	}
 }
 
-stock void vCreateParticle(int player, const char[] particlename, float time, float origin)
+stock void vCreateParticle(int player, const char[] particlename, float time = 0.0, float origin = 0.0)
 {
 	if (bIsValidClient(player))
 	{
@@ -816,32 +902,18 @@ stock void vCreateParticle(int player, const char[] particlename, float time, fl
 			float flPos[3];
 			GetEntPropVector(player, Prop_Send, "m_vecOrigin", flPos);
 			flPos[2] += origin;
+
 			DispatchKeyValue(iParticle, "effect_name", particlename);
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
+
 			AcceptEntityInput(iParticle, "Start");
 			vSetEntityParent(iParticle, player);
+
 			iParticle = EntIndexToEntRef(iParticle);
 			vDeleteEntity(iParticle, time);
 		}
-	}
-}
-
-stock void vDamage(int survivor, const char[] damage)
-{
-	int iPointHurt = CreateEntityByName("point_hurt");
-	if (bIsValidEntity(iPointHurt))
-	{
-		char sTargetName[32];
-		Format(sTargetName, sizeof(sTargetName), "HurtTarget%d", GetClientUserId(survivor));
-		DispatchKeyValue(survivor, "targetname", sTargetName);
-		DispatchKeyValue(iPointHurt, "Damage", damage);
-		DispatchKeyValue(iPointHurt, "DamageTarget", sTargetName);
-		DispatchKeyValue(iPointHurt, "DamageType", "65536");
-		DispatchSpawn(iPointHurt);
-		AcceptEntityInput(iPointHurt, "Hurt", survivor);
-		RemoveEntity(iPointHurt);
 	}
 }
 
@@ -849,10 +921,12 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 {
 	if (bIsValidEntRef(entity))
 	{
+		AcceptEntityInput(entity, "ClearParent");
+
 		char sVariant[64];
 		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		AcceptEntityInput(entity, "ClearParent");
 		SetVariantString(sVariant);
+
 		AcceptEntityInput(entity, "AddOutput");
 		AcceptEntityInput(entity, "FireUser1");
 	}
@@ -875,25 +949,30 @@ stock void vEffect(int survivor, int tank, const char[] enabled, const char[] mo
 	{
 		char sRGB[4][4];
 		ST_TankColors(tank, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
+
 		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
+
 		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
+
 		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
-		vFade(survivor, 800, 300, iRed, iGreen, iBlue);
-	}
-}
 
-stock void vFade(int survivor, int duration, int unknown, int red, int green, int blue)
-{
-	Handle hFadeTarget = StartMessageOne("Fade", survivor);
-	if (hFadeTarget != null)
-	{
-		BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
-		bfWrite.WriteShort(duration), bfWrite.WriteShort(unknown), bfWrite.WriteShort((0x0010|0x0001));
-		bfWrite.WriteByte(red), bfWrite.WriteByte(green), bfWrite.WriteByte(blue), bfWrite.WriteByte(150);
-		EndMessage();
+		Handle hFadeTarget = StartMessageOne("Fade", survivor);
+		if (hFadeTarget != null)
+		{
+			BfWrite bfWrite = UserMessageToBfWrite(hFadeTarget);
+			bfWrite.WriteShort(800);
+			bfWrite.WriteShort(300);
+			bfWrite.WriteShort((0x0010|0x0001));
+			bfWrite.WriteByte(iRed);
+			bfWrite.WriteByte(iGreen);
+			bfWrite.WriteByte(iBlue);
+			bfWrite.WriteByte(150);
+
+			EndMessage();
+		}
 	}
 }
 
@@ -961,8 +1040,10 @@ stock void vPrecacheParticle(const char[] particlename)
 		DispatchKeyValue(iParticle, "effect_name", particlename);
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
+
 		AcceptEntityInput(iParticle, "Start");
 		vSetEntityParent(iParticle, iParticle);
+
 		iParticle = EntIndexToEntRef(iParticle);
 		vDeleteEntity(iParticle);
 	}
@@ -986,7 +1067,9 @@ stock void vSetEntityParent(int entity, int parent)
 
 stock void vSetVector(float target[3], float x, float y, float z)
 {
-	target[0] = x, target[1] = y, target[2] = z;
+	target[0] = x;
+	target[1] = y;
+	target[2] = z;
 }
 
 stock void vShake(int survivor, float duration = 1.0)
@@ -996,7 +1079,9 @@ stock void vShake(int survivor, float duration = 1.0)
 	{
 		BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
 		bfWrite.WriteByte(0);
-		bfWrite.WriteFloat(16.0), bfWrite.WriteFloat(0.5), bfWrite.WriteFloat(duration);
+		bfWrite.WriteFloat(16.0);
+		bfWrite.WriteFloat(0.5);
+		bfWrite.WriteFloat(duration);
 		EndMessage();
 	}
 }
@@ -1015,14 +1100,18 @@ stock void vSpecialAttack(int tank, float pos[3], const char[] model)
 	{
 		DispatchKeyValue(iProp, "disableshadows", "1");
 		SetEntityModel(iProp, model);
+
 		pos[2] += 10.0;
 		TeleportEntity(iProp, pos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iProp);
+
 		SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", tank);
 		SetEntPropFloat(iProp, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
+
 		SetEntProp(iProp, Prop_Send, "m_CollisionGroup", 1);
 		SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
 		SetEntityRenderColor(iProp, 0, 0, 0, 0);
+
 		AcceptEntityInput(iProp, "Break");
 	}
 }
@@ -1050,5 +1139,6 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 	MarkNativeAsOptional("ST_TankName");
 	MarkNativeAsOptional("ST_TankType");
 	MarkNativeAsOptional("ST_TankWave");
+	MarkNativeAsOptional("ST_TypeEnabled");
 }
 #endif

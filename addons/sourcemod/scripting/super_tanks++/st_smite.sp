@@ -2,12 +2,11 @@
 #undef REQUIRE_PLUGIN
 #include <st_clone>
 #define REQUIRE_PLUGIN
+
 #include <super_tanks++>
+
 #pragma semicolon 1
 #pragma newdecls required
-
-#define SPRITE_GLOW "sprites/glow.vmt"
-#define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 
 public Plugin myinfo =
 {
@@ -18,9 +17,16 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+#define SPRITE_GLOW "sprites/glow.vmt"
+
+#define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
+
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+
 char g_sSmiteEffect[ST_MAXTYPES + 1][4], g_sSmiteEffect2[ST_MAXTYPES + 1][4];
+
 float g_flSmiteRange[ST_MAXTYPES + 1], g_flSmiteRange2[ST_MAXTYPES + 1];
+
 int g_iSmiteAbility[ST_MAXTYPES + 1], g_iSmiteAbility2[ST_MAXTYPES + 1], g_iSmiteChance[ST_MAXTYPES + 1], g_iSmiteChance2[ST_MAXTYPES + 1], g_iSmiteHit[ST_MAXTYPES + 1], g_iSmiteHit2[ST_MAXTYPES + 1], g_iSmiteHitMode[ST_MAXTYPES + 1], g_iSmiteHitMode2[ST_MAXTYPES + 1], g_iSmiteMessage[ST_MAXTYPES + 1], g_iSmiteMessage2[ST_MAXTYPES + 1], g_iSmiteRangeChance[ST_MAXTYPES + 1], g_iSmiteRangeChance2[ST_MAXTYPES + 1], g_iSmiteSprite = -1;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -28,9 +34,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
 		strcopy(error, err_max, "[ST++] Smite Ability only supports Left 4 Dead 1 & 2.");
+
 		return APLRes_SilentFailure;
 	}
+
 	g_bLateLoad = late;
+
 	return APLRes_Success;
 }
 
@@ -58,6 +67,7 @@ public void OnLibraryRemoved(const char[] name)
 public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
+
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -67,6 +77,7 @@ public void OnPluginStart()
 				OnClientPutInServer(iPlayer);
 			}
 		}
+
 		g_bLateLoad = false;
 	}
 }
@@ -74,6 +85,7 @@ public void OnPluginStart()
 public void OnMapStart()
 {
 	g_iSmiteSprite = PrecacheModel(SPRITE_GLOW, true);
+
 	PrecacheSound(SOUND_EXPLOSION, true);
 }
 
@@ -88,6 +100,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+
 		if ((iSmiteHitMode(attacker) == 0 || iSmiteHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
@@ -115,25 +128,51 @@ public void ST_Configs(const char[] savepath, bool main)
 		Format(sName, sizeof(sName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sName))
 		{
-			main ? (g_bTankConfig[iIndex] = false) : (g_bTankConfig[iIndex] = true);
-			main ? (g_iSmiteAbility[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", 0)) : (g_iSmiteAbility2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", g_iSmiteAbility[iIndex]));
-			main ? (g_iSmiteAbility[iIndex] = iClamp(g_iSmiteAbility[iIndex], 0, 1)) : (g_iSmiteAbility2[iIndex] = iClamp(g_iSmiteAbility2[iIndex], 0, 1));
-			main ? (kvSuperTanks.GetString("Smite Ability/Ability Effect", g_sSmiteEffect[iIndex], sizeof(g_sSmiteEffect[]), "123")) : (kvSuperTanks.GetString("Smite Ability/Ability Effect", g_sSmiteEffect2[iIndex], sizeof(g_sSmiteEffect2[]), g_sSmiteEffect[iIndex]));
-			main ? (g_iSmiteMessage[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Message", 0)) : (g_iSmiteMessage2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Message", g_iSmiteMessage[iIndex]));
-			main ? (g_iSmiteMessage[iIndex] = iClamp(g_iSmiteMessage[iIndex], 0, 3)) : (g_iSmiteMessage2[iIndex] = iClamp(g_iSmiteMessage2[iIndex], 0, 3));
-			main ? (g_iSmiteChance[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Chance", 4)) : (g_iSmiteChance2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Chance", g_iSmiteChance[iIndex]));
-			main ? (g_iSmiteChance[iIndex] = iClamp(g_iSmiteChance[iIndex], 1, 9999999999)) : (g_iSmiteChance2[iIndex] = iClamp(g_iSmiteChance2[iIndex], 1, 9999999999));
-			main ? (g_iSmiteHit[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit", 0)) : (g_iSmiteHit2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit", g_iSmiteHit[iIndex]));
-			main ? (g_iSmiteHit[iIndex] = iClamp(g_iSmiteHit[iIndex], 0, 1)) : (g_iSmiteHit2[iIndex] = iClamp(g_iSmiteHit2[iIndex], 0, 1));
-			main ? (g_iSmiteHitMode[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit Mode", 0)) : (g_iSmiteHitMode2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit Mode", g_iSmiteHitMode[iIndex]));
-			main ? (g_iSmiteHitMode[iIndex] = iClamp(g_iSmiteHitMode[iIndex], 0, 2)) : (g_iSmiteHitMode2[iIndex] = iClamp(g_iSmiteHitMode2[iIndex], 0, 2));
-			main ? (g_flSmiteRange[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range", 150.0)) : (g_flSmiteRange2[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range", g_flSmiteRange[iIndex]));
-			main ? (g_flSmiteRange[iIndex] = flClamp(g_flSmiteRange[iIndex], 1.0, 9999999999.0)) : (g_flSmiteRange2[iIndex] = flClamp(g_flSmiteRange2[iIndex], 1.0, 9999999999.0));
-			main ? (g_iSmiteRangeChance[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Range Chance", 16)) : (g_iSmiteRangeChance2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Range Chance", g_iSmiteRangeChance[iIndex]));
-			main ? (g_iSmiteRangeChance[iIndex] = iClamp(g_iSmiteRangeChance[iIndex], 1, 9999999999)) : (g_iSmiteRangeChance2[iIndex] = iClamp(g_iSmiteRangeChance2[iIndex], 1, 9999999999));
+			if (main)
+			{
+				g_bTankConfig[iIndex] = false;g_bTankConfig[iIndex] = true;
+
+				g_iSmiteAbility[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", 0);
+				g_iSmiteAbility[iIndex] = iClamp(g_iSmiteAbility[iIndex], 0, 1);
+				kvSuperTanks.GetString("Smite Ability/Ability Effect", g_sSmiteEffect[iIndex], sizeof(g_sSmiteEffect[]), "123");
+				g_iSmiteMessage[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Message", 0);
+				g_iSmiteMessage[iIndex] = iClamp(g_iSmiteMessage[iIndex], 0, 3);
+				g_iSmiteChance[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Chance", 4);
+				g_iSmiteChance[iIndex] = iClamp(g_iSmiteChance[iIndex], 1, 9999999999);
+				g_iSmiteHit[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit", 0);
+				g_iSmiteHit[iIndex] = iClamp(g_iSmiteHit[iIndex], 0, 1);
+				g_iSmiteHitMode[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit Mode", 0);
+				g_iSmiteHitMode[iIndex] = iClamp(g_iSmiteHitMode[iIndex], 0, 2);
+				g_flSmiteRange[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range", 150.0);
+				g_flSmiteRange[iIndex] = flClamp(g_flSmiteRange[iIndex], 1.0, 9999999999.0);
+				g_iSmiteRangeChance[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Range Chance", 16);
+				g_iSmiteRangeChance[iIndex] = iClamp(g_iSmiteRangeChance[iIndex], 1, 9999999999);
+			}
+			else
+			{
+				g_bTankConfig[iIndex] = false;g_bTankConfig[iIndex] = true;
+
+				g_iSmiteAbility2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", g_iSmiteAbility[iIndex]);
+				g_iSmiteAbility2[iIndex] = iClamp(g_iSmiteAbility2[iIndex], 0, 1);
+				kvSuperTanks.GetString("Smite Ability/Ability Effect", g_sSmiteEffect2[iIndex], sizeof(g_sSmiteEffect2[]), g_sSmiteEffect[iIndex]);
+				g_iSmiteMessage2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Message", g_iSmiteMessage[iIndex]);
+				g_iSmiteMessage2[iIndex] = iClamp(g_iSmiteMessage2[iIndex], 0, 3);
+				g_iSmiteChance2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Chance", g_iSmiteChance[iIndex]);
+				g_iSmiteChance2[iIndex] = iClamp(g_iSmiteChance2[iIndex], 1, 9999999999);
+				g_iSmiteHit2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit", g_iSmiteHit[iIndex]);
+				g_iSmiteHit2[iIndex] = iClamp(g_iSmiteHit2[iIndex], 0, 1);
+				g_iSmiteHitMode2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit Mode", g_iSmiteHitMode[iIndex]);
+				g_iSmiteHitMode2[iIndex] = iClamp(g_iSmiteHitMode2[iIndex], 0, 2);
+				g_flSmiteRange2[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range", g_flSmiteRange[iIndex]);
+				g_flSmiteRange2[iIndex] = flClamp(g_flSmiteRange2[iIndex], 1.0, 9999999999.0);
+				g_iSmiteRangeChance2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Range Chance", g_iSmiteRangeChance[iIndex]);
+				g_iSmiteRangeChance2[iIndex] = iClamp(g_iSmiteRangeChance2[iIndex], 1, 9999999999);
+			}
+
 			kvSuperTanks.Rewind();
 		}
 	}
+
 	delete kvSuperTanks;
 }
 
@@ -163,15 +202,18 @@ public void ST_Ability(int tank)
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
 		int iSmiteRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iSmiteChance[ST_TankType(tank)] : g_iSmiteChance2[ST_TankType(tank)];
+
 		float flSmiteRange = !g_bTankConfig[ST_TankType(tank)] ? g_flSmiteRange[ST_TankType(tank)] : g_flSmiteRange2[ST_TankType(tank)],
 			flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
+
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flSmiteRange)
 				{
@@ -182,27 +224,34 @@ public void ST_Ability(int tank)
 	}
 }
 
-stock void vSmiteHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vSmiteHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
 	{
 		float flPosition[3], flStartPosition[3], flDirection[3] = {0.0, 0.0, 0.0};
-		int iSmiteMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iSmiteMessage[ST_TankType(tank)] : g_iSmiteMessage2[ST_TankType(tank)];
+		int iSmiteMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iSmiteMessage[ST_TankType(tank)] : g_iSmiteMessage2[ST_TankType(tank)],
+			iColor[4] = {255, 255, 255, 255};
+
 		GetClientAbsOrigin(survivor, flPosition);
 		flPosition[2] -= 26;
 		flStartPosition[0] = flPosition[0] + GetRandomInt(-500, 500), flStartPosition[1] = flPosition[1] + GetRandomInt(-500, 500), flStartPosition[2] = flPosition[2] + 800;
-		int iColor[4] = {255, 255, 255, 255};
+
 		TE_SetupBeamPoints(flStartPosition, flPosition, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
 		TE_SendToAll();
+
 		TE_SetupSparks(flPosition, flDirection, 5000, 1000);
 		TE_SendToAll();
+
 		TE_SetupEnergySplash(flPosition, flDirection, false);
 		TE_SendToAll();
+
 		EmitAmbientSound(SOUND_EXPLOSION, flStartPosition, survivor, SNDLEVEL_RAIDSIREN);
 		ForcePlayerSuicide(survivor);
+
 		char sSmiteEffect[4];
 		sSmiteEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sSmiteEffect[ST_TankType(tank)] : g_sSmiteEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sSmiteEffect, mode);
+
 		if (iSmiteMessage == message || iSmiteMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
@@ -212,22 +261,22 @@ stock void vSmiteHit(int survivor, int tank, int chance, int enabled, int messag
 	}
 }
 
-stock int iSmiteAbility(int tank)
+static int iSmiteAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmiteAbility[ST_TankType(tank)] : g_iSmiteAbility2[ST_TankType(tank)];
 }
 
-stock int iSmiteChance(int tank)
+static int iSmiteChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmiteChance[ST_TankType(tank)] : g_iSmiteChance2[ST_TankType(tank)];
 }
 
-stock int iSmiteHit(int tank)
+static int iSmiteHit(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmiteHit[ST_TankType(tank)] : g_iSmiteHit2[ST_TankType(tank)];
 }
 
-stock int iSmiteHitMode(int tank)
+static int iSmiteHitMode(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmiteHitMode[ST_TankType(tank)] : g_iSmiteHitMode2[ST_TankType(tank)];
 }
