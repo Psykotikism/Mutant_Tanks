@@ -1,10 +1,10 @@
 # Information
 > There is information about each setting and ability below.
 
-- Abilities count: 60
-- Maximum types: 5,000
+- Abilities count: 62
+- Maximum types: 10,000
 - All of these settings use default values if they are left incomplete or empty.
-- THIS FILE IS NOT THE CONFIG FILE!
+- THIS FILE IS NOT THE CONFIG FILE! USE IT AS A REFERENCE!
 
 ## Plugin Settings
 
@@ -66,11 +66,11 @@
 			// Character limit for each value: 4
 			// --
 			// Minimum number for each value: 1
-			// Maximum number for each value: 5000
+			// Maximum number for each value: 10000
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
-			"Type Range"					"1-5000"
+			"Type Range"					"1-10000"
 		}
 		"Waves"
 		{
@@ -272,7 +272,7 @@
 			// Character limit for each stage type: 4
 			// --
 			// Minimum: 1
-			// Maximum: 5000
+			// Maximum: 10000
 			// --
 			// 1st number = 2nd stage type
 			// 2nd number = 3rd stage type
@@ -280,7 +280,7 @@
 			// 4th number = 5th stage type
 			"Boss Types"					"2,3,4,5"
 
-			// The interval between each random switch.
+			// The Super Tank switches to a random type every time this many seconds passes.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
 			// --
 			// Minimum: 0.1
@@ -313,7 +313,7 @@
 			// Example: "1997,1998,1999,2000,2001,2002,2003,2004,2005,2006"
 			// --
 			// Minimum: 1
-			// Maximum: 5000
+			// Maximum: 10000
 			"Transform Types"				"1,2,3,4,5,6,7,8,9,10"
 
 			// The mode of the Super Tank's spawn status.
@@ -413,6 +413,14 @@
 			// Maximum: 9999999999.0
 			"Claw Damage"					"5.0"
 
+			// Base health given to the Super Tank.
+			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
+			// --
+			// Minimum: 0
+			// Maximum: 65535
+			"Base Health"					"0"
+
 			// Extra health given to the Super Tank.
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
@@ -500,13 +508,13 @@
 			"Ability Message"				"0"
 
 			// The bullet damage received by the Super Tank is divided by this value.
-			// Note: Damage = Bullet damage/Absorb bullet damage
+			// Note: Damage = Bullet damage/Absorb bullet divisor
 			// Example: Damage = 30.0/20.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage/1.0 = Bullet damage)
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Absorb Bullet Damage"			"20.0"
+			"Absorb Bullet Divisor"			"20.0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -521,31 +529,31 @@
 			"Absorb Duration"				"5.0"
 
 			// The explosive damage received by the Super Tank is divided by this value.
-			// Note: Damage = Explosive damage/Absorb explosive damage
+			// Note: Damage = Explosive damage/Absorb explosive divisor
 			// Example: Damage = 30.0/20.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage/1.0 = Explosive damage)
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Absorb Explosive Damage"		"20.0"
+			"Absorb Explosive Divisor"		"20.0"
 
 			// The fire damage received by the Super Tank is divided by this value.
-			// Note: Damage = Fire damage/Absorb fire damage
+			// Note: Damage = Fire damage/Absorb fire divisor
 			// Example: Damage = 300.0/200.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Fire damage/1.0 = Fire damage)
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Absorb Fire Damage"			"200.0"
+			"Absorb Fire Divisor"			"200.0"
 
 			// The melee damage received by the Super Tank is divided by this value.
-			// Note: Damage = Melee damage/Absorb melee damage
+			// Note: Damage = Melee damage/Absorb melee divisor
 			// Example: Damage = 300.0/200.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Melee damage/1.0 = Melee damage)
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Absorb Melee Damage"			"200.0"
+			"Absorb Melee Divisor"			"200.0"
 		}
 	}
 }
@@ -1051,6 +1059,39 @@
 }
 ```
 
+#### Cloud Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank constantly emits clouds of smoke that damage survivors caught in them.
+		// Requires "st_cloud.smx" to be installed.
+		"Cloud Ability"
+		{
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"				"0"
+
+			// The Super Tank's clouds do this much damage.
+			// --
+			// Minimum: 1.0
+			// Maximum: 9999999999.0
+			"Cloud Damage"					"5.0"
+		}
+	}
+}
+```
+
 #### Drop Ability
 
 ```
@@ -1173,6 +1214,12 @@
 			// 2: Ability activates when the Super Tank is hit by a survivor.
 			"Drug Hit Mode"					"0"
 
+			// The Super Tank drugs survivors every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Drug Interval"					"1.0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -1240,9 +1287,9 @@
 
 			// The Super Tank's electrocutions do this much damage.
 			// --
-			// Minimum: 1
-			// Maximum: 9999999999
-			"Electric Damage"				"5"
+			// Minimum: 1.0
+			// Maximum: 9999999999.0
+			"Electric Damage"				"5.0"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -1632,13 +1679,13 @@
 			"Ability Message"				"0"
 
 			// The bullet damage received by the Super Tank is multiplied by this value.
-			// Note: Damage = Bullet damage x Fragile bullet damage
+			// Note: Damage = Bullet damage x Fragile bullet multiplier
 			// Example: Damage = 30.0 x 5.0 (150.0)
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage x 1.0 = Bullet damage)
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Fragile Bullet Damage"			"5.0"
+			"Fragile Bullet Multiplier"		"5.0"
 
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
@@ -1653,31 +1700,31 @@
 			"Fragile Duration"				"5.0"
 
 			// The explosive damage received by the Super Tank is multiplied by this value.
-			// Note: Damage = Explosive damage x Fragile explosive damage
+			// Note: Damage = Explosive damage x Fragile explosive multiplier
 			// Example: Damage = 30.0 x 5.0 (150.0)
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage x 1.0 = Explosive damage)
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Fragile Explosive Damage"		"5.0"
+			"Fragile Explosive Multiplier"	"5.0"
 
 			// The fire damage received by the Super Tank is multiplied by this value.
-			// Note: Damage = Fire damage x Fragile fire damage
+			// Note: Damage = Fire damage x Fragile fire multiplier
 			// Example: Damage = 30.0 x 3.0 (90.0)
 			// Note: Use the value "1.0" to disable this setting. (Fire damage x 1.0 = Fire damage)
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Fragile Fire Damage"			"3.0"
+			"Fragile Fire Multiplier"		"3.0"
 
 			// The melee damage received by the Super Tank is multiplied by this value.
-			// Note: Damage = Melee damage x Fragile melee damage
+			// Note: Damage = Melee damage x Fragile melee multiplier
 			// Example: Damage = 100.0 x 1.5 (150.0)
 			// Note: Use the value "1.0" to disable this setting. (Melee damage x 1.0 = Melee damage)
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Fragile Melee Damage"			"1.5"
+			"Fragile Melee Multiplier"		"1.5"
 		}
 	}
 }
@@ -2140,9 +2187,9 @@
 
 			// The Super Tank's pain inflictions do this much damage.
 			// --
-			// Minimum: 1
-			// Maximum: 9999999999
-			"Hurt Damage"					"1"
+			// Minimum: 1.0
+			// Maximum: 9999999999.0
+			"Hurt Damage"					"5.0"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -2163,6 +2210,12 @@
 			// 1: Ability activates when the Super Tank hits a survivor.
 			// 2: Ability activates when the Super Tank is hit by a survivor.
 			"Hurt Hit Mode"					"0"
+
+			// The Super Tank hurts survivors every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Hurt Interval"					"1.0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -2223,6 +2276,15 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
+			// The bullet damage reflected towards survivors by the Super Tank is divided by this value.
+			// Note: Damage = Bullet damage/Hypno bullet divisor
+			// Example: Damage = 30.0/20.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Bullet damage/1.0 = Bullet damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Hypno Bullet Divisor"			"20.0"
+
 			// The Super Tank has 1 out of this many chances to trigger the ability.
 			// --
 			// Minimum: 1 (Greatest chance)
@@ -2234,6 +2296,24 @@
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Hypno Duration"				"5.0"
+
+			// The explosive damage reflected towards survivors by the Super Tank is divided by this value.
+			// Note: Damage = Explosive damage/Hypno explosive divisor
+			// Example: Damage = 30.0/20.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Explosive damage/1.0 = Explosive damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Hypno Explosive Divisor"		"20.0"
+
+			// The fire damage reflected towards survivors by the Super Tank is divided by this value.
+			// Note: Damage = Fire damage/Hypno fire divisor
+			// Example: Damage = 300.0/200.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Fire damage/1.0 = Fire damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Hypno Fire Divisor"			"200.0"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -2248,6 +2328,15 @@
 			// 1: Ability activates when the Super Tank hits a survivor.
 			// 2: Ability activates when the Super Tank is hit by a survivor.
 			"Hypno Hit Mode"				"0"
+
+			// The melee damage reflected towards survivors by the Super Tank is divided by this value.
+			// Note: Damage = Melee damage/Hypno melee divisor
+			// Example: Damage = 300.0/200.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Melee damage/1.0 = Melee damage)
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Hypno Melee Divisor"			"200.0"
 
 			// The mode of the Super Tank's hypno ability.
 			// --
@@ -3026,9 +3115,9 @@
 
 			// The Super Tank's meteorites do this much damage.
 			// --
-			// Minimum: 1
-			// Maximum: 9999999999
-			"Meteor Damage"					"5"
+			// Minimum: 1.0
+			// Maximum: 9999999999.0
+			"Meteor Damage"					"5.0"
 
 			// The radius of the Super Tank's meteor shower.
 			// --
@@ -3372,7 +3461,7 @@
 			// --
 			// Minimum: 1
 			// Maximum: 9999999999
-			"Pimp Damage"					"1"
+			"Pimp Damage"					"5"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -3387,6 +3476,12 @@
 			// 1: Ability activates when the Super Tank hits a survivor.
 			// 2: Ability activates when the Super Tank is hit by a survivor.
 			"Pimp Hit Mode"					"0"
+
+			// The Super Tank pimp slaps survivors every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Pimp Interval"					"1.0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -3853,7 +3948,7 @@
 			// The type that the Super Tank will respawn as.
 			// --
 			// 0: OFF, use the randomization feature.
-			// 1-5000: ON, the type to respawn as.
+			// 1-10000: ON, the type to respawn as.
 			"Respawn Type"					"0"
 		}
 	}
@@ -4162,6 +4257,12 @@
 			// 2: Ability activates when the Super Tank is hit by a survivor.
 			"Shake Hit Mode"				"0"
 
+			// The Super Tank shakes survivors' screems every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Shake Interval"				"1.0"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -4289,6 +4390,12 @@
 			// 1: Ability activates when the Super Tank hits a survivor.
 			// 2: Ability activates when the Super Tank is hit by a survivor.
 			"Shove Hit Mode"				"0"
+
+			// The Super Tank shoves survivors every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Shove Interval"				"1.0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -4540,9 +4647,9 @@
 
 			// The Super Tank's splashes do this much damage.
 			// --
-			// Minimum: 1
-			// Maximum: 9999999999
-			"Splash Damage"					"5"
+			// Minimum: 1.0
+			// Maximum: 9999999999.0
+			"Splash Damage"					"5.0"
 
 			// The Super Tank deals splash damage to nearby survivors every time this many seconds passes.
 			// --
@@ -4554,7 +4661,7 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
-			"Splash Range"					"150.0"
+			"Splash Range"					"500.0"
 		}
 	}
 }
@@ -5032,6 +5139,108 @@
 			// Minimum: 1 (Greatest chance)
 			// Maximum: 9999999999 (Less chance)
 			"Warp Range Chance"				"16"
+		}
+	}
+}
+```
+
+#### Whirl Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank makes survivors whirl.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor whirls.
+		// - "Whirl Range"
+		// - "Whirl Range Chance"
+		// "Whirl Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor whirls.
+		// - "Whirl Chance"
+		// - "Whirl Hit Mode"
+		// Requires "st_whirl.smx" to be installed.
+		"Whirl Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Whirl Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON, display message only when "Whirl Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
+			"Ability Message"				"0"
+
+			// The axis of the whirl effect.
+			// --
+			// 1: X-axis (Turn horizontally) only.
+			// 2: Y-axis (Turn vertically) only.
+			// 3: Z-axis (Turn diagonally) only.
+			// 4: X-axis or Y-axis only.
+			// 5: X-axis or Z-axis only.
+			// 6: Y-axis or Z-axis only.
+			// 7: Choose between all 3 axes.
+			"Whirl Axis"					"7"
+
+			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Whirl Chance"					"4"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Whirl Duration"				"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Whirl Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Whirl Hit Mode"				"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Whirl Range"					"150.0"
+
+			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// --
+			// Minimum: 1 (Greatest chance)
+			// Maximum: 9999999999 (Less chance)
+			"Whirl Range Chance"			"16"
+
+			// The Super Tank makes survivors whirl at this speed.
+			// --
+			// Minimum: 1.0
+			// Maximum: 9999999999.0
+			"Whirl Speed"					"500.0"
 		}
 	}
 }

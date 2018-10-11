@@ -1,5 +1,28 @@
 # Changelog
 
+## Version 8.44 (October 12, 2018)
+
+Bug fixes:
+
+1. Fixed the Absorb, Fragile, and Hypno abilities not working properly.
+2. Fixed the datapack leaks from various modules.
+
+Changes:
+
+1. Improved readability of the source code for each plugin.
+2. Added the Cloud and Whirl abilities.
+3. Added new settings for several abilities to handle timer intervals and damage values.
+4. The Electric, Hurt, and Splash abilities now use SDKHooks_TakeDamage() to damage players.
+5. The damage settings of the Electric, Hurt, and Splash abilities now accept float values (decimals) instead of int values (whole numbers).
+6. Renamed a bunch of settings.
+7. Increased Super Tank type limit to 10,000!
+8. Removed the st_enableplugin cvar setting.
+
+Files:
+
+1. Updated config file with the new settings.
+2. Updated include file for better readability.
+
 ## Version 8.43 (October 2, 2018)
 
 Bug fixes:
