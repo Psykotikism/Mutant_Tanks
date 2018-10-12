@@ -6,6 +6,7 @@ Bug fixes:
 
 1. Fixed the Absorb, Fragile, and Hypno abilities not working properly.
 2. Fixed the datapack leaks from various modules.
+3. Fixed the Range Chance settings not working at all.
 
 Changes:
 
@@ -17,6 +18,9 @@ Changes:
 6. Renamed a bunch of settings.
 7. Increased Super Tank type limit to 10,000!
 8. Removed the st_enableplugin cvar setting.
+9. Chance and Range Chance settings now only accept decimal (float) values.
+10. Chance and Range Chance settings now work differently. (Before: 1/X chances, After: X/100.0 probability)
+11. Added the "Base Health" setting to determine the base health of each Super Tank.
 
 Files:
 

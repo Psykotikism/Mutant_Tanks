@@ -360,7 +360,7 @@ Set the value in the "Display Health" KeyValue.
 
 8. Why do some Tanks spawn with different props?
 
-Each prop has 1 out of X chances to appear on Super Tanks when they spawn. Configure the chances for each prop in the "Props Chance" KeyValue.
+Each prop has X out of 100.0% probability to appear on Super Tanks when they spawn. Configure the chances for each prop in the "Props Chance" KeyValue.
 
 9. Why are the Tanks spawning with more than the extra health given to them?
 

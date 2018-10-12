@@ -338,13 +338,13 @@
 			// 6: Attach tires only.
 			"Props Attached"				"23456"
 
-			// Each prop has 1 of this many chances to appear when the Super Tank appears.
+			// Each prop has this many chances out of 100.0% to appear when the Super Tank appears.
 			// Separate chances with commas.
 			// Chances limit: 6
-			// Character limit for each chance: 3
+			// Character limit for each chance: 6
 			// --
-			// Minimum value for each chance: 1
-			// Maximum value for each chance: 9999999999
+			// Minimum value for each chance: 0.1 (Lowest chance)
+			// Maximum value for each chance: 100.0 (Highest chance)
 			// --
 			// 1st number = Chance for a blur effect to appear.
 			// 2nd number = Chance for lights to appear.
@@ -352,7 +352,7 @@
 			// 4th number = Chance for oxygen tank flames to appear.
 			// 5th number = Chance for rocks to appear.
 			// 6th number = Chance for tires to appear.
-			"Props Chance"					"3,3,3,3,3,3"
+			"Props Chance"					"33.3,33.3,33.3,33.3,33.3,33.3"
 
 			// The Super Tank's prop colors.
 			// Separate colors with "|".
@@ -417,7 +417,7 @@
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
 			// --
-			// Minimum: 0
+			// Minimum: 0 (OFF)
 			// Maximum: 65535
 			"Base Health"					"0"
 
@@ -516,11 +516,11 @@
 			// Maximum: 9999999999.0
 			"Absorb Bullet Divisor"			"20.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Absorb Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Absorb Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -606,11 +606,11 @@
 			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Acid Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Acid Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -632,11 +632,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Acid Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Acid Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Acid Range Chance"				"15.0"
 
 			// The Super Tank's rock creates an acid puddle when it breaks.
 			// Note: Only available in Left 4 Dead 2.
@@ -693,11 +693,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Ammo Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Ammo Chance"					"33.3"
 
 			// The Super Tank sets survivors' ammunition to this amount.
 			// --
@@ -725,11 +725,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Ammo Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Ammo Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Ammo Range Chance"				"15.0"
 		}
 	}
 }
@@ -778,11 +778,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Blind Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Blind Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -816,11 +816,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Blind Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Blind Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Blind Range Chance"			"15.0"
 		}
 	}
 }
@@ -873,11 +873,11 @@
 			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Bomb Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Bomb Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -899,11 +899,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Bomb Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Bomb Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Bomb Range Chance"				"15.0"
 
 			// The Super Tank's rock creates an explosion when it breaks.
 			// Note: This does not need "Ability Enabled" or "Bomb Hit" set to 1.
@@ -959,11 +959,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Bury Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Bury Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -997,11 +997,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Bury Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Bury Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Bury Range Chance"				"15.0"
 		}
 	}
 }
@@ -1036,11 +1036,11 @@
 			// Maximum: 25
 			"Clone Amount"					"2"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Clone Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Clone Chance"					"33.3"
 
 			// The Super Tank's clone's health.
 			// --
@@ -1115,17 +1115,17 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Drop Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Drop Chance"					"33.3"
 
-			// The Super Tank has 1 out of this many chances to drop guns with a full clip.
+			// The Super Tank has this many chances out of 100.0% to drop guns with a full clip.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Drop Clip Chance"				"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Drop Clip Chance"				"33.3"
 
 			// The mode of the Super Tank's drop ability.
 			// --
@@ -1188,11 +1188,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Drug Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Drug Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -1226,11 +1226,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Drug Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Drug Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Drug Range Chance"				"15.0"
 		}
 	}
 }
@@ -1279,11 +1279,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Electric Chance"				"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Electric Chance"				"33.3"
 
 			// The Super Tank's electrocutions do this much damage.
 			// --
@@ -1323,11 +1323,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Electric Range"				"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Electric Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Electric Range Chance"			"15.0"
 
 			// The Super Tank sets the survivors' run speed to this value when they are electrocuted.
 			// --
@@ -1382,11 +1382,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Enforce Chance"				"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Enforce Chance"				"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -1414,11 +1414,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Enforce Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Enforce Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Enforce Range Chance"			"15.0"
 
 			// The Super Tank forces survivors to only use one of the following weapon slots.
 			// Combine numbers in any order for different results.
@@ -1482,11 +1482,11 @@
 			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Fire Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Fire Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -1508,11 +1508,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Fire Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Fire Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Fire Range Chance"				"15.0"
 
 			// The Super Tank's rock creates a fire when it breaks.
 			// Note: This does not need "Ability Enabled" or "Fire Hit" set to 1.
@@ -1548,11 +1548,11 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Flash Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Flash Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -1619,11 +1619,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Fling Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Fling Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -1645,11 +1645,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Fling Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Fling Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Fling Range Chance"			"15.0"
 		}
 	}
 }
@@ -1687,11 +1687,11 @@
 			// Maximum: 9999999999.0
 			"Fragile Bullet Multiplier"		"5.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Fragile Chance"				"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Fragile Chance"				"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -1784,11 +1784,11 @@
 			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Ghost Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Ghost Chance"					"33.3"
 
 			// The amount of alpha to take from the Super Tank's alpha every X seconds until the limit set by the "Ghost Fade Limit" is reached.
 			// Note: The rate at which the Super Tank's alpha is reduced depends on the "Ghost Fade Rate" setting.
@@ -1835,11 +1835,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Ghost Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Ghost Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Ghost Range Chance"			"15.0"
 
 			// The Super Tank disarms the following weapon slots.
 			// Combine numbers in any order for different results.
@@ -1879,11 +1879,11 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"God Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"God Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -1946,11 +1946,11 @@
 			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Gravity Chance"				"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Gravity Chance"				"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -1987,11 +1987,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Gravity Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Gravity Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Gravity Range Chance"			"15.0"
 
 			// The Super Tank sets the survivors' gravity to this value.
 			// --
@@ -2067,11 +2067,11 @@
 			// Maximum: 65535.0
 			"Heal Buffer"					"25.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Heal Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Heal Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
@@ -2099,11 +2099,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Heal Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Heal Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Heal Range Chance"				"15.0"
 
 			// The Super Tank receives this much health from nearby common infected.
 			// --
@@ -2179,11 +2179,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Hurt Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Hurt Chance"					"33.3"
 
 			// The Super Tank's pain inflictions do this much damage.
 			// --
@@ -2223,11 +2223,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Hurt Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Hurt Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Hurt Range Chance"				"15.0"
 		}
 	}
 }
@@ -2285,11 +2285,11 @@
 			// Maximum: 9999999999.0
 			"Hypno Bullet Divisor"			"20.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Hypno Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Hypno Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -2350,11 +2350,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Hypno Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Hypno Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Hypno Range Chance"			"15.0"
 		}
 	}
 }
@@ -2403,11 +2403,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Ice Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Ice Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -2435,11 +2435,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Ice Range"						"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Ice Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Ice Range Chance"				"15.0"
 		}
 	}
 }
@@ -2488,11 +2488,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Idle Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Idle Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -2514,11 +2514,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Idle Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Idle Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Idle Range Chance"				"15.0"
 		}
 	}
 }
@@ -2567,11 +2567,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Invert Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Invert Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -2598,11 +2598,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Invert Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Invert Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Invert Range Chance"			"15.0"
 		}
 	}
 }
@@ -2631,11 +2631,11 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Item Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Item Chance"					"33.3"
 
 			// The Super Tank gives survivors this loadout.
 			// Item limit: 5
@@ -2707,11 +2707,11 @@
 			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Jump Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Jump Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -2751,11 +2751,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Jump Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Jump Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Jump Range Chance"				"15.0"
 		}
 	}
 }
@@ -2804,11 +2804,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Kamikaze Chance"				"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Kamikaze Chance"				"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -2830,11 +2830,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Kamikaze Range"				"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Kamikaze Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Kamikaze Range Chance"			"15.0"
 		}
 	}
 }
@@ -2883,11 +2883,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Lag Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Lag Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -2914,11 +2914,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Lag Range"						"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Lag Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Lag Range Chance"				"15.0"
 		}
 	}
 }
@@ -2967,11 +2967,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Leech Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Leech Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -3005,11 +3005,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Leech Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Leech Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Leech Range Chance"			"15.0"
 		}
 	}
 }
@@ -3038,11 +3038,11 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Medic Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Medic Chance"					"33.3"
 
 			// The Super Tank gives special infected this much health each time.
 			// --
@@ -3107,11 +3107,11 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Meteor Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Meteor Chance"					"33.3"
 
 			// The Super Tank's meteorites do this much damage.
 			// --
@@ -3163,11 +3163,11 @@
 			// Maximum: 25
 			"Minion Amount"					"5"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Minion Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Minion Chance"					"33.3"
 
 			// The Super Tank spawns these minions.
 			// Combine numbers in any order for different results.
@@ -3209,11 +3209,11 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Necro Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Necro Chance"					"33.3"
 
 			// The distance between a special infected and the Super Tank needed to trigger the ability.
 			// --
@@ -3268,11 +3268,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Nullify Chance"				"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Nullify Chance"				"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -3299,11 +3299,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Nullify Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Nullify Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Nullify Range Chance"			"15.0"
 		}
 	}
 }
@@ -3360,11 +3360,11 @@
 			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Panic Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Panic Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
@@ -3392,11 +3392,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Panic Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Panic Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Panic Range Chance"			"15.0"
 		}
 	}
 }
@@ -3451,11 +3451,11 @@
 			// Maximum: 9999999999
 			"Pimp Amount"					"5"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Pimp Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Pimp Chance"					"33.3"
 
 			// The Super Tank's pimp slaps do this much damage.
 			// --
@@ -3489,11 +3489,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Pimp Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Pimp Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Pimp Range Chance"				"15.0"
 		}
 	}
 }
@@ -3542,11 +3542,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Puke Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Puke Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -3568,11 +3568,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Puke Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Puke Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Puke Range Chance"				"15.0"
 		}
 	}
 }
@@ -3634,11 +3634,11 @@
 			// Maximum: 3.0
 			"Pyro Boost"					"1.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Pyro Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Pyro Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -3672,11 +3672,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Pyro Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Pyro Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Pyro Range Chance"				"15.0"
 		}
 	}
 }
@@ -3725,11 +3725,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Quiet Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Quiet Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -3757,11 +3757,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Quiet Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Quiet Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Quiet Range Chance"			"15.0"
 		}
 	}
 }
@@ -3810,11 +3810,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Recoil Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Recoil Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -3841,11 +3841,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Recoil Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Recoil Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Recoil Range Chance"			"15.0"
 		}
 	}
 }
@@ -3932,11 +3932,11 @@
 			// Maximum: 9999999999
 			"Respawn Amount"				"1"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Respawn Chance"				"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Respawn Chance"				"33.3"
 
 			// The mode of the Super Tank's respawns.
 			// --
@@ -3998,11 +3998,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Restart Chance"				"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Restart Chance"				"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// --
@@ -4038,11 +4038,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Restart Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Restart Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Restart Range Chance"			"15.0"
 		}
 	}
 }
@@ -4071,11 +4071,11 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Rock Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Rock Chance"					"33.3"
 
 			// The Super Tank's rocks do this much damage.
 			// --
@@ -4147,11 +4147,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Rocket Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Rocket Chance"					"33.3"
 
 			// The Super Tank sends survivors into space after this many seconds passes upon triggering the ability.
 			// --
@@ -4178,11 +4178,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Rocket Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Rocket Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Rocket Range Chance"			"15.0"
 		}
 	}
 }
@@ -4231,11 +4231,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Shake Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Shake Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -4269,11 +4269,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Shake Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Shake Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Shake Range Chance"			"15.0"
 		}
 	}
 }
@@ -4365,11 +4365,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Shove Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Shove Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -4403,11 +4403,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Shove Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Shove Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Shove Range Chance"			"15.0"
 		}
 	}
 }
@@ -4456,11 +4456,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Smash Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Smash Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -4482,11 +4482,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Smash Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Smash Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Smash Range Chance"			"15.0"
 		}
 	}
 }
@@ -4535,11 +4535,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Smite Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Smite Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -4561,11 +4561,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Smite Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Smite Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Smite Range Chance"			"15.0"
 		}
 	}
 }
@@ -4594,11 +4594,11 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Spam Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Spam Chance"					"33.3"
 
 			// The Super Tank's rocks do this much damage.
 			// --
@@ -4639,11 +4639,11 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Splash Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Splash Chance"					"33.3"
 
 			// The Super Tank's splashes do this much damage.
 			// --
@@ -4710,11 +4710,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Stun Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Stun Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -4742,11 +4742,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Stun Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Stun Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Stun Range Chance"				"15.0"
 
 			// The Super Tank sets the survivors' run speed to this value.
 			// --
@@ -4840,11 +4840,11 @@
 			// 1: ON
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Track Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Track Chance"					"33.3"
 
 			// The mode of the Super Tank's track ability.
 			// --
@@ -4907,11 +4907,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Vampire Chance"				"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Vampire Chance"				"33.3"
 
 			// The Super Tank receives this much health from survivors.
 			// Note: Tank's health limit on any difficulty is 65,535.
@@ -4944,11 +4944,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Vampire Range"					"500.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Vampire Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Vampire Range Chance"			"15.0"
 		}
 	}
 }
@@ -4997,11 +4997,11 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Vision Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Vision Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -5035,11 +5035,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Vision Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Vision Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Vision Range Chance"			"15.0"
 		}
 	}
 }
@@ -5096,11 +5096,11 @@
 			// 7: ON, display message when 1, 2, and 3 apply.
 			"Ability Message"				"0"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Warp Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Warp Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
@@ -5134,11 +5134,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Warp Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Warp Range Chance"				"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Warp Range Chance"				"15.0"
 		}
 	}
 }
@@ -5198,11 +5198,11 @@
 			// 7: Choose between all 3 axes.
 			"Whirl Axis"					"7"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Whirl Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Whirl Chance"					"33.3"
 
 			// The Super Tank's ability effects last this long.
 			// --
@@ -5230,11 +5230,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Whirl Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Whirl Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Whirl Range Chance"			"15.0"
 
 			// The Super Tank makes survivors whirl at this speed.
 			// --
@@ -5348,11 +5348,11 @@
 			// Maximum: 100
 			"Zombie Amount"					"10"
 
-			// The Super Tank has 1 out of this many chances to trigger the ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Zombie Chance"					"4"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Zombie Chance"					"33.3"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
@@ -5380,11 +5380,11 @@
 			// Maximum: 9999999999.0 (Farthest)
 			"Zombie Range"					"150.0"
 
-			// The Super Tank has 1 out of this many chances to trigger the range ability.
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 1 (Greatest chance)
-			// Maximum: 9999999999 (Less chance)
-			"Zombie Range Chance"			"16"
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Zombie Range Chance"			"15.0"
 		}
 	}
 }
