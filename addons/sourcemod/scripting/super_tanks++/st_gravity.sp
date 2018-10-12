@@ -21,9 +21,9 @@ bool g_bCloneInstalled, g_bGravity[MAXPLAYERS + 1], g_bGravity2[MAXPLAYERS + 1],
 
 char g_sGravityEffect[ST_MAXTYPES + 1][4], g_sGravityEffect2[ST_MAXTYPES + 1][4];
 
-float g_flGravityDuration[ST_MAXTYPES + 1], g_flGravityDuration2[ST_MAXTYPES + 1], g_flGravityForce[ST_MAXTYPES + 1], g_flGravityForce2[ST_MAXTYPES + 1], g_flGravityRange[ST_MAXTYPES + 1], g_flGravityRange2[ST_MAXTYPES + 1], g_flGravityValue[ST_MAXTYPES + 1], g_flGravityValue2[ST_MAXTYPES + 1];
+float g_flGravityChance[ST_MAXTYPES + 1], g_flGravityChance2[ST_MAXTYPES + 1], g_flGravityDuration[ST_MAXTYPES + 1], g_flGravityDuration2[ST_MAXTYPES + 1], g_flGravityForce[ST_MAXTYPES + 1], g_flGravityForce2[ST_MAXTYPES + 1], g_flGravityRange[ST_MAXTYPES + 1], g_flGravityRange2[ST_MAXTYPES + 1], g_flGravityRangeChance[ST_MAXTYPES + 1], g_flGravityRangeChance2[ST_MAXTYPES + 1], g_flGravityValue[ST_MAXTYPES + 1], g_flGravityValue2[ST_MAXTYPES + 1];
 
-int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_iGravityChance[ST_MAXTYPES + 1], g_iGravityChance2[ST_MAXTYPES + 1], g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHit2[ST_MAXTYPES + 1], g_iGravityHitMode[ST_MAXTYPES + 1], g_iGravityHitMode2[ST_MAXTYPES + 1], g_iGravityMessage[ST_MAXTYPES + 1], g_iGravityMessage2[ST_MAXTYPES + 1], g_iGravityRangeChance[ST_MAXTYPES + 1], g_iGravityRangeChance2[ST_MAXTYPES + 1];
+int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHit2[ST_MAXTYPES + 1], g_iGravityHitMode[ST_MAXTYPES + 1], g_iGravityHitMode2[ST_MAXTYPES + 1], g_iGravityMessage[ST_MAXTYPES + 1], g_iGravityMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -107,14 +107,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vGravityHit(victim, attacker, iGravityChance(attacker), iGravityHit(attacker), 1, "1");
+				vGravityHit(victim, attacker, flGravityChance(attacker), iGravityHit(attacker), 1, "1");
 			}
 		}
 		else if ((iGravityHitMode(victim) == 0 || iGravityHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vGravityHit(attacker, victim, iGravityChance(victim), iGravityHit(victim), 1, "2");
+				vGravityHit(attacker, victim, flGravityChance(victim), iGravityHit(victim), 1, "2");
 			}
 		}
 	}
@@ -139,8 +139,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect[iIndex], sizeof(g_sGravityEffect[]), "123");
 				g_iGravityMessage[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Message", 0);
 				g_iGravityMessage[iIndex] = iClamp(g_iGravityMessage[iIndex], 0, 7);
-				g_iGravityChance[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Chance", 4);
-				g_iGravityChance[iIndex] = iClamp(g_iGravityChance[iIndex], 1, 9999999999);
+				g_flGravityChance[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Chance", 33.3);
+				g_flGravityChance[iIndex] = flClamp(g_flGravityChance[iIndex], 0.1, 100.0);
 				g_flGravityDuration[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", 5.0);
 				g_flGravityDuration[iIndex] = flClamp(g_flGravityDuration[iIndex], 0.1, 9999999999.0);
 				g_flGravityForce[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", -50.0);
@@ -151,8 +151,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGravityHitMode[iIndex] = iClamp(g_iGravityHitMode[iIndex], 0, 2);
 				g_flGravityRange[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", 150.0);
 				g_flGravityRange[iIndex] = flClamp(g_flGravityRange[iIndex], 1.0, 9999999999.0);
-				g_iGravityRangeChance[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Range Chance", 16);
-				g_iGravityRangeChance[iIndex] = iClamp(g_iGravityRangeChance[iIndex], 1, 9999999999);
+				g_flGravityRangeChance[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range Chance", 15.0);
+				g_flGravityRangeChance[iIndex] = flClamp(g_flGravityRangeChance[iIndex], 0.1, 100.0);
 				g_flGravityValue[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", 0.3);
 				g_flGravityValue[iIndex] = flClamp(g_flGravityValue[iIndex], 0.1, 9999999999.0);
 			}
@@ -165,8 +165,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect2[iIndex], sizeof(g_sGravityEffect2[]), g_sGravityEffect[iIndex]);
 				g_iGravityMessage2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Message", g_iGravityMessage[iIndex]);
 				g_iGravityMessage2[iIndex] = iClamp(g_iGravityMessage2[iIndex], 0, 7);
-				g_iGravityChance2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Chance", g_iGravityChance[iIndex]);
-				g_iGravityChance2[iIndex] = iClamp(g_iGravityChance2[iIndex], 1, 9999999999);
+				g_flGravityChance2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Chance", g_flGravityChance[iIndex]);
+				g_flGravityChance2[iIndex] = flClamp(g_flGravityChance2[iIndex], 0.1, 100.0);
 				g_flGravityDuration2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", g_flGravityDuration[iIndex]);
 				g_flGravityDuration2[iIndex] = flClamp(g_flGravityDuration2[iIndex], 0.1, 9999999999.0);
 				g_flGravityForce2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", g_flGravityForce[iIndex]);
@@ -177,8 +177,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGravityHitMode2[iIndex] = iClamp(g_iGravityHitMode2[iIndex], 0, 2);
 				g_flGravityRange2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", g_flGravityRange[iIndex]);
 				g_flGravityRange2[iIndex] = flClamp(g_flGravityRange2[iIndex], 1.0, 9999999999.0);
-				g_iGravityRangeChance2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Range Chance", g_iGravityRangeChance[iIndex]);
-				g_iGravityRangeChance2[iIndex] = iClamp(g_iGravityRangeChance2[iIndex], 1, 9999999999);
+				g_flGravityRangeChance2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range Chance", g_flGravityRangeChance[iIndex]);
+				g_flGravityRangeChance2[iIndex] = flClamp(g_flGravityRangeChance2[iIndex], 0.1, 100.0);
 				g_flGravityValue2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", g_flGravityValue[iIndex]);
 				g_flGravityValue2[iIndex] = flClamp(g_flGravityValue2[iIndex], 0.1, 9999999999.0);
 			}
@@ -219,10 +219,10 @@ public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iGravityRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iGravityChance[ST_TankType(tank)] : g_iGravityChance2[ST_TankType(tank)];
-
 		float flGravityRange = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityRange[ST_TankType(tank)] : g_flGravityRange2[ST_TankType(tank)],
+			flGravityRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityRangeChance[ST_TankType(tank)] : g_flGravityRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
+
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -235,7 +235,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flGravityRange)
 				{
-					vGravityHit(iSurvivor, tank, iGravityRangeChance, iGravityAbility(tank), 2, "3");
+					vGravityHit(iSurvivor, tank, flGravityRangeChance, iGravityAbility(tank), 2, "3");
 				}
 			}
 		}
@@ -289,9 +289,9 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vGravityHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vGravityHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if ((enabled == 1 || enabled == 3) && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bGravity2[survivor])
+	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bGravity2[survivor])
 	{
 		g_bGravity2[survivor] = true;
 
@@ -364,14 +364,14 @@ static void vReset()
 	}
 }
 
+static float flGravityChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flGravityChance[ST_TankType(tank)] : g_flGravityChance2[ST_TankType(tank)];
+}
+
 static int iGravityAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iGravityAbility[ST_TankType(tank)] : g_iGravityAbility2[ST_TankType(tank)];
-}
-
-static int iGravityChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iGravityChance[ST_TankType(tank)] : g_iGravityChance2[ST_TankType(tank)];
 }
 
 static int iGravityHit(int tank)

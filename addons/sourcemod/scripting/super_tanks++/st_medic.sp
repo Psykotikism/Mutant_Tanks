@@ -21,9 +21,9 @@ bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sMedicHealth[ST_MAXTYPES + 1][36], g_sMedicHealth2[ST_MAXTYPES + 1][36], g_sMedicMaxHealth[ST_MAXTYPES + 1][36], g_sMedicMaxHealth2[ST_MAXTYPES + 1][36];
 
-float g_flMedicRange[ST_MAXTYPES + 1], g_flMedicRange2[ST_MAXTYPES + 1];
+float g_flMedicChance[ST_MAXTYPES + 1], g_flMedicChance2[ST_MAXTYPES + 1], g_flMedicRange[ST_MAXTYPES + 1], g_flMedicRange2[ST_MAXTYPES + 1];
 
-int g_iMedicAbility[ST_MAXTYPES + 1], g_iMedicAbility2[ST_MAXTYPES + 1], g_iMedicChance[ST_MAXTYPES + 1], g_iMedicChance2[ST_MAXTYPES + 1], g_iMedicMessage[ST_MAXTYPES + 1], g_iMedicMessage2[ST_MAXTYPES + 1];
+int g_iMedicAbility[ST_MAXTYPES + 1], g_iMedicAbility2[ST_MAXTYPES + 1], g_iMedicMessage[ST_MAXTYPES + 1], g_iMedicMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -81,8 +81,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMedicAbility[iIndex] = iClamp(g_iMedicAbility[iIndex], 0, 1);
 				g_iMedicMessage[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Message", 0);
 				g_iMedicMessage[iIndex] = iClamp(g_iMedicMessage[iIndex], 0, 1);
-				g_iMedicChance[iIndex] = kvSuperTanks.GetNum("Medic Ability/Medic Chance", 4);
-				g_iMedicChance[iIndex] = iClamp(g_iMedicChance[iIndex], 1, 9999999999);
+				g_flMedicChance[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Chance", 33.3);
+				g_flMedicChance[iIndex] = flClamp(g_flMedicChance[iIndex], 0.1, 100.0);
 				kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth[iIndex], sizeof(g_sMedicHealth[]), "25,25,25,25,25,25");
 				kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth[iIndex], sizeof(g_sMedicMaxHealth[]), "250,50,250,100,325,600");
 				g_flMedicRange[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", 500.0);
@@ -96,8 +96,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMedicAbility2[iIndex] = iClamp(g_iMedicAbility2[iIndex], 0, 1);
 				g_iMedicMessage2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Message", g_iMedicMessage[iIndex]);
 				g_iMedicMessage2[iIndex] = iClamp(g_iMedicMessage2[iIndex], 0, 1);
-				g_iMedicChance2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Medic Chance", g_iMedicChance[iIndex]);
-				g_iMedicChance2[iIndex] = iClamp(g_iMedicChance2[iIndex], 1, 9999999999);
+				g_flMedicChance2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Chance", g_flMedicChance[iIndex]);
+				g_flMedicChance2[iIndex] = flClamp(g_flMedicChance2[iIndex], 0.1, 100.0);
 				kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth2[iIndex], sizeof(g_sMedicHealth2[]), g_sMedicHealth[iIndex]);
 				kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth2[iIndex], sizeof(g_sMedicMaxHealth2[]), g_sMedicMaxHealth[iIndex]);
 				g_flMedicRange2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", g_flMedicRange[iIndex]);
@@ -116,7 +116,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iMedicAbility(iTank) == 1 && GetRandomInt(1, iMedicChance(iTank)) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iMedicAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flMedicChance(iTank) && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vMedic(iTank);
 		}
@@ -125,7 +125,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_BossStage(int tank)
 {
-	if (iMedicAbility(tank) == 1 && GetRandomInt(1, iMedicChance(tank)) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (iMedicAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vMedic(tank);
 	}
@@ -135,6 +135,7 @@ static void vMedic(int tank)
 {
 	float flMedicRange = !g_bTankConfig[ST_TankType(tank)] ? g_flMedicRange[ST_TankType(tank)] : g_flMedicRange2[ST_TankType(tank)],
 		flTankPos[3];
+
 	int iMedicMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMedicMessage[ST_TankType(tank)] : g_iMedicMessage2[ST_TankType(tank)];
 
 	GetClientAbsOrigin(tank, flTankPos);
@@ -211,12 +212,12 @@ static void vMedic(int tank)
 	}
 }
 
+static float flMedicChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flMedicChance[ST_TankType(tank)] : g_flMedicChance2[ST_TankType(tank)];
+}
+
 static int iMedicAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iMedicAbility[ST_TankType(tank)] : g_iMedicAbility2[ST_TankType(tank)];
-}
-
-static int iMedicChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iMedicChance[ST_TankType(tank)] : g_iMedicChance2[ST_TankType(tank)];
 }

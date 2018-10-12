@@ -112,9 +112,9 @@ char g_sWeaponClass[32][128], g_sWeaponModel[32][128];
 
 ConVar g_cvSTAssaultRifleAmmo, g_cvSTAutoShotgunAmmo, g_cvSTGrenadeLauncherAmmo, g_cvSTHuntingRifleAmmo, g_cvSTShotgunAmmo, g_cvSTSMGAmmo, g_cvSTSniperRifleAmmo;
 
-float g_flDropWeaponScale[ST_MAXTYPES + 1], g_flDropWeaponScale2[ST_MAXTYPES + 1];
+float g_flDropChance[ST_MAXTYPES + 1], g_flDropChance2[ST_MAXTYPES + 1], g_flDropClipChance[ST_MAXTYPES + 1], g_flDropClipChance2[ST_MAXTYPES + 1], g_flDropWeaponScale[ST_MAXTYPES + 1], g_flDropWeaponScale2[ST_MAXTYPES + 1];
 
-int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropAbility2[ST_MAXTYPES + 1], g_iDropChance[ST_MAXTYPES + 1], g_iDropChance2[ST_MAXTYPES + 1], g_iDropClipChance[ST_MAXTYPES + 1], g_iDropClipChance2[ST_MAXTYPES + 1], g_iDropMessage[ST_MAXTYPES + 1], g_iDropMessage2[ST_MAXTYPES + 1], g_iDropMode[ST_MAXTYPES + 1], g_iDropMode2[ST_MAXTYPES + 1], g_iDropWeapon[MAXPLAYERS + 1];
+int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropAbility2[ST_MAXTYPES + 1], g_iDropMessage[ST_MAXTYPES + 1], g_iDropMessage2[ST_MAXTYPES + 1], g_iDropMode[ST_MAXTYPES + 1], g_iDropMode2[ST_MAXTYPES + 1], g_iDropWeapon[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -326,10 +326,10 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iDropAbility[iIndex] = iClamp(g_iDropAbility[iIndex], 0, 1);
 				g_iDropMessage[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Message", 0);
 				g_iDropMessage[iIndex] = iClamp(g_iDropMessage[iIndex], 0, 1);
-				g_iDropChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Chance", 4);
-				g_iDropChance[iIndex] = iClamp(g_iDropChance[iIndex], 1, 9999999999);
-				g_iDropClipChance[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", 4);
-				g_iDropClipChance[iIndex] = iClamp(g_iDropClipChance[iIndex], 1, 9999999999);
+				g_flDropChance[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Chance", 33.3);
+				g_flDropChance[iIndex] = flClamp(g_flDropChance[iIndex], 0.1, 100.0);
+				g_flDropClipChance[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Clip Chance", 33.3);
+				g_flDropClipChance[iIndex] = flClamp(g_flDropClipChance[iIndex], 0.1, 100.0);
 				g_iDropMode[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", 0);
 				g_iDropMode[iIndex] = iClamp(g_iDropMode[iIndex], 0, 2);
 				g_flDropWeaponScale[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", 1.0);
@@ -343,10 +343,10 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iDropAbility2[iIndex] = iClamp(g_iDropAbility2[iIndex], 0, 1);
 				g_iDropMessage2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Message", g_iDropMessage[iIndex]);
 				g_iDropMessage2[iIndex] = iClamp(g_iDropMessage2[iIndex], 0, 1);
-				g_iDropChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Chance", g_iDropChance[iIndex]);
-				g_iDropChance2[iIndex] = iClamp(g_iDropChance2[iIndex], 1, 9999999999);
-				g_iDropClipChance2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Clip Chance", g_iDropClipChance[iIndex]);
-				g_iDropClipChance2[iIndex] = iClamp(g_iDropClipChance2[iIndex], 1, 9999999999);
+				g_flDropChance2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Chance", g_flDropChance[iIndex]);
+				g_flDropChance2[iIndex] = flClamp(g_flDropChance2[iIndex], 0.1, 100.0);
+				g_flDropClipChance2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Clip Chance", g_flDropClipChance[iIndex]);
+				g_flDropClipChance2[iIndex] = flClamp(g_flDropClipChance2[iIndex], 0.1, 100.0);
 				g_iDropMode2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", g_iDropMode[iIndex]);
 				g_iDropMode2[iIndex] = iClamp(g_iDropMode2[iIndex], 0, 2);
 				g_flDropWeaponScale2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", g_flDropWeaponScale[iIndex]);
@@ -369,9 +369,11 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropChance[ST_TankType(iTank)] : g_iDropChance2[ST_TankType(iTank)];
-		if (iDropAbility(iTank) == 1 && GetRandomInt(1, iDropChance) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsValidEntity(g_iDrop[iTank]))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+
+		float flDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropChance[ST_TankType(iTank)] : g_flDropChance2[ST_TankType(iTank)];
+
+		if (iDropAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flDropChance && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsValidEntity(g_iDrop[iTank]))
 		{
 			float flPos[3], flAngles[3];
 			int iDropMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMessage[ST_TankType(iTank)] : g_iDropMessage2[ST_TankType(iTank)];
@@ -422,8 +424,8 @@ public void ST_Event(Event event, const char[] name)
 						iAmmo = g_cvSTSniperRifleAmmo.IntValue;
 					}
 
-					int iDropClipChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropClipChance[ST_TankType(iTank)] : g_iDropClipChance2[ST_TankType(iTank)];
-					if (GetRandomInt(1, iDropClipChance) == 1)
+					float flDropClipChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropClipChance[ST_TankType(iTank)] : g_flDropClipChance2[ST_TankType(iTank)];
+					if (GetRandomFloat(0.1, 100.0) <= flDropClipChance)
 					{
 						iClip = iAmmo;
 					}

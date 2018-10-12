@@ -19,9 +19,9 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bGod[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-float g_flGodDuration[ST_MAXTYPES + 1], g_flGodDuration2[ST_MAXTYPES + 1];
+float g_flGodChance[ST_MAXTYPES + 1], g_flGodChance2[ST_MAXTYPES + 1], g_flGodDuration[ST_MAXTYPES + 1], g_flGodDuration2[ST_MAXTYPES + 1];
 
-int g_iGodAbility[ST_MAXTYPES + 1], g_iGodAbility2[ST_MAXTYPES + 1], g_iGodChance[ST_MAXTYPES + 1], g_iGodChance2[ST_MAXTYPES + 1], g_iGodMessage[ST_MAXTYPES + 1], g_iGodMessage2[ST_MAXTYPES + 1];
+int g_iGodAbility[ST_MAXTYPES + 1], g_iGodAbility2[ST_MAXTYPES + 1], g_iGodMessage[ST_MAXTYPES + 1], g_iGodMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -94,8 +94,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGodAbility[iIndex] = iClamp(g_iGodAbility[iIndex], 0, 1);
 				g_iGodMessage[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", 0);
 				g_iGodMessage[iIndex] = iClamp(g_iGodMessage[iIndex], 0, 1);
-				g_iGodChance[iIndex] = kvSuperTanks.GetNum("God Ability/God Chance", 4);
-				g_iGodChance[iIndex] = iClamp(g_iGodChance[iIndex], 1, 9999999999);
+				g_flGodChance[iIndex] = kvSuperTanks.GetFloat("God Ability/God Chance", 33.3);
+				g_flGodChance[iIndex] = flClamp(g_flGodChance[iIndex], 0.1, 100.0);
 				g_flGodDuration[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", 5.0);
 				g_flGodDuration[iIndex] = flClamp(g_flGodDuration[iIndex], 0.1, 9999999999.0);
 			}
@@ -107,8 +107,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGodAbility2[iIndex] = iClamp(g_iGodAbility2[iIndex], 0, 1);
 				g_iGodMessage2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", g_iGodMessage[iIndex]);
 				g_iGodMessage2[iIndex] = iClamp(g_iGodMessage2[iIndex], 0, 1);
-				g_iGodChance2[iIndex] = kvSuperTanks.GetNum("God Ability/God Chance", g_iGodChance[iIndex]);
-				g_iGodChance2[iIndex] = iClamp(g_iGodChance2[iIndex], 1, 9999999999);
+				g_flGodChance2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Chance", g_flGodChance[iIndex]);
+				g_flGodChance2[iIndex] = flClamp(g_flGodChance2[iIndex], 0.1, 100.0);
 				g_flGodDuration2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", g_flGodDuration[iIndex]);
 				g_flGodDuration2[iIndex] = flClamp(g_flGodDuration2[iIndex], 0.1, 9999999999.0);
 			}
@@ -139,8 +139,8 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	int iGodChance = !g_bTankConfig[ST_TankType(tank)] ? g_iGodChance[ST_TankType(tank)] : g_iGodChance2[ST_TankType(tank)];
-	if (iGodAbility(tank) == 1 && GetRandomInt(1, iGodChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bGod[tank])
+	float flGodChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGodChance[ST_TankType(tank)] : g_flGodChance2[ST_TankType(tank)];
+	if (iGodAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flGodChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bGod[tank])
 	{
 		g_bGod[tank] = true;
 

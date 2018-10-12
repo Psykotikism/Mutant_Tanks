@@ -21,9 +21,9 @@ bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 
-float g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
+float g_flTrackChance[ST_MAXTYPES + 1], g_flTrackChance2[ST_MAXTYPES + 1], g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
 
-int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackChance[ST_MAXTYPES + 1], g_iTrackChance2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
+int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -96,8 +96,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iTrackAbility[iIndex] = iClamp(g_iTrackAbility[iIndex], 0, 1);
 				g_iTrackMessage[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", 0);
 				g_iTrackMessage[iIndex] = iClamp(g_iTrackMessage[iIndex], 0, 1);
-				g_iTrackChance[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Chance", 4);
-				g_iTrackChance[iIndex] = iClamp(g_iTrackChance[iIndex], 1, 9999999999);
+				g_flTrackChance[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Chance", 33.3);
+				g_flTrackChance[iIndex] = flClamp(g_flTrackChance[iIndex], 0.1, 100.0);
 				g_iTrackMode[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", 1);
 				g_iTrackMode[iIndex] = iClamp(g_iTrackMode[iIndex], 0, 1);
 				g_flTrackSpeed[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", 500.0);
@@ -114,8 +114,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iTrackAbility2[iIndex] = iClamp(g_iTrackAbility2[iIndex], 0, 1);
 				g_iTrackMessage2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", g_iTrackMessage[iIndex]);
 				g_iTrackMessage2[iIndex] = iClamp(g_iTrackMessage2[iIndex], 0, 1);
-				g_iTrackChance2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Chance", g_iTrackChance[iIndex]);
-				g_iTrackChance2[iIndex] = iClamp(g_iTrackChance2[iIndex], 1, 9999999999);
+				g_flTrackChance2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Chance", g_flTrackChance[iIndex]);
+				g_flTrackChance2[iIndex] = flClamp(g_flTrackChance2[iIndex], 0.1, 100.0);
 				g_iTrackMode2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", g_iTrackMode[iIndex]);
 				g_iTrackMode2[iIndex] = iClamp(g_iTrackMode2[iIndex], 0, 1);
 				g_flTrackSpeed2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[iIndex]);
@@ -131,8 +131,8 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_RockThrow(int tank, int rock)
 {
-	int iTrackChance = !g_bTankConfig[ST_TankType(tank)] ? g_iTrackChance[ST_TankType(tank)] : g_iTrackChance2[ST_TankType(tank)];
-	if (iTrackAbility(tank) == 1 && GetRandomInt(1, iTrackChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	float flTrackChance = !g_bTankConfig[ST_TankType(tank)] ? g_flTrackChance[ST_TankType(tank)] : g_flTrackChance2[ST_TankType(tank)];
+	if (iTrackAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flTrackChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
 		int iTrackMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iTrackMessage[ST_TankType(tank)] : g_iTrackMessage2[ST_TankType(tank)];
 

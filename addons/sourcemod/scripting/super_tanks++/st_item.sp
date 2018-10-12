@@ -21,7 +21,9 @@ bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sItemLoadout[ST_MAXTYPES + 1][325], g_sItemLoadout2[ST_MAXTYPES + 1][325];
 
-int g_iItemAbility[ST_MAXTYPES + 1], g_iItemAbility2[ST_MAXTYPES + 1], g_iItemChance[ST_MAXTYPES + 1], g_iItemChance2[ST_MAXTYPES + 1], g_iItemMessage[ST_MAXTYPES + 1], g_iItemMessage2[ST_MAXTYPES + 1], g_iItemMode[ST_MAXTYPES + 1], g_iItemMode2[ST_MAXTYPES + 1];
+float g_flItemChance[ST_MAXTYPES + 1], g_flItemChance2[ST_MAXTYPES + 1];
+
+int g_iItemAbility[ST_MAXTYPES + 1], g_iItemAbility2[ST_MAXTYPES + 1], g_iItemMessage[ST_MAXTYPES + 1], g_iItemMessage2[ST_MAXTYPES + 1], g_iItemMode[ST_MAXTYPES + 1], g_iItemMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -79,8 +81,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iItemAbility[iIndex] = iClamp(g_iItemAbility[iIndex], 0, 1);
 				g_iItemMessage[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Message", 0);
 				g_iItemMessage[iIndex] = iClamp(g_iItemMessage[iIndex], 0, 1);
-				g_iItemChance[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Chance", 4);
-				g_iItemChance[iIndex] = iClamp(g_iItemChance[iIndex], 1, 9999999999);
+				g_flItemChance[iIndex] = kvSuperTanks.GetFloat("Item Ability/Item Chance", 33.3);
+				g_flItemChance[iIndex] = flClamp(g_flItemChance[iIndex], 0.1, 100.0);
 				kvSuperTanks.GetString("Item Ability/Item Loadout", g_sItemLoadout[iIndex], sizeof(g_sItemLoadout[]), "rifle,pistol,first_aid_kit,pain_pills");
 				g_iItemMode[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Mode", 0);
 				g_iItemMode[iIndex] = iClamp(g_iItemMode[iIndex], 0, 1);
@@ -93,8 +95,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iItemAbility2[iIndex] = iClamp(g_iItemAbility2[iIndex], 0, 1);
 				g_iItemMessage2[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Message", g_iItemMessage[iIndex]);
 				g_iItemMessage2[iIndex] = iClamp(g_iItemMessage2[iIndex], 0, 1);
-				g_iItemChance2[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Chance", g_iItemChance[iIndex]);
-				g_iItemChance2[iIndex] = iClamp(g_iItemChance2[iIndex], 1, 9999999999);
+				g_flItemChance2[iIndex] = kvSuperTanks.GetFloat("Item Ability/Item Chance", g_flItemChance[iIndex]);
+				g_flItemChance2[iIndex] = flClamp(g_flItemChance2[iIndex], 0.1, 100.0);
 				kvSuperTanks.GetString("Item Ability/Item Loadout", g_sItemLoadout2[iIndex], sizeof(g_sItemLoadout2[]), g_sItemLoadout[iIndex]);
 				g_iItemMode2[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Mode", g_iItemMode[iIndex]);
 				g_iItemMode2[iIndex] = iClamp(g_iItemMode2[iIndex], 0, 1);
@@ -113,10 +115,12 @@ public void ST_Event(Event event, const char[] name)
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
 			iItemAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemAbility[ST_TankType(iTank)] : g_iItemAbility2[ST_TankType(iTank)],
-			iItemChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemChance[ST_TankType(iTank)] : g_iItemChance2[ST_TankType(iTank)],
 			iItemMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemMessage[ST_TankType(iTank)] : g_iItemMessage2[ST_TankType(iTank)],
 			iItemMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iItemMode[ST_TankType(iTank)] : g_iItemMode2[ST_TankType(iTank)];
-		if (iItemAbility == 1 && GetRandomInt(1, iItemChance) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+
+		float flItemChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flItemChance[ST_TankType(iTank)] : g_flItemChance2[ST_TankType(iTank)];
+
+		if (iItemAbility == 1 && GetRandomFloat(0.1, 100.0) <= flItemChance && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			char sItems[5][64], sItemLoadout[325];
 			sItemLoadout = !g_bTankConfig[ST_TankType(iTank)] ? g_sItemLoadout[ST_TankType(iTank)] : g_sItemLoadout2[ST_TankType(iTank)];

@@ -37,7 +37,7 @@ public Plugin myinfo =
 bool g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bTransformed[MAXPLAYERS + 1];
 
 char g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sFinaleWaves[12], g_sFinaleWaves2[12], g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8],
-	g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][12], g_sPropsChance2[ST_MAXTYPES + 1][12], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28],
+	g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28],
 	g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80], g_sTypeRange[10], g_sTypeRange2[10];
 
 ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
@@ -1132,7 +1132,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 				g_iSpawnMode[iIndex] = iClamp(g_iSpawnMode[iIndex], 0, 3);
 
 				kvSuperTanks.GetString("Props/Props Attached", g_sPropsAttached[iIndex], sizeof(g_sPropsAttached[]), "23456");
-				kvSuperTanks.GetString("Props/Props Chance", g_sPropsChance[iIndex], sizeof(g_sPropsChance[]), "3,3,3,3,3,3");
+				kvSuperTanks.GetString("Props/Props Chance", g_sPropsChance[iIndex], sizeof(g_sPropsChance[]), "33.3,33.3,33.3,33.3,33.3,33.3");
 				kvSuperTanks.GetString("Props/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255");
 
 				g_iParticleEffect[iIndex] = kvSuperTanks.GetNum("Particles/Body Particle", 0);
@@ -1531,37 +1531,37 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		int iAlpha5 = (sRGB5[3][0] != '\0') ? StringToInt(sRGB5[3]) : 255;
 		iAlpha5 = iClamp(iAlpha5, 0, 255);
 
-		char sSet2[6][4], sPropsChance[12], sPropsAttached[7];
+		char sSet2[6][4], sPropsChance[35], sPropsAttached[7];
 		sPropsChance = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsChance[g_iTankType[tank]] : g_sPropsChance2[g_iTankType[tank]];
 		TrimString(sPropsChance);
 		ExplodeString(sPropsChance, ",", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 
 		TrimString(sSet2[0]);
-		int iChance = (sSet2[0][0] != '\0') ? StringToInt(sSet2[0]) : 3;
-		iChance = iClamp(iChance, 1, 9999999999);
+		float flChance = (sSet2[0][0] != '\0') ? StringToFloat(sSet2[0]) : 33.3;
+		flChance = flClamp(flChance, 0.1, 100.0);
 
 		TrimString(sSet2[1]);
-		int iChance2 = (sSet2[1][0] != '\0') ? StringToInt(sSet2[1]) : 3;
-		iChance2 = iClamp(iChance2, 1, 9999999999);
+		float flChance2 = (sSet2[1][0] != '\0') ? StringToFloat(sSet2[1]) : 33.3;
+		flChance2 = flClamp(flChance2, 0.1, 100.0);
 
 		TrimString(sSet2[2]);
-		int iChance3 = (sSet2[2][0] != '\0') ? StringToInt(sSet2[2]) : 3;
-		iChance3 = iClamp(iChance3, 1, 9999999999);
+		float flChance3 = (sSet2[2][0] != '\0') ? StringToFloat(sSet2[2]) : 33.3;
+		flChance3 = flClamp(flChance3, 0.1, 100.0);
 
 		TrimString(sSet2[3]);
-		int iChance4 = (sSet2[3][0] != '\0') ? StringToInt(sSet2[3]) : 3;
-		iChance4 = iClamp(iChance4, 1, 9999999999);
+		float flChance4 = (sSet2[3][0] != '\0') ? StringToFloat(sSet2[3]) : 33.3;
+		flChance4 = flClamp(flChance4, 0.1, 100.0);
 
 		TrimString(sSet2[4]);
-		int iChance5 = (sSet2[4][0] != '\0') ? StringToInt(sSet2[4]) : 3;
-		iChance5 = iClamp(iChance5, 1, 9999999999);
+		float flChance5 = (sSet2[4][0] != '\0') ? StringToFloat(sSet2[4]) : 33.3;
+		flChance5 = flClamp(flChance5, 0.1, 100.0);
 
 		TrimString(sSet2[5]);
-		int iChance6 = (sSet2[5][0] != '\0') ? StringToInt(sSet2[5]) : 3;
-		iChance6 = iClamp(iChance6, 1, 9999999999);
+		float flChance6 = (sSet2[5][0] != '\0') ? StringToFloat(sSet2[5]) : 33.3;
+		flChance6 = flClamp(flChance6, 0.1, 100.0);
 
 		sPropsAttached = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsAttached[g_iTankType[tank]] : g_sPropsAttached2[g_iTankType[tank]];
-		if (GetRandomInt(1, iChance) == 1 && StrContains(sPropsAttached, "1") != -1)
+		if (GetRandomFloat(0.1, 100.0) <= flChance && StrContains(sPropsAttached, "1") != -1)
 		{
 			CreateTimer(0.25, tTimerBlurEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
@@ -1573,7 +1573,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		int iBeam[7], iRandom = GetRandomInt(1, 6);
 		for (int iLight = 1; iLight <= iRandom; iLight++)
 		{
-			if (GetRandomInt(1, iChance2) == 1 && StrContains(sPropsAttached, "2") != -1)
+			if (GetRandomFloat(0.1, 100.0) <= flChance2 && StrContains(sPropsAttached, "2") != -1)
 			{
 				iBeam[iLight] = CreateEntityByName("beam_spotlight");
 				if (bIsValidEntity(iBeam[iLight]))
@@ -1626,7 +1626,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		int iJetpack[5], iRandom2 = GetRandomInt(1, 4);
 		for (int iOzTank = 1; iOzTank <= iRandom2; iOzTank++)
 		{
-			if (GetRandomInt(1, iChance3) == 1 && StrContains(sPropsAttached, "3") != -1)
+			if (GetRandomFloat(0.1, 100.0) <= flChance3 && StrContains(sPropsAttached, "3") != -1)
 			{
 				iJetpack[iOzTank] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(iJetpack[iOzTank]))
@@ -1678,7 +1678,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					TeleportEntity(iJetpack[iOzTank], flOrigin, NULL_VECTOR, flAngles2);
 					DispatchSpawn(iJetpack[iOzTank]);
 
-					if (GetRandomInt(1, iChance4) == 1 && StrContains(sPropsAttached, "4") != -1)
+					if (GetRandomFloat(0.1, 100.0) <= flChance4 && StrContains(sPropsAttached, "4") != -1)
 					{
 						int iFlame = CreateEntityByName("env_steam");
 						if (bIsValidEntity(iFlame))
@@ -1718,7 +1718,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		int iConcrete[41], iRandom3 = GetRandomInt(1, 40);
 		for (int iRock = 1; iRock <= iRandom3; iRock++)
 		{
-			if (GetRandomInt(1, iChance5) == 1 && StrContains(sPropsAttached, "5") != -1)
+			if (GetRandomFloat(0.1, 100.0) <= flChance5 && StrContains(sPropsAttached, "5") != -1)
 			{
 				iConcrete[iRock] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(iConcrete[iRock]))
@@ -1768,7 +1768,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		int iWheel[5], iRandom4 = GetRandomInt(1, 4);
 		for (int iTire = 1; iTire <= iRandom4; iTire++)
 		{
-			if (GetRandomInt(1, iChance6) == 1 && StrContains(sPropsAttached, "6") != -1)
+			if (GetRandomFloat(0.1, 100.0) <= flChance6 && StrContains(sPropsAttached, "6") != -1)
 			{
 				iWheel[iTire] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(iWheel[iTire]))

@@ -21,9 +21,9 @@ bool g_bCloneInstalled, g_bLateLoad, g_bNullify[MAXPLAYERS + 1], g_bTankConfig[S
 
 char g_sNullifyEffect[ST_MAXTYPES + 1][4], g_sNullifyEffect2[ST_MAXTYPES + 1][4];
 
-float g_flNullifyDuration[ST_MAXTYPES + 1], g_flNullifyDuration2[ST_MAXTYPES + 1], g_flNullifyRange[ST_MAXTYPES + 1], g_flNullifyRange2[ST_MAXTYPES + 1];
+float g_flNullifyChance[ST_MAXTYPES + 1], g_flNullifyChance2[ST_MAXTYPES + 1], g_flNullifyDuration[ST_MAXTYPES + 1], g_flNullifyDuration2[ST_MAXTYPES + 1], g_flNullifyRange[ST_MAXTYPES + 1], g_flNullifyRange2[ST_MAXTYPES + 1], g_flNullifyRangeChance[ST_MAXTYPES + 1], g_flNullifyRangeChance2[ST_MAXTYPES + 1];
 
-int g_iNullifyAbility[ST_MAXTYPES + 1], g_iNullifyAbility2[ST_MAXTYPES + 1], g_iNullifyChance[ST_MAXTYPES + 1], g_iNullifyChance2[ST_MAXTYPES + 1], g_iNullifyHit[ST_MAXTYPES + 1], g_iNullifyHit2[ST_MAXTYPES + 1], g_iNullifyHitMode[ST_MAXTYPES + 1], g_iNullifyHitMode2[ST_MAXTYPES + 1], g_iNullifyMessage[ST_MAXTYPES + 1], g_iNullifyMessage2[ST_MAXTYPES + 1], g_iNullifyRangeChance[ST_MAXTYPES + 1], g_iNullifyRangeChance2[ST_MAXTYPES + 1];
+int g_iNullifyAbility[ST_MAXTYPES + 1], g_iNullifyAbility2[ST_MAXTYPES + 1], g_iNullifyHit[ST_MAXTYPES + 1], g_iNullifyHit2[ST_MAXTYPES + 1], g_iNullifyHitMode[ST_MAXTYPES + 1], g_iNullifyHitMode2[ST_MAXTYPES + 1], g_iNullifyMessage[ST_MAXTYPES + 1], g_iNullifyMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -106,14 +106,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vNullifyHit(victim, attacker, iNullifyChance(attacker), iNullifyHit(attacker), 1, "1");
+				vNullifyHit(victim, attacker, flNullifyChance(attacker), iNullifyHit(attacker), 1, "1");
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if ((iNullifyHitMode(victim) == 0 || iNullifyHitMode(victim) == 2) && StrEqual(sClassname, "weapon_melee"))
 			{
-				vNullifyHit(attacker, victim, iNullifyChance(victim), iNullifyHit(victim), 1, "2");
+				vNullifyHit(attacker, victim, flNullifyChance(victim), iNullifyHit(victim), 1, "2");
 			}
 
 			if (g_bNullify[attacker])
@@ -145,8 +145,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Nullify Ability/Ability Effect", g_sNullifyEffect[iIndex], sizeof(g_sNullifyEffect[]), "123");
 				g_iNullifyMessage[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Message", 0);
 				g_iNullifyMessage[iIndex] = iClamp(g_iNullifyMessage[iIndex], 0, 3);
-				g_iNullifyChance[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Chance", 4);
-				g_iNullifyChance[iIndex] = iClamp(g_iNullifyChance[iIndex], 1, 9999999999);
+				g_flNullifyChance[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Chance", 33.3);
+				g_flNullifyChance[iIndex] = flClamp(g_flNullifyChance[iIndex], 0.1, 100.0);
 				g_flNullifyDuration[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Duration", 5.0);
 				g_flNullifyDuration[iIndex] = flClamp(g_flNullifyDuration[iIndex], 0.1, 9999999999.0);
 				g_iNullifyHit[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Hit", 0);
@@ -155,8 +155,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iNullifyHitMode[iIndex] = iClamp(g_iNullifyHitMode[iIndex], 0, 2);
 				g_flNullifyRange[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range", 150.0);
 				g_flNullifyRange[iIndex] = flClamp(g_flNullifyRange[iIndex], 1.0, 9999999999.0);
-				g_iNullifyRangeChance[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Range Chance", 16);
-				g_iNullifyRangeChance[iIndex] = iClamp(g_iNullifyRangeChance[iIndex], 1, 9999999999);
+				g_flNullifyRangeChance[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range Chance", 15.0);
+				g_flNullifyRangeChance[iIndex] = flClamp(g_flNullifyRangeChance[iIndex], 0.1, 100.0);
 			}
 			else
 			{
@@ -167,8 +167,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Nullify Ability/Ability Effect", g_sNullifyEffect2[iIndex], sizeof(g_sNullifyEffect2[]), g_sNullifyEffect[iIndex]);
 				g_iNullifyMessage2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Message", g_iNullifyMessage[iIndex]);
 				g_iNullifyMessage2[iIndex] = iClamp(g_iNullifyMessage2[iIndex], 0, 3);
-				g_iNullifyChance2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Chance", g_iNullifyChance[iIndex]);
-				g_iNullifyChance2[iIndex] = iClamp(g_iNullifyChance2[iIndex], 1, 9999999999);
+				g_flNullifyChance2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Chance", g_flNullifyChance[iIndex]);
+				g_flNullifyChance2[iIndex] = flClamp(g_flNullifyChance2[iIndex], 0.1, 100.0);
 				g_flNullifyDuration2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Duration", g_flNullifyDuration[iIndex]);
 				g_flNullifyDuration2[iIndex] = flClamp(g_flNullifyDuration2[iIndex], 0.1, 9999999999.0);
 				g_iNullifyHit2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Hit", g_iNullifyHit[iIndex]);
@@ -177,8 +177,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iNullifyHitMode2[iIndex] = iClamp(g_iNullifyHitMode2[iIndex], 0, 2);
 				g_flNullifyRange2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range", g_flNullifyRange[iIndex]);
 				g_flNullifyRange2[iIndex] = flClamp(g_flNullifyRange2[iIndex], 1.0, 9999999999.0);
-				g_iNullifyRangeChance2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Range Chance", g_iNullifyRangeChance[iIndex]);
-				g_iNullifyRangeChance2[iIndex] = iClamp(g_iNullifyRangeChance2[iIndex], 1, 9999999999);
+				g_flNullifyRangeChance2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range Chance", g_flNullifyRangeChance[iIndex]);
+				g_flNullifyRangeChance2[iIndex] = flClamp(g_flNullifyRangeChance2[iIndex], 0.1, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -210,10 +210,10 @@ public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iNullifyRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyChance[ST_TankType(tank)] : g_iNullifyChance2[ST_TankType(tank)];
-
 		float flNullifyRange = !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyRange[ST_TankType(tank)] : g_flNullifyRange2[ST_TankType(tank)],
+			flNullifyRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyRangeChance[ST_TankType(tank)] : g_flNullifyRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
+
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -226,7 +226,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flNullifyRange)
 				{
-					vNullifyHit(iSurvivor, tank, iNullifyRangeChance, iNullifyAbility(tank), 2, "3");
+					vNullifyHit(iSurvivor, tank, flNullifyRangeChance, iNullifyAbility(tank), 2, "3");
 				}
 			}
 		}
@@ -241,9 +241,9 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vNullifyHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vNullifyHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bNullify[survivor])
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bNullify[survivor])
 	{
 		g_bNullify[survivor] = true;
 
@@ -289,14 +289,14 @@ static void vReset()
 	}
 }
 
+static float flNullifyChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyChance[ST_TankType(tank)] : g_flNullifyChance2[ST_TankType(tank)];
+}
+
 static int iNullifyAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyAbility[ST_TankType(tank)] : g_iNullifyAbility2[ST_TankType(tank)];
-}
-
-static int iNullifyChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyChance[ST_TankType(tank)] : g_iNullifyChance2[ST_TankType(tank)];
 }
 
 static int iNullifyHit(int tank)

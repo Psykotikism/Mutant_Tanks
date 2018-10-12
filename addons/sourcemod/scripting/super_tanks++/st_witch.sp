@@ -19,9 +19,9 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-float g_flWitchRange[ST_MAXTYPES + 1], g_flWitchRange2[ST_MAXTYPES + 1];
+float g_flWitchDamage[ST_MAXTYPES + 1], g_flWitchDamage2[ST_MAXTYPES + 1], g_flWitchRange[ST_MAXTYPES + 1], g_flWitchRange2[ST_MAXTYPES + 1];
 
-int g_iWitchAbility[ST_MAXTYPES + 1], g_iWitchAbility2[ST_MAXTYPES + 1], g_iWitchAmount[ST_MAXTYPES + 1], g_iWitchAmount2[ST_MAXTYPES + 1], g_iWitchDamage[ST_MAXTYPES + 1], g_iWitchDamage2[ST_MAXTYPES + 1], g_iWitchMessage[ST_MAXTYPES + 1], g_iWitchMessage2[ST_MAXTYPES + 1];
+int g_iWitchAbility[ST_MAXTYPES + 1], g_iWitchAbility2[ST_MAXTYPES + 1], g_iWitchAmount[ST_MAXTYPES + 1], g_iWitchAmount2[ST_MAXTYPES + 1], g_iWitchMessage[ST_MAXTYPES + 1], g_iWitchMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -95,8 +95,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (ST_TankAllowed(iOwner) && ST_CloneAllowed(iOwner, g_bCloneInstalled))
 			{
-				int iWitchDamage = !g_bTankConfig[ST_TankType(iOwner)] ? g_iWitchDamage[ST_TankType(iOwner)] : g_iWitchDamage2[ST_TankType(iOwner)];
-				damage = float(iWitchDamage);
+				float flWitchDamage = !g_bTankConfig[ST_TankType(iOwner)] ? g_flWitchDamage[ST_TankType(iOwner)] : g_flWitchDamage2[ST_TankType(iOwner)];
+				damage = flWitchDamage;
 
 				return Plugin_Changed;
 			}
@@ -126,8 +126,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWitchMessage[iIndex] = iClamp(g_iWitchMessage[iIndex], 0, 1);
 				g_iWitchAmount[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Amount", 3);
 				g_iWitchAmount[iIndex] = iClamp(g_iWitchAmount[iIndex], 1, 25);
-				g_iWitchDamage[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Damage", 5);
-				g_iWitchDamage[iIndex] = iClamp(g_iWitchDamage[iIndex], 1, 9999999999);
+				g_flWitchDamage[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Damage", 5.0);
+				g_flWitchDamage[iIndex] = flClamp(g_flWitchDamage[iIndex], 1.0, 9999999999.0);
 				g_flWitchRange[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Range", 500.0);
 				g_flWitchRange[iIndex] = flClamp(g_flWitchRange[iIndex], 1.0, 9999999999.0);
 			}
@@ -141,8 +141,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWitchMessage2[iIndex] = iClamp(g_iWitchMessage2[iIndex], 0, 1);
 				g_iWitchAmount2[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Amount", g_iWitchAmount[iIndex]);
 				g_iWitchAmount2[iIndex] = iClamp(g_iWitchAmount2[iIndex], 1, 25);
-				g_iWitchDamage2[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Damage", g_iWitchDamage[iIndex]);
-				g_iWitchDamage2[iIndex] = iClamp(g_iWitchDamage2[iIndex], 1, 9999999999);
+				g_flWitchDamage2[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Damage", g_flWitchDamage[iIndex]);
+				g_flWitchDamage2[iIndex] = flClamp(g_flWitchDamage2[iIndex], 1.0, 9999999999.0);
 				g_flWitchRange2[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Range", g_flWitchRange[iIndex]);
 				g_flWitchRange2[iIndex] = flClamp(g_flWitchRange2[iIndex], 1.0, 9999999999.0);
 			}

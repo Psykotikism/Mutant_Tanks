@@ -23,9 +23,9 @@ bool g_bCloneInstalled, g_bWhirl[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_
 
 char g_sWhirlEffect[ST_MAXTYPES + 1][4], g_sWhirlEffect2[ST_MAXTYPES + 1][4];
 
-float g_flWhirlDuration[ST_MAXTYPES + 1], g_flWhirlDuration2[ST_MAXTYPES + 1], g_flWhirlRange[ST_MAXTYPES + 1], g_flWhirlRange2[ST_MAXTYPES + 1], g_flWhirlSpeed[ST_MAXTYPES + 1], g_flWhirlSpeed2[ST_MAXTYPES + 1];
+float g_flWhirlChance[ST_MAXTYPES + 1], g_flWhirlChance2[ST_MAXTYPES + 1], g_flWhirlDuration[ST_MAXTYPES + 1], g_flWhirlDuration2[ST_MAXTYPES + 1], g_flWhirlRange[ST_MAXTYPES + 1], g_flWhirlRange2[ST_MAXTYPES + 1], g_flWhirlSpeed[ST_MAXTYPES + 1], g_flWhirlSpeed2[ST_MAXTYPES + 1], g_flWhirlRangeChance[ST_MAXTYPES + 1], g_flWhirlRangeChance2[ST_MAXTYPES + 1];
 
-int g_iWhirlAbility[ST_MAXTYPES + 1], g_iWhirlAbility2[ST_MAXTYPES + 1], g_iWhirlAxis[ST_MAXTYPES + 1], g_iWhirlAxis2[ST_MAXTYPES + 1], g_iWhirlChance[ST_MAXTYPES + 1], g_iWhirlChance2[ST_MAXTYPES + 1], g_iWhirlHit[ST_MAXTYPES + 1], g_iWhirlHit2[ST_MAXTYPES + 1], g_iWhirlHitMode[ST_MAXTYPES + 1], g_iWhirlHitMode2[ST_MAXTYPES + 1], g_iWhirlMessage[ST_MAXTYPES + 1], g_iWhirlMessage2[ST_MAXTYPES + 1], g_iWhirlRangeChance[ST_MAXTYPES + 1], g_iWhirlRangeChance2[ST_MAXTYPES + 1];
+int g_iWhirlAbility[ST_MAXTYPES + 1], g_iWhirlAbility2[ST_MAXTYPES + 1], g_iWhirlAxis[ST_MAXTYPES + 1], g_iWhirlAxis2[ST_MAXTYPES + 1], g_iWhirlHit[ST_MAXTYPES + 1], g_iWhirlHit2[ST_MAXTYPES + 1], g_iWhirlHitMode[ST_MAXTYPES + 1], g_iWhirlHitMode2[ST_MAXTYPES + 1], g_iWhirlMessage[ST_MAXTYPES + 1], g_iWhirlMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -110,14 +110,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vWhirlHit(victim, attacker, iWhirlChance(attacker), iWhirlHit(attacker), 1, "1");
+				vWhirlHit(victim, attacker, flWhirlChance(attacker), iWhirlHit(attacker), 1, "1");
 			}
 		}
 		else if ((iWhirlHitMode(victim) == 0 || iWhirlHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsHumanSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vWhirlHit(attacker, victim, iWhirlChance(victim), iWhirlHit(victim), 1, "2");
+				vWhirlHit(attacker, victim, flWhirlChance(victim), iWhirlHit(victim), 1, "2");
 			}
 		}
 	}
@@ -144,8 +144,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWhirlMessage[iIndex] = iClamp(g_iWhirlMessage[iIndex], 0, 3);
 				g_iWhirlAxis[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Axis", 7);
 				g_iWhirlAxis[iIndex] = iClamp(g_iWhirlAxis[iIndex], 1, 7);
-				g_iWhirlChance[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Chance", 4);
-				g_iWhirlChance[iIndex] = iClamp(g_iWhirlChance[iIndex], 1, 9999999999);
+				g_flWhirlChance[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Chance", 33.3);
+				g_flWhirlChance[iIndex] = flClamp(g_flWhirlChance[iIndex], 0.1, 100.0);
 				g_flWhirlDuration[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Duration", 5.0);
 				g_flWhirlDuration[iIndex] = flClamp(g_flWhirlDuration[iIndex], 0.1, 9999999999.0);
 				g_iWhirlHit[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Hit", 0);
@@ -154,8 +154,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWhirlHitMode[iIndex] = iClamp(g_iWhirlHitMode[iIndex], 0, 2);
 				g_flWhirlRange[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Range", 150.0);
 				g_flWhirlRange[iIndex] = flClamp(g_flWhirlRange[iIndex], 1.0, 9999999999.0);
-				g_iWhirlRangeChance[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Range Chance", 16);
-				g_iWhirlRangeChance[iIndex] = iClamp(g_iWhirlRangeChance[iIndex], 1, 9999999999);
+				g_flWhirlRangeChance[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Range Chance", 15.0);
+				g_flWhirlRangeChance[iIndex] = flClamp(g_flWhirlRangeChance[iIndex], 0.1, 100.0);
 				g_flWhirlSpeed[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Speed", 500.0);
 				g_flWhirlSpeed[iIndex] = flClamp(g_flWhirlSpeed[iIndex], 1.0, 9999999999.0);
 			}
@@ -170,8 +170,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWhirlMessage2[iIndex] = iClamp(g_iWhirlMessage2[iIndex], 0, 3);
 				g_iWhirlAxis2[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Axis", g_iWhirlAxis[iIndex]);
 				g_iWhirlAxis2[iIndex] = iClamp(g_iWhirlAxis2[iIndex], 1, 7);
-				g_iWhirlChance2[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Chance", g_iWhirlChance[iIndex]);
-				g_iWhirlChance2[iIndex] = iClamp(g_iWhirlChance2[iIndex], 1, 9999999999);
+				g_flWhirlChance2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Chance", g_flWhirlChance[iIndex]);
+				g_flWhirlChance2[iIndex] = flClamp(g_flWhirlChance2[iIndex], 0.1, 100.0);
 				g_flWhirlDuration2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Duration", g_flWhirlDuration[iIndex]);
 				g_flWhirlDuration2[iIndex] = flClamp(g_flWhirlDuration2[iIndex], 0.1, 9999999999.0);
 				g_iWhirlHit2[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Hit", g_iWhirlHit[iIndex]);
@@ -180,8 +180,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWhirlHitMode2[iIndex] = iClamp(g_iWhirlHitMode2[iIndex], 0, 2);
 				g_flWhirlRange2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Range", g_flWhirlRange[iIndex]);
 				g_flWhirlRange2[iIndex] = flClamp(g_flWhirlRange2[iIndex], 1.0, 9999999999.0);
-				g_iWhirlRangeChance2[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Range Chance", g_iWhirlRangeChance[iIndex]);
-				g_iWhirlRangeChance2[iIndex] = iClamp(g_iWhirlRangeChance2[iIndex], 1, 9999999999);
+				g_flWhirlRangeChance2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Range Chance", g_flWhirlRangeChance[iIndex]);
+				g_flWhirlRangeChance2[iIndex] = flClamp(g_flWhirlRangeChance2[iIndex], 0.1, 100.0);
 				g_flWhirlSpeed2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Speed", g_flWhirlSpeed[iIndex]);
 				g_flWhirlSpeed2[iIndex] = flClamp(g_flWhirlSpeed2[iIndex], 1.0, 9999999999.0);
 			}
@@ -202,10 +202,10 @@ public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iWhirlRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iWhirlChance[ST_TankType(tank)] : g_iWhirlChance2[ST_TankType(tank)];
-
 		float flWhirlRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlRange[ST_TankType(tank)] : g_flWhirlRange2[ST_TankType(tank)],
+			flWhirlRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlRangeChance[ST_TankType(tank)] : g_flWhirlRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
+
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -218,16 +218,16 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flWhirlRange)
 				{
-					vWhirlHit(iSurvivor, tank, iWhirlRangeChance, iWhirlAbility(tank), 2, "3");
+					vWhirlHit(iSurvivor, tank, flWhirlRangeChance, iWhirlAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-static void vWhirlHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vWhirlHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsHumanSurvivor(survivor) && !g_bWhirl[survivor])
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bWhirl[survivor])
 	{
 		int iWhirl = CreateEntityByName("env_sprite");
 		if (!bIsValidEntity(iWhirl))
@@ -334,14 +334,14 @@ static void vStopWhirl(int survivor, int entity)
 	RemoveEntity(entity);
 }
 
+static float flWhirlChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlChance[ST_TankType(tank)] : g_flWhirlChance2[ST_TankType(tank)];
+}
+
 static int iWhirlAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iWhirlAbility[ST_TankType(tank)] : g_iWhirlAbility2[ST_TankType(tank)];
-}
-
-static int iWhirlChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iWhirlChance[ST_TankType(tank)] : g_iWhirlChance2[ST_TankType(tank)];
 }
 
 static int iWhirlHit(int tank)

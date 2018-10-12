@@ -19,9 +19,9 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bAbsorb[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-float g_flAbsorbBulletDivisor[ST_MAXTYPES + 1], g_flAbsorbBulletDivisor2[ST_MAXTYPES + 1], g_flAbsorbDuration[ST_MAXTYPES + 1], g_flAbsorbDuration2[ST_MAXTYPES + 1], g_flAbsorbExplosiveDivisor[ST_MAXTYPES + 1], g_flAbsorbExplosiveDivisor2[ST_MAXTYPES + 1], g_flAbsorbFireDivisor[ST_MAXTYPES + 1], g_flAbsorbFireDivisor2[ST_MAXTYPES + 1], g_flAbsorbMeleeDivisor[ST_MAXTYPES + 1], g_flAbsorbMeleeDivisor2[ST_MAXTYPES + 1];
+float g_flAbsorbBulletDivisor[ST_MAXTYPES + 1], g_flAbsorbBulletDivisor2[ST_MAXTYPES + 1], g_flAbsorbChance[ST_MAXTYPES + 1], g_flAbsorbChance2[ST_MAXTYPES + 1], g_flAbsorbDuration[ST_MAXTYPES + 1], g_flAbsorbDuration2[ST_MAXTYPES + 1], g_flAbsorbExplosiveDivisor[ST_MAXTYPES + 1], g_flAbsorbExplosiveDivisor2[ST_MAXTYPES + 1], g_flAbsorbFireDivisor[ST_MAXTYPES + 1], g_flAbsorbFireDivisor2[ST_MAXTYPES + 1], g_flAbsorbMeleeDivisor[ST_MAXTYPES + 1], g_flAbsorbMeleeDivisor2[ST_MAXTYPES + 1];
 
-int g_iAbsorbAbility[ST_MAXTYPES + 1], g_iAbsorbAbility2[ST_MAXTYPES + 1], g_iAbsorbChance[ST_MAXTYPES + 1], g_iAbsorbChance2[ST_MAXTYPES + 1], g_iAbsorbMessage[ST_MAXTYPES + 1], g_iAbsorbMessage2[ST_MAXTYPES + 1];
+int g_iAbsorbAbility[ST_MAXTYPES + 1], g_iAbsorbAbility2[ST_MAXTYPES + 1], g_iAbsorbMessage[ST_MAXTYPES + 1], g_iAbsorbMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -147,8 +147,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iAbsorbMessage[iIndex] = iClamp(g_iAbsorbMessage[iIndex], 0, 1);
 				g_flAbsorbBulletDivisor[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Bullet Divisor", 20.0);
 				g_flAbsorbBulletDivisor[iIndex] = flClamp(g_flAbsorbBulletDivisor[iIndex], 0.1, 9999999999.0);
-				g_iAbsorbChance[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Absorb Chance", 4);
-				g_iAbsorbChance[iIndex] = iClamp(g_iAbsorbChance[iIndex], 1, 9999999999);
+				g_flAbsorbChance[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Chance", 33.3);
+				g_flAbsorbChance[iIndex] = flClamp(g_flAbsorbChance[iIndex], 0.1, 100.0);
 				g_flAbsorbDuration[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Duration", 5.0);
 				g_flAbsorbDuration[iIndex] = flClamp(g_flAbsorbDuration[iIndex], 0.1, 9999999999.0);
 				g_flAbsorbExplosiveDivisor[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Explosive Divisor", 20.0);
@@ -168,8 +168,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iAbsorbMessage2[iIndex] = iClamp(g_iAbsorbMessage2[iIndex], 0, 1);
 				g_flAbsorbBulletDivisor2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Bullet Divisor", g_flAbsorbBulletDivisor[iIndex]);
 				g_flAbsorbBulletDivisor2[iIndex] = flClamp(g_flAbsorbBulletDivisor2[iIndex], 0.1, 9999999999.0);
-				g_iAbsorbChance2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Absorb Chance", g_iAbsorbChance[iIndex]);
-				g_iAbsorbChance2[iIndex] = iClamp(g_iAbsorbChance2[iIndex], 1, 9999999999);
+				g_flAbsorbChance2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Chance", g_flAbsorbChance[iIndex]);
+				g_flAbsorbChance2[iIndex] = flClamp(g_flAbsorbChance2[iIndex], 0.1, 100.0);
 				g_flAbsorbDuration2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Duration", g_flAbsorbDuration[iIndex]);
 				g_flAbsorbDuration2[iIndex] = flClamp(g_flAbsorbDuration2[iIndex], 0.1, 9999999999.0);
 				g_flAbsorbExplosiveDivisor2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Explosive Divisor", g_flAbsorbExplosiveDivisor[iIndex]);
@@ -206,8 +206,8 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	int iAbsorbChance = !g_bTankConfig[ST_TankType(tank)] ? g_iAbsorbChance[ST_TankType(tank)] : g_iAbsorbChance2[ST_TankType(tank)];
-	if (iAbsorbAbility(tank) == 1 && GetRandomInt(1, iAbsorbChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bAbsorb[tank])
+	float flAbsorbChance = !g_bTankConfig[ST_TankType(tank)] ? g_flAbsorbChance[ST_TankType(tank)] : g_flAbsorbChance2[ST_TankType(tank)];
+	if (iAbsorbAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flAbsorbChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bAbsorb[tank])
 	{
 		g_bAbsorb[tank] = true;
 

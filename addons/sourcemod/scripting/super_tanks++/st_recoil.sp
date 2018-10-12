@@ -21,9 +21,9 @@ bool g_bCloneInstalled, g_bRecoil[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST
 
 char g_sRecoilEffect[ST_MAXTYPES + 1][4], g_sRecoilEffect2[ST_MAXTYPES + 1][4];
 
-float g_flRecoilDuration[ST_MAXTYPES + 1], g_flRecoilDuration2[ST_MAXTYPES + 1], g_flRecoilRange[ST_MAXTYPES + 1], g_flRecoilRange2[ST_MAXTYPES + 1];
+float g_flRecoilChance[ST_MAXTYPES + 1], g_flRecoilChance2[ST_MAXTYPES + 1], g_flRecoilDuration[ST_MAXTYPES + 1], g_flRecoilDuration2[ST_MAXTYPES + 1], g_flRecoilRange[ST_MAXTYPES + 1], g_flRecoilRange2[ST_MAXTYPES + 1], g_flRecoilRangeChance[ST_MAXTYPES + 1], g_flRecoilRangeChance2[ST_MAXTYPES + 1];
 
-int g_iRecoilAbility[ST_MAXTYPES + 1], g_iRecoilAbility2[ST_MAXTYPES + 1], g_iRecoilChance[ST_MAXTYPES + 1], g_iRecoilChance2[ST_MAXTYPES + 1], g_iRecoilHit[ST_MAXTYPES + 1], g_iRecoilHit2[ST_MAXTYPES + 1], g_iRecoilHitMode[ST_MAXTYPES + 1], g_iRecoilHitMode2[ST_MAXTYPES + 1], g_iRecoilMessage[ST_MAXTYPES + 1], g_iRecoilMessage2[ST_MAXTYPES + 1], g_iRecoilRangeChance[ST_MAXTYPES + 1], g_iRecoilRangeChance2[ST_MAXTYPES + 1];
+int g_iRecoilAbility[ST_MAXTYPES + 1], g_iRecoilAbility2[ST_MAXTYPES + 1], g_iRecoilHit[ST_MAXTYPES + 1], g_iRecoilHit2[ST_MAXTYPES + 1], g_iRecoilHitMode[ST_MAXTYPES + 1], g_iRecoilHitMode2[ST_MAXTYPES + 1], g_iRecoilMessage[ST_MAXTYPES + 1], g_iRecoilMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -106,14 +106,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRecoilHit(victim, attacker, iRecoilChance(attacker), iRecoilHit(attacker), 1, "1");
+				vRecoilHit(victim, attacker, flRecoilChance(attacker), iRecoilHit(attacker), 1, "1");
 			}
 		}
 		else if ((iRecoilHitMode(victim) == 0 || iRecoilHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vRecoilHit(attacker, victim, iRecoilChance(victim), iRecoilHit(victim), 1, "2");
+				vRecoilHit(attacker, victim, flRecoilChance(victim), iRecoilHit(victim), 1, "2");
 			}
 		}
 	}
@@ -138,8 +138,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Recoil Ability/Ability Effect", g_sRecoilEffect[iIndex], sizeof(g_sRecoilEffect[]), "123");
 				g_iRecoilMessage[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Message", 0);
 				g_iRecoilMessage[iIndex] = iClamp(g_iRecoilMessage[iIndex], 0, 3);
-				g_iRecoilChance[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Chance", 4);
-				g_iRecoilChance[iIndex] = iClamp(g_iRecoilChance[iIndex], 1, 9999999999);
+				g_flRecoilChance[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Chance", 33.3);
+				g_flRecoilChance[iIndex] = flClamp(g_flRecoilChance[iIndex], 0.1, 100.0);
 				g_flRecoilDuration[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Duration", 5.0);
 				g_flRecoilDuration[iIndex] = flClamp(g_flRecoilDuration[iIndex], 0.1, 9999999999.0);
 				g_iRecoilHit[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Hit", 0);
@@ -148,8 +148,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRecoilHitMode[iIndex] = iClamp(g_iRecoilHitMode[iIndex], 0, 2);
 				g_flRecoilRange[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range", 150.0);
 				g_flRecoilRange[iIndex] = flClamp(g_flRecoilRange[iIndex], 1.0, 9999999999.0);
-				g_iRecoilRangeChance[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Range Chance", 16);
-				g_iRecoilRangeChance[iIndex] = iClamp(g_iRecoilRangeChance[iIndex], 1, 9999999999);
+				g_flRecoilRangeChance[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range Chance", 15.0);
+				g_flRecoilRangeChance[iIndex] = flClamp(g_flRecoilRangeChance[iIndex], 0.1, 100.0);
 			}
 			else
 			{
@@ -160,8 +160,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Recoil Ability/Ability Effect", g_sRecoilEffect2[iIndex], sizeof(g_sRecoilEffect2[]), g_sRecoilEffect[iIndex]);
 				g_iRecoilMessage2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Message", g_iRecoilMessage[iIndex]);
 				g_iRecoilMessage2[iIndex] = iClamp(g_iRecoilMessage2[iIndex], 0, 3);
-				g_iRecoilChance2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Chance", g_iRecoilChance[iIndex]);
-				g_iRecoilChance2[iIndex] = iClamp(g_iRecoilChance2[iIndex], 1, 9999999999);
+				g_flRecoilChance2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Chance", g_flRecoilChance[iIndex]);
+				g_flRecoilChance2[iIndex] = flClamp(g_flRecoilChance2[iIndex], 0.1, 100.0);
 				g_flRecoilDuration2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Duration", g_flRecoilDuration[iIndex]);
 				g_flRecoilDuration2[iIndex] = flClamp(g_flRecoilDuration2[iIndex], 0.1, 9999999999.0);
 				g_iRecoilHit2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Hit", g_iRecoilHit[iIndex]);
@@ -170,8 +170,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRecoilHitMode2[iIndex] = iClamp(g_iRecoilHitMode2[iIndex], 0, 2);
 				g_flRecoilRange2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range", g_flRecoilRange[iIndex]);
 				g_flRecoilRange2[iIndex] = flClamp(g_flRecoilRange2[iIndex], 1.0, 9999999999.0);
-				g_iRecoilRangeChance2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Range Chance", g_iRecoilRangeChance[iIndex]);
-				g_iRecoilRangeChance2[iIndex] = iClamp(g_iRecoilRangeChance2[iIndex], 1, 9999999999);
+				g_flRecoilRangeChance2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range Chance", g_flRecoilRangeChance[iIndex]);
+				g_flRecoilRangeChance2[iIndex] = flClamp(g_flRecoilRangeChance2[iIndex], 0.1, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -213,10 +213,10 @@ public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iRecoilRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iRecoilChance[ST_TankType(tank)] : g_iRecoilChance2[ST_TankType(tank)];
-
 		float flRecoilRange = !g_bTankConfig[ST_TankType(tank)] ? g_flRecoilRange[ST_TankType(tank)] : g_flRecoilRange2[ST_TankType(tank)],
+			flRecoilRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flRecoilRangeChance[ST_TankType(tank)] : g_flRecoilRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
+
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -229,7 +229,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRecoilRange)
 				{
-					vRecoilHit(iSurvivor, tank, iRecoilRangeChance, iRecoilAbility(tank), 2, "3");
+					vRecoilHit(iSurvivor, tank, flRecoilRangeChance, iRecoilAbility(tank), 2, "3");
 				}
 			}
 		}
@@ -244,9 +244,9 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vRecoilHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vRecoilHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bRecoil[survivor])
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bRecoil[survivor])
 	{
 		g_bRecoil[survivor] = true;
 
@@ -292,14 +292,14 @@ static void vReset()
 	}
 }
 
+static float flRecoilChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flRecoilChance[ST_TankType(tank)] : g_flRecoilChance2[ST_TankType(tank)];
+}
+
 static int iRecoilAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iRecoilAbility[ST_TankType(tank)] : g_iRecoilAbility2[ST_TankType(tank)];
-}
-
-static int iRecoilChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iRecoilChance[ST_TankType(tank)] : g_iRecoilChance2[ST_TankType(tank)];
 }
 
 static int iRecoilHit(int tank)

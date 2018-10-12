@@ -21,9 +21,9 @@ bool g_bCloneInstalled, g_bLag[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MA
 
 char g_sLagEffect[ST_MAXTYPES + 1][4], g_sLagEffect2[ST_MAXTYPES + 1][4];
 
-float g_flLagDuration[ST_MAXTYPES + 1], g_flLagDuration2[ST_MAXTYPES + 1], g_flLagPosition[MAXPLAYERS + 1][4], g_flLagRange[ST_MAXTYPES + 1], g_flLagRange2[ST_MAXTYPES + 1];
+float g_flLagChance[ST_MAXTYPES + 1], g_flLagChance2[ST_MAXTYPES + 1], g_flLagDuration[ST_MAXTYPES + 1], g_flLagDuration2[ST_MAXTYPES + 1], g_flLagPosition[MAXPLAYERS + 1][4], g_flLagRange[ST_MAXTYPES + 1], g_flLagRange2[ST_MAXTYPES + 1], g_flLagRangeChance[ST_MAXTYPES + 1], g_flLagRangeChance2[ST_MAXTYPES + 1];
 
-int g_iLagAbility[ST_MAXTYPES + 1], g_iLagAbility2[ST_MAXTYPES + 1], g_iLagChance[ST_MAXTYPES + 1], g_iLagChance2[ST_MAXTYPES + 1], g_iLagHit[ST_MAXTYPES + 1], g_iLagHit2[ST_MAXTYPES + 1], g_iLagHitMode[ST_MAXTYPES + 1], g_iLagHitMode2[ST_MAXTYPES + 1], g_iLagMessage[ST_MAXTYPES + 1], g_iLagMessage2[ST_MAXTYPES + 1], g_iLagRangeChance[ST_MAXTYPES + 1], g_iLagRangeChance2[ST_MAXTYPES + 1];
+int g_iLagAbility[ST_MAXTYPES + 1], g_iLagAbility2[ST_MAXTYPES + 1], g_iLagHit[ST_MAXTYPES + 1], g_iLagHit2[ST_MAXTYPES + 1], g_iLagHitMode[ST_MAXTYPES + 1], g_iLagHitMode2[ST_MAXTYPES + 1], g_iLagMessage[ST_MAXTYPES + 1], g_iLagMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -106,14 +106,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vLagHit(victim, attacker, iLagChance(attacker), iLagHit(attacker), 1, "1");
+				vLagHit(victim, attacker, flLagChance(attacker), iLagHit(attacker), 1, "1");
 			}
 		}
 		else if ((iLagHitMode(victim) == 0 || iLagHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vLagHit(attacker, victim, iLagChance(victim), iLagHit(victim), 1, "2");
+				vLagHit(attacker, victim, flLagChance(victim), iLagHit(victim), 1, "2");
 			}
 		}
 	}
@@ -138,8 +138,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Lag Ability/Ability Effect", g_sLagEffect[iIndex], sizeof(g_sLagEffect[]), "123");
 				g_iLagMessage[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Message", 0);
 				g_iLagMessage[iIndex] = iClamp(g_iLagMessage[iIndex], 0, 3);
-				g_iLagChance[iIndex] = kvSuperTanks.GetNum("Lag Ability/Lag Chance", 4);
-				g_iLagChance[iIndex] = iClamp(g_iLagChance[iIndex], 1, 9999999999);
+				g_flLagChance[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Chance", 33.3);
+				g_flLagChance[iIndex] = flClamp(g_flLagChance[iIndex], 0.1, 100.0);
 				g_flLagDuration[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Duration", 5.0);
 				g_flLagDuration[iIndex] = flClamp(g_flLagDuration[iIndex], 0.1, 9999999999.0);
 				g_iLagHit[iIndex] = kvSuperTanks.GetNum("Lag Ability/Lag Hit", 0);
@@ -148,8 +148,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iLagHitMode[iIndex] = iClamp(g_iLagHitMode[iIndex], 0, 2);
 				g_flLagRange[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Range", 150.0);
 				g_flLagRange[iIndex] = flClamp(g_flLagRange[iIndex], 1.0, 9999999999.0);
-				g_iLagRangeChance[iIndex] = kvSuperTanks.GetNum("Lag Ability/Lag Range Chance", 16);
-				g_iLagRangeChance[iIndex] = iClamp(g_iLagRangeChance[iIndex], 1, 9999999999);
+				g_flLagRangeChance[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Range Chance", 15.0);
+				g_flLagRangeChance[iIndex] = flClamp(g_flLagRangeChance[iIndex], 0.1, 100.0);
 			}
 			else
 			{
@@ -160,8 +160,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Lag Ability/Ability Effect", g_sLagEffect2[iIndex], sizeof(g_sLagEffect2[]), g_sLagEffect[iIndex]);
 				g_iLagMessage2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Message", g_iLagMessage[iIndex]);
 				g_iLagMessage2[iIndex] = iClamp(g_iLagMessage2[iIndex], 0, 3);
-				g_iLagChance2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Lag Chance", g_iLagChance[iIndex]);
-				g_iLagChance2[iIndex] = iClamp(g_iLagChance2[iIndex], 1, 9999999999);
+				g_flLagChance2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Chance", g_flLagChance[iIndex]);
+				g_flLagChance2[iIndex] = flClamp(g_flLagChance2[iIndex], 0.1, 100.0);
 				g_flLagDuration2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Duration", g_flLagDuration[iIndex]);
 				g_flLagDuration2[iIndex] = flClamp(g_flLagDuration2[iIndex], 0.1, 9999999999.0);
 				g_iLagHit2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Lag Hit", g_iLagHit[iIndex]);
@@ -170,8 +170,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iLagHitMode2[iIndex] = iClamp(g_iLagHitMode2[iIndex], 0, 2);
 				g_flLagRange2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Range", g_flLagRange[iIndex]);
 				g_flLagRange2[iIndex] = flClamp(g_flLagRange2[iIndex], 1.0, 9999999999.0);
-				g_iLagRangeChance2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Lag Range Chance", g_iLagRangeChance[iIndex]);
-				g_iLagRangeChance2[iIndex] = iClamp(g_iLagRangeChance2[iIndex], 1, 9999999999);
+				g_flLagRangeChance2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Range Chance", g_flLagRangeChance[iIndex]);
+				g_flLagRangeChance2[iIndex] = flClamp(g_flLagRangeChance2[iIndex], 0.1, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -190,10 +190,10 @@ public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iLagRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iLagChance[ST_TankType(tank)] : g_iLagChance2[ST_TankType(tank)];
-
 		float flLagRange = !g_bTankConfig[ST_TankType(tank)] ? g_flLagRange[ST_TankType(tank)] : g_flLagRange2[ST_TankType(tank)],
+			flLagRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flLagRangeChance[ST_TankType(tank)] : g_flLagRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
+
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -206,16 +206,16 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flLagRange)
 				{
-					vLagHit(iSurvivor, tank, iLagRangeChance, iLagAbility(tank), 2, "3");
+					vLagHit(iSurvivor, tank, flLagRangeChance, iLagAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-static void vLagHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vLagHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bLag[survivor])
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bLag[survivor])
 	{
 		g_bLag[survivor] = true;
 
@@ -274,6 +274,11 @@ static void vReset2(int survivor, int tank, int message)
 	}
 }
 
+static float flLagChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flLagChance[ST_TankType(tank)] : g_flLagChance2[ST_TankType(tank)];
+}
+
 static float flLagDuration(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flLagDuration[ST_TankType(tank)] : g_flLagDuration2[ST_TankType(tank)];
@@ -282,11 +287,6 @@ static float flLagDuration(int tank)
 static int iLagAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iLagAbility[ST_TankType(tank)] : g_iLagAbility2[ST_TankType(tank)];
-}
-
-static int iLagChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iLagChance[ST_TankType(tank)] : g_iLagChance2[ST_TankType(tank)];
 }
 
 static int iLagHit(int tank)

@@ -19,9 +19,9 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bSpam[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-float g_flSpamDuration[ST_MAXTYPES + 1], g_flSpamDuration2[ST_MAXTYPES + 1];
+float g_flSpamChance[ST_MAXTYPES + 1], g_flSpamChance2[ST_MAXTYPES + 1], g_flSpamDuration[ST_MAXTYPES + 1], g_flSpamDuration2[ST_MAXTYPES + 1];
 
-int g_iSpamAbility[ST_MAXTYPES + 1], g_iSpamAbility2[ST_MAXTYPES + 1], g_iSpamChance[ST_MAXTYPES + 1], g_iSpamChance2[ST_MAXTYPES + 1], g_iSpamDamage[ST_MAXTYPES + 1], g_iSpamDamage2[ST_MAXTYPES + 1], g_iSpamMessage[ST_MAXTYPES + 1], g_iSpamMessage2[ST_MAXTYPES + 1];
+int g_iSpamAbility[ST_MAXTYPES + 1], g_iSpamAbility2[ST_MAXTYPES + 1], g_iSpamDamage[ST_MAXTYPES + 1], g_iSpamDamage2[ST_MAXTYPES + 1], g_iSpamMessage[ST_MAXTYPES + 1], g_iSpamMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -94,8 +94,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iSpamAbility[iIndex] = iClamp(g_iSpamAbility[iIndex], 0, 1);
 				g_iSpamMessage[iIndex] = kvSuperTanks.GetNum("Spam Ability/Ability Message", 0);
 				g_iSpamMessage[iIndex] = iClamp(g_iSpamMessage[iIndex], 0, 1);
-				g_iSpamChance[iIndex] = kvSuperTanks.GetNum("Spam Ability/Spam Chance", 4);
-				g_iSpamChance[iIndex] = iClamp(g_iSpamChance[iIndex], 1, 9999999999);
+				g_flSpamChance[iIndex] = kvSuperTanks.GetFloat("Spam Ability/Spam Chance", 33.3);
+				g_flSpamChance[iIndex] = flClamp(g_flSpamChance[iIndex], 0.1, 100.0);
 				g_iSpamDamage[iIndex] = kvSuperTanks.GetNum("Spam Ability/Spam Damage", 5);
 				g_iSpamDamage[iIndex] = iClamp(g_iSpamDamage[iIndex], 1, 9999999999);
 				g_flSpamDuration[iIndex] = kvSuperTanks.GetFloat("Spam Ability/Spam Duration", 5.0);
@@ -109,8 +109,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iSpamAbility2[iIndex] = iClamp(g_iSpamAbility2[iIndex], 0, 1);
 				g_iSpamMessage2[iIndex] = kvSuperTanks.GetNum("Spam Ability/Ability Message", g_iSpamMessage[iIndex]);
 				g_iSpamMessage2[iIndex] = iClamp(g_iSpamMessage2[iIndex], 0, 1);
-				g_iSpamChance2[iIndex] = kvSuperTanks.GetNum("Spam Ability/Spam Chance", g_iSpamChance[iIndex]);
-				g_iSpamChance2[iIndex] = iClamp(g_iSpamChance2[iIndex], 1, 9999999999);
+				g_flSpamChance2[iIndex] = kvSuperTanks.GetFloat("Spam Ability/Spam Chance", g_flSpamChance[iIndex]);
+				g_flSpamChance2[iIndex] = flClamp(g_flSpamChance2[iIndex], 0.1, 100.0);
 				g_iSpamDamage2[iIndex] = kvSuperTanks.GetNum("Spam Ability/Spam Damage", g_iSpamDamage[iIndex]);
 				g_iSpamDamage2[iIndex] = iClamp(g_iSpamDamage2[iIndex], 1, 9999999999);
 				g_flSpamDuration2[iIndex] = kvSuperTanks.GetFloat("Spam Ability/Spam Duration", g_flSpamDuration[iIndex]);
@@ -126,8 +126,8 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Ability(int tank)
 {
-	int iSpamChance = !g_bTankConfig[ST_TankType(tank)] ? g_iSpamChance[ST_TankType(tank)] : g_iSpamChance2[ST_TankType(tank)];
-	if (iSpamAbility(tank) == 1 && GetRandomInt(1, iSpamChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bSpam[tank])
+	float flSpamChance = !g_bTankConfig[ST_TankType(tank)] ? g_flSpamChance[ST_TankType(tank)] : g_flSpamChance2[ST_TankType(tank)];
+	if (iSpamAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flSpamChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bSpam[tank])
 	{
 		g_bSpam[tank] = true;
 

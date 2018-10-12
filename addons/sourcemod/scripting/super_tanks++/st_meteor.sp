@@ -24,9 +24,9 @@ bool g_bCloneInstalled, g_bMeteor[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1
 
 char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80];
 
-float g_flMeteorDamage[ST_MAXTYPES + 1], g_flMeteorDamage2[ST_MAXTYPES + 1];
+float g_flMeteorChance[ST_MAXTYPES + 1], g_flMeteorChance2[ST_MAXTYPES + 1], g_flMeteorDamage[ST_MAXTYPES + 1], g_flMeteorDamage2[ST_MAXTYPES + 1];
 
-int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorChance[ST_MAXTYPES + 1], g_iMeteorChance2[ST_MAXTYPES + 1], g_iMeteorMessage[ST_MAXTYPES + 1], g_iMeteorMessage2[ST_MAXTYPES + 1];
+int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorMessage[ST_MAXTYPES + 1], g_iMeteorMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -102,8 +102,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMeteorAbility[iIndex] = iClamp(g_iMeteorAbility[iIndex], 0, 1);
 				g_iMeteorMessage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", 0);
 				g_iMeteorMessage[iIndex] = iClamp(g_iMeteorMessage[iIndex], 0, 1);
-				g_iMeteorChance[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", 4);
-				g_iMeteorChance[iIndex] = iClamp(g_iMeteorChance[iIndex], 1, 9999999999);
+				g_flMeteorChance[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Chance", 33.3);
+				g_flMeteorChance[iIndex] = flClamp(g_flMeteorChance[iIndex], 0.1, 100.0);
 				g_flMeteorDamage[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", 5.0);
 				g_flMeteorDamage[iIndex] = flClamp(g_flMeteorDamage[iIndex], 1.0, 9999999999.0);
 				kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius[iIndex], sizeof(g_sMeteorRadius[]), "-180.0,180.0");
@@ -117,8 +117,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMeteorAbility2[iIndex] = iClamp(g_iMeteorAbility2[iIndex], 0, 1);
 				g_iMeteorMessage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", g_iMeteorMessage[iIndex]);
 				g_iMeteorMessage2[iIndex] = iClamp(g_iMeteorMessage2[iIndex], 0, 1);
-				g_iMeteorChance2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Chance", g_iMeteorChance[iIndex]);
-				g_iMeteorChance2[iIndex] = iClamp(g_iMeteorChance2[iIndex], 1, 9999999999);
+				g_flMeteorChance2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Chance", g_flMeteorChance[iIndex]);
+				g_flMeteorChance2[iIndex] = flClamp(g_flMeteorChance2[iIndex], 0.1, 100.0);
 				g_flMeteorDamage2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", g_flMeteorDamage[iIndex]);
 				g_flMeteorDamage2[iIndex] = flClamp(g_flMeteorDamage2[iIndex], 1.0, 9999999999.0);
 				kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius2[iIndex], sizeof(g_sMeteorRadius2[]), g_sMeteorRadius[iIndex]);
@@ -138,8 +138,8 @@ public void ST_PluginEnd()
 
 public void ST_Ability(int tank)
 {
-	int iMeteorChance = !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorChance[ST_TankType(tank)] : g_iMeteorChance2[ST_TankType(tank)];
-	if (iMeteorAbility(tank) == 1 && GetRandomInt(1, iMeteorChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bMeteor[tank])
+	float flMeteorChance = !g_bTankConfig[ST_TankType(tank)] ? g_flMeteorChance[ST_TankType(tank)] : g_flMeteorChance2[ST_TankType(tank)];
+	if (iMeteorAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMeteorChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bMeteor[tank])
 	{
 		g_bMeteor[tank] = true;
 

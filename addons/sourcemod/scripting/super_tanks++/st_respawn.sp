@@ -19,7 +19,9 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 
-int g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iRespawnAbility[ST_MAXTYPES + 1], g_iRespawnAbility2[ST_MAXTYPES + 1], g_iRespawnAmount[ST_MAXTYPES + 1], g_iRespawnAmount2[ST_MAXTYPES + 1], g_iRespawnChance[ST_MAXTYPES + 1], g_iRespawnChance2[ST_MAXTYPES + 1], g_iRespawnCount[MAXPLAYERS + 1], g_iRespawnMessage[ST_MAXTYPES + 1], g_iRespawnMessage2[ST_MAXTYPES + 1], g_iRespawnMode[ST_MAXTYPES + 1], g_iRespawnMode2[ST_MAXTYPES + 1], g_iRespawnType[ST_MAXTYPES + 1], g_iRespawnType2[ST_MAXTYPES + 1];
+float g_flRespawnChance[ST_MAXTYPES + 1], g_flRespawnChance2[ST_MAXTYPES + 1];
+
+int g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iRespawnAbility[ST_MAXTYPES + 1], g_iRespawnAbility2[ST_MAXTYPES + 1], g_iRespawnAmount[ST_MAXTYPES + 1], g_iRespawnAmount2[ST_MAXTYPES + 1], g_iRespawnCount[MAXPLAYERS + 1], g_iRespawnMessage[ST_MAXTYPES + 1], g_iRespawnMessage2[ST_MAXTYPES + 1], g_iRespawnMode[ST_MAXTYPES + 1], g_iRespawnMode2[ST_MAXTYPES + 1], g_iRespawnType[ST_MAXTYPES + 1], g_iRespawnType2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -81,8 +83,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRespawnMessage[iIndex] = iClamp(g_iRespawnMessage[iIndex], 0, 1);
 				g_iRespawnAmount[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", 1);
 				g_iRespawnAmount[iIndex] = iClamp(g_iRespawnAmount[iIndex], 1, 9999999999);
-				g_iRespawnChance[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Chance", 4);
-				g_iRespawnChance[iIndex] = iClamp(g_iRespawnChance[iIndex], 1, 9999999999);
+				g_flRespawnChance[iIndex] = kvSuperTanks.GetFloat("Respawn Ability/Respawn Chance", 33.3);
+				g_flRespawnChance[iIndex] = flClamp(g_flRespawnChance[iIndex], 0.1, 100.0);
 				g_iRespawnMode[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Mode", 0);
 				g_iRespawnMode[iIndex] = iClamp(g_iRespawnMode[iIndex], 0, 2);
 				g_iRespawnType[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Type", 0);
@@ -100,8 +102,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRespawnMessage2[iIndex] = iClamp(g_iRespawnMessage2[iIndex], 0, 1);
 				g_iRespawnAmount2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", g_iRespawnAmount[iIndex]);
 				g_iRespawnAmount2[iIndex] = iClamp(g_iRespawnAmount2[iIndex], 1, 9999999999);
-				g_iRespawnChance2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Chance", g_iRespawnChance[iIndex]);
-				g_iRespawnChance2[iIndex] = iClamp(g_iRespawnChance2[iIndex], 1, 9999999999);
+				g_flRespawnChance2[iIndex] = kvSuperTanks.GetFloat("Respawn Ability/Respawn Chance", g_flRespawnChance[iIndex]);
+				g_flRespawnChance2[iIndex] = flClamp(g_flRespawnChance2[iIndex], 0.1, 100.0);
 				g_iRespawnMode2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Mode", g_iRespawnMode[iIndex]);
 				g_iRespawnMode2[iIndex] = iClamp(g_iRespawnMode2[iIndex], 0, 2);
 				g_iRespawnType2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Type", g_iRespawnType[iIndex]);
@@ -119,9 +121,11 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_incapacitated"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
-			iRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnChance[ST_TankType(iTank)] : g_iRespawnChance2[ST_TankType(iTank)];
-		if (iRespawnAbility(iTank) == 1 && GetRandomInt(1, iRespawnChance) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+
+		float flRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flRespawnChance[ST_TankType(iTank)] : g_flRespawnChance2[ST_TankType(iTank)];
+
+		if (iRespawnAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flRespawnChance && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			float flPos[3], flAngles[3];
 			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags"), iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");

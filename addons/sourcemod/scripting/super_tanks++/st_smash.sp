@@ -26,9 +26,9 @@ bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sSmashEffect[ST_MAXTYPES + 1][4], g_sSmashEffect2[ST_MAXTYPES + 1][4];
 
-float g_flSmashRange[ST_MAXTYPES + 1], g_flSmashRange2[ST_MAXTYPES + 1];
+float g_flSmashChance[ST_MAXTYPES + 1], g_flSmashChance2[ST_MAXTYPES + 1], g_flSmashRange[ST_MAXTYPES + 1], g_flSmashRange2[ST_MAXTYPES + 1], g_flSmashRangeChance[ST_MAXTYPES + 1], g_flSmashRangeChance2[ST_MAXTYPES + 1];
 
-int g_iSmashAbility[ST_MAXTYPES + 1], g_iSmashAbility2[ST_MAXTYPES + 1], g_iSmashChance[ST_MAXTYPES + 1], g_iSmashChance2[ST_MAXTYPES + 1], g_iSmashHit[ST_MAXTYPES + 1], g_iSmashHit2[ST_MAXTYPES + 1], g_iSmashHitMode[ST_MAXTYPES + 1], g_iSmashHitMode2[ST_MAXTYPES + 1], g_iSmashMessage[ST_MAXTYPES + 1], g_iSmashMessage2[ST_MAXTYPES + 1], g_iSmashRangeChance[ST_MAXTYPES + 1], g_iSmashRangeChance2[ST_MAXTYPES + 1];
+int g_iSmashAbility[ST_MAXTYPES + 1], g_iSmashAbility2[ST_MAXTYPES + 1], g_iSmashHit[ST_MAXTYPES + 1], g_iSmashHit2[ST_MAXTYPES + 1], g_iSmashHitMode[ST_MAXTYPES + 1], g_iSmashHitMode2[ST_MAXTYPES + 1], g_iSmashMessage[ST_MAXTYPES + 1], g_iSmashMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -107,14 +107,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vSmashHit(victim, attacker, iSmashChance(attacker), iSmashHit(attacker), 1, "1");
+				vSmashHit(victim, attacker, flSmashChance(attacker), iSmashHit(attacker), 1, "1");
 			}
 		}
 		else if ((iSmashHitMode(victim) == 0 || iSmashHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vSmashHit(attacker, victim, iSmashChance(victim), iSmashHit(victim), 1, "2");
+				vSmashHit(attacker, victim, flSmashChance(victim), iSmashHit(victim), 1, "2");
 			}
 		}
 	}
@@ -139,16 +139,16 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Smash Ability/Ability Effect", g_sSmashEffect[iIndex], sizeof(g_sSmashEffect[]), "123");
 				g_iSmashMessage[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Message", 0);
 				g_iSmashMessage[iIndex] = iClamp(g_iSmashMessage[iIndex], 0, 3);
-				g_iSmashChance[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Chance", 4);
-				g_iSmashChance[iIndex] = iClamp(g_iSmashChance[iIndex], 1, 9999999999);
+				g_flSmashChance[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Chance", 33.3);
+				g_flSmashChance[iIndex] = flClamp(g_flSmashChance[iIndex], 0.1, 100.0);
 				g_iSmashHit[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit", 0);
 				g_iSmashHit[iIndex] = iClamp(g_iSmashHit[iIndex], 0, 1);
 				g_iSmashHitMode[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit Mode", 0);
 				g_iSmashHitMode[iIndex] = iClamp(g_iSmashHitMode[iIndex], 0, 2);
 				g_flSmashRange[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range", 150.0);
 				g_flSmashRange[iIndex] = flClamp(g_flSmashRange[iIndex], 1.0, 9999999999.0);
-				g_iSmashRangeChance[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Range Chance", 16);
-				g_iSmashRangeChance[iIndex] = iClamp(g_iSmashRangeChance[iIndex], 1, 9999999999);
+				g_flSmashRangeChance[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range Chance", 15.0);
+				g_flSmashRangeChance[iIndex] = flClamp(g_flSmashRangeChance[iIndex], 0.1, 100.0);
 			}
 			else
 			{
@@ -159,16 +159,16 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Smash Ability/Ability Effect", g_sSmashEffect2[iIndex], sizeof(g_sSmashEffect2[]), g_sSmashEffect[iIndex]);
 				g_iSmashMessage2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Message", g_iSmashMessage[iIndex]);
 				g_iSmashMessage2[iIndex] = iClamp(g_iSmashMessage2[iIndex], 0, 3);
-				g_iSmashChance2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Chance", g_iSmashChance[iIndex]);
-				g_iSmashChance2[iIndex] = iClamp(g_iSmashChance2[iIndex], 1, 9999999999);
+				g_flSmashChance2[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Chance", g_flSmashChance[iIndex]);
+				g_flSmashChance2[iIndex] = flClamp(g_flSmashChance2[iIndex], 0.1, 100.0);
 				g_iSmashHit2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit", g_iSmashHit[iIndex]);
 				g_iSmashHit2[iIndex] = iClamp(g_iSmashHit2[iIndex], 0, 1);
 				g_iSmashHitMode2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit Mode", g_iSmashHitMode[iIndex]);
 				g_iSmashHitMode2[iIndex] = iClamp(g_iSmashHitMode2[iIndex], 0, 2);
 				g_flSmashRange2[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range", g_flSmashRange[iIndex]);
 				g_flSmashRange2[iIndex] = flClamp(g_flSmashRange2[iIndex], 1.0, 9999999999.0);
-				g_iSmashRangeChance2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Range Chance", g_iSmashRangeChance[iIndex]);
-				g_iSmashRangeChance2[iIndex] = iClamp(g_iSmashRangeChance2[iIndex], 1, 9999999999);
+				g_flSmashRangeChance2[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range Chance", g_flSmashRangeChance[iIndex]);
+				g_flSmashRangeChance2[iIndex] = flClamp(g_flSmashRangeChance2[iIndex], 0.1, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -203,10 +203,10 @@ public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iSmashRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iSmashChance[ST_TankType(tank)] : g_iSmashChance2[ST_TankType(tank)];
-
 		float flSmashRange = !g_bTankConfig[ST_TankType(tank)] ? g_flSmashRange[ST_TankType(tank)] : g_flSmashRange2[ST_TankType(tank)],
+			flSmashRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flSmashRangeChance[ST_TankType(tank)] : g_flSmashRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
+
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -219,16 +219,16 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flSmashRange)
 				{
-					vSmashHit(iSurvivor, tank, iSmashRangeChance, iSmashAbility(tank), 2, "3");
+					vSmashHit(iSurvivor, tank, flSmashRangeChance, iSmashAbility(tank), 2, "3");
 				}
 			}
 		}
 	}
 }
 
-static void vSmashHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vSmashHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor))
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
 		int iSmashMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iSmashMessage[ST_TankType(tank)] : g_iSmashMessage2[ST_TankType(tank)];
 
@@ -251,14 +251,14 @@ static void vSmashHit(int survivor, int tank, int chance, int enabled, int messa
 	}
 }
 
+static float flSmashChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flSmashChance[ST_TankType(tank)] : g_flSmashChance2[ST_TankType(tank)];
+}
+
 static int iSmashAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmashAbility[ST_TankType(tank)] : g_iSmashAbility2[ST_TankType(tank)];
-}
-
-static int iSmashChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmashChance[ST_TankType(tank)] : g_iSmashChance2[ST_TankType(tank)];
 }
 
 static int iSmashHit(int tank)

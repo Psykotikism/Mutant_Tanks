@@ -21,9 +21,9 @@ bool g_bCloneInstalled, g_bLateLoad, g_bQuiet[MAXPLAYERS + 1], g_bTankConfig[ST_
 
 char g_sQuietEffect[ST_MAXTYPES + 1][4], g_sQuietEffect2[ST_MAXTYPES + 1][4];
 
-float g_flQuietDuration[ST_MAXTYPES + 1], g_flQuietDuration2[ST_MAXTYPES + 1], g_flQuietRange[ST_MAXTYPES + 1], g_flQuietRange2[ST_MAXTYPES + 1];
+float g_flQuietChance[ST_MAXTYPES + 1], g_flQuietChance2[ST_MAXTYPES + 1], g_flQuietDuration[ST_MAXTYPES + 1], g_flQuietDuration2[ST_MAXTYPES + 1], g_flQuietRange[ST_MAXTYPES + 1], g_flQuietRange2[ST_MAXTYPES + 1], g_flQuietRangeChance[ST_MAXTYPES + 1], g_flQuietRangeChance2[ST_MAXTYPES + 1];
 
-int g_iQuietAbility[ST_MAXTYPES + 1], g_iQuietAbility2[ST_MAXTYPES + 1], g_iQuietChance[ST_MAXTYPES + 1], g_iQuietChance2[ST_MAXTYPES + 1], g_iQuietHit[ST_MAXTYPES + 1], g_iQuietHit2[ST_MAXTYPES + 1], g_iQuietHitMode[ST_MAXTYPES + 1], g_iQuietHitMode2[ST_MAXTYPES + 1], g_iQuietMessage[ST_MAXTYPES + 1], g_iQuietMessage2[ST_MAXTYPES + 1], g_iQuietRangeChance[ST_MAXTYPES + 1], g_iQuietRangeChance2[ST_MAXTYPES + 1];
+int g_iQuietAbility[ST_MAXTYPES + 1], g_iQuietAbility2[ST_MAXTYPES + 1], g_iQuietHit[ST_MAXTYPES + 1], g_iQuietHit2[ST_MAXTYPES + 1], g_iQuietHitMode[ST_MAXTYPES + 1], g_iQuietHitMode2[ST_MAXTYPES + 1], g_iQuietMessage[ST_MAXTYPES + 1], g_iQuietMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -110,14 +110,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vQuietHit(victim, attacker, iQuietChance(attacker), iQuietHit(attacker), 1, "1");
+				vQuietHit(victim, attacker, flQuietChance(attacker), iQuietHit(attacker), 1, "1");
 			}
 		}
 		else if ((iQuietHitMode(victim) == 0 || iQuietHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsHumanSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vQuietHit(attacker, victim, iQuietChance(victim), iQuietHit(victim), 1, "2");
+				vQuietHit(attacker, victim, flQuietChance(victim), iQuietHit(victim), 1, "2");
 			}
 		}
 	}
@@ -166,8 +166,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Quiet Ability/Ability Effect", g_sQuietEffect[iIndex], sizeof(g_sQuietEffect[]), "123");
 				g_iQuietMessage[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Message", 0);
 				g_iQuietMessage[iIndex] = iClamp(g_iQuietMessage[iIndex], 0, 3);
-				g_iQuietChance[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Chance", 4);
-				g_iQuietChance[iIndex] = iClamp(g_iQuietChance[iIndex], 1, 9999999999);
+				g_flQuietChance[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Chance", 33.3);
+				g_flQuietChance[iIndex] = flClamp(g_flQuietChance[iIndex], 0.1, 100.0);
 				g_flQuietDuration[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Duration", 5.0);
 				g_flQuietDuration[iIndex] = flClamp(g_flQuietDuration[iIndex], 0.1, 9999999999.0);
 				g_iQuietHit[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Hit", 0);
@@ -176,8 +176,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iQuietHitMode[iIndex] = iClamp(g_iQuietHitMode[iIndex], 0, 2);
 				g_flQuietRange[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Range", 150.0);
 				g_flQuietRange[iIndex] = flClamp(g_flQuietRange[iIndex], 1.0, 9999999999.0);
-				g_iQuietRangeChance[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Range Chance", 16);
-				g_iQuietRangeChance[iIndex] = iClamp(g_iQuietRangeChance[iIndex], 1, 9999999999);
+				g_flQuietRangeChance[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Range Chance", 15.0);
+				g_flQuietRangeChance[iIndex] = flClamp(g_flQuietRangeChance[iIndex], 0.1, 100.0);
 			}
 			else
 			{
@@ -188,8 +188,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Quiet Ability/Ability Effect", g_sQuietEffect2[iIndex], sizeof(g_sQuietEffect2[]), g_sQuietEffect[iIndex]);
 				g_iQuietMessage2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Message", g_iQuietMessage[iIndex]);
 				g_iQuietMessage2[iIndex] = iClamp(g_iQuietMessage2[iIndex], 0, 3);
-				g_iQuietChance2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Chance", g_iQuietChance[iIndex]);
-				g_iQuietChance2[iIndex] = iClamp(g_iQuietChance2[iIndex], 1, 9999999999);
+				g_flQuietChance2[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Chance", g_flQuietChance[iIndex]);
+				g_flQuietChance2[iIndex] = flClamp(g_flQuietChance2[iIndex], 0.1, 100.0);
 				g_flQuietDuration2[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Duration", g_flQuietDuration[iIndex]);
 				g_flQuietDuration2[iIndex] = flClamp(g_flQuietDuration2[iIndex], 0.1, 9999999999.0);
 				g_iQuietHit2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Hit", g_iQuietHit[iIndex]);
@@ -198,8 +198,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iQuietHitMode2[iIndex] = iClamp(g_iQuietHitMode2[iIndex], 0, 2);
 				g_flQuietRange2[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Range", g_flQuietRange[iIndex]);
 				g_flQuietRange2[iIndex] = flClamp(g_flQuietRange2[iIndex], 1.0, 9999999999.0);
-				g_iQuietRangeChance2[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Quiet Range Chance", g_iQuietRangeChance[iIndex]);
-				g_iQuietRangeChance2[iIndex] = iClamp(g_iQuietRangeChance2[iIndex], 1, 9999999999);
+				g_flQuietRangeChance2[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Range Chance", g_flQuietRangeChance[iIndex]);
+				g_flQuietRangeChance2[iIndex] = flClamp(g_flQuietRangeChance2[iIndex], 0.1, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -231,10 +231,10 @@ public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iQuietRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iQuietChance[ST_TankType(tank)] : g_iQuietChance2[ST_TankType(tank)];
-
 		float flQuietRange = !g_bTankConfig[ST_TankType(tank)] ? g_flQuietRange[ST_TankType(tank)] : g_flQuietRange2[ST_TankType(tank)],
+			flQuietRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flQuietRangeChance[ST_TankType(tank)] : g_flQuietRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
+
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -247,7 +247,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flQuietRange)
 				{
-					vQuietHit(iSurvivor, tank, iQuietRangeChance, iQuietAbility(tank), 2, "3");
+					vQuietHit(iSurvivor, tank, flQuietRangeChance, iQuietAbility(tank), 2, "3");
 				}
 			}
 		}
@@ -262,9 +262,9 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vQuietHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vQuietHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsHumanSurvivor(survivor) && !g_bQuiet[survivor])
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bQuiet[survivor])
 	{
 		g_bQuiet[survivor] = true;
 
@@ -310,14 +310,14 @@ static void vReset()
 	}
 }
 
+static float flQuietChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flQuietChance[ST_TankType(tank)] : g_flQuietChance2[ST_TankType(tank)];
+}
+
 static int iQuietAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iQuietAbility[ST_TankType(tank)] : g_iQuietAbility2[ST_TankType(tank)];
-}
-
-static int iQuietChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iQuietChance[ST_TankType(tank)] : g_iQuietChance2[ST_TankType(tank)];
 }
 
 static int iQuietHit(int tank)

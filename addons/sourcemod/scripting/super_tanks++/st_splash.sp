@@ -19,9 +19,9 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bSplash[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-float g_flSplashDamage[ST_MAXTYPES + 1], g_flSplashDamage2[ST_MAXTYPES + 1], g_flSplashInterval[ST_MAXTYPES + 1], g_flSplashInterval2[ST_MAXTYPES + 1], g_flSplashRange[ST_MAXTYPES + 1], g_flSplashRange2[ST_MAXTYPES + 1];
+float g_flSplashChance[ST_MAXTYPES + 1], g_flSplashChance2[ST_MAXTYPES + 1], g_flSplashDamage[ST_MAXTYPES + 1], g_flSplashDamage2[ST_MAXTYPES + 1], g_flSplashInterval[ST_MAXTYPES + 1], g_flSplashInterval2[ST_MAXTYPES + 1], g_flSplashRange[ST_MAXTYPES + 1], g_flSplashRange2[ST_MAXTYPES + 1];
 
-int g_iSplashAbility[ST_MAXTYPES + 1], g_iSplashAbility2[ST_MAXTYPES + 1], g_iSplashChance[ST_MAXTYPES + 1], g_iSplashChance2[ST_MAXTYPES + 1], g_iSplashMessage[ST_MAXTYPES + 1], g_iSplashMessage2[ST_MAXTYPES + 1];
+int g_iSplashAbility[ST_MAXTYPES + 1], g_iSplashAbility2[ST_MAXTYPES + 1], g_iSplashMessage[ST_MAXTYPES + 1], g_iSplashMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -94,8 +94,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iSplashAbility[iIndex] = iClamp(g_iSplashAbility[iIndex], 0, 1);
 				g_iSplashMessage[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Message", 0);
 				g_iSplashMessage[iIndex] = iClamp(g_iSplashMessage[iIndex], 0, 1);
-				g_iSplashChance[iIndex] = kvSuperTanks.GetNum("Splash Ability/Splash Chance", 4);
-				g_iSplashChance[iIndex] = iClamp(g_iSplashChance[iIndex], 1, 9999999999);
+				g_flSplashChance[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Chance", 33.3);
+				g_flSplashChance[iIndex] = flClamp(g_flSplashChance[iIndex], 0.1, 100.0);
 				g_flSplashDamage[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Damage", 5.0);
 				g_flSplashDamage[iIndex] = flClamp(g_flSplashDamage[iIndex], 1.0, 9999999999.0);
 				g_flSplashInterval[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Interval", 5.0);
@@ -111,8 +111,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iSplashAbility2[iIndex] = iClamp(g_iSplashAbility2[iIndex], 0, 1);
 				g_iSplashMessage2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Message", g_iSplashMessage[iIndex]);
 				g_iSplashMessage2[iIndex] = iClamp(g_iSplashMessage2[iIndex], 0, 1);
-				g_iSplashChance2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Splash Chance", g_iSplashChance[iIndex]);
-				g_iSplashChance2[iIndex] = iClamp(g_iSplashChance2[iIndex], 1, 9999999999);
+				g_flSplashChance2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Chance", g_flSplashChance[iIndex]);
+				g_flSplashChance2[iIndex] = flClamp(g_flSplashChance2[iIndex], 0.1, 100.0);
 				g_flSplashDamage2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Damage", g_flSplashDamage[iIndex]);
 				g_flSplashDamage2[iIndex] = flClamp(g_flSplashDamage2[iIndex], 1.0, 9999999999.0);
 				g_flSplashInterval2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Interval", g_flSplashInterval[iIndex]);
@@ -138,7 +138,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iSplashAbility(iTank) == 1 && GetRandomInt(1, iSplashChance(iTank)) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iSplashAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flSplashChance(iTank) && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			CreateTimer(0.4, tTimerSplash, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -147,7 +147,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (iSplashAbility(tank) == 1 && GetRandomInt(1, iSplashChance(tank)) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bSplash[tank])
+	if (iSplashAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flSplashChance(tank) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bSplash[tank])
 	{
 		g_bSplash[tank] = true;
 
@@ -174,14 +174,14 @@ static void vReset()
 	}
 }
 
+static float flSplashChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flSplashChance[ST_TankType(tank)] : g_flSplashChance2[ST_TankType(tank)];
+}
+
 static int iSplashAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iSplashAbility[ST_TankType(tank)] : g_iSplashAbility2[ST_TankType(tank)];
-}
-
-static int iSplashChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iSplashChance[ST_TankType(tank)] : g_iSplashChance2[ST_TankType(tank)];
 }
 
 static int iSplashMessage(int tank)

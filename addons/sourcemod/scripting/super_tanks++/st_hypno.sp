@@ -21,9 +21,9 @@ bool g_bCloneInstalled, g_bHypno[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_
 
 char g_sHypnoEffect[ST_MAXTYPES + 1][4], g_sHypnoEffect2[ST_MAXTYPES + 1][4];
 
-float g_flHypnoBulletDivisor[ST_MAXTYPES + 1], g_flHypnoBulletDivisor2[ST_MAXTYPES + 1], g_flHypnoDuration[ST_MAXTYPES + 1], g_flHypnoDuration2[ST_MAXTYPES + 1], g_flHypnoExplosiveDivisor[ST_MAXTYPES + 1], g_flHypnoExplosiveDivisor2[ST_MAXTYPES + 1], g_flHypnoFireDivisor[ST_MAXTYPES + 1], g_flHypnoFireDivisor2[ST_MAXTYPES + 1], g_flHypnoMeleeDivisor[ST_MAXTYPES + 1], g_flHypnoMeleeDivisor2[ST_MAXTYPES + 1], g_flHypnoRange[ST_MAXTYPES + 1], g_flHypnoRange2[ST_MAXTYPES + 1];
+float g_flHypnoBulletDivisor[ST_MAXTYPES + 1], g_flHypnoBulletDivisor2[ST_MAXTYPES + 1], g_flHypnoChance[ST_MAXTYPES + 1], g_flHypnoChance2[ST_MAXTYPES + 1], g_flHypnoDuration[ST_MAXTYPES + 1], g_flHypnoDuration2[ST_MAXTYPES + 1], g_flHypnoExplosiveDivisor[ST_MAXTYPES + 1], g_flHypnoExplosiveDivisor2[ST_MAXTYPES + 1], g_flHypnoFireDivisor[ST_MAXTYPES + 1], g_flHypnoFireDivisor2[ST_MAXTYPES + 1], g_flHypnoMeleeDivisor[ST_MAXTYPES + 1], g_flHypnoMeleeDivisor2[ST_MAXTYPES + 1], g_flHypnoRange[ST_MAXTYPES + 1], g_flHypnoRange2[ST_MAXTYPES + 1], g_flHypnoRangeChance[ST_MAXTYPES + 1], g_flHypnoRangeChance2[ST_MAXTYPES + 1];
 
-int g_iHypnoAbility[ST_MAXTYPES + 1], g_iHypnoAbility2[ST_MAXTYPES + 1], g_iHypnoChance[ST_MAXTYPES + 1], g_iHypnoChance2[ST_MAXTYPES + 1], g_iHypnoHit[ST_MAXTYPES + 1], g_iHypnoHit2[ST_MAXTYPES + 1], g_iHypnoHitMode[ST_MAXTYPES + 1], g_iHypnoHitMode2[ST_MAXTYPES + 1], g_iHypnoMessage[ST_MAXTYPES + 1], g_iHypnoMessage2[ST_MAXTYPES + 1], g_iHypnoMode[ST_MAXTYPES + 1], g_iHypnoMode2[ST_MAXTYPES + 1], g_iHypnoRangeChance[ST_MAXTYPES + 1], g_iHypnoRangeChance2[ST_MAXTYPES + 1];
+int g_iHypnoAbility[ST_MAXTYPES + 1], g_iHypnoAbility2[ST_MAXTYPES + 1], g_iHypnoHit[ST_MAXTYPES + 1], g_iHypnoHit2[ST_MAXTYPES + 1], g_iHypnoHitMode[ST_MAXTYPES + 1], g_iHypnoHitMode2[ST_MAXTYPES + 1], g_iHypnoMessage[ST_MAXTYPES + 1], g_iHypnoMessage2[ST_MAXTYPES + 1], g_iHypnoMode[ST_MAXTYPES + 1], g_iHypnoMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -106,14 +106,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHypnoHit(victim, attacker, iHypnoChance(attacker), iHypnoHit(attacker), 1, "1");
+				vHypnoHit(victim, attacker, flHypnoChance(attacker), iHypnoHit(attacker), 1, "1");
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if ((iHypnoHitMode(victim) == 0 || iHypnoHitMode(victim) == 2) && StrEqual(sClassname, "weapon_melee"))
 			{
-				vHypnoHit(attacker, victim, iHypnoChance(victim), iHypnoHit(victim), 1, "2");
+				vHypnoHit(attacker, victim, flHypnoChance(victim), iHypnoHit(victim), 1, "2");
 			}
 
 			if (g_bHypno[attacker])
@@ -193,8 +193,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iHypnoMessage[iIndex] = iClamp(g_iHypnoMessage[iIndex], 0, 3);
 				g_flHypnoBulletDivisor[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Bullet Divisor", 20.0);
 				g_flHypnoBulletDivisor[iIndex] = flClamp(g_flHypnoBulletDivisor[iIndex], 0.1, 9999999999.0);
-				g_iHypnoChance[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Chance", 4);
-				g_iHypnoChance[iIndex] = iClamp(g_iHypnoChance[iIndex], 1, 9999999999);
+				g_flHypnoChance[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Chance", 33.3);
+				g_flHypnoChance[iIndex] = flClamp(g_flHypnoChance[iIndex], 0.1, 100.0);
 				g_flHypnoDuration[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Duration", 5.0);
 				g_flHypnoDuration[iIndex] = flClamp(g_flHypnoDuration[iIndex], 0.1, 9999999999.0);
 				g_flHypnoExplosiveDivisor[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Explosive Divisor", 20.0);
@@ -211,8 +211,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iHypnoMode[iIndex] = iClamp(g_iHypnoMode[iIndex], 0, 1);
 				g_flHypnoRange[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range", 150.0);
 				g_flHypnoRange[iIndex] = flClamp(g_flHypnoRange[iIndex], 1.0, 9999999999.0);
-				g_iHypnoRangeChance[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Range Chance", 16);
-				g_iHypnoRangeChance[iIndex] = iClamp(g_iHypnoRangeChance[iIndex], 1, 9999999999);
+				g_flHypnoRangeChance[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range Chance", 15.0);
+				g_flHypnoRangeChance[iIndex] = flClamp(g_flHypnoRangeChance[iIndex], 0.1, 100.0);
 			}
 			else
 			{
@@ -225,8 +225,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iHypnoMessage2[iIndex] = iClamp(g_iHypnoMessage2[iIndex], 0, 3);
 				g_flHypnoBulletDivisor2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Bullet Divisor", g_flHypnoBulletDivisor[iIndex]);
 				g_flHypnoBulletDivisor2[iIndex] = flClamp(g_flHypnoBulletDivisor2[iIndex], 0.1, 9999999999.0);
-				g_iHypnoChance2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Chance", g_iHypnoChance[iIndex]);
-				g_iHypnoChance2[iIndex] = iClamp(g_iHypnoChance2[iIndex], 1, 9999999999);
+				g_flHypnoChance2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Chance", g_flHypnoChance[iIndex]);
+				g_flHypnoChance2[iIndex] = flClamp(g_flHypnoChance2[iIndex], 0.1, 100.0);
 				g_flHypnoDuration2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Duration", g_flHypnoDuration[iIndex]);
 				g_flHypnoDuration2[iIndex] = flClamp(g_flHypnoDuration2[iIndex], 0.1, 9999999999.0);
 				g_flHypnoExplosiveDivisor2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Explosive Divisor", g_flHypnoExplosiveDivisor[iIndex]);
@@ -243,8 +243,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iHypnoMode2[iIndex] = iClamp(g_iHypnoMode2[iIndex], 0, 1);
 				g_flHypnoRange2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range", g_flHypnoRange[iIndex]);
 				g_flHypnoRange2[iIndex] = flClamp(g_flHypnoRange2[iIndex], 1.0, 9999999999.0);
-				g_iHypnoRangeChance2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Hypno Range Chance", g_iHypnoRangeChance[iIndex]);
-				g_iHypnoRangeChance2[iIndex] = iClamp(g_iHypnoRangeChance2[iIndex], 1, 9999999999);
+				g_flHypnoRangeChance2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range Chance", g_flHypnoRangeChance[iIndex]);
+				g_flHypnoRangeChance2[iIndex] = flClamp(g_flHypnoRangeChance2[iIndex], 0.1, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -276,10 +276,10 @@ public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iHypnoRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoChance[ST_TankType(tank)] : g_iHypnoChance2[ST_TankType(tank)];
-
 		float flHypnoRange = !g_bTankConfig[ST_TankType(tank)] ? g_flHypnoRange[ST_TankType(tank)] : g_flHypnoRange2[ST_TankType(tank)],
+			flHypnoRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flHypnoRangeChance[ST_TankType(tank)] : g_flHypnoRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
+
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -292,7 +292,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHypnoRange)
 				{
-					vHypnoHit(iSurvivor, tank, iHypnoRangeChance, iHypnoAbility(tank), 2, "3");
+					vHypnoHit(iSurvivor, tank, flHypnoRangeChance, iHypnoAbility(tank), 2, "3");
 				}
 			}
 		}
@@ -307,9 +307,9 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vHypnoHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vHypnoHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bHypno[survivor])
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bHypno[survivor])
 	{
 		g_bHypno[survivor] = true;
 
@@ -355,14 +355,14 @@ static void vReset()
 	}
 }
 
+static float flHypnoChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flHypnoChance[ST_TankType(tank)] : g_flHypnoChance2[ST_TankType(tank)];
+}
+
 static int iHypnoAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoAbility[ST_TankType(tank)] : g_iHypnoAbility2[ST_TankType(tank)];
-}
-
-static int iHypnoChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoChance[ST_TankType(tank)] : g_iHypnoChance2[ST_TankType(tank)];
 }
 
 static int iHypnoHit(int tank)

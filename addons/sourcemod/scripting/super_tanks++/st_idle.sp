@@ -21,11 +21,11 @@ bool g_bCloneInstalled, g_bIdle[MAXPLAYERS + 1], g_bIdled[MAXPLAYERS + 1], g_bLa
 
 char g_sIdleEffect[ST_MAXTYPES + 1][4], g_sIdleEffect2[ST_MAXTYPES + 1][4];
 
-float g_flIdleRange[ST_MAXTYPES + 1], g_flIdleRange2[ST_MAXTYPES + 1];
+float g_flIdleChance[ST_MAXTYPES + 1], g_flIdleChance2[ST_MAXTYPES + 1], g_flIdleRange[ST_MAXTYPES + 1], g_flIdleRange2[ST_MAXTYPES + 1], g_flIdleRangeChance[ST_MAXTYPES + 1], g_flIdleRangeChance2[ST_MAXTYPES + 1];
 
 Handle g_hSDKIdlePlayer, g_hSDKSpecPlayer;
 
-int g_iIdleAbility[ST_MAXTYPES + 1], g_iIdleAbility2[ST_MAXTYPES + 1], g_iIdleChance[ST_MAXTYPES + 1], g_iIdleChance2[ST_MAXTYPES + 1], g_iIdleHit[ST_MAXTYPES + 1], g_iIdleHit2[ST_MAXTYPES + 1], g_iIdleHitMode[ST_MAXTYPES + 1], g_iIdleHitMode2[ST_MAXTYPES + 1], g_iIdleMessage[ST_MAXTYPES + 1], g_iIdleMessage2[ST_MAXTYPES + 1], g_iIdleRangeChance[ST_MAXTYPES + 1], g_iIdleRangeChance2[ST_MAXTYPES + 1];
+int g_iIdleAbility[ST_MAXTYPES + 1], g_iIdleAbility2[ST_MAXTYPES + 1], g_iIdleHit[ST_MAXTYPES + 1], g_iIdleHit2[ST_MAXTYPES + 1], g_iIdleHitMode[ST_MAXTYPES + 1], g_iIdleHitMode2[ST_MAXTYPES + 1], g_iIdleMessage[ST_MAXTYPES + 1], g_iIdleMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -129,14 +129,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIdleHit(victim, attacker, iIdleChance(attacker), iIdleHit(attacker), 1, "1");
+				vIdleHit(victim, attacker, flIdleChance(attacker), iIdleHit(attacker), 1, "1");
 			}
 		}
 		else if ((iIdleHitMode(victim) == 0 || iIdleHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vIdleHit(attacker, victim, iIdleChance(victim), iIdleHit(victim), 1, "2");
+				vIdleHit(attacker, victim, flIdleChance(victim), iIdleHit(victim), 1, "2");
 			}
 		}
 	}
@@ -161,16 +161,16 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect[iIndex], sizeof(g_sIdleEffect[]), "123");
 				g_iIdleMessage[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Message", 0);
 				g_iIdleMessage[iIndex] = iClamp(g_iIdleMessage[iIndex], 0, 3);
-				g_iIdleChance[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Chance", 4);
-				g_iIdleChance[iIndex] = iClamp(g_iIdleChance[iIndex], 1, 9999999999);
+				g_flIdleChance[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", 33.3);
+				g_flIdleChance[iIndex] = flClamp(g_flIdleChance[iIndex], 0.1, 100.0);
 				g_iIdleHit[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", 0);
 				g_iIdleHit[iIndex] = iClamp(g_iIdleHit[iIndex], 0, 1);
 				g_iIdleHitMode[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit Mode", 0);
 				g_iIdleHitMode[iIndex] = iClamp(g_iIdleHitMode[iIndex], 0, 2);
 				g_flIdleRange[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", 150.0);
 				g_flIdleRange[iIndex] = flClamp(g_flIdleRange[iIndex], 1.0, 9999999999.0);
-				g_iIdleRangeChance[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Range Chance", 16);
-				g_iIdleRangeChance[iIndex] = iClamp(g_iIdleRangeChance[iIndex], 1, 9999999999);
+				g_flIdleRangeChance[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range Chance", 15.0);
+				g_flIdleRangeChance[iIndex] = flClamp(g_flIdleRangeChance[iIndex], 0.1, 100.0);
 			}
 			else
 			{
@@ -181,16 +181,16 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect2[iIndex], sizeof(g_sIdleEffect2[]), g_sIdleEffect[iIndex]);
 				g_iIdleMessage2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Message", g_iIdleMessage[iIndex]);
 				g_iIdleMessage2[iIndex] = iClamp(g_iIdleMessage2[iIndex], 0, 3);
-				g_iIdleChance2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Chance", g_iIdleChance[iIndex]);
-				g_iIdleChance2[iIndex] = iClamp(g_iIdleChance2[iIndex], 1, 9999999999);
+				g_flIdleChance2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", g_flIdleChance[iIndex]);
+				g_flIdleChance2[iIndex] = flClamp(g_flIdleChance2[iIndex], 0.1, 100.0);
 				g_iIdleHit2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", g_iIdleHit[iIndex]);
 				g_iIdleHit2[iIndex] = iClamp(g_iIdleHit2[iIndex], 0, 1);
 				g_iIdleHitMode2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit Mode", g_iIdleHitMode[iIndex]);
 				g_iIdleHitMode2[iIndex] = iClamp(g_iIdleHitMode2[iIndex], 0, 2);
 				g_flIdleRange2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", g_flIdleRange[iIndex]);
 				g_flIdleRange2[iIndex] = flClamp(g_flIdleRange2[iIndex], 1.0, 9999999999.0);
-				g_iIdleRangeChance2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Range Chance", g_iIdleRangeChance[iIndex]);
-				g_iIdleRangeChance2[iIndex] = iClamp(g_iIdleRangeChance2[iIndex], 1, 9999999999);
+				g_flIdleRangeChance2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range Chance", g_flIdleRangeChance[iIndex]);
+				g_flIdleRangeChance2[iIndex] = flClamp(g_flIdleRangeChance2[iIndex], 0.1, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -235,11 +235,12 @@ public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iIdleAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iIdleAbility[ST_TankType(tank)] : g_iIdleAbility2[ST_TankType(tank)],
-			iIdleRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iIdleChance[ST_TankType(tank)] : g_iIdleChance2[ST_TankType(tank)];
+		int iIdleAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iIdleAbility[ST_TankType(tank)] : g_iIdleAbility2[ST_TankType(tank)];
 
 		float flIdleRange = !g_bTankConfig[ST_TankType(tank)] ? g_flIdleRange[ST_TankType(tank)] : g_flIdleRange2[ST_TankType(tank)],
+			flIdleRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flIdleRangeChance[ST_TankType(tank)] : g_flIdleRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
+
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -252,16 +253,16 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIdleRange)
 				{
-					vIdleHit(iSurvivor, tank, iIdleRangeChance, iIdleAbility, 2, "3");
+					vIdleHit(iSurvivor, tank, flIdleRangeChance, iIdleAbility, 2, "3");
 				}
 			}
 		}
 	}
 }
 
-static void vIdleHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vIdleHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsHumanSurvivor(survivor) && !g_bIdle[survivor])
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bIdle[survivor])
 	{
 		if (iGetHumanCount() > 1)
 		{
@@ -304,9 +305,9 @@ static void vReset()
 	}
 }
 
-static int iIdleChance(int tank)
+static float flIdleChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iIdleChance[ST_TankType(tank)] : g_iIdleChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flIdleChance[ST_TankType(tank)] : g_flIdleChance2[ST_TankType(tank)];
 }
 
 static int iIdleHit(int tank)

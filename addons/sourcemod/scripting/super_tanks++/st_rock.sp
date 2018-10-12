@@ -21,9 +21,9 @@ bool g_bCloneInstalled, g_bRock[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sRockRadius[ST_MAXTYPES + 1][11], g_sRockRadius2[ST_MAXTYPES + 1][11];
 
-float g_flRockDuration[ST_MAXTYPES + 1], g_flRockDuration2[ST_MAXTYPES + 1];
+float g_flRockChance[ST_MAXTYPES + 1], g_flRockChance2[ST_MAXTYPES + 1], g_flRockDuration[ST_MAXTYPES + 1], g_flRockDuration2[ST_MAXTYPES + 1];
 
-int g_iRockAbility[ST_MAXTYPES + 1], g_iRockAbility2[ST_MAXTYPES + 1], g_iRockChance[ST_MAXTYPES + 1], g_iRockChance2[ST_MAXTYPES + 1], g_iRockDamage[ST_MAXTYPES + 1], g_iRockDamage2[ST_MAXTYPES + 1], g_iRockMessage[ST_MAXTYPES + 1], g_iRockMessage2[ST_MAXTYPES + 1];
+int g_iRockAbility[ST_MAXTYPES + 1], g_iRockAbility2[ST_MAXTYPES + 1], g_iRockDamage[ST_MAXTYPES + 1], g_iRockDamage2[ST_MAXTYPES + 1], g_iRockMessage[ST_MAXTYPES + 1], g_iRockMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -96,8 +96,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRockAbility[iIndex] = iClamp(g_iRockAbility[iIndex], 0, 1);
 				g_iRockMessage[iIndex] = kvSuperTanks.GetNum("Rock Ability/Ability Message", 0);
 				g_iRockMessage[iIndex] = iClamp(g_iRockMessage[iIndex], 0, 1);
-				g_iRockChance[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Chance", 4);
-				g_iRockChance[iIndex] = iClamp(g_iRockChance[iIndex], 1, 9999999999);
+				g_flRockChance[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Chance", 33.3);
+				g_flRockChance[iIndex] = flClamp(g_flRockChance[iIndex], 0.1, 100.0);
 				g_iRockDamage[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Damage", 5);
 				g_iRockDamage[iIndex] = iClamp(g_iRockDamage[iIndex], 1, 9999999999);
 				g_flRockDuration[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Duration", 5.0);
@@ -112,8 +112,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRockAbility2[iIndex] = iClamp(g_iRockAbility2[iIndex], 0, 1);
 				g_iRockMessage2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Ability Message", g_iRockMessage[iIndex]);
 				g_iRockMessage2[iIndex] = iClamp(g_iRockMessage2[iIndex], 0, 1);
-				g_iRockChance2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Chance", g_iRockChance[iIndex]);
-				g_iRockChance2[iIndex] = iClamp(g_iRockChance2[iIndex], 1, 9999999999);
+				g_flRockChance2[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Chance", g_flRockChance[iIndex]);
+				g_flRockChance2[iIndex] = flClamp(g_flRockChance2[iIndex], 0.1, 100.0);
 				g_iRockDamage2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Damage", g_iRockDamage[iIndex]);
 				g_iRockDamage2[iIndex] = iClamp(g_iRockDamage2[iIndex], 1, 9999999999);
 				g_flRockDuration2[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Duration", g_flRockDuration[iIndex]);
@@ -135,8 +135,8 @@ public void ST_PluginEnd()
 
 public void ST_Ability(int tank)
 {
-	int iRockChance = !g_bTankConfig[ST_TankType(tank)] ? g_iRockChance[ST_TankType(tank)] : g_iRockChance2[ST_TankType(tank)];
-	if (iRockAbility(tank) == 1 && GetRandomInt(1, iRockChance) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bRock[tank])
+	float flRockChance = !g_bTankConfig[ST_TankType(tank)] ? g_flRockChance[ST_TankType(tank)] : g_flRockChance2[ST_TankType(tank)];
+	if (iRockAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flRockChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bRock[tank])
 	{
 		int iRock = CreateEntityByName("env_rock_launcher");
 		if (!bIsValidEntity(iRock))

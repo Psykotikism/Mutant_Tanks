@@ -19,7 +19,9 @@ public Plugin myinfo =
 
 bool g_bCloned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneChance[ST_MAXTYPES + 1], g_iCloneChance2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1], g_iCloneMessage[ST_MAXTYPES + 1], g_iCloneMessage2[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneMode2[ST_MAXTYPES + 1];
+float g_flCloneChance[ST_MAXTYPES + 1], g_flCloneChance2[ST_MAXTYPES + 1];
+
+int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1], g_iCloneMessage[ST_MAXTYPES + 1], g_iCloneMessage2[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -89,8 +91,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloneMessage[iIndex] = iClamp(g_iCloneMessage[iIndex], 0, 1);
 				g_iCloneAmount[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Amount", 2);
 				g_iCloneAmount[iIndex] = iClamp(g_iCloneAmount[iIndex], 1, 25);
-				g_iCloneChance[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Chance", 4);
-				g_iCloneChance[iIndex] = iClamp(g_iCloneChance[iIndex], 1, 9999999999);
+				g_flCloneChance[iIndex] = kvSuperTanks.GetFloat("Clone Ability/Clone Chance", 33.3);
+				g_flCloneChance[iIndex] = flClamp(g_flCloneChance[iIndex], 0.1, 100.0);
 				g_iCloneHealth[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", 1000);
 				g_iCloneHealth[iIndex] = iClamp(g_iCloneHealth[iIndex], 1, ST_MAXHEALTH);
 				g_iCloneMode[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", 0);
@@ -106,8 +108,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloneMessage2[iIndex] = iClamp(g_iCloneMessage2[iIndex], 0, 1);
 				g_iCloneAmount2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Amount", g_iCloneAmount[iIndex]);
 				g_iCloneAmount2[iIndex] = iClamp(g_iCloneAmount2[iIndex], 1, 25);
-				g_iCloneChance2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Chance", g_iCloneChance[iIndex]);
-				g_iCloneChance2[iIndex] = iClamp(g_iCloneChance2[iIndex], 1, 9999999999);
+				g_flCloneChance2[iIndex] = kvSuperTanks.GetFloat("Clone Ability/Clone Chance", g_flCloneChance[iIndex]);
+				g_flCloneChance2[iIndex] = flClamp(g_flCloneChance2[iIndex], 0.1, 100.0);
 				g_iCloneHealth2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", g_iCloneHealth[iIndex]);
 				g_iCloneHealth2[iIndex] = iClamp(g_iCloneHealth2[iIndex], 1, ST_MAXHEALTH);
 				g_iCloneMode2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", g_iCloneMode[iIndex]);
@@ -146,8 +148,8 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	int iCloneChance = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneChance[ST_TankType(tank)] : g_iCloneChance2[ST_TankType(tank)];
-	if (iCloneAbility(tank) == 1 && GetRandomInt(1, iCloneChance) == 1 && ST_TankAllowed(tank) && IsPlayerAlive(tank) && !g_bCloned[tank])
+	float flCloneChance = !g_bTankConfig[ST_TankType(tank)] ? g_flCloneChance[ST_TankType(tank)] : g_flCloneChance2[ST_TankType(tank)];
+	if (iCloneAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flCloneChance && ST_TankAllowed(tank) && IsPlayerAlive(tank) && !g_bCloned[tank])
 	{
 		int iCloneAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneAmount[ST_TankType(tank)] : g_iCloneAmount2[ST_TankType(tank)],
 			iCloneMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneMessage[ST_TankType(tank)] : g_iCloneMessage2[ST_TankType(tank)];

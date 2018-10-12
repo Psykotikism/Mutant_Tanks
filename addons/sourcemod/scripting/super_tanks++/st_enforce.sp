@@ -21,9 +21,9 @@ bool g_bCloneInstalled, g_bEnforce[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[S
 
 char g_sEnforceEffect[ST_MAXTYPES + 1][4], g_sEnforceEffect2[ST_MAXTYPES + 1][4], g_sEnforceSlot[ST_MAXTYPES + 1][6], g_sEnforceSlot2[ST_MAXTYPES + 1][6];
 
-float g_flEnforceDuration[ST_MAXTYPES + 1], g_flEnforceDuration2[ST_MAXTYPES + 1], g_flEnforceRange[ST_MAXTYPES + 1], g_flEnforceRange2[ST_MAXTYPES + 1];
+float g_flEnforceChance[ST_MAXTYPES + 1], g_flEnforceChance2[ST_MAXTYPES + 1], g_flEnforceDuration[ST_MAXTYPES + 1], g_flEnforceDuration2[ST_MAXTYPES + 1], g_flEnforceRange[ST_MAXTYPES + 1], g_flEnforceRange2[ST_MAXTYPES + 1], g_flEnforceRangeChance[ST_MAXTYPES + 1], g_flEnforceRangeChance2[ST_MAXTYPES + 1];
 
-int g_iEnforceAbility[ST_MAXTYPES + 1], g_iEnforceAbility2[ST_MAXTYPES + 1], g_iEnforceChance[ST_MAXTYPES + 1], g_iEnforceChance2[ST_MAXTYPES + 1], g_iEnforceHit[ST_MAXTYPES + 1], g_iEnforceHit2[ST_MAXTYPES + 1], g_iEnforceHitMode[ST_MAXTYPES + 1], g_iEnforceHitMode2[ST_MAXTYPES + 1], g_iEnforceMessage[ST_MAXTYPES + 1], g_iEnforceMessage2[ST_MAXTYPES + 1], g_iEnforceRangeChance[ST_MAXTYPES + 1], g_iEnforceRangeChance2[ST_MAXTYPES + 1], g_iEnforceSlot[MAXPLAYERS + 1];
+int g_iEnforceAbility[ST_MAXTYPES + 1], g_iEnforceAbility2[ST_MAXTYPES + 1], g_iEnforceHit[ST_MAXTYPES + 1], g_iEnforceHit2[ST_MAXTYPES + 1], g_iEnforceHitMode[ST_MAXTYPES + 1], g_iEnforceHitMode2[ST_MAXTYPES + 1], g_iEnforceMessage[ST_MAXTYPES + 1], g_iEnforceMessage2[ST_MAXTYPES + 1], g_iEnforceSlot[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -122,14 +122,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vEnforceHit(victim, attacker, iEnforceChance(attacker), iEnforceHit(attacker), 1, "1");
+				vEnforceHit(victim, attacker, flEnforceChance(attacker), iEnforceHit(attacker), 1, "1");
 			}
 		}
 		else if ((iEnforceHitMode(victim) == 0 || iEnforceHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vEnforceHit(attacker, victim, iEnforceChance(victim), iEnforceHit(victim), 1, "2");
+				vEnforceHit(attacker, victim, flEnforceChance(victim), iEnforceHit(victim), 1, "2");
 			}
 		}
 	}
@@ -154,8 +154,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect[iIndex], sizeof(g_sEnforceEffect[]), "123");
 				g_iEnforceMessage[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Message", 0);
 				g_iEnforceMessage[iIndex] = iClamp(g_iEnforceMessage[iIndex], 0, 3);
-				g_iEnforceChance[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Chance", 4);
-				g_iEnforceChance[iIndex] = iClamp(g_iEnforceChance[iIndex], 1, 9999999999);
+				g_flEnforceChance[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Chance", 33.3);
+				g_flEnforceChance[iIndex] = flClamp(g_flEnforceChance[iIndex], 0.1, 100.0);
 				g_flEnforceDuration[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Duration", 5.0);
 				g_flEnforceDuration[iIndex] = flClamp(g_flEnforceDuration[iIndex], 0.1, 9999999999.0);
 				g_iEnforceHit[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit", 0);
@@ -164,8 +164,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iEnforceHitMode[iIndex] = iClamp(g_iEnforceHitMode[iIndex], 0, 2);
 				g_flEnforceRange[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range", 150.0);
 				g_flEnforceRange[iIndex] = flClamp(g_flEnforceRange[iIndex], 1.0, 9999999999.0);
-				g_iEnforceRangeChance[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Range Chance", 16);
-				g_iEnforceRangeChance[iIndex] = iClamp(g_iEnforceRangeChance[iIndex], 1, 9999999999);
+				g_flEnforceRangeChance[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range Chance", 15.0);
+				g_flEnforceRangeChance[iIndex] = flClamp(g_flEnforceRangeChance[iIndex], 0.1, 100.0);
 				kvSuperTanks.GetString("Enforce Ability/Enforce Weapon Slots", g_sEnforceSlot[iIndex], sizeof(g_sEnforceSlot[]), "12345");
 			}
 			else
@@ -177,8 +177,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect2[iIndex], sizeof(g_sEnforceEffect2[]), g_sEnforceEffect[iIndex]);
 				g_iEnforceMessage2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Message", g_iEnforceMessage[iIndex]);
 				g_iEnforceMessage2[iIndex] = iClamp(g_iEnforceMessage2[iIndex], 0, 3);
-				g_iEnforceChance2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Chance", g_iEnforceChance[iIndex]);
-				g_iEnforceChance2[iIndex] = iClamp(g_iEnforceChance2[iIndex], 1, 9999999999);
+				g_flEnforceChance2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Chance", g_flEnforceChance[iIndex]);
+				g_flEnforceChance2[iIndex] = flClamp(g_flEnforceChance2[iIndex], 0.1, 100.0);
 				g_flEnforceDuration2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Duration", g_flEnforceDuration[iIndex]);
 				g_flEnforceDuration2[iIndex] = flClamp(g_flEnforceDuration2[iIndex], 0.1, 9999999999.0);
 				g_iEnforceHit2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit", g_iEnforceHit[iIndex]);
@@ -187,8 +187,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iEnforceHitMode2[iIndex] = iClamp(g_iEnforceHitMode2[iIndex], 0, 2);
 				g_flEnforceRange2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range", g_flEnforceRange[iIndex]);
 				g_flEnforceRange2[iIndex] = flClamp(g_flEnforceRange2[iIndex], 1.0, 9999999999.0);
-				g_iEnforceRangeChance2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Range Chance", g_iEnforceRangeChance[iIndex]);
-				g_iEnforceRangeChance2[iIndex] = iClamp(g_iEnforceRangeChance2[iIndex], 1, 9999999999);
+				g_flEnforceRangeChance2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range Chance", g_flEnforceRangeChance[iIndex]);
+				g_flEnforceRangeChance2[iIndex] = flClamp(g_flEnforceRangeChance2[iIndex], 0.1, 100.0);
 				kvSuperTanks.GetString("Enforce Ability/Enforce Weapon Slots", g_sEnforceSlot2[iIndex], sizeof(g_sEnforceSlot2[]), g_sEnforceSlot[iIndex]);
 			}
 
@@ -221,10 +221,10 @@ public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iEnforceRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceChance[ST_TankType(tank)] : g_iEnforceChance2[ST_TankType(tank)];
-
 		float flEnforceRange = !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceRange[ST_TankType(tank)] : g_flEnforceRange2[ST_TankType(tank)],
+			flEnforceRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceRangeChance[ST_TankType(tank)] : g_flEnforceRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
+
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -237,7 +237,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flEnforceRange)
 				{
-					vEnforceHit(iSurvivor, tank, iEnforceRangeChance, iEnforceAbility(tank), 2, "3");
+					vEnforceHit(iSurvivor, tank, flEnforceRangeChance, iEnforceAbility(tank), 2, "3");
 				}
 			}
 		}
@@ -252,9 +252,9 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vEnforceHit(int survivor, int tank, int chance, int enabled, int message, const char[] mode)
+static void vEnforceHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomInt(1, chance) == 1 && bIsSurvivor(survivor) && !g_bEnforce[survivor])
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bEnforce[survivor])
 	{
 		g_bEnforce[survivor] = true;
 
@@ -313,14 +313,14 @@ static void vReset()
 	}
 }
 
+static float flEnforceChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceChance[ST_TankType(tank)] : g_flEnforceChance2[ST_TankType(tank)];
+}
+
 static int iEnforceAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceAbility[ST_TankType(tank)] : g_iEnforceAbility2[ST_TankType(tank)];
-}
-
-static int iEnforceChance(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceChance[ST_TankType(tank)] : g_iEnforceChance2[ST_TankType(tank)];
 }
 
 static int iEnforceHit(int tank)
