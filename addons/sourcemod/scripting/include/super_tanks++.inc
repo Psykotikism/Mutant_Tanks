@@ -1144,6 +1144,7 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 	MarkNativeAsOptional("ST_PluginEnabled");
 	MarkNativeAsOptional("ST_SpawnTank");
 	MarkNativeAsOptional("ST_TankAllowed");
+	MarkNativeAsOptional("ST_TankChance");
 	MarkNativeAsOptional("ST_TankColors");
 	MarkNativeAsOptional("ST_TankName");
 	MarkNativeAsOptional("ST_TankType");
