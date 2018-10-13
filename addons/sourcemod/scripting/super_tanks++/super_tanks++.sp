@@ -735,7 +735,13 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			g_iTankType[iTank] = 0;
 
 			int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
-			if (iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
+			if (g_iType > 0)
+			{
+				vSetColor(iTank, g_iType);
+				g_bSpawned[iTank] = true;
+				g_iType = 0;
+			}
+			else if (iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
 			{
 				int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 				for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
@@ -751,18 +757,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 				if (iTypeCount > 0)
 				{
-					if (g_iType > 0)
-					{
-						vSetColor(iTank, g_iType);
-						g_bSpawned[iTank] = true;
-						g_iType = 0;
-					}
-					else
-					{
-						int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
-						vSetColor(iTank, iChosen);
-						g_bSpawned[iTank] = false;
-					}
+					int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
+					vSetColor(iTank, iChosen);
+					g_bSpawned[iTank] = false;
 				}
 
 				char sNumbers[3][4], sFinaleWaves[12];
