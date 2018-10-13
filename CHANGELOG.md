@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.44 (October 12, 2018)
+## Version 8.44 (October 16, 2018)
 
 Bug fixes:
 
@@ -21,6 +21,9 @@ Changes:
 9. Chance and Range Chance settings now only accept decimal (float) values.
 10. Chance and Range Chance settings now work differently. (Before: 1/X chances, After: X/100.0 probability)
 11. Added the "Base Health" setting to determine the base health of each Super Tank.
+12. Added the "Tank Chance" setting to determine the chances of a Super Tank type spawning.
+13. Added the ST_TankChance() native for the new "Tank Chance" setting.
+14. The plugin and its modules now require SM 1.10.0.6352 or higher.
 
 Files:
 

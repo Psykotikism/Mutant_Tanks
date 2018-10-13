@@ -194,6 +194,12 @@
 			// 1: ON
 			"Tank Enabled"					"0"
 
+			// The Super Tank has this many chances out of 100.0% to spawn.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Tank Chance"					"100.0"
+
 			// Display a note for the Super Tank when it spawns.
 			// Note: This note can also be displayed for clones if "Clone Mode" is set to 1, so the chat could be spammed if multiple clones spawn.
 			// --

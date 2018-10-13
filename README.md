@@ -20,7 +20,7 @@ Super Tanks++ makes fighting Tanks great again!
 Super Tanks++ enhances the experience and fun that players get from Tank fights by 10,000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
-1. You must have at least SourceMod 1.10.0.6317 or higher.
+1. You must have at least SourceMod 1.10.0.6352 or higher.
 
 ### Notes
 1. I do not provide support for local/listen servers but the plugin and its modules should still work properly on them.
@@ -668,6 +668,15 @@ native void ST_SpawnTank(int tank, int type);
  * @error				Invalid client index.
  */
 native bool ST_TankAllowed(int tank);
+
+/**
+ * Returns if a certain Super Tank type has a chance of spawning.
+ *
+ * @param type			Super Tank type.
+ * @return				True if the type has a chance of spawning, false otherwise.
+ * @error				Type is 0.
+ */
+native bool ST_TankChance(int type);
 
 /**
  * Returns the RGB colors given to a Tank.
