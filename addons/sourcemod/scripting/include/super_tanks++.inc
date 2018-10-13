@@ -930,13 +930,16 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 {
 	if (bIsValidEntRef(entity))
 	{
-		AcceptEntityInput(entity, "ClearParent");
-
 		char sVariant[64];
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:kill::%f:1", time);
-		SetVariantString(sVariant);
 
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:ClearParent::%f:1", time);
+		SetVariantString(sVariant);
 		AcceptEntityInput(entity, "AddOutput");
+
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:Kill::%f:1", time + 0.1);
+		SetVariantString(sVariant);
+		AcceptEntityInput(entity, "AddOutput");
+
 		AcceptEntityInput(entity, "FireUser1");
 	}
 }
