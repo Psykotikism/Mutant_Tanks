@@ -66,9 +66,16 @@ public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
 
-	Handle hGameData = LoadGameConfigFile("super_tanks++");
+	GameData gdSuperTanks = new GameData("super_tanks++");
+
+	if (gdSuperTanks == null)
+	{
+		SetFailState("Unable to load the \"super_tanks++\" gamedata file.");
+		return;
+	}
+
 	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnStaggered");
+	PrepSDKCall_SetFromConf(gdSuperTanks, SDKConf_Signature, "CTerrorPlayer_OnStaggered");
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_Pointer);
 	g_hSDKShovePlayer = EndPrepSDKCall();
@@ -77,6 +84,8 @@ public void OnPluginStart()
 	{
 		PrintToServer("%s Your \"CTerrorPlayer_OnStaggered\" signature is outdated.", ST_PREFIX);
 	}
+
+	delete gdSuperTanks;
 
 	if (g_bLateLoad)
 	{

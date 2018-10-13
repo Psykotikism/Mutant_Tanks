@@ -42,7 +42,8 @@ char g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES 
 
 ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 
-float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRegularInterval, g_flRegularInterval2, g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1], g_flTransformDelay[ST_MAXTYPES + 1], g_flTransformDelay2[ST_MAXTYPES + 1], g_flTransformDuration[ST_MAXTYPES + 1], g_flTransformDuration2[ST_MAXTYPES + 1];
+float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRegularInterval, g_flRegularInterval2, g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1], g_flTankChance[ST_MAXTYPES + 1], g_flTankChance2[ST_MAXTYPES + 1],
+	g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1], g_flTransformDelay[ST_MAXTYPES + 1], g_flTransformDelay2[ST_MAXTYPES + 1], g_flTransformDuration[ST_MAXTYPES + 1], g_flTransformDuration2[ST_MAXTYPES + 1];
 
 Handle g_hAbilityForward, g_hBossStageForward, g_hConfigsForward, g_hEventForward, g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward;
 
@@ -67,6 +68,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("ST_PluginEnabled", aNative_PluginEnabled);
 	CreateNative("ST_SpawnTank", aNative_SpawnTank);
 	CreateNative("ST_TankAllowed", aNative_TankAllowed);
+	CreateNative("ST_TankChance", aNative_TankChance);
 	CreateNative("ST_TankColors", aNative_TankColors);
 	CreateNative("ST_TankName", aNative_TankName);
 	CreateNative("ST_TankType", aNative_TankType);
@@ -112,6 +114,17 @@ public any aNative_TankAllowed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	if (bIsTankAllowed(iTank))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+public any aNative_TankChance(Handle plugin, int numParams)
+{
+	int iType = GetNativeCell(1);
+	if (bTankChance(iType))
 	{
 		return true;
 	}
@@ -727,7 +740,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 				for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 				{
-					if (iTankEnabled(iIndex) == 0 || (iTypeLimit(iIndex) > 0 && iGetTypeCount(iIndex) >= iTypeLimit(iIndex)) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
+					if (iTankEnabled(iIndex) == 0 || !bTankChance(iIndex) || (iTypeLimit(iIndex) > 0 && iGetTypeCount(iIndex) >= iTypeLimit(iIndex)) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
 					{
 						continue;
 					}
@@ -738,18 +751,18 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 				if (iTypeCount > 0)
 				{
-					int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
-					vSetColor(iTank, (g_iType <= 0) ? iChosen : g_iType);
 					if (g_iType > 0)
 					{
+						vSetColor(iTank, g_iType);
 						g_bSpawned[iTank] = true;
+						g_iType = 0;
 					}
 					else
 					{
+						int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
+						vSetColor(iTank, iChosen);
 						g_bSpawned[iTank] = false;
 					}
-
-					g_iType = 0;
 				}
 
 				char sNumbers[3][4], sFinaleWaves[12];
@@ -1107,6 +1120,8 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 				kvSuperTanks.GetString("General/Tank Name", g_sTankName[iIndex], sizeof(g_sTankName[]), sTankName);
 				g_iTankEnabled[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", 0);
 				g_iTankEnabled[iIndex] = iClamp(g_iTankEnabled[iIndex], 0, 1);
+				g_flTankChance[iIndex] = kvSuperTanks.GetFloat("General/Tank Chance", 100.0);
+				g_flTankChance[iIndex] = flClamp(g_flTankChance[iIndex], 0.1, 100.0);
 				g_iTankNote[iIndex] = kvSuperTanks.GetNum("General/Tank Note", 0);
 				g_iTankNote[iIndex] = iClamp(g_iTankNote[iIndex], 0, 1);
 				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255");
@@ -1171,6 +1186,8 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 				kvSuperTanks.GetString("General/Tank Name", g_sTankName2[iIndex], sizeof(g_sTankName2[]), g_sTankName[iIndex]);
 				g_iTankEnabled2[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", g_iTankEnabled[iIndex]);
 				g_iTankEnabled2[iIndex] = iClamp(g_iTankEnabled2[iIndex], 0, 1);
+				g_flTankChance2[iIndex] = kvSuperTanks.GetFloat("General/Tank Chance", g_flTankChance[iIndex]);
+				g_flTankChance2[iIndex] = flClamp(g_flTankChance2[iIndex], 0.1, 100.0);
 				g_iTankNote2[iIndex] = kvSuperTanks.GetNum("General/Tank Note", g_iTankNote[iIndex]);
 				g_iTankNote2[iIndex] = iClamp(g_iTankNote2[iIndex], 0, 1);
 				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]);
@@ -1896,6 +1913,17 @@ static bool bIsTankAllowed(int tank)
 	return bIsTank(tank) && IsFakeClient(tank);
 }
 
+static bool bTankChance(int value)
+{
+	float flTankChance = !g_bTankConfig[value] ? g_flTankChance[value] : g_flTankChance2[value];
+	if (GetRandomFloat(0.1, 100.0) <= flTankChance)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 static float flThrowInterval(int tank)
 {
 	return !g_bTankConfig[g_iTankType[tank]] ? g_flThrowInterval[g_iTankType[tank]] : g_flThrowInterval2[g_iTankType[tank]];
@@ -2240,7 +2268,7 @@ public Action tTimerRandomize(Handle timer, int userid)
 	int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
-		if (iTankEnabled(iIndex) == 0 || (iTypeLimit(iIndex) > 0 && iGetTypeCount(iIndex) >= iTypeLimit(iIndex)) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
+		if (iTankEnabled(iIndex) == 0 || !bTankChance(iIndex) || (iTypeLimit(iIndex) > 0 && iGetTypeCount(iIndex) >= iTypeLimit(iIndex)) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
 		{
 			continue;
 		}

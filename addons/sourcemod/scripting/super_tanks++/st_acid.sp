@@ -66,11 +66,18 @@ public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
 
-	Handle hGameData = LoadGameConfigFile("super_tanks++");
+	GameData gdSuperTanks = new GameData("super_tanks++");
+
+	if (gdSuperTanks == null)
+	{
+		SetFailState("Unable to load the \"super_tanks++\" gamedata file.");
+		return;
+	}
+
 	if (bIsValidGame())
 	{
 		StartPrepSDKCall(SDKCall_Static);
-		PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CSpitterProjectile_Create");
+		PrepSDKCall_SetFromConf(gdSuperTanks, SDKConf_Signature, "CSpitterProjectile_Create");
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -88,7 +95,7 @@ public void OnPluginStart()
 	else
 	{
 		StartPrepSDKCall(SDKCall_Player);
-		PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon");
+		PrepSDKCall_SetFromConf(gdSuperTanks, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon");
 		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDKPukePlayer = EndPrepSDKCall();
@@ -98,6 +105,8 @@ public void OnPluginStart()
 			PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", ST_PREFIX);
 		}
 	}
+
+	delete gdSuperTanks;
 
 	if (g_bLateLoad)
 	{

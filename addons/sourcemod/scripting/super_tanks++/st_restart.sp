@@ -66,15 +66,24 @@ public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
 
-	Handle hGameData = LoadGameConfigFile("super_tanks++");
+	GameData gdSuperTanks = new GameData("super_tanks++");
+
+	if (gdSuperTanks == null)
+	{
+		SetFailState("Unable to load the \"super_tanks++\" gamedata file.");
+		return;
+	}
+
 	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "RoundRespawn");
+	PrepSDKCall_SetFromConf(gdSuperTanks, SDKConf_Signature, "RoundRespawn");
 	g_hSDKRespawnPlayer = EndPrepSDKCall();
 
 	if (g_hSDKRespawnPlayer == null)
 	{
 		PrintToServer("%s Your \"RoundRespawn\" signature is outdated.", ST_PREFIX);
 	}
+
+	delete gdSuperTanks;
 
 	if (g_bLateLoad)
 	{

@@ -131,6 +131,15 @@ native void ST_SpawnTank(int tank, int type);
 native bool ST_TankAllowed(int tank);
 
 /**
+ * Returns if a certain Super Tank type has a chance of spawning.
+ *
+ * @param type			Super Tank type.
+ * @return				True if the type has a chance of spawning, false otherwise.
+ * @error				Type is 0.
+ */
+native bool ST_TankChance(int type);
+
+/**
  * Returns the RGB colors given to a Tank.
  *
  * @param tank			Client index of the Tank.
