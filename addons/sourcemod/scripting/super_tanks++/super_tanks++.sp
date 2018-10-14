@@ -36,9 +36,9 @@ public Plugin myinfo =
 
 bool g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bTransformed[MAXPLAYERS + 1];
 
-char g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sFinaleWaves[12], g_sFinaleWaves2[12], g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8],
-	g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28],
-	g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80], g_sTypeRange[10], g_sTypeRange2[10];
+char g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabled[513], g_sDisabledGameModes[513], g_sEnabled[513], g_sEnabledGameModes[513], g_sFinaleWaves[12], g_sFinaleWaves2[12], g_sParticleEffects[ST_MAXTYPES + 1][8],
+	g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[PLATFORM_MAX_PATH],
+	g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80], g_sTypeRange[10], g_sTypeRange2[10];
 
 ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 
@@ -48,9 +48,9 @@ float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRan
 Handle g_hAbilityForward, g_hBossStageForward, g_hConfigsForward, g_hEventForward, g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward;
 
 int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBaseHealth[ST_MAXTYPES + 1], g_iBaseHealth2[ST_MAXTYPES + 1], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2, g_iExplosiveImmunity[ST_MAXTYPES + 1],
-	g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGameModeTypes, g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1],
-	g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRegularAmount, g_iRegularAmount2, g_iRegularWave, g_iRegularWave2, g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1],
-	g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType, g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
+	g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGameModeTypes, g_iGameTypes, g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1],
+	g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iPluginStatus, g_iRegularAmount, g_iRegularAmount2, g_iRegularWave, g_iRegularWave2, g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1],
+	g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType, g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
 
 TopMenu g_tmSTMenu;
 
@@ -234,6 +234,7 @@ public void OnPluginStart()
 	BuildPath(Path_SM, g_sSavePath, sizeof(g_sSavePath), "data/super_tanks++/super_tanks++.cfg");
 	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 	vLoadConfigs(g_sSavePath, true);
+	vUpdatePluginStatus();
 
 	vMultiTargetFilters(1);
 
@@ -312,6 +313,7 @@ public void OnConfigsExecuted()
 	g_iType = 0;
 
 	vLoadConfigs(g_sSavePath, true);
+	vUpdatePluginStatus();
 
 	char sMapName[128];
 	GetCurrentMap(sMapName, sizeof(sMapName));
@@ -432,6 +434,7 @@ public void OnConfigsExecuted()
 		vLoadConfigs(sDifficultyConfig);
 
 		g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+		vUpdatePluginStatus();
 	}
 
 	if (StrContains(g_sConfigExecute, "2") != -1 && g_iConfigEnable == 1)
@@ -443,6 +446,7 @@ public void OnConfigsExecuted()
 		vLoadConfigs(sMapConfig);
 
 		g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+		vUpdatePluginStatus();
 	}
 
 	if (StrContains(g_sConfigExecute, "3") != -1 && g_iConfigEnable == 1)
@@ -454,6 +458,7 @@ public void OnConfigsExecuted()
 		vLoadConfigs(sModeConfig);
 
 		g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+		vUpdatePluginStatus();
 	}
 
 	if (StrContains(g_sConfigExecute, "4") != -1 && g_iConfigEnable == 1)
@@ -477,6 +482,7 @@ public void OnConfigsExecuted()
 		vLoadConfigs(sDayConfig);
 
 		g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+		vUpdatePluginStatus();
 	}
 
 	if (StrContains(g_sConfigExecute, "5") != -1 && g_iConfigEnable == 1)
@@ -487,6 +493,7 @@ public void OnConfigsExecuted()
 		vLoadConfigs(sCountConfig);
 
 		g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+		vUpdatePluginStatus();
 	}
 }
 
@@ -1905,6 +1912,15 @@ static void vThrowInterval(int tank, float time)
 	}
 }
 
+static void vUpdatePluginStatus()
+{
+	g_iPluginStatus = iPluginEnabled();
+
+	g_iGameTypes = g_iGameModeTypes;
+	g_sEnabled = g_sEnabledGameModes;
+	g_sDisabled = g_sDisabledGameModes;
+}
+
 static bool bIsTankAllowed(int tank)
 {
 	return bIsTank(tank) && IsFakeClient(tank);
@@ -2825,6 +2841,13 @@ public Action tTimerReloadConfigs(Handle timer)
 		vLoadConfigs(g_sSavePath, true);
 
 		g_iFileTimeOld[0] = g_iFileTimeNew[0];
+
+		if (g_iPluginStatus != iPluginEnabled() || g_iGameTypes != g_iGameModeTypes || !StrEqual(g_sEnabled, g_sEnabledGameModes) || !StrEqual(g_sDisabled, g_sDisabledGameModes))
+		{
+			vPluginStatus();
+
+			vUpdatePluginStatus();
+		}
 	}
 
 	if (StrContains(g_sConfigExecute, "1") != -1 && g_iConfigEnable == 1 && g_cvSTDifficulty != null)
