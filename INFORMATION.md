@@ -2,7 +2,7 @@
 > There is information about each setting and ability below.
 
 - Abilities count: 62
-- Maximum types: 10,000
+- Maximum types: 500
 - All of these settings use default values if they are left incomplete or empty.
 - THIS FILE IS NOT THE CONFIG FILE! USE IT AS A REFERENCE!
 
@@ -66,11 +66,11 @@
 			// Character limit for each value: 4
 			// --
 			// Minimum number for each value: 1
-			// Maximum number for each value: 10000
+			// Maximum number for each value: 500
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
-			"Type Range"					"1-10000"
+			"Type Range"					"1-500"
 		}
 		"Waves"
 		{
@@ -278,7 +278,7 @@
 			// Character limit for each stage type: 4
 			// --
 			// Minimum: 1
-			// Maximum: 10000
+			// Maximum: 500
 			// --
 			// 1st number = 2nd stage type
 			// 2nd number = 3rd stage type
@@ -319,7 +319,7 @@
 			// Example: "1997,1998,1999,2000,2001,2002,2003,2004,2005,2006"
 			// --
 			// Minimum: 1
-			// Maximum: 10000
+			// Maximum: 500
 			"Transform Types"				"1,2,3,4,5,6,7,8,9,10"
 
 			// The mode of the Super Tank's spawn status.
@@ -3954,7 +3954,7 @@
 			// The type that the Super Tank will respawn as.
 			// --
 			// 0: OFF, use the randomization feature.
-			// 1-10000: ON, the type to respawn as.
+			// 1-500: ON, the type to respawn as.
 			"Respawn Type"					"0"
 		}
 	}

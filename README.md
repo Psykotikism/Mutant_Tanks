@@ -17,7 +17,7 @@ Super Tanks++ makes fighting Tanks great again!
 > Super Tanks++ will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
 ### What makes Super Tanks++ viable in Left 4 Dead/Left 4 Dead 2?
-Super Tanks++ enhances the experience and fun that players get from Tank fights by 10,000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
+Super Tanks++ enhances the experience and fun that players get from Tank fights by 500. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
 1. You must have at least SourceMod 1.10.0.6352 or higher.
@@ -51,7 +51,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 1. Supports multiple game modes - Provides the option to enable/disable the plugin in certain game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
 3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the KeyValue config file and user-made Super Tanks.
-4. Create and save up to 10,000 Super Tank types - Provides the ability to store up to 10,000 Super Tank types that users can enable/disable.
+4. Create and save up to 500 Super Tank types - Provides the ability to store up to 500 Super Tank types that users can enable/disable.
 5. Easy-to-use config file - Provides a user-friendly KeyValues config file that users can easily understand and edit.
 6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
 7. Optional abilities - Provides the option to choose which abilities to install.
@@ -330,7 +330,7 @@ It may be due to one or more of the following:
 - You are still using the "Tank Character" KeyValue which is no longer used since v8.16.
 - You didn't set up the Super Tank properly.
 - You are missing quotation marks.
-- You have more than 10,000 Super Tanks in your config file.
+- You have more than 500 Super Tanks in your config file.
 - You didn't format your config file properly.
 
 5. How do I kill the Tanks depending on what abilities they have?
@@ -741,7 +741,7 @@ Target filters:
 Commands:
 
 ```
-1. sm_tank <type 1*-10000*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 10,000 though.)
+1. sm_tank <type 1*-500*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 500 though.)
 2. sm_tanklist
 ```
 

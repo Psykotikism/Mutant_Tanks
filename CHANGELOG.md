@@ -16,7 +16,7 @@ Changes:
 4. The Electric, Hurt, and Splash abilities now use SDKHooks_TakeDamage() to damage players.
 5. The damage settings of the Electric, Hurt, and Splash abilities now accept float values (decimals) instead of int values (whole numbers).
 6. Renamed a bunch of settings.
-7. Increased Super Tank type limit to 10,000!
+7. Decreased Super Tank type limit back to 500 to avoid server freezes and lag spikes.
 8. Removed the st_enableplugin cvar setting.
 9. Chance and Range Chance settings now only accept decimal (float) values.
 10. Chance and Range Chance settings now work differently. (Before: 1/X chances, After: X/100.0 probability)
