@@ -1,7 +1,7 @@
 # Information
 > There is information about each setting and ability below.
 
-- Abilities count: 62
+- Ability count: 62
 - Maximum types: 500
 - All of these settings use default values if they are left incomplete or empty.
 - THIS FILE IS NOT THE CONFIG FILE! USE IT AS A REFERENCE!

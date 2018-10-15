@@ -7,6 +7,7 @@ Bug fixes:
 1. Fixed the Absorb, Fragile, and Hypno abilities not working properly.
 2. Fixed the datapack leaks from various modules.
 3. Fixed the Range Chance settings not working at all.
+4. Fixed the Type Range setting not accepting the right amount of characters.
 
 Changes:
 
@@ -25,6 +26,7 @@ Changes:
 13. Added the ST_TankChance() native for the new "Tank Chance" setting.
 14. The core plugin and its modules now require SM 1.10.0.6352 or higher.
 15. The core plugin now properly updates all settings when the config file is refreshed.
+16. Removed the sm_tanklist command.
 
 Files:
 
