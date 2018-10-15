@@ -1,4 +1,6 @@
 // Super Tanks++: Medic Ability
+#include <sourcemod>
+
 #undef REQUIRE_PLUGIN
 #include <st_clone>
 #define REQUIRE_PLUGIN

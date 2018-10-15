@@ -4,11 +4,6 @@
 #endif
 #define _supertanksplusplus_included
 
-#include <sourcemod>
-#include <sdkhooks>
-#include <sdktools>
-#include <adminmenu>
-
 #define ST_PREFIX "[ST++]"
 #define ST_PREFIX2 "\x04[ST++]\x01"
 #define ST_PREFIX3 "\x04[ST++]\x03"
@@ -347,16 +342,20 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 	{
 		g_iCurrentMode = 0;
 		int iGameMode = CreateEntityByName("info_gamemode");
-		DispatchSpawn(iGameMode);
 
-		HookSingleEntityOutput(iGameMode, "OnCoop", vGameMode, true);
-		HookSingleEntityOutput(iGameMode, "OnSurvival", vGameMode, true);
-		HookSingleEntityOutput(iGameMode, "OnVersus", vGameMode, true);
-		HookSingleEntityOutput(iGameMode, "OnScavenge", vGameMode, true);
+		if (bIsValidEntity(iGameMode))
+		{
+			DispatchSpawn(iGameMode);
 
-		ActivateEntity(iGameMode);
-		AcceptEntityInput(iGameMode, "PostSpawnActivate");
-		RemoveEntity(iGameMode);
+			HookSingleEntityOutput(iGameMode, "OnCoop", vGameMode, true);
+			HookSingleEntityOutput(iGameMode, "OnSurvival", vGameMode, true);
+			HookSingleEntityOutput(iGameMode, "OnVersus", vGameMode, true);
+			HookSingleEntityOutput(iGameMode, "OnScavenge", vGameMode, true);
+
+			ActivateEntity(iGameMode);
+			AcceptEntityInput(iGameMode, "PostSpawnActivate");
+			RemoveEntity(iGameMode);
+		}
 
 		if (g_iCurrentMode == 0 || !(mode & g_iCurrentMode))
 		{
@@ -1011,9 +1010,11 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 stock void vHeal(int infected, int health, int extrahealth, int maxhealth)
 {
 	maxhealth = iClamp(maxhealth, 1, ST_MAXHEALTH);
+
 	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth,
 		iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth,
 		iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
+
 	SetEntityHealth(infected, iRealHealth);
 }
 

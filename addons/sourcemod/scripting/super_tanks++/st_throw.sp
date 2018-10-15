@@ -1,4 +1,7 @@
 // Super Tanks++: Throw Ability
+#include <sourcemod>
+#include <sdktools>
+
 #undef REQUIRE_PLUGIN
 #include <st_clone>
 #define REQUIRE_PLUGIN

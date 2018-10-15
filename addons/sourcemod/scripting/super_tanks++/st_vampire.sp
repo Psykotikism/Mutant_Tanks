@@ -1,4 +1,7 @@
 // Super Tanks++: Vampire Ability
+#include <sourcemod>
+#include <sdkhooks>
+
 #undef REQUIRE_PLUGIN
 #include <st_clone>
 #define REQUIRE_PLUGIN

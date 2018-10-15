@@ -1,4 +1,8 @@
 // Super Tanks++
+#include <sourcemod>
+#include <sdkhooks>
+#include <sdktools>
+#include <adminmenu>
 #include <super_tanks++>
 
 #undef REQUIRE_PLUGIN
@@ -2746,12 +2750,16 @@ public Action tTimerSpawnTanks(Handle timer, int wave)
 
 public Action tTimerTankWave(Handle timer, int wave)
 {
-	if (iGetTankCount() > 0 || wave > 2)
+	if (iGetTankCount() > 0)
 	{
 		return Plugin_Stop;
 	}
 
-	g_iTankWave = wave + 1;
+	switch (wave)
+	{
+		case 1: g_iTankWave = 2;
+		case 2: g_iTankWave = 3;
+	}
 
 	return Plugin_Continue;
 }

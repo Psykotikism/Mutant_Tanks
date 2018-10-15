@@ -4,8 +4,6 @@
 #endif
 #define _supertankspluspluscloneability_included
 
-#include <sourcemod>
-
 /* Returns whether the clone can use abilities.
  *
  * @param tank				Client index of the Tank.

@@ -1,4 +1,6 @@
 // Super Tanks++: Clone Ability
+#include <sourcemod>
+#include <sdktools>
 #include <st_clone>
 
 #define REQUIRE_PLUGIN

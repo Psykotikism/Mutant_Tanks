@@ -1,4 +1,8 @@
 // Super Tanks++: Ammo Ability
+#include <sourcemod>
+#include <sdkhooks>
+#include <sdktools>
+
 #undef REQUIRE_PLUGIN
 #include <st_clone>
 #define REQUIRE_PLUGIN
