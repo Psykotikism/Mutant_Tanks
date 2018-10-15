@@ -36,9 +36,9 @@ public Plugin myinfo =
 
 bool g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bTransformed[MAXPLAYERS + 1];
 
-char g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabled[513], g_sDisabledGameModes[513], g_sEnabled[513], g_sEnabledGameModes[513], g_sFinaleWaves[12], g_sFinaleWaves2[12], g_sParticleEffects[ST_MAXTYPES + 1][8],
-	g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[PLATFORM_MAX_PATH],
-	g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80], g_sTypeRange[10], g_sTypeRange2[10];
+char g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sFinaleWaves[12], g_sFinaleWaves2[12], g_sParticleEffects[ST_MAXTYPES + 1][8],
+	g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5],
+	g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80], g_sTypeRange[8], g_sTypeRange2[8];
 
 ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 
@@ -47,10 +47,10 @@ float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRan
 
 Handle g_hAbilityForward, g_hBossStageForward, g_hConfigsForward, g_hEventForward, g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward;
 
-int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBaseHealth[ST_MAXTYPES + 1], g_iBaseHealth2[ST_MAXTYPES + 1], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2, g_iExplosiveImmunity[ST_MAXTYPES + 1],
-	g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGameModeTypes, g_iGameTypes, g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1],
-	g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iPluginStatus, g_iRegularAmount, g_iRegularAmount2, g_iRegularWave, g_iRegularWave2, g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1],
-	g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType, g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
+int g_iAnnounceArrival, g_iAnnounceArrival2, g_iAnnounceDeath, g_iAnnounceDeath2, g_iBaseHealth[ST_MAXTYPES + 1], g_iBaseHealth2[ST_MAXTYPES + 1], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2,
+	g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGameModeTypes,
+	g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRegularAmount, g_iRegularAmount2, g_iRegularWave, g_iRegularWave2, g_iRockEffect[ST_MAXTYPES + 1],
+	g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType, g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
 
 TopMenu g_tmSTMenu;
 
@@ -93,7 +93,7 @@ public any aNative_MinType(Handle plugin, int numParams)
 
 public any aNative_PluginEnabled(Handle plugin, int numParams)
 {
-	if (iPluginEnabled() == 1 && g_bPluginEnabled)
+	if (g_bPluginEnabled)
 	{
 		return true;
 	}
@@ -234,7 +234,6 @@ public void OnPluginStart()
 	BuildPath(Path_SM, g_sSavePath, sizeof(g_sSavePath), "data/super_tanks++/super_tanks++.cfg");
 	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 	vLoadConfigs(g_sSavePath, true);
-	vUpdatePluginStatus();
 
 	vMultiTargetFilters(1);
 
@@ -313,7 +312,6 @@ public void OnConfigsExecuted()
 	g_iType = 0;
 
 	vLoadConfigs(g_sSavePath, true);
-	vUpdatePluginStatus();
 
 	char sMapName[128];
 	GetCurrentMap(sMapName, sizeof(sMapName));
@@ -434,7 +432,6 @@ public void OnConfigsExecuted()
 		vLoadConfigs(sDifficultyConfig);
 
 		g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
-		vUpdatePluginStatus();
 	}
 
 	if (StrContains(g_sConfigExecute, "2") != -1 && g_iConfigEnable == 1)
@@ -446,7 +443,6 @@ public void OnConfigsExecuted()
 		vLoadConfigs(sMapConfig);
 
 		g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
-		vUpdatePluginStatus();
 	}
 
 	if (StrContains(g_sConfigExecute, "3") != -1 && g_iConfigEnable == 1)
@@ -458,7 +454,6 @@ public void OnConfigsExecuted()
 		vLoadConfigs(sModeConfig);
 
 		g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
-		vUpdatePluginStatus();
 	}
 
 	if (StrContains(g_sConfigExecute, "4") != -1 && g_iConfigEnable == 1)
@@ -482,7 +477,6 @@ public void OnConfigsExecuted()
 		vLoadConfigs(sDayConfig);
 
 		g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
-		vUpdatePluginStatus();
 	}
 
 	if (StrContains(g_sConfigExecute, "5") != -1 && g_iConfigEnable == 1)
@@ -493,7 +487,6 @@ public void OnConfigsExecuted()
 		vLoadConfigs(sCountConfig);
 
 		g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
-		vUpdatePluginStatus();
 	}
 }
 
@@ -566,7 +559,7 @@ public void vSuperTankListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObj
 
 public void OnEntityCreated(int entity, const char[] classname)
 {
-	if (iPluginEnabled() == 1 && g_bPluginEnabled && StrEqual(classname, "tank_rock"))
+	if (g_bPluginEnabled && StrEqual(classname, "tank_rock"))
 	{
 		CreateTimer(0.1, tTimerRockThrow, EntIndexToEntRef(entity), TIMER_FLAG_NO_MAPCHANGE);
 	}
@@ -574,7 +567,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 
 public void OnEntityDestroyed(int entity)
 {
-	if (iPluginEnabled() == 1 && g_bPluginEnabled && bIsValidEntity(entity))
+	if (g_bPluginEnabled && bIsValidEntity(entity))
 	{
 		char sClassname[32];
 		GetEntityClassname(entity, sClassname, sizeof(sClassname));
@@ -596,7 +589,7 @@ public void OnEntityDestroyed(int entity)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (iPluginEnabled() == 1 && g_bPluginEnabled && damage > 0.0 && bIsValidClient(victim))
+	if (g_bPluginEnabled && damage > 0.0 && bIsValidClient(victim))
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -813,7 +806,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 public Action cmdTank(int client, int args)
 {
-	if (iPluginEnabled() == 0 || !g_bPluginEnabled)
+	if (!g_bPluginEnabled)
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_PREFIX4);
 
@@ -940,7 +933,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 public Action cmdTankList(int client, int args)
 {
-	if (iPluginEnabled() == 0 || !g_bPluginEnabled)
+	if (!g_bPluginEnabled)
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_PREFIX4);
 
@@ -1061,7 +1054,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 			g_iFinalesOnly = iClamp(g_iFinalesOnly, 0, 1);
 			g_iMultiHealth = kvSuperTanks.GetNum("General/Multiply Health", 0);
 			g_iMultiHealth = iClamp(g_iMultiHealth, 0, 3);
-			kvSuperTanks.GetString("General/Type Range", g_sTypeRange, sizeof(g_sTypeRange), "1-5000");
+			kvSuperTanks.GetString("General/Type Range", g_sTypeRange, sizeof(g_sTypeRange), "1-500");
 
 			g_iRegularAmount = kvSuperTanks.GetNum("Waves/Regular Amount", 2);
 			g_iRegularAmount = iClamp(g_iRegularAmount, 1, 9999999999);
@@ -1115,7 +1108,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
+		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
 			if (main)
 			{
@@ -1912,15 +1905,6 @@ static void vThrowInterval(int tank, float time)
 	}
 }
 
-static void vUpdatePluginStatus()
-{
-	g_iPluginStatus = iPluginEnabled();
-
-	g_iGameTypes = g_iGameModeTypes;
-	g_sEnabled = g_sEnabledGameModes;
-	g_sDisabled = g_sDisabledGameModes;
-}
-
 static bool bIsTankAllowed(int tank)
 {
 	return bIsTank(tank) && IsFakeClient(tank);
@@ -1954,7 +1938,7 @@ static int iFireImmunity(int tank)
 
 static int iGetMaxType()
 {
-	char sTypeRange[10], sRange[2][5];
+	char sTypeRange[8], sRange[2][4];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 	TrimString(sTypeRange);
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
@@ -1967,7 +1951,7 @@ static int iGetMaxType()
 
 static int iGetMinType()
 {
-	char sTypeRange[10], sRange[2][5];
+	char sTypeRange[8], sRange[2][4];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
 	TrimString(sTypeRange);
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
@@ -2417,7 +2401,7 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 
 public Action tTimerUpdatePlayerCount(Handle timer)
 {
-	if (iPluginEnabled() == 0 || !g_bPluginEnabled || StrContains(g_sConfigExecute, "5") == -1)
+	if (!g_bPluginEnabled || StrContains(g_sConfigExecute, "5") == -1)
 	{
 		return Plugin_Continue;
 	}
@@ -2431,7 +2415,7 @@ public Action tTimerUpdatePlayerCount(Handle timer)
 
 public Action tTimerTankHealthUpdate(Handle timer)
 {
-	if (iPluginEnabled() == 0 || !g_bPluginEnabled)
+	if (!g_bPluginEnabled)
 	{
 		return Plugin_Continue;
 	}
@@ -2471,7 +2455,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 
 public Action tTimerTankTypeUpdate(Handle timer)
 {
-	if (iPluginEnabled() == 0 || !g_bPluginEnabled)
+	if (!g_bPluginEnabled)
 	{
 		return Plugin_Continue;
 	}
@@ -2519,19 +2503,19 @@ public Action tTimerTankTypeUpdate(Handle timer)
 
 						TrimString(sSet2[0]);
 						int iType = (sSet2[0][0] != '\0') ? StringToInt(sSet2[0]) : 2;
-						iType = iClamp(iType, 1, 5000);
+						iType = iClamp(iType, 1, 500);
 
 						TrimString(sSet2[1]);
 						int iType2 = (sSet2[1][0] != '\0') ? StringToInt(sSet2[1]) : 3;
-						iType2 = iClamp(iType2, 1, 5000);
+						iType2 = iClamp(iType2, 1, 500);
 
 						TrimString(sSet2[2]);
 						int iType3 = (sSet2[2][0] != '\0') ? StringToInt(sSet2[2]) : 4;
-						iType3 = iClamp(iType3, 1, 5000);
+						iType3 = iClamp(iType3, 1, 500);
 
 						TrimString(sSet2[3]);
 						int iType4 = (sSet2[3][0] != '\0') ? StringToInt(sSet2[3]) : 5;
-						iType4 = iClamp(iType4, 1, 5000);
+						iType4 = iClamp(iType4, 1, 500);
 
 						DataPack dpBoss;
 						CreateDataTimer(1.0, tTimerBoss, dpBoss, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -2842,12 +2826,7 @@ public Action tTimerReloadConfigs(Handle timer)
 
 		g_iFileTimeOld[0] = g_iFileTimeNew[0];
 
-		if (g_iPluginStatus != iPluginEnabled() || g_iGameTypes != g_iGameModeTypes || !StrEqual(g_sEnabled, g_sEnabledGameModes) || !StrEqual(g_sDisabled, g_sDisabledGameModes))
-		{
-			vPluginStatus();
-
-			vUpdatePluginStatus();
-		}
+		vPluginStatus();
 	}
 
 	if (StrContains(g_sConfigExecute, "1") != -1 && g_iConfigEnable == 1 && g_cvSTDifficulty != null)
@@ -2865,6 +2844,8 @@ public Action tTimerReloadConfigs(Handle timer)
 			vLoadConfigs(sDifficultyConfig);
 
 			g_iFileTimeOld[1] = g_iFileTimeNew[1];
+
+			vPluginStatus();
 		}
 	}
 
@@ -2883,6 +2864,8 @@ public Action tTimerReloadConfigs(Handle timer)
 			vLoadConfigs(sMapConfig);
 
 			g_iFileTimeOld[2] = g_iFileTimeNew[2];
+
+			vPluginStatus();
 		}
 	}
 
@@ -2901,6 +2884,8 @@ public Action tTimerReloadConfigs(Handle timer)
 			vLoadConfigs(sModeConfig);
 
 			g_iFileTimeOld[3] = g_iFileTimeNew[3];
+
+			vPluginStatus();
 		}
 	}
 
@@ -2931,6 +2916,8 @@ public Action tTimerReloadConfigs(Handle timer)
 			vLoadConfigs(sDayConfig);
 
 			g_iFileTimeOld[4] = g_iFileTimeNew[4];
+
+			vPluginStatus();
 		}
 	}
 
@@ -2947,6 +2934,8 @@ public Action tTimerReloadConfigs(Handle timer)
 			vLoadConfigs(sCountConfig);
 
 			g_iFileTimeOld[5] = g_iFileTimeNew[5];
+
+			vPluginStatus();
 		}
 	}
 }

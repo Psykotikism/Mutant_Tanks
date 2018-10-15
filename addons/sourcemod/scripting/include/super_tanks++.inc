@@ -18,7 +18,7 @@
 #define ST_VERSION "8.44"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
-#define ST_MAXTYPES 10000
+#define ST_MAXTYPES 500
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
 
