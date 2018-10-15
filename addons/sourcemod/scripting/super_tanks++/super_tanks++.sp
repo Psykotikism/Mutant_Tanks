@@ -149,7 +149,9 @@ public any aNative_TankColors(Handle plugin, int numParams)
 			case 2: ExplodeString(sSet[1], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 		}
 
-		TrimString(sRGB[0]), TrimString(sRGB[1]), TrimString(sRGB[2]);
+		TrimString(sRGB[0]);
+		TrimString(sRGB[1]);
+		TrimString(sRGB[2]);
 		SetNativeString(3, sRGB[0], sizeof(sRGB[]));
 		SetNativeString(4, sRGB[1], sizeof(sRGB[]));
 		SetNativeString(5, sRGB[2], sizeof(sRGB[]));
@@ -241,7 +243,6 @@ public void OnPluginStart()
 	LoadTranslations("super_tanks++.phrases");
 
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
-	RegAdminCmd("sm_tanklist", cmdTankList, ADMFLAG_ROOT, "View the Super Tanks list.");
 
 	CreateConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
@@ -527,7 +528,6 @@ public void OnAdminMenuReady(Handle topmenu)
 	if (st_commands != INVALID_TOPMENUOBJECT)
 	{
 		g_tmSTMenu.AddItem("sm_tank", vSuperTankMenu, st_commands, "sm_tank", ADMFLAG_ROOT);
-		g_tmSTMenu.AddItem("sm_tanklist", vSuperTankListMenu, st_commands, "sm_tanklist", ADMFLAG_ROOT);
 	}
 }
 
@@ -545,15 +545,6 @@ public void vSuperTankMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 	{
 		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tanks++ Menu");
 		case TopMenuAction_SelectOption: vTankMenu(param, 0);
-	}
-}
-
-public void vSuperTankListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
-{
-	switch (action)
-	{
-		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tanks++ List");
-		case TopMenuAction_SelectOption: vTankList(param);
 	}
 }
 
@@ -928,57 +919,6 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				vTankMenu(param1, menu.Selection);
 			}
 		}
-	}
-}
-
-public Action cmdTankList(int client, int args)
-{
-	if (!g_bPluginEnabled)
-	{
-		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_PREFIX4);
-
-		return Plugin_Handled;
-	}
-
-	if (args > 0)
-	{
-		ReplyToCommand(client, "%s Usage: sm_tanklist", ST_PREFIX2);
-
-		return Plugin_Handled;
-	}
-
-	vTankList(client);
-
-	return Plugin_Handled;
-}
-
-static void vTankList(int client)
-{
-	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
-	{
-		char sTankName[MAX_NAME_LENGTH + 1], sStatus[32], sMode[32];
-		sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
-
-		switch (iTankEnabled(iIndex))
-		{
-			case 0: sStatus = "Disabled";
-			case 1: sStatus = "Enabled";
-		}
-
-		switch (iSpawnMode(iIndex))
-		{
-			case 0: sMode = "Normal";
-			case 1: sMode = "Boss";
-			case 2: sMode = "Randomized";
-			case 3: sMode = "Transformer";
-		}
-
-		PrintToConsole(client, "%d. Name: %s, Status: %s, Mode: %s", iIndex, sTankName, sStatus, sMode);
-	}
-
-	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
-	{
-		PrintToChat(client, "%s See console for output.", ST_PREFIX2);
 	}
 }
 
@@ -1979,7 +1919,7 @@ static int iGetTankCount()
 static int iGetTypeCount(int type)
 {
 	int iType;
-	for (int iTank = iGetMinType(); iTank <= iGetMaxType(); iTank++)
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
 		if (bIsTankAllowed(iTank) && IsPlayerAlive(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_iTankType[iTank] == type)
 		{
@@ -2536,6 +2476,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 					if (!g_bRandomized[iTank])
 					{
 						vSpawnModes(iTank, true);
+
 						float flRandomInterval = !g_bTankConfig[g_iTankType[iTank]] ? g_flRandomInterval[g_iTankType[iTank]] : g_flRandomInterval2[g_iTankType[iTank]];
 						CreateTimer(flRandomInterval, tTimerRandomize, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 					}
@@ -2545,10 +2486,12 @@ public Action tTimerTankTypeUpdate(Handle timer)
 					if (!g_bTransformed[iTank])
 					{
 						vSpawnModes(iTank, true);
+
 						float flTransformDelay = !g_bTankConfig[g_iTankType[iTank]] ? g_flTransformDelay[g_iTankType[iTank]] : g_flTransformDelay2[g_iTankType[iTank]],
 							flTransformDuration = !g_bTankConfig[g_iTankType[iTank]] ? g_flTransformDuration[g_iTankType[iTank]] : g_flTransformDuration2[g_iTankType[iTank]];
 
 						CreateTimer(flTransformDelay, tTimerTransform, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+
 						DataPack dpUntransform;
 						CreateDataTimer(flTransformDuration + flTransformDelay, tTimerUntransform, dpUntransform, TIMER_FLAG_NO_MAPCHANGE);
 						dpUntransform.WriteCell(GetClientUserId(iTank));
@@ -2586,6 +2529,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	}
 
 	int iMode = pack.ReadCell();
+
 	vParticleEffects(iTank);
 	vThrowInterval(iTank, flThrowInterval(iTank));
 
@@ -2604,6 +2548,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	}
 
 	vSetName(iTank, sCurrentName, sTankName, iMode);
+
 	if (iMode == 0 && ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		int iHealth = GetClientHealth(iTank),
@@ -2801,16 +2746,12 @@ public Action tTimerSpawnTanks(Handle timer, int wave)
 
 public Action tTimerTankWave(Handle timer, int wave)
 {
-	if (iGetTankCount() > 0)
+	if (iGetTankCount() > 0 || wave > 2)
 	{
 		return Plugin_Stop;
 	}
 
-	switch (wave)
-	{
-		case 1: g_iTankWave = 2;
-		case 2: g_iTankWave = 3;
-	}
+	g_iTankWave = wave + 1;
 
 	return Plugin_Continue;
 }
