@@ -843,7 +843,7 @@ Examples:
 
 **Sipow** - For the default colors, giving me ideas, and overall support.
 
-**SourceMod Team** - For the blind, drug, and ice source codes.
+**SourceMod Team** - For the blind, drug, and ice source codes, and for miscellaneous reasons.
 
 # Contact Me
 If you wish to contact me for any questions, concerns, suggestions, or criticism, I can be found here:

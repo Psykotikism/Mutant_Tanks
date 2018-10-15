@@ -23,7 +23,8 @@ Changes:
 11. Added the "Base Health" setting to determine the base health of each Super Tank.
 12. Added the "Tank Chance" setting to determine the chances of a Super Tank type spawning.
 13. Added the ST_TankChance() native for the new "Tank Chance" setting.
-14. The plugin and its modules now require SM 1.10.0.6352 or higher.
+14. The core plugin and its modules now require SM 1.10.0.6352 or higher.
+15. The core plugin now properly updates all settings when the config file is refreshed.
 
 Files:
 

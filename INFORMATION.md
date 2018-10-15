@@ -63,7 +63,7 @@
 			// The range of types to check for.
 			// Separate values with "-".
 			// Value limit: 2
-			// Character limit for each value: 4
+			// Character limit for each value: 3
 			// --
 			// Minimum number for each value: 1
 			// Maximum number for each value: 500
