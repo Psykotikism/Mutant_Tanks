@@ -1,7 +1,7 @@
 # Information
 > There is information about each setting and ability below.
 
-- Ability count: 64
+- Ability count: 65
 - Maximum types: 500
 - All of these settings use default values if they are left incomplete or empty.
 - Please don't report any bugs or issues if you're using the plugin on a local/listen server. I don't provide support for that kind of server.
@@ -1093,6 +1093,108 @@
 			// Minimum: 0.1 (Lowest chance)
 			// Maximum: 100.0 (Highest chance)
 			"Bury Range Chance"				"15.0"
+		}
+	}
+}
+```
+
+#### Choke Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank chokes survivors in the air.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is choked survivors in the air.
+		// - "Choke Range"
+		// - "Choke Range Chance"
+		// "Choke Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is choked survivors in the air.
+		// - "Choke Chance"
+		// - "Choke Hit Mode"
+		// Requires "st_choke.smx" to be installed.
+		"Choke Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Choke Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON, display message only when "Choke Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
+			"Ability Message"				"0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Choke Chance"					"33.3"
+
+			// The Super Tank's chokes do this much damage.
+			// --
+			// Minimum: 1.0
+			// Maximum: 9999999999.0
+			"Choke Damage"					"5.0"
+
+			// The Super Tank chokes survivors in the air after this many seconds passes upon triggering the ability.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Choke Delay"					"1.0"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Choke Duration"				"5.0"
+
+			// The Super Tank brings survivors this high up into the air.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Choke Height"					"300.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Choke Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Choke Hit Mode"				"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Choke Range"					"150.0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Choke Range Chance"			"15.0"
 		}
 	}
 }

@@ -13,7 +13,7 @@ Bug fixes:
 Changes:
 
 1. Improved readability of the source code for each plugin.
-2. Added the Aimless, Cloud, Drunk, and Whirl abilities.
+2. Added the Aimless, Choke, Cloud, Drunk, and Whirl abilities.
 3. Added new settings for several abilities to handle timer intervals and damage values.
 4. The Electric, Hurt, and Splash abilities now use SDKHooks_TakeDamage() to damage players.
 5. The damage settings of the Electric, Hurt, and Splash abilities now accept float values (decimals) instead of int values (whole numbers).

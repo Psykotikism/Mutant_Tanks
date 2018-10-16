@@ -824,9 +824,9 @@ Examples:
 
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 
-**Mi.Cura** - For reporting issues, giving me ideas, and overall support.
+**Mi.Cura** - For reporting issues, suggesting ideas, and overall support.
 
-**KasperH** - For reporting issues, giving me ideas, and overall support.
+**KasperH** - For reporting issues, suggesting ideas, and overall support.
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
@@ -838,9 +838,9 @@ Examples:
 
 **huwong** - For reporting issues and suggesting ideas.
 
-**AngelAce113** - For the default colors (before v8.12), testing each Tank type, giving me ideas, and overall support.
+**AngelAce113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
 
-**Sipow** - For the default colors (before v8.12), giving me ideas, and overall support.
+**Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
 
 **SourceMod Team** - For the blind, drug, and ice source codes, and for miscellaneous reasons.
 
