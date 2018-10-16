@@ -16,7 +16,7 @@ Super Tanks++ makes fighting Tanks great again!
 
 > Super Tanks++ will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
-### What makes Super Tanks++ viable in Left 4 Dead/Left 4 Dead 2?
+### Why should I use Super Tanks++?
 Super Tanks++ enhances the experience and fun that players get from Tank fights by 500. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements

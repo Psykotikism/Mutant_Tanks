@@ -7,7 +7,7 @@ Bug fixes:
 1. Fixed the Absorb, Fragile, and Hypno abilities not working properly.
 2. Fixed the datapack leaks from various modules.
 3. Fixed the Range Chance settings not working at all.
-4. Fixed the Type Range setting not accepting the right amount of characters.
+4. Fixed the issue with props and special effects not deleting themselves properly, thus causing crashes.
 
 Changes:
 

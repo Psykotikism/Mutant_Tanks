@@ -4,6 +4,7 @@
 - Ability count: 62
 - Maximum types: 500
 - All of these settings use default values if they are left incomplete or empty.
+- Please don't report any bugs or issues if you're using the plugin on a local/listen server. I don't provide support for that kind of server.
 - THIS FILE IS NOT THE CONFIG FILE! USE IT AS A REFERENCE!
 
 ## Plugin Settings
