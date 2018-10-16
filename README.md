@@ -838,9 +838,9 @@ Examples:
 
 **huwong** - For reporting issues and suggesting ideas.
 
-**AngelAce113** - For the default colors, testing each Tank type, giving me ideas, and overall support.
+**AngelAce113** - For the default colors (before v8.12), testing each Tank type, giving me ideas, and overall support.
 
-**Sipow** - For the default colors, giving me ideas, and overall support.
+**Sipow** - For the default colors (before v8.12), giving me ideas, and overall support.
 
 **SourceMod Team** - For the blind, drug, and ice source codes, and for miscellaneous reasons.
 

@@ -1,7 +1,7 @@
 # Information
 > There is information about each setting and ability below.
 
-- Ability count: 62
+- Ability count: 64
 - Maximum types: 500
 - All of these settings use default values if they are left incomplete or empty.
 - Please don't report any bugs or issues if you're using the plugin on a local/listen server. I don't provide support for that kind of server.
@@ -657,6 +657,90 @@
 }
 ```
 
+#### Aimless Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank prevents survivors from aiming.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor cannot aim.
+		// - "Aimless Range"
+		// - "Aimless Range Chance"
+		// "Aimless Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor cannot aim.
+		// - "Aimless Chance"
+		// - "Aimless Hit Mode"
+		// Requires "st_aimless.smx" to be installed.
+		"Aimless Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Aimless Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON, display message only when "Aimless Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
+			"Ability Message"				"0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Aimless Chance"				"33.3"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Aimless Duration"				"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Aimless Hit"					"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Aimless Hit Mode"				"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Aimless Range"					"150.0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Aimless Range Chance"			"15.0"
+		}
+	}
+}
+```
+
 #### Ammo Ability
 
 ```
@@ -1238,6 +1322,102 @@
 			// Minimum: 0.1 (Lowest chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drug Range Chance"				"15.0"
+		}
+	}
+}
+```
+
+#### Drunk Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank makes survivors drunk.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor gets drunk.
+		// - "Drunk Range"
+		// - "Drunk Range Chance"
+		// "Drunk Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor gets drunk.
+		// - "Drunk Chance"
+		// - "Drunk Hit Mode"
+		// Requires "st_drunk.smx" to be installed.
+		"Drunk Ability"
+		{
+			// Enable this ability.
+			// Note: This setting does not affect the "Drunk Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"				"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 3: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"				"123"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON, display message only when "Drunk Hit" is on.
+			// 2: ON, display message only when "Ability Enabled" is on.
+			// 3: ON, display message when both are on.
+			"Ability Message"				"0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Drunk Chance"					"33.3"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Drunk Duration"				"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Drunk Hit"						"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Drunk Hit Mode"				"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Drunk Range"					"150.0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Drunk Range Chance"			"15.0"
+
+			// The Super Tank causes the survivors' speed to randomly change every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Drunk Speed Interval"			"1.5"
+
+			// The Super Tank causes the survivors to turn at a random direction every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Drunk Turn Interval"			"0.5"
 		}
 	}
 }
