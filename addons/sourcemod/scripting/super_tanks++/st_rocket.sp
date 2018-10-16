@@ -256,6 +256,7 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, int me
 
 		float flRocketDelay = !g_bTankConfig[ST_TankType(tank)] ? g_flRocketDelay[ST_TankType(tank)] : g_flRocketDelay2[ST_TankType(tank)],
 			flPosition[3], flAngles[3];
+
 		GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flPosition);
 		flPosition[2] += 30.0;
 		flAngles[0] = 90.0;
@@ -347,7 +348,9 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	}
 
 	float flVelocity[3];
-	flVelocity[0] = 0.0, flVelocity[1] = 0.0, flVelocity[2] = 800.0;
+	flVelocity[0] = 0.0;
+	flVelocity[1] = 0.0;
+	flVelocity[2] = 800.0;
 
 	EmitSoundToAll(SOUND_EXPLOSION, iSurvivor, _, _, _, 1.0);
 	EmitSoundToAll(SOUND_LAUNCH, iSurvivor, _, _, _, 1.0);
@@ -355,7 +358,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
 	SetEntityGravity(iSurvivor, 0.1);
 
-	return Plugin_Handled;
+	return Plugin_Continue;
 }
 
 public Action tTimerRocketDetonate(Handle timer, DataPack pack)
@@ -387,8 +390,6 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	}
 
 	float flPosition[3];
-	int iRocketMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iRocketMessage[ST_TankType(iTank)] : g_iRocketMessage2[ST_TankType(iTank)];
-
 	GetClientAbsOrigin(iSurvivor, flPosition);
 
 	TE_SetupExplosion(flPosition, g_iRocketSprite, 10.0, 1, 0, 600, 5000);
@@ -399,6 +400,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	ForcePlayerSuicide(iSurvivor);
 	SetEntityGravity(iSurvivor, 1.0);
 
+	int iRocketMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iRocketMessage[ST_TankType(iTank)] : g_iRocketMessage2[ST_TankType(iTank)];
 	if (iRocketMessage == iRocketChat || iRocketMessage == 3)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
@@ -408,5 +410,5 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 
 	g_bRocket[iSurvivor] = false;
 
-	return Plugin_Handled;
+	return Plugin_Continue;
 }
