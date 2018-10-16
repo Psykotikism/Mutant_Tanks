@@ -733,8 +733,11 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			if (g_iType > 0)
 			{
 				vSetColor(iTank, g_iType);
+
 				g_bSpawned[iTank] = true;
 				g_iType = 0;
+
+				vTankSpawn(iTank);
 			}
 			else if (iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
 			{
@@ -781,10 +784,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					case 3: vTankCountCheck(iTank, iWave3);
 				}
 
-				DataPack dpTankSpawn;
-				CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
-				dpTankSpawn.WriteCell(GetClientUserId(iTank));
-				dpTankSpawn.WriteCell(0);
+				vTankSpawn(iTank);
 			}
 		}
 	}
@@ -1215,10 +1215,7 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 
 		vSetColor(tank, type);
 
-		DataPack dpTankSpawn;
-		CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
-		dpTankSpawn.WriteCell(GetClientUserId(tank));
-		dpTankSpawn.WriteCell(1);
+		vTankSpawn(tank, 1);
 
 		int iNewHealth = g_iTankHealth[tank] + limit, iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
 		SetEntityHealth(tank, iFinalHealth);
@@ -1519,6 +1516,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		flChance6 = flClamp(flChance6, 0.1, 100.0);
 
 		sPropsAttached = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsAttached[g_iTankType[tank]] : g_sPropsAttached2[g_iTankType[tank]];
+
 		if (GetRandomFloat(0.1, 100.0) <= flChance && StrContains(sPropsAttached, "1") != -1)
 		{
 			CreateTimer(0.25, tTimerBlurEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -1709,6 +1707,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					}
 
 					SetEntPropEnt(iConcrete[iRock], Prop_Send, "m_hOwnerEntity", tank);
+
 					flAngles[0] = flAngles[0] + GetRandomFloat(-90.0, 90.0);
 					flAngles[1] = flAngles[1] + GetRandomFloat(-90.0, 90.0);
 					flAngles[2] = flAngles[2] + GetRandomFloat(-90.0, 90.0);
@@ -1834,6 +1833,14 @@ static void vTankCountCheck(int tank, int wave)
 			ForcePlayerSuicide(tank);
 		}
 	}
+}
+
+static void vTankSpawn(int tank, int mode = 0)
+{
+	DataPack dpTankSpawn;
+	CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
+	dpTankSpawn.WriteCell(GetClientUserId(tank));
+	dpTankSpawn.WriteCell(mode);
 }
 
 static void vThrowInterval(int tank, float time)
@@ -2224,10 +2231,7 @@ public Action tTimerRandomize(Handle timer, int userid)
 		vSetColor(iTank, iChosen);
 	}
 
-	DataPack dpTankSpawn;
-	CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
-	dpTankSpawn.WriteCell(GetClientUserId(iTank));
-	dpTankSpawn.WriteCell(2);
+	vTankSpawn(iTank, 2);
 
 	return Plugin_Continue;
 }
@@ -2308,10 +2312,7 @@ public Action tTimerTransform(Handle timer, int userid)
 		vSetColor(iTank, iChosen);
 	}
 
-	DataPack dpTankSpawn;
-	CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
-	dpTankSpawn.WriteCell(GetClientUserId(iTank));
-	dpTankSpawn.WriteCell(3);
+	vTankSpawn(iTank, 3);
 
 	return Plugin_Continue;
 }
@@ -2333,10 +2334,7 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 	int iTankType = pack.ReadCell();
 	vSetColor(iTank, iTankType);
 
-	DataPack dpTankSpawn;
-	CreateDataTimer(0.1, tTimerTankSpawn, dpTankSpawn, TIMER_FLAG_NO_MAPCHANGE);
-	dpTankSpawn.WriteCell(GetClientUserId(iTank));
-	dpTankSpawn.WriteCell(4);
+	vTankSpawn(iTank, 4);
 
 	vSpawnModes(iTank, false);
 

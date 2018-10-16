@@ -425,7 +425,7 @@ stock bool bIsValidEntity(int entity)
 
 stock bool bIsValidEntRef(int entity)
 {
-	return entity > 0 && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
+	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
 }
 
 stock bool bIsValidGame(bool l4d2 = true)
