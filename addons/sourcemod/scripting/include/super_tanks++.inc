@@ -227,6 +227,16 @@ stock bool bIsCharger(int charger)
 	return bIsInfected(charger) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
 
+stock bool bIsEntityGrounded(int entity)
+{
+	if ((GetEntProp(entity, Prop_Send, "m_fFlags") & FL_ONGROUND) || GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity") == 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 stock bool bIsFinaleMap()
 {
 	return FindEntityByClassname(-1, "trigger_finale") != -1;
@@ -273,16 +283,6 @@ stock bool bIsJockey(int jockey)
 stock bool bIsPlayerBurning(int player)
 {
 	if (GetEntPropFloat(player, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(player, Prop_Data, "m_fFlags") & FL_ONFIRE)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-stock bool bIsPlayerGrounded(int player)
-{
-	if (GetEntProp(player, Prop_Send, "m_fFlags") & FL_ONGROUND)
 	{
 		return true;
 	}

@@ -331,7 +331,7 @@ public Action tTimerJump(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (GetEntPropEnt(iTank, Prop_Send, "m_hGroundEntity") == -1)
+	if (!bIsEntityGrounded(iTank))
 	{
 		return Plugin_Continue;
 	}
@@ -372,7 +372,7 @@ public Action tTimerJump2(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (GetEntPropEnt(iSurvivor, Prop_Send, "m_hGroundEntity") == -1)
+	if (!bIsEntityGrounded(iSurvivor))
 	{
 		return Plugin_Continue;
 	}

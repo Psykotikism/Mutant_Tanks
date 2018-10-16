@@ -206,6 +206,8 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 			DispatchSpawn(iCar);
 			TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
 
+			CreateTimer(2.0, tTimerSetCarVelocity, EntIndexToEntRef(iCar), TIMER_FLAG_NO_MAPCHANGE);
+
 			iCar = EntIndexToEntRef(iCar);
 			vDeleteEntity(iCar, 10.0);
 
@@ -222,6 +224,20 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 
 		return Plugin_Stop;
 	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerSetCarVelocity(Handle timer, int entity)
+{
+	int iCar = EntRefToEntIndex(entity);
+	if (iCar == INVALID_ENT_REFERENCE || !bIsValidEntity(iCar))
+	{
+		return Plugin_Stop;
+	}
+
+	float flVelocity[3] = {0.0, 0.0, 0.0};
+	TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, flVelocity);
 
 	return Plugin_Continue;
 }

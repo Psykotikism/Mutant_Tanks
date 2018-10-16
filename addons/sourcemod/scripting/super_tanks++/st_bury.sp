@@ -251,7 +251,7 @@ public void ST_BossStage(int tank)
 
 static void vBuryHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bBury[survivor] && bIsPlayerGrounded(survivor))
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bBury[survivor] && bIsEntityGrounded(survivor))
 	{
 		g_bBury[survivor] = true;
 
