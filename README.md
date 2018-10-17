@@ -16,11 +16,11 @@ Super Tanks++ makes fighting Tanks great again!
 
 > Super Tanks++ will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
-### What makes Super Tanks++ viable in Left 4 Dead/Left 4 Dead 2?
-Super Tanks++ enhances the experience and fun that players get from Tank fights by 5,000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
+### Why should I use Super Tanks++?
+Super Tanks++ enhances the experience and fun that players get from Tank fights by 500. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
-1. You must have at least SourceMod 1.10.0.6317 or higher.
+1. You must have at least SourceMod 1.10.0.6352 or higher.
 
 ### Notes
 1. I do not provide support for local/listen servers but the plugin and its modules should still work properly on them.
@@ -31,9 +31,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 3. Place all the contents into their respective folders.
 4. If prompted to replace or merge anything, click yes.
 5. Load up Super Tanks++ by restarting the server.
-6. Customize Super Tanks++ in:
-- cfg/sourcemod/super_tanks++.cfg
-- addons/sourcemod/data/super_tanks++/super_tanks++.cfg.
+6. Customize Super Tanks++ in addons/sourcemod/data/super_tanks++/super_tanks++.cfg.
 
 ### Uninstalling/Upgrading to Newer Versions
 1. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/plugins folder.
@@ -42,9 +40,8 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 4. Delete super_tanks++.inc from addons/sourcemod/scripting/include folder.
 5. Delete st_clone.inc from addons/sourcemod/scripting/include folder.
 6. Delete super_tanks++ folder from addons/sourcemod/data folder.
-7. Delete super_tanks++.cfg from cfg/sourcemod folder.
-8. Delete super_tanks++.phrases.txt from addons/sourcemod/translations folder.
-9. Follow the Installation guide above. (Only for upgrading to newer versions.)
+7. Delete super_tanks++.phrases.txt from addons/sourcemod/translations folder.
+8. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
 ### Disabling
 1. Move super_tanks++ folder (super_tanks++.smx and all of its modules) to plugins/disabled folder.
@@ -53,22 +50,12 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 ## Features
 1. Supports multiple game modes - Provides the option to enable/disable the plugin in certain game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
-3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the auto-generated KeyValue config file and user-made Super Tanks.
-4. Create and save up to 5,000 Super Tank types - Provides the ability to store up to 5,000 Super Tank types that users can enable/disable.
+3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the KeyValue config file and user-made Super Tanks.
+4. Create and save up to 500 Super Tank types - Provides the ability to store up to 500 Super Tank types that users can enable/disable.
 5. Easy-to-use config file - Provides a user-friendly KeyValues config file that users can easily understand and edit.
 6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
 7. Optional abilities - Provides the option to choose which abilities to install.
 8. Forwards and natives - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
-
-## ConVars
-```
-// Enable Super Tanks++.
-// 0: OFF
-// 1: ON
-// -
-// Default: "1"
-st_enableplugin "1"
-```
 
 ## KeyValues Settings
 > View the INFORMATION.md file for information about each available setting.
@@ -343,7 +330,7 @@ It may be due to one or more of the following:
 - You are still using the "Tank Character" KeyValue which is no longer used since v8.16.
 - You didn't set up the Super Tank properly.
 - You are missing quotation marks.
-- You have more than 5,000 Super Tanks in your config file.
+- You have more than 500 Super Tanks in your config file.
 - You didn't format your config file properly.
 
 5. How do I kill the Tanks depending on what abilities they have?
@@ -373,7 +360,7 @@ Set the value in the "Display Health" KeyValue.
 
 8. Why do some Tanks spawn with different props?
 
-Each prop has 1 out of X chances to appear on Super Tanks when they spawn. Configure the chances for each prop in the "Props Chance" KeyValue.
+Each prop has X out of 100.0% probability to appear on Super Tanks when they spawn. Configure the chances for each prop in the "Props Chance" KeyValue.
 
 9. Why are the Tanks spawning with more than the extra health given to them?
 
@@ -573,32 +560,33 @@ Yes, there are forwards, natives, stocks, target filters for each special infect
 
 Forwards:
 ```
-/* Called every second to trigger the Super Tank's ability.
+/**
+ * Called every second to trigger the Super Tank's ability.
  * Use this forward for any passive abilities.
  *
  * @param tank			Client index of the Tank.
  */
 forward void ST_Ability(int tank);
 
-/* Called when the Super Tank evolves.
- * Use this forward to trigger any features/abilities/settings
- * when a Super Tank evolves.
+/**
+ * Called when the Super Tank evolves.
+ * Use this forward to trigger any features/abilities/settings when a Super Tank evolves.
  *
  * @param tank			Client index of the Tank.
  */
 forward void ST_BossStage(int tank);
 
-/* Called when the config file is loaded.
+/**
+ * Called when the config file is loaded.
  * Use this forward to load settings for the plugin.
  *
  * @param savepath		The savepath of the config.
- * @param main			Checks whether the main config
- *							or a custom config
- *							is being used.
+ * @param main			Checks whether the main config or a custom config is being used.
  */
 forward void ST_Configs(const char[] savepath, bool main);
 
-/* Called when an event hooked by the core plugin is fired.
+/**
+ * Called when an event hooked by the core plugin is fired.
  * Use this forward to trigger something on any of those events.
  *
  * @param event			Handle to the event.
@@ -606,22 +594,23 @@ forward void ST_Configs(const char[] savepath, bool main);
  */
 forward void ST_Event(Event event, const char[] name);
 
-/* Called when the core plugin is unloaded/reloaded.
- * Use this forward to get rid of any physical modifications to
- * Tanks or survivors.
+/**
+ * Called when the core plugin is unloaded/reloaded.
+ * Use this forward to get rid of any modifications to Tanks or survivors.
  */
 forward void ST_PluginEnd();
 
-/* Called when the Tank spawns.
+/**
+ * Called when the Tank spawns.
  * Use this forward for any on-spawn presets.
- * If you plan on using this to activate an ability,
- * use ST_Ability() instead.
+ * If you plan on using this to activate an ability, use ST_Ability() instead.
  *
  * @param tank			Client index of the Tank.
  */
 forward void ST_Preset(int tank);
 
-/* Called when the Tank's rock breaks.
+/**
+ * Called when the Tank's rock breaks.
  * Use this forward for any after-effects.
  *
  * @param tank			Client index of the Tank.
@@ -629,7 +618,8 @@ forward void ST_Preset(int tank);
  */
 forward void ST_RockBreak(int tank, int rock);
 
-/* Called when the Tank throws a rock.
+/**
+ * Called when the Tank throws a rock.
  * Use this forward for any throwing abilities.
  *
  * @param tank			Client index of the Tank.
@@ -640,79 +630,99 @@ forward void ST_RockThrow(int tank, int rock);
 
 Natives:
 ```
-/* Returns the maximum value of the "Type Range" setting.
+/**
+ * Returns the maximum value of the "Type Range" setting.
  *
- * @return				The maximum value of the
- *							"Type Range" setting.
+ * @return				The maximum value of the "Type Range" setting.
  */
 native int ST_MaxType();
 
-/* Returns the minimum value of the "Type Range" setting.
+/**
+ * Returns the minimum value of the "Type Range" setting.
  *
- * @return				The minimum value of the
- *							"Type Range" setting.
+ * @return				The minimum value of the "Type Range" setting.
  */
 native int ST_MinType();
 
-/* Returns the status of the core plugin.
+/**
+ * Returns if the core plugin is enabled.
  *
- * @return				True on success, false if
- *							core plugin is disabled.
+ * @return				True if core plugin is enabled, false otherwise.
  */
 native bool ST_PluginEnabled();
 
-/* Spawns a Tank with the specified Super Tank type.
+/**
+ * Spawns a Tank with the specified Super Tank type.
  *
  * @param tank			Client index of the Tank.
  * @param type			Type of Super Tank.
+ * @error				Invalid client index or type is 0.
  */
 native void ST_SpawnTank(int tank, int type);
 
-/* Returns the status of the Tank.
+/**
+ * Returns if the Tank is allowed to be a Super Tank.
  *
  * @param tank			Client index of the Tank.
- *
- * @return				True on success, false if
- *							the Tank is controlled
- *							by a human.
+ * @return				True if Tank is allowed to be a Super Tank, false otherwise.
+ * @error				Invalid client index.
  */
 native bool ST_TankAllowed(int tank);
 
-/* Returns the RGB colors given to a Tank.
+/**
+ * Returns if a certain Super Tank type has a chance of spawning.
+ *
+ * @param type			Super Tank type.
+ * @return				True if the type has a chance of spawning, false otherwise.
+ * @error				Type is 0.
+ */
+native bool ST_TankChance(int type);
+
+/**
+ * Returns the RGB colors given to a Tank.
  *
  * @param tank			Client index of the Tank.
- * @param mode			1 = Skin color, 2 = Glow
- *							outline color
- * @param red			Buffer to store the red
- *							color in.
- * @param green			Buffer to store the green
- *							color in.
- * @param blue			Buffer to store the blue
- *							color in.
+ * @param mode			1 = Skin color, 2 = Glow outline color
+ * @param red			Buffer to store the red color in.
+ * @param green			Buffer to store the green color in.
+ * @param blue			Buffer to store the blue color in.
+ * @error				Invalid client index.
  */
 native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] blue);
 
-/* Returns the custom name given to a Tank.
+/**
+ * Returns the custom name given to a Tank.
  *
  * @param tank			Client index of the Tank.
- * @param buffer		Buffer to store the custom
- *							name in.
+ * @param buffer		Buffer to store the custom name in.
+ * @error				Invalid client index.
  */
 native void ST_TankName(int tank, char[] buffer);
 
-/* Returns the Super Tank type of the Tank.
+/**
+ * Returns the Super Tank type of the Tank.
  *
  * @param tank			Client index of the Tank.
- *
  * @return				The Tank's Super Tank type.
+ * @error				Invalid client index.
  */
 native int ST_TankType(int tank);
 
-/* Returns the current finale wave.
+/**
+ * Returns the current finale wave.
  *
  * @return				The current finale wave.
  */
 native int ST_TankWave();
+
+/**
+ * Returns if a certain Super Tank type is enabled.
+ *
+ * @param type			Super Tank type.
+ * @return				True if the type is enabled, false otherwise.
+ * @error				Type is 0.
+ */
+native bool ST_TypeEnabled(int type);
 ```
 
 Target filters:
@@ -731,8 +741,7 @@ Target filters:
 Commands:
 
 ```
-1. sm_tank <type 1*-5000*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 5,000 though.)
-2. sm_tanklist
+1. sm_tank <type 1*-500*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 500 though.)
 ```
 
 ### Configuration
@@ -771,7 +780,7 @@ Examples:
 
 **Spirit_12** - For the L4D signatures for the gamedata file.
 
-**honorcode** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
+**honorcode23** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
 
 **panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537) plugins.
 
@@ -793,6 +802,8 @@ Examples:
 
 **Phil25** - For the [RTD Revamped](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
 
+**Chaosxk** - For the [Spin](https://forums.alliedmods.net/showthread.php?t=283120) plugin.
+
 **ztar** - For the [Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
 
 **IxAvnoMonvAxI** - For the [Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2) plugin.
@@ -813,9 +824,9 @@ Examples:
 
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 
-**Mi.Cura** - For reporting issues, giving me ideas, and overall support.
+**Mi.Cura** - For reporting issues, suggesting ideas, and overall support.
 
-**KasperH** - For reporting issues, giving me ideas, and overall support.
+**KasperH** - For reporting issues, suggesting ideas, and overall support.
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
@@ -827,11 +838,11 @@ Examples:
 
 **huwong** - For reporting issues and suggesting ideas.
 
-**AngelAce113** - For the default colors, testing each Tank type, giving me ideas, and overall support.
+**AngelAce113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
 
-**Sipow** - For the default colors, giving me ideas, and overall support.
+**Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
 
-**SourceMod Team** - For the blind, drug, and ice source codes.
+**SourceMod Team** - For the blind, drug, and ice source codes, and for miscellaneous reasons.
 
 # Contact Me
 If you wish to contact me for any questions, concerns, suggestions, or criticism, I can be found here:

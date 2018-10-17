@@ -1,5 +1,39 @@
 # Changelog
 
+## Version 8.44 (October 16, 2018)
+
+Bug fixes:
+
+1. Fixed the Absorb, Fragile, and Hypno abilities not working properly.
+2. Fixed the datapack leaks from various modules.
+3. Fixed the Range Chance settings not working at all.
+4. Fixed the issue with props and special effects not deleting themselves properly, thus causing crashes.
+5. Fixed the Throw ability's cars having a strong velocity, thus pushing other entities away.
+
+Changes:
+
+1. Improved readability of the source code for each plugin.
+2. Added the Aimless, Choke, Cloud, Drunk, and Whirl abilities.
+3. Added new settings for several abilities to handle timer intervals and damage values.
+4. The Electric, Hurt, and Splash abilities now use SDKHooks_TakeDamage() to damage players.
+5. The damage settings of the Electric, Hurt, and Splash abilities now accept float values (decimals) instead of int values (whole numbers).
+6. Renamed a bunch of settings.
+7. Decreased Super Tank type limit back to 500 to avoid server freezes and lag spikes.
+8. Removed the st_enableplugin cvar setting.
+9. Chance and Range Chance settings now only accept decimal (float) values.
+10. Chance and Range Chance settings now work differently. (Before: 1/X chances, After: X/100.0 probability)
+11. Added the "Base Health" setting to determine the base health of each Super Tank.
+12. Added the "Tank Chance" setting to determine the chances of a Super Tank type spawning.
+13. Added the ST_TankChance() native for the new "Tank Chance" setting.
+14. The core plugin and its modules now require SM 1.10.0.6352 or higher.
+15. The core plugin now properly updates all settings when the config file is refreshed.
+16. Removed the sm_tanklist command.
+
+Files:
+
+1. Updated config file with the new settings.
+2. Updated include file for better readability.
+
 ## Version 8.43 (October 2, 2018)
 
 Bug fixes:
