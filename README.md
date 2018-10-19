@@ -655,7 +655,7 @@ native bool ST_PluginEnabled();
  * Spawns a Tank with the specified Super Tank type.
  *
  * @param tank			Client index of the Tank.
- * @param type			Type of Super Tank.
+ * @param type			Super Tank type.
  * @error				Invalid client index or type is 0.
  */
 native void ST_SpawnTank(int tank, int type);
@@ -723,6 +723,14 @@ native int ST_TankWave();
  * @error				Type is 0.
  */
 native bool ST_TypeEnabled(int type);
+
+/* Returns whether the clone can use abilities.
+ *
+ * @param tank				Client index of the Tank.
+ * @param clone				Checks whether "st_clone.smx" is installed.
+ * @return					True if clone can use abilities, false otherwise.
+ */
+native bool ST_CloneAllowed(int tank, bool clone);
 ```
 
 Target filters:
@@ -774,7 +782,7 @@ Examples:
 ```
 
 ## Credits
-**Machine** - For the original [Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752).
+**Machine** - For the original [Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) plugin.
 
 **NgBUCKWANGS** - For the mapname.cfg code in his [ABM](https://forums.alliedmods.net/showthread.php?t=291562) plugin.
 
@@ -820,7 +828,7 @@ Examples:
 
 **Lux** - For helping to optimize/fix various parts of the code.
 
-**Milo|** - For the code that automatically generates config files for each day and each map installed on a server.
+**Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 

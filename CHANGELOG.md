@@ -5,11 +5,13 @@
 Changes:
 
 1. The "Whirl Axis" setting now accepts different values.
-2. Moved stock functions from include file to some of the module plugins.
+2. Moved some stock functions from include file to some of the module plugins.
 3. Removed the "Meteor Damage" setting.
 4. The Meteor ability's meteorites no longer push players back when exploding.
 5. The Meteor ability's meteorites now start fires upon exploding.
 6. Removed the "Track Mode" setting.
+7. Added the "Clone Replace" setting which determines if the Clone ability replaces clones with new ones when they die.
+8. Removed some redundant code from the core plugin.
 
 Files:
 

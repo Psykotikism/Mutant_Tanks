@@ -183,7 +183,7 @@
 		"General"
 		{
 			// Name of the Super Tank.
-			// Character limit: 128
+			// Character limit: 32
 			// --
 			// Empty: "Tank"
 			// Not Empty: Tank's custom name
@@ -1247,6 +1247,12 @@
 			// 0: OFF, the clone cannot use abilities like real Super Tanks.
 			// 1: ON, the clone can use abilities like real Super Tanks.
 			"Clone Mode"					"0"
+
+			// The Super Tank's clones are replaced with new ones when they die.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Clone Replace"					"1"
 		}
 	}
 }
