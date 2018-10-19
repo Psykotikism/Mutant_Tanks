@@ -256,7 +256,7 @@ static void vDrunkHit(int survivor, int tank, float chance, int enabled, int mes
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Drunk", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Drunk", sTankName, survivor);
 		}
 	}
 }
@@ -278,7 +278,7 @@ static void vReset2(int survivor, int tank, int message)
 
 	if (iDrunkMessage(tank) == message || iDrunkMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Drunk2", survivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Drunk2", survivor);
 	}
 }
 

@@ -681,12 +681,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (bIsTankAllowed(iPlayer))
 			{
-				if (iGlowOutline(g_iTankType[iPlayer]) == 1 && bIsValidGame())
-				{
-					SetEntProp(iPlayer, Prop_Send, "m_iGlowType", 0);
-					SetEntProp(iPlayer, Prop_Send, "m_glowColorOverride", 0);
-				}
-
 				char sTankName[MAX_NAME_LENGTH + 1];
 				sTankName = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sTankName[g_iTankType[iPlayer]] : g_sTankName2[g_iTankType[iPlayer]];
 
@@ -695,16 +689,16 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				{
 					switch (GetRandomInt(1, 10))
 					{
-						case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Death1", sTankName);
-						case 2: PrintToChatAll("%s %t", ST_PREFIX2, "Death2", sTankName);
-						case 3: PrintToChatAll("%s %t", ST_PREFIX2, "Death3", sTankName);
-						case 4: PrintToChatAll("%s %t", ST_PREFIX2, "Death4", sTankName);
-						case 5: PrintToChatAll("%s %t", ST_PREFIX2, "Death5", sTankName);
-						case 6: PrintToChatAll("%s %t", ST_PREFIX2, "Death6", sTankName);
-						case 7: PrintToChatAll("%s %t", ST_PREFIX2, "Death7", sTankName);
-						case 8: PrintToChatAll("%s %t", ST_PREFIX2, "Death8", sTankName);
-						case 9: PrintToChatAll("%s %t", ST_PREFIX2, "Death9", sTankName);
-						case 10: PrintToChatAll("%s %t", ST_PREFIX2, "Death10", sTankName);
+						case 1: PrintToChatAll("%s %t", ST_TAG2, "Death1", sTankName);
+						case 2: PrintToChatAll("%s %t", ST_TAG2, "Death2", sTankName);
+						case 3: PrintToChatAll("%s %t", ST_TAG2, "Death3", sTankName);
+						case 4: PrintToChatAll("%s %t", ST_TAG2, "Death4", sTankName);
+						case 5: PrintToChatAll("%s %t", ST_TAG2, "Death5", sTankName);
+						case 6: PrintToChatAll("%s %t", ST_TAG2, "Death6", sTankName);
+						case 7: PrintToChatAll("%s %t", ST_TAG2, "Death7", sTankName);
+						case 8: PrintToChatAll("%s %t", ST_TAG2, "Death8", sTankName);
+						case 9: PrintToChatAll("%s %t", ST_TAG2, "Death9", sTankName);
+						case 10: PrintToChatAll("%s %t", ST_TAG2, "Death10", sTankName);
 					}
 				}
 
@@ -803,14 +797,14 @@ public Action cmdTank(int client, int args)
 {
 	if (!g_bPluginEnabled)
 	{
-		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_PREFIX4);
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
 		return Plugin_Handled;
 	}
 
 	if (!bIsValidHumanClient(client))
 	{
-		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_PREFIX);
+		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
 		return Plugin_Handled;
 	}
@@ -827,7 +821,7 @@ public Action cmdTank(int client, int args)
 	{
 		if (IsVoteInProgress())
 		{
-			ReplyToCommand(client, "%s %t", ST_PREFIX2, "Vote in Progress");
+			ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
 		}
 		else
 		{
@@ -838,7 +832,7 @@ public Action cmdTank(int client, int args)
 	}
 	else if (iType < iGetMinType() || iType > iGetMaxType() || iMode < 0 || iMode > 1 || args > 2)
 	{
-		ReplyToCommand(client, "%s Usage: sm_tank <type %d-%d> <0: spawn at crosshair|1: spawn automatically>", ST_PREFIX2, iGetMinType(), iGetMaxType());
+		ReplyToCommand(client, "%s Usage: sm_tank <type %d-%d> <0: spawn at crosshair|1: spawn automatically>", ST_TAG2, iGetMinType(), iGetMaxType());
 
 		return Plugin_Handled;
 	}
@@ -848,7 +842,7 @@ public Action cmdTank(int client, int args)
 		char sTankName[MAX_NAME_LENGTH + 1];
 		sTankName = !g_bTankConfig[iType] ? g_sTankName[iType] : g_sTankName2[iType];
 
-		ReplyToCommand(client, "%s %s\x04 (Tank #%d)\x01 is disabled.", ST_PREFIX4, sTankName, iType);
+		ReplyToCommand(client, "%s %s\x04 (Tank #%d)\x01 is disabled.", ST_TAG4, sTankName, iType);
 
 		return Plugin_Handled;
 	}
@@ -1303,7 +1297,7 @@ static void vRemoveProps(int tank, bool end = false)
 		}
 	}
 
-	if (bIsValidGame())
+	if (bIsValidGame() && iGlowOutline(g_iTankType[tank]) == 1)
 	{
 		SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
 		SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
@@ -1771,22 +1765,22 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				{
 					switch (GetRandomInt(1, 10))
 					{
-						case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival1", name);
-						case 2: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival2", name);
-						case 3: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival3", name);
-						case 4: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival4", name);
-						case 5: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival5", name);
-						case 6: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival6", name);
-						case 7: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival7", name);
-						case 8: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival8", name);
-						case 9: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival9", name);
-						case 10: PrintToChatAll("%s %t", ST_PREFIX2, "Arrival10", name);
+						case 1: PrintToChatAll("%s %t", ST_TAG2, "Arrival1", name);
+						case 2: PrintToChatAll("%s %t", ST_TAG2, "Arrival2", name);
+						case 3: PrintToChatAll("%s %t", ST_TAG2, "Arrival3", name);
+						case 4: PrintToChatAll("%s %t", ST_TAG2, "Arrival4", name);
+						case 5: PrintToChatAll("%s %t", ST_TAG2, "Arrival5", name);
+						case 6: PrintToChatAll("%s %t", ST_TAG2, "Arrival6", name);
+						case 7: PrintToChatAll("%s %t", ST_TAG2, "Arrival7", name);
+						case 8: PrintToChatAll("%s %t", ST_TAG2, "Arrival8", name);
+						case 9: PrintToChatAll("%s %t", ST_TAG2, "Arrival9", name);
+						case 10: PrintToChatAll("%s %t", ST_TAG2, "Arrival10", name);
 					}
 				}
-				case 1: PrintToChatAll("%s %t", ST_PREFIX2, "Evolved", oldname, name, g_iBossStageCount[tank] + 1);
-				case 2: PrintToChatAll("%s %t", ST_PREFIX2, "Randomized", oldname, name);
-				case 3: PrintToChatAll("%s %t", ST_PREFIX2, "Transformed", oldname, name);
-				case 4: PrintToChatAll("%s %t", ST_PREFIX2, "Untransformed", oldname, name);
+				case 1: PrintToChatAll("%s %t", ST_TAG2, "Evolved", oldname, name, g_iBossStageCount[tank] + 1);
+				case 2: PrintToChatAll("%s %t", ST_TAG2, "Randomized", oldname, name);
+				case 3: PrintToChatAll("%s %t", ST_TAG2, "Transformed", oldname, name);
+				case 4: PrintToChatAll("%s %t", ST_TAG2, "Untransformed", oldname, name);
 			}
 
 			int iTankNote = !g_bTankConfig[g_iTankType[tank]] ? g_iTankNote[g_iTankType[tank]] : g_iTankNote2[g_iTankType[tank]];
@@ -1796,11 +1790,11 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				Format(sTankNote, sizeof(sTankNote), "Tank #%d", g_iTankType[tank]);
 				if (TranslationPhraseExists(sTankNote))
 				{
-					PrintToChatAll("%s %t", ST_PREFIX3, sTankNote);
+					PrintToChatAll("%s %t", ST_TAG3, sTankNote);
 				}
 				else
 				{
-					PrintToChatAll("%s No note found for this Super Tank.", ST_PREFIX3);
+					PrintToChatAll("%s No note found for this Super Tank.", ST_TAG3);
 				}
 			}
 		}
@@ -2768,7 +2762,7 @@ public Action tTimerReloadConfigs(Handle timer)
 
 	if (g_iFileTimeOld[0] != g_iFileTimeNew[0])
 	{
-		PrintToServer("%s Reloading config file (%s)...", ST_PREFIX, g_sSavePath);
+		PrintToServer("%s Reloading config file (%s)...", ST_TAG, g_sSavePath);
 		vLoadConfigs(g_sSavePath, true);
 
 		g_iFileTimeOld[0] = g_iFileTimeNew[0];
@@ -2787,7 +2781,7 @@ public Action tTimerReloadConfigs(Handle timer)
 
 		if (g_iFileTimeOld[1] != g_iFileTimeNew[1])
 		{
-			PrintToServer("%s Reloading config file (%s)...", ST_PREFIX, sDifficultyConfig);
+			PrintToServer("%s Reloading config file (%s)...", ST_TAG, sDifficultyConfig);
 			vLoadConfigs(sDifficultyConfig);
 
 			g_iFileTimeOld[1] = g_iFileTimeNew[1];
@@ -2807,7 +2801,7 @@ public Action tTimerReloadConfigs(Handle timer)
 
 		if (g_iFileTimeOld[2] != g_iFileTimeNew[2])
 		{
-			PrintToServer("%s Reloading config file (%s)...", ST_PREFIX, sMapConfig);
+			PrintToServer("%s Reloading config file (%s)...", ST_TAG, sMapConfig);
 			vLoadConfigs(sMapConfig);
 
 			g_iFileTimeOld[2] = g_iFileTimeNew[2];
@@ -2827,7 +2821,7 @@ public Action tTimerReloadConfigs(Handle timer)
 
 		if (g_iFileTimeOld[3] != g_iFileTimeNew[3])
 		{
-			PrintToServer("%s Reloading config file (%s)...", ST_PREFIX, sModeConfig);
+			PrintToServer("%s Reloading config file (%s)...", ST_TAG, sModeConfig);
 			vLoadConfigs(sModeConfig);
 
 			g_iFileTimeOld[3] = g_iFileTimeNew[3];
@@ -2859,7 +2853,7 @@ public Action tTimerReloadConfigs(Handle timer)
 
 		if (g_iFileTimeOld[4] != g_iFileTimeNew[4])
 		{
-			PrintToServer("%s Reloading config file (%s)...", ST_PREFIX, sDayConfig);
+			PrintToServer("%s Reloading config file (%s)...", ST_TAG, sDayConfig);
 			vLoadConfigs(sDayConfig);
 
 			g_iFileTimeOld[4] = g_iFileTimeNew[4];
@@ -2877,7 +2871,7 @@ public Action tTimerReloadConfigs(Handle timer)
 
 		if (g_iFileTimeOld[5] != g_iFileTimeNew[5])
 		{
-			PrintToServer("%s Reloading config file (%s)...", ST_PREFIX, sCountConfig);
+			PrintToServer("%s Reloading config file (%s)...", ST_TAG, sCountConfig);
 			vLoadConfigs(sCountConfig);
 
 			g_iFileTimeOld[5] = g_iFileTimeNew[5];

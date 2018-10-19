@@ -269,7 +269,7 @@ static void vRecoilHit(int survivor, int tank, float chance, int enabled, int me
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Recoil", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Recoil", sTankName, survivor);
 		}
 	}
 }
@@ -345,7 +345,7 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 
 	if (iRecoilMessage(iTank) == iRecoilChat || iRecoilMessage(iTank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Recoil2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Recoil2", iSurvivor);
 	}
 
 	return Plugin_Continue;

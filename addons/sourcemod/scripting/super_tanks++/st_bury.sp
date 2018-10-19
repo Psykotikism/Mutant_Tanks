@@ -288,7 +288,7 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, int mess
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Bury", sTankName, survivor, flOrigin);
+			PrintToChatAll("%s %t", ST_TAG2, "Bury", sTankName, survivor, flOrigin);
 		}
 	}
 }
@@ -403,7 +403,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 
 	if (iBuryMessage(iTank) == iBuryChat || iBuryMessage(iTank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Bury2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Bury2", iSurvivor);
 	}
 
 	return Plugin_Continue;

@@ -90,7 +90,7 @@ public void OnPluginStart()
 
 		if (g_hSDKFlingPlayer == null)
 		{
-			PrintToServer("%s Your \"CTerrorPlayer_Fling\" signature is outdated.", ST_PREFIX);
+			PrintToServer("%s Your \"CTerrorPlayer_Fling\" signature is outdated.", ST_TAG);
 		}
 	}
 	else
@@ -103,7 +103,7 @@ public void OnPluginStart()
 
 		if (g_hSDKPukePlayer == null)
 		{
-			PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", ST_PREFIX);
+			PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", ST_TAG);
 		}
 	}
 
@@ -268,7 +268,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 
 			if (iFlingMessage == message || iFlingMessage == 3)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Fling", sTankName, survivor);
+				PrintToChatAll("%s %t", ST_TAG2, "Fling", sTankName, survivor);
 			}
 		}
 		else
@@ -277,7 +277,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 
 			if (iFlingMessage == message || iFlingMessage == 3)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, survivor);
+				PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
 			}
 		}
 

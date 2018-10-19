@@ -161,7 +161,7 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Splash", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Splash", sTankName);
 		}
 	}
 }
@@ -210,7 +210,7 @@ public Action tTimerSplash(Handle timer, int userid)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Splash2", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Splash2", sTankName);
 		}
 
 		return Plugin_Stop;

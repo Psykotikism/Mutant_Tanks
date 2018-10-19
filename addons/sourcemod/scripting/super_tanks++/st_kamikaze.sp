@@ -251,7 +251,7 @@ static void vKamikazeHit(int survivor, int tank, float chance, int enabled, int 
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Kamikaze", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Kamikaze", sTankName, survivor);
 		}
 	}
 }

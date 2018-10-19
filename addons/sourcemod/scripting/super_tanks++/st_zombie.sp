@@ -273,7 +273,7 @@ static void vZombieHit(int survivor, int tank, float chance, int enabled, int me
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Zombie", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
 		}
 	}
 }
@@ -328,7 +328,7 @@ public Action tTimerZombie(Handle timer, int userid)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Zombie", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
 		}
 	}
 

@@ -84,7 +84,7 @@ public void OnPluginStart()
 
 	if (g_hSDKIdlePlayer == null)
 	{
-		PrintToServer("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", ST_PREFIX);
+		PrintToServer("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", ST_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -94,7 +94,7 @@ public void OnPluginStart()
 
 	if (g_hSDKSpecPlayer == null)
 	{
-		PrintToServer("%s Your \"SetHumanSpec\" signature is outdated.", ST_PREFIX);
+		PrintToServer("%s Your \"SetHumanSpec\" signature is outdated.", ST_TAG);
 	}
 
 	delete gdSuperTanks;
@@ -300,7 +300,7 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Idle", sTankName, survivor);
+				PrintToChatAll("%s %t", ST_TAG2, "Idle", sTankName, survivor);
 			}
 		}
 	}

@@ -250,7 +250,7 @@ static void vPimpHit(int survivor, int tank, float chance, int enabled, int mess
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Pimp", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Pimp", sTankName, survivor);
 		}
 	}
 }
@@ -274,7 +274,7 @@ static void vReset2(int survivor, int tank, int message)
 
 	if (iPimpMessage(tank) == message || iPimpMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Pimp2", survivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Pimp2", survivor);
 	}
 }
 

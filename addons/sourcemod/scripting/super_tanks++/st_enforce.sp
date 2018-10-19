@@ -288,7 +288,7 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, int m
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Enforce", sTankName, survivor, sSlotNumber);
+			PrintToChatAll("%s %t", ST_TAG2, "Enforce", sTankName, survivor, sSlotNumber);
 		}
 	}
 }
@@ -369,7 +369,7 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 
 	if (iEnforceMessage(iTank) == iEnforceChat || iEnforceMessage(iTank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Enforce2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Enforce2", iSurvivor);
 	}
 
 	return Plugin_Continue;

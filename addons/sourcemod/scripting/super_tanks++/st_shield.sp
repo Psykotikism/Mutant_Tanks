@@ -305,7 +305,7 @@ static void vShield(int tank, bool shield)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shield", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Shield", sTankName);
 		}
 	}
 	else
@@ -321,7 +321,7 @@ static void vShield(int tank, bool shield)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shield2", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Shield2", sTankName);
 		}
 	}
 }

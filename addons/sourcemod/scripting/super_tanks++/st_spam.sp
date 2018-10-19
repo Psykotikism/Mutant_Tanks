@@ -143,7 +143,7 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Spam", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Spam", sTankName);
 		}
 	}
 }
@@ -191,7 +191,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Spam2", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Spam2", sTankName);
 		}
 
 		return Plugin_Stop;

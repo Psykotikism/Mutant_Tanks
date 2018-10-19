@@ -93,7 +93,7 @@ public void OnPluginStart()
 
 		if (g_hSDKAcidPlayer == null)
 		{
-			PrintToServer("%s Your \"CSpitterProjectile_Create\" signature is outdated.", ST_PREFIX);
+			PrintToServer("%s Your \"CSpitterProjectile_Create\" signature is outdated.", ST_TAG);
 		}
 	}
 	else
@@ -106,7 +106,7 @@ public void OnPluginStart()
 
 		if (g_hSDKPukePlayer == null)
 		{
-			PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", ST_PREFIX);
+			PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", ST_TAG);
 		}
 	}
 
@@ -281,7 +281,7 @@ public void ST_RockBreak(int tank, int rock)
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Acid2", sTankName);
+				PrintToChatAll("%s %t", ST_TAG2, "Acid2", sTankName);
 			}
 		}
 	}
@@ -309,7 +309,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 
 			if (iAcidMessage(tank) == message || iAcidMessage(tank) == 4 || iAcidMessage(tank) == 5 || iAcidMessage(tank) == 6 || iAcidMessage(tank) == 7)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Acid", sTankName, survivor);
+				PrintToChatAll("%s %t", ST_TAG2, "Acid", sTankName, survivor);
 			}
 		}
 		else
@@ -318,7 +318,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 
 			if (iAcidMessage(tank) == message || iAcidMessage(tank) == 4 || iAcidMessage(tank) == 5 || iAcidMessage(tank) == 6 || iAcidMessage(tank) == 7)
 			{
-				PrintToChatAll("%s %t", ST_PREFIX2, "Puke", sTankName, survivor);
+				PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
 			}
 		}
 

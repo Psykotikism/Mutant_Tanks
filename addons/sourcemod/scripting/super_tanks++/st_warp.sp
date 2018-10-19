@@ -271,7 +271,7 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, int mess
 				{
 					char sTankName[MAX_NAME_LENGTH + 1];
 					ST_TankName(tank, sTankName);
-					PrintToChatAll("%s %t", ST_PREFIX2, "Warp", sTankName, survivor, iPlayer);
+					PrintToChatAll("%s %t", ST_TAG2, "Warp", sTankName, survivor, iPlayer);
 				}
 
 				break;
@@ -365,7 +365,7 @@ public Action tTimerWarp(Handle timer, int userid)
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
 				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Warp2", sTankName);
+				PrintToChatAll("%s %t", ST_TAG2, "Warp2", sTankName);
 			}
 		}
 	}

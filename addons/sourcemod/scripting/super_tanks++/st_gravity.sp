@@ -277,7 +277,7 @@ public void ST_Ability(int tank)
 					{
 						char sTankName[MAX_NAME_LENGTH + 1];
 						ST_TankName(tank, sTankName);
-						PrintToChatAll("%s %t", ST_PREFIX2, "Gravity3", sTankName);
+						PrintToChatAll("%s %t", ST_TAG2, "Gravity3", sTankName);
 					}
 				}
 			}
@@ -317,7 +317,7 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, int m
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Gravity", sTankName, survivor, flGravityValue);
+			PrintToChatAll("%s %t", ST_TAG2, "Gravity", sTankName, survivor, flGravityValue);
 		}
 	}
 }
@@ -421,7 +421,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 
 	if (iGravityMessage(iTank) == iGravityChat || iGravityMessage(iTank) == 4 || iGravityMessage(iTank) == 5 || iGravityMessage(iTank) == 6 || iGravityMessage(iTank) == 7)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Gravity2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Gravity2", iSurvivor);
 	}
 
 	return Plugin_Continue;

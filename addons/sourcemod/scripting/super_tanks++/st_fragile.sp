@@ -221,7 +221,7 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Fragile", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Fragile", sTankName);
 		}
 	}
 }
@@ -263,7 +263,7 @@ public Action tTimerStopFragile(Handle timer, int userid)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Fragile2", sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Fragile2", sTankName);
 	}
 
 	return Plugin_Continue;

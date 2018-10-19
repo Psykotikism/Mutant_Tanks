@@ -242,7 +242,7 @@ static void vReset2(int survivor, int tank, int message)
 
 	if (iVisionMessage(tank) == message || iVisionMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Vision2", survivor, 90);
+		PrintToChatAll("%s %t", ST_TAG2, "Vision2", survivor, 90);
 	}
 }
 
@@ -268,7 +268,7 @@ static void vVisionHit(int survivor, int tank, float chance, int enabled, int me
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Vision", sTankName, survivor, iVisionFOV(tank));
+			PrintToChatAll("%s %t", ST_TAG2, "Vision", sTankName, survivor, iVisionFOV(tank));
 		}
 	}
 }

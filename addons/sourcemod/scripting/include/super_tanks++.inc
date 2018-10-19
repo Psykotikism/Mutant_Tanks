@@ -4,14 +4,14 @@
 #endif
 #define _supertanksplusplus_included
 
-#define ST_PREFIX "[ST++]"
-#define ST_PREFIX2 "\x04[ST++]\x01"
-#define ST_PREFIX3 "\x04[ST++]\x03"
-#define ST_PREFIX4 "\x04[ST++]\x05"
-
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_VERSION "8.45"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
+
+#define ST_TAG "[ST++]"
+#define ST_TAG2 "\x04[ST++]\x01"
+#define ST_TAG3 "\x04[ST++]\x03"
+#define ST_TAG4 "\x04[ST++]\x05"
 
 #define ST_MAXTYPES 500
 #define ST_MAXHEALTH 65535
@@ -1074,7 +1074,7 @@ stock void vSpawnInfected(int tank, const char[] infected)
 	KickClient(tank);
 }
 
-stock void vSpecialAttack(int tank, float pos[3], const char[] model)
+stock void vSpecialAttack(int tank, float pos[3], float offset, const char[] model)
 {
 	int iProp = CreateEntityByName("prop_physics");
 	if (bIsValidEntity(iProp))
@@ -1082,7 +1082,7 @@ stock void vSpecialAttack(int tank, float pos[3], const char[] model)
 		DispatchKeyValue(iProp, "disableshadows", "1");
 		SetEntityModel(iProp, model);
 
-		pos[2] += 10.0;
+		pos[2] += offset;
 		TeleportEntity(iProp, pos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iProp);
 

@@ -758,7 +758,7 @@
 	}
 	"Tank #14"
 	{
-		"en"			"This Tank can spawn Tanks behind it and throw some at survivors too."
+		"en"			"This Tank can spawn clones behind it and throw some at survivors too."
 	}
 	"Tank #15"
 	{

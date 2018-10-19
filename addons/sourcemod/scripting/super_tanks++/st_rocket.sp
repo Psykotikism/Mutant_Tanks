@@ -405,7 +405,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Rocket", sTankName, iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Rocket", sTankName, iSurvivor);
 	}
 
 	g_bRocket[iSurvivor] = false;

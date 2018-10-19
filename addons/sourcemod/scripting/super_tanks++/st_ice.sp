@@ -281,7 +281,7 @@ static void vIceHit(int survivor, int tank, float chance, int enabled, int messa
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ice", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Ice", sTankName, survivor);
 		}
 	}
 }
@@ -378,7 +378,7 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 
 	if (iIceMessage(iTank) == iIceChat || iIceMessage(iTank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Ice2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Ice2", iSurvivor);
 	}
 
 	return Plugin_Continue;

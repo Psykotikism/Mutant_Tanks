@@ -217,7 +217,7 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 				{
 					char sTankName[MAX_NAME_LENGTH + 1];
 					ST_TankName(iTank, sTankName);
-					PrintToChatAll("%s %t", ST_PREFIX2, "Throw", sTankName);
+					PrintToChatAll("%s %t", ST_TAG2, "Throw", sTankName);
 				}
 			}
 		}
@@ -328,7 +328,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 				{
 					char sTankName[MAX_NAME_LENGTH + 1];
 					ST_TankName(iTank, sTankName);
-					PrintToChatAll("%s %t", ST_PREFIX2, "Throw2", sTankName);
+					PrintToChatAll("%s %t", ST_TAG2, "Throw2", sTankName);
 				}
 			}
 		}
@@ -380,7 +380,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
 				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Throw3", sTankName);
+				PrintToChatAll("%s %t", ST_TAG2, "Throw3", sTankName);
 			}
 		}
 

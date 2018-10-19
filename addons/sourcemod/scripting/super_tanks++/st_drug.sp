@@ -291,7 +291,7 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, int mess
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Drug", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Drug", sTankName, survivor);
 		}
 	}
 }
@@ -315,7 +315,7 @@ static void vReset2(int survivor, int tank, int message)
 
 	if (iDrugMessage(tank) == message || iDrugMessage(tank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Drug2", survivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Drug2", survivor);
 	}
 }
 

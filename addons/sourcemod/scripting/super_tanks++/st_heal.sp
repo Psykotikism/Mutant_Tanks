@@ -258,7 +258,7 @@ public void ST_Ability(int tank)
 				{
 					char sTankName[MAX_NAME_LENGTH + 1];
 					ST_TankName(tank, sTankName);
-					PrintToChatAll("%s %t", ST_PREFIX2, "Heal2", sTankName);
+					PrintToChatAll("%s %t", ST_TAG2, "Heal2", sTankName);
 				}
 			}
 		}
@@ -286,7 +286,7 @@ static void vHealHit(int survivor, int tank, float chance, int enabled, int mess
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Heal", sTankName, survivor);
+				PrintToChatAll("%s %t", ST_TAG2, "Heal", sTankName, survivor);
 			}
 		}
 	}
@@ -348,7 +348,7 @@ public Action tTimerHeal(Handle timer, int userid)
 			{
 				char sTankName[MAX_NAME_LENGTH + 1];
 				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Heal3", sTankName);
+				PrintToChatAll("%s %t", ST_TAG2, "Heal3", sTankName);
 			}
 		}
 

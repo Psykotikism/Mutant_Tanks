@@ -23,7 +23,7 @@ bool g_bCloned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 float g_flCloneChance[ST_MAXTYPES + 1], g_flCloneChance2[ST_MAXTYPES + 1];
 
-int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1], g_iCloneMessage[ST_MAXTYPES + 1], g_iCloneMessage2[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneMode2[ST_MAXTYPES + 1];
+int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1], g_iCloneMessage[ST_MAXTYPES + 1], g_iCloneMessage2[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneMode2[ST_MAXTYPES + 1], g_iCloneOwner[MAXPLAYERS + 1], g_iCloneReplace[ST_MAXTYPES + 1], g_iCloneReplace2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -99,6 +99,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloneHealth[iIndex] = iClamp(g_iCloneHealth[iIndex], 1, ST_MAXHEALTH);
 				g_iCloneMode[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", 0);
 				g_iCloneMode[iIndex] = iClamp(g_iCloneMode[iIndex], 0, 1);
+				g_iCloneReplace[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Replace", 1);
+				g_iCloneReplace[iIndex] = iClamp(g_iCloneReplace[iIndex], 0, 1);
 			}
 			else
 			{
@@ -116,6 +118,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloneHealth2[iIndex] = iClamp(g_iCloneHealth2[iIndex], 1, ST_MAXHEALTH);
 				g_iCloneMode2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", g_iCloneMode[iIndex]);
 				g_iCloneMode2[iIndex] = iClamp(g_iCloneMode2[iIndex], 0, 1);
+				g_iCloneReplace2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Replace", g_iCloneReplace[iIndex]);
+				g_iCloneReplace2[iIndex] = iClamp(g_iCloneReplace2[iIndex], 0, 1);
 			}
 
 			kvSuperTanks.Rewind();
@@ -144,6 +148,32 @@ public void ST_Event(Event event, const char[] name)
 		if (iCloneAbility(iTank) == 1 && ST_TankAllowed(iTank))
 		{
 			g_iCloneCount[iTank] = 0;
+
+			if (g_bCloned[iTank])
+			{
+				for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
+				{
+					if (g_iCloneOwner[iTank] == iOwner && ST_TankAllowed(iOwner))
+					{
+						int iCloneReplace = !g_bTankConfig[ST_TankType(iOwner)] ? g_iCloneReplace[ST_TankType(iOwner)] : g_iCloneReplace2[ST_TankType(iOwner)];
+						if (iCloneReplace == 1)
+						{
+							g_iCloneOwner[iTank] = 0;
+
+							if (g_iCloneCount[iOwner] > 0)
+							{
+								g_iCloneCount[iOwner]--;
+							}
+							else
+							{
+								g_iCloneCount[iOwner] = 0;
+							}
+						}
+
+						break;
+					}
+				}
+			}
 		}
 	}
 }
@@ -212,12 +242,13 @@ public void ST_Ability(int tank)
 						SetEntityHealth(iSelectedType, iNewHealth);
 
 						g_iCloneCount[tank]++;
+						g_iCloneOwner[iSelectedType] = tank;
 
 						if (iCloneMessage == 1)
 						{
 							char sTankName[MAX_NAME_LENGTH + 1];
 							ST_TankName(tank, sTankName);
-							PrintToChatAll("%s %t", ST_PREFIX2, "Clone", sTankName);
+							PrintToChatAll("%s %t", ST_TAG2, "Clone", sTankName);
 						}
 					}
 				}

@@ -265,7 +265,7 @@ static void vNullifyHit(int survivor, int tank, float chance, int enabled, int m
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Nullify", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Nullify", sTankName, survivor);
 		}
 	}
 }
@@ -341,7 +341,7 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 
 	if (iNullifyMessage(iTank) == iNullifyChat || iNullifyMessage(iTank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Nullify2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Nullify2", iSurvivor);
 	}
 
 	return Plugin_Continue;

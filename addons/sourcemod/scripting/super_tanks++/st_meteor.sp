@@ -160,7 +160,7 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Meteor", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Meteor", sTankName);
 		}
 	}
 }

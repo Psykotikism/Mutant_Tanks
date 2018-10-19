@@ -227,11 +227,11 @@ static void vVampireHit(int survivor, int tank, float chance, int enabled, int m
 		ST_TankName(tank, sTankName);
 		if ((message == 1 && iVampireMessage(tank) == message) || iVampireMessage(tank) == 3)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Vampire", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Vampire", sTankName, survivor);
 		}
 		else if ((message == 2 && iVampireMessage(tank) == message) || iVampireMessage(tank) == 3)
 		{
-			PrintToChatAll("%s %t", ST_PREFIX2, "Vampire2", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Vampire2", sTankName);
 		}
 	}
 }

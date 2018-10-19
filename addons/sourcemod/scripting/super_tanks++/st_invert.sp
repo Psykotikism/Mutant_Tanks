@@ -297,7 +297,7 @@ static void vInvertHit(int survivor, int tank, float chance, int enabled, int me
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Invert", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Invert", sTankName, survivor);
 		}
 	}
 }
@@ -373,7 +373,7 @@ public Action tTimerStopInvert(Handle timer, DataPack pack)
 
 	if (iInvertMessage(iTank) == iInvertChat || iInvertMessage(iTank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Invert2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Invert2", iSurvivor);
 	}
 
 	return Plugin_Continue;

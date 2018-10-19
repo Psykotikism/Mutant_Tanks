@@ -276,7 +276,7 @@ static void vAimlessHit(int survivor, int tank, float chance, int enabled, int m
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Aimless", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Aimless", sTankName, survivor);
 		}
 	}
 }
@@ -352,7 +352,7 @@ public Action tTimerStopAimless(Handle timer, DataPack pack)
 
 	if (iAimlessMessage(iTank) == iAimlessChat || iAimlessMessage(iTank) == 3)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Aimless2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Aimless2", iSurvivor);
 	}
 
 	return Plugin_Continue;
