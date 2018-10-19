@@ -36,7 +36,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 ### Uninstalling/Upgrading to Newer Versions
 1. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/plugins folder.
 2. Delete super_tanks++.txt from addons/sourcemod/gamedata folder.
-3. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/scripting folder.
+3. Delete super_tanks++ folder (super_tanks++.sp and all of its modules) from addons/sourcemod/scripting folder.
 4. Delete super_tanks++.inc from addons/sourcemod/scripting/include folder.
 5. Delete st_clone.inc from addons/sourcemod/scripting/include folder.
 6. Delete super_tanks++ folder from addons/sourcemod/data folder.

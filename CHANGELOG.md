@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 8.45 (TBA)
+
+Changes:
+
+1. The "Whirl Axis" setting now accepts different values.
+2. Moved stock functions from include file to some of the module plugins.
+3. Removed the "Meteor Damage" setting.
+4. The Meteor ability's meteorites no longer push players back when exploding.
+5. The Meteor ability's meteorites now start fires upon exploding.
+6. Removed the "Track Mode" setting.
+
+Files:
+
+1. Updated config file with setting changes.
+2. Updated include file.
+
 ## Version 8.44 (October 16, 2018)
 
 Bug fixes:

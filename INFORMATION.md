@@ -3402,12 +3402,6 @@
 			// Maximum: 100.0 (Highest chance)
 			"Meteor Chance"					"33.3"
 
-			// The Super Tank's meteorites do this much damage.
-			// --
-			// Minimum: 1.0
-			// Maximum: 9999999999.0
-			"Meteor Damage"					"5.0"
-
 			// The radius of the Super Tank's meteor shower.
 			// --
 			// 1st number = Minimum radius
@@ -3460,7 +3454,7 @@
 
 			// The Super Tank spawns these minions.
 			// Combine numbers in any order for different results.
-			// Repeat the same number to increase its chance of being chosen.
+			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 12
 			// --
 			// 1: Smoker
@@ -5080,7 +5074,7 @@
 
 			// The Super Tank throws these cars.
 			// Combine numbers in any order for different results.
-			// Repeat the same number to increase its chance of being chosen.
+			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 6
 			// --
 			// 1: Small car with a big hatchback.
@@ -5090,7 +5084,7 @@
 
 			// The Super Tank throws these special infected.
 			// Combine numbers in any order for different results.
-			// Repeat the same number to increase its chance of being chosen.
+			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 14
 			// --
 			// 1: Smoker
@@ -5134,12 +5128,6 @@
 			// Minimum: 0.1 (Lowest chance)
 			// Maximum: 100.0 (Highest chance)
 			"Track Chance"					"33.3"
-
-			// The mode of the Super Tank's track ability.
-			// --
-			// 0: The Super Tank's rock will only start tracking when it is near a survivor.
-			// 1: The Super Tank's rock will track the nearest survivor.
-			"Track Mode"					"1"
 
 			// The Super Tank's track ability is this fast.
 			// Note: This setting only applies if the "Track Mode" setting is set to 1.
@@ -5476,16 +5464,15 @@
 			// 3: ON, display message when both are on.
 			"Ability Message"				"0"
 
-			// The axis of the whirl effect.
+			// The axis of the Super Tank's whirl effect.
+			// Combine numbers in any order for different results.
+			// Repeat the same number to increase its chances of being chosen.
+			// Character limit: 6
 			// --
-			// 1: X-axis (Turn horizontally) only.
-			// 2: Y-axis (Turn vertically) only.
-			// 3: Z-axis (Turn diagonally) only.
-			// 4: X-axis or Y-axis only.
-			// 5: X-axis or Z-axis only.
-			// 6: Y-axis or Z-axis only.
-			// 7: Choose between all 3 axes.
-			"Whirl Axis"					"7"
+			// 1: X-Axis
+			// 2: Y-Axis
+			// 3: Z-Axis
+			"Whirl Axis"					"123"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
