@@ -244,8 +244,9 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
 		char sTankName[MAX_NAME_LENGTH + 1];
-		int iFlingMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iFlingMessage[ST_TankType(tank)] : g_iFlingMessage2[ST_TankType(tank)];
 		ST_TankName(tank, sTankName);
+
+		int iFlingMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iFlingMessage[ST_TankType(tank)] : g_iFlingMessage2[ST_TankType(tank)];
 
 		if (bIsValidGame())
 		{

@@ -208,8 +208,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, int mess
 	{
 		char sWeapon[32];
 		int iActiveWeapon = GetEntPropEnt(survivor, Prop_Data, "m_hActiveWeapon"),
-			iAmmoCount = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoCount[ST_TankType(tank)] : g_iAmmoCount2[ST_TankType(tank)],
-			iAmmoMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoMessage[ST_TankType(tank)] : g_iAmmoMessage2[ST_TankType(tank)];
+			iAmmoCount = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoCount[ST_TankType(tank)] : g_iAmmoCount2[ST_TankType(tank)];
 
 		GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
 		if (bIsValidEntity(iActiveWeapon))
@@ -279,6 +278,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, int mess
 		sAmmoEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sAmmoEffect[ST_TankType(tank)] : g_sAmmoEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sAmmoEffect, mode);
 
+		int iAmmoMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoMessage[ST_TankType(tank)] : g_iAmmoMessage2[ST_TankType(tank)];
 		if (iAmmoMessage == message || iAmmoMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

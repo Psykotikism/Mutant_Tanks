@@ -403,8 +403,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 
 	g_bChoke2[iSurvivor] = true;
 
-	float flVelocity[3] = {0.0, 0.0, 0.0};
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 
 	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
 	SetEntityGravity(iSurvivor, 1.0);

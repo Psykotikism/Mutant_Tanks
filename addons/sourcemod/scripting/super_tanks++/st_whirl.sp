@@ -25,11 +25,11 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bWhirl[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sWhirlEffect[ST_MAXTYPES + 1][4], g_sWhirlEffect2[ST_MAXTYPES + 1][4];
+char g_sWhirlAxis[ST_MAXTYPES + 1][7], g_sWhirlAxis2[ST_MAXTYPES + 1][7], g_sWhirlEffect[ST_MAXTYPES + 1][4], g_sWhirlEffect2[ST_MAXTYPES + 1][4];
 
 float g_flWhirlChance[ST_MAXTYPES + 1], g_flWhirlChance2[ST_MAXTYPES + 1], g_flWhirlDuration[ST_MAXTYPES + 1], g_flWhirlDuration2[ST_MAXTYPES + 1], g_flWhirlRange[ST_MAXTYPES + 1], g_flWhirlRange2[ST_MAXTYPES + 1], g_flWhirlSpeed[ST_MAXTYPES + 1], g_flWhirlSpeed2[ST_MAXTYPES + 1], g_flWhirlRangeChance[ST_MAXTYPES + 1], g_flWhirlRangeChance2[ST_MAXTYPES + 1];
 
-int g_iWhirlAbility[ST_MAXTYPES + 1], g_iWhirlAbility2[ST_MAXTYPES + 1], g_iWhirlAxis[ST_MAXTYPES + 1], g_iWhirlAxis2[ST_MAXTYPES + 1], g_iWhirlHit[ST_MAXTYPES + 1], g_iWhirlHit2[ST_MAXTYPES + 1], g_iWhirlHitMode[ST_MAXTYPES + 1], g_iWhirlHitMode2[ST_MAXTYPES + 1], g_iWhirlMessage[ST_MAXTYPES + 1], g_iWhirlMessage2[ST_MAXTYPES + 1];
+int g_iWhirlAbility[ST_MAXTYPES + 1], g_iWhirlAbility2[ST_MAXTYPES + 1], g_iWhirlHit[ST_MAXTYPES + 1], g_iWhirlHit2[ST_MAXTYPES + 1], g_iWhirlHitMode[ST_MAXTYPES + 1], g_iWhirlHitMode2[ST_MAXTYPES + 1], g_iWhirlMessage[ST_MAXTYPES + 1], g_iWhirlMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -146,8 +146,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Whirl Ability/Ability Effect", g_sWhirlEffect[iIndex], sizeof(g_sWhirlEffect[]), "123");
 				g_iWhirlMessage[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Ability Message", 0);
 				g_iWhirlMessage[iIndex] = iClamp(g_iWhirlMessage[iIndex], 0, 3);
-				g_iWhirlAxis[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Axis", 7);
-				g_iWhirlAxis[iIndex] = iClamp(g_iWhirlAxis[iIndex], 1, 7);
+				kvSuperTanks.GetString("Whirl Ability/Whirl Axis", g_sWhirlAxis[iIndex], sizeof(g_sWhirlAxis[]), "123");
 				g_flWhirlChance[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Chance", 33.3);
 				g_flWhirlChance[iIndex] = flClamp(g_flWhirlChance[iIndex], 0.1, 100.0);
 				g_flWhirlDuration[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Duration", 5.0);
@@ -172,8 +171,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Whirl Ability/Ability Effect", g_sWhirlEffect2[iIndex], sizeof(g_sWhirlEffect2[]), g_sWhirlEffect[iIndex]);
 				g_iWhirlMessage2[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Ability Message", g_iWhirlMessage[iIndex]);
 				g_iWhirlMessage2[iIndex] = iClamp(g_iWhirlMessage2[iIndex], 0, 3);
-				g_iWhirlAxis2[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Axis", g_iWhirlAxis[iIndex]);
-				g_iWhirlAxis2[iIndex] = iClamp(g_iWhirlAxis2[iIndex], 1, 7);
+				kvSuperTanks.GetString("Whirl Ability/Whirl Axis", g_sWhirlAxis2[iIndex], sizeof(g_sWhirlAxis2[]), g_sWhirlAxis[iIndex]);
 				g_flWhirlChance2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Chance", g_flWhirlChance[iIndex]);
 				g_flWhirlChance2[iIndex] = flClamp(g_flWhirlChance2[iIndex], 0.1, 100.0);
 				g_flWhirlDuration2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Duration", g_flWhirlDuration[iIndex]);
@@ -256,33 +254,14 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, int mes
 		vSetEntityParent(iWhirl, survivor);
 		SetClientViewEntity(survivor, iWhirl);
 
-		int iWhirlAxis = !g_bTankConfig[ST_TankType(tank)] ? g_iWhirlAxis[ST_TankType(tank)] : g_iWhirlAxis2[ST_TankType(tank)],
-			iAxis;
-
-		switch (iWhirlAxis)
+		char sNumbers = !g_bTankConfig[ST_TankType(tank)] ? g_sWhirlAxis[ST_TankType(tank)][GetRandomInt(0, strlen(g_sWhirlAxis[ST_TankType(tank)]) - 1)] : g_sWhirlAxis2[ST_TankType(tank)][GetRandomInt(0, strlen(g_sWhirlAxis2[ST_TankType(tank)]) - 1)];
+		int iAxis;
+		switch (sNumbers)
 		{
-			case 1: iAxis = 0;
-			case 2: iAxis = 1;
-			case 3: iAxis = 2;
-			case 4: iAxis = GetRandomInt(0, 1);
-			case 5:
-			{
-				int iNumberCount, iNumbers[3];
-				for (int iNumber = 0; iNumber <= 2; iNumber++)
-				{
-					if (iNumber == 1)
-					{
-						continue;
-					}
-
-					iNumbers[iNumberCount + 1] = iNumber;
-					iNumberCount++;
-				}
-
-				iAxis = iNumbers[GetRandomInt(0, iNumberCount)];
-			}
-			case 6: iAxis = GetRandomInt(1, 2);
-			case 7: iAxis = GetRandomInt(0, 2);
+			case '1': iAxis = 0;
+			case '2': iAxis = 1;
+			case '3': iAxis = 2;
+			default: iAxis = GetRandomInt(0, 2);
 		}
 
 		DataPack dpWhirl;

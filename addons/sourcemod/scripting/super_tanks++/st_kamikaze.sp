@@ -232,7 +232,6 @@ public void ST_Ability(int tank)
 
 static void vKamikazeHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
-	int iKamikazeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeMessage[ST_TankType(tank)] : g_iKamikazeMessage2[ST_TankType(tank)];
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
 		EmitSoundToAll(SOUND_SMASH, survivor);
@@ -247,6 +246,7 @@ static void vKamikazeHit(int survivor, int tank, float chance, int enabled, int 
 		sKamikazeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sKamikazeEffect[ST_TankType(tank)] : g_sKamikazeEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sKamikazeEffect, mode);
 
+		int iKamikazeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeMessage[ST_TankType(tank)] : g_iKamikazeMessage2[ST_TankType(tank)];
 		if (iKamikazeMessage == message || iKamikazeMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

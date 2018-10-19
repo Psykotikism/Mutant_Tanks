@@ -233,6 +233,16 @@ public void ST_Ability(int tank)
 	}
 }
 
+static void vRemoveWeapon(int survivor, int slot)
+{
+	int iSlot = GetPlayerWeaponSlot(survivor, slot);
+	if (iSlot > 0)
+	{
+		RemovePlayerItem(survivor, iSlot);
+		RemoveEntity(iSlot);
+	}
+}
+
 static void vRestartHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
@@ -240,8 +250,8 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 		SDKCall(g_hSDKRespawnPlayer, survivor);
 
 		char sRestartLoadout[325], sItems[5][64];
-		int iRestartMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMessage[ST_TankType(tank)] : g_iRestartMessage2[ST_TankType(tank)],
-			iRestartMode = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMode[ST_TankType(tank)] : g_iRestartMode2[ST_TankType(tank)];
+		int iRestartMode = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMode[ST_TankType(tank)] : g_iRestartMode2[ST_TankType(tank)];
+
 		sRestartLoadout = !g_bTankConfig[ST_TankType(tank)] ? g_sRestartLoadout[ST_TankType(tank)] : g_sRestartLoadout2[ST_TankType(tank)];
 
 		ExplodeString(sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
@@ -283,6 +293,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 		sRestartEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sRestartEffect[ST_TankType(tank)] : g_sRestartEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sRestartEffect, mode);
 
+		int iRestartMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMessage[ST_TankType(tank)] : g_iRestartMessage2[ST_TankType(tank)];
 		if (iRestartMessage == message || iRestartMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

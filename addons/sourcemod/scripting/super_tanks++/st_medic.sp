@@ -133,6 +133,17 @@ public void ST_BossStage(int tank)
 	}
 }
 
+static void vHeal(int infected, int health, int extrahealth, int maxhealth)
+{
+	maxhealth = iClamp(maxhealth, 1, ST_MAXHEALTH);
+
+	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth,
+		iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth,
+		iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
+
+	SetEntityHealth(infected, iRealHealth);
+}
+
 static void vMedic(int tank)
 {
 	float flMedicRange = !g_bTankConfig[ST_TankType(tank)] ? g_flMedicRange[ST_TankType(tank)] : g_flMedicRange2[ST_TankType(tank)],

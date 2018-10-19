@@ -236,8 +236,7 @@ public Action tTimerSetCarVelocity(Handle timer, int entity)
 		return Plugin_Stop;
 	}
 
-	float flVelocity[3] = {0.0, 0.0, 0.0};
-	TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 
 	return Plugin_Continue;
 }

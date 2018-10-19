@@ -1,6 +1,5 @@
 // Super Tanks++: Meteor Ability
 #include <sourcemod>
-#include <sdkhooks>
 #include <sdktools>
 
 #undef REQUIRE_PLUGIN
@@ -22,13 +21,14 @@ public Plugin myinfo =
 };
 
 #define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 
 bool g_bCloneInstalled, g_bMeteor[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80];
 
-float g_flMeteorChance[ST_MAXTYPES + 1], g_flMeteorChance2[ST_MAXTYPES + 1], g_flMeteorDamage[ST_MAXTYPES + 1], g_flMeteorDamage2[ST_MAXTYPES + 1];
+float g_flMeteorChance[ST_MAXTYPES + 1], g_flMeteorChance2[ST_MAXTYPES + 1];
 
 int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorMessage[ST_MAXTYPES + 1], g_iMeteorMessage2[ST_MAXTYPES + 1];
 
@@ -72,6 +72,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+	PrecacheModel(MODEL_GASCAN, true);
 	PrecacheModel(MODEL_PROPANETANK, true);
 
 	vReset();
@@ -108,8 +109,6 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMeteorMessage[iIndex] = iClamp(g_iMeteorMessage[iIndex], 0, 1);
 				g_flMeteorChance[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Chance", 33.3);
 				g_flMeteorChance[iIndex] = flClamp(g_flMeteorChance[iIndex], 0.1, 100.0);
-				g_flMeteorDamage[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", 5.0);
-				g_flMeteorDamage[iIndex] = flClamp(g_flMeteorDamage[iIndex], 1.0, 9999999999.0);
 				kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius[iIndex], sizeof(g_sMeteorRadius[]), "-180.0,180.0");
 			}
 			else
@@ -123,8 +122,6 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMeteorMessage2[iIndex] = iClamp(g_iMeteorMessage2[iIndex], 0, 1);
 				g_flMeteorChance2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Chance", g_flMeteorChance[iIndex]);
 				g_flMeteorChance2[iIndex] = flClamp(g_flMeteorChance2[iIndex], 0.1, 100.0);
-				g_flMeteorDamage2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", g_flMeteorDamage[iIndex]);
-				g_flMeteorDamage2[iIndex] = flClamp(g_flMeteorDamage2[iIndex], 1.0, 9999999999.0);
 				kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius2[iIndex], sizeof(g_sMeteorRadius2[]), g_sMeteorRadius[iIndex]);
 			}
 
@@ -184,61 +181,8 @@ static void vMeteor(int tank, int rock)
 		float flRockPos[3];
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flRockPos);
 
-		int iPropane = CreateEntityByName("prop_physics");
-		if (bIsValidEntity(iPropane))
-		{
-			SetEntityModel(iPropane, MODEL_PROPANETANK);
-
-			flRockPos[2] += 50.0;
-			TeleportEntity(iPropane, flRockPos, NULL_VECTOR, NULL_VECTOR);
-
-			DispatchSpawn(iPropane);
-			ActivateEntity(iPropane);
-
-			SetEntPropEnt(iPropane, Prop_Data, "m_hPhysicsAttacker", tank);
-			SetEntPropFloat(iPropane, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
-
-			SetEntProp(iPropane, Prop_Send, "m_CollisionGroup", 1);
-			SetEntityRenderMode(iPropane, RENDER_TRANSCOLOR);
-			SetEntityRenderColor(iPropane, 0, 0, 0, 0);
-
-			AcceptEntityInput(iPropane, "Break");
-		}
-
-		float flTankPos[3];
-		GetClientAbsOrigin(tank, flTankPos);
-
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor))
-			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance < 200.0)
-				{
-					float flMeteorDamage = !g_bTankConfig[ST_TankType(tank)] ? g_flMeteorDamage[ST_TankType(tank)] : g_flMeteorDamage2[ST_TankType(tank)];
-					SDKHooks_TakeDamage(iSurvivor, tank, tank, flMeteorDamage);
-				}
-			}
-		}
-
-		int iPointPush = CreateEntityByName("point_push");
-		if (bIsValidEntity(iPointPush))
-		{
-			SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", tank);
-			DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
-			DispatchKeyValueFloat(iPointPush, "radius", 200.0);
-			DispatchKeyValue(iPointPush, "spawnflags", "8");
-			TeleportEntity(iPointPush, flRockPos, NULL_VECTOR, NULL_VECTOR);
-
-			DispatchSpawn(iPointPush);
-			AcceptEntityInput(iPointPush, "Enable");
-
-			iPointPush = EntIndexToEntRef(iPointPush);
-			vDeleteEntity(iPointPush, 0.5);
-		}
+		vSpecialAttack(tank, flRockPos, 50.0, MODEL_GASCAN);
+		vSpecialAttack(tank, flRockPos, 50.0, MODEL_PROPANETANK);
 	}
 }
 
@@ -326,9 +270,11 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	if (g_bMeteor[iTank])
 	{
 		float flAngles[3], flVelocity[3], flHitpos[3], flVector[3];
+
 		flAngles[0] = GetRandomFloat(-20.0, 20.0);
 		flAngles[1] = GetRandomFloat(-20.0, 20.0);
 		flAngles[2] = 60.0;
+
 		GetVectorAngles(flAngles, flAngles);
 		iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
 
@@ -352,12 +298,15 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 				SetEntityRenderColor(iRock, iRed, iGreen, iBlue, iAlpha);
 
 				float flAngles2[3];
+
 				flAngles2[0] = GetRandomFloat(flMin, flMax);
 				flAngles2[1] = GetRandomFloat(flMin, flMax);
 				flAngles2[2] = GetRandomFloat(flMin, flMax);
+
 				flVelocity[0] = GetRandomFloat(0.0, 350.0);
 				flVelocity[1] = GetRandomFloat(0.0, 350.0);
 				flVelocity[2] = GetRandomFloat(0.0, 30.0);
+
 				TeleportEntity(iRock, flHitpos, flAngles2, flVelocity);
 
 				DispatchSpawn(iRock);

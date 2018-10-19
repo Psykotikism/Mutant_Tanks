@@ -203,6 +203,7 @@ public Action tTimerRegen(Handle timer, int userid)
 		iLimitHealth = (iRealHealth > iRegenLimit) ? iRegenLimit : iRealHealth,
 		iLimitHealth2 = (iRealHealth < iRegenLimit) ? iRegenLimit : iRealHealth,
 		iFinalHealth = (iRegenLimit >= 0) ? iLimitHealth : iLimitHealth2;
+
 	SetEntityHealth(iTank, iFinalHealth);
 
 	return Plugin_Continue;

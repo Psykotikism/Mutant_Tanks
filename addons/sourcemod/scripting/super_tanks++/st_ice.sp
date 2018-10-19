@@ -316,7 +316,7 @@ static void vStopIce(int survivor)
 {
 	g_bIce[survivor] = false;
 
-	float flPos[3], flVelocity[3] = {0.0, 0.0, 0.0};
+	float flPos[3];
 	GetClientEyePosition(survivor, flPos);
 
 	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
@@ -324,7 +324,7 @@ static void vStopIce(int survivor)
 		SetEntityMoveType(survivor, MOVETYPE_WALK);
 	}
 
-	TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 	SetEntityRenderColor(survivor, 255, 255, 255, 255);
 	EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
 }

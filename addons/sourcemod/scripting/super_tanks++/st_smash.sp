@@ -234,8 +234,6 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, int mes
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
-		int iSmashMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iSmashMessage[ST_TankType(tank)] : g_iSmashMessage2[ST_TankType(tank)];
-
 		EmitSoundToAll(SOUND_SMASH, survivor);
 		EmitSoundToAll(SOUND_GROWL, tank);
 
@@ -246,6 +244,7 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, int mes
 		sSmashEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sSmashEffect[ST_TankType(tank)] : g_sSmashEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sSmashEffect, mode);
 
+		int iSmashMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iSmashMessage[ST_TankType(tank)] : g_iSmashMessage2[ST_TankType(tank)];
 		if (iSmashMessage == message || iSmashMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];

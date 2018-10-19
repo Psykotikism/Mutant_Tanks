@@ -189,7 +189,7 @@ public void ST_Event(Event event, const char[] name)
 		{
 			float flPos[3];
 			GetClientAbsOrigin(iTank, flPos);
-			vSpecialAttack(iTank, flPos, MODEL_GASCAN);
+			vSpecialAttack(iTank, flPos, 10.0, MODEL_GASCAN);
 		}
 	}
 }
@@ -227,7 +227,7 @@ public void ST_BossStage(int tank)
 	{
 		float flPos[3];
 		GetClientAbsOrigin(tank, flPos);
-		vSpecialAttack(tank, flPos, MODEL_GASCAN);
+		vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
 	}
 }
 
@@ -238,7 +238,7 @@ public void ST_RockBreak(int tank, int rock)
 	{
 		float flPos[3];
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
-		vSpecialAttack(tank, flPos, MODEL_GASCAN);
+		vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
 
 		switch (iFireMessage(tank))
 		{
@@ -258,7 +258,7 @@ static void vFireHit(int survivor, int tank, float chance, int enabled, int mess
 	{
 		float flPos[3];
 		GetClientAbsOrigin(survivor, flPos);
-		vSpecialAttack(tank, flPos, MODEL_GASCAN);
+		vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
 
 		char sFireEffect[4];
 		sFireEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sFireEffect[ST_TankType(tank)] : g_sFireEffect2[ST_TankType(tank)];

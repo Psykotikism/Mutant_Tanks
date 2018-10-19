@@ -269,6 +269,17 @@ public void ST_Ability(int tank)
 	}
 }
 
+static void vDropWeapon(int survivor, const char[] slots, const char[] number, int slot)
+{
+	if (StrContains(slots, number) != -1)
+	{
+		if (bIsSurvivor(survivor) && GetPlayerWeaponSlot(survivor, slot) > 0)
+		{
+			SDKHooks_DropWeapon(survivor, GetPlayerWeaponSlot(survivor, slot), NULL_VECTOR, NULL_VECTOR);
+		}
+	}
+}
+
 static void vGhostHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))

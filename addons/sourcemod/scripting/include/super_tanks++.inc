@@ -10,7 +10,7 @@
 #define ST_PREFIX4 "\x04[ST++]\x05"
 
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.44"
+#define ST_VERSION "8.45"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define ST_MAXTYPES 500
@@ -111,7 +111,7 @@ native bool ST_PluginEnabled();
  * Spawns a Tank with the specified Super Tank type.
  *
  * @param tank			Client index of the Tank.
- * @param type			Type of Super Tank.
+ * @param type			Super Tank type.
  * @error				Invalid client index or type is 0.
  */
 native void ST_SpawnTank(int tank, int type);
@@ -634,10 +634,10 @@ stock float flGetGroundUnits(int entity)
 	if (!(GetEntityFlags(entity) & FL_ONGROUND))
 	{ 
 		Handle hTrace;
-		float flOrigin[3], flPosition[3], flDown[3] = {90.0, 0.0, 0.0};
+		float flOrigin[3], flPosition[3];
 
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
-		hTrace = TR_TraceRayFilterEx(flOrigin, flDown, CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
+		hTrace = TR_TraceRayFilterEx(flOrigin, view_as<float>({90.0, 0.0, 0.0}), CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
 		if (TR_DidHit(hTrace))
 		{
 			float flUnits;
@@ -943,17 +943,6 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 	}
 }
 
-stock void vDropWeapon(int survivor, const char[] slots, const char[] number, int slot)
-{
-	if (StrContains(slots, number) != -1)
-	{
-		if (bIsSurvivor(survivor) && GetPlayerWeaponSlot(survivor, slot) > 0)
-		{
-			SDKHooks_DropWeapon(survivor, GetPlayerWeaponSlot(survivor, slot), NULL_VECTOR, NULL_VECTOR);
-		}
-	}
-}
-
 stock void vEffect(int survivor, int tank, const char[] enabled, const char[] mode)
 {
 	if (StrContains(enabled, mode) != -1)
@@ -1007,17 +996,6 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 	}
 }
 
-stock void vHeal(int infected, int health, int extrahealth, int maxhealth)
-{
-	maxhealth = iClamp(maxhealth, 1, ST_MAXHEALTH);
-
-	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth,
-		iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth,
-		iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
-
-	SetEntityHealth(infected, iRealHealth);
-}
-
 stock void vMultiTargetFilters(int toggle)
 {
 	switch (toggle)
@@ -1059,16 +1037,6 @@ stock void vPrecacheParticle(const char[] particlename)
 
 		iParticle = EntIndexToEntRef(iParticle);
 		vDeleteEntity(iParticle);
-	}
-}
-
-stock void vRemoveWeapon(int survivor, int slot)
-{
-	int iSlot = GetPlayerWeaponSlot(survivor, slot);
-	if (iSlot > 0)
-	{
-		RemovePlayerItem(survivor, iSlot);
-		RemoveEntity(iSlot);
 	}
 }
 

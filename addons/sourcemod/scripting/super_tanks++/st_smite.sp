@@ -232,9 +232,8 @@ static void vSmiteHit(int survivor, int tank, float chance, int enabled, int mes
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
-		float flPosition[3], flStartPosition[3], flDirection[3] = {0.0, 0.0, 0.0};
-		int iSmiteMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iSmiteMessage[ST_TankType(tank)] : g_iSmiteMessage2[ST_TankType(tank)],
-			iColor[4] = {255, 255, 255, 255};
+		float flPosition[3], flStartPosition[3];
+		int iColor[4] = {255, 255, 255, 255};
 
 		GetClientAbsOrigin(survivor, flPosition);
 		flPosition[2] -= 26;
@@ -243,10 +242,10 @@ static void vSmiteHit(int survivor, int tank, float chance, int enabled, int mes
 		TE_SetupBeamPoints(flStartPosition, flPosition, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
 		TE_SendToAll();
 
-		TE_SetupSparks(flPosition, flDirection, 5000, 1000);
+		TE_SetupSparks(flPosition, view_as<float>({0.0, 0.0, 0.0}), 5000, 1000);
 		TE_SendToAll();
 
-		TE_SetupEnergySplash(flPosition, flDirection, false);
+		TE_SetupEnergySplash(flPosition, view_as<float>({0.0, 0.0, 0.0}), false);
 		TE_SendToAll();
 
 		EmitAmbientSound(SOUND_EXPLOSION, flStartPosition, survivor, SNDLEVEL_RAIDSIREN);
@@ -256,6 +255,7 @@ static void vSmiteHit(int survivor, int tank, float chance, int enabled, int mes
 		sSmiteEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sSmiteEffect[ST_TankType(tank)] : g_sSmiteEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sSmiteEffect, mode);
 
+		int iSmiteMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iSmiteMessage[ST_TankType(tank)] : g_iSmiteMessage2[ST_TankType(tank)];
 		if (iSmiteMessage == message || iSmiteMessage == 3)
 		{
 			char sTankName[MAX_NAME_LENGTH + 1];
