@@ -3458,6 +3458,12 @@
 			// Maximum: 100.0 (Highest chance)
 			"Minion Chance"					"33.3"
 
+			// The Super Tank's minions are replaced with new ones when they die.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Minion Replace"				"1"
+
 			// The Super Tank spawns these minions.
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chances of being chosen.

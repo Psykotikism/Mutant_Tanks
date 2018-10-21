@@ -1,6 +1,10 @@
 # Changelog
 
-## Version 8.45 (TBA)
+## Version 8.45 (October 31, 2018)
+
+Bug fixes:
+
+1. Fixed the Clone and Minion abilities not resetting properly.
 
 Changes:
 
@@ -11,12 +15,13 @@ Changes:
 5. The Meteor ability's meteorites now start fires upon exploding.
 6. Removed the "Track Mode" setting.
 7. Added the "Clone Replace" setting which determines if the Clone ability replaces clones with new ones when they die.
-8. Removed some redundant code from the core plugin.
+8. Added the "Minion Replace" setting which determines if the Minion ability replaces minions with new ones when they die.
+9. Removed some redundant code from the core plugin.
 
 Files:
 
 1. Updated config file with setting changes.
-2. Updated include file.
+2. Added a license inside the source code for each plugin and include file because why not.
 
 ## Version 8.44 (October 16, 2018)
 
