@@ -788,47 +788,47 @@ Examples:
 
 **Spirit_12** - For the L4D signatures for the gamedata file.
 
-**honorcode23** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
+**honorcode23** - For the [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
 
-**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537) plugins.
+**panxiaohai** - For the [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537) plugins.
 
-**strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324) plugins.
+**strontiumdog** - For the [[ANY] Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [[ANY] Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [[ANY] Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324) plugins.
 
-**Hipster** - For the [Admin Smite](https://forums.alliedmods.net/showthread.php?t=118534) plugin.
+**Hipster** - For the [[ANY] Admin Smite](https://forums.alliedmods.net/showthread.php?t=118534) plugin.
 
 **Marcus101RR** - For the code to set a player's weapon's ammo.
 
-**AtomicStryker** - For the [SM Respawn Command](https://forums.alliedmods.net/showthread.php?t=96249) and [Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?t=98794) plugins.
+**AtomicStryker** - For the [[L4D & L4D2] SM Respawn Command](https://forums.alliedmods.net/showthread.php?t=96249) and [[L4D & L4D2] Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?t=98794) plugins.
 
 **ivailosp and V10** - For the [[L4D] Away](https://forums.alliedmods.net/showthread.php?t=85537) and [[L4D2] Away](https://forums.alliedmods.net/showthread.php?t=222590) plugins.
 
-**mi123645** - For the [4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409) plugin.
+**mi123645** - For the [[L4D & L4D2] 4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409) plugin.
 
-**Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
+**Farbror Godis** - For the [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
-**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?p=1694338) plugin.
+**GoD-Tony** - For the [[ANY] Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?p=1694338) plugin.
 
 **Phil25** - For the [[TF2] RTD Revamped](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
 
-**Chaosxk** - For the [Spin](https://forums.alliedmods.net/showthread.php?t=283120) plugin.
+**Chaosxk** - For the [[ANY] Spin](https://forums.alliedmods.net/showthread.php?t=283120) plugin.
 
-**ztar** - For the [Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
+**ztar** - For the [[L4D2] Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
 
-**IxAvnoMonvAxI** - For the [Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2) plugin.
+**IxAvnoMonvAxI** - For the [[L4D2] Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2) plugin.
 
 **Uncle Jessie** - For the Tremor Tank in his [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
 
-**Drixevel** - For the [Force Active Weapon](https://forums.alliedmods.net/showthread.php?t=293645) plugin.
+**Drixevel** - For the [[ANY] Force Active Weapon](https://forums.alliedmods.net/showthread.php?t=293645) plugin.
 
-**pRED** - For the [SM Super Commands](https://forums.alliedmods.net/showthread.php?t=57448) plugin.
+**pRED** - For the [[ANY] SM Super Commands](https://forums.alliedmods.net/showthread.php?t=57448) plugin.
 
-**sheo** - For the [Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809) plugin.
+**sheo** - For the [[L4D & L4D2] Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809) plugin.
 
-**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, for the [Silenced Infected](https://forums.alliedmods.net/showthread.php?t=137397) plugin, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and helping to optimize/fix various parts of the code.
+**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, for the [[L4D & L4D2] Silenced Infected](https://forums.alliedmods.net/showthread.php?t=137397) plugin, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and helping to optimize/fix various parts of the code.
 
 **Lux** - For helping to optimize/fix various parts of the code.
 
-**Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
+**Milo|** - For the [[ANY] Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 

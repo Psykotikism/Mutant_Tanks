@@ -5344,6 +5344,7 @@
 		// The Super Tank warps to survivors and warps survivors to random teammates.
 		// "Ability Enabled" - The Tank warps to a random survivor.
 		// - "Warp Interval"
+		// - "Warp Mode"
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is warped to a random teammate.
 		// - "Warp Range"
 		// - "Warp Range Chance"

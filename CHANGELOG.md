@@ -20,7 +20,7 @@ Changes:
 
 Files:
 
-1. Updated config file with setting changes.
+1. Updated config file with new settings and setting changes.
 2. Added a license inside the source code for each plugin and include file because why not.
 
 ## Version 8.44 (October 16, 2018)
