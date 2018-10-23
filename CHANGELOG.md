@@ -5,18 +5,20 @@
 Bug fixes:
 
 1. Fixed the Clone and Minion abilities not resetting properly.
+2. Fixed the Witch ability spamming chat.
 
 Changes:
 
 1. The "Whirl Axis" setting now accepts different values.
 2. Moved some stock functions from include file to some of the module plugins.
-3. Removed the "Meteor Damage" setting.
-4. The Meteor ability's meteorites no longer push players back when exploding.
-5. The Meteor ability's meteorites now start fires upon exploding.
-6. Removed the "Track Mode" setting.
-7. Added the "Clone Replace" setting which determines if the Clone ability replaces clones with new ones when they die.
-8. Added the "Minion Replace" setting which determines if the Minion ability replaces minions with new ones when they die.
+3. The Meteor ability's meteorites no longer push players back when exploding.
+4. The Meteor ability's meteorites now start fires upon exploding.
+5. Added the "Clone Replace" setting which determines if the Clone ability replaces clones with new ones when they die.
+6. Added the "Minion Replace" setting which determines if the Minion ability replaces minions with new ones when they die.
+7. Removed the "Meteor Damage" setting.
+8. Removed the "Track Mode" setting.
 9. Removed some redundant code from the core plugin.
+10. Lowered the "Tank Name" setting's character limit from 128 to 32.
 
 Files:
 

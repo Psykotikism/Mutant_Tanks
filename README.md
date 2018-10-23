@@ -27,7 +27,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 
 ### Installation
 1. Delete files from old versions of the plugin.
-2. Extract the folder inside the .zip file.
+2. Extract the folder inside the super_tanks++.zip file.
 3. Place all the contents into their respective folders.
 4. If prompted to replace or merge anything, click yes.
 5. Load up Super Tanks++ by restarting the server.
