@@ -735,34 +735,35 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			g_iTankType[iTank] = 0;
 
 			int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
-			if (g_iType > 0)
+			if (!bIsFinaleMap() || g_iTankWave == 0 || iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
 			{
-				vSetColor(iTank, g_iType);
-
-				g_bSpawned[iTank] = true;
-				g_iType = 0;
-
-				vTankSpawn(iTank);
-			}
-			else if (iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
-			{
-				int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
-				for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
+				if (g_iType <= 0)
 				{
-					if (iTankEnabled(iIndex) == 0 || !bTankChance(iIndex) || (iTypeLimit(iIndex) > 0 && iGetTypeCount(iIndex) >= iTypeLimit(iIndex)) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
+					int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
+					for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 					{
-						continue;
+						if (iTankEnabled(iIndex) == 0 || !bTankChance(iIndex) || (iTypeLimit(iIndex) > 0 && iGetTypeCount(iIndex) >= iTypeLimit(iIndex)) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
+						{
+							continue;
+						}
+
+						iTankTypes[iTypeCount + 1] = iIndex;
+						iTypeCount++;
 					}
 
-					iTankTypes[iTypeCount + 1] = iIndex;
-					iTypeCount++;
+					if (iTypeCount > 0)
+					{
+						int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
+						vSetColor(iTank, iChosen);
+						g_bSpawned[iTank] = false;
+					}
 				}
-
-				if (iTypeCount > 0)
+				else
 				{
-					int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
-					vSetColor(iTank, iChosen);
-					g_bSpawned[iTank] = false;
+					vSetColor(iTank, g_iType);
+					g_bSpawned[iTank] = true;
+
+					g_iType = 0;
 				}
 
 				char sNumbers[3][4], sFinaleWaves[12];
