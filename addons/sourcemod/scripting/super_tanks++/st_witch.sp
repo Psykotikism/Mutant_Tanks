@@ -127,7 +127,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -174,9 +174,7 @@ public void ST_Ability(int tank)
 	int iWitchAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchAbility[ST_TankType(tank)] : g_iWitchAbility2[ST_TankType(tank)];
 	if (iWitchAbility == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		int iWitchMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchMessage[ST_TankType(tank)] : g_iWitchMessage2[ST_TankType(tank)],
-			iWitchCount, iInfected = -1;
-
+		int iWitchCount, iInfected = -1;
 		while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
 		{
 			float flWitchRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWitchRange[ST_TankType(tank)] : g_flWitchRange[ST_TankType(tank)];
@@ -206,13 +204,14 @@ public void ST_Ability(int tank)
 					}
 				}
 			}
-		}
 
-		if (iWitchMessage == 1)
-		{
-			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Witch", sTankName);
-		}
+			int iWitchMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchMessage[ST_TankType(tank)] : g_iWitchMessage2[ST_TankType(tank)];
+			if (iWitchMessage == 1)
+			{
+				char sTankName[33];
+				ST_TankName(tank, sTankName);
+				PrintToChatAll("%s %t", ST_TAG2, "Witch", sTankName);
+			}
+		}	
 	}
 }

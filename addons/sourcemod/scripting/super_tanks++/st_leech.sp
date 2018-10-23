@@ -139,7 +139,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -254,7 +254,7 @@ static void vLeechHit(int survivor, int tank, float chance, int enabled, int mes
 
 		if (iLeechMessage(tank) == message || iLeechMessage(tank) == 3)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_TAG2, "Leech", sTankName, survivor);
 		}
@@ -278,7 +278,7 @@ static void vReset2(int survivor, int tank, int message)
 
 	if (iLeechMessage(tank) == message || iLeechMessage(tank) == 3)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		ST_TankName(tank, sTankName);
 		PrintToChatAll("%s %t", ST_TAG2, "Leech2", sTankName, survivor);
 	}

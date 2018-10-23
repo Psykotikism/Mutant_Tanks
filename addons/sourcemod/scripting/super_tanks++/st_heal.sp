@@ -144,7 +144,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -267,7 +267,7 @@ public void ST_Ability(int tank)
 			{
 				case 3, 5, 6, 7:
 				{
-					char sTankName[MAX_NAME_LENGTH + 1];
+					char sTankName[33];
 					ST_TankName(tank, sTankName);
 					PrintToChatAll("%s %t", ST_TAG2, "Heal2", sTankName);
 				}
@@ -295,7 +295,7 @@ static void vHealHit(int survivor, int tank, float chance, int enabled, int mess
 
 			if (iHealMessage(tank) == message || iHealMessage(tank) == 4 || iHealMessage(tank) == 5 || iHealMessage(tank) == 6 || iHealMessage(tank) == 7)
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
+				char sTankName[33];
 				ST_TankName(tank, sTankName);
 				PrintToChatAll("%s %t", ST_TAG2, "Heal", sTankName, survivor);
 			}
@@ -357,7 +357,7 @@ public Action tTimerHeal(Handle timer, int userid)
 		{
 			case 3, 5, 6, 7:
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
+				char sTankName[33];
 				ST_TankName(iTank, sTankName);
 				PrintToChatAll("%s %t", ST_TAG2, "Heal3", sTankName);
 			}

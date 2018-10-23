@@ -130,7 +130,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -234,7 +234,7 @@ static void vVampireHit(int survivor, int tank, float chance, int enabled, int m
 		sVampireEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sVampireEffect[ST_TankType(tank)] : g_sVampireEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sVampireEffect, mode);
 
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		ST_TankName(tank, sTankName);
 		if ((message == 1 && iVampireMessage(tank) == message) || iVampireMessage(tank) == 3)
 		{

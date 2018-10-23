@@ -135,7 +135,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -255,7 +255,7 @@ public void ST_RockBreak(int tank, int rock)
 		{
 			case 3, 5, 6, 7:
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
+				char sTankName[33];
 				ST_TankName(tank, sTankName);
 				PrintToChatAll("%s %t", ST_TAG2, "Bomb2", sTankName);
 			}
@@ -277,7 +277,7 @@ static void vBombHit(int survivor, int tank, float chance, int enabled, int mess
 
 		if (iBombMessage(tank) == message || iBombMessage(tank) == 4 || iBombMessage(tank) == 5 || iBombMessage(tank) == 6 || iBombMessage(tank) == 7)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_TAG2, "Bomb", sTankName, survivor);
 		}

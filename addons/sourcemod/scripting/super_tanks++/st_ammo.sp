@@ -128,7 +128,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -292,7 +292,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, int mess
 		int iAmmoMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoMessage[ST_TankType(tank)] : g_iAmmoMessage2[ST_TankType(tank)];
 		if (iAmmoMessage == message || iAmmoMessage == 3)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_TAG2, "Ammo", sTankName, survivor);
 		}

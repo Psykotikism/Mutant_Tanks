@@ -95,7 +95,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -165,7 +165,7 @@ public void ST_Ability(int tank)
 
 		if (iFlashMessage(tank) == 1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_TAG2, "Flash", sTankName);
 		}
@@ -217,7 +217,7 @@ public Action tTimerFlash(Handle timer, DataPack pack)
 
 		if (iFlashMessage(iTank) == 1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(iTank, sTankName);
 			PrintToChatAll("%s %t", ST_TAG2, "Flash2", sTankName);
 		}

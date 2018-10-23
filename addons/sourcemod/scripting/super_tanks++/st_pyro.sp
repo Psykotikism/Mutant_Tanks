@@ -158,7 +158,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						{
 							case 3, 5, 6, 7:
 							{
-								char sTankName[MAX_NAME_LENGTH + 1];
+								char sTankName[33];
 								ST_TankName(victim, sTankName);
 								PrintToChatAll("%s %t", ST_TAG2, "Pyro2", sTankName);
 							}
@@ -176,7 +176,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -296,7 +296,7 @@ static void vPyroHit(int survivor, int tank, float chance, int enabled, int mess
 
 		if (iPyroMessage(tank) == message || iPyroMessage(tank) == 4 || iPyroMessage(tank) == 5 || iPyroMessage(tank) == 6 || iPyroMessage(tank) == 7)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_TAG2, "Pyro", sTankName);
 		}
@@ -367,7 +367,7 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 		{
 			case 3, 5, 6, 7:
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
+				char sTankName[33];
 				ST_TankName(iTank, sTankName);
 				PrintToChatAll("%s %t", ST_TAG2, "Pyro3", sTankName);
 			}

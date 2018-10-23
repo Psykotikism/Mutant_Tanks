@@ -53,7 +53,7 @@ bool g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bGeneralConfig, g_bLateLoad, 
 
 char g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sFinaleWaves[12], g_sFinaleWaves2[12], g_sParticleEffects[ST_MAXTYPES + 1][8],
 	g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5],
-	g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTankName2[ST_MAXTYPES + 1][MAX_NAME_LENGTH + 1], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80], g_sTypeRange[8], g_sTypeRange2[8];
+	g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][33], g_sTankName2[ST_MAXTYPES + 1][33], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80], g_sTypeRange[8], g_sTypeRange2[8];
 
 ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 
@@ -178,7 +178,7 @@ public any aNative_TankName(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1);
 	if (bIsTank(iTank))
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
 		SetNativeString(2, sTankName, sizeof(sTankName));
 	}
@@ -692,7 +692,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (bIsTankAllowed(iPlayer))
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
+				char sTankName[33];
 				sTankName = !g_bTankConfig[g_iTankType[iPlayer]] ? g_sTankName[g_iTankType[iPlayer]] : g_sTankName2[g_iTankType[iPlayer]];
 
 				int iAnnounceDeath = !g_bGeneralConfig ? g_iAnnounceDeath : g_iAnnounceDeath2;
@@ -851,7 +851,7 @@ public Action cmdTank(int client, int args)
 
 	if (iTankEnabled(iType) == 0)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		sTankName = !g_bTankConfig[iType] ? g_sTankName[iType] : g_sTankName2[iType];
 
 		ReplyToCommand(client, "%s %s\x04 (Tank #%d)\x01 is disabled.", ST_TAG4, sTankName, iType);
@@ -891,7 +891,7 @@ static void vTankMenu(int admin, int item)
 			continue;
 		}
 
-		char sTankName[MAX_NAME_LENGTH + 1], sMenuItem[MAX_NAME_LENGTH + 12];
+		char sTankName[33], sMenuItem[MAX_NAME_LENGTH + 12];
 		sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
 		Format(sMenuItem, sizeof(sMenuItem), "%s (Tank #%d)", sTankName, iIndex);
 		mTankMenu.AddItem(sTankName, sMenuItem);
@@ -907,7 +907,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		case MenuAction_End: delete menu;
 		case MenuAction_Select:
 		{
-			char sInfo[MAX_NAME_LENGTH + 1];
+			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
 			for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 			{
@@ -916,7 +916,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 					continue;
 				}
 
-				char sTankName[MAX_NAME_LENGTH + 1];
+				char sTankName[33];
 				sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
 				if (StrEqual(sInfo, sTankName))
 				{
@@ -1056,7 +1056,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -2541,7 +2541,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	vParticleEffects(iTank);
 	vThrowInterval(iTank, flThrowInterval(iTank));
 
-	char sCurrentName[MAX_NAME_LENGTH + 1], sTankName[MAX_NAME_LENGTH + 1];
+	char sCurrentName[33], sTankName[33];
 	GetClientName(iTank, sCurrentName, sizeof(sCurrentName));
 	if (StrEqual(sCurrentName, ""))
 	{

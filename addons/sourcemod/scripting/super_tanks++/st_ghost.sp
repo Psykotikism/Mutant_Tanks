@@ -153,7 +153,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -271,7 +271,7 @@ public void ST_Ability(int tank)
 			{
 				case 3, 5, 6, 7:
 				{
-					char sTankName[MAX_NAME_LENGTH + 1];
+					char sTankName[33];
 					ST_TankName(tank, sTankName);
 					PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
 				}
@@ -316,7 +316,7 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, int mes
 
 		if (iGhostMessage(tank) == message || iGhostMessage(tank) == 4 || iGhostMessage(tank) == 5 || iGhostMessage(tank) == 6 || iGhostMessage(tank) == 7)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_TAG2, "Ghost", sTankName, survivor);
 		}
@@ -569,7 +569,7 @@ public Action tTimerStopGhost(Handle timer, int userid)
 	{
 		case 3, 5, 6, 7:
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(iTank, sTankName);
 			PrintToChatAll("%s %t", ST_TAG2, "Ghost3", sTankName);
 		}

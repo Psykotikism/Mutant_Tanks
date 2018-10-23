@@ -172,7 +172,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -309,7 +309,7 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 			int iIdleMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iIdleMessage[ST_TankType(tank)] : g_iIdleMessage2[ST_TankType(tank)];
 			if (iIdleMessage == message || iIdleMessage == 3)
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
+				char sTankName[33];
 				ST_TankName(tank, sTankName);
 				PrintToChatAll("%s %t", ST_TAG2, "Idle", sTankName, survivor);
 			}

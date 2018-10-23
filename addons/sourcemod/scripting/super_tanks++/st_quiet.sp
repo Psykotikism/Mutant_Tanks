@@ -168,7 +168,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName, true))
 		{
@@ -296,7 +296,7 @@ static void vQuietHit(int survivor, int tank, float chance, int enabled, int mes
 
 		if (iQuietMessage(tank) == message || iQuietMessage(tank) == 3)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_TAG2, "Quiet", sTankName, survivor);
 		}
@@ -374,7 +374,7 @@ public Action tTimerStopQuiet(Handle timer, DataPack pack)
 
 	if (iQuietMessage(iTank) == iQuietChat || iQuietMessage(iTank) == 3)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		ST_TankName(iTank, sTankName);
 		PrintToChatAll("%s %t", ST_TAG2, "Quiet2", sTankName, iSurvivor);
 	}
