@@ -1,5 +1,5 @@
 # Information
-> There is information about each setting and ability below.
+> There is information about each setting and ability below. Everything you need to know about each ability/setting is below.
 
 - Maximum types: 500
 - Ability count: 65
