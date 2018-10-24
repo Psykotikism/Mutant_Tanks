@@ -121,7 +121,9 @@ public any aNative_SpawnTank(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
 	if (bIsValidClient(iTank))
 	{
-		vTank(iTank, iType);
+		char sTankName[33];
+		IntToString(iType, sTankName, sizeof(sTankName));
+		vTank(iTank, sTankName);
 	}
 }
 
@@ -849,7 +851,8 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (iTankEnabled(iType) == 0)
+	iType = iClamp(iType, iGetMinType(), iGetMaxType());
+	if (IsCharNumeric(iType) && iTankEnabled(iType) == 0)
 	{
 		char sTankName[33];
 		sTankName = !g_bTankConfig[iType] ? g_sTankName[iType] : g_sTankName2[iType];
@@ -859,14 +862,44 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, iType, iMode);
+	vTank(client, sType, iMode);
 
 	return Plugin_Handled;
 }
 
-static void vTank(int admin, int type, int mode = 0)
+static void vTank(int admin, char[] type, int mode = 0)
 {
-	g_iType = type;
+	int iType = StringToInt(type);
+	if (iType != 0)
+	{
+		g_iType = iClamp(iType, iGetMinType(), iGetMaxType());
+	}
+	else
+	{
+		int iTypeCount;
+		for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
+		{
+			char sTankName[33];
+			sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
+			if (iTankEnabled(iIndex) == 0 || StrContains(sTankName, type, false) == -1)
+			{
+				continue;
+			}
+
+			g_iType = iIndex;
+			iTypeCount++;
+		}
+
+		if (iTypeCount == 0)
+		{
+			PrintToChat(admin, "%s No\x05 Tank types\x03 matched that name. Request failed...", ST_TAG3);
+			return;
+		}
+		else if (iTypeCount > 1)
+		{
+			PrintToChat(admin, "%s Multiple\x05 Tank types\x03 matched that name. Selecting latest match...", ST_TAG3);
+		}
+	}
 
 	char sParameter[32];
 
@@ -920,7 +953,9 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
 				if (StrEqual(sInfo, sTankName))
 				{
-					vTank(param1, iIndex);
+					char sType[33];
+					IntToString(iIndex, sType, sizeof(sType));
+					vTank(param1, sType);
 				}
 			}
 
