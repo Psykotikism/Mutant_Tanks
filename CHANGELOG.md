@@ -15,19 +15,21 @@ Changes:
 4. The Meteor ability's meteorites now start fires upon exploding.
 5. The "Whirl Axis" setting now accepts different values.
 6. The Throw ability now has a 4th option - Super Tanks can throw Witches.
-7. Added the "Clone Replace".
-8. Added the "Minion Replace" setting.
-9. Added the "Throw Chance" setting.
-10. Added the "Witch Chance" setting.
-11. Removed the "Meteor Damage" setting.
-12. Removed the "Track Mode" setting.
-13. Removed some redundant code from the core plugin.
+7. Added the "Clone Replace" setting.
+8. Added the "Cloud Chance" setting.
+9. Added the "Minion Replace" setting.
+10. Added the "Regen Chance" setting.
+11. Added the "Shield Chance" setting.
+12. Added the "Throw Chance" setting.
+13. Added the "Witch Chance" setting.
+14. Removed the "Meteor Damage" setting.
+15. Removed the "Track Mode" setting.
+16. Removed some redundant code from the core plugin.
 
 Files:
 
-1. Updated config file with new settings and setting changes.
+1. Updated config file and translation file.
 2. Added a license inside the source code for each plugin and include file because why not.
-3. Updated translation file with a new phrase for the Throw ability.
 
 ## Version 8.44 (October 16, 2018)
 

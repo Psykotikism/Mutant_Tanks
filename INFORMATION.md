@@ -1281,6 +1281,12 @@
 			// 1: ON
 			"Ability Message"				"0"
 
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Cloud Chance"					"33.3"
+
 			// The Super Tank's clouds do this much damage.
 			// --
 			// Minimum: 1.0
@@ -4169,6 +4175,12 @@
 			// 1: ON
 			"Ability Message"				"0"
 
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Regen Chance"					"33.3"
+
 			// The Super Tank regenerates this much health each time.
 			// --
 			// Minimum: -65535
@@ -4596,6 +4608,12 @@
 			// 0: OFF
 			// 1: ON
 			"Ability Message"				"0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Shield Chance"					"33.3"
 
 			// This is the Super Tank's shield's color.
 			// --

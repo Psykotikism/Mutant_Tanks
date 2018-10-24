@@ -219,8 +219,8 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		}
 		"Jump Ability"
 		{
-			"Ability Enabled"		"2" // The Tank jumps periodically and makes survivors jump uncontrollably.
-			"Ability Message"		"5" // Notify players when they jump uncontrollably and when the Tank is jumping periodically.
+			"Ability Enabled"		"2" // The Tank jumps periodically.
+			"Ability Message"		"1" // Notify players when the Tank is jumping periodically.
 			"Jump Height"			"300.0" // How high off the ground the Tank can jump.
 			"Jump Interval"			"1.0" // How often the Tank jumps.
 		}
