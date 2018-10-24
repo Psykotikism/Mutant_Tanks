@@ -754,7 +754,12 @@ Target filters:
 Commands:
 
 ```
+sm_tank
+
+Valid inputs:
+
 1. sm_tank <type 1*-500*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 500 though.)
+2. sm_tank <type name*> *The plugin will attempt to match the name with any of the Super Tank types' names. (Partial names are acceptable. If more than 1 match is found, the latest match will be chosen. If 0 matches are found, the command cancels the request.)
 ```
 
 ### Configuration

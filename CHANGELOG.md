@@ -9,27 +9,29 @@ Bug fixes:
 
 Changes:
 
-1. Moved some stock functions from include file to some of the module plugins.
-2. Lowered the "Tank Name" setting's character limit from 128 to 32.
-3. The Meteor ability's meteorites no longer push players back when exploding.
-4. The Meteor ability's meteorites now start fires upon exploding.
-5. The "Whirl Axis" setting now accepts different values.
-6. The Throw ability now has a 4th option - Super Tanks can throw Witches.
-7. Added the "Clone Replace" setting.
-8. Added the "Cloud Chance" setting.
-9. Added the "Minion Replace" setting.
-10. Added the "Regen Chance" setting.
-11. Added the "Shield Chance" setting.
-12. Added the "Throw Chance" setting.
-13. Added the "Witch Chance" setting.
-14. Removed the "Meteor Damage" setting.
-15. Removed the "Track Mode" setting.
-16. Removed some redundant code from the core plugin.
+1. The sm_tank command now accepts partial name matches as input values. (Example: sm_tank "boss")
+2. Moved some stock functions from include file to some of the module plugins.
+3. Lowered the "Tank Name" setting's character limit from 128 to 32.
+4. The Meteor ability's meteorites no longer push players back when exploding.
+5. The Meteor ability's meteorites now start fires upon exploding.
+6. The "Whirl Axis" setting now accepts different values.
+7. The Throw ability now has a 4th option - Super Tanks can throw Witches.
+8. Added the "Clone Replace" setting.
+9. Added the "Cloud Chance" setting.
+10. Added the "Minion Replace" setting.
+11. Added the "Regen Chance" setting.
+12. Added the "Shield Chance" setting.
+13. Added the "Throw Chance" setting.
+14. Added the "Witch Chance" setting.
+15. Removed the "Meteor Damage" setting.
+16. Removed the "Track Mode" setting.
+17. Removed some redundant code from the core plugin.
 
 Files:
 
-1. Updated config file and translation file.
-2. Added a license inside the source code for each plugin and include file because why not.
+1. Updated config file
+2. Updated translation file.
+3. Added a license inside the source code for each plugin and include file because why not.
 
 ## Version 8.44 (October 16, 2018)
 
