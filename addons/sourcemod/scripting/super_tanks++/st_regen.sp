@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ **/
 
 // Super Tanks++: Regen Ability
 #include <sourcemod>
@@ -32,7 +32,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bRegen[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-float g_flRegenInterval[ST_MAXTYPES + 1], g_flRegenInterval2[ST_MAXTYPES + 1];
+float g_flRegenChance[ST_MAXTYPES + 1], g_flRegenChance2[ST_MAXTYPES + 1], g_flRegenInterval[ST_MAXTYPES + 1], g_flRegenInterval2[ST_MAXTYPES + 1];
 
 int g_iRegenAbility[ST_MAXTYPES + 1], g_iRegenAbility2[ST_MAXTYPES + 1], g_iRegenHealth[ST_MAXTYPES + 1], g_iRegenHealth2[ST_MAXTYPES + 1], g_iRegenLimit[ST_MAXTYPES + 1], g_iRegenLimit2[ST_MAXTYPES + 1], g_iRegenMessage[ST_MAXTYPES + 1], g_iRegenMessage2[ST_MAXTYPES + 1];
 
@@ -107,6 +107,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRegenAbility[iIndex] = iClamp(g_iRegenAbility[iIndex], 0, 1);
 				g_iRegenMessage[iIndex] = kvSuperTanks.GetNum("Regen Ability/Ability Message", 0);
 				g_iRegenMessage[iIndex] = iClamp(g_iRegenMessage[iIndex], 0, 1);
+				g_flRegenChance[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Chance", 33.3);
+				g_flRegenChance[iIndex] = flClamp(g_flRegenChance[iIndex], 0.1, 100.0);
 				g_iRegenHealth[iIndex] = kvSuperTanks.GetNum("Regen Ability/Regen Health", 1);
 				g_iRegenHealth[iIndex] = iClamp(g_iRegenHealth[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_flRegenInterval[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Interval", 1.0);
@@ -122,6 +124,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRegenAbility2[iIndex] = iClamp(g_iRegenAbility2[iIndex], 0, 1);
 				g_iRegenMessage2[iIndex] = kvSuperTanks.GetNum("Regen Ability/Ability Message", g_iRegenMessage[iIndex]);
 				g_iRegenMessage2[iIndex] = iClamp(g_iRegenMessage2[iIndex], 0, 1);
+				g_flRegenChance2[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Chance", g_flRegenChance[iIndex]);
+				g_flRegenChance2[iIndex] = flClamp(g_flRegenChance2[iIndex], 0.1, 100.0);
 				g_iRegenHealth2[iIndex] = kvSuperTanks.GetNum("Regen Ability/Regen Health", g_iRegenHealth[iIndex]);
 				g_iRegenHealth2[iIndex] = iClamp(g_iRegenHealth2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_flRegenInterval2[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Duration", g_flRegenInterval[iIndex]);
@@ -203,6 +207,12 @@ public Action tTimerRegen(Handle timer, int userid)
 		}
 
 		return Plugin_Stop;
+	}
+
+	float flRegenChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flRegenChance[ST_TankType(iTank)] : g_flRegenChance2[ST_TankType(iTank)];
+	if (GetRandomFloat(0.1, 100.0) > flRegenChance)
+	{
+		return Plugin_Continue;
 	}
 
 	int iHealth = GetClientHealth(iTank),

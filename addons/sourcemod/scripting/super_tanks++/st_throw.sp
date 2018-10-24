@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ **/
 
 // Super Tanks++: Throw Ability
 #include <sourcemod>
@@ -138,33 +138,40 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_RockThrow(int tank, int rock)
 {
-	if (iThrowAbility(tank) == 1)
+	float flThrowChance = !g_bTankConfig[ST_TankType(tank)] ? g_flThrowChance[ST_TankType(tank)] : g_flThrowChance2[ST_TankType(tank)];
+	if (GetRandomFloat(0.1, 100.0) <= flThrowChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		DataPack dpCarThrow;
-		CreateDataTimer(0.1, tTimerCarThrow, dpCarThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpCarThrow.WriteCell(EntIndexToEntRef(rock));
-		dpCarThrow.WriteCell(GetClientUserId(tank));
-	}
-	else if (iThrowAbility(tank) == 2)
-	{
-		DataPack dpInfectedThrow;
-		CreateDataTimer(0.1, tTimerInfectedThrow, dpInfectedThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpInfectedThrow.WriteCell(EntIndexToEntRef(rock));
-		dpInfectedThrow.WriteCell(GetClientUserId(tank));
-	}
-	else if (iThrowAbility(tank) == 3)
-	{
-		DataPack dpSelfThrow;
-		CreateDataTimer(0.1, tTimerSelfThrow, dpSelfThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpSelfThrow.WriteCell(EntIndexToEntRef(rock));
-		dpSelfThrow.WriteCell(GetClientUserId(tank));
-	}
-	else if (iThrowAbility(tank) == 4)
-	{
-		DataPack dpWitchThrow;
-		CreateDataTimer(0.1, tTimerWitchThrow, dpWitchThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpWitchThrow.WriteCell(EntIndexToEntRef(rock));
-		dpWitchThrow.WriteCell(GetClientUserId(tank));
+		switch (iThrowAbility(tank))
+		{
+			case 1:
+			{
+				DataPack dpCarThrow;
+				CreateDataTimer(0.1, tTimerCarThrow, dpCarThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpCarThrow.WriteCell(EntIndexToEntRef(rock));
+				dpCarThrow.WriteCell(GetClientUserId(tank));
+			}
+			case 2:
+			{
+				DataPack dpInfectedThrow;
+				CreateDataTimer(0.1, tTimerInfectedThrow, dpInfectedThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpInfectedThrow.WriteCell(EntIndexToEntRef(rock));
+				dpInfectedThrow.WriteCell(GetClientUserId(tank));
+			}
+			case 3:
+			{
+				DataPack dpSelfThrow;
+				CreateDataTimer(0.1, tTimerSelfThrow, dpSelfThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpSelfThrow.WriteCell(EntIndexToEntRef(rock));
+				dpSelfThrow.WriteCell(GetClientUserId(tank));
+			}
+			case 4:
+			{
+				DataPack dpWitchThrow;
+				CreateDataTimer(0.1, tTimerWitchThrow, dpWitchThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpWitchThrow.WriteCell(EntIndexToEntRef(rock));
+				dpWitchThrow.WriteCell(GetClientUserId(tank));
+			}
+		}
 	}
 }
 

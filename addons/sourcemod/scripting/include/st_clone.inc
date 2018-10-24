@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ **/
 
 // Super Tanks++: Clone Ability
 #if defined _supertankspluspluscloneability_included
@@ -15,12 +15,13 @@
 #endif
 #define _supertankspluspluscloneability_included
 
-/* Returns whether the clone can use abilities.
+/**
+ * Returns whether the clone can use abilities.
  *
  * @param tank				Client index of the Tank.
  * @param clone				Checks whether "st_clone.smx" is installed.
  * @return					True if clone can use abilities, false otherwise.
- */
+ **/
 native bool ST_CloneAllowed(int tank, bool clone);
 
 public SharedPlugin __pl_supertankspluspluscloneability = 
