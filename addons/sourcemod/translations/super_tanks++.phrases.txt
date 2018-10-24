@@ -649,6 +649,11 @@
 		"#format"		"{1:s}"
 		"en"			"{1} threw itself!"
 	}
+	"Throw4"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} threw a Witch!"
+	}
 	"Track"
 	{
 		"#format"		"{1:s}"
@@ -998,7 +1003,7 @@
 	}
 	"Tank #74"
 	{
-		"en"			"This Tank can convert nearby common infected into Witches."
+		"en"			"This Tank can convert nearby common infected into Witches and throw some at survivors too."
 	}
 	"Tank #75"
 	{
