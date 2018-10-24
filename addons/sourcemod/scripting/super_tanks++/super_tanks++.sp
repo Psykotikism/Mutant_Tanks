@@ -831,6 +831,7 @@ public Action cmdTank(int client, int args)
 	GetCmdArg(2, sMode, sizeof(sMode));
 	int iMode = StringToInt(sMode);
 
+	iType = iClamp(iType, iGetMinType(), iGetMaxType());
 	if (args < 1)
 	{
 		if (IsVoteInProgress())
@@ -844,14 +845,13 @@ public Action cmdTank(int client, int args)
 
 		return Plugin_Handled;
 	}
-	else if (iType < iGetMinType() || iType > iGetMaxType() || iMode < 0 || iMode > 1 || args > 2)
+	else if ((IsCharNumeric(iType) && (iType < iGetMinType() || iType > iGetMaxType())) || iMode < 0 || iMode > 1 || args > 2)
 	{
 		ReplyToCommand(client, "%s Usage: sm_tank <type %d-%d> <0: spawn at crosshair|1: spawn automatically>", ST_TAG2, iGetMinType(), iGetMaxType());
 
 		return Plugin_Handled;
 	}
 
-	iType = iClamp(iType, iGetMinType(), iGetMaxType());
 	if (IsCharNumeric(iType) && iTankEnabled(iType) == 0)
 	{
 		char sTankName[33];
