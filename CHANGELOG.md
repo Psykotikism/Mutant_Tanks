@@ -15,10 +15,10 @@ Changes:
 4. The Meteor ability's meteorites now start fires upon exploding.
 5. The "Whirl Axis" setting now accepts different values.
 6. The Throw ability now has a 4th option - Super Tanks can throw Witches.
-7. Added the "Clone Replace" setting which determines if the Clone ability replaces clones with new ones when they die.
-8. Added the "Minion Replace" setting which determines if the Minion ability replaces minions with new ones when they die.
-9. Added the "Throw Chance" setting to determine how often the Super Tank can throw stuff.
-10. Added the "Witch Chance" setting to determine how often the Super Tank can convert nearby common infected into Witch minions.
+7. Added the "Clone Replace".
+8. Added the "Minion Replace" setting.
+9. Added the "Throw Chance" setting.
+10. Added the "Witch Chance" setting.
 11. Removed the "Meteor Damage" setting.
 12. Removed the "Track Mode" setting.
 13. Removed some redundant code from the core plugin.

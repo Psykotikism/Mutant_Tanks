@@ -5572,7 +5572,7 @@
 			// --
 			// Minimum: 0.1 (Lowest chance)
 			// Maximum: 100.0 (Highest chance)
-			"Witch Chance"					"33.0"
+			"Witch Chance"					"33.3"
 
 			// The Super Tank's Witch minion causes this much damage per hit.
 			// --
