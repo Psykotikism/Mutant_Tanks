@@ -9,21 +9,25 @@ Bug fixes:
 
 Changes:
 
-1. The "Whirl Axis" setting now accepts different values.
-2. Moved some stock functions from include file to some of the module plugins.
-3. Lowered the "Tank Name" setting's character limit from 128 to 32.
-4. The Meteor ability's meteorites no longer push players back when exploding.
-5. The Meteor ability's meteorites now start fires upon exploding.
-6. Added the "Clone Replace" setting which determines if the Clone ability replaces clones with new ones when they die.
-7. Added the "Minion Replace" setting which determines if the Minion ability replaces minions with new ones when they die.
-8. Removed the "Meteor Damage" setting.
-9. Removed the "Track Mode" setting.
-10. Removed some redundant code from the core plugin.
+1. Moved some stock functions from include file to some of the module plugins.
+2. Lowered the "Tank Name" setting's character limit from 128 to 32.
+3. The Meteor ability's meteorites no longer push players back when exploding.
+4. The Meteor ability's meteorites now start fires upon exploding.
+5. The "Whirl Axis" setting now accepts different values.
+6. The Throw ability now has a 4th option - Super Tanks can throw Witches.
+7. Added the "Clone Replace" setting which determines if the Clone ability replaces clones with new ones when they die.
+8. Added the "Minion Replace" setting which determines if the Minion ability replaces minions with new ones when they die.
+9. Added the "Throw Chance" setting to determine how often the Super Tank can throw stuff.
+10. Added the "Witch Chance" setting to determine how often the Super Tank can convert nearby common infected into Witch minions.
+11. Removed the "Meteor Damage" setting.
+12. Removed the "Track Mode" setting.
+13. Removed some redundant code from the core plugin.
 
 Files:
 
 1. Updated config file with new settings and setting changes.
 2. Added a license inside the source code for each plugin and include file because why not.
+3. Updated translation file with a new phrase for the Throw ability.
 
 ## Version 8.44 (October 16, 2018)
 

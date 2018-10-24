@@ -26,6 +26,9 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 
 ### Notes
 1. I do not provide support for local/listen servers but the plugin and its modules should still work properly on them.
+2. I will not help you with installing or troubleshooting problems on your part.
+3. If you get errors from SourceMod itself, that is your problem, not mine.
+4. MAKE SURE YOU MEET ALL THE REQUIREMENTS AND FOLLOW THE INSTALLATION GUIDE PROPERLY.
 
 ### Installation
 1. Delete files from old versions of the plugin.

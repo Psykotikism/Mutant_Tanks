@@ -5060,7 +5060,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank throws cars, special infected, or itself.
+		// The Super Tank throws cars, special infected, itself, or Witches.
 		// Requires "st_throw.smx" to be installed.
 		"Throw Ability"
 		{
@@ -5070,6 +5070,7 @@
 			// 1: ON, the Super Tank throws cars.
 			// 2: ON, the Super Tank throws special infected.
 			// 3: ON, the Super Tank throws itself.
+			// 4: ON, the Super Tank throws Witches.
 			"Ability Enabled"				"0"
 
 			// Display a message whenever the ability activate/deactivate.
@@ -5078,10 +5079,7 @@
 			// 1: ON, display message only when "Ability Enabled" is set to 1.
 			// 2: ON, display message only when "Ability Enabled" is set to 2.
 			// 3: ON, display message only when "Ability Enabled" is set to 3.
-			// 4: ON, display message when 1 or 2 apply.
-			// 5: ON, display message when 1 or 3 apply.
-			// 6: ON, display message when 2 or 3 apply.
-			// 7: ON, display message when 1, 2, or 3 apply.
+			// 4: ON, display message only when "Ability Enabled" is set to 4.
 			"Ability Message"				"0"
 
 			// The Super Tank throws these cars.
@@ -5093,6 +5091,12 @@
 			// 2: Car that looks like a Chevrolet Impala SS.
 			// 3: Car that looks like a Sixth Generation Chevrolet Impala.
 			"Throw Car Options"				"123"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Throw Chance"					"33.3"
 
 			// The Super Tank throws these special infected.
 			// Combine numbers in any order for different results.
@@ -5563,6 +5567,12 @@
 			// Minimum: 1
 			// Maximum: 25
 			"Witch Amount"					"3"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Witch Chance"					"33.0"
 
 			// The Super Tank's Witch minion causes this much damage per hit.
 			// --
