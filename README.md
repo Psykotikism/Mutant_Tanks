@@ -570,7 +570,7 @@ Forwards:
  * Use this forward for any passive abilities.
  *
  * @param tank			Client index of the Tank.
- */
+ **/
 forward void ST_Ability(int tank);
 
 /**
@@ -578,7 +578,7 @@ forward void ST_Ability(int tank);
  * Use this forward to trigger any features/abilities/settings when a Super Tank evolves.
  *
  * @param tank			Client index of the Tank.
- */
+ **/
 forward void ST_BossStage(int tank);
 
 /**
@@ -587,7 +587,7 @@ forward void ST_BossStage(int tank);
  *
  * @param savepath		The savepath of the config.
  * @param main			Checks whether the main config or a custom config is being used.
- */
+ **/
 forward void ST_Configs(const char[] savepath, bool main);
 
 /**
@@ -596,13 +596,13 @@ forward void ST_Configs(const char[] savepath, bool main);
  *
  * @param event			Handle to the event.
  * @param name			String containing the name of the event.
- */
+ **/
 forward void ST_Event(Event event, const char[] name);
 
 /**
  * Called when the core plugin is unloaded/reloaded.
  * Use this forward to get rid of any modifications to Tanks or survivors.
- */
+ **/
 forward void ST_PluginEnd();
 
 /**
@@ -611,7 +611,7 @@ forward void ST_PluginEnd();
  * If you plan on using this to activate an ability, use ST_Ability() instead.
  *
  * @param tank			Client index of the Tank.
- */
+ **/
 forward void ST_Preset(int tank);
 
 /**
@@ -620,7 +620,7 @@ forward void ST_Preset(int tank);
  *
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
- */
+ **/
 forward void ST_RockBreak(int tank, int rock);
 
 /**
@@ -629,7 +629,7 @@ forward void ST_RockBreak(int tank, int rock);
  *
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
- */
+ **/
 forward void ST_RockThrow(int tank, int rock);
 ```
 
@@ -639,21 +639,21 @@ Natives:
  * Returns the maximum value of the "Type Range" setting.
  *
  * @return				The maximum value of the "Type Range" setting.
- */
+ **/
 native int ST_MaxType();
 
 /**
  * Returns the minimum value of the "Type Range" setting.
  *
  * @return				The minimum value of the "Type Range" setting.
- */
+ **/
 native int ST_MinType();
 
 /**
  * Returns if the core plugin is enabled.
  *
  * @return				True if core plugin is enabled, false otherwise.
- */
+ **/
 native bool ST_PluginEnabled();
 
 /**
@@ -662,7 +662,7 @@ native bool ST_PluginEnabled();
  * @param tank			Client index of the Tank.
  * @param type			Super Tank type.
  * @error				Invalid client index or type is 0.
- */
+ **/
 native void ST_SpawnTank(int tank, int type);
 
 /**
@@ -671,7 +671,7 @@ native void ST_SpawnTank(int tank, int type);
  * @param tank			Client index of the Tank.
  * @return				True if Tank is allowed to be a Super Tank, false otherwise.
  * @error				Invalid client index.
- */
+ **/
 native bool ST_TankAllowed(int tank);
 
 /**
@@ -680,7 +680,7 @@ native bool ST_TankAllowed(int tank);
  * @param type			Super Tank type.
  * @return				True if the type has a chance of spawning, false otherwise.
  * @error				Type is 0.
- */
+ **/
 native bool ST_TankChance(int type);
 
 /**
@@ -692,7 +692,7 @@ native bool ST_TankChance(int type);
  * @param green			Buffer to store the green color in.
  * @param blue			Buffer to store the blue color in.
  * @error				Invalid client index.
- */
+ **/
 native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] blue);
 
 /**
@@ -701,7 +701,7 @@ native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] b
  * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom name in.
  * @error				Invalid client index.
- */
+ **/
 native void ST_TankName(int tank, char[] buffer);
 
 /**
@@ -710,14 +710,14 @@ native void ST_TankName(int tank, char[] buffer);
  * @param tank			Client index of the Tank.
  * @return				The Tank's Super Tank type.
  * @error				Invalid client index.
- */
+ **/
 native int ST_TankType(int tank);
 
 /**
  * Returns the current finale wave.
  *
  * @return				The current finale wave.
- */
+ **/
 native int ST_TankWave();
 
 /**
@@ -726,15 +726,16 @@ native int ST_TankWave();
  * @param type			Super Tank type.
  * @return				True if the type is enabled, false otherwise.
  * @error				Type is 0.
- */
+ **/
 native bool ST_TypeEnabled(int type);
 
-/* Returns whether the clone can use abilities.
+/**
+ * Returns whether the clone can use abilities.
  *
  * @param tank				Client index of the Tank.
  * @param clone				Checks whether "st_clone.smx" is installed.
  * @return					True if clone can use abilities, false otherwise.
- */
+ **/
 native bool ST_CloneAllowed(int tank, bool clone);
 ```
 
