@@ -156,7 +156,7 @@ public any aNative_TankColors(Handle plugin, int numParams)
 	{
 		char sSet[2][16], sTankColors[28], sRGB[4][4];
 		sTankColors = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankColors[g_iTankType[iTank]] : g_sTankColors2[g_iTankType[iTank]];
-		TrimString(sTankColors);
+		ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
 		int iMode = GetNativeCell(2);
@@ -166,9 +166,6 @@ public any aNative_TankColors(Handle plugin, int numParams)
 			case 2: ExplodeString(sSet[1], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 		}
 
-		TrimString(sRGB[0]);
-		TrimString(sRGB[1]);
-		TrimString(sRGB[2]);
 		SetNativeString(3, sRGB[0], sizeof(sRGB[]));
 		SetNativeString(4, sRGB[1], sizeof(sRGB[]));
 		SetNativeString(5, sRGB[2], sizeof(sRGB[]));
@@ -395,7 +392,7 @@ public void OnConfigsExecuted()
 
 		char sGameType[2049], sTypes[64][32];
 		g_cvSTGameTypes.GetString(sGameType, sizeof(sGameType));
-		TrimString(sGameType);
+		ReplaceString(sGameType, sizeof(sGameType), " ", "");
 		ExplodeString(sGameType, ",", sTypes, sizeof(sTypes), sizeof(sTypes[]));
 
 		for (int iMode = 0; iMode < sizeof(sTypes); iMode++)
@@ -770,18 +767,15 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 				char sNumbers[3][4], sFinaleWaves[12];
 				sFinaleWaves = !g_bGeneralConfig ? g_sFinaleWaves : g_sFinaleWaves2;
-				TrimString(sFinaleWaves);
+				ReplaceString(sFinaleWaves, sizeof(sFinaleWaves), " ", "");
 				ExplodeString(sFinaleWaves, ",", sNumbers, sizeof(sNumbers), sizeof(sNumbers[]));
 
-				TrimString(sNumbers[0]);
 				int iWave = (sNumbers[0][0] != '\0') ? StringToInt(sNumbers[0]) : 1;
 				iWave = iClamp(iWave, 1, 9999999999);
 
-				TrimString(sNumbers[1]);
 				int iWave2 = (sNumbers[1][0] != '\0') ? StringToInt(sNumbers[1]) : 2;
 				iWave2 = iClamp(iWave2, 1, 9999999999);
 
-				TrimString(sNumbers[2]);
 				int iWave3 = (sNumbers[2][0] != '\0') ? StringToInt(sNumbers[2]) : 3;
 				iWave3 = iClamp(iWave3, 1, 9999999999);
 
@@ -876,7 +870,7 @@ static void vTank(int admin, char[] type, int mode = 0)
 	}
 	else
 	{
-		int iTypeCount;
+		int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 		for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 		{
 			char sTankName[33];
@@ -887,6 +881,7 @@ static void vTank(int admin, char[] type, int mode = 0)
 			}
 
 			g_iType = iIndex;
+			iTankTypes[iTypeCount + 1] = iIndex;
 			iTypeCount++;
 		}
 
@@ -897,7 +892,8 @@ static void vTank(int admin, char[] type, int mode = 0)
 		}
 		else if (iTypeCount > 1)
 		{
-			PrintToChat(admin, "%s Multiple\x05 Tank types\x03 matched that name. Selecting latest match...", ST_TAG3);
+			PrintToChat(admin, "%s Multiple\x05 Tank types\x03 matched that name. Selecting a random match...", ST_TAG3);
+			g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
 		}
 	}
 
@@ -1381,38 +1377,31 @@ static void vSetColor(int tank, int value)
 {
 	char sSet[2][16], sTankColors[28], sRGB[4][4], sGlow[3][4];
 	sTankColors = !g_bTankConfig[value] ? g_sTankColors[value] : g_sTankColors2[value];
-	TrimString(sTankColors);
+	ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
 	ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 
-	TrimString(sRGB[0]);
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
 	iRed = iClamp(iRed, 0, 255);
 
-	TrimString(sRGB[1]);
 	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
 	iGreen = iClamp(iGreen, 0, 255);
 
-	TrimString(sRGB[2]);
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
 	iBlue = iClamp(iBlue, 0, 255);
 
-	TrimString(sRGB[3]);
 	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
 	iAlpha = iClamp(iAlpha, 0, 255);
 
 	ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 
-	TrimString(sGlow[0]);
 	int iRed2 = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
 	iRed2 = iClamp(iRed2, 0, 255);
 
-	TrimString(sGlow[1]);
 	int iGreen2 = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
 	iGreen2 = iClamp(iGreen2, 0, 255);
 
-	TrimString(sGlow[2]);
 	int iBlue2 = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
 	iBlue2 = iClamp(iBlue2, 0, 255);
 
@@ -1434,125 +1423,99 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 	{
 		char sSet[5][16], sPropsColors[80], sRGB[4][4], sRGB2[4][4], sRGB3[4][4], sRGB4[4][4], sRGB5[4][4];
 		sPropsColors = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsColors[g_iTankType[tank]] : g_sPropsColors2[g_iTankType[tank]];
-		TrimString(sPropsColors);
+		ReplaceString(sPropsColors, sizeof(sPropsColors), " ", "");
 		ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 
-		TrimString(sRGB[0]);
 		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 
-		TrimString(sRGB[1]);
 		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 
-		TrimString(sRGB[2]);
 		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 
-		TrimString(sRGB[3]);
 		int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
 		iAlpha = iClamp(iAlpha, 0, 255);
 
 		ExplodeString(sSet[1], ",", sRGB2, sizeof(sRGB2), sizeof(sRGB2[]));
 
-		TrimString(sRGB2[0]);
 		int iRed2 = (sRGB2[0][0] != '\0') ? StringToInt(sRGB2[0]) : 255;
 		iRed2 = iClamp(iRed2, 0, 255);
 
-		TrimString(sRGB2[1]);
 		int iGreen2 = (sRGB2[1][0] != '\0') ? StringToInt(sRGB2[1]) : 255;
 		iGreen2 = iClamp(iGreen2, 0, 255);
 
-		TrimString(sRGB2[2]);
 		int iBlue2 = (sRGB2[2][0] != '\0') ? StringToInt(sRGB2[2]) : 255;
 		iBlue2 = iClamp(iBlue2, 0, 255);
 
-		TrimString(sRGB2[3]);
 		int iAlpha2 = (sRGB2[3][0] != '\0') ? StringToInt(sRGB2[3]) : 255;
 		iAlpha2 = iClamp(iAlpha2, 0, 255);
 
 		ExplodeString(sSet[2], ",", sRGB3, sizeof(sRGB3), sizeof(sRGB3[]));
 
-		TrimString(sRGB3[0]);
 		int iRed3 = (sRGB3[0][0] != '\0') ? StringToInt(sRGB3[0]) : 255;
 		iRed3 = iClamp(iRed3, 0, 255);
 
-		TrimString(sRGB3[1]);
 		int iGreen3 = (sRGB3[1][0] != '\0') ? StringToInt(sRGB3[1]) : 255;
 		iGreen3 = iClamp(iGreen3, 0, 255);
 
-		TrimString(sRGB3[2]);
 		int iBlue3 = (sRGB3[2][0] != '\0') ? StringToInt(sRGB3[2]) : 255;
 		iBlue3 = iClamp(iBlue3, 0, 255);
 
-		TrimString(sRGB3[3]);
 		int iAlpha3 = (sRGB3[3][0] != '\0') ? StringToInt(sRGB3[3]) : 255;
 		iAlpha3 = iClamp(iAlpha3, 0, 255);
 
 		ExplodeString(sSet[3], ",", sRGB4, sizeof(sRGB4), sizeof(sRGB4[]));
 
-		TrimString(sRGB4[0]);
 		int iRed4 = (sRGB4[0][0] != '\0') ? StringToInt(sRGB4[0]) : 255;
 		iRed4 = iClamp(iRed4, 0, 255);
 
-		TrimString(sRGB4[1]);
 		int iGreen4 = (sRGB4[1][0] != '\0') ? StringToInt(sRGB4[1]) : 255;
 		iGreen4 = iClamp(iGreen4, 0, 255);
 
-		TrimString(sRGB4[2]);
 		int iBlue4 = (sRGB4[2][0] != '\0') ? StringToInt(sRGB4[2]) : 255;
 		iBlue4 = iClamp(iBlue4, 0, 255);
 
-		TrimString(sRGB4[3]);
 		int iAlpha4 = (sRGB4[3][0] != '\0') ? StringToInt(sRGB4[3]) : 255;
 		iAlpha4 = iClamp(iAlpha4, 0, 255);
 
 		ExplodeString(sSet[4], ",", sRGB5, sizeof(sRGB5), sizeof(sRGB5[]));
 
-		TrimString(sRGB5[0]);
 		int iRed5 = (sRGB5[0][0] != '\0') ? StringToInt(sRGB5[0]) : 255;
 		iRed5 = iClamp(iRed5, 0, 255);
 
-		TrimString(sRGB5[1]);
 		int iGreen5 = (sRGB5[1][0] != '\0') ? StringToInt(sRGB5[1]) : 255;
 		iGreen5 = iClamp(iGreen5, 0, 255);
 
-		TrimString(sRGB5[2]);
 		int iBlue5 = (sRGB5[2][0] != '\0') ? StringToInt(sRGB5[2]) : 255;
 		iBlue5 = iClamp(iBlue5, 0, 255);
 
-		TrimString(sRGB5[3]);
 		int iAlpha5 = (sRGB5[3][0] != '\0') ? StringToInt(sRGB5[3]) : 255;
 		iAlpha5 = iClamp(iAlpha5, 0, 255);
 
 		char sSet2[6][4], sPropsChance[35], sPropsAttached[7];
 		sPropsChance = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsChance[g_iTankType[tank]] : g_sPropsChance2[g_iTankType[tank]];
-		TrimString(sPropsChance);
+		ReplaceString(sPropsChance, sizeof(sPropsChance), " ", "");
 		ExplodeString(sPropsChance, ",", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 
-		TrimString(sSet2[0]);
 		float flChance = (sSet2[0][0] != '\0') ? StringToFloat(sSet2[0]) : 33.3;
 		flChance = flClamp(flChance, 0.1, 100.0);
 
-		TrimString(sSet2[1]);
 		float flChance2 = (sSet2[1][0] != '\0') ? StringToFloat(sSet2[1]) : 33.3;
 		flChance2 = flClamp(flChance2, 0.1, 100.0);
 
-		TrimString(sSet2[2]);
 		float flChance3 = (sSet2[2][0] != '\0') ? StringToFloat(sSet2[2]) : 33.3;
 		flChance3 = flClamp(flChance3, 0.1, 100.0);
 
-		TrimString(sSet2[3]);
 		float flChance4 = (sSet2[3][0] != '\0') ? StringToFloat(sSet2[3]) : 33.3;
 		flChance4 = flClamp(flChance4, 0.1, 100.0);
 
-		TrimString(sSet2[4]);
 		float flChance5 = (sSet2[4][0] != '\0') ? StringToFloat(sSet2[4]) : 33.3;
 		flChance5 = flClamp(flChance5, 0.1, 100.0);
 
-		TrimString(sSet2[5]);
 		float flChance6 = (sSet2[5][0] != '\0') ? StringToFloat(sSet2[5]) : 33.3;
 		flChance6 = flClamp(flChance6, 0.1, 100.0);
 
@@ -1932,7 +1895,7 @@ static int iGetMaxType()
 {
 	char sTypeRange[8], sRange[2][4];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
-	TrimString(sTypeRange);
+	ReplaceString(sTypeRange, sizeof(sTypeRange), " ", "");
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
 	int iMaxType = (sRange[1][0] != '\0') ? StringToInt(sRange[1]) : ST_MAXTYPES;
@@ -1945,7 +1908,7 @@ static int iGetMinType()
 {
 	char sTypeRange[8], sRange[2][4];
 	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
-	TrimString(sTypeRange);
+	ReplaceString(sTypeRange, sizeof(sTypeRange), " ", "");
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
 	int iMinType = (sRange[0][0] != '\0') ? StringToInt(sRange[0]) : 1;
@@ -2067,24 +2030,20 @@ public Action tTimerBlurEffect(Handle timer, int userid)
 
 	char sSet[2][16], sTankColors[28], sRGB[4][4];
 	sTankColors = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankColors[g_iTankType[iTank]] : g_sTankColors2[g_iTankType[iTank]];
-	TrimString(sTankColors);
+	ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
 	ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 
-	TrimString(sRGB[0]);
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
 	iRed = iClamp(iRed, 0, 255);
 
-	TrimString(sRGB[1]);
 	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
 	iGreen = iClamp(iGreen, 0, 255);
 
-	TrimString(sRGB[2]);
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
 	iBlue = iClamp(iBlue, 0, 255);
 
-	TrimString(sRGB[3]);
 	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
 	iAlpha = iClamp(iAlpha, 0, 255);
 
@@ -2459,44 +2418,36 @@ public Action tTimerTankTypeUpdate(Handle timer)
 
 						char sSet[4][6], sBossHealthStages[25], sSet2[4][5], sBossTypes[20];
 						sBossHealthStages = !g_bTankConfig[g_iTankType[iTank]] ? g_sBossHealthStages[g_iTankType[iTank]] : g_sBossHealthStages2[g_iTankType[iTank]];
-						TrimString(sBossHealthStages);
+						ReplaceString(sBossHealthStages, sizeof(sBossHealthStages), " ", "");
 						ExplodeString(sBossHealthStages, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-						TrimString(sSet[0]);
 						int iBossHealth = (sSet[0][0] != '\0') ? StringToInt(sSet[0]) : 5000;
 						iBossHealth = iClamp(iBossHealth, 1, ST_MAXHEALTH);
 
-						TrimString(sSet[1]);
 						int iBossHealth2 = (sSet[1][0] != '\0') ? StringToInt(sSet[1]) : 2500;
 						iBossHealth2 = iClamp(iBossHealth2, 1, ST_MAXHEALTH);
 
-						TrimString(sSet[2]);
 						int iBossHealth3 = (sSet[2][0] != '\0') ? StringToInt(sSet[2]) : 1500;
 						iBossHealth3 = iClamp(iBossHealth3, 1, ST_MAXHEALTH);
 
-						TrimString(sSet[3]);
 						int iBossHealth4 = (sSet[3][0] != '\0') ? StringToInt(sSet[3]) : 1000;
 						iBossHealth4 = iClamp(iBossHealth4, 1, ST_MAXHEALTH);
 
 						int iBossStages = !g_bTankConfig[g_iTankType[iTank]] ? g_iBossStages[g_iTankType[iTank]] : g_iBossStages2[g_iTankType[iTank]];
 
 						sBossTypes = !g_bTankConfig[ST_TankType(iTank)] ? g_sBossTypes[ST_TankType(iTank)] : g_sBossTypes2[ST_TankType(iTank)];
-						TrimString(sBossTypes);
+						ReplaceString(sBossTypes, sizeof(sBossTypes), " ", "");
 						ExplodeString(sBossTypes, ",", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 
-						TrimString(sSet2[0]);
 						int iType = (sSet2[0][0] != '\0') ? StringToInt(sSet2[0]) : 2;
 						iType = iClamp(iType, 1, 500);
 
-						TrimString(sSet2[1]);
 						int iType2 = (sSet2[1][0] != '\0') ? StringToInt(sSet2[1]) : 3;
 						iType2 = iClamp(iType2, 1, 500);
 
-						TrimString(sSet2[2]);
 						int iType3 = (sSet2[2][0] != '\0') ? StringToInt(sSet2[2]) : 4;
 						iType3 = iClamp(iType3, 1, 500);
 
-						TrimString(sSet2[3]);
 						int iType4 = (sSet2[3][0] != '\0') ? StringToInt(sSet2[3]) : 5;
 						iType4 = iClamp(iType4, 1, 500);
 
@@ -2698,31 +2649,27 @@ public Action tTimerRockThrow(Handle timer, int entity)
 
 	char sSet[5][16], sPropsColors[80], sRGB[4][4], sRockEffects[5];
 	sPropsColors = !g_bTankConfig[g_iTankType[iThrower]] ? g_sPropsColors[g_iTankType[iThrower]] : g_sPropsColors2[g_iTankType[iThrower]];
-	TrimString(sPropsColors);
+	ReplaceString(sPropsColors, sizeof(sPropsColors), " ", "");
 	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
 	ExplodeString(sSet[3], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 
-	TrimString(sRGB[0]);
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
 	iRed = iClamp(iRed, 0, 255);
 
-	TrimString(sRGB[1]);
 	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
 	iGreen = iClamp(iGreen, 0, 255);
 
-	TrimString(sRGB[2]);
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
 	iBlue = iClamp(iBlue, 0, 255);
 
-	TrimString(sRGB[3]);
 	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
 	iAlpha = iClamp(iAlpha, 0, 255);
 
 	SetEntityRenderColor(entity, iRed, iGreen, iBlue, iAlpha);
 
 	sRockEffects = !g_bTankConfig[g_iTankType[iThrower]] ? g_sRockEffects[g_iTankType[iThrower]] : g_sRockEffects2[g_iTankType[iThrower]];
-	TrimString(sRockEffects);
+	ReplaceString(sRockEffects, sizeof(sRockEffects), " ", "");
 	if (iRockEffect(iThrower) == 1 && sRockEffects[0] != '\0')
 	{
 		DataPack dpRockEffects;

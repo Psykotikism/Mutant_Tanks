@@ -348,6 +348,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
+
 			TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
 
 			if (iThrowMessage(iTank) == 2)
@@ -397,6 +398,7 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 
 		NormalizeVector(flVelocity, flVelocity);
 		ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
+
 		TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
 
 		if (iThrowMessage(iTank) == 3)
@@ -448,9 +450,10 @@ public Action tTimerWitchThrow(Handle timer, DataPack pack)
 
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
-			TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
 
 			DispatchSpawn(iWitch);
+			TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
+
 			ActivateEntity(iWitch);
 			SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
 		}

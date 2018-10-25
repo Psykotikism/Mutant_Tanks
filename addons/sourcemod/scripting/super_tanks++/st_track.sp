@@ -376,20 +376,17 @@ static void vTrack(int rock)
 
 	char sSet[2][16], sTankColors[28], sGlow[3][4];
 	sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
-	TrimString(sTankColors);
+	ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
 	ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
 	ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 
-	TrimString(sGlow[0]);
 	int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
 	iRed = iClamp(iRed, 0, 255);
 
-	TrimString(sGlow[1]);
 	int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
 	iGreen = iClamp(iGreen, 0, 255);
 
-	TrimString(sGlow[2]);
 	int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
 	iBlue = iClamp(iBlue, 0, 255);
 

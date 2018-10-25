@@ -381,94 +381,76 @@ public Action tTimerGhost(Handle timer, int userid)
 	char sSet[2][16], sTankColors[28], sRGB[4][4], sSet2[5][16], sPropsColors[80], sProps[4][4],
 		sProps2[4][4], sProps3[4][4], sProps4[4][4], sProps5[4][4];
 	sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
-	TrimString(sTankColors);
+	ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
 	ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 
-	TrimString(sRGB[0]);
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
 	iRed = iClamp(iRed, 0, 255);
 
-	TrimString(sRGB[1]);
 	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
 	iGreen = iClamp(iGreen, 0, 255);
 
-	TrimString(sRGB[2]);
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
 	iBlue = iClamp(iBlue, 0, 255);
 
 	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
-	TrimString(sPropsColors);
+	ReplaceString(sPropsColors, sizeof(sPropsColors), " ", "");
 	ExplodeString(sPropsColors, "|", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 
 	ExplodeString(sSet2[0], ",", sProps, sizeof(sProps), sizeof(sProps[]));
 
-	TrimString(sProps[0]);
 	int iRed2 = (sProps[0][0] != '\0') ? StringToInt(sProps[0]) : 255;
 	iRed2 = iClamp(iRed2, 0, 255);
 
-	TrimString(sProps[1]);
 	int iGreen2 = (sProps[1][0] != '\0') ? StringToInt(sProps[1]) : 255;
 	iGreen2 = iClamp(iGreen2, 0, 255);
 
-	TrimString(sProps[2]);
 	int iBlue2 = (sProps[2][0] != '\0') ? StringToInt(sProps[2]) : 255;
 	iBlue2 = iClamp(iBlue2, 0, 255);
 
 	ExplodeString(sSet2[1], ",", sProps2, sizeof(sProps2), sizeof(sProps2[]));
 
-	TrimString(sProps2[0]);
 	int iRed3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[0]) : 255;
 	iRed3 = iClamp(iRed3, 0, 255);
 
-	TrimString(sProps2[1]);
 	int iGreen3 = (sProps2[1][0] != '\0') ? StringToInt(sProps2[1]) : 255;
 	iGreen3 = iClamp(iGreen3, 0, 255);
 
-	TrimString(sProps2[2]);
 	int iBlue3 = (sProps2[2][0] != '\0') ? StringToInt(sProps2[2]) : 255;
 	iBlue3 = iClamp(iBlue3, 0, 255);
 
 	ExplodeString(sSet2[2], ",", sProps3, sizeof(sProps3), sizeof(sProps3[]));
 
-	TrimString(sProps3[0]);
 	int iRed4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[0]) : 255;
 	iRed4 = iClamp(iRed4, 0, 255);
 
-	TrimString(sProps3[1]);
 	int iGreen4 = (sProps3[1][0] != '\0') ? StringToInt(sProps3[1]) : 255;
 	iGreen4 = iClamp(iGreen4, 0, 255);
 
-	TrimString(sProps3[2]);
 	int iBlue4 = (sProps3[2][0] != '\0') ? StringToInt(sProps3[2]) : 255;
 	iBlue4 = iClamp(iBlue4, 0, 255);
 
 	ExplodeString(sSet2[3], ",", sProps4, sizeof(sProps4), sizeof(sProps4[]));
 
-	TrimString(sProps4[0]);
 	int iRed5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[0]) : 255;
 	iRed5 = iClamp(iRed5, 0, 255);
 
-	TrimString(sProps4[1]);
 	int iGreen5 = (sProps4[1][0] != '\0') ? StringToInt(sProps4[1]) : 255;
 	iGreen5 = iClamp(iGreen5, 0, 255);
 
-	TrimString(sProps4[2]);
 	int iBlue5 = (sProps4[2][0] != '\0') ? StringToInt(sProps4[2]) : 255;
 	iBlue5 = iClamp(iBlue5, 0, 255);
 
 	ExplodeString(sSet2[4], ",", sProps5, sizeof(sProps5), sizeof(sProps5[]));
 
-	TrimString(sProps5[0]);
 	int iRed6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[0]) : 255;
 	iRed6 = iClamp(iRed6, 0, 255);
 
-	TrimString(sProps5[1]);
 	int iGreen6 = (sProps5[1][0] != '\0') ? StringToInt(sProps5[1]) : 255;
 	iGreen6 = iClamp(iGreen6, 0, 255);
 
-	TrimString(sProps5[2]);
 	int iBlue6 = (sProps5[2][0] != '\0') ? StringToInt(sProps5[2]) : 255;
 	iBlue6 = iClamp(iBlue6, 0, 255);
 

@@ -176,11 +176,11 @@ static void vMedic(int tank)
 				char sHealth[6][6], sMedicHealth[36], sMaxHealth[6][6], sMedicMaxHealth[36];
 
 				sMedicHealth = !g_bTankConfig[ST_TankType(tank)] ? g_sMedicHealth[ST_TankType(tank)] : g_sMedicHealth2[ST_TankType(tank)];
-				TrimString(sMedicHealth);
+				ReplaceString(sMedicHealth, sizeof(sMedicHealth), " ", "");
 				ExplodeString(sMedicHealth, ",", sHealth, sizeof(sHealth), sizeof(sHealth[]));
 
 				sMedicMaxHealth = !g_bTankConfig[ST_TankType(tank)] ? g_sMedicMaxHealth[ST_TankType(tank)] : g_sMedicMaxHealth2[ST_TankType(tank)];
-				TrimString(sMedicMaxHealth);
+				ReplaceString(sMedicMaxHealth, sizeof(sMedicMaxHealth), " ", "");
 				ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
 
 				int iHealth = GetClientHealth(iInfected),

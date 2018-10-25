@@ -278,18 +278,15 @@ static void vShield(int tank, bool shield)
 	{
 		char sSet[3][4], sShieldColor[12];
 		sShieldColor = !g_bTankConfig[ST_TankType(tank)] ? g_sShieldColor[ST_TankType(tank)] : g_sShieldColor2[ST_TankType(tank)];
-		TrimString(sShieldColor);
+		ReplaceString(sShieldColor, sizeof(sShieldColor), " ", "");
 		ExplodeString(sShieldColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-		TrimString(sSet[0]);
 		int iRed = (sSet[0][0] != '\0') ? StringToInt(sSet[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 
-		TrimString(sSet[1]);
 		int iGreen = (sSet[1][0] != '\0') ? StringToInt(sSet[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 
-		TrimString(sSet[2]);
 		int iBlue = (sSet[2][0] != '\0') ? StringToInt(sSet[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 

@@ -137,7 +137,7 @@ public void ST_Event(Event event, const char[] name)
 		{
 			char sItems[5][64], sItemLoadout[325];
 			sItemLoadout = !g_bTankConfig[ST_TankType(iTank)] ? g_sItemLoadout[ST_TankType(iTank)] : g_sItemLoadout2[ST_TankType(iTank)];
-			TrimString(sItemLoadout);
+			ReplaceString(sItemLoadout, sizeof(sItemLoadout), " ", "");
 			ExplodeString(sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
 
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)

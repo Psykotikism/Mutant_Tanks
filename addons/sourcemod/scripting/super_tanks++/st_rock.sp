@@ -257,15 +257,11 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 
 	char sRadius[2][6], sRockRadius[11];
 	sRockRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sRockRadius[ST_TankType(iTank)] : g_sRockRadius2[ST_TankType(iTank)];
-	TrimString(sRockRadius);
+	ReplaceString(sRockRadius, sizeof(sRockRadius), " ", "");
 	ExplodeString(sRockRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
 
-	TrimString(sRadius[0]);
-	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -5.0;
-
-	TrimString(sRadius[1]);
-	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 5.0;
-
+	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -5.0,
+		flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 5.0;
 	flMin = flClamp(flMin, -5.0, 0.0);
 	flMax = flClamp(flMax, 0.0, 5.0);
 
