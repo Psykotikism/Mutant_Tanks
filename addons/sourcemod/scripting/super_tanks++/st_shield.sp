@@ -426,6 +426,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
+
 			DispatchSpawn(iPropane);
 			TeleportEntity(iPropane, flPos, NULL_VECTOR, flVelocity);
 		}

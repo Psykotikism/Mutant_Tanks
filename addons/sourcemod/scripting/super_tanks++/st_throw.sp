@@ -452,10 +452,10 @@ public Action tTimerWitchThrow(Handle timer, DataPack pack)
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 
 			DispatchSpawn(iWitch);
-			TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
-
 			ActivateEntity(iWitch);
 			SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
+
+			TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
 		}
 
 		if (iThrowMessage(iTank) == 4)

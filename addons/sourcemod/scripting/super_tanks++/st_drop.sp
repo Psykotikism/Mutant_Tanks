@@ -405,7 +405,7 @@ public void ST_Event(Event event, const char[] name)
 
 					if (bIsValidGame())
 					{
-						SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale(iTank));
+						SetEntPropFloat(iDrop , Prop_Send, "m_flModelScale", flDropWeaponScale(iTank));
 					}
 
 					int iAmmo, iClip;
@@ -470,7 +470,7 @@ public void ST_Event(Event event, const char[] name)
 					DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[iTank]]);
 					TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 					DispatchSpawn(iDrop);
-					SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale(iTank));
+					SetEntPropFloat(iDrop, Prop_Send, "m_flModelScale", flDropWeaponScale(iTank));
 
 					if (iDropMessage == 1)
 					{
@@ -683,7 +683,7 @@ public Action tTimerDrop(Handle timer, int userid)
 
 		if (bIsValidGame())
 		{
-			SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flScale);
+			SetEntPropFloat(iDrop , Prop_Send, "m_flModelScale", flScale);
 		}
 
 		g_iDrop[iTank] = iDrop;
