@@ -887,12 +887,12 @@ static void vTank(int admin, char[] type, int mode = 0)
 
 		if (iTypeCount == 0)
 		{
-			PrintToChat(admin, "%s No\x05 Tank types\x03 matched that name. Request failed...", ST_TAG3);
+			PrintToChat(admin, "%s %t", ST_TAG3, "RequestFailed");
 			return;
 		}
 		else if (iTypeCount > 1)
 		{
-			PrintToChat(admin, "%s Multiple\x05 Tank types\x03 matched that name. Selecting a random match...", ST_TAG3);
+			PrintToChat(admin, "%s %t", ST_TAG3, "MultipleMatches");
 			g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
 		}
 	}
