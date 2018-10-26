@@ -129,7 +129,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -204,7 +204,7 @@ public void ST_Ability(int tank)
 
 						DispatchSpawn(iWitch);
 						ActivateEntity(iWitch);
-						SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", tank);
+						SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", tank);
 					}
 				}
 			}

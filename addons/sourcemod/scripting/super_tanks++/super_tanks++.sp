@@ -1089,7 +1089,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -1804,7 +1804,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				}
 				else
 				{
-					PrintToChatAll("%s No note found for this Super Tank.", ST_TAG3);
+					PrintToChatAll("%s %t", ST_TAG3, "NoNote");
 				}
 			}
 		}
