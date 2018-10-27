@@ -561,6 +561,7 @@ public Action tTimerDrop(Handle timer, int userid)
 	vDeleteDrop(iTank);
 
 	int iDropValue, iPosition;
+
 	switch (iDropMode(iTank))
 	{
 		case 0: iDropValue = GetRandomInt(1, 31);
@@ -569,6 +570,7 @@ public Action tTimerDrop(Handle timer, int userid)
 	}
 
 	int iWeapon = bIsValidGame() ? iDropValue : GetRandomInt(1, 6);
+
 	switch (GetRandomInt(1, 2))
 	{
 		case 1: iPosition = 1;
@@ -581,6 +583,7 @@ public Action tTimerDrop(Handle timer, int userid)
 	if (bIsValidEntity(iDrop))
 	{
 		float flPos[3], flAngles[3];
+
 		char sPosition[32];
 
 		SetEntityModel(iDrop, g_sWeaponModel[iWeapon]);
