@@ -1,11 +1,12 @@
 # Changelog
 
-## Version 8.45 (October 26, 2018)
+## Version 8.45 (October 31, 2018)
 
 Bug fixes:
 
 1. Fixed the Clone and Minion abilities not resetting properly.
 2. Fixed the Witch ability spamming chat.
+3. Fixed the "Ability Message" settings not working properly.
 
 Changes:
 
@@ -16,16 +17,17 @@ Changes:
 5. The Meteor ability's meteorites now start fires upon exploding.
 6. The "Whirl Axis" setting now accepts different values.
 7. The Throw ability now has a 4th option - Super Tanks can throw Witches.
-8. Added the "Clone Replace" setting.
-9. Added the "Cloud Chance" setting.
-10. Added the "Minion Replace" setting.
-11. Added the "Regen Chance" setting.
-12. Added the "Shield Chance" setting.
-13. Added the "Throw Chance" setting.
-14. Added the "Witch Chance" setting.
-15. Removed the "Meteor Damage" setting.
-16. Removed the "Track Mode" setting.
-17. Removed some redundant code from the core plugin.
+8. Several abilities' "Ability Message" setting now accepts different values.
+9. Added the "Clone Replace" setting.
+10. Added the "Cloud Chance" setting.
+11. Added the "Minion Replace" setting.
+12. Added the "Regen Chance" setting.
+13. Added the "Shield Chance" setting.
+14. Added the "Throw Chance" setting.
+15. Added the "Witch Chance" setting.
+16. Removed the "Meteor Damage" setting.
+17. Removed the "Track Mode" setting.
+18. Removed some redundant code from the core plugin.
 
 Files:
 

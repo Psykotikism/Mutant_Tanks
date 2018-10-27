@@ -597,6 +597,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -604,14 +605,13 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Acid Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message only when "Acid Rock Break" is on.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Acid Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
+			// 3: Display message only when "Acid Rock Break" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -688,6 +688,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -695,10 +696,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Aimless Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Aimless Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -772,6 +775,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -779,10 +783,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Ammo Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Ammo Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -857,6 +863,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -864,10 +871,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Blind Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Blind Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -948,6 +957,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -955,14 +965,13 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Bomb Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message only when "Bomb Rock Break" is on.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Bomb Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
+			// 3: Display message only when "Bomb Rock Break" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -1038,6 +1047,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -1045,10 +1055,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Bury Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Bury Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -1129,6 +1141,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -1136,10 +1149,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Choke Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Choke Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -1381,6 +1396,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -1388,10 +1404,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Drug Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Drug Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -1472,6 +1490,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -1479,10 +1498,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Drunk Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Drunk Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -1568,6 +1589,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -1575,10 +1597,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Electric Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Electric Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -1671,6 +1695,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -1678,10 +1703,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Enforce Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Enforce Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -1767,6 +1794,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -1774,14 +1802,13 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Fire Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message only when "Fire Rock Break" is on.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Fire Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
+			// 3: Display message only when "Fire Rock Break" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -1908,6 +1935,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -1915,10 +1943,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Fling Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Fling Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -2069,6 +2099,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -2076,14 +2107,13 @@
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Ghost Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Ghost Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -2231,6 +2261,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -2238,14 +2269,13 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Gravity Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Gravity Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -2340,6 +2370,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -2347,14 +2378,13 @@
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Heal Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Heal Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"				"0"
 
 			// The distance between an infected and the Super Tank needed to trigger the ability.
@@ -2468,6 +2498,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -2475,10 +2506,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Hurt Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Hurt Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -2565,6 +2598,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -2572,10 +2606,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Hypno Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Hypno Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The bullet damage reflected towards survivors by the Super Tank is divided by this value.
@@ -2692,6 +2728,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -2699,10 +2736,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Ice Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Ice Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -2777,6 +2816,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -2784,10 +2824,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Idle Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Idle Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -2856,6 +2898,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -2863,10 +2906,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Invert Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Invert Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -2992,6 +3037,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -2999,14 +3045,13 @@
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Jump Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Jump Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -3093,6 +3138,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -3100,10 +3146,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Kamikaze Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Kamikaze Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -3172,6 +3220,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -3179,10 +3228,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Lag Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Lag Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -3256,6 +3307,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -3263,10 +3315,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Leech Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Leech Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -3557,6 +3611,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -3564,10 +3619,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Nullify Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Nullify Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -3645,6 +3702,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -3652,14 +3710,13 @@
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Panic Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Panic Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -3734,6 +3791,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -3741,10 +3799,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Pimp Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Pimp Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The amount of pimp slaps the Super Tank can give to survivors.
@@ -3831,6 +3891,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -3838,10 +3899,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Puke Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Puke Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -3913,6 +3976,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -3920,14 +3984,13 @@
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Pyro Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Pyro Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"				"0"
 
 			// The Super Tank's speed boost value when on fire.
@@ -4014,6 +4077,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -4021,10 +4085,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Quiet Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Quiet Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -4099,6 +4165,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -4106,10 +4173,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Recoil Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Recoil Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -4293,6 +4362,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -4300,10 +4370,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Restart Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Restart Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -4442,6 +4514,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -4449,10 +4522,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Rocket Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Rocket Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -4526,6 +4601,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -4533,10 +4609,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Shake Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Shake Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -4666,6 +4744,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -4673,10 +4752,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Shove Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Shove Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -4757,6 +4838,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -4764,10 +4846,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Smash Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Smash Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -4836,6 +4920,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -4843,10 +4928,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Smite Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Smite Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -5011,6 +5098,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -5018,10 +5106,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Stun Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Stun Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -5094,11 +5184,14 @@
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Ability Enabled" is set to 1.
-			// 2: ON, display message only when "Ability Enabled" is set to 2.
-			// 3: ON, display message only when "Ability Enabled" is set to 3.
-			// 4: ON, display message only when "Ability Enabled" is set to 4.
+			// Combine numbers in any order for different results.
+			// Character limit: 4
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Ability Enabled" is set to 1.
+			// 2: Display message only when "Ability Enabled" is set to 2.
+			// 3: Display message only when "Ability Enabled" is set to 3.
+			// 4: Display message only when "Ability Enabled" is set to 4.
 			"Ability Message"				"0"
 
 			// The Super Tank throws these cars.
@@ -5106,6 +5199,7 @@
 			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 6
 			// --
+			// Empty: Pick randomly between 1-3.
 			// 1: Small car with a big hatchback.
 			// 2: Car that looks like a Chevrolet Impala SS.
 			// 3: Car that looks like a Sixth Generation Chevrolet Impala.
@@ -5206,6 +5300,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -5213,10 +5308,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Vampire Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Vampire Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -5296,6 +5393,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -5303,10 +5401,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Vision Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Vision Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -5392,6 +5492,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -5399,14 +5500,13 @@
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Warp Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Warp Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -5487,6 +5587,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -5494,10 +5595,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Whirl Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is on.
-			// 3: ON, display message when both are on.
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Whirl Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"				"0"
 
 			// The axis of the Super Tank's whirl effect.
@@ -5505,6 +5608,7 @@
 			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 6
 			// --
+			// Empty: Pick randomly between 1-3.
 			// 1: X-Axis
 			// 2: Y-Axis
 			// 3: Z-Axis
@@ -5643,6 +5747,7 @@
 			// Combine numbers in any order for different results.
 			// Character limit: 3
 			// --
+			// Empty: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
@@ -5650,14 +5755,13 @@
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
-			// 0: OFF
-			// 1: ON, display message only when "Zombie Hit" is on.
-			// 2: ON, display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: ON, display message only when "Ability Enabled" is set to 2 or 3.
-			// 4: ON, display message when 1 and 2 apply.
-			// 5: ON, display message when 1 and 3 apply.
-			// 6: ON, display message when 2 and 3 apply.
-			// 7: ON, display message when 1, 2, and 3 apply.
+			// Combine numbers in any order for different results.
+			// Character limit: 3
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Zombie Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
+			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"				"0"
 
 			// The Super Tank spawns this many common infected at once.
