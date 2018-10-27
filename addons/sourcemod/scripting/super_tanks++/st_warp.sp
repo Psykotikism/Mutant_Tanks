@@ -39,11 +39,11 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1], g_bWarp[MAXPLAYERS + 1];
 
-char g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sWarpEffect[ST_MAXTYPES + 1][4], g_sWarpEffect2[ST_MAXTYPES + 1][4];
+char g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sWarpEffect[ST_MAXTYPES + 1][4], g_sWarpEffect2[ST_MAXTYPES + 1][4], g_sWarpMessage[ST_MAXTYPES + 1][4], g_sWarpMessage2[ST_MAXTYPES + 1][4];
 
 float g_flWarpChance[ST_MAXTYPES + 1], g_flWarpChance2[ST_MAXTYPES + 1], g_flWarpInterval[ST_MAXTYPES + 1], g_flWarpInterval2[ST_MAXTYPES + 1], g_flWarpRange[ST_MAXTYPES + 1], g_flWarpRange2[ST_MAXTYPES + 1], g_flWarpRangeChance[ST_MAXTYPES + 1], g_flWarpRangeChance2[ST_MAXTYPES + 1];
 
-int g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iWarpAbility[ST_MAXTYPES + 1], g_iWarpAbility2[ST_MAXTYPES + 1], g_iWarpHit[ST_MAXTYPES + 1], g_iWarpHit2[ST_MAXTYPES + 1], g_iWarpHitMode[ST_MAXTYPES + 1], g_iWarpHitMode2[ST_MAXTYPES + 1], g_iWarpMessage[ST_MAXTYPES + 1], g_iWarpMessage2[ST_MAXTYPES + 1], g_iWarpMode[ST_MAXTYPES + 1], g_iWarpMode2[ST_MAXTYPES + 1];
+int g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iWarpAbility[ST_MAXTYPES + 1], g_iWarpAbility2[ST_MAXTYPES + 1], g_iWarpHit[ST_MAXTYPES + 1], g_iWarpHit2[ST_MAXTYPES + 1], g_iWarpHitMode[ST_MAXTYPES + 1], g_iWarpHitMode2[ST_MAXTYPES + 1], g_iWarpMode[ST_MAXTYPES + 1], g_iWarpMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -131,14 +131,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vWarpHit(victim, attacker, flWarpChance(attacker), iWarpHit(attacker), 1, "1");
+				vWarpHit(victim, attacker, flWarpChance(attacker), iWarpHit(attacker), "1", "1");
 			}
 		}
 		else if ((iWarpHitMode(victim) == 0 || iWarpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vWarpHit(attacker, victim, flWarpChance(victim), iWarpHit(victim), 1, "2");
+				vWarpHit(attacker, victim, flWarpChance(victim), iWarpHit(victim), "1", "2");
 			}
 		}
 	}
@@ -164,8 +164,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWarpAbility[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", 0);
 				g_iWarpAbility[iIndex] = iClamp(g_iWarpAbility[iIndex], 0, 3);
 				kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect[iIndex], sizeof(g_sWarpEffect[]), "123");
-				g_iWarpMessage[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Message", 0);
-				g_iWarpMessage[iIndex] = iClamp(g_iWarpMessage[iIndex], 0, 7);
+				kvSuperTanks.GetString("Warp Ability/Ability Message", g_sWarpMessage[iIndex], sizeof(g_sWarpMessage[]), "0");
 				g_flWarpChance[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Chance", 33.3);
 				g_flWarpChance[iIndex] = flClamp(g_flWarpChance[iIndex], 0.1, 100.0);
 				g_iWarpHit[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", 0);
@@ -191,8 +190,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWarpAbility2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", g_iWarpAbility[iIndex]);
 				g_iWarpAbility2[iIndex] = iClamp(g_iWarpAbility2[iIndex], 0, 3);
 				kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect2[iIndex], sizeof(g_sWarpEffect2[]), g_sWarpEffect[iIndex]);
-				g_iWarpMessage2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Message", g_iWarpMessage[iIndex]);
-				g_iWarpMessage2[iIndex] = iClamp(g_iWarpMessage2[iIndex], 0, 7);
+				kvSuperTanks.GetString("Warp Ability/Ability Message", g_sWarpMessage2[iIndex], sizeof(g_sWarpMessage2[]), g_sWarpMessage[iIndex]);
 				g_flWarpChance2[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Chance", g_flWarpChance[iIndex]);
 				g_flWarpChance2[iIndex] = flClamp(g_flWarpChance2[iIndex], 0.1, 100.0);
 				g_iWarpHit2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", g_iWarpHit[iIndex]);
@@ -241,7 +239,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flWarpRange)
 				{
-					vWarpHit(iSurvivor, tank, flWarpRangeChance, iWarpAbility(tank), 2, "3");
+					vWarpHit(iSurvivor, tank, flWarpRangeChance, iWarpAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -266,7 +264,7 @@ static void vReset()
 	}
 }
 
-static void vWarpHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vWarpHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
@@ -278,7 +276,9 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, int mess
 				GetClientAbsOrigin(iPlayer, flCurrentOrigin);
 				TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
 
-				if (iWarpMessage(tank) == message || iWarpMessage(tank) == 4 || iWarpMessage(tank) == 5 || iWarpMessage(tank) == 6 || iWarpMessage(tank) == 7)
+				char sWarpMessage[4];
+				sWarpMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sWarpMessage[ST_TankType(tank)] : g_sWarpMessage2[ST_TankType(tank)];
+				if (StrContains(sWarpMessage, message) != -1)
 				{
 					char sTankName[33];
 					ST_TankName(tank, sTankName);
@@ -313,11 +313,6 @@ static int iWarpHit(int tank)
 static int iWarpHitMode(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iWarpHitMode[ST_TankType(tank)] : g_iWarpHitMode2[ST_TankType(tank)];
-}
-
-static int iWarpMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iWarpMessage[ST_TankType(tank)] : g_iWarpMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerWarp(Handle timer, int userid)
@@ -370,14 +365,13 @@ public Action tTimerWarp(Handle timer, int userid)
 			TeleportEntity(iSurvivor, flTankOrigin, flTankAngles, NULL_VECTOR);
 		}
 
-		switch (iWarpMessage(iTank))
+		char sWarpMessage[4];
+		sWarpMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sWarpMessage[ST_TankType(iTank)] : g_sWarpMessage2[ST_TankType(iTank)];
+		if (StrContains(sWarpMessage, "3") != -1)
 		{
-			case 3, 5, 6, 7:
-			{
-				char sTankName[33];
-				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Warp2", sTankName);
-			}
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Warp2", sTankName);
 		}
 	}
 

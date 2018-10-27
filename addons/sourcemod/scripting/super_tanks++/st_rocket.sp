@@ -40,11 +40,11 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bRocket[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sRocketEffect[ST_MAXTYPES + 1][4], g_sRocketEffect2[ST_MAXTYPES + 1][4];
+char g_sRocketEffect[ST_MAXTYPES + 1][4], g_sRocketEffect2[ST_MAXTYPES + 1][4], g_sRocketMessage[ST_MAXTYPES + 1][3], g_sRocketMessage2[ST_MAXTYPES + 1][3];
 
 float g_flRocketChance[ST_MAXTYPES + 1], g_flRocketChance2[ST_MAXTYPES + 1], g_flRocketDelay[ST_MAXTYPES + 1], g_flRocketDelay2[ST_MAXTYPES + 1], g_flRocketRange[ST_MAXTYPES + 1], g_flRocketRange2[ST_MAXTYPES + 1], g_flRocketRangeChance[ST_MAXTYPES + 1], g_flRocketRangeChance2[ST_MAXTYPES + 1];
 
-int g_iRocket[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketAbility2[ST_MAXTYPES + 1], g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHit2[ST_MAXTYPES + 1], g_iRocketHitMode[ST_MAXTYPES + 1], g_iRocketHitMode2[ST_MAXTYPES + 1], g_iRocketMessage[ST_MAXTYPES + 1], g_iRocketMessage2[ST_MAXTYPES + 1], g_iRocketSprite = -1;
+int g_iRocket[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketAbility2[ST_MAXTYPES + 1], g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHit2[ST_MAXTYPES + 1], g_iRocketHitMode[ST_MAXTYPES + 1], g_iRocketHitMode2[ST_MAXTYPES + 1], g_iRocketSprite = -1;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -133,14 +133,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRocketHit(victim, attacker, flRocketChance(attacker), iRocketHit(attacker), 1, "1");
+				vRocketHit(victim, attacker, flRocketChance(attacker), iRocketHit(attacker), "1", "1");
 			}
 		}
 		else if ((iRocketHitMode(victim) == 0 || iRocketHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vRocketHit(attacker, victim, flRocketChance(victim), iRocketHit(victim), 1, "2");
+				vRocketHit(attacker, victim, flRocketChance(victim), iRocketHit(victim), "1", "2");
 			}
 		}
 	}
@@ -163,8 +163,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRocketAbility[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", 0);
 				g_iRocketAbility[iIndex] = iClamp(g_iRocketAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Rocket Ability/Ability Effect", g_sRocketEffect[iIndex], sizeof(g_sRocketEffect[]), "123");
-				g_iRocketMessage[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Message", 0);
-				g_iRocketMessage[iIndex] = iClamp(g_iRocketMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Rocket Ability/Ability Message", g_sRocketMessage[iIndex], sizeof(g_sRocketMessage[]), "0");
 				g_flRocketChance[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Chance", 33.3);
 				g_flRocketChance[iIndex] = flClamp(g_flRocketChance[iIndex], 0.1, 100.0);
 				g_flRocketDelay[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Delay", 1.0);
@@ -185,8 +184,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRocketAbility2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", g_iRocketAbility[iIndex]);
 				g_iRocketAbility2[iIndex] = iClamp(g_iRocketAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Rocket Ability/Ability Effect", g_sRocketEffect2[iIndex], sizeof(g_sRocketEffect2[]), g_sRocketEffect[iIndex]);
-				g_iRocketMessage2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Message", g_iRocketMessage[iIndex]);
-				g_iRocketMessage2[iIndex] = iClamp(g_iRocketMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Rocket Ability/Ability Message", g_sRocketMessage2[iIndex], sizeof(g_sRocketMessage2[]), g_sRocketMessage[iIndex]);
 				g_flRocketChance2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Chance", g_flRocketChance[iIndex]);
 				g_flRocketChance2[iIndex] = flClamp(g_flRocketChance2[iIndex], 0.1, 100.0);
 				g_flRocketDelay2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Delay", g_flRocketDelay[iIndex]);
@@ -235,7 +233,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRocketRange)
 				{
-					vRocketHit(iSurvivor, tank, flRocketRangeChance, iRocketAbility, 2, "3");
+					vRocketHit(iSurvivor, tank, flRocketRangeChance, iRocketAbility, "2", "3");
 				}
 			}
 		}
@@ -253,7 +251,7 @@ static void vReset()
 	}
 }
 
-static void vRocketHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vRocketHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bRocket[survivor])
 	{
@@ -306,7 +304,7 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, int me
 		CreateDataTimer(flRocketDelay + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
 		dpRocketDetonate.WriteCell(GetClientUserId(survivor));
 		dpRocketDetonate.WriteCell(GetClientUserId(tank));
-		dpRocketDetonate.WriteCell(message);
+		dpRocketDetonate.WriteString(message);
 		dpRocketDetonate.WriteCell(enabled);
 
 		char sRocketEffect[4];
@@ -384,7 +382,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iRocketChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bRocket[iSurvivor] = false;
@@ -411,8 +409,10 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	ForcePlayerSuicide(iSurvivor);
 	SetEntityGravity(iSurvivor, 1.0);
 
-	int iRocketMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iRocketMessage[ST_TankType(iTank)] : g_iRocketMessage2[ST_TankType(iTank)];
-	if (iRocketMessage == iRocketChat || iRocketMessage == 3)
+	char sRocketMessage[3], sMessage[3];
+	sRocketMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sRocketMessage[ST_TankType(iTank)] : g_sRocketMessage2[ST_TankType(iTank)];
+	pack.ReadString(sMessage, sizeof(sMessage));
+	if (StrContains(sRocketMessage, sMessage) != -1)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);

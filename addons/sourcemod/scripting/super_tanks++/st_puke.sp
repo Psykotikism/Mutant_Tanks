@@ -34,13 +34,13 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sPukeEffect[ST_MAXTYPES + 1][4], g_sPukeEffect2[ST_MAXTYPES + 1][4];
+char g_sPukeEffect[ST_MAXTYPES + 1][4], g_sPukeEffect2[ST_MAXTYPES + 1][4], g_sPukeMessage[ST_MAXTYPES + 1][3], g_sPukeMessage2[ST_MAXTYPES + 1][3];
 
 float g_flPukeChance[ST_MAXTYPES + 1], g_flPukeChance2[ST_MAXTYPES + 1], g_flPukeRange[ST_MAXTYPES + 1], g_flPukeRange2[ST_MAXTYPES + 1], g_flPukeRangeChance[ST_MAXTYPES + 1], g_flPukeRangeChance2[ST_MAXTYPES + 1];
 
 Handle g_hSDKPukePlayer;
 
-int g_iPukeAbility[ST_MAXTYPES + 1], g_iPukeAbility2[ST_MAXTYPES + 1], g_iPukeHit[ST_MAXTYPES + 1], g_iPukeHit2[ST_MAXTYPES + 1], g_iPukeHitMode[ST_MAXTYPES + 1], g_iPukeHitMode2[ST_MAXTYPES + 1], g_iPukeMessage[ST_MAXTYPES + 1], g_iPukeMessage2[ST_MAXTYPES + 1];
+int g_iPukeAbility[ST_MAXTYPES + 1], g_iPukeAbility2[ST_MAXTYPES + 1], g_iPukeHit[ST_MAXTYPES + 1], g_iPukeHit2[ST_MAXTYPES + 1], g_iPukeHitMode[ST_MAXTYPES + 1], g_iPukeHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -132,14 +132,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vPukeHit(victim, attacker, flPukeChance(attacker), iPukeHit(attacker), 1, "1");
+				vPukeHit(victim, attacker, flPukeChance(attacker), iPukeHit(attacker), "1", "1");
 			}
 		}
 		else if ((iPukeHitMode(victim) == 0 || iPukeHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vPukeHit(attacker, victim, flPukeChance(victim), iPukeHit(victim), 1, "2");
+				vPukeHit(attacker, victim, flPukeChance(victim), iPukeHit(victim), "1", "2");
 			}
 		}
 	}
@@ -162,8 +162,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iPukeAbility[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", 0);
 				g_iPukeAbility[iIndex] = iClamp(g_iPukeAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Puke Ability/Ability Effect", g_sPukeEffect[iIndex], sizeof(g_sPukeEffect[]), "123");
-				g_iPukeMessage[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Message", 0);
-				g_iPukeMessage[iIndex] = iClamp(g_iPukeMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Puke Ability/Ability Message", g_sPukeMessage[iIndex], sizeof(g_sPukeMessage[]), "0");
 				g_flPukeChance[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Chance", 33.3);
 				g_flPukeChance[iIndex] = flClamp(g_flPukeChance[iIndex], 0.1, 100.0);
 				g_iPukeHit[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", 0);
@@ -182,8 +181,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iPukeAbility2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", g_iPukeAbility[iIndex]);
 				g_iPukeAbility2[iIndex] = iClamp(g_iPukeAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Puke Ability/Ability Effect", g_sPukeEffect2[iIndex], sizeof(g_sPukeEffect2[]), g_sPukeEffect[iIndex]);
-				g_iPukeMessage2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Message", g_iPukeMessage[iIndex]);
-				g_iPukeMessage2[iIndex] = iClamp(g_iPukeMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Puke Ability/Ability Message", g_sPukeMessage2[iIndex], sizeof(g_sPukeMessage2[]), g_sPukeMessage[iIndex]);
 				g_flPukeChance2[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Chance", g_flPukeChance[iIndex]);
 				g_flPukeChance2[iIndex] = flClamp(g_flPukeChance2[iIndex], 0.1, 100.0);
 				g_iPukeHit2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", g_iPukeHit[iIndex]);
@@ -223,14 +221,14 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPukeRange)
 				{
-					vPukeHit(iSurvivor, tank, flPukeRangeChance, iPukeAbility(tank), 2, "3");
+					vPukeHit(iSurvivor, tank, flPukeRangeChance, iPukeAbility(tank), "2", "3");
 				}
 			}
 		}
 	}
 }
 
-static void vPukeHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vPukeHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
@@ -240,8 +238,9 @@ static void vPukeHit(int survivor, int tank, float chance, int enabled, int mess
 		sPukeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sPukeEffect[ST_TankType(tank)] : g_sPukeEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sPukeEffect, mode);
 
-		int iPukeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iPukeMessage[ST_TankType(tank)] : g_iPukeMessage2[ST_TankType(tank)];
-		if (iPukeMessage == message, iPukeMessage == 3)
+		char sPukeMessage[3];
+		sPukeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sPukeMessage[ST_TankType(tank)] : g_sPukeMessage2[ST_TankType(tank)];
+		if (StrContains(sPukeMessage, message) != -1)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);

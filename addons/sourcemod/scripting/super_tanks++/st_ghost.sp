@@ -42,11 +42,11 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bGhost[MAXPLAYERS + 1], g_bGhost2[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sGhostEffect[ST_MAXTYPES + 1][4], g_sGhostEffect2[ST_MAXTYPES + 1][4], g_sGhostWeaponSlots[ST_MAXTYPES + 1][6], g_sGhostWeaponSlots2[ST_MAXTYPES + 1][6], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
+char g_sGhostEffect[ST_MAXTYPES + 1][4], g_sGhostEffect2[ST_MAXTYPES + 1][4], g_sGhostMessage[ST_MAXTYPES + 1][4], g_sGhostMessage2[ST_MAXTYPES + 1][4], g_sGhostWeaponSlots[ST_MAXTYPES + 1][6], g_sGhostWeaponSlots2[ST_MAXTYPES + 1][6], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 
 float g_flGhostChance[ST_MAXTYPES + 1], g_flGhostChance2[ST_MAXTYPES + 1], g_flGhostFadeDelay[ST_MAXTYPES + 1], g_flGhostFadeDelay2[ST_MAXTYPES + 1], g_flGhostFadeRate[ST_MAXTYPES + 1], g_flGhostFadeRate2[ST_MAXTYPES + 1], g_flGhostRange[ST_MAXTYPES + 1], g_flGhostRange2[ST_MAXTYPES + 1], g_flGhostRangeChance[ST_MAXTYPES + 1], g_flGhostRangeChance2[ST_MAXTYPES + 1];
 
-int g_iGhostAbility[ST_MAXTYPES + 1], g_iGhostAbility2[ST_MAXTYPES + 1], g_iGhostAlpha[MAXPLAYERS + 1], g_iGhostFadeAlpha[ST_MAXTYPES + 1], g_iGhostFadeAlpha2[ST_MAXTYPES + 1], g_iGhostFadeLimit[ST_MAXTYPES + 1], g_iGhostFadeLimit2[ST_MAXTYPES + 1], g_iGhostHit[ST_MAXTYPES + 1], g_iGhostHit2[ST_MAXTYPES + 1], g_iGhostHitMode[ST_MAXTYPES + 1], g_iGhostHitMode2[ST_MAXTYPES + 1], g_iGhostMessage[ST_MAXTYPES + 1], g_iGhostMessage2[ST_MAXTYPES + 1];
+int g_iGhostAbility[ST_MAXTYPES + 1], g_iGhostAbility2[ST_MAXTYPES + 1], g_iGhostAlpha[MAXPLAYERS + 1], g_iGhostFadeAlpha[ST_MAXTYPES + 1], g_iGhostFadeAlpha2[ST_MAXTYPES + 1], g_iGhostFadeLimit[ST_MAXTYPES + 1], g_iGhostFadeLimit2[ST_MAXTYPES + 1], g_iGhostHit[ST_MAXTYPES + 1], g_iGhostHit2[ST_MAXTYPES + 1], g_iGhostHitMode[ST_MAXTYPES + 1], g_iGhostHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -134,14 +134,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vGhostHit(victim, attacker, flGhostChance(attacker), iGhostHit(attacker), 1, "1");
+				vGhostHit(victim, attacker, flGhostChance(attacker), iGhostHit(attacker), "1", "1");
 			}
 		}
 		else if ((iGhostHitMode(victim) == 0 || iGhostHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vGhostHit(attacker, victim, flGhostChance(victim), iGhostHit(victim), 1, "2");
+				vGhostHit(attacker, victim, flGhostChance(victim), iGhostHit(victim), "1", "2");
 			}
 		}
 	}
@@ -166,8 +166,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGhostAbility[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", 0);
 				g_iGhostAbility[iIndex] = iClamp(g_iGhostAbility[iIndex], 0, 3);
 				kvSuperTanks.GetString("Ghost Ability/Ability Effect", g_sGhostEffect[iIndex], sizeof(g_sGhostEffect[]), "123");
-				g_iGhostMessage[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Message", 0);
-				g_iGhostMessage[iIndex] = iClamp(g_iGhostMessage[iIndex], 0, 7);
+				kvSuperTanks.GetString("Ghost Ability/Ability Message", g_sGhostMessage[iIndex], sizeof(g_sGhostMessage[]), "0");
 				g_flGhostChance[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Chance", 33.3);
 				g_flGhostChance[iIndex] = flClamp(g_flGhostChance[iIndex], 0.1, 100.0);
 				g_iGhostFadeAlpha[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Alpha", 2);
@@ -197,8 +196,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGhostAbility2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", g_iGhostAbility[iIndex]);
 				g_iGhostAbility2[iIndex] = iClamp(g_iGhostAbility2[iIndex], 0, 3);
 				kvSuperTanks.GetString("Ghost Ability/Ability Effect", g_sGhostEffect2[iIndex], sizeof(g_sGhostEffect2[]), g_sGhostEffect[iIndex]);
-				g_iGhostMessage2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Message", g_iGhostMessage[iIndex]);
-				g_iGhostMessage2[iIndex] = iClamp(g_iGhostMessage2[iIndex], 0, 7);
+				kvSuperTanks.GetString("Ghost Ability/Ability Message", g_sGhostMessage2[iIndex], sizeof(g_sGhostMessage2[]), g_sGhostMessage[iIndex]);
 				g_flGhostChance2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Chance", g_flGhostChance[iIndex]);
 				g_flGhostChance2[iIndex] = flClamp(g_flGhostChance2[iIndex], 0.1, 100.0);
 				g_iGhostFadeAlpha2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Alpha", g_iGhostFadeAlpha[iIndex]);
@@ -252,7 +250,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flGhostRange)
 				{
-					vGhostHit(iSurvivor, tank, flGhostRangeChance, iGhostAbility(tank), 2, "3");
+					vGhostHit(iSurvivor, tank, flGhostRangeChance, iGhostAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -267,14 +265,13 @@ public void ST_Ability(int tank)
 
 			SetEntityRenderMode(tank, RENDER_TRANSCOLOR);
 
-			switch (iGhostMessage(tank))
+			char sGhostMessage[4];
+			sGhostMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sGhostMessage[ST_TankType(tank)] : g_sGhostMessage2[ST_TankType(tank)];
+			if (StrContains(sGhostMessage, "3") != -1)
 			{
-				case 3, 5, 6, 7:
-				{
-					char sTankName[33];
-					ST_TankName(tank, sTankName);
-					PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
-				}
+				char sTankName[33];
+				ST_TankName(tank, sTankName);
+				PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
 			}
 		}
 	}
@@ -291,7 +288,7 @@ static void vDropWeapon(int survivor, const char[] slots, const char[] number, i
 	}
 }
 
-static void vGhostHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vGhostHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
@@ -314,7 +311,9 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, int mes
 		sGhostEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sGhostEffect[ST_TankType(tank)] : g_sGhostEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sGhostEffect, mode);
 
-		if (iGhostMessage(tank) == message || iGhostMessage(tank) == 4 || iGhostMessage(tank) == 5 || iGhostMessage(tank) == 6 || iGhostMessage(tank) == 7)
+		char sGhostMessage[4];
+		sGhostMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sGhostMessage[ST_TankType(tank)] : g_sGhostMessage2[ST_TankType(tank)];
+		if (StrContains(sGhostMessage, message) != -1)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
@@ -354,11 +353,6 @@ static int iGhostHit(int tank)
 static int iGhostHitMode(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostHitMode[ST_TankType(tank)] : g_iGhostHitMode2[ST_TankType(tank)];
-}
-
-static int iGhostMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostMessage[ST_TankType(tank)] : g_iGhostMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerGhost(Handle timer, int userid)
@@ -547,14 +541,13 @@ public Action tTimerStopGhost(Handle timer, int userid)
 	g_bGhost2[iTank] = false;
 	g_iGhostAlpha[iTank] = 255;
 
-	switch (iGhostMessage(iTank))
+	char sGhostMessage[4];
+	sGhostMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sGhostMessage[ST_TankType(iTank)] : g_sGhostMessage2[ST_TankType(iTank)];
+	if (StrContains(sGhostMessage, "3") != -1)
 	{
-		case 3, 5, 6, 7:
-		{
-			char sTankName[33];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Ghost3", sTankName);
-		}
+		char sTankName[33];
+		ST_TankName(iTank, sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Ghost3", sTankName);
 	}
 
 	return Plugin_Continue;

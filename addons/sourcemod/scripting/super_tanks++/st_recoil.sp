@@ -34,11 +34,11 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bRecoil[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sRecoilEffect[ST_MAXTYPES + 1][4], g_sRecoilEffect2[ST_MAXTYPES + 1][4];
+char g_sRecoilEffect[ST_MAXTYPES + 1][4], g_sRecoilEffect2[ST_MAXTYPES + 1][4], g_sRecoilMessage[ST_MAXTYPES + 1][3], g_sRecoilMessage2[ST_MAXTYPES + 1][3];
 
 float g_flRecoilChance[ST_MAXTYPES + 1], g_flRecoilChance2[ST_MAXTYPES + 1], g_flRecoilDuration[ST_MAXTYPES + 1], g_flRecoilDuration2[ST_MAXTYPES + 1], g_flRecoilRange[ST_MAXTYPES + 1], g_flRecoilRange2[ST_MAXTYPES + 1], g_flRecoilRangeChance[ST_MAXTYPES + 1], g_flRecoilRangeChance2[ST_MAXTYPES + 1];
 
-int g_iRecoilAbility[ST_MAXTYPES + 1], g_iRecoilAbility2[ST_MAXTYPES + 1], g_iRecoilHit[ST_MAXTYPES + 1], g_iRecoilHit2[ST_MAXTYPES + 1], g_iRecoilHitMode[ST_MAXTYPES + 1], g_iRecoilHitMode2[ST_MAXTYPES + 1], g_iRecoilMessage[ST_MAXTYPES + 1], g_iRecoilMessage2[ST_MAXTYPES + 1];
+int g_iRecoilAbility[ST_MAXTYPES + 1], g_iRecoilAbility2[ST_MAXTYPES + 1], g_iRecoilHit[ST_MAXTYPES + 1], g_iRecoilHit2[ST_MAXTYPES + 1], g_iRecoilHitMode[ST_MAXTYPES + 1], g_iRecoilHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -121,14 +121,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRecoilHit(victim, attacker, flRecoilChance(attacker), iRecoilHit(attacker), 1, "1");
+				vRecoilHit(victim, attacker, flRecoilChance(attacker), iRecoilHit(attacker), "1", "1");
 			}
 		}
 		else if ((iRecoilHitMode(victim) == 0 || iRecoilHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vRecoilHit(attacker, victim, flRecoilChance(victim), iRecoilHit(victim), 1, "2");
+				vRecoilHit(attacker, victim, flRecoilChance(victim), iRecoilHit(victim), "1", "2");
 			}
 		}
 	}
@@ -151,8 +151,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRecoilAbility[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Enabled", 0);
 				g_iRecoilAbility[iIndex] = iClamp(g_iRecoilAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Recoil Ability/Ability Effect", g_sRecoilEffect[iIndex], sizeof(g_sRecoilEffect[]), "123");
-				g_iRecoilMessage[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Message", 0);
-				g_iRecoilMessage[iIndex] = iClamp(g_iRecoilMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Recoil Ability/Ability Message", g_sRecoilMessage[iIndex], sizeof(g_sRecoilMessage[]), "0");
 				g_flRecoilChance[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Chance", 33.3);
 				g_flRecoilChance[iIndex] = flClamp(g_flRecoilChance[iIndex], 0.1, 100.0);
 				g_flRecoilDuration[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Duration", 5.0);
@@ -173,8 +172,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRecoilAbility2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Enabled", g_iRecoilAbility[iIndex]);
 				g_iRecoilAbility2[iIndex] = iClamp(g_iRecoilAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Recoil Ability/Ability Effect", g_sRecoilEffect2[iIndex], sizeof(g_sRecoilEffect2[]), g_sRecoilEffect[iIndex]);
-				g_iRecoilMessage2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Message", g_iRecoilMessage[iIndex]);
-				g_iRecoilMessage2[iIndex] = iClamp(g_iRecoilMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Recoil Ability/Ability Message", g_sRecoilMessage2[iIndex], sizeof(g_sRecoilMessage2[]), g_sRecoilMessage[iIndex]);
 				g_flRecoilChance2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Chance", g_flRecoilChance[iIndex]);
 				g_flRecoilChance2[iIndex] = flClamp(g_flRecoilChance2[iIndex], 0.1, 100.0);
 				g_flRecoilDuration2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Duration", g_flRecoilDuration[iIndex]);
@@ -244,7 +242,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRecoilRange)
 				{
-					vRecoilHit(iSurvivor, tank, flRecoilRangeChance, iRecoilAbility(tank), 2, "3");
+					vRecoilHit(iSurvivor, tank, flRecoilRangeChance, iRecoilAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -259,7 +257,7 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vRecoilHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vRecoilHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bRecoil[survivor])
 	{
@@ -270,13 +268,15 @@ static void vRecoilHit(int survivor, int tank, float chance, int enabled, int me
 		CreateDataTimer(flRecoilDuration, tTimerStopRecoil, dpStopRecoil, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopRecoil.WriteCell(GetClientUserId(survivor));
 		dpStopRecoil.WriteCell(GetClientUserId(tank));
-		dpStopRecoil.WriteCell(message);
+		dpStopRecoil.WriteString(message);
 
 		char sRecoilEffect[4];
 		sRecoilEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sRecoilEffect[ST_TankType(tank)] : g_sRecoilEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sRecoilEffect, mode);
 
-		if (iRecoilMessage(tank) == message || iRecoilMessage(tank) == 3)
+		char sRecoilMessage[3];
+		sRecoilMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sRecoilMessage[ST_TankType(tank)] : g_sRecoilMessage2[ST_TankType(tank)];
+		if (StrContains(sRecoilMessage, message) != -1)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
@@ -327,11 +327,6 @@ static int iRecoilHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iRecoilHitMode[ST_TankType(tank)] : g_iRecoilHitMode2[ST_TankType(tank)];
 }
 
-static int iRecoilMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iRecoilMessage[ST_TankType(tank)] : g_iRecoilMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerStopRecoil(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -344,7 +339,7 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iRecoilChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bRecoil[iSurvivor] = false;
@@ -354,7 +349,10 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 
 	g_bRecoil[iSurvivor] = false;
 
-	if (iRecoilMessage(iTank) == iRecoilChat || iRecoilMessage(iTank) == 3)
+	char sRecoilMessage[3], sMessage[3];
+	sRecoilMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sRecoilMessage[ST_TankType(iTank)] : g_sRecoilMessage2[ST_TankType(iTank)];
+	pack.ReadString(sMessage, sizeof(sMessage));
+	if (StrContains(sRecoilMessage, sMessage) != -1)
 	{
 		PrintToChatAll("%s %t", ST_TAG2, "Recoil2", iSurvivor);
 	}

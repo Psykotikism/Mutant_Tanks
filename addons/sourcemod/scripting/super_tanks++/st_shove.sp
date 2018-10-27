@@ -34,13 +34,13 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bShove[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sShoveEffect[ST_MAXTYPES + 1][4], g_sShoveEffect2[ST_MAXTYPES + 1][4];
+char g_sShoveEffect[ST_MAXTYPES + 1][4], g_sShoveEffect2[ST_MAXTYPES + 1][4], g_sShoveMessage[ST_MAXTYPES + 1][3], g_sShoveMessage2[ST_MAXTYPES + 1][3];
 
 float g_flShoveChance[ST_MAXTYPES + 1], g_flShoveChance2[ST_MAXTYPES + 1], g_flShoveDuration[ST_MAXTYPES + 1], g_flShoveDuration2[ST_MAXTYPES + 1], g_flShoveInterval[ST_MAXTYPES + 1], g_flShoveInterval2[ST_MAXTYPES + 1], g_flShoveRange[ST_MAXTYPES + 1], g_flShoveRange2[ST_MAXTYPES + 1], g_flShoveRangeChance[ST_MAXTYPES + 1], g_flShoveRangeChance2[ST_MAXTYPES + 1];
 
 Handle g_hSDKShovePlayer;
 
-int g_iShoveAbility[ST_MAXTYPES + 1], g_iShoveAbility2[ST_MAXTYPES + 1], g_iShoveHit[ST_MAXTYPES + 1], g_iShoveHit2[ST_MAXTYPES + 1], g_iShoveHitMode[ST_MAXTYPES + 1], g_iShoveHitMode2[ST_MAXTYPES + 1], g_iShoveMessage[ST_MAXTYPES + 1], g_iShoveMessage2[ST_MAXTYPES + 1];
+int g_iShoveAbility[ST_MAXTYPES + 1], g_iShoveAbility2[ST_MAXTYPES + 1], g_iShoveHit[ST_MAXTYPES + 1], g_iShoveHit2[ST_MAXTYPES + 1], g_iShoveHitMode[ST_MAXTYPES + 1], g_iShoveHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -144,14 +144,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vShoveHit(victim, attacker, flShoveChance(attacker), iShoveHit(attacker), 1, "1");
+				vShoveHit(victim, attacker, flShoveChance(attacker), iShoveHit(attacker), "1", "1");
 			}
 		}
 		else if ((iShoveHitMode(victim) == 0 || iShoveHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vShoveHit(attacker, victim, flShoveChance(victim), iShoveHit(victim), 1, "2");
+				vShoveHit(attacker, victim, flShoveChance(victim), iShoveHit(victim), "1", "2");
 			}
 		}
 	}
@@ -174,8 +174,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iShoveAbility[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Enabled", 0);
 				g_iShoveAbility[iIndex] = iClamp(g_iShoveAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Shove Ability/Ability Effect", g_sShoveEffect[iIndex], sizeof(g_sShoveEffect[]), "123");
-				g_iShoveMessage[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Message", 0);
-				g_iShoveMessage[iIndex] = iClamp(g_iShoveMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Shove Ability/Ability Message", g_sShoveMessage[iIndex], sizeof(g_sShoveMessage[]), "0");
 				g_flShoveChance[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Chance", 33.3);
 				g_flShoveChance[iIndex] = flClamp(g_flShoveChance[iIndex], 0.1, 100.0);
 				g_flShoveDuration[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Duration", 5.0);
@@ -198,8 +197,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iShoveAbility2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Enabled", g_iShoveAbility[iIndex]);
 				g_iShoveAbility2[iIndex] = iClamp(g_iShoveAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Shove Ability/Ability Effect", g_sShoveEffect2[iIndex], sizeof(g_sShoveEffect2[]), g_sShoveEffect[iIndex]);
-				g_iShoveMessage2[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Message", g_iShoveMessage[iIndex]);
-				g_iShoveMessage2[iIndex] = iClamp(g_iShoveMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Shove Ability/Ability Message", g_sShoveMessage2[iIndex], sizeof(g_sShoveMessage2[]), g_sShoveMessage[iIndex]);
 				g_flShoveChance2[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Chance", g_flShoveChance[iIndex]);
 				g_flShoveChance2[iIndex] = flClamp(g_flShoveChance2[iIndex], 0.1, 100.0);
 				g_flShoveDuration2[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Duration", g_flShoveDuration[iIndex]);
@@ -250,7 +248,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flShoveRange)
 				{
-					vShoveHit(iSurvivor, tank, flShoveRangeChance, iShoveAbility, 2, "3");
+					vShoveHit(iSurvivor, tank, flShoveRangeChance, iShoveAbility, "2", "3");
 				}
 			}
 		}
@@ -268,17 +266,19 @@ static void vReset()
 	}
 }
 
-static void vReset2(int survivor, int tank, int message)
+static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bShove[survivor] = false;
 
-	if (iShoveMessage(tank) == message || iShoveMessage(tank) == 3)
+	char sShoveMessage[3];
+	sShoveMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sShoveMessage[ST_TankType(tank)] : g_sShoveMessage2[ST_TankType(tank)];
+	if (StrContains(sShoveMessage, message) != -1)
 	{
 		PrintToChatAll("%s %t", ST_TAG2, "Shove2", survivor);
 	}
 }
 
-static void vShoveHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vShoveHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bShove[survivor])
 	{
@@ -289,7 +289,7 @@ static void vShoveHit(int survivor, int tank, float chance, int enabled, int mes
 		CreateDataTimer(flShoveInterval, tTimerShove, dpShove, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpShove.WriteCell(GetClientUserId(survivor));
 		dpShove.WriteCell(GetClientUserId(tank));
-		dpShove.WriteCell(message);
+		dpShove.WriteString(message);
 		dpShove.WriteCell(enabled);
 		dpShove.WriteFloat(GetEngineTime());
 
@@ -297,7 +297,9 @@ static void vShoveHit(int survivor, int tank, float chance, int enabled, int mes
 		sShoveEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sShoveEffect[ST_TankType(tank)] : g_sShoveEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sShoveEffect, mode);
 
-		if (iShoveMessage(tank) == message || iShoveMessage(tank) == 3)
+		char sShoveMessage[3];
+		sShoveMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sShoveMessage[ST_TankType(tank)] : g_sShoveMessage2[ST_TankType(tank)];
+		if (StrContains(sShoveMessage, message) != -1)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
@@ -321,11 +323,6 @@ static int iShoveHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iShoveHitMode[ST_TankType(tank)] : g_iShoveHitMode2[ST_TankType(tank)];
 }
 
-static int iShoveMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iShoveMessage[ST_TankType(tank)] : g_iShoveMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerShove(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -338,10 +335,12 @@ public Action tTimerShove(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iShoveChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	char sMessage[3];
+	pack.ReadString(sMessage, sizeof(sMessage));
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank, iShoveChat);
+		vReset2(iSurvivor, iTank, sMessage);
 
 		return Plugin_Stop;
 	}
@@ -352,7 +351,7 @@ public Action tTimerShove(Handle timer, DataPack pack)
 
 	if (iShoveAbility == 0 || (flTime + flShoveDuration) < GetEngineTime())
 	{
-		vReset2(iSurvivor, iTank, iShoveChat);
+		vReset2(iSurvivor, iTank, sMessage);
 
 		return Plugin_Stop;
 	}

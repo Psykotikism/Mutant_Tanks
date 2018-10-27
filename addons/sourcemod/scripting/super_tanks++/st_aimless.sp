@@ -34,11 +34,11 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bAimless[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sAimlessEffect[ST_MAXTYPES + 1][4], g_sAimlessEffect2[ST_MAXTYPES + 1][4];
+char g_sAimlessEffect[ST_MAXTYPES + 1][4], g_sAimlessEffect2[ST_MAXTYPES + 1][4], g_sAimlessMessage[ST_MAXTYPES + 1][3], g_sAimlessMessage2[ST_MAXTYPES + 1][3];
 
 float g_flAimlessAngle[MAXPLAYERS + 1][3], g_flAimlessChance[ST_MAXTYPES + 1], g_flAimlessChance2[ST_MAXTYPES + 1], g_flAimlessDuration[ST_MAXTYPES + 1], g_flAimlessDuration2[ST_MAXTYPES + 1], g_flAimlessRange[ST_MAXTYPES + 1], g_flAimlessRange2[ST_MAXTYPES + 1], g_flAimlessRangeChance[ST_MAXTYPES + 1], g_flAimlessRangeChance2[ST_MAXTYPES + 1];
 
-int g_iAimlessAbility[ST_MAXTYPES + 1], g_iAimlessAbility2[ST_MAXTYPES + 1], g_iAimlessHit[ST_MAXTYPES + 1], g_iAimlessHit2[ST_MAXTYPES + 1], g_iAimlessHitMode[ST_MAXTYPES + 1], g_iAimlessHitMode2[ST_MAXTYPES + 1], g_iAimlessMessage[ST_MAXTYPES + 1], g_iAimlessMessage2[ST_MAXTYPES + 1];
+int g_iAimlessAbility[ST_MAXTYPES + 1], g_iAimlessAbility2[ST_MAXTYPES + 1], g_iAimlessHit[ST_MAXTYPES + 1], g_iAimlessHit2[ST_MAXTYPES + 1], g_iAimlessHitMode[ST_MAXTYPES + 1], g_iAimlessHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -136,14 +136,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAimlessHit(victim, attacker, flAimlessChance(attacker), iAimlessHit(attacker), 1, "1");
+				vAimlessHit(victim, attacker, flAimlessChance(attacker), iAimlessHit(attacker), "1", "1");
 			}
 		}
 		else if ((iAimlessHitMode(victim) == 0 || iAimlessHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vAimlessHit(attacker, victim, flAimlessChance(victim), iAimlessHit(victim), 1, "2");
+				vAimlessHit(attacker, victim, flAimlessChance(victim), iAimlessHit(victim), "1", "2");
 			}
 		}
 	}
@@ -166,8 +166,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iAimlessAbility[iIndex] = kvSuperTanks.GetNum("Aimless Ability/Ability Enabled", 0);
 				g_iAimlessAbility[iIndex] = iClamp(g_iAimlessAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Aimless Ability/Ability Effect", g_sAimlessEffect[iIndex], sizeof(g_sAimlessEffect[]), "123");
-				g_iAimlessMessage[iIndex] = kvSuperTanks.GetNum("Aimless Ability/Ability Message", 0);
-				g_iAimlessMessage[iIndex] = iClamp(g_iAimlessMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Aimless Ability/Ability Message", g_sAimlessMessage[iIndex], sizeof(g_sAimlessMessage[]), "0");
 				g_flAimlessChance[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Chance", 33.3);
 				g_flAimlessChance[iIndex] = flClamp(g_flAimlessChance[iIndex], 0.1, 100.0);
 				g_flAimlessDuration[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Duration", 5.0);
@@ -188,8 +187,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iAimlessAbility2[iIndex] = kvSuperTanks.GetNum("Aimless Ability/Ability Enabled", g_iAimlessAbility[iIndex]);
 				g_iAimlessAbility2[iIndex] = iClamp(g_iAimlessAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Aimless Ability/Ability Effect", g_sAimlessEffect2[iIndex], sizeof(g_sAimlessEffect2[]), g_sAimlessEffect[iIndex]);
-				g_iAimlessMessage2[iIndex] = kvSuperTanks.GetNum("Aimless Ability/Ability Message", g_iAimlessMessage[iIndex]);
-				g_iAimlessMessage2[iIndex] = iClamp(g_iAimlessMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Aimless Ability/Ability Message", g_sAimlessMessage2[iIndex], sizeof(g_sAimlessMessage2[]), g_sAimlessMessage[iIndex]);
 				g_flAimlessChance2[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Chance", g_flAimlessChance[iIndex]);
 				g_flAimlessChance2[iIndex] = flClamp(g_flAimlessChance2[iIndex], 0.1, 100.0);
 				g_flAimlessDuration2[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Duration", g_flAimlessDuration[iIndex]);
@@ -249,7 +247,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flAimlessRange)
 				{
-					vAimlessHit(iSurvivor, tank, flAimlessRangeChance, iAimlessAbility(tank), 2, "3");
+					vAimlessHit(iSurvivor, tank, flAimlessRangeChance, iAimlessAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -264,7 +262,7 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vAimlessHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vAimlessHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bAimless[survivor])
 	{
@@ -277,13 +275,15 @@ static void vAimlessHit(int survivor, int tank, float chance, int enabled, int m
 		CreateDataTimer(flAimlessDuration, tTimerStopAimless, dpStopAimless, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopAimless.WriteCell(GetClientUserId(survivor));
 		dpStopAimless.WriteCell(GetClientUserId(tank));
-		dpStopAimless.WriteCell(message);
+		dpStopAimless.WriteString(message);
 
 		char sAimlessEffect[4];
 		sAimlessEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sAimlessEffect[ST_TankType(tank)] : g_sAimlessEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sAimlessEffect, mode);
 
-		if (iAimlessMessage(tank) == message || iAimlessMessage(tank) == 3)
+		char sAimlessMessage[3];
+		sAimlessMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sAimlessMessage[ST_TankType(tank)] : g_sAimlessMessage2[ST_TankType(tank)];
+		if (StrContains(sAimlessMessage, message) != -1)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
@@ -334,11 +334,6 @@ static int iAimlessHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iAimlessHitMode[ST_TankType(tank)] : g_iAimlessHitMode2[ST_TankType(tank)];
 }
 
-static int iAimlessMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iAimlessMessage[ST_TankType(tank)] : g_iAimlessMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerStopAimless(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -351,7 +346,7 @@ public Action tTimerStopAimless(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iAimlessChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bAimless[iSurvivor] = false;
@@ -361,7 +356,10 @@ public Action tTimerStopAimless(Handle timer, DataPack pack)
 
 	g_bAimless[iSurvivor] = false;
 
-	if (iAimlessMessage(iTank) == iAimlessChat || iAimlessMessage(iTank) == 3)
+	char sAimlessMessage[3], sMessage[3];
+	sAimlessMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sAimlessMessage[ST_TankType(iTank)] : g_sAimlessMessage2[ST_TankType(iTank)];
+	pack.ReadString(sMessage, sizeof(sMessage));
+	if (StrContains(sAimlessMessage, sMessage) != -1)
 	{
 		PrintToChatAll("%s %t", ST_TAG2, "Aimless2", iSurvivor);
 	}
