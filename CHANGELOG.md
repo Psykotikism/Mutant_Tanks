@@ -31,9 +31,9 @@ Changes:
 
 Files:
 
-1. Updated config file
-2. Updated translation file.
-3. Added a license inside the source code for each plugin and include file because why not.
+1. Updated config file.
+2. Updated include file.
+3. Updated translation file.
 
 ## Version 8.44 (October 16, 2018)
 

@@ -99,8 +99,8 @@ This is okay:
 		"General"
 		{
 			"Tank Name"				"Test Tank" // Tank has a name.
-			"Tank Enabled"			"1" // Tank is enabled.
-			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+			"Tank Enabled"				"1" // Tank is enabled.
+			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
 }
@@ -116,7 +116,7 @@ This is not okay:
 		{
 			// "Tank Enabled" is missing so this entry is disabled.
 			"Tank Name"				"Test Tank" // Tank has a name.
-			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
 }
@@ -131,8 +131,8 @@ This is okay:
 		"General"
 		{
 			// Since "Tank Name" is missing, the default name for this entry will be "Tank"
-			"Tank Enabled"			"1" // Tank is enabled.
-			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+			"Tank Enabled"				"1" // Tank is enabled.
+			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
 }
@@ -147,8 +147,8 @@ This is not okay:
 		"General"
 		{
 			"Tank Name"				"Test Tank" // Tank has a name.
-			"Tank Enabled"			"1" // Tank is enabled.
-			"Skin-Glow Colors"		"255, 0, 0, 255 | 255, 255, 0" // The string should not contain any spaces.
+			"Tank Enabled"				"1" // Tank is enabled.
+			"Skin-Glow Colors"			"255, 0, 0, 255 | 255, 255, 0" // The string should not contain any spaces.
 		}
 	}
 }
@@ -165,12 +165,12 @@ Here's our final entry:
 		"General"
 		{
 			"Tank Name"				"Test Tank" // Named "Test Tank".
-			"Tank Enabled"			"1" // Entry is enabled.
-			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Has red/yellow color scheme.
+			"Tank Enabled"				"1" // Entry is enabled.
+			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Has red/yellow color scheme.
 		}
 		"Immunities"
 		{
-			"Fire Immunity"			"1" // Immune to fire.
+			"Fire Immunity"				"1" // Immune to fire.
 		}
 	}
 }
@@ -185,7 +185,7 @@ To make sure that this entry can be chosen, we must go to the "Plugin Settings" 
 	{
 		"General"
 		{
-			"Type Range"			"1-24" // Determines what entry to start and stop at when reading the entire config file.
+			"Type Range"				"1-24" // Determines what entry to start and stop at when reading the entire config file.
 		}
 	}
 }
@@ -202,7 +202,7 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Type Range"			"1-5" // Check "Tank #1" to "Tank #5"
+			"Type Range"				"1-5" // Check "Tank #1" to "Tank #5"
 		}
 	}
 	"Tank #5" // Checked by the plugin.
@@ -210,19 +210,19 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		"General"
 		{
 			"Tank Name"				"Leaper Tank"
-			"Tank Enabled"			"1"
-			"Skin-Glow Colors"		"255,255,0,255|255,255,0"
+			"Tank Enabled"				"1"
+			"Skin-Glow Colors"			"255,255,0,255|255,255,0"
 		}
 		"Enhancements"
 		{
-			"Extra Health"			"50" // Tank's base health + 50
+			"Extra Health"				"50" // Tank's base health + 50
 		}
 		"Jump Ability"
 		{
-			"Ability Enabled"		"2" // The Tank jumps periodically.
-			"Ability Message"		"3" // Notify players when the Tank is jumping periodically.
-			"Jump Height"			"300.0" // How high off the ground the Tank can jump.
-			"Jump Interval"			"1.0" // How often the Tank jumps.
+			"Ability Enabled"			"2" // The Tank jumps periodically.
+			"Ability Message"			"3" // Notify players when the Tank is jumping periodically.
+			"Jump Height"				"300.0" // How high off the ground the Tank can jump.
+			"Jump Interval"				"1.0" // How often the Tank jumps.
 		}
 	}
 }
@@ -233,7 +233,7 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Type Range"			"1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
+			"Type Range"				"1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
 		}
 	}
 	"Tank #13" // This will not be checked by the plugin.
@@ -241,28 +241,28 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		"General"
 		{
 			"Tank Name"				"Invisible Tank"
-			"Tank Enabled"			"1"
-			"Skin-Glow Colors"		"255,255,255,255|255,255,255"
-			"Glow Outline"			"0" // No glow outline.
+			"Tank Enabled"				"1"
+			"Skin-Glow Colors"			"255,255,255,255|255,255,255"
+			"Glow Outline"				"0" // No glow outline.
 		}
 		"Immunities"
 		{
-			"Fire Immunity"			"1" // Immune to fire.
+			"Fire Immunity"				"1" // Immune to fire.
 		}
 		"Ghost Ability"
 		{
-			"Ability Enabled"		"2"
-			"Ghost Fade Alpha"		"2"
-			"Ghost Fade Delay"		"5.0"
-			"Ghost Fade Limit"		"0"
-			"Ghost Fade Rate"		"0.1"
+			"Ability Enabled"			"2"
+			"Ghost Fade Alpha"			"2"
+			"Ghost Fade Delay"			"5.0"
+			"Ghost Fade Limit"			"0"
+			"Ghost Fade Rate"			"0.1"
 		}
 	}
 	"Tank #10" // Checked by the plugin.
 	{
 		"General"
 		{
-			"Tank Enabled"			"1"
+			"Tank Enabled"				"1"
 		}
 		"Enhancements"
 		{
@@ -385,14 +385,14 @@ Example:
 	{
 		"General"
 		{
-			"Type Range"		"1-69" // The plugin will check for 69 entries when loading the config file.
+			"Type Range"				"1-69" // The plugin will check for 69 entries when loading the config file.
 		}
 	}
 	"Tank #69"
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank #69 is enabled and can be chosen.
+			"Tank Enabled"				"1" // Tank #69 is enabled and can be chosen.
 		}
 	}
 }
@@ -411,28 +411,28 @@ Example:
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank #1 can be chosen.
+			"Tank Enabled"				"1" // Tank #1 can be chosen.
 		}
 	}
 	"Tank #2"
 	{
 		"General"
 		{
-			"Tank Enabled"		"0" // Tank #2 cannot be chosen.
+			"Tank Enabled"				"0" // Tank #2 cannot be chosen.
 		}
 	}
 	"Tank #3"
 	{
 		"General"
 		{
-			"Tank Enabled"		"0" // Tank #3 cannot be chosen.
+			"Tank Enabled"				"0" // Tank #3 cannot be chosen.
 		}
 	}
 	"Tank #4"
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank #4 can be chosen.
+			"Tank Enabled"				"1" // Tank #4 can be chosen.
 		}
 	}
 }
@@ -460,17 +460,17 @@ Example:
 	{
 		"General"
 		{
-			"Tank Name"						"Psyk0tik Tank"
-			"Tank Enabled"					"1"
-			"Skin-Glow Colors"				"0,170,255,255|0,170,255"
+			"Tank Name"				"Psyk0tik Tank"
+			"Tank Enabled"				"1"
+			"Skin-Glow Colors"			"0,170,255,255|0,170,255"
 		}
 		"Enhancements"
 		{
-			"Extra Health"					"250"
+			"Extra Health"				"250"
 		}
 		"Immunities"
 		{
-			"Fire Immunity"					"1"
+			"Fire Immunity"				"1"
 		}
 	}
 }
@@ -482,17 +482,17 @@ Example:
 	{
 		"General"
 		{
-			"Tank Name"						"Idiot Tank"
-			"Tank Enabled"					"1"
-			"Skin-Glow Colors"				"1,1,1,255|1,1,1"
+			"Tank Name"				"Idiot Tank"
+			"Tank Enabled"				"1"
+			"Skin-Glow Colors"			"1,1,1,255|1,1,1"
 		}
 		"Enhancements"
 		{
-			"Extra Health"					"1"
+			"Extra Health"				"1"
 		}
 		"Immunities"
 		{
-			"Fire Immunity"					"0"
+			"Fire Immunity"				"0"
 		}
 	}
 }
