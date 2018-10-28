@@ -124,6 +124,34 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_Ability(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank) && IsPlayerAlive(tank))
+	{
+		float flTankPos[3];
+		GetClientAbsOrigin(tank, flTankPos);
+
+		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
+		{
+			if (bIsSpecialInfected(iInfected) && IsPlayerAlive(iInfected))
+			{
+				float flInfectedPos[3];
+				GetClientAbsOrigin(iInfected, flInfectedPos);
+
+				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
+				if (flDistance <= flMedicRange(tank))
+				{
+					int iHealth = GetClientHealth(iInfected),
+						iNewHealth = iHealth + 1,
+						iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
+
+					SetEntityHealth(iInfected, iFinalHealth);
+				}
+			}
+		}
+	}
+}
+
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -157,11 +185,7 @@ static void vHeal(int infected, int health, int extrahealth, int maxhealth)
 
 static void vMedic(int tank)
 {
-	float flMedicRange = !g_bTankConfig[ST_TankType(tank)] ? g_flMedicRange[ST_TankType(tank)] : g_flMedicRange2[ST_TankType(tank)],
-		flTankPos[3];
-
-	int iMedicMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMedicMessage[ST_TankType(tank)] : g_iMedicMessage2[ST_TankType(tank)];
-
+	float flTankPos[3];
 	GetClientAbsOrigin(tank, flTankPos);
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
@@ -171,7 +195,7 @@ static void vMedic(int tank)
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 
 			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-			if (flDistance <= flMedicRange)
+			if (flDistance <= flMedicRange(tank))
 			{
 				char sHealth[6][6], sMedicHealth[36], sMaxHealth[6][6], sMedicMaxHealth[36];
 
@@ -228,6 +252,7 @@ static void vMedic(int tank)
 		}
 	}
 
+	int iMedicMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMedicMessage[ST_TankType(tank)] : g_iMedicMessage2[ST_TankType(tank)];
 	if (iMedicMessage == 1)
 	{
 		char sTankName[33];
@@ -239,6 +264,11 @@ static void vMedic(int tank)
 static float flMedicChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flMedicChance[ST_TankType(tank)] : g_flMedicChance2[ST_TankType(tank)];
+}
+
+static float flMedicRange(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flMedicRange[ST_TankType(tank)] : g_flMedicRange2[ST_TankType(tank)];
 }
 
 static int iMedicAbility(int tank)
