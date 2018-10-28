@@ -875,4 +875,4 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 
-Thank you very much! :)
+Thank you very much and have fun! :)

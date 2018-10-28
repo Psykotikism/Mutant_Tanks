@@ -423,6 +423,7 @@
 
 			// Base health given to the Super Tank.
 			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
 			// --
 			// Minimum: 0 (OFF)
@@ -431,6 +432,7 @@
 
 			// Extra health given to the Super Tank.
 			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
 			// --
 			// Minimum: -65535

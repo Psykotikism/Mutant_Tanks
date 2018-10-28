@@ -13,21 +13,22 @@ Changes:
 1. The sm_tank command now accepts partial name matches as input values. (Example: sm_tank "boss")
 2. Moved some stock functions from include file to some of the module plugins.
 3. Lowered the "Tank Name" setting's character limit from 128 to 32.
-4. The Meteor ability's meteorites no longer push players back when exploding.
-5. The Meteor ability's meteorites now start fires upon exploding.
-6. The "Whirl Axis" setting now accepts different values.
-7. The Throw ability now has a 4th option - Super Tanks can throw Witches.
-8. Several abilities' "Ability Message" setting now accepts different values.
-9. Added the "Clone Replace" setting.
-10. Added the "Cloud Chance" setting.
-11. Added the "Minion Replace" setting.
-12. Added the "Regen Chance" setting.
-13. Added the "Shield Chance" setting.
-14. Added the "Throw Chance" setting.
-15. Added the "Witch Chance" setting.
-16. Removed the "Meteor Damage" setting.
-17. Removed the "Track Mode" setting.
-18. Removed some redundant code from the core plugin.
+4. The Medic ability now lets Super Tanks heal nearby special infected by 1 HP every second.
+5. The Meteor ability's meteorites no longer push players back when exploding.
+6. The Meteor ability's meteorites now start fires upon exploding.
+7. The "Whirl Axis" setting now accepts different values.
+8. The Throw ability now has a 4th option - Super Tanks can throw Witches.
+9. Several abilities' "Ability Message" setting now accepts different values.
+10. Added the "Clone Replace" setting.
+11. Added the "Cloud Chance" setting.
+12. Added the "Minion Replace" setting.
+13. Added the "Regen Chance" setting.
+14. Added the "Shield Chance" setting.
+15. Added the "Throw Chance" setting.
+16. Added the "Witch Chance" setting.
+17. Removed the "Meteor Damage" setting.
+18. Removed the "Track Mode" setting.
+19. Removed some redundant code from the core plugin.
 
 Files:
 
