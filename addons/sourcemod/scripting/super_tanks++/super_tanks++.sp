@@ -274,8 +274,6 @@ public void OnPluginStart()
 		OnAdminMenuReady(tmAdminMenu);
 	}
 
-	AutoExecConfig(true, "super_tanks++");
-
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
