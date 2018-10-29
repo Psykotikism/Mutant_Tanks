@@ -267,7 +267,7 @@ static void vRemoveStun(int tank)
 			CreateDataTimer(0.1, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopStun.WriteCell(GetClientUserId(iSurvivor));
 			dpStopStun.WriteCell(GetClientUserId(tank));
-			dpStopStun.WriteCell(0);
+			dpStopStun.WriteString("0");
 		}
 	}
 }

@@ -336,7 +336,7 @@ static void vRemoveBlind(int tank)
 			CreateDataTimer(0.1, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopBlindness.WriteCell(GetClientUserId(iSurvivor));
 			dpStopBlindness.WriteCell(GetClientUserId(tank));
-			dpStopBlindness.WriteCell(0);
+			dpStopBlindness.WriteString("0");
 		}
 	}
 }

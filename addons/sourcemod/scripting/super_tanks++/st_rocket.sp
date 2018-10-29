@@ -304,8 +304,8 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, const 
 		CreateDataTimer(flRocketDelay + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
 		dpRocketDetonate.WriteCell(GetClientUserId(survivor));
 		dpRocketDetonate.WriteCell(GetClientUserId(tank));
-		dpRocketDetonate.WriteString(message);
 		dpRocketDetonate.WriteCell(enabled);
+		dpRocketDetonate.WriteString(message);
 
 		char sRocketEffect[4];
 		sRocketEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sRocketEffect[ST_TankType(tank)] : g_sRocketEffect2[ST_TankType(tank)];

@@ -361,7 +361,7 @@ static void vRemoveGravity(int tank)
 			CreateDataTimer(0.1, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopGravity.WriteCell(GetClientUserId(iSurvivor));
 			dpStopGravity.WriteCell(GetClientUserId(tank));
-			dpStopGravity.WriteCell(0);
+			dpStopGravity.WriteString("0");
 		}
 	}
 }

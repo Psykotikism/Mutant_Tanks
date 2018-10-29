@@ -208,14 +208,20 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iFlags = pack.ReadCell(), iSequence = pack.ReadCell();
-	float flPos[3], flAngles[3];
-	flPos[0] = pack.ReadFloat(), flPos[1] = pack.ReadFloat(), flPos[2] = pack.ReadFloat(), flAngles[0] = pack.ReadFloat(), flAngles[1] = pack.ReadFloat(), flAngles[2] = pack.ReadFloat();
-
-	int iRespawnAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAmount[ST_TankType(iTank)] : g_iRespawnAmount2[ST_TankType(iTank)],
+	int iFlags = pack.ReadCell(), iSequence = pack.ReadCell(),
+		iRespawnAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAmount[ST_TankType(iTank)] : g_iRespawnAmount2[ST_TankType(iTank)],
 		iRespawnMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnMessage[ST_TankType(iTank)] : g_iRespawnMessage2[ST_TankType(iTank)],
 		iRespawnMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnMode[ST_TankType(iTank)] : g_iRespawnMode2[ST_TankType(iTank)],
 		iRespawnType = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnType[ST_TankType(iTank)] : g_iRespawnType2[ST_TankType(iTank)];
+
+	float flPos[3], flAngles[3];
+	flPos[0] = pack.ReadFloat();
+	flPos[1] = pack.ReadFloat();
+	flPos[2] = pack.ReadFloat();
+	flAngles[0] = pack.ReadFloat();
+	flAngles[1] = pack.ReadFloat();
+	flAngles[2] = pack.ReadFloat();
+
 	if (g_iRespawnCount[iTank] < iRespawnAmount)
 	{
 		g_iRespawnCount[iTank]++;

@@ -226,7 +226,9 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	}
 
 	float flPos[3];
-	flPos[0] = pack.ReadFloat(), flPos[1] = pack.ReadFloat(), flPos[2] = pack.ReadFloat();
+	flPos[0] = pack.ReadFloat();
+	flPos[1] = pack.ReadFloat();
+	flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
 
 	if (iMeteorAbility(iTank) == 0)

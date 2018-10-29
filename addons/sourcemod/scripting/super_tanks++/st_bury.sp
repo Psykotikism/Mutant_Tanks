@@ -314,7 +314,7 @@ static void vRemoveBury(int tank)
 			CreateDataTimer(0.1, tTimerStopBury, dpStopBury, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopBury.WriteCell(GetClientUserId(iSurvivor));
 			dpStopBury.WriteCell(GetClientUserId(tank));
-			dpStopBury.WriteCell(0);
+			dpStopBury.WriteString("0");
 		}
 	}
 }
