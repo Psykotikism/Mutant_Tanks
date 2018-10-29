@@ -320,7 +320,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 
 				SetEntPropEnt(iRock, Prop_Send, "m_hOwnerEntity", iTank);
 				iRock = EntIndexToEntRef(iRock);
-				vDeleteEntity(iRock, 30.0);
+				vDeleteEntity(iRock, 60.0);
 			}
 		}
 	}

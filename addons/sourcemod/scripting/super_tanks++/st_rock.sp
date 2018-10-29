@@ -288,7 +288,9 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	if (flDistance > 300.0)
 	{ 
 		float flAngles2[3];
-		flAngles2[0] = GetRandomFloat(flMin, flMax), flAngles2[1] = GetRandomFloat(flMin, flMax), flAngles2[2] = -2.0;
+		flAngles2[0] = GetRandomFloat(flMin, flMax);
+		flAngles2[1] = GetRandomFloat(flMin, flMax);
+		flAngles2[2] = -2.0;
 		GetVectorAngles(flAngles2, flAngles2);
 
 		TeleportEntity(iRock, flHitPos, flAngles2, NULL_VECTOR);
