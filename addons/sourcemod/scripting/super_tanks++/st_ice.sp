@@ -307,7 +307,7 @@ static void vRemoveIce(int tank)
 			CreateDataTimer(0.1, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopIce.WriteCell(GetClientUserId(iSurvivor));
 			dpStopIce.WriteCell(GetClientUserId(tank));
-			dpStopIce.WriteCell(0);
+			dpStopIce.WriteString("0");
 		}
 	}
 }
