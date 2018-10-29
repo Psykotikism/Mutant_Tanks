@@ -883,7 +883,7 @@
 	}
 	"Tank #41"
 	{
-		"en"			"This Tank can start meteor showers with meteorites that explode after a few seconds."
+		"en"			"This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
 	}
 	"Tank #42"
 	{
