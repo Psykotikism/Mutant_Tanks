@@ -14,21 +14,19 @@ Changes:
 2. Moved some stock functions from include file to some of the module plugins.
 3. Lowered the "Tank Name" setting's character limit from 128 to 32.
 4. The Medic ability now lets Super Tanks heal nearby special infected by 1 HP every second.
-5. The Meteor ability's meteorites no longer push players back when exploding.
-6. The Meteor ability's meteorites now start fires upon exploding.
-7. The "Whirl Axis" setting now accepts different values.
-8. The Throw ability now has a 4th option - Super Tanks can throw Witches.
-9. Several abilities' "Ability Message" setting now accepts different values.
-10. Added the "Clone Replace" setting.
-11. Added the "Cloud Chance" setting.
+5. The "Whirl Axis" setting now accepts different values.
+6. The Throw ability now has a 4th option - Super Tanks can throw Witches.
+7. Several abilities' "Ability Message" setting now accepts different values.
+8. Added the "Clone Replace" setting.
+9. Added the "Cloud Chance" setting.
+10. Added the "Jump Mode" setting.
+11. Added the "Meteor Mode" setting.
 12. Added the "Minion Replace" setting.
 13. Added the "Regen Chance" setting.
 14. Added the "Shield Chance" setting.
 15. Added the "Throw Chance" setting.
 16. Added the "Witch Chance" setting.
-17. Removed the "Meteor Damage" setting.
-18. Removed the "Track Mode" setting.
-19. Removed some redundant code from the core plugin.
+17. Removed some redundant code from the core plugin.
 
 Files:
 

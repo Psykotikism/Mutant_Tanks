@@ -3094,6 +3094,12 @@
 			// Maximum: 9999999999.0
 			"Jump Interval"				"1.0"
 
+			// The mode of the Super Tank's jumping ability.
+			// --
+			// 0: The Super Tank jumps sporadically.
+			// 1: The Super Tank jumps periodically.
+			"Jump Mode"				"1"
+
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
@@ -3470,6 +3476,19 @@
 			// Minimum: 0.1 (Lowest chance)
 			// Maximum: 100.0 (Highest chance)
 			"Meteor Chance"				"33.3"
+
+			// The Super Tank's meteorites do this much damage.
+			// Note: This setting only applies if the "Meteor Mode" setting is set to 1.
+			// --
+			// Minimum: 1.0
+			// Maximum: 9999999999.0
+			"Meteor Damage"				"5.0"
+
+			// The mode of the Super Tank's meteor shower ability.
+			// --
+			// 0: The Super Tank's meteorites will explode and start fires.
+			// 1: The Super Tank's meteorites will explode and damage and push back nearby survivors.
+			"Meteor Mode"				"0"
 
 			// The radius of the Super Tank's meteor shower.
 			// --
@@ -5259,6 +5278,12 @@
 			// Minimum: 0.1 (Lowest chance)
 			// Maximum: 100.0 (Highest chance)
 			"Track Chance"				"33.3"
+
+			// The mode of the Super Tank's track ability.
+			// --
+			// 0: The Super Tank's rock will only start tracking when it is near a survivor.
+			// 1: The Super Tank's rock will track the nearest survivor.
+			"Track Mode"				"1"
 
 			// The Super Tank's track ability is this fast.
 			// Note: This setting only applies if the "Track Mode" setting is set to 1.
