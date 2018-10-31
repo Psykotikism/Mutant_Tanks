@@ -3068,7 +3068,7 @@
 			// Maximum: 9999999999.0
 			"Jump Duration"				"5.0"
 
-			// The Super Tank jumps this high off a surface.
+			// The Super Tank and survivors jump this high off a surface.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -3096,9 +3096,9 @@
 
 			// The mode of the Super Tank's jumping ability.
 			// --
-			// 0: The Super Tank jumps sporadically.
-			// 1: The Super Tank jumps periodically.
-			"Jump Mode"				"1"
+			// 0: The Super Tank jumps periodically.
+			// 1: The Super Tank jumps sporadically.
+			"Jump Mode"				"0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -3111,6 +3111,20 @@
 			// Minimum: 0.1 (Lowest chance)
 			// Maximum: 100.0 (Highest chance)
 			"Jump Range Chance"			"15.0"
+
+			// The Super Tank has this many chances out of 100.0% to jump sporadically.
+			// Note: This setting only applies if the "Jump Mode" setting is set to 1.
+			// --
+			// Minimum: 0.1 (Lowest chance)
+			// Maximum: 100.0 (Highest chance)
+			"Jump Sporadic Chance"			"33.3"
+
+			// The Super Tank jumps this high up into the air.
+			// Note: This setting only applies if the "Jump Mode" setting is set to 1.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Jump Sporadic Height"			"750.0"
 		}
 	}
 }

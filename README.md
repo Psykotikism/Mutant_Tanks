@@ -223,7 +223,7 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 			"Ability Message"			"3" // Notify players when the Tank is jumping periodically.
 			"Jump Height"				"300.0" // How high off the ground the Tank can jump.
 			"Jump Interval"				"1.0" // How often the Tank jumps.
-			"Jump Mode"				"1" // The Tank's jump mode.
+			"Jump Mode"				"0" // The Tank's jumping method.
 		}
 	}
 }

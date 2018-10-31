@@ -20,13 +20,15 @@ Changes:
 8. Added the "Clone Replace" setting.
 9. Added the "Cloud Chance" setting.
 10. Added the "Jump Mode" setting.
-11. Added the "Meteor Mode" setting.
-12. Added the "Minion Replace" setting.
-13. Added the "Regen Chance" setting.
-14. Added the "Shield Chance" setting.
-15. Added the "Throw Chance" setting.
-16. Added the "Witch Chance" setting.
-17. Removed some redundant code from the core plugin.
+11. Added the "Jump Sporadic Chance" setting.
+12. Added the "Jump Sporadic Height" setting.
+13. Added the "Meteor Mode" setting.
+14. Added the "Minion Replace" setting.
+15. Added the "Regen Chance" setting.
+16. Added the "Shield Chance" setting.
+17. Added the "Throw Chance" setting.
+18. Added the "Witch Chance" setting.
+19. Removed some redundant code from the core plugin.
 
 Files:
 
