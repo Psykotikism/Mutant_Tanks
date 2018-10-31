@@ -182,7 +182,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flJumpInterval2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Interval", g_flJumpInterval[iIndex]);
 				g_flJumpInterval2[iIndex] = flClamp(g_flJumpInterval2[iIndex], 0.1, 9999999999.0);
 				g_iJumpMode2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Mode", g_iJumpMode[iIndex]);
-				g_iJumpMode2[iIndex] = iClamp(g_iJumpMode2[iIndex], 0, 2);
+				g_iJumpMode2[iIndex] = iClamp(g_iJumpMode2[iIndex], 0, 1);
 				g_flJumpRange2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range", g_flJumpRange[iIndex]);
 				g_flJumpRange2[iIndex] = flClamp(g_flJumpRange2[iIndex], 1.0, 9999999999.0);
 				g_flJumpRangeChance2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range Chance", g_flJumpRangeChance[iIndex]);
@@ -237,12 +237,12 @@ public void ST_Ability(int tank)
 			int iJumpMode = !g_bTankConfig[ST_TankType(tank)] ? g_iJumpMode[ST_TankType(tank)] : g_iJumpMode2[ST_TankType(tank)];
 			switch (iJumpMode)
 			{
-				case 0: CreateTimer(1.0, tTimerJump, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				case 1:
+				case 0:
 				{
 					float flJumpInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flJumpInterval[ST_TankType(tank)] : g_flJumpInterval2[ST_TankType(tank)];
-					CreateTimer(flJumpInterval, tTimerJump2, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					CreateTimer(flJumpInterval, tTimerJump, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
+				case 1: CreateTimer(1.0, tTimerJump2, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			}
 
 			char sJumpMessage[4];
@@ -358,6 +358,33 @@ public Action tTimerJump(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
+	if (!bIsEntityGrounded(iTank))
+	{
+		return Plugin_Continue;
+	}
+
+	vJump(iTank, iTank);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerJump2(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bJump[iTank])
+	{
+		g_bJump[iTank] = false;
+
+		return Plugin_Stop;
+	}
+
+	if (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3)
+	{
+		g_bJump[iTank] = false;
+
+		return Plugin_Stop;
+	}
+
 	float flJumpSporadicChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flJumpSporadicChance[ST_TankType(iTank)] : g_flJumpSporadicChance2[ST_TankType(iTank)];
 	if (GetRandomFloat(0.1, 100.0) > flJumpSporadicChance)
 	{
@@ -391,33 +418,6 @@ public Action tTimerJump(Handle timer, int userid)
 		flVelocity[2] += flJumpSporadicHeight;
 		TeleportEntity(iTank, NULL_VECTOR, NULL_VECTOR, flVelocity);
 	}
-
-	return Plugin_Continue;
-}
-
-public Action tTimerJump2(Handle timer, int userid)
-{
-	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bJump[iTank])
-	{
-		g_bJump[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3)
-	{
-		g_bJump[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (!bIsEntityGrounded(iTank))
-	{
-		return Plugin_Continue;
-	}
-
-	vJump(iTank, iTank);
 
 	return Plugin_Continue;
 }
