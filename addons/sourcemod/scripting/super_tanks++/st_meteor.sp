@@ -123,7 +123,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flMeteorChance[iIndex] = flClamp(g_flMeteorChance[iIndex], 0.1, 100.0);
 				g_flMeteorDamage[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", 5.0);
 				g_flMeteorDamage[iIndex] = flClamp(g_flMeteorDamage[iIndex], 1.0, 9999999999.0);
-				g_iMeteorMode[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Mode", 0);
+				g_iMeteorMode[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Mode", 0);
 				g_iMeteorMode[iIndex] = iClamp(g_iMeteorMode[iIndex], 0, 1);
 				kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius[iIndex], sizeof(g_sMeteorRadius[]), "-180.0,180.0");
 			}
@@ -140,7 +140,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flMeteorChance2[iIndex] = flClamp(g_flMeteorChance2[iIndex], 0.1, 100.0);
 				g_flMeteorDamage2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", g_flMeteorDamage[iIndex]);
 				g_flMeteorDamage2[iIndex] = flClamp(g_flMeteorDamage2[iIndex], 1.0, 9999999999.0);
-				g_iMeteorMode2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Mode", g_iMeteorMode[iIndex]);
+				g_iMeteorMode2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Mode", g_iMeteorMode[iIndex]);
 				g_iMeteorMode2[iIndex] = iClamp(g_iMeteorMode2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius2[iIndex], sizeof(g_sMeteorRadius2[]), g_sMeteorRadius[iIndex]);
 			}
