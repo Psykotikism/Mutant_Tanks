@@ -426,7 +426,7 @@ stock bool bIsTank(int tank)
 
 stock bool bIsValidClient(int player)
 {
-	return player > 0 && player <= MaxClients && IsClientInGame(player) && !IsClientInKickQueue(player);
+	return 0 < player <= MaxClients && IsClientInGame(player) && !IsClientInKickQueue(player);
 }
 
 stock bool bIsValidEntity(int entity)
@@ -664,6 +664,30 @@ stock float flGetGroundUnits(int entity)
 	}
 
 	return 0.0;
+}
+
+stock float flGetNearestSurvivor(int tank)
+{
+	float flDistance;
+	if (bIsTank(tank) && IsPlayerAlive(tank))
+	{
+		float flTankPos[3];
+		GetClientAbsOrigin(tank, flTankPos);
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				break;
+			}
+		}
+	}
+
+	return flDistance;
 }
 
 stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace)

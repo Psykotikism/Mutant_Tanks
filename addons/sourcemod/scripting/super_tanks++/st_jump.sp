@@ -38,7 +38,7 @@ char g_sJumpEffect[ST_MAXTYPES + 1][4], g_sJumpEffect2[ST_MAXTYPES + 1][4], g_sJ
 
 float g_flJumpChance[ST_MAXTYPES + 1], g_flJumpChance2[ST_MAXTYPES + 1], g_flJumpDuration[ST_MAXTYPES + 1], g_flJumpDuration2[ST_MAXTYPES + 1], g_flJumpHeight[ST_MAXTYPES + 1], g_flJumpHeight2[ST_MAXTYPES + 1], g_flJumpInterval[ST_MAXTYPES + 1], g_flJumpInterval2[ST_MAXTYPES + 1], g_flJumpRange[ST_MAXTYPES + 1], g_flJumpRange2[ST_MAXTYPES + 1], g_flJumpRangeChance[ST_MAXTYPES + 1], g_flJumpRangeChance2[ST_MAXTYPES + 1];
 
-int g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpAbility2[ST_MAXTYPES + 1], g_iJumpHit[ST_MAXTYPES + 1], g_iJumpHit2[ST_MAXTYPES + 1], g_iJumpHitMode[ST_MAXTYPES + 1], g_iJumpHitMode2[ST_MAXTYPES + 1];
+int g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpAbility2[ST_MAXTYPES + 1], g_iJumpHit[ST_MAXTYPES + 1], g_iJumpHit2[ST_MAXTYPES + 1], g_iJumpHitMode[ST_MAXTYPES + 1], g_iJumpHitMode2[ST_MAXTYPES + 1], g_iJumpMode[ST_MAXTYPES + 1], g_iJumpMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -150,6 +150,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iJumpHitMode[iIndex] = iClamp(g_iJumpHitMode[iIndex], 0, 2);
 				g_flJumpInterval[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Interval", 1.0);
 				g_flJumpInterval[iIndex] = flClamp(g_flJumpInterval[iIndex], 0.1, 9999999999.0);
+				g_iJumpMode[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Mode", 1);
+				g_iJumpMode[iIndex] = iClamp(g_iJumpMode[iIndex], 0, 1);
 				g_flJumpRange[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range", 150.0);
 				g_flJumpRange[iIndex] = flClamp(g_flJumpRange[iIndex], 1.0, 9999999999.0);
 				g_flJumpRangeChance[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range Chance", 15.0);
@@ -175,6 +177,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iJumpHitMode2[iIndex] = iClamp(g_iJumpHitMode2[iIndex], 0, 2);
 				g_flJumpInterval2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Interval", g_flJumpInterval[iIndex]);
 				g_flJumpInterval2[iIndex] = flClamp(g_flJumpInterval2[iIndex], 0.1, 9999999999.0);
+				g_iJumpMode2[iIndex] = kvSuperTanks.GetNum("Jump Ability/Jump Mode", g_iJumpMode[iIndex]);
+				g_iJumpMode2[iIndex] = iClamp(g_iJumpMode2[iIndex], 0, 2);
 				g_flJumpRange2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range", g_flJumpRange[iIndex]);
 				g_flJumpRange2[iIndex] = flClamp(g_flJumpRange2[iIndex], 1.0, 9999999999.0);
 				g_flJumpRangeChance2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range Chance", g_flJumpRangeChance[iIndex]);
@@ -222,8 +226,16 @@ public void ST_Ability(int tank)
 		{
 			g_bJump[tank] = true;
 
-			float flJumpInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flJumpInterval[ST_TankType(tank)] : g_flJumpInterval2[ST_TankType(tank)];
-			CreateTimer(flJumpInterval, tTimerJump, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			int iJumpMode = !g_bTankConfig[ST_TankType(tank)] ? g_iJumpMode[ST_TankType(tank)] : g_iJumpMode2[ST_TankType(tank)];
+			switch (iJumpMode)
+			{
+				case 0: CreateTimer(1.0, tTimerJump, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				case 1:
+				{
+					float flJumpInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flJumpInterval[ST_TankType(tank)] : g_flJumpInterval2[ST_TankType(tank)];
+					CreateTimer(flJumpInterval, tTimerJump2, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				}
+			}
 
 			char sJumpMessage[4];
 			sJumpMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sJumpMessage[ST_TankType(tank)] : g_sJumpMessage2[ST_TankType(tank)];
@@ -255,7 +267,7 @@ static void vJumpHit(int survivor, int tank, float chance, int enabled, const ch
 		g_bJump2[survivor] = true;
 
 		DataPack dpJump;
-		CreateDataTimer(0.25, tTimerJump2, dpJump, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		CreateDataTimer(0.25, tTimerJump3, dpJump, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpJump.WriteCell(GetClientUserId(survivor));
 		dpJump.WriteCell(GetClientUserId(tank));
 		dpJump.WriteString(message);
@@ -338,6 +350,53 @@ public Action tTimerJump(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
+	float flNearestSurvivor = flGetNearestSurvivor(iTank);
+	if (flNearestSurvivor > 100.0 && flNearestSurvivor < 1000.0)
+	{
+		float flVelocity[3];
+		GetEntPropVector(iTank, Prop_Data, "m_vecVelocity", flVelocity);
+
+		if (flVelocity[0] > 0.0 && flVelocity[0] < 500.0)
+		{
+			flVelocity[0] += 500.0;
+		}
+		else if (flVelocity[0] < 0.0 && flVelocity[0] > -500.0)
+		{
+			flVelocity[0] += -500.0;
+		}
+		if (flVelocity[1] > 0.0 && flVelocity[1] < 500.0)
+		{
+			flVelocity[1] += 500.0;
+		}
+		else if (flVelocity[1] < 0.0 && flVelocity[1] > -500.0)
+		{
+			flVelocity[1] += -500.0;
+		}
+
+		flVelocity[2] += 750.0;
+		TeleportEntity(iTank, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerJump2(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bJump[iTank])
+	{
+		g_bJump[iTank] = false;
+
+		return Plugin_Stop;
+	}
+
+	if (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3)
+	{
+		g_bJump[iTank] = false;
+
+		return Plugin_Stop;
+	}
+
 	if (!bIsEntityGrounded(iTank))
 	{
 		return Plugin_Continue;
@@ -348,7 +407,7 @@ public Action tTimerJump(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerJump2(Handle timer, DataPack pack)
+public Action tTimerJump3(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
