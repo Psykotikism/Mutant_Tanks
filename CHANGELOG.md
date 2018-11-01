@@ -28,7 +28,7 @@ Changes:
 16. Added the "Shield Chance" setting.
 17. Added the "Throw Chance" setting.
 18. Added the "Witch Chance" setting.
-19. Removed some redundant code from the core plugin.
+19. Removed some redundant code from multiple module plugins.
 
 Files:
 

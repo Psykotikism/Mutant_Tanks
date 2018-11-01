@@ -3015,6 +3015,9 @@
 		// The Super Tank jumps periodically and makes survivors jump uncontrollably.
 		// "Ability Enabled" - The Super Tank jumps periodically.
 		// - "Jump Interval"
+		// - "Jump Mode"
+		// - "Jump Sporadic Chance"
+		// - "Jump Sporadic Height"
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor jumps uncontrollably.
 		// - "Jump Range"
 		// - "Jump Range Chance"
