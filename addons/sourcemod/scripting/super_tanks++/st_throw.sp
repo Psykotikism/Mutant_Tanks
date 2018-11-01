@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Throw Ability
 #include <sourcemod>
 #include <sdktools>
@@ -26,17 +37,19 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7], g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15];
+char g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7], g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15], g_sThrowMessage[ST_MAXTYPES + 1][5], g_sThrowMessage2[ST_MAXTYPES + 1][5];
 
 ConVar g_cvSTTankThrowForce;
 
-int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1], g_iThrowMessage[ST_MAXTYPES + 1], g_iThrowMessage2[ST_MAXTYPES + 1];
+float g_flThrowChance[ST_MAXTYPES + 1], g_flThrowChance2[ST_MAXTYPES + 1];
+
+int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Throw Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Throw Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -85,19 +98,20 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
 				g_bTankConfig[iIndex] = false;
 
 				g_iThrowAbility[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", 0);
-				g_iThrowAbility[iIndex] = iClamp(g_iThrowAbility[iIndex], 0, 3);
-				g_iThrowMessage[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Message", 0);
-				g_iThrowMessage[iIndex] = iClamp(g_iThrowMessage[iIndex], 0, 7);
+				g_iThrowAbility[iIndex] = iClamp(g_iThrowAbility[iIndex], 0, 4);
+				kvSuperTanks.GetString("Throw Ability/Ability Message", g_sThrowMessage[iIndex], sizeof(g_sThrowMessage[]), "0");
 				kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions[iIndex], sizeof(g_sThrowCarOptions[]), "123");
+				g_flThrowChance[iIndex] = kvSuperTanks.GetFloat("Throw Ability/Throw Chance", 33.3);
+				g_flThrowChance[iIndex] = flClamp(g_flThrowChance[iIndex], 0.1, 100.0);
 				kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions[iIndex], sizeof(g_sThrowInfectedOptions[]), "1234567");
 			}
 			else
@@ -105,10 +119,11 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_bTankConfig[iIndex] = true;
 
 				g_iThrowAbility2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", g_iThrowAbility[iIndex]);
-				g_iThrowAbility2[iIndex] = iClamp(g_iThrowAbility2[iIndex], 0, 3);
-				g_iThrowMessage2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Message", g_iThrowMessage[iIndex]);
-				g_iThrowMessage2[iIndex] = iClamp(g_iThrowMessage2[iIndex], 0, 7);
+				g_iThrowAbility2[iIndex] = iClamp(g_iThrowAbility2[iIndex], 0, 4);
+				kvSuperTanks.GetString("Throw Ability/Ability Message", g_sThrowMessage2[iIndex], sizeof(g_sThrowMessage2[]), g_sThrowMessage[iIndex]);
 				kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions2[iIndex], sizeof(g_sThrowCarOptions2[]), g_sThrowCarOptions[iIndex]);
+				g_flThrowChance2[iIndex] = kvSuperTanks.GetFloat("Throw Ability/Throw Chance", g_flThrowChance[iIndex]);
+				g_flThrowChance2[iIndex] = flClamp(g_flThrowChance2[iIndex], 0.1, 100.0);
 				kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions2[iIndex], sizeof(g_sThrowInfectedOptions2[]), g_sThrowInfectedOptions[iIndex]);
 			}
 
@@ -121,37 +136,46 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_RockThrow(int tank, int rock)
 {
-	if (iThrowAbility(tank) == 1)
+	float flThrowChance = !g_bTankConfig[ST_TankType(tank)] ? g_flThrowChance[ST_TankType(tank)] : g_flThrowChance2[ST_TankType(tank)];
+	if (GetRandomFloat(0.1, 100.0) <= flThrowChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
-		DataPack dpCarThrow;
-		CreateDataTimer(0.1, tTimerCarThrow, dpCarThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpCarThrow.WriteCell(EntIndexToEntRef(rock));
-		dpCarThrow.WriteCell(GetClientUserId(tank));
-	}
-	else if (iThrowAbility(tank) == 2)
-	{
-		DataPack dpInfectedThrow;
-		CreateDataTimer(0.1, tTimerInfectedThrow, dpInfectedThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpInfectedThrow.WriteCell(EntIndexToEntRef(rock));
-		dpInfectedThrow.WriteCell(GetClientUserId(tank));
-	}
-	else if (iThrowAbility(tank) == 3)
-	{
-		DataPack dpSelfThrow;
-		CreateDataTimer(0.1, tTimerSelfThrow, dpSelfThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpSelfThrow.WriteCell(EntIndexToEntRef(rock));
-		dpSelfThrow.WriteCell(GetClientUserId(tank));
+		switch (iThrowAbility(tank))
+		{
+			case 1:
+			{
+				DataPack dpCarThrow;
+				CreateDataTimer(0.1, tTimerCarThrow, dpCarThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpCarThrow.WriteCell(EntIndexToEntRef(rock));
+				dpCarThrow.WriteCell(GetClientUserId(tank));
+			}
+			case 2:
+			{
+				DataPack dpInfectedThrow;
+				CreateDataTimer(0.1, tTimerInfectedThrow, dpInfectedThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpInfectedThrow.WriteCell(EntIndexToEntRef(rock));
+				dpInfectedThrow.WriteCell(GetClientUserId(tank));
+			}
+			case 3:
+			{
+				DataPack dpSelfThrow;
+				CreateDataTimer(0.1, tTimerSelfThrow, dpSelfThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpSelfThrow.WriteCell(EntIndexToEntRef(rock));
+				dpSelfThrow.WriteCell(GetClientUserId(tank));
+			}
+			case 4:
+			{
+				DataPack dpWitchThrow;
+				CreateDataTimer(0.1, tTimerWitchThrow, dpWitchThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpWitchThrow.WriteCell(EntIndexToEntRef(rock));
+				dpWitchThrow.WriteCell(GetClientUserId(tank));
+			}
+		}
 	}
 }
 
 static int iThrowAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iThrowAbility[ST_TankType(tank)] : g_iThrowAbility2[ST_TankType(tank)];
-}
-
-static int iThrowMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iThrowMessage[ST_TankType(tank)] : g_iThrowMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerCarThrow(Handle timer, DataPack pack)
@@ -211,14 +235,13 @@ public Action tTimerCarThrow(Handle timer, DataPack pack)
 			iCar = EntIndexToEntRef(iCar);
 			vDeleteEntity(iCar, 10.0);
 
-			switch (iThrowMessage(iTank))
+			char sThrowMessage[5];
+			sThrowMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowMessage[ST_TankType(iTank)] : g_sThrowMessage2[ST_TankType(iTank)];
+			if (StrContains(sThrowMessage, "1") != -1)
 			{
-				case 1, 4, 5, 7:
-				{
-					char sTankName[MAX_NAME_LENGTH + 1];
-					ST_TankName(iTank, sTankName);
-					PrintToChatAll("%s %t", ST_PREFIX2, "Throw", sTankName);
-				}
+				char sTankName[33];
+				ST_TankName(iTank, sTankName);
+				PrintToChatAll("%s %t", ST_TAG2, "Throw", sTankName);
 			}
 		}
 
@@ -236,8 +259,7 @@ public Action tTimerSetCarVelocity(Handle timer, int entity)
 		return Plugin_Stop;
 	}
 
-	float flVelocity[3] = {0.0, 0.0, 0.0};
-	TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 
 	return Plugin_Continue;
 }
@@ -311,7 +333,7 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 						vSpawnInfected(iInfected, "smoker");
 					}
 				}
-				case '7': vSpawnInfected(iInfected, "tank");
+				case '8': vSpawnInfected(iInfected, "tank");
 				default: vSpawnInfected(iInfected, "hunter");
 			}
 
@@ -321,16 +343,16 @@ public Action tTimerInfectedThrow(Handle timer, DataPack pack)
 
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
+
 			TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
 
-			switch (iThrowMessage(iTank))
+			char sThrowMessage[5];
+			sThrowMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowMessage[ST_TankType(iTank)] : g_sThrowMessage2[ST_TankType(iTank)];
+			if (StrContains(sThrowMessage, "2") != -1)
 			{
-				case 2, 4, 6, 7:
-				{
-					char sTankName[MAX_NAME_LENGTH + 1];
-					ST_TankName(iTank, sTankName);
-					PrintToChatAll("%s %t", ST_PREFIX2, "Throw2", sTankName);
-				}
+				char sTankName[33];
+				ST_TankName(iTank, sTankName);
+				PrintToChatAll("%s %t", ST_TAG2, "Throw2", sTankName);
 			}
 		}
 
@@ -373,16 +395,75 @@ public Action tTimerSelfThrow(Handle timer, DataPack pack)
 
 		NormalizeVector(flVelocity, flVelocity);
 		ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
+
 		TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
 
-		switch (iThrowMessage(iTank))
+		char sThrowMessage[5];
+		sThrowMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowMessage[ST_TankType(iTank)] : g_sThrowMessage2[ST_TankType(iTank)];
+		if (StrContains(sThrowMessage, "3") != -1)
 		{
-			case 3, 5, 6, 7:
-			{
-				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Throw3", sTankName);
-			}
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Throw3", sTankName);
+		}
+
+		return Plugin_Stop;
+	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerWitchThrow(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iRock = EntRefToEntIndex(pack.ReadCell());
+	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	{
+		return Plugin_Stop;
+	}
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	{
+		return Plugin_Stop;
+	}
+
+	if (iThrowAbility(iTank) != 4)
+	{
+		return Plugin_Stop;
+	}
+
+	float flVelocity[3];
+	GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
+
+	float flVector = GetVectorLength(flVelocity);
+	if (flVector > 500.0)
+	{
+		int iWitch = CreateEntityByName("witch");
+		if (bIsValidEntity(iWitch))
+		{
+			float flPos[3];
+			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+			RemoveEntity(iRock);
+
+			NormalizeVector(flVelocity, flVelocity);
+			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
+
+			DispatchSpawn(iWitch);
+			ActivateEntity(iWitch);
+			SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
+
+			TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
+		}
+
+		char sThrowMessage[5];
+		sThrowMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowMessage[ST_TankType(iTank)] : g_sThrowMessage2[ST_TankType(iTank)];
+		if (StrContains(sThrowMessage, "4") != -1)
+		{
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Throw4", sTankName);
 		}
 
 		return Plugin_Stop;

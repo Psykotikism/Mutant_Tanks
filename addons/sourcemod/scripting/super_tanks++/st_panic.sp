@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Panic Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -22,17 +33,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bPanic[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sPanicEffect[ST_MAXTYPES + 1][4], g_sPanicEffect2[ST_MAXTYPES + 1][4];
+char g_sPanicEffect[ST_MAXTYPES + 1][4], g_sPanicEffect2[ST_MAXTYPES + 1][4], g_sPanicMessage[ST_MAXTYPES + 1][4], g_sPanicMessage2[ST_MAXTYPES + 1][4];
 
 float g_flPanicChance[ST_MAXTYPES + 1], g_flPanicChance2[ST_MAXTYPES + 1], g_flPanicInterval[ST_MAXTYPES + 1], g_flPanicInterval2[ST_MAXTYPES + 1], g_flPanicRange[ST_MAXTYPES + 1], g_flPanicRange2[ST_MAXTYPES + 1], g_flPanicRangeChance[ST_MAXTYPES + 1], g_flPanicRangeChance2[ST_MAXTYPES + 1];
 
-int g_iPanicAbility[ST_MAXTYPES + 1], g_iPanicAbility2[ST_MAXTYPES + 1], g_iPanicHit[ST_MAXTYPES + 1], g_iPanicHit2[ST_MAXTYPES + 1], g_iPanicHitMode[ST_MAXTYPES + 1], g_iPanicHitMode2[ST_MAXTYPES + 1], g_iPanicMessage[ST_MAXTYPES + 1], g_iPanicMessage2[ST_MAXTYPES + 1];
+int g_iPanicAbility[ST_MAXTYPES + 1], g_iPanicAbility2[ST_MAXTYPES + 1], g_iPanicHit[ST_MAXTYPES + 1], g_iPanicHit2[ST_MAXTYPES + 1], g_iPanicHitMode[ST_MAXTYPES + 1], g_iPanicHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Panic Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Panic Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -109,14 +120,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vPanicHit(victim, attacker, flPanicChance(attacker), iPanicHit(attacker), 1, "1");
+				vPanicHit(victim, attacker, flPanicChance(attacker), iPanicHit(attacker), "1", "1");
 			}
 		}
 		else if ((iPanicHitMode(victim) == 0 || iPanicHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vPanicHit(attacker, victim, flPanicChance(victim), iPanicHit(victim), 1, "2");
+				vPanicHit(attacker, victim, flPanicChance(victim), iPanicHit(victim), "1", "2");
 			}
 		}
 	}
@@ -128,9 +139,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -139,8 +150,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iPanicAbility[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", 0);
 				g_iPanicAbility[iIndex] = iClamp(g_iPanicAbility[iIndex], 0, 3);
 				kvSuperTanks.GetString("Panic Ability/Ability Effect", g_sPanicEffect[iIndex], sizeof(g_sPanicEffect[]), "123");
-				g_iPanicMessage[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Message", 0);
-				g_iPanicMessage[iIndex] = iClamp(g_iPanicMessage[iIndex], 0, 7);
+				kvSuperTanks.GetString("Panic Ability/Ability Message", g_sPanicMessage[iIndex], sizeof(g_sPanicMessage[]), "0");
 				g_flPanicChance[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Chance", 33.3);
 				g_flPanicChance[iIndex] = flClamp(g_flPanicChance[iIndex], 0.1, 100.0);
 				g_iPanicHit[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", 0);
@@ -161,8 +171,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iPanicAbility2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", g_iPanicAbility[iIndex]);
 				g_iPanicAbility2[iIndex] = iClamp(g_iPanicAbility2[iIndex], 0, 3);
 				kvSuperTanks.GetString("Panic Ability/Ability Effect", g_sPanicEffect2[iIndex], sizeof(g_sPanicEffect2[]), g_sPanicEffect[iIndex]);
-				g_iPanicMessage2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Message", g_iPanicMessage[iIndex]);
-				g_iPanicMessage2[iIndex] = iClamp(g_iPanicMessage2[iIndex], 0, 7);
+				kvSuperTanks.GetString("Panic Ability/Ability Message", g_sPanicMessage2[iIndex], sizeof(g_sPanicMessage2[]), g_sPanicMessage[iIndex]);
 				g_flPanicChance2[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Chance", g_flPanicChance[iIndex]);
 				g_flPanicChance2[iIndex] = flClamp(g_flPanicChance2[iIndex], 0.1, 100.0);
 				g_iPanicHit2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", g_iPanicHit[iIndex]);
@@ -221,7 +230,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPanicRange)
 				{
-					vPanicHit(iSurvivor, tank, flPanicRangeChance, iPanicAbility(tank), 2, "3");
+					vPanicHit(iSurvivor, tank, flPanicRangeChance, iPanicAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -236,7 +245,7 @@ public void ST_Ability(int tank)
 	}
 }
 
-static void vPanicHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vPanicHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
@@ -246,11 +255,13 @@ static void vPanicHit(int survivor, int tank, float chance, int enabled, int mes
 		sPanicEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sPanicEffect[ST_TankType(tank)] : g_sPanicEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sPanicEffect, mode);
 
-		if (iPanicMessage(tank) == message || iPanicMessage(tank) == 4 || iPanicMessage(tank) == 5 || iPanicMessage(tank) == 6 || iPanicMessage(tank) == 7)
+		char sPanicMessage[4];
+		sPanicMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sPanicMessage[ST_TankType(tank)] : g_sPanicMessage[ST_TankType(tank)];
+		if (StrContains(sPanicMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Panic", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Panic", sTankName);
 		}
 	}
 }
@@ -286,11 +297,6 @@ static int iPanicHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicHitMode[ST_TankType(tank)] : g_iPanicHitMode2[ST_TankType(tank)];
 }
 
-static int iPanicMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicMessage[ST_TankType(tank)] : g_iPanicMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerPanic(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -310,14 +316,13 @@ public Action tTimerPanic(Handle timer, int userid)
 
 	vCheatCommand(iTank, "director_force_panic_event");
 
-	switch (iPanicMessage(iTank))
+	char sPanicMessage[4];
+	sPanicMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sPanicMessage[ST_TankType(iTank)] : g_sPanicMessage[ST_TankType(iTank)];
+	if (StrContains(sPanicMessage, "3") != -1)
 	{
-		case 3, 5, 6, 7:
-		{
-			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Panic", sTankName);
-		}
+		char sTankName[33];
+		ST_TankName(iTank, sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Panic", sTankName);
 	}
 
 	return Plugin_Continue;

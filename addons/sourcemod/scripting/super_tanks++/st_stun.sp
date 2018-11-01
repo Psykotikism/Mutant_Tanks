@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Stun Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -22,17 +33,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bStun[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sStunEffect[ST_MAXTYPES + 1][4], g_sStunEffect2[ST_MAXTYPES + 1][4];
+char g_sStunEffect[ST_MAXTYPES + 1][4], g_sStunEffect2[ST_MAXTYPES + 1][4], g_sStunMessage[ST_MAXTYPES + 1][3], g_sStunMessage2[ST_MAXTYPES + 1][3];
 
 float g_flStunChance[ST_MAXTYPES + 1], g_flStunChance2[ST_MAXTYPES + 1], g_flStunDuration[ST_MAXTYPES + 1], g_flStunDuration2[ST_MAXTYPES + 1], g_flStunRange[ST_MAXTYPES + 1], g_flStunRange2[ST_MAXTYPES + 1], g_flStunRangeChance[ST_MAXTYPES + 1], g_flStunRangeChance2[ST_MAXTYPES + 1], g_flStunSpeed[ST_MAXTYPES + 1], g_flStunSpeed2[ST_MAXTYPES + 1];
 
-int g_iStunAbility[ST_MAXTYPES + 1], g_iStunAbility2[ST_MAXTYPES + 1], g_iStunHit[ST_MAXTYPES + 1], g_iStunHit2[ST_MAXTYPES + 1], g_iStunHitMode[ST_MAXTYPES + 1], g_iStunHitMode2[ST_MAXTYPES + 1], g_iStunMessage[ST_MAXTYPES + 1], g_iStunMessage2[ST_MAXTYPES + 1];
+int g_iStunAbility[ST_MAXTYPES + 1], g_iStunAbility2[ST_MAXTYPES + 1], g_iStunHit[ST_MAXTYPES + 1], g_iStunHit2[ST_MAXTYPES + 1], g_iStunHitMode[ST_MAXTYPES + 1], g_iStunHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Stun Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Stun Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -109,14 +120,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vStunHit(victim, attacker, flStunChance(attacker), iStunHit(attacker), 1, "1");
+				vStunHit(victim, attacker, flStunChance(attacker), iStunHit(attacker), "1", "1");
 			}
 		}
 		else if ((iStunHitMode(victim) == 0 || iStunHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vStunHit(attacker, victim, flStunChance(victim), iStunHit(victim), 1, "2");
+				vStunHit(attacker, victim, flStunChance(victim), iStunHit(victim), "1", "2");
 			}
 		}
 	}
@@ -128,9 +139,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -139,8 +150,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iStunAbility[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Enabled", 0);
 				g_iStunAbility[iIndex] = iClamp(g_iStunAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Stun Ability/Ability Effect", g_sStunEffect[iIndex], sizeof(g_sStunEffect[]), "123");
-				g_iStunMessage[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Message", 0);
-				g_iStunMessage[iIndex] = iClamp(g_iStunMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Stun Ability/Ability Message", g_sStunMessage[iIndex], sizeof(g_sStunMessage[]), "0");
 				g_flStunChance[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Chance", 33.3);
 				g_flStunChance[iIndex] = flClamp(g_flStunChance[iIndex], 0.1, 100.0);
 				g_flStunDuration[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Duration", 5.0);
@@ -163,8 +173,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iStunAbility2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Enabled", g_iStunAbility[iIndex]);
 				g_iStunAbility2[iIndex] = iClamp(g_iStunAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Stun Ability/Ability Effect", g_sStunEffect2[iIndex], sizeof(g_sStunEffect2[]), g_sStunEffect[iIndex]);
-				g_iStunMessage2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Message", g_iStunMessage[iIndex]);
-				g_iStunMessage2[iIndex] = iClamp(g_iStunMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Stun Ability/Ability Message", g_sStunMessage2[iIndex], sizeof(g_sStunMessage2[]), g_sStunMessage[iIndex]);
 				g_flStunChance2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Chance", g_flStunChance[iIndex]);
 				g_flStunChance2[iIndex] = flClamp(g_flStunChance2[iIndex], 0.1, 100.0);
 				g_flStunDuration2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Duration", g_flStunDuration[iIndex]);
@@ -233,7 +242,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flStunRange)
 				{
-					vStunHit(iSurvivor, tank, flStunRangeChance, iStunAbility(tank), 2, "3");
+					vStunHit(iSurvivor, tank, flStunRangeChance, iStunAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -258,7 +267,7 @@ static void vRemoveStun(int tank)
 			CreateDataTimer(0.1, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopStun.WriteCell(GetClientUserId(iSurvivor));
 			dpStopStun.WriteCell(GetClientUserId(tank));
-			dpStopStun.WriteCell(0);
+			dpStopStun.WriteString("0");
 		}
 	}
 }
@@ -274,7 +283,7 @@ static void vReset()
 	}
 }
 
-static void vStunHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vStunHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bStun[survivor])
 	{
@@ -289,17 +298,19 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, int mess
 		CreateDataTimer(flStunDuration, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopStun.WriteCell(GetClientUserId(survivor));
 		dpStopStun.WriteCell(GetClientUserId(tank));
-		dpStopStun.WriteCell(message);
+		dpStopStun.WriteString(message);
 
 		char sStunEffect[4];
 		sStunEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sStunEffect[ST_TankType(tank)] : g_sStunEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sStunEffect, mode);
 
-		if (iStunMessage(tank) == message || iStunMessage(tank) == 3)
+		char sStunMessage[3];
+		sStunMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sStunMessage[ST_TankType(tank)] : g_sStunMessage2[ST_TankType(tank)];
+		if (StrContains(sStunMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Stun", sTankName, survivor, flStunSpeed);
+			PrintToChatAll("%s %t", ST_TAG2, "Stun", sTankName, survivor, flStunSpeed);
 		}
 	}
 }
@@ -324,11 +335,6 @@ static int iStunHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iStunHitMode[ST_TankType(tank)] : g_iStunHitMode2[ST_TankType(tank)];
 }
 
-static int iStunMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iStunMessage[ST_TankType(tank)] : g_iStunMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerStopStun(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -341,7 +347,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iStunChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bStun[iSurvivor])
 	{
 		g_bStun[iSurvivor] = false;
@@ -355,9 +361,12 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 
 	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 
-	if (iStunMessage(iTank) == iStunChat || iStunMessage(iTank) == 3)
+	char sStunMessage[3], sMessage[3];
+	sStunMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sStunMessage[ST_TankType(iTank)] : g_sStunMessage2[ST_TankType(iTank)];
+	pack.ReadString(sMessage, sizeof(sMessage));
+	if (StrContains(sStunMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Stun2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Stun2", iSurvivor);
 	}
 
 	return Plugin_Continue;

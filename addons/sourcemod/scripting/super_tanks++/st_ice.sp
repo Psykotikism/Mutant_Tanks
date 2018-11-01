@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Ice Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -25,17 +36,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bIce[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sIceEffect[ST_MAXTYPES + 1][4], g_sIceEffect2[ST_MAXTYPES + 1][4];
+char g_sIceEffect[ST_MAXTYPES + 1][4], g_sIceEffect2[ST_MAXTYPES + 1][4], g_sIceMessage[ST_MAXTYPES + 1][3], g_sIceMessage2[ST_MAXTYPES + 1][3];
 
 float g_flIceChance[ST_MAXTYPES + 1], g_flIceChance2[ST_MAXTYPES + 1], g_flIceDuration[ST_MAXTYPES + 1], g_flIceDuration2[ST_MAXTYPES + 1], g_flIceRange[ST_MAXTYPES + 1], g_flIceRange2[ST_MAXTYPES + 1], g_flIceRangeChance[ST_MAXTYPES + 1], g_flIceRangeChance2[ST_MAXTYPES + 1];
 
-int g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceHitMode2[ST_MAXTYPES + 1], g_iIceMessage[ST_MAXTYPES + 1], g_iIceMessage2[ST_MAXTYPES + 1];
+int g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Ice Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Ice Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -114,14 +125,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIceHit(victim, attacker, flIceChance(attacker), iIceHit(attacker), 1, "1");
+				vIceHit(victim, attacker, flIceChance(attacker), iIceHit(attacker), "1", "1");
 			}
 		}
 		else if ((iIceHitMode(victim) == 0 || iIceHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vIceHit(attacker, victim, flIceChance(victim), iIceHit(victim), 1, "2");
+				vIceHit(attacker, victim, flIceChance(victim), iIceHit(victim), "1", "2");
 			}
 		}
 	}
@@ -133,9 +144,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -144,8 +155,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iIceAbility[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", 0);
 				g_iIceAbility[iIndex] = iClamp(g_iIceAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect[iIndex], sizeof(g_sIceEffect[]), "123");
-				g_iIceMessage[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Message", 0);
-				g_iIceMessage[iIndex] = iClamp(g_iIceMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Ice Ability/Ability Message", g_sIceMessage[iIndex], sizeof(g_sIceMessage[]), "0");
 				g_flIceChance[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Chance", 33.3);
 				g_flIceChance[iIndex] = flClamp(g_flIceChance[iIndex], 0.1, 100.0);
 				g_flIceDuration[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", 5.0);
@@ -166,8 +176,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iIceAbility2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", g_iIceAbility[iIndex]);
 				g_iIceAbility2[iIndex] = iClamp(g_iIceAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect2[iIndex], sizeof(g_sIceEffect2[]), g_sIceEffect[iIndex]);
-				g_iIceMessage2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Message", g_iIceMessage[iIndex]);
-				g_iIceMessage2[iIndex] = iClamp(g_iIceMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Ice Ability/Ability Message", g_sIceMessage2[iIndex], sizeof(g_sIceMessage2[]), g_sIceMessage[iIndex]);
 				g_flIceChance2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Chance", g_flIceChance[iIndex]);
 				g_flIceChance2[iIndex] = flClamp(g_flIceChance2[iIndex], 0.1, 100.0);
 				g_flIceDuration2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", g_flIceDuration[iIndex]);
@@ -234,7 +243,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIceRange)
 				{
-					vIceHit(iSurvivor, tank, flIceRangeChance, iIceAbility(tank), 2, "3");
+					vIceHit(iSurvivor, tank, flIceRangeChance, iIceAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -249,7 +258,7 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vIceHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vIceHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bIce[survivor])
 	{
@@ -271,17 +280,19 @@ static void vIceHit(int survivor, int tank, float chance, int enabled, int messa
 		CreateDataTimer(flIceDuration, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopIce.WriteCell(GetClientUserId(survivor));
 		dpStopIce.WriteCell(GetClientUserId(tank));
-		dpStopIce.WriteCell(message);
+		dpStopIce.WriteString(message);
 
 		char sIceEffect[4];
 		sIceEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sIceEffect[ST_TankType(tank)] : g_sIceEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sIceEffect, mode);
 
-		if (iIceMessage(tank) == message || iIceMessage(tank) == 3)
+		char sIceMessage[3];
+		sIceMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sIceMessage[ST_TankType(tank)] : g_sIceMessage2[ST_TankType(tank)];
+		if (StrContains(sIceMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ice", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Ice", sTankName, survivor);
 		}
 	}
 }
@@ -296,7 +307,7 @@ static void vRemoveIce(int tank)
 			CreateDataTimer(0.1, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopIce.WriteCell(GetClientUserId(iSurvivor));
 			dpStopIce.WriteCell(GetClientUserId(tank));
-			dpStopIce.WriteCell(0);
+			dpStopIce.WriteString("0");
 		}
 	}
 }
@@ -316,7 +327,7 @@ static void vStopIce(int survivor)
 {
 	g_bIce[survivor] = false;
 
-	float flPos[3], flVelocity[3] = {0.0, 0.0, 0.0};
+	float flPos[3];
 	GetClientEyePosition(survivor, flPos);
 
 	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
@@ -324,7 +335,7 @@ static void vStopIce(int survivor)
 		SetEntityMoveType(survivor, MOVETYPE_WALK);
 	}
 
-	TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(survivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 	SetEntityRenderColor(survivor, 255, 255, 255, 255);
 	EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
 }
@@ -349,11 +360,6 @@ static int iIceHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iIceHitMode[ST_TankType(tank)] : g_iIceHitMode2[ST_TankType(tank)];
 }
 
-static int iIceMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iIceMessage[ST_TankType(tank)] : g_iIceMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerStopIce(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -366,7 +372,7 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iIceChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bIce[iSurvivor])
 	{
 		vStopIce(iSurvivor);
@@ -376,9 +382,12 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 
 	vStopIce(iSurvivor);
 
-	if (iIceMessage(iTank) == iIceChat || iIceMessage(iTank) == 3)
+	char sIceMessage[3], sMessage[3];
+	sIceMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sIceMessage[ST_TankType(iTank)] : g_sIceMessage2[ST_TankType(iTank)];
+	pack.ReadString(sMessage, sizeof(sMessage));
+	if (StrContains(sIceMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Ice2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Ice2", iSurvivor);
 	}
 
 	return Plugin_Continue;

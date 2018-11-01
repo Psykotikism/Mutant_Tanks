@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Ammo Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -23,17 +34,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sAmmoEffect[ST_MAXTYPES + 1][4], g_sAmmoEffect2[ST_MAXTYPES + 1][4];
+char g_sAmmoEffect[ST_MAXTYPES + 1][4], g_sAmmoEffect2[ST_MAXTYPES + 1][4], g_sAmmoMessage[ST_MAXTYPES + 1][3], g_sAmmoMessage2[ST_MAXTYPES + 1][3];
 
 float g_flAmmoChance[ST_MAXTYPES + 1], g_flAmmoChance2[ST_MAXTYPES + 1], g_flAmmoRange[ST_MAXTYPES + 1], g_flAmmoRange2[ST_MAXTYPES + 1], g_flAmmoRangeChance[ST_MAXTYPES + 1], g_flAmmoRangeChance2[ST_MAXTYPES + 1];
 
-int g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAbility2[ST_MAXTYPES + 1], g_iAmmoCount[ST_MAXTYPES + 1], g_iAmmoCount2[ST_MAXTYPES + 1], g_iAmmoHit[ST_MAXTYPES + 1], g_iAmmoHit2[ST_MAXTYPES + 1], g_iAmmoHitMode[ST_MAXTYPES + 1], g_iAmmoHitMode2[ST_MAXTYPES + 1], g_iAmmoMessage[ST_MAXTYPES + 1], g_iAmmoMessage2[ST_MAXTYPES + 1];
+int g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAbility2[ST_MAXTYPES + 1], g_iAmmoCount[ST_MAXTYPES + 1], g_iAmmoCount2[ST_MAXTYPES + 1], g_iAmmoHit[ST_MAXTYPES + 1], g_iAmmoHit2[ST_MAXTYPES + 1], g_iAmmoHitMode[ST_MAXTYPES + 1], g_iAmmoHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Ammo Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Ammo Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -98,14 +109,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAmmoHit(victim, attacker, flAmmoChance(attacker), iAmmoHit(attacker), 1, "1");
+				vAmmoHit(victim, attacker, flAmmoChance(attacker), iAmmoHit(attacker), "1", "1");
 			}
 		}
 		else if ((iAmmoHitMode(victim) == 0 || iAmmoHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vAmmoHit(attacker, victim, flAmmoChance(victim), iAmmoHit(victim), 1, "2");
+				vAmmoHit(attacker, victim, flAmmoChance(victim), iAmmoHit(victim), "1", "2");
 			}
 		}
 	}
@@ -117,9 +128,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -128,8 +139,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iAmmoAbility[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Enabled", 0);
 				g_iAmmoAbility[iIndex] = iClamp(g_iAmmoAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Ammo Ability/Ability Effect", g_sAmmoEffect[iIndex], sizeof(g_sAmmoEffect[]), "123");
-				g_iAmmoMessage[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Message", 0);
-				g_iAmmoMessage[iIndex] = iClamp(g_iAmmoMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Ammo Ability/Ability Message", g_sAmmoMessage[iIndex], sizeof(g_sAmmoMessage[]), "0");
 				g_flAmmoChance[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Chance", 33.3);
 				g_flAmmoChance[iIndex] = flClamp(g_flAmmoChance[iIndex], 0.1, 100.0);
 				g_iAmmoCount[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Count", 0);
@@ -150,8 +160,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iAmmoAbility2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Enabled", g_iAmmoAbility[iIndex]);
 				g_iAmmoAbility2[iIndex] = iClamp(g_iAmmoAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Ammo Ability/Ability Effect", g_sAmmoEffect2[iIndex], sizeof(g_sAmmoEffect2[]), g_sAmmoEffect[iIndex]);
-				g_iAmmoMessage2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Message", g_iAmmoMessage[iIndex]);
-				g_iAmmoMessage2[iIndex] = iClamp(g_iAmmoMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Ammo Ability/Ability Message", g_sAmmoMessage2[iIndex], sizeof(g_sAmmoMessage2[]), g_sAmmoMessage[iIndex]);
 				g_flAmmoChance2[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Chance", g_flAmmoChance[iIndex]);
 				g_flAmmoChance2[iIndex] = flClamp(g_flAmmoChance2[iIndex], 0.1, 100.0);
 				g_iAmmoCount2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Count", g_iAmmoCount[iIndex]);
@@ -195,21 +204,20 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flAmmoRange)
 				{
-					vAmmoHit(iSurvivor, tank, flAmmoRangeChance, iAmmoAbility, 2, "3");
+					vAmmoHit(iSurvivor, tank, flAmmoRangeChance, iAmmoAbility, "2", "3");
 				}
 			}
 		}
 	}
 }
 
-static void vAmmoHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vAmmoHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && GetPlayerWeaponSlot(survivor, 0) > 0)
 	{
 		char sWeapon[32];
 		int iActiveWeapon = GetEntPropEnt(survivor, Prop_Data, "m_hActiveWeapon"),
-			iAmmoCount = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoCount[ST_TankType(tank)] : g_iAmmoCount2[ST_TankType(tank)],
-			iAmmoMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoMessage[ST_TankType(tank)] : g_iAmmoMessage2[ST_TankType(tank)];
+			iAmmoCount = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoCount[ST_TankType(tank)] : g_iAmmoCount2[ST_TankType(tank)];
 
 		GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
 		if (bIsValidEntity(iActiveWeapon))
@@ -279,11 +287,13 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, int mess
 		sAmmoEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sAmmoEffect[ST_TankType(tank)] : g_sAmmoEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sAmmoEffect, mode);
 
-		if (iAmmoMessage == message || iAmmoMessage == 3)
+		char sAmmoMessage[3];
+		sAmmoMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sAmmoMessage[ST_TankType(tank)] : g_sAmmoMessage2[ST_TankType(tank)];
+		if (StrContains(sAmmoMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Ammo", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Ammo", sTankName, survivor);
 		}
 	}
 }

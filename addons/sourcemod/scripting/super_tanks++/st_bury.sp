@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Bury Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -23,17 +34,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bBury[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sBuryEffect[ST_MAXTYPES + 1][4], g_sBuryEffect2[ST_MAXTYPES + 1][4];
+char g_sBuryEffect[ST_MAXTYPES + 1][4], g_sBuryEffect2[ST_MAXTYPES + 1][4], g_sBuryMessage[ST_MAXTYPES + 1][3], g_sBuryMessage2[ST_MAXTYPES + 1][3];
 
 float g_flBuryChance[ST_MAXTYPES + 1], g_flBuryChance2[ST_MAXTYPES + 1], g_flBuryDuration[ST_MAXTYPES + 1], g_flBuryDuration2[ST_MAXTYPES + 1], g_flBuryHeight[ST_MAXTYPES + 1], g_flBuryHeight2[ST_MAXTYPES + 1], g_flBuryRange[ST_MAXTYPES + 1], g_flBuryRange2[ST_MAXTYPES + 1], g_flBuryRangeChance[ST_MAXTYPES + 1], g_flBuryRangeChance2[ST_MAXTYPES + 1];
 
-int g_iBuryAbility[ST_MAXTYPES + 1], g_iBuryAbility2[ST_MAXTYPES + 1], g_iBuryHit[ST_MAXTYPES + 1], g_iBuryHit2[ST_MAXTYPES + 1], g_iBuryHitMode[ST_MAXTYPES + 1], g_iBuryHitMode2[ST_MAXTYPES + 1], g_iBuryMessage[ST_MAXTYPES + 1], g_iBuryMessage2[ST_MAXTYPES + 1];
+int g_iBuryAbility[ST_MAXTYPES + 1], g_iBuryAbility2[ST_MAXTYPES + 1], g_iBuryHit[ST_MAXTYPES + 1], g_iBuryHit2[ST_MAXTYPES + 1], g_iBuryHitMode[ST_MAXTYPES + 1], g_iBuryHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Bury Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Bury Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -110,14 +121,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vBuryHit(victim, attacker, flBuryChance(attacker), iBuryHit(attacker), 1, "1");
+				vBuryHit(victim, attacker, flBuryChance(attacker), iBuryHit(attacker), "1", "1");
 			}
 		}
 		else if ((iBuryHitMode(victim) == 0 || iBuryHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vBuryHit(attacker, victim, flBuryChance(victim), iBuryHit(victim), 1, "2");
+				vBuryHit(attacker, victim, flBuryChance(victim), iBuryHit(victim), "1", "2");
 			}
 		}
 	}
@@ -129,9 +140,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -140,8 +151,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iBuryAbility[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", 0);
 				g_iBuryAbility[iIndex] = iClamp(g_iBuryAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Bury Ability/Ability Effect", g_sBuryEffect[iIndex], sizeof(g_sBuryEffect[]), "123");
-				g_iBuryMessage[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Message", 0);
-				g_iBuryMessage[iIndex] = iClamp(g_iBuryMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Bury Ability/Ability Message", g_sBuryMessage[iIndex], sizeof(g_sBuryMessage[]), "0");
 				g_flBuryChance[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Chance", 33.3);
 				g_flBuryChance[iIndex] = flClamp(g_flBuryChance[iIndex], 0.1, 100.0);
 				g_flBuryDuration[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Duration", 5.0);
@@ -164,8 +174,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iBuryAbility2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", g_iBuryAbility[iIndex]);
 				g_iBuryAbility2[iIndex] = iClamp(g_iBuryAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Bury Ability/Ability Effect", g_sBuryEffect2[iIndex], sizeof(g_sBuryEffect2[]), g_sBuryEffect[iIndex]);
-				g_iBuryMessage2[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Message", g_iBuryMessage[iIndex]);
-				g_iBuryMessage2[iIndex] = iClamp(g_iBuryMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Bury Ability/Ability Message", g_sBuryMessage2[iIndex], sizeof(g_sBuryMessage2[]), g_sBuryMessage[iIndex]);
 				g_flBuryChance2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Chance", g_flBuryChance[iIndex]);
 				g_flBuryChance2[iIndex] = flClamp(g_flBuryChance2[iIndex], 0.1, 100.0);
 				g_flBuryDuration2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Duration", g_flBuryDuration[iIndex]);
@@ -234,7 +243,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flBuryRange)
 				{
-					vBuryHit(iSurvivor, tank, flBuryRangeChance, iBuryAbility(tank), 2, "3");
+					vBuryHit(iSurvivor, tank, flBuryRangeChance, iBuryAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -249,9 +258,9 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vBuryHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vBuryHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bBury[survivor] && bIsEntityGrounded(survivor))
+	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && bIsEntityGrounded(survivor) && !g_bBury[survivor])
 	{
 		g_bBury[survivor] = true;
 
@@ -278,17 +287,19 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, int mess
 		CreateDataTimer(flBuryDuration, tTimerStopBury, dpStopBury, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopBury.WriteCell(GetClientUserId(survivor));
 		dpStopBury.WriteCell(GetClientUserId(tank));
-		dpStopBury.WriteCell(message);
+		dpStopBury.WriteString(message);
 
 		char sBuryEffect[4];
 		sBuryEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sBuryEffect[ST_TankType(tank)] : g_sBuryEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sBuryEffect, mode);
 
-		if (iBuryMessage(tank) == message || iBuryMessage(tank) == 3)
+		char sBuryMessage[3];
+		sBuryMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sBuryMessage[ST_TankType(tank)] : g_sBuryMessage2[ST_TankType(tank)];
+		if (StrContains(sBuryMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Bury", sTankName, survivor, flOrigin);
+			PrintToChatAll("%s %t", ST_TAG2, "Bury", sTankName, survivor, flOrigin);
 		}
 	}
 }
@@ -303,7 +314,7 @@ static void vRemoveBury(int tank)
 			CreateDataTimer(0.1, tTimerStopBury, dpStopBury, TIMER_FLAG_NO_MAPCHANGE);
 			dpStopBury.WriteCell(GetClientUserId(iSurvivor));
 			dpStopBury.WriteCell(GetClientUserId(tank));
-			dpStopBury.WriteCell(0);
+			dpStopBury.WriteString("0");
 		}
 	}
 }
@@ -374,11 +385,6 @@ static int iBuryHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iBuryHitMode[ST_TankType(tank)] : g_iBuryHitMode2[ST_TankType(tank)];
 }
 
-static int iBuryMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iBuryMessage[ST_TankType(tank)] : g_iBuryMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerStopBury(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -391,7 +397,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iBuryChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		vStopBury(iSurvivor, iTank);
@@ -401,9 +407,12 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 
 	vStopBury(iSurvivor, iTank);
 
-	if (iBuryMessage(iTank) == iBuryChat || iBuryMessage(iTank) == 3)
+	char sBuryMessage[3], sMessage[3];
+	sBuryMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sBuryMessage[ST_TankType(iTank)] : g_sBuryMessage2[ST_TankType(iTank)];
+	pack.ReadString(sMessage, sizeof(sMessage));
+	if (StrContains(sBuryMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Bury2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Bury2", iSurvivor);
 	}
 
 	return Plugin_Continue;

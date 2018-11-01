@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Minion Ability
 #include <sourcemod>
 #include <sdktools>
@@ -26,13 +37,13 @@ char g_sMinionTypes[ST_MAXTYPES + 1][13], g_sMinionTypes2[ST_MAXTYPES + 1][13];
 
 float g_flMinionChance[ST_MAXTYPES + 1], g_flMinionChance2[ST_MAXTYPES + 1];
 
-int g_iMinionAbility[ST_MAXTYPES + 1], g_iMinionAbility2[ST_MAXTYPES + 1], g_iMinionAmount[ST_MAXTYPES + 1], g_iMinionAmount2[ST_MAXTYPES + 1], g_iMinionCount[MAXPLAYERS + 1], g_iMinionMessage[ST_MAXTYPES + 1], g_iMinionMessage2[ST_MAXTYPES + 1];
+int g_iMinionAbility[ST_MAXTYPES + 1], g_iMinionAbility2[ST_MAXTYPES + 1], g_iMinionAmount[ST_MAXTYPES + 1], g_iMinionAmount2[ST_MAXTYPES + 1], g_iMinionCount[MAXPLAYERS + 1], g_iMinionMessage[ST_MAXTYPES + 1], g_iMinionMessage2[ST_MAXTYPES + 1], g_iMinionOwner[MAXPLAYERS + 1], g_iMinionReplace[ST_MAXTYPES + 1], g_iMinionReplace2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Minion Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Minion Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -75,6 +86,7 @@ public void OnClientPutInServer(int client)
 {
 	g_bMinion[client] = false;
 	g_iMinionCount[client] = 0;
+	g_iMinionOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -88,9 +100,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -104,6 +116,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMinionAmount[iIndex] = iClamp(g_iMinionAmount[iIndex], 1, 25);
 				g_flMinionChance[iIndex] = kvSuperTanks.GetFloat("Minion Ability/Minion Chance", 33.3);
 				g_flMinionChance[iIndex] = flClamp(g_flMinionChance[iIndex], 0.1, 100.0);
+				g_iMinionReplace[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Replace", 1);
+				g_iMinionReplace[iIndex] = iClamp(g_iMinionReplace[iIndex], 0, 1);
 				kvSuperTanks.GetString("Minion Ability/Minion Types", g_sMinionTypes[iIndex], sizeof(g_sMinionTypes[]), "123456");
 			}
 			else
@@ -118,6 +132,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMinionAmount2[iIndex] = iClamp(g_iMinionAmount2[iIndex], 1, 25);
 				g_flMinionChance2[iIndex] = kvSuperTanks.GetFloat("Minion Ability/Minion Chance", g_flMinionChance[iIndex]);
 				g_flMinionChance2[iIndex] = flClamp(g_flMinionChance2[iIndex], 0.1, 100.0);
+				g_iMinionReplace2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Replace", g_iMinionReplace[iIndex]);
+				g_iMinionReplace2[iIndex] = iClamp(g_iMinionReplace2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Minion Ability/Minion Types", g_sMinionTypes2[iIndex], sizeof(g_sMinionTypes2[]), g_sMinionTypes[iIndex]);
 			}
 
@@ -132,11 +148,37 @@ public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iMinionAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
+		if (iMinionAbility(iInfected) == 1 && ST_TankAllowed(iInfected))
 		{
-			g_bMinion[iTank] = false;
-			g_iMinionCount[iTank] = 0;
+			g_bMinion[iInfected] = false;
+			g_iMinionCount[iInfected] = 0;
+		}
+
+		if (bIsSpecialInfected(iInfected) && g_bMinion[iInfected])
+		{
+			for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
+			{
+				if (g_iMinionOwner[iInfected] == iOwner && ST_TankAllowed(iOwner) && ST_CloneAllowed(iOwner, g_bCloneInstalled))
+				{
+					int iMinionReplace = !g_bTankConfig[ST_TankType(iOwner)] ? g_iMinionReplace[ST_TankType(iOwner)] : g_iMinionReplace2[ST_TankType(iOwner)];
+					if (iMinionReplace == 1)
+					{
+						g_iMinionOwner[iInfected] = 0;
+
+						if (g_iMinionCount[iOwner] > 0)
+						{
+							g_iMinionCount[iOwner]--;
+						}
+						else
+						{
+							g_iMinionCount[iOwner] = 0;
+						}
+					}
+
+					break;
+				}
+			}
 		}
 	}
 }
@@ -209,12 +251,13 @@ public void ST_Ability(int tank)
 
 						g_bMinion[iSelectedType] = true;
 						g_iMinionCount[tank]++;
+						g_iMinionOwner[iSelectedType] = tank;
 
 						if (iMinionMessage == 1)
 						{
-							char sTankName[MAX_NAME_LENGTH + 1];
+							char sTankName[33];
 							ST_TankName(tank, sTankName);
-							PrintToChatAll("%s %t", ST_PREFIX2, "Minion", sTankName);
+							PrintToChatAll("%s %t", ST_TAG2, "Minion", sTankName);
 						}
 					}
 				}
@@ -229,8 +272,16 @@ public void ST_BossStage(int tank)
 {
 	if (iMinionAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		g_bMinion[tank] = false;
 		g_iMinionCount[tank] = 0;
+
+		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
+		{
+			if (bIsTank(iInfected) || bIsSpecialInfected(iInfected))
+			{
+				g_bMinion[iInfected] = false;
+				g_iMinionOwner[iInfected] = 0;
+			}
+		}
 	}
 }
 
@@ -242,6 +293,7 @@ static void vReset()
 		{
 			g_bMinion[iPlayer] = false;
 			g_iMinionCount[iPlayer] = 0;
+			g_iMinionOwner[iPlayer] = 0;
 		}
 	}
 }

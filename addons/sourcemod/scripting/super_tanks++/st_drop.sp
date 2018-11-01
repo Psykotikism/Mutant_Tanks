@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Drop Ability
 #include <sourcemod>
 #include <sdktools>
@@ -123,7 +134,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Drop Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Drop Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -317,9 +328,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -394,7 +405,7 @@ public void ST_Event(Event event, const char[] name)
 
 					if (bIsValidGame())
 					{
-						SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flDropWeaponScale(iTank));
+						SetEntPropFloat(iDrop , Prop_Send, "m_flModelScale", flDropWeaponScale(iTank));
 					}
 
 					int iAmmo, iClip;
@@ -445,9 +456,9 @@ public void ST_Event(Event event, const char[] name)
 
 					if (iDropMessage == 1)
 					{
-						char sTankName[MAX_NAME_LENGTH + 1];
+						char sTankName[33];
 						ST_TankName(iTank, sTankName);
-						PrintToChatAll("%s %t", ST_PREFIX2, "Drop", sTankName);
+						PrintToChatAll("%s %t", ST_TAG2, "Drop", sTankName);
 					}
 				}
 			}
@@ -459,13 +470,13 @@ public void ST_Event(Event event, const char[] name)
 					DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[iTank]]);
 					TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 					DispatchSpawn(iDrop);
-					SetEntPropFloat(iDrop, Prop_Send,"m_flModelScale", flDropWeaponScale(iTank));
+					SetEntPropFloat(iDrop, Prop_Send, "m_flModelScale", flDropWeaponScale(iTank));
 
 					if (iDropMessage == 1)
 					{
-						char sTankName[MAX_NAME_LENGTH + 1];
+						char sTankName[33];
 						ST_TankName(iTank, sTankName);
-						PrintToChatAll("%s %t", ST_PREFIX2, "Drop2", sTankName);
+						PrintToChatAll("%s %t", ST_TAG2, "Drop2", sTankName);
 					}
 				}
 			}
@@ -550,6 +561,7 @@ public Action tTimerDrop(Handle timer, int userid)
 	vDeleteDrop(iTank);
 
 	int iDropValue, iPosition;
+
 	switch (iDropMode(iTank))
 	{
 		case 0: iDropValue = GetRandomInt(1, 31);
@@ -558,6 +570,7 @@ public Action tTimerDrop(Handle timer, int userid)
 	}
 
 	int iWeapon = bIsValidGame() ? iDropValue : GetRandomInt(1, 6);
+
 	switch (GetRandomInt(1, 2))
 	{
 		case 1: iPosition = 1;
@@ -570,6 +583,7 @@ public Action tTimerDrop(Handle timer, int userid)
 	if (bIsValidEntity(iDrop))
 	{
 		float flPos[3], flAngles[3];
+
 		char sPosition[32];
 
 		SetEntityModel(iDrop, g_sWeaponModel[iWeapon]);
@@ -672,7 +686,7 @@ public Action tTimerDrop(Handle timer, int userid)
 
 		if (bIsValidGame())
 		{
-			SetEntPropFloat(iDrop , Prop_Send,"m_flModelScale", flScale);
+			SetEntPropFloat(iDrop , Prop_Send, "m_flModelScale", flScale);
 		}
 
 		g_iDrop[iTank] = iDrop;

@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Shield Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -30,7 +41,7 @@ char g_sShieldColor[ST_MAXTYPES + 1][12], g_sShieldColor2[ST_MAXTYPES + 1][12];
 
 ConVar g_cvSTTankThrowForce;
 
-float g_flShieldDelay[ST_MAXTYPES + 1], g_flShieldDelay2[ST_MAXTYPES + 1];
+float g_flShieldChance[ST_MAXTYPES + 1], g_flShieldChance2[ST_MAXTYPES + 1], g_flShieldDelay[ST_MAXTYPES + 1], g_flShieldDelay2[ST_MAXTYPES + 1];
 
 int g_iShieldAbility[ST_MAXTYPES + 1], g_iShieldAbility2[ST_MAXTYPES + 1], g_iShieldMessage[ST_MAXTYPES + 1], g_iShieldMessage2[ST_MAXTYPES + 1];
 
@@ -38,7 +49,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Shield Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Shield Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -139,9 +150,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -152,6 +163,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iShieldMessage[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Message", 0);
 				g_iShieldMessage[iIndex] = iClamp(g_iShieldMessage[iIndex], 0, 1);
 				kvSuperTanks.GetString("Shield Ability/Shield Color", g_sShieldColor[iIndex], sizeof(g_sShieldColor[]), "255,255,255");
+				g_flShieldChance[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Chance", 33.3);
+				g_flShieldChance[iIndex] = flClamp(g_flShieldChance[iIndex], 0.1, 100.0);
 				g_flShieldDelay[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", 5.0);
 				g_flShieldDelay[iIndex] = flClamp(g_flShieldDelay[iIndex], 0.1, 9999999999.0);
 			}
@@ -164,6 +177,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iShieldMessage2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Message", g_iShieldMessage[iIndex]);
 				g_iShieldMessage2[iIndex] = iClamp(g_iShieldMessage2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Shield Ability/Shield Color", g_sShieldColor2[iIndex], sizeof(g_sShieldColor2[]), g_sShieldColor[iIndex]);
+				g_flShieldChance2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Chance", g_flShieldChance[iIndex]);
+				g_flShieldChance2[iIndex] = flClamp(g_flShieldChance2[iIndex], 0.1, 100.0);
 				g_flShieldDelay2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", g_flShieldDelay[iIndex]);
 				g_flShieldDelay2[iIndex] = flClamp(g_flShieldDelay2[iIndex], 0.1, 9999999999.0);
 			}
@@ -218,7 +233,7 @@ public void ST_BossStage(int tank)
 
 public void ST_RockThrow(int tank, int rock)
 {
-	if (iShieldAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (iShieldAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flShieldChance(tank) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
 	{
 		DataPack dpShieldThrow;
 		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -263,18 +278,15 @@ static void vShield(int tank, bool shield)
 	{
 		char sSet[3][4], sShieldColor[12];
 		sShieldColor = !g_bTankConfig[ST_TankType(tank)] ? g_sShieldColor[ST_TankType(tank)] : g_sShieldColor2[ST_TankType(tank)];
-		TrimString(sShieldColor);
+		ReplaceString(sShieldColor, sizeof(sShieldColor), " ", "");
 		ExplodeString(sShieldColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-		TrimString(sSet[0]);
 		int iRed = (sSet[0][0] != '\0') ? StringToInt(sSet[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 
-		TrimString(sSet[1]);
 		int iGreen = (sSet[1][0] != '\0') ? StringToInt(sSet[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 
-		TrimString(sSet[2]);
 		int iBlue = (sSet[2][0] != '\0') ? StringToInt(sSet[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 
@@ -303,9 +315,9 @@ static void vShield(int tank, bool shield)
 
 		if (iShieldMessage(tank) == 1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shield", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Shield", sTankName);
 		}
 	}
 	else
@@ -313,17 +325,22 @@ static void vShield(int tank, bool shield)
 		vRemoveShield(tank);
 
 		float flShieldDelay = !g_bTankConfig[ST_TankType(tank)] ? g_flShieldDelay[ST_TankType(tank)] : g_flShieldDelay2[ST_TankType(tank)];
-		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 		g_bShield2[tank] = false;
 
 		if (iShieldMessage(tank) == 1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shield2", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Shield2", sTankName);
 		}
 	}
+}
+
+static float flShieldChance(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flShieldChance[ST_TankType(tank)] : g_flShieldChance2[ST_TankType(tank)];
 }
 
 static int iShieldAbility(int tank)
@@ -355,7 +372,12 @@ public Action tTimerShield(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	vShield(iTank, true);
+	if (GetRandomFloat(0.1, 100.0) <= flShieldChance(iTank))
+	{
+		vShield(iTank, true);
+
+		return Plugin_Stop;
+	}
 
 	return Plugin_Continue;
 }
@@ -404,6 +426,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
+
 			DispatchSpawn(iPropane);
 			TeleportEntity(iPropane, flPos, NULL_VECTOR, flVelocity);
 		}

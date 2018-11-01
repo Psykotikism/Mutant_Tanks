@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Clone Ability
 #include <sourcemod>
 #include <sdktools>
@@ -23,13 +34,13 @@ bool g_bCloned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 float g_flCloneChance[ST_MAXTYPES + 1], g_flCloneChance2[ST_MAXTYPES + 1];
 
-int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1], g_iCloneMessage[ST_MAXTYPES + 1], g_iCloneMessage2[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneMode2[ST_MAXTYPES + 1];
+int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1], g_iCloneMessage[ST_MAXTYPES + 1], g_iCloneMessage2[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneMode2[ST_MAXTYPES + 1], g_iCloneOwner[MAXPLAYERS + 1], g_iCloneReplace[ST_MAXTYPES + 1], g_iCloneReplace2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Clone Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Clone Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -66,6 +77,7 @@ public void OnClientPutInServer(int client)
 {
 	g_bCloned[client] = false;
 	g_iCloneCount[client] = 0;
+	g_iCloneOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -79,9 +91,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -99,6 +111,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloneHealth[iIndex] = iClamp(g_iCloneHealth[iIndex], 1, ST_MAXHEALTH);
 				g_iCloneMode[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", 0);
 				g_iCloneMode[iIndex] = iClamp(g_iCloneMode[iIndex], 0, 1);
+				g_iCloneReplace[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Replace", 1);
+				g_iCloneReplace[iIndex] = iClamp(g_iCloneReplace[iIndex], 0, 1);
 			}
 			else
 			{
@@ -116,6 +130,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloneHealth2[iIndex] = iClamp(g_iCloneHealth2[iIndex], 1, ST_MAXHEALTH);
 				g_iCloneMode2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", g_iCloneMode[iIndex]);
 				g_iCloneMode2[iIndex] = iClamp(g_iCloneMode2[iIndex], 0, 1);
+				g_iCloneReplace2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Replace", g_iCloneReplace[iIndex]);
+				g_iCloneReplace2[iIndex] = iClamp(g_iCloneReplace2[iIndex], 0, 1);
 			}
 
 			kvSuperTanks.Rewind();
@@ -144,6 +160,32 @@ public void ST_Event(Event event, const char[] name)
 		if (iCloneAbility(iTank) == 1 && ST_TankAllowed(iTank))
 		{
 			g_iCloneCount[iTank] = 0;
+
+			if (g_bCloned[iTank])
+			{
+				for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
+				{
+					if (g_iCloneOwner[iTank] == iOwner && ST_TankAllowed(iOwner))
+					{
+						int iCloneReplace = !g_bTankConfig[ST_TankType(iOwner)] ? g_iCloneReplace[ST_TankType(iOwner)] : g_iCloneReplace2[ST_TankType(iOwner)];
+						if (iCloneReplace == 1)
+						{
+							g_iCloneOwner[iTank] = 0;
+
+							if (g_iCloneCount[iOwner] > 0)
+							{
+								g_iCloneCount[iOwner]--;
+							}
+							else
+							{
+								g_iCloneCount[iOwner] = 0;
+							}
+						}
+
+						break;
+					}
+				}
+			}
 		}
 	}
 }
@@ -212,12 +254,13 @@ public void ST_Ability(int tank)
 						SetEntityHealth(iSelectedType, iNewHealth);
 
 						g_iCloneCount[tank]++;
+						g_iCloneOwner[iSelectedType] = tank;
 
 						if (iCloneMessage == 1)
 						{
-							char sTankName[MAX_NAME_LENGTH + 1];
+							char sTankName[33];
 							ST_TankName(tank, sTankName);
-							PrintToChatAll("%s %t", ST_PREFIX2, "Clone", sTankName);
+							PrintToChatAll("%s %t", ST_TAG2, "Clone", sTankName);
 						}
 					}
 				}
@@ -233,6 +276,15 @@ public void ST_BossStage(int tank)
 	if (iCloneAbility(tank) == 1 && ST_TankAllowed(tank) && !g_bCloned[tank])
 	{
 		g_iCloneCount[tank] = 0;
+
+		for (int iClone = 1; iClone <= MaxClients; iClone++)
+		{
+			if (bIsTank(iClone))
+			{
+				g_bCloned[iClone] = false;
+				g_iCloneOwner[iClone] = 0;
+			}
+		}
 	}
 }
 
@@ -244,6 +296,7 @@ static void vReset()
 		{
 			g_bCloned[iPlayer] = false;
 			g_iCloneCount[iPlayer] = 0;
+			g_iCloneOwner[iPlayer] = 0;
 		}
 	}
 }

@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Track Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -33,7 +44,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Track Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Track Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -85,9 +96,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -147,9 +158,9 @@ public void ST_RockThrow(int tank, int rock)
 
 		if (iTrackMessage == 1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Track", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Track", sTankName);
 		}
 	}
 }
@@ -159,6 +170,7 @@ static void vTrack(int rock)
 	int iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower"),
 		iTrackMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackMode[ST_TankType(iTank)] : g_iTrackMode2[ST_TankType(iTank)];
 	float flTrackSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flTrackSpeed[ST_TankType(iTank)] : g_flTrackSpeed2[ST_TankType(iTank)];
+
 	switch (iTrackMode)
 	{
 		case 0:
@@ -195,10 +207,13 @@ static void vTrack(int rock)
 				float flDirection[3], flVelocity3[3];
 				SubtractVectors(flPos2, flPos, flDirection);
 				NormalizeVector(flDirection, flDirection);
+
 				ScaleVector(flDirection, 0.5);
 				AddVectors(flVelocity, flDirection, flVelocity3);
+
 				NormalizeVector(flVelocity3, flVelocity3);
 				ScaleVector(flVelocity3, flVector);
+
 				TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 			}
 		}
@@ -217,7 +232,9 @@ static void vTrack(int rock)
 
 			int iTarget = iGetRandomTarget(flPos, flVelocity);
 			float flVelocity2[3], flVector[3], flAngles[3], flDistance = 1000.0;
+
 			flVector[0] = flVector[1] = flVector[2] = 0.0;
+
 			bool bVisible;
 
 			if (iTarget > 0)
@@ -236,7 +253,9 @@ static void vTrack(int rock)
 
 			float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
 				flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0;
+
 			flFront[0] = flFront[1] = flFront[2] = 0.0;
+
 			if (bVisible)
 			{
 				flBase = 80.0;
@@ -404,24 +423,23 @@ static void vTrack(int rock)
 			AddVectors(flVelocity, flFront, flVelocity3);
 			NormalizeVector(flVelocity3, flVelocity3);
 			ScaleVector(flVelocity3, flTrackSpeed);
+
 			SetEntityGravity(rock, 0.01);
 			TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 
 			char sSet[2][16], sTankColors[28], sGlow[3][4];
 			sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
-			TrimString(sTankColors);
+			ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
 			ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+
 			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 
-			TrimString(sGlow[0]);
 			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
 			iRed = iClamp(iRed, 0, 255);
 
-			TrimString(sGlow[1]);
 			int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
 			iGreen = iClamp(iGreen, 0, 255);
 
-			TrimString(sGlow[2]);
 			int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
 			iBlue = iClamp(iBlue, 0, 255);
 

@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Shake Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -22,17 +33,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bShake[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sShakeEffect[ST_MAXTYPES + 1][4], g_sShakeEffect2[ST_MAXTYPES + 1][4];
+char g_sShakeEffect[ST_MAXTYPES + 1][4], g_sShakeEffect2[ST_MAXTYPES + 1][4], g_sShakeMessage[ST_MAXTYPES + 1][3], g_sShakeMessage2[ST_MAXTYPES + 1][3];
 
 float g_flShakeChance[ST_MAXTYPES + 1], g_flShakeChance2[ST_MAXTYPES + 1], g_flShakeDuration[ST_MAXTYPES + 1], g_flShakeDuration2[ST_MAXTYPES + 1], g_flShakeInterval[ST_MAXTYPES + 1], g_flShakeInterval2[ST_MAXTYPES + 1], g_flShakeRange[ST_MAXTYPES + 1], g_flShakeRange2[ST_MAXTYPES + 1], g_flShakeRangeChance[ST_MAXTYPES + 1], g_flShakeRangeChance2[ST_MAXTYPES + 1];
 
-int g_iShakeAbility[ST_MAXTYPES + 1], g_iShakeAbility2[ST_MAXTYPES + 1], g_iShakeHit[ST_MAXTYPES + 1], g_iShakeHit2[ST_MAXTYPES + 1], g_iShakeHitMode[ST_MAXTYPES + 1], g_iShakeHitMode2[ST_MAXTYPES + 1], g_iShakeMessage[ST_MAXTYPES + 1], g_iShakeMessage2[ST_MAXTYPES + 1];
+int g_iShakeAbility[ST_MAXTYPES + 1], g_iShakeAbility2[ST_MAXTYPES + 1], g_iShakeHit[ST_MAXTYPES + 1], g_iShakeHit2[ST_MAXTYPES + 1], g_iShakeHitMode[ST_MAXTYPES + 1], g_iShakeHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Shake Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Shake Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -109,14 +120,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vShakeHit(victim, attacker, flShakeChance(attacker), iShakeHit(attacker), 1, "1");
+				vShakeHit(victim, attacker, flShakeChance(attacker), iShakeHit(attacker), "1", "1");
 			}
 		}
 		else if ((iShakeHitMode(victim) == 0 || iShakeHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsHumanSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vShakeHit(attacker, victim, flShakeChance(victim), iShakeHit(victim), 1, "2");
+				vShakeHit(attacker, victim, flShakeChance(victim), iShakeHit(victim), "1", "2");
 			}
 		}
 	}
@@ -128,9 +139,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -139,8 +150,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iShakeAbility[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", 0);
 				g_iShakeAbility[iIndex] = iClamp(g_iShakeAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect[iIndex], sizeof(g_sShakeEffect[]), "123");
-				g_iShakeMessage[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Message", 0);
-				g_iShakeMessage[iIndex] = iClamp(g_iShakeMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Shake Ability/Ability Message", g_sShakeMessage[iIndex], sizeof(g_sShakeMessage[]), "0");
 				g_flShakeChance[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Chance", 33.3);
 				g_flShakeChance[iIndex] = flClamp(g_flShakeChance[iIndex], 0.1, 100.0);
 				g_flShakeDuration[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", 5.0);
@@ -163,8 +173,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iShakeAbility2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", g_iShakeAbility[iIndex]);
 				g_iShakeAbility2[iIndex] = iClamp(g_iShakeAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect2[iIndex], sizeof(g_sShakeEffect2[]), g_sShakeEffect[iIndex]);
-				g_iShakeMessage2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Message", g_iShakeMessage[iIndex]);
-				g_iShakeMessage2[iIndex] = iClamp(g_iShakeMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Shake Ability/Ability Message", g_sShakeMessage2[iIndex], sizeof(g_sShakeMessage2[]), g_sShakeMessage[iIndex]);
 				g_flShakeChance2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Chance", g_flShakeChance[iIndex]);
 				g_flShakeChance2[iIndex] = flClamp(g_flShakeChance2[iIndex], 0.1, 100.0);
 				g_flShakeDuration2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", g_flShakeDuration[iIndex]);
@@ -215,7 +224,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flShakeRange)
 				{
-					vShakeHit(iSurvivor, tank, flShakeRangeChance, iShakeAbility, 2, "3");
+					vShakeHit(iSurvivor, tank, flShakeRangeChance, iShakeAbility, "2", "3");
 				}
 			}
 		}
@@ -233,17 +242,19 @@ static void vReset()
 	}
 }
 
-static void vReset2(int survivor, int tank, int message)
+static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bShake[survivor] = false;
 
-	if (iShakeMessage(tank) == message || iShakeMessage(tank) == 3)
+	char sShakeMessage[3];
+	sShakeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sShakeMessage[ST_TankType(tank)] : g_sShakeMessage2[ST_TankType(tank)];
+	if (StrContains(sShakeMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Shake2", survivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Shake2", survivor);
 	}
 }
 
-static void vShakeHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vShakeHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bShake[survivor])
 	{
@@ -254,7 +265,7 @@ static void vShakeHit(int survivor, int tank, float chance, int enabled, int mes
 		CreateDataTimer(flShakeInterval, tTimerShake, dpShake, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpShake.WriteCell(GetClientUserId(survivor));
 		dpShake.WriteCell(GetClientUserId(tank));
-		dpShake.WriteCell(message);
+		dpShake.WriteString(message);
 		dpShake.WriteCell(enabled);
 		dpShake.WriteFloat(GetEngineTime());
 
@@ -262,11 +273,13 @@ static void vShakeHit(int survivor, int tank, float chance, int enabled, int mes
 		sShakeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sShakeEffect[ST_TankType(tank)] : g_sShakeEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sShakeEffect, mode);
 
-		if (iShakeMessage(tank) == message || iShakeMessage(tank) == 3)
+		char sShakeMessage[3];
+		sShakeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sShakeMessage[ST_TankType(tank)] : g_sShakeMessage2[ST_TankType(tank)];
+		if (StrContains(sShakeMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Shake", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Shake", sTankName, survivor);
 		}
 	}
 }
@@ -286,11 +299,6 @@ static int iShakeHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iShakeHitMode[ST_TankType(tank)] : g_iShakeHitMode2[ST_TankType(tank)];
 }
 
-static int iShakeMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iShakeMessage[ST_TankType(tank)] : g_iShakeMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerShake(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -303,10 +311,12 @@ public Action tTimerShake(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iShakeChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	char sMessage[3];
+	pack.ReadString(sMessage, sizeof(sMessage));
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank, iShakeChat);
+		vReset2(iSurvivor, iTank, sMessage);
 
 		return Plugin_Stop;
 	}
@@ -317,7 +327,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 
 	if (iShakeAbility == 0 || (flTime + flShakeDuration) < GetEngineTime())
 	{
-		vReset2(iSurvivor, iTank, iShakeChat);
+		vReset2(iSurvivor, iTank, sMessage);
 
 		return Plugin_Stop;
 	}

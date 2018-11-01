@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Respawn Ability
 #include <sourcemod>
 #include <sdktools>
@@ -30,7 +41,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Respawn Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Respawn Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -70,9 +81,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -197,14 +208,20 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iFlags = pack.ReadCell(), iSequence = pack.ReadCell();
-	float flPos[3], flAngles[3];
-	flPos[0] = pack.ReadFloat(), flPos[1] = pack.ReadFloat(), flPos[2] = pack.ReadFloat(), flAngles[0] = pack.ReadFloat(), flAngles[1] = pack.ReadFloat(), flAngles[2] = pack.ReadFloat();
-
-	int iRespawnAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAmount[ST_TankType(iTank)] : g_iRespawnAmount2[ST_TankType(iTank)],
+	int iFlags = pack.ReadCell(), iSequence = pack.ReadCell(),
+		iRespawnAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAmount[ST_TankType(iTank)] : g_iRespawnAmount2[ST_TankType(iTank)],
 		iRespawnMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnMessage[ST_TankType(iTank)] : g_iRespawnMessage2[ST_TankType(iTank)],
 		iRespawnMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnMode[ST_TankType(iTank)] : g_iRespawnMode2[ST_TankType(iTank)],
 		iRespawnType = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnType[ST_TankType(iTank)] : g_iRespawnType2[ST_TankType(iTank)];
+
+	float flPos[3], flAngles[3];
+	flPos[0] = pack.ReadFloat();
+	flPos[1] = pack.ReadFloat();
+	flPos[2] = pack.ReadFloat();
+	flAngles[0] = pack.ReadFloat();
+	flAngles[1] = pack.ReadFloat();
+	flAngles[2] = pack.ReadFloat();
+
 	if (g_iRespawnCount[iTank] < iRespawnAmount)
 	{
 		g_iRespawnCount[iTank]++;
@@ -256,9 +273,9 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 
 			if (iRespawnMessage == 1)
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
+				char sTankName[33];
 				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Respawn", sTankName);
+				PrintToChatAll("%s %t", ST_TAG2, "Respawn", sTankName);
 			}
 		}
 	}

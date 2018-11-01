@@ -1,5 +1,41 @@
 # Changelog
 
+## Version 8.45 (October 31, 2018)
+
+Bug fixes:
+
+1. Fixed the Clone and Minion abilities not resetting properly.
+2. Fixed the Witch ability spamming chat.
+3. Fixed the "Ability Message" settings not working properly.
+
+Changes:
+
+1. The sm_tank command now accepts partial name matches as input values. (Example: sm_tank "boss")
+2. Moved some stock functions from include file to some of the module plugins.
+3. Lowered the "Tank Name" setting's character limit from 128 to 32.
+4. The Medic ability now lets Super Tanks heal nearby special infected by 1 HP every second.
+5. The "Whirl Axis" setting now accepts different values.
+6. The Throw ability now has a 4th option - Super Tanks can throw Witches.
+7. Several abilities' "Ability Message" setting now accepts different values.
+8. Added the "Clone Replace" setting.
+9. Added the "Cloud Chance" setting.
+10. Added the "Jump Mode" setting.
+11. Added the "Jump Sporadic Chance" setting.
+12. Added the "Jump Sporadic Height" setting.
+13. Added the "Meteor Mode" setting.
+14. Added the "Minion Replace" setting.
+15. Added the "Regen Chance" setting.
+16. Added the "Shield Chance" setting.
+17. Added the "Throw Chance" setting.
+18. Added the "Witch Chance" setting.
+19. Removed some redundant code from the core plugin.
+
+Files:
+
+1. Updated config file.
+2. Updated include file.
+3. Updated translation file.
+
 ## Version 8.44 (October 16, 2018)
 
 Bug fixes:

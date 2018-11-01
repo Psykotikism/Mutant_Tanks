@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Medic Ability
 #include <sourcemod>
 
@@ -31,7 +42,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Medic Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Medic Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -71,9 +82,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -113,6 +124,34 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_Ability(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank) && IsPlayerAlive(tank))
+	{
+		float flTankPos[3];
+		GetClientAbsOrigin(tank, flTankPos);
+
+		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
+		{
+			if (bIsSpecialInfected(iInfected) && IsPlayerAlive(iInfected))
+			{
+				float flInfectedPos[3];
+				GetClientAbsOrigin(iInfected, flInfectedPos);
+
+				float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
+				if (flDistance <= flMedicRange(tank))
+				{
+					int iHealth = GetClientHealth(iInfected),
+						iNewHealth = iHealth + 1,
+						iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
+
+					SetEntityHealth(iInfected, iFinalHealth);
+				}
+			}
+		}
+	}
+}
+
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -133,13 +172,20 @@ public void ST_BossStage(int tank)
 	}
 }
 
+static void vHeal(int infected, int health, int extrahealth, int maxhealth)
+{
+	maxhealth = iClamp(maxhealth, 1, ST_MAXHEALTH);
+
+	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth,
+		iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth,
+		iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
+
+	SetEntityHealth(infected, iRealHealth);
+}
+
 static void vMedic(int tank)
 {
-	float flMedicRange = !g_bTankConfig[ST_TankType(tank)] ? g_flMedicRange[ST_TankType(tank)] : g_flMedicRange2[ST_TankType(tank)],
-		flTankPos[3];
-
-	int iMedicMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMedicMessage[ST_TankType(tank)] : g_iMedicMessage2[ST_TankType(tank)];
-
+	float flTankPos[3];
 	GetClientAbsOrigin(tank, flTankPos);
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
@@ -149,16 +195,16 @@ static void vMedic(int tank)
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 
 			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-			if (flDistance <= flMedicRange)
+			if (flDistance <= flMedicRange(tank))
 			{
 				char sHealth[6][6], sMedicHealth[36], sMaxHealth[6][6], sMedicMaxHealth[36];
 
 				sMedicHealth = !g_bTankConfig[ST_TankType(tank)] ? g_sMedicHealth[ST_TankType(tank)] : g_sMedicHealth2[ST_TankType(tank)];
-				TrimString(sMedicHealth);
+				ReplaceString(sMedicHealth, sizeof(sMedicHealth), " ", "");
 				ExplodeString(sMedicHealth, ",", sHealth, sizeof(sHealth), sizeof(sHealth[]));
 
 				sMedicMaxHealth = !g_bTankConfig[ST_TankType(tank)] ? g_sMedicMaxHealth[ST_TankType(tank)] : g_sMedicMaxHealth2[ST_TankType(tank)];
-				TrimString(sMedicMaxHealth);
+				ReplaceString(sMedicMaxHealth, sizeof(sMedicMaxHealth), " ", "");
 				ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
 
 				int iHealth = GetClientHealth(iInfected),
@@ -206,17 +252,23 @@ static void vMedic(int tank)
 		}
 	}
 
+	int iMedicMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMedicMessage[ST_TankType(tank)] : g_iMedicMessage2[ST_TankType(tank)];
 	if (iMedicMessage == 1)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Medic", sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Medic", sTankName);
 	}
 }
 
 static float flMedicChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flMedicChance[ST_TankType(tank)] : g_flMedicChance2[ST_TankType(tank)];
+}
+
+static float flMedicRange(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flMedicRange[ST_TankType(tank)] : g_flMedicRange2[ST_TankType(tank)];
 }
 
 static int iMedicAbility(int tank)

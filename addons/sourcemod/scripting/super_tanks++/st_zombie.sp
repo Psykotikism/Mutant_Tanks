@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Zombie Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -22,17 +33,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1], g_bZombie[MAXPLAYERS + 1];
 
-char g_sZombieEffect[ST_MAXTYPES + 1][4], g_sZombieEffect2[ST_MAXTYPES + 1][4];
+char g_sZombieEffect[ST_MAXTYPES + 1][4], g_sZombieEffect2[ST_MAXTYPES + 1][4], g_sZombieMessage[ST_MAXTYPES + 1][4], g_sZombieMessage2[ST_MAXTYPES + 1][4];
 
 float g_flZombieChance[ST_MAXTYPES + 1], g_flZombieChance2[ST_MAXTYPES + 1], g_flZombieInterval[ST_MAXTYPES + 1], g_flZombieInterval2[ST_MAXTYPES + 1], g_flZombieRange[ST_MAXTYPES + 1], g_flZombieRange2[ST_MAXTYPES + 1], g_flZombieRangeChance[ST_MAXTYPES + 1], g_flZombieRangeChance2[ST_MAXTYPES + 1];
 
-int g_iZombieAbility[ST_MAXTYPES + 1], g_iZombieAbility2[ST_MAXTYPES + 1], g_iZombieAmount[ST_MAXTYPES + 1], g_iZombieAmount2[ST_MAXTYPES + 1], g_iZombieHit[ST_MAXTYPES + 1], g_iZombieHit2[ST_MAXTYPES + 1], g_iZombieHitMode[ST_MAXTYPES + 1], g_iZombieHitMode2[ST_MAXTYPES + 1], g_iZombieMessage[ST_MAXTYPES + 1], g_iZombieMessage2[ST_MAXTYPES + 1];
+int g_iZombieAbility[ST_MAXTYPES + 1], g_iZombieAbility2[ST_MAXTYPES + 1], g_iZombieAmount[ST_MAXTYPES + 1], g_iZombieAmount2[ST_MAXTYPES + 1], g_iZombieHit[ST_MAXTYPES + 1], g_iZombieHit2[ST_MAXTYPES + 1], g_iZombieHitMode[ST_MAXTYPES + 1], g_iZombieHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Zombie Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Zombie Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -109,14 +120,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vZombieHit(victim, attacker, flZombieChance(attacker), iZombieHit(attacker), 1, "1");
+				vZombieHit(victim, attacker, flZombieChance(attacker), iZombieHit(attacker), "1", "1");
 			}
 		}
 		else if ((iZombieHitMode(victim) == 0 || iZombieHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vZombieHit(attacker, victim, flZombieChance(victim), iZombieHit(victim), 1, "2");
+				vZombieHit(attacker, victim, flZombieChance(victim), iZombieHit(victim), "1", "2");
 			}
 		}
 	}
@@ -128,9 +139,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -139,8 +150,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iZombieAbility[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Enabled", 0);
 				g_iZombieAbility[iIndex] = iClamp(g_iZombieAbility[iIndex], 0, 3);
 				kvSuperTanks.GetString("Zombie Ability/Ability Effect", g_sZombieEffect[iIndex], sizeof(g_sZombieEffect[]), "123");
-				g_iZombieMessage[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Message", 0);
-				g_iZombieMessage[iIndex] = iClamp(g_iZombieMessage[iIndex], 0, 7);
+				kvSuperTanks.GetString("Zombie Ability/Ability Message", g_sZombieMessage[iIndex], sizeof(g_sZombieMessage[]), "0");
 				g_iZombieAmount[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", 10);
 				g_iZombieAmount[iIndex] = iClamp(g_iZombieAmount[iIndex], 1, 100);
 				g_flZombieChance[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Chance", 33.3);
@@ -163,8 +173,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iZombieAbility2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Enabled", g_iZombieAbility[iIndex]);
 				g_iZombieAbility2[iIndex] = iClamp(g_iZombieAbility2[iIndex], 0, 3);
 				kvSuperTanks.GetString("Zombie Ability/Ability Effect", g_sZombieEffect2[iIndex], sizeof(g_sZombieEffect2[]), g_sZombieEffect[iIndex]);
-				g_iZombieMessage2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Message", g_iZombieMessage[iIndex]);
-				g_iZombieMessage2[iIndex] = iClamp(g_iZombieMessage2[iIndex], 0, 7);
+				kvSuperTanks.GetString("Zombie Ability/Ability Message", g_sZombieMessage2[iIndex], sizeof(g_sZombieMessage2[]), g_sZombieMessage[iIndex]);
 				g_iZombieAmount2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", g_iZombieAmount[iIndex]);
 				g_iZombieAmount2[iIndex] = iClamp(g_iZombieAmount2[iIndex], 1, 100);
 				g_flZombieChance2[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Chance", g_flZombieChance[iIndex]);
@@ -225,7 +234,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flZombieRange)
 				{
-					vZombieHit(iSurvivor, tank, flZombieRangeChance, iZombieAbility(tank), 2, "3");
+					vZombieHit(iSurvivor, tank, flZombieRangeChance, iZombieAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -259,7 +268,7 @@ static void vZombie(int tank)
 	}
 }
 
-static void vZombieHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vZombieHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
@@ -269,11 +278,13 @@ static void vZombieHit(int survivor, int tank, float chance, int enabled, int me
 		sZombieEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sZombieEffect[ST_TankType(tank)] : g_sZombieEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sZombieEffect, mode);
 
-		if (iZombieMessage(tank) == message || iZombieMessage(tank) == 4 || iZombieMessage(tank) == 5 || iZombieMessage(tank) == 6 || iZombieMessage(tank) == 7)
+		char sZombieMessage[4];
+		sZombieMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sZombieMessage[ST_TankType(tank)] : g_sZombieMessage2[ST_TankType(tank)];
+		if (StrContains(sZombieMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Zombie", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
 		}
 	}
 }
@@ -298,11 +309,6 @@ static int iZombieHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iZombieHitMode[ST_TankType(tank)] : g_iZombieHitMode2[ST_TankType(tank)];
 }
 
-static int iZombieMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iZombieMessage[ST_TankType(tank)] : g_iZombieMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerZombie(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -322,14 +328,13 @@ public Action tTimerZombie(Handle timer, int userid)
 
 	vZombie(iTank);
 
-	switch (iZombieMessage(iTank))
+	char sZombieMessage[4];
+	sZombieMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sZombieMessage[ST_TankType(iTank)] : g_sZombieMessage2[ST_TankType(iTank)];
+	if (StrContains(sZombieMessage, "3") != -1)
 	{
-		case 3, 5, 6, 7:
-		{
-			char sTankName[MAX_NAME_LENGTH + 1];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Zombie", sTankName);
-		}
+		char sTankName[33];
+		ST_TankName(iTank, sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
 	}
 
 	return Plugin_Continue;

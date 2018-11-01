@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Idle Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -23,19 +34,19 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bIdle[MAXPLAYERS + 1], g_bIdled[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sIdleEffect[ST_MAXTYPES + 1][4], g_sIdleEffect2[ST_MAXTYPES + 1][4];
+char g_sIdleEffect[ST_MAXTYPES + 1][4], g_sIdleEffect2[ST_MAXTYPES + 1][4], g_sIdleMessage[ST_MAXTYPES + 1][3], g_sIdleMessage2[ST_MAXTYPES + 1][4];
 
 float g_flIdleChance[ST_MAXTYPES + 1], g_flIdleChance2[ST_MAXTYPES + 1], g_flIdleRange[ST_MAXTYPES + 1], g_flIdleRange2[ST_MAXTYPES + 1], g_flIdleRangeChance[ST_MAXTYPES + 1], g_flIdleRangeChance2[ST_MAXTYPES + 1];
 
 Handle g_hSDKIdlePlayer, g_hSDKSpecPlayer;
 
-int g_iIdleAbility[ST_MAXTYPES + 1], g_iIdleAbility2[ST_MAXTYPES + 1], g_iIdleHit[ST_MAXTYPES + 1], g_iIdleHit2[ST_MAXTYPES + 1], g_iIdleHitMode[ST_MAXTYPES + 1], g_iIdleHitMode2[ST_MAXTYPES + 1], g_iIdleMessage[ST_MAXTYPES + 1], g_iIdleMessage2[ST_MAXTYPES + 1];
+int g_iIdleAbility[ST_MAXTYPES + 1], g_iIdleAbility2[ST_MAXTYPES + 1], g_iIdleHit[ST_MAXTYPES + 1], g_iIdleHit2[ST_MAXTYPES + 1], g_iIdleHitMode[ST_MAXTYPES + 1], g_iIdleHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Idle Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Idle Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -84,7 +95,7 @@ public void OnPluginStart()
 
 	if (g_hSDKIdlePlayer == null)
 	{
-		PrintToServer("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", ST_PREFIX);
+		PrintToServer("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", ST_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -94,7 +105,7 @@ public void OnPluginStart()
 
 	if (g_hSDKSpecPlayer == null)
 	{
-		PrintToServer("%s Your \"SetHumanSpec\" signature is outdated.", ST_PREFIX);
+		PrintToServer("%s Your \"SetHumanSpec\" signature is outdated.", ST_TAG);
 	}
 
 	delete gdSuperTanks;
@@ -142,14 +153,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIdleHit(victim, attacker, flIdleChance(attacker), iIdleHit(attacker), 1, "1");
+				vIdleHit(victim, attacker, flIdleChance(attacker), iIdleHit(attacker), "1", "1");
 			}
 		}
 		else if ((iIdleHitMode(victim) == 0 || iIdleHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vIdleHit(attacker, victim, flIdleChance(victim), iIdleHit(victim), 1, "2");
+				vIdleHit(attacker, victim, flIdleChance(victim), iIdleHit(victim), "1", "2");
 			}
 		}
 	}
@@ -161,9 +172,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -172,8 +183,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iIdleAbility[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Enabled", 0);
 				g_iIdleAbility[iIndex] = iClamp(g_iIdleAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect[iIndex], sizeof(g_sIdleEffect[]), "123");
-				g_iIdleMessage[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Message", 0);
-				g_iIdleMessage[iIndex] = iClamp(g_iIdleMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Idle Ability/Ability Message", g_sIdleMessage[iIndex], sizeof(g_sIdleMessage[]), "0");
 				g_flIdleChance[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", 33.3);
 				g_flIdleChance[iIndex] = flClamp(g_flIdleChance[iIndex], 0.1, 100.0);
 				g_iIdleHit[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", 0);
@@ -192,8 +202,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iIdleAbility2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Enabled", g_iIdleAbility[iIndex]);
 				g_iIdleAbility2[iIndex] = iClamp(g_iIdleAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect2[iIndex], sizeof(g_sIdleEffect2[]), g_sIdleEffect[iIndex]);
-				g_iIdleMessage2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Message", g_iIdleMessage[iIndex]);
-				g_iIdleMessage2[iIndex] = iClamp(g_iIdleMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Idle Ability/Ability Message", g_sIdleMessage2[iIndex], sizeof(g_sIdleMessage2[]), g_sIdleMessage[iIndex]);
 				g_flIdleChance2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", g_flIdleChance[iIndex]);
 				g_flIdleChance2[iIndex] = flClamp(g_flIdleChance2[iIndex], 0.1, 100.0);
 				g_iIdleHit2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", g_iIdleHit[iIndex]);
@@ -266,14 +275,14 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flIdleRange)
 				{
-					vIdleHit(iSurvivor, tank, flIdleRangeChance, iIdleAbility, 2, "3");
+					vIdleHit(iSurvivor, tank, flIdleRangeChance, iIdleAbility, "2", "3");
 				}
 			}
 		}
 	}
 }
 
-static void vIdleHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vIdleHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bIdle[survivor])
 	{
@@ -295,12 +304,13 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 			sIdleEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sIdleEffect[ST_TankType(tank)] : g_sIdleEffect2[ST_TankType(tank)];
 			vEffect(survivor, tank, sIdleEffect, mode);
 
-			int iIdleMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iIdleMessage[ST_TankType(tank)] : g_iIdleMessage2[ST_TankType(tank)];
-			if (iIdleMessage == message || iIdleMessage == 3)
+			char sIdleMessage[3];
+			sIdleMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sIdleMessage[ST_TankType(tank)] : g_sIdleMessage2[ST_TankType(tank)];
+			if (StrContains(sIdleMessage, message) != -1)
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
+				char sTankName[33];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Idle", sTankName, survivor);
+				PrintToChatAll("%s %t", ST_TAG2, "Idle", sTankName, survivor);
 			}
 		}
 	}

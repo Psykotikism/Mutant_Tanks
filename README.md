@@ -2,6 +2,8 @@
 Super Tanks++ takes the original [Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752) to the next level by enabling full customization of Super Tanks to make gameplay more interesting.
 
 ## License
+> The following license is also placed inside the source code of each plugin and include file.
+
 Super Tanks++: a L4D/L4D2 SourceMod Plugin
 Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
 
@@ -24,10 +26,13 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 
 ### Notes
 1. I do not provide support for local/listen servers but the plugin and its modules should still work properly on them.
+2. I will not help you with installing or troubleshooting problems on your part.
+3. If you get errors from SourceMod itself, that is your problem, not mine.
+4. MAKE SURE YOU MEET ALL THE REQUIREMENTS AND FOLLOW THE INSTALLATION GUIDE PROPERLY.
 
 ### Installation
 1. Delete files from old versions of the plugin.
-2. Extract the folder inside the .zip file.
+2. Extract the folder inside the super_tanks++.zip file.
 3. Place all the contents into their respective folders.
 4. If prompted to replace or merge anything, click yes.
 5. Load up Super Tanks++ by restarting the server.
@@ -36,7 +41,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 ### Uninstalling/Upgrading to Newer Versions
 1. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/plugins folder.
 2. Delete super_tanks++.txt from addons/sourcemod/gamedata folder.
-3. Delete super_tanks++ folder (super_tanks++.smx and all of its modules) from addons/sourcemod/scripting folder.
+3. Delete super_tanks++ folder (super_tanks++.sp and all of its modules) from addons/sourcemod/scripting folder.
 4. Delete super_tanks++.inc from addons/sourcemod/scripting/include folder.
 5. Delete st_clone.inc from addons/sourcemod/scripting/include folder.
 6. Delete super_tanks++ folder from addons/sourcemod/data folder.
@@ -94,8 +99,8 @@ This is okay:
 		"General"
 		{
 			"Tank Name"				"Test Tank" // Tank has a name.
-			"Tank Enabled"			"1" // Tank is enabled.
-			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+			"Tank Enabled"				"1" // Tank is enabled.
+			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
 }
@@ -111,7 +116,7 @@ This is not okay:
 		{
 			// "Tank Enabled" is missing so this entry is disabled.
 			"Tank Name"				"Test Tank" // Tank has a name.
-			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
 }
@@ -126,8 +131,8 @@ This is okay:
 		"General"
 		{
 			// Since "Tank Name" is missing, the default name for this entry will be "Tank"
-			"Tank Enabled"			"1" // Tank is enabled.
-			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+			"Tank Enabled"				"1" // Tank is enabled.
+			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
 }
@@ -142,8 +147,8 @@ This is not okay:
 		"General"
 		{
 			"Tank Name"				"Test Tank" // Tank has a name.
-			"Tank Enabled"			"1" // Tank is enabled.
-			"Skin-Glow Colors"		"255, 0, 0, 255 | 255, 255, 0" // The string should not contain any spaces.
+			"Tank Enabled"				"1" // Tank is enabled.
+			"Skin-Glow Colors"			"255, 0, 0, 255 | 255, 255, 0" // The string should not contain any spaces.
 		}
 	}
 }
@@ -160,12 +165,12 @@ Here's our final entry:
 		"General"
 		{
 			"Tank Name"				"Test Tank" // Named "Test Tank".
-			"Tank Enabled"			"1" // Entry is enabled.
-			"Skin-Glow Colors"		"255,0,0,255|255,255,0" // Has red/yellow color scheme.
+			"Tank Enabled"				"1" // Entry is enabled.
+			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Has red/yellow color scheme.
 		}
 		"Immunities"
 		{
-			"Fire Immunity"			"1" // Immune to fire.
+			"Fire Immunity"				"1" // Immune to fire.
 		}
 	}
 }
@@ -180,7 +185,7 @@ To make sure that this entry can be chosen, we must go to the "Plugin Settings" 
 	{
 		"General"
 		{
-			"Type Range"			"1-24" // Determines what entry to start and stop at when reading the entire config file.
+			"Type Range"				"1-24" // Determines what entry to start and stop at when reading the entire config file.
 		}
 	}
 }
@@ -197,7 +202,7 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Type Range"			"1-5" // Check "Tank #1" to "Tank #5"
+			"Type Range"				"1-5" // Check "Tank #1" to "Tank #5"
 		}
 	}
 	"Tank #5" // Checked by the plugin.
@@ -205,19 +210,20 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		"General"
 		{
 			"Tank Name"				"Leaper Tank"
-			"Tank Enabled"			"1"
-			"Skin-Glow Colors"		"255,255,0,255|255,255,0"
+			"Tank Enabled"				"1"
+			"Skin-Glow Colors"			"255,255,0,255|255,255,0"
 		}
 		"Enhancements"
 		{
-			"Extra Health"			"50" // Tank's base health + 50
+			"Extra Health"				"50" // Tank's base health + 50
 		}
 		"Jump Ability"
 		{
-			"Ability Enabled"		"2" // The Tank jumps periodically and makes survivors jump uncontrollably.
-			"Ability Message"		"5" // Notify players when they jump uncontrollably and when the Tank is jumping periodically.
-			"Jump Height"			"300.0" // How high off the ground the Tank can jump.
-			"Jump Interval"			"1.0" // How often the Tank jumps.
+			"Ability Enabled"			"2" // The Tank jumps periodically.
+			"Ability Message"			"3" // Notify players when the Tank is jumping periodically.
+			"Jump Height"				"300.0" // How high off the ground the Tank can jump.
+			"Jump Interval"				"1.0" // How often the Tank jumps.
+			"Jump Mode"				"0" // The Tank's jumping method.
 		}
 	}
 }
@@ -228,7 +234,7 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Type Range"			"1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
+			"Type Range"				"1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
 		}
 	}
 	"Tank #13" // This will not be checked by the plugin.
@@ -236,28 +242,28 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		"General"
 		{
 			"Tank Name"				"Invisible Tank"
-			"Tank Enabled"			"1"
-			"Skin-Glow Colors"		"255,255,255,255|255,255,255"
-			"Glow Outline"			"0" // No glow outline.
+			"Tank Enabled"				"1"
+			"Skin-Glow Colors"			"255,255,255,255|255,255,255"
+			"Glow Outline"				"0" // No glow outline.
 		}
 		"Immunities"
 		{
-			"Fire Immunity"			"1" // Immune to fire.
+			"Fire Immunity"				"1" // Immune to fire.
 		}
 		"Ghost Ability"
 		{
-			"Ability Enabled"		"2"
-			"Ghost Fade Alpha"		"2"
-			"Ghost Fade Delay"		"5.0"
-			"Ghost Fade Limit"		"0"
-			"Ghost Fade Rate"		"0.1"
+			"Ability Enabled"			"2"
+			"Ghost Fade Alpha"			"2"
+			"Ghost Fade Delay"			"5.0"
+			"Ghost Fade Limit"			"0"
+			"Ghost Fade Rate"			"0.1"
 		}
 	}
 	"Tank #10" // Checked by the plugin.
 	{
 		"General"
 		{
-			"Tank Enabled"			"1"
+			"Tank Enabled"				"1"
 		}
 		"Enhancements"
 		{
@@ -380,14 +386,14 @@ Example:
 	{
 		"General"
 		{
-			"Type Range"		"1-69" // The plugin will check for 69 entries when loading the config file.
+			"Type Range"				"1-69" // The plugin will check for 69 entries when loading the config file.
 		}
 	}
 	"Tank #69"
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank #69 is enabled and can be chosen.
+			"Tank Enabled"				"1" // Tank #69 is enabled and can be chosen.
 		}
 	}
 }
@@ -406,28 +412,28 @@ Example:
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank #1 can be chosen.
+			"Tank Enabled"				"1" // Tank #1 can be chosen.
 		}
 	}
 	"Tank #2"
 	{
 		"General"
 		{
-			"Tank Enabled"		"0" // Tank #2 cannot be chosen.
+			"Tank Enabled"				"0" // Tank #2 cannot be chosen.
 		}
 	}
 	"Tank #3"
 	{
 		"General"
 		{
-			"Tank Enabled"		"0" // Tank #3 cannot be chosen.
+			"Tank Enabled"				"0" // Tank #3 cannot be chosen.
 		}
 	}
 	"Tank #4"
 	{
 		"General"
 		{
-			"Tank Enabled"		"1" // Tank #4 can be chosen.
+			"Tank Enabled"				"1" // Tank #4 can be chosen.
 		}
 	}
 }
@@ -455,17 +461,17 @@ Example:
 	{
 		"General"
 		{
-			"Tank Name"						"Psyk0tik Tank"
-			"Tank Enabled"					"1"
-			"Skin-Glow Colors"				"0,170,255,255|0,170,255"
+			"Tank Name"				"Psyk0tik Tank"
+			"Tank Enabled"				"1"
+			"Skin-Glow Colors"			"0,170,255,255|0,170,255"
 		}
 		"Enhancements"
 		{
-			"Extra Health"					"250"
+			"Extra Health"				"250"
 		}
 		"Immunities"
 		{
-			"Fire Immunity"					"1"
+			"Fire Immunity"				"1"
 		}
 	}
 }
@@ -477,17 +483,17 @@ Example:
 	{
 		"General"
 		{
-			"Tank Name"						"Idiot Tank"
-			"Tank Enabled"					"1"
-			"Skin-Glow Colors"				"1,1,1,255|1,1,1"
+			"Tank Name"				"Idiot Tank"
+			"Tank Enabled"				"1"
+			"Skin-Glow Colors"			"1,1,1,255|1,1,1"
 		}
 		"Enhancements"
 		{
-			"Extra Health"					"1"
+			"Extra Health"				"1"
 		}
 		"Immunities"
 		{
-			"Fire Immunity"					"0"
+			"Fire Immunity"				"0"
 		}
 	}
 }
@@ -565,7 +571,7 @@ Forwards:
  * Use this forward for any passive abilities.
  *
  * @param tank			Client index of the Tank.
- */
+ **/
 forward void ST_Ability(int tank);
 
 /**
@@ -573,7 +579,7 @@ forward void ST_Ability(int tank);
  * Use this forward to trigger any features/abilities/settings when a Super Tank evolves.
  *
  * @param tank			Client index of the Tank.
- */
+ **/
 forward void ST_BossStage(int tank);
 
 /**
@@ -582,7 +588,7 @@ forward void ST_BossStage(int tank);
  *
  * @param savepath		The savepath of the config.
  * @param main			Checks whether the main config or a custom config is being used.
- */
+ **/
 forward void ST_Configs(const char[] savepath, bool main);
 
 /**
@@ -591,13 +597,13 @@ forward void ST_Configs(const char[] savepath, bool main);
  *
  * @param event			Handle to the event.
  * @param name			String containing the name of the event.
- */
+ **/
 forward void ST_Event(Event event, const char[] name);
 
 /**
  * Called when the core plugin is unloaded/reloaded.
  * Use this forward to get rid of any modifications to Tanks or survivors.
- */
+ **/
 forward void ST_PluginEnd();
 
 /**
@@ -606,7 +612,7 @@ forward void ST_PluginEnd();
  * If you plan on using this to activate an ability, use ST_Ability() instead.
  *
  * @param tank			Client index of the Tank.
- */
+ **/
 forward void ST_Preset(int tank);
 
 /**
@@ -615,7 +621,7 @@ forward void ST_Preset(int tank);
  *
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
- */
+ **/
 forward void ST_RockBreak(int tank, int rock);
 
 /**
@@ -624,7 +630,7 @@ forward void ST_RockBreak(int tank, int rock);
  *
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
- */
+ **/
 forward void ST_RockThrow(int tank, int rock);
 ```
 
@@ -634,30 +640,30 @@ Natives:
  * Returns the maximum value of the "Type Range" setting.
  *
  * @return				The maximum value of the "Type Range" setting.
- */
+ **/
 native int ST_MaxType();
 
 /**
  * Returns the minimum value of the "Type Range" setting.
  *
  * @return				The minimum value of the "Type Range" setting.
- */
+ **/
 native int ST_MinType();
 
 /**
  * Returns if the core plugin is enabled.
  *
  * @return				True if core plugin is enabled, false otherwise.
- */
+ **/
 native bool ST_PluginEnabled();
 
 /**
  * Spawns a Tank with the specified Super Tank type.
  *
  * @param tank			Client index of the Tank.
- * @param type			Type of Super Tank.
+ * @param type			Super Tank type.
  * @error				Invalid client index or type is 0.
- */
+ **/
 native void ST_SpawnTank(int tank, int type);
 
 /**
@@ -666,7 +672,7 @@ native void ST_SpawnTank(int tank, int type);
  * @param tank			Client index of the Tank.
  * @return				True if Tank is allowed to be a Super Tank, false otherwise.
  * @error				Invalid client index.
- */
+ **/
 native bool ST_TankAllowed(int tank);
 
 /**
@@ -675,7 +681,7 @@ native bool ST_TankAllowed(int tank);
  * @param type			Super Tank type.
  * @return				True if the type has a chance of spawning, false otherwise.
  * @error				Type is 0.
- */
+ **/
 native bool ST_TankChance(int type);
 
 /**
@@ -687,7 +693,7 @@ native bool ST_TankChance(int type);
  * @param green			Buffer to store the green color in.
  * @param blue			Buffer to store the blue color in.
  * @error				Invalid client index.
- */
+ **/
 native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] blue);
 
 /**
@@ -696,7 +702,7 @@ native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] b
  * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom name in.
  * @error				Invalid client index.
- */
+ **/
 native void ST_TankName(int tank, char[] buffer);
 
 /**
@@ -705,14 +711,14 @@ native void ST_TankName(int tank, char[] buffer);
  * @param tank			Client index of the Tank.
  * @return				The Tank's Super Tank type.
  * @error				Invalid client index.
- */
+ **/
 native int ST_TankType(int tank);
 
 /**
  * Returns the current finale wave.
  *
  * @return				The current finale wave.
- */
+ **/
 native int ST_TankWave();
 
 /**
@@ -721,8 +727,17 @@ native int ST_TankWave();
  * @param type			Super Tank type.
  * @return				True if the type is enabled, false otherwise.
  * @error				Type is 0.
- */
+ **/
 native bool ST_TypeEnabled(int type);
+
+/**
+ * Returns whether the clone can use abilities.
+ *
+ * @param tank				Client index of the Tank.
+ * @param clone				Checks whether "st_clone.smx" is installed.
+ * @return					True if clone can use abilities, false otherwise.
+ **/
+native bool ST_CloneAllowed(int tank, bool clone);
 ```
 
 Target filters:
@@ -741,7 +756,12 @@ Target filters:
 Commands:
 
 ```
+sm_tank
+
+Valid inputs:
+
 1. sm_tank <type 1*-500*> *The minimum and maximum values are determined by the "Type Range" KeyValue setting. (The lowest value you can set is 1 and the highest value you can set is 500 though.)
+2. sm_tank <type name*> *The plugin will attempt to match the name with any of the Super Tank types' names. (Partial names are acceptable. If more than 1 match is found, the latest match will be chosen. If 0 matches are found, the command cancels the request.)
 ```
 
 ### Configuration
@@ -774,53 +794,53 @@ Examples:
 ```
 
 ## Credits
-**Machine** - For the original [Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752).
+**Machine** - For the original [Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) plugin.
 
 **NgBUCKWANGS** - For the mapname.cfg code in his [ABM](https://forums.alliedmods.net/showthread.php?t=291562) plugin.
 
 **Spirit_12** - For the L4D signatures for the gamedata file.
 
-**honorcode23** - For the [New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
+**honorcode23** - For the [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
 
-**panxiaohai** - For the [We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537) plugins.
+**panxiaohai** - For the [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537) plugins.
 
-**strontiumdog** - For the [Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324) plugins.
+**strontiumdog** - For the [[ANY] Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [[ANY] Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [[ANY] Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324) plugins.
 
-**Hipster** - For the [Admin Smite](https://forums.alliedmods.net/showthread.php?t=118534) plugin.
+**Hipster** - For the [[ANY] Admin Smite](https://forums.alliedmods.net/showthread.php?t=118534) plugin.
 
 **Marcus101RR** - For the code to set a player's weapon's ammo.
 
-**AtomicStryker** - For the [SM Respawn Command](https://forums.alliedmods.net/showthread.php?t=96249) and [Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?t=98794) plugins.
+**AtomicStryker** - For the [[L4D & L4D2] SM Respawn Command](https://forums.alliedmods.net/showthread.php?t=96249) and [[L4D & L4D2] Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?t=98794) plugins.
 
 **ivailosp and V10** - For the [[L4D] Away](https://forums.alliedmods.net/showthread.php?t=85537) and [[L4D2] Away](https://forums.alliedmods.net/showthread.php?t=222590) plugins.
 
-**mi123645** - For the [4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409) plugin.
+**mi123645** - For the [[L4D & L4D2] 4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409) plugin.
 
-**Farbror Godis** - For the [Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
+**Farbror Godis** - For the [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
-**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?p=1694338) plugin.
+**GoD-Tony** - For the [[ANY] Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?p=1694338) plugin.
 
-**Phil25** - For the [RTD Revamped](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
+**Phil25** - For the [[TF2] RTD Revamped](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
 
-**Chaosxk** - For the [Spin](https://forums.alliedmods.net/showthread.php?t=283120) plugin.
+**Chaosxk** - For the [[ANY] Spin](https://forums.alliedmods.net/showthread.php?t=283120) plugin.
 
-**ztar** - For the [Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
+**ztar** - For the [[L4D2] Last Boss](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
 
-**IxAvnoMonvAxI** - For the [Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2) plugin.
+**IxAvnoMonvAxI** - For the [[L4D2] Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2) plugin.
 
 **Uncle Jessie** - For the Tremor Tank in his [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
 
-**Drixevel** - For the [Force Active Weapon](https://forums.alliedmods.net/showthread.php?t=293645) plugin.
+**Drixevel** - For the [[ANY] Force Active Weapon](https://forums.alliedmods.net/showthread.php?t=293645) plugin.
 
-**pRED** - For the [SM Super Commands](https://forums.alliedmods.net/showthread.php?t=57448) plugin.
+**pRED** - For the [[ANY] SM Super Commands](https://forums.alliedmods.net/showthread.php?t=57448) plugin.
 
-**sheo** - For the [Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809) plugin.
+**sheo** - For the [[L4D & L4D2] Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809) plugin.
 
-**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, for the [Silenced Infected](https://forums.alliedmods.net/showthread.php?t=137397) plugin, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and helping to optimize/fix various parts of the code.
+**Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, for the [[L4D & L4D2] Silenced Infected](https://forums.alliedmods.net/showthread.php?t=137397) plugin, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and helping to optimize/fix various parts of the code.
 
 **Lux** - For helping to optimize/fix various parts of the code.
 
-**Milo|** - For the code that automatically generates config files for each day and each map installed on a server.
+**Milo|** - For the [[ANY] Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 
@@ -846,9 +866,9 @@ Examples:
 
 # Contact Me
 If you wish to contact me for any questions, concerns, suggestions, or criticism, I can be found here:
-- [AlliedModders Forum](https://forums.alliedmods.net/member.php?u=181166)
-- [Steam](https://steamcommunity.com/profiles/76561198056665335)
-- Psyk0tik#7757 on Discord
+- [AlliedModders Forum](https://forums.alliedmods.net/member.php?u=181166) (Use this for just reporting bugs/issues or giving suggestions/ideas.)
+- [Steam](https://steamcommunity.com/profiles/76561198056665335) (Use this for getting to know me or wanting to be friends with me.)
+- Psyk0tik#7757 on Discord (Use this for pitching in new/better code.)
 
 # 3rd-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files! I do not want to create confusion for end-users and it will avoid conflict and negative feedback on the official versions of my work. If you choose to keep the same file names for your revisions, it will cause users to assume that the official versions are the source of any problems your revisions may have. This is to protect you (the reviser) and me (the developer)! Thank you!
@@ -856,4 +876,4 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 
-Thank you very much! :)
+Thank you very much and have fun! :)

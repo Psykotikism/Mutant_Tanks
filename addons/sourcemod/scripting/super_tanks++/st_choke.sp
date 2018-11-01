@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Choke Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -23,17 +34,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bChoke[MAXPLAYERS + 1], g_bChoke2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sChokeEffect[ST_MAXTYPES + 1][4], g_sChokeEffect2[ST_MAXTYPES + 1][4];
+char g_sChokeEffect[ST_MAXTYPES + 1][4], g_sChokeEffect2[ST_MAXTYPES + 1][4], g_sChokeMessage[ST_MAXTYPES + 1][3], g_sChokeMessage2[ST_MAXTYPES + 1][3];
 
 float g_flChokeAngle[MAXPLAYERS + 1][3], g_flChokeChance[ST_MAXTYPES + 1], g_flChokeChance2[ST_MAXTYPES + 1], g_flChokeDamage[ST_MAXTYPES + 1], g_flChokeDamage2[ST_MAXTYPES + 1], g_flChokeDelay[ST_MAXTYPES + 1], g_flChokeDelay2[ST_MAXTYPES + 1], g_flChokeDuration[ST_MAXTYPES + 1], g_flChokeDuration2[ST_MAXTYPES + 1], g_flChokeHeight[ST_MAXTYPES + 1], g_flChokeHeight2[ST_MAXTYPES + 1], g_flChokeRange[ST_MAXTYPES + 1], g_flChokeRange2[ST_MAXTYPES + 1], g_flChokeRangeChance[ST_MAXTYPES + 1], g_flChokeRangeChance2[ST_MAXTYPES + 1];
 
-int g_iChokeAbility[ST_MAXTYPES + 1], g_iChokeAbility2[ST_MAXTYPES + 1], g_iChokeHit[ST_MAXTYPES + 1], g_iChokeHit2[ST_MAXTYPES + 1], g_iChokeHitMode[ST_MAXTYPES + 1], g_iChokeHitMode2[ST_MAXTYPES + 1], g_iChokeMessage[ST_MAXTYPES + 1], g_iChokeMessage2[ST_MAXTYPES + 1];
+int g_iChokeAbility[ST_MAXTYPES + 1], g_iChokeAbility2[ST_MAXTYPES + 1], g_iChokeHit[ST_MAXTYPES + 1], g_iChokeHit2[ST_MAXTYPES + 1], g_iChokeHitMode[ST_MAXTYPES + 1], g_iChokeHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Choke Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Choke Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -125,14 +136,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vChokeHit(victim, attacker, flChokeChance(attacker), iChokeHit(attacker), 1, "1");
+				vChokeHit(victim, attacker, flChokeChance(attacker), iChokeHit(attacker), "1", "1");
 			}
 		}
 		else if ((iChokeHitMode(victim) == 0 || iChokeHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vChokeHit(attacker, victim, flChokeChance(victim), iChokeHit(victim), 1, "2");
+				vChokeHit(attacker, victim, flChokeChance(victim), iChokeHit(victim), "1", "2");
 			}
 		}
 	}
@@ -144,9 +155,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -155,8 +166,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iChokeAbility[iIndex] = kvSuperTanks.GetNum("Choke Ability/Ability Enabled", 0);
 				g_iChokeAbility[iIndex] = iClamp(g_iChokeAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Choke Ability/Ability Effect", g_sChokeEffect[iIndex], sizeof(g_sChokeEffect[]), "123");
-				g_iChokeMessage[iIndex] = kvSuperTanks.GetNum("Choke Ability/Ability Message", 0);
-				g_iChokeMessage[iIndex] = iClamp(g_iChokeMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Choke Ability/Ability Message", g_sChokeMessage[iIndex], sizeof(g_sChokeMessage[]), "0");
 				g_flChokeChance[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Chance", 33.3);
 				g_flChokeChance[iIndex] = flClamp(g_flChokeChance[iIndex], 0.1, 100.0);
 				g_flChokeDamage[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Damage", 5.0);
@@ -183,8 +193,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iChokeAbility2[iIndex] = kvSuperTanks.GetNum("Choke Ability/Ability Enabled", g_iChokeAbility[iIndex]);
 				g_iChokeAbility2[iIndex] = iClamp(g_iChokeAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Choke Ability/Ability Effect", g_sChokeEffect2[iIndex], sizeof(g_sChokeEffect2[]), g_sChokeEffect[iIndex]);
-				g_iChokeMessage2[iIndex] = kvSuperTanks.GetNum("Choke Ability/Ability Message", g_iChokeMessage[iIndex]);
-				g_iChokeMessage2[iIndex] = iClamp(g_iChokeMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Choke Ability/Ability Message", g_sChokeMessage2[iIndex], sizeof(g_sChokeMessage2[]), g_sChokeMessage[iIndex]);
 				g_flChokeChance2[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Chance", g_flChokeChance[iIndex]);
 				g_flChokeChance2[iIndex] = flClamp(g_flChokeChance2[iIndex], 0.1, 100.0);
 				g_flChokeDamage2[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Damage", g_flChokeDamage[iIndex]);
@@ -239,14 +248,14 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flChokeRange)
 				{
-					vChokeHit(iSurvivor, tank, flChokeRangeChance, iChokeAbility, 2, "3");
+					vChokeHit(iSurvivor, tank, flChokeRangeChance, iChokeAbility, "2", "3");
 				}
 			}
 		}
 	}
 }
 
-static void vChokeHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vChokeHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bChoke[survivor])
 	{
@@ -260,18 +269,20 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, int mes
 		CreateDataTimer(flChokeDelay, tTimerChokeLaunch, dpChokeLaunch, TIMER_FLAG_NO_MAPCHANGE);
 		dpChokeLaunch.WriteCell(GetClientUserId(survivor));
 		dpChokeLaunch.WriteCell(GetClientUserId(tank));
-		dpChokeLaunch.WriteCell(message);
+		dpChokeLaunch.WriteString(message);
 		dpChokeLaunch.WriteCell(enabled);
 
 		char sChokeEffect[4];
 		sChokeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sChokeEffect[ST_TankType(tank)] : g_sChokeEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sChokeEffect, mode);
 
-		if (iChokeMessage(tank) == message || iChokeMessage(tank) == 3)
+		char sChokeMessage[3];
+		sChokeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sChokeMessage[ST_TankType(tank)] : g_sChokeMessage2[ST_TankType(tank)];
+		if (StrContains(sChokeMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Choke", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Choke", sTankName, survivor);
 		}
 	}
 }
@@ -287,16 +298,18 @@ static void vReset()
 	}
 }
 
-static void vReset2(int survivor, int tank, int message)
+static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bChoke[survivor] = false;
 	g_bChoke2[survivor] = false;
 
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
 
-	if (iChokeMessage(tank) == message || iChokeMessage(tank) == 3)
+	char sChokeMessage[3];
+	sChokeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sChokeMessage[ST_TankType(tank)] : g_sChokeMessage2[ST_TankType(tank)];
+	if (StrContains(sChokeMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Choke2", survivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Choke2", survivor);
 	}
 }
 
@@ -313,11 +326,6 @@ static int iChokeHit(int tank)
 static int iChokeHitMode(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iChokeHitMode[ST_TankType(tank)] : g_iChokeHitMode2[ST_TankType(tank)];
-}
-
-static int iChokeMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iChokeMessage[ST_TankType(tank)] : g_iChokeMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerChokeLaunch(Handle timer, DataPack pack)
@@ -340,7 +348,10 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iChokeChat = pack.ReadCell(), iChokeAbility = pack.ReadCell();
+	char sMessage[3];
+	pack.ReadString(sMessage, sizeof(sMessage));
+
+	int iChokeAbility = pack.ReadCell();
 	if (iChokeAbility == 0)
 	{
 		g_bChoke[iSurvivor] = false;
@@ -362,7 +373,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	CreateDataTimer(1.0, tTimerChokeDamage, dpChokeDamage, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpChokeDamage.WriteCell(GetClientUserId(iSurvivor));
 	dpChokeDamage.WriteCell(GetClientUserId(iTank));
-	dpChokeDamage.WriteCell(iChokeChat);
+	dpChokeDamage.WriteString(sMessage);
 	dpChokeDamage.WriteCell(iChokeAbility);
 	dpChokeDamage.WriteFloat(GetEngineTime());
 
@@ -382,10 +393,12 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iChokeChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	char sMessage[3];
+	pack.ReadString(sMessage, sizeof(sMessage));
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank, iChokeChat);
+		vReset2(iSurvivor, iTank, sMessage);
 
 		return Plugin_Stop;
 	}
@@ -396,15 +409,14 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 
 	if (iChokeAbility == 0 || (flTime + flChokeDuration) < GetEngineTime())
 	{
-		vReset2(iSurvivor, iTank, iChokeChat);
+		vReset2(iSurvivor, iTank, sMessage);
 
 		return Plugin_Stop;
 	}
 
 	g_bChoke2[iSurvivor] = true;
 
-	float flVelocity[3] = {0.0, 0.0, 0.0};
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 
 	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
 	SetEntityGravity(iSurvivor, 1.0);

@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Rock Ability
 #include <sourcemod>
 #include <sdktools>
@@ -32,7 +43,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Rock Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Rock Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -87,9 +98,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -170,9 +181,9 @@ public void ST_Ability(int tank)
 
 		if (iRockMessage(tank) == 1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Rock", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Rock", sTankName);
 		}
 	}
 }
@@ -196,9 +207,9 @@ static void vReset2(int tank, int rock)
 
 	if (iRockMessage(tank) == 1)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_PREFIX2, "Rock2", sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Rock2", sTankName);
 	}
 }
 
@@ -232,7 +243,9 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	}
 
 	float flPos[3];
-	flPos[0] = pack.ReadFloat(), flPos[1] = pack.ReadFloat(), flPos[2] = pack.ReadFloat();
+	flPos[0] = pack.ReadFloat();
+	flPos[1] = pack.ReadFloat();
+	flPos[2] = pack.ReadFloat();
 
 	float flTime = pack.ReadFloat(),
 		flRockDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flRockDuration[ST_TankType(iTank)] : g_flRockDuration2[ST_TankType(iTank)];
@@ -246,15 +259,11 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 
 	char sRadius[2][6], sRockRadius[11];
 	sRockRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sRockRadius[ST_TankType(iTank)] : g_sRockRadius2[ST_TankType(iTank)];
-	TrimString(sRockRadius);
+	ReplaceString(sRockRadius, sizeof(sRockRadius), " ", "");
 	ExplodeString(sRockRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
 
-	TrimString(sRadius[0]);
-	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -5.0;
-
-	TrimString(sRadius[1]);
-	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 5.0;
-
+	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -5.0,
+		flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 5.0;
 	flMin = flClamp(flMin, -5.0, 0.0);
 	flMax = flClamp(flMax, 0.0, 5.0);
 
@@ -279,7 +288,9 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	if (flDistance > 300.0)
 	{ 
 		float flAngles2[3];
-		flAngles2[0] = GetRandomFloat(flMin, flMax), flAngles2[1] = GetRandomFloat(flMin, flMax), flAngles2[2] = -2.0;
+		flAngles2[0] = GetRandomFloat(flMin, flMax);
+		flAngles2[1] = GetRandomFloat(flMin, flMax);
+		flAngles2[2] = -2.0;
 		GetVectorAngles(flAngles2, flAngles2);
 
 		TeleportEntity(iRock, flHitPos, flAngles2, NULL_VECTOR);

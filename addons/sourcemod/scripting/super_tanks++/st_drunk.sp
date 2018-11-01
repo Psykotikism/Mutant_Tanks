@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Drunk Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -23,17 +34,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bDrunk[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sDrunkEffect[ST_MAXTYPES + 1][4], g_sDrunkEffect2[ST_MAXTYPES + 1][4];
+char g_sDrunkEffect[ST_MAXTYPES + 1][4], g_sDrunkEffect2[ST_MAXTYPES + 1][4], g_sDrunkMessage[ST_MAXTYPES + 1][3], g_sDrunkMessage2[ST_MAXTYPES + 1][3];
 
 float g_flDrunkChance[ST_MAXTYPES + 1], g_flDrunkChance2[ST_MAXTYPES + 1], g_flDrunkDuration[ST_MAXTYPES + 1], g_flDrunkDuration2[ST_MAXTYPES + 1], g_flDrunkRange[ST_MAXTYPES + 1], g_flDrunkRange2[ST_MAXTYPES + 1], g_flDrunkRangeChance[ST_MAXTYPES + 1], g_flDrunkRangeChance2[ST_MAXTYPES + 1], g_flDrunkSpeedInterval[ST_MAXTYPES + 1], g_flDrunkSpeedInterval2[ST_MAXTYPES + 1], g_flDrunkTurnInterval[ST_MAXTYPES + 1], g_flDrunkTurnInterval2[ST_MAXTYPES + 1];
 
-int g_iDrunkAbility[ST_MAXTYPES + 1], g_iDrunkAbility2[ST_MAXTYPES + 1], g_iDrunkHit[ST_MAXTYPES + 1], g_iDrunkHit2[ST_MAXTYPES + 1], g_iDrunkHitMode[ST_MAXTYPES + 1], g_iDrunkHitMode2[ST_MAXTYPES + 1], g_iDrunkMessage[ST_MAXTYPES + 1], g_iDrunkMessage2[ST_MAXTYPES + 1];
+int g_iDrunkAbility[ST_MAXTYPES + 1], g_iDrunkAbility2[ST_MAXTYPES + 1], g_iDrunkHit[ST_MAXTYPES + 1], g_iDrunkHit2[ST_MAXTYPES + 1], g_iDrunkHitMode[ST_MAXTYPES + 1], g_iDrunkHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Drunk Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Drunk Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -110,14 +121,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vDrunkHit(victim, attacker, flDrunkChance(attacker), iDrunkHit(attacker), 1, "1");
+				vDrunkHit(victim, attacker, flDrunkChance(attacker), iDrunkHit(attacker), "1", "1");
 			}
 		}
 		else if ((iDrunkHitMode(victim) == 0 || iDrunkHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vDrunkHit(attacker, victim, flDrunkChance(victim), iDrunkHit(victim), 1, "2");
+				vDrunkHit(attacker, victim, flDrunkChance(victim), iDrunkHit(victim), "1", "2");
 			}
 		}
 	}
@@ -129,9 +140,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -140,8 +151,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iDrunkAbility[iIndex] = kvSuperTanks.GetNum("Drunk Ability/Ability Enabled", 0);
 				g_iDrunkAbility[iIndex] = iClamp(g_iDrunkAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Drunk Ability/Ability Effect", g_sDrunkEffect[iIndex], sizeof(g_sDrunkEffect[]), "123");
-				g_iDrunkMessage[iIndex] = kvSuperTanks.GetNum("Drunk Ability/Ability Message", 0);
-				g_iDrunkMessage[iIndex] = iClamp(g_iDrunkMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Drunk Ability/Ability Message", g_sDrunkMessage[iIndex], sizeof(g_sDrunkMessage[]), "0");
 				g_flDrunkChance[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Chance", 33.3);
 				g_flDrunkChance[iIndex] = flClamp(g_flDrunkChance[iIndex], 0.1, 100.0);
 				g_flDrunkDuration[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Duration", 5.0);
@@ -166,8 +176,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iDrunkAbility2[iIndex] = kvSuperTanks.GetNum("Drunk Ability/Ability Enabled", g_iDrunkAbility[iIndex]);
 				g_iDrunkAbility2[iIndex] = iClamp(g_iDrunkAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Drunk Ability/Ability Effect", g_sDrunkEffect2[iIndex], sizeof(g_sDrunkEffect2[]), g_sDrunkEffect[iIndex]);
-				g_iDrunkMessage2[iIndex] = kvSuperTanks.GetNum("Drunk Ability/Ability Message", g_iDrunkMessage[iIndex]);
-				g_iDrunkMessage2[iIndex] = iClamp(g_iDrunkMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Drunk Ability/Ability Message", g_sDrunkMessage2[iIndex], sizeof(g_sDrunkMessage2[]), g_sDrunkMessage[iIndex]);
 				g_flDrunkChance2[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Chance", g_flDrunkChance[iIndex]);
 				g_flDrunkChance2[iIndex] = flClamp(g_flDrunkChance2[iIndex], 0.1, 100.0);
 				g_flDrunkDuration2[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Duration", g_flDrunkDuration[iIndex]);
@@ -218,14 +227,14 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flDrunkRange)
 				{
-					vDrunkHit(iSurvivor, tank, flDrunkRangeChance, iDrunkAbility(tank), 2, "3");
+					vDrunkHit(iSurvivor, tank, flDrunkRangeChance, iDrunkAbility(tank), "2", "3");
 				}
 			}
 		}
 	}
 }
 
-static void vDrunkHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vDrunkHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bDrunk[survivor])
 	{
@@ -244,7 +253,7 @@ static void vDrunkHit(int survivor, int tank, float chance, int enabled, int mes
 		CreateDataTimer(flDrunkTurnInterval, tTimerDrunkTurn, dpDrunkTurn, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpDrunkTurn.WriteCell(GetClientUserId(survivor));
 		dpDrunkTurn.WriteCell(GetClientUserId(tank));
-		dpDrunkTurn.WriteCell(message);
+		dpDrunkTurn.WriteString(message);
 		dpDrunkTurn.WriteCell(enabled);
 		dpDrunkTurn.WriteFloat(GetEngineTime());
 
@@ -252,11 +261,13 @@ static void vDrunkHit(int survivor, int tank, float chance, int enabled, int mes
 		sDrunkEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sDrunkEffect[ST_TankType(tank)] : g_sDrunkEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sDrunkEffect, mode);
 
-		if (iDrunkMessage(tank) == message || iDrunkMessage(tank) == 3)
+		char sDrunkMessage[3];
+		sDrunkMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sDrunkMessage[ST_TankType(tank)] : g_sDrunkMessage2[ST_TankType(tank)];
+		if (StrContains(sDrunkMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Drunk", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Drunk", sTankName, survivor);
 		}
 	}
 }
@@ -272,13 +283,15 @@ static void vReset()
 	}
 }
 
-static void vReset2(int survivor, int tank, int message)
+static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bDrunk[survivor] = false;
 
-	if (iDrunkMessage(tank) == message || iDrunkMessage(tank) == 3)
+	char sDrunkMessage[3];
+	sDrunkMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sDrunkMessage[ST_TankType(tank)] : g_sDrunkMessage2[ST_TankType(tank)];
+	if (StrContains(sDrunkMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Drunk2", survivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Drunk2", survivor);
 	}
 }
 
@@ -305,11 +318,6 @@ static int iDrunkHit(int tank)
 static int iDrunkHitMode(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iDrunkHitMode[ST_TankType(tank)] : g_iDrunkHitMode2[ST_TankType(tank)];
-}
-
-static int iDrunkMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iDrunkMessage[ST_TankType(tank)] : g_iDrunkMessage2[ST_TankType(tank)];
 }
 
 public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
@@ -354,10 +362,12 @@ public Action tTimerDrunkTurn(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iDrunkChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	char sMessage[3];
+	pack.ReadString(sMessage, sizeof(sMessage));
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		vReset2(iSurvivor, iTank, iDrunkChat);
+		vReset2(iSurvivor, iTank, sMessage);
 
 		return Plugin_Stop;
 	}
@@ -367,7 +377,7 @@ public Action tTimerDrunkTurn(Handle timer, DataPack pack)
 
 	if (iDrunkEnabled == 0 || (flTime + flDrunkDuration(iTank) < GetEngineTime()))
 	{
-		vReset2(iSurvivor, iTank, iDrunkChat);
+		vReset2(iSurvivor, iTank, sMessage);
 
 		return Plugin_Stop;
 	}

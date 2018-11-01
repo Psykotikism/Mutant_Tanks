@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Hypno Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -22,17 +33,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bHypno[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sHypnoEffect[ST_MAXTYPES + 1][4], g_sHypnoEffect2[ST_MAXTYPES + 1][4];
+char g_sHypnoEffect[ST_MAXTYPES + 1][4], g_sHypnoEffect2[ST_MAXTYPES + 1][4], g_sHypnoMessage[ST_MAXTYPES + 1][3], g_sHypnoMessage2[ST_MAXTYPES + 1][3];
 
 float g_flHypnoBulletDivisor[ST_MAXTYPES + 1], g_flHypnoBulletDivisor2[ST_MAXTYPES + 1], g_flHypnoChance[ST_MAXTYPES + 1], g_flHypnoChance2[ST_MAXTYPES + 1], g_flHypnoDuration[ST_MAXTYPES + 1], g_flHypnoDuration2[ST_MAXTYPES + 1], g_flHypnoExplosiveDivisor[ST_MAXTYPES + 1], g_flHypnoExplosiveDivisor2[ST_MAXTYPES + 1], g_flHypnoFireDivisor[ST_MAXTYPES + 1], g_flHypnoFireDivisor2[ST_MAXTYPES + 1], g_flHypnoMeleeDivisor[ST_MAXTYPES + 1], g_flHypnoMeleeDivisor2[ST_MAXTYPES + 1], g_flHypnoRange[ST_MAXTYPES + 1], g_flHypnoRange2[ST_MAXTYPES + 1], g_flHypnoRangeChance[ST_MAXTYPES + 1], g_flHypnoRangeChance2[ST_MAXTYPES + 1];
 
-int g_iHypnoAbility[ST_MAXTYPES + 1], g_iHypnoAbility2[ST_MAXTYPES + 1], g_iHypnoHit[ST_MAXTYPES + 1], g_iHypnoHit2[ST_MAXTYPES + 1], g_iHypnoHitMode[ST_MAXTYPES + 1], g_iHypnoHitMode2[ST_MAXTYPES + 1], g_iHypnoMessage[ST_MAXTYPES + 1], g_iHypnoMessage2[ST_MAXTYPES + 1], g_iHypnoMode[ST_MAXTYPES + 1], g_iHypnoMode2[ST_MAXTYPES + 1];
+int g_iHypnoAbility[ST_MAXTYPES + 1], g_iHypnoAbility2[ST_MAXTYPES + 1], g_iHypnoHit[ST_MAXTYPES + 1], g_iHypnoHit2[ST_MAXTYPES + 1], g_iHypnoHitMode[ST_MAXTYPES + 1], g_iHypnoHitMode2[ST_MAXTYPES + 1], g_iHypnoMode[ST_MAXTYPES + 1], g_iHypnoMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Hypno Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Hypno Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -109,14 +120,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHypnoHit(victim, attacker, flHypnoChance(attacker), iHypnoHit(attacker), 1, "1");
+				vHypnoHit(victim, attacker, flHypnoChance(attacker), iHypnoHit(attacker), "1", "1");
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if ((iHypnoHitMode(victim) == 0 || iHypnoHitMode(victim) == 2) && StrEqual(sClassname, "weapon_melee"))
 			{
-				vHypnoHit(attacker, victim, flHypnoChance(victim), iHypnoHit(victim), 1, "2");
+				vHypnoHit(attacker, victim, flHypnoChance(victim), iHypnoHit(victim), "1", "2");
 			}
 
 			if (g_bHypno[attacker])
@@ -181,9 +192,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -192,8 +203,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iHypnoAbility[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Enabled", 0);
 				g_iHypnoAbility[iIndex] = iClamp(g_iHypnoAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Hypno Ability/Ability Effect", g_sHypnoEffect[iIndex], sizeof(g_sHypnoEffect[]), "123");
-				g_iHypnoMessage[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Message", 0);
-				g_iHypnoMessage[iIndex] = iClamp(g_iHypnoMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Hypno Ability/Ability Message", g_sHypnoMessage[iIndex], sizeof(g_sHypnoMessage[]), "0");
 				g_flHypnoBulletDivisor[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Bullet Divisor", 20.0);
 				g_flHypnoBulletDivisor[iIndex] = flClamp(g_flHypnoBulletDivisor[iIndex], 0.1, 9999999999.0);
 				g_flHypnoChance[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Chance", 33.3);
@@ -224,8 +234,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iHypnoAbility2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Enabled", g_iHypnoAbility[iIndex]);
 				g_iHypnoAbility2[iIndex] = iClamp(g_iHypnoAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Hypno Ability/Ability Effect", g_sHypnoEffect2[iIndex], sizeof(g_sHypnoEffect2[]), g_sHypnoEffect[iIndex]);
-				g_iHypnoMessage2[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Message", g_iHypnoMessage[iIndex]);
-				g_iHypnoMessage2[iIndex] = iClamp(g_iHypnoMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Hypno Ability/Ability Message", g_sHypnoMessage2[iIndex], sizeof(g_sHypnoMessage2[]), g_sHypnoMessage[iIndex]);
 				g_flHypnoBulletDivisor2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Bullet Divisor", g_flHypnoBulletDivisor[iIndex]);
 				g_flHypnoBulletDivisor2[iIndex] = flClamp(g_flHypnoBulletDivisor2[iIndex], 0.1, 9999999999.0);
 				g_flHypnoChance2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Chance", g_flHypnoChance[iIndex]);
@@ -295,7 +304,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHypnoRange)
 				{
-					vHypnoHit(iSurvivor, tank, flHypnoRangeChance, iHypnoAbility(tank), 2, "3");
+					vHypnoHit(iSurvivor, tank, flHypnoRangeChance, iHypnoAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -310,7 +319,7 @@ public void ST_BossStage(int tank)
 	}
 }
 
-static void vHypnoHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vHypnoHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bHypno[survivor])
 	{
@@ -321,17 +330,19 @@ static void vHypnoHit(int survivor, int tank, float chance, int enabled, int mes
 		CreateDataTimer(flHypnoDuration, tTimerStopHypno, dpStopHypno, TIMER_FLAG_NO_MAPCHANGE);
 		dpStopHypno.WriteCell(GetClientUserId(survivor));
 		dpStopHypno.WriteCell(GetClientUserId(tank));
-		dpStopHypno.WriteCell(message);
+		dpStopHypno.WriteString(message);
 
 		char sHypnoEffect[4];
 		sHypnoEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sHypnoEffect[ST_TankType(tank)] : g_sHypnoEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sHypnoEffect, mode);
 
-		if (iHypnoMessage(tank) == message || iHypnoMessage(tank) == 3)
+		char sHypnoMessage[3];
+		sHypnoMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sHypnoMessage[ST_TankType(tank)] : g_sHypnoMessage2[ST_TankType(tank)];
+		if (StrContains(sHypnoMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Hypno", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Hypno", sTankName, survivor);
 		}
 	}
 }
@@ -378,11 +389,6 @@ static int iHypnoHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoHitMode[ST_TankType(tank)] : g_iHypnoHitMode2[ST_TankType(tank)];
 }
 
-static int iHypnoMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHypnoMessage[ST_TankType(tank)] : g_iHypnoMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerStopHypno(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -395,7 +401,7 @@ public Action tTimerStopHypno(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iHypnoChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bHypno[iSurvivor] = false;
@@ -405,9 +411,12 @@ public Action tTimerStopHypno(Handle timer, DataPack pack)
 
 	g_bHypno[iSurvivor] = false;
 
-	if (iHypnoMessage(iTank) == iHypnoChat || iHypnoMessage(iTank) == 3)
+	char sHypnoMessage[3], sMessage[3];
+	sHypnoMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sHypnoMessage[ST_TankType(iTank)] : g_sHypnoMessage2[ST_TankType(iTank)];
+	pack.ReadString(sMessage, sizeof(sMessage));
+	if (StrContains(sHypnoMessage, "3") != -1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Hypno2", iSurvivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Hypno2", iSurvivor);
 	}
 
 	return Plugin_Continue;

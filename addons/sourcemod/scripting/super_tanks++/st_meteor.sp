@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Meteor Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -22,6 +33,7 @@ public Plugin myinfo =
 };
 
 #define MODEL_CONCRETE "models/props_debris/concrete_chunk01a.mdl"
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 
 bool g_bCloneInstalled, g_bMeteor[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
@@ -30,13 +42,13 @@ char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13]
 
 float g_flMeteorChance[ST_MAXTYPES + 1], g_flMeteorChance2[ST_MAXTYPES + 1], g_flMeteorDamage[ST_MAXTYPES + 1], g_flMeteorDamage2[ST_MAXTYPES + 1];
 
-int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorMessage[ST_MAXTYPES + 1], g_iMeteorMessage2[ST_MAXTYPES + 1];
+int g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorMessage[ST_MAXTYPES + 1], g_iMeteorMessage2[ST_MAXTYPES + 1], g_iMeteorMode[ST_MAXTYPES + 1], g_iMeteorMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Meteor Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Meteor Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -72,6 +84,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+	PrecacheModel(MODEL_GASCAN, true);
 	PrecacheModel(MODEL_PROPANETANK, true);
 
 	vReset();
@@ -93,9 +106,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -110,6 +123,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flMeteorChance[iIndex] = flClamp(g_flMeteorChance[iIndex], 0.1, 100.0);
 				g_flMeteorDamage[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", 5.0);
 				g_flMeteorDamage[iIndex] = flClamp(g_flMeteorDamage[iIndex], 1.0, 9999999999.0);
+				g_iMeteorMode[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Mode", 0);
+				g_iMeteorMode[iIndex] = iClamp(g_iMeteorMode[iIndex], 0, 1);
 				kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius[iIndex], sizeof(g_sMeteorRadius[]), "-180.0,180.0");
 			}
 			else
@@ -125,6 +140,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flMeteorChance2[iIndex] = flClamp(g_flMeteorChance2[iIndex], 0.1, 100.0);
 				g_flMeteorDamage2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", g_flMeteorDamage[iIndex]);
 				g_flMeteorDamage2[iIndex] = flClamp(g_flMeteorDamage2[iIndex], 1.0, 9999999999.0);
+				g_iMeteorMode2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Mode", g_iMeteorMode[iIndex]);
+				g_iMeteorMode2[iIndex] = iClamp(g_iMeteorMode2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius2[iIndex], sizeof(g_sMeteorRadius2[]), g_sMeteorRadius[iIndex]);
 			}
 
@@ -161,9 +178,9 @@ public void ST_Ability(int tank)
 		int iMeteorMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorMessage[ST_TankType(tank)] : g_iMeteorMessage2[ST_TankType(tank)];
 		if (iMeteorMessage == 1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Meteor", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Meteor", sTankName);
 		}
 	}
 }
@@ -181,63 +198,59 @@ static void vMeteor(int tank, int rock)
 	{
 		RemoveEntity(rock);
 
-		float flRockPos[3];
-		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flRockPos);
-
-		int iPropane = CreateEntityByName("prop_physics");
-		if (bIsValidEntity(iPropane))
+		int iMeteorMode = !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorMode[ST_TankType(tank)] : g_iMeteorMode2[ST_TankType(tank)];
+		switch (iMeteorMode)
 		{
-			SetEntityModel(iPropane, MODEL_PROPANETANK);
-
-			flRockPos[2] += 50.0;
-			TeleportEntity(iPropane, flRockPos, NULL_VECTOR, NULL_VECTOR);
-
-			DispatchSpawn(iPropane);
-			ActivateEntity(iPropane);
-
-			SetEntPropEnt(iPropane, Prop_Data, "m_hPhysicsAttacker", tank);
-			SetEntPropFloat(iPropane, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
-
-			SetEntProp(iPropane, Prop_Send, "m_CollisionGroup", 1);
-			SetEntityRenderMode(iPropane, RENDER_TRANSCOLOR);
-			SetEntityRenderColor(iPropane, 0, 0, 0, 0);
-
-			AcceptEntityInput(iPropane, "Break");
-		}
-
-		float flTankPos[3];
-		GetClientAbsOrigin(tank, flTankPos);
-
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor))
+			case 0:
 			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				float flRockPos[3];
+				GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flRockPos);
 
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance < 200.0)
+				vSpecialAttack(tank, flRockPos, 50.0, MODEL_GASCAN);
+				vSpecialAttack(tank, flRockPos, 50.0, MODEL_PROPANETANK);
+			}
+			case 1:
+			{
+				float flRockPos[3];
+				GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flRockPos);
+
+				vSpecialAttack(tank, flRockPos, 50.0, MODEL_PROPANETANK);
+
+				float flTankPos[3];
+				GetClientAbsOrigin(tank, flTankPos);
+
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
-					float flMeteorDamage = !g_bTankConfig[ST_TankType(tank)] ? g_flMeteorDamage[ST_TankType(tank)] : g_flMeteorDamage2[ST_TankType(tank)];
-					SDKHooks_TakeDamage(iSurvivor, tank, tank, flMeteorDamage);
+					if (bIsSurvivor(iSurvivor))
+					{
+						float flSurvivorPos[3];
+						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+						float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+						if (flDistance < 200.0)
+						{
+							float flMeteorDamage = !g_bTankConfig[ST_TankType(tank)] ? g_flMeteorDamage[ST_TankType(tank)] : g_flMeteorDamage2[ST_TankType(tank)];
+							SDKHooks_TakeDamage(iSurvivor, tank, tank, flMeteorDamage);
+						}
+					}
+				}
+
+				int iPointPush = CreateEntityByName("point_push");
+				if (bIsValidEntity(iPointPush))
+				{
+					SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", tank);
+					DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
+					DispatchKeyValueFloat(iPointPush, "radius", 200.0);
+					DispatchKeyValue(iPointPush, "spawnflags", "8");
+					TeleportEntity(iPointPush, flRockPos, NULL_VECTOR, NULL_VECTOR);
+
+					DispatchSpawn(iPointPush);
+					AcceptEntityInput(iPointPush, "Enable");
+
+					iPointPush = EntIndexToEntRef(iPointPush);
+					vDeleteEntity(iPointPush, 0.5);
 				}
 			}
-		}
-
-		int iPointPush = CreateEntityByName("point_push");
-		if (bIsValidEntity(iPointPush))
-		{
-			SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", tank);
-			DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
-			DispatchKeyValueFloat(iPointPush, "radius", 200.0);
-			DispatchKeyValue(iPointPush, "spawnflags", "8");
-			TeleportEntity(iPointPush, flRockPos, NULL_VECTOR, NULL_VECTOR);
-
-			DispatchSpawn(iPointPush);
-			AcceptEntityInput(iPointPush, "Enable");
-
-			iPointPush = EntIndexToEntRef(iPointPush);
-			vDeleteEntity(iPointPush, 0.5);
 		}
 	}
 }
@@ -271,7 +284,9 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	}
 
 	float flPos[3];
-	flPos[0] = pack.ReadFloat(), flPos[1] = pack.ReadFloat(), flPos[2] = pack.ReadFloat();
+	flPos[0] = pack.ReadFloat();
+	flPos[1] = pack.ReadFloat();
+	flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
 
 	if (iMeteorAbility(iTank) == 0)
@@ -283,37 +298,29 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 
 	char sRadius[2][7], sMeteorRadius[13], sSet[5][16], sPropsColors[80], sRGB[4][4];
 	sMeteorRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sMeteorRadius[ST_TankType(iTank)] : g_sMeteorRadius2[ST_TankType(iTank)];
-	TrimString(sMeteorRadius);
+	ReplaceString(sMeteorRadius, sizeof(sMeteorRadius), " ", "");
 	ExplodeString(sMeteorRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
 
-	TrimString(sRadius[0]);
-	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -200.0;
-
-	TrimString(sRadius[1]);
-	float flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
-
+	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -200.0,
+		flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
 	flMin = flClamp(flMin, -200.0, 0.0);
 	flMax = flClamp(flMax, 0.0, 200.0);
 
 	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
-	TrimString(sPropsColors);
+	ReplaceString(sPropsColors, sizeof(sPropsColors), " ", "");
 	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
 	ExplodeString(sSet[3], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 
-	TrimString(sRGB[0]);
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
 	iRed = iClamp(iRed, 0, 255);
 
-	TrimString(sRGB[1]);
 	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
 	iGreen = iClamp(iGreen, 0, 255);
 
-	TrimString(sRGB[2]);
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
 	iBlue = iClamp(iBlue, 0, 255);
 
-	TrimString(sRGB[3]);
 	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
 	iAlpha = iClamp(iAlpha, 0, 255);
 
@@ -326,9 +333,11 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	if (g_bMeteor[iTank])
 	{
 		float flAngles[3], flVelocity[3], flHitpos[3], flVector[3];
+
 		flAngles[0] = GetRandomFloat(-20.0, 20.0);
 		flAngles[1] = GetRandomFloat(-20.0, 20.0);
 		flAngles[2] = 60.0;
+
 		GetVectorAngles(flAngles, flAngles);
 		iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
 
@@ -352,12 +361,15 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 				SetEntityRenderColor(iRock, iRed, iGreen, iBlue, iAlpha);
 
 				float flAngles2[3];
+
 				flAngles2[0] = GetRandomFloat(flMin, flMax);
 				flAngles2[1] = GetRandomFloat(flMin, flMax);
 				flAngles2[2] = GetRandomFloat(flMin, flMax);
+
 				flVelocity[0] = GetRandomFloat(0.0, 350.0);
 				flVelocity[1] = GetRandomFloat(0.0, 350.0);
 				flVelocity[2] = GetRandomFloat(0.0, 30.0);
+
 				TeleportEntity(iRock, flHitpos, flAngles2, flVelocity);
 
 				DispatchSpawn(iRock);
@@ -366,7 +378,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 
 				SetEntPropEnt(iRock, Prop_Send, "m_hOwnerEntity", iTank);
 				iRock = EntIndexToEntRef(iRock);
-				vDeleteEntity(iRock, 30.0);
+				vDeleteEntity(iRock, 60.0);
 			}
 		}
 	}

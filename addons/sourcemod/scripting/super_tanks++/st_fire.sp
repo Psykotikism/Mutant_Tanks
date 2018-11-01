@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Fire Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -25,17 +36,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sFireEffect[ST_MAXTYPES + 1][4], g_sFireEffect2[ST_MAXTYPES + 1][4];
+char g_sFireEffect[ST_MAXTYPES + 1][4], g_sFireEffect2[ST_MAXTYPES + 1][4], g_sFireMessage[ST_MAXTYPES + 1][4], g_sFireMessage2[ST_MAXTYPES + 1][4];
 
 float g_flFireChance[ST_MAXTYPES + 1], g_flFireChance2[ST_MAXTYPES + 1], g_flFireRange[ST_MAXTYPES + 1], g_flFireRange2[ST_MAXTYPES + 1], g_flFireRangeChance[ST_MAXTYPES + 1], g_flFireRangeChance2[ST_MAXTYPES + 1];
 
-int g_iFireAbility[ST_MAXTYPES + 1], g_iFireAbility2[ST_MAXTYPES + 1], g_iFireHit[ST_MAXTYPES + 1], g_iFireHit2[ST_MAXTYPES + 1], g_iFireHitMode[ST_MAXTYPES + 1], g_iFireHitMode2[ST_MAXTYPES + 1], g_iFireMessage[ST_MAXTYPES + 1], g_iFireMessage2[ST_MAXTYPES + 1], g_iFireRock[ST_MAXTYPES + 1], g_iFireRock2[ST_MAXTYPES + 1];
+int g_iFireAbility[ST_MAXTYPES + 1], g_iFireAbility2[ST_MAXTYPES + 1], g_iFireHit[ST_MAXTYPES + 1], g_iFireHit2[ST_MAXTYPES + 1], g_iFireHitMode[ST_MAXTYPES + 1], g_iFireHitMode2[ST_MAXTYPES + 1], g_iFireRock[ST_MAXTYPES + 1], g_iFireRock2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Fire Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Fire Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -105,14 +116,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vFireHit(victim, attacker, flFireChance(attacker), iFireHit(attacker), 1, "1");
+				vFireHit(victim, attacker, flFireChance(attacker), iFireHit(attacker), "1", "1");
 			}
 		}
 		else if ((iFireHitMode(victim) == 0 || iFireHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vFireHit(attacker, victim, flFireChance(victim), iFireHit(victim), 1, "2");
+				vFireHit(attacker, victim, flFireChance(victim), iFireHit(victim), "1", "2");
 			}
 		}
 	}
@@ -124,9 +135,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -135,8 +146,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iFireAbility[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", 0);
 				g_iFireAbility[iIndex] = iClamp(g_iFireAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Fire Ability/Ability Effect", g_sFireEffect[iIndex], sizeof(g_sFireEffect[]), "123");
-				g_iFireMessage[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Message", 0);
-				g_iFireMessage[iIndex] = iClamp(g_iFireMessage[iIndex], 0, 7);
+				kvSuperTanks.GetString("Fire Ability/Ability Message", g_sFireMessage[iIndex], sizeof(g_sFireMessage[]), "0");
 				g_flFireChance[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Chance", 33.3);
 				g_flFireChance[iIndex] = flClamp(g_flFireChance[iIndex], 0.1, 100.0);
 				g_iFireHit[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit", 0);
@@ -157,8 +167,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iFireAbility2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", g_iFireAbility[iIndex]);
 				g_iFireAbility2[iIndex] = iClamp(g_iFireAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Fire Ability/Ability Effect", g_sFireEffect2[iIndex], sizeof(g_sFireEffect2[]), g_sFireEffect[iIndex]);
-				g_iFireMessage2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Message", g_iFireMessage[iIndex]);
-				g_iFireMessage2[iIndex] = iClamp(g_iFireMessage2[iIndex], 0, 7);
+				kvSuperTanks.GetString("Fire Ability/Ability Message", g_sFireMessage2[iIndex], sizeof(g_sFireMessage2[]), g_sFireMessage[iIndex]);
 				g_flFireChance2[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Chance", g_flFireChance[iIndex]);
 				g_flFireChance2[iIndex] = flClamp(g_flFireChance2[iIndex], 0.1, 100.0);
 				g_iFireHit2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit", g_iFireHit[iIndex]);
@@ -189,7 +198,7 @@ public void ST_Event(Event event, const char[] name)
 		{
 			float flPos[3];
 			GetClientAbsOrigin(iTank, flPos);
-			vSpecialAttack(iTank, flPos, MODEL_GASCAN);
+			vSpecialAttack(iTank, flPos, 10.0, MODEL_GASCAN);
 		}
 	}
 }
@@ -214,7 +223,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flFireRange)
 				{
-					vFireHit(iSurvivor, tank, flFireRangeChance, iFireAbility(tank), 2, "3");
+					vFireHit(iSurvivor, tank, flFireRangeChance, iFireAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -227,7 +236,7 @@ public void ST_BossStage(int tank)
 	{
 		float flPos[3];
 		GetClientAbsOrigin(tank, flPos);
-		vSpecialAttack(tank, flPos, MODEL_GASCAN);
+		vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
 	}
 }
 
@@ -238,37 +247,38 @@ public void ST_RockBreak(int tank, int rock)
 	{
 		float flPos[3];
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
-		vSpecialAttack(tank, flPos, MODEL_GASCAN);
+		vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
 
-		switch (iFireMessage(tank))
+		char sFireMessage[4];
+		sFireMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sFireMessage[ST_TankType(tank)] : g_sFireMessage2[ST_TankType(tank)];
+		if (StrContains(sFireMessage, "3") != -1)
 		{
-			case 3, 5, 6, 7:
-			{
-				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Fire2", sTankName);
-			}
+			char sTankName[33];
+			ST_TankName(tank, sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Fire2", sTankName);
 		}
 	}
 }
 
-static void vFireHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vFireHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
 		float flPos[3];
 		GetClientAbsOrigin(survivor, flPos);
-		vSpecialAttack(tank, flPos, MODEL_GASCAN);
+		vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
 
 		char sFireEffect[4];
 		sFireEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sFireEffect[ST_TankType(tank)] : g_sFireEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sFireEffect, mode);
 
-		if (iFireMessage(tank) == message || iFireMessage(tank) == 4 || iFireMessage(tank) == 5 || iFireMessage(tank) == 6 || iFireMessage(tank) == 7)
+		char sFireMessage[4];
+		sFireMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sFireMessage[ST_TankType(tank)] : g_sFireMessage2[ST_TankType(tank)];
+		if (StrContains(sFireMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Fire", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Fire", sTankName, survivor);
 		}
 	}
 }
@@ -291,9 +301,4 @@ static int iFireHit(int tank)
 static int iFireHitMode(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iFireHitMode[ST_TankType(tank)] : g_iFireHitMode2[ST_TankType(tank)];
-}
-
-static int iFireMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iFireMessage[ST_TankType(tank)] : g_iFireMessage2[ST_TankType(tank)];
 }

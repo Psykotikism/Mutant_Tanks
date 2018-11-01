@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Electric Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -28,17 +39,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sElectricEffect[ST_MAXTYPES + 1][4], g_sElectricEffect2[ST_MAXTYPES + 1][4];
+char g_sElectricEffect[ST_MAXTYPES + 1][4], g_sElectricEffect2[ST_MAXTYPES + 1][4], g_sElectricMessage[ST_MAXTYPES + 1][3], g_sElectricMessage2[ST_MAXTYPES + 1][3];
 
 float g_flElectricChance[ST_MAXTYPES + 1], g_flElectricChance2[ST_MAXTYPES + 1], g_flElectricDamage[ST_MAXTYPES + 1], g_flElectricDamage2[ST_MAXTYPES + 1], g_flElectricDuration[ST_MAXTYPES + 1], g_flElectricDuration2[ST_MAXTYPES + 1], g_flElectricInterval[ST_MAXTYPES + 1], g_flElectricInterval2[ST_MAXTYPES + 1], g_flElectricRange[ST_MAXTYPES + 1], g_flElectricRange2[ST_MAXTYPES + 1], g_flElectricRangeChance[ST_MAXTYPES + 1], g_flElectricRangeChance2[ST_MAXTYPES + 1], g_flElectricSpeed[ST_MAXTYPES + 1], g_flElectricSpeed2[ST_MAXTYPES + 1];
 
-int g_iElectricAbility[ST_MAXTYPES + 1], g_iElectricAbility2[ST_MAXTYPES + 1], g_iElectricHit[ST_MAXTYPES + 1], g_iElectricHit2[ST_MAXTYPES + 1], g_iElectricHitMode[ST_MAXTYPES + 1], g_iElectricHitMode2[ST_MAXTYPES + 1], g_iElectricMessage[ST_MAXTYPES + 1], g_iElectricMessage2[ST_MAXTYPES + 1];
+int g_iElectricAbility[ST_MAXTYPES + 1], g_iElectricAbility2[ST_MAXTYPES + 1], g_iElectricHit[ST_MAXTYPES + 1], g_iElectricHit2[ST_MAXTYPES + 1], g_iElectricHitMode[ST_MAXTYPES + 1], g_iElectricHitMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Electric Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Electric Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -120,14 +131,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vElectricHit(victim, attacker, flElectricChance(attacker), iElectricHit(attacker), 1, "1");
+				vElectricHit(victim, attacker, flElectricChance(attacker), iElectricHit(attacker), "1", "1");
 			}
 		}
 		else if ((iElectricHitMode(victim) == 0 || iElectricHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vElectricHit(attacker, victim, flElectricChance(victim), iElectricHit(victim), 1, "2");
+				vElectricHit(attacker, victim, flElectricChance(victim), iElectricHit(victim), "1", "2");
 			}
 		}
 	}
@@ -139,9 +150,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -150,8 +161,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iElectricAbility[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Enabled", 0);
 				g_iElectricAbility[iIndex] = iClamp(g_iElectricAbility[iIndex], 0, 1);
 				kvSuperTanks.GetString("Electric Ability/Ability Effect", g_sElectricEffect[iIndex], sizeof(g_sElectricEffect[]), "123");
-				g_iElectricMessage[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Message", 0);
-				g_iElectricMessage[iIndex] = iClamp(g_iElectricMessage[iIndex], 0, 3);
+				kvSuperTanks.GetString("Electric Ability/Ability Message", g_sElectricMessage[iIndex], sizeof(g_sElectricMessage[]), "0");
 				g_flElectricChance[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Chance", 33.3);
 				g_flElectricChance[iIndex] = flClamp(g_flElectricChance[iIndex], 0.1, 100.0);
 				g_flElectricDamage[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Damage", 1.0);
@@ -178,8 +188,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iElectricAbility2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Enabled", g_iElectricAbility[iIndex]);
 				g_iElectricAbility2[iIndex] = iClamp(g_iElectricAbility2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Electric Ability/Ability Effect", g_sElectricEffect2[iIndex], sizeof(g_sElectricEffect2[]), g_sElectricEffect[iIndex]);
-				g_iElectricMessage2[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Message", g_iElectricMessage[iIndex]);
-				g_iElectricMessage2[iIndex] = iClamp(g_iElectricMessage2[iIndex], 0, 3);
+				kvSuperTanks.GetString("Electric Ability/Ability Message", g_sElectricMessage2[iIndex], sizeof(g_sElectricMessage2[]), g_sElectricMessage[iIndex]);
 				g_flElectricChance2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Chance", g_flElectricChance[iIndex]);
 				g_flElectricChance2[iIndex] = flClamp(g_flElectricChance2[iIndex], 0.1, 100.0);
 				g_flElectricDamage2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Damage", g_flElectricDamage[iIndex]);
@@ -232,14 +241,14 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flElectricRange)
 				{
-					vElectricHit(iSurvivor, tank, flElectricRangeChance, iElectricAbility(tank), 2, "3");
+					vElectricHit(iSurvivor, tank, flElectricRangeChance, iElectricAbility(tank), "2", "3");
 				}
 			}
 		}
 	}
 }
 
-static void vElectricHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vElectricHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bElectric[survivor])
 	{
@@ -254,7 +263,7 @@ static void vElectricHit(int survivor, int tank, float chance, int enabled, int 
 		CreateDataTimer(flElectricInterval, tTimerElectric, dpElectric, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpElectric.WriteCell(GetClientUserId(survivor));
 		dpElectric.WriteCell(GetClientUserId(tank));
-		dpElectric.WriteCell(message);
+		dpElectric.WriteString(message);
 		dpElectric.WriteCell(enabled);
 		dpElectric.WriteFloat(GetEngineTime());
 
@@ -264,11 +273,13 @@ static void vElectricHit(int survivor, int tank, float chance, int enabled, int 
 		sElectricEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sElectricEffect[ST_TankType(tank)] : g_sElectricEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sElectricEffect, mode);
 
-		if (iElectricMessage(tank) == message || iElectricMessage(tank) == 3)
+		char sElectricMessage[3];
+		sElectricMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sElectricMessage[ST_TankType(tank)] : g_sElectricMessage2[ST_TankType(tank)];
+		if (StrContains(sElectricMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Electric", sTankName, survivor);
+			PrintToChatAll("%s %t", ST_TAG2, "Electric", sTankName, survivor);
 		}
 	}
 }
@@ -284,15 +295,17 @@ static void vReset()
 	}
 }
 
-static void vReset2(int survivor, int tank, int message)
+static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bElectric[survivor] = false;
 
 	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 
-	if (iElectricMessage(tank) == message || iElectricMessage(tank) == 3)
+	char sElectricMessage[3];
+	sElectricMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sElectricMessage[ST_TankType(tank)] : g_sElectricMessage2[ST_TankType(tank)];
+	if (StrContains(sElectricMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_PREFIX2, "Electric2", survivor);
+		PrintToChatAll("%s %t", ST_TAG2, "Electric2", survivor);
 	}
 }
 
@@ -316,11 +329,6 @@ static int iElectricHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iElectricHitMode[ST_TankType(tank)] : g_iElectricHitMode2[ST_TankType(tank)];
 }
 
-static int iElectricMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iElectricMessage[ST_TankType(tank)] : g_iElectricMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerElectric(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -333,10 +341,12 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iElectricChat = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	char sMessage[3];
+	pack.ReadString(sMessage, sizeof(sMessage));
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bElectric[iSurvivor])
 	{
-		vReset2(iSurvivor, iTank, iElectricChat);
+		vReset2(iSurvivor, iTank, sMessage);
 
 		return Plugin_Stop;
 	}
@@ -347,7 +357,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 
 	if (iElectricEnabled == 0 || (flTime + flElectricDuration) < GetEngineTime())
 	{
-		vReset2(iSurvivor, iTank, iElectricChat);
+		vReset2(iSurvivor, iTank, sMessage);
 
 		return Plugin_Stop;
 	}

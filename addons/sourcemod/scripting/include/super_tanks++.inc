@@ -1,17 +1,28 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++
 #if defined _supertanksplusplus_included
 	#endinput
 #endif
 #define _supertanksplusplus_included
 
-#define ST_PREFIX "[ST++]"
-#define ST_PREFIX2 "\x04[ST++]\x01"
-#define ST_PREFIX3 "\x04[ST++]\x03"
-#define ST_PREFIX4 "\x04[ST++]\x05"
-
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.44"
+#define ST_VERSION "8.45"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
+
+#define ST_TAG "[ST++]"
+#define ST_TAG2 "\x04[ST++]\x01"
+#define ST_TAG3 "\x04[ST++]\x03"
+#define ST_TAG4 "\x04[ST++]\x05"
 
 #define ST_MAXTYPES 500
 #define ST_MAXHEALTH 65535
@@ -23,7 +34,7 @@
  * Use this forward for any passive abilities.
  *
  * @param tank			Client index of the Tank.
- */
+ **/
 forward void ST_Ability(int tank);
 
 /**
@@ -31,7 +42,7 @@ forward void ST_Ability(int tank);
  * Use this forward to trigger any features/abilities/settings when a Super Tank evolves.
  *
  * @param tank			Client index of the Tank.
- */
+ **/
 forward void ST_BossStage(int tank);
 
 /**
@@ -40,7 +51,7 @@ forward void ST_BossStage(int tank);
  *
  * @param savepath		The savepath of the config.
  * @param main			Checks whether the main config or a custom config is being used.
- */
+ **/
 forward void ST_Configs(const char[] savepath, bool main);
 
 /**
@@ -49,13 +60,13 @@ forward void ST_Configs(const char[] savepath, bool main);
  *
  * @param event			Handle to the event.
  * @param name			String containing the name of the event.
- */
+ **/
 forward void ST_Event(Event event, const char[] name);
 
 /**
  * Called when the core plugin is unloaded/reloaded.
  * Use this forward to get rid of any modifications to Tanks or survivors.
- */
+ **/
 forward void ST_PluginEnd();
 
 /**
@@ -64,7 +75,7 @@ forward void ST_PluginEnd();
  * If you plan on using this to activate an ability, use ST_Ability() instead.
  *
  * @param tank			Client index of the Tank.
- */
+ **/
 forward void ST_Preset(int tank);
 
 /**
@@ -73,7 +84,7 @@ forward void ST_Preset(int tank);
  *
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
- */
+ **/
 forward void ST_RockBreak(int tank, int rock);
 
 /**
@@ -82,7 +93,7 @@ forward void ST_RockBreak(int tank, int rock);
  *
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
- */
+ **/
 forward void ST_RockThrow(int tank, int rock);
 
 // Natives
@@ -90,30 +101,30 @@ forward void ST_RockThrow(int tank, int rock);
  * Returns the maximum value of the "Type Range" setting.
  *
  * @return				The maximum value of the "Type Range" setting.
- */
+ **/
 native int ST_MaxType();
 
 /**
  * Returns the minimum value of the "Type Range" setting.
  *
  * @return				The minimum value of the "Type Range" setting.
- */
+ **/
 native int ST_MinType();
 
 /**
  * Returns if the core plugin is enabled.
  *
  * @return				True if core plugin is enabled, false otherwise.
- */
+ **/
 native bool ST_PluginEnabled();
 
 /**
  * Spawns a Tank with the specified Super Tank type.
  *
  * @param tank			Client index of the Tank.
- * @param type			Type of Super Tank.
+ * @param type			Super Tank type.
  * @error				Invalid client index or type is 0.
- */
+ **/
 native void ST_SpawnTank(int tank, int type);
 
 /**
@@ -122,7 +133,7 @@ native void ST_SpawnTank(int tank, int type);
  * @param tank			Client index of the Tank.
  * @return				True if Tank is allowed to be a Super Tank, false otherwise.
  * @error				Invalid client index.
- */
+ **/
 native bool ST_TankAllowed(int tank);
 
 /**
@@ -131,7 +142,7 @@ native bool ST_TankAllowed(int tank);
  * @param type			Super Tank type.
  * @return				True if the type has a chance of spawning, false otherwise.
  * @error				Type is 0.
- */
+ **/
 native bool ST_TankChance(int type);
 
 /**
@@ -143,7 +154,7 @@ native bool ST_TankChance(int type);
  * @param green			Buffer to store the green color in.
  * @param blue			Buffer to store the blue color in.
  * @error				Invalid client index.
- */
+ **/
 native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] blue);
 
 /**
@@ -152,7 +163,7 @@ native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] b
  * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom name in.
  * @error				Invalid client index.
- */
+ **/
 native void ST_TankName(int tank, char[] buffer);
 
 /**
@@ -161,14 +172,14 @@ native void ST_TankName(int tank, char[] buffer);
  * @param tank			Client index of the Tank.
  * @return				The Tank's Super Tank type.
  * @error				Invalid client index.
- */
+ **/
 native int ST_TankType(int tank);
 
 /**
  * Returns the current finale wave.
  *
  * @return				The current finale wave.
- */
+ **/
 native int ST_TankWave();
 
 /**
@@ -177,7 +188,7 @@ native int ST_TankWave();
  * @param type			Super Tank type.
  * @return				True if the type is enabled, false otherwise.
  * @error				Type is 0.
- */
+ **/
 native bool ST_TypeEnabled(int type);
 
 // Checks
@@ -415,7 +426,7 @@ stock bool bIsTank(int tank)
 
 stock bool bIsValidClient(int player)
 {
-	return player > 0 && player <= MaxClients && IsClientInGame(player) && !IsClientInKickQueue(player);
+	return 0 < player <= MaxClients && IsClientInGame(player) && !IsClientInKickQueue(player);
 }
 
 stock bool bIsValidEntity(int entity)
@@ -634,10 +645,10 @@ stock float flGetGroundUnits(int entity)
 	if (!(GetEntityFlags(entity) & FL_ONGROUND))
 	{ 
 		Handle hTrace;
-		float flOrigin[3], flPosition[3], flDown[3] = {90.0, 0.0, 0.0};
+		float flOrigin[3], flPosition[3];
 
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
-		hTrace = TR_TraceRayFilterEx(flOrigin, flDown, CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
+		hTrace = TR_TraceRayFilterEx(flOrigin, view_as<float>({90.0, 0.0, 0.0}), CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
 		if (TR_DidHit(hTrace))
 		{
 			float flUnits;
@@ -653,6 +664,30 @@ stock float flGetGroundUnits(int entity)
 	}
 
 	return 0.0;
+}
+
+stock float flGetNearestSurvivor(int tank)
+{
+	float flDistance;
+	if (bIsTank(tank) && IsPlayerAlive(tank))
+	{
+		float flTankPos[3];
+		GetClientAbsOrigin(tank, flTankPos);
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				break;
+			}
+		}
+	}
+
+	return flDistance;
 }
 
 stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace)
@@ -943,17 +978,6 @@ stock void vDeleteEntity(int entity, float time = 0.1)
 	}
 }
 
-stock void vDropWeapon(int survivor, const char[] slots, const char[] number, int slot)
-{
-	if (StrContains(slots, number) != -1)
-	{
-		if (bIsSurvivor(survivor) && GetPlayerWeaponSlot(survivor, slot) > 0)
-		{
-			SDKHooks_DropWeapon(survivor, GetPlayerWeaponSlot(survivor, slot), NULL_VECTOR, NULL_VECTOR);
-		}
-	}
-}
-
 stock void vEffect(int survivor, int tank, const char[] enabled, const char[] mode)
 {
 	if (StrContains(enabled, mode) != -1)
@@ -1007,17 +1031,6 @@ public void vGameMode(const char[] output, int caller, int activator, float dela
 	}
 }
 
-stock void vHeal(int infected, int health, int extrahealth, int maxhealth)
-{
-	maxhealth = iClamp(maxhealth, 1, ST_MAXHEALTH);
-
-	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth,
-		iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth,
-		iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
-
-	SetEntityHealth(infected, iRealHealth);
-}
-
 stock void vMultiTargetFilters(int toggle)
 {
 	switch (toggle)
@@ -1062,16 +1075,6 @@ stock void vPrecacheParticle(const char[] particlename)
 	}
 }
 
-stock void vRemoveWeapon(int survivor, int slot)
-{
-	int iSlot = GetPlayerWeaponSlot(survivor, slot);
-	if (iSlot > 0)
-	{
-		RemovePlayerItem(survivor, iSlot);
-		RemoveEntity(iSlot);
-	}
-}
-
 stock void vSetEntityParent(int entity, int parent)
 {
 	SetVariantString("!activator");
@@ -1106,7 +1109,7 @@ stock void vSpawnInfected(int tank, const char[] infected)
 	KickClient(tank);
 }
 
-stock void vSpecialAttack(int tank, float pos[3], const char[] model)
+stock void vSpecialAttack(int tank, float pos[3], float offset, const char[] model)
 {
 	int iProp = CreateEntityByName("prop_physics");
 	if (bIsValidEntity(iProp))
@@ -1114,7 +1117,7 @@ stock void vSpecialAttack(int tank, float pos[3], const char[] model)
 		DispatchKeyValue(iProp, "disableshadows", "1");
 		SetEntityModel(iProp, model);
 
-		pos[2] += 10.0;
+		pos[2] += offset;
 		TeleportEntity(iProp, pos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iProp);
 

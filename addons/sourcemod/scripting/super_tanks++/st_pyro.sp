@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Pyro Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -23,17 +34,17 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bPyro[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sPyroEffect[ST_MAXTYPES + 1][4], g_sPyroEffect2[ST_MAXTYPES + 1][4];
+char g_sPyroEffect[ST_MAXTYPES + 1][4], g_sPyroEffect2[ST_MAXTYPES + 1][4], g_sPyroMessage[ST_MAXTYPES + 1][4], g_sPyroMessage2[ST_MAXTYPES + 1][4];
 
 float g_flPyroBoost[ST_MAXTYPES + 1], g_flPyroBoost2[ST_MAXTYPES + 1], g_flPyroChance[ST_MAXTYPES + 1], g_flPyroChance2[ST_MAXTYPES + 1], g_flPyroDuration[ST_MAXTYPES + 1], g_flPyroDuration2[ST_MAXTYPES + 1], g_flPyroRange[ST_MAXTYPES + 1], g_flPyroRange2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1], g_flPyroRangeChance[ST_MAXTYPES + 1], g_flPyroRangeChance2[ST_MAXTYPES + 1];
 
-int g_iPyroAbility[ST_MAXTYPES + 1], g_iPyroAbility2[ST_MAXTYPES + 1], g_iPyroHit[ST_MAXTYPES + 1], g_iPyroHit2[ST_MAXTYPES + 1], g_iPyroHitMode[ST_MAXTYPES + 1], g_iPyroHitMode2[ST_MAXTYPES + 1], g_iPyroMessage[ST_MAXTYPES + 1], g_iPyroMessage2[ST_MAXTYPES + 1], g_iPyroMode[ST_MAXTYPES + 1], g_iPyroMode2[ST_MAXTYPES + 1];
+int g_iPyroAbility[ST_MAXTYPES + 1], g_iPyroAbility2[ST_MAXTYPES + 1], g_iPyroHit[ST_MAXTYPES + 1], g_iPyroHit2[ST_MAXTYPES + 1], g_iPyroHitMode[ST_MAXTYPES + 1], g_iPyroHitMode2[ST_MAXTYPES + 1], g_iPyroMode[ST_MAXTYPES + 1], g_iPyroMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Pyro Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Pyro Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -110,14 +121,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vPyroHit(victim, attacker, flPyroChance(attacker), iPyroHit(attacker), 1, "1");
+				vPyroHit(victim, attacker, flPyroChance(attacker), iPyroHit(attacker), "1", "1");
 			}
 		}
 		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim))
 		{
 			if ((iPyroHitMode(victim) == 0 || iPyroHitMode(victim) == 2) && bIsSurvivor(attacker) && StrEqual(sClassname, "weapon_melee"))
 			{
-				vPyroHit(attacker, victim, flPyroChance(victim), iPyroHit(victim), 1, "2");
+				vPyroHit(attacker, victim, flPyroChance(victim), iPyroHit(victim), "1", "2");
 			}
 
 			if (iPyroAbility(victim) == 2 || iPyroAbility(victim) == 3)
@@ -143,14 +154,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						dpPyro.WriteCell(GetClientUserId(victim));
 						dpPyro.WriteFloat(GetEngineTime());
 
-						switch (iPyroMessage(victim))
+						char sPyroMessage[4];
+						sPyroMessage = !g_bTankConfig[ST_TankType(victim)] ? g_sPyroMessage[ST_TankType(victim)] : g_sPyroMessage2[ST_TankType(victim)];
+						if (StrContains(sPyroMessage, "3") != -1)
 						{
-							case 3, 5, 6, 7:
-							{
-								char sTankName[MAX_NAME_LENGTH + 1];
-								ST_TankName(victim, sTankName);
-								PrintToChatAll("%s %t", ST_PREFIX2, "Pyro2", sTankName);
-							}
+							char sTankName[33];
+							ST_TankName(victim, sTankName);
+							PrintToChatAll("%s %t", ST_TAG2, "Pyro2", sTankName);
 						}
 					}
 				}
@@ -165,9 +175,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -178,8 +188,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iPyroAbility[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Enabled", 0);
 				g_iPyroAbility[iIndex] = iClamp(g_iPyroAbility[iIndex], 0, 3);
 				kvSuperTanks.GetString("Pyro Ability/Ability Effect", g_sPyroEffect[iIndex], sizeof(g_sPyroEffect[]), "123");
-				g_iPyroMessage[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Message", 0);
-				g_iPyroMessage[iIndex] = iClamp(g_iPyroMessage[iIndex], 0, 7);
+				kvSuperTanks.GetString("Pyro Ability/Ability Message", g_sPyroMessage[iIndex], sizeof(g_sPyroMessage[]), "0");
 				g_flPyroBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", 1.0);
 				g_flPyroBoost[iIndex] = flClamp(g_flPyroBoost[iIndex], 0.1, 3.0);
 				g_flPyroChance[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Chance", 33.3);
@@ -206,8 +215,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iPyroAbility2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Enabled", g_iPyroAbility[iIndex]);
 				g_iPyroAbility2[iIndex] = iClamp(g_iPyroAbility2[iIndex], 0, 3);
 				kvSuperTanks.GetString("Pyro Ability/Ability Effect", g_sPyroEffect2[iIndex], sizeof(g_sPyroEffect2[]), g_sPyroEffect[iIndex]);
-				g_iPyroMessage2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Message", g_iPyroMessage[iIndex]);
-				g_iPyroMessage2[iIndex] = iClamp(g_iPyroMessage2[iIndex], 0, 7);
+				kvSuperTanks.GetString("Pyro Ability/Ability Message", g_sPyroMessage2[iIndex], sizeof(g_sPyroMessage2[]), g_sPyroMessage[iIndex]);
 				g_flPyroBoost2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", g_flPyroBoost[iIndex]);
 				g_flPyroBoost2[iIndex] = flClamp(g_flPyroBoost2[iIndex], 0.1, 3.0);
 				g_flPyroChance2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Chance", g_flPyroChance[iIndex]);
@@ -266,14 +274,14 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPyroRange)
 				{
-					vPyroHit(iSurvivor, tank, flPyroRangeChance, iPyroAbility(tank), 2, "3");
+					vPyroHit(iSurvivor, tank, flPyroRangeChance, iPyroAbility(tank), "2", "3");
 				}
 			}
 		}
 	}
 }
 
-static void vPyroHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vPyroHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bPyro[tank])
 	{
@@ -283,11 +291,13 @@ static void vPyroHit(int survivor, int tank, float chance, int enabled, int mess
 		sPyroEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sPyroEffect[ST_TankType(tank)] : g_sPyroEffect2[ST_TankType(tank)];
 		vEffect(survivor, tank, sPyroEffect, mode);
 
-		if (iPyroMessage(tank) == message || iPyroMessage(tank) == 4 || iPyroMessage(tank) == 5 || iPyroMessage(tank) == 6 || iPyroMessage(tank) == 7)
+		char sPyroMessage[4];
+		sPyroMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sPyroMessage[ST_TankType(tank)] : g_sPyroMessage2[ST_TankType(tank)];
+		if (StrContains(sPyroMessage, message) != -1)
 		{
-			char sTankName[MAX_NAME_LENGTH + 1];
+			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_PREFIX2, "Pyro", sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Pyro", sTankName);
 		}
 	}
 }
@@ -328,11 +338,6 @@ static int iPyroHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iPyroHitMode[ST_TankType(tank)] : g_iPyroHitMode2[ST_TankType(tank)];
 }
 
-static int iPyroMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iPyroMessage[ST_TankType(tank)] : g_iPyroMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerPyro(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -352,14 +357,13 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 
 		ExtinguishEntity(iTank);
 
-		switch (iPyroMessage(iTank))
+		char sPyroMessage[4];
+		sPyroMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sPyroMessage[ST_TankType(iTank)] : g_sPyroMessage2[ST_TankType(iTank)];
+		if (StrContains(sPyroMessage, "3") != -1)
 		{
-			case 3, 5, 6, 7:
-			{
-				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Pyro3", sTankName);
-			}
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Pyro3", sTankName);
 		}
 
 		return Plugin_Stop;

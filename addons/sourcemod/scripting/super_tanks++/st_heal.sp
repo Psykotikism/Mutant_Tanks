@@ -1,3 +1,14 @@
+/**
+ * Super Tanks++: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
 // Super Tanks++: Heal Ability
 #include <sourcemod>
 #include <sdkhooks>
@@ -23,19 +34,19 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bHeal[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sHealEffect[ST_MAXTYPES + 1][4], g_sHealEffect2[ST_MAXTYPES + 1][4], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
+char g_sHealEffect[ST_MAXTYPES + 1][4], g_sHealEffect2[ST_MAXTYPES + 1][4], g_sHealMessage[ST_MAXTYPES + 1][4], g_sHealMessage2[ST_MAXTYPES + 1][4], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
 
 ConVar g_cvSTMaxIncapCount;
 
 float g_flHealAbsorbRange[ST_MAXTYPES + 1], g_flHealAbsorbRange2[ST_MAXTYPES + 1], g_flHealBuffer[ST_MAXTYPES + 1], g_flHealBuffer2[ST_MAXTYPES + 1], g_flHealChance[ST_MAXTYPES + 1], g_flHealChance2[ST_MAXTYPES + 1], g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1], g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1], g_flHealRangeChance[ST_MAXTYPES + 1], g_flHealRangeChance2[ST_MAXTYPES + 1];
 
-int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealMessage[ST_MAXTYPES + 1], g_iHealMessage2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1];
+int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "[ST++] Heal Ability only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Heal Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -114,14 +125,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vHealHit(victim, attacker, flHealChance(attacker), iHealHit(attacker), 1, "1");
+				vHealHit(victim, attacker, flHealChance(attacker), iHealHit(attacker), "1", "1");
 			}
 		}
 		else if ((iHealHitMode(victim) == 0 || iHealHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vHealHit(attacker, victim, flHealChance(victim), iHealHit(victim), 1, "2");
+				vHealHit(attacker, victim, flHealChance(victim), iHealHit(victim), "1", "2");
 			}
 		}
 	}
@@ -133,9 +144,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	kvSuperTanks.ImportFromFile(savepath);
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
-		char sTankName[MAX_NAME_LENGTH + 1];
+		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName, true))
+		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
@@ -147,8 +158,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iHealAbility[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Enabled", 0);
 				g_iHealAbility[iIndex] = iClamp(g_iHealAbility[iIndex], 0, 3);
 				kvSuperTanks.GetString("Heal Ability/Ability Effect", g_sHealEffect[iIndex], sizeof(g_sHealEffect[]), "123");
-				g_iHealMessage[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Message", 0);
-				g_iHealMessage[iIndex] = iClamp(g_iHealMessage[iIndex], 0, 7);
+				kvSuperTanks.GetString("Heal Ability/Ability Message", g_sHealMessage[iIndex], sizeof(g_sHealMessage[]), "0");
 				g_flHealAbsorbRange[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Absorb Range", 500.0);
 				g_flHealAbsorbRange[iIndex] = flClamp(g_flHealAbsorbRange[iIndex], 1.0, 9999999999.0);
 				g_flHealBuffer[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Buffer", 25.0);
@@ -182,8 +192,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iHealAbility2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Enabled", g_iHealAbility[iIndex]);
 				g_iHealAbility2[iIndex] = iClamp(g_iHealAbility2[iIndex], 0, 3);
 				kvSuperTanks.GetString("Heal Ability/Ability Effect", g_sHealEffect2[iIndex], sizeof(g_sHealEffect2[]), g_sHealEffect[iIndex]);
-				g_iHealMessage2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Message", g_iHealMessage[iIndex]);
-				g_iHealMessage2[iIndex] = iClamp(g_iHealMessage2[iIndex], 0, 7);
+				kvSuperTanks.GetString("Heal Ability/Ability Message", g_sHealMessage2[iIndex], sizeof(g_sHealMessage2[]), g_sHealMessage[iIndex]);
 				g_flHealAbsorbRange2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Absorb Range", g_flHealAbsorbRange[iIndex]);
 				g_flHealAbsorbRange2[iIndex] = flClamp(g_flHealAbsorbRange2[iIndex], 1.0, 9999999999.0);
 				g_flHealBuffer2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Buffer", g_flHealBuffer[iIndex]);
@@ -240,7 +249,7 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flHealRange)
 				{
-					vHealHit(iSurvivor, tank, flHealRangeChance, iHealAbility(tank), 2, "3");
+					vHealHit(iSurvivor, tank, flHealRangeChance, iHealAbility(tank), "2", "3");
 				}
 			}
 		}
@@ -252,20 +261,19 @@ public void ST_Ability(int tank)
 			float flHealInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flHealInterval[ST_TankType(tank)] : g_flHealInterval2[ST_TankType(tank)];
 			CreateTimer(flHealInterval, tTimerHeal, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
-			switch (iHealMessage(tank))
+			char sHealMessage[4];
+			sHealMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sHealMessage[ST_TankType(tank)] : g_sHealMessage2[ST_TankType(tank)];
+			if (StrContains(sHealMessage, "3") != -1)
 			{
-				case 3, 5, 6, 7:
-				{
-					char sTankName[MAX_NAME_LENGTH + 1];
-					ST_TankName(tank, sTankName);
-					PrintToChatAll("%s %t", ST_PREFIX2, "Heal2", sTankName);
-				}
+				char sTankName[33];
+				ST_TankName(tank, sTankName);
+				PrintToChatAll("%s %t", ST_TAG2, "Heal2", sTankName);
 			}
 		}
 	}
 }
 
-static void vHealHit(int survivor, int tank, float chance, int enabled, int message, const char[] mode)
+static void vHealHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
 	{
@@ -282,11 +290,13 @@ static void vHealHit(int survivor, int tank, float chance, int enabled, int mess
 			sHealEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sHealEffect[ST_TankType(tank)] : g_sHealEffect2[ST_TankType(tank)];
 			vEffect(survivor, tank, sHealEffect, mode);
 
-			if (iHealMessage(tank) == message || iHealMessage(tank) == 4 || iHealMessage(tank) == 5 || iHealMessage(tank) == 6 || iHealMessage(tank) == 7)
+			char sHealMessage[4];
+			sHealMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sHealMessage[ST_TankType(tank)] : g_sHealMessage2[ST_TankType(tank)];
+			if (StrContains(sHealMessage, message) != -1)
 			{
-				char sTankName[MAX_NAME_LENGTH + 1];
+				char sTankName[33];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Heal", sTankName, survivor);
+				PrintToChatAll("%s %t", ST_TAG2, "Heal", sTankName, survivor);
 			}
 		}
 	}
@@ -323,11 +333,6 @@ static int iHealHitMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHealHitMode[ST_TankType(tank)] : g_iHealHitMode2[ST_TankType(tank)];
 }
 
-static int iHealMessage(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHealMessage[ST_TankType(tank)] : g_iHealMessage2[ST_TankType(tank)];
-}
-
 public Action tTimerHeal(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -342,14 +347,13 @@ public Action tTimerHeal(Handle timer, int userid)
 	{
 		g_bHeal[iTank] = false;
 
-		switch (iHealMessage(iTank))
+		char sHealMessage[4];
+		sHealMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sHealMessage[ST_TankType(iTank)] : g_sHealMessage2[ST_TankType(iTank)];
+		if (StrContains(sHealMessage, "3") != -1)
 		{
-			case 3, 5, 6, 7:
-			{
-				char sTankName[MAX_NAME_LENGTH + 1];
-				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_PREFIX2, "Heal3", sTankName);
-			}
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			PrintToChatAll("%s %t", ST_TAG2, "Heal3", sTankName);
 		}
 
 		return Plugin_Stop;
@@ -454,20 +458,17 @@ public Action tTimerHeal(Handle timer, int userid)
 	{
 		char sSet[2][16], sTankColors[28], sGlow[3][4];
 		sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
-		TrimString(sTankColors);
+		ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
 		ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
 		ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 
-		TrimString(sGlow[0]);
 		int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
 		iRed = iClamp(iRed, 0, 255);
 
-		TrimString(sGlow[1]);
 		int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
 		iGreen = iClamp(iGreen, 0, 255);
 
-		TrimString(sGlow[2]);
 		int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
 		iBlue = iClamp(iBlue, 0, 255);
 
