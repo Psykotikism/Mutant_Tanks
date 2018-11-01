@@ -2595,15 +2595,14 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	char sRockEffects[5];
-	pack.ReadString(sRockEffects, sizeof(sRockEffects));
 	if (iRockEffect(iTank) == 0)
 	{
 		return Plugin_Stop;
 	}
 
-	char sClassname[32];
+	char sClassname[32], sRockEffects[5];
 	GetEntityClassname(iRock, sClassname, sizeof(sClassname));
+	pack.ReadString(sRockEffects, sizeof(sRockEffects));
 	if (StrEqual(sClassname, "tank_rock"))
 	{
 		if (StrContains(sRockEffects, "1") != -1)
