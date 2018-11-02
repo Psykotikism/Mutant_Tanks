@@ -165,7 +165,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iAimlessAbility[iIndex] = kvSuperTanks.GetNum("Aimless Ability/Ability Enabled", 0);
 				g_iAimlessAbility[iIndex] = iClamp(g_iAimlessAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Aimless Ability/Ability Effect", g_sAimlessEffect[iIndex], sizeof(g_sAimlessEffect[]), "123");
+				kvSuperTanks.GetString("Aimless Ability/Ability Effect", g_sAimlessEffect[iIndex], sizeof(g_sAimlessEffect[]), "0");
 				kvSuperTanks.GetString("Aimless Ability/Ability Message", g_sAimlessMessage[iIndex], sizeof(g_sAimlessMessage[]), "0");
 				g_flAimlessChance[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Chance", 33.3);
 				g_flAimlessChance[iIndex] = flClamp(g_flAimlessChance[iIndex], 0.1, 100.0);

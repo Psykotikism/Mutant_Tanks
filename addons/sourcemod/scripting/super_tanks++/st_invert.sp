@@ -188,7 +188,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iInvertAbility[iIndex] = kvSuperTanks.GetNum("Invert Ability/Ability Enabled", 0);
 				g_iInvertAbility[iIndex] = iClamp(g_iInvertAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Invert Ability/Ability Effect", g_sInvertEffect[iIndex], sizeof(g_sInvertEffect[]), "123");
+				kvSuperTanks.GetString("Invert Ability/Ability Effect", g_sInvertEffect[iIndex], sizeof(g_sInvertEffect[]), "0");
 				kvSuperTanks.GetString("Invert Ability/Ability Message", g_sInvertMessage[iIndex], sizeof(g_sInvertMessage[]), "0");
 				g_flInvertChance[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Chance", 33.3);
 				g_flInvertChance[iIndex] = flClamp(g_flInvertChance[iIndex], 0.1, 100.0);

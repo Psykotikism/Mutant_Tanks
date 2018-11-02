@@ -149,7 +149,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iSmiteAbility[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", 0);
 				g_iSmiteAbility[iIndex] = iClamp(g_iSmiteAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Smite Ability/Ability Effect", g_sSmiteEffect[iIndex], sizeof(g_sSmiteEffect[]), "123");
+				kvSuperTanks.GetString("Smite Ability/Ability Effect", g_sSmiteEffect[iIndex], sizeof(g_sSmiteEffect[]), "0");
 				kvSuperTanks.GetString("Smite Ability/Ability Message", g_sSmiteMessage[iIndex], sizeof(g_sSmiteMessage[]), "0");
 				g_flSmiteChance[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Chance", 33.3);
 				g_flSmiteChance[iIndex] = flClamp(g_flSmiteChance[iIndex], 0.1, 100.0);

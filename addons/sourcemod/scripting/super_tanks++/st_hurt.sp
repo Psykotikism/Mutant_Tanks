@@ -149,7 +149,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iHurtAbility[iIndex] = kvSuperTanks.GetNum("Hurt Ability/Ability Enabled", 0);
 				g_iHurtAbility[iIndex] = iClamp(g_iHurtAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Hurt Ability/Ability Effect", g_sHurtEffect[iIndex], sizeof(g_sHurtEffect[]), "123");
+				kvSuperTanks.GetString("Hurt Ability/Ability Effect", g_sHurtEffect[iIndex], sizeof(g_sHurtEffect[]), "0");
 				kvSuperTanks.GetString("Hurt Ability/Ability Message", g_sHurtMessage[iIndex], sizeof(g_sHurtMessage[]), "0");
 				g_flHurtChance[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Chance", 33.3);
 				g_flHurtChance[iIndex] = flClamp(g_flHurtChance[iIndex], 0.1, 100.0);

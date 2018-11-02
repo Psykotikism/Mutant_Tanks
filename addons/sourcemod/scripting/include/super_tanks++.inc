@@ -16,7 +16,7 @@
 #define _supertanksplusplus_included
 
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.45"
+#define ST_VERSION "8.46"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define ST_TAG "[ST++]"
@@ -506,6 +506,19 @@ public bool bHunterFilter(const char[] pattern, Handle clients)
 	return true;
 }
 
+public bool bInfectedFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsInfected(iPlayer) && IsPlayerAlive(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+
+	return true;
+}
+
 public bool bJockeyFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -524,6 +537,19 @@ public bool bSmokerFilter(const char[] pattern, Handle clients)
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSmoker(iPlayer) && IsPlayerAlive(iPlayer))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+
+	return true;
+}
+
+public bool bSpecialFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsSpecialInfected(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1044,6 +1070,8 @@ stock void vMultiTargetFilters(int toggle)
 			RemoveMultiTargetFilter("@jockeys", bJockeyFilter);
 			RemoveMultiTargetFilter("@chargers", bChargerFilter);
 			RemoveMultiTargetFilter("@tanks", bTankFilter);
+			RemoveMultiTargetFilter("@special", bSpecialFilter);
+			RemoveMultiTargetFilter("@infected", bInfectedFilter);
 		}
 		case 1:
 		{
@@ -1054,6 +1082,8 @@ stock void vMultiTargetFilters(int toggle)
 			AddMultiTargetFilter("@jockeys", bJockeyFilter, "all Jockeys", false);
 			AddMultiTargetFilter("@chargers", bChargerFilter, "all Chargers", false);
 			AddMultiTargetFilter("@tanks", bTankFilter, "all Tanks", false);
+			AddMultiTargetFilter("@special", bSpecialFilter, "all Special Infected", false);
+			AddMultiTargetFilter("@infected", bInfectedFilter, "all Infected", false);
 		}
 	}
 }
@@ -1098,6 +1128,7 @@ stock void vShake(int survivor, float duration = 1.0)
 		bfWrite.WriteFloat(16.0);
 		bfWrite.WriteFloat(0.5);
 		bfWrite.WriteFloat(duration);
+
 		EndMessage();
 	}
 }

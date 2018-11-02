@@ -161,7 +161,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iPukeAbility[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", 0);
 				g_iPukeAbility[iIndex] = iClamp(g_iPukeAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Puke Ability/Ability Effect", g_sPukeEffect[iIndex], sizeof(g_sPukeEffect[]), "123");
+				kvSuperTanks.GetString("Puke Ability/Ability Effect", g_sPukeEffect[iIndex], sizeof(g_sPukeEffect[]), "0");
 				kvSuperTanks.GetString("Puke Ability/Ability Message", g_sPukeMessage[iIndex], sizeof(g_sPukeMessage[]), "0");
 				g_flPukeChance[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Chance", 33.3);
 				g_flPukeChance[iIndex] = flClamp(g_flPukeChance[iIndex], 0.1, 100.0);

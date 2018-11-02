@@ -145,7 +145,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iBombAbility[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", 0);
 				g_iBombAbility[iIndex] = iClamp(g_iBombAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Bomb Ability/Ability Effect", g_sBombEffect[iIndex], sizeof(g_sBombEffect[]), "123");
+				kvSuperTanks.GetString("Bomb Ability/Ability Effect", g_sBombEffect[iIndex], sizeof(g_sBombEffect[]), "0");
 				kvSuperTanks.GetString("Bomb Ability/Ability Message", g_sBombMessage[iIndex], sizeof(g_sBombMessage[]), "0");
 				g_flBombChance[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Chance", 33.3);
 				g_flBombChance[iIndex] = flClamp(g_flBombChance[iIndex], 0.1, 100.0);

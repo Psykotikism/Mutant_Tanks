@@ -187,7 +187,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], 0.1, 3.0);
 				g_iPyroAbility[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Enabled", 0);
 				g_iPyroAbility[iIndex] = iClamp(g_iPyroAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Pyro Ability/Ability Effect", g_sPyroEffect[iIndex], sizeof(g_sPyroEffect[]), "123");
+				kvSuperTanks.GetString("Pyro Ability/Ability Effect", g_sPyroEffect[iIndex], sizeof(g_sPyroEffect[]), "0");
 				kvSuperTanks.GetString("Pyro Ability/Ability Message", g_sPyroMessage[iIndex], sizeof(g_sPyroMessage[]), "0");
 				g_flPyroBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", 1.0);
 				g_flPyroBoost[iIndex] = flClamp(g_flPyroBoost[iIndex], 0.1, 3.0);

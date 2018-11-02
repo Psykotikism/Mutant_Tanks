@@ -159,7 +159,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iRestartAbility[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", 0);
 				g_iRestartAbility[iIndex] = iClamp(g_iRestartAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect[iIndex], sizeof(g_sRestartEffect[]), "123");
+				kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect[iIndex], sizeof(g_sRestartEffect[]), "0");
 				kvSuperTanks.GetString("Restart Ability/Ability Message", g_sRestartMessage[iIndex], sizeof(g_sRestartMessage[]), "0");
 				g_flRestartChance[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Chance", 33.3);
 				g_flRestartChance[iIndex] = flClamp(g_flRestartChance[iIndex], 0.1, 100.0);

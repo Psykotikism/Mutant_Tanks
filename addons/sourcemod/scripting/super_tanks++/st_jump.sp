@@ -136,7 +136,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iJumpAbility[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Enabled", 0);
 				g_iJumpAbility[iIndex] = iClamp(g_iJumpAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Jump Ability/Ability Effect", g_sJumpEffect[iIndex], sizeof(g_sJumpEffect[]), "123");
+				kvSuperTanks.GetString("Jump Ability/Ability Effect", g_sJumpEffect[iIndex], sizeof(g_sJumpEffect[]), "0");
 				kvSuperTanks.GetString("Jump Ability/Ability Message", g_sJumpMessage[iIndex], sizeof(g_sJumpMessage[]), "0");
 				g_flJumpChance[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Chance", 33.3);
 				g_flJumpChance[iIndex] = flClamp(g_flJumpChance[iIndex], 0.1, 100.0);

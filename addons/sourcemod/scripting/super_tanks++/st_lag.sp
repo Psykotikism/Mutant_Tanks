@@ -150,7 +150,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iLagAbility[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Enabled", 0);
 				g_iLagAbility[iIndex] = iClamp(g_iLagAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Lag Ability/Ability Effect", g_sLagEffect[iIndex], sizeof(g_sLagEffect[]), "123");
+				kvSuperTanks.GetString("Lag Ability/Ability Effect", g_sLagEffect[iIndex], sizeof(g_sLagEffect[]), "0");
 				kvSuperTanks.GetString("Lag Ability/Ability Message", g_sLagMessage[iIndex], sizeof(g_sLagMessage[]), "0");
 				g_flLagChance[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Chance", 33.3);
 				g_flLagChance[iIndex] = flClamp(g_flLagChance[iIndex], 0.1, 100.0);

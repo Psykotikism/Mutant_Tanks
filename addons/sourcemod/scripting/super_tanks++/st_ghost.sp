@@ -165,7 +165,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Props/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255");
 				g_iGhostAbility[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", 0);
 				g_iGhostAbility[iIndex] = iClamp(g_iGhostAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Ghost Ability/Ability Effect", g_sGhostEffect[iIndex], sizeof(g_sGhostEffect[]), "123");
+				kvSuperTanks.GetString("Ghost Ability/Ability Effect", g_sGhostEffect[iIndex], sizeof(g_sGhostEffect[]), "0");
 				kvSuperTanks.GetString("Ghost Ability/Ability Message", g_sGhostMessage[iIndex], sizeof(g_sGhostMessage[]), "0");
 				g_flGhostChance[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Chance", 33.3);
 				g_flGhostChance[iIndex] = flClamp(g_flGhostChance[iIndex], 0.1, 100.0);

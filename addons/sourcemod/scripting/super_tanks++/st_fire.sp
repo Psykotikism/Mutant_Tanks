@@ -145,7 +145,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iFireAbility[iIndex] = kvSuperTanks.GetNum("Fire Ability/Ability Enabled", 0);
 				g_iFireAbility[iIndex] = iClamp(g_iFireAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Fire Ability/Ability Effect", g_sFireEffect[iIndex], sizeof(g_sFireEffect[]), "123");
+				kvSuperTanks.GetString("Fire Ability/Ability Effect", g_sFireEffect[iIndex], sizeof(g_sFireEffect[]), "0");
 				kvSuperTanks.GetString("Fire Ability/Ability Message", g_sFireMessage[iIndex], sizeof(g_sFireMessage[]), "0");
 				g_flFireChance[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Chance", 33.3);
 				g_flFireChance[iIndex] = flClamp(g_flFireChance[iIndex], 0.1, 100.0);

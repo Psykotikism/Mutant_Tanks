@@ -182,7 +182,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iAcidAbility[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", 0);
 				g_iAcidAbility[iIndex] = iClamp(g_iAcidAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Acid Ability/Ability Effect", g_sAcidEffect[iIndex], sizeof(g_sAcidEffect[]), "123");
+				kvSuperTanks.GetString("Acid Ability/Ability Effect", g_sAcidEffect[iIndex], sizeof(g_sAcidEffect[]), "0");
 				kvSuperTanks.GetString("Acid Ability/Ability Message", g_sAcidMessage[iIndex], sizeof(g_sAcidMessage[]), "0");
 				g_flAcidChance[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Chance", 33.3);
 				g_flAcidChance[iIndex] = flClamp(g_flAcidChance[iIndex], 0.1, 100.0);

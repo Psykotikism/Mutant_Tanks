@@ -149,7 +149,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iVisionAbility[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Enabled", 0);
 				g_iVisionAbility[iIndex] = iClamp(g_iVisionAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Vision Ability/Ability Effect", g_sVisionEffect[iIndex], sizeof(g_sVisionEffect[]), "123");
+				kvSuperTanks.GetString("Vision Ability/Ability Effect", g_sVisionEffect[iIndex], sizeof(g_sVisionEffect[]), "0");
 				kvSuperTanks.GetString("Vision Ability/Ability Message", g_sVisionMessage[iIndex], sizeof(g_sVisionMessage[]), "0");
 				g_flVisionChance[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Chance", 33.3);
 				g_flVisionChance[iIndex] = flClamp(g_flVisionChance[iIndex], 0.1, 100.0);

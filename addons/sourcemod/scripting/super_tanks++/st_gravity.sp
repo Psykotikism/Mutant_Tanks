@@ -151,7 +151,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iGravityAbility[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Enabled", 0);
 				g_iGravityAbility[iIndex] = iClamp(g_iGravityAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect[iIndex], sizeof(g_sGravityEffect[]), "123");
+				kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect[iIndex], sizeof(g_sGravityEffect[]), "0");
 				kvSuperTanks.GetString("Gravity Ability/Ability Message", g_sGravityMessage[iIndex], sizeof(g_sGravityMessage[]), "0");
 				g_flGravityChance[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Chance", 33.3);
 				g_flGravityChance[iIndex] = flClamp(g_flGravityChance[iIndex], 0.1, 100.0);

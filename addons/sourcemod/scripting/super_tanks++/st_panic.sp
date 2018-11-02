@@ -149,7 +149,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iPanicAbility[iIndex] = kvSuperTanks.GetNum("Panic Ability/Ability Enabled", 0);
 				g_iPanicAbility[iIndex] = iClamp(g_iPanicAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Panic Ability/Ability Effect", g_sPanicEffect[iIndex], sizeof(g_sPanicEffect[]), "123");
+				kvSuperTanks.GetString("Panic Ability/Ability Effect", g_sPanicEffect[iIndex], sizeof(g_sPanicEffect[]), "0");
 				kvSuperTanks.GetString("Panic Ability/Ability Message", g_sPanicMessage[iIndex], sizeof(g_sPanicMessage[]), "0");
 				g_flPanicChance[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Chance", 33.3);
 				g_flPanicChance[iIndex] = flClamp(g_flPanicChance[iIndex], 0.1, 100.0);

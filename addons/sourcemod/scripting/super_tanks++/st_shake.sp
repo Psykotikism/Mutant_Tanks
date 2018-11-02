@@ -149,7 +149,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iShakeAbility[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", 0);
 				g_iShakeAbility[iIndex] = iClamp(g_iShakeAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect[iIndex], sizeof(g_sShakeEffect[]), "123");
+				kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect[iIndex], sizeof(g_sShakeEffect[]), "0");
 				kvSuperTanks.GetString("Shake Ability/Ability Message", g_sShakeMessage[iIndex], sizeof(g_sShakeMessage[]), "0");
 				g_flShakeChance[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Chance", 33.3);
 				g_flShakeChance[iIndex] = flClamp(g_flShakeChance[iIndex], 0.1, 100.0);

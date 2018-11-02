@@ -153,7 +153,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iBlindAbility[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Enabled", 0);
 				g_iBlindAbility[iIndex] = iClamp(g_iBlindAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Blind Ability/Ability Effect", g_sBlindEffect[iIndex], sizeof(g_sBlindEffect[]), "123");
+				kvSuperTanks.GetString("Blind Ability/Ability Effect", g_sBlindEffect[iIndex], sizeof(g_sBlindEffect[]), "0");
 				kvSuperTanks.GetString("Blind Ability/Ability Message", g_sBlindMessage[iIndex], sizeof(g_sBlindMessage[]), "0");
 				g_flBlindChance[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Chance", 33.3);
 				g_flBlindChance[iIndex] = flClamp(g_flBlindChance[iIndex], 0.1, 100.0);

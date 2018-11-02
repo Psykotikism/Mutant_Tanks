@@ -202,7 +202,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iHypnoAbility[iIndex] = kvSuperTanks.GetNum("Hypno Ability/Ability Enabled", 0);
 				g_iHypnoAbility[iIndex] = iClamp(g_iHypnoAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Hypno Ability/Ability Effect", g_sHypnoEffect[iIndex], sizeof(g_sHypnoEffect[]), "123");
+				kvSuperTanks.GetString("Hypno Ability/Ability Effect", g_sHypnoEffect[iIndex], sizeof(g_sHypnoEffect[]), "0");
 				kvSuperTanks.GetString("Hypno Ability/Ability Message", g_sHypnoMessage[iIndex], sizeof(g_sHypnoMessage[]), "0");
 				g_flHypnoBulletDivisor[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Bullet Divisor", 20.0);
 				g_flHypnoBulletDivisor[iIndex] = flClamp(g_flHypnoBulletDivisor[iIndex], 0.1, 9999999999.0);

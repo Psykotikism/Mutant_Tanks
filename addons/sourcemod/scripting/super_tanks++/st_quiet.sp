@@ -178,7 +178,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iQuietAbility[iIndex] = kvSuperTanks.GetNum("Quiet Ability/Ability Enabled", 0);
 				g_iQuietAbility[iIndex] = iClamp(g_iQuietAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Quiet Ability/Ability Effect", g_sQuietEffect[iIndex], sizeof(g_sQuietEffect[]), "123");
+				kvSuperTanks.GetString("Quiet Ability/Ability Effect", g_sQuietEffect[iIndex], sizeof(g_sQuietEffect[]), "0");
 				kvSuperTanks.GetString("Quiet Ability/Ability Message", g_sQuietMessage[iIndex], sizeof(g_sQuietMessage[]), "0");
 				g_flQuietChance[iIndex] = kvSuperTanks.GetFloat("Quiet Ability/Quiet Chance", 33.3);
 				g_flQuietChance[iIndex] = flClamp(g_flQuietChance[iIndex], 0.1, 100.0);

@@ -150,7 +150,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iRecoilAbility[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Enabled", 0);
 				g_iRecoilAbility[iIndex] = iClamp(g_iRecoilAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Recoil Ability/Ability Effect", g_sRecoilEffect[iIndex], sizeof(g_sRecoilEffect[]), "123");
+				kvSuperTanks.GetString("Recoil Ability/Ability Effect", g_sRecoilEffect[iIndex], sizeof(g_sRecoilEffect[]), "0");
 				kvSuperTanks.GetString("Recoil Ability/Ability Message", g_sRecoilMessage[iIndex], sizeof(g_sRecoilMessage[]), "0");
 				g_flRecoilChance[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Chance", 33.3);
 				g_flRecoilChance[iIndex] = flClamp(g_flRecoilChance[iIndex], 0.1, 100.0);

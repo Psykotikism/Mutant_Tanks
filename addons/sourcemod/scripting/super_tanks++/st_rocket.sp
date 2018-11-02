@@ -162,7 +162,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iRocketAbility[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", 0);
 				g_iRocketAbility[iIndex] = iClamp(g_iRocketAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Rocket Ability/Ability Effect", g_sRocketEffect[iIndex], sizeof(g_sRocketEffect[]), "123");
+				kvSuperTanks.GetString("Rocket Ability/Ability Effect", g_sRocketEffect[iIndex], sizeof(g_sRocketEffect[]), "0");
 				kvSuperTanks.GetString("Rocket Ability/Ability Message", g_sRocketMessage[iIndex], sizeof(g_sRocketMessage[]), "0");
 				g_flRocketChance[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Chance", 33.3);
 				g_flRocketChance[iIndex] = flClamp(g_flRocketChance[iIndex], 0.1, 100.0);

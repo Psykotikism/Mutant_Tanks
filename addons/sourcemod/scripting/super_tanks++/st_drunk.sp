@@ -150,7 +150,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iDrunkAbility[iIndex] = kvSuperTanks.GetNum("Drunk Ability/Ability Enabled", 0);
 				g_iDrunkAbility[iIndex] = iClamp(g_iDrunkAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Drunk Ability/Ability Effect", g_sDrunkEffect[iIndex], sizeof(g_sDrunkEffect[]), "123");
+				kvSuperTanks.GetString("Drunk Ability/Ability Effect", g_sDrunkEffect[iIndex], sizeof(g_sDrunkEffect[]), "0");
 				kvSuperTanks.GetString("Drunk Ability/Ability Message", g_sDrunkMessage[iIndex], sizeof(g_sDrunkMessage[]), "0");
 				g_flDrunkChance[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Chance", 33.3);
 				g_flDrunkChance[iIndex] = flClamp(g_flDrunkChance[iIndex], 0.1, 100.0);

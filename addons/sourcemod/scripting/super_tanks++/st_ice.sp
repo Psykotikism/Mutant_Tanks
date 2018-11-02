@@ -154,7 +154,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iIceAbility[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", 0);
 				g_iIceAbility[iIndex] = iClamp(g_iIceAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect[iIndex], sizeof(g_sIceEffect[]), "123");
+				kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect[iIndex], sizeof(g_sIceEffect[]), "0");
 				kvSuperTanks.GetString("Ice Ability/Ability Message", g_sIceMessage[iIndex], sizeof(g_sIceMessage[]), "0");
 				g_flIceChance[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Chance", 33.3);
 				g_flIceChance[iIndex] = flClamp(g_flIceChance[iIndex], 0.1, 100.0);

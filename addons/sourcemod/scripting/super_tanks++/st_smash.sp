@@ -151,7 +151,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iSmashAbility[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Enabled", 0);
 				g_iSmashAbility[iIndex] = iClamp(g_iSmashAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Smash Ability/Ability Effect", g_sSmashEffect[iIndex], sizeof(g_sSmashEffect[]), "123");
+				kvSuperTanks.GetString("Smash Ability/Ability Effect", g_sSmashEffect[iIndex], sizeof(g_sSmashEffect[]), "0");
 				kvSuperTanks.GetString("Smash Ability/Ability Message", g_sSmashMessage[iIndex], sizeof(g_sSmashMessage[]), "0");
 				g_flSmashChance[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Chance", 33.3);
 				g_flSmashChance[iIndex] = flClamp(g_flSmashChance[iIndex], 0.1, 100.0);

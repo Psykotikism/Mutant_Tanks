@@ -157,7 +157,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGlowOutline[iIndex] = iClamp(g_iGlowOutline[iIndex], 0, 1);
 				g_iHealAbility[iIndex] = kvSuperTanks.GetNum("Heal Ability/Ability Enabled", 0);
 				g_iHealAbility[iIndex] = iClamp(g_iHealAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Heal Ability/Ability Effect", g_sHealEffect[iIndex], sizeof(g_sHealEffect[]), "123");
+				kvSuperTanks.GetString("Heal Ability/Ability Effect", g_sHealEffect[iIndex], sizeof(g_sHealEffect[]), "0");
 				kvSuperTanks.GetString("Heal Ability/Ability Message", g_sHealMessage[iIndex], sizeof(g_sHealMessage[]), "0");
 				g_flHealAbsorbRange[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Absorb Range", 500.0);
 				g_flHealAbsorbRange[iIndex] = flClamp(g_flHealAbsorbRange[iIndex], 1.0, 9999999999.0);

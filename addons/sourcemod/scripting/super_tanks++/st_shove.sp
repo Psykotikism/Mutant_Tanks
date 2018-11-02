@@ -173,7 +173,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iShoveAbility[iIndex] = kvSuperTanks.GetNum("Shove Ability/Ability Enabled", 0);
 				g_iShoveAbility[iIndex] = iClamp(g_iShoveAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Shove Ability/Ability Effect", g_sShoveEffect[iIndex], sizeof(g_sShoveEffect[]), "123");
+				kvSuperTanks.GetString("Shove Ability/Ability Effect", g_sShoveEffect[iIndex], sizeof(g_sShoveEffect[]), "0");
 				kvSuperTanks.GetString("Shove Ability/Ability Message", g_sShoveMessage[iIndex], sizeof(g_sShoveMessage[]), "0");
 				g_flShoveChance[iIndex] = kvSuperTanks.GetFloat("Shove Ability/Shove Chance", 33.3);
 				g_flShoveChance[iIndex] = flClamp(g_flShoveChance[iIndex], 0.1, 100.0);

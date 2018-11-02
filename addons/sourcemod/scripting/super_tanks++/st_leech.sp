@@ -149,7 +149,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iLeechAbility[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Enabled", 0);
 				g_iLeechAbility[iIndex] = iClamp(g_iLeechAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Leech Ability/Ability Effect", g_sLeechEffect[iIndex], sizeof(g_sLeechEffect[]), "123");
+				kvSuperTanks.GetString("Leech Ability/Ability Effect", g_sLeechEffect[iIndex], sizeof(g_sLeechEffect[]), "0");
 				kvSuperTanks.GetString("Leech Ability/Ability Message", g_sLeechMessage[iIndex], sizeof(g_sLeechMessage[]), "0");
 				g_flLeechChance[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Chance", 33.3);
 				g_flLeechChance[iIndex] = flClamp(g_flLeechChance[iIndex], 0.1, 100.0);

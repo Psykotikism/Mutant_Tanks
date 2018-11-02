@@ -166,7 +166,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iEnforceAbility[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Enabled", 0);
 				g_iEnforceAbility[iIndex] = iClamp(g_iEnforceAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect[iIndex], sizeof(g_sEnforceEffect[]), "123");
+				kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect[iIndex], sizeof(g_sEnforceEffect[]), "0");
 				kvSuperTanks.GetString("Enforce Ability/Ability Message", g_sEnforceMessage[iIndex], sizeof(g_sEnforceMessage[]), "0");
 				g_flEnforceChance[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Chance", 33.3);
 				g_flEnforceChance[iIndex] = flClamp(g_flEnforceChance[iIndex], 0.1, 100.0);

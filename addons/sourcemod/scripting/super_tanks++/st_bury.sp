@@ -150,7 +150,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iBuryAbility[iIndex] = kvSuperTanks.GetNum("Bury Ability/Ability Enabled", 0);
 				g_iBuryAbility[iIndex] = iClamp(g_iBuryAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Bury Ability/Ability Effect", g_sBuryEffect[iIndex], sizeof(g_sBuryEffect[]), "123");
+				kvSuperTanks.GetString("Bury Ability/Ability Effect", g_sBuryEffect[iIndex], sizeof(g_sBuryEffect[]), "0");
 				kvSuperTanks.GetString("Bury Ability/Ability Message", g_sBuryMessage[iIndex], sizeof(g_sBuryMessage[]), "0");
 				g_flBuryChance[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Chance", 33.3);
 				g_flBuryChance[iIndex] = flClamp(g_flBuryChance[iIndex], 0.1, 100.0);

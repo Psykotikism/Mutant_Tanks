@@ -151,7 +151,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iPimpAbility[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", 0);
 				g_iPimpAbility[iIndex] = iClamp(g_iPimpAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Pimp Ability/Ability Effect", g_sPimpEffect[iIndex], sizeof(g_sPimpEffect[]), "123");
+				kvSuperTanks.GetString("Pimp Ability/Ability Effect", g_sPimpEffect[iIndex], sizeof(g_sPimpEffect[]), "0");
 				kvSuperTanks.GetString("Pimp Ability/Ability Message", g_sPimpMessage[iIndex], sizeof(g_sPimpMessage[]), "0");
 				g_iPimpAmount[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", 5);
 				g_iPimpAmount[iIndex] = iClamp(g_iPimpAmount[iIndex], 1, 9999999999);

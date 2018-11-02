@@ -149,7 +149,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iStunAbility[iIndex] = kvSuperTanks.GetNum("Stun Ability/Ability Enabled", 0);
 				g_iStunAbility[iIndex] = iClamp(g_iStunAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Stun Ability/Ability Effect", g_sStunEffect[iIndex], sizeof(g_sStunEffect[]), "123");
+				kvSuperTanks.GetString("Stun Ability/Ability Effect", g_sStunEffect[iIndex], sizeof(g_sStunEffect[]), "0");
 				kvSuperTanks.GetString("Stun Ability/Ability Message", g_sStunMessage[iIndex], sizeof(g_sStunMessage[]), "0");
 				g_flStunChance[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Chance", 33.3);
 				g_flStunChance[iIndex] = flClamp(g_flStunChance[iIndex], 0.1, 100.0);

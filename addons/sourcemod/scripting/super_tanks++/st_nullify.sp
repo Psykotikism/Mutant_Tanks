@@ -156,7 +156,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iNullifyAbility[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Ability Enabled", 0);
 				g_iNullifyAbility[iIndex] = iClamp(g_iNullifyAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Nullify Ability/Ability Effect", g_sNullifyEffect[iIndex], sizeof(g_sNullifyEffect[]), "123");
+				kvSuperTanks.GetString("Nullify Ability/Ability Effect", g_sNullifyEffect[iIndex], sizeof(g_sNullifyEffect[]), "0");
 				kvSuperTanks.GetString("Nullify Ability/Ability Message", g_sNullifyMessage[iIndex], sizeof(g_sNullifyMessage[]), "0");
 				g_flNullifyChance[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Chance", 33.3);
 				g_flNullifyChance[iIndex] = flClamp(g_flNullifyChance[iIndex], 0.1, 100.0);

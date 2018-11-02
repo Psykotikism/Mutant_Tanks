@@ -160,7 +160,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iElectricAbility[iIndex] = kvSuperTanks.GetNum("Electric Ability/Ability Enabled", 0);
 				g_iElectricAbility[iIndex] = iClamp(g_iElectricAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Electric Ability/Ability Effect", g_sElectricEffect[iIndex], sizeof(g_sElectricEffect[]), "123");
+				kvSuperTanks.GetString("Electric Ability/Ability Effect", g_sElectricEffect[iIndex], sizeof(g_sElectricEffect[]), "0");
 				kvSuperTanks.GetString("Electric Ability/Ability Message", g_sElectricMessage[iIndex], sizeof(g_sElectricMessage[]), "0");
 				g_flElectricChance[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Chance", 33.3);
 				g_flElectricChance[iIndex] = flClamp(g_flElectricChance[iIndex], 0.1, 100.0);

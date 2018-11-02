@@ -154,7 +154,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iWhirlAbility[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Ability Enabled", 0);
 				g_iWhirlAbility[iIndex] = iClamp(g_iWhirlAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Whirl Ability/Ability Effect", g_sWhirlEffect[iIndex], sizeof(g_sWhirlEffect[]), "123");
+				kvSuperTanks.GetString("Whirl Ability/Ability Effect", g_sWhirlEffect[iIndex], sizeof(g_sWhirlEffect[]), "0");
 				kvSuperTanks.GetString("Whirl Ability/Ability Message", g_sWhirlMessage[iIndex], sizeof(g_sWhirlMessage[]), "0");
 				kvSuperTanks.GetString("Whirl Ability/Whirl Axis", g_sWhirlAxis[iIndex], sizeof(g_sWhirlAxis[]), "123");
 				g_flWhirlChance[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Chance", 33.3);

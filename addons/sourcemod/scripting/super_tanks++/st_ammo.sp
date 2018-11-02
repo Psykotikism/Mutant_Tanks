@@ -138,7 +138,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iAmmoAbility[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Enabled", 0);
 				g_iAmmoAbility[iIndex] = iClamp(g_iAmmoAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Ammo Ability/Ability Effect", g_sAmmoEffect[iIndex], sizeof(g_sAmmoEffect[]), "123");
+				kvSuperTanks.GetString("Ammo Ability/Ability Effect", g_sAmmoEffect[iIndex], sizeof(g_sAmmoEffect[]), "0");
 				kvSuperTanks.GetString("Ammo Ability/Ability Message", g_sAmmoMessage[iIndex], sizeof(g_sAmmoMessage[]), "0");
 				g_flAmmoChance[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Chance", 33.3);
 				g_flAmmoChance[iIndex] = flClamp(g_flAmmoChance[iIndex], 0.1, 100.0);

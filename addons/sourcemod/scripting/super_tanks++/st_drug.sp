@@ -154,7 +154,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iDrugAbility[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Enabled", 0);
 				g_iDrugAbility[iIndex] = iClamp(g_iDrugAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Drug Ability/Ability Effect", g_sDrugEffect[iIndex], sizeof(g_sDrugEffect[]), "123");
+				kvSuperTanks.GetString("Drug Ability/Ability Effect", g_sDrugEffect[iIndex], sizeof(g_sDrugEffect[]), "0");
 				kvSuperTanks.GetString("Drug Ability/Ability Message", g_sDrugMessage[iIndex], sizeof(g_sDrugMessage[]), "0");
 				g_flDrugChance[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Chance", 33.3);
 				g_flDrugChance[iIndex] = flClamp(g_flDrugChance[iIndex], 0.1, 100.0);

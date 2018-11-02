@@ -149,7 +149,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iZombieAbility[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Enabled", 0);
 				g_iZombieAbility[iIndex] = iClamp(g_iZombieAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Zombie Ability/Ability Effect", g_sZombieEffect[iIndex], sizeof(g_sZombieEffect[]), "123");
+				kvSuperTanks.GetString("Zombie Ability/Ability Effect", g_sZombieEffect[iIndex], sizeof(g_sZombieEffect[]), "0");
 				kvSuperTanks.GetString("Zombie Ability/Ability Message", g_sZombieMessage[iIndex], sizeof(g_sZombieMessage[]), "0");
 				g_iZombieAmount[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", 10);
 				g_iZombieAmount[iIndex] = iClamp(g_iZombieAmount[iIndex], 1, 100);

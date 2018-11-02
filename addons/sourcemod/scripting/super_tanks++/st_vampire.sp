@@ -140,7 +140,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iVampireAbility[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Enabled", 0);
 				g_iVampireAbility[iIndex] = iClamp(g_iVampireAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Vampire Ability/Ability Effect", g_sVampireEffect[iIndex], sizeof(g_sVampireEffect[]), "123");
+				kvSuperTanks.GetString("Vampire Ability/Ability Effect", g_sVampireEffect[iIndex], sizeof(g_sVampireEffect[]), "0");
 				kvSuperTanks.GetString("Vampire Ability/Ability Message", g_sVampireMessage[iIndex], sizeof(g_sVampireMessage[]), "0");
 				g_flVampireChance[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Chance", 33.3);
 				g_flVampireChance[iIndex] = flClamp(g_flVampireChance[iIndex], 0.1, 100.0);

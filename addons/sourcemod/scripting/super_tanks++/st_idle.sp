@@ -182,7 +182,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iIdleAbility[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Enabled", 0);
 				g_iIdleAbility[iIndex] = iClamp(g_iIdleAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect[iIndex], sizeof(g_sIdleEffect[]), "123");
+				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect[iIndex], sizeof(g_sIdleEffect[]), "0");
 				kvSuperTanks.GetString("Idle Ability/Ability Message", g_sIdleMessage[iIndex], sizeof(g_sIdleMessage[]), "0");
 				g_flIdleChance[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", 33.3);
 				g_flIdleChance[iIndex] = flClamp(g_flIdleChance[iIndex], 0.1, 100.0);

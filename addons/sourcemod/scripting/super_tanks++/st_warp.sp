@@ -163,7 +163,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Particles/Body Effects", g_sParticleEffects[iIndex], sizeof(g_sParticleEffects[]), "1234567");
 				g_iWarpAbility[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", 0);
 				g_iWarpAbility[iIndex] = iClamp(g_iWarpAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect[iIndex], sizeof(g_sWarpEffect[]), "123");
+				kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect[iIndex], sizeof(g_sWarpEffect[]), "0");
 				kvSuperTanks.GetString("Warp Ability/Ability Message", g_sWarpMessage[iIndex], sizeof(g_sWarpMessage[]), "0");
 				g_flWarpChance[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Chance", 33.3);
 				g_flWarpChance[iIndex] = flClamp(g_flWarpChance[iIndex], 0.1, 100.0);

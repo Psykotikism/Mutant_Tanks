@@ -179,7 +179,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iFlingAbility[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", 0);
 				g_iFlingAbility[iIndex] = iClamp(g_iFlingAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Fling Ability/Ability Effect", g_sFlingEffect[iIndex], sizeof(g_sFlingEffect[]), "123");
+				kvSuperTanks.GetString("Fling Ability/Ability Effect", g_sFlingEffect[iIndex], sizeof(g_sFlingEffect[]), "0");
 				kvSuperTanks.GetString("Fling Ability/Ability Message", g_sFlingMessage[iIndex], sizeof(g_sFlingMessage[]), "0");
 				g_flFlingChance[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Chance", 33.3);
 				g_flFlingChance[iIndex] = flClamp(g_flFlingChance[iIndex], 0.1, 100.0);

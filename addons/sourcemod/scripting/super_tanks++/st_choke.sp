@@ -165,7 +165,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iChokeAbility[iIndex] = kvSuperTanks.GetNum("Choke Ability/Ability Enabled", 0);
 				g_iChokeAbility[iIndex] = iClamp(g_iChokeAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Choke Ability/Ability Effect", g_sChokeEffect[iIndex], sizeof(g_sChokeEffect[]), "123");
+				kvSuperTanks.GetString("Choke Ability/Ability Effect", g_sChokeEffect[iIndex], sizeof(g_sChokeEffect[]), "0");
 				kvSuperTanks.GetString("Choke Ability/Ability Message", g_sChokeMessage[iIndex], sizeof(g_sChokeMessage[]), "0");
 				g_flChokeChance[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Chance", 33.3);
 				g_flChokeChance[iIndex] = flClamp(g_flChokeChance[iIndex], 0.1, 100.0);
