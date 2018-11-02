@@ -603,7 +603,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -694,7 +694,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -781,7 +781,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -869,7 +869,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -963,7 +963,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1053,7 +1053,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1147,7 +1147,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1402,7 +1402,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1496,7 +1496,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1595,7 +1595,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1701,7 +1701,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1800,7 +1800,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1941,7 +1941,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2105,7 +2105,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
@@ -2267,7 +2267,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2376,7 +2376,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -2504,7 +2504,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2604,7 +2604,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2734,7 +2734,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2822,7 +2822,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2904,7 +2904,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3046,7 +3046,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
@@ -3167,7 +3167,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3249,7 +3249,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3336,7 +3336,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3653,7 +3653,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3744,7 +3744,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -3833,7 +3833,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3933,7 +3933,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4018,7 +4018,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
@@ -4119,7 +4119,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4207,7 +4207,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4404,7 +4404,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4556,7 +4556,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4643,7 +4643,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4786,7 +4786,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4880,7 +4880,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4962,7 +4962,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -5140,7 +5140,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -5348,7 +5348,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -5441,7 +5441,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -5540,7 +5540,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -5635,7 +5635,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -5795,7 +5795,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --

@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 8.46 (TBA)
+
+Changes:
+
+1. Added new target filters: @special, @infected
+2. The "Ability Effect" settings are now disabled by default.
+
+Files:
+
+1. Updated config file.
+2. Updated include file.
+
 ## Version 8.45 (October 31, 2018)
 
 Bug fixes:

@@ -751,6 +751,8 @@ Target filters:
 @chargers
 @witches
 @tanks
+@special
+@infected
 ```
 
 Commands:
