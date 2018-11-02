@@ -2,6 +2,10 @@
 
 ## Version 8.46 (TBA)
 
+Bug fixes:
+
+1. Fixed all Chance settings not accepting 0.0% as a value.
+
 Changes:
 
 1. Added new target filters: @special, @infected

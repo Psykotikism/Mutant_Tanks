@@ -100,6 +100,7 @@ This is okay:
 		{
 			"Tank Name"				"Test Tank" // Tank has a name.
 			"Tank Enabled"				"1" // Tank is enabled.
+			"Tank Chance"				"100.0" // Tank has 100% chance of spawning.
 			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
@@ -116,6 +117,7 @@ This is not okay:
 		{
 			// "Tank Enabled" is missing so this entry is disabled.
 			"Tank Name"				"Test Tank" // Tank has a name.
+			"Tank Chance"				"47.0" // Tank has 47% chance of spawning.
 			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
@@ -132,6 +134,7 @@ This is okay:
 		{
 			// Since "Tank Name" is missing, the default name for this entry will be "Tank"
 			"Tank Enabled"				"1" // Tank is enabled.
+			"Tank Chance"				"12.3" // Tank has 12.3% chance of spawning.
 			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
 		}
 	}
@@ -148,6 +151,7 @@ This is not okay:
 		{
 			"Tank Name"				"Test Tank" // Tank has a name.
 			"Tank Enabled"				"1" // Tank is enabled.
+			"Tank Chance"				"59.0" // Tank has 59% chance of spawning.
 			"Skin-Glow Colors"			"255, 0, 0, 255 | 255, 255, 0" // The string should not contain any spaces.
 		}
 	}
@@ -166,6 +170,7 @@ Here's our final entry:
 		{
 			"Tank Name"				"Test Tank" // Named "Test Tank".
 			"Tank Enabled"				"1" // Entry is enabled.
+			"Tank Chance"				"9.5" // Tank has 9.5% chance of spawning.
 			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Has red/yellow color scheme.
 		}
 		"Immunities"
@@ -211,6 +216,7 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		{
 			"Tank Name"				"Leaper Tank"
 			"Tank Enabled"				"1"
+			"Tank Chance"				"75.2" // Tank has 75.2% chance of spawning.
 			"Skin-Glow Colors"			"255,255,0,255|255,255,0"
 		}
 		"Enhancements"
@@ -243,6 +249,7 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		{
 			"Tank Name"				"Invisible Tank"
 			"Tank Enabled"				"1"
+			"Tank Chance"				"38.2" // Tank has 38.2% chance of spawning.
 			"Skin-Glow Colors"			"255,255,255,255|255,255,255"
 			"Glow Outline"				"0" // No glow outline.
 		}
@@ -463,6 +470,7 @@ Example:
 		{
 			"Tank Name"				"Psyk0tik Tank"
 			"Tank Enabled"				"1"
+			"Tank Chance"				"2.53" // Tank has 2.53% chance of spawning.
 			"Skin-Glow Colors"			"0,170,255,255|0,170,255"
 		}
 		"Enhancements"
@@ -485,6 +493,7 @@ Example:
 		{
 			"Tank Name"				"Idiot Tank"
 			"Tank Enabled"				"1"
+			"Tank Chance"				"1.0" // Tank has 1% chance of spawning.
 			"Skin-Glow Colors"			"1,1,1,255|1,1,1"
 		}
 		"Enhancements"
