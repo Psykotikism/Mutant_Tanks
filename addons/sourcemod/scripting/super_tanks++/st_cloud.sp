@@ -114,7 +114,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloudMessage[iIndex] = kvSuperTanks.GetNum("Cloud Ability/Ability Message", 0);
 				g_iCloudMessage[iIndex] = iClamp(g_iCloudMessage[iIndex], 0, 1);
 				g_flCloudChance[iIndex] = kvSuperTanks.GetFloat("Cloud Ability/Cloud Chance", 33.3);
-				g_flCloudChance[iIndex] = flClamp(g_flCloudChance[iIndex], 0.1, 100.0);
+				g_flCloudChance[iIndex] = flClamp(g_flCloudChance[iIndex], 0.0, 100.0);
 				g_flCloudDamage[iIndex] = kvSuperTanks.GetFloat("Cloud Ability/Cloud Damage", 5.0);
 				g_flCloudDamage[iIndex] = flClamp(g_flCloudDamage[iIndex], 1.0, 9999999999.0);
 			}
@@ -127,7 +127,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloudMessage2[iIndex] = kvSuperTanks.GetNum("Cloud Ability/Ability Message", g_iCloudMessage[iIndex]);
 				g_iCloudMessage2[iIndex] = iClamp(g_iCloudMessage2[iIndex], 0, 1);
 				g_flCloudChance2[iIndex] = kvSuperTanks.GetFloat("Cloud Ability/Cloud Chance", g_flCloudChance[iIndex]);
-				g_flCloudChance2[iIndex] = flClamp(g_flCloudChance2[iIndex], 0.1, 100.0);
+				g_flCloudChance2[iIndex] = flClamp(g_flCloudChance2[iIndex], 0.0, 100.0);
 				g_flCloudDamage2[iIndex] = kvSuperTanks.GetFloat("Cloud Ability/Cloud Damage", g_flCloudDamage[iIndex]);
 				g_flCloudDamage2[iIndex] = flClamp(g_flCloudDamage2[iIndex], 1.0, 9999999999.0);
 			}

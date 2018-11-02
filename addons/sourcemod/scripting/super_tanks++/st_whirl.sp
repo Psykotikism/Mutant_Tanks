@@ -158,7 +158,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Whirl Ability/Ability Message", g_sWhirlMessage[iIndex], sizeof(g_sWhirlMessage[]), "0");
 				kvSuperTanks.GetString("Whirl Ability/Whirl Axis", g_sWhirlAxis[iIndex], sizeof(g_sWhirlAxis[]), "123");
 				g_flWhirlChance[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Chance", 33.3);
-				g_flWhirlChance[iIndex] = flClamp(g_flWhirlChance[iIndex], 0.1, 100.0);
+				g_flWhirlChance[iIndex] = flClamp(g_flWhirlChance[iIndex], 0.0, 100.0);
 				g_flWhirlDuration[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Duration", 5.0);
 				g_flWhirlDuration[iIndex] = flClamp(g_flWhirlDuration[iIndex], 0.1, 9999999999.0);
 				g_iWhirlHit[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Hit", 0);
@@ -168,7 +168,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flWhirlRange[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Range", 150.0);
 				g_flWhirlRange[iIndex] = flClamp(g_flWhirlRange[iIndex], 1.0, 9999999999.0);
 				g_flWhirlRangeChance[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Range Chance", 15.0);
-				g_flWhirlRangeChance[iIndex] = flClamp(g_flWhirlRangeChance[iIndex], 0.1, 100.0);
+				g_flWhirlRangeChance[iIndex] = flClamp(g_flWhirlRangeChance[iIndex], 0.0, 100.0);
 				g_flWhirlSpeed[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Speed", 500.0);
 				g_flWhirlSpeed[iIndex] = flClamp(g_flWhirlSpeed[iIndex], 1.0, 9999999999.0);
 			}
@@ -182,7 +182,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Whirl Ability/Ability Message", g_sWhirlMessage2[iIndex], sizeof(g_sWhirlMessage2[]), g_sWhirlMessage[iIndex]);
 				kvSuperTanks.GetString("Whirl Ability/Whirl Axis", g_sWhirlAxis2[iIndex], sizeof(g_sWhirlAxis2[]), g_sWhirlAxis[iIndex]);
 				g_flWhirlChance2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Chance", g_flWhirlChance[iIndex]);
-				g_flWhirlChance2[iIndex] = flClamp(g_flWhirlChance2[iIndex], 0.1, 100.0);
+				g_flWhirlChance2[iIndex] = flClamp(g_flWhirlChance2[iIndex], 0.0, 100.0);
 				g_flWhirlDuration2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Duration", g_flWhirlDuration[iIndex]);
 				g_flWhirlDuration2[iIndex] = flClamp(g_flWhirlDuration2[iIndex], 0.1, 9999999999.0);
 				g_iWhirlHit2[iIndex] = kvSuperTanks.GetNum("Whirl Ability/Whirl Hit", g_iWhirlHit[iIndex]);
@@ -192,7 +192,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flWhirlRange2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Range", g_flWhirlRange[iIndex]);
 				g_flWhirlRange2[iIndex] = flClamp(g_flWhirlRange2[iIndex], 1.0, 9999999999.0);
 				g_flWhirlRangeChance2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Range Chance", g_flWhirlRangeChance[iIndex]);
-				g_flWhirlRangeChance2[iIndex] = flClamp(g_flWhirlRangeChance2[iIndex], 0.1, 100.0);
+				g_flWhirlRangeChance2[iIndex] = flClamp(g_flWhirlRangeChance2[iIndex], 0.0, 100.0);
 				g_flWhirlSpeed2[iIndex] = kvSuperTanks.GetFloat("Whirl Ability/Whirl Speed", g_flWhirlSpeed[iIndex]);
 				g_flWhirlSpeed2[iIndex] = flClamp(g_flWhirlSpeed2[iIndex], 1.0, 9999999999.0);
 			}

@@ -112,7 +112,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iTrackMessage[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", 0);
 				g_iTrackMessage[iIndex] = iClamp(g_iTrackMessage[iIndex], 0, 1);
 				g_flTrackChance[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Chance", 33.3);
-				g_flTrackChance[iIndex] = flClamp(g_flTrackChance[iIndex], 0.1, 100.0);
+				g_flTrackChance[iIndex] = flClamp(g_flTrackChance[iIndex], 0.0, 100.0);
 				g_iTrackMode[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", 1);
 				g_iTrackMode[iIndex] = iClamp(g_iTrackMode[iIndex], 0, 1);
 				g_flTrackSpeed[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", 500.0);
@@ -130,7 +130,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iTrackMessage2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", g_iTrackMessage[iIndex]);
 				g_iTrackMessage2[iIndex] = iClamp(g_iTrackMessage2[iIndex], 0, 1);
 				g_flTrackChance2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Chance", g_flTrackChance[iIndex]);
-				g_flTrackChance2[iIndex] = flClamp(g_flTrackChance2[iIndex], 0.1, 100.0);
+				g_flTrackChance2[iIndex] = flClamp(g_flTrackChance2[iIndex], 0.0, 100.0);
 				g_iTrackMode2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", g_iTrackMode[iIndex]);
 				g_iTrackMode2[iIndex] = iClamp(g_iTrackMode2[iIndex], 0, 1);
 				g_flTrackSpeed2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[iIndex]);

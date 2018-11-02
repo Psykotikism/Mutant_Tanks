@@ -153,7 +153,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Bury Ability/Ability Effect", g_sBuryEffect[iIndex], sizeof(g_sBuryEffect[]), "0");
 				kvSuperTanks.GetString("Bury Ability/Ability Message", g_sBuryMessage[iIndex], sizeof(g_sBuryMessage[]), "0");
 				g_flBuryChance[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Chance", 33.3);
-				g_flBuryChance[iIndex] = flClamp(g_flBuryChance[iIndex], 0.1, 100.0);
+				g_flBuryChance[iIndex] = flClamp(g_flBuryChance[iIndex], 0.0, 100.0);
 				g_flBuryDuration[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Duration", 5.0);
 				g_flBuryDuration[iIndex] = flClamp(g_flBuryDuration[iIndex], 0.1, 9999999999.0);
 				g_flBuryHeight[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Height", 50.0);
@@ -165,7 +165,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flBuryRange[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Range", 150.0);
 				g_flBuryRange[iIndex] = flClamp(g_flBuryRange[iIndex], 1.0, 9999999999.0);
 				g_flBuryRangeChance[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Range Chance", 15.0);
-				g_flBuryRangeChance[iIndex] = flClamp(g_flBuryRangeChance[iIndex], 0.1, 100.0);
+				g_flBuryRangeChance[iIndex] = flClamp(g_flBuryRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -176,7 +176,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Bury Ability/Ability Effect", g_sBuryEffect2[iIndex], sizeof(g_sBuryEffect2[]), g_sBuryEffect[iIndex]);
 				kvSuperTanks.GetString("Bury Ability/Ability Message", g_sBuryMessage2[iIndex], sizeof(g_sBuryMessage2[]), g_sBuryMessage[iIndex]);
 				g_flBuryChance2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Chance", g_flBuryChance[iIndex]);
-				g_flBuryChance2[iIndex] = flClamp(g_flBuryChance2[iIndex], 0.1, 100.0);
+				g_flBuryChance2[iIndex] = flClamp(g_flBuryChance2[iIndex], 0.0, 100.0);
 				g_flBuryDuration2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Duration", g_flBuryDuration[iIndex]);
 				g_flBuryDuration2[iIndex] = flClamp(g_flBuryDuration2[iIndex], 0.1, 9999999999.0);
 				g_flBuryHeight2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Height", g_flBuryHeight[iIndex]);
@@ -188,7 +188,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flBuryRange2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Range", g_flBuryRange[iIndex]);
 				g_flBuryRange2[iIndex] = flClamp(g_flBuryRange2[iIndex], 1.0, 9999999999.0);
 				g_flBuryRangeChance2[iIndex] = kvSuperTanks.GetFloat("Bury Ability/Bury Range Chance", g_flBuryRangeChance[iIndex]);
-				g_flBuryRangeChance2[iIndex] = flClamp(g_flBuryRangeChance2[iIndex], 0.1, 100.0);
+				g_flBuryRangeChance2[iIndex] = flClamp(g_flBuryRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

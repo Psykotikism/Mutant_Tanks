@@ -111,7 +111,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRockMessage[iIndex] = kvSuperTanks.GetNum("Rock Ability/Ability Message", 0);
 				g_iRockMessage[iIndex] = iClamp(g_iRockMessage[iIndex], 0, 1);
 				g_flRockChance[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Chance", 33.3);
-				g_flRockChance[iIndex] = flClamp(g_flRockChance[iIndex], 0.1, 100.0);
+				g_flRockChance[iIndex] = flClamp(g_flRockChance[iIndex], 0.0, 100.0);
 				g_iRockDamage[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Damage", 5);
 				g_iRockDamage[iIndex] = iClamp(g_iRockDamage[iIndex], 1, 9999999999);
 				g_flRockDuration[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Duration", 5.0);
@@ -127,7 +127,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRockMessage2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Ability Message", g_iRockMessage[iIndex]);
 				g_iRockMessage2[iIndex] = iClamp(g_iRockMessage2[iIndex], 0, 1);
 				g_flRockChance2[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Chance", g_flRockChance[iIndex]);
-				g_flRockChance2[iIndex] = flClamp(g_flRockChance2[iIndex], 0.1, 100.0);
+				g_flRockChance2[iIndex] = flClamp(g_flRockChance2[iIndex], 0.0, 100.0);
 				g_iRockDamage2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Damage", g_iRockDamage[iIndex]);
 				g_iRockDamage2[iIndex] = iClamp(g_iRockDamage2[iIndex], 1, 9999999999);
 				g_flRockDuration2[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Duration", g_flRockDuration[iIndex]);

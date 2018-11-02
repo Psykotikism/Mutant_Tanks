@@ -166,7 +166,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect[iIndex], sizeof(g_sWarpEffect[]), "0");
 				kvSuperTanks.GetString("Warp Ability/Ability Message", g_sWarpMessage[iIndex], sizeof(g_sWarpMessage[]), "0");
 				g_flWarpChance[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Chance", 33.3);
-				g_flWarpChance[iIndex] = flClamp(g_flWarpChance[iIndex], 0.1, 100.0);
+				g_flWarpChance[iIndex] = flClamp(g_flWarpChance[iIndex], 0.0, 100.0);
 				g_iWarpHit[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", 0);
 				g_iWarpHit[iIndex] = iClamp(g_iWarpHit[iIndex], 0, 1);
 				g_iWarpHitMode[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit Mode", 0);
@@ -178,7 +178,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flWarpRange[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Range", 150.0);
 				g_flWarpRange[iIndex] = flClamp(g_flWarpRange[iIndex], 1.0, 9999999999.0);
 				g_flWarpRangeChance[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Range Chance", 15.0);
-				g_flWarpRangeChance[iIndex] = flClamp(g_flWarpRangeChance[iIndex], 0.1, 100.0);
+				g_flWarpRangeChance[iIndex] = flClamp(g_flWarpRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -192,7 +192,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect2[iIndex], sizeof(g_sWarpEffect2[]), g_sWarpEffect[iIndex]);
 				kvSuperTanks.GetString("Warp Ability/Ability Message", g_sWarpMessage2[iIndex], sizeof(g_sWarpMessage2[]), g_sWarpMessage[iIndex]);
 				g_flWarpChance2[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Chance", g_flWarpChance[iIndex]);
-				g_flWarpChance2[iIndex] = flClamp(g_flWarpChance2[iIndex], 0.1, 100.0);
+				g_flWarpChance2[iIndex] = flClamp(g_flWarpChance2[iIndex], 0.0, 100.0);
 				g_iWarpHit2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", g_iWarpHit[iIndex]);
 				g_iWarpHit2[iIndex] = iClamp(g_iWarpHit2[iIndex], 0, 1);
 				g_iWarpHitMode2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit Mode", g_iWarpHitMode[iIndex]);
@@ -204,7 +204,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flWarpRange2[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Range", g_flWarpRange[iIndex]);
 				g_flWarpRange2[iIndex] = flClamp(g_flWarpRange2[iIndex], 1.0, 9999999999.0);
 				g_flWarpRangeChance2[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Range Chance", g_flWarpRangeChance[iIndex]);
-				g_flWarpRangeChance2[iIndex] = flClamp(g_flWarpRangeChance2[iIndex], 0.1, 100.0);
+				g_flWarpRangeChance2[iIndex] = flClamp(g_flWarpRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

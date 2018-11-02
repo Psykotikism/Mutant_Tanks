@@ -106,7 +106,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloneAmount[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Amount", 2);
 				g_iCloneAmount[iIndex] = iClamp(g_iCloneAmount[iIndex], 1, 25);
 				g_flCloneChance[iIndex] = kvSuperTanks.GetFloat("Clone Ability/Clone Chance", 33.3);
-				g_flCloneChance[iIndex] = flClamp(g_flCloneChance[iIndex], 0.1, 100.0);
+				g_flCloneChance[iIndex] = flClamp(g_flCloneChance[iIndex], 0.0, 100.0);
 				g_iCloneHealth[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", 1000);
 				g_iCloneHealth[iIndex] = iClamp(g_iCloneHealth[iIndex], 1, ST_MAXHEALTH);
 				g_iCloneMode[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", 0);
@@ -125,7 +125,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloneAmount2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Amount", g_iCloneAmount[iIndex]);
 				g_iCloneAmount2[iIndex] = iClamp(g_iCloneAmount2[iIndex], 1, 25);
 				g_flCloneChance2[iIndex] = kvSuperTanks.GetFloat("Clone Ability/Clone Chance", g_flCloneChance[iIndex]);
-				g_flCloneChance2[iIndex] = flClamp(g_flCloneChance2[iIndex], 0.1, 100.0);
+				g_flCloneChance2[iIndex] = flClamp(g_flCloneChance2[iIndex], 0.0, 100.0);
 				g_iCloneHealth2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", g_iCloneHealth[iIndex]);
 				g_iCloneHealth2[iIndex] = iClamp(g_iCloneHealth2[iIndex], 1, ST_MAXHEALTH);
 				g_iCloneMode2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", g_iCloneMode[iIndex]);

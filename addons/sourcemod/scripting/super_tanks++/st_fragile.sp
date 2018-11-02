@@ -162,7 +162,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flFragileBulletMultiplier[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Bullet Multiplier", 5.0);
 				g_flFragileBulletMultiplier[iIndex] = flClamp(g_flFragileBulletMultiplier[iIndex], 0.1, 9999999999.0);
 				g_flFragileChance[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Chance", 33.3);
-				g_flFragileChance[iIndex] = flClamp(g_flFragileChance[iIndex], 0.1, 100.0);
+				g_flFragileChance[iIndex] = flClamp(g_flFragileChance[iIndex], 0.0, 100.0);
 				g_flFragileDuration[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Duration", 5.0);
 				g_flFragileDuration[iIndex] = flClamp(g_flFragileDuration[iIndex], 0.1, 9999999999.0);
 				g_flFragileExplosiveMultiplier[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Explosive Multiplier", 5.0);
@@ -183,7 +183,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flFragileBulletMultiplier2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Bullet Multiplier", g_flFragileBulletMultiplier[iIndex]);
 				g_flFragileBulletMultiplier2[iIndex] = flClamp(g_flFragileBulletMultiplier2[iIndex], 0.1, 9999999999.0);
 				g_flFragileChance2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Chance", g_flFragileChance[iIndex]);
-				g_flFragileChance2[iIndex] = flClamp(g_flFragileChance2[iIndex], 0.1, 100.0);
+				g_flFragileChance2[iIndex] = flClamp(g_flFragileChance2[iIndex], 0.0, 100.0);
 				g_flFragileDuration2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Duration", g_flFragileDuration[iIndex]);
 				g_flFragileDuration2[iIndex] = flClamp(g_flFragileDuration2[iIndex], 0.1, 9999999999.0);
 				g_flFragileExplosiveMultiplier2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Explosive Multiplier", g_flFragileExplosiveMultiplier[iIndex]);

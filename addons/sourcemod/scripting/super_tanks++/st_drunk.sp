@@ -153,7 +153,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Drunk Ability/Ability Effect", g_sDrunkEffect[iIndex], sizeof(g_sDrunkEffect[]), "0");
 				kvSuperTanks.GetString("Drunk Ability/Ability Message", g_sDrunkMessage[iIndex], sizeof(g_sDrunkMessage[]), "0");
 				g_flDrunkChance[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Chance", 33.3);
-				g_flDrunkChance[iIndex] = flClamp(g_flDrunkChance[iIndex], 0.1, 100.0);
+				g_flDrunkChance[iIndex] = flClamp(g_flDrunkChance[iIndex], 0.0, 100.0);
 				g_flDrunkDuration[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Duration", 5.0);
 				g_flDrunkDuration[iIndex] = flClamp(g_flDrunkDuration[iIndex], 0.1, 9999999999.0);
 				g_iDrunkHit[iIndex] = kvSuperTanks.GetNum("Drunk Ability/Drunk Hit", 0);
@@ -163,7 +163,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flDrunkRange[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Range", 150.0);
 				g_flDrunkRange[iIndex] = flClamp(g_flDrunkRange[iIndex], 1.0, 9999999999.0);
 				g_flDrunkRangeChance[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Range Chance", 15.0);
-				g_flDrunkRangeChance[iIndex] = flClamp(g_flDrunkRangeChance[iIndex], 0.1, 100.0);
+				g_flDrunkRangeChance[iIndex] = flClamp(g_flDrunkRangeChance[iIndex], 0.0, 100.0);
 				g_flDrunkSpeedInterval[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Speed Interval", 1.5);
 				g_flDrunkSpeedInterval[iIndex] = flClamp(g_flDrunkSpeedInterval[iIndex], 0.1, 9999999999.0);
 				g_flDrunkTurnInterval[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Turn Interval", 0.5);
@@ -178,7 +178,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Drunk Ability/Ability Effect", g_sDrunkEffect2[iIndex], sizeof(g_sDrunkEffect2[]), g_sDrunkEffect[iIndex]);
 				kvSuperTanks.GetString("Drunk Ability/Ability Message", g_sDrunkMessage2[iIndex], sizeof(g_sDrunkMessage2[]), g_sDrunkMessage[iIndex]);
 				g_flDrunkChance2[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Chance", g_flDrunkChance[iIndex]);
-				g_flDrunkChance2[iIndex] = flClamp(g_flDrunkChance2[iIndex], 0.1, 100.0);
+				g_flDrunkChance2[iIndex] = flClamp(g_flDrunkChance2[iIndex], 0.0, 100.0);
 				g_flDrunkDuration2[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Duration", g_flDrunkDuration[iIndex]);
 				g_flDrunkDuration2[iIndex] = flClamp(g_flDrunkDuration2[iIndex], 0.1, 9999999999.0);
 				g_iDrunkHit2[iIndex] = kvSuperTanks.GetNum("Drunk Ability/Drunk Hit", g_iDrunkHit[iIndex]);
@@ -188,7 +188,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flDrunkRange2[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Range", g_flDrunkRange[iIndex]);
 				g_flDrunkRange2[iIndex] = flClamp(g_flDrunkRange2[iIndex], 1.0, 9999999999.0);
 				g_flDrunkRangeChance2[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Range Chance", g_flDrunkRangeChance[iIndex]);
-				g_flDrunkRangeChance2[iIndex] = flClamp(g_flDrunkRangeChance2[iIndex], 0.1, 100.0);
+				g_flDrunkRangeChance2[iIndex] = flClamp(g_flDrunkRangeChance2[iIndex], 0.0, 100.0);
 				g_flDrunkSpeedInterval2[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Speed Interval", g_flDrunkSpeedInterval[iIndex]);
 				g_flDrunkSpeedInterval2[iIndex] = flClamp(g_flDrunkSpeedInterval2[iIndex], 0.1, 9999999999.0);
 				g_flDrunkTurnInterval2[iIndex] = kvSuperTanks.GetFloat("Drunk Ability/Drunk Turn Interval", g_flDrunkTurnInterval[iIndex]);

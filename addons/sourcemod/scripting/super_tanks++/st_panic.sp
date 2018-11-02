@@ -152,7 +152,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Panic Ability/Ability Effect", g_sPanicEffect[iIndex], sizeof(g_sPanicEffect[]), "0");
 				kvSuperTanks.GetString("Panic Ability/Ability Message", g_sPanicMessage[iIndex], sizeof(g_sPanicMessage[]), "0");
 				g_flPanicChance[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Chance", 33.3);
-				g_flPanicChance[iIndex] = flClamp(g_flPanicChance[iIndex], 0.1, 100.0);
+				g_flPanicChance[iIndex] = flClamp(g_flPanicChance[iIndex], 0.0, 100.0);
 				g_iPanicHit[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", 0);
 				g_iPanicHit[iIndex] = iClamp(g_iPanicHit[iIndex], 0, 1);
 				g_iPanicHitMode[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit Mode", 0);
@@ -162,7 +162,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPanicRange[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Range", 150.0);
 				g_flPanicRange[iIndex] = flClamp(g_flPanicRange[iIndex], 1.0, 9999999999.0);
 				g_flPanicRangeChance[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Range Chance", 15.0);
-				g_flPanicRangeChance[iIndex] = flClamp(g_flPanicRangeChance[iIndex], 0.1, 100.0);
+				g_flPanicRangeChance[iIndex] = flClamp(g_flPanicRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -173,7 +173,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Panic Ability/Ability Effect", g_sPanicEffect2[iIndex], sizeof(g_sPanicEffect2[]), g_sPanicEffect[iIndex]);
 				kvSuperTanks.GetString("Panic Ability/Ability Message", g_sPanicMessage2[iIndex], sizeof(g_sPanicMessage2[]), g_sPanicMessage[iIndex]);
 				g_flPanicChance2[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Chance", g_flPanicChance[iIndex]);
-				g_flPanicChance2[iIndex] = flClamp(g_flPanicChance2[iIndex], 0.1, 100.0);
+				g_flPanicChance2[iIndex] = flClamp(g_flPanicChance2[iIndex], 0.0, 100.0);
 				g_iPanicHit2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit", g_iPanicHit[iIndex]);
 				g_iPanicHit2[iIndex] = iClamp(g_iPanicHit2[iIndex], 0, 1);
 				g_iPanicHitMode2[iIndex] = kvSuperTanks.GetNum("Panic Ability/Panic Hit Mode", g_iPanicHitMode[iIndex]);
@@ -183,7 +183,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPanicRange2[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Range", g_flPanicRange[iIndex]);
 				g_flPanicRange2[iIndex] = flClamp(g_flPanicRange2[iIndex], 1.0, 9999999999.0);
 				g_flPanicRangeChance2[iIndex] = kvSuperTanks.GetFloat("Panic Ability/Panic Range Chance", g_flPanicRangeChance[iIndex]);
-				g_flPanicRangeChance2[iIndex] = flClamp(g_flPanicRangeChance2[iIndex], 0.1, 100.0);
+				g_flPanicRangeChance2[iIndex] = flClamp(g_flPanicRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

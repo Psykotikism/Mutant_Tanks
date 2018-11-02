@@ -159,7 +159,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Nullify Ability/Ability Effect", g_sNullifyEffect[iIndex], sizeof(g_sNullifyEffect[]), "0");
 				kvSuperTanks.GetString("Nullify Ability/Ability Message", g_sNullifyMessage[iIndex], sizeof(g_sNullifyMessage[]), "0");
 				g_flNullifyChance[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Chance", 33.3);
-				g_flNullifyChance[iIndex] = flClamp(g_flNullifyChance[iIndex], 0.1, 100.0);
+				g_flNullifyChance[iIndex] = flClamp(g_flNullifyChance[iIndex], 0.0, 100.0);
 				g_flNullifyDuration[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Duration", 5.0);
 				g_flNullifyDuration[iIndex] = flClamp(g_flNullifyDuration[iIndex], 0.1, 9999999999.0);
 				g_iNullifyHit[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Hit", 0);
@@ -169,7 +169,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flNullifyRange[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range", 150.0);
 				g_flNullifyRange[iIndex] = flClamp(g_flNullifyRange[iIndex], 1.0, 9999999999.0);
 				g_flNullifyRangeChance[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range Chance", 15.0);
-				g_flNullifyRangeChance[iIndex] = flClamp(g_flNullifyRangeChance[iIndex], 0.1, 100.0);
+				g_flNullifyRangeChance[iIndex] = flClamp(g_flNullifyRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -180,7 +180,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Nullify Ability/Ability Effect", g_sNullifyEffect2[iIndex], sizeof(g_sNullifyEffect2[]), g_sNullifyEffect[iIndex]);
 				kvSuperTanks.GetString("Nullify Ability/Ability Message", g_sNullifyMessage2[iIndex], sizeof(g_sNullifyMessage2[]), g_sNullifyMessage[iIndex]);
 				g_flNullifyChance2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Chance", g_flNullifyChance[iIndex]);
-				g_flNullifyChance2[iIndex] = flClamp(g_flNullifyChance2[iIndex], 0.1, 100.0);
+				g_flNullifyChance2[iIndex] = flClamp(g_flNullifyChance2[iIndex], 0.0, 100.0);
 				g_flNullifyDuration2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Duration", g_flNullifyDuration[iIndex]);
 				g_flNullifyDuration2[iIndex] = flClamp(g_flNullifyDuration2[iIndex], 0.1, 9999999999.0);
 				g_iNullifyHit2[iIndex] = kvSuperTanks.GetNum("Nullify Ability/Nullify Hit", g_iNullifyHit[iIndex]);
@@ -190,7 +190,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flNullifyRange2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range", g_flNullifyRange[iIndex]);
 				g_flNullifyRange2[iIndex] = flClamp(g_flNullifyRange2[iIndex], 1.0, 9999999999.0);
 				g_flNullifyRangeChance2[iIndex] = kvSuperTanks.GetFloat("Nullify Ability/Nullify Range Chance", g_flNullifyRangeChance[iIndex]);
-				g_flNullifyRangeChance2[iIndex] = flClamp(g_flNullifyRangeChance2[iIndex], 0.1, 100.0);
+				g_flNullifyRangeChance2[iIndex] = flClamp(g_flNullifyRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

@@ -169,7 +169,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect[iIndex], sizeof(g_sEnforceEffect[]), "0");
 				kvSuperTanks.GetString("Enforce Ability/Ability Message", g_sEnforceMessage[iIndex], sizeof(g_sEnforceMessage[]), "0");
 				g_flEnforceChance[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Chance", 33.3);
-				g_flEnforceChance[iIndex] = flClamp(g_flEnforceChance[iIndex], 0.1, 100.0);
+				g_flEnforceChance[iIndex] = flClamp(g_flEnforceChance[iIndex], 0.0, 100.0);
 				g_flEnforceDuration[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Duration", 5.0);
 				g_flEnforceDuration[iIndex] = flClamp(g_flEnforceDuration[iIndex], 0.1, 9999999999.0);
 				g_iEnforceHit[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit", 0);
@@ -179,7 +179,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flEnforceRange[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range", 150.0);
 				g_flEnforceRange[iIndex] = flClamp(g_flEnforceRange[iIndex], 1.0, 9999999999.0);
 				g_flEnforceRangeChance[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range Chance", 15.0);
-				g_flEnforceRangeChance[iIndex] = flClamp(g_flEnforceRangeChance[iIndex], 0.1, 100.0);
+				g_flEnforceRangeChance[iIndex] = flClamp(g_flEnforceRangeChance[iIndex], 0.0, 100.0);
 				kvSuperTanks.GetString("Enforce Ability/Enforce Weapon Slots", g_sEnforceSlot[iIndex], sizeof(g_sEnforceSlot[]), "12345");
 			}
 			else
@@ -191,7 +191,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect2[iIndex], sizeof(g_sEnforceEffect2[]), g_sEnforceEffect[iIndex]);
 				kvSuperTanks.GetString("Enforce Ability/Ability Message", g_sEnforceMessage2[iIndex], sizeof(g_sEnforceMessage2[]), g_sEnforceMessage[iIndex]);
 				g_flEnforceChance2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Chance", g_flEnforceChance[iIndex]);
-				g_flEnforceChance2[iIndex] = flClamp(g_flEnforceChance2[iIndex], 0.1, 100.0);
+				g_flEnforceChance2[iIndex] = flClamp(g_flEnforceChance2[iIndex], 0.0, 100.0);
 				g_flEnforceDuration2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Duration", g_flEnforceDuration[iIndex]);
 				g_flEnforceDuration2[iIndex] = flClamp(g_flEnforceDuration2[iIndex], 0.1, 9999999999.0);
 				g_iEnforceHit2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit", g_iEnforceHit[iIndex]);
@@ -201,7 +201,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flEnforceRange2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range", g_flEnforceRange[iIndex]);
 				g_flEnforceRange2[iIndex] = flClamp(g_flEnforceRange2[iIndex], 1.0, 9999999999.0);
 				g_flEnforceRangeChance2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range Chance", g_flEnforceRangeChance[iIndex]);
-				g_flEnforceRangeChance2[iIndex] = flClamp(g_flEnforceRangeChance2[iIndex], 0.1, 100.0);
+				g_flEnforceRangeChance2[iIndex] = flClamp(g_flEnforceRangeChance2[iIndex], 0.0, 100.0);
 				kvSuperTanks.GetString("Enforce Ability/Enforce Weapon Slots", g_sEnforceSlot2[iIndex], sizeof(g_sEnforceSlot2[]), g_sEnforceSlot[iIndex]);
 			}
 

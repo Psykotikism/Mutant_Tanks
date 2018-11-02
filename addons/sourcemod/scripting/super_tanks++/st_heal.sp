@@ -164,7 +164,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flHealBuffer[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Buffer", 25.0);
 				g_flHealBuffer[iIndex] = flClamp(g_flHealBuffer[iIndex], 1.0, float(ST_MAXHEALTH));
 				g_flHealChance[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Chance", 33.3);
-				g_flHealChance[iIndex] = flClamp(g_flHealChance[iIndex], 0.1, 100.0);
+				g_flHealChance[iIndex] = flClamp(g_flHealChance[iIndex], 0.0, 100.0);
 				g_iHealCommon[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Commons", 50);
 				g_iHealCommon[iIndex] = iClamp(g_iHealCommon[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_iHealHit[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Hit", 0);
@@ -176,7 +176,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flHealRange[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Range", 150.0);
 				g_flHealRange[iIndex] = flClamp(g_flHealRange[iIndex], 1.0, 9999999999.0);
 				g_flHealRangeChance[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Range Chance", 15.0);
-				g_flHealRangeChance[iIndex] = flClamp(g_flHealRangeChance[iIndex], 0.1, 100.0);
+				g_flHealRangeChance[iIndex] = flClamp(g_flHealRangeChance[iIndex], 0.0, 100.0);
 				g_iHealSpecial[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Specials", 100);
 				g_iHealSpecial[iIndex] = iClamp(g_iHealSpecial[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_iHealTank[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Tanks", 500);
@@ -198,7 +198,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flHealBuffer2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Buffer", g_flHealBuffer[iIndex]);
 				g_flHealBuffer2[iIndex] = flClamp(g_flHealBuffer2[iIndex], 1.0, float(ST_MAXHEALTH));
 				g_flHealChance2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Chance", g_flHealChance[iIndex]);
-				g_flHealChance2[iIndex] = flClamp(g_flHealChance2[iIndex], 0.1, 100.0);
+				g_flHealChance2[iIndex] = flClamp(g_flHealChance2[iIndex], 0.0, 100.0);
 				g_iHealCommon2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Commons", g_iHealCommon[iIndex]);
 				g_iHealCommon2[iIndex] = iClamp(g_iHealCommon2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_iHealHit2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Heal Hit", g_iHealHit[iIndex]);
@@ -210,7 +210,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flHealRange2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Range", g_flHealRange[iIndex]);
 				g_flHealRange2[iIndex] = flClamp(g_flHealRange2[iIndex], 1.0, 9999999999.0);
 				g_flHealRangeChance2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Heal Range Chance", g_flHealRangeChance[iIndex]);
-				g_flHealRangeChance2[iIndex] = flClamp(g_flHealRangeChance2[iIndex], 0.1, 100.0);
+				g_flHealRangeChance2[iIndex] = flClamp(g_flHealRangeChance2[iIndex], 0.0, 100.0);
 				g_iHealSpecial2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Specials", g_iHealSpecial[iIndex]);
 				g_iHealSpecial2[iIndex] = iClamp(g_iHealSpecial2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_iHealTank2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Health From Tanks", g_iHealTank[iIndex]);

@@ -182,7 +182,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Fling Ability/Ability Effect", g_sFlingEffect[iIndex], sizeof(g_sFlingEffect[]), "0");
 				kvSuperTanks.GetString("Fling Ability/Ability Message", g_sFlingMessage[iIndex], sizeof(g_sFlingMessage[]), "0");
 				g_flFlingChance[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Chance", 33.3);
-				g_flFlingChance[iIndex] = flClamp(g_flFlingChance[iIndex], 0.1, 100.0);
+				g_flFlingChance[iIndex] = flClamp(g_flFlingChance[iIndex], 0.0, 100.0);
 				g_iFlingHit[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", 0);
 				g_iFlingHit[iIndex] = iClamp(g_iFlingHit[iIndex], 0, 1);
 				g_iFlingHitMode[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", 0);
@@ -190,7 +190,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flFlingRange[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", 150.0);
 				g_flFlingRange[iIndex] = flClamp(g_flFlingRange[iIndex], 1.0, 9999999999.0);
 				g_flFlingRangeChance[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range Chance", 15.0);
-				g_flFlingRangeChance[iIndex] = flClamp(g_flFlingRangeChance[iIndex], 0.1, 100.0);
+				g_flFlingRangeChance[iIndex] = flClamp(g_flFlingRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -201,7 +201,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Fling Ability/Ability Effect", g_sFlingEffect2[iIndex], sizeof(g_sFlingEffect2[]), g_sFlingEffect[iIndex]);
 				kvSuperTanks.GetString("Fling Ability/Ability Message", g_sFlingMessage2[iIndex], sizeof(g_sFlingMessage2[]), g_sFlingMessage[iIndex]);
 				g_flFlingChance2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Chance", g_flFlingChance[iIndex]);
-				g_flFlingChance2[iIndex] = flClamp(g_flFlingChance2[iIndex], 0.1, 100.0);
+				g_flFlingChance2[iIndex] = flClamp(g_flFlingChance2[iIndex], 0.0, 100.0);
 				g_iFlingHit2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", g_iFlingHit[iIndex]);
 				g_iFlingHit2[iIndex] = iClamp(g_iFlingHit2[iIndex], 0, 1);
 				g_iFlingHitMode2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", g_iFlingHitMode[iIndex]);
@@ -209,7 +209,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flFlingRange2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", g_flFlingRange[iIndex]);
 				g_flFlingRange2[iIndex] = flClamp(g_flFlingRange2[iIndex], 1.0, 9999999999.0);
 				g_flFlingRangeChance2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range Chance", g_flFlingRangeChance[iIndex]);
-				g_flFlingRangeChance2[iIndex] = flClamp(g_flFlingRangeChance2[iIndex], 0.1, 100.0);
+				g_flFlingRangeChance2[iIndex] = flClamp(g_flFlingRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

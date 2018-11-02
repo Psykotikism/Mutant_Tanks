@@ -152,7 +152,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Stun Ability/Ability Effect", g_sStunEffect[iIndex], sizeof(g_sStunEffect[]), "0");
 				kvSuperTanks.GetString("Stun Ability/Ability Message", g_sStunMessage[iIndex], sizeof(g_sStunMessage[]), "0");
 				g_flStunChance[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Chance", 33.3);
-				g_flStunChance[iIndex] = flClamp(g_flStunChance[iIndex], 0.1, 100.0);
+				g_flStunChance[iIndex] = flClamp(g_flStunChance[iIndex], 0.0, 100.0);
 				g_flStunDuration[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Duration", 5.0);
 				g_flStunDuration[iIndex] = flClamp(g_flStunDuration[iIndex], 0.1, 9999999999.0);
 				g_iStunHit[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Hit", 0);
@@ -162,7 +162,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flStunRange[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Range", 150.0);
 				g_flStunRange[iIndex] = flClamp(g_flStunRange[iIndex], 1.0, 9999999999.0);
 				g_flStunRangeChance[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Range Chance", 15.0);
-				g_flStunRangeChance[iIndex] = flClamp(g_flStunRangeChance[iIndex], 0.1, 100.0);
+				g_flStunRangeChance[iIndex] = flClamp(g_flStunRangeChance[iIndex], 0.0, 100.0);
 				g_flStunSpeed[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Speed", 0.25);
 				g_flStunSpeed[iIndex] = flClamp(g_flStunSpeed[iIndex], 0.1, 0.9);
 			}
@@ -175,7 +175,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Stun Ability/Ability Effect", g_sStunEffect2[iIndex], sizeof(g_sStunEffect2[]), g_sStunEffect[iIndex]);
 				kvSuperTanks.GetString("Stun Ability/Ability Message", g_sStunMessage2[iIndex], sizeof(g_sStunMessage2[]), g_sStunMessage[iIndex]);
 				g_flStunChance2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Chance", g_flStunChance[iIndex]);
-				g_flStunChance2[iIndex] = flClamp(g_flStunChance2[iIndex], 0.1, 100.0);
+				g_flStunChance2[iIndex] = flClamp(g_flStunChance2[iIndex], 0.0, 100.0);
 				g_flStunDuration2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Duration", g_flStunDuration[iIndex]);
 				g_flStunDuration2[iIndex] = flClamp(g_flStunDuration2[iIndex], 0.1, 9999999999.0);
 				g_iStunHit2[iIndex] = kvSuperTanks.GetNum("Stun Ability/Stun Hit", g_iStunHit[iIndex]);
@@ -185,7 +185,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flStunRange2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Range", g_flStunRange[iIndex]);
 				g_flStunRange2[iIndex] = flClamp(g_flStunRange2[iIndex], 1.0, 9999999999.0);
 				g_flStunRangeChance2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Range Chance", g_flStunRangeChance[iIndex]);
-				g_flStunRangeChance2[iIndex] = flClamp(g_flStunRangeChance2[iIndex], 0.1, 100.0);
+				g_flStunRangeChance2[iIndex] = flClamp(g_flStunRangeChance2[iIndex], 0.0, 100.0);
 				g_flStunSpeed2[iIndex] = kvSuperTanks.GetFloat("Stun Ability/Stun Speed", g_flStunSpeed[iIndex]);
 				g_flStunSpeed2[iIndex] = flClamp(g_flStunSpeed2[iIndex], 0.1, 0.9);
 			}

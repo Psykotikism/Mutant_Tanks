@@ -94,7 +94,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iNecroMessage[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Message", 0);
 				g_iNecroMessage[iIndex] = iClamp(g_iNecroMessage[iIndex], 0, 1);
 				g_flNecroChance[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Chance", 33.3);
-				g_flNecroChance[iIndex] = flClamp(g_flNecroChance[iIndex], 0.1, 100.0);
+				g_flNecroChance[iIndex] = flClamp(g_flNecroChance[iIndex], 0.0, 100.0);
 				g_flNecroRange[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Range", 500.0);
 				g_flNecroRange[iIndex] = flClamp(g_flNecroRange[iIndex], 1.0, 9999999999.0);
 			}
@@ -107,7 +107,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iNecroMessage2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Message", g_iNecroMessage[iIndex]);
 				g_iNecroMessage2[iIndex] = iClamp(g_iNecroMessage2[iIndex], 0, 1);
 				g_flNecroChance2[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Chance", g_flNecroChance[iIndex]);
-				g_flNecroChance2[iIndex] = flClamp(g_flNecroChance2[iIndex], 0.1, 100.0);
+				g_flNecroChance2[iIndex] = flClamp(g_flNecroChance2[iIndex], 0.0, 100.0);
 				g_flNecroRange2[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Range", g_flNecroRange[iIndex]);
 				g_flNecroRange2[iIndex] = flClamp(g_flNecroRange2[iIndex], 1.0, 9999999999.0);
 			}

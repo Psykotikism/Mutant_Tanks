@@ -139,7 +139,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Jump Ability/Ability Effect", g_sJumpEffect[iIndex], sizeof(g_sJumpEffect[]), "0");
 				kvSuperTanks.GetString("Jump Ability/Ability Message", g_sJumpMessage[iIndex], sizeof(g_sJumpMessage[]), "0");
 				g_flJumpChance[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Chance", 33.3);
-				g_flJumpChance[iIndex] = flClamp(g_flJumpChance[iIndex], 0.1, 100.0);
+				g_flJumpChance[iIndex] = flClamp(g_flJumpChance[iIndex], 0.0, 100.0);
 				g_flJumpDuration[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Duration", 5.0);
 				g_flJumpDuration[iIndex] = flClamp(g_flJumpDuration[iIndex], 0.1, 9999999999.0);
 				g_flJumpHeight[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Height", 300.0);
@@ -155,9 +155,9 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flJumpRange[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range", 150.0);
 				g_flJumpRange[iIndex] = flClamp(g_flJumpRange[iIndex], 1.0, 9999999999.0);
 				g_flJumpRangeChance[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range Chance", 15.0);
-				g_flJumpRangeChance[iIndex] = flClamp(g_flJumpRangeChance[iIndex], 0.1, 100.0);
+				g_flJumpRangeChance[iIndex] = flClamp(g_flJumpRangeChance[iIndex], 0.0, 100.0);
 				g_flJumpSporadicChance[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Sporadic Chance", 33.3);
-				g_flJumpSporadicChance[iIndex] = flClamp(g_flJumpSporadicChance[iIndex], 0.1, 100.0);
+				g_flJumpSporadicChance[iIndex] = flClamp(g_flJumpSporadicChance[iIndex], 0.0, 100.0);
 				g_flJumpSporadicHeight[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Sporadic Height", 750.0);
 				g_flJumpSporadicHeight[iIndex] = flClamp(g_flJumpSporadicHeight[iIndex], 0.1, 9999999999.0);
 			}
@@ -170,7 +170,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Jump Ability/Ability Effect", g_sJumpEffect2[iIndex], sizeof(g_sJumpEffect2[]), g_sJumpEffect[iIndex]);
 				kvSuperTanks.GetString("Jump Ability/Ability Message", g_sJumpMessage2[iIndex], sizeof(g_sJumpMessage2[]), g_sJumpMessage[iIndex]);
 				g_flJumpChance2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Chance", g_flJumpChance[iIndex]);
-				g_flJumpChance2[iIndex] = flClamp(g_flJumpChance2[iIndex], 0.1, 100.0);
+				g_flJumpChance2[iIndex] = flClamp(g_flJumpChance2[iIndex], 0.0, 100.0);
 				g_flJumpDuration2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Duration", g_flJumpDuration[iIndex]);
 				g_flJumpDuration2[iIndex] = flClamp(g_flJumpDuration2[iIndex], 0.1, 9999999999.0);
 				g_flJumpHeight2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Height", g_flJumpHeight[iIndex]);
@@ -186,9 +186,9 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flJumpRange2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range", g_flJumpRange[iIndex]);
 				g_flJumpRange2[iIndex] = flClamp(g_flJumpRange2[iIndex], 1.0, 9999999999.0);
 				g_flJumpRangeChance2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range Chance", g_flJumpRangeChance[iIndex]);
-				g_flJumpRangeChance2[iIndex] = flClamp(g_flJumpRangeChance2[iIndex], 0.1, 100.0);
+				g_flJumpRangeChance2[iIndex] = flClamp(g_flJumpRangeChance2[iIndex], 0.0, 100.0);
 				g_flJumpSporadicChance2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Sporadic Chance", g_flJumpSporadicChance[iIndex]);
-				g_flJumpSporadicChance2[iIndex] = flClamp(g_flJumpSporadicChance2[iIndex], 0.1, 100.0);
+				g_flJumpSporadicChance2[iIndex] = flClamp(g_flJumpSporadicChance2[iIndex], 0.0, 100.0);
 				g_flJumpSporadicHeight2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Sporadic Height", g_flJumpSporadicHeight[iIndex]);
 				g_flJumpSporadicHeight2[iIndex] = flClamp(g_flJumpSporadicHeight2[iIndex], 0.1, 9999999999.0);
 			}

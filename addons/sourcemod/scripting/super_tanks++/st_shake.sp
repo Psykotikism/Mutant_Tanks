@@ -152,7 +152,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect[iIndex], sizeof(g_sShakeEffect[]), "0");
 				kvSuperTanks.GetString("Shake Ability/Ability Message", g_sShakeMessage[iIndex], sizeof(g_sShakeMessage[]), "0");
 				g_flShakeChance[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Chance", 33.3);
-				g_flShakeChance[iIndex] = flClamp(g_flShakeChance[iIndex], 0.1, 100.0);
+				g_flShakeChance[iIndex] = flClamp(g_flShakeChance[iIndex], 0.0, 100.0);
 				g_flShakeDuration[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", 5.0);
 				g_flShakeDuration[iIndex] = flClamp(g_flShakeDuration[iIndex], 0.1, 9999999999.0);
 				g_iShakeHit[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit", 0);
@@ -164,7 +164,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flShakeRange[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range", 150.0);
 				g_flShakeRange[iIndex] = flClamp(g_flShakeRange[iIndex], 1.0, 9999999999.0);
 				g_flShakeRangeChance[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range Chance", 15.0);
-				g_flShakeRangeChance[iIndex] = flClamp(g_flShakeRangeChance[iIndex], 0.1, 100.0);
+				g_flShakeRangeChance[iIndex] = flClamp(g_flShakeRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -175,7 +175,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect2[iIndex], sizeof(g_sShakeEffect2[]), g_sShakeEffect[iIndex]);
 				kvSuperTanks.GetString("Shake Ability/Ability Message", g_sShakeMessage2[iIndex], sizeof(g_sShakeMessage2[]), g_sShakeMessage[iIndex]);
 				g_flShakeChance2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Chance", g_flShakeChance[iIndex]);
-				g_flShakeChance2[iIndex] = flClamp(g_flShakeChance2[iIndex], 0.1, 100.0);
+				g_flShakeChance2[iIndex] = flClamp(g_flShakeChance2[iIndex], 0.0, 100.0);
 				g_flShakeDuration2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", g_flShakeDuration[iIndex]);
 				g_flShakeDuration2[iIndex] = flClamp(g_flShakeDuration2[iIndex], 0.1, 9999999999.0);
 				g_iShakeHit2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit", g_iShakeHit[iIndex]);
@@ -187,7 +187,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flShakeRange2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range", g_flShakeRange[iIndex]);
 				g_flShakeRange2[iIndex] = flClamp(g_flShakeRange2[iIndex], 1.0, 9999999999.0);
 				g_flShakeRangeChance2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range Chance", g_flShakeRangeChance[iIndex]);
-				g_flShakeRangeChance2[iIndex] = flClamp(g_flShakeRangeChance2[iIndex], 0.1, 100.0);
+				g_flShakeRangeChance2[iIndex] = flClamp(g_flShakeRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

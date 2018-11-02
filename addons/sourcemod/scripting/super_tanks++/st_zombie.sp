@@ -154,7 +154,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iZombieAmount[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", 10);
 				g_iZombieAmount[iIndex] = iClamp(g_iZombieAmount[iIndex], 1, 100);
 				g_flZombieChance[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Chance", 33.3);
-				g_flZombieChance[iIndex] = flClamp(g_flZombieChance[iIndex], 0.1, 100.0);
+				g_flZombieChance[iIndex] = flClamp(g_flZombieChance[iIndex], 0.0, 100.0);
 				g_iZombieHit[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Hit", 0);
 				g_iZombieHit[iIndex] = iClamp(g_iZombieHit[iIndex], 0, 1);
 				g_iZombieHitMode[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Hit Mode", 0);
@@ -164,7 +164,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flZombieRange[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Range", 150.0);
 				g_flZombieRange[iIndex] = flClamp(g_flZombieRange[iIndex], 1.0, 9999999999.0);
 				g_flZombieRangeChance[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Range Chance", 15.0);
-				g_flZombieRangeChance[iIndex] = flClamp(g_flZombieRangeChance[iIndex], 0.1, 100.0);
+				g_flZombieRangeChance[iIndex] = flClamp(g_flZombieRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -177,7 +177,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iZombieAmount2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", g_iZombieAmount[iIndex]);
 				g_iZombieAmount2[iIndex] = iClamp(g_iZombieAmount2[iIndex], 1, 100);
 				g_flZombieChance2[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Chance", g_flZombieChance[iIndex]);
-				g_flZombieChance2[iIndex] = flClamp(g_flZombieChance2[iIndex], 0.1, 100.0);
+				g_flZombieChance2[iIndex] = flClamp(g_flZombieChance2[iIndex], 0.0, 100.0);
 				g_iZombieHit2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Hit", g_iZombieHit[iIndex]);
 				g_iZombieHit2[iIndex] = iClamp(g_iZombieHit2[iIndex], 0, 1);
 				g_iZombieHitMode2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Hit Mode", g_iZombieHitMode[iIndex]);
@@ -187,7 +187,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flZombieRange2[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Range", g_flZombieRange[iIndex]);
 				g_flZombieRange2[iIndex] = flClamp(g_flZombieRange2[iIndex], 1.0, 9999999999.0);
 				g_flZombieRangeChance2[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Range Chance", g_flZombieRangeChance[iIndex]);
-				g_flZombieRangeChance2[iIndex] = flClamp(g_flZombieRangeChance2[iIndex], 0.1, 100.0);
+				g_flZombieRangeChance2[iIndex] = flClamp(g_flZombieRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

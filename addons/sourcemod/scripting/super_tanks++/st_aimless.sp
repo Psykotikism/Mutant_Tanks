@@ -168,7 +168,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Aimless Ability/Ability Effect", g_sAimlessEffect[iIndex], sizeof(g_sAimlessEffect[]), "0");
 				kvSuperTanks.GetString("Aimless Ability/Ability Message", g_sAimlessMessage[iIndex], sizeof(g_sAimlessMessage[]), "0");
 				g_flAimlessChance[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Chance", 33.3);
-				g_flAimlessChance[iIndex] = flClamp(g_flAimlessChance[iIndex], 0.1, 100.0);
+				g_flAimlessChance[iIndex] = flClamp(g_flAimlessChance[iIndex], 0.0, 100.0);
 				g_flAimlessDuration[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Duration", 5.0);
 				g_flAimlessDuration[iIndex] = flClamp(g_flAimlessDuration[iIndex], 0.1, 9999999999.0);
 				g_iAimlessHit[iIndex] = kvSuperTanks.GetNum("Aimless Ability/Aimless Hit", 0);
@@ -178,7 +178,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flAimlessRange[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Range", 150.0);
 				g_flAimlessRange[iIndex] = flClamp(g_flAimlessRange[iIndex], 1.0, 9999999999.0);
 				g_flAimlessRangeChance[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Range Chance", 15.0);
-				g_flAimlessRangeChance[iIndex] = flClamp(g_flAimlessRangeChance[iIndex], 0.1, 100.0);
+				g_flAimlessRangeChance[iIndex] = flClamp(g_flAimlessRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -189,7 +189,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Aimless Ability/Ability Effect", g_sAimlessEffect2[iIndex], sizeof(g_sAimlessEffect2[]), g_sAimlessEffect[iIndex]);
 				kvSuperTanks.GetString("Aimless Ability/Ability Message", g_sAimlessMessage2[iIndex], sizeof(g_sAimlessMessage2[]), g_sAimlessMessage[iIndex]);
 				g_flAimlessChance2[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Chance", g_flAimlessChance[iIndex]);
-				g_flAimlessChance2[iIndex] = flClamp(g_flAimlessChance2[iIndex], 0.1, 100.0);
+				g_flAimlessChance2[iIndex] = flClamp(g_flAimlessChance2[iIndex], 0.0, 100.0);
 				g_flAimlessDuration2[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Duration", g_flAimlessDuration[iIndex]);
 				g_flAimlessDuration2[iIndex] = flClamp(g_flAimlessDuration2[iIndex], 0.1, 9999999999.0);
 				g_iAimlessHit2[iIndex] = kvSuperTanks.GetNum("Aimless Ability/Aimless Hit", g_iAimlessHit[iIndex]);
@@ -199,7 +199,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flAimlessRange2[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Range", g_flAimlessRange[iIndex]);
 				g_flAimlessRange2[iIndex] = flClamp(g_flAimlessRange2[iIndex], 1.0, 9999999999.0);
 				g_flAimlessRangeChance2[iIndex] = kvSuperTanks.GetFloat("Aimless Ability/Aimless Range Chance", g_flAimlessRangeChance[iIndex]);
-				g_flAimlessRangeChance2[iIndex] = flClamp(g_flAimlessRangeChance2[iIndex], 0.1, 100.0);
+				g_flAimlessRangeChance2[iIndex] = flClamp(g_flAimlessRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

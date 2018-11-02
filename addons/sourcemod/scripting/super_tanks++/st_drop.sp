@@ -341,9 +341,9 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iDropMessage[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Message", 0);
 				g_iDropMessage[iIndex] = iClamp(g_iDropMessage[iIndex], 0, 1);
 				g_flDropChance[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Chance", 33.3);
-				g_flDropChance[iIndex] = flClamp(g_flDropChance[iIndex], 0.1, 100.0);
+				g_flDropChance[iIndex] = flClamp(g_flDropChance[iIndex], 0.0, 100.0);
 				g_flDropClipChance[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Clip Chance", 33.3);
-				g_flDropClipChance[iIndex] = flClamp(g_flDropClipChance[iIndex], 0.1, 100.0);
+				g_flDropClipChance[iIndex] = flClamp(g_flDropClipChance[iIndex], 0.0, 100.0);
 				g_iDropMode[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", 0);
 				g_iDropMode[iIndex] = iClamp(g_iDropMode[iIndex], 0, 2);
 				g_flDropWeaponScale[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", 1.0);
@@ -358,9 +358,9 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iDropMessage2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Message", g_iDropMessage[iIndex]);
 				g_iDropMessage2[iIndex] = iClamp(g_iDropMessage2[iIndex], 0, 1);
 				g_flDropChance2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Chance", g_flDropChance[iIndex]);
-				g_flDropChance2[iIndex] = flClamp(g_flDropChance2[iIndex], 0.1, 100.0);
+				g_flDropChance2[iIndex] = flClamp(g_flDropChance2[iIndex], 0.0, 100.0);
 				g_flDropClipChance2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Clip Chance", g_flDropClipChance[iIndex]);
-				g_flDropClipChance2[iIndex] = flClamp(g_flDropClipChance2[iIndex], 0.1, 100.0);
+				g_flDropClipChance2[iIndex] = flClamp(g_flDropClipChance2[iIndex], 0.0, 100.0);
 				g_iDropMode2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", g_iDropMode[iIndex]);
 				g_iDropMode2[iIndex] = iClamp(g_iDropMode2[iIndex], 0, 2);
 				g_flDropWeaponScale2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", g_flDropWeaponScale[iIndex]);

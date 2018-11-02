@@ -168,7 +168,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Choke Ability/Ability Effect", g_sChokeEffect[iIndex], sizeof(g_sChokeEffect[]), "0");
 				kvSuperTanks.GetString("Choke Ability/Ability Message", g_sChokeMessage[iIndex], sizeof(g_sChokeMessage[]), "0");
 				g_flChokeChance[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Chance", 33.3);
-				g_flChokeChance[iIndex] = flClamp(g_flChokeChance[iIndex], 0.1, 100.0);
+				g_flChokeChance[iIndex] = flClamp(g_flChokeChance[iIndex], 0.0, 100.0);
 				g_flChokeDamage[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Damage", 5.0);
 				g_flChokeDamage[iIndex] = flClamp(g_flChokeDamage[iIndex], 1.0, 9999999999.0);
 				g_flChokeDelay[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Delay", 1.0);
@@ -184,7 +184,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flChokeRange[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Range", 150.0);
 				g_flChokeRange[iIndex] = flClamp(g_flChokeRange[iIndex], 1.0, 9999999999.0);
 				g_flChokeRangeChance[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Range Chance", 15.0);
-				g_flChokeRangeChance[iIndex] = flClamp(g_flChokeRangeChance[iIndex], 0.1, 100.0);
+				g_flChokeRangeChance[iIndex] = flClamp(g_flChokeRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -195,7 +195,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Choke Ability/Ability Effect", g_sChokeEffect2[iIndex], sizeof(g_sChokeEffect2[]), g_sChokeEffect[iIndex]);
 				kvSuperTanks.GetString("Choke Ability/Ability Message", g_sChokeMessage2[iIndex], sizeof(g_sChokeMessage2[]), g_sChokeMessage[iIndex]);
 				g_flChokeChance2[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Chance", g_flChokeChance[iIndex]);
-				g_flChokeChance2[iIndex] = flClamp(g_flChokeChance2[iIndex], 0.1, 100.0);
+				g_flChokeChance2[iIndex] = flClamp(g_flChokeChance2[iIndex], 0.0, 100.0);
 				g_flChokeDamage2[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Damage", g_flChokeDamage[iIndex]);
 				g_flChokeDamage2[iIndex] = flClamp(g_flChokeDamage2[iIndex], 1.0, 9999999999.0);
 				g_flChokeDelay2[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Delay", g_flChokeDelay[iIndex]);
@@ -211,7 +211,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flChokeRange2[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Range", g_flChokeRange[iIndex]);
 				g_flChokeRange2[iIndex] = flClamp(g_flChokeRange2[iIndex], 1.0, 9999999999.0);
 				g_flChokeRangeChance2[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Choke Range Chance", g_flChokeRangeChance[iIndex]);
-				g_flChokeRangeChance2[iIndex] = flClamp(g_flChokeRangeChance2[iIndex], 0.1, 100.0);
+				g_flChokeRangeChance2[iIndex] = flClamp(g_flChokeRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

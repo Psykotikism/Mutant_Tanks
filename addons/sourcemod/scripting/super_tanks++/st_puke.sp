@@ -164,7 +164,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Puke Ability/Ability Effect", g_sPukeEffect[iIndex], sizeof(g_sPukeEffect[]), "0");
 				kvSuperTanks.GetString("Puke Ability/Ability Message", g_sPukeMessage[iIndex], sizeof(g_sPukeMessage[]), "0");
 				g_flPukeChance[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Chance", 33.3);
-				g_flPukeChance[iIndex] = flClamp(g_flPukeChance[iIndex], 0.1, 100.0);
+				g_flPukeChance[iIndex] = flClamp(g_flPukeChance[iIndex], 0.0, 100.0);
 				g_iPukeHit[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", 0);
 				g_iPukeHit[iIndex] = iClamp(g_iPukeHit[iIndex], 0, 1);
 				g_iPukeHitMode[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit Mode", 0);
@@ -172,7 +172,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPukeRange[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range", 150.0);
 				g_flPukeRange[iIndex] = flClamp(g_flPukeRange[iIndex], 1.0, 9999999999.0);
 				g_flPukeRangeChance[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range Chance", 15.0);
-				g_flPukeRangeChance[iIndex] = flClamp(g_flPukeRangeChance[iIndex], 0.1, 100.0);
+				g_flPukeRangeChance[iIndex] = flClamp(g_flPukeRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -183,7 +183,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Puke Ability/Ability Effect", g_sPukeEffect2[iIndex], sizeof(g_sPukeEffect2[]), g_sPukeEffect[iIndex]);
 				kvSuperTanks.GetString("Puke Ability/Ability Message", g_sPukeMessage2[iIndex], sizeof(g_sPukeMessage2[]), g_sPukeMessage[iIndex]);
 				g_flPukeChance2[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Chance", g_flPukeChance[iIndex]);
-				g_flPukeChance2[iIndex] = flClamp(g_flPukeChance2[iIndex], 0.1, 100.0);
+				g_flPukeChance2[iIndex] = flClamp(g_flPukeChance2[iIndex], 0.0, 100.0);
 				g_iPukeHit2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", g_iPukeHit[iIndex]);
 				g_iPukeHit2[iIndex] = iClamp(g_iPukeHit2[iIndex], 0, 1);
 				g_iPukeHitMode2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit Mode", g_iPukeHitMode[iIndex]);
@@ -191,7 +191,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPukeRange2[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range", g_flPukeRange[iIndex]);
 				g_flPukeRange2[iIndex] = flClamp(g_flPukeRange2[iIndex], 1.0, 9999999999.0);
 				g_flPukeRangeChance2[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range Chance", g_flPukeRangeChance[iIndex]);
-				g_flPukeRangeChance2[iIndex] = flClamp(g_flPukeRangeChance2[iIndex], 0.1, 100.0);
+				g_flPukeRangeChance2[iIndex] = flClamp(g_flPukeRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

@@ -154,7 +154,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Smash Ability/Ability Effect", g_sSmashEffect[iIndex], sizeof(g_sSmashEffect[]), "0");
 				kvSuperTanks.GetString("Smash Ability/Ability Message", g_sSmashMessage[iIndex], sizeof(g_sSmashMessage[]), "0");
 				g_flSmashChance[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Chance", 33.3);
-				g_flSmashChance[iIndex] = flClamp(g_flSmashChance[iIndex], 0.1, 100.0);
+				g_flSmashChance[iIndex] = flClamp(g_flSmashChance[iIndex], 0.0, 100.0);
 				g_iSmashHit[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit", 0);
 				g_iSmashHit[iIndex] = iClamp(g_iSmashHit[iIndex], 0, 1);
 				g_iSmashHitMode[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit Mode", 0);
@@ -162,7 +162,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flSmashRange[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range", 150.0);
 				g_flSmashRange[iIndex] = flClamp(g_flSmashRange[iIndex], 1.0, 9999999999.0);
 				g_flSmashRangeChance[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range Chance", 15.0);
-				g_flSmashRangeChance[iIndex] = flClamp(g_flSmashRangeChance[iIndex], 0.1, 100.0);
+				g_flSmashRangeChance[iIndex] = flClamp(g_flSmashRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -173,7 +173,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Smash Ability/Ability Effect", g_sSmashEffect2[iIndex], sizeof(g_sSmashEffect2[]), g_sSmashEffect[iIndex]);
 				kvSuperTanks.GetString("Smash Ability/Ability Message", g_sSmashMessage2[iIndex], sizeof(g_sSmashMessage2[]), g_sSmashMessage[iIndex]);
 				g_flSmashChance2[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Chance", g_flSmashChance[iIndex]);
-				g_flSmashChance2[iIndex] = flClamp(g_flSmashChance2[iIndex], 0.1, 100.0);
+				g_flSmashChance2[iIndex] = flClamp(g_flSmashChance2[iIndex], 0.0, 100.0);
 				g_iSmashHit2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit", g_iSmashHit[iIndex]);
 				g_iSmashHit2[iIndex] = iClamp(g_iSmashHit2[iIndex], 0, 1);
 				g_iSmashHitMode2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit Mode", g_iSmashHitMode[iIndex]);
@@ -181,7 +181,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flSmashRange2[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range", g_flSmashRange[iIndex]);
 				g_flSmashRange2[iIndex] = flClamp(g_flSmashRange2[iIndex], 1.0, 9999999999.0);
 				g_flSmashRangeChance2[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Range Chance", g_flSmashRangeChance[iIndex]);
-				g_flSmashRangeChance2[iIndex] = flClamp(g_flSmashRangeChance2[iIndex], 0.1, 100.0);
+				g_flSmashRangeChance2[iIndex] = flClamp(g_flSmashRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

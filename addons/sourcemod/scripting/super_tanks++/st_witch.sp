@@ -142,7 +142,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWitchAmount[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Amount", 3);
 				g_iWitchAmount[iIndex] = iClamp(g_iWitchAmount[iIndex], 1, 25);
 				g_flWitchChance[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Chance", 33.3);
-				g_flWitchChance[iIndex] = flClamp(g_flWitchChance[iIndex], 0.1, 100.0);
+				g_flWitchChance[iIndex] = flClamp(g_flWitchChance[iIndex], 0.0, 100.0);
 				g_flWitchDamage[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Damage", 5.0);
 				g_flWitchDamage[iIndex] = flClamp(g_flWitchDamage[iIndex], 1.0, 9999999999.0);
 				g_flWitchRange[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Range", 500.0);
@@ -159,7 +159,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWitchAmount2[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Amount", g_iWitchAmount[iIndex]);
 				g_iWitchAmount2[iIndex] = iClamp(g_iWitchAmount2[iIndex], 1, 25);
 				g_flWitchChance2[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Chance", g_flWitchChance[iIndex]);
-				g_flWitchChance2[iIndex] = flClamp(g_flWitchChance2[iIndex], 0.1, 100.0);
+				g_flWitchChance2[iIndex] = flClamp(g_flWitchChance2[iIndex], 0.0, 100.0);
 				g_flWitchDamage2[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Damage", g_flWitchDamage[iIndex]);
 				g_flWitchDamage2[iIndex] = flClamp(g_flWitchDamage2[iIndex], 1.0, 9999999999.0);
 				g_flWitchRange2[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Range", g_flWitchRange[iIndex]);

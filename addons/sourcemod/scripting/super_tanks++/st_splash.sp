@@ -109,7 +109,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iSplashMessage[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Message", 0);
 				g_iSplashMessage[iIndex] = iClamp(g_iSplashMessage[iIndex], 0, 1);
 				g_flSplashChance[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Chance", 33.3);
-				g_flSplashChance[iIndex] = flClamp(g_flSplashChance[iIndex], 0.1, 100.0);
+				g_flSplashChance[iIndex] = flClamp(g_flSplashChance[iIndex], 0.0, 100.0);
 				g_flSplashDamage[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Damage", 5.0);
 				g_flSplashDamage[iIndex] = flClamp(g_flSplashDamage[iIndex], 1.0, 9999999999.0);
 				g_flSplashInterval[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Interval", 5.0);
@@ -126,7 +126,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iSplashMessage2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Message", g_iSplashMessage[iIndex]);
 				g_iSplashMessage2[iIndex] = iClamp(g_iSplashMessage2[iIndex], 0, 1);
 				g_flSplashChance2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Chance", g_flSplashChance[iIndex]);
-				g_flSplashChance2[iIndex] = flClamp(g_flSplashChance2[iIndex], 0.1, 100.0);
+				g_flSplashChance2[iIndex] = flClamp(g_flSplashChance2[iIndex], 0.0, 100.0);
 				g_flSplashDamage2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Damage", g_flSplashDamage[iIndex]);
 				g_flSplashDamage2[iIndex] = flClamp(g_flSplashDamage2[iIndex], 1.0, 9999999999.0);
 				g_flSplashInterval2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Interval", g_flSplashInterval[iIndex]);

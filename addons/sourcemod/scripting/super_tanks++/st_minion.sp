@@ -115,7 +115,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMinionAmount[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Amount", 5);
 				g_iMinionAmount[iIndex] = iClamp(g_iMinionAmount[iIndex], 1, 25);
 				g_flMinionChance[iIndex] = kvSuperTanks.GetFloat("Minion Ability/Minion Chance", 33.3);
-				g_flMinionChance[iIndex] = flClamp(g_flMinionChance[iIndex], 0.1, 100.0);
+				g_flMinionChance[iIndex] = flClamp(g_flMinionChance[iIndex], 0.0, 100.0);
 				g_iMinionReplace[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Replace", 1);
 				g_iMinionReplace[iIndex] = iClamp(g_iMinionReplace[iIndex], 0, 1);
 				kvSuperTanks.GetString("Minion Ability/Minion Types", g_sMinionTypes[iIndex], sizeof(g_sMinionTypes[]), "123456");
@@ -131,7 +131,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMinionAmount2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Amount", g_iMinionAmount[iIndex]);
 				g_iMinionAmount2[iIndex] = iClamp(g_iMinionAmount2[iIndex], 1, 25);
 				g_flMinionChance2[iIndex] = kvSuperTanks.GetFloat("Minion Ability/Minion Chance", g_flMinionChance[iIndex]);
-				g_flMinionChance2[iIndex] = flClamp(g_flMinionChance2[iIndex], 0.1, 100.0);
+				g_flMinionChance2[iIndex] = flClamp(g_flMinionChance2[iIndex], 0.0, 100.0);
 				g_iMinionReplace2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Replace", g_iMinionReplace[iIndex]);
 				g_iMinionReplace2[iIndex] = iClamp(g_iMinionReplace2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Minion Ability/Minion Types", g_sMinionTypes2[iIndex], sizeof(g_sMinionTypes2[]), g_sMinionTypes[iIndex]);

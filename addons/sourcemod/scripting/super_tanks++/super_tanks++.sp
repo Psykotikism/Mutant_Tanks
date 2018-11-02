@@ -1097,7 +1097,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 				g_iTankEnabled[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", 0);
 				g_iTankEnabled[iIndex] = iClamp(g_iTankEnabled[iIndex], 0, 1);
 				g_flTankChance[iIndex] = kvSuperTanks.GetFloat("General/Tank Chance", 100.0);
-				g_flTankChance[iIndex] = flClamp(g_flTankChance[iIndex], 0.1, 100.0);
+				g_flTankChance[iIndex] = flClamp(g_flTankChance[iIndex], 0.0, 100.0);
 				g_iTankNote[iIndex] = kvSuperTanks.GetNum("General/Tank Note", 0);
 				g_iTankNote[iIndex] = iClamp(g_iTankNote[iIndex], 0, 1);
 				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255");
@@ -1163,7 +1163,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 				g_iTankEnabled2[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", g_iTankEnabled[iIndex]);
 				g_iTankEnabled2[iIndex] = iClamp(g_iTankEnabled2[iIndex], 0, 1);
 				g_flTankChance2[iIndex] = kvSuperTanks.GetFloat("General/Tank Chance", g_flTankChance[iIndex]);
-				g_flTankChance2[iIndex] = flClamp(g_flTankChance2[iIndex], 0.1, 100.0);
+				g_flTankChance2[iIndex] = flClamp(g_flTankChance2[iIndex], 0.0, 100.0);
 				g_iTankNote2[iIndex] = kvSuperTanks.GetNum("General/Tank Note", g_iTankNote[iIndex]);
 				g_iTankNote2[iIndex] = iClamp(g_iTankNote2[iIndex], 0, 1);
 				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]);
@@ -1500,22 +1500,22 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		ExplodeString(sPropsChance, ",", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 
 		float flChance = (sSet2[0][0] != '\0') ? StringToFloat(sSet2[0]) : 33.3;
-		flChance = flClamp(flChance, 0.1, 100.0);
+		flChance = flClamp(flChance, 0.0, 100.0);
 
 		float flChance2 = (sSet2[1][0] != '\0') ? StringToFloat(sSet2[1]) : 33.3;
-		flChance2 = flClamp(flChance2, 0.1, 100.0);
+		flChance2 = flClamp(flChance2, 0.0, 100.0);
 
 		float flChance3 = (sSet2[2][0] != '\0') ? StringToFloat(sSet2[2]) : 33.3;
-		flChance3 = flClamp(flChance3, 0.1, 100.0);
+		flChance3 = flClamp(flChance3, 0.0, 100.0);
 
 		float flChance4 = (sSet2[3][0] != '\0') ? StringToFloat(sSet2[3]) : 33.3;
-		flChance4 = flClamp(flChance4, 0.1, 100.0);
+		flChance4 = flClamp(flChance4, 0.0, 100.0);
 
 		float flChance5 = (sSet2[4][0] != '\0') ? StringToFloat(sSet2[4]) : 33.3;
-		flChance5 = flClamp(flChance5, 0.1, 100.0);
+		flChance5 = flClamp(flChance5, 0.0, 100.0);
 
 		float flChance6 = (sSet2[5][0] != '\0') ? StringToFloat(sSet2[5]) : 33.3;
-		flChance6 = flClamp(flChance6, 0.1, 100.0);
+		flChance6 = flClamp(flChance6, 0.0, 100.0);
 
 		sPropsAttached = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsAttached[g_iTankType[tank]] : g_sPropsAttached2[g_iTankType[tank]];
 

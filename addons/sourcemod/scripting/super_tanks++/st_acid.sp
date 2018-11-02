@@ -185,7 +185,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Acid Ability/Ability Effect", g_sAcidEffect[iIndex], sizeof(g_sAcidEffect[]), "0");
 				kvSuperTanks.GetString("Acid Ability/Ability Message", g_sAcidMessage[iIndex], sizeof(g_sAcidMessage[]), "0");
 				g_flAcidChance[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Chance", 33.3);
-				g_flAcidChance[iIndex] = flClamp(g_flAcidChance[iIndex], 0.1, 100.0);
+				g_flAcidChance[iIndex] = flClamp(g_flAcidChance[iIndex], 0.0, 100.0);
 				g_iAcidHit[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", 0);
 				g_iAcidHit[iIndex] = iClamp(g_iAcidHit[iIndex], 0, 1);
 				g_iAcidHitMode[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit Mode", 0);
@@ -193,7 +193,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flAcidRange[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", 150.0);
 				g_flAcidRange[iIndex] = flClamp(g_flAcidRange[iIndex], 1.0, 9999999999.0);
 				g_flAcidRangeChance[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range Chance", 15.0);
-				g_flAcidRangeChance[iIndex] = flClamp(g_flAcidRangeChance[iIndex], 0.1, 100.0);
+				g_flAcidRangeChance[iIndex] = flClamp(g_flAcidRangeChance[iIndex], 0.0, 100.0);
 				g_iAcidRock[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", 0);
 				g_iAcidRock[iIndex] = iClamp(g_iAcidRock[iIndex], 0, 1);
 			}
@@ -206,7 +206,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Acid Ability/Ability Effect", g_sAcidEffect2[iIndex], sizeof(g_sAcidEffect2[]), g_sAcidEffect[iIndex]);
 				kvSuperTanks.GetString("Acid Ability/Ability Message", g_sAcidMessage2[iIndex], sizeof(g_sAcidMessage2[]), g_sAcidMessage[iIndex]);
 				g_flAcidChance2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Chance", g_flAcidChance[iIndex]);
-				g_flAcidChance2[iIndex] = flClamp(g_flAcidChance2[iIndex], 0.1, 100.0);
+				g_flAcidChance2[iIndex] = flClamp(g_flAcidChance2[iIndex], 0.0, 100.0);
 				g_iAcidHit2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", g_iAcidHit[iIndex]);
 				g_iAcidHit2[iIndex] = iClamp(g_iAcidHit2[iIndex], 0, 1);
 				g_iAcidHitMode2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit Mode", g_iAcidHitMode[iIndex]);
@@ -214,7 +214,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flAcidRange2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", g_flAcidRange[iIndex]);
 				g_flAcidRange2[iIndex] = flClamp(g_flAcidRange2[iIndex], 1.0, 9999999999.0);
 				g_flAcidRangeChance2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range Chance", g_flAcidRangeChance[iIndex]);
-				g_flAcidRangeChance2[iIndex] = flClamp(g_flAcidRangeChance2[iIndex], 0.1, 100.0);
+				g_flAcidRangeChance2[iIndex] = flClamp(g_flAcidRangeChance2[iIndex], 0.0, 100.0);
 				g_iAcidRock2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", g_iAcidRock[iIndex]);
 				g_iAcidRock2[iIndex] = iClamp(g_iAcidRock2[iIndex], 0, 1);
 			}

@@ -143,7 +143,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Vampire Ability/Ability Effect", g_sVampireEffect[iIndex], sizeof(g_sVampireEffect[]), "0");
 				kvSuperTanks.GetString("Vampire Ability/Ability Message", g_sVampireMessage[iIndex], sizeof(g_sVampireMessage[]), "0");
 				g_flVampireChance[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Chance", 33.3);
-				g_flVampireChance[iIndex] = flClamp(g_flVampireChance[iIndex], 0.1, 100.0);
+				g_flVampireChance[iIndex] = flClamp(g_flVampireChance[iIndex], 0.0, 100.0);
 				g_iVampireHealth[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Health", 100);
 				g_iVampireHealth[iIndex] = iClamp(g_iVampireHealth[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_iVampireHit[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Hit", 0);
@@ -153,7 +153,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flVampireRange[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range", 500.0);
 				g_flVampireRange[iIndex] = flClamp(g_flVampireRange[iIndex], 1.0, 9999999999.0);
 				g_flVampireRangeChance[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range Chance", 15.0);
-				g_flVampireRangeChance[iIndex] = flClamp(g_flVampireRangeChance[iIndex], 0.1, 100.0);
+				g_flVampireRangeChance[iIndex] = flClamp(g_flVampireRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -164,7 +164,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Vampire Ability/Ability Effect", g_sVampireEffect2[iIndex], sizeof(g_sVampireEffect2[]), g_sVampireEffect[iIndex]);
 				kvSuperTanks.GetString("Vampire Ability/Ability Message", g_sVampireMessage2[iIndex], sizeof(g_sVampireMessage2[]), g_sVampireMessage[iIndex]);
 				g_flVampireChance2[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Chance", g_flVampireChance[iIndex]);
-				g_flVampireChance2[iIndex] = flClamp(g_flVampireChance2[iIndex], 0.1, 100.0);
+				g_flVampireChance2[iIndex] = flClamp(g_flVampireChance2[iIndex], 0.0, 100.0);
 				g_iVampireHealth2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Health", g_iVampireHealth[iIndex]);
 				g_iVampireHealth2[iIndex] = iClamp(g_iVampireHealth2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_iVampireHit2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Vampire Hit", g_iVampireHit[iIndex]);
@@ -174,7 +174,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flVampireRange2[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range", g_flVampireRange[iIndex]);
 				g_flVampireRange2[iIndex] = flClamp(g_flVampireRange2[iIndex], 1.0, 9999999999.0);
 				g_flVampireRangeChance2[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Range Chance", g_flVampireRangeChance[iIndex]);
-				g_flVampireRangeChance2[iIndex] = flClamp(g_flVampireRangeChance2[iIndex], 0.1, 100.0);
+				g_flVampireRangeChance2[iIndex] = flClamp(g_flVampireRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

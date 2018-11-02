@@ -148,7 +148,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Fire Ability/Ability Effect", g_sFireEffect[iIndex], sizeof(g_sFireEffect[]), "0");
 				kvSuperTanks.GetString("Fire Ability/Ability Message", g_sFireMessage[iIndex], sizeof(g_sFireMessage[]), "0");
 				g_flFireChance[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Chance", 33.3);
-				g_flFireChance[iIndex] = flClamp(g_flFireChance[iIndex], 0.1, 100.0);
+				g_flFireChance[iIndex] = flClamp(g_flFireChance[iIndex], 0.0, 100.0);
 				g_iFireHit[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit", 0);
 				g_iFireHit[iIndex] = iClamp(g_iFireHit[iIndex], 0, 1);
 				g_iFireHitMode[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit Mode", 0);
@@ -156,7 +156,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flFireRange[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Range", 150.0);
 				g_flFireRange[iIndex] = flClamp(g_flFireRange[iIndex], 1.0, 9999999999.0);
 				g_flFireRangeChance[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Range Chance", 15.0);
-				g_flFireRangeChance[iIndex] = flClamp(g_flFireRangeChance[iIndex], 0.1, 100.0);
+				g_flFireRangeChance[iIndex] = flClamp(g_flFireRangeChance[iIndex], 0.0, 100.0);
 				g_iFireRock[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Rock Break", 0);
 				g_iFireRock[iIndex] = iClamp(g_iFireRock[iIndex], 0, 1);
 			}
@@ -169,7 +169,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Fire Ability/Ability Effect", g_sFireEffect2[iIndex], sizeof(g_sFireEffect2[]), g_sFireEffect[iIndex]);
 				kvSuperTanks.GetString("Fire Ability/Ability Message", g_sFireMessage2[iIndex], sizeof(g_sFireMessage2[]), g_sFireMessage[iIndex]);
 				g_flFireChance2[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Chance", g_flFireChance[iIndex]);
-				g_flFireChance2[iIndex] = flClamp(g_flFireChance2[iIndex], 0.1, 100.0);
+				g_flFireChance2[iIndex] = flClamp(g_flFireChance2[iIndex], 0.0, 100.0);
 				g_iFireHit2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit", g_iFireHit[iIndex]);
 				g_iFireHit2[iIndex] = iClamp(g_iFireHit2[iIndex], 0, 1);
 				g_iFireHitMode2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Hit Mode", g_iFireHitMode[iIndex]);
@@ -177,7 +177,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flFireRange2[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Range", g_flFireRange[iIndex]);
 				g_flFireRange2[iIndex] = flClamp(g_flFireRange2[iIndex], 1.0, 9999999999.0);
 				g_flFireRangeChance2[iIndex] = kvSuperTanks.GetFloat("Fire Ability/Fire Range Chance", g_flFireRangeChance[iIndex]);
-				g_flFireRangeChance2[iIndex] = flClamp(g_flFireRangeChance2[iIndex], 0.1, 100.0);
+				g_flFireRangeChance2[iIndex] = flClamp(g_flFireRangeChance2[iIndex], 0.0, 100.0);
 				g_iFireRock2[iIndex] = kvSuperTanks.GetNum("Fire Ability/Fire Rock Break", g_iFireRock[iIndex]);
 				g_iFireRock2[iIndex] = iClamp(g_iFireRock2[iIndex], 0, 1);
 			}

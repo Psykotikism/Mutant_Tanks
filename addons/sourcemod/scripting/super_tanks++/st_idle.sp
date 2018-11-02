@@ -185,7 +185,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect[iIndex], sizeof(g_sIdleEffect[]), "0");
 				kvSuperTanks.GetString("Idle Ability/Ability Message", g_sIdleMessage[iIndex], sizeof(g_sIdleMessage[]), "0");
 				g_flIdleChance[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", 33.3);
-				g_flIdleChance[iIndex] = flClamp(g_flIdleChance[iIndex], 0.1, 100.0);
+				g_flIdleChance[iIndex] = flClamp(g_flIdleChance[iIndex], 0.0, 100.0);
 				g_iIdleHit[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", 0);
 				g_iIdleHit[iIndex] = iClamp(g_iIdleHit[iIndex], 0, 1);
 				g_iIdleHitMode[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit Mode", 0);
@@ -193,7 +193,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flIdleRange[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", 150.0);
 				g_flIdleRange[iIndex] = flClamp(g_flIdleRange[iIndex], 1.0, 9999999999.0);
 				g_flIdleRangeChance[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range Chance", 15.0);
-				g_flIdleRangeChance[iIndex] = flClamp(g_flIdleRangeChance[iIndex], 0.1, 100.0);
+				g_flIdleRangeChance[iIndex] = flClamp(g_flIdleRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -204,7 +204,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect2[iIndex], sizeof(g_sIdleEffect2[]), g_sIdleEffect[iIndex]);
 				kvSuperTanks.GetString("Idle Ability/Ability Message", g_sIdleMessage2[iIndex], sizeof(g_sIdleMessage2[]), g_sIdleMessage[iIndex]);
 				g_flIdleChance2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", g_flIdleChance[iIndex]);
-				g_flIdleChance2[iIndex] = flClamp(g_flIdleChance2[iIndex], 0.1, 100.0);
+				g_flIdleChance2[iIndex] = flClamp(g_flIdleChance2[iIndex], 0.0, 100.0);
 				g_iIdleHit2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", g_iIdleHit[iIndex]);
 				g_iIdleHit2[iIndex] = iClamp(g_iIdleHit2[iIndex], 0, 1);
 				g_iIdleHitMode2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit Mode", g_iIdleHitMode[iIndex]);
@@ -212,7 +212,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flIdleRange2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", g_flIdleRange[iIndex]);
 				g_flIdleRange2[iIndex] = flClamp(g_flIdleRange2[iIndex], 1.0, 9999999999.0);
 				g_flIdleRangeChance2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range Chance", g_flIdleRangeChance[iIndex]);
-				g_flIdleRangeChance2[iIndex] = flClamp(g_flIdleRangeChance2[iIndex], 0.1, 100.0);
+				g_flIdleRangeChance2[iIndex] = flClamp(g_flIdleRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

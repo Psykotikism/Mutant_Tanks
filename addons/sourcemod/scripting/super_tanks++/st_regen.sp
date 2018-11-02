@@ -108,7 +108,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRegenMessage[iIndex] = kvSuperTanks.GetNum("Regen Ability/Ability Message", 0);
 				g_iRegenMessage[iIndex] = iClamp(g_iRegenMessage[iIndex], 0, 1);
 				g_flRegenChance[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Chance", 33.3);
-				g_flRegenChance[iIndex] = flClamp(g_flRegenChance[iIndex], 0.1, 100.0);
+				g_flRegenChance[iIndex] = flClamp(g_flRegenChance[iIndex], 0.0, 100.0);
 				g_iRegenHealth[iIndex] = kvSuperTanks.GetNum("Regen Ability/Regen Health", 1);
 				g_iRegenHealth[iIndex] = iClamp(g_iRegenHealth[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_flRegenInterval[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Interval", 1.0);
@@ -125,7 +125,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRegenMessage2[iIndex] = kvSuperTanks.GetNum("Regen Ability/Ability Message", g_iRegenMessage[iIndex]);
 				g_iRegenMessage2[iIndex] = iClamp(g_iRegenMessage2[iIndex], 0, 1);
 				g_flRegenChance2[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Chance", g_flRegenChance[iIndex]);
-				g_flRegenChance2[iIndex] = flClamp(g_flRegenChance2[iIndex], 0.1, 100.0);
+				g_flRegenChance2[iIndex] = flClamp(g_flRegenChance2[iIndex], 0.0, 100.0);
 				g_iRegenHealth2[iIndex] = kvSuperTanks.GetNum("Regen Ability/Regen Health", g_iRegenHealth[iIndex]);
 				g_iRegenHealth2[iIndex] = iClamp(g_iRegenHealth2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_flRegenInterval2[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Duration", g_flRegenInterval[iIndex]);

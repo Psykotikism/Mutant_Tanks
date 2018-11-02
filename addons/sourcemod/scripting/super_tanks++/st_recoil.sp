@@ -153,7 +153,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Recoil Ability/Ability Effect", g_sRecoilEffect[iIndex], sizeof(g_sRecoilEffect[]), "0");
 				kvSuperTanks.GetString("Recoil Ability/Ability Message", g_sRecoilMessage[iIndex], sizeof(g_sRecoilMessage[]), "0");
 				g_flRecoilChance[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Chance", 33.3);
-				g_flRecoilChance[iIndex] = flClamp(g_flRecoilChance[iIndex], 0.1, 100.0);
+				g_flRecoilChance[iIndex] = flClamp(g_flRecoilChance[iIndex], 0.0, 100.0);
 				g_flRecoilDuration[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Duration", 5.0);
 				g_flRecoilDuration[iIndex] = flClamp(g_flRecoilDuration[iIndex], 0.1, 9999999999.0);
 				g_iRecoilHit[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Hit", 0);
@@ -163,7 +163,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flRecoilRange[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range", 150.0);
 				g_flRecoilRange[iIndex] = flClamp(g_flRecoilRange[iIndex], 1.0, 9999999999.0);
 				g_flRecoilRangeChance[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range Chance", 15.0);
-				g_flRecoilRangeChance[iIndex] = flClamp(g_flRecoilRangeChance[iIndex], 0.1, 100.0);
+				g_flRecoilRangeChance[iIndex] = flClamp(g_flRecoilRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -174,7 +174,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Recoil Ability/Ability Effect", g_sRecoilEffect2[iIndex], sizeof(g_sRecoilEffect2[]), g_sRecoilEffect[iIndex]);
 				kvSuperTanks.GetString("Recoil Ability/Ability Message", g_sRecoilMessage2[iIndex], sizeof(g_sRecoilMessage2[]), g_sRecoilMessage[iIndex]);
 				g_flRecoilChance2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Chance", g_flRecoilChance[iIndex]);
-				g_flRecoilChance2[iIndex] = flClamp(g_flRecoilChance2[iIndex], 0.1, 100.0);
+				g_flRecoilChance2[iIndex] = flClamp(g_flRecoilChance2[iIndex], 0.0, 100.0);
 				g_flRecoilDuration2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Duration", g_flRecoilDuration[iIndex]);
 				g_flRecoilDuration2[iIndex] = flClamp(g_flRecoilDuration2[iIndex], 0.1, 9999999999.0);
 				g_iRecoilHit2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Hit", g_iRecoilHit[iIndex]);
@@ -184,7 +184,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flRecoilRange2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range", g_flRecoilRange[iIndex]);
 				g_flRecoilRange2[iIndex] = flClamp(g_flRecoilRange2[iIndex], 1.0, 9999999999.0);
 				g_flRecoilRangeChance2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range Chance", g_flRecoilRangeChance[iIndex]);
-				g_flRecoilRangeChance2[iIndex] = flClamp(g_flRecoilRangeChance2[iIndex], 0.1, 100.0);
+				g_flRecoilRangeChance2[iIndex] = flClamp(g_flRecoilRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

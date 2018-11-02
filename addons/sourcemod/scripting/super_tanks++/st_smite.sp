@@ -152,7 +152,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Smite Ability/Ability Effect", g_sSmiteEffect[iIndex], sizeof(g_sSmiteEffect[]), "0");
 				kvSuperTanks.GetString("Smite Ability/Ability Message", g_sSmiteMessage[iIndex], sizeof(g_sSmiteMessage[]), "0");
 				g_flSmiteChance[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Chance", 33.3);
-				g_flSmiteChance[iIndex] = flClamp(g_flSmiteChance[iIndex], 0.1, 100.0);
+				g_flSmiteChance[iIndex] = flClamp(g_flSmiteChance[iIndex], 0.0, 100.0);
 				g_iSmiteHit[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit", 0);
 				g_iSmiteHit[iIndex] = iClamp(g_iSmiteHit[iIndex], 0, 1);
 				g_iSmiteHitMode[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit Mode", 0);
@@ -160,7 +160,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flSmiteRange[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range", 150.0);
 				g_flSmiteRange[iIndex] = flClamp(g_flSmiteRange[iIndex], 1.0, 9999999999.0);
 				g_flSmiteRangeChance[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range Chance", 15.0);
-				g_flSmiteRangeChance[iIndex] = flClamp(g_flSmiteRangeChance[iIndex], 0.1, 100.0);
+				g_flSmiteRangeChance[iIndex] = flClamp(g_flSmiteRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -171,7 +171,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Smite Ability/Ability Effect", g_sSmiteEffect2[iIndex], sizeof(g_sSmiteEffect2[]), g_sSmiteEffect[iIndex]);
 				kvSuperTanks.GetString("Smite Ability/Ability Message", g_sSmiteMessage2[iIndex], sizeof(g_sSmiteMessage2[]), g_sSmiteMessage[iIndex]);
 				g_flSmiteChance2[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Chance", g_flSmiteChance[iIndex]);
-				g_flSmiteChance2[iIndex] = flClamp(g_flSmiteChance2[iIndex], 0.1, 100.0);
+				g_flSmiteChance2[iIndex] = flClamp(g_flSmiteChance2[iIndex], 0.0, 100.0);
 				g_iSmiteHit2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit", g_iSmiteHit[iIndex]);
 				g_iSmiteHit2[iIndex] = iClamp(g_iSmiteHit2[iIndex], 0, 1);
 				g_iSmiteHitMode2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Smite Hit Mode", g_iSmiteHitMode[iIndex]);
@@ -179,7 +179,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flSmiteRange2[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range", g_flSmiteRange[iIndex]);
 				g_flSmiteRange2[iIndex] = flClamp(g_flSmiteRange2[iIndex], 1.0, 9999999999.0);
 				g_flSmiteRangeChance2[iIndex] = kvSuperTanks.GetFloat("Smite Ability/Smite Range Chance", g_flSmiteRangeChance[iIndex]);
-				g_flSmiteRangeChance2[iIndex] = flClamp(g_flSmiteRangeChance2[iIndex], 0.1, 100.0);
+				g_flSmiteRangeChance2[iIndex] = flClamp(g_flSmiteRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

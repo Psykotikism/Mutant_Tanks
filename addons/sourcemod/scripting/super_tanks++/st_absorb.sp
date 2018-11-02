@@ -162,7 +162,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flAbsorbBulletDivisor[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Bullet Divisor", 20.0);
 				g_flAbsorbBulletDivisor[iIndex] = flClamp(g_flAbsorbBulletDivisor[iIndex], 0.1, 9999999999.0);
 				g_flAbsorbChance[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Chance", 33.3);
-				g_flAbsorbChance[iIndex] = flClamp(g_flAbsorbChance[iIndex], 0.1, 100.0);
+				g_flAbsorbChance[iIndex] = flClamp(g_flAbsorbChance[iIndex], 0.0, 100.0);
 				g_flAbsorbDuration[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Duration", 5.0);
 				g_flAbsorbDuration[iIndex] = flClamp(g_flAbsorbDuration[iIndex], 0.1, 9999999999.0);
 				g_flAbsorbExplosiveDivisor[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Explosive Divisor", 20.0);
@@ -183,7 +183,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flAbsorbBulletDivisor2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Bullet Divisor", g_flAbsorbBulletDivisor[iIndex]);
 				g_flAbsorbBulletDivisor2[iIndex] = flClamp(g_flAbsorbBulletDivisor2[iIndex], 0.1, 9999999999.0);
 				g_flAbsorbChance2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Chance", g_flAbsorbChance[iIndex]);
-				g_flAbsorbChance2[iIndex] = flClamp(g_flAbsorbChance2[iIndex], 0.1, 100.0);
+				g_flAbsorbChance2[iIndex] = flClamp(g_flAbsorbChance2[iIndex], 0.0, 100.0);
 				g_flAbsorbDuration2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Duration", g_flAbsorbDuration[iIndex]);
 				g_flAbsorbDuration2[iIndex] = flClamp(g_flAbsorbDuration2[iIndex], 0.1, 9999999999.0);
 				g_flAbsorbExplosiveDivisor2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Explosive Divisor", g_flAbsorbExplosiveDivisor[iIndex]);

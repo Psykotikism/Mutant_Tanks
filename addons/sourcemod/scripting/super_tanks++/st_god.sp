@@ -108,7 +108,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGodMessage[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", 0);
 				g_iGodMessage[iIndex] = iClamp(g_iGodMessage[iIndex], 0, 1);
 				g_flGodChance[iIndex] = kvSuperTanks.GetFloat("God Ability/God Chance", 33.3);
-				g_flGodChance[iIndex] = flClamp(g_flGodChance[iIndex], 0.1, 100.0);
+				g_flGodChance[iIndex] = flClamp(g_flGodChance[iIndex], 0.0, 100.0);
 				g_flGodDuration[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", 5.0);
 				g_flGodDuration[iIndex] = flClamp(g_flGodDuration[iIndex], 0.1, 9999999999.0);
 			}
@@ -121,7 +121,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGodMessage2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", g_iGodMessage[iIndex]);
 				g_iGodMessage2[iIndex] = iClamp(g_iGodMessage2[iIndex], 0, 1);
 				g_flGodChance2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Chance", g_flGodChance[iIndex]);
-				g_flGodChance2[iIndex] = flClamp(g_flGodChance2[iIndex], 0.1, 100.0);
+				g_flGodChance2[iIndex] = flClamp(g_flGodChance2[iIndex], 0.0, 100.0);
 				g_flGodDuration2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", g_flGodDuration[iIndex]);
 				g_flGodDuration2[iIndex] = flClamp(g_flGodDuration2[iIndex], 0.1, 9999999999.0);
 			}

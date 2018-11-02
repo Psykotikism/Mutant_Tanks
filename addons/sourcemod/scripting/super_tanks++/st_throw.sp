@@ -111,7 +111,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Throw Ability/Ability Message", g_sThrowMessage[iIndex], sizeof(g_sThrowMessage[]), "0");
 				kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions[iIndex], sizeof(g_sThrowCarOptions[]), "123");
 				g_flThrowChance[iIndex] = kvSuperTanks.GetFloat("Throw Ability/Throw Chance", 33.3);
-				g_flThrowChance[iIndex] = flClamp(g_flThrowChance[iIndex], 0.1, 100.0);
+				g_flThrowChance[iIndex] = flClamp(g_flThrowChance[iIndex], 0.0, 100.0);
 				kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions[iIndex], sizeof(g_sThrowInfectedOptions[]), "1234567");
 			}
 			else
@@ -123,7 +123,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Throw Ability/Ability Message", g_sThrowMessage2[iIndex], sizeof(g_sThrowMessage2[]), g_sThrowMessage[iIndex]);
 				kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions2[iIndex], sizeof(g_sThrowCarOptions2[]), g_sThrowCarOptions[iIndex]);
 				g_flThrowChance2[iIndex] = kvSuperTanks.GetFloat("Throw Ability/Throw Chance", g_flThrowChance[iIndex]);
-				g_flThrowChance2[iIndex] = flClamp(g_flThrowChance2[iIndex], 0.1, 100.0);
+				g_flThrowChance2[iIndex] = flClamp(g_flThrowChance2[iIndex], 0.0, 100.0);
 				kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions2[iIndex], sizeof(g_sThrowInfectedOptions2[]), g_sThrowInfectedOptions[iIndex]);
 			}
 

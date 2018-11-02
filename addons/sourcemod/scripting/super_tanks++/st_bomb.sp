@@ -148,7 +148,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Bomb Ability/Ability Effect", g_sBombEffect[iIndex], sizeof(g_sBombEffect[]), "0");
 				kvSuperTanks.GetString("Bomb Ability/Ability Message", g_sBombMessage[iIndex], sizeof(g_sBombMessage[]), "0");
 				g_flBombChance[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Chance", 33.3);
-				g_flBombChance[iIndex] = flClamp(g_flBombChance[iIndex], 0.1, 100.0);
+				g_flBombChance[iIndex] = flClamp(g_flBombChance[iIndex], 0.0, 100.0);
 				g_iBombHit[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit", 0);
 				g_iBombHit[iIndex] = iClamp(g_iBombHit[iIndex], 0, 1);
 				g_iBombHitMode[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit Mode", 0);
@@ -156,7 +156,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flBombRange[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range", 150.0);
 				g_flBombRange[iIndex] = flClamp(g_flBombRange[iIndex], 1.0, 9999999999.0);
 				g_flBombRangeChance[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range Chance", 15.0);
-				g_flBombRangeChance[iIndex] = flClamp(g_flBombRangeChance[iIndex], 0.1, 100.0);
+				g_flBombRangeChance[iIndex] = flClamp(g_flBombRangeChance[iIndex], 0.0, 100.0);
 				g_iBombRock[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Rock Break", 0);
 				g_iBombRock[iIndex] = iClamp(g_iBombRock[iIndex], 0, 1);
 			}
@@ -169,7 +169,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Bomb Ability/Ability Effect", g_sBombEffect2[iIndex], sizeof(g_sBombEffect2[]), g_sBombEffect[iIndex]);
 				kvSuperTanks.GetString("Bomb Ability/Ability Message", g_sBombMessage2[iIndex], sizeof(g_sBombMessage2[]), g_sBombMessage[iIndex]);
 				g_flBombChance2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Chance", g_flBombChance[iIndex]);
-				g_flBombChance2[iIndex] = flClamp(g_flBombChance2[iIndex], 0.1, 100.0);
+				g_flBombChance2[iIndex] = flClamp(g_flBombChance2[iIndex], 0.0, 100.0);
 				g_iBombHit2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit", g_iBombHit[iIndex]);
 				g_iBombHit2[iIndex] = iClamp(g_iBombHit2[iIndex], 0, 1);
 				g_iBombHitMode2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit Mode", g_iBombHitMode[iIndex]);
@@ -177,7 +177,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flBombRange2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range", g_flBombRange[iIndex]);
 				g_flBombRange2[iIndex] = flClamp(g_flBombRange2[iIndex], 1.0, 9999999999.0);
 				g_flBombRangeChance2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range Chance", g_flBombRangeChance[iIndex]);
-				g_flBombRangeChance2[iIndex] = flClamp(g_flBombRangeChance2[iIndex], 0.1, 100.0);
+				g_flBombRangeChance2[iIndex] = flClamp(g_flBombRangeChance2[iIndex], 0.0, 100.0);
 				g_iBombRock2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Rock Break", g_iBombRock[iIndex]);
 				g_iBombRock2[iIndex] = iClamp(g_iBombRock2[iIndex], 0, 1);
 			}

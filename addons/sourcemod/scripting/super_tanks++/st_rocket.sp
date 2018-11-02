@@ -165,7 +165,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Rocket Ability/Ability Effect", g_sRocketEffect[iIndex], sizeof(g_sRocketEffect[]), "0");
 				kvSuperTanks.GetString("Rocket Ability/Ability Message", g_sRocketMessage[iIndex], sizeof(g_sRocketMessage[]), "0");
 				g_flRocketChance[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Chance", 33.3);
-				g_flRocketChance[iIndex] = flClamp(g_flRocketChance[iIndex], 0.1, 100.0);
+				g_flRocketChance[iIndex] = flClamp(g_flRocketChance[iIndex], 0.0, 100.0);
 				g_flRocketDelay[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Delay", 1.0);
 				g_flRocketDelay[iIndex] = flClamp(g_flRocketDelay[iIndex], 0.1, 9999999999.0);
 				g_iRocketHit[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit", 0);
@@ -175,7 +175,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flRocketRange[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range", 150.0);
 				g_flRocketRange[iIndex] = flClamp(g_flRocketRange[iIndex], 1.0, 9999999999.0);
 				g_flRocketRangeChance[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range Chance", 15.0);
-				g_flRocketRangeChance[iIndex] = flClamp(g_flRocketRangeChance[iIndex], 0.1, 100.0);
+				g_flRocketRangeChance[iIndex] = flClamp(g_flRocketRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -186,7 +186,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Rocket Ability/Ability Effect", g_sRocketEffect2[iIndex], sizeof(g_sRocketEffect2[]), g_sRocketEffect[iIndex]);
 				kvSuperTanks.GetString("Rocket Ability/Ability Message", g_sRocketMessage2[iIndex], sizeof(g_sRocketMessage2[]), g_sRocketMessage[iIndex]);
 				g_flRocketChance2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Chance", g_flRocketChance[iIndex]);
-				g_flRocketChance2[iIndex] = flClamp(g_flRocketChance2[iIndex], 0.1, 100.0);
+				g_flRocketChance2[iIndex] = flClamp(g_flRocketChance2[iIndex], 0.0, 100.0);
 				g_flRocketDelay2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Delay", g_flRocketDelay[iIndex]);
 				g_flRocketDelay2[iIndex] = flClamp(g_flRocketDelay2[iIndex], 0.1, 9999999999.0);
 				g_iRocketHit2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit", g_iRocketHit[iIndex]);
@@ -196,7 +196,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flRocketRange2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range", g_flRocketRange[iIndex]);
 				g_flRocketRange2[iIndex] = flClamp(g_flRocketRange2[iIndex], 1.0, 9999999999.0);
 				g_flRocketRangeChance2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range Chance", g_flRocketRangeChance[iIndex]);
-				g_flRocketRangeChance2[iIndex] = flClamp(g_flRocketRangeChance2[iIndex], 0.1, 100.0);
+				g_flRocketRangeChance2[iIndex] = flClamp(g_flRocketRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

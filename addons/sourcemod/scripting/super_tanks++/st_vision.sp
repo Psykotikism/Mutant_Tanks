@@ -152,7 +152,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Vision Ability/Ability Effect", g_sVisionEffect[iIndex], sizeof(g_sVisionEffect[]), "0");
 				kvSuperTanks.GetString("Vision Ability/Ability Message", g_sVisionMessage[iIndex], sizeof(g_sVisionMessage[]), "0");
 				g_flVisionChance[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Chance", 33.3);
-				g_flVisionChance[iIndex] = flClamp(g_flVisionChance[iIndex], 0.1, 100.0);
+				g_flVisionChance[iIndex] = flClamp(g_flVisionChance[iIndex], 0.0, 100.0);
 				g_flVisionDuration[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", 5.0);
 				g_flVisionDuration[iIndex] = flClamp(g_flVisionDuration[iIndex], 0.1, 9999999999.0);
 				g_iVisionFOV[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision FOV", 160);
@@ -164,7 +164,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flVisionRange[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range", 150.0);
 				g_flVisionRange[iIndex] = flClamp(g_flVisionRange[iIndex], 1.0, 9999999999.0);
 				g_flVisionRangeChance[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range Chance", 15.0);
-				g_flVisionRangeChance[iIndex] = flClamp(g_flVisionRangeChance[iIndex], 0.1, 100.0);
+				g_flVisionRangeChance[iIndex] = flClamp(g_flVisionRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -175,7 +175,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Vision Ability/Ability Effect", g_sVisionEffect2[iIndex], sizeof(g_sVisionEffect2[]), g_sVisionEffect[iIndex]);
 				kvSuperTanks.GetString("Vision Ability/Ability Message", g_sVisionMessage2[iIndex], sizeof(g_sVisionMessage2[]), g_sVisionMessage[iIndex]);
 				g_flVisionChance2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Chance", g_flVisionChance[iIndex]);
-				g_flVisionChance2[iIndex] = flClamp(g_flVisionChance2[iIndex], 0.1, 100.0);
+				g_flVisionChance2[iIndex] = flClamp(g_flVisionChance2[iIndex], 0.0, 100.0);
 				g_flVisionDuration2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", g_flVisionDuration[iIndex]);
 				g_flVisionDuration2[iIndex] = flClamp(g_flVisionDuration2[iIndex], 0.1, 9999999999.0);
 				g_iVisionFOV2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision FOV", g_iVisionFOV[iIndex]);
@@ -187,7 +187,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flVisionRange2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range", g_flVisionRange[iIndex]);
 				g_flVisionRange2[iIndex] = flClamp(g_flVisionRange2[iIndex], 1.0, 9999999999.0);
 				g_flVisionRangeChance2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range Chance", g_flVisionRangeChance[iIndex]);
-				g_flVisionRangeChance2[iIndex] = flClamp(g_flVisionRangeChance2[iIndex], 0.1, 100.0);
+				g_flVisionRangeChance2[iIndex] = flClamp(g_flVisionRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

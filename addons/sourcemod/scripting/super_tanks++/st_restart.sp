@@ -162,7 +162,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect[iIndex], sizeof(g_sRestartEffect[]), "0");
 				kvSuperTanks.GetString("Restart Ability/Ability Message", g_sRestartMessage[iIndex], sizeof(g_sRestartMessage[]), "0");
 				g_flRestartChance[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Chance", 33.3);
-				g_flRestartChance[iIndex] = flClamp(g_flRestartChance[iIndex], 0.1, 100.0);
+				g_flRestartChance[iIndex] = flClamp(g_flRestartChance[iIndex], 0.0, 100.0);
 				g_iRestartHit[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", 0);
 				g_iRestartHit[iIndex] = iClamp(g_iRestartHit[iIndex], 0, 1);
 				g_iRestartHitMode[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit Mode", 0);
@@ -173,7 +173,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flRestartRange[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range", 150.0);
 				g_flRestartRange[iIndex] = flClamp(g_flRestartRange[iIndex], 1.0, 9999999999.0);
 				g_flRestartRangeChance[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range Chance", 15.0);
-				g_flRestartRangeChance[iIndex] = flClamp(g_flRestartRangeChance[iIndex], 0.1, 100.0);
+				g_flRestartRangeChance[iIndex] = flClamp(g_flRestartRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -184,7 +184,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect2[iIndex], sizeof(g_sRestartEffect2[]), g_sRestartEffect[iIndex]);
 				kvSuperTanks.GetString("Restart Ability/Ability Message", g_sRestartMessage2[iIndex], sizeof(g_sRestartMessage2[]), g_sRestartMessage[iIndex]);
 				g_flRestartChance2[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Chance", g_flRestartChance[iIndex]);
-				g_flRestartChance2[iIndex] = flClamp(g_flRestartChance2[iIndex], 0.1, 100.0);
+				g_flRestartChance2[iIndex] = flClamp(g_flRestartChance2[iIndex], 0.0, 100.0);
 				g_iRestartHit2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", g_iRestartHit[iIndex]);
 				g_iRestartHit2[iIndex] = iClamp(g_iRestartHit2[iIndex], 0, 1);
 				g_iRestartHitMode2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit Mode", g_iRestartHitMode[iIndex]);
@@ -195,7 +195,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flRestartRange2[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range", g_flRestartRange[iIndex]);
 				g_flRestartRange2[iIndex] = flClamp(g_flRestartRange2[iIndex], 1.0, 9999999999.0);
 				g_flRestartRangeChance2[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range Chance", g_flRestartRangeChance[iIndex]);
-				g_flRestartRangeChance2[iIndex] = flClamp(g_flRestartRangeChance2[iIndex], 0.1, 100.0);
+				g_flRestartRangeChance2[iIndex] = flClamp(g_flRestartRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

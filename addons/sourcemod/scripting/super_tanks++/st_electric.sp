@@ -163,7 +163,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Electric Ability/Ability Effect", g_sElectricEffect[iIndex], sizeof(g_sElectricEffect[]), "0");
 				kvSuperTanks.GetString("Electric Ability/Ability Message", g_sElectricMessage[iIndex], sizeof(g_sElectricMessage[]), "0");
 				g_flElectricChance[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Chance", 33.3);
-				g_flElectricChance[iIndex] = flClamp(g_flElectricChance[iIndex], 0.1, 100.0);
+				g_flElectricChance[iIndex] = flClamp(g_flElectricChance[iIndex], 0.0, 100.0);
 				g_flElectricDamage[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Damage", 1.0);
 				g_flElectricDamage[iIndex] = flClamp(g_flElectricDamage[iIndex], 1.0, 9999999999.0);
 				g_flElectricDuration[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Duration", 5.0);
@@ -177,7 +177,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flElectricRange[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Range", 150.0);
 				g_flElectricRange[iIndex] = flClamp(g_flElectricRange[iIndex], 1.0, 9999999999.0);
 				g_flElectricRangeChance[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Range Chance", 15.0);
-				g_flElectricRangeChance[iIndex] = flClamp(g_flElectricRangeChance[iIndex], 0.1, 100.0);
+				g_flElectricRangeChance[iIndex] = flClamp(g_flElectricRangeChance[iIndex], 0.0, 100.0);
 				g_flElectricSpeed[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Speed", 0.75);
 				g_flElectricSpeed[iIndex] = flClamp(g_flElectricSpeed[iIndex], 0.1, 0.9);
 			}
@@ -190,7 +190,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Electric Ability/Ability Effect", g_sElectricEffect2[iIndex], sizeof(g_sElectricEffect2[]), g_sElectricEffect[iIndex]);
 				kvSuperTanks.GetString("Electric Ability/Ability Message", g_sElectricMessage2[iIndex], sizeof(g_sElectricMessage2[]), g_sElectricMessage[iIndex]);
 				g_flElectricChance2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Chance", g_flElectricChance[iIndex]);
-				g_flElectricChance2[iIndex] = flClamp(g_flElectricChance2[iIndex], 0.1, 100.0);
+				g_flElectricChance2[iIndex] = flClamp(g_flElectricChance2[iIndex], 0.0, 100.0);
 				g_flElectricDamage2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Damage", g_flElectricDamage[iIndex]);
 				g_flElectricDamage2[iIndex] = flClamp(g_flElectricDamage2[iIndex], 1.0, 9999999999.0);
 				g_flElectricDuration2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Duration", g_flElectricDuration[iIndex]);
@@ -204,7 +204,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flElectricRange2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Range", g_flElectricRange[iIndex]);
 				g_flElectricRange2[iIndex] = flClamp(g_flElectricRange2[iIndex], 1.0, 9999999999.0);
 				g_flElectricRangeChance2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Range Chance", g_flElectricRangeChance[iIndex]);
-				g_flElectricRangeChance2[iIndex] = flClamp(g_flElectricRangeChance2[iIndex], 0.1, 100.0);
+				g_flElectricRangeChance2[iIndex] = flClamp(g_flElectricRangeChance2[iIndex], 0.0, 100.0);
 				g_flElectricSpeed2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Speed", g_flElectricSpeed[iIndex]);
 				g_flElectricSpeed2[iIndex] = flClamp(g_flElectricSpeed2[iIndex], 0.1, 0.9);
 			}

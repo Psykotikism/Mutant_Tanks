@@ -191,7 +191,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Invert Ability/Ability Effect", g_sInvertEffect[iIndex], sizeof(g_sInvertEffect[]), "0");
 				kvSuperTanks.GetString("Invert Ability/Ability Message", g_sInvertMessage[iIndex], sizeof(g_sInvertMessage[]), "0");
 				g_flInvertChance[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Chance", 33.3);
-				g_flInvertChance[iIndex] = flClamp(g_flInvertChance[iIndex], 0.1, 100.0);
+				g_flInvertChance[iIndex] = flClamp(g_flInvertChance[iIndex], 0.0, 100.0);
 				g_flInvertDuration[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Duration", 5.0);
 				g_flInvertDuration[iIndex] = flClamp(g_flInvertDuration[iIndex], 0.1, 9999999999.0);
 				g_iInvertHit[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Hit", 0);
@@ -201,7 +201,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flInvertRange[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range", 150.0);
 				g_flInvertRange[iIndex] = flClamp(g_flInvertRange[iIndex], 1.0, 9999999999.0);
 				g_flInvertRangeChance[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range Chance", 15.0);
-				g_flInvertRangeChance[iIndex] = flClamp(g_flInvertRangeChance[iIndex], 0.1, 100.0);
+				g_flInvertRangeChance[iIndex] = flClamp(g_flInvertRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -212,7 +212,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Invert Ability/Ability Effect", g_sInvertEffect2[iIndex], sizeof(g_sInvertEffect2[]), g_sInvertEffect[iIndex]);
 				kvSuperTanks.GetString("Invert Ability/Ability Message", g_sInvertMessage2[iIndex], sizeof(g_sInvertMessage2[]), g_sInvertMessage[iIndex]);
 				g_flInvertChance2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Chance", g_flInvertChance[iIndex]);
-				g_flInvertChance2[iIndex] = flClamp(g_flInvertChance2[iIndex], 0.1, 100.0);
+				g_flInvertChance2[iIndex] = flClamp(g_flInvertChance2[iIndex], 0.0, 100.0);
 				g_flInvertDuration2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Duration", g_flInvertDuration[iIndex]);
 				g_flInvertDuration2[iIndex] = flClamp(g_flInvertDuration2[iIndex], 0.1, 9999999999.0);
 				g_iInvertHit2[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Hit", g_iInvertHit[iIndex]);
@@ -222,7 +222,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flInvertRange2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range", g_flInvertRange[iIndex]);
 				g_flInvertRange2[iIndex] = flClamp(g_flInvertRange2[iIndex], 1.0, 9999999999.0);
 				g_flInvertRangeChance2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range Chance", g_flInvertRangeChance[iIndex]);
-				g_flInvertRangeChance2[iIndex] = flClamp(g_flInvertRangeChance2[iIndex], 0.1, 100.0);
+				g_flInvertRangeChance2[iIndex] = flClamp(g_flInvertRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

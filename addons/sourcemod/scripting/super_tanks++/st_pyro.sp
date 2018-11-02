@@ -192,7 +192,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPyroBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", 1.0);
 				g_flPyroBoost[iIndex] = flClamp(g_flPyroBoost[iIndex], 0.1, 3.0);
 				g_flPyroChance[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Chance", 33.3);
-				g_flPyroChance[iIndex] = flClamp(g_flPyroChance[iIndex], 0.1, 100.0);
+				g_flPyroChance[iIndex] = flClamp(g_flPyroChance[iIndex], 0.0, 100.0);
 				g_flPyroDuration[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Duration", 5.0);
 				g_flPyroDuration[iIndex] = flClamp(g_flPyroDuration[iIndex], 0.1, 9999999999.0);
 				g_iPyroHit[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Pyro Hit", 0);
@@ -204,7 +204,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPyroRange[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Range", 150.0);
 				g_flPyroRange[iIndex] = flClamp(g_flPyroRange[iIndex], 1.0, 9999999999.0);
 				g_flPyroRangeChance[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Range Chance", 15.0);
-				g_flPyroRangeChance[iIndex] = flClamp(g_flPyroRangeChance[iIndex], 0.1, 100.0);
+				g_flPyroRangeChance[iIndex] = flClamp(g_flPyroRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -219,7 +219,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPyroBoost2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", g_flPyroBoost[iIndex]);
 				g_flPyroBoost2[iIndex] = flClamp(g_flPyroBoost2[iIndex], 0.1, 3.0);
 				g_flPyroChance2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Chance", g_flPyroChance[iIndex]);
-				g_flPyroChance2[iIndex] = flClamp(g_flPyroChance2[iIndex], 0.1, 100.0);
+				g_flPyroChance2[iIndex] = flClamp(g_flPyroChance2[iIndex], 0.0, 100.0);
 				g_flPyroDuration2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Duration", g_flPyroDuration[iIndex]);
 				g_flPyroDuration2[iIndex] = flClamp(g_flPyroDuration2[iIndex], 0.1, 9999999999.0);
 				g_iPyroHit2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Pyro Hit", g_iPyroHit[iIndex]);
@@ -231,7 +231,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPyroRange2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Range", g_flPyroRange[iIndex]);
 				g_flPyroRange2[iIndex] = flClamp(g_flPyroRange2[iIndex], 1.0, 9999999999.0);
 				g_flPyroRangeChance2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Range Chance", g_flPyroRangeChance[iIndex]);
-				g_flPyroRangeChance2[iIndex] = flClamp(g_flPyroRangeChance2[iIndex], 0.1, 100.0);
+				g_flPyroRangeChance2[iIndex] = flClamp(g_flPyroRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

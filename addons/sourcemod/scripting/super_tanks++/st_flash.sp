@@ -110,7 +110,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iFlashMessage[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Message", 0);
 				g_iFlashMessage[iIndex] = iClamp(g_iFlashMessage[iIndex], 0, 1);
 				g_flFlashChance[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Chance", 33.3);
-				g_flFlashChance[iIndex] = flClamp(g_flFlashChance[iIndex], 0.1, 100.0);
+				g_flFlashChance[iIndex] = flClamp(g_flFlashChance[iIndex], 0.0, 100.0);
 				g_flFlashDuration[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Duration", 5.0);
 				g_flFlashDuration[iIndex] = flClamp(g_flFlashDuration[iIndex], 0.1, 9999999999.0);
 				g_flFlashInterval[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Interval", 1.0);
@@ -129,7 +129,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iFlashMessage2[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Message", g_iFlashMessage[iIndex]);
 				g_iFlashMessage2[iIndex] = iClamp(g_iFlashMessage2[iIndex], 0, 1);
 				g_flFlashChance2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Chance", g_flFlashChance[iIndex]);
-				g_flFlashChance2[iIndex] = flClamp(g_flFlashChance2[iIndex], 0.1, 100.0);
+				g_flFlashChance2[iIndex] = flClamp(g_flFlashChance2[iIndex], 0.0, 100.0);
 				g_flFlashDuration2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Duration", g_flFlashDuration[iIndex]);
 				g_flFlashDuration2[iIndex] = flClamp(g_flFlashDuration2[iIndex], 0.1, 9999999999.0);
 				g_flFlashInterval2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Interval", g_flFlashInterval[iIndex]);

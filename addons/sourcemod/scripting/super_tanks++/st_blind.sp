@@ -156,7 +156,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Blind Ability/Ability Effect", g_sBlindEffect[iIndex], sizeof(g_sBlindEffect[]), "0");
 				kvSuperTanks.GetString("Blind Ability/Ability Message", g_sBlindMessage[iIndex], sizeof(g_sBlindMessage[]), "0");
 				g_flBlindChance[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Chance", 33.3);
-				g_flBlindChance[iIndex] = flClamp(g_flBlindChance[iIndex], 0.1, 100.0);
+				g_flBlindChance[iIndex] = flClamp(g_flBlindChance[iIndex], 0.0, 100.0);
 				g_flBlindDuration[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Duration", 5.0);
 				g_flBlindDuration[iIndex] = flClamp(g_flBlindDuration[iIndex], 0.1, 9999999999.0);
 				g_iBlindHit[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Hit", 0);
@@ -168,7 +168,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flBlindRange[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range", 150.0);
 				g_flBlindRange[iIndex] = flClamp(g_flBlindRange[iIndex], 1.0, 9999999999.0);
 				g_flBlindRangeChance[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range Chance", 15.0);
-				g_flBlindRangeChance[iIndex] = flClamp(g_flBlindRangeChance[iIndex], 0.1, 100.0);
+				g_flBlindRangeChance[iIndex] = flClamp(g_flBlindRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -179,7 +179,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Blind Ability/Ability Effect", g_sBlindEffect2[iIndex], sizeof(g_sBlindEffect2[]), g_sBlindEffect[iIndex]);
 				kvSuperTanks.GetString("Blind Ability/Ability Message", g_sBlindMessage2[iIndex], sizeof(g_sBlindMessage2[]), g_sBlindMessage[iIndex]);
 				g_flBlindChance2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Chance", g_flBlindChance[iIndex]);
-				g_flBlindChance2[iIndex] = flClamp(g_flBlindChance2[iIndex], 0.1, 100.0);
+				g_flBlindChance2[iIndex] = flClamp(g_flBlindChance2[iIndex], 0.0, 100.0);
 				g_flBlindDuration2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Duration", g_flBlindDuration[iIndex]);
 				g_flBlindDuration2[iIndex] = flClamp(g_flBlindDuration2[iIndex], 0.1, 9999999999.0);
 				g_iBlindHit2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Hit", g_iBlindHit[iIndex]);
@@ -191,7 +191,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flBlindRange2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range", g_flBlindRange[iIndex]);
 				g_flBlindRange2[iIndex] = flClamp(g_flBlindRange2[iIndex], 1.0, 9999999999.0);
 				g_flBlindRangeChance2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range Chance", g_flBlindRangeChance[iIndex]);
-				g_flBlindRangeChance2[iIndex] = flClamp(g_flBlindRangeChance2[iIndex], 0.1, 100.0);
+				g_flBlindRangeChance2[iIndex] = flClamp(g_flBlindRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

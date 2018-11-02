@@ -98,7 +98,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRespawnAmount[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", 1);
 				g_iRespawnAmount[iIndex] = iClamp(g_iRespawnAmount[iIndex], 1, 9999999999);
 				g_flRespawnChance[iIndex] = kvSuperTanks.GetFloat("Respawn Ability/Respawn Chance", 33.3);
-				g_flRespawnChance[iIndex] = flClamp(g_flRespawnChance[iIndex], 0.1, 100.0);
+				g_flRespawnChance[iIndex] = flClamp(g_flRespawnChance[iIndex], 0.0, 100.0);
 				g_iRespawnMode[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Mode", 0);
 				g_iRespawnMode[iIndex] = iClamp(g_iRespawnMode[iIndex], 0, 2);
 				g_iRespawnType[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Type", 0);
@@ -117,7 +117,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRespawnAmount2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", g_iRespawnAmount[iIndex]);
 				g_iRespawnAmount2[iIndex] = iClamp(g_iRespawnAmount2[iIndex], 1, 9999999999);
 				g_flRespawnChance2[iIndex] = kvSuperTanks.GetFloat("Respawn Ability/Respawn Chance", g_flRespawnChance[iIndex]);
-				g_flRespawnChance2[iIndex] = flClamp(g_flRespawnChance2[iIndex], 0.1, 100.0);
+				g_flRespawnChance2[iIndex] = flClamp(g_flRespawnChance2[iIndex], 0.0, 100.0);
 				g_iRespawnMode2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Mode", g_iRespawnMode[iIndex]);
 				g_iRespawnMode2[iIndex] = iClamp(g_iRespawnMode2[iIndex], 0, 2);
 				g_iRespawnType2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Type", g_iRespawnType[iIndex]);

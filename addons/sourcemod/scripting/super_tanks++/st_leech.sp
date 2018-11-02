@@ -152,7 +152,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Leech Ability/Ability Effect", g_sLeechEffect[iIndex], sizeof(g_sLeechEffect[]), "0");
 				kvSuperTanks.GetString("Leech Ability/Ability Message", g_sLeechMessage[iIndex], sizeof(g_sLeechMessage[]), "0");
 				g_flLeechChance[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Chance", 33.3);
-				g_flLeechChance[iIndex] = flClamp(g_flLeechChance[iIndex], 0.1, 100.0);
+				g_flLeechChance[iIndex] = flClamp(g_flLeechChance[iIndex], 0.0, 100.0);
 				g_flLeechDuration[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Duration", 5.0);
 				g_flLeechDuration[iIndex] = flClamp(g_flLeechDuration[iIndex], 0.1, 9999999999.0);
 				g_iLeechHit[iIndex] = kvSuperTanks.GetNum("Leech Ability/Leech Hit", 0);
@@ -164,7 +164,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flLeechRange[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Range", 150.0);
 				g_flLeechRange[iIndex] = flClamp(g_flLeechRange[iIndex], 1.0, 9999999999.0);
 				g_flLeechRangeChance[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Range Chance", 15.0);
-				g_flLeechRangeChance[iIndex] = flClamp(g_flLeechRangeChance[iIndex], 0.1, 100.0);
+				g_flLeechRangeChance[iIndex] = flClamp(g_flLeechRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -175,7 +175,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Leech Ability/Ability Effect", g_sLeechEffect2[iIndex], sizeof(g_sLeechEffect2[]), g_sLeechEffect[iIndex]);
 				kvSuperTanks.GetString("Leech Ability/Ability Message", g_sLeechMessage2[iIndex], sizeof(g_sLeechMessage2[]), g_sLeechMessage[iIndex]);
 				g_flLeechChance2[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Chance", g_flLeechChance[iIndex]);
-				g_flLeechChance2[iIndex] = flClamp(g_flLeechChance2[iIndex], 0.1, 100.0);
+				g_flLeechChance2[iIndex] = flClamp(g_flLeechChance2[iIndex], 0.0, 100.0);
 				g_flLeechDuration2[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Duration", g_flLeechDuration[iIndex]);
 				g_flLeechDuration2[iIndex] = flClamp(g_flLeechDuration2[iIndex], 0.1, 9999999999.0);
 				g_iLeechHit2[iIndex] = kvSuperTanks.GetNum("Leech Ability/Leech Hit", g_iLeechHit[iIndex]);
@@ -187,7 +187,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flLeechRange2[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Range", g_flLeechRange[iIndex]);
 				g_flLeechRange2[iIndex] = flClamp(g_flLeechRange2[iIndex], 1.0, 9999999999.0);
 				g_flLeechRangeChance2[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Range Chance", g_flLeechRangeChance[iIndex]);
-				g_flLeechRangeChance2[iIndex] = flClamp(g_flLeechRangeChance2[iIndex], 0.1, 100.0);
+				g_flLeechRangeChance2[iIndex] = flClamp(g_flLeechRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

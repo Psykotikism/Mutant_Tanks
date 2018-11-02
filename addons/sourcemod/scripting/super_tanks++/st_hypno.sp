@@ -207,7 +207,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flHypnoBulletDivisor[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Bullet Divisor", 20.0);
 				g_flHypnoBulletDivisor[iIndex] = flClamp(g_flHypnoBulletDivisor[iIndex], 0.1, 9999999999.0);
 				g_flHypnoChance[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Chance", 33.3);
-				g_flHypnoChance[iIndex] = flClamp(g_flHypnoChance[iIndex], 0.1, 100.0);
+				g_flHypnoChance[iIndex] = flClamp(g_flHypnoChance[iIndex], 0.0, 100.0);
 				g_flHypnoDuration[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Duration", 5.0);
 				g_flHypnoDuration[iIndex] = flClamp(g_flHypnoDuration[iIndex], 0.1, 9999999999.0);
 				g_flHypnoExplosiveDivisor[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Explosive Divisor", 20.0);
@@ -225,7 +225,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flHypnoRange[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range", 150.0);
 				g_flHypnoRange[iIndex] = flClamp(g_flHypnoRange[iIndex], 1.0, 9999999999.0);
 				g_flHypnoRangeChance[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range Chance", 15.0);
-				g_flHypnoRangeChance[iIndex] = flClamp(g_flHypnoRangeChance[iIndex], 0.1, 100.0);
+				g_flHypnoRangeChance[iIndex] = flClamp(g_flHypnoRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -238,7 +238,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flHypnoBulletDivisor2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Bullet Divisor", g_flHypnoBulletDivisor[iIndex]);
 				g_flHypnoBulletDivisor2[iIndex] = flClamp(g_flHypnoBulletDivisor2[iIndex], 0.1, 9999999999.0);
 				g_flHypnoChance2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Chance", g_flHypnoChance[iIndex]);
-				g_flHypnoChance2[iIndex] = flClamp(g_flHypnoChance2[iIndex], 0.1, 100.0);
+				g_flHypnoChance2[iIndex] = flClamp(g_flHypnoChance2[iIndex], 0.0, 100.0);
 				g_flHypnoDuration2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Duration", g_flHypnoDuration[iIndex]);
 				g_flHypnoDuration2[iIndex] = flClamp(g_flHypnoDuration2[iIndex], 0.1, 9999999999.0);
 				g_flHypnoExplosiveDivisor2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Explosive Divisor", g_flHypnoExplosiveDivisor[iIndex]);
@@ -256,7 +256,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flHypnoRange2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range", g_flHypnoRange[iIndex]);
 				g_flHypnoRange2[iIndex] = flClamp(g_flHypnoRange2[iIndex], 1.0, 9999999999.0);
 				g_flHypnoRangeChance2[iIndex] = kvSuperTanks.GetFloat("Hypno Ability/Hypno Range Chance", g_flHypnoRangeChance[iIndex]);
-				g_flHypnoRangeChance2[iIndex] = flClamp(g_flHypnoRangeChance2[iIndex], 0.1, 100.0);
+				g_flHypnoRangeChance2[iIndex] = flClamp(g_flHypnoRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

@@ -164,7 +164,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iShieldMessage[iIndex] = iClamp(g_iShieldMessage[iIndex], 0, 1);
 				kvSuperTanks.GetString("Shield Ability/Shield Color", g_sShieldColor[iIndex], sizeof(g_sShieldColor[]), "255,255,255");
 				g_flShieldChance[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Chance", 33.3);
-				g_flShieldChance[iIndex] = flClamp(g_flShieldChance[iIndex], 0.1, 100.0);
+				g_flShieldChance[iIndex] = flClamp(g_flShieldChance[iIndex], 0.0, 100.0);
 				g_flShieldDelay[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", 5.0);
 				g_flShieldDelay[iIndex] = flClamp(g_flShieldDelay[iIndex], 0.1, 9999999999.0);
 			}
@@ -178,7 +178,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iShieldMessage2[iIndex] = iClamp(g_iShieldMessage2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Shield Ability/Shield Color", g_sShieldColor2[iIndex], sizeof(g_sShieldColor2[]), g_sShieldColor[iIndex]);
 				g_flShieldChance2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Chance", g_flShieldChance[iIndex]);
-				g_flShieldChance2[iIndex] = flClamp(g_flShieldChance2[iIndex], 0.1, 100.0);
+				g_flShieldChance2[iIndex] = flClamp(g_flShieldChance2[iIndex], 0.0, 100.0);
 				g_flShieldDelay2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", g_flShieldDelay[iIndex]);
 				g_flShieldDelay2[iIndex] = flClamp(g_flShieldDelay2[iIndex], 0.1, 9999999999.0);
 			}

@@ -152,7 +152,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Hurt Ability/Ability Effect", g_sHurtEffect[iIndex], sizeof(g_sHurtEffect[]), "0");
 				kvSuperTanks.GetString("Hurt Ability/Ability Message", g_sHurtMessage[iIndex], sizeof(g_sHurtMessage[]), "0");
 				g_flHurtChance[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Chance", 33.3);
-				g_flHurtChance[iIndex] = flClamp(g_flHurtChance[iIndex], 0.1, 100.0);
+				g_flHurtChance[iIndex] = flClamp(g_flHurtChance[iIndex], 0.0, 100.0);
 				g_flHurtDamage[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Damage", 5.0);
 				g_flHurtDamage[iIndex] = flClamp(g_flHurtDamage[iIndex], 1.0, 9999999999.0);
 				g_flHurtDuration[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Duration", 5.0);
@@ -166,7 +166,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flHurtRange[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Range", 150.0);
 				g_flHurtRange[iIndex] = flClamp(g_flHurtRange[iIndex], 1.0, 9999999999.0);
 				g_flHurtRangeChance[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Range Chance", 15.0);
-				g_flHurtRangeChance[iIndex] = flClamp(g_flHurtRangeChance[iIndex], 0.1, 100.0);
+				g_flHurtRangeChance[iIndex] = flClamp(g_flHurtRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -177,7 +177,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Hurt Ability/Ability Effect", g_sHurtEffect2[iIndex], sizeof(g_sHurtEffect2[]), g_sHurtEffect[iIndex]);
 				kvSuperTanks.GetString("Hurt Ability/Ability Message", g_sHurtMessage2[iIndex], sizeof(g_sHurtMessage2[]), g_sHurtMessage[iIndex]);
 				g_flHurtChance2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Chance", g_flHurtChance[iIndex]);
-				g_flHurtChance2[iIndex] = flClamp(g_flHurtChance2[iIndex], 0.1, 100.0);
+				g_flHurtChance2[iIndex] = flClamp(g_flHurtChance2[iIndex], 0.0, 100.0);
 				g_flHurtDamage2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Damage", g_flHurtDamage[iIndex]);
 				g_flHurtDamage2[iIndex] = flClamp(g_flHurtDamage2[iIndex], 1.0, 9999999999.0);
 				g_flHurtDuration2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Duration", g_flHurtDuration[iIndex]);
@@ -191,7 +191,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flHurtRange2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Range", g_flHurtRange[iIndex]);
 				g_flHurtRange2[iIndex] = flClamp(g_flHurtRange2[iIndex], 1.0, 9999999999.0);
 				g_flHurtRangeChance2[iIndex] = kvSuperTanks.GetFloat("Hurt Ability/Hurt Range Chance", g_flHurtRangeChance[iIndex]);
-				g_flHurtRangeChance2[iIndex] = flClamp(g_flHurtRangeChance2[iIndex], 0.1, 100.0);
+				g_flHurtRangeChance2[iIndex] = flClamp(g_flHurtRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

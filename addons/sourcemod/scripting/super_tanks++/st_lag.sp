@@ -153,7 +153,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Lag Ability/Ability Effect", g_sLagEffect[iIndex], sizeof(g_sLagEffect[]), "0");
 				kvSuperTanks.GetString("Lag Ability/Ability Message", g_sLagMessage[iIndex], sizeof(g_sLagMessage[]), "0");
 				g_flLagChance[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Chance", 33.3);
-				g_flLagChance[iIndex] = flClamp(g_flLagChance[iIndex], 0.1, 100.0);
+				g_flLagChance[iIndex] = flClamp(g_flLagChance[iIndex], 0.0, 100.0);
 				g_flLagDuration[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Duration", 5.0);
 				g_flLagDuration[iIndex] = flClamp(g_flLagDuration[iIndex], 0.1, 9999999999.0);
 				g_iLagHit[iIndex] = kvSuperTanks.GetNum("Lag Ability/Lag Hit", 0);
@@ -163,7 +163,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flLagRange[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Range", 150.0);
 				g_flLagRange[iIndex] = flClamp(g_flLagRange[iIndex], 1.0, 9999999999.0);
 				g_flLagRangeChance[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Range Chance", 15.0);
-				g_flLagRangeChance[iIndex] = flClamp(g_flLagRangeChance[iIndex], 0.1, 100.0);
+				g_flLagRangeChance[iIndex] = flClamp(g_flLagRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -174,7 +174,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Lag Ability/Ability Effect", g_sLagEffect2[iIndex], sizeof(g_sLagEffect2[]), g_sLagEffect[iIndex]);
 				kvSuperTanks.GetString("Lag Ability/Ability Message", g_sLagMessage2[iIndex], sizeof(g_sLagMessage2[]), g_sLagMessage[iIndex]);
 				g_flLagChance2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Chance", g_flLagChance[iIndex]);
-				g_flLagChance2[iIndex] = flClamp(g_flLagChance2[iIndex], 0.1, 100.0);
+				g_flLagChance2[iIndex] = flClamp(g_flLagChance2[iIndex], 0.0, 100.0);
 				g_flLagDuration2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Duration", g_flLagDuration[iIndex]);
 				g_flLagDuration2[iIndex] = flClamp(g_flLagDuration2[iIndex], 0.1, 9999999999.0);
 				g_iLagHit2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Lag Hit", g_iLagHit[iIndex]);
@@ -184,7 +184,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flLagRange2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Range", g_flLagRange[iIndex]);
 				g_flLagRange2[iIndex] = flClamp(g_flLagRange2[iIndex], 1.0, 9999999999.0);
 				g_flLagRangeChance2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Range Chance", g_flLagRangeChance[iIndex]);
-				g_flLagRangeChance2[iIndex] = flClamp(g_flLagRangeChance2[iIndex], 0.1, 100.0);
+				g_flLagRangeChance2[iIndex] = flClamp(g_flLagRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

@@ -157,7 +157,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Drug Ability/Ability Effect", g_sDrugEffect[iIndex], sizeof(g_sDrugEffect[]), "0");
 				kvSuperTanks.GetString("Drug Ability/Ability Message", g_sDrugMessage[iIndex], sizeof(g_sDrugMessage[]), "0");
 				g_flDrugChance[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Chance", 33.3);
-				g_flDrugChance[iIndex] = flClamp(g_flDrugChance[iIndex], 0.1, 100.0);
+				g_flDrugChance[iIndex] = flClamp(g_flDrugChance[iIndex], 0.0, 100.0);
 				g_flDrugDuration[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Duration", 5.0);
 				g_flDrugDuration[iIndex] = flClamp(g_flDrugDuration[iIndex], 0.1, 9999999999.0);
 				g_iDrugHit[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Hit", 0);
@@ -169,7 +169,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flDrugRange[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range", 150.0);
 				g_flDrugRange[iIndex] = flClamp(g_flDrugRange[iIndex], 1.0, 9999999999.0);
 				g_flDrugRangeChance[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range Chance", 15.0);
-				g_flDrugRangeChance[iIndex] = flClamp(g_flDrugRangeChance[iIndex], 0.1, 100.0);
+				g_flDrugRangeChance[iIndex] = flClamp(g_flDrugRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -180,7 +180,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Drug Ability/Ability Effect", g_sDrugEffect2[iIndex], sizeof(g_sDrugEffect2[]), g_sDrugEffect[iIndex]);
 				kvSuperTanks.GetString("Drug Ability/Ability Message", g_sDrugMessage2[iIndex], sizeof(g_sDrugMessage2[]), g_sDrugMessage[iIndex]);
 				g_flDrugChance2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Chance", g_flDrugChance[iIndex]);
-				g_flDrugChance2[iIndex] = flClamp(g_flDrugChance2[iIndex], 0.1, 100.0);
+				g_flDrugChance2[iIndex] = flClamp(g_flDrugChance2[iIndex], 0.0, 100.0);
 				g_flDrugDuration2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Duration", g_flDrugDuration[iIndex]);
 				g_flDrugDuration2[iIndex] = flClamp(g_flDrugDuration2[iIndex], 0.1, 9999999999.0);
 				g_iDrugHit2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Hit", g_iDrugHit[iIndex]);
@@ -192,7 +192,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flDrugRange2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range", g_flDrugRange[iIndex]);
 				g_flDrugRange2[iIndex] = flClamp(g_flDrugRange2[iIndex], 1.0, 9999999999.0);
 				g_flDrugRangeChance2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range Chance", g_flDrugRangeChance[iIndex]);
-				g_flDrugRangeChance2[iIndex] = flClamp(g_flDrugRangeChance2[iIndex], 0.1, 100.0);
+				g_flDrugRangeChance2[iIndex] = flClamp(g_flDrugRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();

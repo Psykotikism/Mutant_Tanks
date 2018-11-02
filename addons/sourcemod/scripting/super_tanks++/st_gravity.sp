@@ -154,7 +154,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect[iIndex], sizeof(g_sGravityEffect[]), "0");
 				kvSuperTanks.GetString("Gravity Ability/Ability Message", g_sGravityMessage[iIndex], sizeof(g_sGravityMessage[]), "0");
 				g_flGravityChance[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Chance", 33.3);
-				g_flGravityChance[iIndex] = flClamp(g_flGravityChance[iIndex], 0.1, 100.0);
+				g_flGravityChance[iIndex] = flClamp(g_flGravityChance[iIndex], 0.0, 100.0);
 				g_flGravityDuration[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", 5.0);
 				g_flGravityDuration[iIndex] = flClamp(g_flGravityDuration[iIndex], 0.1, 9999999999.0);
 				g_flGravityForce[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", -50.0);
@@ -166,7 +166,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flGravityRange[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", 150.0);
 				g_flGravityRange[iIndex] = flClamp(g_flGravityRange[iIndex], 1.0, 9999999999.0);
 				g_flGravityRangeChance[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range Chance", 15.0);
-				g_flGravityRangeChance[iIndex] = flClamp(g_flGravityRangeChance[iIndex], 0.1, 100.0);
+				g_flGravityRangeChance[iIndex] = flClamp(g_flGravityRangeChance[iIndex], 0.0, 100.0);
 				g_flGravityValue[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", 0.3);
 				g_flGravityValue[iIndex] = flClamp(g_flGravityValue[iIndex], 0.1, 9999999999.0);
 			}
@@ -179,7 +179,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect2[iIndex], sizeof(g_sGravityEffect2[]), g_sGravityEffect[iIndex]);
 				kvSuperTanks.GetString("Gravity Ability/Ability Message", g_sGravityMessage2[iIndex], sizeof(g_sGravityMessage2[]), g_sGravityMessage[iIndex]);
 				g_flGravityChance2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Chance", g_flGravityChance[iIndex]);
-				g_flGravityChance2[iIndex] = flClamp(g_flGravityChance2[iIndex], 0.1, 100.0);
+				g_flGravityChance2[iIndex] = flClamp(g_flGravityChance2[iIndex], 0.0, 100.0);
 				g_flGravityDuration2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", g_flGravityDuration[iIndex]);
 				g_flGravityDuration2[iIndex] = flClamp(g_flGravityDuration2[iIndex], 0.1, 9999999999.0);
 				g_flGravityForce2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", g_flGravityForce[iIndex]);
@@ -191,7 +191,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flGravityRange2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", g_flGravityRange[iIndex]);
 				g_flGravityRange2[iIndex] = flClamp(g_flGravityRange2[iIndex], 1.0, 9999999999.0);
 				g_flGravityRangeChance2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range Chance", g_flGravityRangeChance[iIndex]);
-				g_flGravityRangeChance2[iIndex] = flClamp(g_flGravityRangeChance2[iIndex], 0.1, 100.0);
+				g_flGravityRangeChance2[iIndex] = flClamp(g_flGravityRangeChance2[iIndex], 0.0, 100.0);
 				g_flGravityValue2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", g_flGravityValue[iIndex]);
 				g_flGravityValue2[iIndex] = flClamp(g_flGravityValue2[iIndex], 0.1, 9999999999.0);
 			}
