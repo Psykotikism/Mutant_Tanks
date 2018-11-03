@@ -205,6 +205,7 @@
 			"Tank Enabled"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to spawn.
+			// Note: Clones, respawned Super Tanks, randomized Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -243,13 +244,14 @@
 		"Spawn"
 		{
 			// The number of Super Tanks with this type that can be alive at any given time.
-			// Note: Clones, respawned Super Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
+			// Note: Clones, respawned Super Tanks, randomized Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
 			// Minimum: 0
 			// Maximum: 9999999999
 			"Type Limit"				"32"
 
 			// The Super Tank will only spawn on finale maps.
+			// Note: Clones, respawned Super Tanks, randomized Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
 			// 0: OFF
 			// 1: ON
