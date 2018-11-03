@@ -198,8 +198,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to spawn.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Tank Chance"				"100.0"
 
@@ -352,8 +351,7 @@
 			// Chances limit: 6
 			// Character limit for each chance: 6
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum value for each chance: 0.1 (Lowest chance)
+			// Minimum value for each chance: 0.0 (No chance)
 			// Maximum value for each chance: 100.0 (Highest chance)
 			// --
 			// 1st number = Chance for a blur effect to appear.
@@ -530,8 +528,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Absorb Chance"				"33.3"
 
@@ -621,8 +618,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Acid Chance"				"33.3"
 
@@ -648,8 +644,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Acid Range Chance"			"15.0"
 
@@ -713,8 +708,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Aimless Chance"			"33.3"
 
@@ -745,8 +739,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Aimless Range Chance"			"15.0"
 		}
@@ -802,8 +795,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ammo Chance"				"33.3"
 
@@ -835,8 +827,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ammo Range Chance"			"15.0"
 		}
@@ -892,8 +883,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Blind Chance"				"33.3"
 
@@ -931,8 +921,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Blind Range Chance"			"15.0"
 		}
@@ -989,8 +978,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Bomb Chance"				"33.3"
 
@@ -1016,8 +1004,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Bomb Range Chance"			"15.0"
 
@@ -1080,8 +1067,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Bury Chance"				"33.3"
 
@@ -1119,8 +1105,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Bury Range Chance"			"15.0"
 		}
@@ -1176,8 +1161,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Choke Chance"				"33.3"
 
@@ -1226,8 +1210,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Choke Range Chance"			"15.0"
 		}
@@ -1266,8 +1249,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Clone Chance"				"33.3"
 
@@ -1319,8 +1301,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Cloud Chance"				"33.3"
 
@@ -1359,15 +1340,13 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drop Chance"				"33.3"
 
 			// The Super Tank has this many chances out of 100.0% to drop guns with a full clip.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drop Clip Chance"			"33.3"
 
@@ -1437,8 +1416,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drug Chance"				"33.3"
 
@@ -1476,8 +1454,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drug Range Chance"			"15.0"
 		}
@@ -1533,8 +1510,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drunk Chance"				"33.3"
 
@@ -1565,8 +1541,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drunk Range Chance"			"15.0"
 
@@ -1634,8 +1609,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Electric Chance"			"33.3"
 
@@ -1679,8 +1653,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Electric Range Chance"			"15.0"
 
@@ -1742,8 +1715,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Enforce Chance"			"33.3"
 
@@ -1775,8 +1747,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Enforce Range Chance"			"15.0"
 
@@ -1844,8 +1815,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fire Chance"				"33.3"
 
@@ -1871,8 +1841,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fire Range Chance"			"15.0"
 
@@ -1912,8 +1881,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Flash Chance"				"33.3"
 
@@ -1987,8 +1955,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fling Chance"				"33.3"
 
@@ -2014,8 +1981,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fling Range Chance"			"15.0"
 		}
@@ -2057,8 +2023,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fragile Chance"			"33.3"
 
@@ -2155,8 +2120,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ghost Chance"				"33.3"
 
@@ -2207,8 +2171,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ghost Range Chance"			"15.0"
 
@@ -2252,8 +2215,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"God Chance"				"33.3"
 
@@ -2320,8 +2282,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Gravity Chance"			"33.3"
 
@@ -2362,8 +2323,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Gravity Range Chance"			"15.0"
 
@@ -2443,8 +2403,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Heal Chance"				"33.3"
 
@@ -2476,8 +2435,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Heal Range Chance"			"15.0"
 
@@ -2560,8 +2518,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Hurt Chance"				"33.3"
 
@@ -2605,8 +2562,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Hurt Range Chance"			"15.0"
 		}
@@ -2671,8 +2627,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Hypno Chance"				"33.3"
 
@@ -2737,8 +2692,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Hypno Range Chance"			"15.0"
 		}
@@ -2794,8 +2748,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ice Chance"				"33.3"
 
@@ -2827,8 +2780,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ice Range Chance"			"15.0"
 		}
@@ -2884,8 +2836,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Idle Chance"				"33.3"
 
@@ -2911,8 +2862,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Idle Range Chance"			"15.0"
 		}
@@ -2968,8 +2918,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Invert Chance"				"33.3"
 
@@ -3000,8 +2949,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Invert Range Chance"			"15.0"
 		}
@@ -3034,8 +2982,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Item Chance"				"33.3"
 
@@ -3114,8 +3061,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Jump Chance"				"33.3"
 
@@ -3165,16 +3111,14 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Jump Range Chance"			"15.0"
 
 			// The Super Tank has this many chances out of 100.0% to jump sporadically.
 			// Note: This setting only applies if the "Jump Mode" setting is set to 1.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Jump Sporadic Chance"			"33.3"
 
@@ -3237,8 +3181,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Kamikaze Chance"			"33.3"
 
@@ -3264,8 +3207,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Kamikaze Range Chance"			"15.0"
 		}
@@ -3321,8 +3263,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Lag Chance"				"33.3"
 
@@ -3353,8 +3294,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Lag Range Chance"			"15.0"
 		}
@@ -3410,8 +3350,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Leech Chance"				"33.3"
 
@@ -3449,8 +3388,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Leech Range Chance"			"15.0"
 		}
@@ -3483,8 +3421,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Medic Chance"				"33.3"
 
@@ -3553,8 +3490,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Meteor Chance"				"33.3"
 
@@ -3617,8 +3553,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Minion Chance"				"33.3"
 
@@ -3670,8 +3605,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Necro Chance"				"33.3"
 
@@ -3733,8 +3667,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Nullify Chance"			"33.3"
 
@@ -3765,8 +3698,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Nullify Range Chance"			"15.0"
 		}
@@ -3827,8 +3759,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Panic Chance"				"33.3"
 
@@ -3860,8 +3791,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Panic Range Chance"			"15.0"
 		}
@@ -3923,8 +3853,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pimp Chance"				"33.3"
 
@@ -3962,8 +3891,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pimp Range Chance"			"15.0"
 		}
@@ -4019,8 +3947,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Puke Chance"				"33.3"
 
@@ -4046,8 +3973,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Puke Range Chance"			"15.0"
 		}
@@ -4113,8 +4039,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pyro Chance"				"33.3"
 
@@ -4152,8 +4077,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pyro Range Chance"			"15.0"
 		}
@@ -4209,8 +4133,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Quiet Chance"				"33.3"
 
@@ -4242,8 +4165,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Quiet Range Chance"			"15.0"
 		}
@@ -4299,8 +4221,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Recoil Chance"				"33.3"
 
@@ -4331,8 +4252,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Recoil Range Chance"			"15.0"
 		}
@@ -4365,8 +4285,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Regen Chance"				"33.3"
 
@@ -4430,8 +4349,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Respawn Chance"			"33.3"
 
@@ -4500,8 +4418,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Restart Chance"			"33.3"
 
@@ -4541,8 +4458,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Restart Range Chance"			"15.0"
 		}
@@ -4575,8 +4491,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Rock Chance"				"33.3"
 
@@ -4655,8 +4570,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Rocket Chance"				"33.3"
 
@@ -4687,8 +4601,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Rocket Range Chance"			"15.0"
 		}
@@ -4744,8 +4657,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shake Chance"				"33.3"
 
@@ -4783,8 +4695,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shake Range Chance"			"15.0"
 		}
@@ -4817,8 +4728,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shield Chance"				"33.3"
 
@@ -4890,8 +4800,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shove Chance"				"33.3"
 
@@ -4929,8 +4838,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shove Range Chance"			"15.0"
 		}
@@ -4986,8 +4894,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Smash Chance"				"33.3"
 
@@ -5013,8 +4920,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Smash Range Chance"			"15.0"
 		}
@@ -5070,8 +4976,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Smite Chance"				"33.3"
 
@@ -5097,8 +5002,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Smite Range Chance"			"15.0"
 		}
@@ -5131,8 +5035,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Spam Chance"				"33.3"
 
@@ -5177,8 +5080,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Splash Chance"				"33.3"
 
@@ -5252,8 +5154,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Stun Chance"				"33.3"
 
@@ -5285,8 +5186,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Stun Range Chance"			"15.0"
 
@@ -5345,8 +5245,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Throw Chance"				"33.3"
 
@@ -5393,8 +5292,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Track Chance"				"33.3"
 
@@ -5464,8 +5362,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Vampire Chance"			"33.3"
 
@@ -5502,8 +5399,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Vampire Range Chance"			"15.0"
 		}
@@ -5559,8 +5455,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Vision Chance"				"33.3"
 
@@ -5598,8 +5493,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Vision Range Chance"			"15.0"
 		}
@@ -5661,8 +5555,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Warp Chance"				"33.3"
 
@@ -5700,8 +5593,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Warp Range Chance"			"15.0"
 		}
@@ -5768,8 +5660,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Whirl Chance"				"33.3"
 
@@ -5801,8 +5692,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Whirl Range Chance"			"15.0"
 
@@ -5847,8 +5737,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Witch Chance"				"33.3"
 
@@ -5927,8 +5816,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Zombie Chance"				"33.3"
 
@@ -5960,8 +5848,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// OFF: 0.0 (No chance)
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Zombie Range Chance"			"15.0"
 		}

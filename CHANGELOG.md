@@ -2,14 +2,11 @@
 
 ## Version 8.46 (TBA)
 
-Bug fixes:
-
-1. Fixed all Chance settings not accepting 0.0% as a value.
-
 Changes:
 
 1. Added new target filters: @special, @infected
 2. The "Ability Effect" settings are now disabled by default.
+3. All Chance settings now accept 0.0% as a valid value.
 
 Files:
 
