@@ -378,7 +378,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 	convar.GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
 
-	if (!StrEqual(enabled, ""))
+	if (enabled[0] != '\0')
 	{
 		Format(sGameModes, sizeof(sGameModes), ",%s,", enabled);
 		if (StrContains(sGameModes, sGameMode, false) == -1)
@@ -387,7 +387,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 		}
 	}
 
-	if (!StrEqual(disabled, ""))
+	if (disabled[0] != '\0')
 	{
 		Format(sGameModes, sizeof(sGameModes), ",%s,", disabled);
 		if (StrContains(sGameModes, sGameMode, false) != -1)
@@ -1011,14 +1011,14 @@ stock void vEffect(int survivor, int tank, const char[] enabled, const char[] mo
 		char sRGB[4][4];
 		ST_TankColors(tank, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
 
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
+		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+		iRed = (iRed < 0 || iRed > 255) ? GetRandomInt(0, 255) : iRed;
 
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
+		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+		iGreen = (iGreen < 0 || iGreen > 255) ? GetRandomInt(0, 255) : iGreen;
 
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
+		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+		iBlue = (iBlue < 0 || iBlue > 255) ? GetRandomInt(0, 255) : iBlue;
 
 		Handle hFadeTarget = StartMessageOne("Fade", survivor);
 		if (hFadeTarget != null)

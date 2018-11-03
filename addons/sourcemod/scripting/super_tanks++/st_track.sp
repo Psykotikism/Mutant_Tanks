@@ -34,8 +34,6 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
-
 float g_flTrackChance[ST_MAXTYPES + 1], g_flTrackChance2[ST_MAXTYPES + 1], g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
 
 int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
@@ -104,7 +102,6 @@ public void ST_Configs(const char[] savepath, bool main)
 			{
 				g_bTankConfig[iIndex] = false;
 
-				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255");
 				g_iGlowOutline[iIndex] = kvSuperTanks.GetNum("General/Glow Outline", 1);
 				g_iGlowOutline[iIndex] = iClamp(g_iGlowOutline[iIndex], 0, 1);
 				g_iTrackAbility[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", 0);
@@ -122,7 +119,6 @@ public void ST_Configs(const char[] savepath, bool main)
 			{
 				g_bTankConfig[iIndex] = true;
 
-				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]);
 				g_iGlowOutline2[iIndex] = kvSuperTanks.GetNum("General/Glow Outline", g_iGlowOutline[iIndex]);
 				g_iGlowOutline2[iIndex] = iClamp(g_iGlowOutline2[iIndex], 0, 1);
 				g_iTrackAbility2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", g_iTrackAbility[iIndex]);
@@ -427,21 +423,17 @@ static void vTrack(int rock)
 			SetEntityGravity(rock, 0.01);
 			TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 
-			char sSet[2][16], sTankColors[28], sGlow[3][4];
-			sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
-			ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
-			ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
+			char sRGB[4][4];
+			ST_TankColors(iTank, 2, sRGB[0], sRGB[1], sRGB[2]);
 
-			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
+			int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
+			iRed = (iRed < 0 || iRed > 255) ? GetRandomInt(0, 255) : iRed;
 
-			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
-			iRed = iClamp(iRed, 0, 255);
+			int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
+			iGreen = (iGreen < 0 || iGreen > 255) ? GetRandomInt(0, 255) : iGreen;
 
-			int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
-			iGreen = iClamp(iGreen, 0, 255);
-
-			int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
-			iBlue = iClamp(iBlue, 0, 255);
+			int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
+			iBlue = (iBlue < 0 || iBlue > 255) ? GetRandomInt(0, 255) : iBlue;
 
 			int iGlowOutline = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowOutline[ST_TankType(iTank)] : g_iGlowOutline2[ST_TankType(iTank)];
 			if (iGlowOutline == 1 && bIsValidGame())

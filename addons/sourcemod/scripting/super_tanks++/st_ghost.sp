@@ -42,7 +42,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bGhost[MAXPLAYERS + 1], g_bGhost2[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sGhostEffect[ST_MAXTYPES + 1][4], g_sGhostEffect2[ST_MAXTYPES + 1][4], g_sGhostMessage[ST_MAXTYPES + 1][4], g_sGhostMessage2[ST_MAXTYPES + 1][4], g_sGhostWeaponSlots[ST_MAXTYPES + 1][6], g_sGhostWeaponSlots2[ST_MAXTYPES + 1][6], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
+char g_sGhostEffect[ST_MAXTYPES + 1][4], g_sGhostEffect2[ST_MAXTYPES + 1][4], g_sGhostMessage[ST_MAXTYPES + 1][4], g_sGhostMessage2[ST_MAXTYPES + 1][4], g_sGhostWeaponSlots[ST_MAXTYPES + 1][6], g_sGhostWeaponSlots2[ST_MAXTYPES + 1][6], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80];
 
 float g_flGhostChance[ST_MAXTYPES + 1], g_flGhostChance2[ST_MAXTYPES + 1], g_flGhostFadeDelay[ST_MAXTYPES + 1], g_flGhostFadeDelay2[ST_MAXTYPES + 1], g_flGhostFadeRate[ST_MAXTYPES + 1], g_flGhostFadeRate2[ST_MAXTYPES + 1], g_flGhostRange[ST_MAXTYPES + 1], g_flGhostRange2[ST_MAXTYPES + 1], g_flGhostRangeChance[ST_MAXTYPES + 1], g_flGhostRangeChance2[ST_MAXTYPES + 1];
 
@@ -161,7 +161,6 @@ public void ST_Configs(const char[] savepath, bool main)
 			{
 				g_bTankConfig[iIndex] = false;
 
-				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255");
 				kvSuperTanks.GetString("Props/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255");
 				g_iGhostAbility[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", 0);
 				g_iGhostAbility[iIndex] = iClamp(g_iGhostAbility[iIndex], 0, 3);
@@ -191,7 +190,6 @@ public void ST_Configs(const char[] savepath, bool main)
 			{
 				g_bTankConfig[iIndex] = true;
 
-				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]);
 				kvSuperTanks.GetString("Props/Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]);
 				g_iGhostAbility2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", g_iGhostAbility[iIndex]);
 				g_iGhostAbility2[iIndex] = iClamp(g_iGhostAbility2[iIndex], 0, 3);
@@ -372,28 +370,25 @@ public Action tTimerGhost(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	char sSet[2][16], sTankColors[28], sRGB[4][4], sSet2[5][16], sPropsColors[80], sProps[4][4],
+	char sRGB[4][4], sPropsColors[80], sSet[5][16], sProps[4][4],
 		sProps2[4][4], sProps3[4][4], sProps4[4][4], sProps5[4][4];
-	sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
-	ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
-	ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
-	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
+	ST_TankColors(iTank, 1, sRGB[0], sRGB[1], sRGB[2]);
 
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-	iRed = iClamp(iRed, 0, 255);
+	iRed = (iRed < 0 || iRed > 255) ? GetRandomInt(0, 255) : iRed;
 
 	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-	iGreen = iClamp(iGreen, 0, 255);
+	iGreen = (iGreen < 0 || iGreen > 255) ? GetRandomInt(0, 255) : iGreen;
 
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-	iBlue = iClamp(iBlue, 0, 255);
+	iBlue = (iBlue < 0 || iBlue > 255) ? GetRandomInt(0, 255) : iBlue;
 
 	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
 	ReplaceString(sPropsColors, sizeof(sPropsColors), " ", "");
-	ExplodeString(sPropsColors, "|", sSet2, sizeof(sSet2), sizeof(sSet2[]));
+	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
 
-	ExplodeString(sSet2[0], ",", sProps, sizeof(sProps), sizeof(sProps[]));
+	ExplodeString(sSet[0], ",", sProps, sizeof(sProps), sizeof(sProps[]));
 
 	int iRed2 = (sProps[0][0] != '\0') ? StringToInt(sProps[0]) : 255;
 	iRed2 = iClamp(iRed2, 0, 255);
@@ -404,7 +399,7 @@ public Action tTimerGhost(Handle timer, int userid)
 	int iBlue2 = (sProps[2][0] != '\0') ? StringToInt(sProps[2]) : 255;
 	iBlue2 = iClamp(iBlue2, 0, 255);
 
-	ExplodeString(sSet2[1], ",", sProps2, sizeof(sProps2), sizeof(sProps2[]));
+	ExplodeString(sSet[1], ",", sProps2, sizeof(sProps2), sizeof(sProps2[]));
 
 	int iRed3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[0]) : 255;
 	iRed3 = iClamp(iRed3, 0, 255);
@@ -415,7 +410,7 @@ public Action tTimerGhost(Handle timer, int userid)
 	int iBlue3 = (sProps2[2][0] != '\0') ? StringToInt(sProps2[2]) : 255;
 	iBlue3 = iClamp(iBlue3, 0, 255);
 
-	ExplodeString(sSet2[2], ",", sProps3, sizeof(sProps3), sizeof(sProps3[]));
+	ExplodeString(sSet[2], ",", sProps3, sizeof(sProps3), sizeof(sProps3[]));
 
 	int iRed4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[0]) : 255;
 	iRed4 = iClamp(iRed4, 0, 255);
@@ -426,7 +421,7 @@ public Action tTimerGhost(Handle timer, int userid)
 	int iBlue4 = (sProps3[2][0] != '\0') ? StringToInt(sProps3[2]) : 255;
 	iBlue4 = iClamp(iBlue4, 0, 255);
 
-	ExplodeString(sSet2[3], ",", sProps4, sizeof(sProps4), sizeof(sProps4[]));
+	ExplodeString(sSet[3], ",", sProps4, sizeof(sProps4), sizeof(sProps4[]));
 
 	int iRed5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[0]) : 255;
 	iRed5 = iClamp(iRed5, 0, 255);
@@ -437,7 +432,7 @@ public Action tTimerGhost(Handle timer, int userid)
 	int iBlue5 = (sProps4[2][0] != '\0') ? StringToInt(sProps4[2]) : 255;
 	iBlue5 = iClamp(iBlue5, 0, 255);
 
-	ExplodeString(sSet2[4], ",", sProps5, sizeof(sProps5), sizeof(sProps5[]));
+	ExplodeString(sSet[4], ",", sProps5, sizeof(sProps5), sizeof(sProps5[]));
 
 	int iRed6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[0]) : 255;
 	iRed6 = iClamp(iRed6, 0, 255);

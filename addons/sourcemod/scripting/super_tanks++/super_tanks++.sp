@@ -1381,27 +1381,27 @@ static void vSetColor(int tank, int value)
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-	iRed = iClamp(iRed, 0, 255);
+	iRed = (iRed < 0 || iRed > 255) ? GetRandomInt(0, 255) : iRed;
 
 	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-	iGreen = iClamp(iGreen, 0, 255);
+	iGreen = (iGreen < 0 || iGreen > 255) ? GetRandomInt(0, 255) : iGreen;
 
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-	iBlue = iClamp(iBlue, 0, 255);
+	iBlue = (iBlue < 0 || iBlue > 255) ? GetRandomInt(0, 255) : iBlue;
 
 	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
-	iAlpha = iClamp(iAlpha, 0, 255);
+	iAlpha = (iAlpha < 0 || iAlpha > 255) ? GetRandomInt(0, 255) : iAlpha;
 
 	ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
 
 	int iRed2 = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
-	iRed2 = iClamp(iRed2, 0, 255);
+	iRed2 = (iRed2 < 0 || iRed2 > 255) ? GetRandomInt(0, 255) : iRed2;
 
 	int iGreen2 = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
-	iGreen2 = iClamp(iGreen2, 0, 255);
+	iGreen2 = (iGreen2 < 0 || iGreen2 > 255) ? GetRandomInt(0, 255) : iGreen2;
 
 	int iBlue2 = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
-	iBlue2 = iClamp(iBlue2, 0, 255);
+	iBlue2 = (iBlue2 < 0 || iBlue2 > 255) ? GetRandomInt(0, 255) : iBlue2;
 
 	if (iGlowOutline(value) == 1 && bIsValidGame())
 	{
@@ -1427,72 +1427,72 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 
 		int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
+		iRed = (iRed < 0 || iRed > 255) ? GetRandomInt(0, 255) : iRed;
 
 		int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
+		iGreen = (iGreen < 0 || iGreen > 255) ? GetRandomInt(0, 255) : iGreen;
 
 		int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
+		iBlue = (iBlue < 0 || iBlue > 255) ? GetRandomInt(0, 255) : iBlue;
 
 		int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
-		iAlpha = iClamp(iAlpha, 0, 255);
+		iAlpha = (iAlpha < 0 || iAlpha > 255) ? GetRandomInt(0, 255) : iAlpha;
 
 		ExplodeString(sSet[1], ",", sRGB2, sizeof(sRGB2), sizeof(sRGB2[]));
 
 		int iRed2 = (sRGB2[0][0] != '\0') ? StringToInt(sRGB2[0]) : 255;
-		iRed2 = iClamp(iRed2, 0, 255);
+		iRed2 = (iRed2 < 0 || iRed2 > 255) ? GetRandomInt(0, 255) : iRed2;
 
 		int iGreen2 = (sRGB2[1][0] != '\0') ? StringToInt(sRGB2[1]) : 255;
-		iGreen2 = iClamp(iGreen2, 0, 255);
+		iGreen2 = (iGreen2 < 0 || iGreen2 > 255) ? GetRandomInt(0, 255) : iGreen2;
 
 		int iBlue2 = (sRGB2[2][0] != '\0') ? StringToInt(sRGB2[2]) : 255;
-		iBlue2 = iClamp(iBlue2, 0, 255);
+		iBlue2 = (iBlue2 < 0 || iBlue2 > 255) ? GetRandomInt(0, 255) : iBlue2;
 
 		int iAlpha2 = (sRGB2[3][0] != '\0') ? StringToInt(sRGB2[3]) : 255;
-		iAlpha2 = iClamp(iAlpha2, 0, 255);
+		iAlpha2 = (iAlpha2 < 0 || iAlpha2 > 255) ? GetRandomInt(0, 255) : iAlpha2;
 
 		ExplodeString(sSet[2], ",", sRGB3, sizeof(sRGB3), sizeof(sRGB3[]));
 
 		int iRed3 = (sRGB3[0][0] != '\0') ? StringToInt(sRGB3[0]) : 255;
-		iRed3 = iClamp(iRed3, 0, 255);
+		iRed3 = (iRed3 < 0 || iRed3 > 255) ? GetRandomInt(0, 255) : iRed3;
 
 		int iGreen3 = (sRGB3[1][0] != '\0') ? StringToInt(sRGB3[1]) : 255;
-		iGreen3 = iClamp(iGreen3, 0, 255);
+		iGreen3 = (iGreen3 < 0 || iGreen3 > 255) ? GetRandomInt(0, 255) : iGreen3;
 
 		int iBlue3 = (sRGB3[2][0] != '\0') ? StringToInt(sRGB3[2]) : 255;
-		iBlue3 = iClamp(iBlue3, 0, 255);
+		iBlue3 = (iBlue3 < 0 || iBlue3 > 255) ? GetRandomInt(0, 255) : iBlue3;
 
 		int iAlpha3 = (sRGB3[3][0] != '\0') ? StringToInt(sRGB3[3]) : 255;
-		iAlpha3 = iClamp(iAlpha3, 0, 255);
+		iAlpha3 = (iAlpha3 < 0 || iAlpha3 > 255) ? GetRandomInt(0, 255) : iAlpha3;
 
 		ExplodeString(sSet[3], ",", sRGB4, sizeof(sRGB4), sizeof(sRGB4[]));
 
 		int iRed4 = (sRGB4[0][0] != '\0') ? StringToInt(sRGB4[0]) : 255;
-		iRed4 = iClamp(iRed4, 0, 255);
+		iRed4 = (iRed4 < 0 || iRed4 > 255) ? GetRandomInt(0, 255) : iRed4;
 
 		int iGreen4 = (sRGB4[1][0] != '\0') ? StringToInt(sRGB4[1]) : 255;
-		iGreen4 = iClamp(iGreen4, 0, 255);
+		iGreen4 = (iGreen4 < 0 || iGreen4 > 255) ? GetRandomInt(0, 255) : iGreen4;
 
 		int iBlue4 = (sRGB4[2][0] != '\0') ? StringToInt(sRGB4[2]) : 255;
-		iBlue4 = iClamp(iBlue4, 0, 255);
+		iBlue4 = (iBlue4 < 0 || iBlue4 > 255) ? GetRandomInt(0, 255) : iBlue4;
 
 		int iAlpha4 = (sRGB4[3][0] != '\0') ? StringToInt(sRGB4[3]) : 255;
-		iAlpha4 = iClamp(iAlpha4, 0, 255);
+		iAlpha4 = (iAlpha4 < 0 || iAlpha4 > 255) ? GetRandomInt(0, 255) : iAlpha4;
 
 		ExplodeString(sSet[4], ",", sRGB5, sizeof(sRGB5), sizeof(sRGB5[]));
 
 		int iRed5 = (sRGB5[0][0] != '\0') ? StringToInt(sRGB5[0]) : 255;
-		iRed5 = iClamp(iRed5, 0, 255);
+		iRed5 = (iRed5 < 0 || iRed5 > 255) ? GetRandomInt(0, 255) : iRed5;
 
 		int iGreen5 = (sRGB5[1][0] != '\0') ? StringToInt(sRGB5[1]) : 255;
-		iGreen5 = iClamp(iGreen5, 0, 255);
+		iGreen5 = (iGreen5 < 0 || iGreen5 > 255) ? GetRandomInt(0, 255) : iGreen5;
 
 		int iBlue5 = (sRGB5[2][0] != '\0') ? StringToInt(sRGB5[2]) : 255;
-		iBlue5 = iClamp(iBlue5, 0, 255);
+		iBlue5 = (iBlue5 < 0 || iBlue5 > 255) ? GetRandomInt(0, 255) : iBlue5;
 
 		int iAlpha5 = (sRGB5[3][0] != '\0') ? StringToInt(sRGB5[3]) : 255;
-		iAlpha5 = iClamp(iAlpha5, 0, 255);
+		iAlpha5 = (iAlpha5 < 0 || iAlpha5 > 255) ? GetRandomInt(0, 255) : iAlpha5;
 
 		char sSet2[6][4], sPropsChance[35], sPropsAttached[7];
 		sPropsChance = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsChance[g_iTankType[tank]] : g_sPropsChance2[g_iTankType[tank]];
@@ -2034,16 +2034,16 @@ public Action tTimerBlurEffect(Handle timer, int userid)
 	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-	iRed = iClamp(iRed, 0, 255);
+	iRed = (iRed < 0 || iRed > 255) ? GetRandomInt(0, 255) : iRed;
 
 	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-	iGreen = iClamp(iGreen, 0, 255);
+	iGreen = (iGreen < 0 || iGreen > 255) ? GetRandomInt(0, 255) : iGreen;
 
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-	iBlue = iClamp(iBlue, 0, 255);
+	iBlue = (iBlue < 0 || iBlue > 255) ? GetRandomInt(0, 255) : iBlue;
 
 	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
-	iAlpha = iClamp(iAlpha, 0, 255);
+	iAlpha = (iAlpha < 0 || iAlpha > 255) ? GetRandomInt(0, 255) : iAlpha;
 
 	float flTankPos[3], flTankAng[3];
 	GetClientAbsOrigin(iTank, flTankPos);
@@ -2652,16 +2652,16 @@ public Action tTimerRockThrow(Handle timer, int entity)
 	ExplodeString(sSet[3], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
 
 	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-	iRed = iClamp(iRed, 0, 255);
+	iRed = (iRed < 0 || iRed > 255) ? GetRandomInt(0, 255) : iRed;
 
 	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-	iGreen = iClamp(iGreen, 0, 255);
+	iGreen = (iGreen < 0 || iGreen > 255) ? GetRandomInt(0, 255) : iGreen;
 
 	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-	iBlue = iClamp(iBlue, 0, 255);
+	iBlue = (iBlue < 0 || iBlue > 255) ? GetRandomInt(0, 255) : iBlue;
 
 	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
-	iAlpha = iClamp(iAlpha, 0, 255);
+	iAlpha = (iAlpha < 0 || iAlpha > 255) ? GetRandomInt(0, 255) : iAlpha;
 
 	SetEntityRenderColor(entity, iRed, iGreen, iBlue, iAlpha);
 
