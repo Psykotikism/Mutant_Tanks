@@ -2214,7 +2214,7 @@ public Action tTimerRandomize(Handle timer, int userid)
 	int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
-		if (iTankEnabled(iIndex) == 0 || !bTankChance(iIndex) || (iTypeLimit(iIndex) > 0 && iGetTypeCount(iIndex) >= iTypeLimit(iIndex)) || (iFinaleTank(iIndex) == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[iTank] == iIndex)
+		if (iTankEnabled(iIndex) == 0 || g_iTankType[iTank] == iIndex)
 		{
 			continue;
 		}
@@ -2295,7 +2295,7 @@ public Action tTimerTransform(Handle timer, int userid)
 	int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 	for (int iTypes = 0; iTypes < sizeof(sTransform); iTypes++)
 	{
-		if (StrEqual(sTransform[iTypes], ""))
+		if (sTransform[iTypes][0] == '\0')
 		{
 			continue;
 		}
@@ -2527,14 +2527,14 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 
 	char sCurrentName[33], sTankName[33];
 	GetClientName(iTank, sCurrentName, sizeof(sCurrentName));
-	if (StrEqual(sCurrentName, ""))
+	if (sCurrentName[0] == '\0')
 	{
 		sCurrentName = "Tank";
 	}
 
 	sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
 	TrimString(sTankName);
-	if (StrEqual(sTankName, ""))
+	if (sTankName[0] == '\0')
 	{
 		sTankName = "Tank";
 	}
