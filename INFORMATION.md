@@ -63,7 +63,9 @@
 			"Multiply Health"			"0"
 
 			// The range of types to check for.
+			// --
 			// Separate values with "-".
+			// --
 			// Value limit: 2
 			// Character limit for each value: 3
 			// --
@@ -95,7 +97,9 @@
 			"Regular Wave"				"0"
 
 			// Amount of Tanks to spawn for each finale wave.
+			// --
 			// Separate waves with commas.
+			// --
 			// Wave limit: 3
 			// Character limit for each wave: 3
 			// --
@@ -123,7 +127,9 @@
 			"Game Mode Types"			"5"
 
 			// Enable Super Tanks++ in these game modes.
+			// --
 			// Separate game modes with commas.
+			// --
 			// Character limit: 512 (including commas)
 			// --
 			// Empty: All
@@ -131,7 +137,9 @@
 			"Enabled Game Modes"			"coop,survival"
 
 			// Disable Super Tanks++ in these game modes.
+			// --
 			// Separate game modes with commas.
+			// --
 			// Character limit: 512 (including commas)
 			// --
 			// Empty: None
@@ -210,12 +218,13 @@
 			"Tank Note"				"0"
 
 			// These are the Super Tank's skin and glow outline colors.
-			// --
-			// Character limit: 28
-			// Character limit for each color: 3
+			// Note: Random RGBA combinations will be used if invalid values (values less than 0 or greater than 255) are used.
 			// --
 			// Separate colors with "|".
 			// Separate RGBAs with commas.
+			// --
+			// Character limit: 28
+			// Character limit for each color: 3
 			// --
 			// Minimum value for each color: 0
 			// Maximum value for each color: 255
@@ -313,12 +322,13 @@
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
 			// --
 			// Separate game modes with commas.
+			// --
 			// Character limit: 80 (including commas)
 			// Character limit for each type: 4
 			// --
 			// Example: "1,35,26,4"
-			// Example: "4,9,49,449,4449,499,4999"
-			// Example: "1997,1998,1999,2000,2001,2002,2003,2004,2005,2006"
+			// Example: "4,9,49,94,449,499"
+			// Example: "97,98,99,100,101,102,103,104,105,106"
 			// --
 			// Minimum: 1
 			// Maximum: 500
@@ -348,6 +358,7 @@
 
 			// Each prop has this many chances out of 100.0% to appear when the Super Tank appears.
 			// Separate chances with commas.
+			// --
 			// Chances limit: 6
 			// Character limit for each chance: 6
 			// --
@@ -363,8 +374,13 @@
 			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3"
 
 			// The Super Tank's prop colors.
+			// Note: Random RGBA combinations will be used if invalid values (values less than 0 or greater than 255) are used.
+			// --
 			// Separate colors with "|".
 			// Separate RGBAs with commas.
+			// --
+			// Character limit: 80
+			// Character limit for each color: 3
 			// --
 			// Minimum value for each color: 0
 			// Maximum value for each color: 255
