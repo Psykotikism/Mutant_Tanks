@@ -27,7 +27,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Whirl Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank makes survivors whirl.",
+	description = "The Super Tank makes survivors' screens whirl.",
 	version = ST_VERSION,
 	url = ST_URL
 };

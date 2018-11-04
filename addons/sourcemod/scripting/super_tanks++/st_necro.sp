@@ -26,7 +26,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Necro Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank resurrects dead special infected.",
+	description = "The Super Tank resurrects nearby special infected that die.",
 	version = ST_VERSION,
 	url = ST_URL
 };

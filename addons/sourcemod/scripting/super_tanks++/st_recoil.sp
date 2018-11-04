@@ -211,7 +211,9 @@ public void ST_Event(Event event, const char[] name)
 		if (bIsSurvivor(iSurvivor) && bIsGunWeapon(iSurvivor) && g_bRecoil[iSurvivor])
 		{
 			float flRecoil[3];
-			flRecoil[0] = GetRandomFloat(-20.0, -80.0), flRecoil[1] = GetRandomFloat(-25.0, 25.0), flRecoil[2] = GetRandomFloat(-25.0, 25.0);
+			flRecoil[0] = GetRandomFloat(-20.0, -80.0);
+			flRecoil[1] = GetRandomFloat(-25.0, 25.0);
+			flRecoil[2] = GetRandomFloat(-25.0, 25.0);
 			SetEntPropVector(iSurvivor, Prop_Send, "m_vecPunchAngle", flRecoil);
 		}
 	}
