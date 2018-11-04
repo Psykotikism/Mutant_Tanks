@@ -1139,10 +1139,10 @@
 	"Tank #1"
 	{
 		// The Super Tank chokes survivors in the air.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is choked survivors in the air.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is choked in the air.
 		// - "Choke Range"
 		// - "Choke Range Chance"
-		// "Choke Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is choked survivors in the air.
+		// "Choke Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is choked in the air.
 		// - "Choke Chance"
 		// - "Choke Hit Mode"
 		// Requires "st_choke.smx" to be installed.
@@ -3030,8 +3030,8 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank jumps periodically and makes survivors jump uncontrollably.
-		// "Ability Enabled" - The Super Tank jumps periodically.
+		// The Super Tank jumps periodically or sporadically and makes survivors jump uncontrollably.
+		// "Ability Enabled" - The Super Tank jumps periodically or sporadically.
 		// - "Jump Interval"
 		// - "Jump Mode"
 		// - "Jump Sporadic Chance"
@@ -3605,7 +3605,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank resurrects dead special infected.
+		// The Super Tank resurrects nearby special infected that die.
 		// Requires "st_necro.smx" to be installed.
 		"Necro Ability"
 		{
@@ -3645,10 +3645,10 @@
 	"Tank #1"
 	{
 		// The Super Tank nullifies all of the survivors' damage.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor does not do any damage.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor does not do any damage to the Super Tank.
 		// - "Nullify Range"
 		// - "Nullify Range Chance"
-		// "Nullify Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor does not do any damage.
+		// "Nullify Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor does not do any damage to the Super Tank.
 		// - "Nullify Chance"
 		// - "Nullify Hit Mode"
 		// Requires "st_nullify.smx" to be installed.
@@ -5626,11 +5626,11 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank makes survivors whirl.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor whirls.
+		// The Super Tank makes survivors' screens whirl.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's screen whirls.
 		// - "Whirl Range"
 		// - "Whirl Range Chance"
-		// "Whirl Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor whirls.
+		// "Whirl Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor's screen whirls.
 		// - "Whirl Chance"
 		// - "Whirl Hit Mode"
 		// Requires "st_whirl.smx" to be installed.
