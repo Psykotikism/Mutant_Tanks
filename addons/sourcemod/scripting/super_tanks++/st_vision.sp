@@ -198,6 +198,18 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor) && g_bVision[iSurvivor])
+		{
+			SetEntProp(iSurvivor, Prop_Send, "m_iFOV", 90);
+			SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", 90);
+		}
+	}
+}
+
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))

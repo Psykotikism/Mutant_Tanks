@@ -207,6 +207,17 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && g_bRocket[iSurvivor])
+		{
+			SetEntityGravity(iSurvivor, 1.0);
+		}
+	}
+}
+
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -261,6 +272,14 @@ static void vReset()
 			g_iRocketOwner[iPlayer] = 0;
 		}
 	}
+}
+
+static void vReset2(int survivor)
+{
+	g_bRocket[survivor] = false;
+	g_iRocketOwner[survivor] = 0;
+
+	SetEntityGravity(survivor, 1.0);
 }
 
 static void vRocketHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
@@ -346,7 +365,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bRocket[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bRocket[iSurvivor] = false;
 		g_iRocketOwner[iSurvivor] = 0;
@@ -354,20 +373,10 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	int iTank = GetClientOfUserId(pack.ReadCell()), iRocketAbility = pack.ReadCell();
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRocketAbility == 0 || !g_bRocket[iSurvivor])
 	{
-		g_bRocket[iSurvivor] = false;
-		g_iRocketOwner[iSurvivor] = 0;
-
-		return Plugin_Stop;
-	}
-
-	int iRocketAbility = pack.ReadCell();
-	if (iRocketAbility == 0)
-	{
-		g_bRocket[iSurvivor] = false;
-		g_iRocketOwner[iSurvivor] = 0;
+		vReset2(iSurvivor);
 
 		return Plugin_Stop;
 	}
@@ -391,7 +400,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bRocket[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bRocket[iSurvivor] = false;
 		g_iRocketOwner[iSurvivor] = 0;
@@ -399,20 +408,10 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	int iTank = GetClientOfUserId(pack.ReadCell()), iRocketAbility = pack.ReadCell();
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRocketAbility == 0 || !g_bRocket[iSurvivor])
 	{
-		g_bRocket[iSurvivor] = false;
-		g_iRocketOwner[iSurvivor] = 0;
-
-		return Plugin_Stop;
-	}
-
-	int iRocketAbility = pack.ReadCell();
-	if (iRocketAbility == 0)
-	{
-		g_bRocket[iSurvivor] = false;
-		g_iRocketOwner[iSurvivor] = 0;
+		vReset2(iSurvivor);
 
 		return Plugin_Stop;
 	}

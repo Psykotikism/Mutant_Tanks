@@ -32,7 +32,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bCloneInstalled, g_bLateLoad, g_bChoke[MAXPLAYERS + 1], g_bChoke2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLateLoad, g_bChoke[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sChokeEffect[ST_MAXTYPES + 1][4], g_sChokeEffect2[ST_MAXTYPES + 1][4], g_sChokeMessage[ST_MAXTYPES + 1][3], g_sChokeMessage2[ST_MAXTYPES + 1][3];
 
@@ -103,28 +103,12 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bChoke[client] = false;
-	g_bChoke2[client] = false;
 	g_iChokeOwner[client] = 0;
 }
 
 public void OnMapEnd()
 {
 	vReset();
-}
-
-public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
-{
-	if (!ST_PluginEnabled())
-	{
-		return Plugin_Continue;
-	}
-
-	if (g_bChoke2[client])
-	{
-		TeleportEntity(client, NULL_VECTOR, g_flChokeAngle[client], NULL_VECTOR);
-	}
-
-	return Plugin_Continue;
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -223,6 +207,18 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor) && g_bChoke[iSurvivor])
+		{
+			SetEntityMoveType(iSurvivor, MOVETYPE_WALK);
+			SetEntityGravity(iSurvivor, 1.0);
+		}
+	}
+}
+
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -261,7 +257,6 @@ public void ST_BossStage(int tank)
 			if (bIsSurvivor(iSurvivor) && g_bChoke[iSurvivor] && g_iChokeOwner[iSurvivor] == tank)
 			{
 				g_bChoke[iSurvivor] = false;
-				g_bChoke2[iSurvivor] = false;
 				g_iChokeOwner[iSurvivor] = 0;
 			}
 		}
@@ -308,7 +303,6 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bChoke[iPlayer] = false;
-			g_bChoke2[iPlayer] = false;
 			g_iChokeOwner[iPlayer] = 0;
 		}
 	}
@@ -317,10 +311,10 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bChoke[survivor] = false;
-	g_bChoke2[survivor] = false;
 	g_iChokeOwner[survivor] = 0;
 
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
+	SetEntityGravity(survivor, 1.0);
 
 	char sChokeMessage[3];
 	sChokeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sChokeMessage[ST_TankType(tank)] : g_sChokeMessage2[ST_TankType(tank)];
@@ -408,7 +402,6 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bChoke[iSurvivor] = false;
-		g_bChoke2[iSurvivor] = false;
 		g_iChokeOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
@@ -434,8 +427,6 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 
 		return Plugin_Stop;
 	}
-
-	g_bChoke2[iSurvivor] = true;
 
 	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 

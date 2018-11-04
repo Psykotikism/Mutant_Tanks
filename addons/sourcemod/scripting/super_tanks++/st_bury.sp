@@ -308,7 +308,7 @@ static void vRemoveBury(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && IsPlayerAlive(iSurvivor) && g_bBury[iSurvivor] && g_iBuryOwner[iSurvivor] == tank)
+		if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor] && g_iBuryOwner[iSurvivor] == tank)
 		{
 			vStopBury(iSurvivor, tank);
 		}

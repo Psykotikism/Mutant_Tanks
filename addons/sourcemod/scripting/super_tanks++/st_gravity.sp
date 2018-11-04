@@ -357,7 +357,7 @@ static void vRemoveGravity(int tank)
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && IsPlayerAlive(iSurvivor) && g_bGravity2[iSurvivor] && g_iGravityOwner[iSurvivor] == tank)
+		if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor] && g_iGravityOwner[iSurvivor] == tank)
 		{
 			g_bGravity2[iSurvivor] = false;
 			g_iGravityOwner[iSurvivor] = 0;

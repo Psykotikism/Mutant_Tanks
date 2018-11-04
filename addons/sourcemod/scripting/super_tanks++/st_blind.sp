@@ -330,7 +330,7 @@ static void vRemoveBlind(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor) && IsPlayerAlive(iSurvivor) && g_bBlind[iSurvivor] && g_iBlindOwner[iSurvivor] == tank)
+		if (bIsHumanSurvivor(iSurvivor) && g_bBlind[iSurvivor] && g_iBlindOwner[iSurvivor] == tank)
 		{
 			vBlind(iSurvivor, 0);
 		}

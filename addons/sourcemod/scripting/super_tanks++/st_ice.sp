@@ -301,7 +301,7 @@ static void vRemoveIce(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && IsPlayerAlive(iSurvivor) && g_bIce[iSurvivor] && g_iIceOwner[iSurvivor] == tank)
+		if (bIsSurvivor(iSurvivor) && g_bIce[iSurvivor] && g_iIceOwner[iSurvivor] == tank)
 		{
 			vStopIce(iSurvivor);
 		}

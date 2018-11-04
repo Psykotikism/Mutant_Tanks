@@ -145,6 +145,17 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank) && IsPlayerAlive(iTank) && g_bFlash[iTank])
+		{
+			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		}
+	}
+}
+
 public void ST_Ability(int tank)
 {
 	float flFlashChance = !g_bTankConfig[ST_TankType(tank)] ? g_flFlashChance[ST_TankType(tank)] : g_flFlashChance2[ST_TankType(tank)];

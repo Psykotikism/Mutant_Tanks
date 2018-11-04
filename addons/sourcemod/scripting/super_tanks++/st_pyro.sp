@@ -243,11 +243,11 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (g_bPyro[iPlayer] && bIsTank(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsTank(iTank) && IsPlayerAlive(iTank) && g_bPyro[iTank])
 		{
-			ExtinguishEntity(iPlayer);
+			ExtinguishEntity(iTank);
 		}
 	}
 }

@@ -205,6 +205,17 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor) && g_bWhirl[iSurvivor])
+		{
+			SetClientViewEntity(iSurvivor, iSurvivor);
+		}
+	}
+}
+
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -238,7 +249,7 @@ public void ST_BossStage(int tank)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor) && g_bWhirl[iSurvivor] && g_iWhirlOwner[iSurvivor] == tank)
+			if (bIsHumanSurvivor(iSurvivor) && g_bWhirl[iSurvivor] && g_iWhirlOwner[iSurvivor] == tank)
 			{
 				g_bWhirl[iSurvivor] = false;
 				g_iWhirlOwner[iSurvivor] = 0;
@@ -379,7 +390,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (!bIsSurvivor(iSurvivor))
+	if (!bIsHumanSurvivor(iSurvivor))
 	{
 		vStopWhirl(iSurvivor, iWhirl);
 
