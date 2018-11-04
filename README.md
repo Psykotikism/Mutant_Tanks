@@ -18,7 +18,7 @@ Super Tanks++ makes fighting Tanks great again!
 
 > Super Tanks++ will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
-### Why should I use Super Tanks++?
+### What makes Super Tanks++ worth installing?
 Super Tanks++ enhances the experience and fun that players get from Tank fights by 500. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
