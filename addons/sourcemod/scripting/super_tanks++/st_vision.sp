@@ -37,7 +37,7 @@ char g_sVisionEffect[ST_MAXTYPES + 1][4], g_sVisionEffect2[ST_MAXTYPES + 1][4], 
 
 float g_flVisionChance[ST_MAXTYPES + 1], g_flVisionChance2[ST_MAXTYPES + 1], g_flVisionDuration[ST_MAXTYPES + 1], g_flVisionDuration2[ST_MAXTYPES + 1], g_flVisionRange[ST_MAXTYPES + 1], g_flVisionRange2[ST_MAXTYPES + 1], g_flVisionRangeChance[ST_MAXTYPES + 1], g_flVisionRangeChance2[ST_MAXTYPES + 1];
 
-int g_iVisionAbility[ST_MAXTYPES + 1], g_iVisionAbility2[ST_MAXTYPES + 1], g_iVisionFOV[ST_MAXTYPES + 1], g_iVisionFOV2[ST_MAXTYPES + 1], g_iVisionHit[ST_MAXTYPES + 1], g_iVisionHit2[ST_MAXTYPES + 1], g_iVisionHitMode[ST_MAXTYPES + 1], g_iVisionHitMode2[ST_MAXTYPES + 1];
+int g_iVisionAbility[ST_MAXTYPES + 1], g_iVisionAbility2[ST_MAXTYPES + 1], g_iVisionFOV[ST_MAXTYPES + 1], g_iVisionFOV2[ST_MAXTYPES + 1], g_iVisionHit[ST_MAXTYPES + 1], g_iVisionHit2[ST_MAXTYPES + 1], g_iVisionHitMode[ST_MAXTYPES + 1], g_iVisionHitMode2[ST_MAXTYPES + 1], g_iVisionOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -102,6 +102,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bVision[client] = false;
+	g_iVisionOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -197,11 +198,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -231,6 +227,21 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsHumanSurvivor(iSurvivor) && g_bVision[iSurvivor] && g_iVisionOwner[iSurvivor] == tank)
+			{
+				g_bVision[iSurvivor] = false;
+				g_iVisionOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -238,6 +249,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bVision[iPlayer] = false;
+			g_iVisionOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -245,6 +257,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bVision[survivor] = false;
+	g_iVisionOwner[survivor] = 0;
 
 	SetEntProp(survivor, Prop_Send, "m_iFOV", 90);
 	SetEntProp(survivor, Prop_Send, "m_iDefaultFOV", 90);
@@ -262,6 +275,7 @@ static void vVisionHit(int survivor, int tank, float chance, int enabled, const 
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bVision[survivor])
 	{
 		g_bVision[survivor] = true;
+		g_iVisionOwner[survivor] = tank;
 
 		DataPack dpVision;
 		CreateDataTimer(0.1, tTimerVision, dpVision, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -314,6 +328,7 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	if (!bIsHumanSurvivor(iSurvivor))
 	{
 		g_bVision[iSurvivor] = false;
+		g_iVisionOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}

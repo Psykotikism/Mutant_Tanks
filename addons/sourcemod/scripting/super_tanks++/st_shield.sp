@@ -199,8 +199,6 @@ public void ST_PluginEnd()
 			vRemoveShield(iPlayer);
 		}
 	}
-
-	vReset();
 }
 
 public void ST_Event(Event event, const char[] name)
@@ -210,6 +208,9 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (iShieldAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
+			g_bShield[iTank] = false;
+			g_bShield2[iTank] = false;
+
 			vRemoveShield(iTank);
 		}
 	}
@@ -225,8 +226,11 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iShieldAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
+		g_bShield[tank] = false;
+		g_bShield2[tank] = false;
+
 		vRemoveShield(tank);
 	}
 }
@@ -356,15 +360,7 @@ static int iShieldMessage(int tank)
 public Action tTimerShield(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || g_bShield2[iTank] || (!g_bShield[iTank] && !g_bShield2[iTank]))
-	{
-		g_bShield[iTank] = false;
-		g_bShield2[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iShieldAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || g_bShield2[iTank] || (!g_bShield[iTank] && !g_bShield2[iTank]))
 	{
 		g_bShield[iTank] = false;
 		g_bShield2[iTank] = false;
@@ -393,15 +389,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (!g_bShield[iTank] && !g_bShield2[iTank]))
-	{
-		g_bShield[iTank] = false;
-		g_bShield2[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iShieldAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || (!g_bShield[iTank] && !g_bShield2[iTank]))
 	{
 		g_bShield[iTank] = false;
 		g_bShield2[iTank] = false;

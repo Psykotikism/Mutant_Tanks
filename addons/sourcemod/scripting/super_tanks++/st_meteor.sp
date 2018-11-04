@@ -152,11 +152,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	float flMeteorChance = !g_bTankConfig[ST_TankType(tank)] ? g_flMeteorChance[ST_TankType(tank)] : g_flMeteorChance2[ST_TankType(tank)];
@@ -183,6 +178,11 @@ public void ST_Ability(int tank)
 			PrintToChatAll("%s %t", ST_TAG2, "Meteor", sTankName);
 		}
 	}
+}
+
+public void ST_BossStage(int tank)
+{
+	g_bMeteor[tank] = false;
 }
 
 static void vMeteor(int tank, int rock)
@@ -276,7 +276,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bMeteor[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iMeteorAbility(iTank) == 0 || !g_bMeteor[iTank])
 	{
 		g_bMeteor[iTank] = false;
 
@@ -288,13 +288,6 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	flPos[1] = pack.ReadFloat();
 	flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
-
-	if (iMeteorAbility(iTank) == 0)
-	{
-		g_bMeteor[iTank] = false;
-
-		return Plugin_Stop;
-	}
 
 	char sRadius[2][7], sMeteorRadius[13], sSet[5][16], sPropsColors[80], sRGB[4][4];
 	sMeteorRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sMeteorRadius[ST_TankType(iTank)] : g_sMeteorRadius2[ST_TankType(iTank)];

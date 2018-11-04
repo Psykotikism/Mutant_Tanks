@@ -223,11 +223,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -272,6 +267,16 @@ public void ST_Ability(int tank)
 				PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
 			}
 		}
+	}
+}
+
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		g_bGhost[tank] = false;
+		g_bGhost2[tank] = false;
+		g_iGhostAlpha[tank] = 255;
 	}
 }
 
@@ -356,14 +361,7 @@ static int iGhostHitMode(int tank)
 public Action tTimerGhost(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost[iTank])
-	{
-		g_bGhost[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3) || !g_bGhost[iTank])
 	{
 		g_bGhost[iTank] = false;
 

@@ -40,7 +40,7 @@ char g_sWhirlAxis[ST_MAXTYPES + 1][7], g_sWhirlAxis2[ST_MAXTYPES + 1][7], g_sWhi
 
 float g_flWhirlChance[ST_MAXTYPES + 1], g_flWhirlChance2[ST_MAXTYPES + 1], g_flWhirlDuration[ST_MAXTYPES + 1], g_flWhirlDuration2[ST_MAXTYPES + 1], g_flWhirlRange[ST_MAXTYPES + 1], g_flWhirlRange2[ST_MAXTYPES + 1], g_flWhirlSpeed[ST_MAXTYPES + 1], g_flWhirlSpeed2[ST_MAXTYPES + 1], g_flWhirlRangeChance[ST_MAXTYPES + 1], g_flWhirlRangeChance2[ST_MAXTYPES + 1];
 
-int g_iWhirlAbility[ST_MAXTYPES + 1], g_iWhirlAbility2[ST_MAXTYPES + 1], g_iWhirlHit[ST_MAXTYPES + 1], g_iWhirlHit2[ST_MAXTYPES + 1], g_iWhirlHitMode[ST_MAXTYPES + 1], g_iWhirlHitMode2[ST_MAXTYPES + 1];
+int g_iWhirlAbility[ST_MAXTYPES + 1], g_iWhirlAbility2[ST_MAXTYPES + 1], g_iWhirlHit[ST_MAXTYPES + 1], g_iWhirlHit2[ST_MAXTYPES + 1], g_iWhirlHitMode[ST_MAXTYPES + 1], g_iWhirlHitMode2[ST_MAXTYPES + 1], g_iWhirlOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -107,6 +107,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bWhirl[client] = false;
+	g_iWhirlOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -204,11 +205,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -236,6 +232,21 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bWhirl[iSurvivor] && g_iWhirlOwner[iSurvivor] == tank)
+			{
+				g_bWhirl[iSurvivor] = false;
+				g_iWhirlOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vWhirlHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bWhirl[survivor])
@@ -247,6 +258,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 		}
 
 		g_bWhirl[survivor] = true;
+		g_iWhirlOwner[survivor] = tank;
 
 		float flEyePos[3], flAngles[3];
 		GetClientEyePosition(survivor, flEyePos);
@@ -305,6 +317,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bWhirl[iPlayer] = false;
+			g_iWhirlOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -326,6 +339,7 @@ static void vReset2(int survivor, int tank, int entity, const char[] message)
 static void vStopWhirl(int survivor, int entity)
 {
 	g_bWhirl[survivor] = false;
+	g_iWhirlOwner[survivor] = 0;
 
 	RemoveEntity(entity);
 }
@@ -358,13 +372,14 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 	if (iWhirl == INVALID_ENT_REFERENCE || !bIsValidEntity(iWhirl))
 	{
 		g_bWhirl[iSurvivor] = false;
+		g_iWhirlOwner[iSurvivor] = 0;
 
 		SetClientViewEntity(iSurvivor, iSurvivor);
 
 		return Plugin_Stop;
 	}
 
-	if (!bIsSurvivor(iSurvivor) || !g_bWhirl[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		vStopWhirl(iSurvivor, iWhirl);
 
@@ -374,7 +389,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWhirl[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, iWhirl, sMessage);
 

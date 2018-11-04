@@ -40,7 +40,7 @@ float g_flShoveChance[ST_MAXTYPES + 1], g_flShoveChance2[ST_MAXTYPES + 1], g_flS
 
 Handle g_hSDKShovePlayer;
 
-int g_iShoveAbility[ST_MAXTYPES + 1], g_iShoveAbility2[ST_MAXTYPES + 1], g_iShoveHit[ST_MAXTYPES + 1], g_iShoveHit2[ST_MAXTYPES + 1], g_iShoveHitMode[ST_MAXTYPES + 1], g_iShoveHitMode2[ST_MAXTYPES + 1];
+int g_iShoveAbility[ST_MAXTYPES + 1], g_iShoveAbility2[ST_MAXTYPES + 1], g_iShoveHit[ST_MAXTYPES + 1], g_iShoveHit2[ST_MAXTYPES + 1], g_iShoveHitMode[ST_MAXTYPES + 1], g_iShoveHitMode2[ST_MAXTYPES + 1], g_iShoveOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -126,6 +126,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bShove[client] = false;
+	g_iShoveOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -221,11 +222,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -255,6 +251,21 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bShove[iSurvivor] && g_iShoveOwner[iSurvivor] == tank)
+			{
+				g_bShove[iSurvivor] = false;
+				g_iShoveOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -262,6 +273,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bShove[iPlayer] = false;
+			g_iShoveOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -269,6 +281,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bShove[survivor] = false;
+	g_iShoveOwner[survivor] = 0;
 
 	char sShoveMessage[3];
 	sShoveMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sShoveMessage[ST_TankType(tank)] : g_sShoveMessage2[ST_TankType(tank)];
@@ -283,6 +296,7 @@ static void vShoveHit(int survivor, int tank, float chance, int enabled, const c
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bShove[survivor])
 	{
 		g_bShove[survivor] = true;
+		g_iShoveOwner[survivor] = tank;
 
 		float flShoveInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flShoveInterval[ST_TankType(tank)] : g_flShoveInterval2[ST_TankType(tank)];
 		DataPack dpShove;
@@ -328,9 +342,10 @@ public Action tTimerShove(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bShove[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bShove[iSurvivor] = false;
+		g_iShoveOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -338,7 +353,7 @@ public Action tTimerShove(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bShove[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

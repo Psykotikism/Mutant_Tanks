@@ -38,7 +38,7 @@ char g_sChokeEffect[ST_MAXTYPES + 1][4], g_sChokeEffect2[ST_MAXTYPES + 1][4], g_
 
 float g_flChokeAngle[MAXPLAYERS + 1][3], g_flChokeChance[ST_MAXTYPES + 1], g_flChokeChance2[ST_MAXTYPES + 1], g_flChokeDamage[ST_MAXTYPES + 1], g_flChokeDamage2[ST_MAXTYPES + 1], g_flChokeDelay[ST_MAXTYPES + 1], g_flChokeDelay2[ST_MAXTYPES + 1], g_flChokeDuration[ST_MAXTYPES + 1], g_flChokeDuration2[ST_MAXTYPES + 1], g_flChokeHeight[ST_MAXTYPES + 1], g_flChokeHeight2[ST_MAXTYPES + 1], g_flChokeRange[ST_MAXTYPES + 1], g_flChokeRange2[ST_MAXTYPES + 1], g_flChokeRangeChance[ST_MAXTYPES + 1], g_flChokeRangeChance2[ST_MAXTYPES + 1];
 
-int g_iChokeAbility[ST_MAXTYPES + 1], g_iChokeAbility2[ST_MAXTYPES + 1], g_iChokeHit[ST_MAXTYPES + 1], g_iChokeHit2[ST_MAXTYPES + 1], g_iChokeHitMode[ST_MAXTYPES + 1], g_iChokeHitMode2[ST_MAXTYPES + 1];
+int g_iChokeAbility[ST_MAXTYPES + 1], g_iChokeAbility2[ST_MAXTYPES + 1], g_iChokeHit[ST_MAXTYPES + 1], g_iChokeHit2[ST_MAXTYPES + 1], g_iChokeHitMode[ST_MAXTYPES + 1], g_iChokeHitMode2[ST_MAXTYPES + 1], g_iChokeOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -103,6 +103,8 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bChoke[client] = false;
+	g_bChoke2[client] = false;
+	g_iChokeOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -221,11 +223,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -255,11 +252,28 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bChoke[iSurvivor] && g_iChokeOwner[iSurvivor] == tank)
+			{
+				g_bChoke[iSurvivor] = false;
+				g_bChoke2[iSurvivor] = false;
+				g_iChokeOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vChokeHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bChoke[survivor])
 	{
 		g_bChoke[survivor] = true;
+		g_iChokeOwner[survivor] = tank;
 
 		GetClientEyeAngles(survivor, g_flChokeAngle[survivor]);
 
@@ -294,6 +308,8 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bChoke[iPlayer] = false;
+			g_bChoke2[iPlayer] = false;
+			g_iChokeOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -302,6 +318,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bChoke[survivor] = false;
 	g_bChoke2[survivor] = false;
+	g_iChokeOwner[survivor] = 0;
 
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
 
@@ -336,6 +353,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor) || !g_bChoke[iSurvivor])
 	{
 		g_bChoke[iSurvivor] = false;
+		g_iChokeOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -344,6 +362,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bChoke[iSurvivor] = false;
+		g_iChokeOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -355,6 +374,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	if (iChokeAbility == 0)
 	{
 		g_bChoke[iSurvivor] = false;
+		g_iChokeOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -385,10 +405,11 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bChoke[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bChoke[iSurvivor] = false;
 		g_bChoke2[iSurvivor] = false;
+		g_iChokeOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -396,7 +417,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bChoke[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

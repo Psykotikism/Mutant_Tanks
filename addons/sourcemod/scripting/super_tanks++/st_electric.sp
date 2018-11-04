@@ -43,7 +43,7 @@ char g_sElectricEffect[ST_MAXTYPES + 1][4], g_sElectricEffect2[ST_MAXTYPES + 1][
 
 float g_flElectricChance[ST_MAXTYPES + 1], g_flElectricChance2[ST_MAXTYPES + 1], g_flElectricDamage[ST_MAXTYPES + 1], g_flElectricDamage2[ST_MAXTYPES + 1], g_flElectricDuration[ST_MAXTYPES + 1], g_flElectricDuration2[ST_MAXTYPES + 1], g_flElectricInterval[ST_MAXTYPES + 1], g_flElectricInterval2[ST_MAXTYPES + 1], g_flElectricRange[ST_MAXTYPES + 1], g_flElectricRange2[ST_MAXTYPES + 1], g_flElectricRangeChance[ST_MAXTYPES + 1], g_flElectricRangeChance2[ST_MAXTYPES + 1], g_flElectricSpeed[ST_MAXTYPES + 1], g_flElectricSpeed2[ST_MAXTYPES + 1];
 
-int g_iElectricAbility[ST_MAXTYPES + 1], g_iElectricAbility2[ST_MAXTYPES + 1], g_iElectricHit[ST_MAXTYPES + 1], g_iElectricHit2[ST_MAXTYPES + 1], g_iElectricHitMode[ST_MAXTYPES + 1], g_iElectricHitMode2[ST_MAXTYPES + 1];
+int g_iElectricAbility[ST_MAXTYPES + 1], g_iElectricAbility2[ST_MAXTYPES + 1], g_iElectricHit[ST_MAXTYPES + 1], g_iElectricHit2[ST_MAXTYPES + 1], g_iElectricHitMode[ST_MAXTYPES + 1], g_iElectricHitMode2[ST_MAXTYPES + 1], g_iElectricOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -113,6 +113,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bElectric[client] = false;
+	g_iElectricOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -216,11 +217,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -248,11 +244,27 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor] && g_iElectricOwner[iSurvivor] == tank)
+			{
+				g_bElectric[iSurvivor] = false;
+				g_iElectricOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vElectricHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bElectric[survivor])
 	{
 		g_bElectric[survivor] = true;
+		g_iElectricOwner[survivor] = tank;
 
 		float flElectricSpeed = !g_bTankConfig[ST_TankType(tank)] ? g_flElectricSpeed[ST_TankType(tank)] : g_flElectricSpeed2[ST_TankType(tank)],
 			flElectricInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flElectricInterval[ST_TankType(tank)] : g_flElectricInterval2[ST_TankType(tank)];
@@ -291,6 +303,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bElectric[iPlayer] = false;
+			g_iElectricOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -298,6 +311,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bElectric[survivor] = false;
+	g_iElectricOwner[survivor] = 0;
 
 	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 
@@ -337,6 +351,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bElectric[iSurvivor] = false;
+		g_iElectricOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}

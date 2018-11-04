@@ -245,13 +245,11 @@ public void ST_PluginEnd()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (g_bPyro[iPlayer])
+		if (g_bPyro[iPlayer] && bIsTank(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			ExtinguishEntity(iPlayer);
 		}
 	}
-
-	vReset();
 }
 
 public void ST_Ability(int tank)
@@ -279,6 +277,11 @@ public void ST_Ability(int tank)
 			}
 		}
 	}
+}
+
+public void ST_BossStage(int tank)
+{
+	g_bPyro[tank] = false;
 }
 
 static void vPyroHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
@@ -343,7 +346,7 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPyro[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bPyro[iTank] = false;
 
@@ -351,7 +354,7 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if ((iPyroAbility(iTank) != 2 && iPyroAbility(iTank) != 3) || !bIsPlayerBurning(iTank) || (flTime + flPyroDuration(iTank) < GetEngineTime()))
+	if ((iPyroAbility(iTank) != 2 && iPyroAbility(iTank) != 3) || !bIsPlayerBurning(iTank) || (flTime + flPyroDuration(iTank) < GetEngineTime()) || !g_bPyro[iTank])
 	{
 		g_bPyro[iTank] = false;
 

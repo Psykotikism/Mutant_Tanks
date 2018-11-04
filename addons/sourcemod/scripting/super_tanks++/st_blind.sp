@@ -37,7 +37,7 @@ char g_sBlindEffect[ST_MAXTYPES + 1][4], g_sBlindEffect2[ST_MAXTYPES + 1][4], g_
 
 float g_flBlindChance[ST_MAXTYPES + 1], g_flBlindChance2[ST_MAXTYPES + 1], g_flBlindDuration[ST_MAXTYPES + 1], g_flBlindDuration2[ST_MAXTYPES + 1], g_flBlindRange[ST_MAXTYPES + 1], g_flBlindRange2[ST_MAXTYPES + 1], g_flBlindRangeChance[ST_MAXTYPES + 1], g_flBlindRangeChance2[ST_MAXTYPES + 1];
 
-int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1], g_iBlindHit[ST_MAXTYPES + 1], g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindHitMode[ST_MAXTYPES + 1], g_iBlindHitMode2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1], g_iBlindIntensity2[ST_MAXTYPES + 1];
+int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1], g_iBlindHit[ST_MAXTYPES + 1], g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindHitMode[ST_MAXTYPES + 1], g_iBlindHitMode2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1], g_iBlindIntensity2[ST_MAXTYPES + 1], g_iBlindOwner[MAXPLAYERS + 1];
 
 UserMsg g_umFadeUserMsgId;
 
@@ -106,6 +106,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bBlind[client] = false;
+	g_iBlindOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -210,8 +211,6 @@ public void ST_PluginEnd()
 			vRemoveBlind(iPlayer);
 		}
 	}
-
-	vReset();
 }
 
 public void ST_Event(Event event, const char[] name)
@@ -255,7 +254,7 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iBlindAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveBlind(tank);
 	}
@@ -297,6 +296,7 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, const c
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bBlind[survivor])
 	{
 		g_bBlind[survivor] = true;
+		g_iBlindOwner[survivor] = tank;
 
 		DataPack dpBlind;
 		CreateDataTimer(1.0, tTimerBlind, dpBlind, TIMER_FLAG_NO_MAPCHANGE);
@@ -330,13 +330,9 @@ static void vRemoveBlind(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor) && g_bBlind[iSurvivor])
+		if (bIsHumanSurvivor(iSurvivor) && IsPlayerAlive(iSurvivor) && g_bBlind[iSurvivor] && g_iBlindOwner[iSurvivor] == tank)
 		{
-			DataPack dpStopBlindness;
-			CreateDataTimer(0.1, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopBlindness.WriteCell(GetClientUserId(iSurvivor));
-			dpStopBlindness.WriteCell(GetClientUserId(tank));
-			dpStopBlindness.WriteString("0");
+			vBlind(iSurvivor, 0);
 		}
 	}
 }
@@ -348,6 +344,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bBlind[iPlayer] = false;
+			g_iBlindOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -377,16 +374,20 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsHumanSurvivor(iSurvivor))
+	if (!bIsHumanSurvivor(iSurvivor) || !g_bBlind[iSurvivor])
 	{
 		g_bBlind[iSurvivor] = false;
+		g_iBlindOwner[iSurvivor] = 0;
+
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBlind[iSurvivor])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bBlind[iSurvivor] = false;
+		g_iBlindOwner[iSurvivor] = 0;
+
 		return Plugin_Stop;
 	}
 
@@ -394,6 +395,8 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 	if (iBlindEnabled == 0)
 	{
 		g_bBlind[iSurvivor] = false;
+		g_iBlindOwner[iSurvivor] = 0;
+
 		return Plugin_Stop;
 	}
 
@@ -408,17 +411,19 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsHumanSurvivor(iSurvivor) || !g_bBlind[iSurvivor])
+	if (!bIsHumanSurvivor(iSurvivor))
 	{
 		g_bBlind[iSurvivor] = false;
+		g_iBlindOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBlind[iSurvivor])
 	{
 		g_bBlind[iSurvivor] = false;
+		g_iBlindOwner[iSurvivor] = 0;
 
 		vBlind(iSurvivor, 0);
 
@@ -426,6 +431,7 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 	}
 
 	g_bBlind[iSurvivor] = false;
+	g_iBlindOwner[iSurvivor] = 0;
 
 	vBlind(iSurvivor, 0);
 

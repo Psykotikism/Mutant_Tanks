@@ -145,7 +145,7 @@ public void ST_PluginEnd()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (g_bCloned[iPlayer])
+		if (g_bCloned[iPlayer] && bIsTank(iPlayer) && IsPlayerAlive(iPlayer))
 		{
 			IsFakeClient(iPlayer) ? KickClient(iPlayer) : ForcePlayerSuicide(iPlayer);
 		}
@@ -279,7 +279,7 @@ public void ST_BossStage(int tank)
 
 		for (int iClone = 1; iClone <= MaxClients; iClone++)
 		{
-			if (bIsTank(iClone))
+			if (bIsTank(iClone) && g_iCloneOwner[iClone] == tank)
 			{
 				g_bCloned[iClone] = false;
 				g_iCloneOwner[iClone] = 0;

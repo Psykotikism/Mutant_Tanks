@@ -374,11 +374,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -489,6 +484,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_BossStage(int tank)
 {
 	vDeleteDrop(tank);
+	g_bDrop[tank] = false;
 }
 
 public void ST_Ability(int tank)
@@ -546,15 +542,10 @@ static int iDropMode(int tank)
 public Action tTimerDrop(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bDrop[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iDropAbility(iTank) == 0 || !g_bDrop[iTank])
 	{
 		g_bDrop[iTank] = false;
-		return Plugin_Stop;
-	}
 
-	if (iDropAbility(iTank) == 0)
-	{
-		g_bDrop[iTank] = false;
 		return Plugin_Stop;
 	}
 

@@ -38,7 +38,7 @@ char g_sGravityEffect[ST_MAXTYPES + 1][4], g_sGravityEffect2[ST_MAXTYPES + 1][4]
 
 float g_flGravityChance[ST_MAXTYPES + 1], g_flGravityChance2[ST_MAXTYPES + 1], g_flGravityDuration[ST_MAXTYPES + 1], g_flGravityDuration2[ST_MAXTYPES + 1], g_flGravityForce[ST_MAXTYPES + 1], g_flGravityForce2[ST_MAXTYPES + 1], g_flGravityRange[ST_MAXTYPES + 1], g_flGravityRange2[ST_MAXTYPES + 1], g_flGravityRangeChance[ST_MAXTYPES + 1], g_flGravityRangeChance2[ST_MAXTYPES + 1], g_flGravityValue[ST_MAXTYPES + 1], g_flGravityValue2[ST_MAXTYPES + 1];
 
-int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHit2[ST_MAXTYPES + 1], g_iGravityHitMode[ST_MAXTYPES + 1], g_iGravityHitMode2[ST_MAXTYPES + 1];
+int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHit2[ST_MAXTYPES + 1], g_iGravityHitMode[ST_MAXTYPES + 1], g_iGravityHitMode2[ST_MAXTYPES + 1], g_iGravityOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -104,6 +104,7 @@ public void OnClientPutInServer(int client)
 
 	g_bGravity[client] = false;
 	g_bGravity2[client] = false;
+	g_iGravityOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -212,8 +213,6 @@ public void ST_PluginEnd()
 			vRemoveGravity(iPlayer);
 		}
 	}
-
-	vReset();
 }
 
 public void ST_Event(Event event, const char[] name)
@@ -295,7 +294,7 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if ((iGravityAbility(tank) == 2 || iGravityAbility(tank) == 3) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveGravity(tank);
 	}
@@ -306,6 +305,7 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, const
 	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bGravity2[survivor])
 	{
 		g_bGravity2[survivor] = true;
+		g_iGravityOwner[survivor] = tank;
 
 		float flGravityValue = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityValue[ST_TankType(tank)] : g_flGravityValue2[ST_TankType(tank)],
 			flGravityDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityDuration[ST_TankType(tank)] : g_flGravityDuration2[ST_TankType(tank)];
@@ -353,15 +353,16 @@ static void vRemoveGravity(int tank)
 		}
 	}
 
+	g_bGravity[tank] = false;
+
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
+		if (bIsSurvivor(iSurvivor) && IsPlayerAlive(iSurvivor) && g_bGravity2[iSurvivor] && g_iGravityOwner[iSurvivor] == tank)
 		{
-			DataPack dpStopGravity;
-			CreateDataTimer(0.1, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopGravity.WriteCell(GetClientUserId(iSurvivor));
-			dpStopGravity.WriteCell(GetClientUserId(tank));
-			dpStopGravity.WriteString("0");
+			g_bGravity2[iSurvivor] = false;
+			g_iGravityOwner[iSurvivor] = 0;
+
+			SetEntityGravity(iSurvivor, 1.0);
 		}
 	}
 }
@@ -374,6 +375,7 @@ static void vReset()
 		{
 			g_bGravity[iPlayer] = false;
 			g_bGravity2[iPlayer] = false;
+			g_iGravityOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -406,6 +408,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bGravity2[iSurvivor] = false;
+		g_iGravityOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -414,6 +417,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity2[iSurvivor])
 	{
 		g_bGravity2[iSurvivor] = false;
+		g_iGravityOwner[iSurvivor] = 0;
 
 		SetEntityGravity(iSurvivor, 1.0);
 
@@ -421,6 +425,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	}
 
 	g_bGravity2[iSurvivor] = false;
+	g_iGravityOwner[iSurvivor] = 0;
 
 	SetEntityGravity(iSurvivor, 1.0);
 

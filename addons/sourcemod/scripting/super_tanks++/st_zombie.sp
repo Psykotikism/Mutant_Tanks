@@ -197,11 +197,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -246,6 +241,11 @@ public void ST_Ability(int tank)
 			CreateTimer(flZombieInterval, tTimerZombie, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
+}
+
+public void ST_BossStage(int tank)
+{
+	g_bZombie[tank] = false;
 }
 
 static void vReset()
@@ -312,14 +312,7 @@ static int iZombieHitMode(int tank)
 public Action tTimerZombie(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bZombie[iTank])
-	{
-		g_bZombie[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iZombieAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iZombieAbility(iTank) == 0 || !g_bZombie[iTank])
 	{
 		g_bZombie[iTank] = false;
 

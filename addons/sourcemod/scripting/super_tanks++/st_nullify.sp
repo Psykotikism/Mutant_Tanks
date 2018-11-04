@@ -37,7 +37,7 @@ char g_sNullifyEffect[ST_MAXTYPES + 1][4], g_sNullifyEffect2[ST_MAXTYPES + 1][4]
 
 float g_flNullifyChance[ST_MAXTYPES + 1], g_flNullifyChance2[ST_MAXTYPES + 1], g_flNullifyDuration[ST_MAXTYPES + 1], g_flNullifyDuration2[ST_MAXTYPES + 1], g_flNullifyRange[ST_MAXTYPES + 1], g_flNullifyRange2[ST_MAXTYPES + 1], g_flNullifyRangeChance[ST_MAXTYPES + 1], g_flNullifyRangeChance2[ST_MAXTYPES + 1];
 
-int g_iNullifyAbility[ST_MAXTYPES + 1], g_iNullifyAbility2[ST_MAXTYPES + 1], g_iNullifyHit[ST_MAXTYPES + 1], g_iNullifyHit2[ST_MAXTYPES + 1], g_iNullifyHitMode[ST_MAXTYPES + 1], g_iNullifyHitMode2[ST_MAXTYPES + 1];
+int g_iNullifyAbility[ST_MAXTYPES + 1], g_iNullifyAbility2[ST_MAXTYPES + 1], g_iNullifyHit[ST_MAXTYPES + 1], g_iNullifyHit2[ST_MAXTYPES + 1], g_iNullifyHitMode[ST_MAXTYPES + 1], g_iNullifyHitMode2[ST_MAXTYPES + 1], g_iNullifyOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -102,6 +102,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bNullify[client] = false;
+	g_iNullifyOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -200,12 +201,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vRemoveNullify();
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -213,7 +208,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			vRemoveNullify();
+			vRemoveNullify(iTank);
 		}
 	}
 }
@@ -247,9 +242,9 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iNullifyAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveNullify();
+		vRemoveNullify(tank);
 	}
 }
 
@@ -258,6 +253,7 @@ static void vNullifyHit(int survivor, int tank, float chance, int enabled, const
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bNullify[survivor])
 	{
 		g_bNullify[survivor] = true;
+		g_iNullifyOwner[survivor] = tank;
 
 		float flNullifyDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyDuration[ST_TankType(tank)] : g_flNullifyDuration2[ST_TankType(tank)];
 		DataPack dpStopNullify;
@@ -281,13 +277,14 @@ static void vNullifyHit(int survivor, int tank, float chance, int enabled, const
 	}
 }
 
-static void vRemoveNullify()
+static void vRemoveNullify(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bNullify[iSurvivor])
+		if (bIsSurvivor(iSurvivor) && g_bNullify[iSurvivor] && g_iNullifyOwner[iSurvivor] == tank)
 		{
 			g_bNullify[iSurvivor] = false;
+			g_iNullifyOwner[iSurvivor] = 0;
 		}
 	}
 }
@@ -299,6 +296,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bNullify[iPlayer] = false;
+			g_iNullifyOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -331,6 +329,7 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor) || !g_bNullify[iSurvivor])
 	{
 		g_bNullify[iSurvivor] = false;
+		g_iNullifyOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -339,11 +338,13 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bNullify[iSurvivor] = false;
+		g_iNullifyOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	g_bNullify[iSurvivor] = false;
+	g_iNullifyOwner[iSurvivor] = 0;
 
 	char sNullifyMessage[3], sMessage[3];
 	sNullifyMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sNullifyMessage[ST_TankType(iTank)] : g_sNullifyMessage2[ST_TankType(iTank)];

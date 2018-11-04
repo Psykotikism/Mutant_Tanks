@@ -38,7 +38,7 @@ char g_sEnforceEffect[ST_MAXTYPES + 1][4], g_sEnforceEffect2[ST_MAXTYPES + 1][4]
 
 float g_flEnforceChance[ST_MAXTYPES + 1], g_flEnforceChance2[ST_MAXTYPES + 1], g_flEnforceDuration[ST_MAXTYPES + 1], g_flEnforceDuration2[ST_MAXTYPES + 1], g_flEnforceRange[ST_MAXTYPES + 1], g_flEnforceRange2[ST_MAXTYPES + 1], g_flEnforceRangeChance[ST_MAXTYPES + 1], g_flEnforceRangeChance2[ST_MAXTYPES + 1];
 
-int g_iEnforceAbility[ST_MAXTYPES + 1], g_iEnforceAbility2[ST_MAXTYPES + 1], g_iEnforceHit[ST_MAXTYPES + 1], g_iEnforceHit2[ST_MAXTYPES + 1], g_iEnforceHitMode[ST_MAXTYPES + 1], g_iEnforceHitMode2[ST_MAXTYPES + 1], g_iEnforceSlot[MAXPLAYERS + 1];
+int g_iEnforceAbility[ST_MAXTYPES + 1], g_iEnforceAbility2[ST_MAXTYPES + 1], g_iEnforceHit[ST_MAXTYPES + 1], g_iEnforceHit2[ST_MAXTYPES + 1], g_iEnforceHitMode[ST_MAXTYPES + 1], g_iEnforceHitMode2[ST_MAXTYPES + 1], g_iEnforceOwner[MAXPLAYERS + 1], g_iEnforceSlot[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -103,6 +103,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bEnforce[client] = false;
+	g_iEnforceOwner[client] = 0;
 	g_iEnforceSlot[client] = -1;
 }
 
@@ -212,12 +213,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vRemoveEnforce();
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -225,7 +220,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			vRemoveEnforce();
+			vRemoveEnforce(iTank);
 		}
 	}
 }
@@ -259,9 +254,9 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iEnforceAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveEnforce();
+		vRemoveEnforce(tank);
 	}
 }
 
@@ -270,6 +265,7 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, const
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bEnforce[survivor])
 	{
 		g_bEnforce[survivor] = true;
+		g_iEnforceOwner[survivor] = tank;
 
 		char sNumbers = !g_bTankConfig[ST_TankType(tank)] ? g_sEnforceSlot[ST_TankType(tank)][GetRandomInt(0, strlen(g_sEnforceSlot[ST_TankType(tank)]) - 1)] : g_sEnforceSlot2[ST_TankType(tank)][GetRandomInt(0, strlen(g_sEnforceSlot2[ST_TankType(tank)]) - 1)],
 			sSlotNumber[32];
@@ -304,13 +300,14 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, const
 	}
 }
 
-static void vRemoveEnforce()
+static void vRemoveEnforce(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bEnforce[iSurvivor])
+		if (bIsSurvivor(iSurvivor) && g_bEnforce[iSurvivor] && g_iEnforceOwner[iSurvivor] == tank)
 		{
 			g_bEnforce[iSurvivor] = false;
+			g_iEnforceOwner[iSurvivor] = 0;
 			g_iEnforceSlot[iSurvivor] = -1;
 		}
 	}
@@ -323,6 +320,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bEnforce[iPlayer] = false;
+			g_iEnforceOwner[iPlayer] = 0;
 			g_iEnforceSlot[iPlayer] = -1;
 		}
 	}
@@ -356,6 +354,7 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor) || !g_bEnforce[iSurvivor])
 	{
 		g_bEnforce[iSurvivor] = false;
+		g_iEnforceOwner[iSurvivor] = 0;
 		g_iEnforceSlot[iSurvivor] = -1;
 
 		return Plugin_Stop;
@@ -365,12 +364,14 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bEnforce[iSurvivor] = false;
+		g_iEnforceOwner[iSurvivor] = 0;
 		g_iEnforceSlot[iSurvivor] = -1;
 
 		return Plugin_Stop;
 	}
 
 	g_bEnforce[iSurvivor] = false;
+	g_iEnforceOwner[iSurvivor] = 0;
 	g_iEnforceSlot[iSurvivor] = -1;
 
 	char sEnforceMessage[3], sMessage[3];

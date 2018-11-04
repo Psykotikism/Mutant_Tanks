@@ -37,7 +37,7 @@ char g_sShakeEffect[ST_MAXTYPES + 1][4], g_sShakeEffect2[ST_MAXTYPES + 1][4], g_
 
 float g_flShakeChance[ST_MAXTYPES + 1], g_flShakeChance2[ST_MAXTYPES + 1], g_flShakeDuration[ST_MAXTYPES + 1], g_flShakeDuration2[ST_MAXTYPES + 1], g_flShakeInterval[ST_MAXTYPES + 1], g_flShakeInterval2[ST_MAXTYPES + 1], g_flShakeRange[ST_MAXTYPES + 1], g_flShakeRange2[ST_MAXTYPES + 1], g_flShakeRangeChance[ST_MAXTYPES + 1], g_flShakeRangeChance2[ST_MAXTYPES + 1];
 
-int g_iShakeAbility[ST_MAXTYPES + 1], g_iShakeAbility2[ST_MAXTYPES + 1], g_iShakeHit[ST_MAXTYPES + 1], g_iShakeHit2[ST_MAXTYPES + 1], g_iShakeHitMode[ST_MAXTYPES + 1], g_iShakeHitMode2[ST_MAXTYPES + 1];
+int g_iShakeAbility[ST_MAXTYPES + 1], g_iShakeAbility2[ST_MAXTYPES + 1], g_iShakeHit[ST_MAXTYPES + 1], g_iShakeHit2[ST_MAXTYPES + 1], g_iShakeHitMode[ST_MAXTYPES + 1], g_iShakeHitMode2[ST_MAXTYPES + 1], g_iShakeOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -102,6 +102,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bShake[client] = false;
+	g_iShakeOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -197,11 +198,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -231,6 +227,21 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bShake[iSurvivor] && g_iShakeOwner[iSurvivor] == tank)
+			{
+				g_bShake[iSurvivor] = false;
+				g_iShakeOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -238,6 +249,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bShake[iPlayer] = false;
+			g_iShakeOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -245,6 +257,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bShake[survivor] = false;
+	g_iShakeOwner[survivor] = 0;
 
 	char sShakeMessage[3];
 	sShakeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sShakeMessage[ST_TankType(tank)] : g_sShakeMessage2[ST_TankType(tank)];
@@ -259,6 +272,7 @@ static void vShakeHit(int survivor, int tank, float chance, int enabled, const c
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bShake[survivor])
 	{
 		g_bShake[survivor] = true;
+		g_iShakeOwner[survivor] = tank;
 
 		float flShakeInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flShakeInterval[ST_TankType(tank)] : g_flShakeInterval2[ST_TankType(tank)];
 		DataPack dpShake;
@@ -304,9 +318,10 @@ public Action tTimerShake(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsHumanSurvivor(iSurvivor) || !g_bShake[iSurvivor])
+	if (!bIsHumanSurvivor(iSurvivor))
 	{
 		g_bShake[iSurvivor] = false;
+		g_iShakeOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -314,7 +329,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bShake[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

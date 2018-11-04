@@ -38,7 +38,7 @@ char g_sLagEffect[ST_MAXTYPES + 1][4], g_sLagEffect2[ST_MAXTYPES + 1][4], g_sLag
 
 float g_flLagChance[ST_MAXTYPES + 1], g_flLagChance2[ST_MAXTYPES + 1], g_flLagDuration[ST_MAXTYPES + 1], g_flLagDuration2[ST_MAXTYPES + 1], g_flLagPosition[MAXPLAYERS + 1][4], g_flLagRange[ST_MAXTYPES + 1], g_flLagRange2[ST_MAXTYPES + 1], g_flLagRangeChance[ST_MAXTYPES + 1], g_flLagRangeChance2[ST_MAXTYPES + 1];
 
-int g_iLagAbility[ST_MAXTYPES + 1], g_iLagAbility2[ST_MAXTYPES + 1], g_iLagHit[ST_MAXTYPES + 1], g_iLagHit2[ST_MAXTYPES + 1], g_iLagHitMode[ST_MAXTYPES + 1], g_iLagHitMode2[ST_MAXTYPES + 1];
+int g_iLagAbility[ST_MAXTYPES + 1], g_iLagAbility2[ST_MAXTYPES + 1], g_iLagHit[ST_MAXTYPES + 1], g_iLagHit2[ST_MAXTYPES + 1], g_iLagHitMode[ST_MAXTYPES + 1], g_iLagHitMode2[ST_MAXTYPES + 1], g_iLagOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -103,6 +103,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bLag[client] = false;
+	g_iLagOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -194,11 +195,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -226,11 +222,27 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bLag[iSurvivor] && g_iLagOwner[iSurvivor] == tank)
+			{
+				g_bLag[iSurvivor] = false;
+				g_iLagOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vLagHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bLag[survivor])
 	{
 		g_bLag[survivor] = true;
+		g_iLagOwner[survivor] = tank;
 
 		float flPos[3];
 		GetClientAbsOrigin(survivor, flPos);
@@ -275,6 +287,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bLag[iPlayer] = false;
+			g_iLagOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -282,6 +295,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bLag[survivor] = false;
+	g_iLagOwner[survivor] = 0;
 
 	char sLagMessage[3];
 	sLagMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sLagMessage[ST_TankType(tank)] : g_sLagMessage2[ST_TankType(tank)];
@@ -321,9 +335,10 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bLag[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bLag[iSurvivor] = false;
+		g_iLagOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -331,7 +346,7 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bLag[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

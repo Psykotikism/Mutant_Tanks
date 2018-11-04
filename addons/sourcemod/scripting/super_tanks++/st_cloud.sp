@@ -139,11 +139,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (iCloudAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bCloud[tank])
@@ -161,6 +156,11 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	g_bCloud[tank] = false;
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -169,6 +169,16 @@ static void vReset()
 		{
 			g_bCloud[iPlayer] = false;
 		}
+	}
+}
+
+static void vReset2(int tank)
+{
+	if (iCloudMessage(tank) == 1)
+	{
+		char sTankName[33];
+		ST_TankName(tank, sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Cloud2", sTankName);
 	}
 }
 
@@ -185,23 +195,9 @@ static int iCloudMessage(int tank)
 public Action tTimerCloud(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bCloud[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iCloudAbility(iTank) == 0 || !g_bCloud[iTank])
 	{
-		g_bCloud[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iCloudAbility(iTank) == 0)
-	{
-		g_bCloud[iTank] = false;
-
-		if (iCloudMessage(iTank) == 1)
-		{
-			char sTankName[33];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Cloud2", sTankName);
-		}
+		vReset2(iTank);
 
 		return Plugin_Stop;
 	}

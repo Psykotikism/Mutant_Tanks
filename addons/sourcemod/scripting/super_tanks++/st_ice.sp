@@ -40,7 +40,7 @@ char g_sIceEffect[ST_MAXTYPES + 1][4], g_sIceEffect2[ST_MAXTYPES + 1][4], g_sIce
 
 float g_flIceChance[ST_MAXTYPES + 1], g_flIceChance2[ST_MAXTYPES + 1], g_flIceDuration[ST_MAXTYPES + 1], g_flIceDuration2[ST_MAXTYPES + 1], g_flIceRange[ST_MAXTYPES + 1], g_flIceRange2[ST_MAXTYPES + 1], g_flIceRangeChance[ST_MAXTYPES + 1], g_flIceRangeChance2[ST_MAXTYPES + 1];
 
-int g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceHitMode2[ST_MAXTYPES + 1];
+int g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceHitMode2[ST_MAXTYPES + 1], g_iIceOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -107,6 +107,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bIce[client] = false;
+	g_iIceOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -207,8 +208,6 @@ public void ST_PluginEnd()
 			vRemoveIce(iPlayer);
 		}
 	}
-
-	vReset();
 }
 
 public void ST_Event(Event event, const char[] name)
@@ -252,7 +251,7 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iIceAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveIce(tank);
 	}
@@ -263,6 +262,7 @@ static void vIceHit(int survivor, int tank, float chance, int enabled, const cha
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bIce[survivor])
 	{
 		g_bIce[survivor] = true;
+		g_iIceOwner[survivor] = tank;
 
 		float flPos[3];
 		GetClientEyePosition(survivor, flPos);
@@ -301,13 +301,9 @@ static void vRemoveIce(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bIce[iSurvivor])
+		if (bIsSurvivor(iSurvivor) && IsPlayerAlive(iSurvivor) && g_bIce[iSurvivor] && g_iIceOwner[iSurvivor] == tank)
 		{
-			DataPack dpStopIce;
-			CreateDataTimer(0.1, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopIce.WriteCell(GetClientUserId(iSurvivor));
-			dpStopIce.WriteCell(GetClientUserId(tank));
-			dpStopIce.WriteString("0");
+			vStopIce(iSurvivor);
 		}
 	}
 }
@@ -319,6 +315,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bIce[iPlayer] = false;
+			g_iIceOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -326,6 +323,7 @@ static void vReset()
 static void vStopIce(int survivor)
 {
 	g_bIce[survivor] = false;
+	g_iIceOwner[survivor] = 0;
 
 	float flPos[3];
 	GetClientEyePosition(survivor, flPos);
@@ -368,6 +366,7 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bIce[iSurvivor] = false;
+		g_iIceOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}

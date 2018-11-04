@@ -38,7 +38,7 @@ char g_sDrugEffect[ST_MAXTYPES + 1][4], g_sDrugEffect2[ST_MAXTYPES + 1][4], g_sD
 
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0}, g_flDrugChance[ST_MAXTYPES + 1], g_flDrugChance2[ST_MAXTYPES + 1], g_flDrugDuration[ST_MAXTYPES + 1], g_flDrugDuration2[ST_MAXTYPES + 1], g_flDrugInterval[ST_MAXTYPES + 1], g_flDrugInterval2[ST_MAXTYPES + 1], g_flDrugRange[ST_MAXTYPES + 1], g_flDrugRange2[ST_MAXTYPES + 1], g_flDrugRangeChance[ST_MAXTYPES + 1], g_flDrugRangeChance2[ST_MAXTYPES + 1];
 
-int g_iDrugAbility[ST_MAXTYPES + 1], g_iDrugAbility2[ST_MAXTYPES + 1], g_iDrugHit[ST_MAXTYPES + 1], g_iDrugHit2[ST_MAXTYPES + 1], g_iDrugHitMode[ST_MAXTYPES + 1], g_iDrugHitMode2[ST_MAXTYPES + 1];
+int g_iDrugAbility[ST_MAXTYPES + 1], g_iDrugAbility2[ST_MAXTYPES + 1], g_iDrugHit[ST_MAXTYPES + 1], g_iDrugHit2[ST_MAXTYPES + 1], g_iDrugHitMode[ST_MAXTYPES + 1], g_iDrugHitMode2[ST_MAXTYPES + 1], g_iDrugOwner[MAXPLAYERS + 1];
 
 UserMsg g_umFadeUserMsgId;
 
@@ -107,6 +107,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bDrug[client] = false;
+	g_iDrugOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -202,11 +203,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -231,6 +227,23 @@ public void ST_Ability(int tank)
 				{
 					vDrugHit(iSurvivor, tank, flDrugRangeChance, iDrugAbility, "2", "3");
 				}
+			}
+		}
+	}
+}
+
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsHumanSurvivor(iSurvivor) && IsPlayerAlive(iSurvivor) && g_bDrug[iSurvivor] && g_iDrugOwner[iSurvivor] == tank)
+			{
+				g_bDrug[iSurvivor] = false;
+				g_iDrugOwner[iSurvivor] = 0;
+
+				vDrug(iSurvivor, false, g_flDrugAngles);
 			}
 		}
 	}
@@ -282,6 +295,7 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, const ch
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bDrug[survivor])
 	{
 		g_bDrug[survivor] = true;
+		g_iDrugOwner[survivor] = tank;
 
 		float flDrugInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flDrugInterval[ST_TankType(tank)] : g_flDrugInterval2[ST_TankType(tank)];
 		DataPack dpDrug;
@@ -314,6 +328,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bDrug[iPlayer] = false;
+			g_iDrugOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -321,6 +336,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bDrug[survivor] = false;
+	g_iDrugOwner[survivor] = 0;
 
 	vDrug(survivor, false, g_flDrugAngles);
 
@@ -355,6 +371,8 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 	if (!bIsHumanSurvivor(iSurvivor))
 	{
 		g_bDrug[iSurvivor] = false;
+		g_iDrugOwner[iSurvivor] = 0;
+
 		return Plugin_Stop;
 	}
 

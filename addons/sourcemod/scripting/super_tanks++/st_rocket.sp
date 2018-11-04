@@ -44,7 +44,7 @@ char g_sRocketEffect[ST_MAXTYPES + 1][4], g_sRocketEffect2[ST_MAXTYPES + 1][4], 
 
 float g_flRocketChance[ST_MAXTYPES + 1], g_flRocketChance2[ST_MAXTYPES + 1], g_flRocketDelay[ST_MAXTYPES + 1], g_flRocketDelay2[ST_MAXTYPES + 1], g_flRocketRange[ST_MAXTYPES + 1], g_flRocketRange2[ST_MAXTYPES + 1], g_flRocketRangeChance[ST_MAXTYPES + 1], g_flRocketRangeChance2[ST_MAXTYPES + 1];
 
-int g_iRocket[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketAbility2[ST_MAXTYPES + 1], g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHit2[ST_MAXTYPES + 1], g_iRocketHitMode[ST_MAXTYPES + 1], g_iRocketHitMode2[ST_MAXTYPES + 1], g_iRocketSprite = -1;
+int g_iRocket[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketAbility2[ST_MAXTYPES + 1], g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHit2[ST_MAXTYPES + 1], g_iRocketHitMode[ST_MAXTYPES + 1], g_iRocketHitMode2[ST_MAXTYPES + 1], g_iRocketOwner[MAXPLAYERS + 1], g_iRocketSprite = -1;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -115,6 +115,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bRocket[client] = false;
+	g_iRocketOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -206,11 +207,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -240,6 +236,21 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bRocket[iSurvivor] && g_iRocketOwner[iSurvivor] == tank)
+			{
+				g_bRocket[iSurvivor] = false;
+				g_iRocketOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -247,6 +258,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bRocket[iPlayer] = false;
+			g_iRocketOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -262,6 +274,7 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, const 
 		}
 
 		g_bRocket[survivor] = true;
+		g_iRocketOwner[survivor] = tank;
 
 		float flRocketDelay = !g_bTankConfig[ST_TankType(tank)] ? g_flRocketDelay[ST_TankType(tank)] : g_flRocketDelay2[ST_TankType(tank)],
 			flPosition[3], flAngles[3];
@@ -336,6 +349,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor) || !g_bRocket[iSurvivor])
 	{
 		g_bRocket[iSurvivor] = false;
+		g_iRocketOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -344,6 +358,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bRocket[iSurvivor] = false;
+		g_iRocketOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -352,6 +367,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	if (iRocketAbility == 0)
 	{
 		g_bRocket[iSurvivor] = false;
+		g_iRocketOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -378,6 +394,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor) || !g_bRocket[iSurvivor])
 	{
 		g_bRocket[iSurvivor] = false;
+		g_iRocketOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -386,6 +403,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bRocket[iSurvivor] = false;
+		g_iRocketOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -394,6 +412,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	if (iRocketAbility == 0)
 	{
 		g_bRocket[iSurvivor] = false;
+		g_iRocketOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -420,6 +439,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	}
 
 	g_bRocket[iSurvivor] = false;
+	g_iRocketOwner[iSurvivor] = 0;
 
 	return Plugin_Continue;
 }

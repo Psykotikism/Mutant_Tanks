@@ -38,7 +38,7 @@ char g_sJumpEffect[ST_MAXTYPES + 1][4], g_sJumpEffect2[ST_MAXTYPES + 1][4], g_sJ
 
 float g_flJumpChance[ST_MAXTYPES + 1], g_flJumpChance2[ST_MAXTYPES + 1], g_flJumpDuration[ST_MAXTYPES + 1], g_flJumpDuration2[ST_MAXTYPES + 1], g_flJumpHeight[ST_MAXTYPES + 1], g_flJumpHeight2[ST_MAXTYPES + 1], g_flJumpInterval[ST_MAXTYPES + 1], g_flJumpInterval2[ST_MAXTYPES + 1], g_flJumpRange[ST_MAXTYPES + 1], g_flJumpRange2[ST_MAXTYPES + 1], g_flJumpRangeChance[ST_MAXTYPES + 1], g_flJumpRangeChance2[ST_MAXTYPES + 1], g_flJumpSporadicChance[ST_MAXTYPES + 1], g_flJumpSporadicChance2[ST_MAXTYPES + 1], g_flJumpSporadicHeight[ST_MAXTYPES + 1], g_flJumpSporadicHeight2[ST_MAXTYPES + 1];
 
-int g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpAbility2[ST_MAXTYPES + 1], g_iJumpHit[ST_MAXTYPES + 1], g_iJumpHit2[ST_MAXTYPES + 1], g_iJumpHitMode[ST_MAXTYPES + 1], g_iJumpHitMode2[ST_MAXTYPES + 1], g_iJumpMode[ST_MAXTYPES + 1], g_iJumpMode2[ST_MAXTYPES + 1];
+int g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpAbility2[ST_MAXTYPES + 1], g_iJumpHit[ST_MAXTYPES + 1], g_iJumpHit2[ST_MAXTYPES + 1], g_iJumpHitMode[ST_MAXTYPES + 1], g_iJumpHitMode2[ST_MAXTYPES + 1], g_iJumpMode[ST_MAXTYPES + 1], g_iJumpMode2[ST_MAXTYPES + 1], g_iJumpOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -89,6 +89,7 @@ public void OnClientPutInServer(int client)
 
 	g_bJump[client] = false;
 	g_bJump2[client] = false;
+	g_iJumpOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -200,11 +201,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -257,6 +253,23 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		g_bJump[tank] = false;
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bJump2[iSurvivor] && g_iJumpOwner[iSurvivor] == tank)
+			{
+				g_bJump2[iSurvivor] = false;
+				g_iJumpOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vJump(int survivor, int tank)
 {
 	float flJumpHeight = !g_bTankConfig[ST_TankType(tank)] ? g_flJumpHeight[ST_TankType(tank)] : g_flJumpHeight2[ST_TankType(tank)],
@@ -273,6 +286,7 @@ static void vJumpHit(int survivor, int tank, float chance, int enabled, const ch
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bJump2[survivor])
 	{
 		g_bJump2[survivor] = true;
+		g_iJumpOwner[survivor] = tank;
 
 		DataPack dpJump;
 		CreateDataTimer(0.25, tTimerJump3, dpJump, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -305,6 +319,7 @@ static void vReset()
 		{
 			g_bJump[iPlayer] = false;
 			g_bJump2[iPlayer] = false;
+			g_iJumpOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -312,6 +327,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bJump2[survivor] = false;
+	g_iJumpOwner[survivor] = 0;
 
 	char sJumpMessage[4];
 	sJumpMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sJumpMessage[ST_TankType(tank)] : g_sJumpMessage2[ST_TankType(tank)];
@@ -344,14 +360,7 @@ static int iJumpHitMode(int tank)
 public Action tTimerJump(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bJump[iTank])
-	{
-		g_bJump[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3) || !g_bJump[iTank])
 	{
 		g_bJump[iTank] = false;
 
@@ -371,14 +380,7 @@ public Action tTimerJump(Handle timer, int userid)
 public Action tTimerJump2(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bJump[iTank])
-	{
-		g_bJump[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3) || !g_bJump[iTank])
 	{
 		g_bJump[iTank] = false;
 
@@ -427,9 +429,10 @@ public Action tTimerJump3(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bJump2[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bJump2[iSurvivor] = false;
+		g_iJumpOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -437,7 +440,7 @@ public Action tTimerJump3(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[4];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bJump2[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

@@ -201,11 +201,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_incapacitated"))
@@ -235,6 +230,11 @@ public void ST_Ability(int tank)
 			PrintToChatAll("%s %t", ST_TAG2, "Fragile", sTankName);
 		}
 	}
+}
+
+public void ST_BossStage(int tank)
+{
+	g_bFragile[tank] = false;
 }
 
 static void vReset()

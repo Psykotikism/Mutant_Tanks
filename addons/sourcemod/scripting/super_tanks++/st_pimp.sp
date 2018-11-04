@@ -38,7 +38,7 @@ char g_sPimpEffect[ST_MAXTYPES + 1][4], g_sPimpEffect2[ST_MAXTYPES + 1][4], g_sP
 
 float g_flPimpChance[ST_MAXTYPES + 1], g_flPimpChance2[ST_MAXTYPES + 1], g_flPimpInterval[ST_MAXTYPES + 1], g_flPimpInterval2[ST_MAXTYPES + 1], g_flPimpRange[ST_MAXTYPES + 1], g_flPimpRange2[ST_MAXTYPES + 1], g_flPimpRangeChance[ST_MAXTYPES + 1], g_flPimpRangeChance2[ST_MAXTYPES + 1];
 
-int g_iPimpAbility[ST_MAXTYPES + 1], g_iPimpAbility2[ST_MAXTYPES + 1], g_iPimpAmount[ST_MAXTYPES + 1], g_iPimpAmount2[ST_MAXTYPES + 1], g_iPimpCount[MAXPLAYERS + 1], g_iPimpDamage[ST_MAXTYPES + 1], g_iPimpDamage2[ST_MAXTYPES + 1], g_iPimpHit[ST_MAXTYPES + 1], g_iPimpHit2[ST_MAXTYPES + 1], g_iPimpHitMode[ST_MAXTYPES + 1], g_iPimpHitMode2[ST_MAXTYPES + 1];
+int g_iPimpAbility[ST_MAXTYPES + 1], g_iPimpAbility2[ST_MAXTYPES + 1], g_iPimpAmount[ST_MAXTYPES + 1], g_iPimpAmount2[ST_MAXTYPES + 1], g_iPimpCount[MAXPLAYERS + 1], g_iPimpDamage[ST_MAXTYPES + 1], g_iPimpDamage2[ST_MAXTYPES + 1], g_iPimpHit[ST_MAXTYPES + 1], g_iPimpHit2[ST_MAXTYPES + 1], g_iPimpHitMode[ST_MAXTYPES + 1], g_iPimpHitMode2[ST_MAXTYPES + 1], g_iPimpOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -104,6 +104,7 @@ public void OnClientPutInServer(int client)
 
 	g_bPimp[client] = false;
 	g_iPimpCount[client] = 0;
+	g_iPimpOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -203,11 +204,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -237,11 +233,28 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bPimp[iSurvivor] && g_iPimpOwner[iSurvivor] == tank)
+			{
+				g_bPimp[iSurvivor] = false;
+				g_iPimpCount[iSurvivor] = 0;
+				g_iPimpOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vPimpHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bPimp[survivor])
 	{
 		g_bPimp[survivor] = true;
+		g_iPimpOwner[survivor] = tank;
 
 		float flPimpInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flPimpInterval[ST_TankType(tank)] : g_flPimpInterval2[ST_TankType(tank)];
 		DataPack dpPimp;
@@ -274,6 +287,7 @@ static void vReset()
 		{
 			g_bPimp[iPlayer] = false;
 			g_iPimpCount[iPlayer] = 0;
+			g_iPimpOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -282,6 +296,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bPimp[survivor] = false;
 	g_iPimpCount[survivor] = 0;
+	g_iPimpOwner[survivor] = 0;
 
 	char sPimpMessage[3];
 	sPimpMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sPimpMessage[ST_TankType(tank)] : g_sPimpMessage2[ST_TankType(tank)];
@@ -311,9 +326,11 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bPimp[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bPimp[iSurvivor] = false;
+		g_iPimpCount[iSurvivor] = 0;
+		g_iPimpOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -321,7 +338,7 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPimp[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

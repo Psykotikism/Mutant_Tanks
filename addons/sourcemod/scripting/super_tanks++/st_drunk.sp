@@ -38,7 +38,7 @@ char g_sDrunkEffect[ST_MAXTYPES + 1][4], g_sDrunkEffect2[ST_MAXTYPES + 1][4], g_
 
 float g_flDrunkChance[ST_MAXTYPES + 1], g_flDrunkChance2[ST_MAXTYPES + 1], g_flDrunkDuration[ST_MAXTYPES + 1], g_flDrunkDuration2[ST_MAXTYPES + 1], g_flDrunkRange[ST_MAXTYPES + 1], g_flDrunkRange2[ST_MAXTYPES + 1], g_flDrunkRangeChance[ST_MAXTYPES + 1], g_flDrunkRangeChance2[ST_MAXTYPES + 1], g_flDrunkSpeedInterval[ST_MAXTYPES + 1], g_flDrunkSpeedInterval2[ST_MAXTYPES + 1], g_flDrunkTurnInterval[ST_MAXTYPES + 1], g_flDrunkTurnInterval2[ST_MAXTYPES + 1];
 
-int g_iDrunkAbility[ST_MAXTYPES + 1], g_iDrunkAbility2[ST_MAXTYPES + 1], g_iDrunkHit[ST_MAXTYPES + 1], g_iDrunkHit2[ST_MAXTYPES + 1], g_iDrunkHitMode[ST_MAXTYPES + 1], g_iDrunkHitMode2[ST_MAXTYPES + 1];
+int g_iDrunkAbility[ST_MAXTYPES + 1], g_iDrunkAbility2[ST_MAXTYPES + 1], g_iDrunkHit[ST_MAXTYPES + 1], g_iDrunkHit2[ST_MAXTYPES + 1], g_iDrunkHitMode[ST_MAXTYPES + 1], g_iDrunkHitMode2[ST_MAXTYPES + 1], g_iDrunkOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -103,6 +103,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bDrunk[client] = false;
+	g_iDrunkOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -202,11 +203,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -234,11 +230,27 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bDrunk[iSurvivor] && g_iDrunkOwner[iSurvivor] == tank)
+			{
+				g_bDrunk[iSurvivor] = false;
+				g_iDrunkOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vDrunkHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bDrunk[survivor])
 	{
 		g_bDrunk[survivor] = true;
+		g_iDrunkOwner[survivor] = tank;
 
 		float flDrunkSpeedInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flDrunkSpeedInterval[ST_TankType(tank)] : g_flDrunkSpeedInterval2[ST_TankType(tank)];
 		DataPack dpDrunkSpeed;
@@ -279,6 +291,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bDrunk[iPlayer] = false;
+			g_iDrunkOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -286,6 +299,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bDrunk[survivor] = false;
+	g_iDrunkOwner[survivor] = 0;
 
 	char sDrunkMessage[3];
 	sDrunkMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sDrunkMessage[ST_TankType(tank)] : g_sDrunkMessage2[ST_TankType(tank)];
@@ -355,9 +369,10 @@ public Action tTimerDrunkTurn(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bDrunk[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bDrunk[iSurvivor] = false;
+		g_iDrunkOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -365,7 +380,7 @@ public Action tTimerDrunkTurn(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bDrunk[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

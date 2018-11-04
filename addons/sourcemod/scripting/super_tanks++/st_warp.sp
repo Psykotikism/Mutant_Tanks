@@ -214,11 +214,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -251,6 +246,11 @@ public void ST_Ability(int tank)
 			CreateTimer(flWarpInterval, tTimerWarp, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
+}
+
+public void ST_BossStage(int tank)
+{
+	g_bWarp[tank] = false;
 }
 
 static void vReset()
@@ -318,15 +318,10 @@ static int iWarpHitMode(int tank)
 public Action tTimerWarp(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWarp[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iWarpAbility(iTank) != 2 && iWarpAbility(iTank) != 3) || !g_bWarp[iTank])
 	{
 		g_bWarp[iTank] = false;
-		return Plugin_Stop;
-	}
 
-	if (iWarpAbility(iTank) != 2 && iWarpAbility(iTank) != 3)
-	{
-		g_bWarp[iTank] = false;
 		return Plugin_Stop;
 	}
 

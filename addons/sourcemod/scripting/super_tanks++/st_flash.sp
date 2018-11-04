@@ -145,11 +145,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	float flFlashChance = !g_bTankConfig[ST_TankType(tank)] ? g_flFlashChance[ST_TankType(tank)] : g_flFlashChance2[ST_TankType(tank)];
@@ -172,6 +167,11 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	g_bFlash[tank] = false;
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -180,6 +180,18 @@ static void vReset()
 		{
 			g_bFlash[iPlayer] = false;
 		}
+	}
+}
+
+static void vReset2(int tank)
+{
+	g_bFlash[tank] = false;
+
+	if (iFlashMessage(tank) == 1)
+	{
+		char sTankName[33];
+		ST_TankName(tank, sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Flash2", sTankName);
 	}
 }
 
@@ -198,9 +210,9 @@ public Action tTimerFlash(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFlash[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bFlash[iTank] = false;
+		vReset2(iTank);
 
 		return Plugin_Stop;
 	}
@@ -208,19 +220,12 @@ public Action tTimerFlash(Handle timer, DataPack pack)
 	float flTime = pack.ReadFloat(),
 		flFlashDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flFlashDuration[ST_TankType(iTank)] : g_flFlashDuration2[ST_TankType(iTank)];
 
-	if (iFlashAbility(iTank) == 0 || (flTime + flFlashDuration) < GetEngineTime())
+	if (iFlashAbility(iTank) == 0 || (flTime + flFlashDuration) < GetEngineTime() || !g_bFlash[iTank])
 	{
-		g_bFlash[iTank] = false;
+		vReset2(iTank);
 
 		float flRunSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flRunSpeed[ST_TankType(iTank)] : g_flRunSpeed2[ST_TankType(iTank)];
 		SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
-
-		if (iFlashMessage(iTank) == 1)
-		{
-			char sTankName[33];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Flash2", sTankName);
-		}
 
 		return Plugin_Stop;
 	}

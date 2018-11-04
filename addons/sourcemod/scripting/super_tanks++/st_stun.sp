@@ -37,7 +37,7 @@ char g_sStunEffect[ST_MAXTYPES + 1][4], g_sStunEffect2[ST_MAXTYPES + 1][4], g_sS
 
 float g_flStunChance[ST_MAXTYPES + 1], g_flStunChance2[ST_MAXTYPES + 1], g_flStunDuration[ST_MAXTYPES + 1], g_flStunDuration2[ST_MAXTYPES + 1], g_flStunRange[ST_MAXTYPES + 1], g_flStunRange2[ST_MAXTYPES + 1], g_flStunRangeChance[ST_MAXTYPES + 1], g_flStunRangeChance2[ST_MAXTYPES + 1], g_flStunSpeed[ST_MAXTYPES + 1], g_flStunSpeed2[ST_MAXTYPES + 1];
 
-int g_iStunAbility[ST_MAXTYPES + 1], g_iStunAbility2[ST_MAXTYPES + 1], g_iStunHit[ST_MAXTYPES + 1], g_iStunHit2[ST_MAXTYPES + 1], g_iStunHitMode[ST_MAXTYPES + 1], g_iStunHitMode2[ST_MAXTYPES + 1];
+int g_iStunAbility[ST_MAXTYPES + 1], g_iStunAbility2[ST_MAXTYPES + 1], g_iStunHit[ST_MAXTYPES + 1], g_iStunHit2[ST_MAXTYPES + 1], g_iStunHitMode[ST_MAXTYPES + 1], g_iStunHitMode2[ST_MAXTYPES + 1], g_iStunOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -102,6 +102,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bStun[client] = false;
+	g_iStunOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -206,8 +207,6 @@ public void ST_PluginEnd()
 			vRemoveStun(iPlayer);
 		}
 	}
-
-	vReset();
 }
 
 public void ST_Event(Event event, const char[] name)
@@ -251,7 +250,7 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iStunAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveStun(tank);
 	}
@@ -261,13 +260,12 @@ static void vRemoveStun(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bStun[iSurvivor])
+		if (bIsSurvivor(iSurvivor) && IsPlayerAlive(iSurvivor) && g_bStun[iSurvivor] && g_iStunOwner[iSurvivor] == tank)
 		{
-			DataPack dpStopStun;
-			CreateDataTimer(0.1, tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopStun.WriteCell(GetClientUserId(iSurvivor));
-			dpStopStun.WriteCell(GetClientUserId(tank));
-			dpStopStun.WriteString("0");
+			g_bStun[iSurvivor] = false;
+			g_iStunOwner[iSurvivor] = 0;
+
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
 	}
 }
@@ -279,6 +277,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bStun[iPlayer] = false;
+			g_iStunOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -288,6 +287,7 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, const ch
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bStun[survivor])
 	{
 		g_bStun[survivor] = true;
+		g_iStunOwner[survivor] = tank;
 
 		float flStunSpeed = !g_bTankConfig[ST_TankType(tank)] ? g_flStunSpeed[ST_TankType(tank)] : g_flStunSpeed2[ST_TankType(tank)],
 			flStunDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flStunDuration[ST_TankType(tank)] : g_flStunDuration2[ST_TankType(tank)];
@@ -343,6 +343,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bStun[iSurvivor] = false;
+		g_iStunOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -351,6 +352,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bStun[iSurvivor])
 	{
 		g_bStun[iSurvivor] = false;
+		g_iStunOwner[iSurvivor] = 0;
 
 		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 
@@ -358,6 +360,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 	}
 
 	g_bStun[iSurvivor] = false;
+	g_iStunOwner[iSurvivor] = 0;
 
 	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 

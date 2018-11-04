@@ -142,11 +142,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_incapacitated"))
@@ -177,6 +172,11 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	g_bSplash[tank] = false;
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -185,6 +185,18 @@ static void vReset()
 		{
 			g_bSplash[iPlayer] = false;
 		}
+	}
+}
+
+static void vReset2(int tank)
+{
+	g_bSplash[tank] = false;
+
+	if (iSplashMessage(tank) == 1)
+	{
+		char sTankName[33];
+		ST_TankName(tank, sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Splash2", sTankName);
 	}
 }
 
@@ -206,29 +218,16 @@ static int iSplashMessage(int tank)
 public Action tTimerSplash(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSplash[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iSplashAbility(iTank) == 0 || !g_bSplash[iTank])
 	{
-		g_bSplash[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iSplashAbility(iTank) == 0)
-	{
-		g_bSplash[iTank] = false;
-
-		if (iSplashMessage(iTank) == 1)
-		{
-			char sTankName[33];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Splash2", sTankName);
-		}
+		vReset2(iTank);
 
 		return Plugin_Stop;
 	}
 
 	float flSplashRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flSplashRange[ST_TankType(iTank)] : g_flSplashRange2[ST_TankType(iTank)],
 		flTankPos[3];
+
 	GetClientAbsOrigin(iTank, flTankPos);
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)

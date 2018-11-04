@@ -141,11 +141,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (iRegenAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bRegen[tank])
@@ -164,6 +159,11 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	g_bRegen[tank] = false;
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -172,6 +172,18 @@ static void vReset()
 		{
 			g_bRegen[iPlayer] = false;
 		}
+	}
+}
+
+static void vReset2(int tank)
+{
+	g_bRegen[tank] = false;
+
+	if (iRegenMessage(tank) == 1)
+	{
+		char sTankName[33];
+		ST_TankName(tank, sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Regen2", sTankName);
 	}
 }
 
@@ -188,23 +200,9 @@ static int iRegenMessage(int tank)
 public Action tTimerRegen(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRegen[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRegenAbility(iTank) == 0 || !g_bRegen[iTank])
 	{
-		g_bRegen[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iRegenAbility(iTank) == 0)
-	{
-		g_bRegen[iTank] = false;
-
-		if (iRegenMessage(iTank) == 1)
-		{
-			char sTankName[33];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Regen2", sTankName);
-		}
+		vReset2(iTank);
 
 		return Plugin_Stop;
 	}

@@ -142,11 +142,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	float flRockChance = !g_bTankConfig[ST_TankType(tank)] ? g_flRockChance[ST_TankType(tank)] : g_flRockChance2[ST_TankType(tank)];
@@ -186,6 +181,11 @@ public void ST_Ability(int tank)
 			PrintToChatAll("%s %t", ST_TAG2, "Rock", sTankName);
 		}
 	}
+}
+
+public void ST_BossStage(int tank)
+{
+	g_bRock[tank] = false;
 }
 
 static void vReset()

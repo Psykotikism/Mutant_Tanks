@@ -222,11 +222,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -271,6 +266,11 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	g_bHeal[tank] = false;
+}
+
 static void vHealHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor))
@@ -311,6 +311,20 @@ static void vReset()
 	}
 }
 
+static void vReset2(int tank)
+{
+	g_bHeal[tank] = false;
+
+	char sHealMessage[4];
+	sHealMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sHealMessage[ST_TankType(tank)] : g_sHealMessage2[ST_TankType(tank)];
+	if (StrContains(sHealMessage, "3") != -1)
+	{
+		char sTankName[33];
+		ST_TankName(tank, sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Heal3", sTankName);
+	}
+}
+
 static float flHealChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flHealChance[ST_TankType(tank)] : g_flHealChance2[ST_TankType(tank)];
@@ -334,25 +348,9 @@ static int iHealHitMode(int tank)
 public Action tTimerHeal(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bHeal[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iHealAbility(iTank) != 2 && iHealAbility(iTank) != 3) || !g_bHeal[iTank])
 	{
-		g_bHeal[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iHealAbility(iTank) != 2 && iHealAbility(iTank) != 3)
-	{
-		g_bHeal[iTank] = false;
-
-		char sHealMessage[4];
-		sHealMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sHealMessage[ST_TankType(iTank)] : g_sHealMessage2[ST_TankType(iTank)];
-		if (StrContains(sHealMessage, "3") != -1)
-		{
-			char sTankName[33];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Heal3", sTankName);
-		}
+		vReset2(iTank);
 
 		return Plugin_Stop;
 	}

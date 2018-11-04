@@ -37,7 +37,7 @@ char g_sHypnoEffect[ST_MAXTYPES + 1][4], g_sHypnoEffect2[ST_MAXTYPES + 1][4], g_
 
 float g_flHypnoBulletDivisor[ST_MAXTYPES + 1], g_flHypnoBulletDivisor2[ST_MAXTYPES + 1], g_flHypnoChance[ST_MAXTYPES + 1], g_flHypnoChance2[ST_MAXTYPES + 1], g_flHypnoDuration[ST_MAXTYPES + 1], g_flHypnoDuration2[ST_MAXTYPES + 1], g_flHypnoExplosiveDivisor[ST_MAXTYPES + 1], g_flHypnoExplosiveDivisor2[ST_MAXTYPES + 1], g_flHypnoFireDivisor[ST_MAXTYPES + 1], g_flHypnoFireDivisor2[ST_MAXTYPES + 1], g_flHypnoMeleeDivisor[ST_MAXTYPES + 1], g_flHypnoMeleeDivisor2[ST_MAXTYPES + 1], g_flHypnoRange[ST_MAXTYPES + 1], g_flHypnoRange2[ST_MAXTYPES + 1], g_flHypnoRangeChance[ST_MAXTYPES + 1], g_flHypnoRangeChance2[ST_MAXTYPES + 1];
 
-int g_iHypnoAbility[ST_MAXTYPES + 1], g_iHypnoAbility2[ST_MAXTYPES + 1], g_iHypnoHit[ST_MAXTYPES + 1], g_iHypnoHit2[ST_MAXTYPES + 1], g_iHypnoHitMode[ST_MAXTYPES + 1], g_iHypnoHitMode2[ST_MAXTYPES + 1], g_iHypnoMode[ST_MAXTYPES + 1], g_iHypnoMode2[ST_MAXTYPES + 1];
+int g_iHypnoAbility[ST_MAXTYPES + 1], g_iHypnoAbility2[ST_MAXTYPES + 1], g_iHypnoHit[ST_MAXTYPES + 1], g_iHypnoHit2[ST_MAXTYPES + 1], g_iHypnoHitMode[ST_MAXTYPES + 1], g_iHypnoHitMode2[ST_MAXTYPES + 1], g_iHypnoMode[ST_MAXTYPES + 1], g_iHypnoMode2[ST_MAXTYPES + 1], g_iHypnoOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -102,6 +102,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bHypno[client] = false;
+	g_iHypnoOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -266,12 +267,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vRemoveHypno();
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -279,7 +274,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			vRemoveHypno();
+			vRemoveHypno(iTank);
 		}
 	}
 }
@@ -313,9 +308,9 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iHypnoAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveHypno();
+		vRemoveHypno(tank);
 	}
 }
 
@@ -324,6 +319,7 @@ static void vHypnoHit(int survivor, int tank, float chance, int enabled, const c
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bHypno[survivor])
 	{
 		g_bHypno[survivor] = true;
+		g_iHypnoOwner[survivor] = tank;
 
 		float flHypnoDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flHypnoDuration[ST_TankType(tank)] : g_flHypnoDuration2[ST_TankType(tank)];
 		DataPack dpStopHypno;
@@ -347,13 +343,14 @@ static void vHypnoHit(int survivor, int tank, float chance, int enabled, const c
 	}
 }
 
-static void vRemoveHypno()
+static void vRemoveHypno(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bHypno[iSurvivor])
+		if (bIsSurvivor(iSurvivor) && g_bHypno[iSurvivor] && g_iHypnoOwner[iSurvivor] == tank)
 		{
 			g_bHypno[iSurvivor] = false;
+			g_iHypnoOwner[iSurvivor] = 0;
 		}
 	}
 }
@@ -365,6 +362,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bHypno[iPlayer] = false;
+			g_iHypnoOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -394,22 +392,25 @@ public Action tTimerStopHypno(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bHypno[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bHypno[iSurvivor] = false;
+		g_iHypnoOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bHypno[iSurvivor])
 	{
 		g_bHypno[iSurvivor] = false;
+		g_iHypnoOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	g_bHypno[iSurvivor] = false;
+	g_iHypnoOwner[iSurvivor] = 0;
 
 	char sHypnoMessage[3], sMessage[3];
 	sHypnoMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sHypnoMessage[ST_TankType(iTank)] : g_sHypnoMessage2[ST_TankType(iTank)];

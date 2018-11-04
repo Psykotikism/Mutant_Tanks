@@ -38,7 +38,7 @@ char g_sAimlessEffect[ST_MAXTYPES + 1][4], g_sAimlessEffect2[ST_MAXTYPES + 1][4]
 
 float g_flAimlessAngle[MAXPLAYERS + 1][3], g_flAimlessChance[ST_MAXTYPES + 1], g_flAimlessChance2[ST_MAXTYPES + 1], g_flAimlessDuration[ST_MAXTYPES + 1], g_flAimlessDuration2[ST_MAXTYPES + 1], g_flAimlessRange[ST_MAXTYPES + 1], g_flAimlessRange2[ST_MAXTYPES + 1], g_flAimlessRangeChance[ST_MAXTYPES + 1], g_flAimlessRangeChance2[ST_MAXTYPES + 1];
 
-int g_iAimlessAbility[ST_MAXTYPES + 1], g_iAimlessAbility2[ST_MAXTYPES + 1], g_iAimlessHit[ST_MAXTYPES + 1], g_iAimlessHit2[ST_MAXTYPES + 1], g_iAimlessHitMode[ST_MAXTYPES + 1], g_iAimlessHitMode2[ST_MAXTYPES + 1];
+int g_iAimlessAbility[ST_MAXTYPES + 1], g_iAimlessAbility2[ST_MAXTYPES + 1], g_iAimlessHit[ST_MAXTYPES + 1], g_iAimlessHit2[ST_MAXTYPES + 1], g_iAimlessHitMode[ST_MAXTYPES + 1], g_iAimlessHitMode2[ST_MAXTYPES + 1], g_iAimlessOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -103,6 +103,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bAimless[client] = false;
+	g_iAimlessOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -209,12 +210,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vRemoveAimless();
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -222,7 +217,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			vRemoveAimless();
+			vRemoveAimless(iTank);
 		}
 	}
 }
@@ -256,9 +251,9 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iAimlessAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveAimless();
+		vRemoveAimless(tank);
 	}
 }
 
@@ -267,6 +262,7 @@ static void vAimlessHit(int survivor, int tank, float chance, int enabled, const
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bAimless[survivor])
 	{
 		g_bAimless[survivor] = true;
+		g_iAimlessOwner[survivor] = tank;
 
 		GetClientEyeAngles(survivor, g_flAimlessAngle[survivor]);
 
@@ -292,13 +288,14 @@ static void vAimlessHit(int survivor, int tank, float chance, int enabled, const
 	}
 }
 
-static void vRemoveAimless()
+static void vRemoveAimless(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bAimless[iSurvivor])
+		if (bIsSurvivor(iSurvivor) && g_bAimless[iSurvivor] && g_iAimlessOwner[iSurvivor] == tank)
 		{
 			g_bAimless[iSurvivor] = false;
+			g_iAimlessOwner[iSurvivor] = 0;
 		}
 	}
 }
@@ -310,6 +307,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bAimless[iPlayer] = false;
+			g_iAimlessOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -342,6 +340,7 @@ public Action tTimerStopAimless(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor) || !g_bAimless[iSurvivor])
 	{
 		g_bAimless[iSurvivor] = false;
+		g_iAimlessOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -350,11 +349,13 @@ public Action tTimerStopAimless(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bAimless[iSurvivor] = false;
+		g_iAimlessOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	g_bAimless[iSurvivor] = false;
+	g_iAimlessOwner[iSurvivor] = 0;
 
 	char sAimlessMessage[3], sMessage[3];
 	sAimlessMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sAimlessMessage[ST_TankType(iTank)] : g_sAimlessMessage2[ST_TankType(iTank)];

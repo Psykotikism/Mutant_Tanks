@@ -38,7 +38,7 @@ char g_sQuietEffect[ST_MAXTYPES + 1][4], g_sQuietEffect2[ST_MAXTYPES + 1][4], g_
 
 float g_flQuietChance[ST_MAXTYPES + 1], g_flQuietChance2[ST_MAXTYPES + 1], g_flQuietDuration[ST_MAXTYPES + 1], g_flQuietDuration2[ST_MAXTYPES + 1], g_flQuietRange[ST_MAXTYPES + 1], g_flQuietRange2[ST_MAXTYPES + 1], g_flQuietRangeChance[ST_MAXTYPES + 1], g_flQuietRangeChance2[ST_MAXTYPES + 1];
 
-int g_iQuietAbility[ST_MAXTYPES + 1], g_iQuietAbility2[ST_MAXTYPES + 1], g_iQuietHit[ST_MAXTYPES + 1], g_iQuietHit2[ST_MAXTYPES + 1], g_iQuietHitMode[ST_MAXTYPES + 1], g_iQuietHitMode2[ST_MAXTYPES + 1];
+int g_iQuietAbility[ST_MAXTYPES + 1], g_iQuietAbility2[ST_MAXTYPES + 1], g_iQuietHit[ST_MAXTYPES + 1], g_iQuietHit2[ST_MAXTYPES + 1], g_iQuietHitMode[ST_MAXTYPES + 1], g_iQuietHitMode2[ST_MAXTYPES + 1], g_iQuietOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -105,6 +105,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bQuiet[client] = false;
+	g_iQuietOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -222,12 +223,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vRemoveQuiet();
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -235,7 +230,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			vRemoveQuiet();
+			vRemoveQuiet(iTank);
 		}
 	}
 }
@@ -269,9 +264,9 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iQuietAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveQuiet();
+		vRemoveQuiet(tank);
 	}
 }
 
@@ -280,6 +275,7 @@ static void vQuietHit(int survivor, int tank, float chance, int enabled, const c
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bQuiet[survivor])
 	{
 		g_bQuiet[survivor] = true;
+		g_iQuietOwner[survivor] = tank;
 
 		float flQuietDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flQuietDuration[ST_TankType(tank)] : g_flQuietDuration2[ST_TankType(tank)];
 		DataPack dpStopQuiet;
@@ -303,13 +299,14 @@ static void vQuietHit(int survivor, int tank, float chance, int enabled, const c
 	}
 }
 
-static void vRemoveQuiet()
+static void vRemoveQuiet(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor) && g_bQuiet[iSurvivor])
+		if (bIsHumanSurvivor(iSurvivor) && g_bQuiet[iSurvivor] && g_iQuietOwner[iSurvivor] == tank)
 		{
 			g_bQuiet[iSurvivor] = false;
+			g_iQuietOwner[iSurvivor] = 0;
 		}
 	}
 }
@@ -321,6 +318,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bQuiet[iPlayer] = false;
+			g_iQuietOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -353,6 +351,7 @@ public Action tTimerStopQuiet(Handle timer, DataPack pack)
 	if (!bIsHumanSurvivor(iSurvivor) || !g_bQuiet[iSurvivor])
 	{
 		g_bQuiet[iSurvivor] = false;
+		g_iQuietOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -361,11 +360,13 @@ public Action tTimerStopQuiet(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bQuiet[iSurvivor] = false;
+		g_iQuietOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	g_bQuiet[iSurvivor] = false;
+	g_iQuietOwner[iSurvivor] = 0;
 
 	char sQuietMessage[3], sMessage[3];
 	sQuietMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sQuietMessage[ST_TankType(iTank)] : g_sQuietMessage2[ST_TankType(iTank)];

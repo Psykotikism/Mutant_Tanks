@@ -159,6 +159,11 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	g_bSpam[tank] = false;
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -167,6 +172,18 @@ static void vReset()
 		{
 			g_bSpam[iPlayer] = false;
 		}
+	}
+}
+
+static void vReset2(int tank)
+{
+	g_bSpam[tank] = false;
+
+	if (iSpamMessage(tank) == 1)
+	{
+		char sTankName[33];
+		ST_TankName(tank, sTankName);
+		PrintToChatAll("%s %t", ST_TAG2, "Spam2", sTankName);
 	}
 }
 
@@ -187,7 +204,8 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
 	{
-		g_bSpam[iTank] = false;
+		vReset2(iTank);
+
 		return Plugin_Stop;
 	}
 
@@ -196,14 +214,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 
 	if (iSpamAbility(iTank) == 0 || (flTime + flSpamDuration) < GetEngineTime())
 	{
-		g_bSpam[iTank] = false;
-
-		if (iSpamMessage(iTank) == 1)
-		{
-			char sTankName[33];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Spam2", sTankName);
-		}
+		vReset2(iTank);
 
 		return Plugin_Stop;
 	}

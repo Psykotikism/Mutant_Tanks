@@ -37,7 +37,7 @@ char g_sLeechEffect[ST_MAXTYPES + 1][4], g_sLeechEffect2[ST_MAXTYPES + 1][4], g_
 
 float g_flLeechChance[ST_MAXTYPES + 1], g_flLeechChance2[ST_MAXTYPES + 1], g_flLeechDuration[ST_MAXTYPES + 1], g_flLeechDuration2[ST_MAXTYPES + 1], g_flLeechInterval[ST_MAXTYPES + 1], g_flLeechInterval2[ST_MAXTYPES + 1], g_flLeechRange[ST_MAXTYPES + 1], g_flLeechRange2[ST_MAXTYPES + 1], g_flLeechRangeChance[ST_MAXTYPES + 1], g_flLeechRangeChance2[ST_MAXTYPES + 1];
 
-int g_iLeechAbility[ST_MAXTYPES + 1], g_iLeechAbility2[ST_MAXTYPES + 1], g_iLeechHit[ST_MAXTYPES + 1], g_iLeechHit2[ST_MAXTYPES + 1], g_iLeechHitMode[ST_MAXTYPES + 1], g_iLeechHitMode2[ST_MAXTYPES + 1];
+int g_iLeechAbility[ST_MAXTYPES + 1], g_iLeechAbility2[ST_MAXTYPES + 1], g_iLeechHit[ST_MAXTYPES + 1], g_iLeechHit2[ST_MAXTYPES + 1], g_iLeechHitMode[ST_MAXTYPES + 1], g_iLeechHitMode2[ST_MAXTYPES + 1], g_iLeechOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -102,6 +102,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bLeech[client] = false;
+	g_iLeechOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -197,11 +198,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
@@ -231,11 +227,27 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_BossStage(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor) && g_bLeech[iSurvivor] && g_iLeechOwner[iSurvivor] == tank)
+			{
+				g_bLeech[iSurvivor] = false;
+				g_iLeechOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vLeechHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bLeech[survivor])
 	{
 		g_bLeech[survivor] = true;
+		g_iLeechOwner[survivor] = tank;
 
 		float flLeechInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flLeechInterval[ST_TankType(tank)] : g_flLeechInterval2[ST_TankType(tank)];
 		DataPack dpLeech;
@@ -268,6 +280,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bLeech[iPlayer] = false;
+			g_iLeechOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -275,6 +288,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bLeech[survivor] = false;
+	g_iLeechOwner[survivor] = 0;
 
 	char sLeechMessage[3];
 	sLeechMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sLeechMessage[ST_TankType(tank)] : g_sLeechMessage2[ST_TankType(tank)];
@@ -306,9 +320,10 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bLeech[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bLeech[iSurvivor] = false;
+		g_iLeechOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -316,7 +331,7 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bLeech[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

@@ -38,7 +38,7 @@ char g_sRecoilEffect[ST_MAXTYPES + 1][4], g_sRecoilEffect2[ST_MAXTYPES + 1][4], 
 
 float g_flRecoilChance[ST_MAXTYPES + 1], g_flRecoilChance2[ST_MAXTYPES + 1], g_flRecoilDuration[ST_MAXTYPES + 1], g_flRecoilDuration2[ST_MAXTYPES + 1], g_flRecoilRange[ST_MAXTYPES + 1], g_flRecoilRange2[ST_MAXTYPES + 1], g_flRecoilRangeChance[ST_MAXTYPES + 1], g_flRecoilRangeChance2[ST_MAXTYPES + 1];
 
-int g_iRecoilAbility[ST_MAXTYPES + 1], g_iRecoilAbility2[ST_MAXTYPES + 1], g_iRecoilHit[ST_MAXTYPES + 1], g_iRecoilHit2[ST_MAXTYPES + 1], g_iRecoilHitMode[ST_MAXTYPES + 1], g_iRecoilHitMode2[ST_MAXTYPES + 1];
+int g_iRecoilAbility[ST_MAXTYPES + 1], g_iRecoilAbility2[ST_MAXTYPES + 1], g_iRecoilHit[ST_MAXTYPES + 1], g_iRecoilHit2[ST_MAXTYPES + 1], g_iRecoilHitMode[ST_MAXTYPES + 1], g_iRecoilHitMode2[ST_MAXTYPES + 1], g_iRecoilOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -103,6 +103,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bRecoil[client] = false;
+	g_iRecoilOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -194,12 +195,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vRemoveRecoil();
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -207,7 +202,7 @@ public void ST_Event(Event event, const char[] name)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			vRemoveRecoil();
+			vRemoveRecoil(iTank);
 		}
 	}
 	else if (StrEqual(name, "weapon_fire"))
@@ -251,9 +246,9 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iRecoilAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveRecoil();
+		vRemoveRecoil(tank);
 	}
 }
 
@@ -262,6 +257,7 @@ static void vRecoilHit(int survivor, int tank, float chance, int enabled, const 
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bRecoil[survivor])
 	{
 		g_bRecoil[survivor] = true;
+		g_iRecoilOwner[survivor] = tank;
 
 		float flRecoilDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flRecoilDuration[ST_TankType(tank)] : g_flRecoilDuration2[ST_TankType(tank)];
 		DataPack dpStopRecoil;
@@ -285,13 +281,14 @@ static void vRecoilHit(int survivor, int tank, float chance, int enabled, const 
 	}
 }
 
-static void vRemoveRecoil()
+static void vRemoveRecoil(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bRecoil[iSurvivor])
+		if (bIsSurvivor(iSurvivor) && g_bRecoil[iSurvivor] && g_iRecoilOwner[iSurvivor] == tank)
 		{
 			g_bRecoil[iSurvivor] = false;
+			g_iRecoilOwner[iSurvivor] = 0;
 		}
 	}
 }
@@ -303,6 +300,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bRecoil[iPlayer] = false;
+			g_iRecoilOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -335,6 +333,7 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor) || !g_bRecoil[iSurvivor])
 	{
 		g_bRecoil[iSurvivor] = false;
+		g_iRecoilOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -343,11 +342,13 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bRecoil[iSurvivor] = false;
+		g_iRecoilOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	g_bRecoil[iSurvivor] = false;
+	g_iRecoilOwner[iSurvivor] = 0;
 
 	char sRecoilMessage[3], sMessage[3];
 	sRecoilMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sRecoilMessage[ST_TankType(iTank)] : g_sRecoilMessage2[ST_TankType(iTank)];

@@ -193,11 +193,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -243,6 +238,11 @@ public void ST_Ability(int tank)
 			CreateTimer(flPanicInterval, tTimerPanic, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
+}
+
+public void ST_BossStage(int tank)
+{
+	g_bPanic[tank] = false;
 }
 
 static void vPanicHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
@@ -300,14 +300,7 @@ static int iPanicHitMode(int tank)
 public Action tTimerPanic(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPanic[iTank])
-	{
-		g_bPanic[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iPanicAbility(iTank) != 2 && iPanicAbility(iTank) != 3)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iPanicAbility(iTank) != 2 && iPanicAbility(iTank) != 3) || !g_bPanic[iTank])
 	{
 		g_bPanic[iTank] = false;
 

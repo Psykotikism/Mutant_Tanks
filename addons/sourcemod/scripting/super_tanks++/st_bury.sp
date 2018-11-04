@@ -38,7 +38,7 @@ char g_sBuryEffect[ST_MAXTYPES + 1][4], g_sBuryEffect2[ST_MAXTYPES + 1][4], g_sB
 
 float g_flBuryChance[ST_MAXTYPES + 1], g_flBuryChance2[ST_MAXTYPES + 1], g_flBuryDuration[ST_MAXTYPES + 1], g_flBuryDuration2[ST_MAXTYPES + 1], g_flBuryHeight[ST_MAXTYPES + 1], g_flBuryHeight2[ST_MAXTYPES + 1], g_flBuryRange[ST_MAXTYPES + 1], g_flBuryRange2[ST_MAXTYPES + 1], g_flBuryRangeChance[ST_MAXTYPES + 1], g_flBuryRangeChance2[ST_MAXTYPES + 1];
 
-int g_iBuryAbility[ST_MAXTYPES + 1], g_iBuryAbility2[ST_MAXTYPES + 1], g_iBuryHit[ST_MAXTYPES + 1], g_iBuryHit2[ST_MAXTYPES + 1], g_iBuryHitMode[ST_MAXTYPES + 1], g_iBuryHitMode2[ST_MAXTYPES + 1];
+int g_iBuryAbility[ST_MAXTYPES + 1], g_iBuryAbility2[ST_MAXTYPES + 1], g_iBuryHit[ST_MAXTYPES + 1], g_iBuryHit2[ST_MAXTYPES + 1], g_iBuryHitMode[ST_MAXTYPES + 1], g_iBuryHitMode2[ST_MAXTYPES + 1], g_iBuryOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -103,6 +103,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bBury[client] = false;
+	g_iBuryOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -207,8 +208,6 @@ public void ST_PluginEnd()
 			vRemoveBury(iPlayer);
 		}
 	}
-
-	vReset();
 }
 
 public void ST_Event(Event event, const char[] name)
@@ -252,7 +251,7 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	if (iBuryAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveBury(tank);
 	}
@@ -263,6 +262,7 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, const ch
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && bIsEntityGrounded(survivor) && !g_bBury[survivor])
 	{
 		g_bBury[survivor] = true;
+		g_iBuryOwner[survivor] = tank;
 
 		float flOrigin[3], flPos[3],
 			flBuryDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flBuryDuration[ST_TankType(tank)] : g_flBuryDuration2[ST_TankType(tank)];
@@ -308,13 +308,9 @@ static void vRemoveBury(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor])
+		if (bIsSurvivor(iSurvivor) && IsPlayerAlive(iSurvivor) && g_bBury[iSurvivor] && g_iBuryOwner[iSurvivor] == tank)
 		{
-			DataPack dpStopBury;
-			CreateDataTimer(0.1, tTimerStopBury, dpStopBury, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopBury.WriteCell(GetClientUserId(iSurvivor));
-			dpStopBury.WriteCell(GetClientUserId(tank));
-			dpStopBury.WriteString("0");
+			vStopBury(iSurvivor, tank);
 		}
 	}
 }
@@ -326,6 +322,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer))
 		{
 			g_bBury[iPlayer] = false;
+			g_iBuryOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -333,6 +330,7 @@ static void vReset()
 static void vStopBury(int survivor, int tank)
 {
 	g_bBury[survivor] = false;
+	g_iBuryOwner[survivor] = 0;
 
 	float flOrigin[3], flCurrentOrigin[3];
 	GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
@@ -390,15 +388,16 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bBury[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bBury[iSurvivor] = false;
+		g_iBuryOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBury[iSurvivor])
 	{
 		vStopBury(iSurvivor, iTank);
 

@@ -144,6 +144,17 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_PluginEnd()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (g_bMinion[iPlayer] && (bIsTank(iPlayer) || bIsSpecialInfected(iPlayer)) && IsPlayerAlive(iPlayer))
+		{
+			IsFakeClient(iPlayer) ? KickClient(iPlayer) : ForcePlayerSuicide(iPlayer);
+		}
+	}
+}
+
 public void ST_Event(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
@@ -276,7 +287,7 @@ public void ST_BossStage(int tank)
 
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{
-			if (bIsTank(iInfected) || bIsSpecialInfected(iInfected))
+			if ((bIsTank(iInfected) || bIsSpecialInfected(iInfected)) && g_iMinionOwner[iInfected] == tank)
 			{
 				g_bMinion[iInfected] = false;
 				g_iMinionOwner[iInfected] = 0;
