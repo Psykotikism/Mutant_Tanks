@@ -29,9 +29,15 @@
 
 			// Announce each Super Tank's arrival.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Announce Arrival"			"1"
+			// Combine numbers in any order for different results.
+			// Character limit: 5
+			// --
+			// 1: Announce when a Super Tank spawns.
+			// 2: Announce when a Super Tank evolves. (Only works when "Spawn Mode" is set to 1.)
+			// 3: Announce when a Super Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
+			// 4: Announce when a Super Tank transforms. (Only works when "Spawn Mode" is set to 3.)
+			// 5: Announce when a Super Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
+			"Announce Arrival"			"12345"
 
 			// Announce each Super Tank's death.
 			// --
@@ -155,6 +161,7 @@
 			"Enable Custom Configs"			"0"
 
 			// The type of custom config that Super Tanks++ creates.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 5
 			// --
@@ -166,6 +173,7 @@
 			"Create Config Types"			"12345"
 
 			// The type of custom config that Super Tanks++ executes.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 5
 			// --
@@ -347,6 +355,7 @@
 		"Props"
 		{
 			// Props that the Super Tank can spawn with.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 6
 			// --
@@ -403,6 +412,7 @@
 			"Body Particle"				"0"
 
 			// The particle effects for the Super Tank's body.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 7
 			// --
@@ -422,6 +432,7 @@
 			"Rock Particle"				"0"
 
 			// The particle effects for the Super Tank's rock.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 4
 			// --
@@ -2194,6 +2205,7 @@
 			"Ghost Range Chance"			"15.0"
 
 			// The Super Tank disarms the following weapon slots.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 5
 			// --
@@ -3582,6 +3594,7 @@
 			"Minion Replace"			"1"
 
 			// The Super Tank spawns these minions.
+			// --
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 12
@@ -5251,6 +5264,7 @@
 			"Ability Message"			"0"
 
 			// The Super Tank throws these cars.
+			// --
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 6
@@ -5268,6 +5282,7 @@
 			"Throw Chance"				"33.3"
 
 			// The Super Tank throws these special infected.
+			// --
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 14
@@ -5666,6 +5681,7 @@
 			"Ability Message"			"0"
 
 			// The axis of the Super Tank's whirl effect.
+			// --
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 6

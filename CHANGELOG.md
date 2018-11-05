@@ -13,6 +13,7 @@ Changes:
 3. All Chance settings now accept 0.0% as a valid value.
 4. The "Skin-Glow Colors" and "Props Colors" settings now use random RGBA combinations when given invalid values (values less than 0 or greater than 255).
 5. The "Tank Chance", "Type Limit", and "Finale Tank" settings no longer affect respawned Tanks and randomized Tanks.
+6. The "Announce Arrival" setting now accepts different values.
 
 Files:
 

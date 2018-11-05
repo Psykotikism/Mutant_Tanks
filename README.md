@@ -420,6 +420,7 @@ Example:
 		"General"
 		{
 			"Tank Enabled"				"1" // Tank #1 can be chosen.
+			"Tank Chance"				"100.0" // Tank #1 has a chance to spawn.
 		}
 	}
 	"Tank #2"
@@ -427,6 +428,7 @@ Example:
 		"General"
 		{
 			"Tank Enabled"				"0" // Tank #2 cannot be chosen.
+			"Tank Chance"				"0.0" // Tank #2 has no chance to spawn but can still be spawned through the menu.
 		}
 	}
 	"Tank #3"
@@ -434,6 +436,7 @@ Example:
 		"General"
 		{
 			"Tank Enabled"				"0" // Tank #3 cannot be chosen.
+			"Tank Chance"				"0.0" // Tank #3 has no chance to spawn but can still be spawned through the menu.
 		}
 	}
 	"Tank #4"
@@ -441,6 +444,7 @@ Example:
 		"General"
 		{
 			"Tank Enabled"				"1" // Tank #4 can be chosen.
+			"Tank Chance"				"100.0" // Tank #4 has a chance to spawn.
 		}
 	}
 }
