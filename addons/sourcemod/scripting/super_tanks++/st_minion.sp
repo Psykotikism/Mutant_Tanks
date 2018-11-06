@@ -146,11 +146,11 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
 	{
-		if (g_bMinion[iPlayer] && (bIsTank(iPlayer) || bIsSpecialInfected(iPlayer)) && IsPlayerAlive(iPlayer))
+		if ((bIsTank(iMinion) || bIsSpecialInfected(iMinion)) && IsPlayerAlive(iMinion) && g_bMinion[iMinion])
 		{
-			IsFakeClient(iPlayer) ? KickClient(iPlayer) : ForcePlayerSuicide(iPlayer);
+			IsFakeClient(iMinion) ? KickClient(iMinion) : ForcePlayerSuicide(iMinion);
 		}
 	}
 }

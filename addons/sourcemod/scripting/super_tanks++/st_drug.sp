@@ -205,11 +205,11 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsHumanSurvivor(iSurvivor) && g_bDrug[iSurvivor])
 		{
-			vRemoveDrug(iPlayer);
+			vDrug(iSurvivor, false, g_flDrugAngles);
 		}
 	}
 }
@@ -247,7 +247,14 @@ public void ST_BossStage(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveDrug(tank);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsHumanSurvivor(iSurvivor) && g_bDrug[iSurvivor] && g_iDrugOwner[iSurvivor] == tank)
+			{
+				g_bDrug[iSurvivor] = false;
+				g_iDrugOwner[iSurvivor] = 0;
+			}
+		}
 	}
 }
 
@@ -319,20 +326,6 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, const ch
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
 			PrintToChatAll("%s %t", ST_TAG2, "Drug", sTankName, survivor);
-		}
-	}
-}
-
-static void vRemoveDrug(int tank)
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsHumanSurvivor(iSurvivor) && g_bDrug[iSurvivor] && g_iDrugOwner[iSurvivor] == tank)
-		{
-			g_bDrug[iSurvivor] = false;
-			g_iDrugOwner[iSurvivor] = 0;
-
-			vDrug(iSurvivor, false, g_flDrugAngles);
 		}
 	}
 }

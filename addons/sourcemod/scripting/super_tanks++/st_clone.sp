@@ -143,11 +143,11 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	for (int iClone = 1; iClone <= MaxClients; iClone++)
 	{
-		if (g_bCloned[iPlayer] && bIsTank(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsTank(iClone) && IsPlayerAlive(iClone) && g_bCloned[iClone])
 		{
-			IsFakeClient(iPlayer) ? KickClient(iPlayer) : ForcePlayerSuicide(iPlayer);
+			IsFakeClient(iClone) ? KickClient(iClone) : ForcePlayerSuicide(iClone);
 		}
 	}
 }

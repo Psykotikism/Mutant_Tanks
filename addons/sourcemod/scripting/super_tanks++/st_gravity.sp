@@ -206,11 +206,11 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iTank))
 		{
-			vRemoveGravity(iPlayer);
+			vRemoveGravity(iTank);
 		}
 	}
 }
