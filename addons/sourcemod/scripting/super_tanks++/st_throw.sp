@@ -261,7 +261,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 								vSpawnInfected(iInfected, "smoker");
 							}
 						}
-						case '8': vSpawnInfected(iInfected, "tank");
+						case '7': vSpawnInfected(iInfected, "tank");
 						default: vSpawnInfected(iInfected, "hunter");
 					}
 

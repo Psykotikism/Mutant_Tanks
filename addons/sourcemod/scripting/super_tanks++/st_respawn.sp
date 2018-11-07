@@ -168,7 +168,7 @@ static void vRandomRespawn(int tank)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		int iFinaleTank = !g_bTankConfig[ST_TankType(iIndex)] ? g_iFinaleTank[ST_TankType(iIndex)] : g_iFinaleTank2[ST_TankType(iIndex)];
-		if (!ST_TypeEnabled(iIndex) || (iFinaleTank == 1 && (!bIsFinaleMap() || ST_TankWave() <= 0)) || ST_TankType(tank) == iIndex)
+		if (!ST_TypeEnabled(iIndex) || !ST_SpawnEnabled(iIndex) || (iFinaleTank == 1 && (!bIsFinaleMap() || ST_TankWave() <= 0)) || ST_TankType(tank) == iIndex)
 		{
 			continue;
 		}

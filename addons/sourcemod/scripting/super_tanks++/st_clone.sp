@@ -46,6 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 
 	CreateNative("ST_CloneAllowed", aNative_CloneAllowed);
+
 	RegPluginLibrary("st_clone");
 
 	return APLRes_Success;
