@@ -213,6 +213,7 @@
 			"Tank Enabled"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to spawn.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: Clones, respawned Super Tanks, randomized Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
 			// Minimum: 0.0 (No chance)
@@ -225,6 +226,13 @@
 			// 0: OFF
 			// 1: ON
 			"Tank Note"				"0"
+
+			// The Super Tank can be spawned through the "sm_tank" command.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Spawn Enabled"				"1"
 
 			// These are the Super Tank's skin and glow outline colors.
 			// Note: Random RGBA combinations will be used if invalid values (values less than 0 or greater than 255) are used.
@@ -252,6 +260,7 @@
 		"Spawn"
 		{
 			// The number of Super Tanks with this type that can be alive at any given time.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: Clones, respawned Super Tanks, randomized Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
 			// Minimum: 0
@@ -259,6 +268,7 @@
 			"Type Limit"				"32"
 
 			// The Super Tank will only spawn on finale maps.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: Clones, respawned Super Tanks, randomized Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
 			// 0: OFF
@@ -306,6 +316,13 @@
 			// 3rd number = 4th stage type
 			// 4th number = 5th stage type
 			"Boss Types"				"2,3,4,5"
+
+			// The Super Tank can be used by other Super Tanks who spawn with the Randomization mode feature.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Random Tank"				"1"
 
 			// The Super Tank switches to a random type every time this many seconds passes.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
