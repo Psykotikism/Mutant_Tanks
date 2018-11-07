@@ -788,16 +788,6 @@ Valid inputs:
 2. sm_tank <type name*> *The plugin will attempt to match the name with any of the Super Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 ```
 
-Logging:
-
-```
-The core plugin provides some logging, which consists of only logging each Super Tank's colors, arrival, and death.
-
-Changed the value of ST_LOGS in the core plugin.
-
-#define ST_LOGS 0 to #define ST_LOGS 1
-```
-
 ### Configuration
 1. How do I enable the custom configurations features?
 

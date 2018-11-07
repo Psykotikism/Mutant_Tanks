@@ -14,10 +14,9 @@ Changes:
 4. The "Skin-Glow Colors" and "Props Colors" settings now use random RGBA combinations when given invalid values (values less than 0 or greater than 255).
 5. The "Tank Chance", "Type Limit", and "Finale Tank" settings no longer affect respawned Tanks and randomized Tanks.
 6. The "Announce Arrival" setting now accepts different values.
-7. Added dev logging in the core plugin's source code that logs color combos and logs Tank spawns and deaths. (Changed ST_LOGS from 0 to 1 to enable.)
-8. Added the "Spawn Enabled" setting to determine if a Super Tank can be spawned through the sm_tank command. (Affects Clone and Respawn abilities.)
-9. Added the ST_SpawnEnabled native to check if a Super Tank can be spawned through the sm_tank command.
-10. Added the "Random Tank" setting to determine if a Super Tank can be used by other Super Tanks who spawn with the Randomization mode feature.
+7. Added the "Spawn Enabled" setting to determine if a Super Tank can be spawned through the sm_tank command. (Affects Clone and Respawn abilities.)
+8. Added the ST_SpawnEnabled native to check if a Super Tank can be spawned through the sm_tank command.
+9. Added the "Random Tank" setting to determine if a Super Tank can be used by other Super Tanks who spawn with the Randomization mode feature.
 
 Files:
 
