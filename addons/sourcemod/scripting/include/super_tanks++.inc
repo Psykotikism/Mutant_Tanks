@@ -203,7 +203,7 @@ native bool ST_TypeEnabled(int type);
 // Checks
 stock bool bHasIdlePlayer(int survivor)
 {
-	char sClassname[12];
+	char sClassname[32];
 	GetEntityNetClass(survivor, sClassname, sizeof(sClassname));
 
 	if (StrEqual(sClassname, "SurvivorBot"))
@@ -319,7 +319,7 @@ stock bool bIsPlayerIdle(int survivor)
 			continue;
 		}
 
-		char sClassname[12];
+		char sClassname[32];
 		GetEntityNetClass(iPlayer, sClassname, sizeof(sClassname));
 
 		if (StrEqual(sClassname, "SurvivorBot"))
@@ -383,7 +383,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 		}
 	}
 
-	char sGameMode[32], sGameModes[513];
+	char sGameMode[33], sGameModes[513];
 	convar.GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
 
@@ -791,7 +791,7 @@ stock int iGetIdlePlayer(int bot)
 {
 	if (bIsBotSurvivor(bot))
 	{
-		char sClassname[12];
+		char sClassname[32];
 		GetEntityNetClass(bot, sClassname, sizeof(sClassname));
 
 		if (StrEqual(sClassname, "SurvivorBot"))
