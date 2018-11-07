@@ -20,8 +20,6 @@
 #include <st_clone>
 #define REQUIRE_PLUGIN
 
-#define ST_LOGS 0
-
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -54,9 +52,8 @@ public Plugin myinfo =
 bool g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bTransformed[MAXPLAYERS + 1];
 
 char g_sAnnounceArrival[6], g_sAnnounceArrival2[6], g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sFinaleWaves[12], g_sFinaleWaves2[12],
-	g_sLogPath[PLATFORM_MAX_PATH], g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80],
-	g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][33], g_sTankName2[ST_MAXTYPES + 1][33], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80],
-	g_sTypeRange[8], g_sTypeRange2[8];
+	g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5],
+	g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][33], g_sTankName2[ST_MAXTYPES + 1][33], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80], g_sTypeRange[8], g_sTypeRange2[8];
 
 ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 
@@ -267,11 +264,6 @@ public void OnPluginStart()
 	BuildPath(Path_SM, g_sSavePath, sizeof(g_sSavePath), "data/super_tanks++/super_tanks++.cfg");
 	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 	vLoadConfigs(g_sSavePath, true);
-
-	CreateDirectory("addons/sourcemod/data/super_tanks++/log_files/", 511);
-	char sTimeFormat[32];
-	FormatTime(sTimeFormat, sizeof(sTimeFormat), "%b_%d_%Y", GetTime());
-	BuildPath(Path_SM, g_sLogPath, sizeof(g_sLogPath), "data/super_tanks++/log_files/super_tanks++_%s.txt", sTimeFormat);
 
 	vMultiTargetFilters(1);
 
@@ -728,12 +720,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						case 10: PrintToChatAll("%s %t", ST_TAG2, "Death10", sTankName);
 					}
 				}
-
-				#if ST_LOGS == 1
-				{
-					LogToFile(g_sLogPath, "%s died.", sTankName);
-				}
-				#endif
 
 				vRemoveProps(iPlayer);
 
@@ -1445,13 +1431,6 @@ static void vSetColor(int tank, int value)
 		SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed2, iGreen2, iBlue2));
 	}
 
-	#if ST_LOGS == 1
-	{
-		LogToFile(g_sLogPath, "Super Tank's skin color: %d %d %d", iRed, iGreen, iBlue);
-		LogToFile(g_sLogPath, "Super Tank's glow outline color: %d %d %d", iRed2, iGreen2, iBlue2);
-	}
-	#endif
-
 	g_iTankType[tank] = value;
 }
 
@@ -1533,16 +1512,6 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 		int iAlpha5 = (sRGB5[3][0] != '\0') ? StringToInt(sRGB5[3]) : 255;
 		iAlpha5 = (iAlpha5 < 0 || iAlpha5 > 255) ? GetRandomInt(0, 255) : iAlpha5;
-
-		#if ST_LOGS == 1
-		{
-			LogToFile(g_sLogPath, "Super Tank's beam lights color: %d %d %d", iRed, iGreen, iBlue);
-			LogToFile(g_sLogPath, "Super Tank's oxygen tanks color: %d %d %d", iRed2, iGreen2, iBlue2);
-			LogToFile(g_sLogPath, "Super Tank's oxygen tank flames color: %d %d %d", iRed3, iGreen3, iBlue3);
-			LogToFile(g_sLogPath, "Super Tank's rock spikes color: %d %d %d", iRed4, iGreen4, iBlue4);
-			LogToFile(g_sLogPath, "Super Tank's tires color: %d %d %d", iRed5, iGreen5, iBlue5);
-		}
-		#endif
 
 		char sSet2[6][4], sPropsChance[35], sPropsAttached[7];
 		sPropsChance = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsChance[g_iTankType[tank]] : g_sPropsChance2[g_iTankType[tank]];
@@ -1891,12 +1860,6 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				PrintToChatAll("%s %t", ST_TAG3, "NoNote");
 			}
 		}
-
-		#if ST_LOGS == 1
-		{
-			LogToFile(g_sLogPath, "%s spawned.", name);
-		}
-		#endif
 
 		Call_StartForward(g_hPresetForward);
 		Call_PushCell(tank);
