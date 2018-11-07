@@ -321,7 +321,7 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, const ch
 
 		char sDrugMessage[3];
 		sDrugMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sDrugMessage[ST_TankType(tank)] : g_sDrugMessage2[ST_TankType(tank)];
-		if (StrContains(sDrugMessage, message) != 1)
+		if (StrContains(sDrugMessage, message) != -1)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
