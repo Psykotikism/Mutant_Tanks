@@ -1137,7 +1137,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 				g_iBossStages[iIndex] = kvSuperTanks.GetNum("Spawn/Boss Stages", 3);
 				g_iBossStages[iIndex] = iClamp(g_iBossStages[iIndex], 1, 4);
 				kvSuperTanks.GetString("Spawn/Boss Types", g_sBossTypes[iIndex], sizeof(g_sBossTypes[]), "2,3,4,5");
-				g_iRandomTank[iIndex] = kvSuperTanks.GetNum("Spawn/Random Enabled", 1);
+				g_iRandomTank[iIndex] = kvSuperTanks.GetNum("Spawn/Random Tank", 1);
 				g_iRandomTank[iIndex] = iClamp(g_iRandomTank[iIndex], 0, 1);
 				g_flRandomInterval[iIndex] = kvSuperTanks.GetFloat("Spawn/Random Interval", 5.0);
 				g_flRandomInterval[iIndex] = flClamp(g_flRandomInterval[iIndex], 0.1, 9999999999.0);
@@ -1207,7 +1207,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 				g_iBossStages2[iIndex] = kvSuperTanks.GetNum("Spawn/Boss Stages", g_iBossStages[iIndex]);
 				g_iBossStages2[iIndex] = iClamp(g_iBossStages2[iIndex], 1, 4);
 				kvSuperTanks.GetString("Spawn/Boss Types", g_sBossTypes2[iIndex], sizeof(g_sBossTypes2[]), g_sBossTypes[iIndex]);
-				g_iRandomTank2[iIndex] = kvSuperTanks.GetNum("Spawn/Random Enabled", g_iRandomTank[iIndex]);
+				g_iRandomTank2[iIndex] = kvSuperTanks.GetNum("Spawn/Random Tank", g_iRandomTank[iIndex]);
 				g_iRandomTank2[iIndex] = iClamp(g_iRandomTank2[iIndex], 0, 1);
 				g_flRandomInterval2[iIndex] = kvSuperTanks.GetFloat("Spawn/Random Interval", g_flRandomInterval[iIndex]);
 				g_flRandomInterval2[iIndex] = flClamp(g_flRandomInterval2[iIndex], 0.1, 9999999999.0);
