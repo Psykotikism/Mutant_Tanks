@@ -309,6 +309,7 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, const
 
 		float flGravityValue = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityValue[ST_TankType(tank)] : g_flGravityValue2[ST_TankType(tank)],
 			flGravityDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityDuration[ST_TankType(tank)] : g_flGravityDuration2[ST_TankType(tank)];
+
 		SetEntityGravity(survivor, flGravityValue);
 
 		DataPack dpStopGravity;

@@ -370,6 +370,7 @@ public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 	}
 
 	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", GetRandomFloat(1.5, 3.0));
+
 	CreateTimer(GetRandomFloat(1.0, 3.0), tTimerStopDrunkSpeed, GetClientUserId(iSurvivor), TIMER_FLAG_NO_MAPCHANGE);
 
 	return Plugin_Continue;

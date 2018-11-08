@@ -492,6 +492,7 @@ public void ST_Ability(int tank)
 	if (iDropAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bDrop[tank])
 	{
 		g_bDrop[tank] = true;
+
 		CreateTimer(1.0, tTimerDrop, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }

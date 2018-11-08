@@ -273,7 +273,6 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, const c
 		GetClientEyeAngles(survivor, g_flChokeAngle[survivor]);
 
 		float flChokeDelay = !g_bTankConfig[ST_TankType(tank)] ? g_flChokeDelay[ST_TankType(tank)] : g_flChokeDelay2[ST_TankType(tank)];
-
 		DataPack dpChokeLaunch;
 		CreateDataTimer(flChokeDelay, tTimerChokeLaunch, dpChokeLaunch, TIMER_FLAG_NO_MAPCHANGE);
 		dpChokeLaunch.WriteCell(GetClientUserId(survivor));
@@ -375,7 +374,6 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 
 	float flChokeHeight = !g_bTankConfig[ST_TankType(iTank)] ? g_flChokeHeight[ST_TankType(iTank)] : g_flChokeHeight2[ST_TankType(iTank)],
 		flVelocity[3];
-
 	flVelocity[0] = 0.0;
 	flVelocity[1] = 0.0;
 	flVelocity[2] = flChokeHeight;
