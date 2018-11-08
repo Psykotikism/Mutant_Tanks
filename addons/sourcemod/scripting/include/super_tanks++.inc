@@ -949,10 +949,10 @@ stock void vCopyVector(float source[3], float target[3])
 	target[2] = source[2];
 }
 
-stock void vCreateConfigFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+stock void vCreateConfigFile(const char[] folder, const char[] filename, const char[] label = "")
 {
 	char sConfigFilename[PLATFORM_MAX_PATH], sConfigLabel[PLATFORM_MAX_PATH];
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.cfg", filepath, folder, filename);
+	BuildPath(Path_SM, sConfigFilename, sizeof(sConfigFilename), "data/super_tanks++/%s%s.cfg", folder, filename);
 	if (FileExists(sConfigFilename))
 	{
 		return;
