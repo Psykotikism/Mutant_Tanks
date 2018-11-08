@@ -347,7 +347,17 @@ public Action tTimerShake(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	vShake(iSurvivor);
+	Handle hShakeTarget = StartMessageOne("Shake", iSurvivor);
+	if (hShakeTarget != null)
+	{
+		BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
+		bfWrite.WriteByte(0);
+		bfWrite.WriteFloat(16.0);
+		bfWrite.WriteFloat(0.5);
+		bfWrite.WriteFloat(1.0);
+
+		EndMessage();
+	}
 
 	return Plugin_Continue;
 }

@@ -391,7 +391,6 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 	float flElectricDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_flElectricDamage[ST_TankType(iTank)] : g_flElectricDamage2[ST_TankType(iTank)];
 	SDKHooks_TakeDamage(iSurvivor, iTank, iTank, flElectricDamage);
 
-	vShake(iSurvivor);
 	vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
 
 	switch (GetRandomInt(1, 2))
