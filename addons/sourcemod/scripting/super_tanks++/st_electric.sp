@@ -41,7 +41,7 @@ bool g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[
 
 char g_sElectricEffect[ST_MAXTYPES + 1][4], g_sElectricEffect2[ST_MAXTYPES + 1][4], g_sElectricMessage[ST_MAXTYPES + 1][3], g_sElectricMessage2[ST_MAXTYPES + 1][3];
 
-float g_flElectricChance[ST_MAXTYPES + 1], g_flElectricChance2[ST_MAXTYPES + 1], g_flElectricDamage[ST_MAXTYPES + 1], g_flElectricDamage2[ST_MAXTYPES + 1], g_flElectricDuration[ST_MAXTYPES + 1], g_flElectricDuration2[ST_MAXTYPES + 1], g_flElectricInterval[ST_MAXTYPES + 1], g_flElectricInterval2[ST_MAXTYPES + 1], g_flElectricRange[ST_MAXTYPES + 1], g_flElectricRange2[ST_MAXTYPES + 1], g_flElectricRangeChance[ST_MAXTYPES + 1], g_flElectricRangeChance2[ST_MAXTYPES + 1], g_flElectricSpeed[ST_MAXTYPES + 1], g_flElectricSpeed2[ST_MAXTYPES + 1];
+float g_flElectricChance[ST_MAXTYPES + 1], g_flElectricChance2[ST_MAXTYPES + 1], g_flElectricDamage[ST_MAXTYPES + 1], g_flElectricDamage2[ST_MAXTYPES + 1], g_flElectricDuration[ST_MAXTYPES + 1], g_flElectricDuration2[ST_MAXTYPES + 1], g_flElectricInterval[ST_MAXTYPES + 1], g_flElectricInterval2[ST_MAXTYPES + 1], g_flElectricRange[ST_MAXTYPES + 1], g_flElectricRange2[ST_MAXTYPES + 1], g_flElectricRangeChance[ST_MAXTYPES + 1], g_flElectricRangeChance2[ST_MAXTYPES + 1];
 
 int g_iElectricAbility[ST_MAXTYPES + 1], g_iElectricAbility2[ST_MAXTYPES + 1], g_iElectricHit[ST_MAXTYPES + 1], g_iElectricHit2[ST_MAXTYPES + 1], g_iElectricHitMode[ST_MAXTYPES + 1], g_iElectricHitMode2[ST_MAXTYPES + 1], g_iElectricOwner[MAXPLAYERS + 1];
 
@@ -179,8 +179,6 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flElectricRange[iIndex] = flClamp(g_flElectricRange[iIndex], 1.0, 9999999999.0);
 				g_flElectricRangeChance[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Range Chance", 15.0);
 				g_flElectricRangeChance[iIndex] = flClamp(g_flElectricRangeChance[iIndex], 0.0, 100.0);
-				g_flElectricSpeed[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Speed", 0.75);
-				g_flElectricSpeed[iIndex] = flClamp(g_flElectricSpeed[iIndex], 0.1, 0.9);
 			}
 			else
 			{
@@ -206,8 +204,6 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flElectricRange2[iIndex] = flClamp(g_flElectricRange2[iIndex], 1.0, 9999999999.0);
 				g_flElectricRangeChance2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Range Chance", g_flElectricRangeChance[iIndex]);
 				g_flElectricRangeChance2[iIndex] = flClamp(g_flElectricRangeChance2[iIndex], 0.0, 100.0);
-				g_flElectricSpeed2[iIndex] = kvSuperTanks.GetFloat("Electric Ability/Electric Speed", g_flElectricSpeed[iIndex]);
-				g_flElectricSpeed2[iIndex] = flClamp(g_flElectricSpeed2[iIndex], 0.1, 0.9);
 			}
 
 			kvSuperTanks.Rewind();
@@ -215,17 +211,6 @@ public void ST_Configs(const char[] savepath, bool main)
 	}
 
 	delete kvSuperTanks;
-}
-
-public void ST_PluginEnd()
-{
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor) && g_bElectric[iSurvivor])
-		{
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
-		}
-	}
 }
 
 public void ST_Ability(int tank)
@@ -277,11 +262,7 @@ static void vElectricHit(int survivor, int tank, float chance, int enabled, cons
 		g_bElectric[survivor] = true;
 		g_iElectricOwner[survivor] = tank;
 
-		float flElectricSpeed = !g_bTankConfig[ST_TankType(tank)] ? g_flElectricSpeed[ST_TankType(tank)] : g_flElectricSpeed2[ST_TankType(tank)],
-			flElectricInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flElectricInterval[ST_TankType(tank)] : g_flElectricInterval2[ST_TankType(tank)];
-
-		SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", flElectricSpeed);
-
+		float flElectricInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flElectricInterval[ST_TankType(tank)] : g_flElectricInterval2[ST_TankType(tank)];
 		DataPack dpElectric;
 		CreateDataTimer(flElectricInterval, tTimerElectric, dpElectric, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpElectric.WriteCell(GetClientUserId(survivor));
@@ -323,8 +304,6 @@ static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bElectric[survivor] = false;
 	g_iElectricOwner[survivor] = 0;
-
-	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 
 	char sElectricMessage[3];
 	sElectricMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sElectricMessage[ST_TankType(tank)] : g_sElectricMessage2[ST_TankType(tank)];
