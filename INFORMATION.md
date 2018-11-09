@@ -1702,12 +1702,6 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Electric Range Chance"			"15.0"
-
-			// The Super Tank sets the survivors' run speed to this value when they are electrocuted.
-			// --
-			// Minimum: 0.1
-			// Maximum: 0.99
-			"Electric Speed"			"0.75"
 		}
 	}
 }
