@@ -337,6 +337,8 @@ static void vStopBury(int survivor, int tank)
 	flOrigin[2] = flOrigin[2] + flBuryHeight(tank);
 	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
+	SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
+
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsSurvivor(iPlayer) && !g_bBury[iPlayer] && iPlayer != survivor)
@@ -345,11 +347,6 @@ static void vStopBury(int survivor, int tank)
 			TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
 			break;
 		}
-	}
-
-	if (bIsPlayerIncapacitated(survivor))
-	{
-		SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
 	}
 
 	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
