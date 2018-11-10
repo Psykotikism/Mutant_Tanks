@@ -143,7 +143,7 @@ public void ST_Configs(const char[] savepath, bool main)
 public void ST_RockThrow(int tank, int rock)
 {
 	float flTrackChance = !g_bTankConfig[ST_TankType(tank)] ? g_flTrackChance[ST_TankType(tank)] : g_flTrackChance2[ST_TankType(tank)];
-	if (iTrackAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flTrackChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (iTrackAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flTrackChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iTrackMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iTrackMessage[ST_TankType(tank)] : g_iTrackMessage2[ST_TankType(tank)];
 
@@ -462,7 +462,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iTrackAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iTrackAbility(iTank) == 0)
 	{
 		return Plugin_Stop;
 	}

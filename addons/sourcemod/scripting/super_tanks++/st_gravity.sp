@@ -83,7 +83,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -119,14 +119,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iGravityHitMode(attacker) == 0 || iGravityHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iGravityHitMode(attacker) == 0 || iGravityHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vGravityHit(victim, attacker, flGravityChance(attacker), iGravityHit(attacker), "1", "1");
 			}
 		}
-		else if ((iGravityHitMode(victim) == 0 || iGravityHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iGravityHitMode(victim) == 0 || iGravityHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -206,11 +206,13 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iTank))
+		if (bIsValidClient(iPlayer, "234"))
 		{
-			vRemoveGravity(iTank);
+			vRemoveGravity(iPlayer);
+
+			SetEntityGravity(iPlayer, 1.0);
 		}
 	}
 }
@@ -220,7 +222,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveGravity(iTank);
 		}
@@ -229,7 +231,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flGravityRange = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityRange[ST_TankType(tank)] : g_flGravityRange2[ST_TankType(tank)],
 			flGravityRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityRangeChance[ST_TankType(tank)] : g_flGravityRangeChance2[ST_TankType(tank)],
@@ -239,7 +241,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -296,7 +298,14 @@ public void ST_BossStage(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveGravity(tank);
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, "24") && g_bGravity2[iSurvivor] && g_iGravityOwner[iSurvivor] == tank)
+			{
+				g_bGravity2[iSurvivor] = false;
+				g_iGravityOwner[iSurvivor] = 0;
+			}
+		}
 	}
 }
 
@@ -355,24 +364,13 @@ static void vRemoveGravity(int tank)
 	}
 
 	g_bGravity[tank] = false;
-
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor] && g_iGravityOwner[iSurvivor] == tank)
-		{
-			g_bGravity2[iSurvivor] = false;
-			g_iGravityOwner[iSurvivor] = 0;
-
-			SetEntityGravity(iSurvivor, 1.0);
-		}
-	}
 }
 
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bGravity[iPlayer] = false;
 			g_bGravity2[iPlayer] = false;
@@ -415,7 +413,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity2[iSurvivor])
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity2[iSurvivor])
 	{
 		g_bGravity2[iSurvivor] = false;
 		g_iGravityOwner[iSurvivor] = 0;

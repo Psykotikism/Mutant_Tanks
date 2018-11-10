@@ -382,7 +382,7 @@ public void ST_Event(Event event, const char[] name)
 
 		float flDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropChance[ST_TankType(iTank)] : g_flDropChance2[ST_TankType(iTank)];
 
-		if (iDropAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flDropChance && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsValidEntity(g_iDrop[iTank]))
+		if (iDropAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flDropChance && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsValidEntity(g_iDrop[iTank]))
 		{
 			float flPos[3], flAngles[3];
 			int iDropMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMessage[ST_TankType(iTank)] : g_iDropMessage2[ST_TankType(iTank)];
@@ -484,12 +484,13 @@ public void ST_Event(Event event, const char[] name)
 public void ST_BossStage(int tank)
 {
 	vDeleteDrop(tank);
+
 	g_bDrop[tank] = false;
 }
 
 public void ST_Ability(int tank)
 {
-	if (iDropAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bDrop[tank])
+	if (iDropAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bDrop[tank])
 	{
 		g_bDrop[tank] = true;
 
@@ -511,7 +512,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			vResetDrop(iPlayer);
 		}
@@ -543,7 +544,7 @@ static int iDropMode(int tank)
 public Action tTimerDrop(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iDropAbility(iTank) == 0 || !g_bDrop[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iDropAbility(iTank) == 0 || !g_bDrop[iTank])
 	{
 		g_bDrop[iTank] = false;
 

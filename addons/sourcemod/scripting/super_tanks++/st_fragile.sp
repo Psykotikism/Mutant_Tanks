@@ -80,7 +80,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -111,7 +111,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && g_bFragile[victim])
+		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && g_bFragile[victim])
 		{
 			float flFragileBulletMultiplier = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileBulletMultiplier[ST_TankType(victim)] : g_flFragileBulletMultiplier2[ST_TankType(victim)],
 				flFragileExplosiveMultiplier = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileExplosiveMultiplier[ST_TankType(victim)] : g_flFragileExplosiveMultiplier2[ST_TankType(victim)],
@@ -206,7 +206,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iFragileAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bFragile[iTank])
+		if (iFragileAbility(iTank) == 1 && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bFragile[iTank])
 		{
 			tTimerStopFragile(null, GetClientUserId(iTank));
 		}
@@ -216,7 +216,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_Ability(int tank)
 {
 	float flFragileChance = !g_bTankConfig[ST_TankType(tank)] ? g_flFragileChance[ST_TankType(tank)] : g_flFragileChance2[ST_TankType(tank)];
-	if (iFragileAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flFragileChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bFragile[tank])
+	if (iFragileAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flFragileChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bFragile[tank])
 	{
 		g_bFragile[tank] = true;
 
@@ -241,7 +241,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bFragile[iPlayer] = false;
 		}
@@ -261,7 +261,7 @@ static int iFragileMessage(int tank)
 public Action tTimerStopFragile(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFragile[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFragile[iTank])
 	{
 		g_bFragile[iTank] = false;
 

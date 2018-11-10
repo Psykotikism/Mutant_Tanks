@@ -140,10 +140,13 @@ native void ST_SpawnTank(int tank, int type);
  * Returns if the Tank is allowed to be a Super Tank.
  *
  * @param tank			Client index of the Tank.
+ * @param checks		Checks to run. 0 = client index, 1 = connection, 2 = in-game status,
+ *					3 = life state, 4 = kick status, 5 = bot check
+ *					Default: "0234"
  * @return			True if Tank is allowed to be a Super Tank, false otherwise.
  * @error			Invalid client index.
  **/
-native bool ST_TankAllowed(int tank);
+native bool ST_TankAllowed(int tank, const char[] checks = "0234");
 
 /**
  * Returns if a certain Super Tank type has a chance of spawning.
@@ -222,29 +225,29 @@ stock bool bHasIdlePlayer(int survivor)
 	return false;
 }
 
-stock bool bIsBoomer(int boomer)
+stock bool bIsBoomer(int boomer, const char[] mode = "024")
 {
-	return bIsInfected(boomer) && GetEntProp(boomer, Prop_Send, "m_zombieClass") == 2;
+	return bIsInfected(boomer, mode) && GetEntProp(boomer, Prop_Send, "m_zombieClass") == 2;
 }
 
-stock bool bIsBotIdle(int bot)
+stock bool bIsBotIdle(int bot, const char[] mode = "0234")
 {
-	return bIsSurvivor(bot) && IsFakeClient(bot) && bHasIdlePlayer(bot);
+	return bIsSurvivor(bot, mode) && IsFakeClient(bot) && bHasIdlePlayer(bot);
 }
 
-stock bool bIsBotIdleSurvivor(int bot)
+stock bool bIsBotIdleSurvivor(int bot, const char[] mode = "0234")
 {
-	return bIsSurvivor(bot) && IsFakeClient(bot) && !bHasIdlePlayer(bot);
+	return bIsSurvivor(bot, mode) && IsFakeClient(bot) && !bHasIdlePlayer(bot);
 }
 
-stock bool bIsBotSurvivor(int bot)
+stock bool bIsBotSurvivor(int bot, const char[] mode = "0234")
 {
-	return bIsSurvivor(bot) && IsFakeClient(bot);
+	return bIsSurvivor(bot, mode) && IsFakeClient(bot);
 }
 
-stock bool bIsCharger(int charger)
+stock bool bIsCharger(int charger, const char[] mode = "024")
 {
-	return bIsInfected(charger) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
+	return bIsInfected(charger, mode) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
 
 stock bool bIsEntityGrounded(int entity)
@@ -275,29 +278,29 @@ stock bool bIsGunWeapon(int survivor)
 	return false;
 }
 
-stock bool bIsHumanSurvivor(int survivor)
+stock bool bIsHumanSurvivor(int survivor, const char[] mode = "02345")
 {
-	return bIsSurvivor(survivor) && !IsFakeClient(survivor) && !bHasIdlePlayer(survivor) && !bIsPlayerIdle(survivor);
+	return bIsSurvivor(survivor, mode) && !bHasIdlePlayer(survivor) && !bIsPlayerIdle(survivor);
 }
 
-stock bool bIsHunter(int hunter)
+stock bool bIsHunter(int hunter, const char[] mode = "024")
 {
-	return bIsInfected(hunter) && GetEntProp(hunter, Prop_Send, "m_zombieClass") == 3;
+	return bIsInfected(hunter, mode) && GetEntProp(hunter, Prop_Send, "m_zombieClass") == 3;
 }
 
-stock bool bIsIdlePlayer(int bot, int survivor)
+stock bool bIsIdlePlayer(int bot, int survivor, const char[] mode = "0245")
 {
-	return bIsValidClient(survivor) && !IsFakeClient(survivor) && GetClientTeam(bot) == 2;
+	return bIsValidClient(survivor, mode) && GetClientTeam(bot) == 2;
 }
 
-stock bool bIsInfected(int infected)
+stock bool bIsInfected(int infected, const char[] mode = "024")
 {
-	return bIsValidClient(infected) && GetClientTeam(infected) == 3;
+	return bIsValidClient(infected, mode) && GetClientTeam(infected) == 3;
 }
 
-stock bool bIsJockey(int jockey)
+stock bool bIsJockey(int jockey, const char[] mode = "024")
 {
-	return bIsInfected(jockey) && bIsValidGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
+	return bIsInfected(jockey, mode) && bIsValidGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
 }
 
 stock bool bIsPlayerBurning(int player)
@@ -408,34 +411,64 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 	return true;
 }
 
-stock bool bIsSmoker(int smoker)
+stock bool bIsSmoker(int smoker, const char[] mode = "024")
 {
-	return bIsInfected(smoker) && GetEntProp(smoker, Prop_Send, "m_zombieClass") == 1;
+	return bIsInfected(smoker, mode) && GetEntProp(smoker, Prop_Send, "m_zombieClass") == 1;
 }
 
-stock bool bIsSpecialInfected(int infected)
+stock bool bIsSpecialInfected(int infected, const char[] mode = "024")
 {
-	return bIsSmoker(infected) || bIsBoomer(infected) || bIsHunter(infected) || bIsSpitter(infected) || bIsJockey(infected) || bIsCharger(infected);
+	return bIsSmoker(infected, mode) || bIsBoomer(infected, mode) || bIsHunter(infected, mode) || bIsSpitter(infected, mode) || bIsJockey(infected, mode) || bIsCharger(infected, mode);
 }
 
-stock bool bIsSpitter(int spitter)
+stock bool bIsSpitter(int spitter, const char[] mode = "024")
 {
-	return bIsInfected(spitter) && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
+	return bIsInfected(spitter, mode) && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
 }
 
-stock bool bIsSurvivor(int survivor)
+stock bool bIsSurvivor(int survivor, const char[] mode = "0234")
 {
-	return bIsValidClient(survivor) && GetClientTeam(survivor) == 2 && IsPlayerAlive(survivor);
+	return bIsValidClient(survivor, mode) && GetClientTeam(survivor) == 2;
 }
 
-stock bool bIsTank(int tank)
+stock bool bIsTank(int tank, const char[] mode = "024")
 {
-	return bIsInfected(tank) && (bIsValidGame() ? GetEntProp(tank, Prop_Send, "m_zombieClass") == 8 : GetEntProp(tank, Prop_Send, "m_zombieClass") == 5);
+	return bIsInfected(tank, mode) && (bIsValidGame() ? GetEntProp(tank, Prop_Send, "m_zombieClass") == 8 : GetEntProp(tank, Prop_Send, "m_zombieClass") == 5);
 }
 
-stock bool bIsValidClient(int player)
+stock bool bIsValidClient(int player, const char[] mode = "024")
 {
-	return 0 < player <= MaxClients && IsClientInGame(player) && !IsClientInKickQueue(player);
+	if (StrContains(mode, "0") != -1 && (player <= 0 || player > MaxClients))
+	{
+		return false;
+	}
+
+	if (StrContains(mode, "1") != -1 && !IsClientConnected(player))
+	{
+		return false;
+	}
+
+	if (StrContains(mode, "2") != -1 && !IsClientInGame(player))
+	{
+		return false;
+	}
+
+	if (StrContains(mode, "3") != -1 && !IsPlayerAlive(player))
+	{
+		return false;
+	}
+
+	if (StrContains(mode, "4") != -1 && IsClientInKickQueue(player))
+	{
+		return false;
+	}
+
+	if (StrContains(mode, "5") != -1 && IsFakeClient(player))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 stock bool bIsValidEntity(int entity)
@@ -453,11 +486,6 @@ stock bool bIsValidGame(bool l4d2 = true)
 	EngineVersion evEngine = GetEngineVersion();
 
 	return l4d2 ? evEngine == Engine_Left4Dead2 : evEngine == Engine_Left4Dead;
-}
-
-stock bool bIsValidHumanClient(int player)
-{
-	return bIsValidClient(player) && !IsFakeClient(player);
 }
 
 stock bool bIsWitch(int witch)
@@ -480,7 +508,7 @@ public bool bBoomerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsBoomer(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsBoomer(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -493,7 +521,7 @@ public bool bChargerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsCharger(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsCharger(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -506,7 +534,7 @@ public bool bHunterFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsHunter(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsHunter(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -519,7 +547,7 @@ public bool bInfectedFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsInfected(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsInfected(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -532,7 +560,7 @@ public bool bJockeyFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsJockey(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsJockey(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -545,7 +573,7 @@ public bool bSmokerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSmoker(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsSmoker(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -558,7 +586,7 @@ public bool bSpecialFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSpecialInfected(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsSpecialInfected(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -571,7 +599,7 @@ public bool bSpitterFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSpitter(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsSpitter(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -584,7 +612,7 @@ public bool bTankFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsTank(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsTank(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -605,7 +633,7 @@ public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 
 public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
 {
-	if (entity == data || bIsValidClient(entity))
+	if (entity == data || bIsValidClient(entity, "024"))
 	{
 		return false;
 	}
@@ -704,14 +732,14 @@ stock float flGetGroundUnits(int entity)
 stock float flGetNearestSurvivor(int tank)
 {
 	float flDistance;
-	if (bIsTank(tank) && IsPlayerAlive(tank))
+	if (bIsTank(tank, "0234"))
 	{
 		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -751,7 +779,7 @@ stock int iGetBotSurvivor()
 {
 	for (int iBot = MaxClients; iBot >= 1; iBot--)
 	{
-		if (bIsBotSurvivor(iBot))
+		if (bIsBotSurvivor(iBot, "234"))
 		{
 			return iBot;
 		}
@@ -765,7 +793,7 @@ stock int iGetHumanCount()
 	int iHumanCount;
 	for (int iHuman = 1; iHuman <= MaxClients; iHuman++)
 	{
-		if (bIsHumanSurvivor(iHuman))
+		if (bIsHumanSurvivor(iHuman, "2345"))
 		{
 			iHumanCount++;
 		}
@@ -812,7 +840,7 @@ stock int iGetPlayerCount()
 	int iPlayerCount;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidHumanClient(iPlayer))
+		if (bIsValidClient(iPlayer, "245"))
 		{
 			iPlayerCount++;
 		}
@@ -826,7 +854,7 @@ stock int iGetRandomSurvivor(int survivor)
 	int iSurvivorCount, iSurvivors[MAXPLAYERS + 1];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && iSurvivor != survivor)
+		if (bIsSurvivor(iSurvivor, "234") && iSurvivor != survivor)
 		{
 			iSurvivors[iSurvivorCount++] = iSurvivor;
 		}
@@ -842,7 +870,7 @@ stock int iGetRandomTarget(float pos[3], float angle[3])
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor))
+		if (bIsSurvivor(iSurvivor, "234"))
 		{
 			GetClientEyePosition(iSurvivor, flPos);
 			MakeVectorFromPoints(pos, flPos, flPos);
@@ -909,7 +937,7 @@ stock int iGetWitchCount()
 
 stock void vAttachParticle(int player, const char[] particlename, float time = 0.0, float origin = 0.0)
 {
-	if (bIsValidClient(player))
+	if (bIsValidClient(player, "0234"))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
@@ -971,7 +999,7 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename)
 
 stock void vCreateParticle(int player, const char[] particlename, float time = 0.0, float origin = 0.0)
 {
-	if (bIsValidClient(player))
+	if (bIsValidClient(player, "0234"))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
@@ -1207,7 +1235,7 @@ stock void ST_PrintToChatAll(char[] message, any ...)
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (IsClientInGame(iPlayer) && !IsFakeClient(iPlayer))
+		if (bIsValidClient(iPlayer, "25"))
 		{
 			SetGlobalTransTarget(iPlayer);
 			VFormat(sBuffer, sizeof(sBuffer), message, 2);

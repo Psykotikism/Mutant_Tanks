@@ -87,7 +87,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -121,14 +121,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iHealHitMode(attacker) == 0 || iHealHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iHealHitMode(attacker) == 0 || iHealHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vHealHit(victim, attacker, flHealChance(attacker), iHealHit(attacker), "1", "1");
 			}
 		}
-		else if ((iHealHitMode(victim) == 0 || iHealHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iHealHitMode(victim) == 0 || iHealHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -224,7 +224,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flHealRange = !g_bTankConfig[ST_TankType(tank)] ? g_flHealRange[ST_TankType(tank)] : g_flHealRange2[ST_TankType(tank)],
 			flHealRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flHealRangeChance[ST_TankType(tank)] : g_flHealRangeChance2[ST_TankType(tank)],
@@ -234,7 +234,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -304,7 +304,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bHeal[iPlayer] = false;
 		}
@@ -348,7 +348,7 @@ static int iHealHitMode(int tank)
 public Action tTimerHeal(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iHealAbility(iTank) != 2 && iHealAbility(iTank) != 3) || !g_bHeal[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iHealAbility(iTank) != 2 && iHealAbility(iTank) != 3) || !g_bHeal[iTank])
 	{
 		vReset2(iTank);
 
@@ -390,7 +390,7 @@ public Action tTimerHeal(Handle timer, int userid)
 
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
-		if (bIsSpecialInfected(iInfected))
+		if (bIsSpecialInfected(iInfected, "234"))
 		{
 			float flTankPos[3], flInfectedPos[3];
 			GetClientAbsOrigin(iTank, flTankPos);
@@ -419,7 +419,7 @@ public Action tTimerHeal(Handle timer, int userid)
 				}
 			}
 		}
-		else if (ST_TankAllowed(iInfected) && IsPlayerAlive(iInfected) && iInfected != iTank)
+		else if (ST_TankAllowed(iInfected) && iInfected != iTank)
 		{
 			float flTankPos[3], flInfectedPos[3];
 			GetClientAbsOrigin(iTank, flTankPos);

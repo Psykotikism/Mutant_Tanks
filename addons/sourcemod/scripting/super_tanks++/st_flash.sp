@@ -149,7 +149,7 @@ public void ST_PluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank) && IsPlayerAlive(iTank) && g_bFlash[iTank])
+		if (bIsTank(iTank, "234") && g_bFlash[iTank])
 		{
 			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
@@ -159,7 +159,7 @@ public void ST_PluginEnd()
 public void ST_Ability(int tank)
 {
 	float flFlashChance = !g_bTankConfig[ST_TankType(tank)] ? g_flFlashChance[ST_TankType(tank)] : g_flFlashChance2[ST_TankType(tank)];
-	if (iFlashAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flFlashChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bFlash[tank])
+	if (iFlashAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flFlashChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bFlash[tank])
 	{
 		g_bFlash[tank] = true;
 
@@ -187,7 +187,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bFlash[iPlayer] = false;
 		}
@@ -221,7 +221,7 @@ public Action tTimerFlash(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		vReset2(iTank);
 

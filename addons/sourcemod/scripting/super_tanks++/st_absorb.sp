@@ -80,7 +80,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -111,7 +111,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && g_bAbsorb[victim])
+		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && g_bAbsorb[victim])
 		{
 			float flAbsorbBulletDivisor = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbBulletDivisor[ST_TankType(victim)] : g_flAbsorbBulletDivisor2[ST_TankType(victim)],
 				flAbsorbExplosiveDivisor = !g_bTankConfig[ST_TankType(victim)] ? g_flAbsorbExplosiveDivisor[ST_TankType(victim)] : g_flAbsorbExplosiveDivisor2[ST_TankType(victim)],
@@ -206,7 +206,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iAbsorbAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bAbsorb[iTank])
+		if (iAbsorbAbility(iTank) == 1 && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bAbsorb[iTank])
 		{
 			tTimerStopAbsorb(null, GetClientUserId(iTank));
 		}
@@ -216,7 +216,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_Ability(int tank)
 {
 	float flAbsorbChance = !g_bTankConfig[ST_TankType(tank)] ? g_flAbsorbChance[ST_TankType(tank)] : g_flAbsorbChance2[ST_TankType(tank)];
-	if (iAbsorbAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flAbsorbChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bAbsorb[tank])
+	if (iAbsorbAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flAbsorbChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bAbsorb[tank])
 	{
 		g_bAbsorb[tank] = true;
 
@@ -241,7 +241,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bAbsorb[iPlayer] = false;
 		}
@@ -261,7 +261,7 @@ static int iAbsorbMessage(int tank)
 public Action tTimerStopAbsorb(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bAbsorb[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bAbsorb[iTank])
 	{
 		g_bAbsorb[iTank] = false;
 

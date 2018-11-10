@@ -141,7 +141,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Ability(int tank)
 {
-	if (iCloudAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bCloud[tank])
+	if (iCloudAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bCloud[tank])
 	{
 		g_bCloud[tank] = true;
 
@@ -165,7 +165,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bCloud[iPlayer] = false;
 		}
@@ -195,7 +195,7 @@ static int iCloudMessage(int tank)
 public Action tTimerCloud(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iCloudAbility(iTank) == 0 || !g_bCloud[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iCloudAbility(iTank) == 0 || !g_bCloud[iTank])
 	{
 		vReset2(iTank);
 
@@ -215,7 +215,7 @@ public Action tTimerCloud(Handle timer, int userid)
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor))
+		if (bIsSurvivor(iSurvivor, "234"))
 		{
 			float flSurvivorPos[3];
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);

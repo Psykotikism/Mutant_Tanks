@@ -155,7 +155,7 @@ public void ST_Configs(const char[] savepath, bool main)
 public void ST_Ability(int tank)
 {
 	float flMeteorChance = !g_bTankConfig[ST_TankType(tank)] ? g_flMeteorChance[ST_TankType(tank)] : g_flMeteorChance2[ST_TankType(tank)];
-	if (iMeteorAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMeteorChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bMeteor[tank])
+	if (iMeteorAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMeteorChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bMeteor[tank])
 	{
 		g_bMeteor[tank] = true;
 
@@ -187,7 +187,7 @@ public void ST_BossStage(int tank)
 
 static void vMeteor(int tank, int rock)
 {
-	if (!ST_TankAllowed(tank) || !IsPlayerAlive(tank) || !ST_CloneAllowed(tank, g_bCloneInstalled) || !bIsValidEntity(rock))
+	if (!ST_TankAllowed(tank) || !ST_CloneAllowed(tank, g_bCloneInstalled) || !bIsValidEntity(rock))
 	{
 		return;
 	}
@@ -221,7 +221,7 @@ static void vMeteor(int tank, int rock)
 
 				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
-					if (bIsSurvivor(iSurvivor))
+					if (bIsSurvivor(iSurvivor, "234"))
 					{
 						float flSurvivorPos[3];
 						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -259,7 +259,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bMeteor[iPlayer] = false;
 		}
@@ -276,7 +276,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iMeteorAbility(iTank) == 0 || !g_bMeteor[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iMeteorAbility(iTank) == 0 || !g_bMeteor[iTank])
 	{
 		g_bMeteor[iTank] = false;
 

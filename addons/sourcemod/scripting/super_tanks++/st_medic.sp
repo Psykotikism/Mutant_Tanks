@@ -126,14 +126,14 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank))
 	{
 		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{
-			if (bIsSpecialInfected(iInfected) && IsPlayerAlive(iInfected))
+			if (bIsSpecialInfected(iInfected, "234"))
 			{
 				float flInfectedPos[3];
 				GetClientAbsOrigin(iInfected, flInfectedPos);
@@ -157,7 +157,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iMedicAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flMedicChance(iTank) && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iMedicAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flMedicChance(iTank) && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vMedic(iTank);
 		}
@@ -189,7 +189,7 @@ static void vMedic(int tank)
 	GetClientAbsOrigin(tank, flTankPos);
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
-		if (bIsSpecialInfected(iInfected) && IsPlayerAlive(iInfected))
+		if (bIsSpecialInfected(iInfected, "234"))
 		{
 			float flInfectedPos[3];
 			GetClientAbsOrigin(iInfected, flInfectedPos);

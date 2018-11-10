@@ -81,7 +81,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -177,7 +177,7 @@ public void ST_Ability(int tank)
 {
 	int iWitchAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchAbility[ST_TankType(tank)] : g_iWitchAbility2[ST_TankType(tank)];
 	float flWitchChance = !g_bTankConfig[ST_TankType(tank)] ? g_flWitchChance[ST_TankType(tank)] : g_flWitchChance2[ST_TankType(tank)];
-	if (iWitchAbility == 1 && GetRandomFloat(0.1, 100.0) <= flWitchChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (iWitchAbility == 1 && GetRandomFloat(0.1, 100.0) <= flWitchChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iInfected = -1;
 		while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)

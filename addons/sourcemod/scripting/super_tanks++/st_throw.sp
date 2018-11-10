@@ -133,7 +133,7 @@ public void ST_Configs(const char[] savepath, bool main)
 public void ST_RockThrow(int tank, int rock)
 {
 	float flThrowChance = !g_bTankConfig[ST_TankType(tank)] ? g_flThrowChance[ST_TankType(tank)] : g_flThrowChance2[ST_TankType(tank)];
-	if (GetRandomFloat(0.1, 100.0) <= flThrowChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (GetRandomFloat(0.1, 100.0) <= flThrowChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		DataPack dpThrow;
 		CreateDataTimer(0.1, tTimerThrow, dpThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -155,7 +155,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sThrowAbility[9];
 	sThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowAbility[ST_TankType(iTank)] : g_sThrowAbility2[ST_TankType(iTank)];
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || StrEqual(sThrowAbility, ""))
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || StrEqual(sThrowAbility, ""))
 	{
 		return Plugin_Stop;
 	}

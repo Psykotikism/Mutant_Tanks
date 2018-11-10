@@ -141,7 +141,7 @@ public void ST_Configs(const char[] savepath, bool main)
 public void ST_Ability(int tank)
 {
 	float flSpamChance = !g_bTankConfig[ST_TankType(tank)] ? g_flSpamChance[ST_TankType(tank)] : g_flSpamChance2[ST_TankType(tank)];
-	if (iSpamAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flSpamChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bSpam[tank])
+	if (iSpamAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flSpamChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bSpam[tank])
 	{
 		g_bSpam[tank] = true;
 
@@ -168,7 +168,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bSpam[iPlayer] = false;
 		}
@@ -202,7 +202,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
 	{
 		vReset2(iTank);
 

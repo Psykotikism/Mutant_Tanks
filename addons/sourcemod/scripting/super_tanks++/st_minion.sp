@@ -148,7 +148,7 @@ public void ST_PluginEnd()
 {
 	for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
 	{
-		if ((bIsTank(iMinion) || bIsSpecialInfected(iMinion)) && IsPlayerAlive(iMinion) && g_bMinion[iMinion])
+		if ((bIsTank(iMinion, "234") || bIsSpecialInfected(iMinion, "234")) && g_bMinion[iMinion])
 		{
 			IsFakeClient(iMinion) ? KickClient(iMinion) : ForcePlayerSuicide(iMinion);
 		}
@@ -160,7 +160,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_death"))
 	{
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
-		if (iMinionAbility(iInfected) == 1 && ST_TankAllowed(iInfected))
+		if (iMinionAbility(iInfected) == 1 && ST_TankAllowed(iInfected, "024"))
 		{
 			g_bMinion[iInfected] = false;
 			g_iMinionCount[iInfected] = 0;
@@ -170,7 +170,7 @@ public void ST_Event(Event event, const char[] name)
 		{
 			for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 			{
-				if (g_iMinionOwner[iInfected] == iOwner && ST_TankAllowed(iOwner) && ST_CloneAllowed(iOwner, g_bCloneInstalled))
+				if (g_iMinionOwner[iInfected] == iOwner && ST_TankAllowed(iOwner, "024") && ST_CloneAllowed(iOwner, g_bCloneInstalled))
 				{
 					int iMinionReplace = !g_bTankConfig[ST_TankType(iOwner)] ? g_iMinionReplace[ST_TankType(iOwner)] : g_iMinionReplace2[ST_TankType(iOwner)];
 					if (iMinionReplace == 1)
@@ -197,7 +197,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_Ability(int tank)
 {
 	float flMinionChance = !g_bTankConfig[ST_TankType(tank)] ? g_flMinionChance[ST_TankType(tank)] : g_flMinionChance2[ST_TankType(tank)];
-	if (iMinionAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMinionChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (iMinionAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMinionChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iMinionAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iMinionAmount[ST_TankType(tank)] : g_iMinionAmount2[ST_TankType(tank)],
 			iMinionMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMinionMessage[ST_TankType(tank)] : g_iMinionMessage2[ST_TankType(tank)];
@@ -228,7 +228,7 @@ public void ST_Ability(int tank)
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						bSpecialInfected[iPlayer] = false;
-						if (bIsInfected(iPlayer))
+						if (bIsInfected(iPlayer, "24"))
 						{
 							bSpecialInfected[iPlayer] = true;
 						}
@@ -249,7 +249,7 @@ public void ST_Ability(int tank)
 					int iSelectedType;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (bIsInfected(iPlayer) && !bSpecialInfected[iPlayer])
+						if (bIsInfected(iPlayer, "24") && !bSpecialInfected[iPlayer])
 						{
 							iSelectedType = iPlayer;
 							break;
@@ -287,7 +287,7 @@ public void ST_BossStage(int tank)
 
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{
-			if ((bIsTank(iInfected) || bIsSpecialInfected(iInfected)) && g_iMinionOwner[iInfected] == tank)
+			if ((bIsTank(iInfected, "24") || bIsSpecialInfected(iInfected, "24")) && g_iMinionOwner[iInfected] == tank)
 			{
 				g_bMinion[iInfected] = false;
 				g_iMinionOwner[iInfected] = 0;
@@ -300,7 +300,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bMinion[iPlayer] = false;
 			g_iMinionCount[iPlayer] = 0;

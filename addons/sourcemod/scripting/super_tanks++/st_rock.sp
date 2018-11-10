@@ -145,7 +145,7 @@ public void ST_Configs(const char[] savepath, bool main)
 public void ST_Ability(int tank)
 {
 	float flRockChance = !g_bTankConfig[ST_TankType(tank)] ? g_flRockChance[ST_TankType(tank)] : g_flRockChance2[ST_TankType(tank)];
-	if (iRockAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flRockChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bRock[tank])
+	if (iRockAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flRockChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bRock[tank])
 	{
 		int iRock = CreateEntityByName("env_rock_launcher");
 		if (!bIsValidEntity(iRock))
@@ -192,7 +192,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bRock[iPlayer] = false;
 		}
@@ -235,7 +235,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRock[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRock[iTank])
 	{
 		vReset2(iTank, iRock);
 

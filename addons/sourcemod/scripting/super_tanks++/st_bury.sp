@@ -83,7 +83,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -118,14 +118,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iBuryHitMode(attacker) == 0 || iBuryHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iBuryHitMode(attacker) == 0 || iBuryHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vBuryHit(victim, attacker, flBuryChance(attacker), iBuryHit(attacker), "1", "1");
 			}
 		}
-		else if ((iBuryHitMode(victim) == 0 || iBuryHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iBuryHitMode(victim) == 0 || iBuryHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -201,11 +201,11 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	for (int iTank = 1; iTank <= iTank; iTank++)
 	{
-		if (bIsValidClient(iSurvivor))
+		if (bIsTank(iTank, "234"))
 		{
-			vRemoveBury(iSurvivor);
+			vRemoveBury(iTank);
 		}
 	}
 }
@@ -215,7 +215,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveBury(iTank);
 		}
@@ -224,7 +224,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flBuryRange = !g_bTankConfig[ST_TankType(tank)] ? g_flBuryRange[ST_TankType(tank)] : g_flBuryRange2[ST_TankType(tank)],
 			flBuryRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flBuryRangeChance[ST_TankType(tank)] : g_flBuryRangeChance2[ST_TankType(tank)],
@@ -234,7 +234,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -308,7 +308,7 @@ static void vRemoveBury(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bBury[iSurvivor] && g_iBuryOwner[iSurvivor] == tank)
+		if (bIsSurvivor(iSurvivor, "234") && g_bBury[iSurvivor] && g_iBuryOwner[iSurvivor] == tank)
 		{
 			vStopBury(iSurvivor, tank);
 		}
@@ -319,7 +319,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bBury[iPlayer] = false;
 			g_iBuryOwner[iPlayer] = 0;
@@ -341,7 +341,7 @@ static void vStopBury(int survivor, int tank)
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSurvivor(iPlayer) && !g_bBury[iPlayer] && iPlayer != survivor)
+		if (bIsSurvivor(iPlayer, "234") && !g_bBury[iPlayer] && iPlayer != survivor)
 		{
 			GetClientAbsOrigin(iPlayer, flCurrentOrigin);
 			TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
@@ -394,7 +394,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBury[iSurvivor])
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBury[iSurvivor])
 	{
 		vStopBury(iSurvivor, iTank);
 

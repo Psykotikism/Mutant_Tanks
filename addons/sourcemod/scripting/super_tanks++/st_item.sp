@@ -133,7 +133,7 @@ public void ST_Event(Event event, const char[] name)
 
 		float flItemChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flItemChance[ST_TankType(iTank)] : g_flItemChance2[ST_TankType(iTank)];
 
-		if (iItemAbility == 1 && GetRandomFloat(0.1, 100.0) <= flItemChance && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iItemAbility == 1 && GetRandomFloat(0.1, 100.0) <= flItemChance && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			char sItems[5][64], sItemLoadout[325];
 			sItemLoadout = !g_bTankConfig[ST_TankType(iTank)] ? g_sItemLoadout[ST_TankType(iTank)] : g_sItemLoadout2[ST_TankType(iTank)];
@@ -142,7 +142,7 @@ public void ST_Event(Event event, const char[] name)
 
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				if (bIsSurvivor(iSurvivor))
+				if (bIsSurvivor(iSurvivor, "234"))
 				{
 					switch (iItemMode)
 					{

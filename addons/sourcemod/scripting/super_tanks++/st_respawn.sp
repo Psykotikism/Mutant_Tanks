@@ -139,7 +139,7 @@ public void ST_Event(Event event, const char[] name)
 
 		float flRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flRespawnChance[ST_TankType(iTank)] : g_flRespawnChance2[ST_TankType(iTank)];
 
-		if (iRespawnAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flRespawnChance && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iRespawnAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flRespawnChance && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			float flPos[3], flAngles[3];
 			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags"), iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
@@ -194,7 +194,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !bIsPlayerIncapacitated(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRespawnAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !bIsPlayerIncapacitated(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRespawnAbility(iTank) == 0)
 	{
 		g_iRespawnCount[iTank] = 0;
 
@@ -224,7 +224,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 		{
 			bExists[iRespawn] = false;
-			if (ST_TankAllowed(iRespawn) && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && IsPlayerAlive(iRespawn))
+			if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled))
 			{
 				bExists[iRespawn] = true;
 			}
@@ -250,7 +250,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		int iNewTank;
 		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 		{
-			if (ST_TankAllowed(iRespawn) && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && IsPlayerAlive(iRespawn) && !bExists[iRespawn])
+			if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && !bExists[iRespawn])
 			{
 				iNewTank = iRespawn;
 				g_iRespawnCount[iNewTank] = g_iRespawnCount[iTank];

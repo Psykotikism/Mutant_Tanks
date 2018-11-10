@@ -137,9 +137,9 @@ public void ST_PluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsValidClient(iTank))
+		if (bIsValidClient(iTank, "234"))
 		{
-			vRemoveGod(iTank);
+			SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
 		}
 	}
 }
@@ -149,7 +149,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bGod[iTank])
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bGod[iTank])
 		{
 			tTimerStopGod(null, GetClientUserId(iTank));
 		}
@@ -159,7 +159,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_Ability(int tank)
 {
 	float flGodChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGodChance[ST_TankType(tank)] : g_flGodChance2[ST_TankType(tank)];
-	if (iGodAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flGodChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bGod[tank])
+	if (iGodAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flGodChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bGod[tank])
 	{
 		g_bGod[tank] = true;
 
@@ -180,12 +180,7 @@ public void ST_Ability(int tank)
 
 public void ST_BossStage(int tank)
 {
-	vRemoveGod(tank);
-}
-
-static void vRemoveGod(int tank)
-{
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		g_bGod[tank] = false;
 
@@ -197,7 +192,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bGod[iPlayer] = false;
 		}
@@ -217,7 +212,7 @@ static int iGodMessage(int tank)
 public Action tTimerStopGod(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGod[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGod[iTank])
 	{
 		g_bGod[iTank] = false;
 

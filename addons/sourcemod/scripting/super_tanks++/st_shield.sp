@@ -90,7 +90,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -125,7 +125,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (g_bShield2[victim])
 			{
@@ -194,7 +194,7 @@ public void ST_PluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsValidClient(iTank))
+		if (bIsTank(iTank, "234"))
 		{
 			vRemoveShield(iTank);
 		}
@@ -206,7 +206,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iShieldAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iShieldAbility(iTank) == 1 && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			g_bShield[iTank] = false;
 			g_bShield2[iTank] = false;
@@ -218,7 +218,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (iShieldAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bShield[tank])
+	if (iShieldAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bShield[tank])
 	{
 		vShield(tank, true);
 	}
@@ -237,7 +237,7 @@ public void ST_BossStage(int tank)
 
 public void ST_RockThrow(int tank, int rock)
 {
-	if (iShieldAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flShieldChance(tank) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (iShieldAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flShieldChance(tank) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		DataPack dpShieldThrow;
 		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -268,7 +268,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bShield[iPlayer] = false;
 			g_bShield2[iPlayer] = false;
@@ -360,7 +360,7 @@ static int iShieldMessage(int tank)
 public Action tTimerShield(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || g_bShield2[iTank] || (!g_bShield[iTank] && !g_bShield2[iTank]))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || g_bShield2[iTank] || (!g_bShield[iTank] && !g_bShield2[iTank]))
 	{
 		g_bShield[iTank] = false;
 		g_bShield2[iTank] = false;
@@ -389,7 +389,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || (!g_bShield[iTank] && !g_bShield2[iTank]))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || (!g_bShield[iTank] && !g_bShield2[iTank]))
 	{
 		g_bShield[iTank] = false;
 		g_bShield2[iTank] = false;

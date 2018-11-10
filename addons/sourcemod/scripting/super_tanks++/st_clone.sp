@@ -56,7 +56,7 @@ public any aNative_CloneAllowed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	bool bCloneInstalled = GetNativeCell(2);
-	if (ST_TankAllowed(iTank) && bIsCloneAllowed(iTank, bCloneInstalled))
+	if (ST_TankAllowed(iTank, "024") && bIsCloneAllowed(iTank, bCloneInstalled))
 	{
 		return true;
 	}
@@ -146,7 +146,7 @@ public void ST_PluginEnd()
 {
 	for (int iClone = 1; iClone <= MaxClients; iClone++)
 	{
-		if (bIsTank(iClone) && IsPlayerAlive(iClone) && g_bCloned[iClone])
+		if (bIsTank(iClone, "234") && g_bCloned[iClone])
 		{
 			IsFakeClient(iClone) ? KickClient(iClone) : ForcePlayerSuicide(iClone);
 		}
@@ -158,7 +158,7 @@ public void ST_Event(Event event, const char[] name)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iCloneAbility(iTank) == 1 && ST_TankAllowed(iTank))
+		if (iCloneAbility(iTank) == 1 && ST_TankAllowed(iTank, "024"))
 		{
 			g_iCloneCount[iTank] = 0;
 
@@ -166,7 +166,7 @@ public void ST_Event(Event event, const char[] name)
 			{
 				for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 				{
-					if (g_iCloneOwner[iTank] == iOwner && ST_TankAllowed(iOwner))
+					if (g_iCloneOwner[iTank] == iOwner && ST_TankAllowed(iOwner, "24"))
 					{
 						int iCloneReplace = !g_bTankConfig[ST_TankType(iOwner)] ? g_iCloneReplace[ST_TankType(iOwner)] : g_iCloneReplace2[ST_TankType(iOwner)];
 						if (iCloneReplace == 1)
@@ -194,7 +194,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_Ability(int tank)
 {
 	float flCloneChance = !g_bTankConfig[ST_TankType(tank)] ? g_flCloneChance[ST_TankType(tank)] : g_flCloneChance2[ST_TankType(tank)];
-	if (iCloneAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flCloneChance && ST_TankAllowed(tank) && IsPlayerAlive(tank) && !g_bCloned[tank])
+	if (iCloneAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flCloneChance && ST_TankAllowed(tank) && !g_bCloned[tank])
 	{
 		int iCloneAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneAmount[ST_TankType(tank)] : g_iCloneAmount2[ST_TankType(tank)],
 			iCloneMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneMessage[ST_TankType(tank)] : g_iCloneMessage2[ST_TankType(tank)];
@@ -226,7 +226,7 @@ public void ST_Ability(int tank)
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						bTankBoss[iPlayer] = false;
-						if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer))
+						if (ST_TankAllowed(iPlayer, "234"))
 						{
 							bTankBoss[iPlayer] = true;
 						}
@@ -237,7 +237,7 @@ public void ST_Ability(int tank)
 					int iSelectedType;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer) && !bTankBoss[iPlayer])
+						if (ST_TankAllowed(iPlayer, "234") && !bTankBoss[iPlayer])
 						{
 							iSelectedType = iPlayer;
 							break;
@@ -280,7 +280,7 @@ public void ST_BossStage(int tank)
 
 		for (int iClone = 1; iClone <= MaxClients; iClone++)
 		{
-			if (bIsTank(iClone) && g_iCloneOwner[iClone] == tank)
+			if (bIsTank(iClone, "234") && g_iCloneOwner[iClone] == tank)
 			{
 				g_bCloned[iClone] = false;
 				g_iCloneOwner[iClone] = 0;
@@ -293,7 +293,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bCloned[iPlayer] = false;
 			g_iCloneCount[iPlayer] = 0;

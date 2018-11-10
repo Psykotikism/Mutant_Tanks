@@ -127,12 +127,12 @@ public void ST_Event(Event event, const char[] name)
 
 		float flInfectedPos[3];
 
-		if (bIsSpecialInfected(iInfected))
+		if (bIsSpecialInfected(iInfected, "024"))
 		{
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			for (int iTank = 1; iTank <= MaxClients; iTank++)
 			{
-				if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && IsPlayerAlive(iTank))
+				if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 				{
 					int iNecroAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iNecroAbility[ST_TankType(iTank)] : g_iNecroAbility2[ST_TankType(iTank)];
 
@@ -172,7 +172,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{
 		bExists[iNecro] = false;
-		if (bIsSpecialInfected(iNecro))
+		if (bIsSpecialInfected(iNecro, "24"))
 		{
 			bExists[iNecro] = true;
 		}
@@ -183,7 +183,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 	int iInfected;
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{
-		if (bIsSpecialInfected(iNecro) && !bExists[iNecro])
+		if (bIsSpecialInfected(iNecro, "24") && !bExists[iNecro])
 		{
 			iInfected = iNecro;
 			break;

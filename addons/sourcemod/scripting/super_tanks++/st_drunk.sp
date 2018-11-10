@@ -83,7 +83,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -118,14 +118,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iDrunkHitMode(attacker) == 0 || iDrunkHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iDrunkHitMode(attacker) == 0 || iDrunkHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vDrunkHit(victim, attacker, flDrunkChance(attacker), iDrunkHit(attacker), "1", "1");
 			}
 		}
-		else if ((iDrunkHitMode(victim) == 0 || iDrunkHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iDrunkHitMode(victim) == 0 || iDrunkHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -207,7 +207,7 @@ public void ST_PluginEnd()
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bDrunk[iSurvivor])
+		if (bIsSurvivor(iSurvivor, "234") && g_bDrunk[iSurvivor])
 		{
 			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
@@ -216,7 +216,7 @@ public void ST_PluginEnd()
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flDrunkRange = !g_bTankConfig[ST_TankType(tank)] ? g_flDrunkRange[ST_TankType(tank)] : g_flDrunkRange2[ST_TankType(tank)],
 			flDrunkRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flDrunkRangeChance[ST_TankType(tank)] : g_flDrunkRangeChance2[ST_TankType(tank)],
@@ -226,7 +226,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -247,7 +247,7 @@ public void ST_BossStage(int tank)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor) && g_bDrunk[iSurvivor] && g_iDrunkOwner[iSurvivor] == tank)
+			if (bIsSurvivor(iSurvivor, "24") && g_bDrunk[iSurvivor] && g_iDrunkOwner[iSurvivor] == tank)
 			{
 				g_bDrunk[iSurvivor] = false;
 				g_iDrunkOwner[iSurvivor] = 0;
@@ -299,7 +299,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bDrunk[iPlayer] = false;
 			g_iDrunkOwner[iPlayer] = 0;
@@ -356,7 +356,7 @@ public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		return Plugin_Stop;
 	}
@@ -392,7 +392,7 @@ public Action tTimerDrunkTurn(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bDrunk[iSurvivor])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bDrunk[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 
