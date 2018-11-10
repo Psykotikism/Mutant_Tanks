@@ -1173,7 +1173,7 @@ stock void ST_PrintToChat(int client, char[] message, any ...)
 	ReplaceString(message, strlen(message), "{yellow}", "\x04");
 	ReplaceString(message, strlen(message), "{olive}", "\x05");
 
-	char sBuffer[250], sMessage[250];
+	char sBuffer[255], sMessage[255];
 	SetGlobalTransTarget(client);
 	Format(sBuffer, sizeof(sBuffer), "\x01%s", message);
 	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
@@ -1183,7 +1183,7 @@ stock void ST_PrintToChat(int client, char[] message, any ...)
 
 stock void ST_PrintToChatAll(char[] message, any ...)
 {
-	char sBuffer[250];
+	char sBuffer[255];
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
