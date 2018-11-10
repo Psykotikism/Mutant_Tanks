@@ -290,7 +290,7 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Choke", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Choke", sTankName, survivor);
 		}
 	}
 }
@@ -319,7 +319,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 	sChokeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sChokeMessage[ST_TankType(tank)] : g_sChokeMessage2[ST_TankType(tank)];
 	if (StrContains(sChokeMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Choke2", survivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Choke2", survivor);
 	}
 }
 

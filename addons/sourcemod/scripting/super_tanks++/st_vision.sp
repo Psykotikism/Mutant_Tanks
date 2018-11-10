@@ -278,7 +278,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 	sVisionMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sVisionMessage[ST_TankType(tank)] : g_sVisionMessage2[ST_TankType(tank)];
 	if (StrContains(sVisionMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Vision2", survivor, 90);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Vision2", survivor, 90);
 	}
 }
 
@@ -307,7 +307,7 @@ static void vVisionHit(int survivor, int tank, float chance, int enabled, const 
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Vision", sTankName, survivor, iVisionFOV(tank));
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Vision", sTankName, survivor, iVisionFOV(tank));
 		}
 	}
 }

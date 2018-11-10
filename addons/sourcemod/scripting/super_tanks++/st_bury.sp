@@ -299,7 +299,7 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, const ch
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Bury", sTankName, survivor, flOrigin);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Bury", sTankName, survivor, flOrigin);
 		}
 	}
 }
@@ -408,7 +408,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	pack.ReadString(sMessage, sizeof(sMessage));
 	if (StrContains(sBuryMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Bury2", iSurvivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Bury2", iSurvivor);
 	}
 
 	return Plugin_Continue;

@@ -708,16 +708,16 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				{
 					switch (GetRandomInt(1, 10))
 					{
-						case 1: PrintToChatAll("%s %t", ST_TAG2, "Death1", sTankName);
-						case 2: PrintToChatAll("%s %t", ST_TAG2, "Death2", sTankName);
-						case 3: PrintToChatAll("%s %t", ST_TAG2, "Death3", sTankName);
-						case 4: PrintToChatAll("%s %t", ST_TAG2, "Death4", sTankName);
-						case 5: PrintToChatAll("%s %t", ST_TAG2, "Death5", sTankName);
-						case 6: PrintToChatAll("%s %t", ST_TAG2, "Death6", sTankName);
-						case 7: PrintToChatAll("%s %t", ST_TAG2, "Death7", sTankName);
-						case 8: PrintToChatAll("%s %t", ST_TAG2, "Death8", sTankName);
-						case 9: PrintToChatAll("%s %t", ST_TAG2, "Death9", sTankName);
-						case 10: PrintToChatAll("%s %t", ST_TAG2, "Death10", sTankName);
+						case 1: ST_PrintToChatAll("%s %t", ST_TAG2, "Death1", sTankName);
+						case 2: ST_PrintToChatAll("%s %t", ST_TAG2, "Death2", sTankName);
+						case 3: ST_PrintToChatAll("%s %t", ST_TAG2, "Death3", sTankName);
+						case 4: ST_PrintToChatAll("%s %t", ST_TAG2, "Death4", sTankName);
+						case 5: ST_PrintToChatAll("%s %t", ST_TAG2, "Death5", sTankName);
+						case 6: ST_PrintToChatAll("%s %t", ST_TAG2, "Death6", sTankName);
+						case 7: ST_PrintToChatAll("%s %t", ST_TAG2, "Death7", sTankName);
+						case 8: ST_PrintToChatAll("%s %t", ST_TAG2, "Death8", sTankName);
+						case 9: ST_PrintToChatAll("%s %t", ST_TAG2, "Death9", sTankName);
+						case 10: ST_PrintToChatAll("%s %t", ST_TAG2, "Death10", sTankName);
 					}
 				}
 
@@ -896,12 +896,12 @@ static void vTank(int admin, char[] type, int mode = 0)
 
 		if (iTypeCount == 0)
 		{
-			PrintToChat(admin, "%s %t", ST_TAG3, "RequestFailed");
+			ST_PrintToChat(admin, "%s %t", ST_TAG3, "RequestFailed");
 			return;
 		}
 		else if (iTypeCount > 1)
 		{
-			PrintToChat(admin, "%s %t", ST_TAG3, "MultipleMatches");
+			ST_PrintToChat(admin, "%s %t", ST_TAG3, "MultipleMatches");
 			g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
 		}
 	}
@@ -1803,16 +1803,16 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				{
 					switch (GetRandomInt(1, 10))
 					{
-						case 1: PrintToChatAll("%s %t", ST_TAG2, "Arrival1", name);
-						case 2: PrintToChatAll("%s %t", ST_TAG2, "Arrival2", name);
-						case 3: PrintToChatAll("%s %t", ST_TAG2, "Arrival3", name);
-						case 4: PrintToChatAll("%s %t", ST_TAG2, "Arrival4", name);
-						case 5: PrintToChatAll("%s %t", ST_TAG2, "Arrival5", name);
-						case 6: PrintToChatAll("%s %t", ST_TAG2, "Arrival6", name);
-						case 7: PrintToChatAll("%s %t", ST_TAG2, "Arrival7", name);
-						case 8: PrintToChatAll("%s %t", ST_TAG2, "Arrival8", name);
-						case 9: PrintToChatAll("%s %t", ST_TAG2, "Arrival9", name);
-						case 10: PrintToChatAll("%s %t", ST_TAG2, "Arrival10", name);
+						case 1: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival1", name);
+						case 2: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival2", name);
+						case 3: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival3", name);
+						case 4: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival4", name);
+						case 5: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival5", name);
+						case 6: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival6", name);
+						case 7: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival7", name);
+						case 8: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival8", name);
+						case 9: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival9", name);
+						case 10: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival10", name);
 					}
 				}
 			}
@@ -1820,28 +1820,28 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			{
 				if (StrContains(sAnnounceArrival, "2") != -1)
 				{
-					PrintToChatAll("%s %t", ST_TAG2, "Evolved", oldname, name, g_iBossStageCount[tank] + 1);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Evolved", oldname, name, g_iBossStageCount[tank] + 1);
 				}
 			}
 			case 2:
 			{
 				if (StrContains(sAnnounceArrival, "3") != -1)
 				{
-					PrintToChatAll("%s %t", ST_TAG2, "Randomized", oldname, name);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Randomized", oldname, name);
 				}
 			}
 			case 3:
 			{
 				if (StrContains(sAnnounceArrival, "4") != -1)
 				{
-					PrintToChatAll("%s %t", ST_TAG2, "Transformed", oldname, name);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Transformed", oldname, name);
 				}
 			}
 			case 4:
 			{
 				if (StrContains(sAnnounceArrival, "5") != -1)
 				{
-					PrintToChatAll("%s %t", ST_TAG2, "Untransformed", oldname, name);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Untransformed", oldname, name);
 				}
 			}
 		}
@@ -1853,11 +1853,11 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			Format(sTankNote, sizeof(sTankNote), "Tank #%d", g_iTankType[tank]);
 			if (TranslationPhraseExists(sTankNote))
 			{
-				PrintToChatAll("%s %t", ST_TAG3, sTankNote);
+				ST_PrintToChatAll("%s %t", ST_TAG3, sTankNote);
 			}
 			else
 			{
-				PrintToChatAll("%s %t", ST_TAG3, "NoNote");
+				ST_PrintToChatAll("%s %t", ST_TAG3, "NoNote");
 			}
 		}
 

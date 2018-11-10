@@ -305,7 +305,7 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, const ch
 			{
 				char sTankName[33];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Idle", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Idle", sTankName, survivor);
 			}
 		}
 	}

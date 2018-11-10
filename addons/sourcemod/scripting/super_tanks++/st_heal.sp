@@ -260,7 +260,7 @@ public void ST_Ability(int tank)
 			{
 				char sTankName[33];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Heal2", sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Heal2", sTankName);
 			}
 		}
 	}
@@ -294,7 +294,7 @@ static void vHealHit(int survivor, int tank, float chance, int enabled, const ch
 			{
 				char sTankName[33];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Heal", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Heal", sTankName, survivor);
 			}
 		}
 	}
@@ -321,7 +321,7 @@ static void vReset2(int tank)
 	{
 		char sTankName[33];
 		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Heal3", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Heal3", sTankName);
 	}
 }
 

@@ -167,7 +167,7 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Splash", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Splash", sTankName);
 		}
 	}
 }
@@ -196,7 +196,7 @@ static void vReset2(int tank)
 	{
 		char sTankName[33];
 		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Splash2", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Splash2", sTankName);
 	}
 }
 

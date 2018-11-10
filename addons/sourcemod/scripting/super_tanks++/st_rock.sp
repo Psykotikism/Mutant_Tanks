@@ -178,7 +178,7 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Rock", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Rock", sTankName);
 		}
 	}
 }
@@ -209,7 +209,7 @@ static void vReset2(int tank, int rock)
 	{
 		char sTankName[33];
 		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Rock2", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Rock2", sTankName);
 	}
 }
 

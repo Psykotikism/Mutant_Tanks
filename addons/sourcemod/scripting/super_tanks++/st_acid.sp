@@ -290,7 +290,7 @@ public void ST_RockBreak(int tank, int rock)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Acid2", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Acid2", sTankName);
 		}
 	}
 }
@@ -320,7 +320,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, const ch
 
 			if (StrContains(sAcidMessage, message) != -1)
 			{
-				PrintToChatAll("%s %t", ST_TAG2, "Acid", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Acid", sTankName, survivor);
 			}
 		}
 		else
@@ -329,7 +329,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, const ch
 
 			if (StrContains(sAcidMessage, message) != -1)
 			{
-				PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
 			}
 		}
 

@@ -321,7 +321,7 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Blind", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Blind", sTankName, survivor);
 		}
 	}
 }
@@ -440,7 +440,7 @@ public Action tTimerStopBlindness(Handle timer, DataPack pack)
 	pack.ReadString(sMessage, sizeof(sMessage));
 	if (StrContains(sBlindMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Blind2", iSurvivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Blind2", iSurvivor);
 	}
 
 	return Plugin_Continue;

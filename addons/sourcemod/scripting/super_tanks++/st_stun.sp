@@ -310,7 +310,7 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, const ch
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Stun", sTankName, survivor, flStunSpeed);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Stun", sTankName, survivor, flStunSpeed);
 		}
 	}
 }
@@ -369,7 +369,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 	pack.ReadString(sMessage, sizeof(sMessage));
 	if (StrContains(sStunMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Stun2", iSurvivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Stun2", iSurvivor);
 	}
 
 	return Plugin_Continue;

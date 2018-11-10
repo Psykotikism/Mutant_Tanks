@@ -160,7 +160,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						{
 							char sTankName[33];
 							ST_TankName(victim, sTankName);
-							PrintToChatAll("%s %t", ST_TAG2, "Pyro2", sTankName);
+							ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro2", sTankName);
 						}
 					}
 				}
@@ -300,7 +300,7 @@ static void vPyroHit(int survivor, int tank, float chance, int enabled, const ch
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Pyro", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro", sTankName);
 		}
 	}
 }
@@ -366,7 +366,7 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 		{
 			char sTankName[33];
 			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Pyro3", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro3", sTankName);
 		}
 
 		return Plugin_Stop;

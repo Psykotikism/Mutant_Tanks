@@ -453,7 +453,7 @@ public void ST_Event(Event event, const char[] name)
 					{
 						char sTankName[33];
 						ST_TankName(iTank, sTankName);
-						PrintToChatAll("%s %t", ST_TAG2, "Drop", sTankName);
+						ST_PrintToChatAll("%s %t", ST_TAG2, "Drop", sTankName);
 					}
 				}
 			}
@@ -471,7 +471,7 @@ public void ST_Event(Event event, const char[] name)
 					{
 						char sTankName[33];
 						ST_TankName(iTank, sTankName);
-						PrintToChatAll("%s %t", ST_TAG2, "Drop2", sTankName);
+						ST_PrintToChatAll("%s %t", ST_TAG2, "Drop2", sTankName);
 					}
 				}
 			}

@@ -264,7 +264,7 @@ public void ST_Ability(int tank)
 			{
 				char sTankName[33];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
 			}
 		}
 	}
@@ -320,7 +320,7 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Ghost", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost", sTankName, survivor);
 		}
 	}
 }
@@ -540,7 +540,7 @@ public Action tTimerStopGhost(Handle timer, int userid)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Ghost3", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost3", sTankName);
 	}
 
 	return Plugin_Continue;

@@ -275,7 +275,7 @@ static void vLagHit(int survivor, int tank, float chance, int enabled, const cha
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Lag", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Lag", sTankName, survivor);
 		}
 	}
 }
@@ -301,7 +301,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 	sLagMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sLagMessage[ST_TankType(tank)] : g_sLagMessage2[ST_TankType(tank)];
 	if (StrContains(sLagMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Lag2", survivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Lag2", survivor);
 	}
 }
 

@@ -287,7 +287,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 	sShoveMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sShoveMessage[ST_TankType(tank)] : g_sShoveMessage2[ST_TankType(tank)];
 	if (StrContains(sShoveMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Shove2", survivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Shove2", survivor);
 	}
 }
 
@@ -317,7 +317,7 @@ static void vShoveHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Shove", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Shove", sTankName, survivor);
 		}
 	}
 }

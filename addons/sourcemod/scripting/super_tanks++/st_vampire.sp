@@ -240,11 +240,11 @@ static void vVampireHit(int survivor, int tank, float chance, int enabled, const
 
 		if (StrEqual(message, "1") && StrContains(sVampireMessage, "1") != -1)
 		{
-			PrintToChatAll("%s %t", ST_TAG2, "Vampire", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Vampire", sTankName, survivor);
 		}
 		else if (StrEqual(message, "2") && StrContains(sVampireMessage, "2") != -1)
 		{
-			PrintToChatAll("%s %t", ST_TAG2, "Vampire2", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Vampire2", sTankName);
 		}
 	}
 }

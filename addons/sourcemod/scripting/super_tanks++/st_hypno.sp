@@ -338,7 +338,7 @@ static void vHypnoHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Hypno", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Hypno", sTankName, survivor);
 		}
 	}
 }
@@ -417,7 +417,7 @@ public Action tTimerStopHypno(Handle timer, DataPack pack)
 	pack.ReadString(sMessage, sizeof(sMessage));
 	if (StrContains(sHypnoMessage, "3") != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Hypno2", iSurvivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Hypno2", iSurvivor);
 	}
 
 	return Plugin_Continue;

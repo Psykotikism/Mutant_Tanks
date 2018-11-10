@@ -261,7 +261,7 @@ static void vPanicHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Panic", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Panic", sTankName);
 		}
 	}
 }
@@ -315,7 +315,7 @@ public Action tTimerPanic(Handle timer, int userid)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Panic", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Panic", sTankName);
 	}
 
 	return Plugin_Continue;

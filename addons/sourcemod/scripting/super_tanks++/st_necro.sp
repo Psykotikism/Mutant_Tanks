@@ -198,7 +198,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Necro", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Necro", sTankName);
 		}
 	}
 }

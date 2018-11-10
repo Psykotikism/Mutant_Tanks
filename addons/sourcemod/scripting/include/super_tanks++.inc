@@ -1156,6 +1156,47 @@ stock void vSpecialAttack(int tank, float pos[3], float offset, const char[] mod
 	}
 }
 
+stock void ST_PrintToChat(int client, char[] message, any ...)
+{
+	if (client <= 0 || client > MaxClients)
+	{
+		ThrowError("Invalid client index %d", client);
+	}
+	
+	if (!IsClientInGame(client))
+	{
+		ThrowError("Client %d is not in game", client);
+	}
+
+	ReplaceString(message, strlen(message), "{default}", "\x01");
+	ReplaceString(message, strlen(message), "{mint}", "\x03");
+	ReplaceString(message, strlen(message), "{yellow}", "\x04");
+	ReplaceString(message, strlen(message), "{olive}", "\x05");
+
+	char sBuffer[250], sMessage[250];
+	SetGlobalTransTarget(client);
+	Format(sBuffer, sizeof(sBuffer), "\x01%s", message);
+	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
+
+	PrintToChat(client, sMessage);
+}
+
+stock void ST_PrintToChatAll(char[] message, any ...)
+{
+	char sBuffer[250];
+
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (IsClientInGame(iPlayer) && !IsFakeClient(iPlayer))
+		{
+			SetGlobalTransTarget(iPlayer);
+			VFormat(sBuffer, sizeof(sBuffer), message, 2);
+
+			ST_PrintToChat(iPlayer, sBuffer);
+		}
+	}
+}
+
 public SharedPlugin __pl_supertanksplusplus = 
 {
 	name = "super_tanks++",

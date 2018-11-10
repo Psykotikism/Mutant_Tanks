@@ -172,7 +172,7 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "God", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "God", sTankName);
 		}
 		
 	}
@@ -232,7 +232,7 @@ public Action tTimerStopGod(Handle timer, int userid)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "God2", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "God2", sTankName);
 	}
 
 	return Plugin_Continue;

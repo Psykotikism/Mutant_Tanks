@@ -285,7 +285,7 @@ public void ST_Ability(int tank)
 				{
 					char sTankName[33];
 					ST_TankName(tank, sTankName);
-					PrintToChatAll("%s %t", ST_TAG2, "Gravity3", sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Gravity3", sTankName);
 				}
 			}
 		}
@@ -328,7 +328,7 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, const
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Gravity", sTankName, survivor, flGravityValue);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Gravity", sTankName, survivor, flGravityValue);
 		}
 	}
 }
@@ -435,7 +435,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	pack.ReadString(sMessage, sizeof(sMessage));
 	if (StrContains(sGravityMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Gravity2", iSurvivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Gravity2", iSurvivor);
 	}
 
 	return Plugin_Continue;

@@ -278,7 +278,7 @@ static void vRecoilHit(int survivor, int tank, float chance, int enabled, const 
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Recoil", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Recoil", sTankName, survivor);
 		}
 	}
 }
@@ -357,7 +357,7 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 	pack.ReadString(sMessage, sizeof(sMessage));
 	if (StrContains(sRecoilMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Recoil2", iSurvivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Recoil2", iSurvivor);
 	}
 
 	return Plugin_Continue;

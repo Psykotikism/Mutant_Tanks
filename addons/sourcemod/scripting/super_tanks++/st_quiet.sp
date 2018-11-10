@@ -294,7 +294,7 @@ static void vQuietHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Quiet", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Quiet", sTankName, survivor);
 		}
 	}
 }
@@ -375,7 +375,7 @@ public Action tTimerStopQuiet(Handle timer, DataPack pack)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Quiet2", sTankName, iSurvivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Quiet2", sTankName, iSurvivor);
 	}
 
 	return Plugin_Continue;

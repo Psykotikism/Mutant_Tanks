@@ -308,7 +308,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Restart", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Restart", sTankName, survivor);
 		}
 	}
 }

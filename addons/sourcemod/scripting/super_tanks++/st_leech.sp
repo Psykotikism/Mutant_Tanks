@@ -268,7 +268,7 @@ static void vLeechHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Leech", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Leech", sTankName, survivor);
 		}
 	}
 }
@@ -296,7 +296,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 	{
 		char sTankName[33];
 		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Leech2", sTankName, survivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Leech2", sTankName, survivor);
 	}
 }
 

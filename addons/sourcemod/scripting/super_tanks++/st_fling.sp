@@ -278,7 +278,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, const c
 
 			if (StrContains(sFlingMessage, message) != -1)
 			{
-				PrintToChatAll("%s %t", ST_TAG2, "Fling", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Fling", sTankName, survivor);
 			}
 		}
 		else
@@ -287,7 +287,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, const c
 
 			if (StrContains(sFlingMessage, message) != -1)
 			{
-				PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
 			}
 		}
 

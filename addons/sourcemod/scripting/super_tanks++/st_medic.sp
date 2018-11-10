@@ -257,7 +257,7 @@ static void vMedic(int tank)
 	{
 		char sTankName[33];
 		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Medic", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Medic", sTankName);
 	}
 }
 

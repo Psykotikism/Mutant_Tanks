@@ -175,7 +175,7 @@ public void ST_Event(Event event, const char[] name)
 			{
 				char sTankName[33];
 				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Item", sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Item", sTankName);
 			}
 		}
 	}

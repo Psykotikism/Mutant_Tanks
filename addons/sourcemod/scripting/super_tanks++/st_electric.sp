@@ -283,7 +283,7 @@ static void vElectricHit(int survivor, int tank, float chance, int enabled, cons
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Electric", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Electric", sTankName, survivor);
 		}
 	}
 }
@@ -309,7 +309,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 	sElectricMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sElectricMessage[ST_TankType(tank)] : g_sElectricMessage2[ST_TankType(tank)];
 	if (StrContains(sElectricMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Electric2", survivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Electric2", survivor);
 	}
 }
 

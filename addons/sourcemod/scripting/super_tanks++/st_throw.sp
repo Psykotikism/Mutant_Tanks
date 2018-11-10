@@ -213,7 +213,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					{
 						char sTankName[33];
 						ST_TankName(iTank, sTankName);
-						PrintToChatAll("%s %t", ST_TAG2, "Throw", sTankName);
+						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw", sTankName);
 					}
 				}
 			}
@@ -280,7 +280,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					{
 						char sTankName[33];
 						ST_TankName(iTank, sTankName);
-						PrintToChatAll("%s %t", ST_TAG2, "Throw2", sTankName);
+						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw2", sTankName);
 					}
 				}
 			}
@@ -301,7 +301,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				{
 					char sTankName[33];
 					ST_TankName(iTank, sTankName);
-					PrintToChatAll("%s %t", ST_TAG2, "Throw3", sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Throw3", sTankName);
 				}
 			}
 			case 4:
@@ -329,7 +329,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				{
 					char sTankName[33];
 					ST_TankName(iTank, sTankName);
-					PrintToChatAll("%s %t", ST_TAG2, "Throw4", sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Throw4", sTankName);
 				}
 			}
 		}

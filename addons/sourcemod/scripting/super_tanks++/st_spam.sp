@@ -154,7 +154,7 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Spam", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Spam", sTankName);
 		}
 	}
 }
@@ -183,7 +183,7 @@ static void vReset2(int tank)
 	{
 		char sTankName[33];
 		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Spam2", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Spam2", sTankName);
 	}
 }
 

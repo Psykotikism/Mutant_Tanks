@@ -316,7 +316,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Whirl", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Whirl", sTankName, survivor);
 		}
 	}
 }
@@ -343,7 +343,7 @@ static void vReset2(int survivor, int tank, int entity, const char[] message)
 	sWhirlMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sWhirlMessage[ST_TankType(tank)] : g_sWhirlMessage2[ST_TankType(tank)];
 	if (StrContains(sWhirlMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Whirl2", survivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Whirl2", survivor);
 	}
 }
 

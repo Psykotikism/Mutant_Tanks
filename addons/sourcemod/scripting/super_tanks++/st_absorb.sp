@@ -227,7 +227,7 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Absorb", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Absorb", sTankName);
 		}
 	}
 }
@@ -274,7 +274,7 @@ public Action tTimerStopAbsorb(Handle timer, int userid)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Absorb2", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Absorb2", sTankName);
 	}
 
 	return Plugin_Continue;

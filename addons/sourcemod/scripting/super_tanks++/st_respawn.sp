@@ -268,7 +268,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			{
 				char sTankName[33];
 				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Respawn", sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Respawn", sTankName);
 			}
 		}
 	}

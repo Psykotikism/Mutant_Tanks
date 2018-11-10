@@ -284,7 +284,7 @@ static void vZombieHit(int survivor, int tank, float chance, int enabled, const 
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
 		}
 	}
 }
@@ -327,7 +327,7 @@ public Action tTimerZombie(Handle timer, int userid)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
 	}
 
 	return Plugin_Continue;

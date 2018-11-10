@@ -259,7 +259,7 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Smash", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Smash", sTankName, survivor);
 		}
 	}
 }

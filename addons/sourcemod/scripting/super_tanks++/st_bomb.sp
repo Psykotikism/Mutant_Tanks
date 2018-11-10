@@ -255,7 +255,7 @@ public void ST_RockBreak(int tank, int rock)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Bomb2", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Bomb2", sTankName);
 		}
 	}
 }
@@ -278,7 +278,7 @@ static void vBombHit(int survivor, int tank, float chance, int enabled, const ch
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Bomb", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Bomb", sTankName, survivor);
 		}
 	}
 }

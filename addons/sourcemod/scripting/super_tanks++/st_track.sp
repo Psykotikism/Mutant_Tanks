@@ -156,7 +156,7 @@ public void ST_RockThrow(int tank, int rock)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Track", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Track", sTankName);
 		}
 	}
 }
