@@ -12,6 +12,7 @@
 // Super Tanks++: Hurt Ability
 #include <sourcemod>
 #include <sdkhooks>
+#include <sdktools>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>
@@ -352,7 +353,7 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 	}
 
 	float flHurtDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_flHurtDamage[ST_TankType(iTank)] : g_flHurtDamage2[ST_TankType(iTank)];
-	SDKHooks_TakeDamage(iSurvivor, iTank, iTank, flHurtDamage);
+	vDamageEntity(iSurvivor, iTank, flHurtDamage);
 
 	return Plugin_Continue;
 }

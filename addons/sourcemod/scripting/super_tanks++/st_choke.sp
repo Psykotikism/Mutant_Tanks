@@ -432,7 +432,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	SetEntityGravity(iSurvivor, 1.0);
 
 	float flChokeDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_flChokeDamage[ST_TankType(iTank)] : g_flChokeDamage2[ST_TankType(iTank)];
-	SDKHooks_TakeDamage(iSurvivor, iTank, iTank, flChokeDamage);
+	vDamageEntity(iSurvivor, iTank, flChokeDamage, "16384");
 
 	return Plugin_Continue;
 }

@@ -224,7 +224,7 @@ public Action tTimerCloud(Handle timer, int userid)
 			if (flDistance <= 200.0)
 			{
 				float flCloudDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_flCloudDamage[ST_TankType(iTank)] : g_flCloudDamage2[ST_TankType(iTank)];
-				SDKHooks_TakeDamage(iSurvivor, iTank, iTank, flCloudDamage);
+				vDamageEntity(iSurvivor, iTank, flCloudDamage, "65536");
 			}
 		}
 	}

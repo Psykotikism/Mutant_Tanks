@@ -12,6 +12,7 @@
 // Super Tanks++: Splash Ability
 #include <sourcemod>
 #include <sdkhooks>
+#include <sdktools>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>
@@ -241,7 +242,7 @@ public Action tTimerSplash(Handle timer, int userid)
 			if (flDistance <= flSplashRange)
 			{
 				float flSplashDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_flSplashDamage[ST_TankType(iTank)] : g_flSplashDamage2[ST_TankType(iTank)];
-				SDKHooks_TakeDamage(iSurvivor, iTank, iTank, flSplashDamage);
+				vDamageEntity(iSurvivor, iTank, flSplashDamage, "65536");
 			}
 		}
 	}

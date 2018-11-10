@@ -230,7 +230,7 @@ static void vMeteor(int tank, int rock)
 						if (flDistance < 200.0)
 						{
 							float flMeteorDamage = !g_bTankConfig[ST_TankType(tank)] ? g_flMeteorDamage[ST_TankType(tank)] : g_flMeteorDamage2[ST_TankType(tank)];
-							SDKHooks_TakeDamage(iSurvivor, tank, tank, flMeteorDamage);
+							vDamageEntity(iSurvivor, tank, flMeteorDamage, "16");
 						}
 					}
 				}
