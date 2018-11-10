@@ -866,6 +866,8 @@ Examples:
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
+**exvel** - For the [Colors](https://forums.alliedmods.net/showthread.php?t=96831) include.
+
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 
 **Mi.Cura** - For reporting issues, suggesting ideas, and overall support.

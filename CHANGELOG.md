@@ -17,13 +17,15 @@ Changes:
 7. Added the "Spawn Enabled" setting to determine if a Super Tank can be spawned through the sm_tank command. (Affects Clone and Respawn abilities.)
 8. Added the ST_SpawnEnabled native to check if a Super Tank can be spawned through the sm_tank command.
 9. Added the "Random Tank" setting to determine if a Super Tank can be used by other Super Tanks who spawn with the Randomization mode feature.
-10. Removed the "Electric Speed" setting.
-11. Removed redundant code.
+10. Added chat color tags for translation phrases.
+11. Removed the "Electric Speed" setting.
+12. Removed redundant code.
 
 Files:
 
 1. Updated config file.
 2. Updated include file.
+3. Updated translation file.
 
 ## Version 8.45 (October 31, 2018)
 

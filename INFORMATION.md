@@ -222,6 +222,8 @@
 
 			// Display a note for the Super Tank when it spawns.
 			// Note: This note can also be displayed for clones if "Clone Mode" is set to 1, so the chat could be spammed if multiple clones spawn.
+			// Note: A note must be manually created in the translation file.
+			// Note: Notes support chat color tags in the translation file.
 			// --
 			// 0: OFF
 			// 1: ON
