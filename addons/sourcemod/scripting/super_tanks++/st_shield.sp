@@ -194,7 +194,7 @@ public void ST_PluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, "234"))
+		if (bIsTank(iTank, "234") && (g_bShield[iTank] || g_bShield2[iTank]))
 		{
 			vRemoveShield(iTank);
 		}
@@ -203,7 +203,7 @@ public void ST_PluginEnd()
 
 public void ST_Event(Event event, const char[] name)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (iShieldAbility(iTank) == 1 && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
