@@ -1000,7 +1000,7 @@ stock void vDamageEntity(int victim, int attacker, float damage, const char[] da
 	if (bIsValidEntity(iPointHurt))
 	{
 		char sTargetName[32];
-		Format(sTargetName, sizeof(sTargetName), "target%d", GetClientUserId(victim));
+		Format(sTargetName, sizeof(sTargetName), "target%d", EntIndexToEntRef(victim));
 		DispatchKeyValue(victim, "targetname", sTargetName);
 
 		DispatchKeyValueFloat(iPointHurt, "Damage", damage);

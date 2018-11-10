@@ -37,13 +37,11 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7], g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15], g_sThrowMessage[ST_MAXTYPES + 1][5], g_sThrowMessage2[ST_MAXTYPES + 1][5];
+char g_sThrowAbility[ST_MAXTYPES + 1][9], g_sThrowAbility2[ST_MAXTYPES + 1][9], g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7], g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15], g_sThrowMessage[ST_MAXTYPES + 1][5], g_sThrowMessage2[ST_MAXTYPES + 1][5];
 
 ConVar g_cvSTTankThrowForce;
 
 float g_flThrowChance[ST_MAXTYPES + 1], g_flThrowChance2[ST_MAXTYPES + 1];
-
-int g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowAbility2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -106,8 +104,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			{
 				g_bTankConfig[iIndex] = false;
 
-				g_iThrowAbility[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", 0);
-				g_iThrowAbility[iIndex] = iClamp(g_iThrowAbility[iIndex], 0, 4);
+				kvSuperTanks.GetString("Throw Ability/Ability Enabled", g_sThrowAbility[iIndex], sizeof(g_sThrowAbility[]), "0");
 				kvSuperTanks.GetString("Throw Ability/Ability Message", g_sThrowMessage[iIndex], sizeof(g_sThrowMessage[]), "0");
 				kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions[iIndex], sizeof(g_sThrowCarOptions[]), "123");
 				g_flThrowChance[iIndex] = kvSuperTanks.GetFloat("Throw Ability/Throw Chance", 33.3);
@@ -118,8 +115,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			{
 				g_bTankConfig[iIndex] = true;
 
-				g_iThrowAbility2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Ability Enabled", g_iThrowAbility[iIndex]);
-				g_iThrowAbility2[iIndex] = iClamp(g_iThrowAbility2[iIndex], 0, 4);
+				kvSuperTanks.GetString("Throw Ability/Ability Enabled", g_sThrowAbility2[iIndex], sizeof(g_sThrowAbility2[]), g_sThrowAbility[iIndex]);
 				kvSuperTanks.GetString("Throw Ability/Ability Message", g_sThrowMessage2[iIndex], sizeof(g_sThrowMessage2[]), g_sThrowMessage[iIndex]);
 				kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions2[iIndex], sizeof(g_sThrowCarOptions2[]), g_sThrowCarOptions[iIndex]);
 				g_flThrowChance2[iIndex] = kvSuperTanks.GetFloat("Throw Ability/Throw Chance", g_flThrowChance[iIndex]);
@@ -146,11 +142,6 @@ public void ST_RockThrow(int tank, int rock)
 	}
 }
 
-static int iThrowAbility(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iThrowAbility[ST_TankType(tank)] : g_iThrowAbility2[ST_TankType(tank)];
-}
-
 public Action tTimerThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -162,7 +153,9 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iThrowAbility(iTank) == 0)
+	char sThrowAbility[9];
+	sThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowAbility[ST_TankType(iTank)] : g_sThrowAbility2[ST_TankType(iTank)];
+	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || StrEqual(sThrowAbility, ""))
 	{
 		return Plugin_Stop;
 	}
@@ -173,9 +166,10 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	float flVector = GetVectorLength(flVelocity);
 	if (flVector > 500.0)
 	{
-		switch (iThrowAbility(iTank))
+		char sAbilities = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowAbility[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sThrowAbility[ST_TankType(iTank)]) - 1)] : g_sThrowAbility2[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sThrowAbility2[ST_TankType(iTank)]) - 1)];
+		switch (sAbilities)
 		{
-			case 1:
+			case '1':
 			{
 				int iCar = CreateEntityByName("prop_physics");
 				if (bIsValidEntity(iCar))
@@ -217,7 +211,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					}
 				}
 			}
-			case 2:
+			case '2':
 			{
 				int iInfected = CreateFakeClient("Infected");
 				if (iInfected > 0)
@@ -284,7 +278,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					}
 				}
 			}
-			case 3:
+			case '3':
 			{
 				float flPos[3];
 				GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
@@ -304,7 +298,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Throw3", sTankName);
 				}
 			}
-			case 4:
+			case '4':
 			{
 				int iWitch = CreateEntityByName("witch");
 				if (bIsValidEntity(iWitch))
