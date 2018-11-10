@@ -221,8 +221,8 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		{
 			"Tank Name"				"Leaper Tank"
 			"Tank Enabled"				"1"
-			"Tank Chance"				"75.2" // Tank has 75.2% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
+			"Tank Chance"				"75.2"
+			"Spawn Enabled"				"1"
 			"Skin-Glow Colors"			"255,255,0,255|255,255,0"
 		}
 		"Enhancements"
@@ -255,8 +255,8 @@ Now, assuming that "Tank #25" is our highest entry, we just raise the maximum va
 		{
 			"Tank Name"				"Invisible Tank"
 			"Tank Enabled"				"1"
-			"Tank Chance"				"38.2" // Tank has 38.2% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
+			"Tank Chance"				"38.2"
+			"Spawn Enabled"				"1"
 			"Skin-Glow Colors"			"255,255,255,255|255,255,255"
 			"Glow Outline"				"0" // No glow outline.
 		}
@@ -481,8 +481,8 @@ Example:
 		{
 			"Tank Name"				"Psyk0tik Tank"
 			"Tank Enabled"				"1"
-			"Tank Chance"				"2.53" // Tank has 2.53% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
+			"Tank Chance"				"2.53"
+			"Spawn Enabled"				"1"
 			"Skin-Glow Colors"			"0,170,255,255|0,170,255"
 		}
 		"Enhancements"
@@ -505,8 +505,8 @@ Example:
 		{
 			"Tank Name"				"Idiot Tank"
 			"Tank Enabled"				"1"
-			"Tank Chance"				"1.0" // Tank has 1% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
+			"Tank Chance"				"1.0"
+			"Spawn Enabled"				"1"
 			"Skin-Glow Colors"			"1,1,1,255|1,1,1"
 		}
 		"Enhancements"

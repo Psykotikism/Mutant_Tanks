@@ -5257,11 +5257,15 @@
 		{
 			// Enable this ability.
 			// --
-			// 0: OFF
-			// 1: ON, the Super Tank throws cars.
-			// 2: ON, the Super Tank throws special infected.
-			// 3: ON, the Super Tank throws itself.
-			// 4: ON, the Super Tank throws Witches.
+			// Combine numbers in any order for different results.
+			// Repeat the same number to increase its chances of being chosen.
+			// Character limit: 8
+			// --
+			// Empty: Pick randomly between 1-4.
+			// 1: The Super Tank throws cars.
+			// 2: The Super Tank throws special infected.
+			// 3: The Super Tank throws itself.
+			// 4: The Super Tank throws Witches.
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
