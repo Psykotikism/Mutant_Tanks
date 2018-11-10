@@ -994,6 +994,26 @@ stock void vCreateParticle(int player, const char[] particlename, float time = 0
 	}
 }
 
+stock void vDamageEntity(int victim, int attacker, float damage, const char[] damagetype = "0")
+{
+	int iPointHurt = CreateEntityByName("point_hurt");
+	if (bIsValidEntity(iPointHurt))
+	{
+		char sTargetName[32];
+		Format(sTargetName, sizeof(sTargetName), "target%d", GetClientUserId(victim));
+		DispatchKeyValue(victim, "targetname", sTargetName);
+
+		DispatchKeyValueFloat(iPointHurt, "Damage", damage);
+		DispatchKeyValue(iPointHurt, "DamageTarget", sTargetName);
+		DispatchKeyValue(iPointHurt, "DamageType", damagetype);
+
+		DispatchSpawn(iPointHurt);
+		AcceptEntityInput(iPointHurt, "Hurt", attacker);
+
+		RemoveEntity(iPointHurt);
+	}
+}
+
 stock void vDeleteEntity(int entity, float time = 0.1)
 {
 	if (bIsValidEntRef(entity))
