@@ -148,7 +148,7 @@ public void ST_PluginEnd()
 	{
 		if (bIsTank(iClone, "234") && g_bCloned[iClone])
 		{
-			IsFakeClient(iClone) ? KickClient(iClone) : ForcePlayerSuicide(iClone);
+			!bIsValidClient(iClone, "5") ? KickClient(iClone) : ForcePlayerSuicide(iClone);
 		}
 	}
 }

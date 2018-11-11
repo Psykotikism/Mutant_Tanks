@@ -150,7 +150,7 @@ public void ST_PluginEnd()
 	{
 		if ((bIsTank(iMinion, "234") || bIsSpecialInfected(iMinion, "234")) && g_bMinion[iMinion])
 		{
-			IsFakeClient(iMinion) ? KickClient(iMinion) : ForcePlayerSuicide(iMinion);
+			!bIsValidClient(iMinion, "5") ? KickClient(iMinion) : ForcePlayerSuicide(iMinion);
 		}
 	}
 }

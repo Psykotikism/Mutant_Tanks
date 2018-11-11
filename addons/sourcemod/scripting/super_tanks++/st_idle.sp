@@ -348,7 +348,7 @@ public Action tTimerIdleFix(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor) || IsFakeClient(iSurvivor))
+	if (!bIsValidClient(iSurvivor, "5") || GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor))
 	{
 		g_bIdled[iSurvivor] = false;
 	}

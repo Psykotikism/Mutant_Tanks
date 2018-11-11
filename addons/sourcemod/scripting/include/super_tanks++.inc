@@ -215,7 +215,7 @@ stock bool bHasIdlePlayer(int survivor)
 		if (iSpectatorUserId > 0)
 		{
 			int iIdler = GetClientOfUserId(iSpectatorUserId);
-			if (iIdler > 0 && IsClientInGame(iIdler) && !IsFakeClient(iIdler) && (GetClientTeam(iIdler) != 2))
+			if (iIdler > 0 && bIsValidClient(iIdler, "25") && GetClientTeam(iIdler) != 2)
 			{
 				return true;
 			}
@@ -232,17 +232,17 @@ stock bool bIsBoomer(int boomer, const char[] mode = "024")
 
 stock bool bIsBotIdle(int bot, const char[] mode = "0234")
 {
-	return bIsSurvivor(bot, mode) && IsFakeClient(bot) && bHasIdlePlayer(bot);
+	return bIsSurvivor(bot, mode) && !bIsValidClient(bot, "5") && bHasIdlePlayer(bot);
 }
 
 stock bool bIsBotIdleSurvivor(int bot, const char[] mode = "0234")
 {
-	return bIsSurvivor(bot, mode) && IsFakeClient(bot) && !bHasIdlePlayer(bot);
+	return bIsSurvivor(bot, mode) && !bIsValidClient(bot, "5") && !bHasIdlePlayer(bot);
 }
 
 stock bool bIsBotSurvivor(int bot, const char[] mode = "0234")
 {
-	return bIsSurvivor(bot, mode) && IsFakeClient(bot);
+	return bIsSurvivor(bot, mode) && !bIsValidClient(bot, "5");
 }
 
 stock bool bIsCharger(int charger, const char[] mode = "024")
@@ -317,7 +317,7 @@ stock bool bIsPlayerIdle(int survivor)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (!IsClientInGame(iPlayer) || GetClientTeam(iPlayer) != 2 || !IsFakeClient(iPlayer) || !bHasIdlePlayer(iPlayer))
+		if (!bIsValidClient(iPlayer, "2") || bIsValidClient(iPlayer, "5") || !bHasIdlePlayer(iPlayer) || GetClientTeam(iPlayer) != 2)
 		{
 			continue;
 		}
@@ -825,7 +825,7 @@ stock int iGetIdlePlayer(int bot)
 		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
-			if (iIdler > 0 && IsClientInGame(iIdler) && GetClientTeam(iIdler) == 1)
+			if (iIdler > 0 && bIsValidClient(iIdler, "2") && GetClientTeam(iIdler) == 1)
 			{
 				return iIdler;
 			}
@@ -1206,12 +1206,12 @@ stock void vSpecialAttack(int tank, float pos[3], float offset, const char[] mod
 
 stock void ST_PrintToChat(int client, char[] message, any ...)
 {
-	if (client <= 0 || client > MaxClients)
+	if (!bIsValidClient(client, "0"))
 	{
 		ThrowError("Invalid client index %d", client);
 	}
 	
-	if (!IsClientInGame(client))
+	if (!bIsValidClient(client, "2"))
 	{
 		ThrowError("Client %d is not in game", client);
 	}

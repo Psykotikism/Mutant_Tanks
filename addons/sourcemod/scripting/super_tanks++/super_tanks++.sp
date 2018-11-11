@@ -963,7 +963,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				}
 			}
 
-			if (IsClientInGame(param1) && !IsClientInKickQueue(param1))
+			if (bIsValidClient(param1, "24"))
 			{
 				vTankMenu(param1, menu.Selection);
 			}
@@ -1879,7 +1879,7 @@ static void vTankCountCheck(int tank, int wave)
 	}
 	else if (iGetTankCount() > wave)
 	{
-		if (IsFakeClient(tank))
+		if (!bIsValidClient(tank, "5"))
 		{
 			KickClient(tank);
 		}
@@ -1913,7 +1913,7 @@ static void vThrowInterval(int tank, float time)
 
 static bool bIsTankAllowed(int tank, const char[] mode = "0234")
 {
-	return bIsTank(tank, mode) && IsFakeClient(tank);
+	return bIsTank(tank, mode) && !bIsValidClient(tank, "5");
 }
 
 static bool bTankChance(int value)
