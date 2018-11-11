@@ -20,8 +20,10 @@ Changes:
 10. Added the ST_SpawnEnabled native to check if a Super Tank can be spawned through the sm_tank command.
 11. Added the "Random Tank" setting to determine if a Super Tank can be used by other Super Tanks who spawn with the Randomization mode feature.
 12. Added chat color tags for translation phrases.
-13. Removed the "Electric Speed" setting.
-14. Removed redundant code.
+13. Added the ST_PrintToChat() and ST_PrintToChatAll() stocks.
+14. The Super Tanks++ menu now transforms an existing Tank into the specified type when the command user is facing that Tank.
+15. Removed the "Electric Speed" setting.
+16. Removed redundant code.
 
 Files:
 

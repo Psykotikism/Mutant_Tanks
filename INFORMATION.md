@@ -1,7 +1,7 @@
 # Information
 > Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
 
-- Maximum types: 500
+- Maximum types: 500 (If you want more, change the value of "ST_MAXTYPES" in super_tanks++.inc file at your own risk.)
 - Ability count: 65
 - All of these settings use default values if they are left incomplete or empty.
 - The plugin automatically eliminates any whitespace from each setting's values.

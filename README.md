@@ -701,10 +701,13 @@ native void ST_SpawnTank(int tank, int type);
  * Returns if the Tank is allowed to be a Super Tank.
  *
  * @param tank			Client index of the Tank.
+ * @param checks		Checks to run. 0 = client index, 1 = connection, 2 = in-game status,
+ *					3 = life state, 4 = kick status, 5 = bot check
+ *					Default: "0234"
  * @return			True if Tank is allowed to be a Super Tank, false otherwise.
  * @error			Invalid client index.
  **/
-native bool ST_TankAllowed(int tank);
+native bool ST_TankAllowed(int tank, const char[] checks = "0234");
 
 /**
  * Returns if a certain Super Tank type has a chance of spawning.
@@ -760,6 +763,51 @@ native int ST_TankWave();
  * @error			Type is 0.
  **/
 native bool ST_TypeEnabled(int type);
+```
+
+Stocks:
+
+```
+stock void ST_PrintToChat(int client, char[] message, any ...)
+{
+	if (!bIsValidClient(client, "0"))
+	{
+		ThrowError("Invalid client index %d", client);
+	}
+	
+	if (!bIsValidClient(client, "2"))
+	{
+		ThrowError("Client %d is not in game", client);
+	}
+
+	ReplaceString(message, strlen(message), "{default}", "\x01");
+	ReplaceString(message, strlen(message), "{mint}", "\x03");
+	ReplaceString(message, strlen(message), "{yellow}", "\x04");
+	ReplaceString(message, strlen(message), "{olive}", "\x05");
+
+	char sBuffer[255], sMessage[255];
+	SetGlobalTransTarget(client);
+	Format(sBuffer, sizeof(sBuffer), "\x01%s", message);
+	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
+
+	PrintToChat(client, sMessage);
+}
+
+stock void ST_PrintToChatAll(char[] message, any ...)
+{
+	char sBuffer[255];
+
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, "25"))
+		{
+			SetGlobalTransTarget(iPlayer);
+			VFormat(sBuffer, sizeof(sBuffer), message, 2);
+
+			ST_PrintToChat(iPlayer, sBuffer);
+		}
+	}
+}
 ```
 
 Target filters:
