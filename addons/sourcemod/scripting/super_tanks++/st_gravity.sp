@@ -206,13 +206,11 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsValidClient(iPlayer, "234"))
+		if (bIsTank(iTank, "234"))
 		{
-			vRemoveGravity(iPlayer);
-
-			SetEntityGravity(iPlayer, 1.0);
+			vRemoveGravity(iTank);
 		}
 	}
 }
@@ -298,14 +296,7 @@ public void ST_BossStage(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor, "24") && g_bGravity2[iSurvivor] && g_iGravityOwner[iSurvivor] == tank)
-			{
-				g_bGravity2[iSurvivor] = false;
-				g_iGravityOwner[iSurvivor] = 0;
-			}
-		}
+		vRemoveGravity(tank);
 	}
 }
 
@@ -364,6 +355,17 @@ static void vRemoveGravity(int tank)
 	}
 
 	g_bGravity[tank] = false;
+
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, "234") && g_bGravity2[iSurvivor] && g_iGravityOwner[iSurvivor] == tank)
+		{
+			g_bGravity2[iSurvivor] = false;
+			g_iGravityOwner[iSurvivor] = 0;
+
+			SetEntityGravity(iSurvivor, 1.0);
+		}
+	}
 }
 
 static void vReset()

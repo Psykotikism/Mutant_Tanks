@@ -201,7 +201,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iTank = 1; iTank <= iTank; iTank++)
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
 		if (bIsTank(iTank, "234"))
 		{
