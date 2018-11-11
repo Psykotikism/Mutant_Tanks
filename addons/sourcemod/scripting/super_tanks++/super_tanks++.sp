@@ -2576,14 +2576,12 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	}
 
 	sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
-	ReplaceString(sTankName, sizeof(sTankName), " ", "");
-	if (sTankName[0] == '\0')
+	if (StrEqual(sTankName, ""))
 	{
 		sTankName = "Tank";
 	}
 
 	int iMode = pack.ReadCell();
-
 	vSetName(iTank, sCurrentName, sTankName, iMode);
 
 	if (iMode == 0 && ST_CloneAllowed(iTank, g_bCloneInstalled))
