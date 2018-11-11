@@ -311,20 +311,6 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank)
-{
-	g_bHeal[tank] = false;
-
-	char sHealMessage[4];
-	sHealMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sHealMessage[ST_TankType(tank)] : g_sHealMessage2[ST_TankType(tank)];
-	if (StrContains(sHealMessage, "3") != -1)
-	{
-		char sTankName[33];
-		ST_TankName(tank, sTankName);
-		ST_PrintToChatAll("%s %t", ST_TAG2, "Heal3", sTankName);
-	}
-}
-
 static float flHealChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flHealChance[ST_TankType(tank)] : g_flHealChance2[ST_TankType(tank)];
@@ -350,7 +336,16 @@ public Action tTimerHeal(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iHealAbility(iTank) != 2 && iHealAbility(iTank) != 3) || !g_bHeal[iTank])
 	{
-		vReset2(iTank);
+		g_bHeal[iTank] = false;
+
+		char sHealMessage[4];
+		sHealMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sHealMessage[ST_TankType(iTank)] : g_sHealMessage2[ST_TankType(iTank)];
+		if (StrContains(sHealMessage, "3") != -1)
+		{
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Heal3", sTankName);
+		}
 
 		return Plugin_Stop;
 	}

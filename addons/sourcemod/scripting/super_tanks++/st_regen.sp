@@ -175,18 +175,6 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank)
-{
-	g_bRegen[tank] = false;
-
-	if (iRegenMessage(tank) == 1)
-	{
-		char sTankName[33];
-		ST_TankName(tank, sTankName);
-		ST_PrintToChatAll("%s %t", ST_TAG2, "Regen2", sTankName);
-	}
-}
-
 static int iRegenAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iRegenAbility[ST_TankType(tank)] : g_iRegenAbility2[ST_TankType(tank)];
@@ -202,7 +190,14 @@ public Action tTimerRegen(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRegenAbility(iTank) == 0 || !g_bRegen[iTank])
 	{
-		vReset2(iTank);
+		g_bRegen[iTank] = false;
+
+		if (iRegenMessage(iTank) == 1)
+		{
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Regen2", sTankName);
+		}
 
 		return Plugin_Stop;
 	}

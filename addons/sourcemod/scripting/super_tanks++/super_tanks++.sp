@@ -2554,15 +2554,16 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 
 	if (iMode == 0 && ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		int iHealth = GetClientHealth(iTank),
+		int iHumanCount = iGetHumanCount(),
+			iHealth = GetClientHealth(iTank),
 			iBaseHealth = !g_bTankConfig[g_iTankType[iTank]] ? g_iBaseHealth[g_iTankType[iTank]] : g_iBaseHealth2[g_iTankType[iTank]],
 			iSpawnHealth = (iBaseHealth > 0) ? iBaseHealth : iHealth,
 			iMultiHealth = !g_bGeneralConfig ? g_iMultiHealth : g_iMultiHealth2,
 			iExtraHealth = !g_bTankConfig[g_iTankType[iTank]] ? g_iExtraHealth[g_iTankType[iTank]] : g_iExtraHealth2[g_iTankType[iTank]],
 			iExtraHealthNormal = iSpawnHealth + iExtraHealth,
-			iExtraHealthBoost = (iGetHumanCount() > 1) ? ((iSpawnHealth * iGetHumanCount()) + iExtraHealth) : iExtraHealthNormal,
-			iExtraHealthBoost2 = (iGetHumanCount() > 1) ? (iSpawnHealth + (iGetHumanCount() * iExtraHealth)) : iExtraHealthNormal,
-			iExtraHealthBoost3 = (iGetHumanCount() > 1) ? (iGetHumanCount() * (iSpawnHealth + iExtraHealth)) : iExtraHealthNormal,
+			iExtraHealthBoost = (iHumanCount > 1) ? ((iSpawnHealth * iHumanCount) + iExtraHealth) : iExtraHealthNormal,
+			iExtraHealthBoost2 = (iHumanCount > 1) ? (iSpawnHealth + (iHumanCount * iExtraHealth)) : iExtraHealthNormal,
+			iExtraHealthBoost3 = (iHumanCount > 1) ? (iHumanCount * (iSpawnHealth + iExtraHealth)) : iExtraHealthNormal,
 			iNoBoost = (iExtraHealthNormal > ST_MAXHEALTH) ? ST_MAXHEALTH : iExtraHealthNormal,
 			iBoost = (iExtraHealthBoost > ST_MAXHEALTH) ? ST_MAXHEALTH : iExtraHealthBoost,
 			iBoost2 = (iExtraHealthBoost2 > ST_MAXHEALTH) ? ST_MAXHEALTH : iExtraHealthBoost2,
@@ -2584,7 +2585,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 			case 3: SetEntityHealth(iTank, iFinalHealth3);
 		}
 
-		g_iTankHealth[iTank] = GetClientHealth(iTank);
+		g_iTankHealth[iTank] = iHealth;
 	}
 
 	return Plugin_Continue;

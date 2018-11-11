@@ -172,16 +172,6 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank)
-{
-	if (iCloudMessage(tank) == 1)
-	{
-		char sTankName[33];
-		ST_TankName(tank, sTankName);
-		ST_PrintToChatAll("%s %t", ST_TAG2, "Cloud2", sTankName);
-	}
-}
-
 static int iCloudAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iCloudAbility[ST_TankType(tank)] : g_iCloudAbility2[ST_TankType(tank)];
@@ -197,7 +187,14 @@ public Action tTimerCloud(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iCloudAbility(iTank) == 0 || !g_bCloud[iTank])
 	{
-		vReset2(iTank);
+		g_bCloud[iTank] = false;
+
+		if (iCloudMessage(iTank) == 1)
+		{
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Cloud2", sTankName);
+		}
 
 		return Plugin_Stop;
 	}

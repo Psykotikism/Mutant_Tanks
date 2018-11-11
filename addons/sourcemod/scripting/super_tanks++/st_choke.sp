@@ -277,8 +277,8 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, const c
 		CreateDataTimer(flChokeDelay, tTimerChokeLaunch, dpChokeLaunch, TIMER_FLAG_NO_MAPCHANGE);
 		dpChokeLaunch.WriteCell(GetClientUserId(survivor));
 		dpChokeLaunch.WriteCell(GetClientUserId(tank));
-		dpChokeLaunch.WriteString(message);
 		dpChokeLaunch.WriteCell(enabled);
+		dpChokeLaunch.WriteString(message);
 
 		char sChokeEffect[4];
 		sChokeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sChokeEffect[ST_TankType(tank)] : g_sChokeEffect2[ST_TankType(tank)];
@@ -351,8 +351,8 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	int iTank = GetClientOfUserId(pack.ReadCell()), iChokeAbility = pack.ReadCell();
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iChokeAbility == 0)
 	{
 		g_bChoke[iSurvivor] = false;
 		g_iChokeOwner[iSurvivor] = 0;
@@ -362,15 +362,6 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-
-	int iChokeAbility = pack.ReadCell();
-	if (iChokeAbility == 0)
-	{
-		g_bChoke[iSurvivor] = false;
-		g_iChokeOwner[iSurvivor] = 0;
-
-		return Plugin_Stop;
-	}
 
 	float flChokeHeight = !g_bTankConfig[ST_TankType(iTank)] ? g_flChokeHeight[ST_TankType(iTank)] : g_flChokeHeight2[ST_TankType(iTank)],
 		flVelocity[3];

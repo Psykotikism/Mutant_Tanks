@@ -264,11 +264,11 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 		sRestartLoadout = !g_bTankConfig[ST_TankType(tank)] ? g_sRestartLoadout[ST_TankType(tank)] : g_sRestartLoadout2[ST_TankType(tank)];
 
 		ExplodeString(sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-		vRemoveWeapon(survivor, 0);
-		vRemoveWeapon(survivor, 1);
-		vRemoveWeapon(survivor, 2);
-		vRemoveWeapon(survivor, 3);
-		vRemoveWeapon(survivor, 4);
+
+		for (int iWeapon = 0; iWeapon < 5; iWeapon++)
+		{
+			vRemoveWeapon(survivor, iWeapon);
+		}
 
 		for (int iItem = 0; iItem < sizeof(sItems); iItem++)
 		{

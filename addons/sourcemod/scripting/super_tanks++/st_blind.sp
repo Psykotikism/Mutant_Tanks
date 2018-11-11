@@ -382,17 +382,8 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
-	{
-		g_bBlind[iSurvivor] = false;
-		g_iBlindOwner[iSurvivor] = 0;
-
-		return Plugin_Stop;
-	}
-
-	int iBlindEnabled = pack.ReadCell();
-	if (iBlindEnabled == 0)
+	int iTank = GetClientOfUserId(pack.ReadCell()), iBlindEnabled = pack.ReadCell();
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iBlindEnabled == 0)
 	{
 		g_bBlind[iSurvivor] = false;
 		g_iBlindOwner[iSurvivor] = 0;

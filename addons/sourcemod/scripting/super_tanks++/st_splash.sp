@@ -189,18 +189,6 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank)
-{
-	g_bSplash[tank] = false;
-
-	if (iSplashMessage(tank) == 1)
-	{
-		char sTankName[33];
-		ST_TankName(tank, sTankName);
-		ST_PrintToChatAll("%s %t", ST_TAG2, "Splash2", sTankName);
-	}
-}
-
 static float flSplashChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flSplashChance[ST_TankType(tank)] : g_flSplashChance2[ST_TankType(tank)];
@@ -221,7 +209,14 @@ public Action tTimerSplash(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iSplashAbility(iTank) == 0 || !g_bSplash[iTank])
 	{
-		vReset2(iTank);
+		g_bSplash[iTank] = false;
+
+		if (iSplashMessage(iTank) == 1)
+		{
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Splash2", sTankName);
+		}
 
 		return Plugin_Stop;
 	}
