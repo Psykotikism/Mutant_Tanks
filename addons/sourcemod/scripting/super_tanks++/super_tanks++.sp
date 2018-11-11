@@ -905,6 +905,39 @@ static void vTank(int admin, char[] type, int mode = 0)
 		}
 	}
 
+	if (bIsTankAllowed(admin))
+	{
+		vSpawnTank(admin, mode);
+	}
+	else
+	{
+		int iTarget = GetClientAimTarget(admin, false);
+		if (bIsValidEntity(iTarget))
+		{
+			char sClassname[32];
+			GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
+			if (StrEqual(sClassname, "player") && bIsTankAllowed(iTarget))
+			{
+				vNewTankSettings(iTarget);
+				vSetColor(iTarget, g_iType);
+				vTankSpawn(iTarget);
+
+				g_iType = 0;
+			}
+			else
+			{
+				vSpawnTank(admin, mode);
+			}
+		}
+		else
+		{
+			vSpawnTank(admin, mode);
+		}
+	}
+}
+
+static void vSpawnTank(int admin, int mode = 0)
+{
 	char sParameter[32];
 
 	switch (mode)
@@ -2301,6 +2334,7 @@ public Action tTimerTransform(Handle timer, int userid)
 
 	char sTransform[10][5], sTransformTypes[80];
 	sTransformTypes = !g_bTankConfig[g_iTankType[iTank]] ? g_sTransformTypes[g_iTankType[iTank]] : g_sTransformTypes2[g_iTankType[iTank]];
+	ReplaceString(sTransformTypes, sizeof(sTransformTypes), " ", "");
 	ExplodeString(sTransformTypes, ",", sTransform, sizeof(sTransform), sizeof(sTransform[]));
 
 	int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
@@ -2531,8 +2565,6 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iMode = pack.ReadCell();
-
 	vParticleEffects(iTank);
 	vThrowInterval(iTank, flThrowInterval(iTank));
 
@@ -2544,11 +2576,13 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	}
 
 	sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
-	TrimString(sTankName);
+	ReplaceString(sTankName, sizeof(sTankName), " ", "");
 	if (sTankName[0] == '\0')
 	{
 		sTankName = "Tank";
 	}
+
+	int iMode = pack.ReadCell();
 
 	vSetName(iTank, sCurrentName, sTankName, iMode);
 

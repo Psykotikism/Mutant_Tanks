@@ -259,10 +259,8 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 		SDKCall(g_hSDKRespawnPlayer, survivor);
 
 		char sRestartLoadout[325], sItems[5][64];
-		int iRestartMode = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMode[ST_TankType(tank)] : g_iRestartMode2[ST_TankType(tank)];
-
 		sRestartLoadout = !g_bTankConfig[ST_TankType(tank)] ? g_sRestartLoadout[ST_TankType(tank)] : g_sRestartLoadout2[ST_TankType(tank)];
-
+		ReplaceString(sRestartLoadout, sizeof(sRestartLoadout), " ", "");
 		ExplodeString(sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
 
 		for (int iWeapon = 0; iWeapon < 5; iWeapon++)
@@ -278,6 +276,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 			}
 		}
 
+		int iRestartMode = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMode[ST_TankType(tank)] : g_iRestartMode2[ST_TankType(tank)];
 		if (g_bRestartValid && iRestartMode == 0)
 		{
 			TeleportEntity(survivor, g_flRestartPosition, NULL_VECTOR, NULL_VECTOR);

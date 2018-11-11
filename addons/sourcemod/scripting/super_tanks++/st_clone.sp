@@ -277,15 +277,6 @@ public void ST_BossStage(int tank)
 	if (iCloneAbility(tank) == 1 && ST_TankAllowed(tank) && !g_bCloned[tank])
 	{
 		g_iCloneCount[tank] = 0;
-
-		for (int iClone = 1; iClone <= MaxClients; iClone++)
-		{
-			if (bIsTank(iClone, "234") && g_iCloneOwner[iClone] == tank)
-			{
-				g_bCloned[iClone] = false;
-				g_iCloneOwner[iClone] = 0;
-			}
-		}
 	}
 }
 

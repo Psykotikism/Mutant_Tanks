@@ -284,15 +284,6 @@ public void ST_BossStage(int tank)
 	if (iMinionAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		g_iMinionCount[tank] = 0;
-
-		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
-		{
-			if ((bIsTank(iInfected, "24") || bIsSpecialInfected(iInfected, "24")) && g_iMinionOwner[iInfected] == tank)
-			{
-				g_bMinion[iInfected] = false;
-				g_iMinionOwner[iInfected] = 0;
-			}
-		}
 	}
 }
 
