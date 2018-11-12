@@ -22,7 +22,7 @@ Super Tanks++ will enhance and intensify Tank fights by making each Tank that sp
 Super Tanks++ enhances the experience and fun that players get from Tank fights by 500. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
-1. You must have at least SourceMod 1.10.0.6352 or higher.
+1. You must have at least `SourceMod 1.10.0.6352` or higher.
 
 ### Notes
 1. I do not provide support for local/listen servers but the plugin and its modules should still work properly on them.
@@ -32,47 +32,43 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 
 ### Installation
 1. Delete files from old versions of the plugin.
-2. Extract the folder inside the super_tanks++.zip file.
+2. Extract the folder inside the `super_tanks++.zip` file.
 3. Place all the contents into their respective folders.
 4. If prompted to replace or merge anything, click yes.
 5. Load up Super Tanks++ by restarting the server.
 6. Customize Super Tanks++ in:
-
- - addons/sourcemod/data/super_tanks++/super_tanks++.cfg.
- - cfg/sourcemod/super_tanks++/super_tanks++.cfg.
+ - `addons/sourcemod/data/super_tanks++/super_tanks++.cfg`
+ - `cfg/sourcemod/super_tanks++/super_tanks++.cfg`
 
 ### Uninstalling/Upgrading to Newer Versions
-1. Delete super_tanks++ folder from:
-
- - addons/sourcemod/data folder.
- - addons/sourcemod/plugins folder (super_tanks++.smx and all of its modules).
- - addons/sourcemod/scripting folder (super_tanks++.sp and all of its modules).
- - cfg/sourcemod folder.
-
-2. Delete super_tanks++.txt from addons/sourcemod/gamedata folder.
-3. Delete super_tanks++.inc from addons/sourcemod/scripting/include folder.
-4. Delete st_clone.inc from addons/sourcemod/scripting/include folder.
-5. Delete super_tanks++.phrases.txt from addons/sourcemod/translations folder.
+1. Delete `super_tanks++` folder from:
+ - `addons/sourcemod/data folder`
+ - `addons/sourcemod/plugins folder` (`super_tanks++.smx` and all of its modules)
+ - `addons/sourcemod/scripting folder` (`super_tanks++.sp` and all of its modules)
+ - `cfg/sourcemod folder`
+2. Delete `super_tanks++.txt` from `addons/sourcemod/gamedata` folder.
+3. Delete `super_tanks++.inc` from `addons/sourcemod/scripting/include` folder.
+4. Delete `st_clone.inc` from `addons/sourcemod/scripting/include` folder.
+5. Delete `super_tanks++.phrases.txt` from `addons/sourcemod/translations` folder.
 6. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
 ### Disabling
-1. Move super_tanks++ folder (super_tanks++.smx and all of its modules) to plugins/disabled folder.
+1. Move `super_tanks++` folder (`super_tanks++.smx` and all of its modules) to `plugins/disabled` folder.
 2. Unload Super Tanks++ by restarting the server.
 
 ## Features
-1. Supports multiple game modes - Provides the option to enable/disable the plugin in certain game modes.
+1. Supports all game modes - Provides the option to enable/disable the plugin in all game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
 3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the KeyValue config file and user-made Super Tanks.
-4. Create and save up to 500 Super Tank types - Provides the ability to store up to 500 Super Tank types that users can enable/disable.
-5. Easy-to-use config file - Provides a user-friendly KeyValues config file that users can easily understand and edit.
-6. KeyValues config auto-reloader - Provides the feature to auto-reload the KeyValues config file when users change settings mid-game.
-7. Lock/unlock ConVar values - Provides the option to temporarily lock/unlock ConVar values across map changes.
-8. Automatic ConVars config updater - Provides the ability to update the main ConVar config file when new ConVars are added.
-9. Optional abilities - Provides the option to choose which abilities to install.
-10. Forwards and natives - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
-11. Survivor and Infected target filters - Provides custom target filters. (Use @survivors for survivors and @smokers, @boomers, @hunters, @spitters, @jockeys, @chargers, @special, @infected for infected.)
-12. Supports multiple languages - Provides support for translations.
-13. Chat color tags - Provides chat color tags for translation files.
+4. Create and save up to 500 Super Tank types - Provides the ability to store up to 500 Super Tank types.
+5. KeyValues config auto-reloader - Provides the feature to auto-reload the KeyValues config file when users change settings mid-game.
+6. Lock/unlock ConVar values - Provides the option to temporarily lock/unlock ConVar values across map changes.
+7. Automatic ConVars config updater - Provides the ability to update the main ConVar config file when new ConVars are added.
+8. Optional abilities - Provides the option to choose which abilities to install.
+9. User-friendly API - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
+10. Target filters - Provides custom target filters for targeting survivors and special infected.
+11. Supports multiple languages - Provides support for translations.
+12. Chat color tags - Provides chat color tags for translation files.
 
 ## ConVars Settings
 
@@ -334,8 +330,8 @@ st_finalewaves "2,3,4" // Value after map changes.
 > Super Tanks++ has features that allow for creating and executing custom configuration files.
 
 By default, Super Tanks++ can create and execute the following types of configurations:
-1. Difficulty - Files are created/executed based on the current game difficulty. (Example: If the current z_difficulty is set to Impossible (Expert mode), then `impossible.cfg` is executed (or created if it doesn't exist already).
-2. Map - Files are created/executed based on the current map. (Example: If the current map is c1m1_hotel, then `c1m1_hotel.cfg` is executed (or created if it doesn't exist already).
+1. Difficulty - Files are created/executed based on the current game difficulty. (Example: If the current `z_difficulty` is set to Impossible (Expert mode), then `impossible.cfg` is executed (or created if it doesn't exist already).
+2. Map - Files are created/executed based on the current map. (Example: If the current map is `c1m1_hotel`, then `c1m1_hotel.cfg` is executed (or created if it doesn't exist already).
 3. Game mode - Files are created/executed based on the current game mode. (Example: If the current game mode is Versus, then `versus.cfg` is executed (or created if it doesn't exist already).
 4. Daily - Files are created/executed based on the current day. (Example: If the current day is Friday, then `friday.cfg` is executed (or created if it doesn't exist already).
 5. Player count - Files are created/executed based on the current number of human players. (Example: If the current number is 8, then `8.cfg` is executed (or created if it doesn't exist already).
@@ -343,7 +339,7 @@ By default, Super Tanks++ can create and execute the following types of configur
 #### Features
 1. Create custom config files (can be based on difficulty, map, game mode, day, player count, or custom name).
 2. Execute custom config files (can be based on difficulty, map, game mode, day, player count, or custom name).
-3. Automatically generate config files for up to 66 players, all difficulties specified by z_difficulty, maps installed on the server, game modes specified by sv_gametypes and mp_gamemode, and days.
+3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, and days.
 
 ## Questions You May Have
 > If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140).
@@ -813,7 +809,7 @@ Example:
 
 14. Are there any developer/tester features available in the plugin?
 
-Yes, there are forwards, natives, stocks, target filters for each special infected, and admin commands that allow developers/testers to spawn each Super Tank and see their statuses.
+Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Super Tank.
 
 Forwards:
 ```

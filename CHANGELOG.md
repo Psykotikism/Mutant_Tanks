@@ -28,7 +28,6 @@ Changes:
 18. Renamed the ST_BossStage() and ST_Event() forwards to ST_ChangeType() and ST_EventHandler() respectively.
 19. Removed the "Electric Speed" setting.
 20. Removed the "Plugin Settings" section from the config.
-21. Removed redundant code.
 
 Files:
 
