@@ -38,12 +38,12 @@
 forward void ST_Ability(int tank);
 
 /**
- * Called when the Super Tank evolves.
- * Use this forward to trigger any features/abilities/settings when a Super Tank evolves.
+ * Called when the Super Tank changes types.
+ * Use this forward to trigger any features/abilities/settings when a Super Tank changes types.
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_BossStage(int tank);
+forward void ST_ChangeType(int tank);
 
 /**
  * Called when the config file is loaded.
@@ -61,7 +61,7 @@ forward void ST_Configs(const char[] savepath, bool main);
  * @param event			Handle to the event.
  * @param name			String containing the name of the event.
  **/
-forward void ST_Event(Event event, const char[] name);
+forward void ST_EventHandler(Event event, const char[] name);
 
 /**
  * Called when the core plugin is unloaded/reloaded.
@@ -98,16 +98,16 @@ forward void ST_RockThrow(int tank, int rock);
 
 // Natives
 /**
- * Returns the maximum value of the "Type Range" setting.
+ * Returns the maximum value of the "st_typerange" setting.
  *
- * @return			The maximum value of the "Type Range" setting.
+ * @return			The maximum value of the "st_typerange" setting.
  **/
 native int ST_MaxType();
 
 /**
- * Returns the minimum value of the "Type Range" setting.
+ * Returns the minimum value of the "st_typerange" setting.
  *
- * @return			The minimum value of the "Type Range" setting.
+ * @return			The minimum value of the "st_typerange" setting.
  **/
 native int ST_MinType();
 
@@ -141,8 +141,8 @@ native void ST_SpawnTank(int tank, int type);
  *
  * @param tank			Client index of the Tank.
  * @param checks		Checks to run. 0 = client index, 1 = connection, 2 = in-game status,
- *					3 = life state, 4 = kick status, 5 = bot check
- *					Default: "0234"
+ *				3 = life state, 4 = kick status, 5 = bot check
+ *				Default: "0234"
  * @return			True if Tank is allowed to be a Super Tank, false otherwise.
  * @error			Invalid client index.
  **/
@@ -202,6 +202,393 @@ native int ST_TankWave();
  * @error			Type is 0.
  **/
 native bool ST_TypeEnabled(int type);
+
+// Configs
+#define ST_APPEND_BAD_FILENAME 0
+#define ST_APPEND_FILE_NOT_FOUND 1
+#define ST_APPEND_BAD_HANDLE 2
+#define ST_APPEND_SUCCESS 3
+
+#define ST_FIND_BAD_FILENAME 10
+#define ST_FIND_FILE_NOT_FOUND 11
+#define ST_FIND_BAD_HANDLE 12
+#define ST_FIND_NOT_FOUND 13
+#define ST_FIND_SUCCESS 14
+
+#define ST_CLEAN_FILE_NOT_FOUND 20
+#define ST_CLEAN_BAD_HANDLE 21
+#define ST_CLEAN_SUCCESS 22
+
+#define ST_NO_CONFIG 30
+
+#define ST_FORMAT_BAD_FILENAME 40
+#define ST_FORMAT_SUCCESS 41
+
+static bool g_bCreateDirectory, g_bCreateFile;
+
+static char g_sConfigFile[PLATFORM_MAX_PATH], g_sRawFileName[PLATFORM_MAX_PATH], g_sFolderPath[PLATFORM_MAX_PATH];
+
+static Handle g_hPluginHandle;
+
+static int g_iCreateDirectoryMode, g_iLastFindResult, g_iLastAppendResult;
+
+stock int iST_GetFindResult()
+{
+	return g_iLastFindResult;
+}
+
+stock int iST_GetAppendResult()
+{
+	return g_iLastAppendResult;
+}
+
+stock void vST_CreateConfig(bool create)
+{
+	g_bCreateFile = create;
+}
+
+stock void vST_CreateDirectory(bool create, int mode = 511)
+{
+	g_bCreateDirectory = create;
+	g_iCreateDirectoryMode = mode;
+}
+
+stock bool bST_GetCreateFile()
+{
+	return g_bCreateFile;
+}
+
+stock void vST_SetPlugin(Handle plugin)
+{
+	g_hPluginHandle = plugin;
+}
+
+stock Handle hST_GetPlugin()
+{
+	return g_hPluginHandle;
+}
+
+stock bool bST_Config(char[] file, char[] folder = "sourcemod/super_tanks++")
+{
+	Format(g_sConfigFile, sizeof(g_sConfigFile), "%s", file);
+	strcopy(g_sRawFileName, sizeof(g_sRawFileName), file);
+	strcopy(g_sFolderPath, sizeof(g_sFolderPath), folder);
+
+	return iST_FormatConfig(g_sConfigFile, sizeof(g_sConfigFile), folder) == ST_FORMAT_SUCCESS;
+}
+
+stock bool bST_GetConfig(char[] buffer, int size)
+{
+	if (strlen(g_sConfigFile) > 0)
+	{
+		strcopy(buffer, size, g_sConfigFile);
+
+		return true;
+	}
+
+	buffer[0] = '\0';
+
+	return false;
+}
+
+stock ConVar cvST_ConVar(const char[] name, const char[] defaultValue, const char[] description = "", int flags = 0, bool hasMin = false, float min = 0.0, bool hasMax = false, float max = 0.0)
+{
+	if (!(flags & FCVAR_DONTRECORD) && strlen(g_sConfigFile) > 0)
+	{
+		g_iLastFindResult = -1;
+		g_iLastAppendResult = -1;
+
+		char sValue[64];
+		g_iLastFindResult = iST_FindValue(name, sValue, sizeof(sValue), true);
+
+		if (g_iLastFindResult == ST_FIND_NOT_FOUND || (g_iLastFindResult == ST_FIND_FILE_NOT_FOUND && g_bCreateFile))
+		{
+			g_iLastAppendResult = iST_Append(name, defaultValue, description, flags, hasMin, min, hasMax, max);
+		}
+	}
+
+	return CreateConVar(name, defaultValue, description, flags, hasMin, min, hasMax, max);
+}
+
+stock void vST_ExecConfig()
+{
+	AutoExecConfig(!g_bCreateFile, g_sRawFileName, g_sFolderPath);
+}
+
+stock static int iST_FormatConfig(char[] buffer, int size, char[] folder = "sourcemod/super_tanks++")
+{
+	if (strlen(g_sConfigFile) < 1)
+	{
+		return ST_NO_CONFIG;
+	}
+
+	if (StrContains(g_sConfigFile, ".cfg") != -1 && strlen(g_sConfigFile) < 4)
+	{
+		return ST_FORMAT_BAD_FILENAME;
+	}
+
+	char sPathPrefix[PLATFORM_MAX_PATH];
+	if (strlen(folder) > 0)
+	{
+		Format(sPathPrefix, sizeof(sPathPrefix), "cfg/%s/", folder);
+		if (g_bCreateDirectory && !DirExists(sPathPrefix))
+		{
+			CreateDirectory(sPathPrefix, g_iCreateDirectoryMode);
+		}
+	}
+	else
+	{
+		Format(sPathPrefix, sizeof(sPathPrefix), "cfg/");
+	}
+
+	char sFile[PLATFORM_MAX_PATH];
+	sFile[0] = '\0';
+	if (StrContains(buffer, sPathPrefix) != 0)
+	{
+		StrCat(sFile, sizeof(sFile), sPathPrefix);
+	}
+
+	StrCat(sFile, sizeof(sFile), g_sConfigFile);
+
+	if (StrContains(sFile[strlen(sFile) - 4], ".cfg") != 0)
+	{
+		StrCat(sFile, sizeof(sFile), ".cfg");
+	}
+
+	strcopy(buffer, size, sFile);
+
+	return ST_FORMAT_SUCCESS;
+}
+
+stock int iST_Append(const char[] name, const char[] defaultValue, const char[] description, int flags, bool hasMin, float min, bool hasMax, float max)
+{
+	if (strlen(g_sConfigFile) < 1)
+	{
+		return ST_NO_CONFIG;
+	}
+
+	char sFile[PLATFORM_MAX_PATH];
+	strcopy(sFile, sizeof(sFile), g_sConfigFile);
+	bool bFileExists = FileExists(sFile);
+
+	if (g_bCreateFile || bFileExists)
+	{
+		File fFile = OpenFile(sFile, (bFileExists ? "a" : "w"));
+
+		char sWrite[2048];
+
+		if (fFile == null)
+		{
+			return ST_APPEND_BAD_HANDLE;
+		}
+
+		if (g_bCreateFile && !bFileExists)
+		{
+			fFile.WriteLine("// This config file was auto-generated by Super Tanks++ v%s (%s)", ST_VERSION, ST_URL);
+			GetPluginFilename(g_hPluginHandle, sWrite, sizeof(sWrite));
+			Format(sWrite, sizeof(sWrite), "// ConVars for plugin \"%s\"", sWrite);
+			fFile.WriteLine(sWrite);
+			fFile.WriteLine("");
+		}
+
+		fFile.WriteLine("");
+
+		int iNewLines = iST_GetCharCountInStr('\n', description);
+		if (iNewLines == 0)
+		{
+			Format(sWrite, sizeof(sWrite), "// %s", description);
+			fFile.WriteLine(sWrite);
+		}
+		else
+		{
+			char[][] sNewLines = new char[iNewLines + 1][2048];
+			ExplodeString(description, "\n", sNewLines, iNewLines + 1, 2048, false);
+
+			for (int iLine; iLine <= iNewLines; iLine++)
+			{
+				if (strlen(sNewLines[iLine]) > 0)
+				{
+					fFile.WriteLine("// %s", sNewLines[iLine]);
+				}
+			}
+		}
+
+		fFile.WriteLine("// -");
+
+		Format(sWrite, sizeof(sWrite), "// Default: \"%s\"", defaultValue);
+		fFile.WriteLine(sWrite);
+
+		if (hasMin)
+		{		
+			Format(sWrite, sizeof(sWrite), "// Minimum: \"%f\"", min);
+			fFile.WriteLine(sWrite);
+		}
+
+		if (hasMax)
+		{
+			Format(sWrite, sizeof(sWrite), "// Maximum: \"%f\"", max);
+			fFile.WriteLine(sWrite);
+		}
+
+		Format(sWrite, sizeof(sWrite), "%s \"%s\"", name, defaultValue);
+		fFile.WriteLine(sWrite);
+
+		delete fFile;
+
+		return ST_APPEND_SUCCESS;
+	}
+
+	return ST_APPEND_FILE_NOT_FOUND;
+}
+
+stock int iST_FindValue(const char[] cvar, char[] value, int size, bool caseSensitive = false)
+{
+	value[0] = '\0';
+
+	if (strlen(g_sConfigFile) < 1)
+	{
+		return ST_NO_CONFIG;
+	}
+
+	char sFile[PLATFORM_MAX_PATH];
+	strcopy(sFile, sizeof(sFile), g_sConfigFile);
+	bool bFileExists = FileExists(sFile);
+
+	if (g_bCreateFile && !bFileExists)
+	{
+		return ST_FIND_FILE_NOT_FOUND;
+	}
+
+	if (bFileExists)
+	{
+		File fFile = OpenFile(sFile, "r");
+
+		int iValueStart, iValueEnd, iCvarEnd;
+
+		char sConvar[64], sValue[64], sRead[2048], sCopy[2048];
+
+		if (fFile == null)
+		{
+			return ST_FIND_BAD_HANDLE;
+		}
+
+		while (!fFile.EndOfFile() && fFile.ReadLine(sRead, sizeof(sRead)))
+		{
+			if (IsCharSpace(sRead[0]) || sRead[0] == '/' || (!IsCharNumeric(sRead[0]) && !IsCharAlpha(sRead[0])) || iST_GetCharCountInStr(' ', sRead) < 1 || iST_GetCharCountInStr('"', sRead) != 2 || (iValueStart = StrContains(sRead, "\"")) == -1 || (iValueEnd = StrContains(sRead[iValueStart + 1], "\"")) == -1 || (iCvarEnd = StrContains(sRead, " ")) == -1 || iCvarEnd >= iValueStart || iCvarEnd >= iValueStart)
+			{
+				continue;
+			}
+
+			strcopy(sCopy, sizeof(sCopy), sRead);
+			sCopy[iCvarEnd] = '\0';
+			strcopy(sConvar, sizeof(sConvar), sCopy);
+			strcopy(sCopy, sizeof(sCopy), sRead[iValueStart+1]);
+			sCopy[iValueEnd] = '\0';
+			strcopy(sValue, sizeof(sValue), sCopy);
+
+			if (StrEqual(sConvar, cvar, caseSensitive))
+			{
+				Format(value, size, "%s", sConvar);
+
+				delete fFile;
+
+				return ST_FIND_SUCCESS;
+			}					
+		}
+
+		delete fFile;
+
+		return ST_FIND_NOT_FOUND;
+	}
+
+	return ST_FIND_FILE_NOT_FOUND;
+}
+
+stock int iST_Clean()
+{
+	if (strlen(g_sConfigFile) < 1)
+	{
+		return ST_NO_CONFIG;
+	}
+
+	char sFile[PLATFORM_MAX_PATH];
+	strcopy(sFile, sizeof(sFile), g_sConfigFile);
+	if (!FileExists(sFile))
+	{
+		return ST_CLEAN_FILE_NOT_FOUND;
+	}
+
+	char sFile2[PLATFORM_MAX_PATH], sRead[2048];
+	Format(sFile2, sizeof(sFile2), "%s_tempcopy", sFile);
+
+	File fFile1 = OpenFile(sFile, "r");
+	File fFile2 = OpenFile(sFile2, "w");
+
+	if (fFile1 == null || fFile2 == null)
+	{
+		if (fFile1 != null)
+		{
+			delete fFile1;
+		}
+
+		if (fFile2 != null)
+		{
+			delete fFile2;
+		}
+
+		return ST_CLEAN_BAD_HANDLE;
+	}
+
+	while (!fFile1.EndOfFile() && fFile1.ReadLine(sRead, sizeof(sRead)))
+	{
+		int iCount;
+
+		if (IsCharSpace(sRead[0]))
+		{
+			iCount++;
+		}
+		else
+		{
+			iCount = 0;
+		}
+
+		bool bFirstReached;
+
+		if (iCount < 2 || !bFirstReached)
+		{
+			ReplaceString(sRead, sizeof(sRead), "\n", "");
+			fFile2.WriteLine(sRead);
+		}
+
+		if (iCount == 2)
+		{
+			bFirstReached = true;
+		}
+	}
+
+	delete fFile1;
+	delete fFile2;
+
+	DeleteFile(sFile);
+	RenameFile(sFile, sFile2);
+
+	return ST_CLEAN_SUCCESS;
+}
+
+stock static int iST_GetCharCountInStr(int character, const char[] str)
+{
+	int iLength = strlen(str), iCount;
+
+	for (int iString; iString < iLength; iString++)
+	{
+		if (str[iString] == character)
+		{
+			iCount++;
+		}
+	}
+
+	return iCount;
+}
 
 // Checks
 stock bool bHasIdlePlayer(int survivor)
@@ -352,16 +739,16 @@ stock bool bIsPlayerIncapacitated(int survivor)
 	return false;
 }
 
-int g_iCurrentMode;
+static int g_iCurrentMode;
 
-stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disabled)
+stock bool bIsPluginEnabled(ConVar gamemode, ConVar mode, ConVar enabled, ConVar disabled)
 {
-	if (convar == null)
+	if (gamemode == null)
 	{
 		return false;
 	}
 
-	if (mode != 0)
+	if (mode.IntValue != 0)
 	{
 		g_iCurrentMode = 0;
 		int iGameMode = CreateEntityByName("info_gamemode");
@@ -377,31 +764,34 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 
 			ActivateEntity(iGameMode);
 			AcceptEntityInput(iGameMode, "PostSpawnActivate");
+
 			RemoveEntity(iGameMode);
 		}
 
-		if (g_iCurrentMode == 0 || !(mode & g_iCurrentMode))
+		if (g_iCurrentMode == 0 || !(mode.IntValue & g_iCurrentMode))
 		{
 			return false;
 		}
 	}
 
 	char sGameMode[33], sGameModes[513];
-	convar.GetString(sGameMode, sizeof(sGameMode));
+	gamemode.GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
 
-	if (enabled[0] != '\0')
+	enabled.GetString(sGameModes, sizeof(sGameModes));
+	if (!StrEqual(sGameModes, ""))
 	{
-		Format(sGameModes, sizeof(sGameModes), ",%s,", enabled);
+		Format(sGameModes, sizeof(sGameModes), ",%s,", sGameModes);
 		if (StrContains(sGameModes, sGameMode, false) == -1)
 		{
 			return false;
 		}
 	}
 
-	if (disabled[0] != '\0')
+	disabled.GetString(sGameModes, sizeof(sGameModes));
+	if (!StrEqual(sGameModes, ""))
 	{
-		Format(sGameModes, sizeof(sGameModes), ",%s,", disabled);
+		Format(sGameModes, sizeof(sGameModes), ",%s,", sGameModes);
 		if (StrContains(sGameModes, sGameMode, false) != -1)
 		{
 			return false;
@@ -962,7 +1352,7 @@ stock void vAttachParticle(int player, const char[] particlename, float time = 0
 	}
 }
 
-stock void vCheatCommand(int player, const char[] command, const char[] arguments = "", any ...)
+stock void vCheatCommand(int player, const char[] command, const char[] arguments = "")
 {
 	int iCmdFlags = GetCommandFlags(command);
 	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
@@ -977,10 +1367,11 @@ stock void vCopyVector(float source[3], float target[3])
 	target[2] = source[2];
 }
 
-stock void vCreateConfigFile(const char[] folder, const char[] filename)
+stock void vCreateConfigFile(const char[] filepath, const char[] folder, const char[] filename, any ...)
 {
-	char sConfigFilename[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sConfigFilename, sizeof(sConfigFilename), "data/super_tanks++/%s%s.cfg", folder, filename);
+	char sConfigFilename[PLATFORM_MAX_PATH], sFilename[PLATFORM_MAX_PATH];
+	VFormat(sFilename, sizeof(sFilename), filename, 4);
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.cfg", filepath, folder, sFilename);
 	if (FileExists(sConfigFilename))
 	{
 		return;
@@ -990,8 +1381,7 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename)
 	if (fFilename != null)
 	{
 		fFilename.WriteLine("// This config file was auto-generated by Super Tanks++ v%s (%s)", ST_VERSION, ST_URL);
-		fFilename.WriteLine("");
-		fFilename.WriteLine("");
+		fFilename.WriteLine("\n");
 
 		delete fFilename;
 	}
@@ -1091,6 +1481,22 @@ stock void vEffect(int survivor, int tank, const char[] enabled, const char[] mo
 			EndMessage();
 		}
 	}
+}
+
+stock void vExecConfigFile(const char[] filepath, const char[] folder, const char[] filename, any ...)
+{
+	char sConfigFilename[PLATFORM_MAX_PATH], sFilename[PLATFORM_MAX_PATH];
+	VFormat(sFilename, sizeof(sFilename), filename, 4);
+	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.cfg", filepath, folder, sFilename);
+	if (!FileExists(sConfigFilename))
+	{
+		vCreateConfigFile(filepath, folder, sFilename);
+
+		return;
+	}
+
+	strcopy(sConfigFilename, sizeof(sConfigFilename), sConfigFilename[4]);
+	ServerCommand("exec \"%s\"", sConfigFilename);
 }
 
 public void vGameMode(const char[] output, int caller, int activator, float delay)
@@ -1222,6 +1628,7 @@ stock void ST_PrintToChat(int client, char[] message, any ...)
 	ReplaceString(message, strlen(message), "{olive}", "\x05");
 
 	char sBuffer[255], sMessage[255];
+
 	SetGlobalTransTarget(client);
 	Format(sBuffer, sizeof(sBuffer), "\x01%s", message);
 	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);

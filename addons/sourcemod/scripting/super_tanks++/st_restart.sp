@@ -205,7 +205,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name)
 {
 	if (StrEqual(name, "round_start"))
 	{

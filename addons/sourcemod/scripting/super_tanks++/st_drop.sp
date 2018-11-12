@@ -374,7 +374,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
 	{
@@ -384,7 +384,7 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_BossStage(int tank)
+public void ST_ChangeType(int tank)
 {
 	vDropWeapon(tank);
 

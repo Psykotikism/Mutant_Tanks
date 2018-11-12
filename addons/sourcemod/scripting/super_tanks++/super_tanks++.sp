@@ -49,24 +49,27 @@ public Plugin myinfo =
 
 #define SOUND_BOSS "items/suitchargeok1.wav"
 
-bool g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bTransformed[MAXPLAYERS + 1];
+bool g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bTransformed[MAXPLAYERS + 1];
 
-char g_sAnnounceArrival[6], g_sAnnounceArrival2[6], g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sFinaleWaves[12], g_sFinaleWaves2[12],
-	g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5],
-	g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][33], g_sTankName2[ST_MAXTYPES + 1][33], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80], g_sTypeRange[8], g_sTypeRange2[8];
+char g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7],
+	g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5],
+	g_sSavePath[PLATFORM_MAX_PATH], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28], g_sTankName[ST_MAXTYPES + 1][33], g_sTankName2[ST_MAXTYPES + 1][33], g_sTransformTypes[ST_MAXTYPES + 1][80], g_sTransformTypes2[ST_MAXTYPES + 1][80];
 
-ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
+ConVar g_cvSTConVarSwitch, g_cvSTAnnounceArrival, g_cvSTAnnounceDeath, g_cvSTConfigCreate, g_cvSTConfigEnable, g_cvSTConfigExecute, g_cvSTDifficulty, g_cvSTDisabledGameModes, g_cvSTDisplayHealth, g_cvSTEnabledGameModes, g_cvSTEnablePlugin, g_cvSTFinalesOnly, g_cvSTFinaleWaves, g_cvSTGameMode,
+	g_cvSTGameModeTypes, g_cvSTGameTypes, g_cvSTMaxPlayerZombies, g_cvSTMultiHealth, g_cvSTRegularAmount, g_cvSTRegularInterval, g_cvSTRegularWave, g_cvSTTypeRange;
 
-float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRegularInterval, g_flRegularInterval2, g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1], g_flTankChance[ST_MAXTYPES + 1], g_flTankChance2[ST_MAXTYPES + 1],
-	g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1], g_flTransformDelay[ST_MAXTYPES + 1], g_flTransformDelay2[ST_MAXTYPES + 1], g_flTransformDuration[ST_MAXTYPES + 1], g_flTransformDuration2[ST_MAXTYPES + 1];
+float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1],
+	g_flTankChance[ST_MAXTYPES + 1], g_flTankChance2[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1], g_flTransformDelay[ST_MAXTYPES + 1], g_flTransformDelay2[ST_MAXTYPES + 1], g_flTransformDuration[ST_MAXTYPES + 1], g_flTransformDuration2[ST_MAXTYPES + 1];
 
-Handle g_hAbilityForward, g_hBossStageForward, g_hConfigsForward, g_hEventForward, g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward;
+Handle g_hAbilityForward, g_hChangeTypeForward, g_hConfigsForward, g_hEventHandlerForward, g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward;
 
-int g_iAnnounceDeath, g_iAnnounceDeath2, g_iBaseHealth[ST_MAXTYPES + 1], g_iBaseHealth2[ST_MAXTYPES + 1], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2, g_iExplosiveImmunity[ST_MAXTYPES + 1],
-	g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGameModeTypes, g_iGlowOutline[ST_MAXTYPES + 1],
-	g_iGlowOutline2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPluginEnabled, g_iPluginEnabled2, g_iRandomTank[ST_MAXTYPES + 1], g_iRandomTank2[ST_MAXTYPES + 1], g_iRegularAmount, g_iRegularAmount2, g_iRegularWave,
-	g_iRegularWave2, g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnEnabled[ST_MAXTYPES + 1], g_iSpawnEnabled2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1],
-	g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType, g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
+int g_iBaseHealth[ST_MAXTYPES + 1], g_iBaseHealth2[ST_MAXTYPES + 1], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[ST_MAXTYPES + 1],
+	g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1], g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1],
+	g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iRandomTank[ST_MAXTYPES + 1], g_iRandomTank2[ST_MAXTYPES + 1], g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1], g_iSpawnEnabled[ST_MAXTYPES + 1],
+	g_iSpawnEnabled2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iType,
+	g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
+
+StringMap g_smConVars;
 
 TopMenu g_tmSTMenu;
 
@@ -254,18 +257,13 @@ public void OnLibraryRemoved(const char[] name)
 public void OnPluginStart()
 {
 	g_hAbilityForward = CreateGlobalForward("ST_Ability", ET_Ignore, Param_Cell);
-	g_hBossStageForward = CreateGlobalForward("ST_BossStage", ET_Ignore, Param_Cell);
+	g_hChangeTypeForward = CreateGlobalForward("ST_ChangeType", ET_Ignore, Param_Cell);
 	g_hConfigsForward = CreateGlobalForward("ST_Configs", ET_Ignore, Param_String, Param_Cell);
-	g_hEventForward = CreateGlobalForward("ST_Event", ET_Ignore, Param_Cell, Param_String);
+	g_hEventHandlerForward = CreateGlobalForward("ST_EventHandler", ET_Ignore, Param_Cell, Param_String);
 	g_hPluginEndForward = CreateGlobalForward("ST_PluginEnd", ET_Ignore);
 	g_hPresetForward = CreateGlobalForward("ST_Preset", ET_Ignore, Param_Cell);
 	g_hRockBreakForward = CreateGlobalForward("ST_RockBreak", ET_Ignore, Param_Cell, Param_Cell);
 	g_hRockThrowForward = CreateGlobalForward("ST_RockThrow", ET_Ignore, Param_Cell, Param_Cell);
-
-	CreateDirectory("addons/sourcemod/data/super_tanks++/", 511);
-	BuildPath(Path_SM, g_sSavePath, sizeof(g_sSavePath), "data/super_tanks++/super_tanks++.cfg");
-	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
-	vLoadConfigs(g_sSavePath, true);
 
 	vMultiTargetFilters(1);
 
@@ -274,13 +272,48 @@ public void OnPluginStart()
 
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
 
-	CreateConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	g_smConVars = new StringMap();
+
+	vST_CreateConfig(true);
+	vST_CreateDirectory(true);
+	bST_Config("super_tanks++");
+	g_cvSTConVarSwitch = cvST_ConVar("st_convarswitch", "==,!=", "Symbols to use for locking/unlocking the other ConVars' values.\nNote: Do not change this setting if you are unsure of how it works.\n-\nSeparate symbols with commas.\nCharacter limit: 5\nCharacter limit for each symbol: 2\n-\n1st symbol: Lock switch\n2nd symbol: Unlock switch\n-\nEmpty: \"==,!=\"\nNot empty: Switch symbols used.");
+	vCreateConVar(g_cvSTAnnounceArrival, "st_announcearrivals", "12345", "Announce each Super Tank's arrival.\n-\nCombine numbers in any order for different results.\nCharacter limit: 5\n-\n1: Announce when a Super Tank spawns.\n2: Announce when a Super Tank evolves. (Only works when \"Spawn Mode\" is set to 1.)\n3: Announce when a Super Tank randomizes. (Only works when \"Spawn Mode\" is set to 2.)\n4: Announce when a Super Tank transforms. (Only works when \"Spawn Mode\" is set to 3.)\n5: Announce when a Super Tank untransforms. (Only works when \"Spawn Mode\" is set to 3.)");
+	vCreateConVar(g_cvSTAnnounceDeath, "st_announcedeaths", "1", "Announce each Super Tank's death.\n-\n0: OFF\n1: ON", _, true, 0.0, true, 1.0);
+	vCreateConVar(g_cvSTConfigCreate, "st_configcreate", "12345", "The type of custom config that Super Tanks++ creates.\n-\nCombine numbers in any order for different results.\nCharacter limit: 5\n-\n1: Difficulties\n2: Maps\n3: Game modes\n4: Days\n5: Player count");
+	vCreateConVar(g_cvSTConfigEnable, "st_configenable", "0", "Enable Super Tanks++ custom configuration.\n-\n0: OFF\n1: ON", _, true, 0.0, true, 1.0);
+	vCreateConVar(g_cvSTConfigExecute, "st_configexecute", "1", "The type of custom config that Super Tanks++ executes.\n-\nCombine numbers in any order for different results.\nCharacter limit: 5\n-\n1: Difficulties\n2: Maps\n3: Game modes\n4: Days\n5: Player count");
+	vCreateConVar(g_cvSTDisabledGameModes, "st_disabledgamemodes", "versus,scavenge", "Disable Super Tanks++ in these game mode types.\n-\nSeparate game modes with commas.\nCharacter limit: 512 (including commas)\n-\nEmpty: None\nNot empty: Disabled only in these game modes.");
+	vCreateConVar(g_cvSTDisplayHealth, "st_displayhealth", "3", "Display Super Tanks' names and health.\n-\n0: OFF\n1: ON, show names only.\n2: ON, show health only.\n3: ON, show both names and health.", _, true, 0.0, true, 3.0);
+	vCreateConVar(g_cvSTEnabledGameModes, "st_enabledgamemodes", "coop,survival", "Enable Super Tanks++ in these game mode types.\n-\nSeparate game modes with commas.\nCharacter limit: 512 (including commas)\n-\nEmpty: All\nNot empty: Enabled only in these game modes.");
+	vCreateConVar(g_cvSTEnablePlugin, "st_enableplugin", "1", "Enable Super Tanks++.\n-\n0: OFF\n1: ON", _, true, 0.0, true, 1.0);
+	vCreateConVar(g_cvSTFinalesOnly, "st_finalesonly", "0", "Enable Super Tanks++ in finales only.\n-\n0: OFF\n1: ON", _, true, 0.0, true, 1.0);
+	vCreateConVar(g_cvSTFinaleWaves, "st_finalewaves", "2,3,4", "Amount of Tanks to spawn for each finale wave.\n-\nSeparate waves with commas.\nWave limit: 3\nCharacter limit for each wave: 3\n-\nMinimum value for each wave: 1\nMaximum value for each wave: 9999999999\n-\n1st number = 1st wave\n2nd number = 2nd wave\n3rd number = 3rd wave");
+	vCreateConVar(g_cvSTGameModeTypes, "st_gamemodetypes", "5", "Enable Super Tanks++ in these game mode types.\n-\nAdd up numbers together for different results.\n-\n0: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", _, true, 0.0, true, 15.0);
+	vCreateConVar(g_cvSTMultiHealth, "st_multiplyhealth", "0", "Multiply the Super Tank's health.\nNote: Health changes only occur when there are at least 2 alive non-idle human survivors.\n-\n0: No changes to health.\n1: Multiply original health only.\n2: Multiply extra health only.\n3: Multiply both.", _, true, 0.0, true, 3.0);
+	cvST_ConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	vCreateConVar(g_cvSTRegularAmount, "st_regularamount", "2", "Spawn this many Tanks on non-finale maps periodically.", _, true, 0.0, true, 9999999999.0);
+	vCreateConVar(g_cvSTRegularInterval, "st_regularinterval", "300.0", "Spawn Tanks on non-finale maps every time this many seconds passes.", _, true, 0.1, true, 9999999999.0);
+	vCreateConVar(g_cvSTRegularWave, "st_regularwave", "0", "Spawn Tanks on non-finale maps periodically.\n-\n0: OFF\n1: ON", _, true, 0.0, true, 1.0);
+	vCreateConVar(g_cvSTTypeRange, "st_typerange", "1-500", "The range of types to check for.\n-\nSeparate values with \"-\".Value limit: 2\nCharacter limit for each value: 3\n-\nMinimum number for each value: 1\nMaximum number for each value: 500\n-\n1st number = Minimum value\n2nd number = Maximum value");
+	vST_ExecConfig();
+	iST_Clean();
 
 	g_cvSTDifficulty = FindConVar("z_difficulty");
 	g_cvSTGameMode = FindConVar("mp_gamemode");
 	g_cvSTGameTypes = FindConVar("sv_gametypes");
 	g_cvSTMaxPlayerZombies = FindConVar("z_max_player_zombies");
+
+	g_cvSTDisabledGameModes.AddChangeHook(vPluginStatusCvars);
+	g_cvSTEnablePlugin.AddChangeHook(vPluginStatusCvars);
+	g_cvSTEnabledGameModes.AddChangeHook(vPluginStatusCvars);
+
 	g_cvSTDifficulty.AddChangeHook(vSTGameDifficultyCvar);
+
+	CreateDirectory("addons/sourcemod/data/super_tanks++/", 511);
+	BuildPath(Path_SM, g_sSavePath, sizeof(g_sSavePath), "data/super_tanks++/super_tanks++.cfg");
+	vLoadConfigs(g_sSavePath, true);
+	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 
 	HookEvent("round_start", vEventHandler);
 
@@ -347,8 +380,7 @@ public void OnConfigsExecuted()
 	{
 		vPluginStatus();
 
-		float flRegularInterval = !g_bGeneralConfig ? g_flRegularInterval : g_flRegularInterval2;
-		CreateTimer(flRegularInterval, tTimerRegularWaves, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		CreateTimer(g_cvSTRegularInterval.FloatValue, tTimerRegularWaves, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 		CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(0.1, tTimerTankHealthUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -356,9 +388,12 @@ public void OnConfigsExecuted()
 		CreateTimer(1.0, tTimerUpdatePlayerCount, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 
-	if (StrContains(g_sConfigCreate, "1") != -1 && g_iConfigEnable == 1)
+	char sConfigCreate[6];
+	g_cvSTConfigCreate.GetString(sConfigCreate, sizeof(sConfigCreate));
+	if (StrContains(sConfigCreate, "1") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		CreateDirectory("addons/sourcemod/data/super_tanks++/difficulty_configs/", 511);
+		CreateDirectory("cfg/sourcemod/super_tanks++/difficulty_configs/", 511);
 
 		char sDifficulty[32];
 		for (int iDifficulty = 0; iDifficulty <= 3; iDifficulty++)
@@ -371,13 +406,15 @@ public void OnConfigsExecuted()
 				case 3: sDifficulty = "impossible";
 			}
 
-			vCreateConfigFile("difficulty_configs/", sDifficulty);
+			vCreateConfigFile("addons/sourcemod/data/super_tanks++/", "difficulty_configs/", sDifficulty);
+			vCreateConfigFile("cfg/sourcemod/super_tanks++/", "difficulty_configs/", sDifficulty);
 		}
 	}
 
-	if (StrContains(g_sConfigCreate, "2") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigCreate, "2") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		CreateDirectory((bIsValidGame() ? "addons/sourcemod/data/super_tanks++/l4d2_map_configs/" : "addons/sourcemod/data/super_tanks++/l4d_map_configs/"), 511);
+		CreateDirectory((bIsValidGame() ? "cfg/sourcemod/super_tanks++/l4d2_map_configs/" : "cfg/sourcemod/super_tanks++/l4d_map_configs/"), 511);
 
 		char sMapNames[128];
 		ArrayList alADTMaps = new ArrayList(16, 0);
@@ -392,16 +429,18 @@ public void OnConfigsExecuted()
 			for (int iMap = 0; iMap < iMapCount; iMap++)
 			{
 				alADTMaps.GetString(iMap, sMapNames, sizeof(sMapNames));
-				vCreateConfigFile((bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapNames);
+				vCreateConfigFile("addons/sourcemod/data/super_tanks++/", (bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapNames);
+				vCreateConfigFile("cfg/sourcemod/super_tanks++/", (bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapNames);
 			}
 		}
 
 		delete alADTMaps;
 	}
 
-	if (StrContains(g_sConfigCreate, "3") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigCreate, "3") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		CreateDirectory((bIsValidGame() ? "addons/sourcemod/data/super_tanks++/l4d2_gamemode_configs/" : "addons/sourcemod/data/super_tanks++/l4d_gamemode_configs/"), 511);
+		CreateDirectory((bIsValidGame() ? "cfg/sourcemod/super_tanks++/l4d2_gamemode_configs/" : "cfg/sourcemod/super_tanks++/l4d_gamemode_configs/"), 511);
 
 		char sGameType[2049], sTypes[64][32];
 		g_cvSTGameTypes.GetString(sGameType, sizeof(sGameType));
@@ -412,14 +451,16 @@ public void OnConfigsExecuted()
 		{
 			if (StrContains(sGameType, sTypes[iMode]) != -1 && sTypes[iMode][0] != '\0')
 			{
-				vCreateConfigFile((bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode]);
+				vCreateConfigFile("addons/sourcemod/data/super_tanks++/", (bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode]);
+				vCreateConfigFile("cfg/sourcemod/super_tanks++/", (bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode]);
 			}
 		}
 	}
 
-	if (StrContains(g_sConfigCreate, "4") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigCreate, "4") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		CreateDirectory("addons/sourcemod/data/super_tanks++/daily_configs/", 511);
+		CreateDirectory("cfg/sourcemod/super_tanks++/daily_configs/", 511);
 
 		char sWeekday[32];
 		for (int iDay = 0; iDay <= 6; iDay++)
@@ -435,56 +476,64 @@ public void OnConfigsExecuted()
 				default: sWeekday = "sunday";
 			}
 
-			vCreateConfigFile("daily_configs/", sWeekday);
+			vCreateConfigFile("addons/sourcemod/data/super_tanks++/", "daily_configs/", sWeekday);
+			vCreateConfigFile("cfg/sourcemod/super_tanks++/", "daily_configs/", sWeekday);
 		}
 	}
 
-	if (StrContains(g_sConfigCreate, "5") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigCreate, "5") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		CreateDirectory("addons/sourcemod/data/super_tanks++/playercount_configs/", 511);
+		CreateDirectory("cfg/sourcemod/super_tanks++/playercount_configs/", 511);
 
 		char sPlayerCount[32];
 		for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
 		{
 			IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
-			vCreateConfigFile("playercount_configs/", sPlayerCount);
+			vCreateConfigFile("addons/sourcemod/data/super_tanks++/", "playercount_configs/", sPlayerCount);
+			vCreateConfigFile("cfg/sourcemod/super_tanks++/", "playercount_configs/", sPlayerCount);
 		}
 	}
 
-	if (StrContains(g_sConfigExecute, "1") != -1 && g_iConfigEnable == 1 && g_cvSTDifficulty != null)
+	char sConfigExecute[6];
+	g_cvSTConfigExecute.GetString(sConfigExecute, sizeof(sConfigExecute));
+	if (StrContains(sConfigExecute, "1") != -1 && g_cvSTConfigEnable.BoolValue && g_cvSTDifficulty != null)
 	{
 		char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 		g_cvSTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/super_tanks++/difficulty_configs/%s.cfg", sDifficulty);
 		vLoadConfigs(sDifficultyConfig);
-
 		g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+
+		vExecConfigFile("cfg/sourcemod/super_tanks++/", "difficulty_configs/", sDifficulty);
 	}
 
-	if (StrContains(g_sConfigExecute, "2") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigExecute, "2") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
 
 		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/super_tanks++/l4d2_map_configs/%s.cfg" : "data/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
 		vLoadConfigs(sMapConfig);
-
 		g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+
+		vExecConfigFile("cfg/sourcemod/super_tanks++/", (bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMap);
 	}
 
-	if (StrContains(g_sConfigExecute, "3") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigExecute, "3") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_cvSTGameMode.GetString(sMode, sizeof(sMode));
 
 		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "data/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
 		vLoadConfigs(sModeConfig);
-
 		g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+
+		vExecConfigFile("cfg/sourcemod/super_tanks++/", (bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sMode);
 	}
 
-	if (StrContains(g_sConfigExecute, "4") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigExecute, "4") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		char sDay[9], sDayNumber[2], sDayConfig[PLATFORM_MAX_PATH];
 		FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
@@ -503,18 +552,20 @@ public void OnConfigsExecuted()
 
 		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/super_tanks++/daily_configs/%s.cfg", sDay);
 		vLoadConfigs(sDayConfig);
-
 		g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+
+		vExecConfigFile("cfg/sourcemod/super_tanks++/", "daily_configs/", sDay);
 	}
 
-	if (StrContains(g_sConfigExecute, "5") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigExecute, "5") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		char sCountConfig[PLATFORM_MAX_PATH];
 
 		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/super_tanks++/playercount_configs/%d.cfg", iGetPlayerCount());
 		vLoadConfigs(sCountConfig);
-
 		g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+
+		vExecConfigFile("cfg/sourcemod/super_tanks++/", "playercount_configs/", "%d", iGetPlayerCount());
 	}
 }
 
@@ -552,7 +603,7 @@ public void OnAdminMenuReady(Handle topmenu)
 	TopMenuObject st_commands = g_tmSTMenu.AddCategory("SuperTanks++", iSTAdminMenuHandler);
 	if (st_commands != INVALID_TOPMENUOBJECT)
 	{
-		g_tmSTMenu.AddItem("sm_tank", vSuperTankMenu, st_commands, "sm_tank", ADMFLAG_ROOT);
+		g_tmSTMenu.AddItem("sm_tank", vSuperTanksMenu, st_commands, "sm_tank", ADMFLAG_ROOT);
 	}
 }
 
@@ -564,7 +615,7 @@ public int iSTAdminMenuHandler(TopMenu topmenu, TopMenuAction action, TopMenuObj
 	}
 }
 
-public void vSuperTankMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
+public void vSuperTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
 {
 	switch (action)
 	{
@@ -703,8 +754,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			char sTankName[33];
 			sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
 
-			int iAnnounceDeath = !g_bGeneralConfig ? g_iAnnounceDeath : g_iAnnounceDeath2;
-			if (iAnnounceDeath == 1 && ST_CloneAllowed(iTank, g_bCloneInstalled))
+			if (g_cvSTAnnounceDeath.BoolValue && ST_CloneAllowed(iTank, g_bCloneInstalled))
 			{
 				switch (GetRandomInt(1, 10))
 				{
@@ -741,8 +791,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		{
 			g_iTankType[iTank] = 0;
 
-			int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
-			if (!bIsFinaleMap() || g_iTankWave == 0 || iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
+			if (!bIsFinaleMap() || g_iTankWave == 0 || !g_cvSTFinalesOnly.BoolValue || (g_cvSTFinalesOnly.BoolValue && (bIsFinaleMap() || g_iTankWave > 0)))
 			{
 				if (g_iType <= 0)
 				{
@@ -774,7 +823,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 
 				char sNumbers[3][4], sFinaleWaves[12];
-				sFinaleWaves = !g_bGeneralConfig ? g_sFinaleWaves : g_sFinaleWaves2;
+				g_cvSTFinaleWaves.GetString(sFinaleWaves, sizeof(sFinaleWaves));
 				ReplaceString(sFinaleWaves, sizeof(sFinaleWaves), " ", "");
 				ExplodeString(sFinaleWaves, ",", sNumbers, sizeof(sNumbers), sizeof(sNumbers[]));
 
@@ -803,7 +852,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		g_iTankWave = 0;
 	}
 
-	Call_StartForward(g_hEventForward);
+	Call_StartForward(g_hEventHandlerForward);
 	Call_PushCell(event);
 	Call_PushString(name);
 	Call_Finish();
@@ -1006,16 +1055,19 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 static void vPluginStatus()
 {
-	bool bIsPluginAllowed = bIsPluginEnabled(g_cvSTGameMode, g_iGameModeTypes, g_sEnabledGameModes, g_sDisabledGameModes);
-	if (iPluginEnabled() == 1 && bIsPluginAllowed)
+	bool bIsPluginAllowed = bIsPluginEnabled(g_cvSTGameMode, g_cvSTGameModeTypes, g_cvSTEnabledGameModes, g_cvSTDisabledGameModes);
+	if (g_cvSTEnablePlugin.BoolValue)
 	{
-		vHookEvents(true);
-		g_bPluginEnabled = true;
-	}
-	else
-	{
-		vHookEvents(false);
-		g_bPluginEnabled = false;
+		if (bIsPluginAllowed)
+		{
+			vHookEvents(true);
+			g_bPluginEnabled = true;
+		}
+		else
+		{
+			vHookEvents(false);
+			g_bPluginEnabled = false;
+		}
 	}
 }
 
@@ -1058,72 +1110,6 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
-	if (kvSuperTanks.JumpToKey("Plugin Settings"))
-	{
-		if (main)
-		{
-			g_bGeneralConfig = false;
-
-			g_iPluginEnabled = kvSuperTanks.GetNum("General/Plugin Enabled", 1);
-			g_iPluginEnabled = iClamp(g_iPluginEnabled, 0, 1);
-			kvSuperTanks.GetString("General/Announce Arrival", g_sAnnounceArrival, sizeof(g_sAnnounceArrival), "12345");
-			g_iAnnounceDeath = kvSuperTanks.GetNum("General/Announce Death", 1);
-			g_iAnnounceDeath = iClamp(g_iAnnounceDeath, 0, 1);
-			g_iDisplayHealth = kvSuperTanks.GetNum("General/Display Health", 3);
-			g_iDisplayHealth = iClamp(g_iDisplayHealth, 0, 3);
-			g_iFinalesOnly = kvSuperTanks.GetNum("General/Finales Only", 0);
-			g_iFinalesOnly = iClamp(g_iFinalesOnly, 0, 1);
-			g_iMultiHealth = kvSuperTanks.GetNum("General/Multiply Health", 0);
-			g_iMultiHealth = iClamp(g_iMultiHealth, 0, 3);
-			kvSuperTanks.GetString("General/Type Range", g_sTypeRange, sizeof(g_sTypeRange), "1-500");
-
-			g_iRegularAmount = kvSuperTanks.GetNum("Waves/Regular Amount", 2);
-			g_iRegularAmount = iClamp(g_iRegularAmount, 1, 9999999999);
-			g_flRegularInterval = kvSuperTanks.GetFloat("Waves/Regular Interval", 300.0);
-			g_flRegularInterval = flClamp(g_flRegularInterval, 0.1, 9999999999.0);
-			g_iRegularWave = kvSuperTanks.GetNum("Waves/Regular Wave", 0);
-			g_iRegularWave = iClamp(g_iRegularWave, 0, 1);
-			kvSuperTanks.GetString("Waves/Finale Waves", g_sFinaleWaves, sizeof(g_sFinaleWaves), "2,3,4");
-
-			g_iGameModeTypes = kvSuperTanks.GetNum("Game Modes/Game Mode Types", 5);
-			g_iGameModeTypes = iClamp(g_iGameModeTypes, 0, 15);
-			kvSuperTanks.GetString("Game Modes/Enabled Game Modes", g_sEnabledGameModes, sizeof(g_sEnabledGameModes), "coop,survival");
-			kvSuperTanks.GetString("Game Modes/Disabled Game Modes", g_sDisabledGameModes, sizeof(g_sDisabledGameModes), "versus,scavenge");
-
-			g_iConfigEnable = kvSuperTanks.GetNum("Custom/Enable Custom Configs", 0);
-			g_iConfigEnable = iClamp(g_iConfigEnable, 0, 1);
-			kvSuperTanks.GetString("Custom/Create Config Types", g_sConfigCreate, sizeof(g_sConfigCreate), "12345");
-			kvSuperTanks.GetString("Custom/Execute Config Types", g_sConfigExecute, sizeof(g_sConfigExecute), "1");
-		}
-		else
-		{
-			g_bGeneralConfig = true;
-
-			g_iPluginEnabled2 = kvSuperTanks.GetNum("General/Plugin Enabled", g_iPluginEnabled);
-			g_iPluginEnabled2 = iClamp(g_iPluginEnabled2, 0, 1);
-			kvSuperTanks.GetString("General/Announce Arrival", g_sAnnounceArrival2, sizeof(g_sAnnounceArrival2), g_sAnnounceArrival);
-			g_iAnnounceDeath2 = kvSuperTanks.GetNum("General/Announce Death", g_iAnnounceDeath);
-			g_iAnnounceDeath2 = iClamp(g_iAnnounceDeath2, 0, 1);
-			g_iDisplayHealth2 = kvSuperTanks.GetNum("General/Display Health", g_iDisplayHealth);
-			g_iDisplayHealth2 = iClamp(g_iDisplayHealth2, 0, 3);
-			g_iFinalesOnly2 = kvSuperTanks.GetNum("General/Finales Only", g_iFinalesOnly);
-			g_iFinalesOnly2 = iClamp(g_iFinalesOnly2, 0, 1);
-			g_iMultiHealth2 = kvSuperTanks.GetNum("General/Multiply Health", g_iMultiHealth);
-			g_iMultiHealth2 = iClamp(g_iMultiHealth2, 0, 3);
-			kvSuperTanks.GetString("General/Type Range", g_sTypeRange2, sizeof(g_sTypeRange2), g_sTypeRange);
-
-			g_iRegularAmount2 = kvSuperTanks.GetNum("Waves/Regular Amount", g_iRegularAmount);
-			g_iRegularAmount2 = iClamp(g_iRegularAmount2, 1, 9999999999);
-			g_flRegularInterval2 = kvSuperTanks.GetFloat("Waves/Regular Interval", g_flRegularInterval);
-			g_flRegularInterval2 = flClamp(g_flRegularInterval2, 0.1, 9999999999.0);
-			g_iRegularWave2 = kvSuperTanks.GetNum("Waves/Regular Wave", g_iRegularWave);
-			g_iRegularWave2 = iClamp(g_iRegularWave2, 0, 1);
-			kvSuperTanks.GetString("Waves/Finale Waves", g_sFinaleWaves2, sizeof(g_sFinaleWaves2), g_sFinaleWaves);
-		}
-
-		kvSuperTanks.Rewind();
-	}
-
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
 		char sTankName[33];
@@ -1283,6 +1269,13 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 	Call_Finish();
 }
 
+static void vCreateConVar(ConVar &convar, const char[] name, const char[] defaultValue, const char[] description = "", int flags = 0, bool hasMin = false, float min = 0.0, bool hasMax = false, float max = 0.0)
+{
+	convar = cvST_ConVar(name, defaultValue, description, flags, hasMin, min, hasMax, max);
+	convar.AddChangeHook(vSwitchCvars);
+	vSwitchCvars(convar, defaultValue, defaultValue);
+}
+
 static void vBoss(int tank, int limit, int stages, int type, int stage)
 {
 	if (stages < stage)
@@ -1313,7 +1306,7 @@ static void vNewTankSettings(int tank)
 	EmitSoundToAll(SOUND_BOSS, tank);
 	vRemoveProps(tank);
 
-	Call_StartForward(g_hBossStageForward);
+	Call_StartForward(g_hChangeTypeForward);
 	Call_PushCell(tank);
 	Call_Finish();
 }
@@ -1826,7 +1819,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		SetClientName(tank, name);
 
 		char sAnnounceArrival[6];
-		sAnnounceArrival = !g_bGeneralConfig ? g_sAnnounceArrival : g_sAnnounceArrival2;
+		g_cvSTAnnounceArrival.GetString(sAnnounceArrival, sizeof(sAnnounceArrival));
 		switch (mode)
 		{
 			case 0:
@@ -1978,7 +1971,7 @@ static int iFireImmunity(int tank)
 static int iGetMaxType()
 {
 	char sTypeRange[8], sRange[2][4];
-	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
+	g_cvSTTypeRange.GetString(sTypeRange, sizeof(sTypeRange));
 	ReplaceString(sTypeRange, sizeof(sTypeRange), " ", "");
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
@@ -1991,7 +1984,7 @@ static int iGetMaxType()
 static int iGetMinType()
 {
 	char sTypeRange[8], sRange[2][4];
-	sTypeRange = !g_bGeneralConfig ? g_sTypeRange : g_sTypeRange2;
+	g_cvSTTypeRange.GetString(sTypeRange, sizeof(sTypeRange));
 	ReplaceString(sTypeRange, sizeof(sTypeRange), " ", "");
 	ExplodeString(sTypeRange, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
@@ -2039,11 +2032,6 @@ static int iParticleEffect(int tank)
 	return !g_bTankConfig[g_iTankType[tank]] ? g_iParticleEffect[g_iTankType[tank]] : g_iParticleEffect2[g_iTankType[tank]];
 }
 
-static int iPluginEnabled()
-{
-	return !g_bGeneralConfig ? g_iPluginEnabled : g_iPluginEnabled2;
-}
-
 static int iRockEffect(int tank)
 {
 	return !g_bTankConfig[g_iTankType[tank]] ? g_iRockEffect[g_iTankType[tank]] : g_iRockEffect2[g_iTankType[tank]];
@@ -2069,15 +2057,71 @@ static int iTypeLimit(int type)
 	return !g_bTankConfig[type] ? g_iTypeLimit[type] : g_iTypeLimit2[type];
 }
 
+public void vSwitchCvars(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	char sConVars[64], sName[64], sSwitch[6], sSymbols[2][6], sValue[515];
+
+	convar.GetName(sConVars, sizeof(sConVars));
+	Format(sName, sizeof(sName), sConVars);
+	Format(sValue, sizeof(sValue), "%s", newValue);
+	TrimString(sValue);
+
+	g_cvSTConVarSwitch.GetString(sSwitch, sizeof(sSwitch));
+	ReplaceString(sSwitch, sizeof(sSwitch), " ", "");
+	ExplodeString(sSwitch, ",", sSymbols, sizeof(sSymbols), sizeof(sSymbols[]));
+
+	if (sSymbols[0][0] == '\0')
+	{
+		sSymbols[0] = "==";
+	}
+
+	if (sSymbols[1][0] == '\0')
+	{
+		sSymbols[1] = "!=";
+	}
+
+	if (StrContains(newValue, sSymbols[0]) == 0)
+	{
+		strcopy(sValue, sizeof(sValue), sValue[2]);
+		TrimString(sValue);
+
+		g_smConVars.SetString(sName, sValue, true);
+	}
+	else if (StrContains(newValue, sSymbols[1]) == 0)
+	{
+		strcopy(sValue, sizeof(sValue), sValue[2]);
+		TrimString(sValue);
+
+		g_smConVars.Remove(sName);
+	}
+
+	g_smConVars.GetString(sName, sValue, sizeof(sValue));
+
+	if (!StrEqual(newValue, sValue))
+	{
+		convar.SetString(sValue);
+	}
+}
+
 public void vSTGameDifficultyCvar(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	if (StrContains(g_sConfigExecute, "1") != -1)
+	char sConfigExecute[6];
+	g_cvSTConfigExecute.GetString(sConfigExecute, sizeof(sConfigExecute));
+	if (StrContains(sConfigExecute, "1") != -1)
 	{
 		char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 		g_cvSTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
+
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/super_tanks++/difficulty_configs/%s.cfg", sDifficulty);
 		vLoadConfigs(sDifficultyConfig);
+
+		vExecConfigFile("cfg/sourcemod/super_tanks++/", "difficulty_configs/", sDifficulty);
 	}
+}
+
+public void vPluginStatusCvars(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	vPluginStatus();
 }
 
 public Action tTimerBloodEffect(Handle timer, int userid)
@@ -2386,7 +2430,9 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 
 public Action tTimerUpdatePlayerCount(Handle timer)
 {
-	if (!g_bPluginEnabled || StrContains(g_sConfigExecute, "5") == -1)
+	char sConfigExecute[6];
+	g_cvSTConfigExecute.GetString(sConfigExecute, sizeof(sConfigExecute));
+	if (!g_bPluginEnabled || StrContains(sConfigExecute, "5") == -1)
 	{
 		return Plugin_Continue;
 	}
@@ -2394,6 +2440,8 @@ public Action tTimerUpdatePlayerCount(Handle timer)
 	char sCountConfig[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/super_tanks++/playercount_configs/%d.cfg", iGetPlayerCount());
 	vLoadConfigs(sCountConfig);
+
+	vExecConfigFile("cfg/sourcemod/super_tanks++/", "playercount_configs/", "%d", iGetPlayerCount());
 
 	return Plugin_Continue;
 }
@@ -2405,8 +2453,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 		return Plugin_Continue;
 	}
 
-	int iDisplayHealth = !g_bGeneralConfig ? g_iDisplayHealth : g_iDisplayHealth2;
-	if (iDisplayHealth > 0)
+	if (g_cvSTDisplayHealth.IntValue > 0)
 	{
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -2422,7 +2469,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 						if (bIsTankAllowed(iTarget))
 						{
 							int iHealth = GetClientHealth(iTarget);
-							switch (iDisplayHealth)
+							switch (g_cvSTDisplayHealth.IntValue)
 							{
 								case 1: PrintHintText(iSurvivor, "%N", iTarget);
 								case 2: PrintHintText(iSurvivor, "%d HP", iHealth);
@@ -2590,7 +2637,6 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 			iHealth = GetClientHealth(iTank),
 			iBaseHealth = !g_bTankConfig[g_iTankType[iTank]] ? g_iBaseHealth[g_iTankType[iTank]] : g_iBaseHealth2[g_iTankType[iTank]],
 			iSpawnHealth = (iBaseHealth > 0) ? iBaseHealth : iHealth,
-			iMultiHealth = !g_bGeneralConfig ? g_iMultiHealth : g_iMultiHealth2,
 			iExtraHealth = !g_bTankConfig[g_iTankType[iTank]] ? g_iExtraHealth[g_iTankType[iTank]] : g_iExtraHealth2[g_iTankType[iTank]],
 			iExtraHealthNormal = iSpawnHealth + iExtraHealth,
 			iExtraHealthBoost = (iHumanCount > 1) ? ((iSpawnHealth * iHumanCount) + iExtraHealth) : iExtraHealthNormal,
@@ -2609,7 +2655,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 			iFinalHealth2 = (iExtraHealthNormal >= 0) ? iBoost2 : iNegaBoost2,
 			iFinalHealth3 = (iExtraHealthNormal >= 0) ? iBoost3 : iNegaBoost3;
 
-		switch (iMultiHealth)
+		switch (g_cvSTMultiHealth.IntValue)
 		{
 			case 0: SetEntityHealth(iTank, iFinalNoHealth);
 			case 1: SetEntityHealth(iTank, iFinalHealth);
@@ -2725,18 +2771,16 @@ public Action tTimerRockThrow(Handle timer, int entity)
 
 public Action tTimerRegularWaves(Handle timer)
 {
-	int iRegularWave = !g_bGeneralConfig ? g_iRegularWave : g_iRegularWave2;
 	if (bIsFinaleMap() || g_iTankWave > 0)
 	{
 		return Plugin_Stop;
 	}
-	else if (iRegularWave == 0 || iGetTankCount() > 0)
+	else if (!g_cvSTRegularWave.BoolValue || iGetTankCount() > 0)
 	{
 		return Plugin_Continue;
 	}
 
-	int iRegularAmount = !g_bGeneralConfig ? g_iRegularAmount : g_iRegularAmount2;
-	for (int iAmount = 1; iAmount <= iRegularAmount; iAmount++)
+	for (int iAmount = 1; iAmount <= g_cvSTRegularAmount.IntValue; iAmount++)
 	{
 		for (int iTank = 1; iTank <= MaxClients; iTank++)
 		{
@@ -2788,83 +2832,67 @@ public Action tTimerTankWave(Handle timer, int wave)
 
 public Action tTimerReloadConfigs(Handle timer)
 {
-	g_iFileTimeNew[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
+	if (!g_bPluginEnabled)
+	{
+		return Plugin_Continue;
+	}
 
+	g_iFileTimeNew[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 	if (g_iFileTimeOld[0] != g_iFileTimeNew[0])
 	{
 		PrintToServer("%s Reloading config file (%s)...", ST_TAG, g_sSavePath);
 		vLoadConfigs(g_sSavePath, true);
-
 		g_iFileTimeOld[0] = g_iFileTimeNew[0];
-
-		vPluginStatus();
 	}
 
-	if (StrContains(g_sConfigExecute, "1") != -1 && g_iConfigEnable == 1 && g_cvSTDifficulty != null)
+	char sConfigExecute[6];
+	g_cvSTConfigExecute.GetString(sConfigExecute, sizeof(sConfigExecute));
+	if (StrContains(sConfigExecute, "1") != -1 && g_cvSTConfigEnable.BoolValue && g_cvSTDifficulty != null)
 	{
 		char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 		g_cvSTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/super_tanks++/difficulty_configs/%s.cfg", sDifficulty);
-
 		g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
-
 		if (g_iFileTimeOld[1] != g_iFileTimeNew[1])
 		{
 			PrintToServer("%s Reloading config file (%s)...", ST_TAG, sDifficultyConfig);
 			vLoadConfigs(sDifficultyConfig);
-
 			g_iFileTimeOld[1] = g_iFileTimeNew[1];
-
-			vPluginStatus();
 		}
 	}
 
-	if (StrContains(g_sConfigExecute, "2") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigExecute, "2") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
-
 		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/super_tanks++/l4d2_map_configs/%s.cfg" : "data/super_tanks++/l4d_map_configs/%s.cfg"), sMap);
-
 		g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
-
 		if (g_iFileTimeOld[2] != g_iFileTimeNew[2])
 		{
 			PrintToServer("%s Reloading config file (%s)...", ST_TAG, sMapConfig);
 			vLoadConfigs(sMapConfig);
-
 			g_iFileTimeOld[2] = g_iFileTimeNew[2];
-
-			vPluginStatus();
 		}
 	}
 
-	if (StrContains(g_sConfigExecute, "3") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigExecute, "3") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_cvSTGameMode.GetString(sMode, sizeof(sMode));
-
 		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/super_tanks++/l4d2_gamemode_configs/%s.cfg" : "data/super_tanks++/l4d_gamemode_configs/%s.cfg"), sMode);
-
 		g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
-
 		if (g_iFileTimeOld[3] != g_iFileTimeNew[3])
 		{
 			PrintToServer("%s Reloading config file (%s)...", ST_TAG, sModeConfig);
 			vLoadConfigs(sModeConfig);
-
 			g_iFileTimeOld[3] = g_iFileTimeNew[3];
-
-			vPluginStatus();
 		}
 	}
 
-	if (StrContains(g_sConfigExecute, "4") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigExecute, "4") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		char sDay[9], sDayNumber[2], sDayConfig[PLATFORM_MAX_PATH];
 		FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
-
 		int iDayNumber = StringToInt(sDayNumber);
 		switch (iDayNumber)
 		{
@@ -2878,35 +2906,27 @@ public Action tTimerReloadConfigs(Handle timer)
 		}
 
 		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/super_tanks++/daily_configs/%s.cfg", sDay);
-
 		g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
-
 		if (g_iFileTimeOld[4] != g_iFileTimeNew[4])
 		{
 			PrintToServer("%s Reloading config file (%s)...", ST_TAG, sDayConfig);
 			vLoadConfigs(sDayConfig);
-
 			g_iFileTimeOld[4] = g_iFileTimeNew[4];
-
-			vPluginStatus();
 		}
 	}
 
-	if (StrContains(g_sConfigExecute, "5") != -1 && g_iConfigEnable == 1)
+	if (StrContains(sConfigExecute, "5") != -1 && g_cvSTConfigEnable.BoolValue)
 	{
 		char sCountConfig[PLATFORM_MAX_PATH];
 		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/super_tanks++/playercount_configs/%d.cfg", iGetPlayerCount());
-
 		g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
-
 		if (g_iFileTimeOld[5] != g_iFileTimeNew[5])
 		{
 			PrintToServer("%s Reloading config file (%s)...", ST_TAG, sCountConfig);
 			vLoadConfigs(sCountConfig);
-
 			g_iFileTimeOld[5] = g_iFileTimeNew[5];
-
-			vPluginStatus();
 		}
 	}
+
+	return Plugin_Continue;
 }

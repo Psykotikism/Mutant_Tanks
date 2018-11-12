@@ -180,7 +180,7 @@ public void ST_Ability(int tank)
 	}
 }
 
-public void ST_BossStage(int tank)
+public void ST_ChangeType(int tank)
 {
 	g_bMeteor[tank] = false;
 }

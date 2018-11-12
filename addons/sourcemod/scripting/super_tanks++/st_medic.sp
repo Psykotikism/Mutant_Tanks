@@ -152,7 +152,7 @@ public void ST_Ability(int tank)
 	}
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name)
 {
 	if (StrEqual(name, "player_death"))
 	{
@@ -164,7 +164,7 @@ public void ST_Event(Event event, const char[] name)
 	}
 }
 
-public void ST_BossStage(int tank)
+public void ST_ChangeType(int tank)
 {
 	if (iMedicAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
