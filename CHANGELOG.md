@@ -22,8 +22,13 @@ Changes:
 12. Added chat color tags for translation phrases.
 13. Added the ST_PrintToChat() and ST_PrintToChatAll() stocks.
 14. The Super Tanks++ menu now transforms an existing Tank into the specified type when the command user is facing that Tank.
-15. Removed the "Electric Speed" setting.
-16. Removed redundant code.
+15. Replaced all KeyValues settings under "Plugin Settings" section with ConVars.
+16. All of the plugin's convars can now have their values locked/unlocked and carry on over map change. (Refer to README.md file.)
+17. New convars will be appended to the main config file, so no need to generate a new one every update.
+18. Renamed the ST_BossStage() and ST_Event() forwards to ST_ChangeType() and ST_EventHandler() respectively.
+19. Removed the "Electric Speed" setting.
+20. Removed the "Plugin Settings" section from the config.
+21. Removed redundant code.
 
 Files:
 
