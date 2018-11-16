@@ -116,7 +116,7 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -145,7 +145,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -213,7 +213,7 @@ public void ST_PluginEnd()
 	}
 }
 
-public void ST_EventHandler(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
@@ -305,11 +305,11 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, const c
 		dpBlind.WriteCell(enabled);
 
 		float flBlindDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flBlindDuration[ST_TankType(tank)] : g_flBlindDuration2[ST_TankType(tank)];
-		DataPack dpStopBlindness;
-		CreateDataTimer(flBlindDuration + 1.0, tTimerStopBlindness, dpStopBlindness, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopBlindness.WriteCell(GetClientUserId(survivor));
-		dpStopBlindness.WriteCell(GetClientUserId(tank));
-		dpStopBlindness.WriteString(message);
+		DataPack dpStopBlind;
+		CreateDataTimer(flBlindDuration + 1.0, tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE);
+		dpStopBlind.WriteCell(GetClientUserId(survivor));
+		dpStopBlind.WriteCell(GetClientUserId(tank));
+		dpStopBlind.WriteString(message);
 
 		char sBlindEffect[4];
 		sBlindEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sBlindEffect[ST_TankType(tank)] : g_sBlindEffect2[ST_TankType(tank)];
@@ -397,7 +397,7 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopBlindness(Handle timer, DataPack pack)
+public Action tTimerStopBlind(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

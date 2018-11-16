@@ -314,7 +314,9 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
-	vResetDrop(client);
+	g_bDrop[client] = false;
+	g_iDrop[client] = 0;
+	g_iDropWeapon[client] = 0;
 }
 
 public void OnMapEnd()
@@ -329,7 +331,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -374,7 +376,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_EventHandler(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
@@ -382,13 +384,6 @@ public void ST_EventHandler(Event event, const char[] name)
 
 		vDropWeapon(iTank);
 	}
-}
-
-public void ST_ChangeType(int tank)
-{
-	vDropWeapon(tank);
-
-	g_bDrop[tank] = false;
 }
 
 public void ST_Ability(int tank)
@@ -399,6 +394,13 @@ public void ST_Ability(int tank)
 
 		CreateTimer(1.0, tTimerDrop, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	vDropWeapon(tank);
+
+	g_bDrop[tank] = false;
 }
 
 static void vDeleteDrop(int tank)
@@ -519,16 +521,11 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, "24"))
 		{
-			vResetDrop(iPlayer);
+			g_bDrop[iPlayer] = false;
+			g_iDrop[iPlayer] = 0;
+			g_iDropWeapon[iPlayer] = 0;
 		}
 	}
-}
-
-static void vResetDrop(int tank)
-{
-	g_bDrop[tank] = false;
-	g_iDrop[tank] = 0;
-	g_iDropWeapon[tank] = 0;
 }
 
 static float flDropWeaponScale(int tank)
@@ -549,6 +546,7 @@ static int iDropMode(int tank)
 public Action tTimerDrop(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
+
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iDropAbility(iTank) == 0 || !g_bDrop[iTank])
 	{
 		g_bDrop[iTank] = false;

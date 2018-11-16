@@ -97,7 +97,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -334,9 +334,10 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerSetCarVelocity(Handle timer, int entity)
+public Action tTimerSetCarVelocity(Handle timer, int ref)
 {
-	int iCar = EntRefToEntIndex(entity);
+	int iCar = EntRefToEntIndex(ref);
+
 	if (iCar == INVALID_ENT_REFERENCE || !bIsValidEntity(iCar))
 	{
 		return Plugin_Stop;

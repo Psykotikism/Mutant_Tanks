@@ -117,7 +117,7 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -146,7 +146,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -262,8 +262,8 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bWhirl[survivor])
 	{
-		int iWhirl = CreateEntityByName("env_sprite");
-		if (!bIsValidEntity(iWhirl))
+		int iCamera = CreateEntityByName("env_sprite");
+		if (!bIsValidEntity(iCamera))
 		{
 			return;
 		}
@@ -275,16 +275,16 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 		GetClientEyePosition(survivor, flEyePos);
 		GetClientEyeAngles(survivor, flAngles);
 
-		SetEntityModel(iWhirl, SPRITE_DOT);
-		SetEntityRenderMode(iWhirl, RENDER_TRANSCOLOR);
-		SetEntityRenderColor(iWhirl, 0, 0, 0, 0);
-		DispatchSpawn(iWhirl);
+		SetEntityModel(iCamera, SPRITE_DOT);
+		SetEntityRenderMode(iCamera, RENDER_TRANSCOLOR);
+		SetEntityRenderColor(iCamera, 0, 0, 0, 0);
+		DispatchSpawn(iCamera);
 
-		TeleportEntity(iWhirl, flEyePos, flAngles, NULL_VECTOR);
+		TeleportEntity(iCamera, flEyePos, flAngles, NULL_VECTOR);
 		TeleportEntity(survivor, NULL_VECTOR, flAngles, NULL_VECTOR);
 
-		vSetEntityParent(iWhirl, survivor);
-		SetClientViewEntity(survivor, iWhirl);
+		vSetEntityParent(iCamera, survivor);
+		SetClientViewEntity(survivor, iCamera);
 
 		char sNumbers = !g_bTankConfig[ST_TankType(tank)] ? g_sWhirlAxis[ST_TankType(tank)][GetRandomInt(0, strlen(g_sWhirlAxis[ST_TankType(tank)]) - 1)] : g_sWhirlAxis2[ST_TankType(tank)][GetRandomInt(0, strlen(g_sWhirlAxis2[ST_TankType(tank)]) - 1)];
 		int iAxis;
@@ -298,7 +298,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 
 		DataPack dpWhirl;
 		CreateDataTimer(0.1, tTimerWhirl, dpWhirl, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpWhirl.WriteCell(EntIndexToEntRef(iWhirl));
+		dpWhirl.WriteCell(EntIndexToEntRef(iCamera));
 		dpWhirl.WriteCell(GetClientUserId(survivor));
 		dpWhirl.WriteCell(GetClientUserId(tank));
 		dpWhirl.WriteString(message);
@@ -333,9 +333,9 @@ static void vReset()
 	}
 }
 
-static void vReset2(int survivor, int tank, int entity, const char[] message)
+static void vReset2(int survivor, int tank, int camera, const char[] message)
 {
-	vStopWhirl(survivor, entity);
+	vStopWhirl(survivor, camera);
 
 	SetClientViewEntity(survivor, survivor);
 
@@ -347,12 +347,12 @@ static void vReset2(int survivor, int tank, int entity, const char[] message)
 	}
 }
 
-static void vStopWhirl(int survivor, int entity)
+static void vStopWhirl(int survivor, int camera)
 {
 	g_bWhirl[survivor] = false;
 	g_iWhirlOwner[survivor] = 0;
 
-	RemoveEntity(entity);
+	RemoveEntity(camera);
 }
 
 static float flWhirlChance(int tank)
@@ -379,8 +379,8 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iWhirl = EntRefToEntIndex(pack.ReadCell()), iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (iWhirl == INVALID_ENT_REFERENCE || !bIsValidEntity(iWhirl))
+	int iCamera = EntRefToEntIndex(pack.ReadCell()), iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (iCamera == INVALID_ENT_REFERENCE || !bIsValidEntity(iCamera))
 	{
 		g_bWhirl[iSurvivor] = false;
 		g_iWhirlOwner[iSurvivor] = 0;
@@ -392,7 +392,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 
 	if (!bIsHumanSurvivor(iSurvivor))
 	{
-		vStopWhirl(iSurvivor, iWhirl);
+		vStopWhirl(iSurvivor, iCamera);
 
 		return Plugin_Stop;
 	}
@@ -402,7 +402,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 	pack.ReadString(sMessage, sizeof(sMessage));
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWhirl[iSurvivor])
 	{
-		vReset2(iSurvivor, iTank, iWhirl, sMessage);
+		vReset2(iSurvivor, iTank, iCamera, sMessage);
 
 		return Plugin_Stop;
 	}
@@ -413,17 +413,17 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 
 	if (iWhirlEnabled == 0 || (flTime + flWhirlDuration) < GetEngineTime())
 	{
-		vReset2(iSurvivor, iTank, iWhirl, sMessage);
+		vReset2(iSurvivor, iTank, iCamera, sMessage);
 
 		return Plugin_Stop;
 	}
 
 	float flWhirlSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flWhirlSpeed[ST_TankType(iTank)] : g_flWhirlSpeed2[ST_TankType(iTank)],
 		flAngles[3];
-	GetEntPropVector(iWhirl, Prop_Send, "m_angRotation", flAngles);
+	GetEntPropVector(iCamera, Prop_Send, "m_angRotation", flAngles);
 
 	flAngles[iWhirlAxis] += flWhirlSpeed;
-	TeleportEntity(iWhirl, NULL_VECTOR, flAngles, NULL_VECTOR);
+	TeleportEntity(iCamera, NULL_VECTOR, flAngles, NULL_VECTOR);
 
 	return Plugin_Continue;
 }
