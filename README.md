@@ -25,7 +25,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 1. You must have at least `SourceMod 1.10.0.6352` or higher.
 
 ### Notes
-1. I do not provide support for local/listen servers but the plugin and its modules should still work properly on them.
+1. I do not provide support for listen servers but the plugin and its modules should still work properly on them.
 2. I will not help you with installing or troubleshooting problems on your part.
 3. If you get errors from SourceMod itself, that is your problem, not mine.
 4. MAKE SURE YOU MEET ALL THE REQUIREMENTS AND FOLLOW THE INSTALLATION GUIDE PROPERLY.
@@ -36,16 +36,13 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 3. Place all the contents into their respective folders.
 4. If prompted to replace or merge anything, click yes.
 5. Load up Super Tanks++ by restarting the server.
-6. Customize Super Tanks++ in:
- - `addons/sourcemod/data/super_tanks++/super_tanks++.cfg`
- - `cfg/sourcemod/super_tanks++/super_tanks++.cfg`
+6. Customize Super Tanks++ in `addons/sourcemod/data/super_tanks++/super_tanks++.cfg`
 
 ### Uninstalling/Upgrading to Newer Versions
 1. Delete `super_tanks++` folder from:
  - `addons/sourcemod/data folder`
  - `addons/sourcemod/plugins folder` (`super_tanks++.smx` and all of its modules)
  - `addons/sourcemod/scripting folder` (`super_tanks++.sp` and all of its modules)
- - `cfg/sourcemod folder`
 2. Delete `super_tanks++.txt` from `addons/sourcemod/gamedata` folder.
 3. Delete `super_tanks++.inc` from `addons/sourcemod/scripting/include` folder.
 4. Delete `st_clone.inc` from `addons/sourcemod/scripting/include` folder.
@@ -59,269 +56,14 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 ## Features
 1. Supports all game modes - Provides the option to enable/disable the plugin in all game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
-3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the KeyValue config file and user-made Super Tanks.
+3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the config file and user-made Super Tanks.
 4. Create and save up to 500 Super Tank types - Provides the ability to store up to 500 Super Tank types.
-5. KeyValues config auto-reloader - Provides the feature to auto-reload the KeyValues config file when users change settings mid-game.
-6. Lock/unlock ConVar values - Provides the option to temporarily lock/unlock ConVar values across map changes.
-7. Automatic ConVars config updater - Provides the ability to update the main ConVar config file when new ConVars are added.
-8. Optional abilities - Provides the option to choose which abilities to install.
-9. User-friendly API - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
-10. Target filters - Provides custom target filters for targeting survivors and special infected.
-11. Supports multiple languages - Provides support for translations.
-12. Chat color tags - Provides chat color tags for translation files.
-
-## ConVars Settings
-
-```
-// Symbols to use for locking/unlocking the other ConVars' values.
-// Note: Do not change this setting if you are unsure of how it works.
-// -
-// Separate symbols with commas.
-// Character limit: 5
-// Character limit for each symbol: 2
-// -
-// 1st symbol: Lock switch
-// 2nd symbol: Unlock switch
-// -
-// Empty: "==,!="
-// Not empty: Switch symbols used.
-// -
-// Default: "==,!="
-st_convarswitch "==,!="
-
-// Announce each Super Tank's arrival.
-// -
-// Combine numbers in any order for different results.
-// Character limit: 5
-// -
-// 1: Announce when a Super Tank spawns.
-// 2: Announce when a Super Tank evolves. (Only works when "Spawn Mode" is set to 1.)
-// 3: Announce when a Super Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
-// 4: Announce when a Super Tank transforms. (Only works when "Spawn Mode" is set to 3.)
-// 5: Announce when a Super Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
-// -
-// Default: "12345"
-st_announcearrivals "12345"
-
-// Announce each Super Tank's death.
-// -
-// 0: OFF
-// 1: ON
-// -
-// Default: "1"
-// Minimum: "0.000000"
-// Maximum: "1.000000"
-st_announcedeaths "1"
-
-// The type of custom config that Super Tanks++ creates.
-// -
-// Combine numbers in any order for different results.
-// Character limit: 5
-// -
-// 1: Difficulties
-// 2: Maps
-// 3: Game modes
-// 4: Days
-// 5: Player count
-// -
-// Default: "12345"
-st_configcreate "12345"
-
-// Enable Super Tanks++ custom configuration.
-// -
-// 0: OFF
-// 1: ON
-// -
-// Default: "0"
-// Minimum: "0.000000"
-// Maximum: "1.000000"
-st_configenable "0"
-
-// The type of custom config that Super Tanks++ executes.
-// -
-// Combine numbers in any order for different results.
-// Character limit: 5
-// -
-// 1: Difficulties
-// 2: Maps
-// 3: Game modes
-// 4: Days
-// 5: Player count
-// -
-// Default: "1"
-st_configexecute "1"
-
-// Disable Super Tanks++ in these game mode types.
-// -
-// Separate game modes with commas.
-// Character limit: 512 (including commas)
-// -
-// Empty: None
-// Not empty: Disabled only in these game modes.
-// -
-// Default: "versus,scavenge"
-st_disabledgamemodes "versus,scavenge"
-
-// Display Super Tanks' names and health.
-// -
-// 0: OFF
-// 1: ON, show names only.
-// 2: ON, show health only.
-// 3: ON, show both names and health.
-// -
-// Default: "3"
-// Minimum: "0.000000"
-// Maximum: "3.000000"
-st_displayhealth "3"
-
-// Enable Super Tanks++ in these game mode types.
-// -
-// Separate game modes with commas.
-// Character limit: 512 (including commas)
-// -
-// Empty: All
-// Not empty: Enabled only in these game modes.
-// -
-// Default: "coop,survival"
-st_enabledgamemodes "coop,survival"
-
-// Enable Super Tanks++.
-// -
-// 0: OFF
-// 1: ON
-// -
-// Default: "1"
-// Minimum: "0.000000"
-// Maximum: "1.000000"
-st_enableplugin "1"
-
-// Enable Super Tanks++ in finales only.
-// -
-// 0: OFF
-// 1: ON
-// -
-// Default: "0"
-// Minimum: "0.000000"
-// Maximum: "1.000000"
-st_finalesonly "0"
-
-// Amount of Tanks to spawn for each finale wave.
-// -
-// Separate waves with commas.
-// Wave limit: 3
-// Character limit for each wave: 3
-// -
-// Minimum value for each wave: 1
-// Maximum value for each wave: 9999999999
-// -
-// 1st number = 1st wave
-// 2nd number = 2nd wave
-// 3rd number = 3rd wave
-// -
-// Default: "2,3,4"
-st_finalewaves "2,3,4"
-
-// Enable Super Tanks++ in these game mode types.
-// -
-// Add up numbers together for different results.
-// -
-// 0: All game mode types.
-// 1: Co-Op modes only.
-// 2: Versus modes only.
-// 4: Survival modes only.
-// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
-// -
-// Default: "5"
-// Minimum: "0.000000"
-// Maximum: "15.000000"
-st_gamemodetypes "5"
-
-// Multiply the Super Tank's health.
-// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
-// -
-// 0: No changes to health.
-// 1: Multiply original health only.
-// 2: Multiply extra health only.
-// 3: Multiply both.
-// -
-// Default: "0"
-// Minimum: "0.000000"
-// Maximum: "3.000000"
-st_multiplyhealth "0"
-
-// Spawn this many Tanks on non-finale maps periodically.
-// -
-// Default: "2"
-// Minimum: "0.000000"
-// Maximum: "10000000000.000000"
-st_regularamount "2"
-
-// Spawn Tanks on non-finale maps every time this many seconds passes.
-// -
-// Default: "300.0"
-// Minimum: "0.100000"
-// Maximum: "10000000000.000000"
-st_regularinterval "300.0"
-
-// Spawn Tanks on non-finale maps periodically.
-// -
-// 0: OFF
-// 1: ON
-// -
-// Default: "0"
-// Minimum: "0.000000"
-// Maximum: "1.000000"
-st_regularwave "0"
-
-// The range of types to check for.
-// -
-// Separate values with "-".Value limit: 2
-// Character limit for each value: 3
-// -
-// Minimum number for each value: 1
-// Maximum number for each value: 500
-// -
-// 1st number = Minimum value
-// 2nd number = Maximum value
-// -
-// Default: "1-500"
-st_typerange "1-500"
-```
-
-### Locking/Unlocking ConVar values
-
-Super Tanks++ provides the option to lock/unlock ConVar values. By locking a ConVar's value, Super Tanks++ will prevent ConVars from reverting to their default values across map changes until the server ends or restarts.
-
-> The default lock and unlock switch symbols are `==` and `!=` respectively. You can change these with `st_convarswitch`. The character limit for both is 2 each.
-
-Example:
-
-`st_convarswitch "//,\\" // The lock/unlock switches are "//" and "\\" respectively.`
-
-#### Usage:
-Normal
-```
-st_finalewaves "2,3,4" // Value set in super_tanks++.cfg.
-st_finalewaves "1,2,3" // Value set during a map.
-Map changes...
-st_finalewaves "2,3,4" // Value after map changes.
-```
-
-Lock
-```
-st_finalewaves "2,3,4" // Value set in super_tanks++.cfg.
-st_finalewaves "==1,2,3" // Value set during a map.
-Map changes...
-st_finalewaves "1,2,3" // Value after map changes.
-```
-
-Unlock
-```
-st_finalewaves "2,3,4" // Value set in super_tanks++.cfg.
-st_finalewaves "!=1,2,3" // Value set during a map.
-Map changes...
-st_finalewaves "2,3,4" // Value after map changes.
-```
+5. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
+6. Optional abilities - Provides the option to choose which abilities to install.
+7. User-friendly API - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
+8. Target filters - Provides custom target filters for targeting survivors and special infected.
+9. Supports multiple languages - Provides support for translations.
+10. Chat color tags - Provides chat color tags for translation files.
 
 ## KeyValues Settings
 > View the INFORMATION.md file for information about each available setting.
@@ -363,7 +105,8 @@ This is okay:
 			"Tank Enabled"				"1" // Tank is enabled.
 			"Tank Chance"				"100.0" // Tank has 100% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+			"Skin Color"				"255 0 0 255" // Tank has red skin.
+			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
 		}
 	}
 }
@@ -381,7 +124,8 @@ This is not okay:
 			"Tank Name"				"Test Tank" // Tank has a name.
 			"Tank Chance"				"47.0" // Tank has 47% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+			"Skin Color"				"255 0 0 255" // Tank has red skin.
+			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
 		}
 	}
 }
@@ -399,7 +143,8 @@ This is okay:
 			"Tank Enabled"				"1" // Tank is enabled.
 			"Tank Chance"				"12.3" // Tank has 12.3% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Tank has a red (skin) and yellow (glow outline) color scheme.
+			"Skin Color"				"255 0 0 255" // Tank has red skin.
+			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
 		}
 	}
 }
@@ -417,7 +162,8 @@ This is not okay:
 			"Tank Enabled"				"1" // Tank is enabled.
 			"Tank Chance"				"59.0" // Tank has 59% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin-Glow Colors"			"255, 0, 0, 255 | 255, 255, 0" // The string should not contain any spaces.
+			"Skin Color"				"255,0,0,255" // The string should not contain any commas.
+			"Glow Color"				"255,255,0" // The string should not contain any commas.
 		}
 	}
 }
@@ -437,7 +183,8 @@ Here's our final entry:
 			"Tank Enabled"				"1" // Entry is enabled.
 			"Tank Chance"				"9.5" // Tank has 9.5% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin-Glow Colors"			"255,0,0,255|255,255,0" // Has red/yellow color scheme.
+			"Skin Color"				"255 0 0 255" // Tank has red skin.
+			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
 		}
 		"Immunities"
 		{
@@ -447,19 +194,35 @@ Here's our final entry:
 }
 ```
 
-To make sure that this entry can be chosen, we must go to `cfg/sourcemod/super_tanks++/super_tanks++.cfg` and look for the `st_typerange` setting.
-
-`st_typerange "1-24" // Determines what entry to start and stop at when reading the entire config file.`
-
-Now, assuming that `Tank #25` is our highest entry, we just raise the maximum value of `st_typerange` by 1, so we get 25 entries to choose from. Once the plugin starts reading the KeyValues config file, when it gets to `Tank #25` it will stop reading the rest.
-
-- Advanced Entry Examples
-
-`st_typerange "1-5" // Check "Tank #1" to "Tank #5"`
+To make sure that this entry can be chosen, we must change the value in the `Type Range` setting.
 
 ```
 "Super Tanks++"
 {
+	"Plugin Settings"
+	{
+		"General"
+		{
+			"Type Range" "1-24" // Determines what entry to start and stop at when reading the entire config file.
+		}
+	}
+}
+```
+
+Now, assuming that `Tank #25` is our highest entry, we just raise the maximum value of `Type Range` by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to `Tank #25` it will stop reading the rest.
+
+- Advanced Entry Examples
+
+```
+"Super Tanks++"
+{
+	"Plugin Settings"
+	{
+		"General"
+		{
+			"Type Range" "1-5" // Check "Tank #1" to "Tank #5"
+		}
+	}
 	"Tank #5" // Checked by the plugin.
 	{
 		"General"
@@ -468,7 +231,8 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 			"Tank Enabled"				"1"
 			"Tank Chance"				"75.2"
 			"Spawn Enabled"				"1"
-			"Skin-Glow Colors"			"255,255,0,255|255,255,0"
+			"Skin Color"				"255 255 0 255"
+			"Glow Color"				"255 255 0"
 		}
 		"Enhancements"
 		{
@@ -486,11 +250,16 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 }
 ```
 
-`st_typerange "1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")`
-
 ```
 "Super Tanks++"
 {
+	"Plugin Settings"
+	{
+		"General"
+		{
+			Type Range "1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
+		}
+	}
 	"Tank #13" // This will not be checked by the plugin.
 	{
 		"General"
@@ -499,8 +268,9 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 			"Tank Enabled"				"1"
 			"Tank Chance"				"38.2"
 			"Spawn Enabled"				"1"
-			"Skin-Glow Colors"			"255,255,255,255|255,255,255"
-			"Glow Outline"				"0" // No glow outline.
+			"Skin Color"				"255 255 255 255"
+			"Glow Color"				"255 255 255"
+			"Glow Enabled"				"0" // No glow outline.
 		}
 		"Immunities"
 		{
@@ -544,20 +314,20 @@ You have 2 options:
 
 For option 1:
 
-You must add numbers up together in `st_gamemodetypes`.
+You must add numbers up together in `Game Mode Types`.
 
 For option 2:
 
-You must specify the game modes in `st_enabledgamemodes` and `st_disabledgamemodes`.
+You must specify the game modes in `Enabled Game Modes` and `Disabled Game Modes`.
 
 Here are some scenarios and their outcomes:
 
 Scenario 1:
 
 ```
-st_gamemodetypes "0" // The plugin is enabled in all game mode types.
-st_enabledgamemodes "" // The plugin is enabled in all game modes.
-st_disabledgamemodes "coop" // The plugin is disabled in "coop" mode.
+"Game Mode Types" "0" // The plugin is enabled in all game mode types.
+"Enabled Game Modes" "" // The plugin is enabled in all game modes.
+"Disabled Game Modes" "coop" // The plugin is disabled in "coop" mode.
 
 Outcome: The plugin works in every game mode except "coop" mode.
 ```
@@ -565,9 +335,9 @@ Outcome: The plugin works in every game mode except "coop" mode.
 Scenario 2:
 
 ```
-st_gamemodetypes "1" // The plugin is enabled in every Campaign-based game mode.
-st_enabledgamemodes "coop" // The plugin is enabled in only "coop" mode.
-st_disabledgamemodes "" // The plugin is not disabled in any game modes.
+"Game Mode Types" "1" // The plugin is enabled in every Campaign-based game mode.
+"Enabled Game Modes" "coop" // The plugin is enabled in only "coop" mode.
+"Disabled Game Modes" "" // The plugin is not disabled in any game modes.
 
 Outcome: The plugin works only in "coop" mode.
 ```
@@ -575,9 +345,9 @@ Outcome: The plugin works only in "coop" mode.
 Scenario 3:
 
 ```
-st_gamemodetypes "5" // The plugin is enabled in every Campaign-based and Survival-based game mode.
-st_enabledgamemodes "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
-st_disabledgamemodes "coop" // The plugin is disabled in "coop" mode.
+"Game Mode Types" "5" // The plugin is enabled in every Campaign-based and Survival-based game mode.
+"Enabled Game Modes" "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
+"Disabled Game Modes" "coop" // The plugin is disabled in "coop" mode.
 
 Outcome: The plugin works in every Campaign-based and Survival-based game mode except "coop" mode.
 ```
@@ -586,10 +356,10 @@ Outcome: The plugin works in every Campaign-based and Survival-based game mode e
 
 It may be due to one or more of the following:
 
-- The `Tank Enabled` KeyValue setting for that Super Tank may be set to 0 or doesn't exists at all which defaults to 0.
-- You have created a new Super Tank and didn't raise the maximum value of `st_typerange`.
-- You have misspelled one of the KeyValues settings.
-- You are still using the `Tank Character` KeyValue setting which is no longer used since v8.16.
+- The `Tank Enabled` setting for that Super Tank may be set to 0 or doesn't exists at all which defaults to 0.
+- You have created a new Super Tank and didn't raise the maximum value of `Type Range`.
+- You have misspelled one of the settings.
+- You are still using the `Tank Character` setting which is no longer used since v8.16.
 - You didn't set up the Super Tank properly.
 - You are missing quotation marks.
 - You have more than 500 Super Tanks in your config file.
@@ -613,16 +383,16 @@ The following abilities require different strategies:
 Here's an example:
 
 ```
-st_finalewaves "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
+"Finale Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
 ```
 
 7. How can I decide whether to display each Tank's health?
 
-Set the value in `st_displayhealth`.
+Set the value in `Display Health`.
 
 8. Why do some Tanks spawn with different props?
 
-Each prop has X out of 100.0% probability to appear on Super Tanks when they spawn. Configure the chances for each prop in the `Props Chance` KeyValue setting.
+Each prop has X out of 100.0% probability to appear on Super Tanks when they spawn. Configure the chances for each prop in the `Props Chance` setting.
 
 9. Why are the Tanks spawning with more than the extra health given to them?
 
@@ -630,16 +400,21 @@ Since v8.10, extra health given to Tanks is now multiplied by the number of aliv
 
 10. How do I add more Super Tanks?
 
-- Add a new entry in the KeyValues config file.
-- Raise the maximum value of the `st_typerange` ConVar.
+- Add a new entry in the config file.
+- Raise the maximum value of the `Type Range` setting.
 
 Example:
-
-`st_typerange "1-69" // The plugin will check for 69 entries when loading the config file.`
 
 ```
 "Super Tanks++"
 {
+	"Plugin Settings"
+	{
+		"General"
+		{
+			"Type Range" "1-69" // The plugin will check for 69 entries when loading the config file.
+		}
+	}
 	"Tank #69"
 	{
 		"General"
@@ -652,7 +427,7 @@ Example:
 
 11. How do I filter out certain Super Tanks that I made without deleting them?
 
-Enable/disable them with the `Tank Enabled` KeyValue setting.
+Enable/disable them with the `Tank Enabled` setting.
 
 Example:
 
@@ -701,15 +476,17 @@ Yes, you can do that with custom configs.
 Example:
 
 ```
-// Settings for cfg/sourcemod/super_tanks++/super_tanks++.cfg
-st_configenable "1" // Enable custom configs
-st_configexecute "1" // 1: Difficulty configs (easy, normal, hard, impossible)
-```
-
-```
 // Settings for addons/sourcemod/data/super_tanks++/super_tanks++.cfg
 "Super Tanks++"
 {
+	"Plugin Settings"
+	{
+		"Custom"
+		{
+			"Enable Custom Configs" "1" // Enable custom configs
+			"Execute Config Types" "1" // 1: Difficulty configs (easy, normal, hard, impossible)
+		}
+	}
 	"Tank #69"
 	{
 		"General"
@@ -718,7 +495,8 @@ st_configexecute "1" // 1: Difficulty configs (easy, normal, hard, impossible)
 			"Tank Enabled"				"1"
 			"Tank Chance"				"2.53"
 			"Spawn Enabled"				"1"
-			"Skin-Glow Colors"			"0,170,255,255|0,170,255"
+			"Skin Color"				"0 170 255 255"
+			"Glow Color"				"0 170 255"
 		}
 		"Enhancements"
 		{
@@ -742,7 +520,8 @@ st_configexecute "1" // 1: Difficulty configs (easy, normal, hard, impossible)
 			"Tank Enabled"				"1"
 			"Tank Chance"				"1.0"
 			"Spawn Enabled"				"1"
-			"Skin-Glow Colors"			"1,1,1,255|1,1,1"
+			"Skin Color"				"1 1 1 255"
+			"Glow Color"				"1 1 1"
 		}
 		"Enhancements"
 		{
@@ -844,8 +623,9 @@ forward void ST_Configs(const char[] savepath, bool main);
  *
  * @param event			Handle to the event.
  * @param name			String containing the name of the event.
+ * @param dontBroadcast		True if event was not broadcast to clients, false otherwise.
  **/
-forward void ST_EventHandler(Event event, const char[] name);
+forward void ST_EventHandler(Event event, const char[] name, bool dontBroadcast);
 
 /**
  * Called when the core plugin is unloaded/reloaded.
@@ -884,18 +664,32 @@ forward void ST_RockThrow(int tank, int rock);
 Natives:
 ```
 /**
- * Returns the maximum value of the "st_typerange" setting.
+ * Returns the maximum value of the "Type Range" setting.
  *
- * @return			The maximum value of the "st_typerange" setting.
+ * @return			The maximum value of the "Type Range" setting.
  **/
 native int ST_MaxType();
 
 /**
- * Returns the minimum value of the "st_typerange" setting.
+ * Returns the minimum value of the "Type Range" setting.
  *
- * @return			The minimum value of the "st_typerange" setting.
+ * @return			The minimum value of the "Type Range" setting.
  **/
 native int ST_MinType();
+
+/**
+ * Returns the RGBA colors given to a Tank's props.
+ *
+ * @param tank			Client index of the Tank.
+ * @param mode			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
+ *				4 = Rock color, 5 = Tire color
+ * @param red			Red color reference.
+ * @param green			Green color reference.
+ * @param blue			Blue color reference.
+ * @param alpha			Alpha color reference.
+ * @error			Invalid client index.
+ **/
+native void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
  * Returns if the core plugin is enabled.
@@ -948,12 +742,13 @@ native bool ST_TankChance(int type);
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Skin color, 2 = Glow outline color
- * @param red			Buffer to store the red color in.
- * @param green			Buffer to store the green color in.
- * @param blue			Buffer to store the blue color in.
+ * @param red			Red color reference.
+ * @param green			Green color reference.
+ * @param blue			Blue color reference.
+ * @param alpha			Alpha color reference.
  * @error			Invalid client index.
  **/
-native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] blue);
+native void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
  * Returns the custom name given to a Tank.
@@ -1014,7 +809,6 @@ stock void ST_PrintToChat(int client, char[] message, any ...)
 	SetGlobalTransTarget(client);
 	Format(sBuffer, sizeof(sBuffer), "\x01%s", message);
 	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
-
 	PrintToChat(client, sMessage);
 }
 
@@ -1028,7 +822,6 @@ stock void ST_PrintToChatAll(char[] message, any ...)
 		{
 			SetGlobalTransTarget(iPlayer);
 			VFormat(sBuffer, sizeof(sBuffer), message, 2);
-
 			ST_PrintToChat(iPlayer, sBuffer);
 		}
 	}
@@ -1050,14 +843,14 @@ Target filters:
 @infected
 ```
 
-Commands:
+Command:
 
 ```
 sm_tank
 
 Valid inputs:
 
-1. sm_tank <type 1*-500*> *The minimum and maximum values are determined by "st_typerange". (The lowest value you can set is 1 and the highest value you can set is 500 though.)
+1. sm_tank <type 1*-500*> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is 500 though.)
 2. sm_tank <type name*> *The plugin will attempt to match the name with any of the Super Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 
 Note: The command has 2 functions.
@@ -1069,30 +862,30 @@ Note: The command has 2 functions.
 ### Configuration
 1. How do I enable the custom configurations features?
 
-Set `st_configenable` to 1.
+Set `Enable Custom Configs` to 1.
 
 2. How do I tell the plugin to only create certain custom config files?
 
-Set the values in `st_configcreate`.
+Set the values in `Create Config Types`.
 
 Examples:
 
 ```
-st_configcreate "123" // Creates the folders and config files for each difficulty, map, and game mode.
-st_configcreate "4" // Creates the folder and config files for each day.
-st_configcreate "12345" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
+"Create Config Types" "123" // Creates the folders and config files for each difficulty, map, and game mode.
+"Create Config Types" "4" // Creates the folder and config files for each day.
+"Create Config Types" "12345" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
 ```
 
 3. How do I tell the plugin to only execute certain custom config files?
 
-Set the values in `st_configexecute`.
+Set the values in `Execute Config Types`.
 
 Examples:
 
 ```
-st_configexecute "123" // Executes the config file for the current difficulty, map, and game mode.
-st_configexecute "4" // Executes the config file for the current day.
-st_configexecute "12345" // Executes the config file for the current difficulty, map, game mode, day, and player count.
+"Execute Config Types" "123" // Executes the config file for the current difficulty, map, and game mode.
+"Execute Config Types" "4" // Executes the config file for the current day.
+"Execute Config Types" "12345" // Executes the config file for the current difficulty, map, game mode, day, and player count.
 ```
 
 ## Credits

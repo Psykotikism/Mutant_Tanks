@@ -3,10 +3,190 @@
 
 - Maximum types: 500 (If you want more, change the value of `ST_MAXTYPES` in super_tanks++.inc file at your own risk.)
 - Ability count: 65
-- All of these settings use default values if they are left incomplete or empty.
-- The plugin automatically eliminates any whitespace from each setting's values.
-- Please don't report any bugs or issues if you're using the plugin on a local/listen server. No support will be provided for that kind of server.
+- Please don't report any bugs or issues if you're using the plugin on a listen server. No support will be provided for that kind of server.
 - THIS FILE IS NOT THE CONFIG FILE! USE IT AS A REFERENCE!
+
+## Plugin Settings
+
+```
+"Super Tanks++"
+{
+	// These are the general plugin settings.
+	// Note: The following settings will not work in custom config files:
+	// Any setting under the "Game Modes" section.
+	// Any setting under the "Custom" section.
+	"Plugin Settings"
+	{
+		"General"
+		{
+			// Enable Super Tanks++.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Plugin Enabled"			"1"
+
+			// Announce each Super Tank's arrival.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 5
+			// --
+			// 1: Announce when a Super Tank spawns.
+			// 2: Announce when a Super Tank evolves. (Only works when "Spawn Mode" is set to 1.)
+			// 3: Announce when a Super Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
+			// 4: Announce when a Super Tank transforms. (Only works when "Spawn Mode" is set to 3.)
+			// 5: Announce when a Super Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
+			"Announce Arrival"			"12345"
+
+			// Announce each Super Tank's death.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Announce Death"			"1"
+
+			// Display Tanks' names and health.
+			// --
+			// 0: OFF
+			// 1: ON, show names only.
+			// 2: ON, show health only.
+			// 3: ON, show both names and health.
+			"Display Health"			"3"
+
+			// Enable Super Tanks++ in finales only.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Finales Only"				"0"
+
+			// Multiply the Super Tank's health.
+			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
+			// --
+			// 0: No changes to health.
+			// 1: Multiply original health only.
+			// 2: Multiply extra health only.
+			// 3: Multiply both.
+			"Multiply Health"			"0"
+
+			// The range of types to check for.
+			// --
+			// Separate values with "-".
+			// --
+			// Value limit: 2
+			// Character limit for each value: 3
+			// --
+			// Minimum number for each value: 1
+			// Maximum number for each value: 500
+			// --
+			// 1st number = Minimum value
+			// 2nd number = Maximum value
+			"Type Range"				"1-500"
+		}
+		"Waves"
+		{
+			// Spawn this many Tanks on non-finale maps periodically.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Regular Amount"			"2"
+
+			// Spawn Tanks on non-finale maps every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Regular Interval"			"300.0"
+
+			// Spawn Tanks on non-finale maps periodically.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Regular Wave"				"0"
+
+			// Amount of Tanks to spawn for each finale wave.
+			// --
+			// Separate waves with commas.
+			// --
+			// Wave limit: 3
+			// Character limit for each wave: 3
+			// --
+			// Minimum value for each wave: 1
+			// Maximum value for each wave: 9999999999
+			// --
+			// 1st number = 1st wave
+			// 2nd number = 2nd wave
+			// 3rd number = 3rd wave
+			"Finale Waves"				"2,3,4"
+		}
+		"Game Modes"
+		{
+			// Enable Super Tanks++ in these game mode types.
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0: All game mode types.
+			// 1: Co-Op modes only.
+			// 2: Versus modes only.
+			// 4: Survival modes only.
+			// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
+			"Game Mode Types"			"5"
+
+			// Enable Super Tanks++ in these game modes.
+			// --
+			// Separate game modes with commas.
+			// --
+			// Character limit: 512 (including commas)
+			// --
+			// Empty: All
+			// Not empty: Enabled only in these game modes.
+			"Enabled Game Modes"			"coop,survival"
+
+			// Disable Super Tanks++ in these game modes.
+			// --
+			// Separate game modes with commas.
+			// --
+			// Character limit: 512 (including commas)
+			// --
+			// Empty: None
+			// Not empty: Disabled only in these game modes.
+			"Disabled Game Modes"			"versus,scavenge"
+		}
+		"Custom"
+		{
+			// Enable Super Tanks++ custom configuration.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Enable Custom Configs"			"0"
+
+			// The type of custom config that Super Tanks++ creates.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 5
+			// --
+			// 1: Difficulties
+			// 2: Maps
+			// 3: Game modes
+			// 4: Days
+			// 5: Player count
+			"Create Config Types"			"12345"
+
+			// The type of custom config that Super Tanks++ executes.
+			// --
+			// Combine numbers in any order for different results.
+			// Character limit: 5
+			// --
+			// 1: Difficulties
+			// 2: Maps
+			// 3: Game modes
+			// 4: Days
+			// 5: Player count
+			"Execute Config Types"			"1"
+		}
+	}
+}
+```
+
+## Tank Settings
 
 ### General, Spawn, Props, Particles, Enhancements, Immunities
 
@@ -41,7 +221,7 @@
 			// Display a note for the Super Tank when it spawns.
 			// Note: This note can also be displayed for clones if "Clone Mode" is set to 1, so the chat could be spammed if multiple clones spawn.
 			// Note: A note must be manually created in the translation file.
-			// Note: Notes support chat color tags in the translation file.
+			// Note: Tank notes support chat color tags in the translation file.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -54,28 +234,27 @@
 			// 1: ON
 			"Spawn Enabled"				"1"
 
-			// These are the Super Tank's skin and glow outline colors.
-			// Note: Random RGBA combinations will be used if invalid values (values less than 0 or greater than 255) are used.
+			// These are the RGBA values of the Super Tank's skin color.
 			// --
-			// Separate colors with "|".
-			// Separate RGBAs with commas.
-			// --
-			// Character limit: 28
-			// Character limit for each color: 3
-			// --
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
-			// --
-			// 1st set = skin color (RGBA)
-			// 2nd set = glow color (RGB)
-			"Skin-Glow Colors"			"255,255,255,255|255,255,255"
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Skin Color"				"255 255 255 255"
 
 			// The Super Tank will have a glow outline.
 			// Only available in Left 4 Dead 2.
 			// --
 			// 0: OFF
 			// 1: ON
-			"Glow Outline"				"1"
+			"Glow Enabled"				"1"
+
+			// These are the RGB values of the Super Tank's glow outline color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			"Glow Color"				"255 255 255"
 		}
 		"Spawn"
 		{
@@ -221,24 +400,45 @@
 			// 6th number = Chance for tires to appear.
 			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3"
 
-			// The Super Tank's prop colors.
-			// Note: Random RGBA combinations will be used if invalid values (values less than 0 or greater than 255) are used.
+			// These are the RGBA values of the Super Tank's light prop's color.
 			// --
-			// Separate colors with "|".
-			// Separate RGBAs with commas.
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Light Color"				"255 255 255 255"
+
+			// These are the RGBA values of the Super Tank's oxygen tank prop's color.
 			// --
-			// Character limit: 80
-			// Character limit for each color: 3
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Oxygen Tank Color"			"255 255 255 255"
+
+			// These are the RGBA values of the Super Tank's oxygen tank prop's flame's color.
 			// --
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Flame Color"				"255 255 255 180"
+
+			// These are the RGBA values of the Super Tank's rock prop's color.
 			// --
-			// 1st set = lights color (RGBA)
-			// 2nd set = oxygen tanks color (RGBA)
-			// 3rd set = oxygen tank flames color (RGBA)
-			// 4th set = rocks color (RGBA)
-			// 5th set = tires color (RGBA)
-			"Props Colors"				"255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255"
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Rock Color"				"255 255 255 255"
+
+			// These are the RGBA values of the Super Tank's tire prop's color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Tire Color"				"255 255 255 255"
 		}
 		"Particles"
 		{
@@ -460,7 +660,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -551,7 +751,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -638,7 +838,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -726,7 +926,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -820,7 +1020,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -910,7 +1110,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1004,7 +1204,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1259,7 +1459,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1353,7 +1553,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1452,7 +1652,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1552,7 +1752,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1651,7 +1851,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1792,7 +1992,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1956,7 +2156,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2119,7 +2319,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2228,7 +2428,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2356,7 +2556,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2456,7 +2656,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2586,7 +2786,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2674,7 +2874,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2756,7 +2956,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2898,7 +3098,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3019,7 +3219,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3101,7 +3301,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3188,7 +3388,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3506,7 +3706,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3597,7 +3797,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3686,7 +3886,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3786,7 +3986,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3871,7 +4071,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3972,7 +4172,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4060,7 +4260,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4257,7 +4457,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4409,7 +4609,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4496,7 +4696,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4594,15 +4794,13 @@
 			// Maximum: 100.0 (Highest chance)
 			"Shield Chance"				"33.3"
 
-			// This is the Super Tank's shield's color.
-			// --
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
+			// These are the RGBA values of the Super Tank's shield prop's color.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
-			"Shield Color"				"255,255,255"
+			// 4th number = Alpha
+			"Shield Color"				"255 255 255 50"
 
 			// The Super Tank's shield reactivates after this many seconds passes upon destroying the shield.
 			// --
@@ -4639,7 +4837,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4733,7 +4931,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4815,7 +5013,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4993,7 +5191,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5207,7 +5405,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5300,7 +5498,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5399,7 +5597,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5494,7 +5692,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5655,7 +5853,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
