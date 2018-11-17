@@ -137,6 +137,7 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
@@ -300,7 +301,6 @@ static int iPanicHitMode(int tank)
 public Action tTimerPanic(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iPanicAbility(iTank) != 2 && iPanicAbility(iTank) != 3) || !g_bPanic[iTank])
 	{
 		g_bPanic[iTank] = false;

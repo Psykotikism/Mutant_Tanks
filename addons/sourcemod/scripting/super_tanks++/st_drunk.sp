@@ -139,6 +139,7 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
@@ -424,7 +425,6 @@ public Action tTimerDrunkTurn(Handle timer, DataPack pack)
 public Action tTimerStopDrunkSpeed(Handle timer, int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
-
 	if (!bIsSurvivor(iSurvivor))
 	{
 		return Plugin_Stop;

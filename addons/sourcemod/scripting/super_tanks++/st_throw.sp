@@ -94,6 +94,7 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
@@ -337,7 +338,6 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 public Action tTimerSetCarVelocity(Handle timer, int ref)
 {
 	int iCar = EntRefToEntIndex(ref);
-
 	if (iCar == INVALID_ENT_REFERENCE || !bIsValidEntity(iCar))
 	{
 		return Plugin_Stop;

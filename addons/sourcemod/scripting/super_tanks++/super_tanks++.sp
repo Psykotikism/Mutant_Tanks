@@ -178,14 +178,12 @@ public any aNative_PropsColors(Handle plugin, int numParams)
 		SetNativeCellRef(4, iGreen);
 		SetNativeCellRef(5, iBlue);
 		SetNativeCellRef(6, iAlpha);
-
 	}
 }
 
 public any aNative_SpawnEnabled(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
-
 	if (iSpawnEnabled(iType) == 1)
 	{
 		return true;
@@ -197,7 +195,6 @@ public any aNative_SpawnEnabled(Handle plugin, int numParams)
 public any aNative_SpawnTank(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
-
 	if (bIsValidClient(iTank))
 	{
 		char sTankName[33];
@@ -211,7 +208,6 @@ public any aNative_TankAllowed(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1);
 	char sChecks[7];
 	GetNativeString(2, sChecks, sizeof(sChecks));
-
 	if (bIsTankAllowed(iTank, sChecks))
 	{
 		return true;
@@ -223,7 +219,6 @@ public any aNative_TankAllowed(Handle plugin, int numParams)
 public any aNative_TankChance(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
-
 	if (bTankChance(iType))
 	{
 		return true;
@@ -259,7 +254,6 @@ public any aNative_TankColors(Handle plugin, int numParams)
 		SetNativeCellRef(4, iGreen);
 		SetNativeCellRef(5, iBlue);
 		SetNativeCellRef(6, iAlpha);
-
 	}
 }
 
@@ -271,14 +265,12 @@ public any aNative_TankName(Handle plugin, int numParams)
 		char sTankName[33];
 		sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
 		SetNativeString(2, sTankName, sizeof(sTankName));
-
 	}
 }
 
 public any aNative_TankType(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-
 	if (bIsTank(iTank))
 	{
 		return g_iTankType[iTank];
@@ -295,7 +287,6 @@ public any aNative_TankWave(Handle plugin, int numParams)
 public any aNative_TypeEnabled(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
-
 	if (iTankEnabled(iType) == 1)
 	{
 		return true;
@@ -1572,8 +1563,8 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
-		int iBeam[7], iRandom = GetRandomInt(1, 6);
-		for (int iLight = 1; iLight <= iRandom; iLight++)
+		int iBeam[4];
+		for (int iLight = 1; iLight <= 3; iLight++)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= flChance2 && StrContains(sPropsAttached, "2") != -1)
 			{
@@ -1602,17 +1593,17 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					switch (iLight)
 					{
-						case 1, 4:
+						case 1:
 						{
 							SetVariantString("mouth");
 							vSetVector(flAngles, -90.0, 0.0, 0.0);
 						}
-						case 2, 5:
+						case 2:
 						{
 							SetVariantString("rhand");
 							vSetVector(flAngles, 90.0, 0.0, 0.0);
 						}
-						case 3, 6:
+						case 3:
 						{
 							SetVariantString("lhand");
 							vSetVector(flAngles, -90.0, 0.0, 0.0);
@@ -1633,8 +1624,8 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		GetClientEyePosition(tank, flOrigin);
 		GetClientAbsAngles(tank, flAngles);
 
-		int iJetpack[5], iRandom2 = GetRandomInt(1, 4);
-		for (int iOzTank = 1; iOzTank <= iRandom2; iOzTank++)
+		int iJetpack[3];
+		for (int iOzTank = 1; iOzTank <= 2; iOzTank++)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= flChance3 && StrContains(sPropsAttached, "3") != -1)
 			{
@@ -1657,20 +1648,10 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					{
 						case 1:
 						{
-							SetVariantString("rshoulder");
-							vSetVector(flOrigin, 0.0, 30.0, 8.0);
-						}
-						case 2:
-						{
-							SetVariantString("lshoulder");
-							vSetVector(flOrigin, 0.0, 30.0, -8.0);
-						}
-						case 3:
-						{
 							SetVariantString("rfoot");
 							vSetVector(flOrigin, 0.0, 30.0, 8.0);
 						}
-						case 4:
+						case 2:
 						{
 							SetVariantString("lfoot");
 							vSetVector(flOrigin, 0.0, 30.0, -8.0);
@@ -1735,8 +1716,8 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
-		int iConcrete[41], iRandom3 = GetRandomInt(1, 40);
-		for (int iRock = 1; iRock <= iRandom3; iRock++)
+		int iConcrete[17];
+		for (int iRock = 1; iRock <= 16; iRock++)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= flChance5 && StrContains(sPropsAttached, "5") != -1)
 			{
@@ -1757,10 +1738,10 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					switch (iRock)
 					{
-						case 1, 5, 9, 13, 17, 21, 25, 29, 33, 37: SetVariantString("rshoulder");
-						case 2, 6, 10, 14, 18, 22, 26, 30, 34, 38: SetVariantString("lshoulder");
-						case 3, 7, 11, 15, 19, 23, 27, 31, 35, 39: SetVariantString("relbow");
-						case 4, 8, 12, 16, 20, 24, 28, 32, 36, 40: SetVariantString("lelbow");
+						case 1, 5, 9, 13: SetVariantString("rshoulder");
+						case 2, 6, 10, 14: SetVariantString("lshoulder");
+						case 3, 7, 11, 15: SetVariantString("relbow");
+						case 4, 8, 12, 16: SetVariantString("lelbow");
 					}
 
 					AcceptEntityInput(iConcrete[iRock], "SetParentAttachment");
@@ -1771,16 +1752,16 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					{
 						switch (iRock)
 						{
-							case 1, 2, 5, 6, 9, 10, 13, 14, 17, 18, 21, 22, 25, 26, 29, 30, 33, 34, 37, 38: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.4);
-							case 3, 4, 7, 8, 11, 12, 15, 16, 19, 20, 23, 24, 27, 28, 31, 32, 35, 36, 39, 40: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.5);
+							case 1, 2, 5, 6, 9, 10, 13, 14: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.4);
+							case 3, 4, 7, 8, 11, 12, 15, 16: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.5);
 						}
 					}
 
 					SetEntPropEnt(iConcrete[iRock], Prop_Send, "m_hOwnerEntity", tank);
 
-					flAngles[0] = flAngles[0] + GetRandomFloat(-90.0, 90.0);
-					flAngles[1] = flAngles[1] + GetRandomFloat(-90.0, 90.0);
-					flAngles[2] = flAngles[2] + GetRandomFloat(-90.0, 90.0);
+					flAngles[0] += GetRandomFloat(-90.0, 90.0);
+					flAngles[1] += GetRandomFloat(-90.0, 90.0);
+					flAngles[2] += GetRandomFloat(-90.0, 90.0);
 
 					TeleportEntity(iConcrete[iRock], NULL_VECTOR, flAngles, NULL_VECTOR);
 					DispatchSpawn(iConcrete[iRock]);
@@ -1792,8 +1773,8 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 		flAngles[0] += 90.0;
 
-		int iWheel[5], iRandom4 = GetRandomInt(1, 4);
-		for (int iTire = 1; iTire <= iRandom4; iTire++)
+		int iWheel[3];
+		for (int iTire = 1; iTire <= 2; iTire++)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= flChance6 && StrContains(sPropsAttached, "6") != -1)
 			{
@@ -1814,10 +1795,8 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					switch (iTire)
 					{
-						case 1: SetVariantString("relbow");
-						case 2: SetVariantString("lelbow");
-						case 3: SetVariantString("rfoot");
-						case 4: SetVariantString("lfoot");
+						case 1: SetVariantString("rfoot");
+						case 2: SetVariantString("lfoot");
 					}
 
 					AcceptEntityInput(iWheel[iTire], "SetParentAttachment");
@@ -2097,7 +2076,6 @@ public void vSTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 public Action tTimerBloodEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
 	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "1") == -1)
@@ -2113,7 +2091,6 @@ public Action tTimerBloodEffect(Handle timer, int userid)
 public Action tTimerBlurEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	char sPropsAttached[7];
 	sPropsAttached = !g_bTankConfig[g_iTankType[iTank]] ? g_sPropsAttached[g_iTankType[iTank]] : g_sPropsAttached2[g_iTankType[iTank]];
 	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || StrContains(sPropsAttached, "1") == -1)
@@ -2186,7 +2163,6 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 public Action tTimerElectricEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
 	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "2") == -1)
@@ -2202,7 +2178,6 @@ public Action tTimerElectricEffect(Handle timer, int userid)
 public Action tTimerFireEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
 	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "3") == -1)
@@ -2218,7 +2193,6 @@ public Action tTimerFireEffect(Handle timer, int userid)
 public Action tTimerIceEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
 	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "4") == -1)
@@ -2234,7 +2208,6 @@ public Action tTimerIceEffect(Handle timer, int userid)
 public Action tTimerKillStuckTank(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	if (!bIsTankAllowed(iTank) || !bIsPlayerIncapacitated(iTank))
 	{
 		return Plugin_Stop;
@@ -2248,7 +2221,6 @@ public Action tTimerKillStuckTank(Handle timer, int userid)
 public Action tTimerMeteorEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
 	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "5") == -1)
@@ -2264,7 +2236,6 @@ public Action tTimerMeteorEffect(Handle timer, int userid)
 public Action tTimerRandomize(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		vSpawnModes(iTank, false);
@@ -2301,7 +2272,6 @@ public Action tTimerRandomize(Handle timer, int userid)
 public Action tTimerSmokeEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
 	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "6") == -1)
@@ -2317,7 +2287,6 @@ public Action tTimerSmokeEffect(Handle timer, int userid)
 public Action tTimerSpitEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
 	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "7") == -1)
@@ -2333,7 +2302,6 @@ public Action tTimerSpitEffect(Handle timer, int userid)
 public Action tTimerTransform(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		vSpawnModes(iTank, false);

@@ -328,6 +328,7 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
@@ -546,7 +547,6 @@ static int iDropMode(int tank)
 public Action tTimerDrop(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-
 	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iDropAbility(iTank) == 0 || !g_bDrop[iTank])
 	{
 		g_bDrop[iTank] = false;
@@ -573,12 +573,10 @@ public Action tTimerDrop(Handle timer, int userid)
 		case 2: iPosition = 2;
 	}
 
-	float flScale;
-
 	int iDrop = CreateEntityByName("prop_dynamic_override");
 	if (bIsValidEntity(iDrop))
 	{
-		float flPos[3], flAngles[3];
+		float flPos[3], flAngles[3], flScale;
 
 		char sPosition[32];
 

@@ -56,7 +56,6 @@ public any aNative_CloneAllowed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	bool bCloneInstalled = GetNativeCell(2);
-
 	if (ST_TankAllowed(iTank, "024") && bIsCloneAllowed(iTank, bCloneInstalled))
 	{
 		return true;
@@ -91,6 +90,7 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];

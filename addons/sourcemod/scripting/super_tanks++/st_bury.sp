@@ -139,6 +139,7 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
@@ -267,7 +268,7 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, const ch
 		float flOrigin[3], flPos[3],
 			flBuryDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flBuryDuration[ST_TankType(tank)] : g_flBuryDuration2[ST_TankType(tank)];
 		GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
-		flOrigin[2] = flOrigin[2] - flBuryHeight(tank);
+		flOrigin[2] -= flBuryHeight(tank);
 		SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
 		if (!bIsPlayerIncapacitated(survivor))
@@ -334,7 +335,7 @@ static void vStopBury(int survivor, int tank)
 
 	float flOrigin[3], flCurrentOrigin[3];
 	GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
-	flOrigin[2] = flOrigin[2] + flBuryHeight(tank);
+	flOrigin[2] += flBuryHeight(tank);
 	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
 	SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);

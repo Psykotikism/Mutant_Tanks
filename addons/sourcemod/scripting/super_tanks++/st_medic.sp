@@ -80,6 +80,7 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
@@ -187,6 +188,7 @@ static void vMedic(int tank)
 {
 	float flTankPos[3];
 	GetClientAbsOrigin(tank, flTankPos);
+
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
 		if (bIsSpecialInfected(iInfected, "234"))
