@@ -380,8 +380,8 @@ stock bool bIsPluginEnabled(ConVar gamemode, int mode, char[] enabled, char[] di
 	if (mode != 0)
 	{
 		g_iCurrentMode = 0;
-		int iGameMode = CreateEntityByName("info_gamemode");
 
+		int iGameMode = CreateEntityByName("info_gamemode");
 		if (bIsValidEntity(iGameMode))
 		{
 			DispatchSpawn(iGameMode);
