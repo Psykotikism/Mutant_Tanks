@@ -2691,25 +2691,30 @@ public Action tTimerRockThrow(Handle timer, int ref)
 
 public Action tTimerRegularWaves(Handle timer)
 {
-	int iRegularWave = !g_bGeneralConfig ? g_iRegularWave : g_iRegularWave2;
 	if (bIsFinaleMap() || g_iTankWave > 0)
 	{
 		return Plugin_Stop;
 	}
-	else if (iRegularWave == 0 || iGetTankCount() > 0)
+
+	int iRegularWave = !g_bGeneralConfig ? g_iRegularWave : g_iRegularWave2;
+	if (iRegularWave == 0 || iGetTankCount() >= iRegularAmount)
 	{
 		return Plugin_Continue;
 	}
 
 	int iRegularAmount = !g_bGeneralConfig ? g_iRegularAmount : g_iRegularAmount2;
-	for (int iAmount = 1; iAmount <= iRegularAmount; iAmount++)
+	for (int iAmount = 0; iAmount <= iRegularAmount; iAmount++)
 	{
-		for (int iTank = 1; iTank <= MaxClients; iTank++)
+		if (iGetTankCount() < iRegularAmount)
 		{
-			if (bIsValidClient(iTank, "24"))
+			for (int iTank = 1; iTank <= MaxClients; iTank++)
 			{
-				vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank auto");
-				break;
+				if (bIsValidClient(iTank, "24"))
+				{
+					vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank auto");
+
+					break;
+				}
 			}
 		}
 	}
@@ -2729,6 +2734,7 @@ public Action tTimerSpawnTanks(Handle timer, int wave)
 		if (bIsValidClient(iTank, "24"))
 		{
 			vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank auto");
+
 			break;
 		}
 	}

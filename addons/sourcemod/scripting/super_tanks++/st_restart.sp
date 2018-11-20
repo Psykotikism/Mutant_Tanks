@@ -294,6 +294,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 
 				GetClientAbsOrigin(iPlayer, flCurrentOrigin);
 				TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
+
 				break;
 			}
 		}

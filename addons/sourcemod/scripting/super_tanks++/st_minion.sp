@@ -253,6 +253,7 @@ public void ST_Ability(int tank)
 						if (bIsInfected(iPlayer, "24") && !bSpecialInfected[iPlayer])
 						{
 							iSelectedType = iPlayer;
+
 							break;
 						}
 					}

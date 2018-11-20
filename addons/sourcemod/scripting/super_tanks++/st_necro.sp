@@ -187,6 +187,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 		if (bIsSpecialInfected(iNecro, "24") && !bExists[iNecro])
 		{
 			iInfected = iNecro;
+
 			break;
 		}
 	}

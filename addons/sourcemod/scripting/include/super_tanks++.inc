@@ -23,7 +23,6 @@
 #define ST_TAG2 "\x04[ST++]\x01"
 #define ST_TAG3 "\x04[ST++]\x03"
 #define ST_TAG4 "\x04[ST++]\x05"
-
 #define ST_MAXTYPES 500
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
@@ -761,6 +760,7 @@ stock float flGetNearestSurvivor(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+
 				break;
 			}
 		}

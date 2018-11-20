@@ -255,6 +255,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			{
 				iNewTank = iRespawn;
 				g_iRespawnCount[iNewTank] = g_iRespawnCount[iTank];
+
 				break;
 			}
 		}

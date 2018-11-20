@@ -346,6 +346,7 @@ static void vStopBury(int survivor, int tank)
 		{
 			GetClientAbsOrigin(iPlayer, flCurrentOrigin);
 			TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
+
 			break;
 		}
 	}

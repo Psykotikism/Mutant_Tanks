@@ -241,6 +241,7 @@ public void ST_Ability(int tank)
 						if (ST_TankAllowed(iPlayer, "234") && !bTankBoss[iPlayer])
 						{
 							iSelectedType = iPlayer;
+
 							break;
 						}
 					}
