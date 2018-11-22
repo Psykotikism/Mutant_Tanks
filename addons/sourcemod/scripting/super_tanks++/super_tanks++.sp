@@ -2703,7 +2703,7 @@ public Action tTimerRegularWaves(Handle timer)
 		return Plugin_Continue;
 	}
 
-	for (int iAmount = 0; iAmount <= iRegularAmount; iAmount++)
+	for (int iAmount = 0; iAmount < iRegularAmount; iAmount++)
 	{
 		if (iGetTankCount() < iRegularAmount)
 		{
