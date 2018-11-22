@@ -2696,13 +2696,13 @@ public Action tTimerRegularWaves(Handle timer)
 		return Plugin_Stop;
 	}
 
-	int iRegularWave = !g_bGeneralConfig ? g_iRegularWave : g_iRegularWave2;
+	int iRegularWave = !g_bGeneralConfig ? g_iRegularWave : g_iRegularWave2,
+		iRegularAmount = !g_bGeneralConfig ? g_iRegularAmount : g_iRegularAmount2;
 	if (iRegularWave == 0 || iGetTankCount() >= iRegularAmount)
 	{
 		return Plugin_Continue;
 	}
 
-	int iRegularAmount = !g_bGeneralConfig ? g_iRegularAmount : g_iRegularAmount2;
 	for (int iAmount = 0; iAmount <= iRegularAmount; iAmount++)
 	{
 		if (iGetTankCount() < iRegularAmount)
