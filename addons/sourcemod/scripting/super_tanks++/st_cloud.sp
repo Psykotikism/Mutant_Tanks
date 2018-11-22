@@ -99,10 +99,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -114,7 +115,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloudMessage[iIndex] = kvSuperTanks.GetNum("Cloud Ability/Ability Message", 0);
 				g_iCloudMessage[iIndex] = iClamp(g_iCloudMessage[iIndex], 0, 1);
 				g_flCloudChance[iIndex] = kvSuperTanks.GetFloat("Cloud Ability/Cloud Chance", 33.3);
-				g_flCloudChance[iIndex] = flClamp(g_flCloudChance[iIndex], 0.1, 100.0);
+				g_flCloudChance[iIndex] = flClamp(g_flCloudChance[iIndex], 0.0, 100.0);
 				g_flCloudDamage[iIndex] = kvSuperTanks.GetFloat("Cloud Ability/Cloud Damage", 5.0);
 				g_flCloudDamage[iIndex] = flClamp(g_flCloudDamage[iIndex], 1.0, 9999999999.0);
 			}
@@ -127,7 +128,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloudMessage2[iIndex] = kvSuperTanks.GetNum("Cloud Ability/Ability Message", g_iCloudMessage[iIndex]);
 				g_iCloudMessage2[iIndex] = iClamp(g_iCloudMessage2[iIndex], 0, 1);
 				g_flCloudChance2[iIndex] = kvSuperTanks.GetFloat("Cloud Ability/Cloud Chance", g_flCloudChance[iIndex]);
-				g_flCloudChance2[iIndex] = flClamp(g_flCloudChance2[iIndex], 0.1, 100.0);
+				g_flCloudChance2[iIndex] = flClamp(g_flCloudChance2[iIndex], 0.0, 100.0);
 				g_flCloudDamage2[iIndex] = kvSuperTanks.GetFloat("Cloud Ability/Cloud Damage", g_flCloudDamage[iIndex]);
 				g_flCloudDamage2[iIndex] = flClamp(g_flCloudDamage2[iIndex], 1.0, 9999999999.0);
 			}
@@ -139,14 +140,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
-	if (iCloudAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bCloud[tank])
+	if (iCloudAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bCloud[tank])
 	{
 		g_bCloud[tank] = true;
 
@@ -156,16 +152,21 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Cloud", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Cloud", sTankName);
 		}
 	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	g_bCloud[tank] = false;
 }
 
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bCloud[iPlayer] = false;
 		}
@@ -185,14 +186,7 @@ static int iCloudMessage(int tank)
 public Action tTimerCloud(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bCloud[iTank])
-	{
-		g_bCloud[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iCloudAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iCloudAbility(iTank) == 0 || !g_bCloud[iTank])
 	{
 		g_bCloud[iTank] = false;
 
@@ -200,7 +194,7 @@ public Action tTimerCloud(Handle timer, int userid)
 		{
 			char sTankName[33];
 			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Cloud2", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Cloud2", sTankName);
 		}
 
 		return Plugin_Stop;
@@ -219,7 +213,7 @@ public Action tTimerCloud(Handle timer, int userid)
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor))
+		if (bIsSurvivor(iSurvivor, "234"))
 		{
 			float flSurvivorPos[3];
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -228,7 +222,7 @@ public Action tTimerCloud(Handle timer, int userid)
 			if (flDistance <= 200.0)
 			{
 				float flCloudDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_flCloudDamage[ST_TankType(iTank)] : g_flCloudDamage2[ST_TankType(iTank)];
-				SDKHooks_TakeDamage(iSurvivor, iTank, iTank, flCloudDamage);
+				vDamageEntity(iSurvivor, iTank, flCloudDamage, "65536");
 			}
 		}
 	}

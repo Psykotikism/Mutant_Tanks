@@ -83,7 +83,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -112,19 +112,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iPyroHitMode(attacker) == 0 || iPyroHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iPyroHitMode(attacker) == 0 || iPyroHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vPyroHit(victim, attacker, flPyroChance(attacker), iPyroHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim))
+		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled))
 		{
 			if ((iPyroHitMode(victim) == 0 || iPyroHitMode(victim) == 2) && bIsSurvivor(attacker) && StrEqual(sClassname, "weapon_melee"))
 			{
@@ -160,7 +160,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						{
 							char sTankName[33];
 							ST_TankName(victim, sTankName);
-							PrintToChatAll("%s %t", ST_TAG2, "Pyro2", sTankName);
+							ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro2", sTankName);
 						}
 					}
 				}
@@ -173,10 +173,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -187,12 +188,12 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], 0.1, 3.0);
 				g_iPyroAbility[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Enabled", 0);
 				g_iPyroAbility[iIndex] = iClamp(g_iPyroAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Pyro Ability/Ability Effect", g_sPyroEffect[iIndex], sizeof(g_sPyroEffect[]), "123");
+				kvSuperTanks.GetString("Pyro Ability/Ability Effect", g_sPyroEffect[iIndex], sizeof(g_sPyroEffect[]), "0");
 				kvSuperTanks.GetString("Pyro Ability/Ability Message", g_sPyroMessage[iIndex], sizeof(g_sPyroMessage[]), "0");
 				g_flPyroBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", 1.0);
 				g_flPyroBoost[iIndex] = flClamp(g_flPyroBoost[iIndex], 0.1, 3.0);
 				g_flPyroChance[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Chance", 33.3);
-				g_flPyroChance[iIndex] = flClamp(g_flPyroChance[iIndex], 0.1, 100.0);
+				g_flPyroChance[iIndex] = flClamp(g_flPyroChance[iIndex], 0.0, 100.0);
 				g_flPyroDuration[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Duration", 5.0);
 				g_flPyroDuration[iIndex] = flClamp(g_flPyroDuration[iIndex], 0.1, 9999999999.0);
 				g_iPyroHit[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Pyro Hit", 0);
@@ -204,7 +205,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPyroRange[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Range", 150.0);
 				g_flPyroRange[iIndex] = flClamp(g_flPyroRange[iIndex], 1.0, 9999999999.0);
 				g_flPyroRangeChance[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Range Chance", 15.0);
-				g_flPyroRangeChance[iIndex] = flClamp(g_flPyroRangeChance[iIndex], 0.1, 100.0);
+				g_flPyroRangeChance[iIndex] = flClamp(g_flPyroRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -219,7 +220,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPyroBoost2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", g_flPyroBoost[iIndex]);
 				g_flPyroBoost2[iIndex] = flClamp(g_flPyroBoost2[iIndex], 0.1, 3.0);
 				g_flPyroChance2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Chance", g_flPyroChance[iIndex]);
-				g_flPyroChance2[iIndex] = flClamp(g_flPyroChance2[iIndex], 0.1, 100.0);
+				g_flPyroChance2[iIndex] = flClamp(g_flPyroChance2[iIndex], 0.0, 100.0);
 				g_flPyroDuration2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Duration", g_flPyroDuration[iIndex]);
 				g_flPyroDuration2[iIndex] = flClamp(g_flPyroDuration2[iIndex], 0.1, 9999999999.0);
 				g_iPyroHit2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Pyro Hit", g_iPyroHit[iIndex]);
@@ -231,7 +232,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPyroRange2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Range", g_flPyroRange[iIndex]);
 				g_flPyroRange2[iIndex] = flClamp(g_flPyroRange2[iIndex], 1.0, 9999999999.0);
 				g_flPyroRangeChance2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Range Chance", g_flPyroRangeChance[iIndex]);
-				g_flPyroRangeChance2[iIndex] = flClamp(g_flPyroRangeChance2[iIndex], 0.1, 100.0);
+				g_flPyroRangeChance2[iIndex] = flClamp(g_flPyroRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -243,20 +244,18 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (g_bPyro[iPlayer])
+		if (bIsTank(iTank, "234") && g_bPyro[iTank])
 		{
-			ExtinguishEntity(iPlayer);
+			ExtinguishEntity(iTank);
 		}
 	}
-
-	vReset();
 }
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flPyroRange = !g_bTankConfig[ST_TankType(tank)] ? g_flPyroRange[ST_TankType(tank)] : g_flPyroRange2[ST_TankType(tank)],
 			flPyroRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flPyroRangeChance[ST_TankType(tank)] : g_flPyroRangeChance2[ST_TankType(tank)],
@@ -266,7 +265,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -279,6 +278,11 @@ public void ST_Ability(int tank)
 			}
 		}
 	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	g_bPyro[tank] = false;
 }
 
 static void vPyroHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
@@ -297,7 +301,7 @@ static void vPyroHit(int survivor, int tank, float chance, int enabled, const ch
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Pyro", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro", sTankName);
 		}
 	}
 }
@@ -306,7 +310,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bPyro[iPlayer] = false;
 		}
@@ -343,7 +347,7 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPyro[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bPyro[iTank] = false;
 
@@ -351,7 +355,7 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if ((iPyroAbility(iTank) != 2 && iPyroAbility(iTank) != 3) || !bIsPlayerBurning(iTank) || (flTime + flPyroDuration(iTank) < GetEngineTime()))
+	if ((iPyroAbility(iTank) != 2 && iPyroAbility(iTank) != 3) || !bIsPlayerBurning(iTank) || (flTime + flPyroDuration(iTank) < GetEngineTime()) || !g_bPyro[iTank])
 	{
 		g_bPyro[iTank] = false;
 
@@ -363,7 +367,7 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 		{
 			char sTankName[33];
 			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Pyro3", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro3", sTankName);
 		}
 
 		return Plugin_Stop;

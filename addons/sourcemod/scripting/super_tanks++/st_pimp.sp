@@ -38,7 +38,7 @@ char g_sPimpEffect[ST_MAXTYPES + 1][4], g_sPimpEffect2[ST_MAXTYPES + 1][4], g_sP
 
 float g_flPimpChance[ST_MAXTYPES + 1], g_flPimpChance2[ST_MAXTYPES + 1], g_flPimpInterval[ST_MAXTYPES + 1], g_flPimpInterval2[ST_MAXTYPES + 1], g_flPimpRange[ST_MAXTYPES + 1], g_flPimpRange2[ST_MAXTYPES + 1], g_flPimpRangeChance[ST_MAXTYPES + 1], g_flPimpRangeChance2[ST_MAXTYPES + 1];
 
-int g_iPimpAbility[ST_MAXTYPES + 1], g_iPimpAbility2[ST_MAXTYPES + 1], g_iPimpAmount[ST_MAXTYPES + 1], g_iPimpAmount2[ST_MAXTYPES + 1], g_iPimpCount[MAXPLAYERS + 1], g_iPimpDamage[ST_MAXTYPES + 1], g_iPimpDamage2[ST_MAXTYPES + 1], g_iPimpHit[ST_MAXTYPES + 1], g_iPimpHit2[ST_MAXTYPES + 1], g_iPimpHitMode[ST_MAXTYPES + 1], g_iPimpHitMode2[ST_MAXTYPES + 1];
+int g_iPimpAbility[ST_MAXTYPES + 1], g_iPimpAbility2[ST_MAXTYPES + 1], g_iPimpAmount[ST_MAXTYPES + 1], g_iPimpAmount2[ST_MAXTYPES + 1], g_iPimpCount[MAXPLAYERS + 1], g_iPimpDamage[ST_MAXTYPES + 1], g_iPimpDamage2[ST_MAXTYPES + 1], g_iPimpHit[ST_MAXTYPES + 1], g_iPimpHit2[ST_MAXTYPES + 1], g_iPimpHitMode[ST_MAXTYPES + 1], g_iPimpHitMode2[ST_MAXTYPES + 1], g_iPimpOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -83,7 +83,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -104,6 +104,7 @@ public void OnClientPutInServer(int client)
 
 	g_bPimp[client] = false;
 	g_iPimpCount[client] = 0;
+	g_iPimpOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -113,19 +114,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iPimpHitMode(attacker) == 0 || iPimpHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iPimpHitMode(attacker) == 0 || iPimpHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vPimpHit(victim, attacker, flPimpChance(attacker), iPimpHit(attacker), "1", "1");
 			}
 		}
-		else if ((iPimpHitMode(victim) == 0 || iPimpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iPimpHitMode(victim) == 0 || iPimpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -139,10 +140,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -151,12 +153,12 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iPimpAbility[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", 0);
 				g_iPimpAbility[iIndex] = iClamp(g_iPimpAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Pimp Ability/Ability Effect", g_sPimpEffect[iIndex], sizeof(g_sPimpEffect[]), "123");
+				kvSuperTanks.GetString("Pimp Ability/Ability Effect", g_sPimpEffect[iIndex], sizeof(g_sPimpEffect[]), "0");
 				kvSuperTanks.GetString("Pimp Ability/Ability Message", g_sPimpMessage[iIndex], sizeof(g_sPimpMessage[]), "0");
 				g_iPimpAmount[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", 5);
 				g_iPimpAmount[iIndex] = iClamp(g_iPimpAmount[iIndex], 1, 9999999999);
 				g_flPimpChance[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Chance", 33.3);
-				g_flPimpChance[iIndex] = flClamp(g_flPimpChance[iIndex], 0.1, 100.0);
+				g_flPimpChance[iIndex] = flClamp(g_flPimpChance[iIndex], 0.0, 100.0);
 				g_iPimpDamage[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Damage", 1);
 				g_iPimpDamage[iIndex] = iClamp(g_iPimpDamage[iIndex], 1, 9999999999);
 				g_iPimpHit[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit", 0);
@@ -168,7 +170,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPimpRange[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range", 150.0);
 				g_flPimpRange[iIndex] = flClamp(g_flPimpRange[iIndex], 1.0, 9999999999.0);
 				g_flPimpRangeChance[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range Chance", 15.0);
-				g_flPimpRangeChance[iIndex] = flClamp(g_flPimpRangeChance[iIndex], 0.1, 100.0);
+				g_flPimpRangeChance[iIndex] = flClamp(g_flPimpRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -181,7 +183,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iPimpAmount2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", g_iPimpAmount[iIndex]);
 				g_iPimpAmount2[iIndex] = iClamp(g_iPimpAmount2[iIndex], 1, 9999999999);
 				g_flPimpChance2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Chance", g_flPimpChance[iIndex]);
-				g_flPimpChance2[iIndex] = flClamp(g_flPimpChance2[iIndex], 0.1, 100.0);
+				g_flPimpChance2[iIndex] = flClamp(g_flPimpChance2[iIndex], 0.0, 100.0);
 				g_iPimpDamage2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Damage", g_iPimpDamage[iIndex]);
 				g_iPimpDamage2[iIndex] = iClamp(g_iPimpDamage2[iIndex], 1, 9999999999);
 				g_iPimpHit2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit", g_iPimpHit[iIndex]);
@@ -193,7 +195,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flPimpRange2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range", g_flPimpRange[iIndex]);
 				g_flPimpRange2[iIndex] = flClamp(g_flPimpRange2[iIndex], 1.0, 9999999999.0);
 				g_flPimpRangeChance2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range Chance", g_flPimpRangeChance[iIndex]);
-				g_flPimpRangeChance2[iIndex] = flClamp(g_flPimpRangeChance2[iIndex], 0.1, 100.0);
+				g_flPimpRangeChance2[iIndex] = flClamp(g_flPimpRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -203,14 +205,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iPimpAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iPimpAbility[ST_TankType(tank)] : g_iPimpAbility2[ST_TankType(tank)];
 
@@ -222,7 +219,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -237,11 +234,28 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_ChangeType(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, "24") && g_bPimp[iSurvivor] && g_iPimpOwner[iSurvivor] == tank)
+			{
+				g_bPimp[iSurvivor] = false;
+				g_iPimpCount[iSurvivor] = 0;
+				g_iPimpOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vPimpHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bPimp[survivor])
 	{
 		g_bPimp[survivor] = true;
+		g_iPimpOwner[survivor] = tank;
 
 		float flPimpInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flPimpInterval[ST_TankType(tank)] : g_flPimpInterval2[ST_TankType(tank)];
 		DataPack dpPimp;
@@ -261,7 +275,7 @@ static void vPimpHit(int survivor, int tank, float chance, int enabled, const ch
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Pimp", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Pimp", sTankName, survivor);
 		}
 	}
 }
@@ -270,10 +284,11 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bPimp[iPlayer] = false;
 			g_iPimpCount[iPlayer] = 0;
+			g_iPimpOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -282,12 +297,13 @@ static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bPimp[survivor] = false;
 	g_iPimpCount[survivor] = 0;
+	g_iPimpOwner[survivor] = 0;
 
 	char sPimpMessage[3];
 	sPimpMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sPimpMessage[ST_TankType(tank)] : g_sPimpMessage2[ST_TankType(tank)];
 	if (StrContains(sPimpMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Pimp2", survivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Pimp2", survivor);
 	}
 }
 
@@ -311,9 +327,11 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bPimp[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bPimp[iSurvivor] = false;
+		g_iPimpCount[iSurvivor] = 0;
+		g_iPimpOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -321,7 +339,7 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPimp[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

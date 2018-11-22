@@ -127,7 +127,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -144,19 +144,19 @@ public void OnClientPutInServer(int client)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iAcidHitMode(attacker) == 0 || iAcidHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iAcidHitMode(attacker) == 0 || iAcidHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vAcidHit(victim, attacker, flAcidChance(attacker), iAcidHit(attacker), "1", "1");
 			}
 		}
-		else if ((iAcidHitMode(victim) == 0 || iAcidHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iAcidHitMode(victim) == 0 || iAcidHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -170,10 +170,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -182,10 +183,10 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iAcidAbility[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", 0);
 				g_iAcidAbility[iIndex] = iClamp(g_iAcidAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Acid Ability/Ability Effect", g_sAcidEffect[iIndex], sizeof(g_sAcidEffect[]), "123");
+				kvSuperTanks.GetString("Acid Ability/Ability Effect", g_sAcidEffect[iIndex], sizeof(g_sAcidEffect[]), "0");
 				kvSuperTanks.GetString("Acid Ability/Ability Message", g_sAcidMessage[iIndex], sizeof(g_sAcidMessage[]), "0");
 				g_flAcidChance[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Chance", 33.3);
-				g_flAcidChance[iIndex] = flClamp(g_flAcidChance[iIndex], 0.1, 100.0);
+				g_flAcidChance[iIndex] = flClamp(g_flAcidChance[iIndex], 0.0, 100.0);
 				g_iAcidHit[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", 0);
 				g_iAcidHit[iIndex] = iClamp(g_iAcidHit[iIndex], 0, 1);
 				g_iAcidHitMode[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit Mode", 0);
@@ -193,7 +194,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flAcidRange[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", 150.0);
 				g_flAcidRange[iIndex] = flClamp(g_flAcidRange[iIndex], 1.0, 9999999999.0);
 				g_flAcidRangeChance[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range Chance", 15.0);
-				g_flAcidRangeChance[iIndex] = flClamp(g_flAcidRangeChance[iIndex], 0.1, 100.0);
+				g_flAcidRangeChance[iIndex] = flClamp(g_flAcidRangeChance[iIndex], 0.0, 100.0);
 				g_iAcidRock[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", 0);
 				g_iAcidRock[iIndex] = iClamp(g_iAcidRock[iIndex], 0, 1);
 			}
@@ -206,7 +207,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Acid Ability/Ability Effect", g_sAcidEffect2[iIndex], sizeof(g_sAcidEffect2[]), g_sAcidEffect[iIndex]);
 				kvSuperTanks.GetString("Acid Ability/Ability Message", g_sAcidMessage2[iIndex], sizeof(g_sAcidMessage2[]), g_sAcidMessage[iIndex]);
 				g_flAcidChance2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Chance", g_flAcidChance[iIndex]);
-				g_flAcidChance2[iIndex] = flClamp(g_flAcidChance2[iIndex], 0.1, 100.0);
+				g_flAcidChance2[iIndex] = flClamp(g_flAcidChance2[iIndex], 0.0, 100.0);
 				g_iAcidHit2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", g_iAcidHit[iIndex]);
 				g_iAcidHit2[iIndex] = iClamp(g_iAcidHit2[iIndex], 0, 1);
 				g_iAcidHitMode2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit Mode", g_iAcidHitMode[iIndex]);
@@ -214,7 +215,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flAcidRange2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", g_flAcidRange[iIndex]);
 				g_flAcidRange2[iIndex] = flClamp(g_flAcidRange2[iIndex], 1.0, 9999999999.0);
 				g_flAcidRangeChance2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range Chance", g_flAcidRangeChance[iIndex]);
-				g_flAcidRangeChance2[iIndex] = flClamp(g_flAcidRangeChance2[iIndex], 0.1, 100.0);
+				g_flAcidRangeChance2[iIndex] = flClamp(g_flAcidRangeChance2[iIndex], 0.0, 100.0);
 				g_iAcidRock2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", g_iAcidRock[iIndex]);
 				g_iAcidRock2[iIndex] = iClamp(g_iAcidRock2[iIndex], 0, 1);
 			}
@@ -226,12 +227,12 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iAcidAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsValidGame())
+		if (iAcidAbility(iTank) == 1 && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsValidGame())
 		{
 			vAcid(iTank, iTank);
 		}
@@ -240,7 +241,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flAcidRange = !g_bTankConfig[ST_TankType(tank)] ? g_flAcidRange[ST_TankType(tank)] : g_flAcidRange2[ST_TankType(tank)],
 			flAcidRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flAcidRangeChance[ST_TankType(tank)] : g_flAcidRangeChance2[ST_TankType(tank)],
@@ -250,7 +251,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -265,7 +266,7 @@ public void ST_Ability(int tank)
 	}
 }
 
-public void ST_BossStage(int tank)
+public void ST_ChangeType(int tank)
 {
 	if (iAcidAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && bIsValidGame())
 	{
@@ -276,7 +277,7 @@ public void ST_BossStage(int tank)
 public void ST_RockBreak(int tank, int rock)
 {
 	int iAcidRock = !g_bTankConfig[ST_TankType(tank)] ? g_iAcidRock[ST_TankType(tank)] : g_iAcidRock2[ST_TankType(tank)];
-	if (iAcidRock == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && bIsValidGame())
+	if (iAcidRock == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && bIsValidGame())
 	{
 		float flOrigin[3], flAngles[3];
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
@@ -290,7 +291,7 @@ public void ST_RockBreak(int tank, int rock)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Acid2", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Acid2", sTankName);
 		}
 	}
 }
@@ -320,7 +321,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, const ch
 
 			if (StrContains(sAcidMessage, message) != -1)
 			{
-				PrintToChatAll("%s %t", ST_TAG2, "Acid", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Acid", sTankName, survivor);
 			}
 		}
 		else
@@ -329,7 +330,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, const ch
 
 			if (StrContains(sAcidMessage, message) != -1)
 			{
-				PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
 			}
 		}
 

@@ -80,10 +80,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -95,8 +96,8 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iItemMessage[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Message", 0);
 				g_iItemMessage[iIndex] = iClamp(g_iItemMessage[iIndex], 0, 1);
 				g_flItemChance[iIndex] = kvSuperTanks.GetFloat("Item Ability/Item Chance", 33.3);
-				g_flItemChance[iIndex] = flClamp(g_flItemChance[iIndex], 0.1, 100.0);
-				kvSuperTanks.GetString("Item Ability/Item Loadout", g_sItemLoadout[iIndex], sizeof(g_sItemLoadout[]), "rifle,pistol,first_aid_kit,pain_pills");
+				g_flItemChance[iIndex] = flClamp(g_flItemChance[iIndex], 0.0, 100.0);
+				kvSuperTanks.GetString("Item Ability/Item Loadout", g_sItemLoadout[iIndex], sizeof(g_sItemLoadout[]), "rifle, pistol, first_aid_kit, pain_pills");
 				g_iItemMode[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Mode", 0);
 				g_iItemMode[iIndex] = iClamp(g_iItemMode[iIndex], 0, 1);
 			}
@@ -109,7 +110,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iItemMessage2[iIndex] = kvSuperTanks.GetNum("Item Ability/Ability Message", g_iItemMessage[iIndex]);
 				g_iItemMessage2[iIndex] = iClamp(g_iItemMessage2[iIndex], 0, 1);
 				g_flItemChance2[iIndex] = kvSuperTanks.GetFloat("Item Ability/Item Chance", g_flItemChance[iIndex]);
-				g_flItemChance2[iIndex] = flClamp(g_flItemChance2[iIndex], 0.1, 100.0);
+				g_flItemChance2[iIndex] = flClamp(g_flItemChance2[iIndex], 0.0, 100.0);
 				kvSuperTanks.GetString("Item Ability/Item Loadout", g_sItemLoadout2[iIndex], sizeof(g_sItemLoadout2[]), g_sItemLoadout[iIndex]);
 				g_iItemMode2[iIndex] = kvSuperTanks.GetNum("Item Ability/Item Mode", g_iItemMode[iIndex]);
 				g_iItemMode2[iIndex] = iClamp(g_iItemMode2[iIndex], 0, 1);
@@ -122,7 +123,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
@@ -133,7 +134,7 @@ public void ST_Event(Event event, const char[] name)
 
 		float flItemChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flItemChance[ST_TankType(iTank)] : g_flItemChance2[ST_TankType(iTank)];
 
-		if (iItemAbility == 1 && GetRandomFloat(0.1, 100.0) <= flItemChance && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iItemAbility == 1 && GetRandomFloat(0.1, 100.0) <= flItemChance && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			char sItems[5][64], sItemLoadout[325];
 			sItemLoadout = !g_bTankConfig[ST_TankType(iTank)] ? g_sItemLoadout[ST_TankType(iTank)] : g_sItemLoadout2[ST_TankType(iTank)];
@@ -142,7 +143,7 @@ public void ST_Event(Event event, const char[] name)
 
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				if (bIsSurvivor(iSurvivor))
+				if (bIsSurvivor(iSurvivor, "234"))
 				{
 					switch (iItemMode)
 					{
@@ -175,7 +176,7 @@ public void ST_Event(Event event, const char[] name)
 			{
 				char sTankName[33];
 				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Item", sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Item", sTankName);
 			}
 		}
 	}

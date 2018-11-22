@@ -114,7 +114,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -144,19 +144,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iIdleHitMode(attacker) == 0 || iIdleHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iIdleHitMode(attacker) == 0 || iIdleHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vIdleHit(victim, attacker, flIdleChance(attacker), iIdleHit(attacker), "1", "1");
 			}
 		}
-		else if ((iIdleHitMode(victim) == 0 || iIdleHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iIdleHitMode(victim) == 0 || iIdleHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -170,10 +170,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -182,10 +183,10 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iIdleAbility[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Enabled", 0);
 				g_iIdleAbility[iIndex] = iClamp(g_iIdleAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect[iIndex], sizeof(g_sIdleEffect[]), "123");
+				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect[iIndex], sizeof(g_sIdleEffect[]), "0");
 				kvSuperTanks.GetString("Idle Ability/Ability Message", g_sIdleMessage[iIndex], sizeof(g_sIdleMessage[]), "0");
 				g_flIdleChance[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", 33.3);
-				g_flIdleChance[iIndex] = flClamp(g_flIdleChance[iIndex], 0.1, 100.0);
+				g_flIdleChance[iIndex] = flClamp(g_flIdleChance[iIndex], 0.0, 100.0);
 				g_iIdleHit[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", 0);
 				g_iIdleHit[iIndex] = iClamp(g_iIdleHit[iIndex], 0, 1);
 				g_iIdleHitMode[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit Mode", 0);
@@ -193,7 +194,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flIdleRange[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", 150.0);
 				g_flIdleRange[iIndex] = flClamp(g_flIdleRange[iIndex], 1.0, 9999999999.0);
 				g_flIdleRangeChance[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range Chance", 15.0);
-				g_flIdleRangeChance[iIndex] = flClamp(g_flIdleRangeChance[iIndex], 0.1, 100.0);
+				g_flIdleRangeChance[iIndex] = flClamp(g_flIdleRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -204,7 +205,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Idle Ability/Ability Effect", g_sIdleEffect2[iIndex], sizeof(g_sIdleEffect2[]), g_sIdleEffect[iIndex]);
 				kvSuperTanks.GetString("Idle Ability/Ability Message", g_sIdleMessage2[iIndex], sizeof(g_sIdleMessage2[]), g_sIdleMessage[iIndex]);
 				g_flIdleChance2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", g_flIdleChance[iIndex]);
-				g_flIdleChance2[iIndex] = flClamp(g_flIdleChance2[iIndex], 0.1, 100.0);
+				g_flIdleChance2[iIndex] = flClamp(g_flIdleChance2[iIndex], 0.0, 100.0);
 				g_iIdleHit2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", g_iIdleHit[iIndex]);
 				g_iIdleHit2[iIndex] = iClamp(g_iIdleHit2[iIndex], 0, 1);
 				g_iIdleHitMode2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit Mode", g_iIdleHitMode[iIndex]);
@@ -212,7 +213,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flIdleRange2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", g_flIdleRange[iIndex]);
 				g_flIdleRange2[iIndex] = flClamp(g_flIdleRange2[iIndex], 1.0, 9999999999.0);
 				g_flIdleRangeChance2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range Chance", g_flIdleRangeChance[iIndex]);
-				g_flIdleRangeChance2[iIndex] = flClamp(g_flIdleRangeChance2[iIndex], 0.1, 100.0);
+				g_flIdleRangeChance2[iIndex] = flClamp(g_flIdleRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -222,12 +223,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_afk"))
 	{
@@ -255,7 +251,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iIdleAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iIdleAbility[ST_TankType(tank)] : g_iIdleAbility2[ST_TankType(tank)];
 
@@ -267,7 +263,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -310,7 +306,7 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, const ch
 			{
 				char sTankName[33];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Idle", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Idle", sTankName, survivor);
 			}
 		}
 	}
@@ -320,7 +316,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bIdle[iPlayer] = false;
 			g_bIdled[iPlayer] = false;
@@ -348,12 +344,12 @@ public Action tTimerIdleFix(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell()), iBot = GetClientOfUserId(pack.ReadCell());
-	if (!bIsValidClient(iSurvivor) || !IsPlayerAlive(iSurvivor) || !bIsValidClient(iBot) || !IsPlayerAlive(iSurvivor) || !g_bIdled[iSurvivor])
+	if (!bIsValidClient(iSurvivor, "0234") || !bIsValidClient(iBot, "0234") || !g_bIdled[iSurvivor])
 	{
 		return Plugin_Stop;
 	}
 
-	if (GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor) || IsFakeClient(iSurvivor))
+	if (!bIsValidClient(iSurvivor, "5") || GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor))
 	{
 		g_bIdled[iSurvivor] = false;
 	}

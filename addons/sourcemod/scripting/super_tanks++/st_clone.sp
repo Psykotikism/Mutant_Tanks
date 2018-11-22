@@ -46,6 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 
 	CreateNative("ST_CloneAllowed", aNative_CloneAllowed);
+
 	RegPluginLibrary("st_clone");
 
 	return APLRes_Success;
@@ -55,7 +56,7 @@ public any aNative_CloneAllowed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	bool bCloneInstalled = GetNativeCell(2);
-	if (ST_TankAllowed(iTank) && bIsCloneAllowed(iTank, bCloneInstalled))
+	if (ST_TankAllowed(iTank, "024") && bIsCloneAllowed(iTank, bCloneInstalled))
 	{
 		return true;
 	}
@@ -89,10 +90,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -106,7 +108,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloneAmount[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Amount", 2);
 				g_iCloneAmount[iIndex] = iClamp(g_iCloneAmount[iIndex], 1, 25);
 				g_flCloneChance[iIndex] = kvSuperTanks.GetFloat("Clone Ability/Clone Chance", 33.3);
-				g_flCloneChance[iIndex] = flClamp(g_flCloneChance[iIndex], 0.1, 100.0);
+				g_flCloneChance[iIndex] = flClamp(g_flCloneChance[iIndex], 0.0, 100.0);
 				g_iCloneHealth[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", 1000);
 				g_iCloneHealth[iIndex] = iClamp(g_iCloneHealth[iIndex], 1, ST_MAXHEALTH);
 				g_iCloneMode[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", 0);
@@ -125,7 +127,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iCloneAmount2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Amount", g_iCloneAmount[iIndex]);
 				g_iCloneAmount2[iIndex] = iClamp(g_iCloneAmount2[iIndex], 1, 25);
 				g_flCloneChance2[iIndex] = kvSuperTanks.GetFloat("Clone Ability/Clone Chance", g_flCloneChance[iIndex]);
-				g_flCloneChance2[iIndex] = flClamp(g_flCloneChance2[iIndex], 0.1, 100.0);
+				g_flCloneChance2[iIndex] = flClamp(g_flCloneChance2[iIndex], 0.0, 100.0);
 				g_iCloneHealth2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", g_iCloneHealth[iIndex]);
 				g_iCloneHealth2[iIndex] = iClamp(g_iCloneHealth2[iIndex], 1, ST_MAXHEALTH);
 				g_iCloneMode2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", g_iCloneMode[iIndex]);
@@ -143,21 +145,21 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	for (int iClone = 1; iClone <= MaxClients; iClone++)
 	{
-		if (g_bCloned[iPlayer])
+		if (bIsTank(iClone, "234") && g_bCloned[iClone])
 		{
-			IsFakeClient(iPlayer) ? KickClient(iPlayer) : ForcePlayerSuicide(iPlayer);
+			!bIsValidClient(iClone, "5") ? KickClient(iClone) : ForcePlayerSuicide(iClone);
 		}
 	}
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iCloneAbility(iTank) == 1 && ST_TankAllowed(iTank))
+		if (iCloneAbility(iTank) == 1 && ST_TankAllowed(iTank, "024"))
 		{
 			g_iCloneCount[iTank] = 0;
 
@@ -165,7 +167,7 @@ public void ST_Event(Event event, const char[] name)
 			{
 				for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 				{
-					if (g_iCloneOwner[iTank] == iOwner && ST_TankAllowed(iOwner))
+					if (g_iCloneOwner[iTank] == iOwner && ST_TankAllowed(iOwner, "24"))
 					{
 						int iCloneReplace = !g_bTankConfig[ST_TankType(iOwner)] ? g_iCloneReplace[ST_TankType(iOwner)] : g_iCloneReplace2[ST_TankType(iOwner)];
 						if (iCloneReplace == 1)
@@ -193,7 +195,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_Ability(int tank)
 {
 	float flCloneChance = !g_bTankConfig[ST_TankType(tank)] ? g_flCloneChance[ST_TankType(tank)] : g_flCloneChance2[ST_TankType(tank)];
-	if (iCloneAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flCloneChance && ST_TankAllowed(tank) && IsPlayerAlive(tank) && !g_bCloned[tank])
+	if (iCloneAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flCloneChance && ST_TankAllowed(tank) && !g_bCloned[tank])
 	{
 		int iCloneAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneAmount[ST_TankType(tank)] : g_iCloneAmount2[ST_TankType(tank)],
 			iCloneMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneMessage[ST_TankType(tank)] : g_iCloneMessage2[ST_TankType(tank)];
@@ -225,7 +227,7 @@ public void ST_Ability(int tank)
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						bTankBoss[iPlayer] = false;
-						if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer))
+						if (ST_TankAllowed(iPlayer, "234"))
 						{
 							bTankBoss[iPlayer] = true;
 						}
@@ -236,9 +238,10 @@ public void ST_Ability(int tank)
 					int iSelectedType;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (ST_TankAllowed(iPlayer) && IsPlayerAlive(iPlayer) && !bTankBoss[iPlayer])
+						if (ST_TankAllowed(iPlayer, "234") && !bTankBoss[iPlayer])
 						{
 							iSelectedType = iPlayer;
+
 							break;
 						}
 					}
@@ -260,7 +263,7 @@ public void ST_Ability(int tank)
 						{
 							char sTankName[33];
 							ST_TankName(tank, sTankName);
-							PrintToChatAll("%s %t", ST_TAG2, "Clone", sTankName);
+							ST_PrintToChatAll("%s %t", ST_TAG2, "Clone", sTankName);
 						}
 					}
 				}
@@ -271,20 +274,11 @@ public void ST_Ability(int tank)
 	}
 }
 
-public void ST_BossStage(int tank)
+public void ST_ChangeType(int tank)
 {
 	if (iCloneAbility(tank) == 1 && ST_TankAllowed(tank) && !g_bCloned[tank])
 	{
 		g_iCloneCount[tank] = 0;
-
-		for (int iClone = 1; iClone <= MaxClients; iClone++)
-		{
-			if (bIsTank(iClone))
-			{
-				g_bCloned[iClone] = false;
-				g_iCloneOwner[iClone] = 0;
-			}
-		}
 	}
 }
 
@@ -292,7 +286,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bCloned[iPlayer] = false;
 			g_iCloneCount[iPlayer] = 0;

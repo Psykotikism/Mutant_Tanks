@@ -40,7 +40,7 @@ char g_sIceEffect[ST_MAXTYPES + 1][4], g_sIceEffect2[ST_MAXTYPES + 1][4], g_sIce
 
 float g_flIceChance[ST_MAXTYPES + 1], g_flIceChance2[ST_MAXTYPES + 1], g_flIceDuration[ST_MAXTYPES + 1], g_flIceDuration2[ST_MAXTYPES + 1], g_flIceRange[ST_MAXTYPES + 1], g_flIceRange2[ST_MAXTYPES + 1], g_flIceRangeChance[ST_MAXTYPES + 1], g_flIceRangeChance2[ST_MAXTYPES + 1];
 
-int g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceHitMode2[ST_MAXTYPES + 1];
+int g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceHitMode2[ST_MAXTYPES + 1], g_iIceOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -85,7 +85,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -107,6 +107,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bIce[client] = false;
+	g_iIceOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -116,19 +117,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iIceHitMode(attacker) == 0 || iIceHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iIceHitMode(attacker) == 0 || iIceHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vIceHit(victim, attacker, flIceChance(attacker), iIceHit(attacker), "1", "1");
 			}
 		}
-		else if ((iIceHitMode(victim) == 0 || iIceHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iIceHitMode(victim) == 0 || iIceHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -142,10 +143,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -154,10 +156,10 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iIceAbility[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", 0);
 				g_iIceAbility[iIndex] = iClamp(g_iIceAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect[iIndex], sizeof(g_sIceEffect[]), "123");
+				kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect[iIndex], sizeof(g_sIceEffect[]), "0");
 				kvSuperTanks.GetString("Ice Ability/Ability Message", g_sIceMessage[iIndex], sizeof(g_sIceMessage[]), "0");
 				g_flIceChance[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Chance", 33.3);
-				g_flIceChance[iIndex] = flClamp(g_flIceChance[iIndex], 0.1, 100.0);
+				g_flIceChance[iIndex] = flClamp(g_flIceChance[iIndex], 0.0, 100.0);
 				g_flIceDuration[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", 5.0);
 				g_flIceDuration[iIndex] = flClamp(g_flIceDuration[iIndex], 0.1, 9999999999.0);
 				g_iIceHit[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Hit", 0);
@@ -167,7 +169,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flIceRange[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range", 150.0);
 				g_flIceRange[iIndex] = flClamp(g_flIceRange[iIndex], 1.0, 9999999999.0);
 				g_flIceRangeChance[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range Chance", 15.0);
-				g_flIceRangeChance[iIndex] = flClamp(g_flIceRangeChance[iIndex], 0.1, 100.0);
+				g_flIceRangeChance[iIndex] = flClamp(g_flIceRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -178,7 +180,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect2[iIndex], sizeof(g_sIceEffect2[]), g_sIceEffect[iIndex]);
 				kvSuperTanks.GetString("Ice Ability/Ability Message", g_sIceMessage2[iIndex], sizeof(g_sIceMessage2[]), g_sIceMessage[iIndex]);
 				g_flIceChance2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Chance", g_flIceChance[iIndex]);
-				g_flIceChance2[iIndex] = flClamp(g_flIceChance2[iIndex], 0.1, 100.0);
+				g_flIceChance2[iIndex] = flClamp(g_flIceChance2[iIndex], 0.0, 100.0);
 				g_flIceDuration2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", g_flIceDuration[iIndex]);
 				g_flIceDuration2[iIndex] = flClamp(g_flIceDuration2[iIndex], 0.1, 9999999999.0);
 				g_iIceHit2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Hit", g_iIceHit[iIndex]);
@@ -188,7 +190,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flIceRange2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range", g_flIceRange[iIndex]);
 				g_flIceRange2[iIndex] = flClamp(g_flIceRange2[iIndex], 1.0, 9999999999.0);
 				g_flIceRangeChance2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range Chance", g_flIceRangeChance[iIndex]);
-				g_flIceRangeChance2[iIndex] = flClamp(g_flIceRangeChance2[iIndex], 0.1, 100.0);
+				g_flIceRangeChance2[iIndex] = flClamp(g_flIceRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -200,23 +202,21 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsTank(iTank, "234"))
 		{
-			vRemoveIce(iPlayer);
+			vRemoveIce(iTank);
 		}
 	}
-
-	vReset();
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveIce(iTank);
 		}
@@ -225,7 +225,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flIceRange = !g_bTankConfig[ST_TankType(tank)] ? g_flIceRange[ST_TankType(tank)] : g_flIceRange2[ST_TankType(tank)],
 			flIceRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flIceRangeChance[ST_TankType(tank)] : g_flIceRangeChance2[ST_TankType(tank)],
@@ -235,7 +235,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -250,9 +250,9 @@ public void ST_Ability(int tank)
 	}
 }
 
-public void ST_BossStage(int tank)
+public void ST_ChangeType(int tank)
 {
-	if (iIceAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveIce(tank);
 	}
@@ -263,6 +263,7 @@ static void vIceHit(int survivor, int tank, float chance, int enabled, const cha
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bIce[survivor])
 	{
 		g_bIce[survivor] = true;
+		g_iIceOwner[survivor] = tank;
 
 		float flPos[3];
 		GetClientEyePosition(survivor, flPos);
@@ -292,7 +293,7 @@ static void vIceHit(int survivor, int tank, float chance, int enabled, const cha
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Ice", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Ice", sTankName, survivor);
 		}
 	}
 }
@@ -301,13 +302,9 @@ static void vRemoveIce(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bIce[iSurvivor])
+		if (bIsSurvivor(iSurvivor, "234") && g_bIce[iSurvivor] && g_iIceOwner[iSurvivor] == tank)
 		{
-			DataPack dpStopIce;
-			CreateDataTimer(0.1, tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopIce.WriteCell(GetClientUserId(iSurvivor));
-			dpStopIce.WriteCell(GetClientUserId(tank));
-			dpStopIce.WriteString("0");
+			vStopIce(iSurvivor);
 		}
 	}
 }
@@ -316,9 +313,10 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bIce[iPlayer] = false;
+			g_iIceOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -326,6 +324,7 @@ static void vReset()
 static void vStopIce(int survivor)
 {
 	g_bIce[survivor] = false;
+	g_iIceOwner[survivor] = 0;
 
 	float flPos[3];
 	GetClientEyePosition(survivor, flPos);
@@ -368,12 +367,13 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bIce[iSurvivor] = false;
+		g_iIceOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bIce[iSurvivor])
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bIce[iSurvivor])
 	{
 		vStopIce(iSurvivor);
 
@@ -387,7 +387,7 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 	pack.ReadString(sMessage, sizeof(sMessage));
 	if (StrContains(sIceMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Ice2", iSurvivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Ice2", iSurvivor);
 	}
 
 	return Plugin_Continue;

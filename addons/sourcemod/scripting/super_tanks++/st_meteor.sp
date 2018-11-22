@@ -38,7 +38,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bMeteor[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80];
+char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13];
 
 float g_flMeteorChance[ST_MAXTYPES + 1], g_flMeteorChance2[ST_MAXTYPES + 1], g_flMeteorDamage[ST_MAXTYPES + 1], g_flMeteorDamage2[ST_MAXTYPES + 1];
 
@@ -104,23 +104,23 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
 				g_bTankConfig[iIndex] = false;
 
-				kvSuperTanks.GetString("Props/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255");
 				g_iMeteorAbility[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", 0);
 				g_iMeteorAbility[iIndex] = iClamp(g_iMeteorAbility[iIndex], 0, 1);
 				g_iMeteorMessage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", 0);
 				g_iMeteorMessage[iIndex] = iClamp(g_iMeteorMessage[iIndex], 0, 1);
 				g_flMeteorChance[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Chance", 33.3);
-				g_flMeteorChance[iIndex] = flClamp(g_flMeteorChance[iIndex], 0.1, 100.0);
+				g_flMeteorChance[iIndex] = flClamp(g_flMeteorChance[iIndex], 0.0, 100.0);
 				g_flMeteorDamage[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", 5.0);
 				g_flMeteorDamage[iIndex] = flClamp(g_flMeteorDamage[iIndex], 1.0, 9999999999.0);
 				g_iMeteorMode[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Mode", 0);
@@ -131,13 +131,12 @@ public void ST_Configs(const char[] savepath, bool main)
 			{
 				g_bTankConfig[iIndex] = true;
 
-				kvSuperTanks.GetString("Props/Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]);
 				g_iMeteorAbility2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", g_iMeteorAbility[iIndex]);
 				g_iMeteorAbility2[iIndex] = iClamp(g_iMeteorAbility2[iIndex], 0, 1);
 				g_iMeteorMessage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", g_iMeteorMessage[iIndex]);
 				g_iMeteorMessage2[iIndex] = iClamp(g_iMeteorMessage2[iIndex], 0, 1);
 				g_flMeteorChance2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Chance", g_flMeteorChance[iIndex]);
-				g_flMeteorChance2[iIndex] = flClamp(g_flMeteorChance2[iIndex], 0.1, 100.0);
+				g_flMeteorChance2[iIndex] = flClamp(g_flMeteorChance2[iIndex], 0.0, 100.0);
 				g_flMeteorDamage2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", g_flMeteorDamage[iIndex]);
 				g_flMeteorDamage2[iIndex] = flClamp(g_flMeteorDamage2[iIndex], 1.0, 9999999999.0);
 				g_iMeteorMode2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Mode", g_iMeteorMode[iIndex]);
@@ -152,15 +151,10 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	float flMeteorChance = !g_bTankConfig[ST_TankType(tank)] ? g_flMeteorChance[ST_TankType(tank)] : g_flMeteorChance2[ST_TankType(tank)];
-	if (iMeteorAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMeteorChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bMeteor[tank])
+	if (iMeteorAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMeteorChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bMeteor[tank])
 	{
 		g_bMeteor[tank] = true;
 
@@ -180,14 +174,19 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Meteor", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Meteor", sTankName);
 		}
 	}
 }
 
+public void ST_ChangeType(int tank)
+{
+	g_bMeteor[tank] = false;
+}
+
 static void vMeteor(int tank, int rock)
 {
-	if (!ST_TankAllowed(tank) || !IsPlayerAlive(tank) || !ST_CloneAllowed(tank, g_bCloneInstalled) || !bIsValidEntity(rock))
+	if (!ST_TankAllowed(tank) || !ST_CloneAllowed(tank, g_bCloneInstalled) || !bIsValidEntity(rock))
 	{
 		return;
 	}
@@ -221,7 +220,7 @@ static void vMeteor(int tank, int rock)
 
 				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
-					if (bIsSurvivor(iSurvivor))
+					if (bIsSurvivor(iSurvivor, "234"))
 					{
 						float flSurvivorPos[3];
 						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -230,7 +229,7 @@ static void vMeteor(int tank, int rock)
 						if (flDistance < 200.0)
 						{
 							float flMeteorDamage = !g_bTankConfig[ST_TankType(tank)] ? g_flMeteorDamage[ST_TankType(tank)] : g_flMeteorDamage2[ST_TankType(tank)];
-							SDKHooks_TakeDamage(iSurvivor, tank, tank, flMeteorDamage);
+							vDamageEntity(iSurvivor, tank, flMeteorDamage, "16");
 						}
 					}
 				}
@@ -259,7 +258,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bMeteor[iPlayer] = false;
 		}
@@ -276,7 +275,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bMeteor[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iMeteorAbility(iTank) == 0 || !g_bMeteor[iTank])
 	{
 		g_bMeteor[iTank] = false;
 
@@ -289,14 +288,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
 
-	if (iMeteorAbility(iTank) == 0)
-	{
-		g_bMeteor[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	char sRadius[2][7], sMeteorRadius[13], sSet[5][16], sPropsColors[80], sRGB[4][4];
+	char sRadius[2][7], sMeteorRadius[13];
 	sMeteorRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sMeteorRadius[ST_TankType(iTank)] : g_sMeteorRadius2[ST_TankType(iTank)];
 	ReplaceString(sMeteorRadius, sizeof(sMeteorRadius), " ", "");
 	ExplodeString(sMeteorRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
@@ -305,24 +297,6 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 		flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
 	flMin = flClamp(flMin, -200.0, 0.0);
 	flMax = flClamp(flMax, 0.0, 200.0);
-
-	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
-	ReplaceString(sPropsColors, sizeof(sPropsColors), " ", "");
-	ExplodeString(sPropsColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-
-	ExplodeString(sSet[3], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
-
-	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-	iRed = iClamp(iRed, 0, 255);
-
-	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-	iGreen = iClamp(iGreen, 0, 255);
-
-	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-	iBlue = iClamp(iBlue, 0, 255);
-
-	int iAlpha = (sRGB[3][0] != '\0') ? StringToInt(sRGB[3]) : 255;
-	iAlpha = iClamp(iAlpha, 0, 255);
 
 	if ((GetEngineTime() - flTime) > 5.0)
 	{
@@ -358,10 +332,12 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 			if (bIsValidEntity(iRock))
 			{
 				SetEntityModel(iRock, MODEL_CONCRETE);
-				SetEntityRenderColor(iRock, iRed, iGreen, iBlue, iAlpha);
+
+				int iRockRed, iRockGreen, iRockBlue, iRockAlpha;
+				ST_PropsColors(iTank, 4, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
+				SetEntityRenderColor(iRock, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
 
 				float flAngles2[3];
-
 				flAngles2[0] = GetRandomFloat(flMin, flMax);
 				flAngles2[1] = GetRandomFloat(flMin, flMax);
 				flAngles2[2] = GetRandomFloat(flMin, flMax);

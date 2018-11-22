@@ -26,7 +26,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Necro Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank resurrects dead special infected.",
+	description = "The Super Tank resurrects nearby special infected that die.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -79,10 +79,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -94,7 +95,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iNecroMessage[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Message", 0);
 				g_iNecroMessage[iIndex] = iClamp(g_iNecroMessage[iIndex], 0, 1);
 				g_flNecroChance[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Chance", 33.3);
-				g_flNecroChance[iIndex] = flClamp(g_flNecroChance[iIndex], 0.1, 100.0);
+				g_flNecroChance[iIndex] = flClamp(g_flNecroChance[iIndex], 0.0, 100.0);
 				g_flNecroRange[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Range", 500.0);
 				g_flNecroRange[iIndex] = flClamp(g_flNecroRange[iIndex], 1.0, 9999999999.0);
 			}
@@ -107,7 +108,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iNecroMessage2[iIndex] = kvSuperTanks.GetNum("Necro Ability/Ability Message", g_iNecroMessage[iIndex]);
 				g_iNecroMessage2[iIndex] = iClamp(g_iNecroMessage2[iIndex], 0, 1);
 				g_flNecroChance2[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Chance", g_flNecroChance[iIndex]);
-				g_flNecroChance2[iIndex] = flClamp(g_flNecroChance2[iIndex], 0.1, 100.0);
+				g_flNecroChance2[iIndex] = flClamp(g_flNecroChance2[iIndex], 0.0, 100.0);
 				g_flNecroRange2[iIndex] = kvSuperTanks.GetFloat("Necro Ability/Necro Range", g_flNecroRange[iIndex]);
 				g_flNecroRange2[iIndex] = flClamp(g_flNecroRange2[iIndex], 1.0, 9999999999.0);
 			}
@@ -119,7 +120,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
@@ -127,12 +128,12 @@ public void ST_Event(Event event, const char[] name)
 
 		float flInfectedPos[3];
 
-		if (bIsSpecialInfected(iInfected))
+		if (bIsSpecialInfected(iInfected, "024"))
 		{
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			for (int iTank = 1; iTank <= MaxClients; iTank++)
 			{
-				if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && IsPlayerAlive(iTank))
+				if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
 				{
 					int iNecroAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_iNecroAbility[ST_TankType(iTank)] : g_iNecroAbility2[ST_TankType(iTank)];
 
@@ -172,7 +173,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{
 		bExists[iNecro] = false;
-		if (bIsSpecialInfected(iNecro))
+		if (bIsSpecialInfected(iNecro, "24"))
 		{
 			bExists[iNecro] = true;
 		}
@@ -183,9 +184,10 @@ static void vNecro(int tank, float pos[3], const char[] type)
 	int iInfected;
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
 	{
-		if (bIsSpecialInfected(iNecro) && !bExists[iNecro])
+		if (bIsSpecialInfected(iNecro, "24") && !bExists[iNecro])
 		{
 			iInfected = iNecro;
+
 			break;
 		}
 	}
@@ -198,7 +200,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Necro", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Necro", sTankName);
 		}
 	}
 }

@@ -98,10 +98,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -115,7 +116,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMinionAmount[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Amount", 5);
 				g_iMinionAmount[iIndex] = iClamp(g_iMinionAmount[iIndex], 1, 25);
 				g_flMinionChance[iIndex] = kvSuperTanks.GetFloat("Minion Ability/Minion Chance", 33.3);
-				g_flMinionChance[iIndex] = flClamp(g_flMinionChance[iIndex], 0.1, 100.0);
+				g_flMinionChance[iIndex] = flClamp(g_flMinionChance[iIndex], 0.0, 100.0);
 				g_iMinionReplace[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Replace", 1);
 				g_iMinionReplace[iIndex] = iClamp(g_iMinionReplace[iIndex], 0, 1);
 				kvSuperTanks.GetString("Minion Ability/Minion Types", g_sMinionTypes[iIndex], sizeof(g_sMinionTypes[]), "123456");
@@ -131,7 +132,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMinionAmount2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Amount", g_iMinionAmount[iIndex]);
 				g_iMinionAmount2[iIndex] = iClamp(g_iMinionAmount2[iIndex], 1, 25);
 				g_flMinionChance2[iIndex] = kvSuperTanks.GetFloat("Minion Ability/Minion Chance", g_flMinionChance[iIndex]);
-				g_flMinionChance2[iIndex] = flClamp(g_flMinionChance2[iIndex], 0.1, 100.0);
+				g_flMinionChance2[iIndex] = flClamp(g_flMinionChance2[iIndex], 0.0, 100.0);
 				g_iMinionReplace2[iIndex] = kvSuperTanks.GetNum("Minion Ability/Minion Replace", g_iMinionReplace[iIndex]);
 				g_iMinionReplace2[iIndex] = iClamp(g_iMinionReplace2[iIndex], 0, 1);
 				kvSuperTanks.GetString("Minion Ability/Minion Types", g_sMinionTypes2[iIndex], sizeof(g_sMinionTypes2[]), g_sMinionTypes[iIndex]);
@@ -144,12 +145,23 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_PluginEnd()
+{
+	for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
+	{
+		if ((bIsTank(iMinion, "234") || bIsSpecialInfected(iMinion, "234")) && g_bMinion[iMinion])
+		{
+			!bIsValidClient(iMinion, "5") ? KickClient(iMinion) : ForcePlayerSuicide(iMinion);
+		}
+	}
+}
+
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
-		if (iMinionAbility(iInfected) == 1 && ST_TankAllowed(iInfected))
+		if (iMinionAbility(iInfected) == 1 && ST_TankAllowed(iInfected, "024"))
 		{
 			g_bMinion[iInfected] = false;
 			g_iMinionCount[iInfected] = 0;
@@ -159,7 +171,7 @@ public void ST_Event(Event event, const char[] name)
 		{
 			for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 			{
-				if (g_iMinionOwner[iInfected] == iOwner && ST_TankAllowed(iOwner) && ST_CloneAllowed(iOwner, g_bCloneInstalled))
+				if (g_iMinionOwner[iInfected] == iOwner && ST_TankAllowed(iOwner, "024") && ST_CloneAllowed(iOwner, g_bCloneInstalled))
 				{
 					int iMinionReplace = !g_bTankConfig[ST_TankType(iOwner)] ? g_iMinionReplace[ST_TankType(iOwner)] : g_iMinionReplace2[ST_TankType(iOwner)];
 					if (iMinionReplace == 1)
@@ -186,7 +198,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_Ability(int tank)
 {
 	float flMinionChance = !g_bTankConfig[ST_TankType(tank)] ? g_flMinionChance[ST_TankType(tank)] : g_flMinionChance2[ST_TankType(tank)];
-	if (iMinionAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMinionChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (iMinionAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMinionChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iMinionAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iMinionAmount[ST_TankType(tank)] : g_iMinionAmount2[ST_TankType(tank)],
 			iMinionMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMinionMessage[ST_TankType(tank)] : g_iMinionMessage2[ST_TankType(tank)];
@@ -217,7 +229,7 @@ public void ST_Ability(int tank)
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						bSpecialInfected[iPlayer] = false;
-						if (bIsInfected(iPlayer))
+						if (bIsInfected(iPlayer, "24"))
 						{
 							bSpecialInfected[iPlayer] = true;
 						}
@@ -238,9 +250,10 @@ public void ST_Ability(int tank)
 					int iSelectedType;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (bIsInfected(iPlayer) && !bSpecialInfected[iPlayer])
+						if (bIsInfected(iPlayer, "24") && !bSpecialInfected[iPlayer])
 						{
 							iSelectedType = iPlayer;
+
 							break;
 						}
 					}
@@ -257,7 +270,7 @@ public void ST_Ability(int tank)
 						{
 							char sTankName[33];
 							ST_TankName(tank, sTankName);
-							PrintToChatAll("%s %t", ST_TAG2, "Minion", sTankName);
+							ST_PrintToChatAll("%s %t", ST_TAG2, "Minion", sTankName);
 						}
 					}
 				}
@@ -268,20 +281,11 @@ public void ST_Ability(int tank)
 	}
 }
 
-public void ST_BossStage(int tank)
+public void ST_ChangeType(int tank)
 {
 	if (iMinionAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		g_iMinionCount[tank] = 0;
-
-		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
-		{
-			if (bIsTank(iInfected) || bIsSpecialInfected(iInfected))
-			{
-				g_bMinion[iInfected] = false;
-				g_iMinionOwner[iInfected] = 0;
-			}
-		}
 	}
 }
 
@@ -289,7 +293,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bMinion[iPlayer] = false;
 			g_iMinionCount[iPlayer] = 0;

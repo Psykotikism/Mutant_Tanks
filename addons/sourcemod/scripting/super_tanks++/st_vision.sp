@@ -37,7 +37,7 @@ char g_sVisionEffect[ST_MAXTYPES + 1][4], g_sVisionEffect2[ST_MAXTYPES + 1][4], 
 
 float g_flVisionChance[ST_MAXTYPES + 1], g_flVisionChance2[ST_MAXTYPES + 1], g_flVisionDuration[ST_MAXTYPES + 1], g_flVisionDuration2[ST_MAXTYPES + 1], g_flVisionRange[ST_MAXTYPES + 1], g_flVisionRange2[ST_MAXTYPES + 1], g_flVisionRangeChance[ST_MAXTYPES + 1], g_flVisionRangeChance2[ST_MAXTYPES + 1];
 
-int g_iVisionAbility[ST_MAXTYPES + 1], g_iVisionAbility2[ST_MAXTYPES + 1], g_iVisionFOV[ST_MAXTYPES + 1], g_iVisionFOV2[ST_MAXTYPES + 1], g_iVisionHit[ST_MAXTYPES + 1], g_iVisionHit2[ST_MAXTYPES + 1], g_iVisionHitMode[ST_MAXTYPES + 1], g_iVisionHitMode2[ST_MAXTYPES + 1];
+int g_iVisionAbility[ST_MAXTYPES + 1], g_iVisionAbility2[ST_MAXTYPES + 1], g_iVisionFOV[ST_MAXTYPES + 1], g_iVisionFOV2[ST_MAXTYPES + 1], g_iVisionHit[ST_MAXTYPES + 1], g_iVisionHit2[ST_MAXTYPES + 1], g_iVisionHitMode[ST_MAXTYPES + 1], g_iVisionHitMode2[ST_MAXTYPES + 1], g_iVisionOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -82,7 +82,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -102,6 +102,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bVision[client] = false;
+	g_iVisionOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -111,19 +112,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iVisionHitMode(attacker) == 0 || iVisionHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsHumanSurvivor(victim))
+		if ((iVisionHitMode(attacker) == 0 || iVisionHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsHumanSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vVisionHit(victim, attacker, flVisionChance(attacker), iVisionHit(attacker), "1", "1");
 			}
 		}
-		else if ((iVisionHitMode(victim) == 0 || iVisionHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsHumanSurvivor(attacker))
+		else if ((iVisionHitMode(victim) == 0 || iVisionHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsHumanSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -137,10 +138,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -149,10 +151,10 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iVisionAbility[iIndex] = kvSuperTanks.GetNum("Vision Ability/Ability Enabled", 0);
 				g_iVisionAbility[iIndex] = iClamp(g_iVisionAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Vision Ability/Ability Effect", g_sVisionEffect[iIndex], sizeof(g_sVisionEffect[]), "123");
+				kvSuperTanks.GetString("Vision Ability/Ability Effect", g_sVisionEffect[iIndex], sizeof(g_sVisionEffect[]), "0");
 				kvSuperTanks.GetString("Vision Ability/Ability Message", g_sVisionMessage[iIndex], sizeof(g_sVisionMessage[]), "0");
 				g_flVisionChance[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Chance", 33.3);
-				g_flVisionChance[iIndex] = flClamp(g_flVisionChance[iIndex], 0.1, 100.0);
+				g_flVisionChance[iIndex] = flClamp(g_flVisionChance[iIndex], 0.0, 100.0);
 				g_flVisionDuration[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", 5.0);
 				g_flVisionDuration[iIndex] = flClamp(g_flVisionDuration[iIndex], 0.1, 9999999999.0);
 				g_iVisionFOV[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision FOV", 160);
@@ -164,7 +166,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flVisionRange[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range", 150.0);
 				g_flVisionRange[iIndex] = flClamp(g_flVisionRange[iIndex], 1.0, 9999999999.0);
 				g_flVisionRangeChance[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range Chance", 15.0);
-				g_flVisionRangeChance[iIndex] = flClamp(g_flVisionRangeChance[iIndex], 0.1, 100.0);
+				g_flVisionRangeChance[iIndex] = flClamp(g_flVisionRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -175,7 +177,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Vision Ability/Ability Effect", g_sVisionEffect2[iIndex], sizeof(g_sVisionEffect2[]), g_sVisionEffect[iIndex]);
 				kvSuperTanks.GetString("Vision Ability/Ability Message", g_sVisionMessage2[iIndex], sizeof(g_sVisionMessage2[]), g_sVisionMessage[iIndex]);
 				g_flVisionChance2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Chance", g_flVisionChance[iIndex]);
-				g_flVisionChance2[iIndex] = flClamp(g_flVisionChance2[iIndex], 0.1, 100.0);
+				g_flVisionChance2[iIndex] = flClamp(g_flVisionChance2[iIndex], 0.0, 100.0);
 				g_flVisionDuration2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Duration", g_flVisionDuration[iIndex]);
 				g_flVisionDuration2[iIndex] = flClamp(g_flVisionDuration2[iIndex], 0.1, 9999999999.0);
 				g_iVisionFOV2[iIndex] = kvSuperTanks.GetNum("Vision Ability/Vision FOV", g_iVisionFOV[iIndex]);
@@ -187,7 +189,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flVisionRange2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range", g_flVisionRange[iIndex]);
 				g_flVisionRange2[iIndex] = flClamp(g_flVisionRange2[iIndex], 1.0, 9999999999.0);
 				g_flVisionRangeChance2[iIndex] = kvSuperTanks.GetFloat("Vision Ability/Vision Range Chance", g_flVisionRangeChance[iIndex]);
-				g_flVisionRangeChance2[iIndex] = flClamp(g_flVisionRangeChance2[iIndex], 0.1, 100.0);
+				g_flVisionRangeChance2[iIndex] = flClamp(g_flVisionRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -199,12 +201,19 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	vReset();
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor, "234") && g_bVision[iSurvivor])
+		{
+			SetEntProp(iSurvivor, Prop_Send, "m_iFOV", 90);
+			SetEntProp(iSurvivor, Prop_Send, "m_iDefaultFOV", 90);
+		}
+	}
 }
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iVisionAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iVisionAbility[ST_TankType(tank)] : g_iVisionAbility2[ST_TankType(tank)];
 
@@ -216,7 +225,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsHumanSurvivor(iSurvivor))
+			if (bIsHumanSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -231,13 +240,29 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_ChangeType(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsHumanSurvivor(iSurvivor, "24") && g_bVision[iSurvivor] && g_iVisionOwner[iSurvivor] == tank)
+			{
+				g_bVision[iSurvivor] = false;
+				g_iVisionOwner[iSurvivor] = 0;
+			}
+		}
+	}
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bVision[iPlayer] = false;
+			g_iVisionOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -245,6 +270,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bVision[survivor] = false;
+	g_iVisionOwner[survivor] = 0;
 
 	SetEntProp(survivor, Prop_Send, "m_iFOV", 90);
 	SetEntProp(survivor, Prop_Send, "m_iDefaultFOV", 90);
@@ -253,7 +279,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 	sVisionMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sVisionMessage[ST_TankType(tank)] : g_sVisionMessage2[ST_TankType(tank)];
 	if (StrContains(sVisionMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Vision2", survivor, 90);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Vision2", survivor, 90);
 	}
 }
 
@@ -262,6 +288,7 @@ static void vVisionHit(int survivor, int tank, float chance, int enabled, const 
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bVision[survivor])
 	{
 		g_bVision[survivor] = true;
+		g_iVisionOwner[survivor] = tank;
 
 		DataPack dpVision;
 		CreateDataTimer(0.1, tTimerVision, dpVision, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -281,7 +308,7 @@ static void vVisionHit(int survivor, int tank, float chance, int enabled, const 
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Vision", sTankName, survivor, iVisionFOV(tank));
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Vision", sTankName, survivor, iVisionFOV(tank));
 		}
 	}
 }
@@ -314,6 +341,7 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	if (!bIsHumanSurvivor(iSurvivor))
 	{
 		g_bVision[iSurvivor] = false;
+		g_iVisionOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -321,7 +349,7 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bVision[iSurvivor])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bVision[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

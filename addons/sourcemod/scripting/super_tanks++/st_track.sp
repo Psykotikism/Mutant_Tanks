@@ -34,11 +34,9 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
-
 float g_flTrackChance[ST_MAXTYPES + 1], g_flTrackChance2[ST_MAXTYPES + 1], g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
 
-int g_iGlowOutline[ST_MAXTYPES + 1], g_iGlowOutline2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
+int g_iGlowEnabled[ST_MAXTYPES + 1], g_iGlowEnabled2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -94,25 +92,26 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
 				g_bTankConfig[iIndex] = false;
 
-				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255");
-				g_iGlowOutline[iIndex] = kvSuperTanks.GetNum("General/Glow Outline", 1);
-				g_iGlowOutline[iIndex] = iClamp(g_iGlowOutline[iIndex], 0, 1);
+				g_iGlowEnabled[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", 1);
+				g_iGlowEnabled[iIndex] = iClamp(g_iGlowEnabled[iIndex], 0, 1);
+
 				g_iTrackAbility[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", 0);
 				g_iTrackAbility[iIndex] = iClamp(g_iTrackAbility[iIndex], 0, 1);
 				g_iTrackMessage[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", 0);
 				g_iTrackMessage[iIndex] = iClamp(g_iTrackMessage[iIndex], 0, 1);
 				g_flTrackChance[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Chance", 33.3);
-				g_flTrackChance[iIndex] = flClamp(g_flTrackChance[iIndex], 0.1, 100.0);
+				g_flTrackChance[iIndex] = flClamp(g_flTrackChance[iIndex], 0.0, 100.0);
 				g_iTrackMode[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", 1);
 				g_iTrackMode[iIndex] = iClamp(g_iTrackMode[iIndex], 0, 1);
 				g_flTrackSpeed[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", 500.0);
@@ -122,15 +121,15 @@ public void ST_Configs(const char[] savepath, bool main)
 			{
 				g_bTankConfig[iIndex] = true;
 
-				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]);
-				g_iGlowOutline2[iIndex] = kvSuperTanks.GetNum("General/Glow Outline", g_iGlowOutline[iIndex]);
-				g_iGlowOutline2[iIndex] = iClamp(g_iGlowOutline2[iIndex], 0, 1);
+				g_iGlowEnabled2[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", g_iGlowEnabled[iIndex]);
+				g_iGlowEnabled2[iIndex] = iClamp(g_iGlowEnabled2[iIndex], 0, 1);
+
 				g_iTrackAbility2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", g_iTrackAbility[iIndex]);
 				g_iTrackAbility2[iIndex] = iClamp(g_iTrackAbility2[iIndex], 0, 1);
 				g_iTrackMessage2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", g_iTrackMessage[iIndex]);
 				g_iTrackMessage2[iIndex] = iClamp(g_iTrackMessage2[iIndex], 0, 1);
 				g_flTrackChance2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Chance", g_flTrackChance[iIndex]);
-				g_flTrackChance2[iIndex] = flClamp(g_flTrackChance2[iIndex], 0.1, 100.0);
+				g_flTrackChance2[iIndex] = flClamp(g_flTrackChance2[iIndex], 0.0, 100.0);
 				g_iTrackMode2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", g_iTrackMode[iIndex]);
 				g_iTrackMode2[iIndex] = iClamp(g_iTrackMode2[iIndex], 0, 1);
 				g_flTrackSpeed2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[iIndex]);
@@ -147,7 +146,7 @@ public void ST_Configs(const char[] savepath, bool main)
 public void ST_RockThrow(int tank, int rock)
 {
 	float flTrackChance = !g_bTankConfig[ST_TankType(tank)] ? g_flTrackChance[ST_TankType(tank)] : g_flTrackChance2[ST_TankType(tank)];
-	if (iTrackAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flTrackChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (iTrackAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flTrackChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iTrackMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iTrackMessage[ST_TankType(tank)] : g_iTrackMessage2[ST_TankType(tank)];
 
@@ -160,7 +159,7 @@ public void ST_RockThrow(int tank, int rock)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Track", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Track", sTankName);
 		}
 	}
 }
@@ -427,28 +426,14 @@ static void vTrack(int rock)
 			SetEntityGravity(rock, 0.01);
 			TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 
-			char sSet[2][16], sTankColors[28], sGlow[3][4];
-			sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
-			ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
-			ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-
-			ExplodeString(sSet[1], ",", sGlow, sizeof(sGlow), sizeof(sGlow[]));
-
-			int iRed = (sGlow[0][0] != '\0') ? StringToInt(sGlow[0]) : 255;
-			iRed = iClamp(iRed, 0, 255);
-
-			int iGreen = (sGlow[1][0] != '\0') ? StringToInt(sGlow[1]) : 255;
-			iGreen = iClamp(iGreen, 0, 255);
-
-			int iBlue = (sGlow[2][0] != '\0') ? StringToInt(sGlow[2]) : 255;
-			iBlue = iClamp(iBlue, 0, 255);
-
-			int iGlowOutline = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowOutline[ST_TankType(iTank)] : g_iGlowOutline2[ST_TankType(iTank)];
-			if (iGlowOutline == 1 && bIsValidGame())
+			int iGlowEnabled = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEnabled[ST_TankType(iTank)] : g_iGlowEnabled2[ST_TankType(iTank)];
+			if (iGlowEnabled == 1 && bIsValidGame())
 			{
+				int iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha;
+				ST_TankColors(iTank, 2, iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha);
 				SetEntProp(rock, Prop_Send, "m_iGlowType", 3);
 				SetEntProp(rock, Prop_Send, "m_nGlowRange", 0);
-				SetEntProp(rock, Prop_Send, "m_glowColorOverride", iGetRGBColor(iRed, iGreen, iBlue));
+				SetEntProp(rock, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowRed, iGlowGreen, iGlowBlue));
 			}
 		}
 	}
@@ -470,12 +455,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
-	{
-		return Plugin_Stop;
-	}
-
-	if (iTrackAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iTrackAbility(iTank) == 0)
 	{
 		return Plugin_Stop;
 	}

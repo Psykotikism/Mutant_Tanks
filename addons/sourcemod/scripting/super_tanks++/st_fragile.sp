@@ -80,7 +80,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -109,9 +109,9 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && g_bFragile[victim])
+		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && g_bFragile[victim])
 		{
 			float flFragileBulletMultiplier = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileBulletMultiplier[ST_TankType(victim)] : g_flFragileBulletMultiplier2[ST_TankType(victim)],
 				flFragileExplosiveMultiplier = !g_bTankConfig[ST_TankType(victim)] ? g_flFragileExplosiveMultiplier[ST_TankType(victim)] : g_flFragileExplosiveMultiplier2[ST_TankType(victim)],
@@ -145,10 +145,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -162,7 +163,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flFragileBulletMultiplier[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Bullet Multiplier", 5.0);
 				g_flFragileBulletMultiplier[iIndex] = flClamp(g_flFragileBulletMultiplier[iIndex], 0.1, 9999999999.0);
 				g_flFragileChance[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Chance", 33.3);
-				g_flFragileChance[iIndex] = flClamp(g_flFragileChance[iIndex], 0.1, 100.0);
+				g_flFragileChance[iIndex] = flClamp(g_flFragileChance[iIndex], 0.0, 100.0);
 				g_flFragileDuration[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Duration", 5.0);
 				g_flFragileDuration[iIndex] = flClamp(g_flFragileDuration[iIndex], 0.1, 9999999999.0);
 				g_flFragileExplosiveMultiplier[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Explosive Multiplier", 5.0);
@@ -183,7 +184,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flFragileBulletMultiplier2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Bullet Multiplier", g_flFragileBulletMultiplier[iIndex]);
 				g_flFragileBulletMultiplier2[iIndex] = flClamp(g_flFragileBulletMultiplier2[iIndex], 0.1, 9999999999.0);
 				g_flFragileChance2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Chance", g_flFragileChance[iIndex]);
-				g_flFragileChance2[iIndex] = flClamp(g_flFragileChance2[iIndex], 0.1, 100.0);
+				g_flFragileChance2[iIndex] = flClamp(g_flFragileChance2[iIndex], 0.0, 100.0);
 				g_flFragileDuration2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Duration", g_flFragileDuration[iIndex]);
 				g_flFragileDuration2[iIndex] = flClamp(g_flFragileDuration2[iIndex], 0.1, 9999999999.0);
 				g_flFragileExplosiveMultiplier2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Explosive Multiplier", g_flFragileExplosiveMultiplier[iIndex]);
@@ -201,17 +202,12 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iFragileAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bFragile[iTank])
+		if (iFragileAbility(iTank) == 1 && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bFragile[iTank])
 		{
 			tTimerStopFragile(null, GetClientUserId(iTank));
 		}
@@ -221,7 +217,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_Ability(int tank)
 {
 	float flFragileChance = !g_bTankConfig[ST_TankType(tank)] ? g_flFragileChance[ST_TankType(tank)] : g_flFragileChance2[ST_TankType(tank)];
-	if (iFragileAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flFragileChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bFragile[tank])
+	if (iFragileAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flFragileChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bFragile[tank])
 	{
 		g_bFragile[tank] = true;
 
@@ -232,16 +228,21 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Fragile", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Fragile", sTankName);
 		}
 	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	g_bFragile[tank] = false;
 }
 
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bFragile[iPlayer] = false;
 		}
@@ -261,7 +262,7 @@ static int iFragileMessage(int tank)
 public Action tTimerStopFragile(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFragile[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFragile[iTank])
 	{
 		g_bFragile[iTank] = false;
 
@@ -274,7 +275,7 @@ public Action tTimerStopFragile(Handle timer, int userid)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Fragile2", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Fragile2", sTankName);
 	}
 
 	return Plugin_Continue;

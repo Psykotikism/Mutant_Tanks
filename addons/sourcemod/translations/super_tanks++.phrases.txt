@@ -1,117 +1,117 @@
 "Phrases"
 {
-	// "" Normal - \x01 
-	// "" Sky-green - \x03 
-	// "" Yellow-orange - \x04 
-	// "" Olive/Yellow-green - \x05
+	// "{default}" Normal - \x01 
+	// "{mint}" Sky-green - \x03 
+	// "{yellow}" Yellow-orange - \x04 
+	// "{olive}" Yellow-green - \x05
 	"Arrival1"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} has appeared!"
+		"en"			"{olive}{1}{default} has appeared!"
 	}
 	"Arrival2"
 	{
 		"#format"		"{1:s}"
-		"en"			"Here comes {1}!"
+		"en"			"Here comes{olive} {1}{default}!"
 	}
 	"Arrival3"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is ready to kill!"
+		"en"			"{olive}{1}{default} is ready to kill!"
 	}
 	"Arrival4"
 	{
 		"#format"		"{1:s}"
-		"en"			"Are you ready to face {1}?"
+		"en"			"Are you ready to face{olive} {1}{default}?"
 	}
 	"Arrival5"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} came for a challenge!"
+		"en"			"{olive}{1}{default} came for a challenge!"
 	}
 	"Arrival6"
 	{
 		"#format"		"{1:s}"
-		"en"			"Get ready! {1} is coming!"
+		"en"			"Get ready!{olive} {1}{default} is coming!"
 	}
 	"Arrival7"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is here!"
+		"en"			"{olive}{1}{default} is here!"
 	}
 	"Arrival8"
 	{
 		"#format"		"{1:s}"
-		"en"			"Oh no! {1} is nearing!"
+		"en"			"Oh no!{olive} {1}{default} is nearing!"
 	}
 	"Arrival9"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} joined the game..."
+		"en"			"{olive}{1}{default} joined the game..."
 	}
 	"Arrival10"
 	{
 		"#format"		"{1:s}"
-		"en"			"It seems {1} is joining your company..."
+		"en"			"It seems{olive} {1}{default} is joining your company..."
 	}
 	"Death1"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is defeated!"
+		"en"			"{olive}{1}{default} is defeated!"
 	}
 	"Death2"
 	{
 		"#format"		"{1:s}"
-		"en"			"The survivors defeated {1}!"
+		"en"			"The survivors defeated{olive} {1}{default}!"
 	}
 	"Death3"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} goes to hell!"
+		"en"			"{olive}{1}{default} goes to hell!"
 	}
 	"Death4"
 	{
 		"#format"		"{1:s}"
-		"en"			"Is {1} really dead...?"
+		"en"			"Is{olive} {1}{default} really dead...?"
 	}
 	"Death5"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} lost the challenge against the survivors!"
+		"en"			"{olive}{1}{default} lost the challenge against the survivors!"
 	}
 	"Death6"
 	{
 		"#format"		"{1:s}"
-		"en"			"The {1} failed to kill the survivors!"
+		"en"			"The{olive} {1}{default} failed to kill the survivors!"
 	}
 	"Death7"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} has met their demise!"
+		"en"			"{olive}{1}{default} has met their demise!"
 	}
 	"Death8"
 	{
 		"#format"		"{1:s}"
-		"en"			"Yay! {1} is dead!"
+		"en"			"Yay!{olive} {1}{default} is dead!"
 	}
 	"Death9"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} left the game..."
+		"en"			"{olive}{1}{default} left the game..."
 	}
 	"Death10"
 	{
 		"#format"		"{1:s}"
-		"en"			"It seems {1} could not beat the survivors after all..."
+		"en"			"It seems{olive} {1}{default} could not beat the survivors after all..."
 	}
 	"Evolved"
 	{
 		"#format"		"{1:s},{2:s},{3:d}"
-		"en"			"{1} evolved into {2} (Stage {3})!"
+		"en"			"{olive}{1}{mint} evolved into{olive} {2}{yellow} (Stage {3}){mint}!"
 	}
 	"MultipleMatches"
 	{
-		"en"			"Multiple Tank types matched that name. Selecting a random match..."
+		"en"			"Multiple{olive} Tank types{mint} matched that name. Selecting a random match..."
 	}
 	"NoNote"
 	{
@@ -120,1026 +120,1034 @@
 	"Randomized"
 	{
 		"#format"		"{1:s},{2:s}"
-		"en"			"{1} randomized into {2}!"
+		"en"			"{olive}{1}{mint} randomized into{olive} {2}{mint}!"
 	}
 	"RequestFailed"
 	{
-		"en"			"No Tank types matched that name. Request failed..."
+		"en"			"No{olive} Tank types{mint} matched that name. Request failed..."
 	}
 	"Transformed"
 	{
 		"#format"		"{1:s},{2:s}"
-		"en"			"{1} transformed into {2}!"
+		"en"			"{olive}{1}{mint} transformed into{olive} {2}{mint}!"
 	}
 	"Untransformed"
 	{
 		"#format"		"{1:s},{2:s}"
-		"en"			"{1} reverted back into {2}!"
+		"en"			"{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
 	}
 	"Absorb"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is temporarily absorbing most of your damage!"
+		"en"			"{olive}{1}{mint} is temporarily absorbing most of your damage!"
 	}
 	"Absorb2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is no longer absorbing most of your damage!"
+		"en"			"{olive}{1}{mint} is no longer absorbing most of your damage!"
 	}
 	"Acid"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} just created an acid puddle underneath {2}!"
+		"en"			"{olive}{1}{mint} just created an acid puddle underneath{olive} {2}{mint}!"
 	}
 	"Acid2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1}'s rock created an acid puddle."
+		"en"			"{olive}{1}'s{mint} rock created an acid puddle."
 	}
 	"Aimless"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is preventing {2} from aiming!"
+		"en"			"{olive}{1}{mint} is preventing{olive} {2}{mint} from aiming!"
 	}
 	"Aimless2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} can aim again!"
+		"en"			"{olive}{1}{mint} can aim again!"
 	}
 	"Ammo"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} took all of {2}'s ammunition!"
+		"en"			"{olive}{1}{mint} took all of{olive} {2}'s{mint} ammunition!"
 	}
 	"Blind"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} blinded {2}!"
+		"en"			"{olive}{1}{mint} blinded{olive} {2}{mint}!"
 	}
 	"Blind2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer blind!"
+		"en"			"{olive}{1}{mint} is no longer blind!"
 	}
 	"Bomb"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} just created an explosion at {2}'s location!"
+		"en"			"{olive}{1}{mint} just created an explosion at{olive} {2}'s{mint} location!"
 	}
 	"Bomb2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1}'s rock created an explosion."
+		"en"			"{olive}{1}'s{mint} rock created an explosion."
 	}
 	"Bury"
 	{
 		"#format"		"{1:s},{2:N},{3:.2f}"
-		"en"			"{1} buried {2} {3} feet into the ground!"
+		"en"			"{olive}{1}{mint} buried{olive} {2}{yellow} {3}{mint} feet into the ground!"
 	}
 	"Bury2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer buried into the ground!"
+		"en"			"{olive}{1}{mint} is no longer buried into the ground!"
 	}
 	"Choke"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is choking {2} in the air!"
+		"en"			"{olive}{1}{mint} is choking{olive} {2}{mint} in the air!"
 	}
 	"Choke2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer being choked in the air!"
+		"en"			"{olive}{1}{mint} is no longer being choked in the air!"
 	}
 	"Clone"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} created a clone of itself!"
+		"en"			"{olive}{1}{mint} created a clone of itself!"
 	}
 	"Cloud"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is emitting clouds of smoke!"
+		"en"			"{olive}{1}{mint} is emitting clouds of smoke!"
 	}
 	"Cloud2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} stopped emitting clouds of smoke!"
+		"en"			"{olive}{1}{mint} stopped emitting clouds of smoke!"
 	}
 	"Drop"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} dropped a gun!"
+		"en"			"{olive}{1}{mint} dropped a gun!"
 	}
 	"Drop2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} dropped a melee weapon!"
+		"en"			"{olive}{1}{mint} dropped a melee weapon!"
 	}
 	"Drug"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} drugged {2}!"
+		"en"			"{olive}{1}{mint} drugged{olive} {2}{mint}!"
 	}
 	"Drug2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer drugged!"
+		"en"			"{olive}{1}{mint} is no longer drugged!"
 	}
 	"Drunk"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} made {2} drunk!"
+		"en"			"{olive}{1}{mint} made{olive} {2}{mint} drunk!"
 	}
 	"Drunk2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer drunk!"
+		"en"			"{olive}{1}{mint} is no longer drunk!"
 	}
 	"Electric"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is electrocuting {2}!"
+		"en"			"{olive}{1}{mint} is electrocuting{olive} {2}{mint}!"
 	}
 	"Electric2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer being electrocuted!"
+		"en"			"{olive}{1}{mint} is no longer being electrocuted!"
 	}
 	"Enforce"
 	{
 		"#format"		"{1:s},{2:N},{3:s}"
-		"en"			"{1} is forcing {2} to only use their {3} slot!"
+		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to only use their{yellow} {3} slot{mint}!"
 	}
 	"Enforce2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} can use all weapon slots again!"
+		"en"			"{olive}{1}{mint} can use all weapon slots again!"
 	}
 	"Fire"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} just created a fire underneath {2}!"
+		"en"			"{olive}{1}{mint} just created a fire underneath{olive} {2}{mint}!"
 	}
 	"Fire2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1}'s rock created a fire."
+		"en"			"{olive}{1}'s{mint} rock created a fire."
 	}
 	"Flash"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1}'s special speed activated!"
+		"en"			"{olive}{1}'s{mint} special speed activated!"
 	}
 	"Flash2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1}'s special speed deactivated!"
+		"en"			"{olive}{1}'s{mint} special speed deactivated!"
 	}
 	"Fling"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} flung {2} into the air!"
+		"en"			"{olive}{1}{mint} flung{olive} {2}{mint} into the air!"
 	}
 	"Fragile"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is temporarily fragile to damage!"
+		"en"			"{olive}{1}{mint} is temporarily fragile to damage!"
 	}
 	"Fragile2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is no longer fragile to damage!"
+		"en"			"{olive}{1}{mint} is no longer fragile to damage!"
 	}
 	"Ghost"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} disarmed {2}!"
+		"en"			"{olive}{1}{mint} disarmed{olive} {2}{mint}!"
 	}
 	"Ghost2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is cloaking itself!"
+		"en"			"{olive}{1}{mint} is cloaking itself!"
 	}
 	"Ghost3"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is visible again!"
+		"en"			"{olive}{1}{mint} is visible again!"
 	}
 	"God"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is temporarily invincible!"
+		"en"			"{olive}{1}{mint} is temporarily invincible!"
 	}
 	"God2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is no longer invincible!"
+		"en"			"{olive}{1}{mint} is no longer invincible!"
 	}
 	"Gravity"
 	{
 		"#format"		"{1:s},{2:N},{3:.2f}"
-		"en"			"{1} changed {2}'s gravity to {3}!"
+		"en"			"{olive}{1}{mint} changed{olive} {2}'s{mint} gravity to{yellow} {3}{mint}!"
 	}
 	"Gravity2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1}'s gravity is back to normal!"
+		"en"			"{olive}{1}'s{mint} gravity is back to normal!"
 	}
 	"Gravity3"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} created a gravitational pull!"
+		"en"			"{olive}{1}{mint} created a gravitational pull!"
 	}
 	"Heal"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} set {2} to temporary health who will die when their HP reaches 0!"
+		"en"			"{olive}{1}{mint} set{olive} {2}{mint} to temporary health who will die when their HP reaches 0!"
 	}
 	"Heal2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is absorbing health from nearby infected!"
+		"en"			"{olive}{1}{mint} is absorbing health from nearby infected!"
 	}
 	"Heal3"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is no longer absorbing health from nearby infected!"
+		"en"			"{olive}{1}{mint} is no longer absorbing health from nearby infected!"
 	}
 	"Hurt"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is hurting {2}!"
+		"en"			"{olive}{1}{mint} is hurting{olive} {2}{mint}!"
 	}
 	"Hurt2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer hurting!"
+		"en"			"{olive}{1}{mint} is no longer hurting!"
 	}
 	"Hypno"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} hypnotized {2}!"
+		"en"			"{olive}{1}{mint} hypnotized{olive} {2}{mint}!"
 	}
 	"Hypno2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer hypnotized!"
+		"en"			"{olive}{1}{mint} is no longer hypnotized!"
 	}
 	"Ice"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} froze {2}!"
+		"en"			"{olive}{1}{mint} froze{olive} {2}{mint}!"
 	}
 	"Ice2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is unfrozen!"
+		"en"			"{olive}{1}{mint} is unfrozen!"
 	}
 	"Idle"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} made {2} go idle!"
+		"en"			"{olive}{1}{mint} made{olive} {2}{mint} go idle!"
 	}
 	"Invert"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} inverted {2}'s movement keys!"
+		"en"			"{olive}{1}{mint} inverted{olive} {2}'s{mint} movement keys!"
 	}
 	"Invert2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1}'s keys are no longer inverted!"
+		"en"			"{olive}{1}'s{mint} keys are no longer inverted!"
 	}
 	"Item"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} gave the survivors items!"
+		"en"			"{olive}{1}{mint} gave the survivors{yellow} items{mint}!"
 	}
 	"Jump"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is forcing {2} to jump uncontrollably!"
+		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to jump uncontrollably!"
 	}
 	"Jump2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer being forced to jump!"
+		"en"			"{olive}{1}{mint} is no longer being forced to jump!"
 	}
 	"Jump3"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} will jump periodically!"
+		"en"			"{olive}{1}{mint} will jump periodically!"
 	}
 	"Kamikaze"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} just went kamikaze on {2}!"
+		"en"			"{olive}{1}{mint} just went kamikaze on{olive} {2}{mint}!"
 	}
 	"Lag"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is making {2} lag!"
+		"en"			"{olive}{1}{mint} is making{olive} {2}{mint} lag!"
 	}
 	"Lag2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer lagging!"
+		"en"			"{olive}{1}{mint} is no longer lagging!"
 	}
 	"Leech"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is leeching health off of {2}!"
+		"en"			"{olive}{1}{mint} is{yellow} leeching health{mint} off of{olive} {2}{mint}!"
 	}
 	"Leech2"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is no longer leeching health off of {2}!"
+		"en"			"{olive}{1}{mint} is no longer{yellow} leeching health{mint} off of{olive} {2}{mint}!"
 	}
 	"Medic"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} just healed nearby special infected!"
+		"en"			"{olive}{1}{mint} just healed nearby special infected!"
 	}
 	"Meteor"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} started a meteor shower!"
+		"en"			"{olive}{1}{mint} started a{yellow} meteor shower{mint}!"
 	}
 	"Minion"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} summoned a minion!"
+		"en"			"{olive}{1}{mint} summoned a{yellow} minion{mint}!"
 	}
 	"Necro"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} resurrected nearby special infected!"
+		"en"			"{olive}{1}{mint} resurrected nearby special infected!"
 	}
 	"Nullify"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} temporarily nullified all of {2}'s damage!"
+		"en"			"{olive}{1}{mint} temporarily nullified all of{olive} {2}'s{mint} damage!"
 	}
 	"Nullify2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1}'s damage is no longer nullified!"
+		"en"			"{olive}{1}'s{mint} damage is no longer nullified!"
 	}
 	"Panic"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} started a panic event!"
+		"en"			"{olive}{1}{mint} started a{yellow} panic event{mint}!"
 	}
 	"Pimp"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is pimp slapping {2}!"
+		"en"			"{olive}{1}{mint} is pimp slapping{olive} {2}{mint}!"
 	}
 	"Pimp2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer being pimp slapped!"
+		"en"			"{olive}{1}{mint} is no longer being pimp slapped!"
 	}
 	"Puke"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} puked on {2}!"
+		"en"			"{olive}{1}{mint} puked on{olive} {2}{mint}!"
 	}
 	"Pyro"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} ignited itself!"
+		"en"			"{olive}{1}{mint} ignited itself!"
 	}
 	"Pyro2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is burning and running really fast!"
+		"en"			"{olive}{1}{mint} is burning and running really fast!"
 	}
 	"Pyro3"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is no longer burning and is back to normal speed!"
+		"en"			"{olive}{1}{mint} is no longer burning and is back to normal speed!"
 	}
 	"Quiet"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} silenced itself around {2}!"
+		"en"			"{olive}{1}{mint} silenced itself around{olive} {2}{mint}!"
 	}
 	"Quiet2"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is no longer quiet around {2}!"
+		"en"			"{olive}{1}{mint} is no longer quiet around{olive} {2}{mint}!"
 	}
 	"Recoil"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} gave {2} strong recoil!"
+		"en"			"{olive}{1}{mint} gave{olive} {2}{mint} strong recoil!"
 	}
 	"Recoil2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} no longer has strong recoil!"
+		"en"			"{olive}{1}{mint} no longer has strong recoil!"
 	}
 	"Regen"
 	{
 		"#format"		"{1:s},{2:.2f}"
-		"en"			"{1} is regenerating health every {2} second(s)!"
+		"en"			"{olive}{1}{mint} is regenerating health every{yellow} {2}{mint} second(s)!"
 	}
 	"Regen2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} stopped regenerating health!"
+		"en"			"{olive}{1}{mint} stopped regenerating health!"
 	}
 	"Respawn"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} just respawned itself!"
+		"en"			"{olive}{1}{mint} just respawned itself!"
 	}
 	"Restart"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} caused {2} to restart with a different loadout!"
+		"en"			"{olive}{1}{mint} caused{olive} {2}{mint} to restart with a different loadout!"
 	}
 	"Rock"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} started a rock shower!"
+		"en"			"{olive}{1}{mint} started a{yellow} rock shower{mint}!"
 	}
 	"Rock2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1}'s rock shower ended!"
+		"en"			"{olive}{1}'s{mint} rock shower ended!"
 	}
 	"Rocket"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} sent {2} into space!"
+		"en"			"{olive}{1}{mint} sent{olive} {2}{mint} into space!"
 	}
 	"Shake"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is shaking {2}!"
+		"en"			"{olive}{1}{mint} is shaking{olive} {2}{mint}!"
 	}
 	"Shake2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is no longer shaking!"
+		"en"			"{olive}{1}{mint} is no longer shaking!"
 	}
 	"Shield"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1}'s shield activated!"
+		"en"			"{olive}{1}'s{mint} shield{yellow} activated{mint}!"
 	}
 	"Shield2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1}'s shield deactivated!"
+		"en"			"{olive}{1}'s{mint} shield{yellow} deactivated{mint}!"
 	}
 	"Shove"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is shoving {2}!"
+		"en"			"{olive}{1}{mint} is shoving{olive} {2}{mint}!"
 	}
 	"Shove2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer being shoved!"
+		"en"			"{olive}{1}{mint} is no longer being shoved!"
 	}
 	"Smash"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} smashed {2} to death!"
+		"en"			"{olive}{1}{mint} smashed{olive} {2}{mint} to death!"
 	}
 	"Smite"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} smited {2}!"
+		"en"			"{olive}{1}{mint} smited{olive} {2}{mint}!"
 	}
 	"Spam"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is spamming rocks!"
+		"en"			"{olive}{1}{mint} is spamming rocks!"
 	}
 	"Spam2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is no longer spamming rocks!"
+		"en"			"{olive}{1}{mint} is no longer spamming rocks!"
 	}
 	"Splash"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is splashing damage at nearby survivors!"
+		"en"			"{olive}{1}{mint} is splashing damage at nearby survivors!"
 	}
 	"Splash2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} is no longer splashing damage at nearby survivors!"
+		"en"			"{olive}{1}{mint} is no longer splashing damage at nearby survivors!"
 	}
 	"Stun"
 	{
 		"#format"		"{1:s},{2:N},{3:.2f}"
-		"en"			"{1} stunned {2} and slowed them down to {3}!"
+		"en"			"{olive}{1}{mint} stunned{olive} {2}{mint} and slowed them down to{yellow} {3}{mint}!"
 	}
 	"Stun2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} is no longer stunned!"
+		"en"			"{olive}{1}{mint} is no longer stunned!"
 	}
 	"Throw"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} threw a car!"
+		"en"			"{olive}{1}{mint} threw a car!"
 	}
 	"Throw2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} threw a special infected!"
+		"en"			"{olive}{1}{mint} threw a{yellow} special infected{mint}!"
 	}
 	"Throw3"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} threw itself!"
+		"en"			"{olive}{1}{mint} threw itself!"
 	}
 	"Throw4"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} threw a Witch!"
+		"en"			"{olive}{1}{mint} threw a Witch!"
 	}
 	"Track"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1}'s rock is tracking a survivor!"
+		"en"			"{olive}{1}'s{mint} rock is{yellow} tracking{mint} a survivor!"
 	}
 	"Vampire"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} stole some health from {2}!"
+		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
 	}
 	"Vampire2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} gained some health from nearby survivors!"
+		"en"			"{olive}{1}{mint} gained some health from nearby survivors!"
 	}
 	"Vision"
 	{
 		"#format"		"{1:s},{2:N},{3:d}"
-		"en"			"{1} changed {2}'s vision to {3} FOV!"
+		"en"			"{olive}{1}{mint} changed{olive} {2}'s{mint} vision to{yellow} {3}{mint} FOV!"
 	}
 	"Vision2"
 	{
 		"#format"		"{1:N},{2:d}"
-		"en"			"{1}'s vision changed back to {2} FOV!"
+		"en"			"{olive}{1}'s{mint} vision changed back to{yellow} {2}{mint} FOV!"
 	}
 	"Warp"
 	{
 		"#format"		"{1:s},{2:N},{3:N}"
-		"en"			"{1} warped {2} to {3}!"
+		"en"			"{olive}{1}{mint} warped{olive} {2}{mint} to{olive} {3}{mint}!"
 	}
 	"Warp2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} warped to a survivor!"
+		"en"			"{olive}{1}{mint} warped to a survivor!"
 	}
 	"Whirl"
 	{
 		"#format"		"{1:s},{2:N}"
-		"en"			"{1} is making {2} whirl."
+		"en"			"{olive}{1}{mint} is making{olive} {2}{mint} whirl."
 	}
 	"Whirl2"
 	{
 		"#format"		"{1:N}"
-		"en"			"{1} stopped whirling."
+		"en"			"{olive}{1}{mint} stopped whirling."
 	}
 	"Witch"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} converted some common infected into Witch minions!"
+		"en"			"{olive}{1}{mint} converted some common infected into{olive} Witch minions{mint}!"
 	}
 	"Zombie"
 	{
 		"#format"		"{1:s}"
-		"en"			"{1} created a zombie mob!"
+		"en"			"{olive}{1}{mint} created a{olive} zombie mob{mint}!"
 	}
 	"Tank #1"
 	{
-		"en"			"This Tank can absorb most of the damage it receives."
+		"en"			"{mint}This Tank can absorb most of the damage it receives."
 	}
 	"Tank #2"
 	{
-		"en"			"This Tank can create acid puddles underneath survivors."
+		"en"			"{mint}This Tank can create acid puddles underneath survivors."
 	}
 	"Tank #3"
 	{
-		"en"			"This Tank can prevent survivors from aiming."
+		"en"			"{mint}This Tank can prevent survivors from aiming."
 	}
 	"Tank #4"
 	{
-		"en"			"This Tank can steal some or all of your ammunition."
+		"en"			"{mint}This Tank can steal some or all of your ammunition."
 	}
 	"Tank #5"
 	{
-		"en"			"This Tank can blind survivors."
+		"en"			"{mint}This Tank can blind survivors."
 	}
 	"Tank #6"
 	{
-		"en"			"This Tank can cause explosions and is immune to explosive damage."
+		"en"			"{mint}This Tank can cause explosions and is immune to explosive damage."
 	}
 	"Tank #7"
 	{
-		"en"			"This Tank can spawn Boomers behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spawn Boomers behind it and throw some at survivors too."
 	}
 	"Tank #8"
 	{
-		"en"			"This Tank is immune to bullet damage."
+		"en"			"{mint}This Tank is immune to bullet damage."
 	}
 	"Tank #9"
 	{
-		"en"			"This Tank can bury survivors."
+		"en"			"{mint}This Tank can bury survivors."
 	}
 	"Tank #10"
 	{
-		"en"			"This Tank can throw cars at survivors. The cars disappear after 10 seconds."
+		"en"			"{mint}This Tank can throw cars at survivors. The cars disappear after 10 seconds."
 	}
 	"Tank #11"
 	{
-		"en"			"This Tank can spawn Chargers behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spawn Chargers behind it and throw some at survivors too."
 	}
 	"Tank #12"
 	{
-		"en"			"This Tank can choke survivors in the air."
+		"en"			"{mint}This Tank can choke survivors in the air."
 	}
 	"Tank #13"
 	{
-		"en"			"This Tank can spawn clones behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spawn clones behind it and throw some at survivors too."
 	}
 	"Tank #14"
 	{
-		"en"			"This Tank can emit clouds of smoke that damage survivors caught in them."
+		"en"			"{mint}This Tank can emit clouds of smoke that damage survivors caught in them."
 	}
 	"Tank #15"
 	{
-		"en"			"This Tank can drop a random weapon upon death."
+		"en"			"{mint}This Tank can drop a random weapon upon death."
 	}
 	"Tank #16"
 	{
-		"en"			"This Tank can drug survivors."
+		"en"			"{mint}This Tank can drug survivors."
 	}
 	"Tank #17"
 	{
-		"en"			"This Tank can make survivors drunk."
+		"en"			"{mint}This Tank can make survivors drunk."
 	}
 	"Tank #18"
 	{
-		"en"			"This Tank can electrocute survivors."
+		"en"			"{mint}This Tank can electrocute survivors."
 	}
 	"Tank #19"
 	{
-		"en"			"This Tank can force survivors to equip a specific weapon slot for a certain period of time."
+		"en"			"{mint}This Tank can force survivors to equip a specific weapon slot for a certain period of time."
 	}
 	"Tank #20"
 	{
-		"en"			"This Tank can start fires and is immune to fire damage."
+		"en"			"{mint}This Tank can start fires and is immune to fire damage."
 	}
 	"Tank #21"
 	{
-		"en"			"This Tank can run really fast like the Flash."
+		"en"			"{mint}This Tank can run really fast like the Flash."
 	}
 	"Tank #22"
 	{
-		"en"			"This Tank can fling survivors away or into the air."
+		"en"			"{mint}This Tank can fling survivors away or into the air."
 	}
 	"Tank #23"
 	{
-		"en"			"This Tank takes extra damage."
+		"en"			"{mint}This Tank takes extra damage."
 	}
 	"Tank #24"
 	{
-		"en"			"This Tank can cloak itself and disarm survivors."
+		"en"			"{mint}This Tank can cloak itself and disarm survivors."
 	}
 	"Tank #25"
 	{
-		"en"			"This Tank can gain temporary invincibility."
+		"en"			"{mint}This Tank can gain temporary invincibility."
 	}
 	"Tank #26"
 	{
-		"en"			"This Tank can pull survivors and infected towards it and lower survivors' gravity."
+		"en"			"{mint}This Tank can pull survivors and infected towards it and lower survivors' gravity."
 	}
 	"Tank #27"
 	{
-		"en"			"This Tank can give survivors temporary health, and it can absorb health from nearby infected."
+		"en"			"{mint}This Tank can give survivors temporary health, and it can absorb health from nearby infected."
 	}
 	"Tank #28"
 	{
-		"en"			"This Tank can spawn Hunters behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spawn Hunters behind it and throw some at survivors too."
 	}
 	"Tank #29"
 	{
-		"en"			"This Tank can constantly hurt survivors for a certain period of time."
+		"en"			"{mint}This Tank can constantly hurt survivors for a certain period of time."
 	}
 	"Tank #30"
 	{
-		"en"			"This Tank can hypnotize survivors to hurt themselves or their teammates."
+		"en"			"{mint}This Tank can hypnotize survivors to hurt themselves or their teammates."
 	}
 	"Tank #31"
 	{
-		"en"			"This Tank can freeze survivors."
+		"en"			"{mint}This Tank can freeze survivors."
 	}
 	"Tank #32"
 	{
-		"en"			"This Tank can make survivors go idle. (This doesn't affect bots.)"
+		"en"			"{mint}This Tank can make survivors go idle. (This doesn't affect bots.)"
 	}
 	"Tank #33"
 	{
-		"en"			"This Tank can invert survivors' movement keys."
+		"en"			"{mint}This Tank can invert survivors' movement keys."
 	}
 	"Tank #34"
 	{
-		"en"			"This Tank can give survivors items upon death."
+		"en"			"{mint}This Tank can give survivors items upon death."
 	}
 	"Tank #35"
 	{
-		"en"			"This Tank can spawn Jockeys behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spawn Jockeys behind it and throw some at survivors too."
 	}
 	"Tank #36"
 	{
-		"en"			"This Tank can jump periodically and make survivors jump uncontrollably."
+		"en"			"{mint}This Tank can jump periodically and make survivors jump uncontrollably."
 	}
 	"Tank #37"
 	{
-		"en"			"This Tank can kill itself along with a survivor victim."
+		"en"			"{mint}This Tank can kill itself along with a survivor victim."
 	}
 	"Tank #38"
 	{
-		"en"			"This Tank can make survivors lag."
+		"en"			"{mint}This Tank can make survivors lag."
 	}
 	"Tank #39"
 	{
-		"en"			"This Tank can leech off health from survivors."
+		"en"			"{mint}This Tank can leech off health from survivors."
 	}
 	"Tank #40"
 	{
-		"en"			"This Tank can heal nearby special infected upon death."
+		"en"			"{mint}This Tank can heal nearby special infected upon death."
 	}
 	"Tank #41"
 	{
-		"en"			"This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
+		"en"			"{mint}This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
 	}
 	"Tank #42"
 	{
-		"en"			"This Tank can resurrect dead special infected."
+		"en"			"{mint}This Tank can resurrect dead special infected."
 	}
 	"Tank #43"
 	{
-		"en"			"This Tank can nullify survivors' damage to protect itself from damage."
+		"en"			"{mint}This Tank can nullify survivors' damage to protect itself from damage."
 	}
 	"Tank #44"
 	{
-		"en"			"This Tank can start panic events with hordes of zombies."
+		"en"			"{mint}This Tank can start panic events with hordes of zombies."
 	}
 	"Tank #45"
 	{
-		"en"			"This Tank can pimp slap survivors repeatedly to show them who's boss."
+		"en"			"{mint}This Tank can pimp slap survivors repeatedly to show them who's boss."
 	}
 	"Tank #46"
 	{
-		"en"			"This Tank is immune to melee damage."
+		"en"			"{mint}This Tank is immune to melee damage."
 	}
 	"Tank #47"
 	{
-		"en"			"This Tank can puke on survivors."
+		"en"			"{mint}This Tank can puke on survivors."
 	}
 	"Tank #48"
 	{
-		"en"			"This Tank gains a speed boost when set on fire."
+		"en"			"{mint}This Tank gains a speed boost when set on fire."
 	}
 	"Tank #49"
 	{
-		"en"			"This Tank can silence itself from survivors."
+		"en"			"{mint}This Tank can silence itself from survivors."
 	}
 	"Tank #50"
 	{
-		"en"			"This Tank can give survivors high gun recoil."
+		"en"			"{mint}This Tank can give survivors high gun recoil."
 	}
 	"Tank #51"
 	{
-		"en"			"This Tank regenerates health every second."
+		"en"			"{mint}This Tank regenerates health every second."
 	}
 	"Tank #52"
 	{
-		"en"			"This Tank can respawn upon death."
+		"en"			"{mint}This Tank can respawn upon death."
 	}
 	"Tank #53"
 	{
-		"en"			"This Tank can force survivors to restart with a new loadout."
+		"en"			"{mint}This Tank can force survivors to restart with a new loadout."
 	}
 	"Tank #54"
 	{
-		"en"			"This Tank can start rock showers."
+		"en"			"{mint}This Tank can start rock showers."
 	}
 	"Tank #55"
 	{
-		"en"			"This Tank can send survivors into space."
+		"en"			"{mint}This Tank can send survivors into space."
 	}
 	"Tank #56"
 	{
-		"en"			"This Tank can throw itself towards survivors."
+		"en"			"{mint}This Tank can throw itself towards survivors."
 	}
 	"Tank #57"
 	{
-		"en"			"This Tank can shake survivors' screens."
+		"en"			"{mint}This Tank can shake survivors' screens."
 	}
 	"Tank #58"
 	{
-		"en"			"This Tank spawns with a shield and throws propane tanks which survivors can use to break the shield."
+		"en"			"{mint}This Tank spawns with a shield and throws propane tanks which survivors can use to break the shield."
 	}
 	"Tank #59"
 	{
-		"en"			"This Tank can shove survivors around."
+		"en"			"{mint}This Tank can shove survivors around."
 	}
 	"Tank #60"
 	{
-		"en"			"This Tank can smash survivors to death."
+		"en"			"{mint}This Tank can smash survivors to death."
 	}
 	"Tank #61"
 	{
-		"en"			"This Tank can smite survivors for an instant kill."
+		"en"			"{mint}This Tank can smite survivors for an instant kill."
 	}
 	"Tank #62"
 	{
-		"en"			"This Tank can spawn Smokers behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spawn Smokers behind it and throw some at survivors too."
 	}
 	"Tank #63"
 	{
-		"en"			"This Tank can spam rocks at survivors."
+		"en"			"{mint}This Tank can spam rocks at survivors."
 	}
 	"Tank #64"
 	{
-		"en"			"This Tank can spawn random special infected behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spawn random special infected behind it and throw some at survivors too."
 	}
 	"Tank #65"
 	{
-		"en"			"This Tank can spawn Spitters behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spawn Spitters behind it and throw some at survivors too."
 	}
 	"Tank #66"
 	{
-		"en"			"This Tank can release a splash of damage within a certain radius."
+		"en"			"{mint}This Tank can release a splash of damage within a certain radius."
 	}
 	"Tank #67"
 	{
-		"en"			"This Tank can stun survivors and slow them down."
+		"en"			"{mint}This Tank can stun survivors and slow them down."
 	}
 	"Tank #68"
 	{
-		"en"			"This Tank throws rocks which can track nearby survivors."
+		"en"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
 	}
 	"Tank #69"
 	{
-		"en"			"This Tank can steal health from survivors."
+		"en"			"{mint}This Tank throws rocks which can track nearby survivors."
 	}
 	"Tank #70"
 	{
-		"en"			"This Tank can change the FOV of survivors."
+		"en"			"{mint}This Tank can steal health from survivors."
 	}
 	"Tank #71"
 	{
-		"en"			"This Tank can warp to a random survivor."
+		"en"			"{mint}This Tank can change the FOV of survivors."
 	}
 	"Tank #72"
 	{
-		"en"			"This Tank can make survivors whirl."
+		"en"			"{mint}This Tank can warp to a random survivor."
 	}
 	"Tank #73"
 	{
-		"en"			"This Tank can convert nearby common infected into Witches and throw some at survivors too."
+		"en"			"{mint}This Tank can make survivors whirl."
 	}
 	"Tank #74"
 	{
-		"en"			"This Tank can create a mob of zombies within the area."
+		"en"			"{mint}This Tank can convert nearby common infected into Witches and throw some at survivors too."
 	}
 	"Tank #75"
 	{
-		"en"			"This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+		"en"			"{mint}This Tank can create a mob of zombies within the area."
 	}
 	"Tank #76"
 	{
-		"en"			"Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn witches/zombies."
+		"en"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
 	}
 	"Tank #77"
 	{
-		"en"			"This Tank is immune to fire damage and can run really fast."
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
 	}
 	"Tank #78"
 	{
-		"en"			"This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+		"en"			"{mint}This Tank is immune to fire damage and can run really fast."
 	}
 	"Tank #79"
 	{
-		"en"			"This Tank pushes survivors away."
+		"en"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
 	}
 	"Tank #80"
 	{
-		"en"			"Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+		"en"			"{mint}This Tank pushes survivors away."
 	}
 	"Tank #81"
 	{
-		"en"			"Fire immunity, cloaks itself, and warps to survivors."
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
 	}
 	"Tank #82"
 	{
-		"en"			"Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns witches/zombies."
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
 	}
 	"Tank #83"
 	{
-		"en"			"This Tank is immune to fire damage, runs fast, and warps to survivors."
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
 	}
 	"Tank #84"
 	{
-		"en"			"This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
 	}
 	"Tank #85"
 	{
-		"en"			"This Tank can give survivors temporary health, absorb health from nearby infected, jump really high, start meteor showers, spawn with a shield, and warp to survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
 	}
 	"Tank #86"
 	{
-		"en"			"This Tank is immune to fire damage, runs really fast, and warps to survivors."
+		"en"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, jump really high, start meteor showers, spawn with a shield, and warp to survivors."
 	}
 	"Tank #87"
 	{
-		"en"			"This Tank spawns zombies behind clouds of smoke within the area."
+		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 	}
 	"Tank #88"
 	{
-		"en"			"This Tank is immune to fire damage, runs really fast, and warps to survivors."
+		"en"			"{mint}This Tank spawns zombies behind clouds of smoke within the area."
 	}
 	"Tank #89"
 	{
-		"en"			"This Tank can partially blind and drug survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 	}
 	"Tank #90"
 	{
-		"en"			"This Tank can partially drug and hurt survivors."
+		"en"			"{mint}This Tank can partially blind and drug survivors."
 	}
 	"Tank #91"
 	{
-		"en"			"This Tank can start rock showers and spam rocks at survivors."
+		"en"			"{mint}This Tank can partially drug and hurt survivors."
 	}
 	"Tank #92"
 	{
-		"en"			"This Tank does extra damage, runs really fast, clones itself, creates acid puddles, explosions, and fires, cloaks itself, starts rock showers, spams rocks at survivors, and throws rocks that track nearby survivors."
+		"en"			"{mint}This Tank can start rock showers and spam rocks at survivors."
 	}
 	"Tank #93"
 	{
-		"en"			"This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+		"en"			"{mint}This Tank does extra damage, runs really fast, clones itself, creates acid puddles, explosions, and fires, cloaks itself, starts rock showers, spams rocks at survivors, and throws rocks that track nearby survivors."
 	}
 	"Tank #94"
 	{
-		"en"			"This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
 	}
 	"Tank #95"
 	{
-		"en"			"This Tank can start panic events and spawn Boomers to help prolong them."
+		"en"			"{mint}It's Darth Vader... And he is... A Super Tank with the Force!"
 	}
 	"Tank #96"
 	{
-		"en"			"Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
+		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
 	}
 	"Tank #97"
 	{
-		"en"			"This Tank can teleport, move around silently, and cloak itself. Be very careful!"
+		"en"			"{mint}This Tank can start panic events and spawn Boomers to help prolong them."
 	}
 	"Tank #98"
 	{
-		"en"			"This Tank can run really fast like the Flash and create speed mirages (clones) of itself."
+		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
 	}
 	"Tank #99"
 	{
-		"en"			"This Tank is too busy meditating to care about you."
+		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
 	}
 	"Tank #100"
 	{
-		"en"			"This Tank throws explosive rocks and periodically warps to survivors."
+		"en"			"{mint}This Tank can run really fast like the Flash and create speed mirages (clones) of itself."
 	}
 	"Tank #101"
 	{
-		"en"			"This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
+		"en"			"{mint}This Tank is too busy meditating to care about you."
 	}
 	"Tank #102"
 	{
-		"en"			"This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
+		"en"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
 	}
 	"Tank #103"
 	{
-		"en"			"This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
 	}
 	"Tank #104"
 	{
-		"en"			"This Tank randomly switches into different Super Tank types and deals increased damage. Be careful..."
+		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
 	}
 	"Tank #105"
 	{
-		"en"			"This Tank can shapeshift into different Super Tank types. Don't underestimate it..."
+		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+	"Tank #106"
+	{
+		"en"			"{mint}This Tank randomly switches into different Super Tank types and deals increased damage. Be careful..."
+	}
+	"Tank #107"
+	{
+		"en"			"{mint}This Tank can shapeshift into different Super Tank types. Don't underestimate it..."
 	}
 	// Add Tank Note phrases for your own Super Tanks below!
 }

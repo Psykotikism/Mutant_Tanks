@@ -38,7 +38,7 @@ char g_sGravityEffect[ST_MAXTYPES + 1][4], g_sGravityEffect2[ST_MAXTYPES + 1][4]
 
 float g_flGravityChance[ST_MAXTYPES + 1], g_flGravityChance2[ST_MAXTYPES + 1], g_flGravityDuration[ST_MAXTYPES + 1], g_flGravityDuration2[ST_MAXTYPES + 1], g_flGravityForce[ST_MAXTYPES + 1], g_flGravityForce2[ST_MAXTYPES + 1], g_flGravityRange[ST_MAXTYPES + 1], g_flGravityRange2[ST_MAXTYPES + 1], g_flGravityRangeChance[ST_MAXTYPES + 1], g_flGravityRangeChance2[ST_MAXTYPES + 1], g_flGravityValue[ST_MAXTYPES + 1], g_flGravityValue2[ST_MAXTYPES + 1];
 
-int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHit2[ST_MAXTYPES + 1], g_iGravityHitMode[ST_MAXTYPES + 1], g_iGravityHitMode2[ST_MAXTYPES + 1];
+int g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHit2[ST_MAXTYPES + 1], g_iGravityHitMode[ST_MAXTYPES + 1], g_iGravityHitMode2[ST_MAXTYPES + 1], g_iGravityOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -83,7 +83,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -104,6 +104,7 @@ public void OnClientPutInServer(int client)
 
 	g_bGravity[client] = false;
 	g_bGravity2[client] = false;
+	g_iGravityOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -113,19 +114,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iGravityHitMode(attacker) == 0 || iGravityHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iGravityHitMode(attacker) == 0 || iGravityHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vGravityHit(victim, attacker, flGravityChance(attacker), iGravityHit(attacker), "1", "1");
 			}
 		}
-		else if ((iGravityHitMode(victim) == 0 || iGravityHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iGravityHitMode(victim) == 0 || iGravityHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -139,10 +140,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -151,10 +153,10 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iGravityAbility[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Enabled", 0);
 				g_iGravityAbility[iIndex] = iClamp(g_iGravityAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect[iIndex], sizeof(g_sGravityEffect[]), "123");
+				kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect[iIndex], sizeof(g_sGravityEffect[]), "0");
 				kvSuperTanks.GetString("Gravity Ability/Ability Message", g_sGravityMessage[iIndex], sizeof(g_sGravityMessage[]), "0");
 				g_flGravityChance[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Chance", 33.3);
-				g_flGravityChance[iIndex] = flClamp(g_flGravityChance[iIndex], 0.1, 100.0);
+				g_flGravityChance[iIndex] = flClamp(g_flGravityChance[iIndex], 0.0, 100.0);
 				g_flGravityDuration[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", 5.0);
 				g_flGravityDuration[iIndex] = flClamp(g_flGravityDuration[iIndex], 0.1, 9999999999.0);
 				g_flGravityForce[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", -50.0);
@@ -166,7 +168,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flGravityRange[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", 150.0);
 				g_flGravityRange[iIndex] = flClamp(g_flGravityRange[iIndex], 1.0, 9999999999.0);
 				g_flGravityRangeChance[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range Chance", 15.0);
-				g_flGravityRangeChance[iIndex] = flClamp(g_flGravityRangeChance[iIndex], 0.1, 100.0);
+				g_flGravityRangeChance[iIndex] = flClamp(g_flGravityRangeChance[iIndex], 0.0, 100.0);
 				g_flGravityValue[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", 0.3);
 				g_flGravityValue[iIndex] = flClamp(g_flGravityValue[iIndex], 0.1, 9999999999.0);
 			}
@@ -179,7 +181,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect2[iIndex], sizeof(g_sGravityEffect2[]), g_sGravityEffect[iIndex]);
 				kvSuperTanks.GetString("Gravity Ability/Ability Message", g_sGravityMessage2[iIndex], sizeof(g_sGravityMessage2[]), g_sGravityMessage[iIndex]);
 				g_flGravityChance2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Chance", g_flGravityChance[iIndex]);
-				g_flGravityChance2[iIndex] = flClamp(g_flGravityChance2[iIndex], 0.1, 100.0);
+				g_flGravityChance2[iIndex] = flClamp(g_flGravityChance2[iIndex], 0.0, 100.0);
 				g_flGravityDuration2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", g_flGravityDuration[iIndex]);
 				g_flGravityDuration2[iIndex] = flClamp(g_flGravityDuration2[iIndex], 0.1, 9999999999.0);
 				g_flGravityForce2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", g_flGravityForce[iIndex]);
@@ -191,7 +193,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flGravityRange2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", g_flGravityRange[iIndex]);
 				g_flGravityRange2[iIndex] = flClamp(g_flGravityRange2[iIndex], 1.0, 9999999999.0);
 				g_flGravityRangeChance2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range Chance", g_flGravityRangeChance[iIndex]);
-				g_flGravityRangeChance2[iIndex] = flClamp(g_flGravityRangeChance2[iIndex], 0.1, 100.0);
+				g_flGravityRangeChance2[iIndex] = flClamp(g_flGravityRangeChance2[iIndex], 0.0, 100.0);
 				g_flGravityValue2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", g_flGravityValue[iIndex]);
 				g_flGravityValue2[iIndex] = flClamp(g_flGravityValue2[iIndex], 0.1, 9999999999.0);
 			}
@@ -205,23 +207,21 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsTank(iTank, "234"))
 		{
-			vRemoveGravity(iPlayer);
+			vRemoveGravity(iTank);
 		}
 	}
-
-	vReset();
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveGravity(iTank);
 		}
@@ -230,7 +230,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flGravityRange = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityRange[ST_TankType(tank)] : g_flGravityRange2[ST_TankType(tank)],
 			flGravityRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityRangeChance[ST_TankType(tank)] : g_flGravityRangeChance2[ST_TankType(tank)],
@@ -240,7 +240,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -286,16 +286,16 @@ public void ST_Ability(int tank)
 				{
 					char sTankName[33];
 					ST_TankName(tank, sTankName);
-					PrintToChatAll("%s %t", ST_TAG2, "Gravity3", sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Gravity3", sTankName);
 				}
 			}
 		}
 	}
 }
 
-public void ST_BossStage(int tank)
+public void ST_ChangeType(int tank)
 {
-	if ((iGravityAbility(tank) == 2 || iGravityAbility(tank) == 3) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		vRemoveGravity(tank);
 	}
@@ -306,9 +306,11 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, const
 	if ((enabled == 1 || enabled == 3) && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bGravity2[survivor])
 	{
 		g_bGravity2[survivor] = true;
+		g_iGravityOwner[survivor] = tank;
 
 		float flGravityValue = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityValue[ST_TankType(tank)] : g_flGravityValue2[ST_TankType(tank)],
 			flGravityDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flGravityDuration[ST_TankType(tank)] : g_flGravityDuration2[ST_TankType(tank)];
+
 		SetEntityGravity(survivor, flGravityValue);
 
 		DataPack dpStopGravity;
@@ -327,7 +329,7 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, const
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Gravity", sTankName, survivor, flGravityValue);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Gravity", sTankName, survivor, flGravityValue);
 		}
 	}
 }
@@ -353,15 +355,16 @@ static void vRemoveGravity(int tank)
 		}
 	}
 
+	g_bGravity[tank] = false;
+
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bGravity2[iSurvivor])
+		if (bIsSurvivor(iSurvivor, "234") && g_bGravity2[iSurvivor] && g_iGravityOwner[iSurvivor] == tank)
 		{
-			DataPack dpStopGravity;
-			CreateDataTimer(0.1, tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
-			dpStopGravity.WriteCell(GetClientUserId(iSurvivor));
-			dpStopGravity.WriteCell(GetClientUserId(tank));
-			dpStopGravity.WriteString("0");
+			g_bGravity2[iSurvivor] = false;
+			g_iGravityOwner[iSurvivor] = 0;
+
+			SetEntityGravity(iSurvivor, 1.0);
 		}
 	}
 }
@@ -370,10 +373,11 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bGravity[iPlayer] = false;
 			g_bGravity2[iPlayer] = false;
+			g_iGravityOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -406,14 +410,16 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bGravity2[iSurvivor] = false;
+		g_iGravityOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity2[iSurvivor])
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity2[iSurvivor])
 	{
 		g_bGravity2[iSurvivor] = false;
+		g_iGravityOwner[iSurvivor] = 0;
 
 		SetEntityGravity(iSurvivor, 1.0);
 
@@ -421,6 +427,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	}
 
 	g_bGravity2[iSurvivor] = false;
+	g_iGravityOwner[iSurvivor] = 0;
 
 	SetEntityGravity(iSurvivor, 1.0);
 
@@ -429,7 +436,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	pack.ReadString(sMessage, sizeof(sMessage));
 	if (StrContains(sGravityMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Gravity2", iSurvivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Gravity2", iSurvivor);
 	}
 
 	return Plugin_Continue;

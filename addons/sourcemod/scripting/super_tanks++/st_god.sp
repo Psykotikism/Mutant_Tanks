@@ -93,10 +93,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -108,7 +109,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGodMessage[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", 0);
 				g_iGodMessage[iIndex] = iClamp(g_iGodMessage[iIndex], 0, 1);
 				g_flGodChance[iIndex] = kvSuperTanks.GetFloat("God Ability/God Chance", 33.3);
-				g_flGodChance[iIndex] = flClamp(g_flGodChance[iIndex], 0.1, 100.0);
+				g_flGodChance[iIndex] = flClamp(g_flGodChance[iIndex], 0.0, 100.0);
 				g_flGodDuration[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", 5.0);
 				g_flGodDuration[iIndex] = flClamp(g_flGodDuration[iIndex], 0.1, 9999999999.0);
 			}
@@ -121,7 +122,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iGodMessage2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", g_iGodMessage[iIndex]);
 				g_iGodMessage2[iIndex] = iClamp(g_iGodMessage2[iIndex], 0, 1);
 				g_flGodChance2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Chance", g_flGodChance[iIndex]);
-				g_flGodChance2[iIndex] = flClamp(g_flGodChance2[iIndex], 0.1, 100.0);
+				g_flGodChance2[iIndex] = flClamp(g_flGodChance2[iIndex], 0.0, 100.0);
 				g_flGodDuration2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", g_flGodDuration[iIndex]);
 				g_flGodDuration2[iIndex] = flClamp(g_flGodDuration2[iIndex], 0.1, 9999999999.0);
 			}
@@ -135,15 +136,21 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	vReset();
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank, "234") && g_bGod[iTank])
+		{
+			SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
+		}
+	}
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iGodAbility(iTank) == 1 && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bGod[iTank])
+		if (iGodAbility(iTank) == 1 && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bGod[iTank])
 		{
 			tTimerStopGod(null, GetClientUserId(iTank));
 		}
@@ -153,7 +160,7 @@ public void ST_Event(Event event, const char[] name)
 public void ST_Ability(int tank)
 {
 	float flGodChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGodChance[ST_TankType(tank)] : g_flGodChance2[ST_TankType(tank)];
-	if (iGodAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flGodChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bGod[tank])
+	if (iGodAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flGodChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bGod[tank])
 	{
 		g_bGod[tank] = true;
 
@@ -166,9 +173,19 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "God", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "God", sTankName);
 		}
 		
+	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		g_bGod[tank] = false;
+
+		SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
 	}
 }
 
@@ -176,7 +193,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bGod[iPlayer] = false;
 		}
@@ -196,7 +213,7 @@ static int iGodMessage(int tank)
 public Action tTimerStopGod(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGod[iTank])
 	{
 		g_bGod[iTank] = false;
 
@@ -211,7 +228,7 @@ public Action tTimerStopGod(Handle timer, int userid)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "God2", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "God2", sTankName);
 	}
 
 	return Plugin_Continue;

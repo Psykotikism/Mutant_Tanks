@@ -38,7 +38,7 @@ char g_sDrugEffect[ST_MAXTYPES + 1][4], g_sDrugEffect2[ST_MAXTYPES + 1][4], g_sD
 
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0}, g_flDrugChance[ST_MAXTYPES + 1], g_flDrugChance2[ST_MAXTYPES + 1], g_flDrugDuration[ST_MAXTYPES + 1], g_flDrugDuration2[ST_MAXTYPES + 1], g_flDrugInterval[ST_MAXTYPES + 1], g_flDrugInterval2[ST_MAXTYPES + 1], g_flDrugRange[ST_MAXTYPES + 1], g_flDrugRange2[ST_MAXTYPES + 1], g_flDrugRangeChance[ST_MAXTYPES + 1], g_flDrugRangeChance2[ST_MAXTYPES + 1];
 
-int g_iDrugAbility[ST_MAXTYPES + 1], g_iDrugAbility2[ST_MAXTYPES + 1], g_iDrugHit[ST_MAXTYPES + 1], g_iDrugHit2[ST_MAXTYPES + 1], g_iDrugHitMode[ST_MAXTYPES + 1], g_iDrugHitMode2[ST_MAXTYPES + 1];
+int g_iDrugAbility[ST_MAXTYPES + 1], g_iDrugAbility2[ST_MAXTYPES + 1], g_iDrugHit[ST_MAXTYPES + 1], g_iDrugHit2[ST_MAXTYPES + 1], g_iDrugHitMode[ST_MAXTYPES + 1], g_iDrugHitMode2[ST_MAXTYPES + 1], g_iDrugOwner[MAXPLAYERS + 1];
 
 UserMsg g_umFadeUserMsgId;
 
@@ -87,7 +87,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -107,6 +107,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bDrug[client] = false;
+	g_iDrugOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -116,19 +117,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iDrugHitMode(attacker) == 0 || iDrugHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsHumanSurvivor(victim))
+		if ((iDrugHitMode(attacker) == 0 || iDrugHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsHumanSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vDrugHit(victim, attacker, flDrugChance(attacker), iDrugHit(attacker), "1", "1");
 			}
 		}
-		else if ((iDrugHitMode(victim) == 0 || iDrugHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsHumanSurvivor(attacker))
+		else if ((iDrugHitMode(victim) == 0 || iDrugHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsHumanSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -142,10 +143,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -154,10 +156,10 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iDrugAbility[iIndex] = kvSuperTanks.GetNum("Drug Ability/Ability Enabled", 0);
 				g_iDrugAbility[iIndex] = iClamp(g_iDrugAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Drug Ability/Ability Effect", g_sDrugEffect[iIndex], sizeof(g_sDrugEffect[]), "123");
+				kvSuperTanks.GetString("Drug Ability/Ability Effect", g_sDrugEffect[iIndex], sizeof(g_sDrugEffect[]), "0");
 				kvSuperTanks.GetString("Drug Ability/Ability Message", g_sDrugMessage[iIndex], sizeof(g_sDrugMessage[]), "0");
 				g_flDrugChance[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Chance", 33.3);
-				g_flDrugChance[iIndex] = flClamp(g_flDrugChance[iIndex], 0.1, 100.0);
+				g_flDrugChance[iIndex] = flClamp(g_flDrugChance[iIndex], 0.0, 100.0);
 				g_flDrugDuration[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Duration", 5.0);
 				g_flDrugDuration[iIndex] = flClamp(g_flDrugDuration[iIndex], 0.1, 9999999999.0);
 				g_iDrugHit[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Hit", 0);
@@ -169,7 +171,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flDrugRange[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range", 150.0);
 				g_flDrugRange[iIndex] = flClamp(g_flDrugRange[iIndex], 1.0, 9999999999.0);
 				g_flDrugRangeChance[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range Chance", 15.0);
-				g_flDrugRangeChance[iIndex] = flClamp(g_flDrugRangeChance[iIndex], 0.1, 100.0);
+				g_flDrugRangeChance[iIndex] = flClamp(g_flDrugRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -180,7 +182,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Drug Ability/Ability Effect", g_sDrugEffect2[iIndex], sizeof(g_sDrugEffect2[]), g_sDrugEffect[iIndex]);
 				kvSuperTanks.GetString("Drug Ability/Ability Message", g_sDrugMessage2[iIndex], sizeof(g_sDrugMessage2[]), g_sDrugMessage[iIndex]);
 				g_flDrugChance2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Chance", g_flDrugChance[iIndex]);
-				g_flDrugChance2[iIndex] = flClamp(g_flDrugChance2[iIndex], 0.1, 100.0);
+				g_flDrugChance2[iIndex] = flClamp(g_flDrugChance2[iIndex], 0.0, 100.0);
 				g_flDrugDuration2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Duration", g_flDrugDuration[iIndex]);
 				g_flDrugDuration2[iIndex] = flClamp(g_flDrugDuration2[iIndex], 0.1, 9999999999.0);
 				g_iDrugHit2[iIndex] = kvSuperTanks.GetNum("Drug Ability/Drug Hit", g_iDrugHit[iIndex]);
@@ -192,7 +194,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flDrugRange2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range", g_flDrugRange[iIndex]);
 				g_flDrugRange2[iIndex] = flClamp(g_flDrugRange2[iIndex], 1.0, 9999999999.0);
 				g_flDrugRangeChance2[iIndex] = kvSuperTanks.GetFloat("Drug Ability/Drug Range Chance", g_flDrugRangeChance[iIndex]);
-				g_flDrugRangeChance2[iIndex] = flClamp(g_flDrugRangeChance2[iIndex], 0.1, 100.0);
+				g_flDrugRangeChance2[iIndex] = flClamp(g_flDrugRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -204,12 +206,18 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	vReset();
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor, "234") && g_bDrug[iSurvivor])
+		{
+			vDrug(iSurvivor, false, g_flDrugAngles);
+		}
+	}
 }
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iDrugAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iDrugAbility[ST_TankType(tank)] : g_iDrugAbility2[ST_TankType(tank)];
 
@@ -221,7 +229,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsHumanSurvivor(iSurvivor))
+			if (bIsHumanSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -231,6 +239,21 @@ public void ST_Ability(int tank)
 				{
 					vDrugHit(iSurvivor, tank, flDrugRangeChance, iDrugAbility, "2", "3");
 				}
+			}
+		}
+	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsHumanSurvivor(iSurvivor, "24") && g_bDrug[iSurvivor] && g_iDrugOwner[iSurvivor] == tank)
+			{
+				g_bDrug[iSurvivor] = false;
+				g_iDrugOwner[iSurvivor] = 0;
 			}
 		}
 	}
@@ -282,6 +305,7 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, const ch
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bDrug[survivor])
 	{
 		g_bDrug[survivor] = true;
+		g_iDrugOwner[survivor] = tank;
 
 		float flDrugInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flDrugInterval[ST_TankType(tank)] : g_flDrugInterval2[ST_TankType(tank)];
 		DataPack dpDrug;
@@ -298,11 +322,11 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, const ch
 
 		char sDrugMessage[3];
 		sDrugMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sDrugMessage[ST_TankType(tank)] : g_sDrugMessage2[ST_TankType(tank)];
-		if (StrContains(sDrugMessage, message) != 1)
+		if (StrContains(sDrugMessage, message) != -1)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Drug", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Drug", sTankName, survivor);
 		}
 	}
 }
@@ -311,9 +335,10 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bDrug[iPlayer] = false;
+			g_iDrugOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -321,6 +346,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bDrug[survivor] = false;
+	g_iDrugOwner[survivor] = 0;
 
 	vDrug(survivor, false, g_flDrugAngles);
 
@@ -328,7 +354,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 	sDrugMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sDrugMessage[ST_TankType(tank)] : g_sDrugMessage2[ST_TankType(tank)];
 	if (StrContains(sDrugMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Drug2", survivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Drug2", survivor);
 	}
 }
 
@@ -355,13 +381,15 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 	if (!bIsHumanSurvivor(iSurvivor))
 	{
 		g_bDrug[iSurvivor] = false;
+		g_iDrugOwner[iSurvivor] = 0;
+
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bDrug[iSurvivor])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bDrug[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

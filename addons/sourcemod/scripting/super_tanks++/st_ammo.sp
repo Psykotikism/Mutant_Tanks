@@ -83,7 +83,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -100,19 +100,19 @@ public void OnClientPutInServer(int client)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iAmmoHitMode(attacker) == 0 || iAmmoHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iAmmoHitMode(attacker) == 0 || iAmmoHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vAmmoHit(victim, attacker, flAmmoChance(attacker), iAmmoHit(attacker), "1", "1");
 			}
 		}
-		else if ((iAmmoHitMode(victim) == 0 || iAmmoHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iAmmoHitMode(victim) == 0 || iAmmoHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -126,10 +126,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -138,10 +139,10 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iAmmoAbility[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Enabled", 0);
 				g_iAmmoAbility[iIndex] = iClamp(g_iAmmoAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Ammo Ability/Ability Effect", g_sAmmoEffect[iIndex], sizeof(g_sAmmoEffect[]), "123");
+				kvSuperTanks.GetString("Ammo Ability/Ability Effect", g_sAmmoEffect[iIndex], sizeof(g_sAmmoEffect[]), "0");
 				kvSuperTanks.GetString("Ammo Ability/Ability Message", g_sAmmoMessage[iIndex], sizeof(g_sAmmoMessage[]), "0");
 				g_flAmmoChance[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Chance", 33.3);
-				g_flAmmoChance[iIndex] = flClamp(g_flAmmoChance[iIndex], 0.1, 100.0);
+				g_flAmmoChance[iIndex] = flClamp(g_flAmmoChance[iIndex], 0.0, 100.0);
 				g_iAmmoCount[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Count", 0);
 				g_iAmmoCount[iIndex] = iClamp(g_iAmmoCount[iIndex], 0, 25);
 				g_iAmmoHit[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Hit", 0);
@@ -151,7 +152,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flAmmoRange[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Range", 150.0);
 				g_flAmmoRange[iIndex] = flClamp(g_flAmmoRange[iIndex], 1.0, 9999999999.0);
 				g_flAmmoRangeChance[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Range Chance", 15.0);
-				g_flAmmoRangeChance[iIndex] = flClamp(g_flAmmoRangeChance[iIndex], 0.1, 100.0);
+				g_flAmmoRangeChance[iIndex] = flClamp(g_flAmmoRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -162,7 +163,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Ammo Ability/Ability Effect", g_sAmmoEffect2[iIndex], sizeof(g_sAmmoEffect2[]), g_sAmmoEffect[iIndex]);
 				kvSuperTanks.GetString("Ammo Ability/Ability Message", g_sAmmoMessage2[iIndex], sizeof(g_sAmmoMessage2[]), g_sAmmoMessage[iIndex]);
 				g_flAmmoChance2[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Chance", g_flAmmoChance[iIndex]);
-				g_flAmmoChance2[iIndex] = flClamp(g_flAmmoChance2[iIndex], 0.1, 100.0);
+				g_flAmmoChance2[iIndex] = flClamp(g_flAmmoChance2[iIndex], 0.0, 100.0);
 				g_iAmmoCount2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Count", g_iAmmoCount[iIndex]);
 				g_iAmmoCount2[iIndex] = iClamp(g_iAmmoCount2[iIndex], 0, 25);
 				g_iAmmoHit2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Hit", g_iAmmoHit[iIndex]);
@@ -172,7 +173,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flAmmoRange2[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Range", g_flAmmoRange[iIndex]);
 				g_flAmmoRange2[iIndex] = flClamp(g_flAmmoRange2[iIndex], 1.0, 9999999999.0);
 				g_flAmmoRangeChance2[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Range Chance", g_flAmmoRangeChance[iIndex]);
-				g_flAmmoRangeChance2[iIndex] = flClamp(g_flAmmoRangeChance2[iIndex], 0.1, 100.0);
+				g_flAmmoRangeChance2[iIndex] = flClamp(g_flAmmoRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -184,7 +185,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iAmmoAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoAbility[ST_TankType(tank)] : g_iAmmoAbility2[ST_TankType(tank)];
 
@@ -196,7 +197,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -293,7 +294,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Ammo", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Ammo", sTankName, survivor);
 		}
 	}
 }

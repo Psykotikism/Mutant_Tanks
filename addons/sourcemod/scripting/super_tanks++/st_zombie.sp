@@ -82,7 +82,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -111,19 +111,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iZombieHitMode(attacker) == 0 || iZombieHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iZombieHitMode(attacker) == 0 || iZombieHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vZombieHit(victim, attacker, flZombieChance(attacker), iZombieHit(attacker), "1", "1");
 			}
 		}
-		else if ((iZombieHitMode(victim) == 0 || iZombieHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iZombieHitMode(victim) == 0 || iZombieHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -137,10 +137,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -149,12 +150,12 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iZombieAbility[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Ability Enabled", 0);
 				g_iZombieAbility[iIndex] = iClamp(g_iZombieAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Zombie Ability/Ability Effect", g_sZombieEffect[iIndex], sizeof(g_sZombieEffect[]), "123");
+				kvSuperTanks.GetString("Zombie Ability/Ability Effect", g_sZombieEffect[iIndex], sizeof(g_sZombieEffect[]), "0");
 				kvSuperTanks.GetString("Zombie Ability/Ability Message", g_sZombieMessage[iIndex], sizeof(g_sZombieMessage[]), "0");
 				g_iZombieAmount[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", 10);
 				g_iZombieAmount[iIndex] = iClamp(g_iZombieAmount[iIndex], 1, 100);
 				g_flZombieChance[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Chance", 33.3);
-				g_flZombieChance[iIndex] = flClamp(g_flZombieChance[iIndex], 0.1, 100.0);
+				g_flZombieChance[iIndex] = flClamp(g_flZombieChance[iIndex], 0.0, 100.0);
 				g_iZombieHit[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Hit", 0);
 				g_iZombieHit[iIndex] = iClamp(g_iZombieHit[iIndex], 0, 1);
 				g_iZombieHitMode[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Hit Mode", 0);
@@ -164,7 +165,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flZombieRange[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Range", 150.0);
 				g_flZombieRange[iIndex] = flClamp(g_flZombieRange[iIndex], 1.0, 9999999999.0);
 				g_flZombieRangeChance[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Range Chance", 15.0);
-				g_flZombieRangeChance[iIndex] = flClamp(g_flZombieRangeChance[iIndex], 0.1, 100.0);
+				g_flZombieRangeChance[iIndex] = flClamp(g_flZombieRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -177,7 +178,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iZombieAmount2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Amount", g_iZombieAmount[iIndex]);
 				g_iZombieAmount2[iIndex] = iClamp(g_iZombieAmount2[iIndex], 1, 100);
 				g_flZombieChance2[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Chance", g_flZombieChance[iIndex]);
-				g_flZombieChance2[iIndex] = flClamp(g_flZombieChance2[iIndex], 0.1, 100.0);
+				g_flZombieChance2[iIndex] = flClamp(g_flZombieChance2[iIndex], 0.0, 100.0);
 				g_iZombieHit2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Hit", g_iZombieHit[iIndex]);
 				g_iZombieHit2[iIndex] = iClamp(g_iZombieHit2[iIndex], 0, 1);
 				g_iZombieHitMode2[iIndex] = kvSuperTanks.GetNum("Zombie Ability/Zombie Hit Mode", g_iZombieHitMode[iIndex]);
@@ -187,7 +188,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flZombieRange2[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Range", g_flZombieRange[iIndex]);
 				g_flZombieRange2[iIndex] = flClamp(g_flZombieRange2[iIndex], 1.0, 9999999999.0);
 				g_flZombieRangeChance2[iIndex] = kvSuperTanks.GetFloat("Zombie Ability/Zombie Range Chance", g_flZombieRangeChance[iIndex]);
-				g_flZombieRangeChance2[iIndex] = flClamp(g_flZombieRangeChance2[iIndex], 0.1, 100.0);
+				g_flZombieRangeChance2[iIndex] = flClamp(g_flZombieRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -197,17 +198,12 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iZombieAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flZombieChance(iTank) && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iZombieAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flZombieChance(iTank) && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vZombie(iTank);
 		}
@@ -216,7 +212,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bZombie[tank])
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bZombie[tank])
 	{
 		float flZombieRange = !g_bTankConfig[ST_TankType(tank)] ? g_flZombieRange[ST_TankType(tank)] : g_flZombieRange2[ST_TankType(tank)],
 			flZombieRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flZombieRangeChance[ST_TankType(tank)] : g_flZombieRangeChance2[ST_TankType(tank)],
@@ -226,7 +222,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -248,11 +244,16 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_ChangeType(int tank)
+{
+	g_bZombie[tank] = false;
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bZombie[iPlayer] = false;
 		}
@@ -284,7 +285,7 @@ static void vZombieHit(int survivor, int tank, float chance, int enabled, const 
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
 		}
 	}
 }
@@ -312,14 +313,7 @@ static int iZombieHitMode(int tank)
 public Action tTimerZombie(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bZombie[iTank])
-	{
-		g_bZombie[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iZombieAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iZombieAbility(iTank) == 0 || !g_bZombie[iTank])
 	{
 		g_bZombie[iTank] = false;
 
@@ -334,7 +328,7 @@ public Action tTimerZombie(Handle timer, int userid)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
 	}
 
 	return Plugin_Continue;

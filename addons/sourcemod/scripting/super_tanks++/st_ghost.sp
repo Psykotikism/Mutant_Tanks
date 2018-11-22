@@ -42,7 +42,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bGhost[MAXPLAYERS + 1], g_bGhost2[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
-char g_sGhostEffect[ST_MAXTYPES + 1][4], g_sGhostEffect2[ST_MAXTYPES + 1][4], g_sGhostMessage[ST_MAXTYPES + 1][4], g_sGhostMessage2[ST_MAXTYPES + 1][4], g_sGhostWeaponSlots[ST_MAXTYPES + 1][6], g_sGhostWeaponSlots2[ST_MAXTYPES + 1][6], g_sPropsColors[ST_MAXTYPES + 1][80], g_sPropsColors2[ST_MAXTYPES + 1][80], g_sTankColors[ST_MAXTYPES + 1][28], g_sTankColors2[ST_MAXTYPES + 1][28];
+char g_sGhostEffect[ST_MAXTYPES + 1][4], g_sGhostEffect2[ST_MAXTYPES + 1][4], g_sGhostMessage[ST_MAXTYPES + 1][4], g_sGhostMessage2[ST_MAXTYPES + 1][4], g_sGhostWeaponSlots[ST_MAXTYPES + 1][6], g_sGhostWeaponSlots2[ST_MAXTYPES + 1][6];
 
 float g_flGhostChance[ST_MAXTYPES + 1], g_flGhostChance2[ST_MAXTYPES + 1], g_flGhostFadeDelay[ST_MAXTYPES + 1], g_flGhostFadeDelay2[ST_MAXTYPES + 1], g_flGhostFadeRate[ST_MAXTYPES + 1], g_flGhostFadeRate2[ST_MAXTYPES + 1], g_flGhostRange[ST_MAXTYPES + 1], g_flGhostRange2[ST_MAXTYPES + 1], g_flGhostRangeChance[ST_MAXTYPES + 1], g_flGhostRangeChance2[ST_MAXTYPES + 1];
 
@@ -91,7 +91,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -125,19 +125,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iGhostHitMode(attacker) == 0 || iGhostHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iGhostHitMode(attacker) == 0 || iGhostHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vGhostHit(victim, attacker, flGhostChance(attacker), iGhostHit(attacker), "1", "1");
 			}
 		}
-		else if ((iGhostHitMode(victim) == 0 || iGhostHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iGhostHitMode(victim) == 0 || iGhostHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -151,24 +151,23 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
 			{
 				g_bTankConfig[iIndex] = false;
 
-				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors[iIndex], sizeof(g_sTankColors[]), "255,255,255,255|255,255,255");
-				kvSuperTanks.GetString("Props/Props Colors", g_sPropsColors[iIndex], sizeof(g_sPropsColors[]), "255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255");
 				g_iGhostAbility[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", 0);
 				g_iGhostAbility[iIndex] = iClamp(g_iGhostAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Ghost Ability/Ability Effect", g_sGhostEffect[iIndex], sizeof(g_sGhostEffect[]), "123");
+				kvSuperTanks.GetString("Ghost Ability/Ability Effect", g_sGhostEffect[iIndex], sizeof(g_sGhostEffect[]), "0");
 				kvSuperTanks.GetString("Ghost Ability/Ability Message", g_sGhostMessage[iIndex], sizeof(g_sGhostMessage[]), "0");
 				g_flGhostChance[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Chance", 33.3);
-				g_flGhostChance[iIndex] = flClamp(g_flGhostChance[iIndex], 0.1, 100.0);
+				g_flGhostChance[iIndex] = flClamp(g_flGhostChance[iIndex], 0.0, 100.0);
 				g_iGhostFadeAlpha[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Alpha", 2);
 				g_iGhostFadeAlpha[iIndex] = iClamp(g_iGhostFadeAlpha[iIndex], 0, 255);
 				g_flGhostFadeDelay[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Fade Delay", 5.0);
@@ -184,21 +183,19 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flGhostRange[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Range", 150.0);
 				g_flGhostRange[iIndex] = flClamp(g_flGhostRange[iIndex], 1.0, 9999999999.0);
 				g_flGhostRangeChance[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Range Chance", 15.0);
-				g_flGhostRangeChance[iIndex] = flClamp(g_flGhostRangeChance[iIndex], 0.1, 100.0);
+				g_flGhostRangeChance[iIndex] = flClamp(g_flGhostRangeChance[iIndex], 0.0, 100.0);
 				kvSuperTanks.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostWeaponSlots[iIndex], sizeof(g_sGhostWeaponSlots[]), "12345");
 			}
 			else
 			{
 				g_bTankConfig[iIndex] = true;
 
-				kvSuperTanks.GetString("General/Skin-Glow Colors", g_sTankColors2[iIndex], sizeof(g_sTankColors2[]), g_sTankColors[iIndex]);
-				kvSuperTanks.GetString("Props/Props Colors", g_sPropsColors2[iIndex], sizeof(g_sPropsColors2[]), g_sPropsColors[iIndex]);
 				g_iGhostAbility2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ability Enabled", g_iGhostAbility[iIndex]);
 				g_iGhostAbility2[iIndex] = iClamp(g_iGhostAbility2[iIndex], 0, 3);
 				kvSuperTanks.GetString("Ghost Ability/Ability Effect", g_sGhostEffect2[iIndex], sizeof(g_sGhostEffect2[]), g_sGhostEffect[iIndex]);
 				kvSuperTanks.GetString("Ghost Ability/Ability Message", g_sGhostMessage2[iIndex], sizeof(g_sGhostMessage2[]), g_sGhostMessage[iIndex]);
 				g_flGhostChance2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Chance", g_flGhostChance[iIndex]);
-				g_flGhostChance2[iIndex] = flClamp(g_flGhostChance2[iIndex], 0.1, 100.0);
+				g_flGhostChance2[iIndex] = flClamp(g_flGhostChance2[iIndex], 0.0, 100.0);
 				g_iGhostFadeAlpha2[iIndex] = kvSuperTanks.GetNum("Ghost Ability/Ghost Fade Alpha", g_iGhostFadeAlpha[iIndex]);
 				g_iGhostFadeAlpha2[iIndex] = iClamp(g_iGhostFadeAlpha2[iIndex], 0, 255);
 				g_flGhostFadeDelay2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Fade Delay", g_flGhostFadeDelay[iIndex]);
@@ -214,7 +211,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flGhostRange2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Range", g_flGhostRange[iIndex]);
 				g_flGhostRange2[iIndex] = flClamp(g_flGhostRange2[iIndex], 1.0, 9999999999.0);
 				g_flGhostRangeChance2[iIndex] = kvSuperTanks.GetFloat("Ghost Ability/Ghost Range Chance", g_flGhostRangeChance[iIndex]);
-				g_flGhostRangeChance2[iIndex] = flClamp(g_flGhostRangeChance2[iIndex], 0.1, 100.0);
+				g_flGhostRangeChance2[iIndex] = flClamp(g_flGhostRangeChance2[iIndex], 0.0, 100.0);
 				kvSuperTanks.GetString("Ghost Ability/Ghost Weapon Slots", g_sGhostWeaponSlots2[iIndex], sizeof(g_sGhostWeaponSlots2[]), g_sGhostWeaponSlots[iIndex]);
 			}
 
@@ -225,14 +222,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flGhostRange = !g_bTankConfig[ST_TankType(tank)] ? g_flGhostRange[ST_TankType(tank)] : g_flGhostRange2[ST_TankType(tank)],
 			flGhostRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGhostRangeChance[ST_TankType(tank)] : g_flGhostRangeChance2[ST_TankType(tank)],
@@ -242,7 +234,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -271,9 +263,19 @@ public void ST_Ability(int tank)
 			{
 				char sTankName[33];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
 			}
 		}
+	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		g_bGhost[tank] = false;
+		g_bGhost2[tank] = false;
+		g_iGhostAlpha[tank] = 255;
 	}
 }
 
@@ -317,7 +319,7 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Ghost", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost", sTankName, survivor);
 		}
 	}
 }
@@ -326,7 +328,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bGhost[iPlayer] = false;
 			g_bGhost2[iPlayer] = false;
@@ -358,95 +360,13 @@ static int iGhostHitMode(int tank)
 public Action tTimerGhost(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3) || !g_bGhost[iTank])
 	{
 		g_bGhost[iTank] = false;
+		g_iGhostAlpha[iTank] = 255;
 
 		return Plugin_Stop;
 	}
-
-	if (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3)
-	{
-		g_bGhost[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	char sSet[2][16], sTankColors[28], sRGB[4][4], sSet2[5][16], sPropsColors[80], sProps[4][4],
-		sProps2[4][4], sProps3[4][4], sProps4[4][4], sProps5[4][4];
-	sTankColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sTankColors[ST_TankType(iTank)] : g_sTankColors2[ST_TankType(iTank)];
-	ReplaceString(sTankColors, sizeof(sTankColors), " ", "");
-	ExplodeString(sTankColors, "|", sSet, sizeof(sSet), sizeof(sSet[]));
-
-	ExplodeString(sSet[0], ",", sRGB, sizeof(sRGB), sizeof(sRGB[]));
-
-	int iRed = (sRGB[0][0] != '\0') ? StringToInt(sRGB[0]) : 255;
-	iRed = iClamp(iRed, 0, 255);
-
-	int iGreen = (sRGB[1][0] != '\0') ? StringToInt(sRGB[1]) : 255;
-	iGreen = iClamp(iGreen, 0, 255);
-
-	int iBlue = (sRGB[2][0] != '\0') ? StringToInt(sRGB[2]) : 255;
-	iBlue = iClamp(iBlue, 0, 255);
-
-	sPropsColors = !g_bTankConfig[ST_TankType(iTank)] ? g_sPropsColors[ST_TankType(iTank)] : g_sPropsColors2[ST_TankType(iTank)];
-	ReplaceString(sPropsColors, sizeof(sPropsColors), " ", "");
-	ExplodeString(sPropsColors, "|", sSet2, sizeof(sSet2), sizeof(sSet2[]));
-
-	ExplodeString(sSet2[0], ",", sProps, sizeof(sProps), sizeof(sProps[]));
-
-	int iRed2 = (sProps[0][0] != '\0') ? StringToInt(sProps[0]) : 255;
-	iRed2 = iClamp(iRed2, 0, 255);
-
-	int iGreen2 = (sProps[1][0] != '\0') ? StringToInt(sProps[1]) : 255;
-	iGreen2 = iClamp(iGreen2, 0, 255);
-
-	int iBlue2 = (sProps[2][0] != '\0') ? StringToInt(sProps[2]) : 255;
-	iBlue2 = iClamp(iBlue2, 0, 255);
-
-	ExplodeString(sSet2[1], ",", sProps2, sizeof(sProps2), sizeof(sProps2[]));
-
-	int iRed3 = (sProps2[0][0] != '\0') ? StringToInt(sProps2[0]) : 255;
-	iRed3 = iClamp(iRed3, 0, 255);
-
-	int iGreen3 = (sProps2[1][0] != '\0') ? StringToInt(sProps2[1]) : 255;
-	iGreen3 = iClamp(iGreen3, 0, 255);
-
-	int iBlue3 = (sProps2[2][0] != '\0') ? StringToInt(sProps2[2]) : 255;
-	iBlue3 = iClamp(iBlue3, 0, 255);
-
-	ExplodeString(sSet2[2], ",", sProps3, sizeof(sProps3), sizeof(sProps3[]));
-
-	int iRed4 = (sProps3[0][0] != '\0') ? StringToInt(sProps3[0]) : 255;
-	iRed4 = iClamp(iRed4, 0, 255);
-
-	int iGreen4 = (sProps3[1][0] != '\0') ? StringToInt(sProps3[1]) : 255;
-	iGreen4 = iClamp(iGreen4, 0, 255);
-
-	int iBlue4 = (sProps3[2][0] != '\0') ? StringToInt(sProps3[2]) : 255;
-	iBlue4 = iClamp(iBlue4, 0, 255);
-
-	ExplodeString(sSet2[3], ",", sProps4, sizeof(sProps4), sizeof(sProps4[]));
-
-	int iRed5 = (sProps4[0][0] != '\0') ? StringToInt(sProps4[0]) : 255;
-	iRed5 = iClamp(iRed5, 0, 255);
-
-	int iGreen5 = (sProps4[1][0] != '\0') ? StringToInt(sProps4[1]) : 255;
-	iGreen5 = iClamp(iGreen5, 0, 255);
-
-	int iBlue5 = (sProps4[2][0] != '\0') ? StringToInt(sProps4[2]) : 255;
-	iBlue5 = iClamp(iBlue5, 0, 255);
-
-	ExplodeString(sSet2[4], ",", sProps5, sizeof(sProps5), sizeof(sProps5[]));
-
-	int iRed6 = (sProps5[0][0] != '\0') ? StringToInt(sProps5[0]) : 255;
-	iRed6 = iClamp(iRed6, 0, 255);
-
-	int iGreen6 = (sProps5[1][0] != '\0') ? StringToInt(sProps5[1]) : 255;
-	iGreen6 = iClamp(iGreen6, 0, 255);
-
-	int iBlue6 = (sProps5[2][0] != '\0') ? StringToInt(sProps5[2]) : 255;
-	iBlue6 = iClamp(iBlue6, 0, 255);
 
 	int iGhostFadeAlpha = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFadeAlpha[ST_TankType(iTank)] : g_iGhostFadeAlpha2[ST_TankType(iTank)],
 		iGhostFadeLimit = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFadeLimit[ST_TankType(iTank)] : g_iGhostFadeLimit2[ST_TankType(iTank)];
@@ -464,6 +384,9 @@ public Action tTimerGhost(Handle timer, int userid)
 		}
 	}
 
+	int iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha;
+	ST_TankColors(iTank, 1, iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha);
+
 	int iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
 	{
@@ -476,26 +399,32 @@ public Action tTimerGhost(Handle timer, int userid)
 			{
 				if (StrEqual(sModel, MODEL_JETPACK, false))
 				{
+					int iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha;
+					ST_PropsColors(iTank, 2, iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha);
 					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-					SetEntityRenderColor(iProp, iRed3, iGreen3, iBlue3, g_iGhostAlpha[iTank]);
+					SetEntityRenderColor(iProp, iJetpackRed, iJetpackGreen, iJetpackBlue, g_iGhostAlpha[iTank]);
 				}
 
 				if (StrEqual(sModel, MODEL_CONCRETE, false))
 				{
+					int iRockRed, iRockGreen, iRockBlue, iRockAlpha;
+					ST_PropsColors(iTank, 4, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
 					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-					SetEntityRenderColor(iProp, iRed5, iGreen5, iBlue5, g_iGhostAlpha[iTank]);
+					SetEntityRenderColor(iProp, iRockRed, iRockGreen, iRockBlue, g_iGhostAlpha[iTank]);
 				}
 
 				if (StrEqual(sModel, MODEL_TIRES, false))
 				{
+					int iTireRed, iTireGreen, iTireBlue, iTireAlpha;
+					ST_PropsColors(iTank, 5, iTireRed, iTireGreen, iTireBlue, iTireAlpha);
 					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-					SetEntityRenderColor(iProp, iRed6, iGreen6, iBlue6, g_iGhostAlpha[iTank]);
+					SetEntityRenderColor(iProp, iTireRed, iTireGreen, iTireBlue, g_iGhostAlpha[iTank]);
 				}
 
 				if (StrEqual(sModel, MODEL_TANK, false))
 				{
 					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-					SetEntityRenderColor(iProp, iRed, iGreen, iBlue, g_iGhostAlpha[iTank]);
+					SetEntityRenderColor(iProp, iSkinRed, iSkinGreen, iSkinBlue, g_iGhostAlpha[iTank]);
 				}
 			}
 		}
@@ -506,8 +435,10 @@ public Action tTimerGhost(Handle timer, int userid)
 		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 		if (iOwner == iTank)
 		{
+			int iLightRed, iLightGreen, iLightBlue, iLightAlpha;
+			ST_PropsColors(iTank, 1, iLightRed, iLightGreen, iLightBlue, iLightAlpha);
 			SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-			SetEntityRenderColor(iProp, iRed2, iGreen2, iBlue2, g_iGhostAlpha[iTank]);
+			SetEntityRenderColor(iProp, iLightRed, iLightGreen, iLightBlue, g_iGhostAlpha[iTank]);
 		}
 	}
 
@@ -516,13 +447,15 @@ public Action tTimerGhost(Handle timer, int userid)
 		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 		if (iOwner == iTank)
 		{
+			int iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha;
+			ST_PropsColors(iTank, 3, iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha);
 			SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-			SetEntityRenderColor(iProp, iRed4, iGreen4, iBlue4, g_iGhostAlpha[iTank]);
+			SetEntityRenderColor(iProp, iFlameRed, iFlameGreen, iFlameBlue, g_iGhostAlpha[iTank]);
 		}
 	}
 
 	SetEntityRenderMode(iTank, RENDER_TRANSCOLOR);
-	SetEntityRenderColor(iTank, iRed, iGreen, iBlue, g_iGhostAlpha[iTank]);
+	SetEntityRenderColor(iTank, iSkinRed, iSkinGreen, iSkinBlue, g_iGhostAlpha[iTank]);
 
 	return Plugin_Continue;
 }
@@ -530,7 +463,7 @@ public Action tTimerGhost(Handle timer, int userid)
 public Action tTimerStopGhost(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost2[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost2[iTank])
 	{
 		g_bGhost2[iTank] = false;
 		g_iGhostAlpha[iTank] = 255;
@@ -547,7 +480,7 @@ public Action tTimerStopGhost(Handle timer, int userid)
 	{
 		char sTankName[33];
 		ST_TankName(iTank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Ghost3", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost3", sTankName);
 	}
 
 	return Plugin_Continue;

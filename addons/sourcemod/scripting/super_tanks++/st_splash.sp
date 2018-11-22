@@ -12,6 +12,7 @@
 // Super Tanks++: Splash Ability
 #include <sourcemod>
 #include <sdkhooks>
+#include <sdktools>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>
@@ -94,10 +95,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -109,7 +111,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iSplashMessage[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Message", 0);
 				g_iSplashMessage[iIndex] = iClamp(g_iSplashMessage[iIndex], 0, 1);
 				g_flSplashChance[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Chance", 33.3);
-				g_flSplashChance[iIndex] = flClamp(g_flSplashChance[iIndex], 0.1, 100.0);
+				g_flSplashChance[iIndex] = flClamp(g_flSplashChance[iIndex], 0.0, 100.0);
 				g_flSplashDamage[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Damage", 5.0);
 				g_flSplashDamage[iIndex] = flClamp(g_flSplashDamage[iIndex], 1.0, 9999999999.0);
 				g_flSplashInterval[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Interval", 5.0);
@@ -126,7 +128,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iSplashMessage2[iIndex] = kvSuperTanks.GetNum("Splash Ability/Ability Message", g_iSplashMessage[iIndex]);
 				g_iSplashMessage2[iIndex] = iClamp(g_iSplashMessage2[iIndex], 0, 1);
 				g_flSplashChance2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Chance", g_flSplashChance[iIndex]);
-				g_flSplashChance2[iIndex] = flClamp(g_flSplashChance2[iIndex], 0.1, 100.0);
+				g_flSplashChance2[iIndex] = flClamp(g_flSplashChance2[iIndex], 0.0, 100.0);
 				g_flSplashDamage2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Damage", g_flSplashDamage[iIndex]);
 				g_flSplashDamage2[iIndex] = flClamp(g_flSplashDamage2[iIndex], 1.0, 9999999999.0);
 				g_flSplashInterval2[iIndex] = kvSuperTanks.GetFloat("Splash Ability/Splash Interval", g_flSplashInterval[iIndex]);
@@ -142,17 +144,12 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iSplashAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flSplashChance(iTank) && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iSplashAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flSplashChance(iTank) && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			CreateTimer(0.4, tTimerSplash, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -161,7 +158,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (iSplashAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flSplashChance(tank) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bSplash[tank])
+	if (iSplashAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flSplashChance(tank) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bSplash[tank])
 	{
 		g_bSplash[tank] = true;
 
@@ -172,16 +169,21 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Splash", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Splash", sTankName);
 		}
 	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	g_bSplash[tank] = false;
 }
 
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bSplash[iPlayer] = false;
 		}
@@ -206,14 +208,7 @@ static int iSplashMessage(int tank)
 public Action tTimerSplash(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSplash[iTank])
-	{
-		g_bSplash[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iSplashAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iSplashAbility(iTank) == 0 || !g_bSplash[iTank])
 	{
 		g_bSplash[iTank] = false;
 
@@ -221,7 +216,7 @@ public Action tTimerSplash(Handle timer, int userid)
 		{
 			char sTankName[33];
 			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Splash2", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Splash2", sTankName);
 		}
 
 		return Plugin_Stop;
@@ -229,11 +224,12 @@ public Action tTimerSplash(Handle timer, int userid)
 
 	float flSplashRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flSplashRange[ST_TankType(iTank)] : g_flSplashRange2[ST_TankType(iTank)],
 		flTankPos[3];
+
 	GetClientAbsOrigin(iTank, flTankPos);
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor))
+		if (bIsSurvivor(iSurvivor, "234"))
 		{
 			float flSurvivorPos[3];
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -242,7 +238,7 @@ public Action tTimerSplash(Handle timer, int userid)
 			if (flDistance <= flSplashRange)
 			{
 				float flSplashDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_flSplashDamage[ST_TankType(iTank)] : g_flSplashDamage2[ST_TankType(iTank)];
-				SDKHooks_TakeDamage(iSurvivor, iTank, iTank, flSplashDamage);
+				vDamageEntity(iSurvivor, iTank, flSplashDamage, "65536");
 			}
 		}
 	}

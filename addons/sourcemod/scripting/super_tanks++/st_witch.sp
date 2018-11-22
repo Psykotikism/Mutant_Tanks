@@ -81,7 +81,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -98,7 +98,7 @@ public void OnClientPutInServer(int client)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		if (bIsWitch(attacker) && bIsSurvivor(victim))
 		{
@@ -125,10 +125,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -142,7 +143,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWitchAmount[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Amount", 3);
 				g_iWitchAmount[iIndex] = iClamp(g_iWitchAmount[iIndex], 1, 25);
 				g_flWitchChance[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Chance", 33.3);
-				g_flWitchChance[iIndex] = flClamp(g_flWitchChance[iIndex], 0.1, 100.0);
+				g_flWitchChance[iIndex] = flClamp(g_flWitchChance[iIndex], 0.0, 100.0);
 				g_flWitchDamage[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Damage", 5.0);
 				g_flWitchDamage[iIndex] = flClamp(g_flWitchDamage[iIndex], 1.0, 9999999999.0);
 				g_flWitchRange[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Range", 500.0);
@@ -159,7 +160,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iWitchAmount2[iIndex] = kvSuperTanks.GetNum("Witch Ability/Witch Amount", g_iWitchAmount[iIndex]);
 				g_iWitchAmount2[iIndex] = iClamp(g_iWitchAmount2[iIndex], 1, 25);
 				g_flWitchChance2[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Chance", g_flWitchChance[iIndex]);
-				g_flWitchChance2[iIndex] = flClamp(g_flWitchChance2[iIndex], 0.1, 100.0);
+				g_flWitchChance2[iIndex] = flClamp(g_flWitchChance2[iIndex], 0.0, 100.0);
 				g_flWitchDamage2[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Damage", g_flWitchDamage[iIndex]);
 				g_flWitchDamage2[iIndex] = flClamp(g_flWitchDamage2[iIndex], 1.0, 9999999999.0);
 				g_flWitchRange2[iIndex] = kvSuperTanks.GetFloat("Witch Ability/Witch Range", g_flWitchRange[iIndex]);
@@ -177,7 +178,7 @@ public void ST_Ability(int tank)
 {
 	int iWitchAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchAbility[ST_TankType(tank)] : g_iWitchAbility2[ST_TankType(tank)];
 	float flWitchChance = !g_bTankConfig[ST_TankType(tank)] ? g_flWitchChance[ST_TankType(tank)] : g_flWitchChance2[ST_TankType(tank)];
-	if (iWitchAbility == 1 && GetRandomFloat(0.1, 100.0) <= flWitchChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (iWitchAbility == 1 && GetRandomFloat(0.1, 100.0) <= flWitchChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iInfected = -1;
 		while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
@@ -214,7 +215,7 @@ public void ST_Ability(int tank)
 			{
 				char sTankName[33];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Witch", sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Witch", sTankName);
 			}
 		}	
 	}

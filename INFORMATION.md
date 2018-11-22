@@ -1,11 +1,9 @@
 # Information
-> Everything you need to know about each ability/setting is below.
+> Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
 
-- Maximum types: 500
+- Maximum types: 500 (If you want more, change the value of `ST_MAXTYPES` in super_tanks++.inc file at your own risk.)
 - Ability count: 65
-- All of these settings use default values if they are left incomplete or empty.
-- The plugin automatically eliminates any whitespace from each setting's values.
-- Please don't report any bugs or issues if you're using the plugin on a local/listen server. I don't provide support for that kind of server.
+- Please don't report any bugs or issues if you're using the plugin on a listen server. No support will be provided for that kind of server.
 - THIS FILE IS NOT THE CONFIG FILE! USE IT AS A REFERENCE!
 
 ## Plugin Settings
@@ -29,9 +27,15 @@
 
 			// Announce each Super Tank's arrival.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Announce Arrival"			"1"
+			// Combine numbers in any order for different results.
+			// Character limit: 5
+			// --
+			// 1: Announce when a Super Tank spawns.
+			// 2: Announce when a Super Tank evolves. (Only works when "Spawn Mode" is set to 1.)
+			// 3: Announce when a Super Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
+			// 4: Announce when a Super Tank transforms. (Only works when "Spawn Mode" is set to 3.)
+			// 5: Announce when a Super Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
+			"Announce Arrival"			"12345"
 
 			// Announce each Super Tank's death.
 			// --
@@ -63,7 +67,9 @@
 			"Multiply Health"			"0"
 
 			// The range of types to check for.
+			// --
 			// Separate values with "-".
+			// --
 			// Value limit: 2
 			// Character limit for each value: 3
 			// --
@@ -95,7 +101,9 @@
 			"Regular Wave"				"0"
 
 			// Amount of Tanks to spawn for each finale wave.
+			// --
 			// Separate waves with commas.
+			// --
 			// Wave limit: 3
 			// Character limit for each wave: 3
 			// --
@@ -123,7 +131,9 @@
 			"Game Mode Types"			"5"
 
 			// Enable Super Tanks++ in these game modes.
+			// --
 			// Separate game modes with commas.
+			// --
 			// Character limit: 512 (including commas)
 			// --
 			// Empty: All
@@ -131,7 +141,9 @@
 			"Enabled Game Modes"			"coop,survival"
 
 			// Disable Super Tanks++ in these game modes.
+			// --
 			// Separate game modes with commas.
+			// --
 			// Character limit: 512 (including commas)
 			// --
 			// Empty: None
@@ -147,6 +159,7 @@
 			"Enable Custom Configs"			"0"
 
 			// The type of custom config that Super Tanks++ creates.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 5
 			// --
@@ -158,6 +171,7 @@
 			"Create Config Types"			"12345"
 
 			// The type of custom config that Super Tanks++ executes.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 5
 			// --
@@ -197,50 +211,64 @@
 			"Tank Enabled"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to spawn.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: Clones, respawned Super Tanks, randomized Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Tank Chance"				"100.0"
 
 			// Display a note for the Super Tank when it spawns.
 			// Note: This note can also be displayed for clones if "Clone Mode" is set to 1, so the chat could be spammed if multiple clones spawn.
+			// Note: A note must be manually created in the translation file.
+			// Note: Tank notes support chat color tags in the translation file.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Tank Note"				"0"
 
-			// These are the Super Tank's skin and glow outline colors.
+			// The Super Tank can be spawned through the "sm_tank" command.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// Character limit: 28
-			// Character limit for each color: 3
+			// 0: OFF
+			// 1: ON
+			"Spawn Enabled"				"1"
+
+			// These are the RGBA values of the Super Tank's skin color.
 			// --
-			// Separate colors with "|".
-			// Separate RGBAs with commas.
-			// --
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
-			// --
-			// 1st set = skin color (RGBA)
-			// 2nd set = glow color (RGB)
-			"Skin-Glow Colors"			"255,255,255,255|255,255,255"
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Skin Color"				"255 255 255 255"
 
 			// The Super Tank will have a glow outline.
 			// Only available in Left 4 Dead 2.
 			// --
 			// 0: OFF
 			// 1: ON
-			"Glow Outline"				"1"
+			"Glow Enabled"				"1"
+
+			// These are the RGB values of the Super Tank's glow outline color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			"Glow Color"				"255 255 255"
 		}
 		"Spawn"
 		{
 			// The number of Super Tanks with this type that can be alive at any given time.
-			// Note: Clones, respawned Super Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: Clones, respawned Super Tanks, randomized Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
 			// Minimum: 0
 			// Maximum: 9999999999
 			"Type Limit"				"32"
 
 			// The Super Tank will only spawn on finale maps.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: Clones, respawned Super Tanks, randomized Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
 			// 0: OFF
 			// 1: ON
@@ -288,6 +316,13 @@
 			// 4th number = 5th stage type
 			"Boss Types"				"2,3,4,5"
 
+			// The Super Tank can be used by other Super Tanks who spawn with the Randomization mode feature.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Random Tank"				"1"
+
 			// The Super Tank switches to a random type every time this many seconds passes.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
 			// --
@@ -313,12 +348,13 @@
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
 			// --
 			// Separate game modes with commas.
+			// --
 			// Character limit: 80 (including commas)
 			// Character limit for each type: 4
 			// --
 			// Example: "1,35,26,4"
-			// Example: "4,9,49,449,4449,499,4999"
-			// Example: "1997,1998,1999,2000,2001,2002,2003,2004,2005,2006"
+			// Example: "4,9,49,94,449,499"
+			// Example: "97,98,99,100,101,102,103,104,105,106"
 			// --
 			// Minimum: 1
 			// Maximum: 500
@@ -335,6 +371,7 @@
 		"Props"
 		{
 			// Props that the Super Tank can spawn with.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 6
 			// --
@@ -348,10 +385,11 @@
 
 			// Each prop has this many chances out of 100.0% to appear when the Super Tank appears.
 			// Separate chances with commas.
+			// --
 			// Chances limit: 6
 			// Character limit for each chance: 6
 			// --
-			// Minimum value for each chance: 0.1 (Lowest chance)
+			// Minimum value for each chance: 0.0 (No chance)
 			// Maximum value for each chance: 100.0 (Highest chance)
 			// --
 			// 1st number = Chance for a blur effect to appear.
@@ -362,19 +400,45 @@
 			// 6th number = Chance for tires to appear.
 			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3"
 
-			// The Super Tank's prop colors.
-			// Separate colors with "|".
-			// Separate RGBAs with commas.
+			// These are the RGBA values of the Super Tank's light prop's color.
 			// --
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Light Color"				"255 255 255 255"
+
+			// These are the RGBA values of the Super Tank's oxygen tank prop's color.
 			// --
-			// 1st set = lights color (RGBA)
-			// 2nd set = oxygen tanks color (RGBA)
-			// 3rd set = oxygen tank flames color (RGBA)
-			// 4th set = rocks color (RGBA)
-			// 5th set = tires color (RGBA)
-			"Props Colors"				"255,255,255,255|255,255,255,255|255,255,255,180|255,255,255,255|255,255,255,255"
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Oxygen Tank Color"			"255 255 255 255"
+
+			// These are the RGBA values of the Super Tank's oxygen tank prop's flame's color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Flame Color"				"255 255 255 180"
+
+			// These are the RGBA values of the Super Tank's rock prop's color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Rock Color"				"255 255 255 255"
+
+			// These are the RGBA values of the Super Tank's tire prop's color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Tire Color"				"255 255 255 255"
 		}
 		"Particles"
 		{
@@ -385,6 +449,7 @@
 			"Body Particle"				"0"
 
 			// The particle effects for the Super Tank's body.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 7
 			// --
@@ -404,6 +469,7 @@
 			"Rock Particle"				"0"
 
 			// The particle effects for the Super Tank's rock.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 4
 			// --
@@ -528,7 +594,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Absorb Chance"				"33.3"
 
@@ -594,7 +660,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -603,7 +669,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -618,7 +684,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Acid Chance"				"33.3"
 
@@ -644,7 +710,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Acid Range Chance"			"15.0"
 
@@ -685,7 +751,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -694,7 +760,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -708,7 +774,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Aimless Chance"			"33.3"
 
@@ -739,7 +805,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Aimless Range Chance"			"15.0"
 		}
@@ -772,7 +838,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -781,7 +847,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -795,7 +861,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ammo Chance"				"33.3"
 
@@ -827,7 +893,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ammo Range Chance"			"15.0"
 		}
@@ -860,7 +926,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -869,7 +935,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -883,7 +949,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Blind Chance"				"33.3"
 
@@ -921,7 +987,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Blind Range Chance"			"15.0"
 		}
@@ -954,7 +1020,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -963,7 +1029,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -978,7 +1044,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Bomb Chance"				"33.3"
 
@@ -1004,7 +1070,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Bomb Range Chance"			"15.0"
 
@@ -1044,7 +1110,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1053,7 +1119,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1067,7 +1133,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Bury Chance"				"33.3"
 
@@ -1105,7 +1171,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Bury Range Chance"			"15.0"
 		}
@@ -1121,10 +1187,10 @@
 	"Tank #1"
 	{
 		// The Super Tank chokes survivors in the air.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is choked survivors in the air.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is choked in the air.
 		// - "Choke Range"
 		// - "Choke Range Chance"
-		// "Choke Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is choked survivors in the air.
+		// "Choke Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is choked in the air.
 		// - "Choke Chance"
 		// - "Choke Hit Mode"
 		// Requires "st_choke.smx" to be installed.
@@ -1138,7 +1204,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1147,7 +1213,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1161,7 +1227,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Choke Chance"				"33.3"
 
@@ -1210,7 +1276,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Choke Range Chance"			"15.0"
 		}
@@ -1249,7 +1315,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Clone Chance"				"33.3"
 
@@ -1301,7 +1367,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Cloud Chance"				"33.3"
 
@@ -1340,13 +1406,13 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drop Chance"				"33.3"
 
 			// The Super Tank has this many chances out of 100.0% to drop guns with a full clip.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drop Clip Chance"			"33.3"
 
@@ -1393,7 +1459,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1402,7 +1468,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1416,7 +1482,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drug Chance"				"33.3"
 
@@ -1454,7 +1520,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drug Range Chance"			"15.0"
 		}
@@ -1487,7 +1553,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1496,7 +1562,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1510,7 +1576,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drunk Chance"				"33.3"
 
@@ -1541,7 +1607,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drunk Range Chance"			"15.0"
 
@@ -1586,7 +1652,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1595,7 +1661,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1609,7 +1675,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Electric Chance"			"33.3"
 
@@ -1653,15 +1719,9 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Electric Range Chance"			"15.0"
-
-			// The Super Tank sets the survivors' run speed to this value when they are electrocuted.
-			// --
-			// Minimum: 0.1
-			// Maximum: 0.99
-			"Electric Speed"			"0.75"
 		}
 	}
 }
@@ -1692,7 +1752,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1701,7 +1761,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1715,7 +1775,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Enforce Chance"			"33.3"
 
@@ -1747,7 +1807,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Enforce Range Chance"			"15.0"
 
@@ -1791,7 +1851,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1800,7 +1860,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1815,7 +1875,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fire Chance"				"33.3"
 
@@ -1841,7 +1901,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fire Range Chance"			"15.0"
 
@@ -1881,7 +1941,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Flash Chance"				"33.3"
 
@@ -1932,7 +1992,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -1941,7 +2001,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -1955,7 +2015,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fling Chance"				"33.3"
 
@@ -1981,7 +2041,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fling Range Chance"			"15.0"
 		}
@@ -2023,7 +2083,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fragile Chance"			"33.3"
 
@@ -2096,7 +2156,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2105,7 +2165,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
@@ -2120,7 +2180,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ghost Chance"				"33.3"
 
@@ -2171,11 +2231,12 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ghost Range Chance"			"15.0"
 
 			// The Super Tank disarms the following weapon slots.
+			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 5
 			// --
@@ -2215,7 +2276,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"God Chance"				"33.3"
 
@@ -2258,7 +2319,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2267,7 +2328,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2282,7 +2343,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Gravity Chance"			"33.3"
 
@@ -2323,7 +2384,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Gravity Range Chance"			"15.0"
 
@@ -2367,7 +2428,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2376,7 +2437,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -2403,7 +2464,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Heal Chance"				"33.3"
 
@@ -2435,7 +2496,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Heal Range Chance"			"15.0"
 
@@ -2495,7 +2556,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2504,7 +2565,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2518,7 +2579,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Hurt Chance"				"33.3"
 
@@ -2562,7 +2623,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Hurt Range Chance"			"15.0"
 		}
@@ -2595,7 +2656,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2604,7 +2665,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2627,7 +2688,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Hypno Chance"				"33.3"
 
@@ -2692,7 +2753,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Hypno Range Chance"			"15.0"
 		}
@@ -2725,7 +2786,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2734,7 +2795,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2748,7 +2809,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ice Chance"				"33.3"
 
@@ -2780,7 +2841,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ice Range Chance"			"15.0"
 		}
@@ -2813,7 +2874,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2822,7 +2883,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2836,7 +2897,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Idle Chance"				"33.3"
 
@@ -2862,7 +2923,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Idle Range Chance"			"15.0"
 		}
@@ -2895,7 +2956,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -2904,7 +2965,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -2918,7 +2979,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Invert Chance"				"33.3"
 
@@ -2949,7 +3010,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Invert Range Chance"			"15.0"
 		}
@@ -2982,7 +3043,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Item Chance"				"33.3"
 
@@ -3012,8 +3073,8 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank jumps periodically and makes survivors jump uncontrollably.
-		// "Ability Enabled" - The Super Tank jumps periodically.
+		// The Super Tank jumps periodically or sporadically and makes survivors jump uncontrollably.
+		// "Ability Enabled" - The Super Tank jumps periodically or sporadically.
 		// - "Jump Interval"
 		// - "Jump Mode"
 		// - "Jump Sporadic Chance"
@@ -3037,7 +3098,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3046,7 +3107,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
@@ -3061,7 +3122,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Jump Chance"				"33.3"
 
@@ -3111,14 +3172,14 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Jump Range Chance"			"15.0"
 
 			// The Super Tank has this many chances out of 100.0% to jump sporadically.
 			// Note: This setting only applies if the "Jump Mode" setting is set to 1.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Jump Sporadic Chance"			"33.3"
 
@@ -3158,7 +3219,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3167,7 +3228,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3181,7 +3242,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Kamikaze Chance"			"33.3"
 
@@ -3207,7 +3268,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Kamikaze Range Chance"			"15.0"
 		}
@@ -3240,7 +3301,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3249,7 +3310,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3263,7 +3324,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Lag Chance"				"33.3"
 
@@ -3294,7 +3355,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Lag Range Chance"			"15.0"
 		}
@@ -3327,7 +3388,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3336,7 +3397,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3350,7 +3411,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Leech Chance"				"33.3"
 
@@ -3388,7 +3449,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Leech Range Chance"			"15.0"
 		}
@@ -3421,7 +3482,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Medic Chance"				"33.3"
 
@@ -3490,7 +3551,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Meteor Chance"				"33.3"
 
@@ -3553,7 +3614,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Minion Chance"				"33.3"
 
@@ -3564,6 +3625,7 @@
 			"Minion Replace"			"1"
 
 			// The Super Tank spawns these minions.
+			// --
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 12
@@ -3587,7 +3649,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank resurrects dead special infected.
+		// The Super Tank resurrects nearby special infected that die.
 		// Requires "st_necro.smx" to be installed.
 		"Necro Ability"
 		{
@@ -3605,7 +3667,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Necro Chance"				"33.3"
 
@@ -3627,10 +3689,10 @@
 	"Tank #1"
 	{
 		// The Super Tank nullifies all of the survivors' damage.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor does not do any damage.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor does not do any damage to the Super Tank.
 		// - "Nullify Range"
 		// - "Nullify Range Chance"
-		// "Nullify Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor does not do any damage.
+		// "Nullify Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor does not do any damage to the Super Tank.
 		// - "Nullify Chance"
 		// - "Nullify Hit Mode"
 		// Requires "st_nullify.smx" to be installed.
@@ -3644,7 +3706,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3653,7 +3715,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3667,7 +3729,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Nullify Chance"			"33.3"
 
@@ -3698,7 +3760,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Nullify Range Chance"			"15.0"
 		}
@@ -3735,7 +3797,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3744,7 +3806,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -3759,7 +3821,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Panic Chance"				"33.3"
 
@@ -3791,7 +3853,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Panic Range Chance"			"15.0"
 		}
@@ -3824,7 +3886,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3833,7 +3895,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3853,7 +3915,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pimp Chance"				"33.3"
 
@@ -3891,7 +3953,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pimp Range Chance"			"15.0"
 		}
@@ -3924,7 +3986,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -3933,7 +3995,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -3947,7 +4009,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Puke Chance"				"33.3"
 
@@ -3973,7 +4035,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Puke Range Chance"			"15.0"
 		}
@@ -4009,7 +4071,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4018,7 +4080,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
@@ -4039,7 +4101,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pyro Chance"				"33.3"
 
@@ -4077,7 +4139,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pyro Range Chance"			"15.0"
 		}
@@ -4110,7 +4172,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4119,7 +4181,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4133,7 +4195,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Quiet Chance"				"33.3"
 
@@ -4165,7 +4227,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Quiet Range Chance"			"15.0"
 		}
@@ -4198,7 +4260,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4207,7 +4269,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4221,7 +4283,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Recoil Chance"				"33.3"
 
@@ -4252,7 +4314,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Recoil Range Chance"			"15.0"
 		}
@@ -4285,7 +4347,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Regen Chance"				"33.3"
 
@@ -4349,7 +4411,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Respawn Chance"			"33.3"
 
@@ -4395,7 +4457,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4404,7 +4466,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4418,7 +4480,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Restart Chance"			"33.3"
 
@@ -4458,7 +4520,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Restart Range Chance"			"15.0"
 		}
@@ -4491,7 +4553,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Rock Chance"				"33.3"
 
@@ -4547,7 +4609,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4556,7 +4618,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4570,7 +4632,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Rocket Chance"				"33.3"
 
@@ -4601,7 +4663,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Rocket Range Chance"			"15.0"
 		}
@@ -4634,7 +4696,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4643,7 +4705,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4657,7 +4719,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shake Chance"				"33.3"
 
@@ -4695,7 +4757,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shake Range Chance"			"15.0"
 		}
@@ -4728,19 +4790,17 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shield Chance"				"33.3"
 
-			// This is the Super Tank's shield's color.
-			// --
-			// Minimum value for each color: 0
-			// Maximum value for each color: 255
+			// These are the RGBA values of the Super Tank's shield prop's color.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
-			"Shield Color"				"255,255,255"
+			// 4th number = Alpha
+			"Shield Color"				"255 255 255 50"
 
 			// The Super Tank's shield reactivates after this many seconds passes upon destroying the shield.
 			// --
@@ -4777,7 +4837,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4786,7 +4846,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4800,7 +4860,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shove Chance"				"33.3"
 
@@ -4838,7 +4898,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shove Range Chance"			"15.0"
 		}
@@ -4871,7 +4931,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4880,7 +4940,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4894,7 +4954,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Smash Chance"				"33.3"
 
@@ -4920,7 +4980,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Smash Range Chance"			"15.0"
 		}
@@ -4953,7 +5013,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -4962,7 +5022,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -4976,7 +5036,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Smite Chance"				"33.3"
 
@@ -5002,7 +5062,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Smite Range Chance"			"15.0"
 		}
@@ -5035,7 +5095,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Spam Chance"				"33.3"
 
@@ -5080,7 +5140,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Splash Chance"				"33.3"
 
@@ -5131,7 +5191,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5140,7 +5200,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -5154,7 +5214,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Stun Chance"				"33.3"
 
@@ -5186,7 +5246,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Stun Range Chance"			"15.0"
 
@@ -5213,11 +5273,15 @@
 		{
 			// Enable this ability.
 			// --
-			// 0: OFF
-			// 1: ON, the Super Tank throws cars.
-			// 2: ON, the Super Tank throws special infected.
-			// 3: ON, the Super Tank throws itself.
-			// 4: ON, the Super Tank throws Witches.
+			// Combine numbers in any order for different results.
+			// Repeat the same number to increase its chances of being chosen.
+			// Character limit: 8
+			// --
+			// Empty: Pick randomly between 1-4.
+			// 1: The Super Tank throws cars.
+			// 2: The Super Tank throws special infected.
+			// 3: The Super Tank throws itself.
+			// 4: The Super Tank throws Witches.
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
@@ -5233,6 +5297,7 @@
 			"Ability Message"			"0"
 
 			// The Super Tank throws these cars.
+			// --
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 6
@@ -5245,11 +5310,12 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Throw Chance"				"33.3"
 
 			// The Super Tank throws these special infected.
+			// --
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 14
@@ -5292,7 +5358,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Track Chance"				"33.3"
 
@@ -5339,7 +5405,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5348,7 +5414,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -5362,7 +5428,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Vampire Chance"			"33.3"
 
@@ -5399,7 +5465,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Vampire Range Chance"			"15.0"
 		}
@@ -5432,7 +5498,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5441,7 +5507,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -5455,7 +5521,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Vision Chance"				"33.3"
 
@@ -5493,7 +5559,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Vision Range Chance"			"15.0"
 		}
@@ -5531,7 +5597,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5540,7 +5606,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -5555,7 +5621,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Warp Chance"				"33.3"
 
@@ -5593,7 +5659,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Warp Range Chance"			"15.0"
 		}
@@ -5608,11 +5674,11 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank makes survivors whirl.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor whirls.
+		// The Super Tank makes survivors' screens whirl.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's screen whirls.
 		// - "Whirl Range"
 		// - "Whirl Range Chance"
-		// "Whirl Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor whirls.
+		// "Whirl Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor's screen whirls.
 		// - "Whirl Chance"
 		// - "Whirl Hit Mode"
 		// Requires "st_whirl.smx" to be installed.
@@ -5626,7 +5692,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5635,7 +5701,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
@@ -5648,6 +5714,7 @@
 			"Ability Message"			"0"
 
 			// The axis of the Super Tank's whirl effect.
+			// --
 			// Combine numbers in any order for different results.
 			// Repeat the same number to increase its chances of being chosen.
 			// Character limit: 6
@@ -5660,7 +5727,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Whirl Chance"				"33.3"
 
@@ -5692,7 +5759,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Whirl Range Chance"			"15.0"
 
@@ -5737,7 +5804,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Witch Chance"				"33.3"
 
@@ -5786,7 +5853,7 @@
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin-Glow Colors" setting.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
 			// Combine numbers in any order for different results.
 			// Character limit: 3
@@ -5795,7 +5862,7 @@
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
 			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"123"
+			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
@@ -5816,7 +5883,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Zombie Chance"				"33.3"
 
@@ -5848,7 +5915,7 @@
 
 			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
 			// --
-			// Minimum: 0.1 (Lowest chance)
+			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Zombie Range Chance"			"15.0"
 		}

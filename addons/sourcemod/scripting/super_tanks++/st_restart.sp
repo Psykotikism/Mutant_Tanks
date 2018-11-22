@@ -104,7 +104,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -121,19 +121,19 @@ public void OnClientPutInServer(int client)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iRestartHitMode(attacker) == 0 || iRestartHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iRestartHitMode(attacker) == 0 || iRestartHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vRestartHit(victim, attacker, flRestartChance(attacker), iRestartHit(attacker), "1", "1");
 			}
 		}
-		else if ((iRestartHitMode(victim) == 0 || iRestartHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iRestartHitMode(victim) == 0 || iRestartHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -147,10 +147,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -159,21 +160,21 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iRestartAbility[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", 0);
 				g_iRestartAbility[iIndex] = iClamp(g_iRestartAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect[iIndex], sizeof(g_sRestartEffect[]), "123");
+				kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect[iIndex], sizeof(g_sRestartEffect[]), "0");
 				kvSuperTanks.GetString("Restart Ability/Ability Message", g_sRestartMessage[iIndex], sizeof(g_sRestartMessage[]), "0");
 				g_flRestartChance[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Chance", 33.3);
-				g_flRestartChance[iIndex] = flClamp(g_flRestartChance[iIndex], 0.1, 100.0);
+				g_flRestartChance[iIndex] = flClamp(g_flRestartChance[iIndex], 0.0, 100.0);
 				g_iRestartHit[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", 0);
 				g_iRestartHit[iIndex] = iClamp(g_iRestartHit[iIndex], 0, 1);
 				g_iRestartHitMode[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit Mode", 0);
 				g_iRestartHitMode[iIndex] = iClamp(g_iRestartHitMode[iIndex], 0, 2);
-				kvSuperTanks.GetString("Restart Ability/Restart Loadout", g_sRestartLoadout[iIndex], sizeof(g_sRestartLoadout[]), "smg,pistol,pain_pills");
+				kvSuperTanks.GetString("Restart Ability/Restart Loadout", g_sRestartLoadout[iIndex], sizeof(g_sRestartLoadout[]), "smg, pistol, pain_pills");
 				g_iRestartMode[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Mode", 1);
 				g_iRestartMode[iIndex] = iClamp(g_iRestartMode[iIndex], 0, 1);
 				g_flRestartRange[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range", 150.0);
 				g_flRestartRange[iIndex] = flClamp(g_flRestartRange[iIndex], 1.0, 9999999999.0);
 				g_flRestartRangeChance[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range Chance", 15.0);
-				g_flRestartRangeChance[iIndex] = flClamp(g_flRestartRangeChance[iIndex], 0.1, 100.0);
+				g_flRestartRangeChance[iIndex] = flClamp(g_flRestartRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -184,7 +185,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect2[iIndex], sizeof(g_sRestartEffect2[]), g_sRestartEffect[iIndex]);
 				kvSuperTanks.GetString("Restart Ability/Ability Message", g_sRestartMessage2[iIndex], sizeof(g_sRestartMessage2[]), g_sRestartMessage[iIndex]);
 				g_flRestartChance2[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Chance", g_flRestartChance[iIndex]);
-				g_flRestartChance2[iIndex] = flClamp(g_flRestartChance2[iIndex], 0.1, 100.0);
+				g_flRestartChance2[iIndex] = flClamp(g_flRestartChance2[iIndex], 0.0, 100.0);
 				g_iRestartHit2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", g_iRestartHit[iIndex]);
 				g_iRestartHit2[iIndex] = iClamp(g_iRestartHit2[iIndex], 0, 1);
 				g_iRestartHitMode2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit Mode", g_iRestartHitMode[iIndex]);
@@ -195,7 +196,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flRestartRange2[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range", g_flRestartRange[iIndex]);
 				g_flRestartRange2[iIndex] = flClamp(g_flRestartRange2[iIndex], 1.0, 9999999999.0);
 				g_flRestartRangeChance2[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Range Chance", g_flRestartRangeChance[iIndex]);
-				g_flRestartRangeChance2[iIndex] = flClamp(g_flRestartRangeChance2[iIndex], 0.1, 100.0);
+				g_flRestartRangeChance2[iIndex] = flClamp(g_flRestartRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -205,7 +206,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "round_start"))
 	{
@@ -215,7 +216,7 @@ public void ST_Event(Event event, const char[] name)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iRestartAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartAbility[ST_TankType(tank)] : g_iRestartAbility2[ST_TankType(tank)];
 
@@ -227,7 +228,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -259,16 +260,14 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 		SDKCall(g_hSDKRespawnPlayer, survivor);
 
 		char sRestartLoadout[325], sItems[5][64];
-		int iRestartMode = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMode[ST_TankType(tank)] : g_iRestartMode2[ST_TankType(tank)];
-
 		sRestartLoadout = !g_bTankConfig[ST_TankType(tank)] ? g_sRestartLoadout[ST_TankType(tank)] : g_sRestartLoadout2[ST_TankType(tank)];
-
+		ReplaceString(sRestartLoadout, sizeof(sRestartLoadout), " ", "");
 		ExplodeString(sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-		vRemoveWeapon(survivor, 0);
-		vRemoveWeapon(survivor, 1);
-		vRemoveWeapon(survivor, 2);
-		vRemoveWeapon(survivor, 3);
-		vRemoveWeapon(survivor, 4);
+
+		for (int iWeapon = 0; iWeapon < 5; iWeapon++)
+		{
+			vRemoveWeapon(survivor, iWeapon);
+		}
 
 		for (int iItem = 0; iItem < sizeof(sItems); iItem++)
 		{
@@ -278,6 +277,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 			}
 		}
 
+		int iRestartMode = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMode[ST_TankType(tank)] : g_iRestartMode2[ST_TankType(tank)];
 		if (g_bRestartValid && iRestartMode == 0)
 		{
 			TeleportEntity(survivor, g_flRestartPosition, NULL_VECTOR, NULL_VECTOR);
@@ -287,13 +287,14 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 			float flCurrentOrigin[3];
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (!bIsSurvivor(iPlayer) || bIsPlayerIncapacitated(iPlayer) || iPlayer == survivor)
+				if (!bIsSurvivor(iPlayer, "234") || bIsPlayerIncapacitated(iPlayer) || iPlayer == survivor)
 				{
 					continue;
 				}
 
 				GetClientAbsOrigin(iPlayer, flCurrentOrigin);
 				TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
+
 				break;
 			}
 		}
@@ -308,7 +309,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Restart", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Restart", sTankName, survivor);
 		}
 	}
 }
@@ -332,7 +333,7 @@ public Action tTimerRestartCoordinates(Handle timer)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor))
+		if (bIsSurvivor(iSurvivor, "234"))
 		{
 			g_bRestartValid = true;
 			GetClientAbsOrigin(iSurvivor, g_flRestartPosition);
@@ -344,4 +345,5 @@ public Action tTimerRestartCoordinates(Handle timer)
 	{
 		g_bRestartValid = false;
 	}
+
 }

@@ -314,7 +314,9 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
-	vResetDrop(client);
+	g_bDrop[client] = false;
+	g_iDrop[client] = 0;
+	g_iDropWeapon[client] = 0;
 }
 
 public void OnMapEnd()
@@ -326,10 +328,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -341,9 +344,9 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iDropMessage[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Message", 0);
 				g_iDropMessage[iIndex] = iClamp(g_iDropMessage[iIndex], 0, 1);
 				g_flDropChance[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Chance", 33.3);
-				g_flDropChance[iIndex] = flClamp(g_flDropChance[iIndex], 0.1, 100.0);
+				g_flDropChance[iIndex] = flClamp(g_flDropChance[iIndex], 0.0, 100.0);
 				g_flDropClipChance[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Clip Chance", 33.3);
-				g_flDropClipChance[iIndex] = flClamp(g_flDropClipChance[iIndex], 0.1, 100.0);
+				g_flDropClipChance[iIndex] = flClamp(g_flDropClipChance[iIndex], 0.0, 100.0);
 				g_iDropMode[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", 0);
 				g_iDropMode[iIndex] = iClamp(g_iDropMode[iIndex], 0, 2);
 				g_flDropWeaponScale[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", 1.0);
@@ -358,9 +361,9 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iDropMessage2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Message", g_iDropMessage[iIndex]);
 				g_iDropMessage2[iIndex] = iClamp(g_iDropMessage2[iIndex], 0, 1);
 				g_flDropChance2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Chance", g_flDropChance[iIndex]);
-				g_flDropChance2[iIndex] = flClamp(g_flDropChance2[iIndex], 0.1, 100.0);
+				g_flDropChance2[iIndex] = flClamp(g_flDropChance2[iIndex], 0.0, 100.0);
 				g_flDropClipChance2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Clip Chance", g_flDropClipChance[iIndex]);
-				g_flDropClipChance2[iIndex] = flClamp(g_flDropClipChance2[iIndex], 0.1, 100.0);
+				g_flDropClipChance2[iIndex] = flClamp(g_flDropClipChance2[iIndex], 0.0, 100.0);
 				g_iDropMode2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", g_iDropMode[iIndex]);
 				g_iDropMode2[iIndex] = iClamp(g_iDropMode2[iIndex], 0, 2);
 				g_flDropWeaponScale2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", g_flDropWeaponScale[iIndex]);
@@ -374,130 +377,31 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 
-		float flDropChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropChance[ST_TankType(iTank)] : g_flDropChance2[ST_TankType(iTank)];
-
-		if (iDropAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flDropChance && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsValidEntity(g_iDrop[iTank]))
-		{
-			float flPos[3], flAngles[3];
-			int iDropMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iDropMessage[ST_TankType(iTank)] : g_iDropMessage2[ST_TankType(iTank)];
-
-			GetClientEyePosition(iTank, flPos);
-			GetClientAbsAngles(iTank, flAngles);
-
-			if (iDropMode(iTank) != 2 && StrContains(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon") != -1)
-			{
-				int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[iTank]]);
-				if (bIsValidEntity(iDrop))
-				{
-					TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
-					DispatchSpawn(iDrop);
-
-					if (bIsValidGame())
-					{
-						SetEntPropFloat(iDrop , Prop_Send, "m_flModelScale", flDropWeaponScale(iTank));
-					}
-
-					int iAmmo, iClip;
-					if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_ak47") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_desert") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_rifle_sg552"))
-					{
-						iAmmo = g_cvSTAssaultRifleAmmo.IntValue;
-					}
-					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_autoshotgun") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_spas"))
-					{
-						iAmmo = g_cvSTAutoShotgunAmmo.IntValue;
-					}
-					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_grenade_launcher"))
-					{
-						iAmmo = g_cvSTGrenadeLauncherAmmo.IntValue;
-					}
-					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_hunting_rifle"))
-					{
-						iAmmo = g_cvSTHuntingRifleAmmo.IntValue;
-					}
-					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_pumpshotgun") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_shotgun_chrome"))
-					{
-						iAmmo = g_cvSTShotgunAmmo.IntValue;
-					}
-					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg_silenced") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_smg_mp5"))
-					{
-						iAmmo = g_cvSTSMGAmmo.IntValue;
-					}
-					else if (StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_scout") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_military") || StrEqual(g_sWeaponClass[g_iDropWeapon[iTank]], "weapon_sniper_awp"))
-					{
-						iAmmo = g_cvSTSniperRifleAmmo.IntValue;
-					}
-
-					float flDropClipChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flDropClipChance[ST_TankType(iTank)] : g_flDropClipChance2[ST_TankType(iTank)];
-					if (GetRandomFloat(0.1, 100.0) <= flDropClipChance)
-					{
-						iClip = iAmmo;
-					}
-
-					if (iClip > 0)
-					{
-						SetEntProp(iDrop, Prop_Send, "m_iClip1", iClip);
-					}
-
-					if (iAmmo > 0)
-					{
-						SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
-					}
-
-					if (iDropMessage == 1)
-					{
-						char sTankName[33];
-						ST_TankName(iTank, sTankName);
-						PrintToChatAll("%s %t", ST_TAG2, "Drop", sTankName);
-					}
-				}
-			}
-			else if (iDropMode(iTank) != 1 && bIsValidGame())
-			{
-				int iDrop = CreateEntityByName("weapon_melee");
-				if (bIsValidEntity(iDrop))
-				{
-					DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[iTank]]);
-					TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
-					DispatchSpawn(iDrop);
-					SetEntPropFloat(iDrop, Prop_Send, "m_flModelScale", flDropWeaponScale(iTank));
-
-					if (iDropMessage == 1)
-					{
-						char sTankName[33];
-						ST_TankName(iTank, sTankName);
-						PrintToChatAll("%s %t", ST_TAG2, "Drop2", sTankName);
-					}
-				}
-			}
-		}
-
-		vDeleteDrop(iTank);
+		vDropWeapon(iTank);
 	}
-}
-
-public void ST_BossStage(int tank)
-{
-	vDeleteDrop(tank);
 }
 
 public void ST_Ability(int tank)
 {
-	if (iDropAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bDrop[tank])
+	if (iDropAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bDrop[tank])
 	{
 		g_bDrop[tank] = true;
+
 		CreateTimer(1.0, tTimerDrop, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	vDropWeapon(tank);
+
+	g_bDrop[tank] = false;
 }
 
 static void vDeleteDrop(int tank)
@@ -510,22 +414,119 @@ static void vDeleteDrop(int tank)
 	g_iDrop[tank] = 0;
 }
 
+static void vDropWeapon(int tank)
+{
+	float flDropChance = !g_bTankConfig[ST_TankType(tank)] ? g_flDropChance[ST_TankType(tank)] : g_flDropChance2[ST_TankType(tank)];
+
+	if (iDropAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flDropChance && ST_TankAllowed(tank, "024") && ST_CloneAllowed(tank, g_bCloneInstalled) && bIsValidEntity(g_iDrop[tank]))
+	{
+		float flPos[3], flAngles[3];
+		int iDropMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iDropMessage[ST_TankType(tank)] : g_iDropMessage2[ST_TankType(tank)];
+
+		GetClientEyePosition(tank, flPos);
+		GetClientAbsAngles(tank, flAngles);
+
+		if (iDropMode(tank) != 2 && StrContains(g_sWeaponClass[g_iDropWeapon[tank]], "weapon") != -1)
+		{
+			int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[tank]]);
+			if (bIsValidEntity(iDrop))
+			{
+				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
+				DispatchSpawn(iDrop);
+
+				if (bIsValidGame())
+				{
+					SetEntPropFloat(iDrop , Prop_Send, "m_flModelScale", flDropWeaponScale(tank));
+				}
+
+				int iAmmo, iClip;
+				if (StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_rifle") || StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_rifle_ak47") || StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_rifle_desert") || StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_rifle_sg552"))
+				{
+					iAmmo = g_cvSTAssaultRifleAmmo.IntValue;
+				}
+				else if (StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_autoshotgun") || StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_shotgun_spas"))
+				{
+					iAmmo = g_cvSTAutoShotgunAmmo.IntValue;
+				}
+				else if (StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_grenade_launcher"))
+				{
+					iAmmo = g_cvSTGrenadeLauncherAmmo.IntValue;
+				}
+				else if (StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_hunting_rifle"))
+				{
+					iAmmo = g_cvSTHuntingRifleAmmo.IntValue;
+				}
+				else if (StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_pumpshotgun") || StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_shotgun_chrome"))
+				{
+					iAmmo = g_cvSTShotgunAmmo.IntValue;
+				}
+				else if (StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_smg") || StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_smg_silenced") || StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_smg_mp5"))
+				{
+					iAmmo = g_cvSTSMGAmmo.IntValue;
+				}
+				else if (StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_sniper_scout") || StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_sniper_military") || StrEqual(g_sWeaponClass[g_iDropWeapon[tank]], "weapon_sniper_awp"))
+				{
+					iAmmo = g_cvSTSniperRifleAmmo.IntValue;
+				}
+
+				float flDropClipChance = !g_bTankConfig[ST_TankType(tank)] ? g_flDropClipChance[ST_TankType(tank)] : g_flDropClipChance2[ST_TankType(tank)];
+				if (GetRandomFloat(0.1, 100.0) <= flDropClipChance)
+				{
+					iClip = iAmmo;
+				}
+
+				if (iClip > 0)
+				{
+					SetEntProp(iDrop, Prop_Send, "m_iClip1", iClip);
+				}
+
+				if (iAmmo > 0)
+				{
+					SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
+				}
+
+				if (iDropMessage == 1)
+				{
+					char sTankName[33];
+					ST_TankName(tank, sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Drop", sTankName);
+				}
+			}
+		}
+		else if (iDropMode(tank) != 1 && bIsValidGame())
+		{
+			int iDrop = CreateEntityByName("weapon_melee");
+			if (bIsValidEntity(iDrop))
+			{
+				DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[tank]]);
+				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
+				DispatchSpawn(iDrop);
+				SetEntPropFloat(iDrop, Prop_Send, "m_flModelScale", flDropWeaponScale(tank));
+
+				if (iDropMessage == 1)
+				{
+					char sTankName[33];
+					ST_TankName(tank, sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Drop2", sTankName);
+				}
+			}
+		}
+	}
+
+	vDeleteDrop(tank);
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
-			vResetDrop(iPlayer);
+			g_bDrop[iPlayer] = false;
+			g_iDrop[iPlayer] = 0;
+			g_iDropWeapon[iPlayer] = 0;
 		}
 	}
-}
-
-static void vResetDrop(int tank)
-{
-	g_bDrop[tank] = false;
-	g_iDrop[tank] = 0;
-	g_iDropWeapon[tank] = 0;
 }
 
 static float flDropWeaponScale(int tank)
@@ -546,15 +547,10 @@ static int iDropMode(int tank)
 public Action tTimerDrop(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bDrop[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iDropAbility(iTank) == 0 || !g_bDrop[iTank])
 	{
 		g_bDrop[iTank] = false;
-		return Plugin_Stop;
-	}
 
-	if (iDropAbility(iTank) == 0)
-	{
-		g_bDrop[iTank] = false;
 		return Plugin_Stop;
 	}
 
@@ -577,12 +573,10 @@ public Action tTimerDrop(Handle timer, int userid)
 		case 2: iPosition = 2;
 	}
 
-	float flScale;
-
 	int iDrop = CreateEntityByName("prop_dynamic_override");
 	if (bIsValidEntity(iDrop))
 	{
-		float flPos[3], flAngles[3];
+		float flPos[3], flAngles[3], flScale;
 
 		char sPosition[32];
 

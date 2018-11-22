@@ -94,10 +94,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -109,7 +110,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iSpamMessage[iIndex] = kvSuperTanks.GetNum("Spam Ability/Ability Message", 0);
 				g_iSpamMessage[iIndex] = iClamp(g_iSpamMessage[iIndex], 0, 1);
 				g_flSpamChance[iIndex] = kvSuperTanks.GetFloat("Spam Ability/Spam Chance", 33.3);
-				g_flSpamChance[iIndex] = flClamp(g_flSpamChance[iIndex], 0.1, 100.0);
+				g_flSpamChance[iIndex] = flClamp(g_flSpamChance[iIndex], 0.0, 100.0);
 				g_iSpamDamage[iIndex] = kvSuperTanks.GetNum("Spam Ability/Spam Damage", 5);
 				g_iSpamDamage[iIndex] = iClamp(g_iSpamDamage[iIndex], 1, 9999999999);
 				g_flSpamDuration[iIndex] = kvSuperTanks.GetFloat("Spam Ability/Spam Duration", 5.0);
@@ -124,7 +125,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iSpamMessage2[iIndex] = kvSuperTanks.GetNum("Spam Ability/Ability Message", g_iSpamMessage[iIndex]);
 				g_iSpamMessage2[iIndex] = iClamp(g_iSpamMessage2[iIndex], 0, 1);
 				g_flSpamChance2[iIndex] = kvSuperTanks.GetFloat("Spam Ability/Spam Chance", g_flSpamChance[iIndex]);
-				g_flSpamChance2[iIndex] = flClamp(g_flSpamChance2[iIndex], 0.1, 100.0);
+				g_flSpamChance2[iIndex] = flClamp(g_flSpamChance2[iIndex], 0.0, 100.0);
 				g_iSpamDamage2[iIndex] = kvSuperTanks.GetNum("Spam Ability/Spam Damage", g_iSpamDamage[iIndex]);
 				g_iSpamDamage2[iIndex] = iClamp(g_iSpamDamage2[iIndex], 1, 9999999999);
 				g_flSpamDuration2[iIndex] = kvSuperTanks.GetFloat("Spam Ability/Spam Duration", g_flSpamDuration[iIndex]);
@@ -141,7 +142,7 @@ public void ST_Configs(const char[] savepath, bool main)
 public void ST_Ability(int tank)
 {
 	float flSpamChance = !g_bTankConfig[ST_TankType(tank)] ? g_flSpamChance[ST_TankType(tank)] : g_flSpamChance2[ST_TankType(tank)];
-	if (iSpamAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flSpamChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bSpam[tank])
+	if (iSpamAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flSpamChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bSpam[tank])
 	{
 		g_bSpam[tank] = true;
 
@@ -154,19 +155,36 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Spam", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Spam", sTankName);
 		}
 	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	g_bSpam[tank] = false;
 }
 
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bSpam[iPlayer] = false;
 		}
+	}
+}
+
+static void vReset2(int tank)
+{
+	g_bSpam[tank] = false;
+
+	if (iSpamMessage(tank) == 1)
+	{
+		char sTankName[33];
+		ST_TankName(tank, sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Spam2", sTankName);
 	}
 }
 
@@ -185,9 +203,10 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
 	{
-		g_bSpam[iTank] = false;
+		vReset2(iTank);
+
 		return Plugin_Stop;
 	}
 
@@ -196,14 +215,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 
 	if (iSpamAbility(iTank) == 0 || (flTime + flSpamDuration) < GetEngineTime())
 	{
-		g_bSpam[iTank] = false;
-
-		if (iSpamMessage(iTank) == 1)
-		{
-			char sTankName[33];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Spam2", sTankName);
-		}
+		vReset2(iTank);
 
 		return Plugin_Stop;
 	}

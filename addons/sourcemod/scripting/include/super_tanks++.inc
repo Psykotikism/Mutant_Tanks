@@ -16,14 +16,13 @@
 #define _supertanksplusplus_included
 
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.45"
+#define ST_VERSION "8.46"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define ST_TAG "[ST++]"
 #define ST_TAG2 "\x04[ST++]\x01"
 #define ST_TAG3 "\x04[ST++]\x03"
 #define ST_TAG4 "\x04[ST++]\x05"
-
 #define ST_MAXTYPES 500
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
@@ -38,12 +37,12 @@
 forward void ST_Ability(int tank);
 
 /**
- * Called when the Super Tank evolves.
- * Use this forward to trigger any features/abilities/settings when a Super Tank evolves.
+ * Called when the Super Tank changes types.
+ * Use this forward to trigger any features/abilities/settings when a Super Tank changes types.
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_BossStage(int tank);
+forward void ST_ChangeType(int tank);
 
 /**
  * Called when the config file is loaded.
@@ -60,8 +59,9 @@ forward void ST_Configs(const char[] savepath, bool main);
  *
  * @param event			Handle to the event.
  * @param name			String containing the name of the event.
+ * @param dontBroadcast		True if event was not broadcast to clients, false otherwise.
  **/
-forward void ST_Event(Event event, const char[] name);
+forward void ST_EventHandler(Event event, const char[] name, bool dontBroadcast);
 
 /**
  * Called when the core plugin is unloaded/reloaded.
@@ -98,32 +98,55 @@ forward void ST_RockThrow(int tank, int rock);
 
 // Natives
 /**
- * Returns the maximum value of the "Type Range" setting.
+ * Returns the maximum value of the "st_typerange" setting.
  *
- * @return				The maximum value of the "Type Range" setting.
+ * @return			The maximum value of the "st_typerange" setting.
  **/
 native int ST_MaxType();
 
 /**
- * Returns the minimum value of the "Type Range" setting.
+ * Returns the minimum value of the "st_typerange" setting.
  *
- * @return				The minimum value of the "Type Range" setting.
+ * @return			The minimum value of the "st_typerange" setting.
  **/
 native int ST_MinType();
 
 /**
+ * Returns the RGBA colors given to a Tank's props.
+ *
+ * @param tank			Client index of the Tank.
+ * @param mode			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
+ *				4 = Rock color, 5 = Tire color
+ * @param red			Red color reference.
+ * @param green			Green color reference.
+ * @param blue			Blue color reference.
+ * @param alpha			Alpha color reference.
+ * @error			Invalid client index.
+ **/
+native void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+
+/**
  * Returns if the core plugin is enabled.
  *
- * @return				True if core plugin is enabled, false otherwise.
+ * @return			True if core plugin is enabled, false otherwise.
  **/
 native bool ST_PluginEnabled();
+
+/**
+ * Returns if a certain Super Tank type can be spawned.
+ *
+ * @param type			Super Tank type.
+ * @return			True if the type can be spawned, false otherwise.
+ * @error			Type is 0.
+ **/
+native bool ST_SpawnEnabled(int type);
 
 /**
  * Spawns a Tank with the specified Super Tank type.
  *
  * @param tank			Client index of the Tank.
  * @param type			Super Tank type.
- * @error				Invalid client index or type is 0.
+ * @error			Invalid client index or type is 0.
  **/
 native void ST_SpawnTank(int tank, int type);
 
@@ -131,17 +154,20 @@ native void ST_SpawnTank(int tank, int type);
  * Returns if the Tank is allowed to be a Super Tank.
  *
  * @param tank			Client index of the Tank.
- * @return				True if Tank is allowed to be a Super Tank, false otherwise.
- * @error				Invalid client index.
+ * @param checks		Checks to run. 0 = client index, 1 = connection, 2 = in-game status,
+ *				3 = life state, 4 = kick status, 5 = bot check
+ *				Default: "0234"
+ * @return			True if Tank is allowed to be a Super Tank, false otherwise.
+ * @error			Invalid client index.
  **/
-native bool ST_TankAllowed(int tank);
+native bool ST_TankAllowed(int tank, const char[] checks = "0234");
 
 /**
  * Returns if a certain Super Tank type has a chance of spawning.
  *
  * @param type			Super Tank type.
- * @return				True if the type has a chance of spawning, false otherwise.
- * @error				Type is 0.
+ * @return			True if the type has a chance of spawning, false otherwise.
+ * @error			Type is 0.
  **/
 native bool ST_TankChance(int type);
 
@@ -150,19 +176,20 @@ native bool ST_TankChance(int type);
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Skin color, 2 = Glow outline color
- * @param red			Buffer to store the red color in.
- * @param green			Buffer to store the green color in.
- * @param blue			Buffer to store the blue color in.
- * @error				Invalid client index.
+ * @param red			Red color reference.
+ * @param green			Green color reference.
+ * @param blue			Blue color reference.
+ * @param alpha			Alpha color reference.
+ * @error			Invalid client index.
  **/
-native void ST_TankColors(int tank, int mode, char[] red, char[] green, char[] blue);
+native void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
  * Returns the custom name given to a Tank.
  *
  * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom name in.
- * @error				Invalid client index.
+ * @error			Invalid client index.
  **/
 native void ST_TankName(int tank, char[] buffer);
 
@@ -170,15 +197,15 @@ native void ST_TankName(int tank, char[] buffer);
  * Returns the Super Tank type of the Tank.
  *
  * @param tank			Client index of the Tank.
- * @return				The Tank's Super Tank type.
- * @error				Invalid client index.
+ * @return			The Tank's Super Tank type.
+ * @error			Invalid client index.
  **/
 native int ST_TankType(int tank);
 
 /**
  * Returns the current finale wave.
  *
- * @return				The current finale wave.
+ * @return			The current finale wave.
  **/
 native int ST_TankWave();
 
@@ -186,15 +213,15 @@ native int ST_TankWave();
  * Returns if a certain Super Tank type is enabled.
  *
  * @param type			Super Tank type.
- * @return				True if the type is enabled, false otherwise.
- * @error				Type is 0.
+ * @return			True if the type is enabled, false otherwise.
+ * @error			Type is 0.
  **/
 native bool ST_TypeEnabled(int type);
 
 // Checks
 stock bool bHasIdlePlayer(int survivor)
 {
-	char sClassname[12];
+	char sClassname[32];
 	GetEntityNetClass(survivor, sClassname, sizeof(sClassname));
 
 	if (StrEqual(sClassname, "SurvivorBot"))
@@ -203,7 +230,7 @@ stock bool bHasIdlePlayer(int survivor)
 		if (iSpectatorUserId > 0)
 		{
 			int iIdler = GetClientOfUserId(iSpectatorUserId);
-			if (iIdler > 0 && IsClientInGame(iIdler) && !IsFakeClient(iIdler) && (GetClientTeam(iIdler) != 2))
+			if (iIdler > 0 && bIsValidClient(iIdler, "25") && GetClientTeam(iIdler) != 2)
 			{
 				return true;
 			}
@@ -213,29 +240,29 @@ stock bool bHasIdlePlayer(int survivor)
 	return false;
 }
 
-stock bool bIsBoomer(int boomer)
+stock bool bIsBoomer(int boomer, const char[] mode = "024")
 {
-	return bIsInfected(boomer) && GetEntProp(boomer, Prop_Send, "m_zombieClass") == 2;
+	return bIsInfected(boomer, mode) && GetEntProp(boomer, Prop_Send, "m_zombieClass") == 2;
 }
 
-stock bool bIsBotIdle(int bot)
+stock bool bIsBotIdle(int bot, const char[] mode = "0234")
 {
-	return bIsSurvivor(bot) && IsFakeClient(bot) && bHasIdlePlayer(bot);
+	return bIsSurvivor(bot, mode) && !bIsValidClient(bot, "5") && bHasIdlePlayer(bot);
 }
 
-stock bool bIsBotIdleSurvivor(int bot)
+stock bool bIsBotIdleSurvivor(int bot, const char[] mode = "0234")
 {
-	return bIsSurvivor(bot) && IsFakeClient(bot) && !bHasIdlePlayer(bot);
+	return bIsSurvivor(bot, mode) && !bIsValidClient(bot, "5") && !bHasIdlePlayer(bot);
 }
 
-stock bool bIsBotSurvivor(int bot)
+stock bool bIsBotSurvivor(int bot, const char[] mode = "0234")
 {
-	return bIsSurvivor(bot) && IsFakeClient(bot);
+	return bIsSurvivor(bot, mode) && !bIsValidClient(bot, "5");
 }
 
-stock bool bIsCharger(int charger)
+stock bool bIsCharger(int charger, const char[] mode = "024")
 {
-	return bIsInfected(charger) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
+	return bIsInfected(charger, mode) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
 
 stock bool bIsEntityGrounded(int entity)
@@ -266,29 +293,29 @@ stock bool bIsGunWeapon(int survivor)
 	return false;
 }
 
-stock bool bIsHumanSurvivor(int survivor)
+stock bool bIsHumanSurvivor(int survivor, const char[] mode = "02345")
 {
-	return bIsSurvivor(survivor) && !IsFakeClient(survivor) && !bHasIdlePlayer(survivor) && !bIsPlayerIdle(survivor);
+	return bIsSurvivor(survivor, mode) && !bHasIdlePlayer(survivor) && !bIsPlayerIdle(survivor);
 }
 
-stock bool bIsHunter(int hunter)
+stock bool bIsHunter(int hunter, const char[] mode = "024")
 {
-	return bIsInfected(hunter) && GetEntProp(hunter, Prop_Send, "m_zombieClass") == 3;
+	return bIsInfected(hunter, mode) && GetEntProp(hunter, Prop_Send, "m_zombieClass") == 3;
 }
 
-stock bool bIsIdlePlayer(int bot, int survivor)
+stock bool bIsIdlePlayer(int bot, int survivor, const char[] mode = "0245")
 {
-	return bIsValidClient(survivor) && !IsFakeClient(survivor) && GetClientTeam(bot) == 2;
+	return bIsValidClient(survivor, mode) && GetClientTeam(bot) == 2;
 }
 
-stock bool bIsInfected(int infected)
+stock bool bIsInfected(int infected, const char[] mode = "024")
 {
-	return bIsValidClient(infected) && GetClientTeam(infected) == 3;
+	return bIsValidClient(infected, mode) && GetClientTeam(infected) == 3;
 }
 
-stock bool bIsJockey(int jockey)
+stock bool bIsJockey(int jockey, const char[] mode = "024")
 {
-	return bIsInfected(jockey) && bIsValidGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
+	return bIsInfected(jockey, mode) && bIsValidGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
 }
 
 stock bool bIsPlayerBurning(int player)
@@ -305,12 +332,12 @@ stock bool bIsPlayerIdle(int survivor)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (!IsClientInGame(iPlayer) || GetClientTeam(iPlayer) != 2 || !IsFakeClient(iPlayer) || !bHasIdlePlayer(iPlayer))
+		if (!bIsValidClient(iPlayer, "2") || bIsValidClient(iPlayer, "5") || !bHasIdlePlayer(iPlayer) || GetClientTeam(iPlayer) != 2)
 		{
 			continue;
 		}
 
-		char sClassname[12];
+		char sClassname[32];
 		GetEntityNetClass(iPlayer, sClassname, sizeof(sClassname));
 
 		if (StrEqual(sClassname, "SurvivorBot"))
@@ -340,11 +367,11 @@ stock bool bIsPlayerIncapacitated(int survivor)
 	return false;
 }
 
-int g_iCurrentMode;
+static int g_iCurrentMode;
 
-stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disabled)
+stock bool bIsPluginEnabled(ConVar gamemode, int mode, char[] enabled, char[] disabled)
 {
-	if (convar == null)
+	if (gamemode == null)
 	{
 		return false;
 	}
@@ -352,8 +379,8 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 	if (mode != 0)
 	{
 		g_iCurrentMode = 0;
-		int iGameMode = CreateEntityByName("info_gamemode");
 
+		int iGameMode = CreateEntityByName("info_gamemode");
 		if (bIsValidEntity(iGameMode))
 		{
 			DispatchSpawn(iGameMode);
@@ -375,7 +402,7 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 	}
 
 	char sGameMode[32], sGameModes[513];
-	convar.GetString(sGameMode, sizeof(sGameMode));
+	gamemode.GetString(sGameMode, sizeof(sGameMode));
 	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
 
 	if (!StrEqual(enabled, ""))
@@ -399,34 +426,64 @@ stock bool bIsPluginEnabled(ConVar convar, int mode, char[] enabled, char[] disa
 	return true;
 }
 
-stock bool bIsSmoker(int smoker)
+stock bool bIsSmoker(int smoker, const char[] mode = "024")
 {
-	return bIsInfected(smoker) && GetEntProp(smoker, Prop_Send, "m_zombieClass") == 1;
+	return bIsInfected(smoker, mode) && GetEntProp(smoker, Prop_Send, "m_zombieClass") == 1;
 }
 
-stock bool bIsSpecialInfected(int infected)
+stock bool bIsSpecialInfected(int infected, const char[] mode = "024")
 {
-	return bIsSmoker(infected) || bIsBoomer(infected) || bIsHunter(infected) || bIsSpitter(infected) || bIsJockey(infected) || bIsCharger(infected);
+	return bIsSmoker(infected, mode) || bIsBoomer(infected, mode) || bIsHunter(infected, mode) || bIsSpitter(infected, mode) || bIsJockey(infected, mode) || bIsCharger(infected, mode);
 }
 
-stock bool bIsSpitter(int spitter)
+stock bool bIsSpitter(int spitter, const char[] mode = "024")
 {
-	return bIsInfected(spitter) && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
+	return bIsInfected(spitter, mode) && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
 }
 
-stock bool bIsSurvivor(int survivor)
+stock bool bIsSurvivor(int survivor, const char[] mode = "0234")
 {
-	return bIsValidClient(survivor) && GetClientTeam(survivor) == 2 && IsPlayerAlive(survivor);
+	return bIsValidClient(survivor, mode) && GetClientTeam(survivor) == 2;
 }
 
-stock bool bIsTank(int tank)
+stock bool bIsTank(int tank, const char[] mode = "024")
 {
-	return bIsInfected(tank) && (bIsValidGame() ? GetEntProp(tank, Prop_Send, "m_zombieClass") == 8 : GetEntProp(tank, Prop_Send, "m_zombieClass") == 5);
+	return bIsInfected(tank, mode) && (bIsValidGame() ? GetEntProp(tank, Prop_Send, "m_zombieClass") == 8 : GetEntProp(tank, Prop_Send, "m_zombieClass") == 5);
 }
 
-stock bool bIsValidClient(int player)
+stock bool bIsValidClient(int player, const char[] mode = "024")
 {
-	return 0 < player <= MaxClients && IsClientInGame(player) && !IsClientInKickQueue(player);
+	if (StrContains(mode, "0") != -1 && (player <= 0 || player > MaxClients))
+	{
+		return false;
+	}
+
+	if (StrContains(mode, "1") != -1 && !IsClientConnected(player))
+	{
+		return false;
+	}
+
+	if (StrContains(mode, "2") != -1 && !IsClientInGame(player))
+	{
+		return false;
+	}
+
+	if (StrContains(mode, "3") != -1 && !IsPlayerAlive(player))
+	{
+		return false;
+	}
+
+	if (StrContains(mode, "4") != -1 && IsClientInKickQueue(player))
+	{
+		return false;
+	}
+
+	if (StrContains(mode, "5") != -1 && IsFakeClient(player))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 stock bool bIsValidEntity(int entity)
@@ -444,11 +501,6 @@ stock bool bIsValidGame(bool l4d2 = true)
 	EngineVersion evEngine = GetEngineVersion();
 
 	return l4d2 ? evEngine == Engine_Left4Dead2 : evEngine == Engine_Left4Dead;
-}
-
-stock bool bIsValidHumanClient(int player)
-{
-	return bIsValidClient(player) && !IsFakeClient(player);
 }
 
 stock bool bIsWitch(int witch)
@@ -471,7 +523,7 @@ public bool bBoomerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsBoomer(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsBoomer(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -484,7 +536,7 @@ public bool bChargerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsCharger(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsCharger(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -497,7 +549,20 @@ public bool bHunterFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsHunter(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsHunter(iPlayer, "234"))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+
+	return true;
+}
+
+public bool bInfectedFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsInfected(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -510,7 +575,7 @@ public bool bJockeyFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsJockey(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsJockey(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -523,7 +588,20 @@ public bool bSmokerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSmoker(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsSmoker(iPlayer, "234"))
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+
+	return true;
+}
+
+public bool bSpecialFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsSpecialInfected(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -536,7 +614,7 @@ public bool bSpitterFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSpitter(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsSpitter(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -549,7 +627,7 @@ public bool bTankFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsTank(iPlayer) && IsPlayerAlive(iPlayer))
+		if (bIsTank(iPlayer, "234"))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -570,7 +648,7 @@ public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 
 public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
 {
-	if (entity == data || bIsValidClient(entity))
+	if (entity == data || bIsValidClient(entity, "024"))
 	{
 		return false;
 	}
@@ -669,19 +747,20 @@ stock float flGetGroundUnits(int entity)
 stock float flGetNearestSurvivor(int tank)
 {
 	float flDistance;
-	if (bIsTank(tank) && IsPlayerAlive(tank))
+	if (bIsTank(tank, "0234"))
 	{
 		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+
 				break;
 			}
 		}
@@ -716,7 +795,7 @@ stock int iGetBotSurvivor()
 {
 	for (int iBot = MaxClients; iBot >= 1; iBot--)
 	{
-		if (bIsBotSurvivor(iBot))
+		if (bIsBotSurvivor(iBot, "234"))
 		{
 			return iBot;
 		}
@@ -730,7 +809,7 @@ stock int iGetHumanCount()
 	int iHumanCount;
 	for (int iHuman = 1; iHuman <= MaxClients; iHuman++)
 	{
-		if (bIsHumanSurvivor(iHuman))
+		if (bIsHumanSurvivor(iHuman, "2345"))
 		{
 			iHumanCount++;
 		}
@@ -756,13 +835,13 @@ stock int iGetIdlePlayer(int bot)
 {
 	if (bIsBotSurvivor(bot))
 	{
-		char sClassname[12];
+		char sClassname[32];
 		GetEntityNetClass(bot, sClassname, sizeof(sClassname));
 
 		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
-			if (iIdler > 0 && IsClientInGame(iIdler) && GetClientTeam(iIdler) == 1)
+			if (iIdler > 0 && bIsValidClient(iIdler, "2") && GetClientTeam(iIdler) == 1)
 			{
 				return iIdler;
 			}
@@ -777,7 +856,7 @@ stock int iGetPlayerCount()
 	int iPlayerCount;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidHumanClient(iPlayer))
+		if (bIsValidClient(iPlayer, "245"))
 		{
 			iPlayerCount++;
 		}
@@ -791,7 +870,7 @@ stock int iGetRandomSurvivor(int survivor)
 	int iSurvivorCount, iSurvivors[MAXPLAYERS + 1];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && iSurvivor != survivor)
+		if (bIsSurvivor(iSurvivor, "234") && iSurvivor != survivor)
 		{
 			iSurvivors[iSurvivorCount++] = iSurvivor;
 		}
@@ -807,7 +886,7 @@ stock int iGetRandomTarget(float pos[3], float angle[3])
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor))
+		if (bIsSurvivor(iSurvivor, "234"))
 		{
 			GetClientEyePosition(iSurvivor, flPos);
 			MakeVectorFromPoints(pos, flPos, flPos);
@@ -874,7 +953,7 @@ stock int iGetWitchCount()
 
 stock void vAttachParticle(int player, const char[] particlename, float time = 0.0, float origin = 0.0)
 {
-	if (bIsValidClient(player))
+	if (bIsValidClient(player, "0234"))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
@@ -899,7 +978,7 @@ stock void vAttachParticle(int player, const char[] particlename, float time = 0
 	}
 }
 
-stock void vCheatCommand(int player, const char[] command, const char[] arguments = "", any ...)
+stock void vCheatCommand(int player, const char[] command, const char[] arguments = "")
 {
 	int iCmdFlags = GetCommandFlags(command);
 	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
@@ -914,22 +993,21 @@ stock void vCopyVector(float source[3], float target[3])
 	target[2] = source[2];
 }
 
-stock void vCreateConfigFile(const char[] filepath, const char[] folder, const char[] filename, const char[] label = "")
+stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...)
 {
-	char sConfigFilename[PLATFORM_MAX_PATH], sConfigLabel[PLATFORM_MAX_PATH];
-	Format(sConfigFilename, sizeof(sConfigFilename), "%s%s%s.cfg", filepath, folder, filename);
+	char sConfigFilename[PLATFORM_MAX_PATH], sFilename[PLATFORM_MAX_PATH];
+	VFormat(sFilename, sizeof(sFilename), filename, 3);
+	BuildPath(Path_SM, sConfigFilename, sizeof(sConfigFilename), "data/super_tanks++/%s%s.cfg", folder, sFilename);
 	if (FileExists(sConfigFilename))
 	{
 		return;
 	}
 
 	File fFilename = OpenFile(sConfigFilename, "w+");
-	strlen(label) > 0 ? strcopy(sConfigLabel, sizeof(sConfigLabel), label) : strcopy(sConfigLabel, sizeof(sConfigLabel), sConfigFilename);
 	if (fFilename != null)
 	{
 		fFilename.WriteLine("// This config file was auto-generated by Super Tanks++ v%s (%s)", ST_VERSION, ST_URL);
-		fFilename.WriteLine("");
-		fFilename.WriteLine("");
+		fFilename.WriteLine("\n");
 
 		delete fFilename;
 	}
@@ -937,7 +1015,7 @@ stock void vCreateConfigFile(const char[] filepath, const char[] folder, const c
 
 stock void vCreateParticle(int player, const char[] particlename, float time = 0.0, float origin = 0.0)
 {
-	if (bIsValidClient(player))
+	if (bIsValidClient(player, "0234"))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
@@ -957,6 +1035,26 @@ stock void vCreateParticle(int player, const char[] particlename, float time = 0
 			iParticle = EntIndexToEntRef(iParticle);
 			vDeleteEntity(iParticle, time);
 		}
+	}
+}
+
+stock void vDamageEntity(int victim, int attacker, float damage, const char[] damagetype = "0")
+{
+	int iPointHurt = CreateEntityByName("point_hurt");
+	if (bIsValidEntity(iPointHurt))
+	{
+		char sTargetName[32];
+		Format(sTargetName, sizeof(sTargetName), "target%d", EntIndexToEntRef(victim));
+		DispatchKeyValue(victim, "targetname", sTargetName);
+
+		DispatchKeyValueFloat(iPointHurt, "Damage", damage);
+		DispatchKeyValue(iPointHurt, "DamageTarget", sTargetName);
+		DispatchKeyValue(iPointHurt, "DamageType", damagetype);
+
+		DispatchSpawn(iPointHurt);
+		AcceptEntityInput(iPointHurt, "Hurt", attacker);
+
+		RemoveEntity(iPointHurt);
 	}
 }
 
@@ -982,17 +1080,8 @@ stock void vEffect(int survivor, int tank, const char[] enabled, const char[] mo
 {
 	if (StrContains(enabled, mode) != -1)
 	{
-		char sRGB[4][4];
-		ST_TankColors(tank, GetRandomInt(1, 2), sRGB[0], sRGB[1], sRGB[2]);
-
-		int iRed = (!StrEqual(sRGB[0], "")) ? StringToInt(sRGB[0]) : 255;
-		iRed = iClamp(iRed, 0, 255);
-
-		int iGreen = (!StrEqual(sRGB[1], "")) ? StringToInt(sRGB[1]) : 255;
-		iGreen = iClamp(iGreen, 0, 255);
-
-		int iBlue = (!StrEqual(sRGB[2], "")) ? StringToInt(sRGB[2]) : 255;
-		iBlue = iClamp(iBlue, 0, 255);
+		int iRed, iGreen, iBlue, iAlpha;
+		ST_TankColors(tank, GetRandomInt(1, 2), iRed, iGreen, iBlue, iAlpha);
 
 		Handle hFadeTarget = StartMessageOne("Fade", survivor);
 		if (hFadeTarget != null)
@@ -1044,6 +1133,8 @@ stock void vMultiTargetFilters(int toggle)
 			RemoveMultiTargetFilter("@jockeys", bJockeyFilter);
 			RemoveMultiTargetFilter("@chargers", bChargerFilter);
 			RemoveMultiTargetFilter("@tanks", bTankFilter);
+			RemoveMultiTargetFilter("@special", bSpecialFilter);
+			RemoveMultiTargetFilter("@infected", bInfectedFilter);
 		}
 		case 1:
 		{
@@ -1054,6 +1145,8 @@ stock void vMultiTargetFilters(int toggle)
 			AddMultiTargetFilter("@jockeys", bJockeyFilter, "all Jockeys", false);
 			AddMultiTargetFilter("@chargers", bChargerFilter, "all Chargers", false);
 			AddMultiTargetFilter("@tanks", bTankFilter, "all Tanks", false);
+			AddMultiTargetFilter("@special", bSpecialFilter, "all Special Infected", false);
+			AddMultiTargetFilter("@infected", bInfectedFilter, "all Infected", false);
 		}
 	}
 }
@@ -1088,20 +1181,6 @@ stock void vSetVector(float target[3], float x, float y, float z)
 	target[2] = z;
 }
 
-stock void vShake(int survivor, float duration = 1.0)
-{
-	Handle hShakeTarget = StartMessageOne("Shake", survivor);
-	if (hShakeTarget != null)
-	{
-		BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
-		bfWrite.WriteByte(0);
-		bfWrite.WriteFloat(16.0);
-		bfWrite.WriteFloat(0.5);
-		bfWrite.WriteFloat(duration);
-		EndMessage();
-	}
-}
-
 stock void vSpawnInfected(int tank, const char[] infected)
 {
 	ChangeClientTeam(tank, 3);
@@ -1132,6 +1211,46 @@ stock void vSpecialAttack(int tank, float pos[3], float offset, const char[] mod
 	}
 }
 
+// Chat
+stock void ST_PrintToChat(int client, char[] message, any ...)
+{
+	if (!bIsValidClient(client, "0"))
+	{
+		ThrowError("Invalid client index %d", client);
+	}
+	
+	if (!bIsValidClient(client, "2"))
+	{
+		ThrowError("Client %d is not in game", client);
+	}
+
+	ReplaceString(message, strlen(message), "{default}", "\x01");
+	ReplaceString(message, strlen(message), "{mint}", "\x03");
+	ReplaceString(message, strlen(message), "{yellow}", "\x04");
+	ReplaceString(message, strlen(message), "{olive}", "\x05");
+
+	char sBuffer[255], sMessage[255];
+	SetGlobalTransTarget(client);
+	Format(sBuffer, sizeof(sBuffer), "\x01%s", message);
+	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
+	PrintToChat(client, sMessage);
+}
+
+stock void ST_PrintToChatAll(char[] message, any ...)
+{
+	char sBuffer[255];
+
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, "25"))
+		{
+			SetGlobalTransTarget(iPlayer);
+			VFormat(sBuffer, sizeof(sBuffer), message, 2);
+			ST_PrintToChat(iPlayer, sBuffer);
+		}
+	}
+}
+
 public SharedPlugin __pl_supertanksplusplus = 
 {
 	name = "super_tanks++",
@@ -1149,6 +1268,8 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 	MarkNativeAsOptional("ST_MaxType");
 	MarkNativeAsOptional("ST_MinType");
 	MarkNativeAsOptional("ST_PluginEnabled");
+	MarkNativeAsOptional("ST_PropsColors");
+	MarkNativeAsOptional("ST_SpawnEnabled");
 	MarkNativeAsOptional("ST_SpawnTank");
 	MarkNativeAsOptional("ST_TankAllowed");
 	MarkNativeAsOptional("ST_TankChance");

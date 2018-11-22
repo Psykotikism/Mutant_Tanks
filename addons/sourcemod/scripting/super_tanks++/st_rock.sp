@@ -96,10 +96,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -111,7 +112,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRockMessage[iIndex] = kvSuperTanks.GetNum("Rock Ability/Ability Message", 0);
 				g_iRockMessage[iIndex] = iClamp(g_iRockMessage[iIndex], 0, 1);
 				g_flRockChance[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Chance", 33.3);
-				g_flRockChance[iIndex] = flClamp(g_flRockChance[iIndex], 0.1, 100.0);
+				g_flRockChance[iIndex] = flClamp(g_flRockChance[iIndex], 0.0, 100.0);
 				g_iRockDamage[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Damage", 5);
 				g_iRockDamage[iIndex] = iClamp(g_iRockDamage[iIndex], 1, 9999999999);
 				g_flRockDuration[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Duration", 5.0);
@@ -127,7 +128,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRockMessage2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Ability Message", g_iRockMessage[iIndex]);
 				g_iRockMessage2[iIndex] = iClamp(g_iRockMessage2[iIndex], 0, 1);
 				g_flRockChance2[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Chance", g_flRockChance[iIndex]);
-				g_flRockChance2[iIndex] = flClamp(g_flRockChance2[iIndex], 0.1, 100.0);
+				g_flRockChance2[iIndex] = flClamp(g_flRockChance2[iIndex], 0.0, 100.0);
 				g_iRockDamage2[iIndex] = kvSuperTanks.GetNum("Rock Ability/Rock Damage", g_iRockDamage[iIndex]);
 				g_iRockDamage2[iIndex] = iClamp(g_iRockDamage2[iIndex], 1, 9999999999);
 				g_flRockDuration2[iIndex] = kvSuperTanks.GetFloat("Rock Ability/Rock Duration", g_flRockDuration[iIndex]);
@@ -142,15 +143,10 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
 	float flRockChance = !g_bTankConfig[ST_TankType(tank)] ? g_flRockChance[ST_TankType(tank)] : g_flRockChance2[ST_TankType(tank)];
-	if (iRockAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flRockChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bRock[tank])
+	if (iRockAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flRockChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bRock[tank])
 	{
 		int iRock = CreateEntityByName("env_rock_launcher");
 		if (!bIsValidEntity(iRock))
@@ -183,16 +179,21 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Rock", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Rock", sTankName);
 		}
 	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	g_bRock[tank] = false;
 }
 
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bRock[iPlayer] = false;
 		}
@@ -209,7 +210,7 @@ static void vReset2(int tank, int rock)
 	{
 		char sTankName[33];
 		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Rock2", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Rock2", sTankName);
 	}
 }
 
@@ -235,7 +236,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRock[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRock[iTank])
 	{
 		vReset2(iTank, iRock);
 

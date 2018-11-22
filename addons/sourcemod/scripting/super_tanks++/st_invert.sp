@@ -37,7 +37,7 @@ char g_sInvertEffect[ST_MAXTYPES + 1][4], g_sInvertEffect2[ST_MAXTYPES + 1][4], 
 
 float g_flInvertChance[ST_MAXTYPES + 1], g_flInvertChance2[ST_MAXTYPES + 1], g_flInvertDuration[ST_MAXTYPES + 1], g_flInvertDuration2[ST_MAXTYPES + 1], g_flInvertRange[ST_MAXTYPES + 1], g_flInvertRange2[ST_MAXTYPES + 1], g_flInvertRangeChance[ST_MAXTYPES + 1], g_flInvertRangeChance2[ST_MAXTYPES + 1];
 
-int g_iInvertAbility[ST_MAXTYPES + 1], g_iInvertAbility2[ST_MAXTYPES + 1], g_iInvertHit[ST_MAXTYPES + 1], g_iInvertHit2[ST_MAXTYPES + 1], g_iInvertHitMode[ST_MAXTYPES + 1], g_iInvertHitMode2[ST_MAXTYPES + 1];
+int g_iInvertAbility[ST_MAXTYPES + 1], g_iInvertAbility2[ST_MAXTYPES + 1], g_iInvertHit[ST_MAXTYPES + 1], g_iInvertHit2[ST_MAXTYPES + 1], g_iInvertHitMode[ST_MAXTYPES + 1], g_iInvertHitMode2[ST_MAXTYPES + 1], g_iInvertOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -82,7 +82,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -102,6 +102,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	g_bInvert[client] = false;
+	g_iInvertOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -150,19 +151,19 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iInvertHitMode(attacker) == 0 || iInvertHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iInvertHitMode(attacker) == 0 || iInvertHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vInvertHit(victim, attacker, flInvertChance(attacker), iInvertHit(attacker), "1", "1");
 			}
 		}
-		else if ((iInvertHitMode(victim) == 0 || iInvertHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iInvertHitMode(victim) == 0 || iInvertHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -176,10 +177,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -188,10 +190,10 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iInvertAbility[iIndex] = kvSuperTanks.GetNum("Invert Ability/Ability Enabled", 0);
 				g_iInvertAbility[iIndex] = iClamp(g_iInvertAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Invert Ability/Ability Effect", g_sInvertEffect[iIndex], sizeof(g_sInvertEffect[]), "123");
+				kvSuperTanks.GetString("Invert Ability/Ability Effect", g_sInvertEffect[iIndex], sizeof(g_sInvertEffect[]), "0");
 				kvSuperTanks.GetString("Invert Ability/Ability Message", g_sInvertMessage[iIndex], sizeof(g_sInvertMessage[]), "0");
 				g_flInvertChance[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Chance", 33.3);
-				g_flInvertChance[iIndex] = flClamp(g_flInvertChance[iIndex], 0.1, 100.0);
+				g_flInvertChance[iIndex] = flClamp(g_flInvertChance[iIndex], 0.0, 100.0);
 				g_flInvertDuration[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Duration", 5.0);
 				g_flInvertDuration[iIndex] = flClamp(g_flInvertDuration[iIndex], 0.1, 9999999999.0);
 				g_iInvertHit[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Hit", 0);
@@ -201,7 +203,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flInvertRange[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range", 150.0);
 				g_flInvertRange[iIndex] = flClamp(g_flInvertRange[iIndex], 1.0, 9999999999.0);
 				g_flInvertRangeChance[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range Chance", 15.0);
-				g_flInvertRangeChance[iIndex] = flClamp(g_flInvertRangeChance[iIndex], 0.1, 100.0);
+				g_flInvertRangeChance[iIndex] = flClamp(g_flInvertRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -212,7 +214,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Invert Ability/Ability Effect", g_sInvertEffect2[iIndex], sizeof(g_sInvertEffect2[]), g_sInvertEffect[iIndex]);
 				kvSuperTanks.GetString("Invert Ability/Ability Message", g_sInvertMessage2[iIndex], sizeof(g_sInvertMessage2[]), g_sInvertMessage[iIndex]);
 				g_flInvertChance2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Chance", g_flInvertChance[iIndex]);
-				g_flInvertChance2[iIndex] = flClamp(g_flInvertChance2[iIndex], 0.1, 100.0);
+				g_flInvertChance2[iIndex] = flClamp(g_flInvertChance2[iIndex], 0.0, 100.0);
 				g_flInvertDuration2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Duration", g_flInvertDuration[iIndex]);
 				g_flInvertDuration2[iIndex] = flClamp(g_flInvertDuration2[iIndex], 0.1, 9999999999.0);
 				g_iInvertHit2[iIndex] = kvSuperTanks.GetNum("Invert Ability/Invert Hit", g_iInvertHit[iIndex]);
@@ -222,7 +224,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flInvertRange2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range", g_flInvertRange[iIndex]);
 				g_flInvertRange2[iIndex] = flClamp(g_flInvertRange2[iIndex], 1.0, 9999999999.0);
 				g_flInvertRangeChance2[iIndex] = kvSuperTanks.GetFloat("Invert Ability/Invert Range Chance", g_flInvertRangeChance[iIndex]);
-				g_flInvertRangeChance2[iIndex] = flClamp(g_flInvertRangeChance2[iIndex], 0.1, 100.0);
+				g_flInvertRangeChance2[iIndex] = flClamp(g_flInvertRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -232,27 +234,21 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vRemoveInvert();
-	vReset();
-}
-
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			vRemoveInvert();
+			vRemoveInvert(iTank);
 		}
 	}
 }
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flInvertRange = !g_bTankConfig[ST_TankType(tank)] ? g_flInvertRange[ST_TankType(tank)] : g_flInvertRange2[ST_TankType(tank)],
 			flInvertRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flInvertRangeChance[ST_TankType(tank)] : g_flInvertRangeChance2[ST_TankType(tank)],
@@ -262,7 +258,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -277,11 +273,11 @@ public void ST_Ability(int tank)
 	}
 }
 
-public void ST_BossStage(int tank)
+public void ST_ChangeType(int tank)
 {
-	if (iInvertAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		vRemoveInvert();
+		vRemoveInvert(tank);
 	}
 }
 
@@ -290,6 +286,7 @@ static void vInvertHit(int survivor, int tank, float chance, int enabled, const 
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bInvert[survivor])
 	{
 		g_bInvert[survivor] = true;
+		g_iInvertOwner[survivor] = tank;
 
 		float flInvertDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flInvertDuration[ST_TankType(tank)] : g_flInvertDuration2[ST_TankType(tank)];
 		DataPack dpStopInvert;
@@ -308,18 +305,19 @@ static void vInvertHit(int survivor, int tank, float chance, int enabled, const 
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Invert", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Invert", sTankName, survivor);
 		}
 	}
 }
 
-static void vRemoveInvert()
+static void vRemoveInvert(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor) && g_bInvert[iSurvivor])
+		if (bIsSurvivor(iSurvivor, "24") && g_bInvert[iSurvivor] && g_iInvertOwner[iSurvivor] == tank)
 		{
 			g_bInvert[iSurvivor] = false;
+			g_iInvertOwner[iSurvivor] = 0;
 		}
 	}
 }
@@ -328,9 +326,10 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bInvert[iPlayer] = false;
+			g_iInvertOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -363,26 +362,29 @@ public Action tTimerStopInvert(Handle timer, DataPack pack)
 	if (!bIsSurvivor(iSurvivor) || !g_bInvert[iSurvivor])
 	{
 		g_bInvert[iSurvivor] = false;
+		g_iInvertOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bInvert[iSurvivor] = false;
+		g_iInvertOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
 
 	g_bInvert[iSurvivor] = false;
+	g_iInvertOwner[iSurvivor] = 0;
 
 	char sInvertMessage[3], sMessage[3];
 	sInvertMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sInvertMessage[ST_TankType(iTank)] : g_sInvertMessage2[ST_TankType(iTank)];
 	pack.ReadString(sMessage, sizeof(sMessage));
 	if (StrContains(sInvertMessage, sMessage) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Invert2", iSurvivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Invert2", iSurvivor);
 	}
 
 	return Plugin_Continue;

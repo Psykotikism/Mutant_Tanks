@@ -79,10 +79,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -98,7 +99,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRespawnAmount[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", 1);
 				g_iRespawnAmount[iIndex] = iClamp(g_iRespawnAmount[iIndex], 1, 9999999999);
 				g_flRespawnChance[iIndex] = kvSuperTanks.GetFloat("Respawn Ability/Respawn Chance", 33.3);
-				g_flRespawnChance[iIndex] = flClamp(g_flRespawnChance[iIndex], 0.1, 100.0);
+				g_flRespawnChance[iIndex] = flClamp(g_flRespawnChance[iIndex], 0.0, 100.0);
 				g_iRespawnMode[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Mode", 0);
 				g_iRespawnMode[iIndex] = iClamp(g_iRespawnMode[iIndex], 0, 2);
 				g_iRespawnType[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Type", 0);
@@ -117,7 +118,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRespawnAmount2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", g_iRespawnAmount[iIndex]);
 				g_iRespawnAmount2[iIndex] = iClamp(g_iRespawnAmount2[iIndex], 1, 9999999999);
 				g_flRespawnChance2[iIndex] = kvSuperTanks.GetFloat("Respawn Ability/Respawn Chance", g_flRespawnChance[iIndex]);
-				g_flRespawnChance2[iIndex] = flClamp(g_flRespawnChance2[iIndex], 0.1, 100.0);
+				g_flRespawnChance2[iIndex] = flClamp(g_flRespawnChance2[iIndex], 0.0, 100.0);
 				g_iRespawnMode2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Mode", g_iRespawnMode[iIndex]);
 				g_iRespawnMode2[iIndex] = iClamp(g_iRespawnMode2[iIndex], 0, 2);
 				g_iRespawnType2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Type", g_iRespawnType[iIndex]);
@@ -131,7 +132,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_incapacitated"))
 	{
@@ -139,7 +140,7 @@ public void ST_Event(Event event, const char[] name)
 
 		float flRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flRespawnChance[ST_TankType(iTank)] : g_flRespawnChance2[ST_TankType(iTank)];
 
-		if (iRespawnAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flRespawnChance && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iRespawnAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flRespawnChance && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			float flPos[3], flAngles[3];
 			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags"), iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
@@ -168,7 +169,7 @@ static void vRandomRespawn(int tank)
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		int iFinaleTank = !g_bTankConfig[ST_TankType(iIndex)] ? g_iFinaleTank[ST_TankType(iIndex)] : g_iFinaleTank2[ST_TankType(iIndex)];
-		if (!ST_TypeEnabled(iIndex) || !ST_TankChance(iIndex) || (iFinaleTank == 1 && (!bIsFinaleMap() || ST_TankWave() <= 0)) || ST_TankType(tank) == iIndex)
+		if (!ST_TypeEnabled(iIndex) || !ST_SpawnEnabled(iIndex) || (iFinaleTank == 1 && (!bIsFinaleMap() || ST_TankWave() <= 0)) || ST_TankType(tank) == iIndex)
 		{
 			continue;
 		}
@@ -194,14 +195,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !bIsPlayerIncapacitated(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
-	{
-		g_iRespawnCount[iTank] = 0;
-
-		return Plugin_Stop;
-	}
-
-	if (iRespawnAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !bIsPlayerIncapacitated(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRespawnAbility(iTank) == 0)
 	{
 		g_iRespawnCount[iTank] = 0;
 
@@ -231,7 +225,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 		{
 			bExists[iRespawn] = false;
-			if (ST_TankAllowed(iRespawn) && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && IsPlayerAlive(iRespawn))
+			if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled))
 			{
 				bExists[iRespawn] = true;
 			}
@@ -257,10 +251,11 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		int iNewTank;
 		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 		{
-			if (ST_TankAllowed(iRespawn) && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && IsPlayerAlive(iRespawn) && !bExists[iRespawn])
+			if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && !bExists[iRespawn])
 			{
 				iNewTank = iRespawn;
 				g_iRespawnCount[iNewTank] = g_iRespawnCount[iTank];
+
 				break;
 			}
 		}
@@ -275,7 +270,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			{
 				char sTankName[33];
 				ST_TankName(iTank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Respawn", sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Respawn", sTankName);
 			}
 		}
 	}

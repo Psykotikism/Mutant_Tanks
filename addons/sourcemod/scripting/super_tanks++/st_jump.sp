@@ -27,7 +27,7 @@ public Plugin myinfo =
 {
 	name = "[ST++] Jump Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank jumps periodically and makes survivors jump uncontrollably.",
+	description = "The Super Tank jumps periodically or sporadically and makes survivors jump uncontrollably.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -38,7 +38,7 @@ char g_sJumpEffect[ST_MAXTYPES + 1][4], g_sJumpEffect2[ST_MAXTYPES + 1][4], g_sJ
 
 float g_flJumpChance[ST_MAXTYPES + 1], g_flJumpChance2[ST_MAXTYPES + 1], g_flJumpDuration[ST_MAXTYPES + 1], g_flJumpDuration2[ST_MAXTYPES + 1], g_flJumpHeight[ST_MAXTYPES + 1], g_flJumpHeight2[ST_MAXTYPES + 1], g_flJumpInterval[ST_MAXTYPES + 1], g_flJumpInterval2[ST_MAXTYPES + 1], g_flJumpRange[ST_MAXTYPES + 1], g_flJumpRange2[ST_MAXTYPES + 1], g_flJumpRangeChance[ST_MAXTYPES + 1], g_flJumpRangeChance2[ST_MAXTYPES + 1], g_flJumpSporadicChance[ST_MAXTYPES + 1], g_flJumpSporadicChance2[ST_MAXTYPES + 1], g_flJumpSporadicHeight[ST_MAXTYPES + 1], g_flJumpSporadicHeight2[ST_MAXTYPES + 1];
 
-int g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpAbility2[ST_MAXTYPES + 1], g_iJumpHit[ST_MAXTYPES + 1], g_iJumpHit2[ST_MAXTYPES + 1], g_iJumpHitMode[ST_MAXTYPES + 1], g_iJumpHitMode2[ST_MAXTYPES + 1], g_iJumpMode[ST_MAXTYPES + 1], g_iJumpMode2[ST_MAXTYPES + 1];
+int g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpAbility2[ST_MAXTYPES + 1], g_iJumpHit[ST_MAXTYPES + 1], g_iJumpHit2[ST_MAXTYPES + 1], g_iJumpHitMode[ST_MAXTYPES + 1], g_iJumpHitMode2[ST_MAXTYPES + 1], g_iJumpMode[ST_MAXTYPES + 1], g_iJumpMode2[ST_MAXTYPES + 1], g_iJumpOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -89,6 +89,7 @@ public void OnClientPutInServer(int client)
 
 	g_bJump[client] = false;
 	g_bJump2[client] = false;
+	g_iJumpOwner[client] = 0;
 }
 
 public void OnMapEnd()
@@ -98,19 +99,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iJumpHitMode(attacker) == 0 || iJumpHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iJumpHitMode(attacker) == 0 || iJumpHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vJumpHit(victim, attacker, flJumpChance(attacker), iJumpHit(attacker), "1", "1");
 			}
 		}
-		else if ((iJumpHitMode(victim) == 0 || iJumpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iJumpHitMode(victim) == 0 || iJumpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -124,10 +125,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -136,10 +138,10 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iJumpAbility[iIndex] = kvSuperTanks.GetNum("Jump Ability/Ability Enabled", 0);
 				g_iJumpAbility[iIndex] = iClamp(g_iJumpAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Jump Ability/Ability Effect", g_sJumpEffect[iIndex], sizeof(g_sJumpEffect[]), "123");
+				kvSuperTanks.GetString("Jump Ability/Ability Effect", g_sJumpEffect[iIndex], sizeof(g_sJumpEffect[]), "0");
 				kvSuperTanks.GetString("Jump Ability/Ability Message", g_sJumpMessage[iIndex], sizeof(g_sJumpMessage[]), "0");
 				g_flJumpChance[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Chance", 33.3);
-				g_flJumpChance[iIndex] = flClamp(g_flJumpChance[iIndex], 0.1, 100.0);
+				g_flJumpChance[iIndex] = flClamp(g_flJumpChance[iIndex], 0.0, 100.0);
 				g_flJumpDuration[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Duration", 5.0);
 				g_flJumpDuration[iIndex] = flClamp(g_flJumpDuration[iIndex], 0.1, 9999999999.0);
 				g_flJumpHeight[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Height", 300.0);
@@ -155,9 +157,9 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flJumpRange[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range", 150.0);
 				g_flJumpRange[iIndex] = flClamp(g_flJumpRange[iIndex], 1.0, 9999999999.0);
 				g_flJumpRangeChance[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range Chance", 15.0);
-				g_flJumpRangeChance[iIndex] = flClamp(g_flJumpRangeChance[iIndex], 0.1, 100.0);
+				g_flJumpRangeChance[iIndex] = flClamp(g_flJumpRangeChance[iIndex], 0.0, 100.0);
 				g_flJumpSporadicChance[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Sporadic Chance", 33.3);
-				g_flJumpSporadicChance[iIndex] = flClamp(g_flJumpSporadicChance[iIndex], 0.1, 100.0);
+				g_flJumpSporadicChance[iIndex] = flClamp(g_flJumpSporadicChance[iIndex], 0.0, 100.0);
 				g_flJumpSporadicHeight[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Sporadic Height", 750.0);
 				g_flJumpSporadicHeight[iIndex] = flClamp(g_flJumpSporadicHeight[iIndex], 0.1, 9999999999.0);
 			}
@@ -170,7 +172,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Jump Ability/Ability Effect", g_sJumpEffect2[iIndex], sizeof(g_sJumpEffect2[]), g_sJumpEffect[iIndex]);
 				kvSuperTanks.GetString("Jump Ability/Ability Message", g_sJumpMessage2[iIndex], sizeof(g_sJumpMessage2[]), g_sJumpMessage[iIndex]);
 				g_flJumpChance2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Chance", g_flJumpChance[iIndex]);
-				g_flJumpChance2[iIndex] = flClamp(g_flJumpChance2[iIndex], 0.1, 100.0);
+				g_flJumpChance2[iIndex] = flClamp(g_flJumpChance2[iIndex], 0.0, 100.0);
 				g_flJumpDuration2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Duration", g_flJumpDuration[iIndex]);
 				g_flJumpDuration2[iIndex] = flClamp(g_flJumpDuration2[iIndex], 0.1, 9999999999.0);
 				g_flJumpHeight2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Height", g_flJumpHeight[iIndex]);
@@ -186,9 +188,9 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flJumpRange2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range", g_flJumpRange[iIndex]);
 				g_flJumpRange2[iIndex] = flClamp(g_flJumpRange2[iIndex], 1.0, 9999999999.0);
 				g_flJumpRangeChance2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Range Chance", g_flJumpRangeChance[iIndex]);
-				g_flJumpRangeChance2[iIndex] = flClamp(g_flJumpRangeChance2[iIndex], 0.1, 100.0);
+				g_flJumpRangeChance2[iIndex] = flClamp(g_flJumpRangeChance2[iIndex], 0.0, 100.0);
 				g_flJumpSporadicChance2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Sporadic Chance", g_flJumpSporadicChance[iIndex]);
-				g_flJumpSporadicChance2[iIndex] = flClamp(g_flJumpSporadicChance2[iIndex], 0.1, 100.0);
+				g_flJumpSporadicChance2[iIndex] = flClamp(g_flJumpSporadicChance2[iIndex], 0.0, 100.0);
 				g_flJumpSporadicHeight2[iIndex] = kvSuperTanks.GetFloat("Jump Ability/Jump Sporadic Height", g_flJumpSporadicHeight[iIndex]);
 				g_flJumpSporadicHeight2[iIndex] = flClamp(g_flJumpSporadicHeight2[iIndex], 0.1, 9999999999.0);
 			}
@@ -200,14 +202,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flJumpRange = !g_bTankConfig[ST_TankType(tank)] ? g_flJumpRange[ST_TankType(tank)] : g_flJumpRange2[ST_TankType(tank)],
 			flJumpRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flJumpRangeChance[ST_TankType(tank)] : g_flJumpRangeChance2[ST_TankType(tank)],
@@ -217,7 +214,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -251,7 +248,24 @@ public void ST_Ability(int tank)
 			{
 				char sTankName[33];
 				ST_TankName(tank, sTankName);
-				PrintToChatAll("%s %t", ST_TAG2, "Jump3", sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Jump3", sTankName);
+			}
+		}
+	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		g_bJump[tank] = false;
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, "24") && g_bJump2[iSurvivor] && g_iJumpOwner[iSurvivor] == tank)
+			{
+				g_bJump2[iSurvivor] = false;
+				g_iJumpOwner[iSurvivor] = 0;
 			}
 		}
 	}
@@ -273,6 +287,7 @@ static void vJumpHit(int survivor, int tank, float chance, int enabled, const ch
 	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bJump2[survivor])
 	{
 		g_bJump2[survivor] = true;
+		g_iJumpOwner[survivor] = tank;
 
 		DataPack dpJump;
 		CreateDataTimer(0.25, tTimerJump3, dpJump, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -292,7 +307,7 @@ static void vJumpHit(int survivor, int tank, float chance, int enabled, const ch
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Jump", sTankName, survivor);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Jump", sTankName, survivor);
 		}
 	}
 }
@@ -301,10 +316,11 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bJump[iPlayer] = false;
 			g_bJump2[iPlayer] = false;
+			g_iJumpOwner[iPlayer] = 0;
 		}
 	}
 }
@@ -312,12 +328,13 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bJump2[survivor] = false;
+	g_iJumpOwner[survivor] = 0;
 
 	char sJumpMessage[4];
 	sJumpMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sJumpMessage[ST_TankType(tank)] : g_sJumpMessage2[ST_TankType(tank)];
 	if (StrContains(sJumpMessage, message) != -1)
 	{
-		PrintToChatAll("%s %t", ST_TAG2, "Jump2", survivor);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Jump2", survivor);
 	}
 }
 
@@ -344,14 +361,7 @@ static int iJumpHitMode(int tank)
 public Action tTimerJump(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bJump[iTank])
-	{
-		g_bJump[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3) || !g_bJump[iTank])
 	{
 		g_bJump[iTank] = false;
 
@@ -371,14 +381,7 @@ public Action tTimerJump(Handle timer, int userid)
 public Action tTimerJump2(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bJump[iTank])
-	{
-		g_bJump[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3) || !g_bJump[iTank])
 	{
 		g_bJump[iTank] = false;
 
@@ -427,9 +430,10 @@ public Action tTimerJump3(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bJump2[iSurvivor])
+	if (!bIsSurvivor(iSurvivor))
 	{
 		g_bJump2[iSurvivor] = false;
+		g_iJumpOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
 	}
@@ -437,7 +441,7 @@ public Action tTimerJump3(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[4];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bJump2[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

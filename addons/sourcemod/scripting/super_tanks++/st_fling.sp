@@ -124,7 +124,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -141,19 +141,19 @@ public void OnClientPutInServer(int client)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iFlingHitMode(attacker) == 0 || iFlingHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iFlingHitMode(attacker) == 0 || iFlingHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vFlingHit(victim, attacker, flFlingChance(attacker), iFlingHit(attacker), "1", "1");
 			}
 		}
-		else if ((iFlingHitMode(victim) == 0 || iFlingHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iFlingHitMode(victim) == 0 || iFlingHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -167,10 +167,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -179,10 +180,10 @@ public void ST_Configs(const char[] savepath, bool main)
 
 				g_iFlingAbility[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", 0);
 				g_iFlingAbility[iIndex] = iClamp(g_iFlingAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Fling Ability/Ability Effect", g_sFlingEffect[iIndex], sizeof(g_sFlingEffect[]), "123");
+				kvSuperTanks.GetString("Fling Ability/Ability Effect", g_sFlingEffect[iIndex], sizeof(g_sFlingEffect[]), "0");
 				kvSuperTanks.GetString("Fling Ability/Ability Message", g_sFlingMessage[iIndex], sizeof(g_sFlingMessage[]), "0");
 				g_flFlingChance[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Chance", 33.3);
-				g_flFlingChance[iIndex] = flClamp(g_flFlingChance[iIndex], 0.1, 100.0);
+				g_flFlingChance[iIndex] = flClamp(g_flFlingChance[iIndex], 0.0, 100.0);
 				g_iFlingHit[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", 0);
 				g_iFlingHit[iIndex] = iClamp(g_iFlingHit[iIndex], 0, 1);
 				g_iFlingHitMode[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", 0);
@@ -190,7 +191,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flFlingRange[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", 150.0);
 				g_flFlingRange[iIndex] = flClamp(g_flFlingRange[iIndex], 1.0, 9999999999.0);
 				g_flFlingRangeChance[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range Chance", 15.0);
-				g_flFlingRangeChance[iIndex] = flClamp(g_flFlingRangeChance[iIndex], 0.1, 100.0);
+				g_flFlingRangeChance[iIndex] = flClamp(g_flFlingRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -201,7 +202,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Fling Ability/Ability Effect", g_sFlingEffect2[iIndex], sizeof(g_sFlingEffect2[]), g_sFlingEffect[iIndex]);
 				kvSuperTanks.GetString("Fling Ability/Ability Message", g_sFlingMessage2[iIndex], sizeof(g_sFlingMessage2[]), g_sFlingMessage[iIndex]);
 				g_flFlingChance2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Chance", g_flFlingChance[iIndex]);
-				g_flFlingChance2[iIndex] = flClamp(g_flFlingChance2[iIndex], 0.1, 100.0);
+				g_flFlingChance2[iIndex] = flClamp(g_flFlingChance2[iIndex], 0.0, 100.0);
 				g_iFlingHit2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", g_iFlingHit[iIndex]);
 				g_iFlingHit2[iIndex] = iClamp(g_iFlingHit2[iIndex], 0, 1);
 				g_iFlingHitMode2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", g_iFlingHitMode[iIndex]);
@@ -209,7 +210,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flFlingRange2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", g_flFlingRange[iIndex]);
 				g_flFlingRange2[iIndex] = flClamp(g_flFlingRange2[iIndex], 1.0, 9999999999.0);
 				g_flFlingRangeChance2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range Chance", g_flFlingRangeChance[iIndex]);
-				g_flFlingRangeChance2[iIndex] = flClamp(g_flFlingRangeChance2[iIndex], 0.1, 100.0);
+				g_flFlingRangeChance2[iIndex] = flClamp(g_flFlingRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -221,7 +222,7 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		int iFlingAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iFlingAbility[ST_TankType(tank)] : g_iFlingAbility2[ST_TankType(tank)];
 
@@ -233,7 +234,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -278,7 +279,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, const c
 
 			if (StrContains(sFlingMessage, message) != -1)
 			{
-				PrintToChatAll("%s %t", ST_TAG2, "Fling", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Fling", sTankName, survivor);
 			}
 		}
 		else
@@ -287,7 +288,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, const c
 
 			if (StrContains(sFlingMessage, message) != -1)
 			{
-				PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
 			}
 		}
 

@@ -80,10 +80,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -95,7 +96,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMedicMessage[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Message", 0);
 				g_iMedicMessage[iIndex] = iClamp(g_iMedicMessage[iIndex], 0, 1);
 				g_flMedicChance[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Chance", 33.3);
-				g_flMedicChance[iIndex] = flClamp(g_flMedicChance[iIndex], 0.1, 100.0);
+				g_flMedicChance[iIndex] = flClamp(g_flMedicChance[iIndex], 0.0, 100.0);
 				kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth[iIndex], sizeof(g_sMedicHealth[]), "25,25,25,25,25,25");
 				kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth[iIndex], sizeof(g_sMedicMaxHealth[]), "250,50,250,100,325,600");
 				g_flMedicRange[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", 500.0);
@@ -110,7 +111,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iMedicMessage2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Message", g_iMedicMessage[iIndex]);
 				g_iMedicMessage2[iIndex] = iClamp(g_iMedicMessage2[iIndex], 0, 1);
 				g_flMedicChance2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Chance", g_flMedicChance[iIndex]);
-				g_flMedicChance2[iIndex] = flClamp(g_flMedicChance2[iIndex], 0.1, 100.0);
+				g_flMedicChance2[iIndex] = flClamp(g_flMedicChance2[iIndex], 0.0, 100.0);
 				kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth2[iIndex], sizeof(g_sMedicHealth2[]), g_sMedicHealth[iIndex]);
 				kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth2[iIndex], sizeof(g_sMedicMaxHealth2[]), g_sMedicMaxHealth[iIndex]);
 				g_flMedicRange2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", g_flMedicRange[iIndex]);
@@ -126,14 +127,14 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank))
 	{
 		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 		{
-			if (bIsSpecialInfected(iInfected) && IsPlayerAlive(iInfected))
+			if (bIsSpecialInfected(iInfected, "234"))
 			{
 				float flInfectedPos[3];
 				GetClientAbsOrigin(iInfected, flInfectedPos);
@@ -152,19 +153,19 @@ public void ST_Ability(int tank)
 	}
 }
 
-public void ST_Event(Event event, const char[] name)
+public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iMedicAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flMedicChance(iTank) && ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (iMedicAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flMedicChance(iTank) && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vMedic(iTank);
 		}
 	}
 }
 
-public void ST_BossStage(int tank)
+public void ST_ChangeType(int tank)
 {
 	if (iMedicAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
@@ -187,9 +188,10 @@ static void vMedic(int tank)
 {
 	float flTankPos[3];
 	GetClientAbsOrigin(tank, flTankPos);
+
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
-		if (bIsSpecialInfected(iInfected) && IsPlayerAlive(iInfected))
+		if (bIsSpecialInfected(iInfected, "234"))
 		{
 			float flInfectedPos[3];
 			GetClientAbsOrigin(iInfected, flInfectedPos);
@@ -257,7 +259,7 @@ static void vMedic(int tank)
 	{
 		char sTankName[33];
 		ST_TankName(tank, sTankName);
-		PrintToChatAll("%s %t", ST_TAG2, "Medic", sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Medic", sTankName);
 	}
 }
 

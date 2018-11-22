@@ -93,10 +93,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -108,7 +109,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRegenMessage[iIndex] = kvSuperTanks.GetNum("Regen Ability/Ability Message", 0);
 				g_iRegenMessage[iIndex] = iClamp(g_iRegenMessage[iIndex], 0, 1);
 				g_flRegenChance[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Chance", 33.3);
-				g_flRegenChance[iIndex] = flClamp(g_flRegenChance[iIndex], 0.1, 100.0);
+				g_flRegenChance[iIndex] = flClamp(g_flRegenChance[iIndex], 0.0, 100.0);
 				g_iRegenHealth[iIndex] = kvSuperTanks.GetNum("Regen Ability/Regen Health", 1);
 				g_iRegenHealth[iIndex] = iClamp(g_iRegenHealth[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_flRegenInterval[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Interval", 1.0);
@@ -125,7 +126,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iRegenMessage2[iIndex] = kvSuperTanks.GetNum("Regen Ability/Ability Message", g_iRegenMessage[iIndex]);
 				g_iRegenMessage2[iIndex] = iClamp(g_iRegenMessage2[iIndex], 0, 1);
 				g_flRegenChance2[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Chance", g_flRegenChance[iIndex]);
-				g_flRegenChance2[iIndex] = flClamp(g_flRegenChance2[iIndex], 0.1, 100.0);
+				g_flRegenChance2[iIndex] = flClamp(g_flRegenChance2[iIndex], 0.0, 100.0);
 				g_iRegenHealth2[iIndex] = kvSuperTanks.GetNum("Regen Ability/Regen Health", g_iRegenHealth[iIndex]);
 				g_iRegenHealth2[iIndex] = iClamp(g_iRegenHealth2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
 				g_flRegenInterval2[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Duration", g_flRegenInterval[iIndex]);
@@ -141,14 +142,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
-	if (iRegenAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bRegen[tank])
+	if (iRegenAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bRegen[tank])
 	{
 		g_bRegen[tank] = true;
 
@@ -159,16 +155,21 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Regen", sTankName, flRegenInterval);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Regen", sTankName, flRegenInterval);
 		}
 	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	g_bRegen[tank] = false;
 }
 
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bRegen[iPlayer] = false;
 		}
@@ -188,14 +189,7 @@ static int iRegenMessage(int tank)
 public Action tTimerRegen(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRegen[iTank])
-	{
-		g_bRegen[iTank] = false;
-
-		return Plugin_Stop;
-	}
-
-	if (iRegenAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRegenAbility(iTank) == 0 || !g_bRegen[iTank])
 	{
 		g_bRegen[iTank] = false;
 
@@ -203,7 +197,7 @@ public Action tTimerRegen(Handle timer, int userid)
 		{
 			char sTankName[33];
 			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Regen2", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Regen2", sTankName);
 		}
 
 		return Plugin_Stop;

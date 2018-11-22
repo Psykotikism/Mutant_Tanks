@@ -93,10 +93,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -110,7 +111,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iFlashMessage[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Message", 0);
 				g_iFlashMessage[iIndex] = iClamp(g_iFlashMessage[iIndex], 0, 1);
 				g_flFlashChance[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Chance", 33.3);
-				g_flFlashChance[iIndex] = flClamp(g_flFlashChance[iIndex], 0.1, 100.0);
+				g_flFlashChance[iIndex] = flClamp(g_flFlashChance[iIndex], 0.0, 100.0);
 				g_flFlashDuration[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Duration", 5.0);
 				g_flFlashDuration[iIndex] = flClamp(g_flFlashDuration[iIndex], 0.1, 9999999999.0);
 				g_flFlashInterval[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Interval", 1.0);
@@ -129,7 +130,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_iFlashMessage2[iIndex] = kvSuperTanks.GetNum("Flash Ability/Ability Message", g_iFlashMessage[iIndex]);
 				g_iFlashMessage2[iIndex] = iClamp(g_iFlashMessage2[iIndex], 0, 1);
 				g_flFlashChance2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Chance", g_flFlashChance[iIndex]);
-				g_flFlashChance2[iIndex] = flClamp(g_flFlashChance2[iIndex], 0.1, 100.0);
+				g_flFlashChance2[iIndex] = flClamp(g_flFlashChance2[iIndex], 0.0, 100.0);
 				g_flFlashDuration2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Duration", g_flFlashDuration[iIndex]);
 				g_flFlashDuration2[iIndex] = flClamp(g_flFlashDuration2[iIndex], 0.1, 9999999999.0);
 				g_flFlashInterval2[iIndex] = kvSuperTanks.GetFloat("Flash Ability/Flash Interval", g_flFlashInterval[iIndex]);
@@ -147,13 +148,19 @@ public void ST_Configs(const char[] savepath, bool main)
 
 public void ST_PluginEnd()
 {
-	vReset();
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank, "234") && g_bFlash[iTank])
+		{
+			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		}
+	}
 }
 
 public void ST_Ability(int tank)
 {
 	float flFlashChance = !g_bTankConfig[ST_TankType(tank)] ? g_flFlashChance[ST_TankType(tank)] : g_flFlashChance2[ST_TankType(tank)];
-	if (iFlashAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flFlashChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank) && !g_bFlash[tank])
+	if (iFlashAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flFlashChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bFlash[tank])
 	{
 		g_bFlash[tank] = true;
 
@@ -167,19 +174,36 @@ public void ST_Ability(int tank)
 		{
 			char sTankName[33];
 			ST_TankName(tank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Flash", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Flash", sTankName);
 		}
 	}
+}
+
+public void ST_ChangeType(int tank)
+{
+	g_bFlash[tank] = false;
 }
 
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bFlash[iPlayer] = false;
 		}
+	}
+}
+
+static void vReset2(int tank)
+{
+	g_bFlash[tank] = false;
+
+	if (iFlashMessage(tank) == 1)
+	{
+		char sTankName[33];
+		ST_TankName(tank, sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Flash2", sTankName);
 	}
 }
 
@@ -198,9 +222,9 @@ public Action tTimerFlash(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFlash[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bFlash[iTank] = false;
+		vReset2(iTank);
 
 		return Plugin_Stop;
 	}
@@ -208,19 +232,12 @@ public Action tTimerFlash(Handle timer, DataPack pack)
 	float flTime = pack.ReadFloat(),
 		flFlashDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flFlashDuration[ST_TankType(iTank)] : g_flFlashDuration2[ST_TankType(iTank)];
 
-	if (iFlashAbility(iTank) == 0 || (flTime + flFlashDuration) < GetEngineTime())
+	if (iFlashAbility(iTank) == 0 || (flTime + flFlashDuration) < GetEngineTime() || !g_bFlash[iTank])
 	{
-		g_bFlash[iTank] = false;
+		vReset2(iTank);
 
 		float flRunSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flRunSpeed[ST_TankType(iTank)] : g_flRunSpeed2[ST_TankType(iTank)];
 		SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
-
-		if (iFlashMessage(iTank) == 1)
-		{
-			char sTankName[33];
-			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Flash2", sTankName);
-		}
 
 		return Plugin_Stop;
 	}

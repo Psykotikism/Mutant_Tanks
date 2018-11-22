@@ -88,7 +88,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer))
+			if (bIsValidClient(iPlayer, "24"))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -122,19 +122,19 @@ public void OnMapEnd()
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && damage > 0.0)
+	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iWarpHitMode(attacker) == 0 || iWarpHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && IsPlayerAlive(attacker) && bIsSurvivor(victim))
+		if ((iWarpHitMode(attacker) == 0 || iWarpHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vWarpHit(victim, attacker, flWarpChance(attacker), iWarpHit(attacker), "1", "1");
 			}
 		}
-		else if ((iWarpHitMode(victim) == 0 || iWarpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && IsPlayerAlive(victim) && bIsSurvivor(attacker))
+		else if ((iWarpHitMode(victim) == 0 || iWarpHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -148,10 +148,11 @@ public void ST_Configs(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
+
 	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
 	{
 		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%d", iIndex);
+		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
 			if (main)
@@ -163,10 +164,10 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Particles/Body Effects", g_sParticleEffects[iIndex], sizeof(g_sParticleEffects[]), "1234567");
 				g_iWarpAbility[iIndex] = kvSuperTanks.GetNum("Warp Ability/Ability Enabled", 0);
 				g_iWarpAbility[iIndex] = iClamp(g_iWarpAbility[iIndex], 0, 3);
-				kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect[iIndex], sizeof(g_sWarpEffect[]), "123");
+				kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect[iIndex], sizeof(g_sWarpEffect[]), "0");
 				kvSuperTanks.GetString("Warp Ability/Ability Message", g_sWarpMessage[iIndex], sizeof(g_sWarpMessage[]), "0");
 				g_flWarpChance[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Chance", 33.3);
-				g_flWarpChance[iIndex] = flClamp(g_flWarpChance[iIndex], 0.1, 100.0);
+				g_flWarpChance[iIndex] = flClamp(g_flWarpChance[iIndex], 0.0, 100.0);
 				g_iWarpHit[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", 0);
 				g_iWarpHit[iIndex] = iClamp(g_iWarpHit[iIndex], 0, 1);
 				g_iWarpHitMode[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit Mode", 0);
@@ -178,7 +179,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flWarpRange[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Range", 150.0);
 				g_flWarpRange[iIndex] = flClamp(g_flWarpRange[iIndex], 1.0, 9999999999.0);
 				g_flWarpRangeChance[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Range Chance", 15.0);
-				g_flWarpRangeChance[iIndex] = flClamp(g_flWarpRangeChance[iIndex], 0.1, 100.0);
+				g_flWarpRangeChance[iIndex] = flClamp(g_flWarpRangeChance[iIndex], 0.0, 100.0);
 			}
 			else
 			{
@@ -192,7 +193,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				kvSuperTanks.GetString("Warp Ability/Ability Effect", g_sWarpEffect2[iIndex], sizeof(g_sWarpEffect2[]), g_sWarpEffect[iIndex]);
 				kvSuperTanks.GetString("Warp Ability/Ability Message", g_sWarpMessage2[iIndex], sizeof(g_sWarpMessage2[]), g_sWarpMessage[iIndex]);
 				g_flWarpChance2[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Chance", g_flWarpChance[iIndex]);
-				g_flWarpChance2[iIndex] = flClamp(g_flWarpChance2[iIndex], 0.1, 100.0);
+				g_flWarpChance2[iIndex] = flClamp(g_flWarpChance2[iIndex], 0.0, 100.0);
 				g_iWarpHit2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit", g_iWarpHit[iIndex]);
 				g_iWarpHit2[iIndex] = iClamp(g_iWarpHit2[iIndex], 0, 1);
 				g_iWarpHitMode2[iIndex] = kvSuperTanks.GetNum("Warp Ability/Warp Hit Mode", g_iWarpHitMode[iIndex]);
@@ -204,7 +205,7 @@ public void ST_Configs(const char[] savepath, bool main)
 				g_flWarpRange2[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Range", g_flWarpRange[iIndex]);
 				g_flWarpRange2[iIndex] = flClamp(g_flWarpRange2[iIndex], 1.0, 9999999999.0);
 				g_flWarpRangeChance2[iIndex] = kvSuperTanks.GetFloat("Warp Ability/Warp Range Chance", g_flWarpRangeChance[iIndex]);
-				g_flWarpRangeChance2[iIndex] = flClamp(g_flWarpRangeChance2[iIndex], 0.1, 100.0);
+				g_flWarpRangeChance2[iIndex] = flClamp(g_flWarpRangeChance2[iIndex], 0.0, 100.0);
 			}
 
 			kvSuperTanks.Rewind();
@@ -214,14 +215,9 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
-{
-	vReset();
-}
-
 public void ST_Ability(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && IsPlayerAlive(tank))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
 		float flWarpRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWarpRange[ST_TankType(tank)] : g_flWarpRange2[ST_TankType(tank)],
 			flWarpRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flWarpRangeChance[ST_TankType(tank)] : g_flWarpRangeChance2[ST_TankType(tank)],
@@ -231,7 +227,7 @@ public void ST_Ability(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -253,11 +249,16 @@ public void ST_Ability(int tank)
 	}
 }
 
+public void ST_ChangeType(int tank)
+{
+	g_bWarp[tank] = false;
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer))
+		if (bIsValidClient(iPlayer, "24"))
 		{
 			g_bWarp[iPlayer] = false;
 		}
@@ -282,7 +283,7 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, const ch
 				{
 					char sTankName[33];
 					ST_TankName(tank, sTankName);
-					PrintToChatAll("%s %t", ST_TAG2, "Warp", sTankName, survivor, iPlayer);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Warp", sTankName, survivor, iPlayer);
 				}
 
 				break;
@@ -318,15 +319,10 @@ static int iWarpHitMode(int tank)
 public Action tTimerWarp(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !IsPlayerAlive(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWarp[iTank])
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iWarpAbility(iTank) != 2 && iWarpAbility(iTank) != 3) || !g_bWarp[iTank])
 	{
 		g_bWarp[iTank] = false;
-		return Plugin_Stop;
-	}
 
-	if (iWarpAbility(iTank) != 2 && iWarpAbility(iTank) != 3)
-	{
-		g_bWarp[iTank] = false;
 		return Plugin_Stop;
 	}
 
@@ -371,7 +367,7 @@ public Action tTimerWarp(Handle timer, int userid)
 		{
 			char sTankName[33];
 			ST_TankName(iTank, sTankName);
-			PrintToChatAll("%s %t", ST_TAG2, "Warp2", sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Warp2", sTankName);
 		}
 	}
 
