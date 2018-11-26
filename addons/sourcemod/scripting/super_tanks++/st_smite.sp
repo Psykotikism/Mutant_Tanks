@@ -146,7 +146,7 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			if (main)
 			{
-				g_bTankConfig[iIndex] = false;g_bTankConfig[iIndex] = true;
+				g_bTankConfig[iIndex] = false;
 
 				g_iSmiteAbility[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", 0);
 				g_iSmiteAbility[iIndex] = iClamp(g_iSmiteAbility[iIndex], 0, 1);
@@ -165,7 +165,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			}
 			else
 			{
-				g_bTankConfig[iIndex] = false;g_bTankConfig[iIndex] = true;
+				g_bTankConfig[iIndex] = true;
 
 				g_iSmiteAbility2[iIndex] = kvSuperTanks.GetNum("Smite Ability/Ability Enabled", g_iSmiteAbility[iIndex]);
 				g_iSmiteAbility2[iIndex] = iClamp(g_iSmiteAbility2[iIndex], 0, 1);
