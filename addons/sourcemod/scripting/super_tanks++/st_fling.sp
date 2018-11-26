@@ -176,7 +176,7 @@ public void ST_Configs(const char[] savepath, bool main)
 		{
 			if (main)
 			{
-				g_bTankConfig[iIndex] = false;g_bTankConfig[iIndex] = true;
+				g_bTankConfig[iIndex] = false;
 
 				g_iFlingAbility[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", 0);
 				g_iFlingAbility[iIndex] = iClamp(g_iFlingAbility[iIndex], 0, 1);
@@ -195,7 +195,7 @@ public void ST_Configs(const char[] savepath, bool main)
 			}
 			else
 			{
-				g_bTankConfig[iIndex] = false;g_bTankConfig[iIndex] = true;
+				g_bTankConfig[iIndex] = true;
 
 				g_iFlingAbility2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", g_iFlingAbility[iIndex]);
 				g_iFlingAbility2[iIndex] = iClamp(g_iFlingAbility2[iIndex], 0, 1);

@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 8.47 (November 26, 2018)
+
+Bug fixes:
+
+1. Fixed the Fling and Smite abilities not working. (Thanks to Mi.Cura for reporting!)
+
+Files:
+
+1. Updated include file to fix documentation typos.
+
 ## Version 8.46 (November 22, 2018)
 
 Bug fixes:

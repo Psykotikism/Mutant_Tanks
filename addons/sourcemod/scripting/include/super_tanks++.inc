@@ -16,7 +16,7 @@
 #define _supertanksplusplus_included
 
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.46"
+#define ST_VERSION "8.47"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define ST_TAG "[ST++]"
@@ -98,16 +98,16 @@ forward void ST_RockThrow(int tank, int rock);
 
 // Natives
 /**
- * Returns the maximum value of the "st_typerange" setting.
+ * Returns the maximum value of the "Type Range" setting.
  *
- * @return			The maximum value of the "st_typerange" setting.
+ * @return			The maximum value of the "Type Range" setting.
  **/
 native int ST_MaxType();
 
 /**
- * Returns the minimum value of the "st_typerange" setting.
+ * Returns the minimum value of the "Type Range" setting.
  *
- * @return			The minimum value of the "st_typerange" setting.
+ * @return			The minimum value of the "Type Range" setting.
  **/
 native int ST_MinType();
 
