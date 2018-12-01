@@ -375,7 +375,7 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsHumanSurvivor(iSurvivor) || !g_bBlind[iSurvivor])
+	if (!ST_PluginEnabled() || !bIsHumanSurvivor(iSurvivor) || !g_bBlind[iSurvivor])
 	{
 		g_bBlind[iSurvivor] = false;
 		g_iBlindOwner[iSurvivor] = 0;

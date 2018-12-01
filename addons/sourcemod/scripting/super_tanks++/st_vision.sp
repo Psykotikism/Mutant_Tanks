@@ -338,7 +338,7 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsHumanSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsHumanSurvivor(iSurvivor))
 	{
 		g_bVision[iSurvivor] = false;
 		g_iVisionOwner[iSurvivor] = 0;
@@ -359,7 +359,6 @@ public Action tTimerVision(Handle timer, DataPack pack)
 	int iVisionAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flVisionDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flVisionDuration[ST_TankType(iTank)] : g_flVisionDuration2[ST_TankType(iTank)];
-
 	if (iVisionAbility == 0 || (flTime + flVisionDuration) < GetEngineTime())
 	{
 		vReset2(iSurvivor, iTank, sMessage);

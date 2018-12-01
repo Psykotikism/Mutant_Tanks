@@ -378,7 +378,7 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsHumanSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsHumanSurvivor(iSurvivor))
 	{
 		g_bDrug[iSurvivor] = false;
 		g_iDrugOwner[iSurvivor] = 0;
@@ -399,7 +399,6 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 	int iDrugAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flDrugDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flDrugDuration[ST_TankType(iTank)] : g_flDrugDuration2[ST_TankType(iTank)];
-
 	if (iDrugAbility == 0 || (flTime + flDrugDuration) < GetEngineTime())
 	{
 		vReset2(iSurvivor, iTank, sMessage);

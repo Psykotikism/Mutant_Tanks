@@ -343,7 +343,7 @@ public Action tTimerShove(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bShove[iSurvivor] = false;
 		g_iShoveOwner[iSurvivor] = 0;
@@ -364,7 +364,6 @@ public Action tTimerShove(Handle timer, DataPack pack)
 	int iShoveAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flShoveDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShoveDuration[ST_TankType(iTank)] : g_flShoveDuration2[ST_TankType(iTank)];
-
 	if (iShoveAbility == 0 || (flTime + flShoveDuration) < GetEngineTime())
 	{
 		vReset2(iSurvivor, iTank, sMessage);

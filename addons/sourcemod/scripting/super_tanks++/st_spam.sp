@@ -203,7 +203,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
+	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
 	{
 		vReset2(iTank);
 
@@ -212,7 +212,6 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 
 	float flTime = pack.ReadFloat(),
 		flSpamDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flSpamDuration[ST_TankType(iTank)] : g_flSpamDuration2[ST_TankType(iTank)];
-
 	if (iSpamAbility(iTank) == 0 || (flTime + flSpamDuration) < GetEngineTime())
 	{
 		vReset2(iTank);

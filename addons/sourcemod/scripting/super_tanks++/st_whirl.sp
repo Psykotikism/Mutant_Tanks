@@ -381,7 +381,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iCamera = EntRefToEntIndex(pack.ReadCell()), iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (iCamera == INVALID_ENT_REFERENCE || !bIsValidEntity(iCamera))
+	if (!ST_PluginEnabled() || iCamera == INVALID_ENT_REFERENCE || !bIsValidEntity(iCamera))
 	{
 		g_bWhirl[iSurvivor] = false;
 		g_iWhirlOwner[iSurvivor] = 0;
@@ -411,7 +411,6 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 	int iWhirlEnabled = pack.ReadCell(), iWhirlAxis = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flWhirlDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flWhirlDuration[ST_TankType(iTank)] : g_flWhirlDuration2[ST_TankType(iTank)];
-
 	if (iWhirlEnabled == 0 || (flTime + flWhirlDuration) < GetEngineTime())
 	{
 		vReset2(iSurvivor, iTank, iCamera, sMessage);

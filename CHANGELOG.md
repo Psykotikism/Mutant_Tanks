@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 8.48 (November 30, 2018)
+
+Bug fixes:
+
+1. Fixed various timers not stopping when their corresponding settings are disabled.
+
 ## Version 8.47 (November 26, 2018)
 
 Bug fixes:

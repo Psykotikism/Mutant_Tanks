@@ -361,7 +361,7 @@ static int iJumpHitMode(int tank)
 public Action tTimerJump(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3) || !g_bJump[iTank])
+	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3) || !g_bJump[iTank])
 	{
 		g_bJump[iTank] = false;
 
@@ -381,7 +381,7 @@ public Action tTimerJump(Handle timer, int userid)
 public Action tTimerJump2(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3) || !g_bJump[iTank])
+	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iJumpAbility(iTank) != 2 && iJumpAbility(iTank) != 3) || !g_bJump[iTank])
 	{
 		g_bJump[iTank] = false;
 
@@ -430,7 +430,7 @@ public Action tTimerJump3(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bJump2[iSurvivor] = false;
 		g_iJumpOwner[iSurvivor] = 0;
@@ -451,7 +451,6 @@ public Action tTimerJump3(Handle timer, DataPack pack)
 	int iJumpEnabled = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flJumpDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flJumpDuration[ST_TankType(iTank)] : g_flJumpDuration2[ST_TankType(iTank)];
-
 	if ((iJumpEnabled != 1 && iJumpEnabled != 3) || (flTime + flJumpDuration < GetEngineTime()))
 	{
 		vReset2(iSurvivor, iTank, sMessage);

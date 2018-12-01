@@ -148,7 +148,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	if (!ST_PluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}

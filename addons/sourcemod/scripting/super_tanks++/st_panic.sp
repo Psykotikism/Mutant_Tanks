@@ -301,7 +301,7 @@ static int iPanicHitMode(int tank)
 public Action tTimerPanic(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iPanicAbility(iTank) != 2 && iPanicAbility(iTank) != 3) || !g_bPanic[iTank])
+	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iPanicAbility(iTank) != 2 && iPanicAbility(iTank) != 3) || !g_bPanic[iTank])
 	{
 		g_bPanic[iTank] = false;
 

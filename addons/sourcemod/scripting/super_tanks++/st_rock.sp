@@ -229,7 +229,7 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iRock = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
-	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	if (!ST_PluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		g_bRock[iTank] = false;
 
@@ -250,7 +250,6 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 
 	float flTime = pack.ReadFloat(),
 		flRockDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flRockDuration[ST_TankType(iTank)] : g_flRockDuration2[ST_TankType(iTank)];
-
 	if (iRockAbility(iTank) == 0 || (flTime + flRockDuration) < GetEngineTime())
 	{
 		vReset2(iTank, iRock);

@@ -366,7 +366,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bRocket[iSurvivor] = false;
 		g_iRocketOwner[iSurvivor] = 0;
@@ -401,7 +401,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bRocket[iSurvivor] = false;
 		g_iRocketOwner[iSurvivor] = 0;
