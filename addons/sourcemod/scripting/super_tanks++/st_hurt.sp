@@ -324,7 +324,7 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bHurt[iSurvivor] = false;
 		g_iHurtOwner[iSurvivor] = 0;
@@ -345,7 +345,6 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 	int iHurtAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flHurtDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flHurtDuration[ST_TankType(iTank)] : g_flHurtDuration2[ST_TankType(iTank)];
-
 	if (iHurtAbility == 0 || (flTime + flHurtDuration) < GetEngineTime())
 	{
 		vReset2(iSurvivor, iTank, sMessage);

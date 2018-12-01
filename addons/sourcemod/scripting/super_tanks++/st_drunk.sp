@@ -351,7 +351,7 @@ public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bDrunk[iSurvivor])
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor) || !g_bDrunk[iSurvivor])
 	{
 		return Plugin_Stop;
 	}
@@ -364,7 +364,6 @@ public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 
 	int iDrunkEnabled = pack.ReadCell();
 	float flTime = pack.ReadFloat();
-
 	if (iDrunkEnabled == 0 || (flTime + flDrunkDuration(iTank) < GetEngineTime()))
 	{
 		return Plugin_Stop;
@@ -382,7 +381,7 @@ public Action tTimerDrunkTurn(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bDrunk[iSurvivor] = false;
 		g_iDrunkOwner[iSurvivor] = 0;
@@ -402,7 +401,6 @@ public Action tTimerDrunkTurn(Handle timer, DataPack pack)
 
 	int iDrunkEnabled = pack.ReadCell();
 	float flTime = pack.ReadFloat();
-
 	if (iDrunkEnabled == 0 || (flTime + flDrunkDuration(iTank) < GetEngineTime()))
 	{
 		vReset2(iSurvivor, iTank, sMessage);

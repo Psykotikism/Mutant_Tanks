@@ -319,7 +319,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsHumanSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsHumanSurvivor(iSurvivor))
 	{
 		g_bShake[iSurvivor] = false;
 		g_iShakeOwner[iSurvivor] = 0;
@@ -340,7 +340,6 @@ public Action tTimerShake(Handle timer, DataPack pack)
 	int iShakeAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flShakeDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShakeDuration[ST_TankType(iTank)] : g_flShakeDuration2[ST_TankType(iTank)];
-
 	if (iShakeAbility == 0 || (flTime + flShakeDuration) < GetEngineTime())
 	{
 		vReset2(iSurvivor, iTank, sMessage);

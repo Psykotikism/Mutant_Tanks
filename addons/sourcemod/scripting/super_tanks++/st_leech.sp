@@ -321,7 +321,7 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bLeech[iSurvivor] = false;
 		g_iLeechOwner[iSurvivor] = 0;
@@ -342,7 +342,6 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 	int iLeechEnabled = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flLeechDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flLeechDuration[ST_TankType(iTank)] : g_flLeechDuration2[ST_TankType(iTank)];
-
 	if (iLeechEnabled == 0 || (flTime + flLeechDuration) < GetEngineTime())
 	{
 		vReset2(iSurvivor, iTank, sMessage);

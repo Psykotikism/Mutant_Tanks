@@ -393,7 +393,7 @@ public Action tTimerStopHypno(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor) || !g_bHypno[iSurvivor])
 	{
 		g_bHypno[iSurvivor] = false;
 		g_iHypnoOwner[iSurvivor] = 0;
@@ -402,7 +402,7 @@ public Action tTimerStopHypno(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bHypno[iSurvivor])
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bHypno[iSurvivor] = false;
 		g_iHypnoOwner[iSurvivor] = 0;

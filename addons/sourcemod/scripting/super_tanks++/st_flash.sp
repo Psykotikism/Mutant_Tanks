@@ -222,7 +222,7 @@ public Action tTimerFlash(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
 	{
 		vReset2(iTank);
 
@@ -231,7 +231,6 @@ public Action tTimerFlash(Handle timer, DataPack pack)
 
 	float flTime = pack.ReadFloat(),
 		flFlashDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flFlashDuration[ST_TankType(iTank)] : g_flFlashDuration2[ST_TankType(iTank)];
-
 	if (iFlashAbility(iTank) == 0 || (flTime + flFlashDuration) < GetEngineTime() || !g_bFlash[iTank])
 	{
 		vReset2(iTank);

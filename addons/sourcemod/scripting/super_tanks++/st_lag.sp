@@ -336,7 +336,7 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bLag[iSurvivor] = false;
 		g_iLagOwner[iSurvivor] = 0;
@@ -356,7 +356,6 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 
 	int iLagEnabled = pack.ReadCell();
 	float flTime = pack.ReadFloat();
-
 	if (iLagEnabled == 0 || (flTime + flLagDuration(iTank) < GetEngineTime()))
 	{
 		vReset2(iSurvivor, iTank, sMessage);
@@ -378,7 +377,7 @@ public Action tTimerLagPosition(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bLag[iSurvivor])
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor) || !g_bLag[iSurvivor])
 	{
 		return Plugin_Stop;
 	}
@@ -391,7 +390,6 @@ public Action tTimerLagPosition(Handle timer, DataPack pack)
 
 	int iLagEnabled = pack.ReadCell();
 	float flTime = pack.ReadFloat();
-
 	if (iLagEnabled == 0 || (flTime + flLagDuration(iTank) < GetEngineTime()))
 	{
 		return Plugin_Stop;

@@ -339,7 +339,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bElectric[iSurvivor] = false;
 		g_iElectricOwner[iSurvivor] = 0;
@@ -360,7 +360,6 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 	int iElectricEnabled = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flElectricDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flElectricDuration[ST_TankType(iTank)] : g_flElectricDuration2[ST_TankType(iTank)];
-
 	if (iElectricEnabled == 0 || (flTime + flElectricDuration) < GetEngineTime())
 	{
 		vReset2(iSurvivor, iTank, sMessage);

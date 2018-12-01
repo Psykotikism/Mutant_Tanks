@@ -333,7 +333,7 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bRecoil[iSurvivor])
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor) || !g_bRecoil[iSurvivor])
 	{
 		g_bRecoil[iSurvivor] = false;
 		g_iRecoilOwner[iSurvivor] = 0;

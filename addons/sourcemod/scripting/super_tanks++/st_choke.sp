@@ -344,7 +344,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bChoke[iSurvivor])
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor) || !g_bChoke[iSurvivor])
 	{
 		g_bChoke[iSurvivor] = false;
 		g_iChokeOwner[iSurvivor] = 0;
@@ -389,7 +389,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bChoke[iSurvivor] = false;
 		g_iChokeOwner[iSurvivor] = 0;
@@ -410,7 +410,6 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	int iChokeAbility = pack.ReadCell();
 	float flTime = pack.ReadFloat(),
 		flChokeDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flChokeDuration[ST_TankType(iTank)] : g_flChokeDuration2[ST_TankType(iTank)];
-
 	if (iChokeAbility == 0 || (flTime + flChokeDuration) < GetEngineTime())
 	{
 		vReset2(iSurvivor, iTank, sMessage);
