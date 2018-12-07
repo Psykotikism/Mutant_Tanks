@@ -842,9 +842,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					{
 						vSetColor(iTank, g_iType);
 						g_bSpawned[iTank] = true;
-
-						g_iType = 0;
 					}
+
+					g_iType = 0;
 
 					char sNumbers[3][4], sFinaleWaves[12];
 					sFinaleWaves = !g_bGeneralConfig ? g_sFinaleWaves : g_sFinaleWaves2;
@@ -925,7 +925,11 @@ public Action cmdTank(int client, int args)
 
 		return Plugin_Handled;
 	}
-	else if ((IsCharNumeric(iType) && (iType < iGetMinType() || iType > iGetMaxType())) || iAmount < 1 || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
+	else if (iAmount == 0)
+	{
+		iAmount = 1;
+	}
+	else if ((IsCharNumeric(iType) && (iType < iGetMinType() || iType > iGetMaxType())) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
 	{
 		ReplyToCommand(client, "%s Usage: sm_tank <type %i-%i> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>", ST_TAG2, iGetMinType(), iGetMaxType());
 
