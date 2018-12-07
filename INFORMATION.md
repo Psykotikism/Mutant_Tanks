@@ -204,7 +204,8 @@
 			// Not Empty: Tank's custom name
 			"Tank Name"				"Tank #1"
 
-			// Enable the Super Tank.
+			// The game can spawn the Super Tank.
+			// Note: The Super Tank will still appear on the Super Tanks++ menu and other Super Tanks can still transform into the Super Tank.
 			// --
 			// 0: OFF
 			// 1: ON

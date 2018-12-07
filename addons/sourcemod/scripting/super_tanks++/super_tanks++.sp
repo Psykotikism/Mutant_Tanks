@@ -842,9 +842,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					{
 						vSetColor(iTank, g_iType);
 						g_bSpawned[iTank] = true;
-
-						g_iType = 0;
 					}
+
+					g_iType = 0;
 
 					char sNumbers[3][4], sFinaleWaves[12];
 					sFinaleWaves = !g_bGeneralConfig ? g_sFinaleWaves : g_sFinaleWaves2;
@@ -900,12 +900,15 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	char sType[32], sMode[32];
+	char sType[32], sAmount[32], sMode[32];
 
 	GetCmdArg(1, sType, sizeof(sType));
 	int iType = StringToInt(sType);
 
-	GetCmdArg(2, sMode, sizeof(sMode));
+	GetCmdArg(2, sAmount, sizeof(sAmount));
+	int iAmount = StringToInt(sAmount);
+
+	GetCmdArg(3, sMode, sizeof(sMode));
 	int iMode = StringToInt(sMode);
 
 	iType = iClamp(iType, iGetMinType(), iGetMaxType());
@@ -922,14 +925,18 @@ public Action cmdTank(int client, int args)
 
 		return Plugin_Handled;
 	}
-	else if ((IsCharNumeric(iType) && (iType < iGetMinType() || iType > iGetMaxType())) || iMode < 0 || iMode > 1 || args > 2)
+	else if (iAmount == 0)
 	{
-		ReplyToCommand(client, "%s Usage: sm_tank <type %i-%i> <0: spawn at crosshair|1: spawn automatically>", ST_TAG2, iGetMinType(), iGetMaxType());
+		iAmount = 1;
+	}
+	else if ((IsCharNumeric(iType) && (iType < iGetMinType() || iType > iGetMaxType())) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
+	{
+		ReplyToCommand(client, "%s Usage: sm_tank <type %i-%i> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>", ST_TAG2, iGetMinType(), iGetMaxType());
 
 		return Plugin_Handled;
 	}
 
-	if (IsCharNumeric(iType) && iTankEnabled(iType) == 0)
+	if (IsCharNumeric(iType) && iSpawnEnabled(iType) == 0)
 	{
 		char sTankName[33];
 		sTankName = !g_bTankConfig[iType] ? g_sTankName[iType] : g_sTankName2[iType];
@@ -939,12 +946,12 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, sType, iMode);
+	vTank(client, sType, iAmount, iMode);
 
 	return Plugin_Handled;
 }
 
-static void vTank(int admin, char[] type, int mode = 0)
+static void vTank(int admin, char[] type, int amount = 1, int mode = 0)
 {
 	int iType = StringToInt(type);
 	if (iType != 0)
@@ -982,7 +989,7 @@ static void vTank(int admin, char[] type, int mode = 0)
 
 	if (bIsTankAllowed(admin))
 	{
-		vSpawnTank(admin, mode);
+		vSpawnTank(admin, g_iType, amount, mode);
 	}
 	else
 	{
@@ -1001,17 +1008,17 @@ static void vTank(int admin, char[] type, int mode = 0)
 			}
 			else
 			{
-				vSpawnTank(admin, mode);
+				vSpawnTank(admin, g_iType, amount, mode);
 			}
 		}
 		else
 		{
-			vSpawnTank(admin, mode);
+			vSpawnTank(admin, g_iType, amount, mode);
 		}
 	}
 }
 
-static void vSpawnTank(int admin, int mode = 0)
+static void vSpawnTank(int admin, int type, int amount, int mode = 0)
 {
 	char sParameter[32];
 
@@ -1021,7 +1028,11 @@ static void vSpawnTank(int admin, int mode = 0)
 		case 1: sParameter = "tank auto";
 	}
 
-	vCheatCommand(admin, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
+	for (int iAmount = 0; iAmount < amount; iAmount++)
+	{
+		vCheatCommand(admin, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
+		g_iType = type;
+	}
 }
 
 static void vTankMenu(int admin, int item)

@@ -16,7 +16,7 @@
 #define _supertanksplusplus_included
 
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.48"
+#define ST_VERSION "8.49"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define ST_TAG "[ST++]"
@@ -1224,15 +1224,16 @@ stock void ST_PrintToChat(int client, char[] message, any ...)
 		ThrowError("Client %d is not in game", client);
 	}
 
-	ReplaceString(message, strlen(message), "{default}", "\x01");
-	ReplaceString(message, strlen(message), "{mint}", "\x03");
-	ReplaceString(message, strlen(message), "{yellow}", "\x04");
-	ReplaceString(message, strlen(message), "{olive}", "\x05");
-
 	char sBuffer[255], sMessage[255];
 	SetGlobalTransTarget(client);
 	Format(sBuffer, sizeof(sBuffer), "\x01%s", message);
 	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
+
+	ReplaceString(sMessage, sizeof(sMessage), "{default}", "\x01");
+	ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
+	ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
+	ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
+
 	PrintToChat(client, sMessage);
 }
 
@@ -1246,6 +1247,7 @@ stock void ST_PrintToChatAll(char[] message, any ...)
 		{
 			SetGlobalTransTarget(iPlayer);
 			VFormat(sBuffer, sizeof(sBuffer), message, 2);
+
 			ST_PrintToChat(iPlayer, sBuffer);
 		}
 	}
