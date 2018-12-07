@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 8.49 (December 6, 2018)
+
+Bug fixes:
+
+1. Fixed the `sm_tank` command not spawning disabled Super Tanks.
+
+Changes:
+
+1. The `sm_tank` command can now spawn more than 1 Super Tank at a time. (New syntax: `sm_tank "type 1-500 OR name" "amount: 1-32" "0: spawn at crosshair|1: spawn automatically"`)
+
 ## Version 8.48 (November 30, 2018)
 
 Bug fixes:
