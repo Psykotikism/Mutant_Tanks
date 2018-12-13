@@ -16,7 +16,7 @@
 #define _supertanksplusplus_included
 
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.49"
+#define ST_VERSION "8.50"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define ST_TAG "[ST++]"
@@ -133,10 +133,10 @@ native void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, 
 native bool ST_PluginEnabled();
 
 /**
- * Returns if a certain Super Tank type can be spawned.
+ * Returns if a certain Super Tank type can spawn.
  *
  * @param type			Super Tank type.
- * @return			True if the type can be spawned, false otherwise.
+ * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0.
  **/
 native bool ST_SpawnEnabled(int type);
