@@ -104,7 +104,8 @@ This is okay:
 			"Tank Name"				"Test Tank" // Tank has a name.
 			"Tank Enabled"				"1" // Tank is enabled.
 			"Tank Chance"				"100.0" // Tank has 100% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
+			"Spawn Enabled"				"1" // Tank can spawn.
+			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
 			"Skin Color"				"255 0 0 255" // Tank has red skin.
 			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
 		}
@@ -123,7 +124,8 @@ This is not okay:
 			// "Tank Enabled" is missing so this entry is disabled.
 			"Tank Name"				"Test Tank" // Tank has a name.
 			"Tank Chance"				"47.0" // Tank has 47% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
+			"Spawn Enabled"				"1" // Tank can spawn.
+			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
 			"Skin Color"				"255 0 0 255" // Tank has red skin.
 			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
 		}
@@ -142,7 +144,8 @@ This is okay:
 			// Since "Tank Name" is missing, the default name for this entry will be "Tank"
 			"Tank Enabled"				"1" // Tank is enabled.
 			"Tank Chance"				"12.3" // Tank has 12.3% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
+			"Spawn Enabled"				"1" // Tank can spawn.
+			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
 			"Skin Color"				"255 0 0 255" // Tank has red skin.
 			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
 		}
@@ -161,7 +164,8 @@ This is not okay:
 			"Tank Name"				"Test Tank" // Tank has a name.
 			"Tank Enabled"				"1" // Tank is enabled.
 			"Tank Chance"				"59.0" // Tank has 59% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
+			"Spawn Enabled"				"1" // Tank can spawn.
+			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
 			"Skin Color"				"255,0,0,255" // The string should not contain any commas.
 			"Glow Color"				"255,255,0" // The string should not contain any commas.
 		}
@@ -182,7 +186,8 @@ Here's our final entry:
 			"Tank Name"				"Test Tank" // Named "Test Tank".
 			"Tank Enabled"				"1" // Entry is enabled.
 			"Tank Chance"				"9.5" // Tank has 9.5% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
+			"Spawn Enabled"				"1" // Tank can spawn.
+			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
 			"Skin Color"				"255 0 0 255" // Tank has red skin.
 			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
 		}
@@ -231,6 +236,7 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 			"Tank Enabled"				"1"
 			"Tank Chance"				"75.2"
 			"Spawn Enabled"				"1"
+			"Menu Enabled"				"1"
 			"Skin Color"				"255 255 0 255"
 			"Glow Color"				"255 255 0"
 		}
@@ -268,6 +274,7 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 			"Tank Enabled"				"1"
 			"Tank Chance"				"38.2"
 			"Spawn Enabled"				"1"
+			"Menu Enabled"				"1"
 			"Skin Color"				"255 255 255 255"
 			"Glow Color"				"255 255 255"
 			"Glow Enabled"				"0" // No glow outline.
@@ -495,6 +502,7 @@ Example:
 			"Tank Enabled"				"1"
 			"Tank Chance"				"2.53"
 			"Spawn Enabled"				"1"
+			"Menu Enabled"				"1"
 			"Skin Color"				"0 170 255 255"
 			"Glow Color"				"0 170 255"
 		}
@@ -520,6 +528,7 @@ Example:
 			"Tank Enabled"				"1"
 			"Tank Chance"				"1.0"
 			"Spawn Enabled"				"1"
+			"Menu Enabled"				"1"
 			"Skin Color"				"1 1 1 255"
 			"Glow Color"				"1 1 1"
 		}
@@ -699,10 +708,10 @@ native void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, 
 native bool ST_PluginEnabled();
 
 /**
- * Returns if a certain Super Tank type can be spawned.
+ * Returns if a certain Super Tank type can spawn.
  *
  * @param type			Super Tank type.
- * @return			True if the type can be spawned, false otherwise.
+ * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0.
  **/
 native bool ST_SpawnEnabled(int type);

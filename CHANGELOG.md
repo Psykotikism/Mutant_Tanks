@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 8.50 (December 15, 2018)
+
+Bug fixes:
+
+1. Fixed the chat color tags not working properly.
+
+Changes:
+
+1. Added the `Menu Enabled` setting to replace the `Spawn Enabled` setting.
+2. The `Spawn Enabled` setting now determines if a Super Tank can spawn. (Correlates to the `Tank Chance` setting.)
+3. The `Tank Enabled` setting is now an all-in-one setting for more flexibility.
+4. The following settings can now be completely disabled with negative values and they are all set to `-1.0` by default:
+- `Claw Damage` - If set to anything less than `0.0`, the Super Tank's claw damage will be untouched by the plugin.
+- `Rock Damage` - If set to anything less than `0.0`, the Super Tank's rock damage will be untouched by the plugin.
+- `Run Speed` - If set to anything less than `0.1`, the Super Tank's run speed will be untouched by the plugin.
+- `Throw Interval` - If set to anything less than `0.1`, the Super Tank's rock throw interval will be untouched by the plugin.
+
+Files:
+
+1. Updated documentation of the `ST_SpawnEnabled()` native in the `super_tanks++.inc` file.
+
 ## Version 8.49 (December 6, 2018)
 
 Bug fixes:

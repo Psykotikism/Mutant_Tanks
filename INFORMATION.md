@@ -1,7 +1,7 @@
 # Information
 > Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
 
-- Maximum types: 500 (If you want more, change the value of `ST_MAXTYPES` in super_tanks++.inc file at your own risk.)
+- Maximum types: 500 (If you want more, change the value of `ST_MAXTYPES` in `super_tanks++.inc` file at your own risk.)
 - Ability count: 65
 - Please don't report any bugs or issues if you're using the plugin on a listen server. No support will be provided for that kind of server.
 - THIS FILE IS NOT THE CONFIG FILE! USE IT AS A REFERENCE!
@@ -204,8 +204,8 @@
 			// Not Empty: Tank's custom name
 			"Tank Name"				"Tank #1"
 
-			// The game can spawn the Super Tank.
-			// Note: The Super Tank will still appear on the Super Tanks++ menu and other Super Tanks can still transform into the Super Tank.
+			// Enable the Super Tank.
+			// Note: This setting determines full enablement. Even if other settings are enabled while this is disabled, the Super Tank will stay disabled.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -228,12 +228,20 @@
 			// 1: ON
 			"Tank Note"				"0"
 
+			// The game can spawn the Super Tank.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: The Super Tank will still appear on the Super Tanks++ menu and other Super Tanks can still transform into the Super Tank.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Spawn Enabled"				"1"
+
 			// The Super Tank can be spawned through the "sm_tank" command.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// 0: OFF
 			// 1: ON
-			"Spawn Enabled"				"1"
+			"Menu Enabled"				"1"
 
 			// These are the RGBA values of the Super Tank's skin color.
 			// --
@@ -484,9 +492,10 @@
 		{
 			// The Super Tank's claw attacks do this much damage.
 			// --
+			// OFF: -1.0
 			// Minimum: 0.0
 			// Maximum: 9999999999.0
-			"Claw Damage"				"5.0"
+			"Claw Damage"				"-1.0"
 
 			// Base health given to the Super Tank.
 			// Note: Tank's health limit on any difficulty is 65,535.
@@ -511,23 +520,26 @@
 
 			// The Super Tank's rock throws do this much damage.
 			// --
+			// OFF: -1.0
 			// Minimum: 0.0
 			// Maximum: 9999999999.0
-			"Rock Damage"				"5.0"
+			"Rock Damage"				"-1.0"
 
 			// Set the Super Tank's run speed.
 			// Note: Default run speed is 1.0.
 			// --
+			// OFF: -1.0
 			// Minimum: 0.1
 			// Maximum: 3.0
-			"Run Speed"				"1.0"
+			"Run Speed"				"-1.0"
 
 			// The Super Tank throws a rock every time this many seconds passes.
 			// Note: Default throw interval is 5.0 seconds.
 			// --
+			// OFF: -1.0
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
-			"Throw Interval"			"5.0"
+			"Throw Interval"			"-1.0"
 		}
 		"Immunities"
 		{
