@@ -1025,7 +1025,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 31-34 of the `super_tanks++.inc` file and recompile each ability plugin.
+Edit lines 32-35 of the `super_tanks++.inc` file and recompile each ability plugin.
 
 5. What happens if a Super Tank has multiple abilities that are all activated by the same button?
 
