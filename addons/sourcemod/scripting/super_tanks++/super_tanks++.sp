@@ -1222,6 +1222,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			if (bIsTank(iTank, "024"))
 			{
 				CreateTimer(0.5, tTimerKillStuckTank, iTankId, TIMER_FLAG_NO_MAPCHANGE);
+
+				vResetSpeed(iTank, true);
 			}
 		}
 		else if (StrEqual(name, "player_spawn"))
