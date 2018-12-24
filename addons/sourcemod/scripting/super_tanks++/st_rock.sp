@@ -9,9 +9,7 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-// Super Tanks++: Rock Ability
 #include <sourcemod>
-#include <sdktools>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>
@@ -450,10 +448,6 @@ static void vReset3(int tank)
 
 static void vRock(int tank)
 {
-	float flPos[3];
-	GetClientEyePosition(tank, flPos);
-	flPos[2] += 20.0;
-
 	char sDamage[11];
 	int iRockDamage = !g_bTankConfig[ST_TankType(tank)] ? g_iRockDamage[ST_TankType(tank)] : g_iRockDamage2[ST_TankType(tank)];
 	IntToString(iRockDamage, sDamage, sizeof(sDamage));
@@ -464,9 +458,6 @@ static void vRock(int tank)
 	CreateDataTimer(0.2, tTimerRockUpdate, dpRockUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpRockUpdate.WriteCell(EntIndexToEntRef(g_iRock[tank]));
 	dpRockUpdate.WriteCell(GetClientUserId(tank));
-	dpRockUpdate.WriteFloat(flPos[0]);
-	dpRockUpdate.WriteFloat(flPos[1]);
-	dpRockUpdate.WriteFloat(flPos[2]);
 	dpRockUpdate.WriteFloat(GetEngineTime());
 }
 
@@ -566,11 +557,6 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	float flPos[3];
-	flPos[0] = pack.ReadFloat();
-	flPos[1] = pack.ReadFloat();
-	flPos[2] = pack.ReadFloat();
-
 	float flTime = pack.ReadFloat();
 	if (iRockAbility(iTank) == 0 || ((!ST_TankAllowed(iTank, "5") || (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flRockDuration(iTank)) < GetEngineTime()))
 	{
@@ -601,11 +587,16 @@ public Action tTimerRockUpdate(Handle timer, DataPack pack)
 	flMin = flClamp(flMin, -5.0, 0.0);
 	flMax = flClamp(flMax, 0.0, 5.0);
 
-	float flAngles[3], flHitPos[3];
+	float flPos[3];
+	GetClientEyePosition(iTank, flPos);
+	flPos[2] += 20.0;
+
+	float flAngles[3];
 	flAngles[0] = GetRandomFloat(-1.0, 1.0);
 	flAngles[1] = GetRandomFloat(-1.0, 1.0);
 	flAngles[2] = 2.0;
 	GetVectorAngles(flAngles, flAngles);
+	float flHitPos[3];
 	iGetRayHitPos(flPos, flAngles, flHitPos, iTank, true, 2);
 
 	float flDistance = GetVectorDistance(flPos, flHitPos), flVector[3];

@@ -9,10 +9,8 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-// Super Tanks++: Clone Ability
 #include <sourcemod>
 #include <sdktools>
-#include <st_clone>
 
 #define REQUIRE_PLUGIN
 #include <super_tanks++>

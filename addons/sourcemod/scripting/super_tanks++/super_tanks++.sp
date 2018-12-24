@@ -9,10 +9,8 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-// Super Tanks++
 #include <sourcemod>
 #include <sdkhooks>
-#include <sdktools>
 #include <adminmenu>
 #include <super_tanks++>
 

@@ -9,9 +9,7 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-// Super Tanks++: Car Ability
 #include <sourcemod>
-#include <sdktools>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>
@@ -403,15 +401,9 @@ public void ST_OnChangeType(int tank)
 
 static void vCar(int tank)
 {
-	float flPos[3];
-	GetClientEyePosition(tank, flPos);
-
 	DataPack dpCarUpdate;
 	CreateDataTimer(0.6, tTimerCarUpdate, dpCarUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpCarUpdate.WriteCell(GetClientUserId(tank));
-	dpCarUpdate.WriteFloat(flPos[0]);
-	dpCarUpdate.WriteFloat(flPos[1]);
-	dpCarUpdate.WriteFloat(flPos[2]);
 	dpCarUpdate.WriteFloat(GetEngineTime());
 }
 
@@ -532,12 +524,7 @@ public Action tTimerCarUpdate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	float flPos[3];
-	flPos[0] = pack.ReadFloat();
-	flPos[1] = pack.ReadFloat();
-	flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
-
 	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bCar3[iTank])
 	{
 		vReset2(iTank);
@@ -555,67 +542,64 @@ public Action tTimerCarUpdate(Handle timer, DataPack pack)
 	flMin = flClamp(flMin, -200.0, 0.0);
 	flMax = flClamp(flMax, 0.0, 200.0);
 
-	if ((GetEngineTime() - flTime) > 5.0)
+	float flPos[3];
+	GetClientEyePosition(iTank, flPos);
+
+	float flAngles[3];
+	flAngles[0] = GetRandomFloat(-20.0, 20.0);
+	flAngles[1] = GetRandomFloat(-20.0, 20.0);
+	flAngles[2] = 60.0;
+
+	GetVectorAngles(flAngles, flAngles);
+	float flHitpos[3];
+	iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
+
+	float flDistance = GetVectorDistance(flPos, flHitpos);
+	if (flDistance > 1600.0)
 	{
-		g_bCar[iTank] = false;
+		flDistance = 1600.0;
 	}
 
-	if (g_bCar[iTank])
+	float flVector[3];
+	MakeVectorFromPoints(flPos, flHitpos, flVector);
+	NormalizeVector(flVector, flVector);
+	ScaleVector(flVector, flDistance - 40.0);
+	AddVectors(flPos, flVector, flHitpos);
+
+	if (flDistance > 100.0)
 	{
-		float flAngles[3], flVelocity[3], flHitpos[3], flVector[3];
-
-		flAngles[0] = GetRandomFloat(-20.0, 20.0);
-		flAngles[1] = GetRandomFloat(-20.0, 20.0);
-		flAngles[2] = 60.0;
-
-		GetVectorAngles(flAngles, flAngles);
-		iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
-
-		float flDistance = GetVectorDistance(flPos, flHitpos);
-		if (flDistance > 1600.0)
+		int iCar = CreateEntityByName("prop_physics");
+		if (bIsValidEntity(iCar))
 		{
-			flDistance = 1600.0;
-		}
-
-		MakeVectorFromPoints(flPos, flHitpos, flVector);
-		NormalizeVector(flVector, flVector);
-		ScaleVector(flVector, flDistance - 40.0);
-		AddVectors(flPos, flVector, flHitpos);
-
-		if (flDistance > 100.0)
-		{
-			int iCar = CreateEntityByName("prop_physics");
-			if (bIsValidEntity(iCar))
+			char sNumbers = !g_bTankConfig[ST_TankType(iTank)] ? g_sCarOptions[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sCarOptions[ST_TankType(iTank)]) - 1)] : g_sCarOptions2[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sCarOptions2[ST_TankType(iTank)]) - 1)];
+			switch (sNumbers)
 			{
-				char sNumbers = !g_bTankConfig[ST_TankType(iTank)] ? g_sCarOptions[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sCarOptions[ST_TankType(iTank)]) - 1)] : g_sCarOptions2[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sCarOptions2[ST_TankType(iTank)]) - 1)];
-				switch (sNumbers)
-				{
-					case '1': SetEntityModel(iCar, MODEL_CAR);
-					case '2': SetEntityModel(iCar, MODEL_CAR2);
-					case '3': SetEntityModel(iCar, MODEL_CAR3);
-					default: SetEntityModel(iCar, MODEL_CAR);
-				}
-
-				int iRed = GetRandomInt(0, 255), iGreen = GetRandomInt(0, 255), iBlue = GetRandomInt(0, 255);
-				SetEntityRenderColor(iCar, iRed, iGreen, iBlue, 255);
-
-				float flAngles2[3];
-				flAngles2[0] = GetRandomFloat(flMin, flMax);
-				flAngles2[1] = GetRandomFloat(flMin, flMax);
-				flAngles2[2] = GetRandomFloat(flMin, flMax);
-
-				flVelocity[0] = GetRandomFloat(0.0, 350.0);
-				flVelocity[1] = GetRandomFloat(0.0, 350.0);
-				flVelocity[2] = GetRandomFloat(0.0, 30.0);
-
-				DispatchSpawn(iCar);
-				TeleportEntity(iCar, flHitpos, flAngles2, flVelocity);
-
-				CreateTimer(6.0, tTimerSetCarVelocity, EntIndexToEntRef(iCar), TIMER_FLAG_NO_MAPCHANGE);
-
-				iCar = EntIndexToEntRef(iCar);
-				vDeleteEntity(iCar, 30.0);
+				case '1': SetEntityModel(iCar, MODEL_CAR);
+				case '2': SetEntityModel(iCar, MODEL_CAR2);
+				case '3': SetEntityModel(iCar, MODEL_CAR3);
+				default: SetEntityModel(iCar, MODEL_CAR);
 			}
+
+			int iRed = GetRandomInt(0, 255), iGreen = GetRandomInt(0, 255), iBlue = GetRandomInt(0, 255);
+			SetEntityRenderColor(iCar, iRed, iGreen, iBlue, 255);
+
+			float flAngles2[3];
+			flAngles2[0] = GetRandomFloat(flMin, flMax);
+			flAngles2[1] = GetRandomFloat(flMin, flMax);
+			flAngles2[2] = GetRandomFloat(flMin, flMax);
+
+			float flVelocity[3];
+			flVelocity[0] = GetRandomFloat(0.0, 350.0);
+			flVelocity[1] = GetRandomFloat(0.0, 350.0);
+			flVelocity[2] = GetRandomFloat(0.0, 30.0);
+
+			DispatchSpawn(iCar);
+			TeleportEntity(iCar, flHitpos, flAngles2, flVelocity);
+
+			CreateTimer(6.0, tTimerSetCarVelocity, EntIndexToEntRef(iCar), TIMER_FLAG_NO_MAPCHANGE);
+
+			iCar = EntIndexToEntRef(iCar);
+			vDeleteEntity(iCar, 30.0);
 		}
 	}
 

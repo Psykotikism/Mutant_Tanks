@@ -9,9 +9,7 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-// Super Tanks++: Meteor Ability
 #include <sourcemod>
-#include <sdktools>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>
@@ -45,7 +43,7 @@ char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13]
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flHumanDuration[ST_MAXTYPES + 1], g_flHumanDuration2[ST_MAXTYPES + 1], g_flMeteorChance[ST_MAXTYPES + 1], g_flMeteorChance2[ST_MAXTYPES + 1], g_flMeteorDamage[ST_MAXTYPES + 1], g_flMeteorDamage2[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1], g_iMeteor[MAXPLAYERS + 1], g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorCount[MAXPLAYERS + 1], g_iMeteorMessage[ST_MAXTYPES + 1], g_iMeteorMessage2[ST_MAXTYPES + 1], g_iMeteorMode[ST_MAXTYPES + 1], g_iMeteorMode2[ST_MAXTYPES + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1], g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorCount[MAXPLAYERS + 1], g_iMeteorMessage[ST_MAXTYPES + 1], g_iMeteorMessage2[ST_MAXTYPES + 1], g_iMeteorMode[ST_MAXTYPES + 1], g_iMeteorMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -479,15 +477,9 @@ static void vMeteor(int tank, int rock)
 
 static void vMeteor2(int tank)
 {
-	float flPos[3];
-	GetClientEyePosition(tank, flPos);
-
 	DataPack dpMeteorUpdate;
 	CreateDataTimer(0.6, tTimerMeteorUpdate, dpMeteorUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpMeteorUpdate.WriteCell(GetClientUserId(tank));
-	dpMeteorUpdate.WriteFloat(flPos[0]);
-	dpMeteorUpdate.WriteFloat(flPos[1]);
-	dpMeteorUpdate.WriteFloat(flPos[2]);
 	dpMeteorUpdate.WriteFloat(GetEngineTime());
 }
 
@@ -534,7 +526,6 @@ static void vRemoveMeteor(int tank)
 	g_bMeteor[tank] = false;
 	g_bMeteor2[tank] = false;
 	g_bMeteor3[tank] = false;
-	g_iMeteor[tank] = 0;
 	g_iMeteorCount[tank] = 0;
 }
 
@@ -609,12 +600,7 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	float flPos[3];
-	flPos[0] = pack.ReadFloat();
-	flPos[1] = pack.ReadFloat();
-	flPos[2] = pack.ReadFloat();
 	float flTime = pack.ReadFloat();
-
 	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bMeteor3[iTank])
 	{
 		vReset2(iTank);
@@ -632,73 +618,74 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	flMin = flClamp(flMin, -200.0, 0.0);
 	flMax = flClamp(flMax, 0.0, 200.0);
 
-	if ((GetEngineTime() - flTime) > 5.0)
+	float flPos[3];
+	GetClientEyePosition(iTank, flPos);
+
+	float flAngles[3];
+	flAngles[0] = GetRandomFloat(-20.0, 20.0);
+	flAngles[1] = GetRandomFloat(-20.0, 20.0);
+	flAngles[2] = 60.0;
+	GetVectorAngles(flAngles, flAngles);
+	float flHitpos[3];
+	iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
+
+	float flDistance = GetVectorDistance(flPos, flHitpos);
+	if (flDistance > 1600.0)
 	{
-		g_bMeteor[iTank] = false;
+		flDistance = 1600.0;
 	}
 
-	if (g_bMeteor[iTank])
+	float flVector[3];
+	MakeVectorFromPoints(flPos, flHitpos, flVector);
+	NormalizeVector(flVector, flVector);
+	ScaleVector(flVector, flDistance - 40.0);
+	AddVectors(flPos, flVector, flHitpos);
+
+	if (flDistance > 100.0)
 	{
-		float flAngles[3], flVelocity[3], flHitpos[3], flVector[3];
-
-		flAngles[0] = GetRandomFloat(-20.0, 20.0);
-		flAngles[1] = GetRandomFloat(-20.0, 20.0);
-		flAngles[2] = 60.0;
-
-		GetVectorAngles(flAngles, flAngles);
-		iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
-
-		float flDistance = GetVectorDistance(flPos, flHitpos);
-		if (flDistance > 1600.0)
+		int iMeteor = CreateEntityByName("tank_rock");
+		if (bIsValidEntity(iMeteor))
 		{
-			flDistance = 1600.0;
+			SetEntityModel(iMeteor, MODEL_CONCRETE);
+
+			int iRockRed, iRockGreen, iRockBlue, iRockAlpha;
+			ST_PropsColors(iTank, 4, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
+			SetEntityRenderColor(iMeteor, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
+
+			float flAngles2[3];
+			flAngles2[0] = GetRandomFloat(flMin, flMax);
+			flAngles2[1] = GetRandomFloat(flMin, flMax);
+			flAngles2[2] = GetRandomFloat(flMin, flMax);
+
+			float flVelocity[3];
+			flVelocity[0] = GetRandomFloat(0.0, 350.0);
+			flVelocity[1] = GetRandomFloat(0.0, 350.0);
+			flVelocity[2] = GetRandomFloat(0.0, 30.0);
+
+			TeleportEntity(iMeteor, flHitpos, flAngles2, flVelocity);
+
+			DispatchSpawn(iMeteor);
+			ActivateEntity(iMeteor);
+			AcceptEntityInput(iMeteor, "Ignite");
+
+			SetEntPropEnt(iMeteor, Prop_Send, "m_hOwnerEntity", iTank);
+			iMeteor = EntIndexToEntRef(iMeteor);
+			vDeleteEntity(iMeteor, 60.0);
 		}
+	}
 
-		MakeVectorFromPoints(flPos, flHitpos, flVector);
-		NormalizeVector(flVector, flVector);
-		ScaleVector(flVector, flDistance - 40.0);
-		AddVectors(flPos, flVector, flHitpos);
-
-		if (flDistance > 100.0)
+	int iMeteor = -1;
+	while ((iMeteor = FindEntityByClassname(iMeteor, "tank_rock")) != INVALID_ENT_REFERENCE)
+	{
+		int iOwner = GetEntPropEnt(iMeteor, Prop_Send, "m_hOwnerEntity");
+		if (iTank == iOwner)
 		{
-			g_iMeteor[iTank] = CreateEntityByName("tank_rock");
-			if (bIsValidEntity(g_iMeteor[iTank]))
+			if (flGetGroundUnits(iMeteor) < 200.0)
 			{
-				SetEntityModel(g_iMeteor[iTank], MODEL_CONCRETE);
-
-				int iRockRed, iRockGreen, iRockBlue, iRockAlpha;
-				ST_PropsColors(iTank, 4, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
-				SetEntityRenderColor(g_iMeteor[iTank], iRockRed, iRockGreen, iRockBlue, iRockAlpha);
-
-				float flAngles2[3];
-				flAngles2[0] = GetRandomFloat(flMin, flMax);
-				flAngles2[1] = GetRandomFloat(flMin, flMax);
-				flAngles2[2] = GetRandomFloat(flMin, flMax);
-
-				flVelocity[0] = GetRandomFloat(0.0, 350.0);
-				flVelocity[1] = GetRandomFloat(0.0, 350.0);
-				flVelocity[2] = GetRandomFloat(0.0, 30.0);
-
-				TeleportEntity(g_iMeteor[iTank], flHitpos, flAngles2, flVelocity);
-
-				DispatchSpawn(g_iMeteor[iTank]);
-				ActivateEntity(g_iMeteor[iTank]);
-				AcceptEntityInput(g_iMeteor[iTank], "Ignite");
-
-				SetEntPropEnt(g_iMeteor[iTank], Prop_Send, "m_hOwnerEntity", iTank);
-				int iMeteor = EntIndexToEntRef(g_iMeteor[iTank]);
-				vDeleteEntity(iMeteor, 60.0);
+				vMeteor(iOwner, iMeteor);
 			}
 		}
 	}
-	else
-	{
-		vMeteor(iTank, g_iMeteor[iTank]);
-
-		return Plugin_Stop;
-	}
-
-	vMeteor(iTank, g_iMeteor[iTank]);
 
 	return Plugin_Continue;
 }

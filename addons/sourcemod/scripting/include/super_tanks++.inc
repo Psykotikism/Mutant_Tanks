@@ -9,11 +9,12 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-// Super Tanks++
 #if defined _supertanksplusplus_included
 	#endinput
 #endif
 #define _supertanksplusplus_included
+
+#include <sdktools>
 
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
 #define ST_VERSION "8.50"
