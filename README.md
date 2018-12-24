@@ -607,7 +607,25 @@ Forwards:
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_Ability(int tank);
+forward void ST_OnAbilityActivated(int tank);
+
+/**
+ * Called when a human-controlled Super Tank presses a button.
+ * Use this forward to trigger abilities manually.
+ *
+ * @param tank			Client index of the Tank.
+ * @param button		Button pressed.
+ **/
+forward void ST_OnButtonPressed(int tank, int button);
+
+/**
+ * Called when a human-controlled Super Tank releases a button.
+ * Use this forward to trigger abilities manually.
+ *
+ * @param tank			Client index of the Tank.
+ * @param button		Button released.
+ **/
+forward void ST_OnButtonReleased(int tank, int button);
 
 /**
  * Called when the Super Tank changes types.
@@ -615,7 +633,7 @@ forward void ST_Ability(int tank);
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_ChangeType(int tank);
+forward void ST_OnChangeType(int tank);
 
 /**
  * Called when the config file is loaded.
@@ -624,7 +642,15 @@ forward void ST_ChangeType(int tank);
  * @param savepath		The savepath of the config.
  * @param main			Checks whether the main config or a custom config is being used.
  **/
-forward void ST_Configs(const char[] savepath, bool main);
+forward void ST_OnConfigsLoaded(const char[] savepath, bool main);
+
+/**
+ * Called when a player uses the "sm_st_info" command.
+ * Use this forward to add menu items.
+ *
+ * @param menu			Handle to the menu.
+ **/
+forward void ST_OnDisplayMenu(Menu menu);
 
 /**
  * Called when an event hooked by the core plugin is fired.
@@ -634,13 +660,30 @@ forward void ST_Configs(const char[] savepath, bool main);
  * @param name			String containing the name of the event.
  * @param dontBroadcast		True if event was not broadcast to clients, false otherwise.
  **/
-forward void ST_EventHandler(Event event, const char[] name, bool dontBroadcast);
+forward void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast);
+
+/**
+ * Called when the core plugin is hooking/unhooking events.
+ * Use this forward to hook/unhook events.
+ *
+ * @param mode			True if event was hooked, false otherwise.
+ **/
+forward void ST_OnHookEvent(bool mode);
+
+/**
+ * Called when a player selects an item from the "Super Tanks++ Information" menu.
+ * Use this forward to do anything when an item is selected.
+ *
+ * @param client		Client index of the player selecting the item.
+ * @param info			String containing the name of the item.
+ **/
+forward void ST_OnMenuItemSelected(int client, const char[] info);
 
 /**
  * Called when the core plugin is unloaded/reloaded.
  * Use this forward to get rid of any modifications to Tanks or survivors.
  **/
-forward void ST_PluginEnd();
+forward void ST_OnPluginEnd();
 
 /**
  * Called when the Tank spawns.
@@ -649,7 +692,7 @@ forward void ST_PluginEnd();
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_Preset(int tank);
+forward void ST_OnPreset(int tank);
 
 /**
  * Called when the Tank's rock breaks.
@@ -658,7 +701,7 @@ forward void ST_Preset(int tank);
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
  **/
-forward void ST_RockBreak(int tank, int rock);
+forward void ST_OnRockBreak(int tank, int rock);
 
 /**
  * Called when the Tank throws a rock.
@@ -667,7 +710,7 @@ forward void ST_RockBreak(int tank, int rock);
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
  **/
-forward void ST_RockThrow(int tank, int rock);
+forward void ST_OnRockThrow(int tank, int rock);
 ```
 
 Natives:
@@ -809,28 +852,29 @@ stock void ST_PrintToChat(int client, char[] message, any ...)
 		ThrowError("Client %d is not in game", client);
 	}
 
-	ReplaceString(message, strlen(message), "{default}", "\x01");
-	ReplaceString(message, strlen(message), "{mint}", "\x03");
-	ReplaceString(message, strlen(message), "{yellow}", "\x04");
-	ReplaceString(message, strlen(message), "{olive}", "\x05");
-
 	char sBuffer[255], sMessage[255];
 	SetGlobalTransTarget(client);
 	Format(sBuffer, sizeof(sBuffer), "\x01%s", message);
 	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
+
+	ReplaceString(sMessage, sizeof(sMessage), "{default}", "\x01");
+	ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
+	ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
+	ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
+
 	PrintToChat(client, sMessage);
 }
 
 stock void ST_PrintToChatAll(char[] message, any ...)
 {
 	char sBuffer[255];
-
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, "25"))
 		{
 			SetGlobalTransTarget(iPlayer);
 			VFormat(sBuffer, sizeof(sBuffer), message, 2);
+
 			ST_PrintToChat(iPlayer, sBuffer);
 		}
 	}
@@ -852,21 +896,184 @@ Target filters:
 @infected
 ```
 
-Command:
+Commands:
 
 ```
-sm_tank
+sm_tank - Spawn a Super Tank.
 
 Valid inputs:
 
-1. sm_tank <type 1*-500*> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is 500 though.)
-2. sm_tank <type name*> *The plugin will attempt to match the name with any of the Super Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
+1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is 500 though.)
+2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Super Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 
-Note: The command has 2 functions.
+The command has 4 functions.
+
+If you are not a Tank:
 
 1. When facing a non-Tank entity, a Super Tank will spawn with the chosen type.
 2. When facing a Tank, it will switch to the chosen type.
+
+If you are a Tank:
+
+1. When you use the menu, you will transform into the chosen type.
+2. When you type out the command, a Super Tank will spawn into the chosen type.
 ```
+
+```
+sm_st_info - View information about Super Tanks++.
+```
+
+```
+sm_st_absorb - View information about the Absorb ability.
+sm_st_acid - View information about the Acid ability.
+sm_st_aimless - View information about the Aimless ability.
+sm_st_ammo - View information about the Ammo ability.
+sm_st_blind - View information about the Blind ability.
+sm_st_bomb - View information about the Bomb ability.
+sm_st_bury - View information about the Bury ability.
+sm_st_car - View information about the Car ability.
+sm_st_choke - View information about the Choke ability.
+sm_st_clone - View information about the Clone ability.
+sm_st_cloud - View information about the Cloud ability.
+sm_st_drop - View information about the Drop ability.
+sm_st_drug - View information about the Drug ability.
+sm_st_drunk - View information about the Drunk ability.
+sm_st_electric - View information about the Electric ability.
+sm_st_enforce - View information about the Enforce ability.
+sm_st_fire - View information about the Fire ability.
+sm_st_flash - View information about the Flash ability.
+sm_st_fling - View information about the Fling ability.
+sm_st_fragile - View information about the Fragile ability.
+sm_st_ghost - View information about the Ghost ability.
+sm_st_god - View information about the God ability.
+sm_st_gravity - View information about the Gravity ability.
+sm_st_heal - View information about the Heal ability.
+sm_st_hurt - View information about the Hurt ability.
+sm_st_hypno - View information about the Hypno ability.
+sm_st_ice - View information about the Ice ability.
+sm_st_idle - View information about the Idle ability.
+sm_st_invert - View information about the Invert ability.
+sm_st_item - View information about the Item ability.
+sm_st_jump - View information about the Jump ability.
+sm_st_kamikaze - View information about the Kamikaze ability.
+sm_st_lag - View information about the Lag ability.
+sm_st_leech - View information about the Leech ability.
+sm_st_medic - View information about the Medic ability.
+sm_st_meteor - View information about the Meteor ability.
+sm_st_minion - View information about the Minion ability.
+sm_st_necro - View information about the Necro ability.
+sm_st_nullify - View information about the Nullify ability.
+sm_st_panic - View information about the Panic ability.
+sm_st_pimp - View information about the Pimp ability.
+sm_st_puke - View information about the Puke ability.
+sm_st_pyro - View information about the Pyro ability.
+sm_st_quiet - View information about the Quiet ability.
+sm_st_recoil - View information about the Recoil ability.
+sm_st_regen - View information about the Regen ability.
+sm_st_respawn - View information about the Respawn ability.
+sm_st_restart - View information about the Restart ability.
+sm_st_rock - View information about the Rock ability.
+sm_st_rocket - View information about the Rocket ability.
+sm_st_shake - View information about the Shake ability.
+sm_st_shield - View information about the Shield ability.
+sm_st_shove - View information about the Shove ability.
+sm_st_smash - View information about the Smash ability.
+sm_st_smite - View information about the Smite ability.
+sm_st_spam - View information about the Spam ability.
+sm_st_splash - View information about the Splash ability.
+sm_st_stun - View information about the Stun ability.
+sm_st_throw - View information about the Throw ability.
+sm_st_track - View information about the Track ability.
+sm_st_vampire - View information about the Vampire ability.
+sm_st_vision - View information about the Vision ability.
+sm_st_warp - View information about the Warp ability.
+sm_st_whirl - View information about the Whirl ability.
+sm_st_witch - View information about the Witch ability.
+sm_st_zombie - View information about the Zombie ability.
+```
+
+### Human Support
+1. How do I enable human support?
+
+Set `Human Support` to 1.
+
+2. Can players use the abilities manually?
+
+Yes, just set `Human Ability` to 1 for EACH ability.
+
+Example:
+
+```
+"Flash Ability"
+{
+	"Human Ability"				"1"
+}
+```
+
+3. How can players use the abilities manually?
+
+There are 4 buttons that players can use when they spawn as Super Tanks.
+
+```
++use (default: E) - Main ability
++reload (default: R) - Sub/range ability
++zoom (default: Mouse3/Scroll wheel) - Special ability
++duck (default: CTRL) - Upon-death ability
+```
+
+Whatever each button activates is entirely up to your configuration settings.
+
+4. How do I change the buttons or add extra buttons?
+
+Edit lines 31-34 of the `super_tanks++.inc` file and recompile each ability plugin.
+
+5. What happens if a Super Tank has multiple abilities that are all activated by the same button?
+
+All related abilities may or may not activate at the same time, depending on your configuration settings. It is recommended to not stack many abilities for human-controlled Super Tanks.
+
+6. How do I limit the usage of abilities for each player?
+
+Set the `Human Ammo` setting for each ability to whatever value you want.
+
+Example:
+
+```
+"Flash Ability"
+{
+	"Human Ammo"				"1"
+}
+```
+
+7. Can I add a cooldown to the usage of abilities for each player?
+
+Yes, just set the `Human Cooldown` setting for each ability to whatever value you want.
+
+Example:
+
+```
+"Flash Ability"
+{
+	"Human Cooldown"			"1"
+}
+```
+
+8. What is the `Human Duration` setting for in some of the abilities?
+
+That setting is a special duration for players, but they only apply if the `Human Mode` setting is set to 0.
+
+Furthermore, there are some duration settings for abilities that will also affect players. Read the `INFORMATION.md` for more details.
+
+9. What is the `Human Mode` setting for in some of the abilities?
+
+That setting is a special mode setting for players, which can determine how some abilities are activated. Read the `INFORMATION.md` for more details.
+
+10. Is there any way players can view information about this feature in-game?
+
+Yes, each ability has a `sm_st_<ability name here>` command that players can use anytime to view information about abilities.
+
+The commands will each provide a menu that players can use to display certain information in chat.
+
+The information displayed in chat will be more detailed and accurate when the player is playing as a Super Tank.
 
 ### Configuration
 1. How do I enable the custom configurations features?
@@ -942,7 +1149,7 @@ Examples:
 
 **Silvers (Silvershot)** - For the code that allows users to enable/disable the plugin in certain game modes, for the [[L4D & L4D2] Silenced Infected](https://forums.alliedmods.net/showthread.php?t=137397) plugin, help with gamedata signatures, the code to prevent Tanks from damaging themselves and other infected with their own abilities, and helping to optimize/fix various parts of the code.
 
-**Lux** - For helping to optimize/fix various parts of the code.
+**Lux** - For helping to optimize/fix various parts of the code and code for detecting thirdperson view.
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 

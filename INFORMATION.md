@@ -2,7 +2,7 @@
 > Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
 
 - Maximum types: 500 (If you want more, change the value of `ST_MAXTYPES` in `super_tanks++.inc` file at your own risk.)
-- Ability count: 65
+- Ability count: 66
 - Please don't report any bugs or issues if you're using the plugin on a listen server. No support will be provided for that kind of server.
 - THIS FILE IS NOT THE CONFIG FILE! USE IT AS A REFERENCE!
 
@@ -128,7 +128,7 @@
 			// 2: Versus modes only.
 			// 4: Survival modes only.
 			// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
-			"Game Mode Types"			"5"
+			"Game Mode Types"			"0"
 
 			// Enable Super Tanks++ in these game modes.
 			// --
@@ -138,7 +138,7 @@
 			// --
 			// Empty: All
 			// Not empty: Enabled only in these game modes.
-			"Enabled Game Modes"			"coop,survival"
+			"Enabled Game Modes"			""
 
 			// Disable Super Tanks++ in these game modes.
 			// --
@@ -148,7 +148,7 @@
 			// --
 			// Empty: None
 			// Not empty: Disabled only in these game modes.
-			"Disabled Game Modes"			"versus,scavenge"
+			"Disabled Game Modes"			""
 		}
 		"Custom"
 		{
@@ -242,6 +242,12 @@
 			// 0: OFF
 			// 1: ON
 			"Menu Enabled"				"1"
+
+			// Enable support for human-controlled Super Tanks.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Support"				"0"
 
 			// These are the RGBA values of the Super Tank's skin color.
 			// --
@@ -584,6 +590,30 @@
 		// Requires "st_absorb.smx" to be installed.
 		"Absorb Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -612,6 +642,7 @@
 			"Absorb Chance"				"33.3"
 
 			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -662,9 +693,29 @@
 		// "Acid Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, an acid puddle is created underneath the survivor.
 		// - "Acid Chance"
 		// - "Acid Hit Mode"
+		// "Acid Rock Break" - When the Super Tank's rock breaks, it creates an acid puddle.
+		// - "Acid Rock Chance"
 		// Requires "st_acid.smx" to be installed.
 		"Acid Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Acid Hit" setting.
 			// --
@@ -734,6 +785,12 @@
 			// 0: OFF
 			// 1: ON
 			"Acid Rock Break"			"0"
+
+			// The Super Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Acid Rock Chance"			"33.3"
 		}
 	}
 }
@@ -756,6 +813,24 @@
 		// Requires "st_aimless.smx" to be installed.
 		"Aimless Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Aimless Hit" setting.
 			// --
@@ -843,6 +918,24 @@
 		// Requires "st_ammo.smx" to be installed.
 		"Ammo Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Ammo Hit" setting.
 			// --
@@ -931,6 +1024,24 @@
 		// Requires "st_blind.smx" to be installed.
 		"Blind Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Blind Hit" setting.
 			// --
@@ -1022,9 +1133,29 @@
 		// "Bomb Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, an explosion is created around the survivor.
 		// - "Bomb Chance"
 		// - "Bomb Hit Mode"
+		// "Bomb Rock Break" - When the Super Tank's rock breaks, it creates an explosion.
+		// - "Bomb Rock Chance"
 		// Requires "st_bomb.smx" to be installed.
 		"Bomb Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Bomb Hit" setting.
 			// --
@@ -1093,6 +1224,12 @@
 			// 0: OFF
 			// 1: ON
 			"Bomb Rock Break"			"0"
+
+			// The Super Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Bomb Rock Chance"			"33.3"
 		}
 	}
 }
@@ -1115,6 +1252,24 @@
 		// Requires "st_bury.smx" to be installed.
 		"Bury Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Bury Hit" setting.
 			// --
@@ -1192,6 +1347,93 @@
 }
 ```
 
+#### Car Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank creates car showers.
+		// Requires "st_car.smx" to be installed.
+		"Car Ability"
+		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Car Chance"				"33.3"
+
+			// The Super Tank create car showers with these cars.
+			// --
+			// Combine numbers in any order for different results.
+			// Repeat the same number to increase its chances of being chosen.
+			// Character limit: 6
+			// --
+			// Empty: Pick randomly between 1-3.
+			// 1: Small car with a big hatchback.
+			// 2: Car that looks like a Chevrolet Impala SS.
+			// 3: Car that looks like a Sixth Generation Chevrolet Impala.
+			"Car Options"				"123"
+
+			// The radius of the Super Tank's car shower.
+			// --
+			// 1st number = Minimum radius
+			// Minimum: -200.0
+			// Maximum: 0.0
+			// --
+			// 2nd number = Maximum radius
+			// Minimum: 0.0
+			// Maximum: 200.0
+			"Car Radius"				"-180.0,180.0"
+		}
+	}
+}
+```
+
 #### Choke Ability
 
 ```
@@ -1199,7 +1441,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank chokes survivors in the air.
+		// The Super Tank chokes survivors in midair.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is choked in the air.
 		// - "Choke Range"
 		// - "Choke Range Chance"
@@ -1209,6 +1451,24 @@
 		// Requires "st_choke.smx" to be installed.
 		"Choke Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Choke Hit" setting.
 			// --
@@ -1308,6 +1568,24 @@
 		// Requires "st_clone.smx" to be installed.
 		"Clone Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -1366,6 +1644,37 @@
 		// Requires "st_cloud.smx" to be installed.
 		"Cloud Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -1405,6 +1714,12 @@
 		// Requires "st_drop.smx" to be installed.
 		"Drop Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -1464,6 +1779,24 @@
 		// Requires "st_drug.smx" to be installed.
 		"Drug Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Drug Hit" setting.
 			// --
@@ -1558,6 +1891,24 @@
 		// Requires "st_drunk.smx" to be installed.
 		"Drunk Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Drunk Hit" setting.
 			// --
@@ -1657,6 +2008,24 @@
 		// Requires "st_electric.smx" to be installed.
 		"Electric Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Electric Hit" setting.
 			// --
@@ -1757,6 +2126,24 @@
 		// Requires "st_enforce.smx" to be installed.
 		"Enforce Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Enforce Hit" setting.
 			// --
@@ -1853,9 +2240,29 @@
 		// "Fire Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, a fire is created around the survivor.
 		// - "Fire Chance"
 		// - "Fire Hit Mode"
+		// "Fire Rock Break" - When the Super Tank's rock breaks, it creates a fire.
+		// - "Fire Rock Chance"
 		// Requires "st_fire.smx" to be installed.
 		"Fire Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Fire Hit" setting.
 			// --
@@ -1924,6 +2331,12 @@
 			// 0: OFF
 			// 1: ON
 			"Fire Rock Break"			"0"
+
+			// The Super Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Fire Rock Chance"			"33.3"
 		}
 	}
 }
@@ -1940,6 +2353,30 @@
 		// Requires "st_flash.smx" to be installed.
 		"Flash Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -1959,16 +2396,11 @@
 			"Flash Chance"				"33.3"
 
 			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Flash Duration"			"5.0"
-
-			// The Super Tank runs fast every time this many seconds passes.
-			// --
-			// Minimum: 0.1
-			// Maximum: 9999999999.0
-			"Flash Interval"			"1.0"
 
 			// The Super Tank's special speed.
 			// --
@@ -1997,6 +2429,24 @@
 		// Requires "st_fling.smx" to be installed.
 		"Fling Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Fling Hit" setting.
 			// --
@@ -2073,6 +2523,30 @@
 		// Requires "st_fragile.smx" to be installed.
 		"Fragile Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -2101,6 +2575,7 @@
 			"Fragile Chance"			"33.3"
 
 			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -2159,6 +2634,38 @@
 		// Requires "st_ghost.smx" to be installed.
 		"Ghost Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// Note: This setting does not apply to the range ability.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Ghost Hit" setting.
 			// --
@@ -2271,10 +2778,34 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank gains temporary immunity to all damage.
+		// The Super Tank gains temporary immunity to all types of damage.
 		// Requires "st_god.smx" to be installed.
 		"God Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -2294,6 +2825,7 @@
 			"God Chance"				"33.3"
 
 			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -2322,6 +2854,31 @@
 		// Requires "st_gravity.smx" to be installed.
 		"Gravity Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// Note: This setting does not apply to the range ability.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Gravity Hit" setting.
 			// --
@@ -2361,6 +2918,7 @@
 			"Gravity Chance"			"33.3"
 
 			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -2431,6 +2989,38 @@
 		// Requires "st_heal.smx" to be installed.
 		"Heal Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// Note: This setting does not apply to the range ability.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Heal Hit" setting.
 			// --
@@ -2551,7 +3141,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank hurts survivors.
+		// The Super Tank repeatedly hurts survivors.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor gets hurt repeatedly.
 		// - "Hurt Range"
 		// - "Hurt Range Chance"
@@ -2561,6 +3151,24 @@
 		// Requires "st_hurt.smx" to be installed.
 		"Hurt Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Hurt Hit" setting.
 			// --
@@ -2651,7 +3259,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank hypnotizes survivors to damage themselves or teammates.
+		// The Super Tank hypnotizes survivors to damage themselves or their teammates.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is hypnotized.
 		// - "Hypno Range"
 		// - "Hypno Range Chance"
@@ -2661,6 +3269,24 @@
 		// Requires "st_hypno.smx" to be installed.
 		"Hypno Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Hypno Hit" setting.
 			// --
@@ -2791,6 +3417,24 @@
 		// Requires "st_ice.smx" to be installed.
 		"Ice Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Ice Hit" setting.
 			// --
@@ -2879,6 +3523,24 @@
 		// Requires "st_idle.smx" to be installed.
 		"Idle Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Idle Hit" setting.
 			// --
@@ -2961,6 +3623,24 @@
 		// Requires "st_invert.smx" to be installed.
 		"Invert Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Invert Hit" setting.
 			// --
@@ -3042,6 +3722,12 @@
 		// Requires "st_item.smx" to be installed.
 		"Item Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -3101,6 +3787,31 @@
 		// Requires "st_jump.smx" to be installed.
 		"Jump Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// Note: This setting does not apply to the range ability.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Jump Hit" setting.
 			// --
@@ -3140,6 +3851,7 @@
 			"Jump Chance"				"33.3"
 
 			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -3224,6 +3936,24 @@
 		// Requires "st_kamikaze.smx" to be installed.
 		"Kamikaze Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Kamikaze Hit" setting.
 			// --
@@ -3306,6 +4036,24 @@
 		// Requires "st_lag.smx" to be installed.
 		"Lag Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Lag Hit" setting.
 			// --
@@ -3393,6 +4141,24 @@
 		// Requires "st_leech.smx" to be installed.
 		"Leech Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Leech Hit" setting.
 			// --
@@ -3481,6 +4247,38 @@
 		// Requires "st_medic.smx" to be installed.
 		"Medic Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// Note: This setting does not apply to the upon-death ability.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -3489,8 +4287,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Combine numbers in any order for different results.
+			// Character limit: 2
+			// --
+			// Empty: OFF
+			// 1: Display message only when "Ability Enabled" is set to 1 or 3.
+			// 2: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -3514,6 +4316,12 @@
 			// 5th number = Health given to Jockeys.
 			// 6th number = Health given to Chargers.
 			"Medic Health"				"25,25,25,25,25,25"
+
+			// The Super Tank heals nearby special infected every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Medic Interval"			"5.0"
 
 			// The special infected's max health.
 			// The Super Tank will not heal special infected if they already have this much health.
@@ -3550,6 +4358,37 @@
 		// Requires "st_meteor.smx" to be installed.
 		"Meteor Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -3607,6 +4446,24 @@
 		// Requires "st_minion.smx" to be installed.
 		"Minion Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -3666,6 +4523,37 @@
 		// Requires "st_necro.smx" to be installed.
 		"Necro Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -3711,6 +4599,24 @@
 		// Requires "st_nullify.smx" to be installed.
 		"Nullify Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Nullify Hit" setting.
 			// --
@@ -3789,47 +4695,50 @@
 	"Tank #1"
 	{
 		// The Super Tank starts panic events.
-		// "Ability Enabled" - The Tank starts a panic event periodically.
-		// - "Panic Interval"
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, a panic event starts.
-		// - "Panic Range"
-		// - "Panic Range Chance"
-		// "Panic Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, a panic event starts.
-		// - "Panic Chance"
-		// - "Panic Hit Mode"
 		// Requires "st_panic.smx" to be installed.
 		"Panic Ability"
 		{
-			// Enable this ability.
-			// Note: This setting does not affect the "Panic Hit" setting.
+			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON, the Super Tank can start panic events when a survivor is nearby.
-			// 2: ON, the Super Tank can start panic events periodically.
-			// 3: ON, the Super Tank can do both.
-			"Ability Enabled"			"0"
+			// 1: ON
+			"Human Ability"				"0"
 
-			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
 			// --
-			// Empty: OFF
-			// 1: Show effect when the Super Tank uses its claw/rock attack.
-			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"0"
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
-			// --
-			// Empty: OFF
-			// 1: Display message only when "Panic Hit" is enabled.
-			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 0: OFF
+			// 1: ON
 			"Ability Message"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -3838,37 +4747,11 @@
 			// Maximum: 100.0 (Highest chance)
 			"Panic Chance"				"33.3"
 
-			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" to be on.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Panic Hit"				"0"
-
-			// The mode of the Super Tank's claw/rock attack.
-			// --
-			// 0: Both
-			// 1: Ability activates when the Super Tank hits a survivor.
-			// 2: Ability activates when the Super Tank is hit by a survivor.
-			"Panic Hit Mode"			"0"
-
 			// The Super Tank starts a panic event every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Panic Interval"			"5.0"
-
-			// The distance between a survivor and the Super Tank needed to trigger the ability.
-			// --
-			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
-			"Panic Range"				"150.0"
-
-			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
-			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
-			"Panic Range Chance"			"15.0"
 		}
 	}
 }
@@ -3891,6 +4774,24 @@
 		// Requires "st_pimp.smx" to be installed.
 		"Pimp Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Pimp Hit" setting.
 			// --
@@ -3920,12 +4821,6 @@
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
 
-			// The amount of pimp slaps the Super Tank can give to survivors.
-			// --
-			// Minimum: 1
-			// Maximum: 9999999999
-			"Pimp Amount"				"5"
-
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
 			// Minimum: 0.0 (No chance)
@@ -3937,6 +4832,12 @@
 			// Minimum: 1
 			// Maximum: 9999999999
 			"Pimp Damage"				"5"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Pimp Duration"				"5.0"
 
 			// Enable the Super Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -3991,6 +4892,24 @@
 		// Requires "st_puke.smx" to be installed.
 		"Puke Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Puke Hit" setting.
 			// --
@@ -4063,47 +4982,44 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank gains a speed boost when on fire.
-		// "Ability Enabled" - When a Super Tank is on fire, it gains a speed boost.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the Super Tank ignites itself.
-		// - "Pyro Range"
-		// - "Pyro Range Chance"
-		// "Pyro Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the Super Tank ignites itself.
-		// - "Pyro Chance"
-		// - "Pyro Hit Mode"
+		// The Super Tank ignites itself and gains a speed boost when on fire.
 		// Requires "st_pyro.smx" to be installed.
 		"Pyro Ability"
 		{
-			// Enable this ability.
-			// Note: This setting does not affect the "Pyro Hit" setting.
+			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON, the Super Tank can ignite itself.
-			// 2: ON, the Super Tank can gain a speed boost while on fire.
-			// 3: ON, the Super Tank can do both.
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
 			"Ability Enabled"			"0"
 
-			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
-			// --
-			// Empty: OFF
-			// 1: Show effect when the Super Tank uses its claw/rock attack.
-			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"0"
-
-			// Display a message whenever the abilities activate/deactivate.
-			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
-			// --
-			// Empty: OFF
-			// 1: Display message only when "Pyro Hit" is enabled.
-			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 0: OFF
+			// 1: ON
 			"Ability Message"			"0"
 
 			// The Super Tank's speed boost value when on fire.
@@ -4119,42 +5035,17 @@
 			"Pyro Chance"				"33.3"
 
 			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Pyro Duration"				"5.0"
-
-			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" to be on.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Pyro Hit"				"0"
-
-			// The mode of the Super Tank's claw/rock attack.
-			// --
-			// 0: Both
-			// 1: Ability activates when the Super Tank hits a survivor.
-			// 2: Ability activates when the Super Tank is hit by a survivor.
-			"Pyro Hit Mode"				"0"
 
 			// The mode of the Super Tank's speed boost.
 			// --
 			// 0: Super Tank's speed = Run speed + Pyro boost
 			// 1: Super Tank's speed = Pyro boost
 			"Pyro Mode"				"0"
-
-			// The distance between a survivor and the Super Tank needed to trigger the ability.
-			// --
-			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
-			"Pyro Range"				"150.0"
-
-			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
-			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
-			"Pyro Range Chance"			"15.0"
 		}
 	}
 }
@@ -4177,6 +5068,24 @@
 		// Requires "st_quiet.smx" to be installed.
 		"Quiet Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Quiet Hit" setting.
 			// --
@@ -4265,6 +5174,24 @@
 		// Requires "st_recoil.smx" to be installed.
 		"Recoil Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Recoil Hit" setting.
 			// --
@@ -4346,6 +5273,37 @@
 		// Requires "st_regen.smx" to be installed.
 		"Regen Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -4403,6 +5361,18 @@
 		// Requires "st_respawn.smx" to be installed.
 		"Respawn Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -4462,6 +5432,24 @@
 		// Requires "st_restart.smx" to be installed.
 		"Restart Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Restart Hit" setting.
 			// --
@@ -4552,6 +5540,30 @@
 		// Requires "st_rock.smx" to be installed.
 		"Rock Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -4577,6 +5589,7 @@
 			"Rock Damage"				"5"
 
 			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -4614,6 +5627,24 @@
 		// Requires "st_rocket.smx" to be installed.
 		"Rocket Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Rocket Hit" setting.
 			// --
@@ -4701,6 +5732,24 @@
 		// Requires "st_shake.smx" to be installed.
 		"Shake Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Shake Hit" setting.
 			// --
@@ -4785,10 +5834,41 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank protects itself with a shield and throws propane tanks.
+		// The Super Tank protects itself with a shield and throws propane tanks or gas cans.
 		// Requires "st_shield.smx" to be installed.
 		"Shield Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -4820,6 +5900,14 @@
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Shield Delay"				"5.0"
+
+			// The type of the Super Tank's shield'.
+			// --
+			// 0: Bullet-based (Requires bullets to break shield.)
+			// 1: Blast-based (Requires explosives to break shield.)
+			// 2: Fire-based (Requires fires to break shield.)
+			// 3: Melee-based (Requires melee weapons to break shield.)
+			"Shield Type"				"1"
 		}
 	}
 }
@@ -4832,7 +5920,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank shoves survivors.
+		// The Super Tank repeatedly shoves survivors.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is shoved repeatedly.
 		// - "Shove Range"
 		// - "Shove Range Chance"
@@ -4842,6 +5930,24 @@
 		// Requires "st_shove.smx" to be installed.
 		"Shove Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Shove Hit" setting.
 			// --
@@ -4936,6 +6042,24 @@
 		// Requires "st_smash.smx" to be installed.
 		"Smash Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Smash Hit" setting.
 			// --
@@ -5018,6 +6142,24 @@
 		// Requires "st_smite.smx" to be installed.
 		"Smite Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Smite Hit" setting.
 			// --
@@ -5094,6 +6236,30 @@
 		// Requires "st_spam.smx" to be installed.
 		"Spam Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -5119,6 +6285,7 @@
 			"Spam Damage"				"5"
 
 			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
@@ -5139,6 +6306,37 @@
 		// Requires "st_splash.smx" to be installed.
 		"Splash Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -5196,6 +6394,24 @@
 		// Requires "st_stun.smx" to be installed.
 		"Stun Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Stun Hit" setting.
 			// --
@@ -5280,10 +6496,28 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank throws cars, special infected, itself, or Witches.
+		// The Super Tank throws cars, special infected, Witches, or itself.
 		// Requires "st_throw.smx" to be installed.
 		"Throw Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// --
 			// Combine numbers in any order for different results.
@@ -5353,10 +6587,28 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank throws a heat-seeking rock that will track down the nearest survivor.
+		// The Super Tank throws heat-seeking rocks that will track down the nearest survivors.
 		// Requires "st_track.smx" to be installed.
 		"Track Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -5400,18 +6652,16 @@
 	"Tank #1"
 	{
 		// The Super Tank gains health from hurting survivors.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the Super Tank gains health.
-		// - "Vampire Health"
-		// - "Vampire Range"
-		// - "Vampire Range Chance"
-		// "Vampire Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the Super Tank gains health.
-		// - "Vampire Chance"
-		// - "Vampire Hit Mode"
 		// Requires "st_vampire.smx" to be installed.
 		"Vampire Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
 			// Enable this ability.
-			// Note: This setting does not affect the "Vampire Hit" setting.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -5420,23 +6670,14 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
-			// --
-			// Empty: OFF
-			// 1: Show effect when the Super Tank uses its claw/rock attack.
-			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 0: OFF
+			// 1: ON
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
-			// --
-			// Empty: OFF
-			// 1: Display message only when "Vampire Hit" is enabled.
-			// 2: Display message only when "Ability Enabled" is enabled.
+			// 0: OFF
+			// 1: ON
 			"Ability Message"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -5444,43 +6685,6 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Vampire Chance"			"33.3"
-
-			// The Super Tank receives this much health from survivors.
-			// Note: Tank's health limit on any difficulty is 65,535.
-			// Note: This setting does not apply to the "Vampire Hit" setting.
-			// --
-			// Minimum: -65535
-			// Maximum: 65535
-			// --
-			// Positive numbers: Current health + Vampire health
-			// Negative numbers: Current health - Vampire health
-			"Vampire Health"			"100"
-
-			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Vampire Hit"				"0"
-
-			// The mode of the Super Tank's claw/rock attack.
-			// --
-			// 0: Both
-			// 1: Ability activates when the Super Tank hits a survivor.
-			// 2: Ability activates when the Super Tank is hit by a survivor.
-			"Vampire Hit Mode"			"0"
-
-			// The distance between a survivor and the Super Tank needed to trigger the ability.
-			// --
-			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
-			"Vampire Range"				"500.0"
-
-			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
-			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
-			"Vampire Range Chance"			"15.0"
 		}
 	}
 }
@@ -5493,7 +6697,7 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank changes the survivors' vision.
+		// The Super Tank changes the survivors' field of view.
 		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor's vision changes.
 		// - "Vision Range"
 		// - "Vision Range Chance"
@@ -5503,6 +6707,24 @@
 		// Requires "st_vision.smx" to be installed.
 		"Vision Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Vision Hit" setting.
 			// --
@@ -5600,6 +6822,38 @@
 		// Requires "st_warp.smx" to be installed.
 		"Warp Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// Note: This setting does not apply to the range ability.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Warp Hit" setting.
 			// --
@@ -5697,6 +6951,24 @@
 		// Requires "st_whirl.smx" to be installed.
 		"Whirl Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Whirl Hit" setting.
 			// --
@@ -5797,6 +7069,24 @@
 		// Requires "st_witch.smx" to be installed.
 		"Witch Ability"
 		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
 			// Enable this ability.
 			// --
 			// 0: OFF
@@ -5844,48 +7134,51 @@
 {
 	"Tank #1"
 	{
-		// The Super Tank creates zombie mobs.
-		// "Ability Enabled" - The Tank creates a zombie mob periodically.
-		// - "Zombie Interval"
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, a zombie mob appears.
-		// - "Zombie Range"
-		// - "Zombie Range Chance"
-		// "Panic Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, a zombie mob appears.
-		// - "Zombie Chance"
-		// - "Zombie Hit Mode"
+		// The Super Tank spawns zombies.
 		// Requires "st_zombie.smx" to be installed.
 		"Zombie Ability"
 		{
-			// Enable this ability.
-			// Note: This setting does not affect the "Zombie Hit" setting.
+			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON, the Super Tank can create zombie mobs when a survivor is nearby.
-			// 2: ON, the Super Tank can create zombie mobs periodically.
-			// 3: ON, the Super Tank can do both.
-			"Ability Enabled"			"0"
+			// 1: ON
+			"Human Ability"				"0"
 
-			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
 			// --
-			// Empty: OFF
-			// 1: Show effect when the Super Tank uses its claw/rock attack.
-			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"0"
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Human Duration"			"5.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
-			// --
-			// Empty: OFF
-			// 1: Display message only when "Zombie Hit" is enabled.
-			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 0: OFF
+			// 1: ON
 			"Ability Message"			"0"
 
 			// The Super Tank spawns this many common infected at once.
@@ -5900,37 +7193,11 @@
 			// Maximum: 100.0 (Highest chance)
 			"Zombie Chance"				"33.3"
 
-			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" to be on.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Zombie Hit"				"0"
-
-			// The mode of the Super Tank's claw/rock attack.
-			// --
-			// 0: Both
-			// 1: Ability activates when the Super Tank hits a survivor.
-			// 2: Ability activates when the Super Tank is hit by a survivor.
-			"Zombie Hit Mode"			"0"
-
 			// The Super Tank spawns a zombie mob every time this many seconds passes.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Zombie Interval"			"5.0"
-
-			// The distance between a survivor and the Super Tank needed to trigger the ability.
-			// --
-			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
-			"Zombie Range"				"150.0"
-
-			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
-			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
-			"Zombie Range Chance"			"15.0"
 		}
 	}
 }
