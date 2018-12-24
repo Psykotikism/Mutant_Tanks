@@ -880,10 +880,17 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 						case true: vSpawnTank(admin, g_iType, amount, mode);
 						case false:
 						{
-							vNewTankSettings(admin);
-							vSetColor(admin, g_iType);
-							vTankSpawn(admin, 5);
-							vExternalView(admin, 1.5);
+							if (GetClientButtons(admin) & ST_MAIN_KEY == ST_MAIN_KEY)
+							{
+								vSpawnTank(admin, g_iType, amount, mode);
+							}
+							else
+							{
+								vNewTankSettings(admin);
+								vSetColor(admin, g_iType);
+								vTankSpawn(admin, 5);
+								vExternalView(admin, 1.5);
+							}
 
 							g_iType = 0;
 						}
