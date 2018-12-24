@@ -915,8 +915,8 @@ If you are not a Tank:
 
 If you are a Tank:
 
-1. When holding down the +use (default: E) button, a Super Tank will spawn into the chosen type.
-2. When not holding down the +use button, you will transform into the chosen type.
+1. When holding down the +speed (default: LSHIFT) button, a Super Tank will spawn into the chosen type.
+2. When not holding down the +speed button, you will transform into the chosen type.
 ```
 
 ```

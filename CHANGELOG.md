@@ -23,7 +23,7 @@ Changes:
 - Added new forwards for many human support features.
 7. Added `Rock Chance` settings for the Acid, Bomb, and Fire abilities.
 8. Added various new settings for several abilities.
-9. Removed several settings.
+9. Removed/replaced several settings.
 10. Reworked several abilities for balance and simplicity.
 
 Files:
