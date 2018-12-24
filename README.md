@@ -1004,9 +1004,15 @@ Yes, just set `Human Ability` to 1 for EACH ability.
 Example:
 
 ```
-"Flash Ability"
+"Super Tanks++"
 {
-	"Human Ability"				"1"
+	"Tank #1"
+	{
+		"Flash Ability"
+		{
+			"Human Ability"				"1"
+		}
+	}
 }
 ```
 
@@ -1038,9 +1044,15 @@ Set the `Human Ammo` setting for each ability to whatever value you want.
 Example:
 
 ```
-"Flash Ability"
+"Super Tanks++"
 {
-	"Human Ammo"				"1"
+	"Tank #1"
+	{
+		"Flash Ability"
+		{
+			"Human Ammo"				"1"
+		}
+	}
 }
 ```
 
@@ -1051,9 +1063,15 @@ Yes, just set the `Human Cooldown` setting for each ability to whatever value yo
 Example:
 
 ```
-"Flash Ability"
+"Super Tanks++"
 {
-	"Human Cooldown"			"1"
+	"Tank #1"
+	{
+		"Flash Ability"
+		{
+			"Human Cooldown"			"1"
+		}
+	}
 }
 ```
 
