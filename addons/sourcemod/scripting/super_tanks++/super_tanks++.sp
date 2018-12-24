@@ -880,7 +880,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 						case true: vSpawnTank(admin, g_iType, amount, mode);
 						case false:
 						{
-							if (GetClientButtons(admin) & ST_MAIN_KEY == ST_MAIN_KEY)
+							if (GetClientButtons(admin) & IN_SPEED == IN_SPEED)
 							{
 								vSpawnTank(admin, g_iType, amount, mode);
 							}
