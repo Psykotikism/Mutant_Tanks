@@ -32,13 +32,15 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bCloneInstalled, g_bEnforce[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
+#define ST_MENU_ENFORCE "Enforce Ability"
+
+bool g_bCloneInstalled, g_bEnforce[MAXPLAYERS + 1], g_bEnforce2[MAXPLAYERS + 1], g_bEnforce3[MAXPLAYERS + 1], g_bEnforce4[MAXPLAYERS + 1], g_bEnforce5[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sEnforceEffect[ST_MAXTYPES + 1][4], g_sEnforceEffect2[ST_MAXTYPES + 1][4], g_sEnforceMessage[ST_MAXTYPES + 1][3], g_sEnforceMessage2[ST_MAXTYPES + 1][3], g_sEnforceSlot[ST_MAXTYPES + 1][6], g_sEnforceSlot2[ST_MAXTYPES + 1][6];
 
-float g_flEnforceChance[ST_MAXTYPES + 1], g_flEnforceChance2[ST_MAXTYPES + 1], g_flEnforceDuration[ST_MAXTYPES + 1], g_flEnforceDuration2[ST_MAXTYPES + 1], g_flEnforceRange[ST_MAXTYPES + 1], g_flEnforceRange2[ST_MAXTYPES + 1], g_flEnforceRangeChance[ST_MAXTYPES + 1], g_flEnforceRangeChance2[ST_MAXTYPES + 1];
+float g_flEnforceChance[ST_MAXTYPES + 1], g_flEnforceChance2[ST_MAXTYPES + 1], g_flEnforceDuration[ST_MAXTYPES + 1], g_flEnforceDuration2[ST_MAXTYPES + 1], g_flEnforceRange[ST_MAXTYPES + 1], g_flEnforceRange2[ST_MAXTYPES + 1], g_flEnforceRangeChance[ST_MAXTYPES + 1], g_flEnforceRangeChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
 
-int g_iEnforceAbility[ST_MAXTYPES + 1], g_iEnforceAbility2[ST_MAXTYPES + 1], g_iEnforceHit[ST_MAXTYPES + 1], g_iEnforceHit2[ST_MAXTYPES + 1], g_iEnforceHitMode[ST_MAXTYPES + 1], g_iEnforceHitMode2[ST_MAXTYPES + 1], g_iEnforceOwner[MAXPLAYERS + 1], g_iEnforceSlot[MAXPLAYERS + 1];
+int g_iEnforceAbility[ST_MAXTYPES + 1], g_iEnforceAbility2[ST_MAXTYPES + 1], g_iEnforceCount[MAXPLAYERS + 1], g_iEnforceHit[ST_MAXTYPES + 1], g_iEnforceHit2[ST_MAXTYPES + 1], g_iEnforceHitMode[ST_MAXTYPES + 1], g_iEnforceHitMode2[ST_MAXTYPES + 1], g_iEnforceOwner[MAXPLAYERS + 1], g_iEnforceSlot[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -79,6 +81,8 @@ public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
 
+	RegConsoleCmd("sm_st_enforce", cmdEnforceInfo, "View information about the Enforce ability.");
+
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -102,14 +106,141 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
-	g_bEnforce[client] = false;
-	g_iEnforceOwner[client] = 0;
-	g_iEnforceSlot[client] = -1;
+	vReset2(client);
 }
 
 public void OnMapEnd()
 {
 	vReset();
+}
+
+public Action cmdEnforceInfo(int client, int args)
+{
+	if (!ST_PluginEnabled())
+	{
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, "0245"))
+	{
+		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
+		case false: vEnforceMenu(client, 0);
+	}
+
+	return Plugin_Handled;
+}
+
+static void vEnforceMenu(int client, int item)
+{
+	Menu mAbilityMenu = new Menu(iEnforceMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Enforce Ability Information");
+	mAbilityMenu.AddItem("Status", "Status");
+	mAbilityMenu.AddItem("Ammunition", "Ammunition");
+	mAbilityMenu.AddItem("Buttons", "Buttons");
+	mAbilityMenu.AddItem("Cooldown", "Cooldown");
+	mAbilityMenu.AddItem("Details", "Details");
+	mAbilityMenu.AddItem("Duration", "Duration");
+	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+}
+
+public int iEnforceMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iEnforceAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iEnforceCount[param1], iHumanAmmo(param1));
+				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "EnforceDetails");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flEnforceDuration(param1));
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+			}
+
+			if (bIsValidClient(param1, "24"))
+			{
+				vEnforceMenu(param1, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[255];
+			Panel panel = view_as<Panel>(param2);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "EnforceMenu", param1);
+			panel.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			char sMenuOption[255];
+			switch (param2)
+			{
+				case 0:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 1:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 2:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 3:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 4:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 5:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 6:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+public void ST_OnDisplayMenu(Menu menu)
+{
+	menu.AddItem(ST_MENU_ENFORCE, ST_MENU_ENFORCE);
+}
+
+public void ST_OnMenuItemSelected(int client, const char[] info)
+{
+	if (StrEqual(info, ST_MENU_ENFORCE, false))
+	{
+		vEnforceMenu(client, 0);
+	}
 }
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
@@ -151,7 +282,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(const char[] savepath, bool main)
+public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -162,49 +293,64 @@ public void ST_Configs(const char[] savepath, bool main)
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
-			if (main)
+			switch (main)
 			{
-				g_bTankConfig[iIndex] = false;
+				case true:
+				{
+					g_bTankConfig[iIndex] = false;
 
-				g_iEnforceAbility[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Enabled", 0);
-				g_iEnforceAbility[iIndex] = iClamp(g_iEnforceAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect[iIndex], sizeof(g_sEnforceEffect[]), "0");
-				kvSuperTanks.GetString("Enforce Ability/Ability Message", g_sEnforceMessage[iIndex], sizeof(g_sEnforceMessage[]), "0");
-				g_flEnforceChance[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Chance", 33.3);
-				g_flEnforceChance[iIndex] = flClamp(g_flEnforceChance[iIndex], 0.0, 100.0);
-				g_flEnforceDuration[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Duration", 5.0);
-				g_flEnforceDuration[iIndex] = flClamp(g_flEnforceDuration[iIndex], 0.1, 9999999999.0);
-				g_iEnforceHit[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit", 0);
-				g_iEnforceHit[iIndex] = iClamp(g_iEnforceHit[iIndex], 0, 1);
-				g_iEnforceHitMode[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit Mode", 0);
-				g_iEnforceHitMode[iIndex] = iClamp(g_iEnforceHitMode[iIndex], 0, 2);
-				g_flEnforceRange[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range", 150.0);
-				g_flEnforceRange[iIndex] = flClamp(g_flEnforceRange[iIndex], 1.0, 9999999999.0);
-				g_flEnforceRangeChance[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range Chance", 15.0);
-				g_flEnforceRangeChance[iIndex] = flClamp(g_flEnforceRangeChance[iIndex], 0.0, 100.0);
-				kvSuperTanks.GetString("Enforce Ability/Enforce Weapon Slots", g_sEnforceSlot[iIndex], sizeof(g_sEnforceSlot[]), "12345");
-			}
-			else
-			{
-				g_bTankConfig[iIndex] = true;
+					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Human Ability", 0);
+					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
+					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Human Ammo", 5);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Human Cooldown", 30.0);
+					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
+					g_iEnforceAbility[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Enabled", 0);
+					g_iEnforceAbility[iIndex] = iClamp(g_iEnforceAbility[iIndex], 0, 1);
+					kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect[iIndex], sizeof(g_sEnforceEffect[]), "0");
+					kvSuperTanks.GetString("Enforce Ability/Ability Message", g_sEnforceMessage[iIndex], sizeof(g_sEnforceMessage[]), "0");
+					g_flEnforceChance[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Chance", 33.3);
+					g_flEnforceChance[iIndex] = flClamp(g_flEnforceChance[iIndex], 0.0, 100.0);
+					g_flEnforceDuration[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Duration", 5.0);
+					g_flEnforceDuration[iIndex] = flClamp(g_flEnforceDuration[iIndex], 0.1, 9999999999.0);
+					g_iEnforceHit[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit", 0);
+					g_iEnforceHit[iIndex] = iClamp(g_iEnforceHit[iIndex], 0, 1);
+					g_iEnforceHitMode[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit Mode", 0);
+					g_iEnforceHitMode[iIndex] = iClamp(g_iEnforceHitMode[iIndex], 0, 2);
+					g_flEnforceRange[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range", 150.0);
+					g_flEnforceRange[iIndex] = flClamp(g_flEnforceRange[iIndex], 1.0, 9999999999.0);
+					g_flEnforceRangeChance[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range Chance", 15.0);
+					g_flEnforceRangeChance[iIndex] = flClamp(g_flEnforceRangeChance[iIndex], 0.0, 100.0);
+					kvSuperTanks.GetString("Enforce Ability/Enforce Weapon Slots", g_sEnforceSlot[iIndex], sizeof(g_sEnforceSlot[]), "12345");
+				}
+				case false:
+				{
+					g_bTankConfig[iIndex] = true;
 
-				g_iEnforceAbility2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Enabled", g_iEnforceAbility[iIndex]);
-				g_iEnforceAbility2[iIndex] = iClamp(g_iEnforceAbility2[iIndex], 0, 1);
-				kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect2[iIndex], sizeof(g_sEnforceEffect2[]), g_sEnforceEffect[iIndex]);
-				kvSuperTanks.GetString("Enforce Ability/Ability Message", g_sEnforceMessage2[iIndex], sizeof(g_sEnforceMessage2[]), g_sEnforceMessage[iIndex]);
-				g_flEnforceChance2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Chance", g_flEnforceChance[iIndex]);
-				g_flEnforceChance2[iIndex] = flClamp(g_flEnforceChance2[iIndex], 0.0, 100.0);
-				g_flEnforceDuration2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Duration", g_flEnforceDuration[iIndex]);
-				g_flEnforceDuration2[iIndex] = flClamp(g_flEnforceDuration2[iIndex], 0.1, 9999999999.0);
-				g_iEnforceHit2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit", g_iEnforceHit[iIndex]);
-				g_iEnforceHit2[iIndex] = iClamp(g_iEnforceHit2[iIndex], 0, 1);
-				g_iEnforceHitMode2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit Mode", g_iEnforceHitMode[iIndex]);
-				g_iEnforceHitMode2[iIndex] = iClamp(g_iEnforceHitMode2[iIndex], 0, 2);
-				g_flEnforceRange2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range", g_flEnforceRange[iIndex]);
-				g_flEnforceRange2[iIndex] = flClamp(g_flEnforceRange2[iIndex], 1.0, 9999999999.0);
-				g_flEnforceRangeChance2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range Chance", g_flEnforceRangeChance[iIndex]);
-				g_flEnforceRangeChance2[iIndex] = flClamp(g_flEnforceRangeChance2[iIndex], 0.0, 100.0);
-				kvSuperTanks.GetString("Enforce Ability/Enforce Weapon Slots", g_sEnforceSlot2[iIndex], sizeof(g_sEnforceSlot2[]), g_sEnforceSlot[iIndex]);
+					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Human Ability", g_iHumanAbility[iIndex]);
+					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
+					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Human Ammo", g_iHumanAmmo[iIndex]);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 1, 9999999999);
+					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
+					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
+					g_iEnforceAbility2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Ability Enabled", g_iEnforceAbility[iIndex]);
+					g_iEnforceAbility2[iIndex] = iClamp(g_iEnforceAbility2[iIndex], 0, 1);
+					kvSuperTanks.GetString("Enforce Ability/Ability Effect", g_sEnforceEffect2[iIndex], sizeof(g_sEnforceEffect2[]), g_sEnforceEffect[iIndex]);
+					kvSuperTanks.GetString("Enforce Ability/Ability Message", g_sEnforceMessage2[iIndex], sizeof(g_sEnforceMessage2[]), g_sEnforceMessage[iIndex]);
+					g_flEnforceChance2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Chance", g_flEnforceChance[iIndex]);
+					g_flEnforceChance2[iIndex] = flClamp(g_flEnforceChance2[iIndex], 0.0, 100.0);
+					g_flEnforceDuration2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Duration", g_flEnforceDuration[iIndex]);
+					g_flEnforceDuration2[iIndex] = flClamp(g_flEnforceDuration2[iIndex], 0.1, 9999999999.0);
+					g_iEnforceHit2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit", g_iEnforceHit[iIndex]);
+					g_iEnforceHit2[iIndex] = iClamp(g_iEnforceHit2[iIndex], 0, 1);
+					g_iEnforceHitMode2[iIndex] = kvSuperTanks.GetNum("Enforce Ability/Enforce Hit Mode", g_iEnforceHitMode[iIndex]);
+					g_iEnforceHitMode2[iIndex] = iClamp(g_iEnforceHitMode2[iIndex], 0, 2);
+					g_flEnforceRange2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range", g_flEnforceRange[iIndex]);
+					g_flEnforceRange2[iIndex] = flClamp(g_flEnforceRange2[iIndex], 1.0, 9999999999.0);
+					g_flEnforceRangeChance2[iIndex] = kvSuperTanks.GetFloat("Enforce Ability/Enforce Range Chance", g_flEnforceRangeChance[iIndex]);
+					g_flEnforceRangeChance2[iIndex] = flClamp(g_flEnforceRangeChance2[iIndex], 0.0, 100.0);
+					kvSuperTanks.GetString("Enforce Ability/Enforce Weapon Slots", g_sEnforceSlot2[iIndex], sizeof(g_sEnforceSlot2[]), g_sEnforceSlot[iIndex]);
+				}
 			}
 
 			kvSuperTanks.Rewind();
@@ -214,7 +360,7 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
+public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
@@ -226,15 +372,58 @@ public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void ST_Ability(int tank)
+public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iEnforceAbility(tank) == 1)
 	{
+		vEnforceAbility(tank);
+	}
+}
+
+public void ST_OnButtonPressed(int tank, int button)
+{
+	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		if (button & ST_SUB_KEY == ST_SUB_KEY)
+		{
+			if (iEnforceAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			{
+				if (!g_bEnforce2[tank] && !g_bEnforce3[tank])
+				{
+					vEnforceAbility(tank);
+				}
+				else if (g_bEnforce2[tank])
+				{
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceHuman3");
+				}
+				else if (g_bEnforce3[tank])
+				{
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceHuman4");
+				}
+			}
+		}
+	}
+}
+
+public void ST_OnChangeType(int tank)
+{
+	vRemoveEnforce(tank);
+}
+
+static void vEnforceAbility(int tank)
+{
+	if (g_iEnforceCount[tank] < iHumanAmmo(tank))
+	{
+		g_bEnforce4[tank] = false;
+		g_bEnforce5[tank] = false;
+
 		float flEnforceRange = !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceRange[ST_TankType(tank)] : g_flEnforceRange2[ST_TankType(tank)],
 			flEnforceRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceRangeChance[ST_TankType(tank)] : g_flEnforceRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
 
 		GetClientAbsOrigin(tank, flTankPos);
+
+		int iSurvivorCount;
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -247,56 +436,93 @@ public void ST_Ability(int tank)
 				if (flDistance <= flEnforceRange)
 				{
 					vEnforceHit(iSurvivor, tank, flEnforceRangeChance, iEnforceAbility(tank), "2", "3");
+
+					iSurvivorCount++;
 				}
 			}
 		}
-	}
-}
 
-public void ST_ChangeType(int tank)
-{
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+		if (iSurvivorCount == 0)
+		{
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			{
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceHuman5");
+			}
+		}
+	}
+	else
 	{
-		vRemoveEnforce(tank);
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceAmmo");
 	}
 }
 
 static void vEnforceHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bEnforce[survivor])
+	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		g_bEnforce[survivor] = true;
-		g_iEnforceOwner[survivor] = tank;
-
-		char sNumbers = !g_bTankConfig[ST_TankType(tank)] ? g_sEnforceSlot[ST_TankType(tank)][GetRandomInt(0, strlen(g_sEnforceSlot[ST_TankType(tank)]) - 1)] : g_sEnforceSlot2[ST_TankType(tank)][GetRandomInt(0, strlen(g_sEnforceSlot2[ST_TankType(tank)]) - 1)],
-			sSlotNumber[32];
-		switch (sNumbers)
+		if (g_iEnforceCount[tank] < iHumanAmmo(tank))
 		{
-			case '1': sSlotNumber = "1st", g_iEnforceSlot[survivor] = 0;
-			case '2': sSlotNumber = "2nd", g_iEnforceSlot[survivor] = 1;
-			case '3': sSlotNumber = "3rd", g_iEnforceSlot[survivor] = 2;
-			case '4': sSlotNumber = "4th", g_iEnforceSlot[survivor] = 3;
-			case '5': sSlotNumber = "5th", g_iEnforceSlot[survivor] = 4;
+			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bEnforce[survivor])
+			{
+				g_bEnforce[survivor] = true;
+				g_iEnforceOwner[survivor] = tank;
+
+				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bEnforce2[tank])
+				{
+					g_bEnforce2[tank] = true;
+					g_iEnforceCount[tank]++;
+
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceHuman", g_iEnforceCount[tank], iHumanAmmo(tank));
+				}
+
+				char sNumbers = !g_bTankConfig[ST_TankType(tank)] ? g_sEnforceSlot[ST_TankType(tank)][GetRandomInt(0, strlen(g_sEnforceSlot[ST_TankType(tank)]) - 1)] : g_sEnforceSlot2[ST_TankType(tank)][GetRandomInt(0, strlen(g_sEnforceSlot2[ST_TankType(tank)]) - 1)],
+					sSlotNumber[32];
+				switch (sNumbers)
+				{
+					case '1': sSlotNumber = "1st", g_iEnforceSlot[survivor] = 0;
+					case '2': sSlotNumber = "2nd", g_iEnforceSlot[survivor] = 1;
+					case '3': sSlotNumber = "3rd", g_iEnforceSlot[survivor] = 2;
+					case '4': sSlotNumber = "4th", g_iEnforceSlot[survivor] = 3;
+					case '5': sSlotNumber = "5th", g_iEnforceSlot[survivor] = 4;
+				}
+
+				DataPack dpStopEnforce;
+				CreateDataTimer(flEnforceDuration(tank), tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
+				dpStopEnforce.WriteCell(GetClientUserId(survivor));
+				dpStopEnforce.WriteCell(GetClientUserId(tank));
+				dpStopEnforce.WriteString(message);
+
+				char sEnforceEffect[4];
+				sEnforceEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sEnforceEffect[ST_TankType(tank)] : g_sEnforceEffect2[ST_TankType(tank)];
+				vEffect(survivor, tank, sEnforceEffect, mode);
+
+				char sEnforceMessage[3];
+				sEnforceMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sEnforceMessage[ST_TankType(tank)] : g_sEnforceMessage2[ST_TankType(tank)];
+				if (StrContains(sEnforceMessage, message) != -1)
+				{
+					char sTankName[33];
+					ST_TankName(tank, sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Enforce", sTankName, survivor, sSlotNumber);
+				}
+			}
+			else if (StrEqual(mode, "3") && !g_bEnforce2[tank])
+			{
+				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bEnforce4[tank])
+				{
+					g_bEnforce4[tank] = true;
+
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceHuman2");
+				}
+			}
 		}
-
-		float flEnforceDuration = !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceDuration[ST_TankType(tank)] : g_flEnforceDuration2[ST_TankType(tank)];
-		DataPack dpStopEnforce;
-		CreateDataTimer(flEnforceDuration, tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
-		dpStopEnforce.WriteCell(GetClientUserId(survivor));
-		dpStopEnforce.WriteCell(GetClientUserId(tank));
-		dpStopEnforce.WriteString(message);
-
-		char sEnforceEffect[4];
-		sEnforceEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sEnforceEffect[ST_TankType(tank)] : g_sEnforceEffect2[ST_TankType(tank)];
-		vEffect(survivor, tank, sEnforceEffect, mode);
-
-		char sEnforceMessage[3];
-		sEnforceMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sEnforceMessage[ST_TankType(tank)] : g_sEnforceMessage2[ST_TankType(tank)];
-		if (StrContains(sEnforceMessage, message) != -1)
+		else
 		{
-			char sTankName[33];
-			ST_TankName(tank, sTankName);
-			ST_PrintToChatAll("%s %t", ST_TAG2, "Enforce", sTankName, survivor, sSlotNumber);
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bEnforce5[tank])
+			{
+				g_bEnforce5[tank] = true;
+
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceAmmo");
+			}
 		}
 	}
 }
@@ -312,6 +538,8 @@ static void vRemoveEnforce(int tank)
 			g_iEnforceSlot[iSurvivor] = -1;
 		}
 	}
+
+	vReset2(tank);
 }
 
 static void vReset()
@@ -320,16 +548,37 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, "24"))
 		{
-			g_bEnforce[iPlayer] = false;
+			vReset2(iPlayer);
+
 			g_iEnforceOwner[iPlayer] = 0;
 			g_iEnforceSlot[iPlayer] = -1;
 		}
 	}
 }
 
+static void vReset2(int tank)
+{
+	g_bEnforce[tank] = false;
+	g_bEnforce2[tank] = false;
+	g_bEnforce3[tank] = false;
+	g_bEnforce4[tank] = false;
+	g_bEnforce5[tank] = false;
+	g_iEnforceCount[tank] = 0;
+}
+
 static float flEnforceChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceChance[ST_TankType(tank)] : g_flEnforceChance2[ST_TankType(tank)];
+}
+
+static float flEnforceDuration(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flEnforceDuration[ST_TankType(tank)] : g_flEnforceDuration2[ST_TankType(tank)];
+}
+
+static float flHumanCooldown(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
 }
 
 static int iEnforceAbility(int tank)
@@ -345,6 +594,16 @@ static int iEnforceHit(int tank)
 static int iEnforceHitMode(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iEnforceHitMode[ST_TankType(tank)] : g_iEnforceHitMode2[ST_TankType(tank)];
+}
+
+static int iHumanAbility(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+}
+
+static int iHumanAmmo(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
 }
 
 public Action tTimerStopEnforce(Handle timer, DataPack pack)
@@ -372,16 +631,52 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 	}
 
 	g_bEnforce[iSurvivor] = false;
+	g_bEnforce2[iTank] = false;
 	g_iEnforceOwner[iSurvivor] = 0;
 	g_iEnforceSlot[iSurvivor] = -1;
 
-	char sEnforceMessage[3], sMessage[3];
-	sEnforceMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sEnforceMessage[ST_TankType(iTank)] : g_sEnforceMessage2[ST_TankType(iTank)];
+	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
+
+	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bEnforce3[iTank])
+	{
+		g_bEnforce3[iTank] = true;
+
+		ST_PrintToChat(iTank, "%s %t", ST_TAG3, "EnforceHuman6");
+
+		if (g_iEnforceCount[iTank] < iHumanAmmo(iTank))
+		{
+			CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+		}
+		else
+		{
+			g_bEnforce3[iTank] = false;
+		}
+	}
+
+	char sEnforceMessage[3];
+	sEnforceMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sEnforceMessage[ST_TankType(iTank)] : g_sEnforceMessage2[ST_TankType(iTank)];
 	if (StrContains(sEnforceMessage, sMessage) != -1)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Enforce2", iSurvivor);
 	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerResetCooldown(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bEnforce3[iTank])
+	{
+		g_bEnforce3[iTank] = false;
+
+		return Plugin_Stop;
+	}
+
+	g_bEnforce3[iTank] = false;
+
+	ST_PrintToChat(iTank, "%s %t", ST_TAG3, "EnforceHuman7");
 
 	return Plugin_Continue;
 }

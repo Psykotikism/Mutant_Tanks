@@ -31,13 +31,15 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bCloneInstalled, g_bLateLoad, g_bShake[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+#define ST_MENU_SHAKE "Shake Ability"
+
+bool g_bCloneInstalled, g_bLateLoad, g_bShake[MAXPLAYERS + 1], g_bShake2[MAXPLAYERS + 1], g_bShake3[MAXPLAYERS + 1], g_bShake4[MAXPLAYERS + 1], g_bShake5[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sShakeEffect[ST_MAXTYPES + 1][4], g_sShakeEffect2[ST_MAXTYPES + 1][4], g_sShakeMessage[ST_MAXTYPES + 1][3], g_sShakeMessage2[ST_MAXTYPES + 1][3];
 
-float g_flShakeChance[ST_MAXTYPES + 1], g_flShakeChance2[ST_MAXTYPES + 1], g_flShakeDuration[ST_MAXTYPES + 1], g_flShakeDuration2[ST_MAXTYPES + 1], g_flShakeInterval[ST_MAXTYPES + 1], g_flShakeInterval2[ST_MAXTYPES + 1], g_flShakeRange[ST_MAXTYPES + 1], g_flShakeRange2[ST_MAXTYPES + 1], g_flShakeRangeChance[ST_MAXTYPES + 1], g_flShakeRangeChance2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flShakeChance[ST_MAXTYPES + 1], g_flShakeChance2[ST_MAXTYPES + 1], g_flShakeDuration[ST_MAXTYPES + 1], g_flShakeDuration2[ST_MAXTYPES + 1], g_flShakeInterval[ST_MAXTYPES + 1], g_flShakeInterval2[ST_MAXTYPES + 1], g_flShakeRange[ST_MAXTYPES + 1], g_flShakeRange2[ST_MAXTYPES + 1], g_flShakeRangeChance[ST_MAXTYPES + 1], g_flShakeRangeChance2[ST_MAXTYPES + 1];
 
-int g_iShakeAbility[ST_MAXTYPES + 1], g_iShakeAbility2[ST_MAXTYPES + 1], g_iShakeHit[ST_MAXTYPES + 1], g_iShakeHit2[ST_MAXTYPES + 1], g_iShakeHitMode[ST_MAXTYPES + 1], g_iShakeHitMode2[ST_MAXTYPES + 1], g_iShakeOwner[MAXPLAYERS + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iShakeAbility[ST_MAXTYPES + 1], g_iShakeAbility2[ST_MAXTYPES + 1], g_iShakeCount[MAXPLAYERS + 1], g_iShakeHit[ST_MAXTYPES + 1], g_iShakeHit2[ST_MAXTYPES + 1], g_iShakeHitMode[ST_MAXTYPES + 1], g_iShakeHitMode2[ST_MAXTYPES + 1], g_iShakeOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -78,6 +80,8 @@ public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
 
+	RegConsoleCmd("sm_st_shake", cmdShakeInfo, "View information about the Shake ability.");
+
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -101,13 +105,141 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
-	g_bShake[client] = false;
-	g_iShakeOwner[client] = 0;
+	vReset3(client);
 }
 
 public void OnMapEnd()
 {
 	vReset();
+}
+
+public Action cmdShakeInfo(int client, int args)
+{
+	if (!ST_PluginEnabled())
+	{
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, "0245"))
+	{
+		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
+		case false: vShakeMenu(client, 0);
+	}
+
+	return Plugin_Handled;
+}
+
+static void vShakeMenu(int client, int item)
+{
+	Menu mAbilityMenu = new Menu(iShakeMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Shake Ability Information");
+	mAbilityMenu.AddItem("Status", "Status");
+	mAbilityMenu.AddItem("Ammunition", "Ammunition");
+	mAbilityMenu.AddItem("Buttons", "Buttons");
+	mAbilityMenu.AddItem("Cooldown", "Cooldown");
+	mAbilityMenu.AddItem("Details", "Details");
+	mAbilityMenu.AddItem("Duration", "Duration");
+	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+}
+
+public int iShakeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iShakeAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iShakeCount[param1], iHumanAmmo(param1));
+				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "ShakeDetails");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flShakeDuration(param1));
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+			}
+
+			if (bIsValidClient(param1, "24"))
+			{
+				vShakeMenu(param1, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[255];
+			Panel panel = view_as<Panel>(param2);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "ShakeMenu", param1);
+			panel.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			char sMenuOption[255];
+			switch (param2)
+			{
+				case 0:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 1:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 2:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 3:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 4:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 5:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 6:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+public void ST_OnDisplayMenu(Menu menu)
+{
+	menu.AddItem(ST_MENU_SHAKE, ST_MENU_SHAKE);
+}
+
+public void ST_OnMenuItemSelected(int client, const char[] info)
+{
+	if (StrEqual(info, ST_MENU_SHAKE, false))
+	{
+		vShakeMenu(client, 0);
+	}
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -134,7 +266,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(const char[] savepath, bool main)
+public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -145,51 +277,66 @@ public void ST_Configs(const char[] savepath, bool main)
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
-			if (main)
+			switch (main)
 			{
-				g_bTankConfig[iIndex] = false;
+				case true:
+				{
+					g_bTankConfig[iIndex] = false;
 
-				g_iShakeAbility[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", 0);
-				g_iShakeAbility[iIndex] = iClamp(g_iShakeAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect[iIndex], sizeof(g_sShakeEffect[]), "0");
-				kvSuperTanks.GetString("Shake Ability/Ability Message", g_sShakeMessage[iIndex], sizeof(g_sShakeMessage[]), "0");
-				g_flShakeChance[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Chance", 33.3);
-				g_flShakeChance[iIndex] = flClamp(g_flShakeChance[iIndex], 0.0, 100.0);
-				g_flShakeDuration[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", 5.0);
-				g_flShakeDuration[iIndex] = flClamp(g_flShakeDuration[iIndex], 0.1, 9999999999.0);
-				g_iShakeHit[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit", 0);
-				g_iShakeHit[iIndex] = iClamp(g_iShakeHit[iIndex], 0, 1);
-				g_iShakeHitMode[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit Mode", 0);
-				g_iShakeHitMode[iIndex] = iClamp(g_iShakeHitMode[iIndex], 0, 2);
-				g_flShakeInterval[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Interval", 1.0);
-				g_flShakeInterval[iIndex] = flClamp(g_flShakeInterval[iIndex], 0.1, 9999999999.0);
-				g_flShakeRange[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range", 150.0);
-				g_flShakeRange[iIndex] = flClamp(g_flShakeRange[iIndex], 1.0, 9999999999.0);
-				g_flShakeRangeChance[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range Chance", 15.0);
-				g_flShakeRangeChance[iIndex] = flClamp(g_flShakeRangeChance[iIndex], 0.0, 100.0);
-			}
-			else
-			{
-				g_bTankConfig[iIndex] = true;
+					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Shake Ability/Human Ability", 0);
+					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
+					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Shake Ability/Human Ammo", 5);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Human Cooldown", 30.0);
+					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
+					g_iShakeAbility[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", 0);
+					g_iShakeAbility[iIndex] = iClamp(g_iShakeAbility[iIndex], 0, 1);
+					kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect[iIndex], sizeof(g_sShakeEffect[]), "0");
+					kvSuperTanks.GetString("Shake Ability/Ability Message", g_sShakeMessage[iIndex], sizeof(g_sShakeMessage[]), "0");
+					g_flShakeChance[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Chance", 33.3);
+					g_flShakeChance[iIndex] = flClamp(g_flShakeChance[iIndex], 0.0, 100.0);
+					g_flShakeDuration[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", 5.0);
+					g_flShakeDuration[iIndex] = flClamp(g_flShakeDuration[iIndex], 0.1, 9999999999.0);
+					g_iShakeHit[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit", 0);
+					g_iShakeHit[iIndex] = iClamp(g_iShakeHit[iIndex], 0, 1);
+					g_iShakeHitMode[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit Mode", 0);
+					g_iShakeHitMode[iIndex] = iClamp(g_iShakeHitMode[iIndex], 0, 2);
+					g_flShakeInterval[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Interval", 1.0);
+					g_flShakeInterval[iIndex] = flClamp(g_flShakeInterval[iIndex], 0.1, 9999999999.0);
+					g_flShakeRange[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range", 150.0);
+					g_flShakeRange[iIndex] = flClamp(g_flShakeRange[iIndex], 1.0, 9999999999.0);
+					g_flShakeRangeChance[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range Chance", 15.0);
+					g_flShakeRangeChance[iIndex] = flClamp(g_flShakeRangeChance[iIndex], 0.0, 100.0);
+				}
+				case false:
+				{
+					g_bTankConfig[iIndex] = true;
 
-				g_iShakeAbility2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", g_iShakeAbility[iIndex]);
-				g_iShakeAbility2[iIndex] = iClamp(g_iShakeAbility2[iIndex], 0, 1);
-				kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect2[iIndex], sizeof(g_sShakeEffect2[]), g_sShakeEffect[iIndex]);
-				kvSuperTanks.GetString("Shake Ability/Ability Message", g_sShakeMessage2[iIndex], sizeof(g_sShakeMessage2[]), g_sShakeMessage[iIndex]);
-				g_flShakeChance2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Chance", g_flShakeChance[iIndex]);
-				g_flShakeChance2[iIndex] = flClamp(g_flShakeChance2[iIndex], 0.0, 100.0);
-				g_flShakeDuration2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", g_flShakeDuration[iIndex]);
-				g_flShakeDuration2[iIndex] = flClamp(g_flShakeDuration2[iIndex], 0.1, 9999999999.0);
-				g_iShakeHit2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit", g_iShakeHit[iIndex]);
-				g_iShakeHit2[iIndex] = iClamp(g_iShakeHit2[iIndex], 0, 1);
-				g_iShakeHitMode2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit Mode", g_iShakeHitMode[iIndex]);
-				g_iShakeHitMode2[iIndex] = iClamp(g_iShakeHitMode2[iIndex], 0, 2);
-				g_flShakeInterval2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Interval", g_flShakeInterval[iIndex]);
-				g_flShakeInterval2[iIndex] = flClamp(g_flShakeInterval2[iIndex], 0.1, 9999999999.0);
-				g_flShakeRange2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range", g_flShakeRange[iIndex]);
-				g_flShakeRange2[iIndex] = flClamp(g_flShakeRange2[iIndex], 1.0, 9999999999.0);
-				g_flShakeRangeChance2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range Chance", g_flShakeRangeChance[iIndex]);
-				g_flShakeRangeChance2[iIndex] = flClamp(g_flShakeRangeChance2[iIndex], 0.0, 100.0);
+					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Human Ability", g_iHumanAbility[iIndex]);
+					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
+					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Human Ammo", g_iHumanAmmo[iIndex]);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 1, 9999999999);
+					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
+					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
+					g_iShakeAbility2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Ability Enabled", g_iShakeAbility[iIndex]);
+					g_iShakeAbility2[iIndex] = iClamp(g_iShakeAbility2[iIndex], 0, 1);
+					kvSuperTanks.GetString("Shake Ability/Ability Effect", g_sShakeEffect2[iIndex], sizeof(g_sShakeEffect2[]), g_sShakeEffect[iIndex]);
+					kvSuperTanks.GetString("Shake Ability/Ability Message", g_sShakeMessage2[iIndex], sizeof(g_sShakeMessage2[]), g_sShakeMessage[iIndex]);
+					g_flShakeChance2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Chance", g_flShakeChance[iIndex]);
+					g_flShakeChance2[iIndex] = flClamp(g_flShakeChance2[iIndex], 0.0, 100.0);
+					g_flShakeDuration2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Duration", g_flShakeDuration[iIndex]);
+					g_flShakeDuration2[iIndex] = flClamp(g_flShakeDuration2[iIndex], 0.1, 9999999999.0);
+					g_iShakeHit2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit", g_iShakeHit[iIndex]);
+					g_iShakeHit2[iIndex] = iClamp(g_iShakeHit2[iIndex], 0, 1);
+					g_iShakeHitMode2[iIndex] = kvSuperTanks.GetNum("Shake Ability/Shake Hit Mode", g_iShakeHitMode[iIndex]);
+					g_iShakeHitMode2[iIndex] = iClamp(g_iShakeHitMode2[iIndex], 0, 2);
+					g_flShakeInterval2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Interval", g_flShakeInterval[iIndex]);
+					g_flShakeInterval2[iIndex] = flClamp(g_flShakeInterval2[iIndex], 0.1, 9999999999.0);
+					g_flShakeRange2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range", g_flShakeRange[iIndex]);
+					g_flShakeRange2[iIndex] = flClamp(g_flShakeRange2[iIndex], 1.0, 9999999999.0);
+					g_flShakeRangeChance2[iIndex] = kvSuperTanks.GetFloat("Shake Ability/Shake Range Chance", g_flShakeRangeChance[iIndex]);
+					g_flShakeRangeChance2[iIndex] = flClamp(g_flShakeRangeChance2[iIndex], 0.0, 100.0);
+				}
 			}
 
 			kvSuperTanks.Rewind();
@@ -199,11 +346,62 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Ability(int tank)
+public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (StrEqual(name, "player_death"))
 	{
-		int iShakeAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iShakeAbility[ST_TankType(tank)] : g_iShakeAbility2[ST_TankType(tank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		{
+			vRemoveShake(iTank);
+		}
+	}
+}
+
+public void ST_OnAbilityActivated(int tank)
+{
+	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iShakeAbility(tank) == 1)
+	{
+		vShakeAbility(tank);
+	}
+}
+
+public void ST_OnButtonPressed(int tank, int button)
+{
+	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		if (button & ST_SUB_KEY == ST_SUB_KEY)
+		{
+			if (iShakeAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			{
+				if (!g_bShake2[tank] && !g_bShake3[tank])
+				{
+					vShakeAbility(tank);
+				}
+				else if (g_bShake2[tank])
+				{
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeHuman3");
+				}
+				else if (g_bShake3[tank])
+				{
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeHuman4");
+				}
+			}
+		}
+	}
+}
+
+public void ST_OnChangeType(int tank)
+{
+	vRemoveShake(tank);
+}
+
+static void vShakeAbility(int tank)
+{
+	if (g_iShakeCount[tank] < iHumanAmmo(tank))
+	{
+		g_bShake4[tank] = false;
+		g_bShake5[tank] = false;
 
 		float flShakeRange = !g_bTankConfig[ST_TankType(tank)] ? g_flShakeRange[ST_TankType(tank)] : g_flShakeRange2[ST_TankType(tank)],
 			flShakeRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flShakeRangeChance[ST_TankType(tank)] : g_flShakeRangeChance2[ST_TankType(tank)],
@@ -211,9 +409,11 @@ public void ST_Ability(int tank)
 
 		GetClientAbsOrigin(tank, flTankPos);
 
+		int iSurvivorCount;
+
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsHumanSurvivor(iSurvivor, "234"))
+			if (bIsSurvivor(iSurvivor, "234"))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -221,26 +421,39 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flShakeRange)
 				{
-					vShakeHit(iSurvivor, tank, flShakeRangeChance, iShakeAbility, "2", "3");
+					vShakeHit(iSurvivor, tank, flShakeRangeChance, iShakeAbility(tank), "2", "3");
+
+					iSurvivorCount++;
 				}
 			}
 		}
-	}
-}
 
-public void ST_ChangeType(int tank)
-{
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
-	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		if (iSurvivorCount == 0)
 		{
-			if (bIsSurvivor(iSurvivor, "24") && g_bShake[iSurvivor] && g_iShakeOwner[iSurvivor] == tank)
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 			{
-				g_bShake[iSurvivor] = false;
-				g_iShakeOwner[iSurvivor] = 0;
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeHuman5");
 			}
 		}
 	}
+	else
+	{
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeAmmo");
+	}
+}
+
+static void vRemoveShake(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor, "234") && g_bShake[iSurvivor] && g_iShakeOwner[iSurvivor] == tank)
+		{
+			g_bShake[iSurvivor] = false;
+			g_iShakeOwner[iSurvivor] = 0;
+		}
+	}
+
+	vReset3(tank);
 }
 
 static void vReset()
@@ -249,7 +462,8 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, "24"))
 		{
-			g_bShake[iPlayer] = false;
+			vReset3(iPlayer);
+
 			g_iShakeOwner[iPlayer] = 0;
 		}
 	}
@@ -268,40 +482,107 @@ static void vReset2(int survivor, int tank, const char[] message)
 	}
 }
 
+static void vReset3(int tank)
+{
+	g_bShake[tank] = false;
+	g_bShake2[tank] = false;
+	g_bShake3[tank] = false;
+	g_bShake4[tank] = false;
+	g_bShake5[tank] = false;
+	g_iShakeCount[tank] = 0;
+}
+
 static void vShakeHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsHumanSurvivor(survivor) && !g_bShake[survivor])
+	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		g_bShake[survivor] = true;
-		g_iShakeOwner[survivor] = tank;
-
-		float flShakeInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flShakeInterval[ST_TankType(tank)] : g_flShakeInterval2[ST_TankType(tank)];
-		DataPack dpShake;
-		CreateDataTimer(flShakeInterval, tTimerShake, dpShake, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpShake.WriteCell(GetClientUserId(survivor));
-		dpShake.WriteCell(GetClientUserId(tank));
-		dpShake.WriteString(message);
-		dpShake.WriteCell(enabled);
-		dpShake.WriteFloat(GetEngineTime());
-
-		char sShakeEffect[4];
-		sShakeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sShakeEffect[ST_TankType(tank)] : g_sShakeEffect2[ST_TankType(tank)];
-		vEffect(survivor, tank, sShakeEffect, mode);
-
-		char sShakeMessage[3];
-		sShakeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sShakeMessage[ST_TankType(tank)] : g_sShakeMessage2[ST_TankType(tank)];
-		if (StrContains(sShakeMessage, message) != -1)
+		if (g_iShakeCount[tank] < iHumanAmmo(tank))
 		{
-			char sTankName[33];
-			ST_TankName(tank, sTankName);
-			ST_PrintToChatAll("%s %t", ST_TAG2, "Shake", sTankName, survivor);
+			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bShake[survivor])
+			{
+				g_bShake[survivor] = true;
+				g_iShakeOwner[survivor] = tank;
+
+				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bShake2[tank])
+				{
+					g_bShake2[tank] = true;
+					g_iShakeCount[tank]++;
+
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeHuman", g_iShakeCount[tank], iHumanAmmo(tank));
+				}
+
+				float flShakeInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flShakeInterval[ST_TankType(tank)] : g_flShakeInterval2[ST_TankType(tank)];
+				DataPack dpShake;
+				CreateDataTimer(flShakeInterval, tTimerShake, dpShake, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpShake.WriteCell(GetClientUserId(survivor));
+				dpShake.WriteCell(GetClientUserId(tank));
+				dpShake.WriteString(message);
+				dpShake.WriteCell(enabled);
+				dpShake.WriteFloat(GetEngineTime());
+
+				char sShakeEffect[4];
+				sShakeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sShakeEffect[ST_TankType(tank)] : g_sShakeEffect2[ST_TankType(tank)];
+				vEffect(survivor, tank, sShakeEffect, mode);
+
+				char sShakeMessage[3];
+				sShakeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sShakeMessage[ST_TankType(tank)] : g_sShakeMessage2[ST_TankType(tank)];
+				if (StrContains(sShakeMessage, message) != -1)
+				{
+					char sTankName[33];
+					ST_TankName(tank, sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Shake", sTankName, survivor);
+				}
+			}
+			else if (StrEqual(mode, "3") && !g_bShake2[tank])
+			{
+				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bShake4[tank])
+				{
+					g_bShake4[tank] = true;
+
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeHuman2");
+				}
+			}
+		}
+		else
+		{
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bShake5[tank])
+			{
+				g_bShake5[tank] = true;
+
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeAmmo");
+			}
 		}
 	}
+}
+
+static float flHumanCooldown(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
 }
 
 static float flShakeChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flShakeChance[ST_TankType(tank)] : g_flShakeChance2[ST_TankType(tank)];
+}
+
+static float flShakeDuration(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flShakeDuration[ST_TankType(tank)] : g_flShakeDuration2[ST_TankType(tank)];
+}
+
+static int iHumanAbility(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+}
+
+static int iHumanAmmo(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+}
+
+static int iShakeAbility(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShakeAbility[ST_TankType(tank)] : g_iShakeAbility2[ST_TankType(tank)];
 }
 
 static int iShakeHit(int tank)
@@ -337,12 +618,29 @@ public Action tTimerShake(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iShakeAbility = pack.ReadCell();
-	float flTime = pack.ReadFloat(),
-		flShakeDuration = !g_bTankConfig[ST_TankType(iTank)] ? g_flShakeDuration[ST_TankType(iTank)] : g_flShakeDuration2[ST_TankType(iTank)];
-	if (iShakeAbility == 0 || (flTime + flShakeDuration) < GetEngineTime())
+	int iShakeEnabled = pack.ReadCell();
+	float flTime = pack.ReadFloat();
+	if (iShakeEnabled == 0 || (flTime + flShakeDuration(iTank)) < GetEngineTime())
 	{
+		g_bShake2[iTank] = false;
+
 		vReset2(iSurvivor, iTank, sMessage);
+
+		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bShake3[iTank])
+		{
+			g_bShake3[iTank] = true;
+
+			ST_PrintToChat(iTank, "%s %t", ST_TAG3, "ShakeHuman6");
+
+			if (g_iShakeCount[iTank] < iHumanAmmo(iTank))
+			{
+				CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			}
+			else
+			{
+				g_bShake3[iTank] = false;
+			}
+		}
 
 		return Plugin_Stop;
 	}
@@ -358,6 +656,23 @@ public Action tTimerShake(Handle timer, DataPack pack)
 
 		EndMessage();
 	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerResetCooldown(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bShake3[iTank])
+	{
+		g_bShake3[iTank] = false;
+
+		return Plugin_Stop;
+	}
+
+	g_bShake3[iTank] = false;
+
+	ST_PrintToChat(iTank, "%s %t", ST_TAG3, "ShakeHuman7");
 
 	return Plugin_Continue;
 }

@@ -31,11 +31,13 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+#define ST_MENU_RESPAWN "Respawn Ability"
+
+bool g_bCloneInstalled, g_bRespawn[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 float g_flRespawnChance[ST_MAXTYPES + 1], g_flRespawnChance2[ST_MAXTYPES + 1];
 
-int g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iRespawnAbility[ST_MAXTYPES + 1], g_iRespawnAbility2[ST_MAXTYPES + 1], g_iRespawnAmount[ST_MAXTYPES + 1], g_iRespawnAmount2[ST_MAXTYPES + 1], g_iRespawnCount[MAXPLAYERS + 1], g_iRespawnMessage[ST_MAXTYPES + 1], g_iRespawnMessage2[ST_MAXTYPES + 1], g_iRespawnMode[ST_MAXTYPES + 1], g_iRespawnMode2[ST_MAXTYPES + 1], g_iRespawnType[ST_MAXTYPES + 1], g_iRespawnType2[ST_MAXTYPES + 1];
+int g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iRespawnAbility[ST_MAXTYPES + 1], g_iRespawnAbility2[ST_MAXTYPES + 1], g_iRespawnAmount[ST_MAXTYPES + 1], g_iRespawnAmount2[ST_MAXTYPES + 1], g_iRespawnCount[MAXPLAYERS + 1], g_iRespawnCount2[MAXPLAYERS + 1], g_iRespawnMessage[ST_MAXTYPES + 1], g_iRespawnMessage2[ST_MAXTYPES + 1], g_iRespawnMode[ST_MAXTYPES + 1], g_iRespawnMode2[ST_MAXTYPES + 1], g_iRespawnType[ST_MAXTYPES + 1], g_iRespawnType2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -73,9 +75,141 @@ public void OnLibraryRemoved(const char[] name)
 public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
+
+	RegConsoleCmd("sm_st_respawn", cmdRespawnInfo, "View information about the Respawn ability.");
 }
 
-public void ST_Configs(const char[] savepath, bool main)
+public void OnMapStart()
+{
+	vReset();
+}
+
+public void OnClientPutInServer(int client)
+{
+	vRemoveRespawn(client);
+}
+
+public void OnMapEnd()
+{
+	vReset();
+}
+
+public Action cmdRespawnInfo(int client, int args)
+{
+	if (!ST_PluginEnabled())
+	{
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, "0245"))
+	{
+		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
+		case false: vRespawnMenu(client, 0);
+	}
+
+	return Plugin_Handled;
+}
+
+static void vRespawnMenu(int client, int item)
+{
+	Menu mAbilityMenu = new Menu(iRespawnMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Respawn Ability Information");
+	mAbilityMenu.AddItem("Status", "Status");
+	mAbilityMenu.AddItem("Ammunition", "Ammunition");
+	mAbilityMenu.AddItem("Buttons", "Buttons");
+	mAbilityMenu.AddItem("Details", "Details");
+	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+}
+
+public int iRespawnMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iRespawnAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iRespawnCount2[param1], iHumanAmmo(param1));
+				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons4");
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "RespawnDetails");
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+			}
+
+			if (bIsValidClient(param1, "24"))
+			{
+				vRespawnMenu(param1, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[255];
+			Panel panel = view_as<Panel>(param2);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "RespawnMenu", param1);
+			panel.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			char sMenuOption[255];
+			switch (param2)
+			{
+				case 0:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 1:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 2:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 3:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 4:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+public void ST_OnDisplayMenu(Menu menu)
+{
+	menu.AddItem(ST_MENU_RESPAWN, ST_MENU_RESPAWN);
+}
+
+public void ST_OnMenuItemSelected(int client, const char[] info)
+{
+	if (StrEqual(info, ST_MENU_RESPAWN, false))
+	{
+		vRespawnMenu(client, 0);
+	}
+}
+
+public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -86,43 +220,56 @@ public void ST_Configs(const char[] savepath, bool main)
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
-			if (main)
+			switch (main)
 			{
-				g_bTankConfig[iIndex] = false;
+				case true:
+				{
+					g_bTankConfig[iIndex] = false;
 
-				g_iFinaleTank[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", 0);
-				g_iFinaleTank[iIndex] = iClamp(g_iFinaleTank[iIndex], 0, 1);
-				g_iRespawnAbility[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Enabled", 0);
-				g_iRespawnAbility[iIndex] = iClamp(g_iRespawnAbility[iIndex], 0, 1);
-				g_iRespawnMessage[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Message", 0);
-				g_iRespawnMessage[iIndex] = iClamp(g_iRespawnMessage[iIndex], 0, 1);
-				g_iRespawnAmount[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", 1);
-				g_iRespawnAmount[iIndex] = iClamp(g_iRespawnAmount[iIndex], 1, 9999999999);
-				g_flRespawnChance[iIndex] = kvSuperTanks.GetFloat("Respawn Ability/Respawn Chance", 33.3);
-				g_flRespawnChance[iIndex] = flClamp(g_flRespawnChance[iIndex], 0.0, 100.0);
-				g_iRespawnMode[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Mode", 0);
-				g_iRespawnMode[iIndex] = iClamp(g_iRespawnMode[iIndex], 0, 2);
-				g_iRespawnType[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Type", 0);
-				g_iRespawnType[iIndex] = iClamp(g_iRespawnType[iIndex], 0, 5000);
-			}
-			else
-			{
-				g_bTankConfig[iIndex] = true;
+					g_iFinaleTank[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", 0);
+					g_iFinaleTank[iIndex] = iClamp(g_iFinaleTank[iIndex], 0, 1);
 
-				g_iFinaleTank2[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", g_iFinaleTank[iIndex]);
-				g_iFinaleTank2[iIndex] = iClamp(g_iFinaleTank2[iIndex], 0, 1);
-				g_iRespawnAbility2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Enabled", g_iRespawnAbility[iIndex]);
-				g_iRespawnAbility2[iIndex] = iClamp(g_iRespawnAbility2[iIndex], 0, 1);
-				g_iRespawnMessage2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Message", g_iRespawnMessage[iIndex]);
-				g_iRespawnMessage2[iIndex] = iClamp(g_iRespawnMessage2[iIndex], 0, 1);
-				g_iRespawnAmount2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", g_iRespawnAmount[iIndex]);
-				g_iRespawnAmount2[iIndex] = iClamp(g_iRespawnAmount2[iIndex], 1, 9999999999);
-				g_flRespawnChance2[iIndex] = kvSuperTanks.GetFloat("Respawn Ability/Respawn Chance", g_flRespawnChance[iIndex]);
-				g_flRespawnChance2[iIndex] = flClamp(g_flRespawnChance2[iIndex], 0.0, 100.0);
-				g_iRespawnMode2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Mode", g_iRespawnMode[iIndex]);
-				g_iRespawnMode2[iIndex] = iClamp(g_iRespawnMode2[iIndex], 0, 2);
-				g_iRespawnType2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Type", g_iRespawnType[iIndex]);
-				g_iRespawnType2[iIndex] = iClamp(g_iRespawnType2[iIndex], 0, 5000);
+					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Human Ability", 0);
+					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
+					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Human Ammo", 5);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_iRespawnAbility[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Enabled", 0);
+					g_iRespawnAbility[iIndex] = iClamp(g_iRespawnAbility[iIndex], 0, 1);
+					g_iRespawnMessage[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Message", 0);
+					g_iRespawnMessage[iIndex] = iClamp(g_iRespawnMessage[iIndex], 0, 1);
+					g_iRespawnAmount[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", 1);
+					g_iRespawnAmount[iIndex] = iClamp(g_iRespawnAmount[iIndex], 1, 9999999999);
+					g_flRespawnChance[iIndex] = kvSuperTanks.GetFloat("Respawn Ability/Respawn Chance", 33.3);
+					g_flRespawnChance[iIndex] = flClamp(g_flRespawnChance[iIndex], 0.0, 100.0);
+					g_iRespawnMode[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Mode", 0);
+					g_iRespawnMode[iIndex] = iClamp(g_iRespawnMode[iIndex], 0, 2);
+					g_iRespawnType[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Type", 0);
+					g_iRespawnType[iIndex] = iClamp(g_iRespawnType[iIndex], 0, 5000);
+				}
+				case false:
+				{
+					g_bTankConfig[iIndex] = true;
+
+					g_iFinaleTank2[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", g_iFinaleTank[iIndex]);
+					g_iFinaleTank2[iIndex] = iClamp(g_iFinaleTank2[iIndex], 0, 1);
+
+					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Human Ability", 0);
+					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
+					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Human Ammo", 5);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_iRespawnAbility2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Enabled", g_iRespawnAbility[iIndex]);
+					g_iRespawnAbility2[iIndex] = iClamp(g_iRespawnAbility2[iIndex], 0, 1);
+					g_iRespawnMessage2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Message", g_iRespawnMessage[iIndex]);
+					g_iRespawnMessage2[iIndex] = iClamp(g_iRespawnMessage2[iIndex], 0, 1);
+					g_iRespawnAmount2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Amount", g_iRespawnAmount[iIndex]);
+					g_iRespawnAmount2[iIndex] = iClamp(g_iRespawnAmount2[iIndex], 1, 9999999999);
+					g_flRespawnChance2[iIndex] = kvSuperTanks.GetFloat("Respawn Ability/Respawn Chance", g_flRespawnChance[iIndex]);
+					g_flRespawnChance2[iIndex] = flClamp(g_flRespawnChance2[iIndex], 0.0, 100.0);
+					g_iRespawnMode2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Mode", g_iRespawnMode[iIndex]);
+					g_iRespawnMode2[iIndex] = iClamp(g_iRespawnMode2[iIndex], 0, 2);
+					g_iRespawnType2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Respawn Type", g_iRespawnType[iIndex]);
+					g_iRespawnType2[iIndex] = iClamp(g_iRespawnType2[iIndex], 0, 5000);
+				}
 			}
 
 			kvSuperTanks.Rewind();
@@ -132,21 +279,19 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
+public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-
 		float flRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flRespawnChance[ST_TankType(iTank)] : g_flRespawnChance2[ST_TankType(iTank)];
-
-		if (iRespawnAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flRespawnChance && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && iRespawnAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flRespawnChance)
 		{
 			float flPos[3], flAngles[3];
-			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags"), iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
-
 			GetEntPropVector(iTank, Prop_Send, "m_vecOrigin", flPos);
 			GetEntPropVector(iTank, Prop_Send, "m_angRotation", flAngles);
+
+			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags"), iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
 
 			DataPack dpRespawn;
 			CreateDataTimer(0.4, tTimerRespawn, dpRespawn, TIMER_FLAG_NO_MAPCHANGE);
@@ -161,6 +306,41 @@ public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
 			dpRespawn.WriteFloat(flAngles[2]);
 		}
 	}
+}
+
+public void ST_OnButtonPressed(int tank, int button)
+{
+	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		if (button & ST_SPECIAL_KEY2 == ST_SPECIAL_KEY2)
+		{
+			if (iRespawnAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			{
+				switch (g_bRespawn[tank])
+				{
+					case true: ST_PrintToChat(tank, "%s %t", ST_TAG3, "RespawnHuman2");
+					case false:
+					{
+						if (g_iRespawnCount2[tank] < iHumanAmmo(tank))
+						{
+							g_bRespawn[tank] = true;
+
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "RespawnHuman");
+						}
+						else
+						{
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "RespawnAmmo");
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+public void ST_OnChangeType(int tank)
+{
+	vRemoveRespawn(tank);
 }
 
 static void vRandomRespawn(int tank)
@@ -185,6 +365,34 @@ static void vRandomRespawn(int tank)
 	}
 }
 
+static void vRemoveRespawn(int tank)
+{
+	g_bRespawn[tank] = false;
+	g_iRespawnCount[tank] = 0;
+	g_iRespawnCount2[tank] = 0;
+}
+
+static void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, "24"))
+		{
+			vRemoveRespawn(iPlayer);
+		}
+	}
+}
+
+static int iHumanAbility(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+}
+
+static int iHumanAmmo(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+}
+
 static int iRespawnAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iRespawnAbility[ST_TankType(tank)] : g_iRespawnAbility2[ST_TankType(tank)];
@@ -197,6 +405,14 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !bIsPlayerIncapacitated(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRespawnAbility(iTank) == 0)
 	{
+		g_iRespawnCount[iTank] = 0;
+
+		return Plugin_Stop;
+	}
+
+	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bRespawn[iTank])
+	{
+		g_bRespawn[iTank] = false;
 		g_iRespawnCount[iTank] = 0;
 
 		return Plugin_Stop;
@@ -216,12 +432,19 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	flAngles[1] = pack.ReadFloat();
 	flAngles[2] = pack.ReadFloat();
 
-	if (g_iRespawnCount[iTank] < iRespawnAmount)
+	if (g_iRespawnCount[iTank] < iRespawnAmount || g_iRespawnCount2[iTank] < iHumanAmmo(iTank))
 	{
+		g_bRespawn[iTank] = false;
 		g_iRespawnCount[iTank]++;
 
-		bool bExists[MAXPLAYERS + 1];
+		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1)
+		{
+			g_iRespawnCount2[iTank]++;
 
+			ST_PrintToChat(iTank, "%s %t", ST_TAG3, "RespawnHuman3", g_iRespawnCount2[iTank], iHumanAmmo(iTank));
+		}
+
+		bool bExists[MAXPLAYERS + 1];
 		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 		{
 			bExists[iRespawn] = false;
@@ -254,7 +477,17 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && !bExists[iRespawn])
 			{
 				iNewTank = iRespawn;
+				g_bRespawn[iNewTank] = false;
 				g_iRespawnCount[iNewTank] = g_iRespawnCount[iTank];
+				g_iRespawnCount2[iNewTank] = g_iRespawnCount2[iTank];
+
+				vRemoveRespawn(iTank);
+
+				break;
+			}
+			else
+			{
+				vRemoveRespawn(iTank);
 
 				break;
 			}
@@ -277,6 +510,9 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	else
 	{
 		g_iRespawnCount[iTank] = 0;
+		g_iRespawnCount2[iTank] = 0;
+
+		ST_PrintToChat(iTank, "%s %t", ST_TAG3, "RespawnAmmo");
 	}
 
 	return Plugin_Continue;

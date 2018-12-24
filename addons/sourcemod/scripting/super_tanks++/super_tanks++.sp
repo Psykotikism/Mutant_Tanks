@@ -60,19 +60,20 @@ ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies
 float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRegularInterval, g_flRegularInterval2, g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1],
 	g_flTankChance[ST_MAXTYPES + 1], g_flTankChance2[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1], g_flTransformDelay[ST_MAXTYPES + 1], g_flTransformDelay2[ST_MAXTYPES + 1], g_flTransformDuration[ST_MAXTYPES + 1], g_flTransformDuration2[ST_MAXTYPES + 1];
 
-Handle g_hAbilityForward, g_hChangeTypeForward, g_hConfigsForward, g_hEventHandlerForward, g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward;
+Handle g_hAbilityActivatedForward, g_hButtonPressedForward, g_hButtonReleasedForward, g_hChangeTypeForward, g_hConfigsLoadedForward, g_hDisplayMenuForward, g_hEventFiredForward, g_hHookEventForward, g_hMenuItemSelectedForward, g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward;
 
 int g_iAnnounceDeath, g_iAnnounceDeath2, g_iBaseHealth[ST_MAXTYPES + 1], g_iBaseHealth2[ST_MAXTYPES + 1], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2,
 	g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1],
-	g_iFireImmunity2[ST_MAXTYPES + 1], g_iFlameRed[ST_MAXTYPES + 1], g_iFlameRed2[ST_MAXTYPES + 1], g_iFlameGreen[ST_MAXTYPES + 1], g_iFlameGreen2[ST_MAXTYPES + 1], g_iFlameBlue[ST_MAXTYPES + 1], g_iFlameBlue2[ST_MAXTYPES + 1], g_iFlameAlpha[ST_MAXTYPES + 1], g_iFlameAlpha2[ST_MAXTYPES + 1], g_iGameModeTypes,
-	g_iGlowEnabled[ST_MAXTYPES + 1], g_iGlowEnabled2[ST_MAXTYPES + 1], g_iGlowRed[ST_MAXTYPES + 1], g_iGlowRed2[ST_MAXTYPES + 1], g_iGlowGreen[ST_MAXTYPES + 1], g_iGlowGreen2[ST_MAXTYPES + 1], g_iGlowBlue[ST_MAXTYPES + 1], g_iGlowBlue2[ST_MAXTYPES + 1], g_iJetpackRed[ST_MAXTYPES + 1], g_iJetpackRed2[ST_MAXTYPES + 1],
-	g_iJetpackGreen[ST_MAXTYPES + 1], g_iJetpackGreen2[ST_MAXTYPES + 1], g_iJetpackBlue[ST_MAXTYPES + 1], g_iJetpackBlue2[ST_MAXTYPES + 1], g_iJetpackAlpha[ST_MAXTYPES + 1], g_iJetpackAlpha2[ST_MAXTYPES + 1], g_iLightRed[ST_MAXTYPES + 1], g_iLightRed2[ST_MAXTYPES + 1], g_iLightGreen[ST_MAXTYPES + 1],
-	g_iLightGreen2[ST_MAXTYPES + 1], g_iLightBlue[ST_MAXTYPES + 1], g_iLightBlue2[ST_MAXTYPES + 1], g_iLightAlpha[ST_MAXTYPES + 1], g_iLightAlpha2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMenuEnabled[ST_MAXTYPES + 1], g_iMenuEnabled2[ST_MAXTYPES + 1], g_iMultiHealth,
-	g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPlayerCount[2], g_iPluginEnabled, g_iPluginEnabled2, g_iRandomTank[ST_MAXTYPES + 1], g_iRandomTank2[ST_MAXTYPES + 1], g_iRegularAmount, g_iRegularAmount2, g_iRegularWave, g_iRegularWave2, g_iRockEffect[ST_MAXTYPES + 1],
-	g_iRockEffect2[ST_MAXTYPES + 1], g_iRockRed[ST_MAXTYPES + 1], g_iRockRed2[ST_MAXTYPES + 1], g_iRockGreen[ST_MAXTYPES + 1], g_iRockGreen2[ST_MAXTYPES + 1], g_iRockBlue[ST_MAXTYPES + 1], g_iRockBlue2[ST_MAXTYPES + 1], g_iRockAlpha[ST_MAXTYPES + 1], g_iRockAlpha2[ST_MAXTYPES + 1], g_iSkinRed[ST_MAXTYPES + 1],
-	g_iSkinRed2[ST_MAXTYPES + 1], g_iSkinGreen[ST_MAXTYPES + 1], g_iSkinGreen2[ST_MAXTYPES + 1], g_iSkinBlue[ST_MAXTYPES + 1], g_iSkinBlue2[ST_MAXTYPES + 1], g_iSkinAlpha[ST_MAXTYPES + 1], g_iSkinAlpha2[ST_MAXTYPES + 1], g_iSpawnEnabled[ST_MAXTYPES + 1], g_iSpawnEnabled2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1],
-	g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iTireRed[ST_MAXTYPES + 1], g_iTireRed2[ST_MAXTYPES + 1], g_iTireGreen[ST_MAXTYPES + 1],
-	g_iTireGreen2[ST_MAXTYPES + 1], g_iTireBlue[ST_MAXTYPES + 1], g_iTireBlue2[ST_MAXTYPES + 1], g_iTireAlpha[ST_MAXTYPES + 1], g_iTireAlpha2[ST_MAXTYPES + 1], g_iType, g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
+	g_iFireImmunity2[ST_MAXTYPES + 1], g_iFlame[MAXPLAYERS + 1][3], g_iFlameRed[ST_MAXTYPES + 1], g_iFlameRed2[ST_MAXTYPES + 1], g_iFlameGreen[ST_MAXTYPES + 1], g_iFlameGreen2[ST_MAXTYPES + 1], g_iFlameBlue[ST_MAXTYPES + 1], g_iFlameBlue2[ST_MAXTYPES + 1], g_iFlameAlpha[ST_MAXTYPES + 1], g_iFlameAlpha2[ST_MAXTYPES + 1], g_iGameModeTypes,
+	g_iGlowEnabled[ST_MAXTYPES + 1], g_iGlowEnabled2[ST_MAXTYPES + 1], g_iGlowRed[ST_MAXTYPES + 1], g_iGlowRed2[ST_MAXTYPES + 1], g_iGlowGreen[ST_MAXTYPES + 1], g_iGlowGreen2[ST_MAXTYPES + 1], g_iGlowBlue[ST_MAXTYPES + 1], g_iGlowBlue2[ST_MAXTYPES + 1], g_iHumanSupport[ST_MAXTYPES + 1], g_iHumanSupport2[ST_MAXTYPES + 1],
+	g_iJetpack[MAXPLAYERS + 1][3], g_iJetpackRed[ST_MAXTYPES + 1], g_iJetpackRed2[ST_MAXTYPES + 1], g_iJetpackGreen[ST_MAXTYPES + 1], g_iJetpackGreen2[ST_MAXTYPES + 1], g_iJetpackBlue[ST_MAXTYPES + 1], g_iJetpackBlue2[ST_MAXTYPES + 1], g_iJetpackAlpha[ST_MAXTYPES + 1], g_iJetpackAlpha2[ST_MAXTYPES + 1], g_iLastButtons[MAXPLAYERS + 1],
+	g_iLight[MAXPLAYERS + 1][4], g_iLightRed[ST_MAXTYPES + 1], g_iLightRed2[ST_MAXTYPES + 1], g_iLightGreen[ST_MAXTYPES + 1], g_iLightGreen2[ST_MAXTYPES + 1], g_iLightBlue[ST_MAXTYPES + 1], g_iLightBlue2[ST_MAXTYPES + 1], g_iLightAlpha[ST_MAXTYPES + 1], g_iLightAlpha2[ST_MAXTYPES + 1], g_iMeleeImmunity[ST_MAXTYPES + 1],
+	g_iMeleeImmunity2[ST_MAXTYPES + 1], g_iMenuEnabled[ST_MAXTYPES + 1], g_iMenuEnabled2[ST_MAXTYPES + 1], g_iMultiHealth, g_iMultiHealth2, g_iParticleEffect[ST_MAXTYPES + 1], g_iParticleEffect2[ST_MAXTYPES + 1], g_iPlayerCount[2], g_iPluginEnabled, g_iPluginEnabled2, g_iRandomTank[ST_MAXTYPES + 1], g_iRandomTank2[ST_MAXTYPES + 1],
+	g_iRegularAmount, g_iRegularAmount2, g_iRegularWave, g_iRegularWave2, g_iRockEffect[ST_MAXTYPES + 1], g_iRockEffect2[ST_MAXTYPES + 1], g_iRock[MAXPLAYERS + 1][17], g_iRockRed[ST_MAXTYPES + 1], g_iRockRed2[ST_MAXTYPES + 1], g_iRockGreen[ST_MAXTYPES + 1], g_iRockGreen2[ST_MAXTYPES + 1], g_iRockBlue[ST_MAXTYPES + 1],
+	g_iRockBlue2[ST_MAXTYPES + 1], g_iRockAlpha[ST_MAXTYPES + 1], g_iRockAlpha2[ST_MAXTYPES + 1], g_iSkinRed[ST_MAXTYPES + 1], g_iSkinRed2[ST_MAXTYPES + 1], g_iSkinGreen[ST_MAXTYPES + 1], g_iSkinGreen2[ST_MAXTYPES + 1], g_iSkinBlue[ST_MAXTYPES + 1], g_iSkinBlue2[ST_MAXTYPES + 1], g_iSkinAlpha[ST_MAXTYPES + 1],
+	g_iSkinAlpha2[ST_MAXTYPES + 1], g_iSpawnEnabled[ST_MAXTYPES + 1], g_iSpawnEnabled2[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSpawnMode2[ST_MAXTYPES + 1], g_iTankEnabled[ST_MAXTYPES + 1], g_iTankEnabled2[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankModel[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1],
+	g_iTankNote2[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iTire[MAXPLAYERS + 1][3], g_iTireRed[ST_MAXTYPES + 1], g_iTireRed2[ST_MAXTYPES + 1], g_iTireGreen[ST_MAXTYPES + 1], g_iTireGreen2[ST_MAXTYPES + 1], g_iTireBlue[ST_MAXTYPES + 1], g_iTireBlue2[ST_MAXTYPES + 1], g_iTireAlpha[ST_MAXTYPES + 1],
+	g_iTireAlpha2[ST_MAXTYPES + 1], g_iType, g_iTypeLimit[ST_MAXTYPES + 1], g_iTypeLimit2[ST_MAXTYPES + 1];
 
 TopMenu g_tmSTMenu;
 
@@ -129,7 +130,7 @@ public any aNative_PluginEnabled(Handle plugin, int numParams)
 public any aNative_PropsColors(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank))
+	if (bIsTank(iTank, "024"))
 	{
 		int iMode = GetNativeCell(2), iRed, iGreen, iBlue, iAlpha;
 		switch (iMode)
@@ -230,7 +231,7 @@ public any aNative_TankChance(Handle plugin, int numParams)
 public any aNative_TankColors(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank))
+	if (bIsTank(iTank, "024"))
 	{
 		int iMode = GetNativeCell(2), iRed, iGreen, iBlue, iAlpha;
 		switch (iMode)
@@ -260,7 +261,7 @@ public any aNative_TankColors(Handle plugin, int numParams)
 public any aNative_TankName(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank))
+	if (bIsTank(iTank, "024"))
 	{
 		char sTankName[33];
 		sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
@@ -271,7 +272,7 @@ public any aNative_TankName(Handle plugin, int numParams)
 public any aNative_TankType(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank))
+	if (bIsTank(iTank, "024"))
 	{
 		return g_iTankType[iTank];
 	}
@@ -322,20 +323,26 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
-	g_hAbilityForward = CreateGlobalForward("ST_Ability", ET_Ignore, Param_Cell);
-	g_hChangeTypeForward = CreateGlobalForward("ST_ChangeType", ET_Ignore, Param_Cell);
-	g_hConfigsForward = CreateGlobalForward("ST_Configs", ET_Ignore, Param_String, Param_Cell);
-	g_hEventHandlerForward = CreateGlobalForward("ST_EventHandler", ET_Ignore, Param_Cell, Param_String, Param_Cell);
-	g_hPluginEndForward = CreateGlobalForward("ST_PluginEnd", ET_Ignore);
-	g_hPresetForward = CreateGlobalForward("ST_Preset", ET_Ignore, Param_Cell);
-	g_hRockBreakForward = CreateGlobalForward("ST_RockBreak", ET_Ignore, Param_Cell, Param_Cell);
-	g_hRockThrowForward = CreateGlobalForward("ST_RockThrow", ET_Ignore, Param_Cell, Param_Cell);
+	g_hAbilityActivatedForward = CreateGlobalForward("ST_OnAbilityActivated", ET_Ignore, Param_Cell);
+	g_hButtonPressedForward = CreateGlobalForward("ST_OnButtonPressed", ET_Ignore, Param_Cell, Param_Cell);
+	g_hButtonReleasedForward = CreateGlobalForward("ST_OnButtonReleased", ET_Ignore, Param_Cell, Param_Cell);
+	g_hChangeTypeForward = CreateGlobalForward("ST_OnChangeType", ET_Ignore, Param_Cell);
+	g_hConfigsLoadedForward = CreateGlobalForward("ST_OnConfigsLoaded", ET_Ignore, Param_String, Param_Cell);
+	g_hDisplayMenuForward = CreateGlobalForward("ST_OnDisplayMenu", ET_Ignore, Param_Cell);
+	g_hEventFiredForward = CreateGlobalForward("ST_OnEventFired", ET_Ignore, Param_Cell, Param_String, Param_Cell);
+	g_hHookEventForward = CreateGlobalForward("ST_OnHookEvent", ET_Ignore, Param_Cell, Param_Cell);
+	g_hMenuItemSelectedForward = CreateGlobalForward("ST_OnMenuItemSelected", ET_Ignore, Param_Cell, Param_String);
+	g_hPluginEndForward = CreateGlobalForward("ST_OnPluginEnd", ET_Ignore);
+	g_hPresetForward = CreateGlobalForward("ST_OnPreset", ET_Ignore, Param_Cell);
+	g_hRockBreakForward = CreateGlobalForward("ST_OnRockBreak", ET_Ignore, Param_Cell, Param_Cell);
+	g_hRockThrowForward = CreateGlobalForward("ST_OnRockThrow", ET_Ignore, Param_Cell, Param_Cell);
 
 	vMultiTargetFilters(1);
 
 	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
+	RegConsoleCmd("sm_st_info", cmdSTInfo, "View information about Super Tanks++.");
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
 
 	CreateConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
@@ -403,7 +410,14 @@ public void OnClientPutInServer(int client)
 	g_iPlayerCount[0] = iGetPlayerCount();
 	g_iTankType[client] = 0;
 
+	vResetProps(client);
+
 	vSpawnModes(client, false);
+}
+
+public void OnClientDisconnect_Post(int client)
+{
+	g_iLastButtons[client] = 0;
 }
 
 public void OnConfigsExecuted()
@@ -624,6 +638,7 @@ public void OnAdminMenuReady(Handle topmenu)
 	if (st_commands != INVALID_TOPMENUOBJECT)
 	{
 		g_tmSTMenu.AddItem("sm_tank", vSuperTanksMenu, st_commands, "sm_tank", ADMFLAG_ROOT);
+		g_tmSTMenu.AddItem("sm_st_info", vSTInfoMenu, st_commands, "sm_st_info", ADMFLAG_GENERIC);
 	}
 }
 
@@ -639,8 +654,365 @@ public void vSuperTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject
 {
 	switch (action)
 	{
-		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tanks++ Menu");
+		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "%T", "STMenu", param);
 		case TopMenuAction_SelectOption: vTankMenu(param, 0);
+	}
+}
+
+public void vSTInfoMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
+{
+	switch (action)
+	{
+		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "%T", "STInfoMenu");
+		case TopMenuAction_SelectOption: vInfoMenu(param, 0);
+	}
+}
+
+public Action cmdSTInfo(int client, int args)
+{
+	if (!g_bPluginEnabled)
+	{
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, "0245"))
+	{
+		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
+		case false: vInfoMenu(client, 0);
+	}
+
+	return Plugin_Handled;
+}
+
+static void vInfoMenu(int client, int item)
+{
+	Menu mInfoMenu = new Menu(iInfoMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mInfoMenu.SetTitle("Super Tanks++ Information");
+	mInfoMenu.AddItem("Status", "Status");
+	mInfoMenu.AddItem("Details", "Details");
+	mInfoMenu.AddItem("Human Support", "Human Support");
+	Call_StartForward(g_hDisplayMenuForward);
+	Call_PushCell(mInfoMenu);
+	Call_Finish();
+	mInfoMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+}
+
+public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, !g_bPluginEnabled ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "GeneralDetails");
+				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanSupport(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+			}
+
+			char sInfo[33];
+			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			Call_StartForward(g_hMenuItemSelectedForward);
+			Call_PushCell(param1);
+			Call_PushString(sInfo);
+			Call_Finish();
+
+			if (param2 < 3 && bIsValidClient(param1, "24"))
+			{
+				vInfoMenu(param1, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[255];
+			Panel panel = view_as<Panel>(param2);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "STInfoMenu", param1);
+			panel.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			char sMenuOption[255];
+			switch (param2)
+			{
+				case 0:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 1:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 2:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+public Action cmdTank(int client, int args)
+{
+	if (!g_bPluginEnabled)
+	{
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, "0245"))
+	{
+		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
+
+		return Plugin_Handled;
+	}
+
+	char sType[32], sAmount[32], sMode[32];
+
+	GetCmdArg(1, sType, sizeof(sType));
+	int iType = StringToInt(sType);
+
+	GetCmdArg(2, sAmount, sizeof(sAmount));
+	int iAmount = StringToInt(sAmount);
+
+	GetCmdArg(3, sMode, sizeof(sMode));
+	int iMode = StringToInt(sMode);
+
+	iType = iClamp(iType, iGetMinType(), iGetMaxType());
+	if (args < 1)
+	{
+		switch (IsVoteInProgress())
+		{
+			case true: ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
+			case false: vTankMenu(client, 0);
+		}
+
+		return Plugin_Handled;
+	}
+	else if (iAmount == 0)
+	{
+		iAmount = 1;
+	}
+	else if ((IsCharNumeric(iType) && (iType < iGetMinType() || iType > iGetMaxType())) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
+	{
+		ReplyToCommand(client, "%s Usage: sm_tank <type %i-%i> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>", ST_TAG2, iGetMinType(), iGetMaxType());
+
+		return Plugin_Handled;
+	}
+
+	if (IsCharNumeric(iType) && (iTankEnabled(iType) == 0 || iMenuEnabled(iType) == 0))
+	{
+		char sTankName[33];
+		sTankName = !g_bTankConfig[iType] ? g_sTankName[iType] : g_sTankName2[iType];
+		ReplyToCommand(client, "%s %s\x04 (Tank #%i)\x01 is disabled.", ST_TAG4, sTankName, iType);
+
+		return Plugin_Handled;
+	}
+
+	vTank(client, sType, false, iAmount, iMode);
+
+	return Plugin_Handled;
+}
+
+static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int mode = 0)
+{
+	int iType = StringToInt(type);
+	switch (iType)
+	{
+		case 0:
+		{
+			int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
+			for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
+			{
+				char sTankName[33];
+				sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
+				if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0 || StrContains(sTankName, type, false) == -1)
+				{
+					continue;
+				}
+
+				g_iType = iIndex;
+				iTankTypes[iTypeCount + 1] = iIndex;
+				iTypeCount++;
+			}
+
+			switch (iTypeCount)
+			{
+				case 0:
+				{
+					ST_PrintToChat(admin, "%s %t", ST_TAG3, "RequestFailed");
+
+					return;
+				}
+				default:
+				{
+					ST_PrintToChat(admin, "%s %t", ST_TAG3, "MultipleMatches");
+					g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
+				}
+			}
+		}
+		default: g_iType = iClamp(iType, iGetMinType(), iGetMaxType());
+	}
+
+	switch (bIsTank(admin))
+	{
+		case true:
+		{
+			switch (bIsTank(admin, "5"))
+			{
+				case true:
+				{
+					switch (spawn)
+					{
+						case true: vSpawnTank(admin, g_iType, amount, mode);
+						case false:
+						{
+							vNewTankSettings(admin);
+							vSetColor(admin, g_iType);
+							vTankSpawn(admin, 5);
+							vExternalView(admin, 1.5);
+
+							g_iType = 0;
+						}
+					}
+				}
+				case false: vSpawnTank(admin, g_iType, amount, mode);
+			}
+		}
+		case false:
+		{
+			int iTarget = GetClientAimTarget(admin, false);
+			switch (bIsValidEntity(iTarget))
+			{
+				case true:
+				{
+					char sClassname[32];
+					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
+					if (bIsTank(iTarget) && StrEqual(sClassname, "player"))
+					{
+						vNewTankSettings(iTarget);
+						vSetColor(iTarget, g_iType);
+						vTankSpawn(iTarget, 5);
+
+						if (bIsTank(iTarget, "5"))
+						{
+							vExternalView(iTarget, 1.5);
+						}
+
+						g_iType = 0;
+					}
+					else
+					{
+						vSpawnTank(admin, g_iType, amount, mode);
+					}
+				}
+				case false:
+				{
+					vSpawnTank(admin, g_iType, amount, mode);
+				}
+			}
+		}
+	}
+}
+
+static void vSpawnTank(int admin, int type, int amount, int mode = 0)
+{
+	char sParameter[32];
+
+	switch (mode)
+	{
+		case 0: sParameter = "tank";
+		case 1: sParameter = "tank auto";
+	}
+
+	for (int iAmount = 0; iAmount <= amount; iAmount++)
+	{
+		if (iAmount < amount)
+		{
+			vCheatCommand(admin, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
+			g_iType = type;
+		}
+		else if (iAmount == amount)
+		{
+			g_iType = 0;
+		}
+	}
+}
+
+static void vTankMenu(int admin, int item)
+{
+	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
+	mTankMenu.SetTitle("Super Tanks++ Menu");
+
+	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
+	{
+		if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0)
+		{
+			continue;
+		}
+
+		char sTankName[33], sMenuItem[MAX_NAME_LENGTH + 12];
+		sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
+		Format(sMenuItem, sizeof(sMenuItem), "%s (Tank #%i)", sTankName, iIndex);
+		mTankMenu.AddItem(sTankName, sMenuItem);
+	}
+
+	mTankMenu.DisplayAt(admin, item, MENU_TIME_FOREVER);
+}
+
+public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			char sInfo[33];
+			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
+			{
+				if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0)
+				{
+					continue;
+				}
+
+				char sTankName[33];
+				sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
+				if (StrEqual(sInfo, sTankName))
+				{
+					char sType[33];
+					IntToString(iIndex, sType, sizeof(sType));
+					vTank(param1, sType, false);
+				}
+			}
+
+			if (bIsValidClient(param1, "24"))
+			{
+				vTankMenu(param1, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[255];
+			Panel panel = view_as<Panel>(param2);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "STMenu", param1);
+			panel.SetTitle(sMenuTitle);
+		}
 	}
 }
 
@@ -672,6 +1044,41 @@ public void OnEntityDestroyed(int entity)
 			Call_Finish();
 		}
 	}
+}
+
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+	if (!g_bPluginEnabled && !bIsValidClient(client, "02345"))
+	{
+		return Plugin_Continue;
+	}
+
+	for (int iBit = 0; iBit < 25; iBit++)
+	{
+		int iButton = (1 << iBit);
+
+		if ((buttons & iButton))
+		{
+			if (!(g_iLastButtons[client] & iButton))
+			{
+				Call_StartForward(g_hButtonPressedForward);
+				Call_PushCell(client);
+				Call_PushCell(iButton);
+				Call_Finish();
+			}
+		}
+		else if ((g_iLastButtons[client] & iButton))
+		{
+			Call_StartForward(g_hButtonReleasedForward);
+			Call_PushCell(client);
+			Call_PushCell(iButton);
+			Call_Finish();
+		}
+	}
+
+	g_iLastButtons[client] = buttons;
+
+	return Plugin_Continue;
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -708,7 +1115,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 				if ((damagetype & DMG_BULLET && iBulletImmunity == 1) ||
 					((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && iExplosiveImmunity == 1) ||
-					((damagetype & DMG_BURN || damagetype & (DMG_BURN|DMG_PREVENT_PHYSICS_FORCE) || damagetype & (DMG_BURN|DMG_DIRECT)) && iFireImmunity(victim) == 1) ||
+					(damagetype & DMG_BURN && iFireImmunity(victim) == 1) ||
 					((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && iMeleeImmunity == 1))
 				{
 					return Plugin_Handled;
@@ -733,12 +1140,23 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
 				}
 
-				if ((iOwner > 0 && iOwner == victim) || (iThrower > 0 && iThrower == victim) || bIsTank(iOwner, "0234") || StrEqual(sClassname, "tank_rock"))
+				if ((iOwner > 0 && iOwner == victim) || (iThrower > 0 && iThrower == victim) || bIsTank(iOwner) || StrEqual(sClassname, "tank_rock"))
 				{
 					return Plugin_Handled;
 				}
 			}
 		}
+	}
+
+	return Plugin_Continue;
+}
+
+public Action SetTransmit(int entity, int client)
+{
+	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+	if (ST_PluginEnabled() && iOwner == client && !bIsTankThirdPerson(client))
+	{
+		return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
@@ -750,7 +1168,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 	{
 		if (StrEqual(name, "ability_use"))
 		{
-			int iUserId = event.GetInt("userid"), iTank = GetClientOfUserId(iUserId);
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 			if (bIsTankAllowed(iTank))
 			{
 				vThrowInterval(iTank, flThrowInterval(iTank));
@@ -770,7 +1188,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "player_death"))
 		{
-			int iUserId = event.GetInt("userid"), iTank = GetClientOfUserId(iUserId);
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 			if (bIsTankAllowed(iTank, "024"))
 			{
 				char sTankName[33];
@@ -795,22 +1213,23 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 
 				vRemoveProps(iTank);
+				vResetSpeed(iTank, true);
 
 				CreateTimer(3.0, tTimerTankWave, g_iTankWave, TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
 		else if (StrEqual(name, "player_incapacitated"))
 		{
-			int iUserId = event.GetInt("userid"), iTank = GetClientOfUserId(iUserId);
-			if (bIsTankAllowed(iTank))
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+			if (bIsTank(iTank, "024"))
 			{
-				CreateTimer(0.5, tTimerKillStuckTank, iUserId, TIMER_FLAG_NO_MAPCHANGE);
+				CreateTimer(0.5, tTimerKillStuckTank, iTankId, TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
 		else if (StrEqual(name, "player_spawn"))
 		{
-			int iUserId = event.GetInt("userid"), iTank = GetClientOfUserId(iUserId);
-			if (bIsTankAllowed(iTank))
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+			if (bIsTank(iTank))
 			{
 				g_iTankType[iTank] = 0;
 
@@ -876,217 +1295,11 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			g_iTankWave = 0;
 		}
 
-		Call_StartForward(g_hEventHandlerForward);
+		Call_StartForward(g_hEventFiredForward);
 		Call_PushCell(event);
 		Call_PushString(name);
 		Call_PushCell(dontBroadcast);
 		Call_Finish();
-	}
-}
-
-public Action cmdTank(int client, int args)
-{
-	if (!g_bPluginEnabled)
-	{
-		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
-
-		return Plugin_Handled;
-	}
-
-	if (!bIsValidClient(client, "0245"))
-	{
-		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
-
-		return Plugin_Handled;
-	}
-
-	char sType[32], sAmount[32], sMode[32];
-
-	GetCmdArg(1, sType, sizeof(sType));
-	int iType = StringToInt(sType);
-
-	GetCmdArg(2, sAmount, sizeof(sAmount));
-	int iAmount = StringToInt(sAmount);
-
-	GetCmdArg(3, sMode, sizeof(sMode));
-	int iMode = StringToInt(sMode);
-
-	iType = iClamp(iType, iGetMinType(), iGetMaxType());
-	if (args < 1)
-	{
-		if (IsVoteInProgress())
-		{
-			ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
-		}
-		else
-		{
-			vTankMenu(client, 0);
-		}
-
-		return Plugin_Handled;
-	}
-	else if (iAmount == 0)
-	{
-		iAmount = 1;
-	}
-	else if ((IsCharNumeric(iType) && (iType < iGetMinType() || iType > iGetMaxType())) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
-	{
-		ReplyToCommand(client, "%s Usage: sm_tank <type %i-%i> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>", ST_TAG2, iGetMinType(), iGetMaxType());
-
-		return Plugin_Handled;
-	}
-
-	if (IsCharNumeric(iType) && (iTankEnabled(iType) == 0 || iMenuEnabled(iType) == 0))
-	{
-		char sTankName[33];
-		sTankName = !g_bTankConfig[iType] ? g_sTankName[iType] : g_sTankName2[iType];
-
-		ReplyToCommand(client, "%s %s\x04 (Tank #%i)\x01 is disabled.", ST_TAG4, sTankName, iType);
-
-		return Plugin_Handled;
-	}
-
-	vTank(client, sType, iAmount, iMode);
-
-	return Plugin_Handled;
-}
-
-static void vTank(int admin, char[] type, int amount = 1, int mode = 0)
-{
-	int iType = StringToInt(type);
-	if (iType != 0)
-	{
-		g_iType = iClamp(iType, iGetMinType(), iGetMaxType());
-	}
-	else
-	{
-		int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
-		for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
-		{
-			char sTankName[33];
-			sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
-			if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0 || StrContains(sTankName, type, false) == -1)
-			{
-				continue;
-			}
-
-			g_iType = iIndex;
-			iTankTypes[iTypeCount + 1] = iIndex;
-			iTypeCount++;
-		}
-
-		if (iTypeCount == 0)
-		{
-			ST_PrintToChat(admin, "%s %t", ST_TAG3, "RequestFailed");
-			return;
-		}
-		else if (iTypeCount > 1)
-		{
-			ST_PrintToChat(admin, "%s %t", ST_TAG3, "MultipleMatches");
-			g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
-		}
-	}
-
-	if (bIsTankAllowed(admin))
-	{
-		vSpawnTank(admin, g_iType, amount, mode);
-	}
-	else
-	{
-		int iTarget = GetClientAimTarget(admin, false);
-		if (bIsValidEntity(iTarget))
-		{
-			char sClassname[32];
-			GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
-			if (StrEqual(sClassname, "player") && bIsTankAllowed(iTarget))
-			{
-				vNewTankSettings(iTarget);
-				vSetColor(iTarget, g_iType);
-				vTankSpawn(iTarget);
-
-				g_iType = 0;
-			}
-			else
-			{
-				vSpawnTank(admin, g_iType, amount, mode);
-			}
-		}
-		else
-		{
-			vSpawnTank(admin, g_iType, amount, mode);
-		}
-	}
-}
-
-static void vSpawnTank(int admin, int type, int amount, int mode = 0)
-{
-	char sParameter[32];
-
-	switch (mode)
-	{
-		case 0: sParameter = "tank";
-		case 1: sParameter = "tank auto";
-	}
-
-	for (int iAmount = 0; iAmount < amount; iAmount++)
-	{
-		vCheatCommand(admin, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
-		g_iType = type;
-	}
-}
-
-static void vTankMenu(int admin, int item)
-{
-	Menu mTankMenu = new Menu(iTankMenuHandler);
-	mTankMenu.SetTitle("Super Tanks++ Menu");
-
-	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
-	{
-		if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0)
-		{
-			continue;
-		}
-
-		char sTankName[33], sMenuItem[MAX_NAME_LENGTH + 12];
-		sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
-		Format(sMenuItem, sizeof(sMenuItem), "%s (Tank #%i)", sTankName, iIndex);
-		mTankMenu.AddItem(sTankName, sMenuItem);
-	}
-
-	mTankMenu.DisplayAt(admin, item, MENU_TIME_FOREVER);
-}
-
-public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2)
-{
-	switch (action)
-	{
-		case MenuAction_End: delete menu;
-		case MenuAction_Select:
-		{
-			char sInfo[33];
-			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
-			{
-				if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0)
-				{
-					continue;
-				}
-
-				char sTankName[33];
-				sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
-				if (StrEqual(sInfo, sTankName))
-				{
-					char sType[33];
-					IntToString(iIndex, sType, sizeof(sType));
-					vTank(param1, sType);
-				}
-			}
-
-			if (bIsValidClient(param1, "24"))
-			{
-				vTankMenu(param1, menu.Selection);
-			}
-		}
 	}
 }
 
@@ -1095,15 +1308,18 @@ static void vPluginStatus()
 	bool bIsPluginAllowed = bIsPluginEnabled(g_cvSTGameMode, g_iGameModeTypes, g_sEnabledGameModes, g_sDisabledGameModes);
 	if (iPluginEnabled() == 1)
 	{
-		if (bIsPluginAllowed)
+		switch (bIsPluginAllowed)
 		{
-			vHookEvents(true);
-			g_bPluginEnabled = true;
-		}
-		else
-		{
-			vHookEvents(false);
-			g_bPluginEnabled = false;
+			case true:
+			{
+				vHookEvents(true);
+				g_bPluginEnabled = true;
+			}
+			case false:
+			{
+				vHookEvents(false);
+				g_bPluginEnabled = false;
+			}
 		}
 	}
 }
@@ -1118,12 +1334,10 @@ static void vHookEvents(bool hook)
 		HookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		HookEvent("finale_vehicle_leaving", vEventHandler);
 		HookEvent("finale_vehicle_ready", vEventHandler);
-		HookEvent("player_afk", vEventHandler, EventHookMode_Pre);
-		HookEvent("player_bot_replace", vEventHandler);
 		HookEvent("player_death", vEventHandler);
 		HookEvent("player_incapacitated", vEventHandler);
 		HookEvent("player_spawn", vEventHandler);
-		HookEvent("weapon_fire", vEventHandler);
+		vHookEventForward(true);
 		bHooked = true;
 	}
 	else if (!hook && bHooked)
@@ -1133,14 +1347,19 @@ static void vHookEvents(bool hook)
 		UnhookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("finale_vehicle_leaving", vEventHandler);
 		UnhookEvent("finale_vehicle_ready", vEventHandler);
-		UnhookEvent("player_afk", vEventHandler, EventHookMode_Pre);
-		UnhookEvent("player_bot_replace", vEventHandler);
 		UnhookEvent("player_death", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
 		UnhookEvent("player_spawn", vEventHandler);
-		UnhookEvent("weapon_fire", vEventHandler);
+		vHookEventForward(false);
 		bHooked = false;
 	}
+}
+
+static void vHookEventForward(bool mode)
+{
+	Call_StartForward(g_hHookEventForward);
+	Call_PushCell(mode);
+	Call_Finish();
 }
 
 static void vLoadConfigs(const char[] savepath, bool main = false)
@@ -1150,65 +1369,68 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 
 	if (kvSuperTanks.JumpToKey("Plugin Settings"))
 	{
-		if (main)
+		switch (main)
 		{
-			g_bGeneralConfig = false;
+			case true:
+			{
+				g_bGeneralConfig = false;
 
-			g_iPluginEnabled = kvSuperTanks.GetNum("General/Plugin Enabled", 1);
-			g_iPluginEnabled = iClamp(g_iPluginEnabled, 0, 1);
-			kvSuperTanks.GetString("General/Announce Arrival", g_sAnnounceArrival, sizeof(g_sAnnounceArrival), "12345");
-			g_iAnnounceDeath = kvSuperTanks.GetNum("General/Announce Death", 1);
-			g_iAnnounceDeath = iClamp(g_iAnnounceDeath, 0, 1);
-			g_iDisplayHealth = kvSuperTanks.GetNum("General/Display Health", 3);
-			g_iDisplayHealth = iClamp(g_iDisplayHealth, 0, 3);
-			g_iFinalesOnly = kvSuperTanks.GetNum("General/Finales Only", 0);
-			g_iFinalesOnly = iClamp(g_iFinalesOnly, 0, 1);
-			g_iMultiHealth = kvSuperTanks.GetNum("General/Multiply Health", 0);
-			g_iMultiHealth = iClamp(g_iMultiHealth, 0, 3);
-			kvSuperTanks.GetString("General/Type Range", g_sTypeRange, sizeof(g_sTypeRange), "1-500");
+				g_iPluginEnabled = kvSuperTanks.GetNum("General/Plugin Enabled", 1);
+				g_iPluginEnabled = iClamp(g_iPluginEnabled, 0, 1);
+				kvSuperTanks.GetString("General/Announce Arrival", g_sAnnounceArrival, sizeof(g_sAnnounceArrival), "12345");
+				g_iAnnounceDeath = kvSuperTanks.GetNum("General/Announce Death", 1);
+				g_iAnnounceDeath = iClamp(g_iAnnounceDeath, 0, 1);
+				g_iDisplayHealth = kvSuperTanks.GetNum("General/Display Health", 3);
+				g_iDisplayHealth = iClamp(g_iDisplayHealth, 0, 3);
+				g_iFinalesOnly = kvSuperTanks.GetNum("General/Finales Only", 0);
+				g_iFinalesOnly = iClamp(g_iFinalesOnly, 0, 1);
+				g_iMultiHealth = kvSuperTanks.GetNum("General/Multiply Health", 0);
+				g_iMultiHealth = iClamp(g_iMultiHealth, 0, 3);
+				kvSuperTanks.GetString("General/Type Range", g_sTypeRange, sizeof(g_sTypeRange), "1-500");
 
-			g_iRegularAmount = kvSuperTanks.GetNum("Waves/Regular Amount", 2);
-			g_iRegularAmount = iClamp(g_iRegularAmount, 1, 9999999999);
-			g_flRegularInterval = kvSuperTanks.GetFloat("Waves/Regular Interval", 300.0);
-			g_flRegularInterval = flClamp(g_flRegularInterval, 0.1, 9999999999.0);
-			g_iRegularWave = kvSuperTanks.GetNum("Waves/Regular Wave", 0);
-			g_iRegularWave = iClamp(g_iRegularWave, 0, 1);
-			kvSuperTanks.GetString("Waves/Finale Waves", g_sFinaleWaves, sizeof(g_sFinaleWaves), "2,3,4");
+				g_iRegularAmount = kvSuperTanks.GetNum("Waves/Regular Amount", 2);
+				g_iRegularAmount = iClamp(g_iRegularAmount, 1, 9999999999);
+				g_flRegularInterval = kvSuperTanks.GetFloat("Waves/Regular Interval", 300.0);
+				g_flRegularInterval = flClamp(g_flRegularInterval, 0.1, 9999999999.0);
+				g_iRegularWave = kvSuperTanks.GetNum("Waves/Regular Wave", 0);
+				g_iRegularWave = iClamp(g_iRegularWave, 0, 1);
+				kvSuperTanks.GetString("Waves/Finale Waves", g_sFinaleWaves, sizeof(g_sFinaleWaves), "2,3,4");
 
-			g_iGameModeTypes = kvSuperTanks.GetNum("Game Modes/Game Mode Types", 5);
-			g_iGameModeTypes = iClamp(g_iGameModeTypes, 0, 15);
-			kvSuperTanks.GetString("Game Modes/Enabled Game Modes", g_sEnabledGameModes, sizeof(g_sEnabledGameModes), "coop,survival");
-			kvSuperTanks.GetString("Game Modes/Disabled Game Modes", g_sDisabledGameModes, sizeof(g_sDisabledGameModes), "versus,scavenge");
+				g_iGameModeTypes = kvSuperTanks.GetNum("Game Modes/Game Mode Types", 0);
+				g_iGameModeTypes = iClamp(g_iGameModeTypes, 0, 15);
+				kvSuperTanks.GetString("Game Modes/Enabled Game Modes", g_sEnabledGameModes, sizeof(g_sEnabledGameModes), "");
+				kvSuperTanks.GetString("Game Modes/Disabled Game Modes", g_sDisabledGameModes, sizeof(g_sDisabledGameModes), "");
 
-			g_iConfigEnable = kvSuperTanks.GetNum("Custom/Enable Custom Configs", 0);
-			g_iConfigEnable = iClamp(g_iConfigEnable, 0, 1);
-			kvSuperTanks.GetString("Custom/Create Config Types", g_sConfigCreate, sizeof(g_sConfigCreate), "12345");
-			kvSuperTanks.GetString("Custom/Execute Config Types", g_sConfigExecute, sizeof(g_sConfigExecute), "1");
-		}
-		else
-		{
-			g_bGeneralConfig = true;
+				g_iConfigEnable = kvSuperTanks.GetNum("Custom/Enable Custom Configs", 0);
+				g_iConfigEnable = iClamp(g_iConfigEnable, 0, 1);
+				kvSuperTanks.GetString("Custom/Create Config Types", g_sConfigCreate, sizeof(g_sConfigCreate), "12345");
+				kvSuperTanks.GetString("Custom/Execute Config Types", g_sConfigExecute, sizeof(g_sConfigExecute), "1");
+			}
+			case false:
+			{
+				g_bGeneralConfig = true;
 
-			g_iPluginEnabled2 = kvSuperTanks.GetNum("General/Plugin Enabled", g_iPluginEnabled);
-			g_iPluginEnabled2 = iClamp(g_iPluginEnabled2, 0, 1);
-			kvSuperTanks.GetString("General/Announce Arrival", g_sAnnounceArrival2, sizeof(g_sAnnounceArrival2), g_sAnnounceArrival);
-			g_iAnnounceDeath2 = kvSuperTanks.GetNum("General/Announce Death", g_iAnnounceDeath);
-			g_iAnnounceDeath2 = iClamp(g_iAnnounceDeath2, 0, 1);
-			g_iDisplayHealth2 = kvSuperTanks.GetNum("General/Display Health", g_iDisplayHealth);
-			g_iDisplayHealth2 = iClamp(g_iDisplayHealth2, 0, 3);
-			g_iFinalesOnly2 = kvSuperTanks.GetNum("General/Finales Only", g_iFinalesOnly);
-			g_iFinalesOnly2 = iClamp(g_iFinalesOnly2, 0, 1);
-			g_iMultiHealth2 = kvSuperTanks.GetNum("General/Multiply Health", g_iMultiHealth);
-			g_iMultiHealth2 = iClamp(g_iMultiHealth2, 0, 3);
-			kvSuperTanks.GetString("General/Type Range", g_sTypeRange2, sizeof(g_sTypeRange2), g_sTypeRange);
+				g_iPluginEnabled2 = kvSuperTanks.GetNum("General/Plugin Enabled", g_iPluginEnabled);
+				g_iPluginEnabled2 = iClamp(g_iPluginEnabled2, 0, 1);
+				kvSuperTanks.GetString("General/Announce Arrival", g_sAnnounceArrival2, sizeof(g_sAnnounceArrival2), g_sAnnounceArrival);
+				g_iAnnounceDeath2 = kvSuperTanks.GetNum("General/Announce Death", g_iAnnounceDeath);
+				g_iAnnounceDeath2 = iClamp(g_iAnnounceDeath2, 0, 1);
+				g_iDisplayHealth2 = kvSuperTanks.GetNum("General/Display Health", g_iDisplayHealth);
+				g_iDisplayHealth2 = iClamp(g_iDisplayHealth2, 0, 3);
+				g_iFinalesOnly2 = kvSuperTanks.GetNum("General/Finales Only", g_iFinalesOnly);
+				g_iFinalesOnly2 = iClamp(g_iFinalesOnly2, 0, 1);
+				g_iMultiHealth2 = kvSuperTanks.GetNum("General/Multiply Health", g_iMultiHealth);
+				g_iMultiHealth2 = iClamp(g_iMultiHealth2, 0, 3);
+				kvSuperTanks.GetString("General/Type Range", g_sTypeRange2, sizeof(g_sTypeRange2), g_sTypeRange);
 
-			g_iRegularAmount2 = kvSuperTanks.GetNum("Waves/Regular Amount", g_iRegularAmount);
-			g_iRegularAmount2 = iClamp(g_iRegularAmount2, 1, 9999999999);
-			g_flRegularInterval2 = kvSuperTanks.GetFloat("Waves/Regular Interval", g_flRegularInterval);
-			g_flRegularInterval2 = flClamp(g_flRegularInterval2, 0.1, 9999999999.0);
-			g_iRegularWave2 = kvSuperTanks.GetNum("Waves/Regular Wave", g_iRegularWave);
-			g_iRegularWave2 = iClamp(g_iRegularWave2, 0, 1);
-			kvSuperTanks.GetString("Waves/Finale Waves", g_sFinaleWaves2, sizeof(g_sFinaleWaves2), g_sFinaleWaves);
+				g_iRegularAmount2 = kvSuperTanks.GetNum("Waves/Regular Amount", g_iRegularAmount);
+				g_iRegularAmount2 = iClamp(g_iRegularAmount2, 1, 9999999999);
+				g_flRegularInterval2 = kvSuperTanks.GetFloat("Waves/Regular Interval", g_flRegularInterval);
+				g_flRegularInterval2 = flClamp(g_flRegularInterval2, 0.1, 9999999999.0);
+				g_iRegularWave2 = kvSuperTanks.GetNum("Waves/Regular Wave", g_iRegularWave);
+				g_iRegularWave2 = iClamp(g_iRegularWave2, 0, 1);
+				kvSuperTanks.GetString("Waves/Finale Waves", g_sFinaleWaves2, sizeof(g_sFinaleWaves2), g_sFinaleWaves);
+			}
 		}
 
 		kvSuperTanks.Rewind();
@@ -1220,161 +1442,168 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
-			if (main)
+			switch (main)
 			{
-				g_bTankConfig[iIndex] = false;
+				case true:
+				{
+					g_bTankConfig[iIndex] = false;
 
-				kvSuperTanks.GetString("General/Tank Name", g_sTankName[iIndex], sizeof(g_sTankName[]), sTankName);
-				g_iTankEnabled[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", 0);
-				g_iTankEnabled[iIndex] = iClamp(g_iTankEnabled[iIndex], 0, 1);
-				g_flTankChance[iIndex] = kvSuperTanks.GetFloat("General/Tank Chance", 100.0);
-				g_flTankChance[iIndex] = flClamp(g_flTankChance[iIndex], 0.0, 100.0);
-				g_iTankNote[iIndex] = kvSuperTanks.GetNum("General/Tank Note", 0);
-				g_iTankNote[iIndex] = iClamp(g_iTankNote[iIndex], 0, 1);
-				g_iSpawnEnabled[iIndex] = kvSuperTanks.GetNum("General/Spawn Enabled", 1);
-				g_iSpawnEnabled[iIndex] = iClamp(g_iSpawnEnabled[iIndex], 0, 1);
-				g_iMenuEnabled[iIndex] = kvSuperTanks.GetNum("General/Menu Enabled", 1);
-				g_iMenuEnabled[iIndex] = iClamp(g_iMenuEnabled[iIndex], 0, 1);
-				kvSuperTanks.GetColor("General/Skin Color", g_iSkinRed[iIndex], g_iSkinGreen[iIndex], g_iSkinBlue[iIndex], g_iSkinAlpha[iIndex]);
-				g_iGlowEnabled[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", 1);
-				g_iGlowEnabled[iIndex] = iClamp(g_iGlowEnabled[iIndex], 0, 1);
-				int iAlpha;
-				kvSuperTanks.GetColor("General/Glow Color", g_iGlowRed[iIndex], g_iGlowGreen[iIndex], g_iGlowBlue[iIndex], iAlpha);
+					kvSuperTanks.GetString("General/Tank Name", g_sTankName[iIndex], sizeof(g_sTankName[]), sTankName);
+					g_iTankEnabled[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", 0);
+					g_iTankEnabled[iIndex] = iClamp(g_iTankEnabled[iIndex], 0, 1);
+					g_flTankChance[iIndex] = kvSuperTanks.GetFloat("General/Tank Chance", 100.0);
+					g_flTankChance[iIndex] = flClamp(g_flTankChance[iIndex], 0.0, 100.0);
+					g_iTankNote[iIndex] = kvSuperTanks.GetNum("General/Tank Note", 0);
+					g_iTankNote[iIndex] = iClamp(g_iTankNote[iIndex], 0, 1);
+					g_iSpawnEnabled[iIndex] = kvSuperTanks.GetNum("General/Spawn Enabled", 1);
+					g_iSpawnEnabled[iIndex] = iClamp(g_iSpawnEnabled[iIndex], 0, 1);
+					g_iMenuEnabled[iIndex] = kvSuperTanks.GetNum("General/Menu Enabled", 1);
+					g_iMenuEnabled[iIndex] = iClamp(g_iMenuEnabled[iIndex], 0, 1);
+					g_iHumanSupport[iIndex] = kvSuperTanks.GetNum("General/Human Support", 0);
+					g_iHumanSupport[iIndex] = iClamp(g_iHumanSupport[iIndex], 0, 1);
+					kvSuperTanks.GetColor("General/Skin Color", g_iSkinRed[iIndex], g_iSkinGreen[iIndex], g_iSkinBlue[iIndex], g_iSkinAlpha[iIndex]);
+					g_iGlowEnabled[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", 1);
+					g_iGlowEnabled[iIndex] = iClamp(g_iGlowEnabled[iIndex], 0, 1);
+					int iAlpha;
+					kvSuperTanks.GetColor("General/Glow Color", g_iGlowRed[iIndex], g_iGlowGreen[iIndex], g_iGlowBlue[iIndex], iAlpha);
 
-				g_iTypeLimit[iIndex] = kvSuperTanks.GetNum("Spawn/Type Limit", 32);
-				g_iTypeLimit[iIndex] = iClamp(g_iTypeLimit[iIndex], 0, 9999999999);
-				g_iFinaleTank[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", 0);
-				g_iFinaleTank[iIndex] = iClamp(g_iFinaleTank[iIndex], 0, 1);
-				kvSuperTanks.GetString("Spawn/Boss Health Stages", g_sBossHealthStages[iIndex], sizeof(g_sBossHealthStages[]), "5000,2500,1500,1000");
-				g_iBossStages[iIndex] = kvSuperTanks.GetNum("Spawn/Boss Stages", 3);
-				g_iBossStages[iIndex] = iClamp(g_iBossStages[iIndex], 1, 4);
-				kvSuperTanks.GetString("Spawn/Boss Types", g_sBossTypes[iIndex], sizeof(g_sBossTypes[]), "2,3,4,5");
-				g_iRandomTank[iIndex] = kvSuperTanks.GetNum("Spawn/Random Tank", 1);
-				g_iRandomTank[iIndex] = iClamp(g_iRandomTank[iIndex], 0, 1);
-				g_flRandomInterval[iIndex] = kvSuperTanks.GetFloat("Spawn/Random Interval", 5.0);
-				g_flRandomInterval[iIndex] = flClamp(g_flRandomInterval[iIndex], 0.1, 9999999999.0);
-				g_flTransformDelay[iIndex] = kvSuperTanks.GetFloat("Spawn/Transform Delay", 10.0);
-				g_flTransformDelay[iIndex] = flClamp(g_flTransformDelay[iIndex], 0.1, 9999999999.0);
-				g_flTransformDuration[iIndex] = kvSuperTanks.GetFloat("Spawn/Transform Duration", 10.0);
-				g_flTransformDuration[iIndex] = flClamp(g_flTransformDuration[iIndex], 0.1, 9999999999.0);
-				kvSuperTanks.GetString("Spawn/Transform Types", g_sTransformTypes[iIndex], sizeof(g_sTransformTypes[]), "1,2,3,4,5,6,7,8,9,10");
-				g_iSpawnMode[iIndex] = kvSuperTanks.GetNum("Spawn/Spawn Mode", 0);
-				g_iSpawnMode[iIndex] = iClamp(g_iSpawnMode[iIndex], 0, 3);
+					g_iTypeLimit[iIndex] = kvSuperTanks.GetNum("Spawn/Type Limit", 32);
+					g_iTypeLimit[iIndex] = iClamp(g_iTypeLimit[iIndex], 0, 9999999999);
+					g_iFinaleTank[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", 0);
+					g_iFinaleTank[iIndex] = iClamp(g_iFinaleTank[iIndex], 0, 1);
+					kvSuperTanks.GetString("Spawn/Boss Health Stages", g_sBossHealthStages[iIndex], sizeof(g_sBossHealthStages[]), "5000,2500,1500,1000");
+					g_iBossStages[iIndex] = kvSuperTanks.GetNum("Spawn/Boss Stages", 3);
+					g_iBossStages[iIndex] = iClamp(g_iBossStages[iIndex], 1, 4);
+					kvSuperTanks.GetString("Spawn/Boss Types", g_sBossTypes[iIndex], sizeof(g_sBossTypes[]), "2,3,4,5");
+					g_iRandomTank[iIndex] = kvSuperTanks.GetNum("Spawn/Random Tank", 1);
+					g_iRandomTank[iIndex] = iClamp(g_iRandomTank[iIndex], 0, 1);
+					g_flRandomInterval[iIndex] = kvSuperTanks.GetFloat("Spawn/Random Interval", 5.0);
+					g_flRandomInterval[iIndex] = flClamp(g_flRandomInterval[iIndex], 0.1, 9999999999.0);
+					g_flTransformDelay[iIndex] = kvSuperTanks.GetFloat("Spawn/Transform Delay", 10.0);
+					g_flTransformDelay[iIndex] = flClamp(g_flTransformDelay[iIndex], 0.1, 9999999999.0);
+					g_flTransformDuration[iIndex] = kvSuperTanks.GetFloat("Spawn/Transform Duration", 10.0);
+					g_flTransformDuration[iIndex] = flClamp(g_flTransformDuration[iIndex], 0.1, 9999999999.0);
+					kvSuperTanks.GetString("Spawn/Transform Types", g_sTransformTypes[iIndex], sizeof(g_sTransformTypes[]), "1,2,3,4,5,6,7,8,9,10");
+					g_iSpawnMode[iIndex] = kvSuperTanks.GetNum("Spawn/Spawn Mode", 0);
+					g_iSpawnMode[iIndex] = iClamp(g_iSpawnMode[iIndex], 0, 3);
 
-				kvSuperTanks.GetString("Props/Props Attached", g_sPropsAttached[iIndex], sizeof(g_sPropsAttached[]), "23456");
-				kvSuperTanks.GetString("Props/Props Chance", g_sPropsChance[iIndex], sizeof(g_sPropsChance[]), "33.3,33.3,33.3,33.3,33.3,33.3");
-				kvSuperTanks.GetColor("Props/Light Color", g_iLightRed[iIndex], g_iLightGreen[iIndex], g_iLightBlue[iIndex], g_iLightAlpha[iIndex]);
-				kvSuperTanks.GetColor("Props/Oxygen Tank Color", g_iJetpackRed[iIndex], g_iJetpackGreen[iIndex], g_iJetpackBlue[iIndex], g_iJetpackAlpha[iIndex]);
-				kvSuperTanks.GetColor("Props/Flame Color", g_iFlameRed[iIndex], g_iFlameGreen[iIndex], g_iFlameBlue[iIndex], g_iFlameAlpha[iIndex]);
-				kvSuperTanks.GetColor("Props/Rock Color", g_iRockRed[iIndex], g_iRockGreen[iIndex], g_iRockBlue[iIndex], g_iRockAlpha[iIndex]);
-				kvSuperTanks.GetColor("Props/Tire Color", g_iTireRed[iIndex], g_iTireGreen[iIndex], g_iTireBlue[iIndex], g_iTireAlpha[iIndex]);
+					kvSuperTanks.GetString("Props/Props Attached", g_sPropsAttached[iIndex], sizeof(g_sPropsAttached[]), "23456");
+					kvSuperTanks.GetString("Props/Props Chance", g_sPropsChance[iIndex], sizeof(g_sPropsChance[]), "33.3,33.3,33.3,33.3,33.3,33.3");
+					kvSuperTanks.GetColor("Props/Light Color", g_iLightRed[iIndex], g_iLightGreen[iIndex], g_iLightBlue[iIndex], g_iLightAlpha[iIndex]);
+					kvSuperTanks.GetColor("Props/Oxygen Tank Color", g_iJetpackRed[iIndex], g_iJetpackGreen[iIndex], g_iJetpackBlue[iIndex], g_iJetpackAlpha[iIndex]);
+					kvSuperTanks.GetColor("Props/Flame Color", g_iFlameRed[iIndex], g_iFlameGreen[iIndex], g_iFlameBlue[iIndex], g_iFlameAlpha[iIndex]);
+					kvSuperTanks.GetColor("Props/Rock Color", g_iRockRed[iIndex], g_iRockGreen[iIndex], g_iRockBlue[iIndex], g_iRockAlpha[iIndex]);
+					kvSuperTanks.GetColor("Props/Tire Color", g_iTireRed[iIndex], g_iTireGreen[iIndex], g_iTireBlue[iIndex], g_iTireAlpha[iIndex]);
 
-				g_iParticleEffect[iIndex] = kvSuperTanks.GetNum("Particles/Body Particle", 0);
-				g_iParticleEffect[iIndex] = iClamp(g_iParticleEffect[iIndex], 0, 1);
-				kvSuperTanks.GetString("Particles/Body Effects", g_sParticleEffects[iIndex], sizeof(g_sParticleEffects[]), "1234567");
-				g_iRockEffect[iIndex] = kvSuperTanks.GetNum("Particles/Rock Particle", 0);
-				g_iRockEffect[iIndex] = iClamp(g_iRockEffect[iIndex], 0, 1);
-				kvSuperTanks.GetString("Particles/Rock Effects", g_sRockEffects[iIndex], sizeof(g_sRockEffects[]), "1234");
+					g_iParticleEffect[iIndex] = kvSuperTanks.GetNum("Particles/Body Particle", 0);
+					g_iParticleEffect[iIndex] = iClamp(g_iParticleEffect[iIndex], 0, 1);
+					kvSuperTanks.GetString("Particles/Body Effects", g_sParticleEffects[iIndex], sizeof(g_sParticleEffects[]), "1234567");
+					g_iRockEffect[iIndex] = kvSuperTanks.GetNum("Particles/Rock Particle", 0);
+					g_iRockEffect[iIndex] = iClamp(g_iRockEffect[iIndex], 0, 1);
+					kvSuperTanks.GetString("Particles/Rock Effects", g_sRockEffects[iIndex], sizeof(g_sRockEffects[]), "1234");
 
-				g_flClawDamage[iIndex] = kvSuperTanks.GetFloat("Enhancements/Claw Damage", -1.0);
-				g_flClawDamage[iIndex] = flClamp(g_flClawDamage[iIndex], -1.0, 9999999999.0);
-				g_iBaseHealth[iIndex] = kvSuperTanks.GetNum("Enhancements/Base Health", 0);
-				g_iBaseHealth[iIndex] = iClamp(g_iBaseHealth[iIndex], 0, ST_MAXHEALTH);
-				g_iExtraHealth[iIndex] = kvSuperTanks.GetNum("Enhancements/Extra Health", 0);
-				g_iExtraHealth[iIndex] = iClamp(g_iExtraHealth[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				g_flRockDamage[iIndex] = kvSuperTanks.GetFloat("Enhancements/Rock Damage", -1.0);
-				g_flRockDamage[iIndex] = flClamp(g_flRockDamage[iIndex], -1.0, 9999999999.0);
-				g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", -1.0);
-				g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], -1.0, 3.0);
-				g_flThrowInterval[iIndex] = kvSuperTanks.GetFloat("Enhancements/Throw Interval", -1.0);
-				g_flThrowInterval[iIndex] = flClamp(g_flThrowInterval[iIndex], -1.0, 9999999999.0);
+					g_flClawDamage[iIndex] = kvSuperTanks.GetFloat("Enhancements/Claw Damage", -1.0);
+					g_flClawDamage[iIndex] = flClamp(g_flClawDamage[iIndex], -1.0, 9999999999.0);
+					g_iBaseHealth[iIndex] = kvSuperTanks.GetNum("Enhancements/Base Health", 0);
+					g_iBaseHealth[iIndex] = iClamp(g_iBaseHealth[iIndex], 0, ST_MAXHEALTH);
+					g_iExtraHealth[iIndex] = kvSuperTanks.GetNum("Enhancements/Extra Health", 0);
+					g_iExtraHealth[iIndex] = iClamp(g_iExtraHealth[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+					g_flRockDamage[iIndex] = kvSuperTanks.GetFloat("Enhancements/Rock Damage", -1.0);
+					g_flRockDamage[iIndex] = flClamp(g_flRockDamage[iIndex], -1.0, 9999999999.0);
+					g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", -1.0);
+					g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], -1.0, 3.0);
+					g_flThrowInterval[iIndex] = kvSuperTanks.GetFloat("Enhancements/Throw Interval", -1.0);
+					g_flThrowInterval[iIndex] = flClamp(g_flThrowInterval[iIndex], -1.0, 9999999999.0);
 
-				g_iBulletImmunity[iIndex] = kvSuperTanks.GetNum("Immunities/Bullet Immunity", 0);
-				g_iBulletImmunity[iIndex] = iClamp(g_iBulletImmunity[iIndex], 0, 1);
-				g_iExplosiveImmunity[iIndex] = kvSuperTanks.GetNum("Immunities/Explosive Immunity", 0);
-				g_iExplosiveImmunity[iIndex] = iClamp(g_iExplosiveImmunity[iIndex], 0, 1);
-				g_iFireImmunity[iIndex] = kvSuperTanks.GetNum("Immunities/Fire Immunity", 0);
-				g_iFireImmunity[iIndex] = iClamp(g_iFireImmunity[iIndex], 0, 1);
-				g_iMeleeImmunity[iIndex] = kvSuperTanks.GetNum("Immunities/Melee Immunity", 0);
-				g_iMeleeImmunity[iIndex] = iClamp(g_iMeleeImmunity[iIndex], 0, 1);
-			}
-			else
-			{
-				g_bTankConfig[iIndex] = true;
+					g_iBulletImmunity[iIndex] = kvSuperTanks.GetNum("Immunities/Bullet Immunity", 0);
+					g_iBulletImmunity[iIndex] = iClamp(g_iBulletImmunity[iIndex], 0, 1);
+					g_iExplosiveImmunity[iIndex] = kvSuperTanks.GetNum("Immunities/Explosive Immunity", 0);
+					g_iExplosiveImmunity[iIndex] = iClamp(g_iExplosiveImmunity[iIndex], 0, 1);
+					g_iFireImmunity[iIndex] = kvSuperTanks.GetNum("Immunities/Fire Immunity", 0);
+					g_iFireImmunity[iIndex] = iClamp(g_iFireImmunity[iIndex], 0, 1);
+					g_iMeleeImmunity[iIndex] = kvSuperTanks.GetNum("Immunities/Melee Immunity", 0);
+					g_iMeleeImmunity[iIndex] = iClamp(g_iMeleeImmunity[iIndex], 0, 1);
+				}
+				case false:
+				{
+					g_bTankConfig[iIndex] = true;
 
-				kvSuperTanks.GetString("General/Tank Name", g_sTankName2[iIndex], sizeof(g_sTankName2[]), g_sTankName[iIndex]);
-				g_iTankEnabled2[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", g_iTankEnabled[iIndex]);
-				g_iTankEnabled2[iIndex] = iClamp(g_iTankEnabled2[iIndex], 0, 1);
-				g_flTankChance2[iIndex] = kvSuperTanks.GetFloat("General/Tank Chance", g_flTankChance[iIndex]);
-				g_flTankChance2[iIndex] = flClamp(g_flTankChance2[iIndex], 0.0, 100.0);
-				g_iTankNote2[iIndex] = kvSuperTanks.GetNum("General/Tank Note", g_iTankNote[iIndex]);
-				g_iTankNote2[iIndex] = iClamp(g_iTankNote2[iIndex], 0, 1);
-				g_iSpawnEnabled2[iIndex] = kvSuperTanks.GetNum("General/Spawn Enabled", g_iSpawnEnabled[iIndex]);
-				g_iSpawnEnabled2[iIndex] = iClamp(g_iSpawnEnabled2[iIndex], 0, 1);
-				g_iMenuEnabled2[iIndex] = kvSuperTanks.GetNum("General/Menu Enabled", g_iMenuEnabled[iIndex]);
-				g_iMenuEnabled2[iIndex] = iClamp(g_iMenuEnabled2[iIndex], 0, 1);
-				kvSuperTanks.GetColor("General/Skin Color", g_iSkinRed2[iIndex], g_iSkinGreen2[iIndex], g_iSkinBlue2[iIndex], g_iSkinAlpha2[iIndex]);
-				g_iGlowEnabled2[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", g_iGlowEnabled[iIndex]);
-				g_iGlowEnabled2[iIndex] = iClamp(g_iGlowEnabled2[iIndex], 0, 1);
-				int iAlpha;
-				kvSuperTanks.GetColor("General/Glow Color", g_iGlowRed2[iIndex], g_iGlowGreen2[iIndex], g_iGlowBlue2[iIndex], iAlpha);
+					kvSuperTanks.GetString("General/Tank Name", g_sTankName2[iIndex], sizeof(g_sTankName2[]), g_sTankName[iIndex]);
+					g_iTankEnabled2[iIndex] = kvSuperTanks.GetNum("General/Tank Enabled", g_iTankEnabled[iIndex]);
+					g_iTankEnabled2[iIndex] = iClamp(g_iTankEnabled2[iIndex], 0, 1);
+					g_flTankChance2[iIndex] = kvSuperTanks.GetFloat("General/Tank Chance", g_flTankChance[iIndex]);
+					g_flTankChance2[iIndex] = flClamp(g_flTankChance2[iIndex], 0.0, 100.0);
+					g_iTankNote2[iIndex] = kvSuperTanks.GetNum("General/Tank Note", g_iTankNote[iIndex]);
+					g_iTankNote2[iIndex] = iClamp(g_iTankNote2[iIndex], 0, 1);
+					g_iSpawnEnabled2[iIndex] = kvSuperTanks.GetNum("General/Spawn Enabled", g_iSpawnEnabled[iIndex]);
+					g_iSpawnEnabled2[iIndex] = iClamp(g_iSpawnEnabled2[iIndex], 0, 1);
+					g_iMenuEnabled2[iIndex] = kvSuperTanks.GetNum("General/Menu Enabled", g_iMenuEnabled[iIndex]);
+					g_iMenuEnabled2[iIndex] = iClamp(g_iMenuEnabled2[iIndex], 0, 1);
+					g_iHumanSupport2[iIndex] = kvSuperTanks.GetNum("General/Human Support", g_iHumanSupport[iIndex]);
+					g_iHumanSupport2[iIndex] = iClamp(g_iHumanSupport2[iIndex], 0, 1);
+					kvSuperTanks.GetColor("General/Skin Color", g_iSkinRed2[iIndex], g_iSkinGreen2[iIndex], g_iSkinBlue2[iIndex], g_iSkinAlpha2[iIndex]);
+					g_iGlowEnabled2[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", g_iGlowEnabled[iIndex]);
+					g_iGlowEnabled2[iIndex] = iClamp(g_iGlowEnabled2[iIndex], 0, 1);
+					int iAlpha;
+					kvSuperTanks.GetColor("General/Glow Color", g_iGlowRed2[iIndex], g_iGlowGreen2[iIndex], g_iGlowBlue2[iIndex], iAlpha);
 
-				g_iTypeLimit2[iIndex] = kvSuperTanks.GetNum("Spawn/Type Limit", g_iTypeLimit[iIndex]);
-				g_iTypeLimit2[iIndex] = iClamp(g_iTypeLimit2[iIndex], 0, 9999999999);
-				g_iFinaleTank2[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", g_iFinaleTank[iIndex]);
-				g_iFinaleTank2[iIndex] = iClamp(g_iFinaleTank2[iIndex], 0, 1);
-				kvSuperTanks.GetString("Spawn/Boss Health Stages", g_sBossHealthStages2[iIndex], sizeof(g_sBossHealthStages2[]), g_sBossHealthStages[iIndex]);
-				g_iBossStages2[iIndex] = kvSuperTanks.GetNum("Spawn/Boss Stages", g_iBossStages[iIndex]);
-				g_iBossStages2[iIndex] = iClamp(g_iBossStages2[iIndex], 1, 4);
-				kvSuperTanks.GetString("Spawn/Boss Types", g_sBossTypes2[iIndex], sizeof(g_sBossTypes2[]), g_sBossTypes[iIndex]);
-				g_iRandomTank2[iIndex] = kvSuperTanks.GetNum("Spawn/Random Tank", g_iRandomTank[iIndex]);
-				g_iRandomTank2[iIndex] = iClamp(g_iRandomTank2[iIndex], 0, 1);
-				g_flRandomInterval2[iIndex] = kvSuperTanks.GetFloat("Spawn/Random Interval", g_flRandomInterval[iIndex]);
-				g_flRandomInterval2[iIndex] = flClamp(g_flRandomInterval2[iIndex], 0.1, 9999999999.0);
-				g_flTransformDelay2[iIndex] = kvSuperTanks.GetFloat("Spawn/Transform Delay", g_flTransformDelay[iIndex]);
-				g_flTransformDelay2[iIndex] = flClamp(g_flTransformDelay2[iIndex], 0.1, 9999999999.0);
-				g_flTransformDuration2[iIndex] = kvSuperTanks.GetFloat("Spawn/Transform Duration", g_flTransformDuration[iIndex]);
-				g_flTransformDuration2[iIndex] = flClamp(g_flTransformDuration2[iIndex], 0.1, 9999999999.0);
-				kvSuperTanks.GetString("Spawn/Transform Types", g_sTransformTypes2[iIndex], sizeof(g_sTransformTypes2[]), g_sTransformTypes[iIndex]);
-				g_iSpawnMode2[iIndex] = kvSuperTanks.GetNum("Spawn/Spawn Mode", g_iSpawnMode[iIndex]);
-				g_iSpawnMode2[iIndex] = iClamp(g_iSpawnMode2[iIndex], 0, 3);
+					g_iTypeLimit2[iIndex] = kvSuperTanks.GetNum("Spawn/Type Limit", g_iTypeLimit[iIndex]);
+					g_iTypeLimit2[iIndex] = iClamp(g_iTypeLimit2[iIndex], 0, 9999999999);
+					g_iFinaleTank2[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", g_iFinaleTank[iIndex]);
+					g_iFinaleTank2[iIndex] = iClamp(g_iFinaleTank2[iIndex], 0, 1);
+					kvSuperTanks.GetString("Spawn/Boss Health Stages", g_sBossHealthStages2[iIndex], sizeof(g_sBossHealthStages2[]), g_sBossHealthStages[iIndex]);
+					g_iBossStages2[iIndex] = kvSuperTanks.GetNum("Spawn/Boss Stages", g_iBossStages[iIndex]);
+					g_iBossStages2[iIndex] = iClamp(g_iBossStages2[iIndex], 1, 4);
+					kvSuperTanks.GetString("Spawn/Boss Types", g_sBossTypes2[iIndex], sizeof(g_sBossTypes2[]), g_sBossTypes[iIndex]);
+					g_iRandomTank2[iIndex] = kvSuperTanks.GetNum("Spawn/Random Tank", g_iRandomTank[iIndex]);
+					g_iRandomTank2[iIndex] = iClamp(g_iRandomTank2[iIndex], 0, 1);
+					g_flRandomInterval2[iIndex] = kvSuperTanks.GetFloat("Spawn/Random Interval", g_flRandomInterval[iIndex]);
+					g_flRandomInterval2[iIndex] = flClamp(g_flRandomInterval2[iIndex], 0.1, 9999999999.0);
+					g_flTransformDelay2[iIndex] = kvSuperTanks.GetFloat("Spawn/Transform Delay", g_flTransformDelay[iIndex]);
+					g_flTransformDelay2[iIndex] = flClamp(g_flTransformDelay2[iIndex], 0.1, 9999999999.0);
+					g_flTransformDuration2[iIndex] = kvSuperTanks.GetFloat("Spawn/Transform Duration", g_flTransformDuration[iIndex]);
+					g_flTransformDuration2[iIndex] = flClamp(g_flTransformDuration2[iIndex], 0.1, 9999999999.0);
+					kvSuperTanks.GetString("Spawn/Transform Types", g_sTransformTypes2[iIndex], sizeof(g_sTransformTypes2[]), g_sTransformTypes[iIndex]);
+					g_iSpawnMode2[iIndex] = kvSuperTanks.GetNum("Spawn/Spawn Mode", g_iSpawnMode[iIndex]);
+					g_iSpawnMode2[iIndex] = iClamp(g_iSpawnMode2[iIndex], 0, 3);
 
-				kvSuperTanks.GetString("Props/Props Attached", g_sPropsAttached2[iIndex], sizeof(g_sPropsAttached2[]), g_sPropsAttached[iIndex]);
-				kvSuperTanks.GetString("Props/Props Chance", g_sPropsChance2[iIndex], sizeof(g_sPropsChance2[]), g_sPropsChance[iIndex]);
-				kvSuperTanks.GetColor("Props/Light Color", g_iLightRed2[iIndex], g_iLightGreen2[iIndex], g_iLightBlue2[iIndex], g_iLightAlpha2[iIndex]);
-				kvSuperTanks.GetColor("Props/Oxygen Tank Color", g_iJetpackRed2[iIndex], g_iJetpackGreen2[iIndex], g_iJetpackBlue2[iIndex], g_iJetpackAlpha2[iIndex]);
-				kvSuperTanks.GetColor("Props/Flame Color", g_iFlameRed2[iIndex], g_iFlameGreen2[iIndex], g_iFlameBlue2[iIndex], g_iFlameAlpha2[iIndex]);
-				kvSuperTanks.GetColor("Props/Rock Color", g_iRockRed2[iIndex], g_iRockGreen2[iIndex], g_iRockBlue2[iIndex], g_iRockAlpha2[iIndex]);
-				kvSuperTanks.GetColor("Props/Tire Color", g_iTireRed2[iIndex], g_iTireGreen2[iIndex], g_iTireBlue2[iIndex], g_iTireAlpha2[iIndex]);
+					kvSuperTanks.GetString("Props/Props Attached", g_sPropsAttached2[iIndex], sizeof(g_sPropsAttached2[]), g_sPropsAttached[iIndex]);
+					kvSuperTanks.GetString("Props/Props Chance", g_sPropsChance2[iIndex], sizeof(g_sPropsChance2[]), g_sPropsChance[iIndex]);
+					kvSuperTanks.GetColor("Props/Light Color", g_iLightRed2[iIndex], g_iLightGreen2[iIndex], g_iLightBlue2[iIndex], g_iLightAlpha2[iIndex]);
+					kvSuperTanks.GetColor("Props/Oxygen Tank Color", g_iJetpackRed2[iIndex], g_iJetpackGreen2[iIndex], g_iJetpackBlue2[iIndex], g_iJetpackAlpha2[iIndex]);
+					kvSuperTanks.GetColor("Props/Flame Color", g_iFlameRed2[iIndex], g_iFlameGreen2[iIndex], g_iFlameBlue2[iIndex], g_iFlameAlpha2[iIndex]);
+					kvSuperTanks.GetColor("Props/Rock Color", g_iRockRed2[iIndex], g_iRockGreen2[iIndex], g_iRockBlue2[iIndex], g_iRockAlpha2[iIndex]);
+					kvSuperTanks.GetColor("Props/Tire Color", g_iTireRed2[iIndex], g_iTireGreen2[iIndex], g_iTireBlue2[iIndex], g_iTireAlpha2[iIndex]);
 
-				g_iParticleEffect2[iIndex] = kvSuperTanks.GetNum("Particles/Body Particle", g_iParticleEffect[iIndex]);
-				g_iParticleEffect2[iIndex] = iClamp(g_iParticleEffect2[iIndex], 0, 1);
-				kvSuperTanks.GetString("Particles/Body Effects", g_sParticleEffects2[iIndex], sizeof(g_sParticleEffects2[]), g_sParticleEffects[iIndex]);
-				g_iRockEffect2[iIndex] = kvSuperTanks.GetNum("Particles/Rock Particle", g_iRockEffect[iIndex]);
-				g_iRockEffect2[iIndex] = iClamp(g_iRockEffect2[iIndex], 0, 1);
-				kvSuperTanks.GetString("Particles/Rock Effects", g_sRockEffects2[iIndex], sizeof(g_sRockEffects2[]), g_sRockEffects[iIndex]);
+					g_iParticleEffect2[iIndex] = kvSuperTanks.GetNum("Particles/Body Particle", g_iParticleEffect[iIndex]);
+					g_iParticleEffect2[iIndex] = iClamp(g_iParticleEffect2[iIndex], 0, 1);
+					kvSuperTanks.GetString("Particles/Body Effects", g_sParticleEffects2[iIndex], sizeof(g_sParticleEffects2[]), g_sParticleEffects[iIndex]);
+					g_iRockEffect2[iIndex] = kvSuperTanks.GetNum("Particles/Rock Particle", g_iRockEffect[iIndex]);
+					g_iRockEffect2[iIndex] = iClamp(g_iRockEffect2[iIndex], 0, 1);
+					kvSuperTanks.GetString("Particles/Rock Effects", g_sRockEffects2[iIndex], sizeof(g_sRockEffects2[]), g_sRockEffects[iIndex]);
 
-				g_flClawDamage2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Claw Damage", g_flClawDamage[iIndex]);
-				g_flClawDamage2[iIndex] = flClamp(g_flClawDamage2[iIndex], -1.0, 9999999999.0);
-				g_iBaseHealth2[iIndex] = kvSuperTanks.GetNum("Enhancements/Base Health", g_iBaseHealth[iIndex]);
-				g_iBaseHealth2[iIndex] = iClamp(g_iBaseHealth2[iIndex], 0, ST_MAXHEALTH);
-				g_iExtraHealth2[iIndex] = kvSuperTanks.GetNum("Enhancements/Extra Health", g_iExtraHealth[iIndex]);
-				g_iExtraHealth2[iIndex] = iClamp(g_iExtraHealth2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-				g_flRockDamage2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Rock Damage", g_flRockDamage[iIndex]);
-				g_flRockDamage2[iIndex] = flClamp(g_flRockDamage2[iIndex], -1.0, 9999999999.0);
-				g_flRunSpeed2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", g_flRunSpeed[iIndex]);
-				g_flRunSpeed2[iIndex] = flClamp(g_flRunSpeed2[iIndex], -1.0, 3.0);
-				g_flThrowInterval2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Throw Interval", g_flThrowInterval[iIndex]);
-				g_flThrowInterval2[iIndex] = flClamp(g_flThrowInterval2[iIndex], -1.0, 9999999999.0);
+					g_flClawDamage2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Claw Damage", g_flClawDamage[iIndex]);
+					g_flClawDamage2[iIndex] = flClamp(g_flClawDamage2[iIndex], -1.0, 9999999999.0);
+					g_iBaseHealth2[iIndex] = kvSuperTanks.GetNum("Enhancements/Base Health", g_iBaseHealth[iIndex]);
+					g_iBaseHealth2[iIndex] = iClamp(g_iBaseHealth2[iIndex], 0, ST_MAXHEALTH);
+					g_iExtraHealth2[iIndex] = kvSuperTanks.GetNum("Enhancements/Extra Health", g_iExtraHealth[iIndex]);
+					g_iExtraHealth2[iIndex] = iClamp(g_iExtraHealth2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+					g_flRockDamage2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Rock Damage", g_flRockDamage[iIndex]);
+					g_flRockDamage2[iIndex] = flClamp(g_flRockDamage2[iIndex], -1.0, 9999999999.0);
+					g_flRunSpeed2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", g_flRunSpeed[iIndex]);
+					g_flRunSpeed2[iIndex] = flClamp(g_flRunSpeed2[iIndex], -1.0, 3.0);
+					g_flThrowInterval2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Throw Interval", g_flThrowInterval[iIndex]);
+					g_flThrowInterval2[iIndex] = flClamp(g_flThrowInterval2[iIndex], -1.0, 9999999999.0);
 
-				g_iBulletImmunity2[iIndex] = kvSuperTanks.GetNum("Immunities/Bullet Immunity", g_iBulletImmunity[iIndex]);
-				g_iBulletImmunity2[iIndex] = iClamp(g_iBulletImmunity2[iIndex], 0, 1);
-				g_iExplosiveImmunity2[iIndex] = kvSuperTanks.GetNum("Immunities/Explosive Immunity", g_iExplosiveImmunity[iIndex]);
-				g_iExplosiveImmunity2[iIndex] = iClamp(g_iExplosiveImmunity2[iIndex], 0, 1);
-				g_iFireImmunity2[iIndex] = kvSuperTanks.GetNum("Immunities/Fire Immunity", g_iFireImmunity[iIndex]);
-				g_iFireImmunity2[iIndex] = iClamp(g_iFireImmunity2[iIndex], 0, 1);
-				g_iMeleeImmunity2[iIndex] = kvSuperTanks.GetNum("Immunities/Melee Immunity", g_iMeleeImmunity[iIndex]);
-				g_iMeleeImmunity2[iIndex] = iClamp(g_iMeleeImmunity2[iIndex], 0, 1);
+					g_iBulletImmunity2[iIndex] = kvSuperTanks.GetNum("Immunities/Bullet Immunity", g_iBulletImmunity[iIndex]);
+					g_iBulletImmunity2[iIndex] = iClamp(g_iBulletImmunity2[iIndex], 0, 1);
+					g_iExplosiveImmunity2[iIndex] = kvSuperTanks.GetNum("Immunities/Explosive Immunity", g_iExplosiveImmunity[iIndex]);
+					g_iExplosiveImmunity2[iIndex] = iClamp(g_iExplosiveImmunity2[iIndex], 0, 1);
+					g_iFireImmunity2[iIndex] = kvSuperTanks.GetNum("Immunities/Fire Immunity", g_iFireImmunity[iIndex]);
+					g_iFireImmunity2[iIndex] = iClamp(g_iFireImmunity2[iIndex], 0, 1);
+					g_iMeleeImmunity2[iIndex] = kvSuperTanks.GetNum("Immunities/Melee Immunity", g_iMeleeImmunity[iIndex]);
+					g_iMeleeImmunity2[iIndex] = iClamp(g_iMeleeImmunity2[iIndex], 0, 1);
+				}
 			}
 
 			kvSuperTanks.Rewind();
@@ -1383,7 +1612,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 
 	delete kvSuperTanks;
 
-	Call_StartForward(g_hConfigsForward);
+	Call_StartForward(g_hConfigsLoadedForward);
 	Call_PushString(savepath);
 	Call_PushCell(main);
 	Call_Finish();
@@ -1418,6 +1647,7 @@ static void vNewTankSettings(int tank)
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(SOUND_BOSS, tank);
 	vRemoveProps(tank);
+	vResetSpeed(tank, true);
 
 	Call_StartForward(g_hChangeTypeForward);
 	Call_PushCell(tank);
@@ -1428,7 +1658,7 @@ static void vParticleEffects(int tank)
 {
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[tank]] ? g_sParticleEffects[g_iTankType[tank]] : g_sParticleEffects2[g_iTankType[tank]];
-	if (iParticleEffect(tank) == 1 && bIsTankAllowed(tank))
+	if (bIsTankAllowed(tank) && iParticleEffect(tank) == 1)
 	{
 		if (StrContains(sParticleEffects, "1") != -1)
 		{
@@ -1469,28 +1699,64 @@ static void vParticleEffects(int tank)
 
 static void vRemoveProps(int tank, bool end = false)
 {
-	int iProp = -1;
-	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+	if (bIsValidEntity(g_iTankModel[tank]))
 	{
-		char sModel[128];
-		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-		if (StrEqual(sModel, MODEL_JETPACK, false) || StrEqual(sModel, MODEL_CONCRETE, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_TANK, false))
-		{
-			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-			if (iOwner == tank)
-			{
-				RemoveEntity(iProp);
-			}
-		}
+		SDKUnhook(g_iTankModel[tank], SDKHook_SetTransmit, SetTransmit);
+		RemoveEntity(g_iTankModel[tank]);
 	}
 
-	while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+	g_iTankModel[tank] = 0;
+
+	for (int iLight = 0; iLight < 4; iLight++)
 	{
-		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-		if (iOwner == tank)
+		if (bIsValidEntity(g_iLight[tank][iLight]))
 		{
-			RemoveEntity(iProp);
+			SDKUnhook(g_iLight[tank][iLight], SDKHook_SetTransmit, SetTransmit);
+			RemoveEntity(g_iLight[tank][iLight]);
 		}
+
+		g_iLight[tank][iLight] = 0;
+	}
+
+	for (int iOzTank = 0; iOzTank < 3; iOzTank++)
+	{
+		if (bIsValidEntity(g_iFlame[tank][iOzTank]))
+		{
+			SDKUnhook(g_iFlame[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
+			RemoveEntity(g_iFlame[tank][iOzTank]);
+		}
+
+		g_iFlame[tank][iOzTank] = 0;
+
+		if (bIsValidEntity(g_iJetpack[tank][iOzTank]))
+		{
+			SDKUnhook(g_iJetpack[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
+			RemoveEntity(g_iJetpack[tank][iOzTank]);
+		}
+
+		g_iJetpack[tank][iOzTank] = 0;
+	}
+
+	for (int iRock = 0; iRock < 17; iRock++)
+	{
+		if (bIsValidEntity(g_iRock[tank][iRock]))
+		{
+			SDKUnhook(g_iRock[tank][iRock], SDKHook_SetTransmit, SetTransmit);
+			RemoveEntity(g_iRock[tank][iRock]);
+		}
+
+		g_iRock[tank][iRock] = 0;
+	}
+
+	for (int iTire = 0; iTire < 3; iTire++)
+	{
+		if (bIsValidEntity(g_iTire[tank][iTire]))
+		{
+			SDKUnhook(g_iTire[tank][iTire], SDKHook_SetTransmit, SetTransmit);
+			RemoveEntity(g_iTire[tank][iTire]);
+		}
+
+		g_iTire[tank][iTire] = 0;
 	}
 
 	if (bIsValidGame() && iGlowEnabled(g_iTankType[tank]) == 1)
@@ -1516,7 +1782,52 @@ static void vReset()
 		{
 			g_iBossStageCount[iPlayer] = 0;
 			g_iTankType[iPlayer] = 0;
+
+			vResetProps(iPlayer);
+
 			vSpawnModes(iPlayer, false);
+		}
+	}
+}
+
+static void vResetProps(int tank)
+{
+	g_iTankModel[tank] = 0;
+
+	for (int iLight = 0; iLight < 4; iLight++)
+	{
+		g_iLight[tank][iLight] = 0;
+	}
+
+	for (int iOzTank = 0; iOzTank < 3; iOzTank++)
+	{
+		g_iFlame[tank][iOzTank] = 0;
+		g_iJetpack[tank][iOzTank] = 0;
+	}
+
+	for (int iRock = 0; iRock < 17; iRock++)
+	{
+		g_iRock[tank][iRock] = 0;
+	}
+
+	for (int iTire = 0; iTire < 3; iTire++)
+	{
+		g_iTire[tank][iTire] = 0;
+	}
+}
+
+static void vResetSpeed(int tank, bool mode = false)
+{
+	float flRunSpeed = !g_bTankConfig[g_iTankType[tank]] ? g_flRunSpeed[g_iTankType[tank]] : g_flRunSpeed2[g_iTankType[tank]];
+	switch (mode)
+	{
+		case true: SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		case false:
+		{
+			if (flRunSpeed > 0.0)
+			{
+				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
+			}
 		}
 	}
 }
@@ -1551,7 +1862,7 @@ static void vSetColor(int tank, int value)
 
 static void vSetName(int tank, const char[] oldname, const char[] name, int mode)
 {
-	if (bIsTankAllowed(tank))
+	if (bIsTank(tank))
 	{
 		char sSet[6][4], sPropsChance[35], sPropsAttached[7];
 		sPropsChance = !g_bTankConfig[g_iTankType[tank]] ? g_sPropsChance[g_iTankType[tank]] : g_sPropsChance2[g_iTankType[tank]];
@@ -1587,33 +1898,32 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
-		int iBeam[4];
 		for (int iLight = 1; iLight <= 3; iLight++)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= flChance2 && StrContains(sPropsAttached, "2") != -1)
 			{
-				iBeam[iLight] = CreateEntityByName("beam_spotlight");
-				if (bIsValidEntity(iBeam[iLight]))
+				g_iLight[tank][iLight] = CreateEntityByName("beam_spotlight");
+				if (bIsValidEntity(g_iLight[tank][iLight]))
 				{
-					DispatchKeyValueVector(iBeam[iLight], "origin", flOrigin);
-					DispatchKeyValueVector(iBeam[iLight], "angles", flAngles);
+					DispatchKeyValueVector(g_iLight[tank][iLight], "origin", flOrigin);
+					DispatchKeyValueVector(g_iLight[tank][iLight], "angles", flAngles);
 
-					DispatchKeyValue(iBeam[iLight], "spotlightwidth", "10");
-					DispatchKeyValue(iBeam[iLight], "spotlightlength", "60");
-					DispatchKeyValue(iBeam[iLight], "spawnflags", "3");
+					DispatchKeyValue(g_iLight[tank][iLight], "spotlightwidth", "10");
+					DispatchKeyValue(g_iLight[tank][iLight], "spotlightlength", "60");
+					DispatchKeyValue(g_iLight[tank][iLight], "spawnflags", "3");
 
 					int iLightRed = !g_bTankConfig[g_iTankType[tank]] ? g_iLightRed[g_iTankType[tank]] : g_iLightRed2[g_iTankType[tank]],
 						iLightGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iLightGreen[g_iTankType[tank]] : g_iLightGreen2[g_iTankType[tank]],
 						iLightBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iLightBlue[g_iTankType[tank]] : g_iLightBlue2[g_iTankType[tank]],
 						iLightAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iLightAlpha[g_iTankType[tank]] : g_iLightAlpha2[g_iTankType[tank]];
-					SetEntityRenderColor(iBeam[iLight], iLightRed, iLightGreen, iLightBlue, iLightAlpha);
+					SetEntityRenderColor(g_iLight[tank][iLight], iLightRed, iLightGreen, iLightBlue, iLightAlpha);
 
-					DispatchKeyValue(iBeam[iLight], "maxspeed", "100");
-					DispatchKeyValue(iBeam[iLight], "HDRColorScale", "0.7");
-					DispatchKeyValue(iBeam[iLight], "fadescale", "1");
-					DispatchKeyValue(iBeam[iLight], "fademindist", "-1");
+					DispatchKeyValue(g_iLight[tank][iLight], "maxspeed", "100");
+					DispatchKeyValue(g_iLight[tank][iLight], "HDRColorScale", "0.7");
+					DispatchKeyValue(g_iLight[tank][iLight], "fadescale", "1");
+					DispatchKeyValue(g_iLight[tank][iLight], "fademindist", "-1");
 
-					vSetEntityParent(iBeam[iLight], tank);
+					vSetEntityParent(g_iLight[tank][iLight], tank);
 
 					switch (iLight)
 					{
@@ -1634,13 +1944,15 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 						}
 					}
 
-					AcceptEntityInput(iBeam[iLight], "SetParentAttachment");
-					AcceptEntityInput(iBeam[iLight], "Enable");
-					AcceptEntityInput(iBeam[iLight], "DisableCollision");
+					AcceptEntityInput(g_iLight[tank][iLight], "SetParentAttachment");
+					AcceptEntityInput(g_iLight[tank][iLight], "Enable");
+					AcceptEntityInput(g_iLight[tank][iLight], "DisableCollision");
 
-					SetEntPropEnt(iBeam[iLight], Prop_Send, "m_hOwnerEntity", tank);
-					TeleportEntity(iBeam[iLight], NULL_VECTOR, flAngles, NULL_VECTOR);
-					DispatchSpawn(iBeam[iLight]);
+					SetEntPropEnt(g_iLight[tank][iLight], Prop_Send, "m_hOwnerEntity", tank);
+					TeleportEntity(g_iLight[tank][iLight], NULL_VECTOR, flAngles, NULL_VECTOR);
+					DispatchSpawn(g_iLight[tank][iLight]);
+
+					SDKHook(g_iLight[tank][iLight], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
 		}
@@ -1648,25 +1960,24 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		GetClientEyePosition(tank, flOrigin);
 		GetClientAbsAngles(tank, flAngles);
 
-		int iJetpack[3];
 		for (int iOzTank = 1; iOzTank <= 2; iOzTank++)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= flChance3 && StrContains(sPropsAttached, "3") != -1)
 			{
-				iJetpack[iOzTank] = CreateEntityByName("prop_dynamic_override");
-				if (bIsValidEntity(iJetpack[iOzTank]))
+				g_iJetpack[tank][iOzTank] = CreateEntityByName("prop_dynamic_override");
+				if (bIsValidEntity(g_iJetpack[tank][iOzTank]))
 				{
-					SetEntityModel(iJetpack[iOzTank], MODEL_JETPACK);
+					SetEntityModel(g_iJetpack[tank][iOzTank], MODEL_JETPACK);
 
 					int iJetpackRed = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackRed[g_iTankType[tank]] : g_iJetpackRed2[g_iTankType[tank]],
 						iJetpackGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackGreen[g_iTankType[tank]] : g_iJetpackGreen2[g_iTankType[tank]],
 						iJetpackBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackBlue[g_iTankType[tank]] : g_iJetpackBlue2[g_iTankType[tank]],
 						iJetpackAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackAlpha[g_iTankType[tank]] : g_iJetpackAlpha2[g_iTankType[tank]];
-					SetEntityRenderColor(iJetpack[iOzTank], iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha);
+					SetEntityRenderColor(g_iJetpack[tank][iOzTank], iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha);
 
-					SetEntProp(iJetpack[iOzTank], Prop_Data, "m_takedamage", 0, 1);
-					SetEntProp(iJetpack[iOzTank], Prop_Data, "m_CollisionGroup", 2);
-					vSetEntityParent(iJetpack[iOzTank], tank);
+					SetEntProp(g_iJetpack[tank][iOzTank], Prop_Data, "m_takedamage", 0, 1);
+					SetEntProp(g_iJetpack[tank][iOzTank], Prop_Data, "m_CollisionGroup", 2);
+					vSetEntityParent(g_iJetpack[tank][iOzTank], tank);
 
 					switch (iOzTank)
 					{
@@ -1682,57 +1993,61 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 						}
 					}
 
-					AcceptEntityInput(iJetpack[iOzTank], "SetParentAttachment");
+					AcceptEntityInput(g_iJetpack[tank][iOzTank], "SetParentAttachment");
 
 					float flAngles2[3];
 					vSetVector(flAngles2, 0.0, 0.0, 1.0);
 					GetVectorAngles(flAngles2, flAngles2);
 					vCopyVector(flAngles, flAngles2);
 					flAngles2[2] += 90.0;
-					DispatchKeyValueVector(iJetpack[iOzTank], "origin", flOrigin);
-					DispatchKeyValueVector(iJetpack[iOzTank], "angles", flAngles2);
+					DispatchKeyValueVector(g_iJetpack[tank][iOzTank], "origin", flOrigin);
+					DispatchKeyValueVector(g_iJetpack[tank][iOzTank], "angles", flAngles2);
 
-					AcceptEntityInput(iJetpack[iOzTank], "Enable");
-					AcceptEntityInput(iJetpack[iOzTank], "DisableCollision");
-					SetEntPropEnt(iJetpack[iOzTank], Prop_Send, "m_hOwnerEntity", tank);
+					AcceptEntityInput(g_iJetpack[tank][iOzTank], "Enable");
+					AcceptEntityInput(g_iJetpack[tank][iOzTank], "DisableCollision");
+					SetEntPropEnt(g_iJetpack[tank][iOzTank], Prop_Send, "m_hOwnerEntity", tank);
 
-					TeleportEntity(iJetpack[iOzTank], flOrigin, NULL_VECTOR, flAngles2);
-					DispatchSpawn(iJetpack[iOzTank]);
+					TeleportEntity(g_iJetpack[tank][iOzTank], flOrigin, NULL_VECTOR, flAngles2);
+					DispatchSpawn(g_iJetpack[tank][iOzTank]);
 
 					if (GetRandomFloat(0.1, 100.0) <= flChance4 && StrContains(sPropsAttached, "4") != -1)
 					{
-						int iFlame = CreateEntityByName("env_steam");
-						if (bIsValidEntity(iFlame))
+						g_iFlame[tank][iOzTank] = CreateEntityByName("env_steam");
+						if (bIsValidEntity(g_iFlame[tank][iOzTank]))
 						{
 							int iFlameRed = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameRed[g_iTankType[tank]] : g_iFlameRed2[g_iTankType[tank]],
 								iFlameGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameGreen[g_iTankType[tank]] : g_iFlameGreen2[g_iTankType[tank]],
 								iFlameBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameBlue[g_iTankType[tank]] : g_iFlameBlue2[g_iTankType[tank]],
 								iFlameAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameAlpha[g_iTankType[tank]] : g_iFlameAlpha2[g_iTankType[tank]];
-							SetEntityRenderColor(iFlame, iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha);
+							SetEntityRenderColor(g_iFlame[tank][iOzTank], iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha);
 
-							DispatchKeyValue(iFlame, "spawnflags", "1");
-							DispatchKeyValue(iFlame, "Type", "0");
-							DispatchKeyValue(iFlame, "InitialState", "1");
-							DispatchKeyValue(iFlame, "Spreadspeed", "1");
-							DispatchKeyValue(iFlame, "Speed", "250");
-							DispatchKeyValue(iFlame, "Startsize", "6");
-							DispatchKeyValue(iFlame, "EndSize", "8");
-							DispatchKeyValue(iFlame, "Rate", "555");
-							DispatchKeyValue(iFlame, "JetLength", "40");
+							DispatchKeyValue(g_iFlame[tank][iOzTank], "spawnflags", "1");
+							DispatchKeyValue(g_iFlame[tank][iOzTank], "Type", "0");
+							DispatchKeyValue(g_iFlame[tank][iOzTank], "InitialState", "1");
+							DispatchKeyValue(g_iFlame[tank][iOzTank], "Spreadspeed", "1");
+							DispatchKeyValue(g_iFlame[tank][iOzTank], "Speed", "250");
+							DispatchKeyValue(g_iFlame[tank][iOzTank], "Startsize", "6");
+							DispatchKeyValue(g_iFlame[tank][iOzTank], "EndSize", "8");
+							DispatchKeyValue(g_iFlame[tank][iOzTank], "Rate", "555");
+							DispatchKeyValue(g_iFlame[tank][iOzTank], "JetLength", "40");
 
-							vSetEntityParent(iFlame, iJetpack[iOzTank]);
-							SetEntPropEnt(iFlame, Prop_Send, "m_hOwnerEntity", tank);
+							vSetEntityParent(g_iFlame[tank][iOzTank], g_iJetpack[tank][iOzTank]);
+							SetEntPropEnt(g_iFlame[tank][iOzTank], Prop_Send, "m_hOwnerEntity", tank);
 
 							float flOrigin2[3], flAngles3[3];
 							vSetVector(flOrigin2, -2.0, 0.0, 26.0);
 							vSetVector(flAngles3, 0.0, 0.0, 1.0);
 							GetVectorAngles(flAngles3, flAngles3);
 
-							TeleportEntity(iFlame, flOrigin2, flAngles3, NULL_VECTOR);
-							DispatchSpawn(iFlame);
-							AcceptEntityInput(iFlame, "TurnOn");
+							TeleportEntity(g_iFlame[tank][iOzTank], flOrigin2, flAngles3, NULL_VECTOR);
+							DispatchSpawn(g_iFlame[tank][iOzTank]);
+							AcceptEntityInput(g_iFlame[tank][iOzTank], "TurnOn");
+
+							SDKHook(g_iFlame[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
 						}
 					}
+
+					SDKHook(g_iJetpack[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
 		}
@@ -1740,25 +2055,24 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
-		int iConcrete[17];
 		for (int iRock = 1; iRock <= 16; iRock++)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= flChance5 && StrContains(sPropsAttached, "5") != -1)
 			{
-				iConcrete[iRock] = CreateEntityByName("prop_dynamic_override");
-				if (bIsValidEntity(iConcrete[iRock]))
+				g_iRock[tank][iRock] = CreateEntityByName("prop_dynamic_override");
+				if (bIsValidEntity(g_iRock[tank][iRock]))
 				{
-					SetEntityModel(iConcrete[iRock], MODEL_CONCRETE);
+					SetEntityModel(g_iRock[tank][iRock], MODEL_CONCRETE);
 
 					int iRockRed = !g_bTankConfig[g_iTankType[tank]] ? g_iRockRed[g_iTankType[tank]] : g_iRockRed2[g_iTankType[tank]],
 						iRockGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iRockGreen[g_iTankType[tank]] : g_iRockGreen2[g_iTankType[tank]],
 						iRockBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iRockBlue[g_iTankType[tank]] : g_iRockBlue2[g_iTankType[tank]],
 						iRockAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iRockAlpha[g_iTankType[tank]] : g_iRockAlpha2[g_iTankType[tank]];
-					SetEntityRenderColor(iConcrete[iRock], iRockRed, iRockGreen, iRockBlue, iRockAlpha);
+					SetEntityRenderColor(g_iRock[tank][iRock], iRockRed, iRockGreen, iRockBlue, iRockAlpha);
 
-					DispatchKeyValueVector(iConcrete[iRock], "origin", flOrigin);
-					DispatchKeyValueVector(iConcrete[iRock], "angles", flAngles);
-					vSetEntityParent(iConcrete[iRock], tank);
+					DispatchKeyValueVector(g_iRock[tank][iRock], "origin", flOrigin);
+					DispatchKeyValueVector(g_iRock[tank][iRock], "angles", flAngles);
+					vSetEntityParent(g_iRock[tank][iRock], tank);
 
 					switch (iRock)
 					{
@@ -1768,27 +2082,29 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 						case 4, 8, 12, 16: SetVariantString("lelbow");
 					}
 
-					AcceptEntityInput(iConcrete[iRock], "SetParentAttachment");
-					AcceptEntityInput(iConcrete[iRock], "Enable");
-					AcceptEntityInput(iConcrete[iRock], "DisableCollision");
+					AcceptEntityInput(g_iRock[tank][iRock], "SetParentAttachment");
+					AcceptEntityInput(g_iRock[tank][iRock], "Enable");
+					AcceptEntityInput(g_iRock[tank][iRock], "DisableCollision");
 
 					if (bIsValidGame())
 					{
 						switch (iRock)
 						{
-							case 1, 2, 5, 6, 9, 10, 13, 14: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.4);
-							case 3, 4, 7, 8, 11, 12, 15, 16: SetEntPropFloat(iConcrete[iRock], Prop_Data, "m_flModelScale", 0.5);
+							case 1, 2, 5, 6, 9, 10, 13, 14: SetEntPropFloat(g_iRock[tank][iRock], Prop_Data, "m_flModelScale", 0.4);
+							case 3, 4, 7, 8, 11, 12, 15, 16: SetEntPropFloat(g_iRock[tank][iRock], Prop_Data, "m_flModelScale", 0.5);
 						}
 					}
 
-					SetEntPropEnt(iConcrete[iRock], Prop_Send, "m_hOwnerEntity", tank);
+					SetEntPropEnt(g_iRock[tank][iRock], Prop_Send, "m_hOwnerEntity", tank);
 
 					flAngles[0] += GetRandomFloat(-90.0, 90.0);
 					flAngles[1] += GetRandomFloat(-90.0, 90.0);
 					flAngles[2] += GetRandomFloat(-90.0, 90.0);
 
-					TeleportEntity(iConcrete[iRock], NULL_VECTOR, flAngles, NULL_VECTOR);
-					DispatchSpawn(iConcrete[iRock]);
+					TeleportEntity(g_iRock[tank][iRock], NULL_VECTOR, flAngles, NULL_VECTOR);
+					DispatchSpawn(g_iRock[tank][iRock]);
+
+					SDKHook(g_iRock[tank][iRock], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
 		}
@@ -1797,25 +2113,24 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 		flAngles[0] += 90.0;
 
-		int iWheel[3];
 		for (int iTire = 1; iTire <= 2; iTire++)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= flChance6 && StrContains(sPropsAttached, "6") != -1)
 			{
-				iWheel[iTire] = CreateEntityByName("prop_dynamic_override");
-				if (bIsValidEntity(iWheel[iTire]))
+				g_iTire[tank][iTire] = CreateEntityByName("prop_dynamic_override");
+				if (bIsValidEntity(g_iTire[tank][iTire]))
 				{
-					SetEntityModel(iWheel[iTire], MODEL_TIRES);
+					SetEntityModel(g_iTire[tank][iTire], MODEL_TIRES);
 
 					int iTireRed = !g_bTankConfig[g_iTankType[tank]] ? g_iTireRed[g_iTankType[tank]] : g_iTireRed2[g_iTankType[tank]],
 						iTireGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iTireGreen[g_iTankType[tank]] : g_iTireGreen2[g_iTankType[tank]],
 						iTireBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iTireBlue[g_iTankType[tank]] : g_iTireBlue2[g_iTankType[tank]],
 						iTireAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iTireAlpha[g_iTankType[tank]] : g_iTireAlpha2[g_iTankType[tank]];
-					SetEntityRenderColor(iWheel[iTire], iTireRed, iTireGreen, iTireBlue, iTireAlpha);
+					SetEntityRenderColor(g_iTire[tank][iTire], iTireRed, iTireGreen, iTireBlue, iTireAlpha);
 
-					DispatchKeyValueVector(iWheel[iTire], "origin", flOrigin);
-					DispatchKeyValueVector(iWheel[iTire], "angles", flAngles);
-					vSetEntityParent(iWheel[iTire], tank);
+					DispatchKeyValueVector(g_iTire[tank][iTire], "origin", flOrigin);
+					DispatchKeyValueVector(g_iTire[tank][iTire], "angles", flAngles);
+					vSetEntityParent(g_iTire[tank][iTire], tank);
 
 					switch (iTire)
 					{
@@ -1823,23 +2138,28 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 						case 2: SetVariantString("lfoot");
 					}
 
-					AcceptEntityInput(iWheel[iTire], "SetParentAttachment");
-					AcceptEntityInput(iWheel[iTire], "Enable");
-					AcceptEntityInput(iWheel[iTire], "DisableCollision");
+					AcceptEntityInput(g_iTire[tank][iTire], "SetParentAttachment");
+					AcceptEntityInput(g_iTire[tank][iTire], "Enable");
+					AcceptEntityInput(g_iTire[tank][iTire], "DisableCollision");
 
 					if (bIsValidGame())
 					{
-						SetEntPropFloat(iWheel[iTire], Prop_Data, "m_flModelScale", 1.5);
+						SetEntPropFloat(g_iTire[tank][iTire], Prop_Data, "m_flModelScale", 1.5);
 					}
 
-					SetEntPropEnt(iWheel[iTire], Prop_Send, "m_hOwnerEntity", tank);
-					TeleportEntity(iWheel[iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
-					DispatchSpawn(iWheel[iTire]);
+					SetEntPropEnt(g_iTire[tank][iTire], Prop_Send, "m_hOwnerEntity", tank);
+					TeleportEntity(g_iTire[tank][iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
+					DispatchSpawn(g_iTire[tank][iTire]);
+
+					SDKHook(g_iTire[tank][iTire], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
 		}
 
-		SetClientName(tank, name);
+		if (!bIsValidClient(tank, "5"))
+		{
+			SetClientName(tank, name);
+		}
 
 		char sAnnounceArrival[6];
 		sAnnounceArrival = !g_bGeneralConfig ? g_sAnnounceArrival : g_sAnnounceArrival2;
@@ -1892,6 +2212,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Untransformed", oldname, name);
 				}
 			}
+			case 5: ST_PrintToChat(tank, "%s %t", ST_TAG3, "ChangeType");
 		}
 
 		int iTankNote = !g_bTankConfig[g_iTankType[tank]] ? g_iTankNote[g_iTankType[tank]] : g_iTankNote2[g_iTankType[tank]];
@@ -1899,13 +2220,10 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		{
 			char sTankNote[32];
 			Format(sTankNote, sizeof(sTankNote), "Tank #%i", g_iTankType[tank]);
-			if (TranslationPhraseExists(sTankNote))
+			switch (TranslationPhraseExists(sTankNote))
 			{
-				ST_PrintToChatAll("%s %t", ST_TAG3, sTankNote);
-			}
-			else
-			{
-				ST_PrintToChatAll("%s %t", ST_TAG3, "NoNote");
+				case true: ST_PrintToChatAll("%s %t", ST_TAG3, sTankNote);
+				case false: ST_PrintToChatAll("%s %t", ST_TAG3, "NoNote");
 			}
 		}
 
@@ -1928,13 +2246,10 @@ static void vTankCountCheck(int tank, int wave)
 	}
 	else if (iGetTankCount() > wave)
 	{
-		if (!bIsValidClient(tank, "5"))
+		switch (bIsValidClient(tank, "5"))
 		{
-			KickClient(tank);
-		}
-		else
-		{
-			ForcePlayerSuicide(tank);
+			case true: ForcePlayerSuicide(tank);
+			case false: KickClient(tank);
 		}
 	}
 }
@@ -1949,7 +2264,7 @@ static void vTankSpawn(int tank, int mode = 0)
 
 static void vThrowInterval(int tank, float time)
 {
-	if (bIsTankAllowed(tank) && time >= 0.1)
+	if (bIsTankAllowed(tank) && !bIsTankAllowed(tank, "5") && time > 0.0)
 	{
 		int iAbility = GetEntPropEnt(tank, Prop_Send, "m_customAbility");
 		if (iAbility > 0)
@@ -1962,7 +2277,17 @@ static void vThrowInterval(int tank, float time)
 
 static bool bIsTankAllowed(int tank, const char[] mode = "0234")
 {
-	return bIsTank(tank, mode) && !bIsValidClient(tank, "5");
+	if (!bIsTank(tank, mode))
+	{
+		return false;
+	}
+
+	if (bIsTank(tank, "5") && iHumanSupport(tank) == 0)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 static bool bTankChance(int value)
@@ -2050,6 +2375,11 @@ static int iGlowEnabled(int value)
 	return !g_bTankConfig[value] ? g_iGlowEnabled[value] : g_iGlowEnabled2[value];
 }
 
+static int iHumanSupport(int tank)
+{
+	return !g_bTankConfig[g_iTankType[tank]] ? g_iHumanSupport[g_iTankType[tank]] : g_iHumanSupport2[g_iTankType[tank]];
+}
+
 static int iMenuEnabled(int value)
 {
 	return !g_bTankConfig[value] ? g_iMenuEnabled[value] : g_iMenuEnabled2[value];
@@ -2132,30 +2462,33 @@ public Action tTimerBlurEffect(Handle timer, int userid)
 	GetClientAbsOrigin(iTank, flTankPos);
 	GetClientAbsAngles(iTank, flTankAng);
 
-	int iAnim = GetEntProp(iTank, Prop_Send, "m_nSequence"), iTankModel = CreateEntityByName("prop_dynamic");
-	if (bIsValidEntity(iTankModel))
+	int iAnim = GetEntProp(iTank, Prop_Send, "m_nSequence");
+	g_iTankModel[iTank] = CreateEntityByName("prop_dynamic");
+	if (bIsValidEntity(g_iTankModel[iTank]))
 	{
-		SetEntityModel(iTankModel, MODEL_TANK);
+		SetEntityModel(g_iTankModel[iTank], MODEL_TANK);
 
-		SetEntPropEnt(iTankModel, Prop_Send, "m_hOwnerEntity", iTank);
-		DispatchKeyValue(iTankModel, "solid", "6");
+		SetEntPropEnt(g_iTankModel[iTank], Prop_Send, "m_hOwnerEntity", iTank);
+		DispatchKeyValue(g_iTankModel[iTank], "solid", "6");
 
-		TeleportEntity(iTankModel, flTankPos, flTankAng, NULL_VECTOR);
-		DispatchSpawn(iTankModel);
+		TeleportEntity(g_iTankModel[iTank], flTankPos, flTankAng, NULL_VECTOR);
+		DispatchSpawn(g_iTankModel[iTank]);
 
-		AcceptEntityInput(iTankModel, "DisableCollision");
+		AcceptEntityInput(g_iTankModel[iTank], "DisableCollision");
 
 		int iSkinRed = !g_bTankConfig[g_iTankType[iTank]] ? g_iSkinRed[g_iTankType[iTank]] : g_iSkinRed2[g_iTankType[iTank]],
 			iSkinGreen = !g_bTankConfig[g_iTankType[iTank]] ? g_iSkinGreen[g_iTankType[iTank]] : g_iSkinGreen2[g_iTankType[iTank]],
 			iSkinBlue = !g_bTankConfig[g_iTankType[iTank]] ? g_iSkinBlue[g_iTankType[iTank]] : g_iSkinBlue2[g_iTankType[iTank]],
 			iSkinAlpha = !g_bTankConfig[g_iTankType[iTank]] ? g_iSkinAlpha[g_iTankType[iTank]] : g_iSkinAlpha2[g_iTankType[iTank]];
-		SetEntityRenderColor(iTankModel, iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha);
+		SetEntityRenderColor(g_iTankModel[iTank], iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha);
 
-		SetEntProp(iTankModel, Prop_Send, "m_nSequence", iAnim);
-		SetEntPropFloat(iTankModel, Prop_Send, "m_flPlaybackRate", 5.0);
+		SetEntProp(g_iTankModel[iTank], Prop_Send, "m_nSequence", iAnim);
+		SetEntPropFloat(g_iTankModel[iTank], Prop_Send, "m_flPlaybackRate", 5.0);
 
-		iTankModel = EntIndexToEntRef(iTankModel);
-		vDeleteEntity(iTankModel, 0.3);
+		SDKHook(g_iTankModel[iTank], SDKHook_SetTransmit, SetTransmit);
+
+		g_iTankModel[iTank] = EntIndexToEntRef(g_iTankModel[iTank]);
+		vDeleteEntity(g_iTankModel[iTank], 0.3);
 	}
 
 	return Plugin_Continue;
@@ -2434,7 +2767,7 @@ public Action tTimerTankHealthUpdate(Handle timer)
 					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
 					if (StrEqual(sClassname, "player"))
 					{
-						if (bIsTankAllowed(iTarget))
+						if (bIsTank(iTarget))
 						{
 							int iHealth = GetClientHealth(iTarget);
 							switch (iDisplayHealth)
@@ -2558,13 +2891,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 				SetEntPropFloat(iTank, Prop_Send, "m_burnPercent", 1.0);
 			}
 
-			float flRunSpeed = !g_bTankConfig[g_iTankType[iTank]] ? g_flRunSpeed[g_iTankType[iTank]] : g_flRunSpeed2[g_iTankType[iTank]];
-			if (flRunSpeed >= 0.1)
-			{
-				SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
-			}
-
-			Call_StartForward(g_hAbilityForward);
+			Call_StartForward(g_hAbilityActivatedForward);
 			Call_PushCell(iTank);
 			Call_Finish();
 		}
@@ -2636,7 +2963,18 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 		}
 
 		g_iTankHealth[iTank] = iHealth;
+
+		if (bIsTankAllowed(iTank, "5"))
+		{
+			ST_PrintToChat(iTank, "%s %t", ST_TAG3, "SpawnMessage");
+			ST_PrintToChat(iTank, "%s %t", ST_TAG2, "MainButton");
+			ST_PrintToChat(iTank, "%s %t", ST_TAG2, "SubButton");
+			ST_PrintToChat(iTank, "%s %t", ST_TAG2, "SpecialButton");
+			ST_PrintToChat(iTank, "%s %t", ST_TAG2, "SpecialButton2");
+		}
 	}
+
+	vResetSpeed(iTank);
 
 	return Plugin_Continue;
 }

@@ -27,16 +27,18 @@ public Plugin myinfo =
 {
 	name = "[ST++] Track Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank throws a heat-seeking rock that will track down the nearest survivor.",
+	description = "The Super Tank throws heat-seeking rocks that will track down the nearest survivors.",
 	version = ST_VERSION,
 	url = ST_URL
 };
 
-bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+#define ST_MENU_TRACK "Track Ability"
 
-float g_flTrackChance[ST_MAXTYPES + 1], g_flTrackChance2[ST_MAXTYPES + 1], g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1], g_bTrack[MAXPLAYERS + 1], g_bTrack2[MAXPLAYERS + 1];
 
-int g_iGlowEnabled[ST_MAXTYPES + 1], g_iGlowEnabled2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flTrackChance[ST_MAXTYPES + 1], g_flTrackChance2[ST_MAXTYPES + 1], g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
+
+int g_iGlowEnabled[ST_MAXTYPES + 1], g_iGlowEnabled2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackCount[MAXPLAYERS + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -74,6 +76,145 @@ public void OnLibraryRemoved(const char[] name)
 public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
+
+	RegConsoleCmd("sm_st_track", cmdTrackInfo, "View information about the Track ability.");
+}
+
+public void OnMapStart()
+{
+	vReset();
+}
+
+public void OnClientPutInServer(int client)
+{
+	vRemoveTrack(client);
+}
+
+public void OnMapEnd()
+{
+	vReset();
+}
+
+public Action cmdTrackInfo(int client, int args)
+{
+	if (!ST_PluginEnabled())
+	{
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, "0245"))
+	{
+		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
+		case false: vTrackMenu(client, 0);
+	}
+
+	return Plugin_Handled;
+}
+
+static void vTrackMenu(int client, int item)
+{
+	Menu mAbilityMenu = new Menu(iTrackMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Track Ability Information");
+	mAbilityMenu.AddItem("Status", "Status");
+	mAbilityMenu.AddItem("Ammunition", "Ammunition");
+	mAbilityMenu.AddItem("Buttons", "Buttons");
+	mAbilityMenu.AddItem("Cooldown", "Cooldown");
+	mAbilityMenu.AddItem("Details", "Details");
+	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+}
+
+public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iTrackAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iTrackCount[param1], iHumanAmmo(param1));
+				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons4");
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "TrackDetails");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+			}
+
+			if (bIsValidClient(param1, "24"))
+			{
+				vTrackMenu(param1, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[255];
+			Panel panel = view_as<Panel>(param2);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "TrackMenu", param1);
+			panel.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			char sMenuOption[255];
+			switch (param2)
+			{
+				case 0:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 1:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 2:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 3:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 4:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 5:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+public void ST_OnDisplayMenu(Menu menu)
+{
+	menu.AddItem(ST_MENU_TRACK, ST_MENU_TRACK);
+}
+
+public void ST_OnMenuItemSelected(int client, const char[] info)
+{
+	if (StrEqual(info, ST_MENU_TRACK, false))
+	{
+		vTrackMenu(client, 0);
+	}
 }
 
 public void Think(int rock)
@@ -88,7 +229,7 @@ public void Think(int rock)
 	}
 }
 
-public void ST_Configs(const char[] savepath, bool main)
+public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -99,41 +240,56 @@ public void ST_Configs(const char[] savepath, bool main)
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
-			if (main)
+			switch (main)
 			{
-				g_bTankConfig[iIndex] = false;
+				case true:
+				{
+					g_bTankConfig[iIndex] = false;
 
-				g_iGlowEnabled[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", 1);
-				g_iGlowEnabled[iIndex] = iClamp(g_iGlowEnabled[iIndex], 0, 1);
+					g_iGlowEnabled[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", 1);
+					g_iGlowEnabled[iIndex] = iClamp(g_iGlowEnabled[iIndex], 0, 1);
 
-				g_iTrackAbility[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", 0);
-				g_iTrackAbility[iIndex] = iClamp(g_iTrackAbility[iIndex], 0, 1);
-				g_iTrackMessage[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", 0);
-				g_iTrackMessage[iIndex] = iClamp(g_iTrackMessage[iIndex], 0, 1);
-				g_flTrackChance[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Chance", 33.3);
-				g_flTrackChance[iIndex] = flClamp(g_flTrackChance[iIndex], 0.0, 100.0);
-				g_iTrackMode[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", 1);
-				g_iTrackMode[iIndex] = iClamp(g_iTrackMode[iIndex], 0, 1);
-				g_flTrackSpeed[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", 500.0);
-				g_flTrackSpeed[iIndex] = flClamp(g_flTrackSpeed[iIndex], 0.1, 9999999999.0);
-			}
-			else
-			{
-				g_bTankConfig[iIndex] = true;
+					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Track Ability/Human Ability", 0);
+					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
+					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Track Ability/Human Ammo", 5);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Track Ability/Human Cooldown", 30.0);
+					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
+					g_iTrackAbility[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", 0);
+					g_iTrackAbility[iIndex] = iClamp(g_iTrackAbility[iIndex], 0, 1);
+					g_iTrackMessage[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", 0);
+					g_iTrackMessage[iIndex] = iClamp(g_iTrackMessage[iIndex], 0, 1);
+					g_flTrackChance[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Chance", 33.3);
+					g_flTrackChance[iIndex] = flClamp(g_flTrackChance[iIndex], 0.0, 100.0);
+					g_iTrackMode[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", 1);
+					g_iTrackMode[iIndex] = iClamp(g_iTrackMode[iIndex], 0, 1);
+					g_flTrackSpeed[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", 500.0);
+					g_flTrackSpeed[iIndex] = flClamp(g_flTrackSpeed[iIndex], 0.1, 9999999999.0);
+				}
+				case false:
+				{
+					g_bTankConfig[iIndex] = true;
 
-				g_iGlowEnabled2[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", g_iGlowEnabled[iIndex]);
-				g_iGlowEnabled2[iIndex] = iClamp(g_iGlowEnabled2[iIndex], 0, 1);
+					g_iGlowEnabled2[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", g_iGlowEnabled[iIndex]);
+					g_iGlowEnabled2[iIndex] = iClamp(g_iGlowEnabled2[iIndex], 0, 1);
 
-				g_iTrackAbility2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", g_iTrackAbility[iIndex]);
-				g_iTrackAbility2[iIndex] = iClamp(g_iTrackAbility2[iIndex], 0, 1);
-				g_iTrackMessage2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", g_iTrackMessage[iIndex]);
-				g_iTrackMessage2[iIndex] = iClamp(g_iTrackMessage2[iIndex], 0, 1);
-				g_flTrackChance2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Chance", g_flTrackChance[iIndex]);
-				g_flTrackChance2[iIndex] = flClamp(g_flTrackChance2[iIndex], 0.0, 100.0);
-				g_iTrackMode2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", g_iTrackMode[iIndex]);
-				g_iTrackMode2[iIndex] = iClamp(g_iTrackMode2[iIndex], 0, 1);
-				g_flTrackSpeed2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[iIndex]);
-				g_flTrackSpeed2[iIndex] = flClamp(g_flTrackSpeed2[iIndex], 100.0, 500.0);
+					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Track Ability/Human Ability", g_iHumanAbility[iIndex]);
+					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
+					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Track Ability/Human Ammo", g_iHumanAmmo[iIndex]);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 1, 9999999999);
+					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
+					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
+					g_iTrackAbility2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Enabled", g_iTrackAbility[iIndex]);
+					g_iTrackAbility2[iIndex] = iClamp(g_iTrackAbility2[iIndex], 0, 1);
+					g_iTrackMessage2[iIndex] = kvSuperTanks.GetNum("Track Ability/Ability Message", g_iTrackMessage[iIndex]);
+					g_iTrackMessage2[iIndex] = iClamp(g_iTrackMessage2[iIndex], 0, 1);
+					g_flTrackChance2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Chance", g_flTrackChance[iIndex]);
+					g_flTrackChance2[iIndex] = flClamp(g_flTrackChance2[iIndex], 0.0, 100.0);
+					g_iTrackMode2[iIndex] = kvSuperTanks.GetNum("Track Ability/Track Mode", g_iTrackMode[iIndex]);
+					g_iTrackMode2[iIndex] = iClamp(g_iTrackMode2[iIndex], 0, 1);
+					g_flTrackSpeed2[iIndex] = kvSuperTanks.GetFloat("Track Ability/Track Speed", g_flTrackSpeed[iIndex]);
+					g_flTrackSpeed2[iIndex] = flClamp(g_flTrackSpeed2[iIndex], 100.0, 500.0);
+				}
 			}
 
 			kvSuperTanks.Rewind();
@@ -143,18 +299,74 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_RockThrow(int tank, int rock)
+public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+{
+	if (StrEqual(name, "player_death"))
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (ST_TankAllowed(iTank, "0245") && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		{
+			vRemoveTrack(iTank);
+		}
+	}
+}
+
+public void ST_OnButtonPressed(int tank, int button)
+{
+	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
+		{
+			if (iTrackAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			{
+				if (!g_bTrack[tank] && !g_bTrack2[tank])
+				{
+					if (g_iTrackCount[tank] < iHumanAmmo(tank))
+					{
+						g_bTrack[tank] = true;
+						g_iTrackCount[tank]++;
+
+						ST_PrintToChat(tank, "%s %t", ST_TAG3, "TrackHuman", g_iTrackCount[tank], iHumanAmmo(tank));
+					}
+					else
+					{
+						ST_PrintToChat(tank, "%s %t", ST_TAG3, "TrackAmmo");
+					}
+				}
+				else if (g_bTrack[tank])
+				{
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "TrackHuman2");
+				}
+				else if (g_bTrack2[tank])
+				{
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "TrackHuman3");
+				}
+			}
+		}
+	}
+}
+
+public void ST_OnChangeType(int tank)
+{
+	vRemoveTrack(tank);
+}
+
+public void ST_OnRockThrow(int tank, int rock)
 {
 	float flTrackChance = !g_bTankConfig[ST_TankType(tank)] ? g_flTrackChance[ST_TankType(tank)] : g_flTrackChance2[ST_TankType(tank)];
-	if (iTrackAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flTrackChance && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && iTrackAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flTrackChance)
 	{
-		int iTrackMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iTrackMessage[ST_TankType(tank)] : g_iTrackMessage2[ST_TankType(tank)];
+		if ((!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && !g_bTrack[tank])
+		{
+			g_bTrack[tank] = true;
+		}
 
 		DataPack dpTrack;
 		CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
 		dpTrack.WriteCell(EntIndexToEntRef(rock));
 		dpTrack.WriteCell(GetClientUserId(tank));
 
+		int iTrackMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iTrackMessage[ST_TankType(tank)] : g_iTrackMessage2[ST_TankType(tank)];
 		if (iTrackMessage == 1)
 		{
 			char sTankName[33];
@@ -164,12 +376,28 @@ public void ST_RockThrow(int tank, int rock)
 	}
 }
 
+static void vRemoveTrack(int tank)
+{
+	g_bTrack[tank] = false;
+	g_bTrack2[tank] = false;
+	g_iTrackCount[tank] = 0;
+}
+
+static void vReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, "24"))
+		{
+			vRemoveTrack(iPlayer);
+		}
+	}
+}
+
 static void vTrack(int rock)
 {
 	int iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower"),
 		iTrackMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackMode[ST_TankType(iTank)] : g_iTrackMode2[ST_TankType(iTank)];
-	float flTrackSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flTrackSpeed[ST_TankType(iTank)] : g_flTrackSpeed2[ST_TankType(iTank)];
-
 	switch (iTrackMode)
 	{
 		case 0:
@@ -231,10 +459,9 @@ static void vTrack(int rock)
 
 			int iTarget = iGetRandomTarget(flPos, flVelocity);
 			float flVelocity2[3], flVector[3], flAngles[3], flDistance = 1000.0;
+			bool bVisible;
 
 			flVector[0] = flVector[1] = flVector[2] = 0.0;
-
-			bool bVisible;
 
 			if (iTarget > 0)
 			{
@@ -421,6 +648,8 @@ static void vTrack(int rock)
 			ScaleVector(flFront, flAngles2);
 			AddVectors(flVelocity, flFront, flVelocity3);
 			NormalizeVector(flVelocity3, flVelocity3);
+
+			float flTrackSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flTrackSpeed[ST_TankType(iTank)] : g_flTrackSpeed2[ST_TankType(iTank)];
 			ScaleVector(flVelocity3, flTrackSpeed);
 
 			SetEntityGravity(rock, 0.01);
@@ -439,6 +668,21 @@ static void vTrack(int rock)
 	}
 }
 
+static float flHumanCooldown(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+}
+
+static int iHumanAbility(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+}
+
+static int iHumanAmmo(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+}
+
 static int iTrackAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iTrackAbility[ST_TankType(tank)] : g_iTrackAbility2[ST_TankType(tank)];
@@ -455,13 +699,49 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iTrackAbility(iTank) == 0)
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iTrackAbility(iTank) == 0 || !g_bTrack[iTank])
 	{
+		g_bTrack[iTank] = false;
+
 		return Plugin_Stop;
 	}
 
 	SDKUnhook(iRock, SDKHook_Think, Think);
 	SDKHook(iRock, SDKHook_Think, Think);
+
+	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bTrack2[iTank])
+	{
+		g_bTrack[iTank] = false;
+		g_bTrack2[iTank] = true;
+
+		ST_PrintToChat(iTank, "%s %t", ST_TAG3, "TrackHuman4");
+
+		if (g_iTrackCount[iTank] < iHumanAmmo(iTank))
+		{
+			CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+		}
+		else
+		{
+			g_bTrack2[iTank] = false;
+		}
+	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerResetCooldown(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bTrack2[iTank])
+	{
+		g_bTrack2[iTank] = false;
+
+		return Plugin_Stop;
+	}
+
+	g_bTrack2[iTank] = false;
+
+	ST_PrintToChat(iTank, "%s %t", ST_TAG3, "TrackHuman5");
 
 	return Plugin_Continue;
 }
