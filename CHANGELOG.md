@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.50 (December 25, 2019)
+## Version 8.50 (December 25, 2018)
 
 Bug fixes:
 

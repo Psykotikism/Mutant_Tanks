@@ -915,8 +915,8 @@ If you are not a Tank:
 
 If you are a Tank:
 
-1. When you use the menu, you will transform into the chosen type.
-2. When you type out the command, a Super Tank will spawn into the chosen type.
+1. When holding down the +use (default: E) button, a Super Tank will spawn into the chosen type.
+2. When not holding down the +use button, you will transform into the chosen type.
 ```
 
 ```
