@@ -1789,38 +1789,12 @@ static void vReset()
 
 static void vReset2(int tank)
 {
-	vResetProps(tank);
+	vRemoveProps(tank);
 	vResetSpeed(tank, true);
 	vSpawnModes(tank, false);
 
 	g_iBossStageCount[tank] = 0;
 	g_iTankType[tank] = 0;
-}
-
-static void vResetProps(int tank)
-{
-	g_iTankModel[tank] = 0;
-
-	for (int iLight = 0; iLight < 4; iLight++)
-	{
-		g_iLight[tank][iLight] = 0;
-	}
-
-	for (int iOzTank = 0; iOzTank < 3; iOzTank++)
-	{
-		g_iFlame[tank][iOzTank] = 0;
-		g_iJetpack[tank][iOzTank] = 0;
-	}
-
-	for (int iRock = 0; iRock < 17; iRock++)
-	{
-		g_iRock[tank][iRock] = 0;
-	}
-
-	for (int iTire = 0; iTire < 3; iTire++)
-	{
-		g_iTire[tank][iTire] = 0;
-	}
 }
 
 static void vResetSpeed(int tank, bool mode = false)
