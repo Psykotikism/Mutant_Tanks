@@ -1,5 +1,37 @@
 # Changelog
 
+## Version 8.50 (December 25, 2018)
+
+Bug fixes:
+
+1. Fixed the chat color tags not working properly.
+2. Fixed several settings not working properly.
+
+Changes:
+
+1. Added the `Menu Enabled` setting to replace the `Spawn Enabled` setting.
+2. The `Spawn Enabled` setting now determines if a Super Tank can spawn. (Correlates to the `Tank Chance` setting.)
+3. The `Tank Enabled` setting is now an all-in-one setting for more flexibility.
+4. The following settings can now be completely disabled with negative values and they are all set to `-1.0` by default:
+- `Claw Damage` - If set to anything less than `0.0`, the Super Tank's claw damage will be untouched by the plugin.
+- `Rock Damage` - If set to anything less than `0.0`, the Super Tank's rock damage will be untouched by the plugin.
+- `Run Speed` - If set to anything less than `0.1`, the Super Tank's run speed will be untouched by the plugin.
+- `Throw Interval` - If set to anything less than `0.1`, the Super Tank's rock throw interval will be untouched by the plugin.
+5. New ability added: Car ability - The Super Tank creates car showers.
+6. Added back human support, with manually controlled abilities.
+- Added `Cooldown` and `Ammo` settings for most abilities.
+- Added new forwards for many human support features.
+7. Added `Rock Chance` settings for the Acid, Bomb, and Fire abilities.
+8. Added various new settings for several abilities.
+9. Removed/replaced several settings.
+10. Reworked several abilities for balance and simplicity.
+
+Files:
+
+1. Updated the `super_tanks++.cfg` file with the new settings.
+2. Updated the `super_tanks++.inc` file with new forwards, natives, and stocks.
+3. Updated the `super_tanks++.phrases.txt` file with various new phrases.
+
 ## Version 8.49 (December 6, 2018)
 
 Bug fixes:

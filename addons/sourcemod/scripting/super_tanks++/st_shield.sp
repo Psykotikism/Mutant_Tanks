@@ -9,10 +9,8 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-// Super Tanks++: Shield Ability
 #include <sourcemod>
 #include <sdkhooks>
-#include <sdktools>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>
@@ -27,21 +25,24 @@ public Plugin myinfo =
 {
 	name = "[ST++] Shield Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank protects itself with a shield and throws propane tanks.",
+	description = "The Super Tank protects itself with a shield and throws propane tanks or gas cans.",
 	version = ST_VERSION,
 	url = ST_URL
 };
 
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
+
+#define ST_MENU_SHIELD "Shield Ability"
 
 bool g_bCloneInstalled, g_bLateLoad, g_bShield[MAXPLAYERS + 1], g_bShield2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 ConVar g_cvSTTankThrowForce;
 
-float g_flShieldChance[ST_MAXTYPES + 1], g_flShieldChance2[ST_MAXTYPES + 1], g_flShieldDelay[ST_MAXTYPES + 1], g_flShieldDelay2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flHumanDuration[ST_MAXTYPES + 1], g_flHumanDuration2[ST_MAXTYPES + 1], g_flShieldChance[ST_MAXTYPES + 1], g_flShieldChance2[ST_MAXTYPES + 1], g_flShieldDelay[ST_MAXTYPES + 1], g_flShieldDelay2[ST_MAXTYPES + 1];
 
-int g_iShieldAbility[ST_MAXTYPES + 1], g_iShieldAbility2[ST_MAXTYPES + 1], g_iShieldMessage[ST_MAXTYPES + 1], g_iShieldMessage2[ST_MAXTYPES + 1], g_iShieldRed[ST_MAXTYPES + 1], g_iShieldRed2[ST_MAXTYPES + 1], g_iShieldGreen[ST_MAXTYPES + 1], g_iShieldGreen2[ST_MAXTYPES + 1], g_iShieldBlue[ST_MAXTYPES + 1], g_iShieldBlue2[ST_MAXTYPES + 1], g_iShieldAlpha[ST_MAXTYPES + 1], g_iShieldAlpha2[ST_MAXTYPES + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1], g_iShield[MAXPLAYERS + 1], g_iShieldAbility[ST_MAXTYPES + 1], g_iShieldAbility2[ST_MAXTYPES + 1], g_iShieldCount[MAXPLAYERS + 1], g_iShieldMessage[ST_MAXTYPES + 1], g_iShieldMessage2[ST_MAXTYPES + 1], g_iShieldType[ST_MAXTYPES + 1], g_iShieldType2[ST_MAXTYPES + 1], g_iShieldRed[ST_MAXTYPES + 1], g_iShieldRed2[ST_MAXTYPES + 1], g_iShieldGreen[ST_MAXTYPES + 1], g_iShieldGreen2[ST_MAXTYPES + 1], g_iShieldBlue[ST_MAXTYPES + 1], g_iShieldBlue2[ST_MAXTYPES + 1], g_iShieldAlpha[ST_MAXTYPES + 1], g_iShieldAlpha2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -82,6 +83,8 @@ public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
 
+	RegConsoleCmd("sm_st_shield", cmdShieldInfo, "View information about the Shield ability.");
+
 	g_cvSTTankThrowForce = FindConVar("z_tank_throw_force");
 
 	if (g_bLateLoad)
@@ -100,6 +103,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+	PrecacheModel(MODEL_GASCAN, true);
 	PrecacheModel(MODEL_PROPANETANK, true);
 	PrecacheModel(MODEL_SHIELD, true);
 
@@ -110,13 +114,148 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
-	g_bShield[client] = false;
-	g_bShield2[client] = false;
+	vReset2(client);
 }
 
 public void OnMapEnd()
 {
 	vReset();
+}
+
+public Action cmdShieldInfo(int client, int args)
+{
+	if (!ST_PluginEnabled())
+	{
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, "0245"))
+	{
+		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
+		case false: vShieldMenu(client, 0);
+	}
+
+	return Plugin_Handled;
+}
+
+static void vShieldMenu(int client, int item)
+{
+	Menu mAbilityMenu = new Menu(iShieldMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Shield Ability Information");
+	mAbilityMenu.AddItem("Status", "Status");
+	mAbilityMenu.AddItem("Ammunition", "Ammunition");
+	mAbilityMenu.AddItem("Buttons", "Buttons");
+	mAbilityMenu.AddItem("Button Mode", "Button Mode");
+	mAbilityMenu.AddItem("Cooldown", "Cooldown");
+	mAbilityMenu.AddItem("Details", "Details");
+	mAbilityMenu.AddItem("Duration", "Duration");
+	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+}
+
+public int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iShieldAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iShieldCount[param1], iHumanAmmo(param1));
+				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons");
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanMode(param1) == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "ShieldDetails");
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flHumanDuration(param1));
+				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+			}
+
+			if (bIsValidClient(param1, "24"))
+			{
+				vShieldMenu(param1, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[255];
+			Panel panel = view_as<Panel>(param2);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "ShieldMenu", param1);
+			panel.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			char sMenuOption[255];
+			switch (param2)
+			{
+				case 0:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 1:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 2:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 3:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 4:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 5:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 6:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 7:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+public void ST_OnDisplayMenu(Menu menu)
+{
+	menu.AddItem(ST_MENU_SHIELD, ST_MENU_SHIELD);
+}
+
+public void ST_OnMenuItemSelected(int client, const char[] info)
+{
+	if (StrEqual(info, ST_MENU_SHIELD, false))
+	{
+		vShieldMenu(client, 0);
+	}
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -125,15 +264,54 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
-			if (g_bShield2[victim])
+			if (g_bShield[victim])
 			{
-				if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
+				switch (iShieldType(victim))
 				{
-					vShield(victim, false);
-				}
-				else
-				{
-					return Plugin_Handled;
+					case 0:
+					{
+						if (damagetype & DMG_BULLET)
+						{
+							vShieldAbility(victim, false);
+						}
+						else
+						{
+							return Plugin_Handled;
+						}
+					}
+					case 1:
+					{
+						if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
+						{
+							vShieldAbility(victim, false);
+						}
+						else
+						{
+							return Plugin_Handled;
+						}
+					}
+					case 2:
+					{
+						if (damagetype & DMG_BURN)
+						{
+							vShieldAbility(victim, false);
+						}
+						else
+						{
+							return Plugin_Handled;
+						}
+					}
+					case 3:
+					{
+						if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
+						{
+							vShieldAbility(victim, false);
+						}
+						else
+						{
+							return Plugin_Handled;
+						}
+					}
 				}
 			}
 		}
@@ -142,7 +320,18 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public void ST_Configs(const char[] savepath, bool main)
+public Action SetTransmit(int entity, int client)
+{
+	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+	if (ST_PluginEnabled() && iOwner == client && !bIsTankThirdPerson(client))
+	{
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+
+public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -153,33 +342,60 @@ public void ST_Configs(const char[] savepath, bool main)
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
-			if (main)
+			switch (main)
 			{
-				g_bTankConfig[iIndex] = false;
+				case true:
+				{
+					g_bTankConfig[iIndex] = false;
 
-				g_iShieldAbility[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Enabled", 0);
-				g_iShieldAbility[iIndex] = iClamp(g_iShieldAbility[iIndex], 0, 1);
-				g_iShieldMessage[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Message", 0);
-				g_iShieldMessage[iIndex] = iClamp(g_iShieldMessage[iIndex], 0, 1);
-				kvSuperTanks.GetColor("Shield Ability/Shield Color", g_iShieldRed[iIndex], g_iShieldGreen[iIndex], g_iShieldBlue[iIndex], g_iShieldAlpha[iIndex]);
-				g_flShieldChance[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Chance", 33.3);
-				g_flShieldChance[iIndex] = flClamp(g_flShieldChance[iIndex], 0.0, 100.0);
-				g_flShieldDelay[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", 5.0);
-				g_flShieldDelay[iIndex] = flClamp(g_flShieldDelay[iIndex], 0.1, 9999999999.0);
-			}
-			else
-			{
-				g_bTankConfig[iIndex] = true;
+					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Shield Ability/Human Ability", 0);
+					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
+					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Shield Ability/Human Ammo", 5);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
+					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Human Cooldown", 30.0);
+					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
+					g_flHumanDuration[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Human Duration", 5.0);
+					g_flHumanDuration[iIndex] = flClamp(g_flHumanDuration[iIndex], 0.1, 9999999999.0);
+					g_iHumanMode[iIndex] = kvSuperTanks.GetNum("Shield Ability/Human Mode", 1);
+					g_iHumanMode[iIndex] = iClamp(g_iHumanMode[iIndex], 0, 1);
+					g_iShieldAbility[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Enabled", 0);
+					g_iShieldAbility[iIndex] = iClamp(g_iShieldAbility[iIndex], 0, 1);
+					g_iShieldMessage[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Message", 0);
+					g_iShieldMessage[iIndex] = iClamp(g_iShieldMessage[iIndex], 0, 1);
+					kvSuperTanks.GetColor("Shield Ability/Shield Color", g_iShieldRed[iIndex], g_iShieldGreen[iIndex], g_iShieldBlue[iIndex], g_iShieldAlpha[iIndex]);
+					g_flShieldChance[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Chance", 33.3);
+					g_flShieldChance[iIndex] = flClamp(g_flShieldChance[iIndex], 0.0, 100.0);
+					g_flShieldDelay[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", 5.0);
+					g_flShieldDelay[iIndex] = flClamp(g_flShieldDelay[iIndex], 0.1, 9999999999.0);
+					g_iShieldType[iIndex] = kvSuperTanks.GetNum("Shield Ability/Shield Types", 1);
+					g_iShieldType[iIndex] = iClamp(g_iShieldType[iIndex], 0, 3);
+				}
+				case false:
+				{
+					g_bTankConfig[iIndex] = true;
 
-				g_iShieldAbility2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Enabled", g_iShieldAbility[iIndex]);
-				g_iShieldAbility2[iIndex] = iClamp(g_iShieldAbility2[iIndex], 0, 1);
-				g_iShieldMessage2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Message", g_iShieldMessage[iIndex]);
-				g_iShieldMessage2[iIndex] = iClamp(g_iShieldMessage2[iIndex], 0, 1);
-				kvSuperTanks.GetColor("Shield Ability/Shield Color", g_iShieldRed2[iIndex], g_iShieldGreen2[iIndex], g_iShieldBlue2[iIndex], g_iShieldAlpha2[iIndex]);
-				g_flShieldChance2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Chance", g_flShieldChance[iIndex]);
-				g_flShieldChance2[iIndex] = flClamp(g_flShieldChance2[iIndex], 0.0, 100.0);
-				g_flShieldDelay2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", g_flShieldDelay[iIndex]);
-				g_flShieldDelay2[iIndex] = flClamp(g_flShieldDelay2[iIndex], 0.1, 9999999999.0);
+					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Human Ability", g_iHumanAbility[iIndex]);
+					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
+					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Human Ammo", g_iHumanAmmo[iIndex]);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
+					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
+					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
+					g_flHumanDuration2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Human Duration", g_flHumanDuration[iIndex]);
+					g_flHumanDuration2[iIndex] = flClamp(g_flHumanDuration2[iIndex], 0.1, 9999999999.0);
+					g_iHumanMode2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Human Mode", g_iHumanMode[iIndex]);
+					g_iHumanMode2[iIndex] = iClamp(g_iHumanMode2[iIndex], 0, 1);
+					g_iShieldAbility2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Enabled", g_iShieldAbility[iIndex]);
+					g_iShieldAbility2[iIndex] = iClamp(g_iShieldAbility2[iIndex], 0, 1);
+					g_iShieldMessage2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Ability Message", g_iShieldMessage[iIndex]);
+					g_iShieldMessage2[iIndex] = iClamp(g_iShieldMessage2[iIndex], 0, 1);
+					kvSuperTanks.GetColor("Shield Ability/Shield Color", g_iShieldRed2[iIndex], g_iShieldGreen2[iIndex], g_iShieldBlue2[iIndex], g_iShieldAlpha2[iIndex]);
+					g_flShieldChance2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Chance", g_flShieldChance[iIndex]);
+					g_flShieldChance2[iIndex] = flClamp(g_flShieldChance2[iIndex], 0.0, 100.0);
+					g_flShieldDelay2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", g_flShieldDelay[iIndex]);
+					g_flShieldDelay2[iIndex] = flClamp(g_flShieldDelay2[iIndex], 0.1, 9999999999.0);
+					g_iShieldType2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Shield Types", g_iShieldType[iIndex]);
+					g_iShieldType2[iIndex] = iClamp(g_iShieldType2[iIndex], 0, 3);
+				}
 			}
 
 			kvSuperTanks.Rewind();
@@ -189,54 +405,127 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_PluginEnd()
+public void ST_OnPluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, "234") && (g_bShield[iTank] || g_bShield2[iTank]))
+		if (bIsTank(iTank, "234") && g_bShield[iTank])
 		{
 			vRemoveShield(iTank);
 		}
 	}
 }
 
-public void ST_EventHandler(Event event, const char[] name, bool dontBroadcast)
+public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (iShieldAbility(iTank) == 1 && ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
 		{
-			g_bShield[iTank] = false;
-			g_bShield2[iTank] = false;
-
 			vRemoveShield(iTank);
+
+			vReset2(iTank);
 		}
 	}
 }
 
-public void ST_Ability(int tank)
+public void ST_OnAbilityActivated(int tank)
 {
-	if (iShieldAbility(tank) == 1 && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !g_bShield[tank])
+	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iShieldAbility(tank) == 1 && !g_bShield[tank] && !g_bShield2[tank])
 	{
-		vShield(tank, true);
+		vShieldAbility(tank, true);
 	}
 }
 
-public void ST_ChangeType(int tank)
+public void ST_OnButtonPressed(int tank, int button)
+{
+	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
+		{
+			if (iShieldAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			{
+				switch (iHumanMode(tank))
+				{
+					case 0:
+					{
+						if (!g_bShield[tank] && !g_bShield2[tank])
+						{
+							vShieldAbility(tank, true);
+						}
+						else if (g_bShield[tank])
+						{
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShieldHuman3");
+						}
+						else if (g_bShield2[tank])
+						{
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShieldHuman4");
+						}
+					}
+					case 1:
+					{
+						if (g_iShieldCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+						{
+							if (!g_bShield[tank] && !g_bShield2[tank])
+							{
+								g_bShield[tank] = true;
+								g_iShieldCount[tank]++;
+
+								g_iShield[tank] = CreateEntityByName("prop_dynamic");
+								if (bIsValidEntity(g_iShield[tank]))
+								{
+									vShield(tank);
+								}
+
+								ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShieldHuman", g_iShieldCount[tank], iHumanAmmo(tank));
+							}
+						}
+						else
+						{
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShieldAmmo");
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+public void ST_OnButtonReleased(int tank, int button)
+{
+	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
+		{
+			if (iShieldAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			{
+				if (iHumanMode(tank) == 1 && g_bShield[tank] && !g_bShield2[tank])
+				{
+					vRemoveShield(tank);
+
+					g_bShield[tank] = false;
+
+					vReset3(tank);
+				}
+			}
+		}
+	}
+}
+
+public void ST_OnChangeType(int tank)
 {
 	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
 	{
-		g_bShield[tank] = false;
-		g_bShield2[tank] = false;
-
 		vRemoveShield(tank);
+
+		vReset2(tank);
 	}
 }
 
-public void ST_RockThrow(int tank, int rock)
+public void ST_OnRockThrow(int tank, int rock)
 {
-	if (iShieldAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flShieldChance(tank) && ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && iShieldAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flShieldChance(tank))
 	{
 		DataPack dpShieldThrow;
 		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -247,19 +536,10 @@ public void ST_RockThrow(int tank, int rock)
 
 static void vRemoveShield(int tank)
 {
-	int iShield = -1;
-	while ((iShield = FindEntityByClassname(iShield, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+	if (bIsValidEntity(g_iShield[tank]))
 	{
-		char sModel[128];
-		GetEntPropString(iShield, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-		if (StrEqual(sModel, MODEL_SHIELD, false))
-		{
-			int iOwner = GetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity");
-			if (iOwner == tank)
-			{
-				RemoveEntity(iShield);
-			}
-		}
+		SDKUnhook(g_iShield[tank], SDKHook_SetTransmit, SetTransmit);
+		RemoveEntity(g_iShield[tank]);
 	}
 }
 
@@ -269,71 +549,171 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, "24"))
 		{
-			g_bShield[iPlayer] = false;
-			g_bShield2[iPlayer] = false;
+			vReset2(iPlayer);
 		}
 	}
 }
 
-static void vShield(int tank, bool shield)
+static void vReset2(int tank)
 {
-	if (shield)
+	g_bShield[tank] = false;
+	g_bShield2[tank] = false;
+	g_iShield[tank] = 0;
+	g_iShieldCount[tank] = 0;
+}
+
+static void vReset3(int tank)
+{
+	if (!g_bShield2[tank])
 	{
-		float flOrigin[3];
-		GetClientAbsOrigin(tank, flOrigin);
-		flOrigin[2] -= 120.0;
-
-		int iShield = CreateEntityByName("prop_dynamic");
-		if (bIsValidEntity(iShield))
-		{
-			SetEntityModel(iShield, MODEL_SHIELD);
-
-			DispatchKeyValueVector(iShield, "origin", flOrigin);
-			DispatchSpawn(iShield);
-			vSetEntityParent(iShield, tank);
-
-			int iShieldRed = !g_bTankConfig[ST_TankType(tank)] ? g_iShieldRed[ST_TankType(tank)] : g_iShieldRed2[ST_TankType(tank)],
-				iShieldGreen = !g_bTankConfig[ST_TankType(tank)] ? g_iShieldGreen[ST_TankType(tank)] : g_iShieldGreen2[ST_TankType(tank)],
-				iShieldBlue = !g_bTankConfig[ST_TankType(tank)] ? g_iShieldBlue[ST_TankType(tank)] : g_iShieldBlue2[ST_TankType(tank)],
-				iShieldAlpha = !g_bTankConfig[ST_TankType(tank)] ? g_iShieldAlpha[ST_TankType(tank)] : g_iShieldAlpha2[ST_TankType(tank)];
-			SetEntityRenderMode(iShield, RENDER_TRANSTEXTURE);
-			SetEntityRenderColor(iShield, iShieldRed, iShieldGreen, iShieldBlue, iShieldAlpha);
-
-			SetEntProp(iShield, Prop_Send, "m_CollisionGroup", 1);
-			SetEntPropEnt(iShield, Prop_Send, "m_hOwnerEntity", tank);
-		}
-
-		g_bShield[tank] = true;
 		g_bShield2[tank] = true;
 
-		if (iShieldMessage(tank) == 1)
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShieldHuman5");
+
+		if (g_iShieldCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 		{
-			char sTankName[33];
-			ST_TankName(tank, sTankName);
-			ST_PrintToChatAll("%s %t", ST_TAG2, "Shield", sTankName);
+			CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		}
+		else
+		{
+			g_bShield2[tank] = false;
 		}
 	}
-	else
+}
+
+static void vShield(int tank)
+{
+	float flOrigin[3];
+	GetClientAbsOrigin(tank, flOrigin);
+	flOrigin[2] -= 120.0;
+
+	SetEntityModel(g_iShield[tank], MODEL_SHIELD);
+
+	DispatchKeyValueVector(g_iShield[tank], "origin", flOrigin);
+	DispatchSpawn(g_iShield[tank]);
+	vSetEntityParent(g_iShield[tank], tank);
+
+	int iShieldRed = !g_bTankConfig[ST_TankType(tank)] ? g_iShieldRed[ST_TankType(tank)] : g_iShieldRed2[ST_TankType(tank)],
+		iShieldGreen = !g_bTankConfig[ST_TankType(tank)] ? g_iShieldGreen[ST_TankType(tank)] : g_iShieldGreen2[ST_TankType(tank)],
+		iShieldBlue = !g_bTankConfig[ST_TankType(tank)] ? g_iShieldBlue[ST_TankType(tank)] : g_iShieldBlue2[ST_TankType(tank)],
+		iShieldAlpha = !g_bTankConfig[ST_TankType(tank)] ? g_iShieldAlpha[ST_TankType(tank)] : g_iShieldAlpha2[ST_TankType(tank)];
+	SetEntityRenderMode(g_iShield[tank], RENDER_TRANSTEXTURE);
+	SetEntityRenderColor(g_iShield[tank], iShieldRed, iShieldGreen, iShieldBlue, iShieldAlpha);
+
+	SetEntProp(g_iShield[tank], Prop_Send, "m_CollisionGroup", 1);
+	SetEntPropEnt(g_iShield[tank], Prop_Send, "m_hOwnerEntity", tank);
+
+	SDKHook(g_iShield[tank], SDKHook_SetTransmit, SetTransmit);
+}
+
+static void vShieldAbility(int tank, bool shield)
+{
+	switch (shield)
 	{
-		vRemoveShield(tank);
-
-		float flShieldDelay = !g_bTankConfig[ST_TankType(tank)] ? g_flShieldDelay[ST_TankType(tank)] : g_flShieldDelay2[ST_TankType(tank)];
-		CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-
-		g_bShield2[tank] = false;
-
-		if (iShieldMessage(tank) == 1)
+		case true:
 		{
-			char sTankName[33];
-			ST_TankName(tank, sTankName);
-			ST_PrintToChatAll("%s %t", ST_TAG2, "Shield2", sTankName);
+			if (g_iShieldCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+			{
+				if (GetRandomFloat(0.1, 100.0) <= flShieldChance(tank))
+				{
+					g_iShield[tank] = CreateEntityByName("prop_dynamic");
+					if (bIsValidEntity(g_iShield[tank]))
+					{
+						vShield(tank);
+
+						g_bShield[tank] = true;
+
+						ExtinguishEntity(tank);
+
+						if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+						{
+							g_iShieldCount[tank]++;
+
+							DataPack dpStopShield;
+							CreateDataTimer(flHumanDuration(tank), tTimerStopShield, dpStopShield, TIMER_FLAG_NO_MAPCHANGE);
+							dpStopShield.WriteCell(EntIndexToEntRef(g_iShield[tank]));
+							dpStopShield.WriteCell(GetClientUserId(tank));
+
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShieldHuman", g_iShieldCount[tank], iHumanAmmo(tank));
+						}
+
+						if (iShieldMessage(tank) == 1)
+						{
+							char sTankName[33];
+							ST_TankName(tank, sTankName);
+							ST_PrintToChatAll("%s %t", ST_TAG2, "Shield", sTankName);
+						}
+					}
+				}
+				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+				{
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShieldHuman2");
+				}
+			}
+			else
+			{
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShieldAmmo");
+			}
+		}
+		case false:
+		{
+			vRemoveShield(tank);
+
+			g_bShield[tank] = false;
+
+			switch (ST_TankAllowed(tank, "02345"))
+			{
+				case true: vReset3(tank);
+				case false:
+				{
+					if (!g_bShield2[tank])
+					{
+						g_bShield2[tank] = true;
+
+						float flShieldDelay = !g_bTankConfig[ST_TankType(tank)] ? g_flShieldDelay[ST_TankType(tank)] : g_flShieldDelay2[ST_TankType(tank)];
+						CreateTimer(flShieldDelay, tTimerShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+					}
+				}
+			}
+
+			if (iShieldMessage(tank) == 1)
+			{
+				char sTankName[33];
+				ST_TankName(tank, sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Shield2", sTankName);
+			}
 		}
 	}
+}
+
+static float flHumanCooldown(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+}
+
+static float flHumanDuration(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanDuration[ST_TankType(tank)] : g_flHumanDuration2[ST_TankType(tank)];
 }
 
 static float flShieldChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flShieldChance[ST_TankType(tank)] : g_flShieldChance2[ST_TankType(tank)];
+}
+
+static int iHumanAbility(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+}
+
+static int iHumanAmmo(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+}
+
+static int iHumanMode(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
 }
 
 static int iShieldAbility(int tank)
@@ -346,23 +726,24 @@ static int iShieldMessage(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iShieldMessage[ST_TankType(tank)] : g_iShieldMessage2[ST_TankType(tank)];
 }
 
+static int iShieldType(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iShieldType[ST_TankType(tank)] : g_iShieldType2[ST_TankType(tank)];
+}
+
 public Action tTimerShield(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || g_bShield2[iTank] || (!g_bShield[iTank] && !g_bShield2[iTank]))
+	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || !g_bShield2[iTank])
 	{
-		g_bShield[iTank] = false;
 		g_bShield2[iTank] = false;
 
 		return Plugin_Stop;
 	}
 
-	if (GetRandomFloat(0.1, 100.0) <= flShieldChance(iTank))
-	{
-		vShield(iTank, true);
+	g_bShield2[iTank] = false;
 
-		return Plugin_Stop;
-	}
+	vShieldAbility(iTank, true);
 
 	return Plugin_Continue;
 }
@@ -378,11 +759,13 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || (!g_bShield[iTank] && !g_bShield2[iTank]))
+	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || !g_bShield[iTank])
 	{
-		g_bShield[iTank] = false;
-		g_bShield2[iTank] = false;
+		return Plugin_Stop;
+	}
 
+	if (iShieldType(iTank) != 1 && iShieldType(iTank) != 2)
+	{
 		return Plugin_Stop;
 	}
 
@@ -392,10 +775,14 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	float flVector = GetVectorLength(flVelocity);
 	if (flVector > 500.0)
 	{
-		int iPropane = CreateEntityByName("prop_physics");
-		if (bIsValidEntity(iPropane))
+		int iThrowable = CreateEntityByName("prop_physics");
+		if (bIsValidEntity(iThrowable))
 		{
-			SetEntityModel(iPropane, MODEL_PROPANETANK);
+			switch (iShieldType(iTank))
+			{
+				case 1: SetEntityModel(iThrowable, MODEL_PROPANETANK);
+				case 2: SetEntityModel(iThrowable, MODEL_GASCAN);
+			}
 
 			float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
@@ -404,12 +791,52 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 
-			DispatchSpawn(iPropane);
-			TeleportEntity(iPropane, flPos, NULL_VECTOR, flVelocity);
+			DispatchSpawn(iThrowable);
+			TeleportEntity(iThrowable, flPos, NULL_VECTOR, flVelocity);
 		}
 
 		return Plugin_Stop;
 	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerStopShield(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iShield = EntRefToEntIndex(pack.ReadCell());
+	if (iShield == INVALID_ENT_REFERENCE || !bIsValidEntity(iShield))
+	{
+		return Plugin_Stop;
+	}
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bShield[iTank])
+	{
+		vShieldAbility(iTank, false);
+
+		return Plugin_Stop;
+	}
+
+	vShieldAbility(iTank, false);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerResetCooldown(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bShield2[iTank])
+	{
+		g_bShield2[iTank] = false;
+
+		return Plugin_Stop;
+	}
+
+	g_bShield2[iTank] = false;
+
+	ST_PrintToChat(iTank, "%s %t", ST_TAG3, "ShieldHuman6");
 
 	return Plugin_Continue;
 }

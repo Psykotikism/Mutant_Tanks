@@ -9,10 +9,8 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-// Super Tanks++: Pimp Ability
 #include <sourcemod>
 #include <sdkhooks>
-#include <sdktools>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>
@@ -32,13 +30,15 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-bool g_bCloneInstalled, g_bLateLoad, g_bPimp[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+#define ST_MENU_PIMP "Pimp Ability"
+
+bool g_bCloneInstalled, g_bLateLoad, g_bPimp[MAXPLAYERS + 1], g_bPimp2[MAXPLAYERS + 1], g_bPimp3[MAXPLAYERS + 1], g_bPimp4[MAXPLAYERS + 1], g_bPimp5[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sPimpEffect[ST_MAXTYPES + 1][4], g_sPimpEffect2[ST_MAXTYPES + 1][4], g_sPimpMessage[ST_MAXTYPES + 1][3], g_sPimpMessage2[ST_MAXTYPES + 1][3];
 
-float g_flPimpChance[ST_MAXTYPES + 1], g_flPimpChance2[ST_MAXTYPES + 1], g_flPimpInterval[ST_MAXTYPES + 1], g_flPimpInterval2[ST_MAXTYPES + 1], g_flPimpRange[ST_MAXTYPES + 1], g_flPimpRange2[ST_MAXTYPES + 1], g_flPimpRangeChance[ST_MAXTYPES + 1], g_flPimpRangeChance2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flPimpChance[ST_MAXTYPES + 1], g_flPimpChance2[ST_MAXTYPES + 1], g_flPimpDuration[ST_MAXTYPES + 1], g_flPimpDuration2[ST_MAXTYPES + 1], g_flPimpInterval[ST_MAXTYPES + 1], g_flPimpInterval2[ST_MAXTYPES + 1], g_flPimpRange[ST_MAXTYPES + 1], g_flPimpRange2[ST_MAXTYPES + 1], g_flPimpRangeChance[ST_MAXTYPES + 1], g_flPimpRangeChance2[ST_MAXTYPES + 1];
 
-int g_iPimpAbility[ST_MAXTYPES + 1], g_iPimpAbility2[ST_MAXTYPES + 1], g_iPimpAmount[ST_MAXTYPES + 1], g_iPimpAmount2[ST_MAXTYPES + 1], g_iPimpCount[MAXPLAYERS + 1], g_iPimpDamage[ST_MAXTYPES + 1], g_iPimpDamage2[ST_MAXTYPES + 1], g_iPimpHit[ST_MAXTYPES + 1], g_iPimpHit2[ST_MAXTYPES + 1], g_iPimpHitMode[ST_MAXTYPES + 1], g_iPimpHitMode2[ST_MAXTYPES + 1], g_iPimpOwner[MAXPLAYERS + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iPimpAbility[ST_MAXTYPES + 1], g_iPimpAbility2[ST_MAXTYPES + 1], g_iPimpCount[MAXPLAYERS + 1], g_iPimpDamage[ST_MAXTYPES + 1], g_iPimpDamage2[ST_MAXTYPES + 1], g_iPimpHit[ST_MAXTYPES + 1], g_iPimpHit2[ST_MAXTYPES + 1], g_iPimpHitMode[ST_MAXTYPES + 1], g_iPimpHitMode2[ST_MAXTYPES + 1], g_iPimpOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -79,6 +79,8 @@ public void OnPluginStart()
 {
 	LoadTranslations("super_tanks++.phrases");
 
+	RegConsoleCmd("sm_st_pimp", cmdPimpInfo, "View information about the Pimp ability.");
+
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -102,14 +104,141 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
-	g_bPimp[client] = false;
-	g_iPimpCount[client] = 0;
-	g_iPimpOwner[client] = 0;
+	vRemovePimp(client);
 }
 
 public void OnMapEnd()
 {
 	vReset();
+}
+
+public Action cmdPimpInfo(int client, int args)
+{
+	if (!ST_PluginEnabled())
+	{
+		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, "0245"))
+	{
+		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
+		case false: vPimpMenu(client, 0);
+	}
+
+	return Plugin_Handled;
+}
+
+static void vPimpMenu(int client, int item)
+{
+	Menu mAbilityMenu = new Menu(iPimpMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Pimp Ability Information");
+	mAbilityMenu.AddItem("Status", "Status");
+	mAbilityMenu.AddItem("Ammunition", "Ammunition");
+	mAbilityMenu.AddItem("Buttons", "Buttons");
+	mAbilityMenu.AddItem("Cooldown", "Cooldown");
+	mAbilityMenu.AddItem("Details", "Details");
+	mAbilityMenu.AddItem("Duration", "Duration");
+	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+}
+
+public int iPimpMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iPimpAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iPimpCount[param1], iHumanAmmo(param1));
+				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "PimpDetails");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flPimpDuration(param1));
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+			}
+
+			if (bIsValidClient(param1, "24"))
+			{
+				vPimpMenu(param1, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[255];
+			Panel panel = view_as<Panel>(param2);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "PimpMenu", param1);
+			panel.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			char sMenuOption[255];
+			switch (param2)
+			{
+				case 0:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 1:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 2:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 3:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 4:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 5:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 6:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+public void ST_OnDisplayMenu(Menu menu)
+{
+	menu.AddItem(ST_MENU_PIMP, ST_MENU_PIMP);
+}
+
+public void ST_OnMenuItemSelected(int client, const char[] info)
+{
+	if (StrEqual(info, ST_MENU_PIMP, false))
+	{
+		vPimpMenu(client, 0);
+	}
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -136,7 +265,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_Configs(const char[] savepath, bool main)
+public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 {
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
@@ -147,55 +276,70 @@ public void ST_Configs(const char[] savepath, bool main)
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
 		if (kvSuperTanks.JumpToKey(sTankName))
 		{
-			if (main)
+			switch (main)
 			{
-				g_bTankConfig[iIndex] = false;
+				case true:
+				{
+					g_bTankConfig[iIndex] = false;
 
-				g_iPimpAbility[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", 0);
-				g_iPimpAbility[iIndex] = iClamp(g_iPimpAbility[iIndex], 0, 1);
-				kvSuperTanks.GetString("Pimp Ability/Ability Effect", g_sPimpEffect[iIndex], sizeof(g_sPimpEffect[]), "0");
-				kvSuperTanks.GetString("Pimp Ability/Ability Message", g_sPimpMessage[iIndex], sizeof(g_sPimpMessage[]), "0");
-				g_iPimpAmount[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", 5);
-				g_iPimpAmount[iIndex] = iClamp(g_iPimpAmount[iIndex], 1, 9999999999);
-				g_flPimpChance[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Chance", 33.3);
-				g_flPimpChance[iIndex] = flClamp(g_flPimpChance[iIndex], 0.0, 100.0);
-				g_iPimpDamage[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Damage", 1);
-				g_iPimpDamage[iIndex] = iClamp(g_iPimpDamage[iIndex], 1, 9999999999);
-				g_iPimpHit[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit", 0);
-				g_iPimpHit[iIndex] = iClamp(g_iPimpHit[iIndex], 0, 1);
-				g_iPimpHitMode[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit Mode", 0);
-				g_iPimpHitMode[iIndex] = iClamp(g_iPimpHitMode[iIndex], 0, 2);
-				g_flPimpInterval[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Interval", 1.0);
-				g_flPimpInterval[iIndex] = flClamp(g_flPimpInterval[iIndex], 0.1, 9999999999.0);
-				g_flPimpRange[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range", 150.0);
-				g_flPimpRange[iIndex] = flClamp(g_flPimpRange[iIndex], 1.0, 9999999999.0);
-				g_flPimpRangeChance[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range Chance", 15.0);
-				g_flPimpRangeChance[iIndex] = flClamp(g_flPimpRangeChance[iIndex], 0.0, 100.0);
-			}
-			else
-			{
-				g_bTankConfig[iIndex] = true;
+					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Human Ability", 0);
+					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
+					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Human Ammo", 5);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
+					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Human Cooldown", 30.0);
+					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
+					g_iPimpAbility[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", 0);
+					g_iPimpAbility[iIndex] = iClamp(g_iPimpAbility[iIndex], 0, 1);
+					kvSuperTanks.GetString("Pimp Ability/Ability Effect", g_sPimpEffect[iIndex], sizeof(g_sPimpEffect[]), "0");
+					kvSuperTanks.GetString("Pimp Ability/Ability Message", g_sPimpMessage[iIndex], sizeof(g_sPimpMessage[]), "0");
+					g_flPimpChance[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Chance", 33.3);
+					g_flPimpChance[iIndex] = flClamp(g_flPimpChance[iIndex], 0.0, 100.0);
+					g_iPimpDamage[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Damage", 1);
+					g_iPimpDamage[iIndex] = iClamp(g_iPimpDamage[iIndex], 1, 9999999999);
+					g_flPimpDuration[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Duration", 5.0);
+					g_flPimpDuration[iIndex] = flClamp(g_flPimpDuration[iIndex], 0.1, 9999999999.0);
+					g_iPimpHit[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit", 0);
+					g_iPimpHit[iIndex] = iClamp(g_iPimpHit[iIndex], 0, 1);
+					g_iPimpHitMode[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit Mode", 0);
+					g_iPimpHitMode[iIndex] = iClamp(g_iPimpHitMode[iIndex], 0, 2);
+					g_flPimpInterval[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Interval", 1.0);
+					g_flPimpInterval[iIndex] = flClamp(g_flPimpInterval[iIndex], 0.1, 9999999999.0);
+					g_flPimpRange[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range", 150.0);
+					g_flPimpRange[iIndex] = flClamp(g_flPimpRange[iIndex], 1.0, 9999999999.0);
+					g_flPimpRangeChance[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range Chance", 15.0);
+					g_flPimpRangeChance[iIndex] = flClamp(g_flPimpRangeChance[iIndex], 0.0, 100.0);
+				}
+				case false:
+				{
+					g_bTankConfig[iIndex] = true;
 
-				g_iPimpAbility2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", g_iPimpAbility[iIndex]);
-				g_iPimpAbility2[iIndex] = iClamp(g_iPimpAbility2[iIndex], 0, 1);
-				kvSuperTanks.GetString("Pimp Ability/Ability Effect", g_sPimpEffect2[iIndex], sizeof(g_sPimpEffect2[]), g_sPimpEffect[iIndex]);
-				kvSuperTanks.GetString("Pimp Ability/Ability Message", g_sPimpMessage2[iIndex], sizeof(g_sPimpMessage2[]), g_sPimpMessage[iIndex]);
-				g_iPimpAmount2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Amount", g_iPimpAmount[iIndex]);
-				g_iPimpAmount2[iIndex] = iClamp(g_iPimpAmount2[iIndex], 1, 9999999999);
-				g_flPimpChance2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Chance", g_flPimpChance[iIndex]);
-				g_flPimpChance2[iIndex] = flClamp(g_flPimpChance2[iIndex], 0.0, 100.0);
-				g_iPimpDamage2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Damage", g_iPimpDamage[iIndex]);
-				g_iPimpDamage2[iIndex] = iClamp(g_iPimpDamage2[iIndex], 1, 9999999999);
-				g_iPimpHit2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit", g_iPimpHit[iIndex]);
-				g_iPimpHit2[iIndex] = iClamp(g_iPimpHit2[iIndex], 0, 1);
-				g_iPimpHitMode2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit Mode", g_iPimpHitMode[iIndex]);
-				g_iPimpHitMode2[iIndex] = iClamp(g_iPimpHitMode2[iIndex], 0, 2);
-				g_flPimpInterval2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Interval", g_flPimpInterval[iIndex]);
-				g_flPimpInterval2[iIndex] = flClamp(g_flPimpInterval2[iIndex], 0.1, 9999999999.0);
-				g_flPimpRange2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range", g_flPimpRange[iIndex]);
-				g_flPimpRange2[iIndex] = flClamp(g_flPimpRange2[iIndex], 1.0, 9999999999.0);
-				g_flPimpRangeChance2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range Chance", g_flPimpRangeChance[iIndex]);
-				g_flPimpRangeChance2[iIndex] = flClamp(g_flPimpRangeChance2[iIndex], 0.0, 100.0);
+					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Human Ability", g_iHumanAbility[iIndex]);
+					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
+					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Human Ammo", g_iHumanAmmo[iIndex]);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
+					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
+					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
+					g_iPimpAbility2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Ability Enabled", g_iPimpAbility[iIndex]);
+					g_iPimpAbility2[iIndex] = iClamp(g_iPimpAbility2[iIndex], 0, 1);
+					kvSuperTanks.GetString("Pimp Ability/Ability Effect", g_sPimpEffect2[iIndex], sizeof(g_sPimpEffect2[]), g_sPimpEffect[iIndex]);
+					kvSuperTanks.GetString("Pimp Ability/Ability Message", g_sPimpMessage2[iIndex], sizeof(g_sPimpMessage2[]), g_sPimpMessage[iIndex]);
+					g_flPimpChance2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Chance", g_flPimpChance[iIndex]);
+					g_flPimpChance2[iIndex] = flClamp(g_flPimpChance2[iIndex], 0.0, 100.0);
+					g_iPimpDamage2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Damage", g_iPimpDamage[iIndex]);
+					g_iPimpDamage2[iIndex] = iClamp(g_iPimpDamage2[iIndex], 1, 9999999999);
+					g_flPimpDuration2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Duration", g_flPimpDuration[iIndex]);
+					g_flPimpDuration2[iIndex] = flClamp(g_flPimpDuration2[iIndex], 0.1, 9999999999.0);
+					g_iPimpHit2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit", g_iPimpHit[iIndex]);
+					g_iPimpHit2[iIndex] = iClamp(g_iPimpHit2[iIndex], 0, 1);
+					g_iPimpHitMode2[iIndex] = kvSuperTanks.GetNum("Pimp Ability/Pimp Hit Mode", g_iPimpHitMode[iIndex]);
+					g_iPimpHitMode2[iIndex] = iClamp(g_iPimpHitMode2[iIndex], 0, 2);
+					g_flPimpInterval2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Interval", g_flPimpInterval[iIndex]);
+					g_flPimpInterval2[iIndex] = flClamp(g_flPimpInterval2[iIndex], 0.1, 9999999999.0);
+					g_flPimpRange2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range", g_flPimpRange[iIndex]);
+					g_flPimpRange2[iIndex] = flClamp(g_flPimpRange2[iIndex], 1.0, 9999999999.0);
+					g_flPimpRangeChance2[iIndex] = kvSuperTanks.GetFloat("Pimp Ability/Pimp Range Chance", g_flPimpRangeChance[iIndex]);
+					g_flPimpRangeChance2[iIndex] = flClamp(g_flPimpRangeChance2[iIndex], 0.0, 100.0);
+				}
 			}
 
 			kvSuperTanks.Rewind();
@@ -205,17 +349,70 @@ public void ST_Configs(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
-public void ST_Ability(int tank)
+public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (StrEqual(name, "player_death"))
 	{
-		int iPimpAbility = !g_bTankConfig[ST_TankType(tank)] ? g_iPimpAbility[ST_TankType(tank)] : g_iPimpAbility2[ST_TankType(tank)];
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		{
+			vRemovePimp(iTank);
+		}
+	}
+}
+
+public void ST_OnAbilityActivated(int tank)
+{
+	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iPimpAbility(tank) == 1)
+	{
+		vPimpAbility(tank);
+	}
+}
+
+public void ST_OnButtonPressed(int tank, int button)
+{
+	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	{
+		if (button & ST_SUB_KEY == ST_SUB_KEY)
+		{
+			if (iPimpAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			{
+				if (!g_bPimp2[tank] && !g_bPimp3[tank])
+				{
+					vPimpAbility(tank);
+				}
+				else if (g_bPimp2[tank])
+				{
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "PimpHuman3");
+				}
+				else if (g_bPimp3[tank])
+				{
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "PimpHuman4");
+				}
+			}
+		}
+	}
+}
+
+public void ST_OnChangeType(int tank)
+{
+	vRemovePimp(tank);
+}
+
+static void vPimpAbility(int tank)
+{
+	if (g_iPimpCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	{
+		g_bPimp4[tank] = false;
+		g_bPimp5[tank] = false;
 
 		float flPimpRange = !g_bTankConfig[ST_TankType(tank)] ? g_flPimpRange[ST_TankType(tank)] : g_flPimpRange2[ST_TankType(tank)],
 			flPimpRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flPimpRangeChance[ST_TankType(tank)] : g_flPimpRangeChance2[ST_TankType(tank)],
 			flTankPos[3];
 
 		GetClientAbsOrigin(tank, flTankPos);
+
+		int iSurvivorCount;
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
@@ -227,57 +424,102 @@ public void ST_Ability(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flPimpRange)
 				{
-					vPimpHit(iSurvivor, tank, flPimpRangeChance, iPimpAbility, "2", "3");
+					vPimpHit(iSurvivor, tank, flPimpRangeChance, iPimpAbility(tank), "2", "3");
+
+					iSurvivorCount++;
 				}
 			}
 		}
-	}
-}
 
-public void ST_ChangeType(int tank)
-{
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
-	{
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		if (iSurvivorCount == 0)
 		{
-			if (bIsSurvivor(iSurvivor, "24") && g_bPimp[iSurvivor] && g_iPimpOwner[iSurvivor] == tank)
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 			{
-				g_bPimp[iSurvivor] = false;
-				g_iPimpCount[iSurvivor] = 0;
-				g_iPimpOwner[iSurvivor] = 0;
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "PimpHuman5");
 			}
 		}
+	}
+	else
+	{
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "PimpAmmo");
 	}
 }
 
 static void vPimpHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
-	if (enabled == 1 && GetRandomFloat(0.1, 100.0) <= chance && bIsSurvivor(survivor) && !g_bPimp[survivor])
+	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		g_bPimp[survivor] = true;
-		g_iPimpOwner[survivor] = tank;
-
-		float flPimpInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flPimpInterval[ST_TankType(tank)] : g_flPimpInterval2[ST_TankType(tank)];
-		DataPack dpPimp;
-		CreateDataTimer(flPimpInterval, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		dpPimp.WriteCell(GetClientUserId(survivor));
-		dpPimp.WriteCell(GetClientUserId(tank));
-		dpPimp.WriteString(message);
-		dpPimp.WriteCell(enabled);
-
-		char sPimpEffect[4];
-		sPimpEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sPimpEffect[ST_TankType(tank)] : g_sPimpEffect2[ST_TankType(tank)];
-		vEffect(survivor, tank, sPimpEffect, mode);
-
-		char sPimpMessage[3];
-		sPimpMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sPimpMessage[ST_TankType(tank)] : g_sPimpMessage2[ST_TankType(tank)];
-		if (StrContains(sPimpMessage, message) != -1)
+		if (g_iPimpCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 		{
-			char sTankName[33];
-			ST_TankName(tank, sTankName);
-			ST_PrintToChatAll("%s %t", ST_TAG2, "Pimp", sTankName, survivor);
+			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bPimp[survivor])
+			{
+				g_bPimp[survivor] = true;
+				g_iPimpOwner[survivor] = tank;
+
+				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bPimp2[tank])
+				{
+					g_bPimp2[tank] = true;
+					g_iPimpCount[tank]++;
+
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "PimpHuman", g_iPimpCount[tank], iHumanAmmo(tank));
+				}
+
+				float flPimpInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flPimpInterval[ST_TankType(tank)] : g_flPimpInterval2[ST_TankType(tank)];
+				DataPack dpPimp;
+				CreateDataTimer(flPimpInterval, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpPimp.WriteCell(GetClientUserId(survivor));
+				dpPimp.WriteCell(GetClientUserId(tank));
+				dpPimp.WriteString(message);
+				dpPimp.WriteCell(enabled);
+				dpPimp.WriteFloat(GetEngineTime());
+
+				char sPimpEffect[4];
+				sPimpEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sPimpEffect[ST_TankType(tank)] : g_sPimpEffect2[ST_TankType(tank)];
+				vEffect(survivor, tank, sPimpEffect, mode);
+
+				char sPimpMessage[3];
+				sPimpMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sPimpMessage[ST_TankType(tank)] : g_sPimpMessage2[ST_TankType(tank)];
+				if (StrContains(sPimpMessage, message) != -1)
+				{
+					char sTankName[33];
+					ST_TankName(tank, sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Pimp", sTankName, survivor);
+				}
+			}
+			else if (StrEqual(mode, "3") && !g_bPimp2[tank])
+			{
+				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bPimp4[tank])
+				{
+					g_bPimp4[tank] = true;
+
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "PimpHuman2");
+				}
+			}
+		}
+		else
+		{
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bPimp5[tank])
+			{
+				g_bPimp5[tank] = true;
+
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "PimpAmmo");
+			}
 		}
 	}
+}
+
+static void vRemovePimp(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor, "234") && g_bPimp[iSurvivor] && g_iPimpOwner[iSurvivor] == tank)
+		{
+			g_bPimp[iSurvivor] = false;
+			g_iPimpOwner[iSurvivor] = 0;
+		}
+	}
+
+	vReset3(tank);
 }
 
 static void vReset()
@@ -286,8 +528,8 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, "24"))
 		{
-			g_bPimp[iPlayer] = false;
-			g_iPimpCount[iPlayer] = 0;
+			vReset3(iPlayer);
+
 			g_iPimpOwner[iPlayer] = 0;
 		}
 	}
@@ -296,7 +538,6 @@ static void vReset()
 static void vReset2(int survivor, int tank, const char[] message)
 {
 	g_bPimp[survivor] = false;
-	g_iPimpCount[survivor] = 0;
 	g_iPimpOwner[survivor] = 0;
 
 	char sPimpMessage[3];
@@ -307,9 +548,44 @@ static void vReset2(int survivor, int tank, const char[] message)
 	}
 }
 
+static void vReset3(int tank)
+{
+	g_bPimp[tank] = false;
+	g_bPimp2[tank] = false;
+	g_bPimp3[tank] = false;
+	g_bPimp4[tank] = false;
+	g_bPimp5[tank] = false;
+	g_iPimpCount[tank] = 0;
+}
+
+static float flHumanCooldown(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+}
+
 static float flPimpChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flPimpChance[ST_TankType(tank)] : g_flPimpChance2[ST_TankType(tank)];
+}
+
+static float flPimpDuration(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flPimpDuration[ST_TankType(tank)] : g_flPimpDuration2[ST_TankType(tank)];
+}
+
+static int iHumanAbility(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+}
+
+static int iHumanAmmo(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+}
+
+static int iPimpAbility(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPimpAbility[ST_TankType(tank)] : g_iPimpAbility2[ST_TankType(tank)];
 }
 
 static int iPimpHit(int tank)
@@ -330,7 +606,6 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bPimp[iSurvivor] = false;
-		g_iPimpCount[iSurvivor] = 0;
 		g_iPimpOwner[iSurvivor] = 0;
 
 		return Plugin_Stop;
@@ -346,12 +621,29 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iPimpAbility = pack.ReadCell(),
-		iPimpAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpAmount[ST_TankType(iTank)] : g_iPimpAmount2[ST_TankType(iTank)];
-
-	if (iPimpAbility == 0 || g_iPimpCount[iSurvivor] >= iPimpAmount)
+	int iPimpEnabled = pack.ReadCell();
+	float flTime = pack.ReadFloat();
+	if (iPimpEnabled == 0 || (flTime + flPimpDuration(iTank)) < GetEngineTime() || !g_bPimp[iSurvivor])
 	{
+		g_bPimp2[iTank] = false;
+
 		vReset2(iSurvivor, iTank, sMessage);
+
+		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bPimp3[iTank])
+		{
+			g_bPimp3[iTank] = true;
+
+			ST_PrintToChat(iTank, "%s %t", ST_TAG3, "PimpHuman6");
+
+			if (g_iPimpCount[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
+			{
+				CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			}
+			else
+			{
+				g_bPimp3[iTank] = false;
+			}
+		}
 
 		return Plugin_Stop;
 	}
@@ -359,7 +651,22 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 	int iPimpDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iPimpDamage[ST_TankType(iTank)] : g_iPimpDamage2[ST_TankType(iTank)];
 	SlapPlayer(iSurvivor, iPimpDamage, true);
 
-	g_iPimpCount[iSurvivor]++;
+	return Plugin_Continue;
+}
+
+public Action tTimerResetCooldown(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPimp3[iTank])
+	{
+		g_bPimp3[iTank] = false;
+
+		return Plugin_Stop;
+	}
+
+	g_bPimp3[iTank] = false;
+
+	ST_PrintToChat(iTank, "%s %t", ST_TAG3, "PimpHuman7");
 
 	return Plugin_Continue;
 }
