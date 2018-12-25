@@ -5,7 +5,7 @@
 Bug fixes:
 
 1. Fixed the chat color tags not working properly.
-2. Fixed some settings not working properly.
+2. Fixed several settings not working properly.
 
 Changes:
 

@@ -364,6 +364,7 @@ Outcome: The plugin works in every Campaign-based and Survival-based game mode e
 It may be due to one or more of the following:
 
 - The `Tank Enabled` setting for that Super Tank may be set to 0 or doesn't exists at all which defaults to 0.
+- The `Spawn Enabled` setting for that Super Tank may be set to 0
 - You have created a new Super Tank and didn't raise the maximum value of `Type Range`.
 - You have misspelled one of the settings.
 - You are still using the `Tank Character` setting which is no longer used since v8.16.

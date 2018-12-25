@@ -3,8 +3,6 @@
 
 - Maximum types: 500
 - Ability count: 66
-- Please don't report any bugs or issues if you're using the plugins on a listen server. No support will be provided for that kind of server.
-- THIS FILE IS NOT THE CONFIG FILE! USE IT AS A REFERENCE!
 
 ## Plugin Settings
 
