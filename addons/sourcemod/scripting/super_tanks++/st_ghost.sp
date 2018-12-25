@@ -491,6 +491,7 @@ public void ST_OnButtonReleased(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
+	vGhostRender(tank, RENDER_NORMAL);
 	vRemoveGhost(tank);
 }
 
@@ -678,6 +679,78 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, const c
 	}
 }
 
+static void vGhostRender(int tank, RenderMode mode, int alpha = 255)
+{
+	int iProp = -1;
+	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
+	{
+		char sModel[128];
+		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+		if (StrEqual(sModel, MODEL_JETPACK, false) || StrEqual(sModel, MODEL_CONCRETE, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_TANK, false))
+		{
+			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+			if (iOwner == tank)
+			{
+				if (StrEqual(sModel, MODEL_JETPACK, false))
+				{
+					int iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha;
+					ST_PropsColors(tank, 2, iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha);
+					SetEntityRenderMode(iProp, mode);
+					SetEntityRenderColor(iProp, iJetpackRed, iJetpackGreen, iJetpackBlue, alpha);
+				}
+
+				if (StrEqual(sModel, MODEL_CONCRETE, false))
+				{
+					int iRockRed, iRockGreen, iRockBlue, iRockAlpha;
+					ST_PropsColors(tank, 4, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
+					SetEntityRenderMode(iProp, mode);
+					SetEntityRenderColor(iProp, iRockRed, iRockGreen, iRockBlue, alpha);
+				}
+
+				if (StrEqual(sModel, MODEL_TIRES, false))
+				{
+					int iTireRed, iTireGreen, iTireBlue, iTireAlpha;
+					ST_PropsColors(tank, 5, iTireRed, iTireGreen, iTireBlue, iTireAlpha);
+					SetEntityRenderMode(iProp, mode);
+					SetEntityRenderColor(iProp, iTireRed, iTireGreen, iTireBlue, alpha);
+				}
+
+				if (StrEqual(sModel, MODEL_TANK, false))
+				{
+					int iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha;
+					ST_TankColors(tank, 1, iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha);
+					SetEntityRenderMode(iProp, mode);
+					SetEntityRenderColor(iProp, iSkinRed, iSkinGreen, iSkinBlue, alpha);
+				}
+			}
+		}
+	}
+
+	while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
+	{
+		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		if (iOwner == tank)
+		{
+			int iLightRed, iLightGreen, iLightBlue, iLightAlpha;
+			ST_PropsColors(tank, 1, iLightRed, iLightGreen, iLightBlue, iLightAlpha);
+			SetEntityRenderMode(iProp, mode);
+			SetEntityRenderColor(iProp, iLightRed, iLightGreen, iLightBlue, alpha);
+		}
+	}
+
+	while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
+	{
+		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		if (iOwner == tank)
+		{
+			int iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha;
+			ST_PropsColors(tank, 3, iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha);
+			SetEntityRenderMode(iProp, mode);
+			SetEntityRenderColor(iProp, iFlameRed, iFlameGreen, iFlameBlue, alpha);
+		}
+	}
+}
+
 static void vRemoveGhost(int tank)
 {
 	g_bGhost[tank] = false;
@@ -805,72 +878,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	int iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha;
 	ST_TankColors(iTank, 1, iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha);
 
-	int iProp = -1;
-	while ((iProp = FindEntityByClassname(iProp, "prop_dynamic")) != INVALID_ENT_REFERENCE)
-	{
-		char sModel[128];
-		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-		if (StrEqual(sModel, MODEL_JETPACK, false) || StrEqual(sModel, MODEL_CONCRETE, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_TANK, false))
-		{
-			int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-			if (iOwner == iTank)
-			{
-				if (StrEqual(sModel, MODEL_JETPACK, false))
-				{
-					int iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha;
-					ST_PropsColors(iTank, 2, iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha);
-					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-					SetEntityRenderColor(iProp, iJetpackRed, iJetpackGreen, iJetpackBlue, g_iGhostAlpha[iTank]);
-				}
-
-				if (StrEqual(sModel, MODEL_CONCRETE, false))
-				{
-					int iRockRed, iRockGreen, iRockBlue, iRockAlpha;
-					ST_PropsColors(iTank, 4, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
-					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-					SetEntityRenderColor(iProp, iRockRed, iRockGreen, iRockBlue, g_iGhostAlpha[iTank]);
-				}
-
-				if (StrEqual(sModel, MODEL_TIRES, false))
-				{
-					int iTireRed, iTireGreen, iTireBlue, iTireAlpha;
-					ST_PropsColors(iTank, 5, iTireRed, iTireGreen, iTireBlue, iTireAlpha);
-					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-					SetEntityRenderColor(iProp, iTireRed, iTireGreen, iTireBlue, g_iGhostAlpha[iTank]);
-				}
-
-				if (StrEqual(sModel, MODEL_TANK, false))
-				{
-					SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-					SetEntityRenderColor(iProp, iSkinRed, iSkinGreen, iSkinBlue, g_iGhostAlpha[iTank]);
-				}
-			}
-		}
-	}
-
-	while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
-	{
-		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-		if (iOwner == iTank)
-		{
-			int iLightRed, iLightGreen, iLightBlue, iLightAlpha;
-			ST_PropsColors(iTank, 1, iLightRed, iLightGreen, iLightBlue, iLightAlpha);
-			SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-			SetEntityRenderColor(iProp, iLightRed, iLightGreen, iLightBlue, g_iGhostAlpha[iTank]);
-		}
-	}
-
-	while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
-	{
-		int iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-		if (iOwner == iTank)
-		{
-			int iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha;
-			ST_PropsColors(iTank, 3, iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha);
-			SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
-			SetEntityRenderColor(iProp, iFlameRed, iFlameGreen, iFlameBlue, g_iGhostAlpha[iTank]);
-		}
-	}
+	vGhostRender(iTank, RENDER_TRANSCOLOR, g_iGhostAlpha[iTank]);
 
 	SetEntityRenderMode(iTank, RENDER_TRANSCOLOR);
 	SetEntityRenderColor(iTank, iSkinRed, iSkinGreen, iSkinBlue, g_iGhostAlpha[iTank]);
