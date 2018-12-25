@@ -598,7 +598,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -706,7 +706,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -821,7 +821,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -926,7 +926,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -1032,7 +1032,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -1146,7 +1146,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -1260,7 +1260,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -1366,7 +1366,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -1459,7 +1459,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -1576,7 +1576,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -1652,7 +1652,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -1787,7 +1787,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -1899,7 +1899,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -2016,7 +2016,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -2134,7 +2134,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -2253,7 +2253,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -2361,7 +2361,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -2437,7 +2437,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -2531,7 +2531,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -2642,7 +2642,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -2790,7 +2790,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -2862,7 +2862,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -2997,7 +2997,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -3159,7 +3159,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -3277,7 +3277,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -3425,7 +3425,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -3531,7 +3531,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -3631,7 +3631,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -3795,7 +3795,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -3944,7 +3944,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4044,7 +4044,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4149,7 +4149,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4255,7 +4255,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4366,7 +4366,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4454,7 +4454,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4531,7 +4531,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4607,7 +4607,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4706,7 +4706,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4782,7 +4782,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4900,7 +4900,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -4994,7 +4994,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -5076,7 +5076,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -5182,7 +5182,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -5281,7 +5281,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -5369,7 +5369,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -5440,7 +5440,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -5548,7 +5548,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -5635,7 +5635,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -5740,7 +5740,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -5846,7 +5846,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -5938,7 +5938,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -6050,7 +6050,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -6150,7 +6150,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -6244,7 +6244,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -6314,7 +6314,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -6402,7 +6402,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -6508,7 +6508,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -6599,7 +6599,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -6715,7 +6715,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -6830,7 +6830,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -6959,7 +6959,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -7077,7 +7077,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
@@ -7146,7 +7146,7 @@
 
 			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 9999999999
 			"Human Ammo"				"5"
 
