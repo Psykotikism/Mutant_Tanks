@@ -285,7 +285,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Lag Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
 					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Lag Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
 					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Human Cooldown", 30.0);
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_iLagAbility[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Enabled", 0);
@@ -312,7 +312,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
 					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 1, 9999999999);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
 					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_iLagAbility2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Enabled", g_iLagAbility[iIndex]);
@@ -393,7 +393,7 @@ public void ST_OnChangeType(int tank)
 
 static void vLagAbility(int tank)
 {
-	if (g_iLagCount[tank] < iHumanAmmo(tank))
+	if (g_iLagCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
 		g_bLag4[tank] = false;
 		g_bLag5[tank] = false;
@@ -441,7 +441,7 @@ static void vLagHit(int survivor, int tank, float chance, int enabled, const cha
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iLagCount[tank] < iHumanAmmo(tank))
+		if (g_iLagCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bLag[survivor])
 			{
@@ -639,7 +639,7 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 
 			ST_PrintToChat(iTank, "%s %t", ST_TAG3, "LagHuman6");
 
-			if (g_iLagCount[iTank] < iHumanAmmo(iTank))
+			if (g_iLagCount[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
 			{
 				CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 			}

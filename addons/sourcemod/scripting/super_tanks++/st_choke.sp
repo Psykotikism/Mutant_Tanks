@@ -285,7 +285,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Choke Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
 					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Choke Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
 					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Human Cooldown", 30.0);
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_iChokeAbility[iIndex] = kvSuperTanks.GetNum("Choke Ability/Ability Enabled", 0);
@@ -318,7 +318,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Choke Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
 					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Choke Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 1, 9999999999);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
 					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Choke Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_iChokeAbility2[iIndex] = kvSuperTanks.GetNum("Choke Ability/Ability Enabled", g_iChokeAbility[iIndex]);
@@ -417,7 +417,7 @@ public void ST_OnChangeType(int tank)
 
 static void vChokeAbility(int tank)
 {
-	if (g_iChokeCount[tank] < iHumanAmmo(tank))
+	if (g_iChokeCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
 		g_bChoke4[tank] = false;
 		g_bChoke5[tank] = false;
@@ -465,7 +465,7 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, const c
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iChokeCount[tank] < iHumanAmmo(tank))
+		if (g_iChokeCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bChoke[survivor])
 			{
@@ -700,7 +700,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 
 			ST_PrintToChat(iTank, "%s %t", ST_TAG3, "ChokeHuman6");
 
-			if (g_iChokeCount[iTank] < iHumanAmmo(iTank))
+			if (g_iChokeCount[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
 			{
 				CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 			}

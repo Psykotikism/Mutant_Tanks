@@ -351,7 +351,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Shield Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
 					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Shield Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
 					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Human Cooldown", 30.0);
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_flHumanDuration[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Human Duration", 5.0);
@@ -377,7 +377,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
 					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 1, 9999999999);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
 					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_flHumanDuration2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Human Duration", g_flHumanDuration[iIndex]);
@@ -465,7 +465,7 @@ public void ST_OnButtonPressed(int tank, int button)
 					}
 					case 1:
 					{
-						if (g_iShieldCount[tank] < iHumanAmmo(tank))
+						if (g_iShieldCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 						{
 							if (!g_bShield[tank] && !g_bShield2[tank])
 							{
@@ -570,7 +570,7 @@ static void vReset3(int tank)
 
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShieldHuman5");
 
-		if (g_iShieldCount[tank] < iHumanAmmo(tank))
+		if (g_iShieldCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 		{
 			CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -612,7 +612,7 @@ static void vShieldAbility(int tank, bool shield)
 	{
 		case true:
 		{
-			if (g_iShieldCount[tank] < iHumanAmmo(tank))
+			if (g_iShieldCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 			{
 				if (GetRandomFloat(0.1, 100.0) <= flShieldChance(tank))
 				{

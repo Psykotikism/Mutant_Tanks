@@ -311,7 +311,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Heal Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
 					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Heal Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
 					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Human Cooldown", 30.0);
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_flHumanDuration[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Human Duration", 5.0);
@@ -355,7 +355,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
 					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 1, 9999999999);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
 					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_flHumanDuration2[iIndex] = kvSuperTanks.GetFloat("Heal Ability/Human Duration", g_flHumanDuration[iIndex]);
@@ -472,7 +472,7 @@ public void ST_OnButtonPressed(int tank, int button)
 					}
 					case 1:
 					{
-						if (g_iHealCount[tank] < iHumanAmmo(tank))
+						if (g_iHealCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 						{
 							if (!g_bHeal[tank] && !g_bHeal2[tank])
 							{
@@ -546,7 +546,7 @@ static void vHealAbility(int tank, bool main)
 		{
 			if (iHealAbility(tank) == 1 || iHealAbility(tank) == 3)
 			{
-				if (g_iHealCount2[tank] < iHumanAmmo(tank))
+				if (g_iHealCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 				{
 					g_bHeal5[tank] = false;
 					g_bHeal6[tank] = false;
@@ -594,7 +594,7 @@ static void vHealAbility(int tank, bool main)
 		{
 			if ((iHealAbility(tank) == 2 || iHealAbility(tank) == 3) && !g_bHeal[tank])
 			{
-				if (g_iHealCount[tank] < iHumanAmmo(tank))
+				if (g_iHealCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 				{
 					g_bHeal[tank] = true;
 
@@ -629,7 +629,7 @@ static void vHealHit(int survivor, int tank, float chance, int enabled, const ch
 {
 	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor))
 	{
-		if (g_iHealCount2[tank] < iHumanAmmo(tank))
+		if (g_iHealCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bHeal4[survivor])
 			{
@@ -645,7 +645,7 @@ static void vHealHit(int survivor, int tank, float chance, int enabled, const ch
 
 						ST_PrintToChat(tank, "%s %t", ST_TAG3, "HealHuman2", g_iHealCount2[tank], iHumanAmmo(tank));
 
-						if (g_iHealCount2[tank] < iHumanAmmo(tank))
+						if (g_iHealCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 						{
 							CreateTimer(flHumanCooldown(tank), tTimerResetCooldown2, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 						}
@@ -727,7 +727,7 @@ static void vReset2(int tank)
 
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "HealHuman8");
 
-	if (g_iHealCount[tank] < iHumanAmmo(tank))
+	if (g_iHealCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
 		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}

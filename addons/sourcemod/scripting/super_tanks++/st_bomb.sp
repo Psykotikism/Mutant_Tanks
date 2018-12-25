@@ -282,7 +282,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
 					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
 					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Human Cooldown", 30.0);
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_iBombAbility[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", 0);
@@ -311,7 +311,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
 					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 1, 9999999999);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
 					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_iBombAbility2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", g_iBombAbility[iIndex]);
@@ -425,7 +425,7 @@ public void ST_OnRockBreak(int tank, int rock)
 
 static void vBombAbility(int tank)
 {
-	if (g_iBombCount[tank] < iHumanAmmo(tank))
+	if (g_iBombCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
 		g_bBomb2[tank] = false;
 		g_bBomb3[tank] = false;
@@ -473,7 +473,7 @@ static void vBombHit(int survivor, int tank, float chance, int enabled, const ch
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iBombCount[tank] < iHumanAmmo(tank))
+		if (g_iBombCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
@@ -484,7 +484,7 @@ static void vBombHit(int survivor, int tank, float chance, int enabled, const ch
 
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "BombHuman", g_iBombCount[tank], iHumanAmmo(tank));
 
-					if (g_iBombCount[tank] < iHumanAmmo(tank))
+					if (g_iBombCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 					{
 						CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 					}

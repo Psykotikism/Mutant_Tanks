@@ -657,7 +657,7 @@ public void vSTInfoMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject obj
 {
 	switch (action)
 	{
-		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "%T", "STInfoMenu");
+		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "%T", "STInfoMenu", param);
 		case TopMenuAction_SelectOption: vInfoMenu(param, 0);
 	}
 }

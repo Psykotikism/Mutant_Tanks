@@ -230,7 +230,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
 					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
 					g_iRespawnAbility[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Enabled", 0);
 					g_iRespawnAbility[iIndex] = iClamp(g_iRespawnAbility[iIndex], 0, 1);
 					g_iRespawnMessage[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Message", 0);
@@ -251,10 +251,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iFinaleTank2[iIndex] = kvSuperTanks.GetNum("Spawn/Finale Tank", g_iFinaleTank[iIndex]);
 					g_iFinaleTank2[iIndex] = iClamp(g_iFinaleTank2[iIndex], 0, 1);
 
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Human Ability", g_iHumanAbility[iIndex]);
+					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
+					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Human Ammo", g_iHumanAmmo[iIndex]);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
 					g_iRespawnAbility2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Enabled", g_iRespawnAbility[iIndex]);
 					g_iRespawnAbility2[iIndex] = iClamp(g_iRespawnAbility2[iIndex], 0, 1);
 					g_iRespawnMessage2[iIndex] = kvSuperTanks.GetNum("Respawn Ability/Ability Message", g_iRespawnMessage[iIndex]);
@@ -319,7 +319,7 @@ public void ST_OnButtonPressed(int tank, int button)
 					case true: ST_PrintToChat(tank, "%s %t", ST_TAG3, "RespawnHuman2");
 					case false:
 					{
-						if (g_iRespawnCount2[tank] < iHumanAmmo(tank))
+						if (g_iRespawnCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 						{
 							g_bRespawn[tank] = true;
 
@@ -430,7 +430,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	flAngles[1] = pack.ReadFloat();
 	flAngles[2] = pack.ReadFloat();
 
-	if (g_iRespawnCount[iTank] < iRespawnAmount || g_iRespawnCount2[iTank] < iHumanAmmo(iTank))
+	if (g_iRespawnCount[iTank] < iRespawnAmount || g_iRespawnCount2[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
 	{
 		g_bRespawn[iTank] = false;
 		g_iRespawnCount[iTank]++;

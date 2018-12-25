@@ -312,7 +312,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
 					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 1, 9999999999);
+					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
 					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Human Cooldown", 30.0);
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_iHumanMode[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Mode", 1);
@@ -340,7 +340,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
 					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 1, 9999999999);
+					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
 					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_iHumanMode2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Mode", g_iHumanMode[iIndex]);
@@ -425,7 +425,7 @@ public void ST_OnButtonPressed(int tank, int button)
 					}
 					case 1:
 					{
-						if (g_iPyroCount[tank] < iHumanAmmo(tank))
+						if (g_iPyroCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 						{
 							if (!g_bPyro2[tank] && !g_bPyro3[tank])
 							{
@@ -477,7 +477,7 @@ public void ST_OnChangeType(int tank)
 
 static void vPyroAbility(int tank)
 {
-	if (g_iPyroCount[tank] < iHumanAmmo(tank))
+	if (g_iPyroCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
 		float flPyroChance = !g_bTankConfig[ST_TankType(tank)] ? g_flPyroChance[ST_TankType(tank)] : g_flPyroChance2[ST_TankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flPyroChance)
@@ -538,7 +538,7 @@ static void vReset2(int tank)
 
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroHuman5");
 
-	if (g_iPyroCount[tank] < iHumanAmmo(tank))
+	if (g_iPyroCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
 		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
