@@ -58,7 +58,8 @@ ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies
 float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRegularInterval, g_flRegularInterval2, g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1],
 	g_flTankChance[ST_MAXTYPES + 1], g_flTankChance2[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1], g_flTransformDelay[ST_MAXTYPES + 1], g_flTransformDelay2[ST_MAXTYPES + 1], g_flTransformDuration[ST_MAXTYPES + 1], g_flTransformDuration2[ST_MAXTYPES + 1];
 
-Handle g_hAbilityActivatedForward, g_hButtonPressedForward, g_hButtonReleasedForward, g_hChangeTypeForward, g_hConfigsLoadedForward, g_hDisplayMenuForward, g_hEventFiredForward, g_hHookEventForward, g_hMenuItemSelectedForward, g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward;
+Handle g_hAbilityActivatedForward, g_hBloodTimer[MAXPLAYERS + 1], g_hButtonPressedForward, g_hButtonReleasedForward, g_hChangeTypeForward, g_hConfigsLoadedForward, g_hDisplayMenuForward, g_hElectricTimer[MAXPLAYERS + 1], g_hEventFiredForward, g_hFireTimer[MAXPLAYERS + 1], g_hHookEventForward, g_hIceTimer[MAXPLAYERS + 1], g_hMenuItemSelectedForward,
+	g_hMeteorTimer[MAXPLAYERS + 1], g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward, g_hSmokeTimer[MAXPLAYERS + 1], g_hSpitTimer[MAXPLAYERS + 1];
 
 int g_iAnnounceDeath, g_iAnnounceDeath2, g_iBaseHealth[ST_MAXTYPES + 1], g_iBaseHealth2[ST_MAXTYPES + 1], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iDisplayHealth, g_iDisplayHealth2,
 	g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1],
@@ -1648,6 +1649,7 @@ static void vNewTankSettings(int tank)
 	ExtinguishEntity(tank);
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(SOUND_BOSS, tank);
+	vRemoveParticles(tank);
 	vRemoveProps(tank);
 	vResetSpeed(tank, true);
 
@@ -1664,39 +1666,85 @@ static void vParticleEffects(int tank)
 	{
 		if (StrContains(sParticleEffects, "1") != -1)
 		{
-			CreateTimer(0.75, tTimerBloodEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			if (g_hBloodTimer[tank] != null)
+			{
+				delete g_hBloodTimer[tank];
+			}
+
+			g_hBloodTimer[tank] = CreateTimer(0.75, tTimerBloodEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if (StrContains(sParticleEffects, "2") != -1)
 		{
-			CreateTimer(0.75, tTimerElectricEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			if (g_hElectricTimer[tank] != null)
+			{
+				delete g_hElectricTimer[tank];
+			}
+
+			g_hElectricTimer[tank] = CreateTimer(0.75, tTimerElectricEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if (StrContains(sParticleEffects, "3") != -1)
 		{
-			CreateTimer(0.75, tTimerFireEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			if (g_hFireTimer[tank] != null)
+			{
+				delete g_hFireTimer[tank];
+			}
+
+			g_hFireTimer[tank] = CreateTimer(0.75, tTimerFireEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if (StrContains(sParticleEffects, "4") != -1)
 		{
-			CreateTimer(2.0, tTimerIceEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			if (g_hIceTimer[tank] != null)
+			{
+				delete g_hIceTimer[tank];
+			}
+
+			g_hIceTimer[tank] = CreateTimer(2.0, tTimerIceEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if (StrContains(sParticleEffects, "5") != -1)
 		{
-			CreateTimer(6.0, tTimerMeteorEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			if (g_hMeteorTimer[tank] != null)
+			{
+				delete g_hMeteorTimer[tank];
+			}
+
+			g_hMeteorTimer[tank] = CreateTimer(6.0, tTimerMeteorEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if (StrContains(sParticleEffects, "6") != -1)
 		{
-			CreateTimer(1.5, tTimerSmokeEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			if (g_hSmokeTimer[tank] != null)
+			{
+				delete g_hSmokeTimer[tank];
+			}
+
+			g_hSmokeTimer[tank] = CreateTimer(1.5, tTimerSmokeEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if (StrContains(sParticleEffects, "7") != -1 && bIsValidGame())
 		{
-			CreateTimer(2.0, tTimerSpitEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			if (g_hSpitTimer[tank] != null)
+			{
+				delete g_hSpitTimer[tank];
+			}
+
+			g_hSpitTimer[tank] = CreateTimer(2.0, tTimerSpitEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
+}
+
+static void vRemoveParticles(int tank)
+{
+	delete g_hBloodTimer[tank];
+	delete g_hElectricTimer[tank];
+	delete g_hFireTimer[tank];
+	delete g_hIceTimer[tank];
+	delete g_hMeteorTimer[tank];
+	delete g_hSmokeTimer[tank];
+	delete g_hSpitTimer[tank];
 }
 
 static void vRemoveProps(int tank, bool end = false)
@@ -1789,6 +1837,7 @@ static void vReset()
 
 static void vReset2(int tank)
 {
+	vRemoveParticles(tank);
 	vRemoveProps(tank);
 	vResetSpeed(tank, true);
 	vSpawnModes(tank, false);
