@@ -404,13 +404,9 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
-	g_iBossStageCount[client] = 0;
+	vReset2(client);
+
 	g_iPlayerCount[0] = iGetPlayerCount();
-	g_iTankType[client] = 0;
-
-	vResetProps(client);
-
-	vSpawnModes(client, false);
 }
 
 public void OnClientDisconnect_Post(int client)
@@ -1217,8 +1213,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					}
 				}
 
-				vRemoveProps(iTank);
-				vResetSpeed(iTank, true);
+				vReset2(iTank);
 
 				CreateTimer(3.0, tTimerTankWave, g_iTankWave, TIMER_FLAG_NO_MAPCHANGE);
 			}
@@ -1787,14 +1782,19 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, "24"))
 		{
-			g_iBossStageCount[iPlayer] = 0;
-			g_iTankType[iPlayer] = 0;
-
-			vResetProps(iPlayer);
-
-			vSpawnModes(iPlayer, false);
+			vReset2(iPlayer);
 		}
 	}
+}
+
+static void vReset2(int tank)
+{
+	vResetProps(tank);
+	vResetSpeed(tank, true);
+	vSpawnModes(tank, false);
+
+	g_iBossStageCount[tank] = 0;
+	g_iTankType[tank] = 0;
 }
 
 static void vResetProps(int tank)
@@ -1825,6 +1825,11 @@ static void vResetProps(int tank)
 
 static void vResetSpeed(int tank, bool mode = false)
 {
+	if (!bIsValidClient(tank))
+	{
+		return;
+	}
+
 	float flRunSpeed = !g_bTankConfig[g_iTankType[tank]] ? g_flRunSpeed[g_iTankType[tank]] : g_flRunSpeed2[g_iTankType[tank]];
 	switch (mode)
 	{
