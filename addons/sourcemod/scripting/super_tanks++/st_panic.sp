@@ -317,9 +317,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (ST_TankAllowed(iTank, "024"))
 		{
-			if (iPanicAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flPanicChance(iTank))
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iPanicAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flPanicChance(iTank))
 			{
 				vCheatCommand(iTank, "director_force_panic_event");
 			}

@@ -334,7 +334,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			}
 		}
 
-		if (ST_TankAllowed(iInfected, "024") && ST_CloneAllowed(iInfected, g_bCloneInstalled))
+		if (ST_TankAllowed(iInfected, "024"))
 		{
 			vRemoveNecro(iInfected);
 		}

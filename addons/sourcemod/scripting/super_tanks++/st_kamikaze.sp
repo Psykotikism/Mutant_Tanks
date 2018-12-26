@@ -346,7 +346,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		int iUserId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iUserId),
 			iTankId = event.GetInt("attacker"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && bIsSurvivor(iPlayer))
+		if (ST_TankAllowed(iTank, "024") && iKamikazeAbility(iTank) == 1 && bIsSurvivor(iPlayer))
 		{
 			int iCorpse = -1;
 			while ((iCorpse = FindEntityByClassname(iCorpse, "survivor_death_model")) != INVALID_ENT_REFERENCE)
@@ -359,7 +359,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			}
 		}
 
-		if (ST_TankAllowed(iPlayer, "024") && ST_CloneAllowed(iPlayer, g_bCloneInstalled))
+		if (ST_TankAllowed(iPlayer, "024"))
 		{
 			vRemoveKamikaze(iPlayer);
 		}

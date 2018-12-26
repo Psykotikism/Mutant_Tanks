@@ -365,7 +365,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled))
+		if (ST_TankAllowed(iTank, "024"))
 		{
 			if (g_bAbsorb[iTank])
 			{
