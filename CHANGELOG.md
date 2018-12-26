@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 8.51 (December 26, 2018)
+
+Bug fixes:
+
+1. Fixed the Clone, Minion, and Respawn abilities not respecting the `Amount` settings.
+
 ## Version 8.50 (December 25, 2018)
 
 Bug fixes:
