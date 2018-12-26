@@ -301,6 +301,18 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	delete kvSuperTanks;
 }
 
+public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+{
+	if (StrEqual(name, "player_death"))
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (ST_TankAllowed(iTank, "024"))
+		{
+			vRemoveCloud(iTank);
+		}
+	}
+}
+
 public void ST_OnAbilityActivated(int tank)
 {
 	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iCloudAbility(tank) == 1 && !g_bCloud[tank])

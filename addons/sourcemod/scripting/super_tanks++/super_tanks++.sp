@@ -47,7 +47,7 @@ public Plugin myinfo =
 
 #define SOUND_BOSS "items/suitchargeok1.wav"
 
-bool g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bGeneralConfig, g_bLateLoad, g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bTransformed[MAXPLAYERS + 1];
+bool g_bBlood[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1], g_bGeneralConfig, g_bIce[MAXPLAYERS + 1], g_bLateLoad, g_bMeteor[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSmoke[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bTransformed[MAXPLAYERS + 1];
 
 char g_sAnnounceArrival[6], g_sAnnounceArrival2[6], g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sFinaleWaves[12],
 	g_sFinaleWaves2[12], g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sRockEffects[ST_MAXTYPES + 1][5],
@@ -407,6 +407,7 @@ public void OnClientPutInServer(int client)
 	vReset2(client);
 
 	g_iPlayerCount[0] = iGetPlayerCount();
+	g_iTankType[client] = 0;
 }
 
 public void OnClientDisconnect_Post(int client)
@@ -1192,12 +1193,12 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 			if (bIsTankAllowed(iTank, "024"))
 			{
-				char sTankName[33];
-				sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
-
 				int iAnnounceDeath = !g_bGeneralConfig ? g_iAnnounceDeath : g_iAnnounceDeath2;
 				if (iAnnounceDeath == 1 && ST_CloneAllowed(iTank, g_bCloneInstalled))
 				{
+					char sTankName[33];
+					sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
+
 					switch (GetRandomInt(1, 10))
 					{
 						case 1: ST_PrintToChatAll("%s %t", ST_TAG2, "Death1", sTankName);
@@ -1649,8 +1650,6 @@ static void vNewTankSettings(int tank)
 	vRemoveProps(tank);
 	vResetSpeed(tank, true);
 
-	g_bChanged[tank] = true;
-
 	Call_StartForward(g_hChangeTypeForward);
 	Call_PushCell(tank);
 	Call_Finish();
@@ -1740,6 +1739,8 @@ static void vReset()
 		if (bIsValidClient(iPlayer, "24"))
 		{
 			vReset2(iPlayer);
+
+			g_iTankType[iPlayer] = 0;
 		}
 	}
 }
@@ -1750,8 +1751,14 @@ static void vReset2(int tank)
 	vResetSpeed(tank, true);
 	vSpawnModes(tank, false);
 
+	g_bBlood[tank] = false;
+	g_bElectric[tank] = false;
+	g_bFire[tank] = false;
+	g_bIce[tank] = false;
+	g_bMeteor[tank] = false;
+	g_bSmoke[tank] = false;
+	g_bSpit[tank] = false;
 	g_iBossStageCount[tank] = 0;
-	g_iTankType[tank] = 0;
 }
 
 static void vResetSpeed(int tank, bool mode = false)
@@ -2182,38 +2189,45 @@ static void vParticleEffects(int tank)
 	sParticleEffects = !g_bTankConfig[g_iTankType[tank]] ? g_sParticleEffects[g_iTankType[tank]] : g_sParticleEffects2[g_iTankType[tank]];
 	if (bIsTankAllowed(tank) && iParticleEffect(tank) == 1)
 	{
-		if (StrContains(sParticleEffects, "1") != -1)
+		if (StrContains(sParticleEffects, "1") != -1 && !g_bBlood[tank])
 		{
+			g_bBlood[tank] = true;
 			CreateTimer(0.75, tTimerBloodEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if (StrContains(sParticleEffects, "2") != -1)
+		if (StrContains(sParticleEffects, "2") != -1 && !g_bElectric[tank])
 		{
+			g_bElectric[tank] = true;
 			CreateTimer(0.75, tTimerElectricEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if (StrContains(sParticleEffects, "3") != -1)
+		if (StrContains(sParticleEffects, "3") != -1 && !g_bFire[tank])
 		{
+			g_bFire[tank] = true;
 			CreateTimer(0.75, tTimerFireEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if (StrContains(sParticleEffects, "4") != -1)
+		if (StrContains(sParticleEffects, "4") != -1 && !g_bIce[tank])
 		{
+			g_bIce[tank] = true;
 			CreateTimer(2.0, tTimerIceEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if (StrContains(sParticleEffects, "5") != -1)
+		if (StrContains(sParticleEffects, "5") != -1 && !g_bMeteor[tank])
 		{
+			g_bMeteor[tank] = true;
 			CreateTimer(6.0, tTimerMeteorEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if (StrContains(sParticleEffects, "6") != -1)
+		if (StrContains(sParticleEffects, "6") != -1 && !g_bSmoke[tank])
 		{
+			g_bSmoke[tank] = true;
 			CreateTimer(1.5, tTimerSmokeEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if (StrContains(sParticleEffects, "7") != -1 && bIsValidGame())
+		if (StrContains(sParticleEffects, "7") != -1 && bIsValidGame() && !g_bSpit[tank])
 		{
+			g_bSpit[tank] = true;
 			CreateTimer(2.0, tTimerSpitEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
@@ -2424,14 +2438,9 @@ public Action tTimerBloodEffect(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "1") == -1)
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "1") == -1 || !g_bBlood[iTank])
 	{
-		return Plugin_Stop;
-	}
-
-	if (g_bChanged[iTank])
-	{
-		g_bChanged[iTank] = false;
+		g_bBlood[iTank] = false;
 
 		return Plugin_Stop;
 	}
@@ -2521,14 +2530,9 @@ public Action tTimerElectricEffect(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "2") == -1)
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "2") == -1 || !g_bElectric[iTank])
 	{
-		return Plugin_Stop;
-	}
-
-	if (g_bChanged[iTank])
-	{
-		g_bChanged[iTank] = false;
+		g_bElectric[iTank] = false;
 
 		return Plugin_Stop;
 	}
@@ -2543,14 +2547,9 @@ public Action tTimerFireEffect(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "3") == -1)
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "3") == -1 || !g_bFire[iTank])
 	{
-		return Plugin_Stop;
-	}
-
-	if (g_bChanged[iTank])
-	{
-		g_bChanged[iTank] = false;
+		g_bFire[iTank] = false;
 
 		return Plugin_Stop;
 	}
@@ -2565,14 +2564,9 @@ public Action tTimerIceEffect(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "4") == -1)
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "4") == -1 || !g_bIce[iTank])
 	{
-		return Plugin_Stop;
-	}
-
-	if (g_bChanged[iTank])
-	{
-		g_bChanged[iTank] = false;
+		g_bIce[iTank] = false;
 
 		return Plugin_Stop;
 	}
@@ -2600,14 +2594,9 @@ public Action tTimerMeteorEffect(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "5") == -1)
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "5") == -1 || !g_bMeteor[iTank])
 	{
-		return Plugin_Stop;
-	}
-
-	if (g_bChanged[iTank])
-	{
-		g_bChanged[iTank] = false;
+		g_bMeteor[iTank] = false;
 
 		return Plugin_Stop;
 	}
@@ -2658,14 +2647,9 @@ public Action tTimerSmokeEffect(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "6") == -1)
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "6") == -1 || !g_bSmoke[iTank])
 	{
-		return Plugin_Stop;
-	}
-
-	if (g_bChanged[iTank])
-	{
-		g_bChanged[iTank] = false;
+		g_bSmoke[iTank] = false;
 
 		return Plugin_Stop;
 	}
@@ -2680,14 +2664,9 @@ public Action tTimerSpitEffect(Handle timer, int userid)
 	int iTank = GetClientOfUserId(userid);
 	char sParticleEffects[8];
 	sParticleEffects = !g_bTankConfig[g_iTankType[iTank]] ? g_sParticleEffects[g_iTankType[iTank]] : g_sParticleEffects2[g_iTankType[iTank]];
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "7") == -1)
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || iParticleEffect(iTank) == 0 || StrContains(sParticleEffects, "7") == -1 || !g_bSpit[iTank])
 	{
-		return Plugin_Stop;
-	}
-
-	if (g_bChanged[iTank])
-	{
-		g_bChanged[iTank] = false;
+		g_bSpit[iTank] = false;
 
 		return Plugin_Stop;
 	}

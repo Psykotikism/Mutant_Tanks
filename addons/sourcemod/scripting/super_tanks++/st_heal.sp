@@ -429,7 +429,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			StopSound(iPlayer, SNDCHAN_AUTO, SOUND_HEARTBEAT);
 		}
-		else if (ST_TankAllowed(iPlayer, "0245") && ST_CloneAllowed(iPlayer, g_bCloneInstalled))
+		else if (ST_TankAllowed(iPlayer, "024"))
 		{
 			vRemoveHeal(iPlayer);
 		}
