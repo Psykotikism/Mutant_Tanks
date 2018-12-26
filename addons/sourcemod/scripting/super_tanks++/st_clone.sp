@@ -401,101 +401,118 @@ public void ST_OnChangeType(int tank)
 
 static void vCloneAbility(int tank)
 {
-	float flCloneChance = !g_bTankConfig[ST_TankType(tank)] ? g_flCloneChance[ST_TankType(tank)] : g_flCloneChance2[ST_TankType(tank)],
-		flChance = GetRandomFloat(0.1, 100.0);
-	if (iCloneAbility(tank) == 1 && flChance <= flCloneChance)
+	if (iCloneAbility(tank) == 1)
 	{
-		int iCloneMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneMessage[ST_TankType(tank)] : g_iCloneMessage2[ST_TankType(tank)];
-		if (g_iCloneCount[tank] < iCloneAmount(tank) || g_iCloneCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iCloneCount[tank] < iCloneAmount(tank))
 		{
-			float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
-			GetClientEyePosition(tank, flPosition);
-			GetClientEyeAngles(tank, flAngles);
-			flAngles[0] = -25.0;
-
-			GetAngleVectors(flAngles, flAngles, NULL_VECTOR, NULL_VECTOR);
-			NormalizeVector(flAngles, flAngles);
-			ScaleVector(flAngles, -1.0);
-			vCopyVector(flAngles, flVector);
-			GetVectorAngles(flAngles, flAngles);
-
-			Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
-			if (TR_DidHit(hTrace))
+			if (g_iCloneCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 			{
-				TR_GetEndPosition(flHitPosition, hTrace);
-				NormalizeVector(flVector, flVector);
-				ScaleVector(flVector, -40.0);
-				AddVectors(flHitPosition, flVector, flHitPosition);
-
-				float flDistance = GetVectorDistance(flHitPosition, flPosition);
-				if (flDistance < 200.0 && flDistance > 40.0)
+				float flCloneChance = !g_bTankConfig[ST_TankType(tank)] ? g_flCloneChance[ST_TankType(tank)] : g_flCloneChance2[ST_TankType(tank)];
+				if (GetRandomFloat(0.1, 100.0) <= flCloneChance)
 				{
-					bool bTankBoss[MAXPLAYERS + 1];
-					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+					float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
+					GetClientEyePosition(tank, flPosition);
+					GetClientEyeAngles(tank, flAngles);
+					flAngles[0] = -25.0;
+
+					GetAngleVectors(flAngles, flAngles, NULL_VECTOR, NULL_VECTOR);
+					NormalizeVector(flAngles, flAngles);
+					ScaleVector(flAngles, -1.0);
+					vCopyVector(flAngles, flVector);
+					GetVectorAngles(flAngles, flAngles);
+
+					Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+					if (TR_DidHit(hTrace))
 					{
-						bTankBoss[iPlayer] = false;
-						if (ST_TankAllowed(iPlayer, "234"))
+						TR_GetEndPosition(flHitPosition, hTrace);
+						NormalizeVector(flVector, flVector);
+						ScaleVector(flVector, -40.0);
+						AddVectors(flHitPosition, flVector, flHitPosition);
+
+						float flDistance = GetVectorDistance(flHitPosition, flPosition);
+						if (flDistance < 200.0 && flDistance > 40.0)
 						{
-							bTankBoss[iPlayer] = true;
+							bool bTankBoss[MAXPLAYERS + 1];
+							for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+							{
+								bTankBoss[iPlayer] = false;
+								if (ST_TankAllowed(iPlayer, "234"))
+								{
+									bTankBoss[iPlayer] = true;
+								}
+							}
+
+							ST_SpawnTank(tank, ST_TankType(tank));
+
+							int iSelectedType;
+							for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+							{
+								if (ST_TankAllowed(iPlayer, "234") && !bTankBoss[iPlayer])
+								{
+									iSelectedType = iPlayer;
+
+									break;
+								}
+							}
+
+							if (iSelectedType > 0)
+							{
+								TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
+
+								g_bClone[iSelectedType] = true;
+
+								int iCloneHealth = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneHealth[ST_TankType(tank)] : g_iCloneHealth2[ST_TankType(tank)],
+									iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
+								SetEntityHealth(iSelectedType, iNewHealth);
+
+								g_iCloneCount[tank]++;
+								g_iCloneOwner[iSelectedType] = tank;
+
+								if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+								{
+									g_iCloneCount2[tank]++;
+
+									ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman", g_iCloneCount2[tank], iHumanAmmo(tank));
+								}
+
+								int iCloneMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneMessage[ST_TankType(tank)] : g_iCloneMessage2[ST_TankType(tank)];
+								if (iCloneMessage == 1)
+								{
+									char sTankName[33];
+									ST_TankName(tank, sTankName);
+									ST_PrintToChatAll("%s %t", ST_TAG2, "Clone", sTankName);
+								}
+							}
 						}
 					}
 
-					ST_SpawnTank(tank, ST_TankType(tank));
-
-					int iSelectedType;
-					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+					delete hTrace;
+				}
+				else
+				{
+					if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 					{
-						if (ST_TankAllowed(iPlayer, "234") && !bTankBoss[iPlayer])
-						{
-							iSelectedType = iPlayer;
-
-							break;
-						}
-					}
-
-					if (iSelectedType > 0)
-					{
-						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
-
-						g_bClone[iSelectedType] = true;
-
-						int iCloneHealth = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneHealth[ST_TankType(tank)] : g_iCloneHealth2[ST_TankType(tank)],
-							iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
-						SetEntityHealth(iSelectedType, iNewHealth);
-
-						g_iCloneCount[tank]++;
-						g_iCloneOwner[iSelectedType] = tank;
-
-						if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-						{
-							g_iCloneCount2[tank]++;
-
-							ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman", g_iCloneCount2[tank], iHumanAmmo(tank));
-						}
-
-						if (iCloneMessage == 1)
-						{
-							char sTankName[33];
-							ST_TankName(tank, sTankName);
-							ST_PrintToChatAll("%s %t", ST_TAG2, "Clone", sTankName);
-						}
+						ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman2");
 					}
 				}
 			}
-
-			delete hTrace;
+			else
+			{
+				vCloneMessage(tank);
+			}
 		}
 		else
 		{
-			ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneAmmo");
+			vCloneMessage(tank);
 		}
 	}
-	else if (flChance > flCloneChance && (g_iCloneCount[tank] < iCloneAmount(tank) || g_iCloneCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0))
+}
+
+static void vCloneMessage(int tank)
+{
+	if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
-		if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-		{
-			ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman2");
-		}
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneAmmo");
 	}
 }
 

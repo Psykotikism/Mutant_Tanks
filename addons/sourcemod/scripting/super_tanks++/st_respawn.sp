@@ -370,6 +370,13 @@ static void vRemoveRespawn(int tank)
 	g_iRespawnCount2[tank] = 0;
 }
 
+static void vRespawnMessage(int tank)
+{
+	vRemoveRespawn(tank);
+
+	ST_PrintToChat(tank, "%s %t", ST_TAG3, "RespawnAmmo");
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -430,87 +437,91 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	flAngles[1] = pack.ReadFloat();
 	flAngles[2] = pack.ReadFloat();
 
-	if (g_iRespawnCount[iTank] < iRespawnAmount || g_iRespawnCount2[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
+	if (g_iRespawnCount[iTank] < iRespawnAmount)
 	{
-		g_bRespawn[iTank] = false;
-		g_iRespawnCount[iTank]++;
-
-		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1)
+		if (g_iRespawnCount2[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
 		{
-			g_iRespawnCount2[iTank]++;
+			g_bRespawn[iTank] = false;
+			g_iRespawnCount[iTank]++;
 
-			ST_PrintToChat(iTank, "%s %t", ST_TAG3, "RespawnHuman3", g_iRespawnCount2[iTank], iHumanAmmo(iTank));
-		}
-
-		bool bExists[MAXPLAYERS + 1];
-		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
-		{
-			bExists[iRespawn] = false;
-			if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled))
+			if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1)
 			{
-				bExists[iRespawn] = true;
+				g_iRespawnCount2[iTank]++;
+
+				ST_PrintToChat(iTank, "%s %t", ST_TAG3, "RespawnHuman3", g_iRespawnCount2[iTank], iHumanAmmo(iTank));
 			}
-		}
 
-		switch (iRespawnMode)
-		{
-			case 0: ST_SpawnTank(iTank, ST_TankType(iTank));
-			case 1:
+			bool bExists[MAXPLAYERS + 1];
+			for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 			{
-				if (iRespawnType > 0)
+				bExists[iRespawn] = false;
+				if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled))
 				{
-					ST_SpawnTank(iTank, iRespawnType);
+					bExists[iRespawn] = true;
+				}
+			}
+
+			switch (iRespawnMode)
+			{
+				case 0: ST_SpawnTank(iTank, ST_TankType(iTank));
+				case 1:
+				{
+					if (iRespawnType > 0)
+					{
+						ST_SpawnTank(iTank, iRespawnType);
+					}
+					else
+					{
+						vRandomRespawn(iTank);
+					}
+				}
+				case 2: vRandomRespawn(iTank);
+			}
+
+			int iNewTank;
+			for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
+			{
+				if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && !bExists[iRespawn])
+				{
+					iNewTank = iRespawn;
+					g_bRespawn[iNewTank] = false;
+					g_iRespawnCount[iNewTank] = g_iRespawnCount[iTank];
+					g_iRespawnCount2[iNewTank] = g_iRespawnCount2[iTank];
+
+					vRemoveRespawn(iTank);
+
+					break;
 				}
 				else
 				{
-					vRandomRespawn(iTank);
+					vRemoveRespawn(iTank);
+
+					break;
 				}
 			}
-			case 2: vRandomRespawn(iTank);
-		}
 
-		int iNewTank;
-		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
-		{
-			if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && !bExists[iRespawn])
+			if (iNewTank > 0)
 			{
-				iNewTank = iRespawn;
-				g_bRespawn[iNewTank] = false;
-				g_iRespawnCount[iNewTank] = g_iRespawnCount[iTank];
-				g_iRespawnCount2[iNewTank] = g_iRespawnCount2[iTank];
+				SetEntProp(iNewTank, Prop_Send, "m_fFlags", iFlags);
+				SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);
+				TeleportEntity(iNewTank, flPos, flAngles, NULL_VECTOR);
 
-				vRemoveRespawn(iTank);
-
-				break;
-			}
-			else
-			{
-				vRemoveRespawn(iTank);
-
-				break;
+				if (iRespawnMessage == 1)
+				{
+					char sTankName[33];
+					ST_TankName(iTank, sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Respawn", sTankName);
+				}
 			}
 		}
-
-		if (iNewTank > 0)
+		else
 		{
-			SetEntProp(iNewTank, Prop_Send, "m_fFlags", iFlags);
-			SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);
-			TeleportEntity(iNewTank, flPos, flAngles, NULL_VECTOR);
-
-			if (iRespawnMessage == 1)
-			{
-				char sTankName[33];
-				ST_TankName(iTank, sTankName);
-				ST_PrintToChatAll("%s %t", ST_TAG2, "Respawn", sTankName);
-			}
+			vRespawnMessage(iTank);
 		}
 	}
 	else
 	{
-		g_iRespawnCount[iTank] = 0;
-		g_iRespawnCount2[iTank] = 0;
-
-		ST_PrintToChat(iTank, "%s %t", ST_TAG3, "RespawnAmmo");
+		vRespawnMessage(iTank);
 	}
 
 	return Plugin_Continue;
