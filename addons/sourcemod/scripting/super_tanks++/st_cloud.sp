@@ -533,7 +533,7 @@ public Action tTimerCloud(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bCloud2[iTank])
+	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bCloud2[iTank])
 	{
 		vReset2(iTank);
 		vReset3(iTank);
