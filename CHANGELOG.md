@@ -5,6 +5,7 @@
 Bug fixes:
 
 1. Fixed the Clone, Minion, and Respawn abilities not respecting the `Amount` settings.
+2. Fixed the Cloud ability not respecting the `Human Mode` setting.
 
 ## Version 8.50 (December 25, 2018)
 
