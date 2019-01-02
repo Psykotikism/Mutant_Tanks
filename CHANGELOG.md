@@ -1,5 +1,29 @@
 # Changelog
 
+## Version 8.52 (January 1, 2019)
+
+Bug fixes:
+
+1. Fixed some chat messages being sent to AI Super Tanks.
+2. Fixed the Car and Meteor abilities not working. (Thanks to Mi.Cura for reporting!)
+3. Fixed the Item ability not disabling properly.
+
+Changes:
+
+1. Removed `Human Ammo` and `Human Cooldown` settings for the Kamikaze ability.
+2. The `Base Health` setting is now a global setting under `Plugins Settings/General` section. (Requested by KasperH/Ladis.)
+3. New ability added: Hit Ability - The Super Tank only takes damage in certain parts of its body.
+4. New ability added: Undead ability - The Super Tank cannot die.
+5. Renamed the `Human Duration` setting to `Car Duration` for the Car ability.
+6. Renamed the `Human Duration` setting to `Meteor Duration` for the Meteor ability.
+7. Renamed the `Pyro Boost` setting to `Pyro Speed Boost`.
+8. Added the `Pyro Damage Boost` setting for the Pyro ability.
+
+Files:
+
+1. Updated the `super_tanks++.cfg` file with the new settings.
+2. Updated the `super_tanks++.phrases.txt` file with various new phrases.
+
 ## Version 8.51 (December 26, 2018)
 
 Bug fixes:

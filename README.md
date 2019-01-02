@@ -949,6 +949,7 @@ sm_st_ghost - View information about the Ghost ability.
 sm_st_god - View information about the God ability.
 sm_st_gravity - View information about the Gravity ability.
 sm_st_heal - View information about the Heal ability.
+sm_st_hit - View information about the Hit ability.
 sm_st_hurt - View information about the Hurt ability.
 sm_st_hypno - View information about the Hypno ability.
 sm_st_ice - View information about the Ice ability.
@@ -985,6 +986,7 @@ sm_st_splash - View information about the Splash ability.
 sm_st_stun - View information about the Stun ability.
 sm_st_throw - View information about the Throw ability.
 sm_st_track - View information about the Track ability.
+sm_st_undead - View information about the Undead ability.
 sm_st_vampire - View information about the Vampire ability.
 sm_st_vision - View information about the Vision ability.
 sm_st_warp - View information about the Warp ability.
