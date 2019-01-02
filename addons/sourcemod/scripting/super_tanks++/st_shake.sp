@@ -77,6 +77,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_shake", cmdShakeInfo, "View information about the Shake ability.");
@@ -395,52 +396,6 @@ public void ST_OnChangeType(int tank)
 	vRemoveShake(tank);
 }
 
-static void vShakeAbility(int tank)
-{
-	if (g_iShakeCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
-	{
-		g_bShake4[tank] = false;
-		g_bShake5[tank] = false;
-
-		float flShakeRange = !g_bTankConfig[ST_TankType(tank)] ? g_flShakeRange[ST_TankType(tank)] : g_flShakeRange2[ST_TankType(tank)],
-			flShakeRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flShakeRangeChance[ST_TankType(tank)] : g_flShakeRangeChance2[ST_TankType(tank)],
-			flTankPos[3];
-
-		GetClientAbsOrigin(tank, flTankPos);
-
-		int iSurvivorCount;
-
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor, "234"))
-			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flShakeRange)
-				{
-					vShakeHit(iSurvivor, tank, flShakeRangeChance, iShakeAbility(tank), "2", "3");
-
-					iSurvivorCount++;
-				}
-			}
-		}
-
-		if (iSurvivorCount == 0)
-		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-			{
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeHuman5");
-			}
-		}
-	}
-	else
-	{
-		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeAmmo");
-	}
-}
-
 static void vRemoveShake(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -489,6 +444,52 @@ static void vReset3(int tank)
 	g_bShake4[tank] = false;
 	g_bShake5[tank] = false;
 	g_iShakeCount[tank] = 0;
+}
+
+static void vShakeAbility(int tank)
+{
+	if (g_iShakeCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	{
+		g_bShake4[tank] = false;
+		g_bShake5[tank] = false;
+
+		float flShakeRange = !g_bTankConfig[ST_TankType(tank)] ? g_flShakeRange[ST_TankType(tank)] : g_flShakeRange2[ST_TankType(tank)],
+			flShakeRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flShakeRangeChance[ST_TankType(tank)] : g_flShakeRangeChance2[ST_TankType(tank)],
+			flTankPos[3];
+
+		GetClientAbsOrigin(tank, flTankPos);
+
+		int iSurvivorCount;
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, "234"))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flShakeRange)
+				{
+					vShakeHit(iSurvivor, tank, flShakeRangeChance, iShakeAbility(tank), "2", "3");
+
+					iSurvivorCount++;
+				}
+			}
+		}
+
+		if (iSurvivorCount == 0)
+		{
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			{
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeHuman5");
+			}
+		}
+	}
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	{
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeAmmo");
+	}
 }
 
 static void vShakeHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
@@ -542,14 +543,11 @@ static void vShakeHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bShake5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bShake5[tank])
-			{
-				g_bShake5[tank] = true;
+			g_bShake5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShakeAmmo");
 		}
 	}
 }
@@ -662,7 +660,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bShake3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bShake3[iTank])
 	{
 		g_bShake3[iTank] = false;
 

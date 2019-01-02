@@ -79,6 +79,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_shove", cmdShoveInfo, "View information about the Shove ability.");
@@ -418,52 +419,6 @@ public void ST_OnChangeType(int tank)
 	vRemoveShove(tank);
 }
 
-static void vShoveAbility(int tank)
-{
-	if (g_iShoveCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
-	{
-		g_bShove4[tank] = false;
-		g_bShove5[tank] = false;
-
-		float flShoveRange = !g_bTankConfig[ST_TankType(tank)] ? g_flShoveRange[ST_TankType(tank)] : g_flShoveRange2[ST_TankType(tank)],
-			flShoveRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flShoveRangeChance[ST_TankType(tank)] : g_flShoveRangeChance2[ST_TankType(tank)],
-			flTankPos[3];
-
-		GetClientAbsOrigin(tank, flTankPos);
-
-		int iSurvivorCount;
-
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor, "234"))
-			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flShoveRange)
-				{
-					vShoveHit(iSurvivor, tank, flShoveRangeChance, iShoveAbility(tank), "2", "3");
-
-					iSurvivorCount++;
-				}
-			}
-		}
-
-		if (iSurvivorCount == 0)
-		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-			{
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShoveHuman5");
-			}
-		}
-	}
-	else
-	{
-		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShoveAmmo");
-	}
-}
-
 static void vRemoveShove(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -512,6 +467,52 @@ static void vReset3(int tank)
 	g_bShove4[tank] = false;
 	g_bShove5[tank] = false;
 	g_iShoveCount[tank] = 0;
+}
+
+static void vShoveAbility(int tank)
+{
+	if (g_iShoveCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	{
+		g_bShove4[tank] = false;
+		g_bShove5[tank] = false;
+
+		float flShoveRange = !g_bTankConfig[ST_TankType(tank)] ? g_flShoveRange[ST_TankType(tank)] : g_flShoveRange2[ST_TankType(tank)],
+			flShoveRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flShoveRangeChance[ST_TankType(tank)] : g_flShoveRangeChance2[ST_TankType(tank)],
+			flTankPos[3];
+
+		GetClientAbsOrigin(tank, flTankPos);
+
+		int iSurvivorCount;
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, "234"))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flShoveRange)
+				{
+					vShoveHit(iSurvivor, tank, flShoveRangeChance, iShoveAbility(tank), "2", "3");
+
+					iSurvivorCount++;
+				}
+			}
+		}
+
+		if (iSurvivorCount == 0)
+		{
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			{
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShoveHuman5");
+			}
+		}
+	}
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	{
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShoveAmmo");
+	}
 }
 
 static void vShoveHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
@@ -565,14 +566,11 @@ static void vShoveHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bShove5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bShove5[tank])
-			{
-				g_bShove5[tank] = true;
+			g_bShove5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShoveAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShoveAmmo");
 		}
 	}
 }
@@ -678,7 +676,7 @@ public Action tTimerShove(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bShove3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bShove3[iTank])
 	{
 		g_bShove3[iTank] = false;
 

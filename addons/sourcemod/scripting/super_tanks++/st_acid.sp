@@ -79,6 +79,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_acid", cmdAcidInfo, "View information about the Acid ability.");
@@ -513,7 +514,7 @@ static void vAcidAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "AcidAmmo");
 	}
@@ -584,14 +585,11 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bAcid3[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bAcid3[tank])
-			{
-				g_bAcid3[tank] = true;
+			g_bAcid3[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "AcidAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "AcidAmmo");
 		}
 	}
 }
@@ -653,7 +651,7 @@ static int iHumanAmmo(int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bAcid[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bAcid[iTank])
 	{
 		g_bAcid[iTank] = false;
 

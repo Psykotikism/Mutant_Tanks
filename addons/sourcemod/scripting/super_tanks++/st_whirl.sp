@@ -79,6 +79,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_whirl", cmdWhirlInfo, "View information about the Whirl ability.");
@@ -412,52 +413,6 @@ public void ST_OnChangeType(int tank)
 	vRemoveWhirl(tank);
 }
 
-static void vWhirlAbility(int tank)
-{
-	if (g_iWhirlCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
-	{
-		g_bWhirl4[tank] = false;
-		g_bWhirl5[tank] = false;
-
-		float flWhirlRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlRange[ST_TankType(tank)] : g_flWhirlRange2[ST_TankType(tank)],
-			flWhirlRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlRangeChance[ST_TankType(tank)] : g_flWhirlRangeChance2[ST_TankType(tank)],
-			flTankPos[3];
-
-		GetClientAbsOrigin(tank, flTankPos);
-
-		int iSurvivorCount;
-
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor, "234"))
-			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flWhirlRange)
-				{
-					vWhirlHit(iSurvivor, tank, flWhirlRangeChance, iWhirlAbility(tank), "2", "3");
-
-					iSurvivorCount++;
-				}
-			}
-		}
-
-		if (iSurvivorCount == 0)
-		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-			{
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "WhirlHuman5");
-			}
-		}
-	}
-	else
-	{
-		ST_PrintToChat(tank, "%s %t", ST_TAG3, "WhirlAmmo");
-	}
-}
-
 static void vRemoveWhirl(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -515,6 +470,52 @@ static void vStopWhirl(int survivor, int camera)
 	g_iWhirlOwner[survivor] = 0;
 
 	RemoveEntity(camera);
+}
+
+static void vWhirlAbility(int tank)
+{
+	if (g_iWhirlCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	{
+		g_bWhirl4[tank] = false;
+		g_bWhirl5[tank] = false;
+
+		float flWhirlRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlRange[ST_TankType(tank)] : g_flWhirlRange2[ST_TankType(tank)],
+			flWhirlRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlRangeChance[ST_TankType(tank)] : g_flWhirlRangeChance2[ST_TankType(tank)],
+			flTankPos[3];
+
+		GetClientAbsOrigin(tank, flTankPos);
+
+		int iSurvivorCount;
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, "234"))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flWhirlRange)
+				{
+					vWhirlHit(iSurvivor, tank, flWhirlRangeChance, iWhirlAbility(tank), "2", "3");
+
+					iSurvivorCount++;
+				}
+			}
+		}
+
+		if (iSurvivorCount == 0)
+		{
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			{
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "WhirlHuman5");
+			}
+		}
+	}
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	{
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "WhirlAmmo");
+	}
 }
 
 static void vWhirlHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
@@ -600,14 +601,11 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bWhirl5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bWhirl5[tank])
-			{
-				g_bWhirl5[tank] = true;
+			g_bWhirl5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "WhirlAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "WhirlAmmo");
 		}
 	}
 }
@@ -724,7 +722,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWhirl3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWhirl3[iTank])
 	{
 		g_bWhirl3[iTank] = false;
 

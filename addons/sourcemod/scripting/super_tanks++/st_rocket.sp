@@ -83,6 +83,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_rocket", cmdRocketInfo, "View information about the Rocket ability.");
@@ -407,52 +408,6 @@ public void ST_OnChangeType(int tank)
 	vRemoveRocket(tank);
 }
 
-static void vRocketAbility(int tank)
-{
-	if (g_iRocketCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
-	{
-		g_bRocket4[tank] = false;
-		g_bRocket5[tank] = false;
-
-		float flRocketRange = !g_bTankConfig[ST_TankType(tank)] ? g_flRocketRange[ST_TankType(tank)] : g_flRocketRange2[ST_TankType(tank)],
-			flRocketRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flRocketRangeChance[ST_TankType(tank)] : g_flRocketRangeChance2[ST_TankType(tank)],
-			flTankPos[3];
-
-		GetClientAbsOrigin(tank, flTankPos);
-
-		int iSurvivorCount;
-
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor, "234"))
-			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flRocketRange)
-				{
-					vRocketHit(iSurvivor, tank, flRocketRangeChance, iRocketAbility(tank), "2", "3");
-
-					iSurvivorCount++;
-				}
-			}
-		}
-
-		if (iSurvivorCount == 0)
-		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-			{
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketHuman5");
-			}
-		}
-	}
-	else
-	{
-		ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketAmmo");
-	}
-}
-
 static void vRemoveRocket(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -496,6 +451,52 @@ static void vReset3(int tank)
 	g_bRocket4[tank] = false;
 	g_bRocket5[tank] = false;
 	g_iRocketCount[tank] = 0;
+}
+
+static void vRocketAbility(int tank)
+{
+	if (g_iRocketCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	{
+		g_bRocket4[tank] = false;
+		g_bRocket5[tank] = false;
+
+		float flRocketRange = !g_bTankConfig[ST_TankType(tank)] ? g_flRocketRange[ST_TankType(tank)] : g_flRocketRange2[ST_TankType(tank)],
+			flRocketRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flRocketRangeChance[ST_TankType(tank)] : g_flRocketRangeChance2[ST_TankType(tank)],
+			flTankPos[3];
+
+		GetClientAbsOrigin(tank, flTankPos);
+
+		int iSurvivorCount;
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, "234"))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flRocketRange)
+				{
+					vRocketHit(iSurvivor, tank, flRocketRangeChance, iRocketAbility(tank), "2", "3");
+
+					iSurvivorCount++;
+				}
+			}
+		}
+
+		if (iSurvivorCount == 0)
+		{
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			{
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketHuman5");
+			}
+		}
+	}
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	{
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketAmmo");
+	}
 }
 
 static void vRocketHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
@@ -581,14 +582,11 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, const 
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bRocket5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bRocket5[tank])
-			{
-				g_bRocket5[tank] = true;
+			g_bRocket5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketAmmo");
 		}
 	}
 }
@@ -736,7 +734,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRocket3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRocket3[iTank])
 	{
 		g_bRocket3[iTank] = false;
 

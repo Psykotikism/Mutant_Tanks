@@ -32,7 +32,7 @@ public Plugin myinfo =
 
 #define ST_MENU_ZOMBIE "Zombie Ability"
 
-bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1], g_bZombie[MAXPLAYERS + 1], g_bZombie2[MAXPLAYERS + 1];
+bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1], g_bZombie[MAXPLAYERS + 1], g_bZombie2[MAXPLAYERS + 1];
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flHumanDuration[ST_MAXTYPES + 1], g_flHumanDuration2[ST_MAXTYPES + 1], g_flZombieChance[ST_MAXTYPES + 1], g_flZombieChance2[ST_MAXTYPES + 1], g_flZombieInterval[ST_MAXTYPES + 1], g_flZombieInterval2[ST_MAXTYPES + 1];
 
@@ -46,8 +46,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 		return APLRes_SilentFailure;
 	}
-
-	g_bLateLoad = late;
 
 	return APLRes_Success;
 }
@@ -75,22 +73,10 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_zombie", cmdZombieInfo, "View information about the Zombie ability.");
-
-	if (g_bLateLoad)
-	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer, "24"))
-			{
-				OnClientPutInServer(iPlayer);
-			}
-		}
-
-		g_bLateLoad = false;
-	}
 }
 
 public void OnMapStart()
@@ -495,7 +481,7 @@ static void vZombieAbility(int tank)
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "ZombieHuman2");
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ZombieAmmo");
 	}
@@ -576,7 +562,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bZombie2[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bZombie2[iTank])
 	{
 		g_bZombie2[iTank] = false;
 

@@ -79,6 +79,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_ice", cmdIceInfo, "View information about the Ice ability.");
@@ -446,7 +447,7 @@ static void vIceAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "IceAmmo");
 	}
@@ -511,14 +512,11 @@ static void vIceHit(int survivor, int tank, float chance, int enabled, const cha
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bIce5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bIce5[tank])
-			{
-				g_bIce5[tank] = true;
+			g_bIce5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "IceAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "IceAmmo");
 		}
 	}
 }
@@ -674,7 +672,7 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bIce3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bIce3[iTank])
 	{
 		g_bIce3[iTank] = false;
 

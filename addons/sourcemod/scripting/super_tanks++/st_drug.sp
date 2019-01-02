@@ -79,6 +79,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_drug", cmdDrugInfo, "View information about the Drug ability.");
@@ -428,24 +429,27 @@ static void vDrug(int survivor, bool toggle, float angles[20])
 	}
 
 	Handle hDrugTarget = StartMessageEx(g_umFadeUserMsgId, iClients, 1);
-	if (GetUserMessageType() == UM_Protobuf)
+	switch (GetUserMessageType() == UM_Protobuf)
 	{
-		Protobuf pbSet = UserMessageToProtobuf(hDrugTarget);
-		pbSet.SetInt("duration", toggle ? 255: 1536);
-		pbSet.SetInt("hold_time", toggle ? 255 : 1536);
-		pbSet.SetInt("flags", iFlags);
-		pbSet.SetColor("clr", toggle ? iColor : iColor2);
-	}
-	else
-	{
-		BfWrite bfWrite = UserMessageToBfWrite(hDrugTarget);
-		bfWrite.WriteShort(toggle ? 255 : 1536);
-		bfWrite.WriteShort(toggle ? 255 : 1536);
-		bfWrite.WriteShort(iFlags);
-		bfWrite.WriteByte(toggle ? iColor[0] : iColor2[0]);
-		bfWrite.WriteByte(toggle ? iColor[1] : iColor2[1]);
-		bfWrite.WriteByte(toggle ? iColor[2] : iColor2[2]);
-		bfWrite.WriteByte(toggle ? iColor[3] : iColor2[3]);
+		case true:
+		{
+			Protobuf pbSet = UserMessageToProtobuf(hDrugTarget);
+			pbSet.SetInt("duration", toggle ? 255: 1536);
+			pbSet.SetInt("hold_time", toggle ? 255 : 1536);
+			pbSet.SetInt("flags", iFlags);
+			pbSet.SetColor("clr", toggle ? iColor : iColor2);
+		}
+		case false:
+		{
+			BfWrite bfWrite = UserMessageToBfWrite(hDrugTarget);
+			bfWrite.WriteShort(toggle ? 255 : 1536);
+			bfWrite.WriteShort(toggle ? 255 : 1536);
+			bfWrite.WriteShort(iFlags);
+			bfWrite.WriteByte(toggle ? iColor[0] : iColor2[0]);
+			bfWrite.WriteByte(toggle ? iColor[1] : iColor2[1]);
+			bfWrite.WriteByte(toggle ? iColor[2] : iColor2[2]);
+			bfWrite.WriteByte(toggle ? iColor[3] : iColor2[3]);
+		}
 	}
 
 	EndMessage();
@@ -491,7 +495,7 @@ static void vDrugAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "DrugAmmo");
 	}
@@ -548,14 +552,11 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bDrug5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bDrug5[tank])
-			{
-				g_bDrug5[tank] = true;
+			g_bDrug5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "DrugAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "DrugAmmo");
 		}
 	}
 }
@@ -712,7 +713,7 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bDrug3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bDrug3[iTank])
 	{
 		g_bDrug3[iTank] = false;
 

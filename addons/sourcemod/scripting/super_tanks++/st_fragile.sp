@@ -75,6 +75,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_fragile", cmdFragileInfo, "View information about the Fragile ability.");
@@ -310,17 +311,17 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iFragileMessage[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Ability Message", 0);
 					g_iFragileMessage[iIndex] = iClamp(g_iFragileMessage[iIndex], 0, 1);
 					g_flFragileBulletMultiplier[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Bullet Multiplier", 5.0);
-					g_flFragileBulletMultiplier[iIndex] = flClamp(g_flFragileBulletMultiplier[iIndex], 0.1, 9999999999.0);
+					g_flFragileBulletMultiplier[iIndex] = flClamp(g_flFragileBulletMultiplier[iIndex], 1.0, 9999999999.0);
 					g_flFragileChance[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Chance", 33.3);
 					g_flFragileChance[iIndex] = flClamp(g_flFragileChance[iIndex], 0.0, 100.0);
 					g_flFragileDuration[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Duration", 5.0);
 					g_flFragileDuration[iIndex] = flClamp(g_flFragileDuration[iIndex], 0.1, 9999999999.0);
 					g_flFragileExplosiveMultiplier[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Explosive Multiplier", 5.0);
-					g_flFragileExplosiveMultiplier[iIndex] = flClamp(g_flFragileExplosiveMultiplier[iIndex], 0.1, 9999999999.0);
+					g_flFragileExplosiveMultiplier[iIndex] = flClamp(g_flFragileExplosiveMultiplier[iIndex], 1.0, 9999999999.0);
 					g_flFragileFireMultiplier[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Fire Multiplier", 3.0);
-					g_flFragileFireMultiplier[iIndex] = flClamp(g_flFragileFireMultiplier[iIndex], 0.1, 9999999999.0);
+					g_flFragileFireMultiplier[iIndex] = flClamp(g_flFragileFireMultiplier[iIndex], 1.0, 9999999999.0);
 					g_flFragileMeleeMultiplier[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Melee Multiplier", 1.5);
-					g_flFragileMeleeMultiplier[iIndex] = flClamp(g_flFragileMeleeMultiplier[iIndex], 0.1, 9999999999.0);
+					g_flFragileMeleeMultiplier[iIndex] = flClamp(g_flFragileMeleeMultiplier[iIndex], 1.0, 9999999999.0);
 				}
 				case false:
 				{
@@ -339,17 +340,17 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iFragileMessage2[iIndex] = kvSuperTanks.GetNum("Fragile Ability/Ability Message", g_iFragileMessage[iIndex]);
 					g_iFragileMessage2[iIndex] = iClamp(g_iFragileMessage2[iIndex], 0, 1);
 					g_flFragileBulletMultiplier2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Bullet Multiplier", g_flFragileBulletMultiplier[iIndex]);
-					g_flFragileBulletMultiplier2[iIndex] = flClamp(g_flFragileBulletMultiplier2[iIndex], 0.1, 9999999999.0);
+					g_flFragileBulletMultiplier2[iIndex] = flClamp(g_flFragileBulletMultiplier2[iIndex], 1.0, 9999999999.0);
 					g_flFragileChance2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Chance", g_flFragileChance[iIndex]);
 					g_flFragileChance2[iIndex] = flClamp(g_flFragileChance2[iIndex], 0.0, 100.0);
 					g_flFragileDuration2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Duration", g_flFragileDuration[iIndex]);
 					g_flFragileDuration2[iIndex] = flClamp(g_flFragileDuration2[iIndex], 0.1, 9999999999.0);
 					g_flFragileExplosiveMultiplier2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Explosive Multiplier", g_flFragileExplosiveMultiplier[iIndex]);
-					g_flFragileExplosiveMultiplier2[iIndex] = flClamp(g_flFragileExplosiveMultiplier2[iIndex], 0.1, 9999999999.0);
+					g_flFragileExplosiveMultiplier2[iIndex] = flClamp(g_flFragileExplosiveMultiplier2[iIndex], 1.0, 9999999999.0);
 					g_flFragileFireMultiplier2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Fire Multiplier", g_flFragileFireMultiplier[iIndex]);
-					g_flFragileFireMultiplier2[iIndex] = flClamp(g_flFragileFireMultiplier2[iIndex], 0.1, 9999999999.0);
+					g_flFragileFireMultiplier2[iIndex] = flClamp(g_flFragileFireMultiplier2[iIndex], 1.0, 9999999999.0);
 					g_flFragileMeleeMultiplier2[iIndex] = kvSuperTanks.GetFloat("Fragile Ability/Fragile Melee Multiplier", g_flFragileMeleeMultiplier[iIndex]);
-					g_flFragileMeleeMultiplier2[iIndex] = flClamp(g_flFragileMeleeMultiplier2[iIndex], 0.1, 9999999999.0);
+					g_flFragileMeleeMultiplier2[iIndex] = flClamp(g_flFragileMeleeMultiplier2[iIndex], 1.0, 9999999999.0);
 				}
 			}
 
@@ -367,12 +368,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank, "024"))
 		{
-			if (g_bFragile[iTank])
-			{
-				tTimerStopFragile(null, GetClientUserId(iTank));
-			}
-
-			g_iFragileCount[iTank] = 0;
+			vRemoveFragile(iTank);
 		}
 	}
 }
@@ -459,43 +455,37 @@ public void ST_OnChangeType(int tank)
 
 static void vFragileAbility(int tank)
 {
-	if (iFragileAbility(tank) == 1)
+	if (g_iFragileCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		if (g_iFragileCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		float flFragileChance = !g_bTankConfig[ST_TankType(tank)] ? g_flFragileChance[ST_TankType(tank)] : g_flFragileChance2[ST_TankType(tank)];
+		if (GetRandomFloat(0.1, 100.0) <= flFragileChance)
 		{
-			float flFragileChance = !g_bTankConfig[ST_TankType(tank)] ? g_flFragileChance[ST_TankType(tank)] : g_flFragileChance2[ST_TankType(tank)];
-			if (GetRandomFloat(0.1, 100.0) <= flFragileChance)
+			g_bFragile[tank] = true;
+
+			CreateTimer(flFragileDuration(tank), tTimerStopFragile, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 			{
-				g_bFragile[tank] = true;
+				g_iFragileCount[tank]++;
 
-				CreateTimer(flFragileDuration(tank), tTimerStopFragile, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
-
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-				{
-					g_iFragileCount[tank]++;
-
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "FragileHuman", g_iFragileCount[tank], iHumanAmmo(tank));
-				}
-
-				if (iFragileMessage(tank) == 1)
-				{
-					char sTankName[33];
-					ST_TankName(tank, sTankName);
-					ST_PrintToChatAll("%s %t", ST_TAG2, "Fragile", sTankName);
-				}
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "FragileHuman", g_iFragileCount[tank], iHumanAmmo(tank));
 			}
-			else
+
+			if (iFragileMessage(tank) == 1)
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-				{
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "FragileHuman2");
-				}
+				char sTankName[33];
+				ST_TankName(tank, sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Fragile", sTankName);
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 		{
-			ST_PrintToChat(tank, "%s %t", ST_TAG3, "FragileAmmo");
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "FragileHuman2");
 		}
+	}
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	{
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "FragileAmmo");
 	}
 }
 
@@ -598,7 +588,7 @@ public Action tTimerStopFragile(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFragile2[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFragile2[iTank])
 	{
 		g_bFragile2[iTank] = false;
 

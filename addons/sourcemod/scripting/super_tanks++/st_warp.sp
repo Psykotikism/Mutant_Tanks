@@ -82,6 +82,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_warp", cmdWarpInfo, "View information about the Warp ability.");
@@ -577,7 +578,7 @@ static void vWarpAbility(int tank, bool main)
 						}
 					}
 				}
-				else
+				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "WarpAmmo");
 				}
@@ -609,7 +610,7 @@ static void vWarpAbility(int tank, bool main)
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Warp2", sTankName);
 					}
 				}
-				else
+				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "WarpAmmo");
 				}
@@ -678,14 +679,11 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bWarp5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bWarp5[tank])
-			{
-				g_bWarp5[tank] = true;
+			g_bWarp5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "WarpAmmo2");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "WarpAmmo2");
 		}
 	}
 }
@@ -813,7 +811,7 @@ public Action tTimerResetCooldown(Handle timer, int userid)
 public Action tTimerResetCooldown2(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWarp3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWarp3[iTank])
 	{
 		g_bWarp3[iTank] = false;
 

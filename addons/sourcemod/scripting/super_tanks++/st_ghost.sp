@@ -85,6 +85,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_ghost", cmdGhostInfo, "View information about the Ghost ability.");
@@ -563,7 +564,7 @@ static void vGhostAbility(int tank, bool main)
 						}
 					}
 				}
-				else
+				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GhostAmmo2");
 				}
@@ -596,7 +597,7 @@ static void vGhostAbility(int tank, bool main)
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
 					}
 				}
-				else
+				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GhostAmmo");
 				}
@@ -667,14 +668,11 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bGhost6[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bGhost6[tank])
-			{
-				g_bGhost6[tank] = true;
+			g_bGhost6[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "GhostAmmo2");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "GhostAmmo2");
 		}
 	}
 }
@@ -915,7 +913,7 @@ public Action tTimerStopGhost(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost3[iTank])
 	{
 		g_bGhost3[iTank] = false;
 
@@ -932,7 +930,7 @@ public Action tTimerResetCooldown(Handle timer, int userid)
 public Action tTimerResetCooldown2(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost4[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost4[iTank])
 	{
 		g_bGhost4[iTank] = false;
 

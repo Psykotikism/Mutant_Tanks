@@ -77,6 +77,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_quiet", cmdQuietInfo, "View information about the Quiet ability.");
@@ -459,7 +460,7 @@ static void vQuietAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "QuietAmmo");
 	}
@@ -513,14 +514,11 @@ static void vQuietHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bQuiet5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bQuiet5[tank])
-			{
-				g_bQuiet5[tank] = true;
+			g_bQuiet5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "QuietAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "QuietAmmo");
 		}
 	}
 }
@@ -662,7 +660,7 @@ public Action tTimerStopQuiet(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bQuiet3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bQuiet3[iTank])
 	{
 		g_bQuiet3[iTank] = false;
 

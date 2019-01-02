@@ -72,6 +72,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_spam", cmdSpamInfo, "View information about the Spam ability.");
@@ -474,7 +475,7 @@ static void vSpamAbility(int tank)
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "SpamHuman2");
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "SpamAmmo");
 	}
@@ -566,7 +567,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam2[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam2[iTank])
 	{
 		g_bSpam2[iTank] = false;
 

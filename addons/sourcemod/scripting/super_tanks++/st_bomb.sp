@@ -79,6 +79,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_bomb", cmdBombInfo, "View information about the Bomb ability.");
@@ -463,7 +464,7 @@ static void vBombAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "BombAmmo");
 	}
@@ -521,14 +522,11 @@ static void vBombHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bBomb3[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bBomb3[tank])
-			{
-				g_bBomb3[tank] = true;
+			g_bBomb3[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "BombAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "BombAmmo");
 		}
 	}
 }
@@ -590,7 +588,7 @@ static int iHumanAmmo(int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBomb[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBomb[iTank])
 	{
 		g_bBomb[iTank] = false;
 

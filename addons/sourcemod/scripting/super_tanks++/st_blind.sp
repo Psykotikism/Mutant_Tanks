@@ -79,6 +79,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_blind", cmdBlindInfo, "View information about the Blind ability.");
@@ -418,24 +419,27 @@ static void vBlind(int survivor, int intensity)
 	iColor[3] = intensity;
 
 	Handle hBlindTarget = StartMessageEx(g_umFadeUserMsgId, iTargets, 1);
-	if (GetUserMessageType() == UM_Protobuf)
+	switch (GetUserMessageType() == UM_Protobuf)
 	{
-		Protobuf pbSet = UserMessageToProtobuf(hBlindTarget);
-		pbSet.SetInt("duration", 1536);
-		pbSet.SetInt("hold_time", 1536);
-		pbSet.SetInt("flags", iFlags);
-		pbSet.SetColor("clr", iColor);
-	}
-	else
-	{
-		BfWrite bfWrite = UserMessageToBfWrite(hBlindTarget);
-		bfWrite.WriteShort(1536);
-		bfWrite.WriteShort(1536);
-		bfWrite.WriteShort(iFlags);
-		bfWrite.WriteByte(iColor[0]);
-		bfWrite.WriteByte(iColor[1]);
-		bfWrite.WriteByte(iColor[2]);
-		bfWrite.WriteByte(iColor[3]);
+		case true:
+		{
+			Protobuf pbSet = UserMessageToProtobuf(hBlindTarget);
+			pbSet.SetInt("duration", 1536);
+			pbSet.SetInt("hold_time", 1536);
+			pbSet.SetInt("flags", iFlags);
+			pbSet.SetColor("clr", iColor);
+		}
+		case false:
+		{
+			BfWrite bfWrite = UserMessageToBfWrite(hBlindTarget);
+			bfWrite.WriteShort(1536);
+			bfWrite.WriteShort(1536);
+			bfWrite.WriteShort(iFlags);
+			bfWrite.WriteByte(iColor[0]);
+			bfWrite.WriteByte(iColor[1]);
+			bfWrite.WriteByte(iColor[2]);
+			bfWrite.WriteByte(iColor[3]);
+		}
 	}
 
 	EndMessage();
@@ -481,7 +485,7 @@ static void vBlindAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "BlindAmmo");
 	}
@@ -541,14 +545,11 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bBlind5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bBlind5[tank])
-			{
-				g_bBlind5[tank] = true;
+			g_bBlind5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "BlindAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "BlindAmmo");
 		}
 	}
 }
@@ -722,7 +723,7 @@ public Action tTimerStopBlind(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBlind3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBlind3[iTank])
 	{
 		g_bBlind3[iTank] = false;
 

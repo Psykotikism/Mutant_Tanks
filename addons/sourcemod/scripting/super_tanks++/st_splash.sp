@@ -73,6 +73,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_splash", cmdSplashInfo, "View information about the Splash ability.");
@@ -477,7 +478,7 @@ static void vSplashAbility(int tank)
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "SplashHuman2");
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "SplashAmmo");
 	}
@@ -582,7 +583,7 @@ public Action tTimerSplash(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSplash2[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSplash2[iTank])
 	{
 		g_bSplash2[iTank] = false;
 

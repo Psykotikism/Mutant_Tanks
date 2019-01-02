@@ -79,6 +79,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_restart", cmdRestartInfo, "View information about the Restart ability.");
@@ -486,7 +487,7 @@ static void vRestartAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "RestartAmmo");
 	}
@@ -582,14 +583,11 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bRestart3[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bRestart3[tank])
-			{
-				g_bRestart3[tank] = true;
+			g_bRestart3[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "RestartAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "RestartAmmo");
 		}
 	}
 }
@@ -632,7 +630,7 @@ static int iRestartHitMode(int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRestart[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRestart[iTank])
 	{
 		g_bRestart[iTank] = false;
 

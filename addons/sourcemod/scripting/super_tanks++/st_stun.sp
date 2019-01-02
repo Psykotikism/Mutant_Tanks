@@ -77,6 +77,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_stun", cmdStunInfo, "View information about the Stun ability.");
@@ -483,7 +484,7 @@ static void vStunAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "StunAmmo");
 	}
@@ -540,14 +541,11 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bStun5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bStun5[tank])
-			{
-				g_bStun5[tank] = true;
+			g_bStun5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "StunAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "StunAmmo");
 		}
 	}
 }
@@ -654,7 +652,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bStun3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bStun3[iTank])
 	{
 		g_bStun3[iTank] = false;
 

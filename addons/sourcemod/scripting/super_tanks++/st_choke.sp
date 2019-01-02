@@ -77,6 +77,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_choke", cmdChokeInfo, "View information about the Choke ability.");
@@ -455,7 +456,7 @@ static void vChokeAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ChokeAmmo");
 	}
@@ -513,14 +514,11 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bChoke5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bChoke5[tank])
-			{
-				g_bChoke5[tank] = true;
+			g_bChoke5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ChokeAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "ChokeAmmo");
 		}
 	}
 }
@@ -727,7 +725,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bChoke3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bChoke3[iTank])
 	{
 		g_bChoke3[iTank] = false;
 
