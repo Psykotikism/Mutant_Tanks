@@ -72,6 +72,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_god", cmdGodInfo, "View information about the God ability.");
@@ -411,46 +412,39 @@ public void ST_OnChangeType(int tank)
 
 static void vGodAbility(int tank)
 {
-	if (iGodAbility(tank) == 1)
+	if (g_iGodCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		if (g_iGodCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		float flGodChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGodChance[ST_TankType(tank)] : g_flGodChance2[ST_TankType(tank)];
+		if (GetRandomFloat(0.1, 100.0) <= flGodChance)
 		{
-			float flGodChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGodChance[ST_TankType(tank)] : g_flGodChance2[ST_TankType(tank)],
-				flChance = GetRandomFloat(0.1, 100.0);
-			if (flChance <= flGodChance)
+			g_bGod[tank] = true;
+
+			SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
+
+			CreateTimer(flGodDuration(tank), tTimerStopGod, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 			{
-				g_bGod[tank] = true;
+				g_iGodCount[tank]++;
 
-				SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
-
-				CreateTimer(flGodDuration(tank), tTimerStopGod, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
-
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-				{
-					g_iGodCount[tank]++;
-
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman", g_iGodCount[tank], iHumanAmmo(tank));
-				}
-
-				if (iGodMessage(tank) == 1)
-				{
-					char sTankName[33];
-					ST_TankName(tank, sTankName);
-					ST_PrintToChatAll("%s %t", ST_TAG2, "God", sTankName);
-				}
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman", g_iGodCount[tank], iHumanAmmo(tank));
 			}
-			else if (flChance > flGodChance)
+
+			if (iGodMessage(tank) == 1)
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-				{
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman2");
-				}
+				char sTankName[33];
+				ST_TankName(tank, sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "God", sTankName);
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 		{
-			ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodAmmo");
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman2");
 		}
+	}
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	{
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodAmmo");
 	}
 }
 
@@ -555,7 +549,7 @@ public Action tTimerStopGod(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGod2[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGod2[iTank])
 	{
 		g_bGod2[iTank] = false;
 

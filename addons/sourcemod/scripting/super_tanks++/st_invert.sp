@@ -77,6 +77,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_invert", cmdInvertInfo, "View information about the Invert ability.");
@@ -470,7 +471,7 @@ static void vInvertAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "InvertAmmo");
 	}
@@ -524,14 +525,11 @@ static void vInvertHit(int survivor, int tank, float chance, int enabled, const 
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bInvert5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bInvert5[tank])
-			{
-				g_bInvert5[tank] = true;
+			g_bInvert5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "InvertAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "InvertAmmo");
 		}
 	}
 }
@@ -671,7 +669,7 @@ public Action tTimerStopInvert(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bInvert3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bInvert3[iTank])
 	{
 		g_bInvert3[iTank] = false;
 

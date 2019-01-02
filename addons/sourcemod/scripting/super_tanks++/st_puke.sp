@@ -30,6 +30,8 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+#define PARTICLE_BLOOD "boomer_explode_D"
+
 #define ST_MENU_PUKE "Puke Ability"
 
 bool g_bCloneInstalled, g_bLateLoad, g_bPuke[MAXPLAYERS + 1], g_bPuke2[MAXPLAYERS + 1], g_bPuke3[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
@@ -79,6 +81,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_puke", cmdPukeInfo, "View information about the Puke ability.");
@@ -120,6 +123,8 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+	vPrecacheParticle(PARTICLE_BLOOD);
+
 	vReset();
 }
 
@@ -360,6 +365,29 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank, "024"))
 		{
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iPukeAbility(iTank) == 1)
+			{
+				vAttachParticle(iTank, PARTICLE_BLOOD, 0.1, 0.0);
+
+				float flTankPos[3];
+				GetClientAbsOrigin(iTank, flTankPos);
+
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				{
+					if (bIsSurvivor(iSurvivor, "234"))
+					{
+						float flSurvivorPos[3];
+						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+						float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+						if (flDistance <= 200.0)
+						{
+							SDKCall(g_hSDKPukePlayer, iSurvivor, iTank, true);
+						}
+					}
+				}
+			}
+
 			vRemovePuke(iTank);
 		}
 	}
@@ -436,7 +464,7 @@ static void vPukeAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "PukeAmmo");
 	}
@@ -492,14 +520,11 @@ static void vPukeHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bPuke3[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bPuke3[tank])
-			{
-				g_bPuke3[tank] = true;
+			g_bPuke3[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "PukeAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "PukeAmmo");
 		}
 	}
 }
@@ -561,7 +586,7 @@ static int iPukeHitMode(int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPuke[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPuke[iTank])
 	{
 		g_bPuke[iTank] = false;
 

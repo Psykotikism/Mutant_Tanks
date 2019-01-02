@@ -77,6 +77,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_vision", cmdVisionInfo, "View information about the Vision ability.");
@@ -407,52 +408,6 @@ public void ST_OnChangeType(int tank)
 	vRemoveVision(tank);
 }
 
-static void vVisionAbility(int tank)
-{
-	if (g_iVisionCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
-	{
-		g_bVision4[tank] = false;
-		g_bVision5[tank] = false;
-
-		float flVisionRange = !g_bTankConfig[ST_TankType(tank)] ? g_flVisionRange[ST_TankType(tank)] : g_flVisionRange2[ST_TankType(tank)],
-			flVisionRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flVisionRangeChance[ST_TankType(tank)] : g_flVisionRangeChance2[ST_TankType(tank)],
-			flTankPos[3];
-
-		GetClientAbsOrigin(tank, flTankPos);
-
-		int iSurvivorCount;
-
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor, "234"))
-			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flVisionRange)
-				{
-					vVisionHit(iSurvivor, tank, flVisionRangeChance, iVisionAbility(tank), "2", "3");
-
-					iSurvivorCount++;
-				}
-			}
-		}
-
-		if (iSurvivorCount == 0)
-		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-			{
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "VisionHuman5");
-			}
-		}
-	}
-	else
-	{
-		ST_PrintToChat(tank, "%s %t", ST_TAG3, "VisionAmmo");
-	}
-}
-
 static void vRemoveVision(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -506,6 +461,52 @@ static void vReset3(int tank)
 	g_iVisionCount[tank] = 0;
 }
 
+static void vVisionAbility(int tank)
+{
+	if (g_iVisionCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	{
+		g_bVision4[tank] = false;
+		g_bVision5[tank] = false;
+
+		float flVisionRange = !g_bTankConfig[ST_TankType(tank)] ? g_flVisionRange[ST_TankType(tank)] : g_flVisionRange2[ST_TankType(tank)],
+			flVisionRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flVisionRangeChance[ST_TankType(tank)] : g_flVisionRangeChance2[ST_TankType(tank)],
+			flTankPos[3];
+
+		GetClientAbsOrigin(tank, flTankPos);
+
+		int iSurvivorCount;
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, "234"))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= flVisionRange)
+				{
+					vVisionHit(iSurvivor, tank, flVisionRangeChance, iVisionAbility(tank), "2", "3");
+
+					iSurvivorCount++;
+				}
+			}
+		}
+
+		if (iSurvivorCount == 0)
+		{
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			{
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "VisionHuman5");
+			}
+		}
+	}
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	{
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "VisionAmmo");
+	}
+}
+
 static void vVisionHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
@@ -556,14 +557,11 @@ static void vVisionHit(int survivor, int tank, float chance, int enabled, const 
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bVision5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bVision5[tank])
-			{
-				g_bVision5[tank] = true;
+			g_bVision5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "VisionAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "VisionAmmo");
 		}
 	}
 }
@@ -672,7 +670,7 @@ public Action tTimerVision(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bVision3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bVision3[iTank])
 	{
 		g_bVision3[iTank] = false;
 

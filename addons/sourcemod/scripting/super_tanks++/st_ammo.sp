@@ -77,6 +77,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_ammo", cmdAmmoInfo, "View information about the Ammo ability.");
@@ -417,7 +418,7 @@ static void vAmmoAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "AmmoAmmo");
 	}
@@ -464,13 +465,10 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 					}
 					else if (StrEqual(sWeapon, "weapon_pumpshotgun"))
 					{
-						if (bIsValidGame())
+						switch (bIsValidGame())
 						{
-							SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 7);
-						}
-						else
-						{
-							SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 6);
+							case true: SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 7);
+							case false: SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 6);
 						}
 					}
 					else if (StrEqual(sWeapon, "weapon_shotgun_chrome"))
@@ -479,13 +477,10 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 					}
 					else if (StrEqual(sWeapon, "weapon_autoshotgun"))
 					{
-						if (bIsValidGame())
+						switch (bIsValidGame())
 						{
-							SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 8);
-						}
-						else
-						{
-							SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 6);
+							case true: SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 8);
+							case false: SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 6);
 						}
 					}
 					else if (StrEqual(sWeapon, "weapon_shotgun_spas"))
@@ -494,13 +489,10 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 					}
 					else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
 					{
-						if (bIsValidGame())
+						switch (bIsValidGame())
 						{
-							SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 9);
-						}
-						else
-						{
-							SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 2);
+							case true: SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 9);
+							case false: SetEntProp(survivor, Prop_Data, "m_iAmmo", iAmmoAmount, _, 2);
 						}
 					}
 					else if (StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_awp"))
@@ -538,14 +530,11 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bAmmo3[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bAmmo3[tank])
-			{
-				g_bAmmo3[tank] = true;
+			g_bAmmo3[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "AmmoAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "AmmoAmmo");
 		}
 	}
 }
@@ -607,7 +596,7 @@ static int iHumanAmmo(int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bAmmo[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bAmmo[iTank])
 	{
 		g_bAmmo[iTank] = false;
 

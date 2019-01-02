@@ -34,7 +34,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bPyro[MAXPLAYERS + 1], g_bPyro2[MAXPLAYERS + 1], g_bPyro3[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flPyroBoost[ST_MAXTYPES + 1], g_flPyroBoost2[ST_MAXTYPES + 1], g_flPyroChance[ST_MAXTYPES + 1], g_flPyroChance2[ST_MAXTYPES + 1], g_flPyroDuration[ST_MAXTYPES + 1], g_flPyroDuration2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flPyroChance[ST_MAXTYPES + 1], g_flPyroChance2[ST_MAXTYPES + 1], g_flPyroDamageBoost[ST_MAXTYPES + 1], g_flPyroDamageBoost2[ST_MAXTYPES + 1], g_flPyroDuration[ST_MAXTYPES + 1], g_flPyroDuration2[ST_MAXTYPES + 1], g_flPyroSpeedBoost[ST_MAXTYPES + 1], g_flPyroSpeedBoost2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1];
 
 int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1], g_iPyroAbility[ST_MAXTYPES + 1], g_iPyroAbility2[ST_MAXTYPES + 1], g_iPyroCount[MAXPLAYERS + 1], g_iPyroMessage[ST_MAXTYPES + 1], g_iPyroMessage2[ST_MAXTYPES + 1], g_iPyroMode[ST_MAXTYPES + 1], g_iPyroMode2[ST_MAXTYPES + 1];
 
@@ -75,6 +75,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_pyro", cmdPyroInfo, "View information about the Pyro ability.");
@@ -250,21 +251,38 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
-		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
 		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled))
 		{
 			if (iPyroAbility(victim) == 1)
 			{
 				if (damagetype & DMG_BURN)
 				{
+					char sClassname[32];
+					GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+
 					int iPyroMode = !g_bTankConfig[ST_TankType(victim)] ? g_iPyroMode[ST_TankType(victim)] : g_iPyroMode2[ST_TankType(victim)];
-					float flPyroBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroBoost[ST_TankType(victim)] : g_flPyroBoost2[ST_TankType(victim)];
+					float flPyroDamageBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroDamageBoost[ST_TankType(victim)] : g_flPyroDamageBoost2[ST_TankType(victim)],
+						flPyroSpeedBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroSpeedBoost[ST_TankType(victim)] : g_flPyroSpeedBoost2[ST_TankType(victim)];
 					switch (iPyroMode)
 					{
-						case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(victim) + flPyroBoost);
-						case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flPyroBoost);
+						case 0:
+						{
+							if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+							{
+								damage += flPyroDamageBoost;
+							}
+
+							SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(victim) + flPyroSpeedBoost);
+						}
+						case 1:
+						{
+							if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+							{
+								damage = flPyroDamageBoost;
+							}
+
+							SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flPyroSpeedBoost);
+						}
 					}
 
 					if (!g_bPyro[victim])
@@ -321,14 +339,16 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iPyroAbility[iIndex] = iClamp(g_iPyroAbility[iIndex], 0, 1);
 					g_iPyroMessage[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Message", 0);
 					g_iPyroMessage[iIndex] = iClamp(g_iPyroMessage[iIndex], 0, 1);
-					g_flPyroBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", 1.0);
-					g_flPyroBoost[iIndex] = flClamp(g_flPyroBoost[iIndex], 0.1, 3.0);
 					g_flPyroChance[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Chance", 33.3);
 					g_flPyroChance[iIndex] = flClamp(g_flPyroChance[iIndex], 0.0, 100.0);
+					g_flPyroDamageBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Damage Boost", 1.0);
+					g_flPyroDamageBoost[iIndex] = flClamp(g_flPyroDamageBoost[iIndex], 0.1, 9999999999.0);
 					g_flPyroDuration[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Duration", 5.0);
 					g_flPyroDuration[iIndex] = flClamp(g_flPyroDuration[iIndex], 0.1, 9999999999.0);
 					g_iPyroMode[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Pyro Mode", 0);
 					g_iPyroMode[iIndex] = iClamp(g_iPyroMode[iIndex], 0, 1);
+					g_flPyroSpeedBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Speed Boost", 1.0);
+					g_flPyroSpeedBoost[iIndex] = flClamp(g_flPyroSpeedBoost[iIndex], 0.1, 3.0);
 				}
 				case false:
 				{
@@ -349,14 +369,16 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iPyroAbility2[iIndex] = iClamp(g_iPyroAbility2[iIndex], 0, 1);
 					g_iPyroMessage2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Message", g_iPyroMessage[iIndex]);
 					g_iPyroMessage2[iIndex] = iClamp(g_iPyroMessage2[iIndex], 0, 1);
-					g_flPyroBoost2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Boost", g_flPyroBoost[iIndex]);
-					g_flPyroBoost2[iIndex] = flClamp(g_flPyroBoost2[iIndex], 0.1, 3.0);
 					g_flPyroChance2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Chance", g_flPyroChance[iIndex]);
 					g_flPyroChance2[iIndex] = flClamp(g_flPyroChance2[iIndex], 0.0, 100.0);
+					g_flPyroDamageBoost2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Damage Boost", g_flPyroDamageBoost[iIndex]);
+					g_flPyroDamageBoost2[iIndex] = flClamp(g_flPyroDamageBoost2[iIndex], 0.1, 9999999999.0);
 					g_flPyroDuration2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Duration", g_flPyroDuration[iIndex]);
 					g_flPyroDuration2[iIndex] = flClamp(g_flPyroDuration2[iIndex], 0.1, 9999999999.0);
 					g_iPyroMode2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Pyro Mode", g_iPyroMode[iIndex]);
 					g_iPyroMode2[iIndex] = iClamp(g_iPyroMode2[iIndex], 0, 1);
+					g_flPyroSpeedBoost2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Speed Boost", g_flPyroSpeedBoost[iIndex]);
+					g_flPyroSpeedBoost2[iIndex] = flClamp(g_flPyroSpeedBoost2[iIndex], 0.1, 3.0);
 				}
 			}
 
@@ -507,7 +529,7 @@ static void vPyroAbility(int tank)
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroHuman2");
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroAmmo");
 	}
@@ -662,7 +684,7 @@ public Action tTimerStopPyro(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPyro3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPyro3[iTank])
 	{
 		g_bPyro3[iTank] = false;
 

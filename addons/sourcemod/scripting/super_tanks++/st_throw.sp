@@ -80,6 +80,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_throw", cmdThrowInfo, "View information about the Throw ability.");
@@ -482,35 +483,26 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						case '3': vSpawnInfected(iInfected, "hunter");
 						case '4':
 						{
-							if (bIsValidGame())
+							switch (bIsValidGame())
 							{
-								vSpawnInfected(iInfected, "spitter");
-							}
-							else
-							{
-								vSpawnInfected(iInfected, "boomer");
+								case true: vSpawnInfected(iInfected, "spitter");
+								case false: vSpawnInfected(iInfected, "boomer");
 							}
 						}
 						case '5':
 						{
-							if (bIsValidGame())
+							switch (bIsValidGame())
 							{
-								vSpawnInfected(iInfected, "jockey");
-							}
-							else
-							{
-								vSpawnInfected(iInfected, "hunter");
+								case true: vSpawnInfected(iInfected, "jockey");
+								case false: vSpawnInfected(iInfected, "hunter");
 							}
 						}
 						case '6':
 						{
-							if (bIsValidGame())
+							switch (bIsValidGame())
 							{
-								vSpawnInfected(iInfected, "charger");
-							}
-							else
-							{
-								vSpawnInfected(iInfected, "smoker");
+								case true: vSpawnInfected(iInfected, "charger");
+								case false: vSpawnInfected(iInfected, "smoker");
 							}
 						}
 						case '7': vSpawnInfected(iInfected, "tank");
@@ -626,7 +618,7 @@ public Action tTimerSetCarVelocity(Handle timer, int ref)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bThrow2[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bThrow2[iTank])
 	{
 		g_bThrow2[iTank] = false;
 

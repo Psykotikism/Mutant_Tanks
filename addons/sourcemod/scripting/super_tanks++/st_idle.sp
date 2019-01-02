@@ -79,6 +79,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_idle", cmdIdleInfo, "View information about the Idle ability.");
@@ -483,7 +484,7 @@ static void vIdleAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "IdleAmmo");
 	}
@@ -514,13 +515,10 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, const ch
 					}
 				}
 
-				if (iGetHumanCount() > 1)
+				switch (iGetHumanCount() > 1)
 				{
-					FakeClientCommand(survivor, "go_away_from_keyboard");
-				}
-				else
-				{
-					SDKCall(g_hSDKIdlePlayer, survivor);
+					case true: FakeClientCommand(survivor, "go_away_from_keyboard");
+					case false: SDKCall(g_hSDKIdlePlayer, survivor);
 				}
 
 				if (bIsBotIdle(survivor))
@@ -552,14 +550,11 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bIdle4[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bIdle4[tank])
-			{
-				g_bIdle4[tank] = true;
+			g_bIdle4[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "IdleAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "IdleAmmo");
 		}
 	}
 }
@@ -660,7 +655,7 @@ public Action tTimerIdleFix(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bIdle2[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bIdle2[iTank])
 	{
 		g_bIdle2[iTank] = false;
 

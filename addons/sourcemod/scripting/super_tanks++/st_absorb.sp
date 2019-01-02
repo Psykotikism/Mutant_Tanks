@@ -75,6 +75,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_absorb", cmdAbsorbInfo, "View information about the Absorb ability.");
@@ -367,12 +368,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank, "024"))
 		{
-			if (g_bAbsorb[iTank])
-			{
-				tTimerStopAbsorb(null, GetClientUserId(iTank));
-			}
-
-			g_iAbsorbCount[iTank] = 0;
+			vRemoveAbsorb(iTank);
 		}
 	}
 }
@@ -459,43 +455,37 @@ public void ST_OnChangeType(int tank)
 
 static void vAbsorbAbility(int tank)
 {
-	if (iAbsorbAbility(tank) == 1)
+	if (g_iAbsorbCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		if (g_iAbsorbCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		float flAbsorbChance = !g_bTankConfig[ST_TankType(tank)] ? g_flAbsorbChance[ST_TankType(tank)] : g_flAbsorbChance2[ST_TankType(tank)];
+		if (GetRandomFloat(0.1, 100.0) <= flAbsorbChance)
 		{
-			float flAbsorbChance = !g_bTankConfig[ST_TankType(tank)] ? g_flAbsorbChance[ST_TankType(tank)] : g_flAbsorbChance2[ST_TankType(tank)];
-			if (GetRandomFloat(0.1, 100.0) <= flAbsorbChance)
+			g_bAbsorb[tank] = true;
+
+			CreateTimer(flAbsorbDuration(tank), tTimerStopAbsorb, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+
+			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 			{
-				g_bAbsorb[tank] = true;
+				g_iAbsorbCount[tank]++;
 
-				CreateTimer(flAbsorbDuration(tank), tTimerStopAbsorb, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
-
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-				{
-					g_iAbsorbCount[tank]++;
-
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbHuman", g_iAbsorbCount[tank], iHumanAmmo(tank));
-				}
-
-				if (iAbsorbMessage(tank) == 1)
-				{
-					char sTankName[33];
-					ST_TankName(tank, sTankName);
-					ST_PrintToChatAll("%s %t", ST_TAG2, "Absorb", sTankName);
-				}
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbHuman", g_iAbsorbCount[tank], iHumanAmmo(tank));
 			}
-			else
+
+			if (iAbsorbMessage(tank) == 1)
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
-				{
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbHuman2");
-				}
+				char sTankName[33];
+				ST_TankName(tank, sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Absorb", sTankName);
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 		{
-			ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbAmmo");
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbHuman2");
 		}
+	}
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	{
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbAmmo");
 	}
 }
 
@@ -598,7 +588,7 @@ public Action tTimerStopAbsorb(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bAbsorb2[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bAbsorb2[iTank])
 	{
 		g_bAbsorb2[iTank] = false;
 

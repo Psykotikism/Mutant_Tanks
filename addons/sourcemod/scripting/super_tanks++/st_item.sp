@@ -74,6 +74,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_item", cmdItemInfo, "View information about the Item ability.");
@@ -261,7 +262,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= flItemChance(iTank) && g_bItem[iTank])
+		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && iItemAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flItemChance(iTank) && g_bItem[iTank])
 		{
 			vItemAbility(iTank);
 		}
@@ -301,7 +302,10 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
-	vItemAbility(tank);
+	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && iItemAbility(tank) == 1)
+	{
+		vItemAbility(tank);
+	}
 }
 
 static void vItemAbility(int tank)

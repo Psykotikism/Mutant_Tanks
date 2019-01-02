@@ -77,6 +77,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_gravity", cmdGravityInfo, "View information about the Gravity ability.");
@@ -566,7 +567,7 @@ static void vGravityAbility(int tank, bool main)
 						}
 					}
 				}
-				else
+				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityAmmo2");
 				}
@@ -607,7 +608,7 @@ static void vGravityAbility(int tank, bool main)
 						}
 					}
 				}
-				else
+				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityAmmo");
 				}
@@ -667,14 +668,11 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, const
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bGravity7[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bGravity7[tank])
-			{
-				g_bGravity7[tank] = true;
+			g_bGravity7[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityAmmo2");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityAmmo2");
 		}
 	}
 }
@@ -886,7 +884,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity3[iTank])
 	{
 		g_bGravity3[iTank] = false;
 
@@ -903,7 +901,7 @@ public Action tTimerResetCooldown(Handle timer, int userid)
 public Action tTimerResetCooldown2(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity5[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity5[iTank])
 	{
 		g_bGravity5[iTank] = false;
 

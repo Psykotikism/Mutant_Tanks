@@ -79,6 +79,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_fling", cmdFlingInfo, "View information about the Fling ability.");
@@ -91,32 +92,35 @@ public void OnPluginStart()
 		return;
 	}
 
-	if (bIsValidGame())
+	switch (bIsValidGame())
 	{
-		StartPrepSDKCall(SDKCall_Player);
-		PrepSDKCall_SetFromConf(gdSuperTanks, SDKConf_Signature, "CTerrorPlayer_Fling");
-		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-		g_hSDKFlingPlayer = EndPrepSDKCall();
-
-		if (g_hSDKFlingPlayer == null)
+		case true:
 		{
-			PrintToServer("%s Your \"CTerrorPlayer_Fling\" signature is outdated.", ST_TAG);
+			StartPrepSDKCall(SDKCall_Player);
+			PrepSDKCall_SetFromConf(gdSuperTanks, SDKConf_Signature, "CTerrorPlayer_Fling");
+			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+			g_hSDKFlingPlayer = EndPrepSDKCall();
+
+			if (g_hSDKFlingPlayer == null)
+			{
+				PrintToServer("%s Your \"CTerrorPlayer_Fling\" signature is outdated.", ST_TAG);
+			}
 		}
-	}
-	else
-	{
-		StartPrepSDKCall(SDKCall_Player);
-		PrepSDKCall_SetFromConf(gdSuperTanks, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon");
-		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-		g_hSDKPukePlayer = EndPrepSDKCall();
-
-		if (g_hSDKPukePlayer == null)
+		case false:
 		{
-			PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", ST_TAG);
+			StartPrepSDKCall(SDKCall_Player);
+			PrepSDKCall_SetFromConf(gdSuperTanks, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon");
+			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+			g_hSDKPukePlayer = EndPrepSDKCall();
+
+			if (g_hSDKPukePlayer == null)
+			{
+				PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", ST_TAG);
+			}
 		}
 	}
 
@@ -454,7 +458,7 @@ static void vFlingAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "FlingAmmo");
 	}
@@ -489,36 +493,39 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, const c
 				ST_TankName(tank, sTankName);
 				sFlingMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sFlingMessage[ST_TankType(tank)] : g_sFlingMessage2[ST_TankType(tank)];
 
-				if (bIsValidGame())
+				switch (bIsValidGame())
 				{
-					float flSurvivorPos[3], flSurvivorVelocity[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
-					GetClientAbsOrigin(survivor, flSurvivorPos);
-					GetClientAbsOrigin(tank, flTankPos);
-
-					flDistance[0] = (flTankPos[0] - flSurvivorPos[0]);
-					flDistance[1] = (flTankPos[1] - flSurvivorPos[1]);
-					flDistance[2] = (flTankPos[2] - flSurvivorPos[2]);
-					GetEntPropVector(survivor, Prop_Data, "m_vecVelocity", flSurvivorVelocity);
-					flRatio[0] = flDistance[0] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
-					flRatio[1] = flDistance[1] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
-					flVelocity[0] = (flRatio[0] * -1) * 500.0;
-					flVelocity[1] = (flRatio[1] * -1) * 500.0;
-					flVelocity[2] = 500.0;
-
-					SDKCall(g_hSDKFlingPlayer, survivor, flVelocity, 76, tank, 7.0);
-
-					if (StrContains(sFlingMessage, message) != -1)
+					case true:
 					{
-						ST_PrintToChatAll("%s %t", ST_TAG2, "Fling", sTankName, survivor);
+						float flSurvivorPos[3], flSurvivorVelocity[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
+						GetClientAbsOrigin(survivor, flSurvivorPos);
+						GetClientAbsOrigin(tank, flTankPos);
+
+						flDistance[0] = (flTankPos[0] - flSurvivorPos[0]);
+						flDistance[1] = (flTankPos[1] - flSurvivorPos[1]);
+						flDistance[2] = (flTankPos[2] - flSurvivorPos[2]);
+						GetEntPropVector(survivor, Prop_Data, "m_vecVelocity", flSurvivorVelocity);
+						flRatio[0] = flDistance[0] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
+						flRatio[1] = flDistance[1] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
+						flVelocity[0] = (flRatio[0] * -1) * 500.0;
+						flVelocity[1] = (flRatio[1] * -1) * 500.0;
+						flVelocity[2] = 500.0;
+
+						SDKCall(g_hSDKFlingPlayer, survivor, flVelocity, 76, tank, 7.0);
+
+						if (StrContains(sFlingMessage, message) != -1)
+						{
+							ST_PrintToChatAll("%s %t", ST_TAG2, "Fling", sTankName, survivor);
+						}
 					}
-				}
-				else
-				{
-					SDKCall(g_hSDKPukePlayer, survivor, tank, true);
-
-					if (StrContains(sFlingMessage, message) != -1)
+					case false:
 					{
-						ST_PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
+						SDKCall(g_hSDKPukePlayer, survivor, tank, true);
+
+						if (StrContains(sFlingMessage, message) != -1)
+						{
+							ST_PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
+						}
 					}
 				}
 
@@ -536,14 +543,11 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bFling3[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bFling3[tank])
-			{
-				g_bFling3[tank] = true;
+			g_bFling3[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "FlingAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "FlingAmmo");
 		}
 	}
 }
@@ -605,7 +609,7 @@ static int iHumanAmmo(int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFling[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFling[iTank])
 	{
 		g_bFling[iTank] = false;
 

@@ -1458,6 +1458,14 @@
 	{
 		"en"			"Heal Ability Information"
 	}
+	"HitDetails"
+	{
+		"en"			"You only take damage in certain parts of your body."
+	}
+	"HitMenu"
+	{
+		"en"			"Hit Ability Information"
+	}
 	"Hurt"
 	{
 		"#format"		"{1:s},{2:N}"
@@ -1807,18 +1815,13 @@
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} just went kamikaze on{olive} {2}{mint}!"
 	}
-	"KamikazeAmmo"
-	{
-		"en"			"You've used up all your kamikaze range ability's ammo."
-	}
 	"KamikazeDetails"
 	{
 		"en"			"You kill yourself along with a survivor victim."
 	}
 	"KamikazeHuman"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your kamikaze range ability!"
+		"en"			"You activated your kamikaze range ability!"
 	}
 	"KamikazeHuman2"
 	{
@@ -1826,15 +1829,7 @@
 	}
 	"KamikazeHuman3"
 	{
-		"en"			"Your kamikaze range ability is still recharging."
-	}
-	"KamikazeHuman4"
-	{
 		"en"			"There are no survivors nearby to use your kamikaze range ability on."
-	}
-	"KamikazeHuman5"
-	{
-		"en"			"Your kamikaze range ability's cooldown is over."
 	}
 	"KamikazeMenu"
 	{
@@ -1916,7 +1911,7 @@
 	}
 	"LeechHuman2"
 	{
-		"en"			"Your leech range ability failed to activate. Try eechain."
+		"en"			"Your leech range ability failed to activate. Try again."
 	}
 	"LeechHuman3"
 	{
@@ -2242,7 +2237,7 @@
 	}
 	"PimpHuman2"
 	{
-		"en"			"Your pimp range ability failed to activate. Try eechain."
+		"en"			"Your pimp range ability failed to activate. Try again."
 	}
 	"PimpHuman3"
 	{
@@ -2642,7 +2637,7 @@
 	}
 	"RocketHuman2"
 	{
-		"en"			"Your rocket range ability failed to activate. Try eechain."
+		"en"			"Your rocket range ability failed to activate. Try again."
 	}
 	"RocketHuman3"
 	{
@@ -2693,7 +2688,7 @@
 	}
 	"ShakeHuman2"
 	{
-		"en"			"Your shake range ability failed to activate. Try eechain."
+		"en"			"Your shake range ability failed to activate. Try again."
 	}
 	"ShakeHuman3"
 	{
@@ -2791,7 +2786,7 @@
 	}
 	"ShoveHuman2"
 	{
-		"en"			"Your shove range ability failed to activate. Try eechain."
+		"en"			"Your shove range ability failed to activate. Try again."
 	}
 	"ShoveHuman3"
 	{
@@ -3129,6 +3124,53 @@
 	{
 		"en"			"Track Ability Information"
 	}
+	"Undead"
+	{
+		"#format"		"{1:s}"
+		"en"			"{olive}{1}{mint} increased its lifespan!"
+	}
+	"Undead2"
+	{
+		"#format"		"{1:s}"
+		"en"			"{olive}{1}{mint} is back to full health!"
+	}
+	"UndeadAmmo"
+	{
+		"en"			"You've used up all your undead ability's ammo."
+	}
+	"UndeadDetails"
+	{
+		"en"			"You cannot die."
+	}
+	"UndeadHuman"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your undead ability!"
+	}
+	"UndeadHuman2"
+	{
+		"en"			"Your undead ability failed to activate. Try again."
+	}
+	"UndeadHuman3"
+	{
+		"en"			"You already activated your undead ability."
+	}
+	"UndeadHuman4"
+	{
+		"en"			"Your undead ability is still recharging."
+	}
+	"UndeadHuman5"
+	{
+		"en"			"Your undead ability ended and needs to recharge."
+	}
+	"UndeadHuman6"
+	{
+		"en"			"Your undead ability's cooldown is over."
+	}
+	"UndeadMenu"
+	{
+		"en"			"Undead Ability Information"
+	}
 	"Vampire"
 	{
 		"#format"		"{1:s},{2:N}"
@@ -3167,7 +3209,7 @@
 	}
 	"VisionHuman2"
 	{
-		"en"			"Your vision range ability failed to activate. Try eechain."
+		"en"			"Your vision range ability failed to activate. Try again."
 	}
 	"VisionHuman3"
 	{
@@ -3291,7 +3333,7 @@
 	}
 	"WhirlHuman2"
 	{
-		"en"			"Your whirl range ability failed to activate. Try eechain."
+		"en"			"Your whirl range ability failed to activate. Try again."
 	}
 	"WhirlHuman3"
 	{
@@ -3508,247 +3550,247 @@
 	}
 	"Tank #28"
 	{
-		"en"			"{mint}This Tank can spawn Hunters behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can only be damaged by headshots."
 	}
 	"Tank #29"
 	{
-		"en"			"{mint}This Tank can constantly hurt survivors for a certain period of time."
+		"en"			"{mint}This Tank can spawn Hunters behind it and throw some at survivors too."
 	}
 	"Tank #30"
 	{
-		"en"			"{mint}This Tank can hypnotize survivors to hurt themselves or their teammates."
+		"en"			"{mint}This Tank can constantly hurt survivors for a certain period of time."
 	}
 	"Tank #31"
 	{
-		"en"			"{mint}This Tank can freeze survivors."
+		"en"			"{mint}This Tank can hypnotize survivors to hurt themselves or their teammates."
 	}
 	"Tank #32"
 	{
-		"en"			"{mint}This Tank can make survivors go idle. (This doesn't affect bots.)"
+		"en"			"{mint}This Tank can freeze survivors."
 	}
 	"Tank #33"
 	{
-		"en"			"{mint}This Tank can invert survivors' movement keys."
+		"en"			"{mint}This Tank can make survivors go idle. (This doesn't affect bots.)"
 	}
 	"Tank #34"
 	{
-		"en"			"{mint}This Tank can give survivors items upon death."
+		"en"			"{mint}This Tank can invert survivors' movement keys."
 	}
 	"Tank #35"
 	{
-		"en"			"{mint}This Tank can spawn Jockeys behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can give survivors items upon death."
 	}
 	"Tank #36"
 	{
-		"en"			"{mint}This Tank can jump periodically and make survivors jump uncontrollably."
+		"en"			"{mint}This Tank can spawn Jockeys behind it and throw some at survivors too."
 	}
 	"Tank #37"
 	{
-		"en"			"{mint}This Tank can kill itself along with a survivor victim."
+		"en"			"{mint}This Tank can jump periodically and make survivors jump uncontrollably."
 	}
 	"Tank #38"
 	{
-		"en"			"{mint}This Tank can make survivors lag."
+		"en"			"{mint}This Tank can kill itself along with a survivor victim."
 	}
 	"Tank #39"
 	{
-		"en"			"{mint}This Tank can leech off health from survivors."
+		"en"			"{mint}This Tank can make survivors lag."
 	}
 	"Tank #40"
 	{
-		"en"			"{mint}This Tank can heal nearby special infected upon death."
+		"en"			"{mint}This Tank can leech off health from survivors."
 	}
 	"Tank #41"
 	{
-		"en"			"{mint}This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
+		"en"			"{mint}This Tank can heal nearby special infected upon death."
 	}
 	"Tank #42"
 	{
-		"en"			"{mint}This Tank can resurrect dead special infected."
+		"en"			"{mint}This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
 	}
 	"Tank #43"
 	{
-		"en"			"{mint}This Tank can nullify survivors' damage to protect itself from damage."
+		"en"			"{mint}This Tank can resurrect dead special infected."
 	}
 	"Tank #44"
 	{
-		"en"			"{mint}This Tank can start panic events with hordes of zombies."
+		"en"			"{mint}This Tank can nullify survivors' damage to protect itself from damage."
 	}
 	"Tank #45"
 	{
-		"en"			"{mint}This Tank can pimp slap survivors repeatedly to show them who's boss."
+		"en"			"{mint}This Tank can start panic events with hordes of zombies."
 	}
 	"Tank #46"
 	{
-		"en"			"{mint}This Tank is immune to melee damage."
+		"en"			"{mint}This Tank can pimp slap survivors repeatedly to show them who's boss."
 	}
 	"Tank #47"
 	{
-		"en"			"{mint}This Tank can puke on survivors."
+		"en"			"{mint}This Tank is immune to melee damage."
 	}
 	"Tank #48"
 	{
-		"en"			"{mint}This Tank gains a speed boost when set on fire."
+		"en"			"{mint}This Tank can puke on survivors."
 	}
 	"Tank #49"
 	{
-		"en"			"{mint}This Tank can silence itself from survivors."
+		"en"			"{mint}This Tank gains a speed boost when set on fire."
 	}
 	"Tank #50"
 	{
-		"en"			"{mint}This Tank can give survivors high gun recoil."
+		"en"			"{mint}This Tank can silence itself from survivors."
 	}
 	"Tank #51"
 	{
-		"en"			"{mint}This Tank regenerates health every second."
+		"en"			"{mint}This Tank can give survivors high gun recoil."
 	}
 	"Tank #52"
 	{
-		"en"			"{mint}This Tank can respawn upon death."
+		"en"			"{mint}This Tank regenerates health every second."
 	}
 	"Tank #53"
 	{
-		"en"			"{mint}This Tank can force survivors to restart with a new loadout."
+		"en"			"{mint}This Tank can respawn upon death."
 	}
 	"Tank #54"
 	{
-		"en"			"{mint}This Tank can start rock showers."
+		"en"			"{mint}This Tank can force survivors to restart with a new loadout."
 	}
 	"Tank #55"
 	{
-		"en"			"{mint}This Tank can send survivors into space."
+		"en"			"{mint}This Tank can start rock showers."
 	}
 	"Tank #56"
 	{
-		"en"			"{mint}This Tank can throw itself towards survivors."
+		"en"			"{mint}This Tank can send survivors into space."
 	}
 	"Tank #57"
 	{
-		"en"			"{mint}This Tank can shake survivors' screens."
+		"en"			"{mint}This Tank can throw itself towards survivors."
 	}
 	"Tank #58"
 	{
-		"en"			"{mint}This Tank spawns with a shield and throws propane tanks or gas cans which survivors can use to break the shield."
+		"en"			"{mint}This Tank can shake survivors' screens."
 	}
 	"Tank #59"
 	{
-		"en"			"{mint}This Tank can shove survivors around."
+		"en"			"{mint}This Tank spawns with a shield and throws propane tanks or gas cans which survivors can use to break the shield."
 	}
 	"Tank #60"
 	{
-		"en"			"{mint}This Tank can smash survivors to death."
+		"en"			"{mint}This Tank can shove survivors around."
 	}
 	"Tank #61"
 	{
-		"en"			"{mint}This Tank can smite survivors for an instant kill."
+		"en"			"{mint}This Tank can smash survivors to death."
 	}
 	"Tank #62"
 	{
-		"en"			"{mint}This Tank can spawn Smokers behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can smite survivors for an instant kill."
 	}
 	"Tank #63"
 	{
-		"en"			"{mint}This Tank can spam rocks at survivors."
+		"en"			"{mint}This Tank can spawn Smokers behind it and throw some at survivors too."
 	}
 	"Tank #64"
 	{
-		"en"			"{mint}This Tank can spawn random special infected behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spam rocks at survivors."
 	}
 	"Tank #65"
 	{
-		"en"			"{mint}This Tank can spawn Spitters behind it and throw some at survivors too."
+		"en"			"{mint}This Tank can spawn random special infected behind it and throw some at survivors too."
 	}
 	"Tank #66"
 	{
-		"en"			"{mint}This Tank can release a splash of damage within a certain radius."
+		"en"			"{mint}This Tank can spawn Spitters behind it and throw some at survivors too."
 	}
 	"Tank #67"
 	{
-		"en"			"{mint}This Tank can stun survivors and slow them down."
+		"en"			"{mint}This Tank can release a splash of damage within a certain radius."
 	}
 	"Tank #68"
 	{
-		"en"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
+		"en"			"{mint}This Tank can stun survivors and slow them down."
 	}
 	"Tank #69"
 	{
-		"en"			"{mint}This Tank throws rocks which can track nearby survivors."
+		"en"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
 	}
 	"Tank #70"
 	{
-		"en"			"{mint}This Tank can steal health from survivors."
+		"en"			"{mint}This Tank throws rocks which can track nearby survivors."
 	}
 	"Tank #71"
 	{
-		"en"			"{mint}This Tank can change the FOV of survivors."
+		"en"			"{mint}This Tank regains full HP when close to dying."
 	}
 	"Tank #72"
 	{
-		"en"			"{mint}This Tank can warp to a random survivor."
+		"en"			"{mint}This Tank can steal health from survivors."
 	}
 	"Tank #73"
 	{
-		"en"			"{mint}This Tank can make survivors whirl."
+		"en"			"{mint}This Tank can change the FOV of survivors."
 	}
 	"Tank #74"
 	{
-		"en"			"{mint}This Tank can convert nearby common infected into Witches and throw some at survivors too."
+		"en"			"{mint}This Tank can warp to a random survivor."
 	}
 	"Tank #75"
 	{
-		"en"			"{mint}This Tank can create a mob of zombies within the area."
+		"en"			"{mint}This Tank can make survivors whirl."
 	}
 	"Tank #76"
 	{
-		"en"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+		"en"			"{mint}This Tank can convert nearby common infected into Witches and throw some at survivors too."
 	}
 	"Tank #77"
 	{
-		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+		"en"			"{mint}This Tank can create a mob of zombies within the area."
 	}
 	"Tank #78"
 	{
-		"en"			"{mint}This Tank is immune to fire damage and can run really fast."
+		"en"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
 	}
 	"Tank #79"
 	{
-		"en"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
 	}
 	"Tank #80"
 	{
-		"en"			"{mint}This Tank pushes survivors away."
+		"en"			"{mint}This Tank is immune to fire damage and can run really fast."
 	}
 	"Tank #81"
 	{
-		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+		"en"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
 	}
 	"Tank #82"
 	{
-		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+		"en"			"{mint}This Tank pushes survivors away."
 	}
 	"Tank #83"
 	{
-		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
 	}
 	"Tank #84"
 	{
-		"en"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
+		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
 	}
 	"Tank #85"
 	{
-		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
 	}
 	"Tank #86"
 	{
-		"en"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, jump really high, start meteor showers, spawn with a shield, and warp to survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
 	}
 	"Tank #87"
 	{
-		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
 	}
 	"Tank #88"
 	{
-		"en"			"{mint}This Tank spawns zombies behind clouds of smoke within the area."
+		"en"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, jump really high, start meteor showers, spawn with a shield, and warp to survivors."
 	}
 	"Tank #89"
 	{
@@ -3756,73 +3798,81 @@
 	}
 	"Tank #90"
 	{
-		"en"			"{mint}This Tank can partially blind and drug survivors."
+		"en"			"{mint}This Tank spawns zombies behind clouds of smoke within the area."
 	}
 	"Tank #91"
 	{
-		"en"			"{mint}This Tank can partially drug and hurt survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 	}
 	"Tank #92"
 	{
-		"en"			"{mint}This Tank can start rock showers and spam rocks at survivors."
+		"en"			"{mint}This Tank can partially blind and drug survivors."
 	}
 	"Tank #93"
 	{
-		"en"			"{mint}This Tank does extra damage, runs really fast, clones itself, creates acid puddles, explosions, and fires, cloaks itself, starts rock showers, spams rocks at survivors, and throws rocks that track nearby survivors."
+		"en"			"{mint}This Tank can partially drug and hurt survivors."
 	}
 	"Tank #94"
 	{
-		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+		"en"			"{mint}This Tank can start rock showers and spam rocks at survivors."
 	}
 	"Tank #95"
 	{
-		"en"			"{mint}It's Darth Vader... And he is... A Super Tank with the Force!"
+		"en"			"{mint}This Tank does extra damage, runs really fast, clones itself, creates acid puddles, explosions, and fires, cloaks itself, starts rock showers, spams rocks at survivors, and throws rocks that track nearby survivors."
 	}
 	"Tank #96"
 	{
-		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
 	}
 	"Tank #97"
 	{
-		"en"			"{mint}This Tank can start panic events and spawn Boomers to help prolong them."
+		"en"			"{mint}It's Darth Vader... And he is... A Super Tank with the Force!"
 	}
 	"Tank #98"
 	{
-		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
+		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
 	}
 	"Tank #99"
 	{
-		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
+		"en"			"{mint}This Tank can start panic events and spawn Boomers to help prolong them."
 	}
 	"Tank #100"
 	{
-		"en"			"{mint}This Tank can run really fast like the Flash and create speed mirages (clones) of itself."
+		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
 	}
 	"Tank #101"
 	{
-		"en"			"{mint}This Tank is too busy meditating to care about you."
+		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
 	}
 	"Tank #102"
 	{
-		"en"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
+		"en"			"{mint}This Tank can run really fast like the Flash and create speed mirages (clones) of itself."
 	}
 	"Tank #103"
 	{
-		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
+		"en"			"{mint}This Tank is too busy meditating to care about you."
 	}
 	"Tank #104"
 	{
-		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
+		"en"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
 	}
 	"Tank #105"
 	{
-		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
 	}
 	"Tank #106"
 	{
-		"en"			"{mint}This Tank randomly switches into different Super Tank types and deals increased damage. Be careful..."
+		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
 	}
 	"Tank #107"
+	{
+		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+	}
+	"Tank #108"
+	{
+		"en"			"{mint}This Tank randomly switches into different Super Tank types and deals increased damage. Be careful..."
+	}
+	"Tank #109"
 	{
 		"en"			"{mint}This Tank can shapeshift into different Super Tank types. Don't underestimate it..."
 	}

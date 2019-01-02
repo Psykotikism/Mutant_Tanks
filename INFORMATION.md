@@ -2,7 +2,7 @@
 > Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
 
 - Maximum types: 500
-- Ability count: 66
+- Ability count: 68
 
 ## Plugin Settings
 
@@ -40,6 +40,15 @@
 			// 0: OFF
 			// 1: ON
 			"Announce Death"			"1"
+
+			// Base health given to all Super Tanks.
+			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Disable this setting if it conflicts with other plugins.
+			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 65535
+			"Base Health"				"0"
 
 			// Display Tanks' names and health.
 			// --
@@ -83,7 +92,7 @@
 			// Spawn this many Tanks on non-finale maps periodically.
 			// --
 			// Minimum: 1
-			// Maximum: 9999999999
+			// Maximum: 64
 			"Regular Amount"			"2"
 
 			// Spawn Tanks on non-finale maps every time this many seconds passes.
@@ -98,7 +107,8 @@
 			// 1: ON
 			"Regular Wave"				"0"
 
-			// Amount of Tanks to spawn for each finale wave.
+			// Number of Tanks to spawn for each finale wave.
+			// Note: This setting does not seem to work on the official L4D1 campaigns' finale maps. They have their own finale scripts which limit the number of Tanks to 1 for each wave.
 			// --
 			// Separate waves with commas.
 			// --
@@ -106,7 +116,7 @@
 			// Character limit for each wave: 3
 			// --
 			// Minimum value for each wave: 1
-			// Maximum value for each wave: 9999999999
+			// Maximum value for each wave: 64
 			// --
 			// 1st number = 1st wave
 			// 2nd number = 2nd wave
@@ -276,7 +286,7 @@
 			// Note: Clones, respawned Super Tanks, randomized Tanks, and Super Tanks spawned through the Super Tanks++ menu are not affected. 
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 64
 			"Type Limit"				"32"
 
 			// The Super Tank will only spawn on finale maps.
@@ -299,10 +309,10 @@
 			// Minimum value for each health stage: 1
 			// Maximum value for each health stage: 65535
 			// --
-			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "1" or higher.)
-			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "2" or higher.)
-			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "3" or higher.)
-			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "4" or higher.)
+			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to 1 or higher.)
+			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to 2 or higher.)
+			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to 3 or higher.)
+			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to 4 or higher.)
 			"Boss Health Stages"			"5000,2500,1500,1000"
 
 			// The number of stages for Super Tank bosses.
@@ -500,15 +510,6 @@
 			// Minimum: 0.0
 			// Maximum: 9999999999.0
 			"Claw Damage"				"-1.0"
-
-			// Base health given to the Super Tank.
-			// Note: Tank's health limit on any difficulty is 65,535.
-			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
-			// --
-			// Minimum: 0 (OFF)
-			// Maximum: 65535
-			"Base Health"				"0"
 
 			// Extra health given to the Super Tank.
 			// Note: Tank's health limit on any difficulty is 65,535.
@@ -2562,7 +2563,7 @@
 			// Example: Damage = 30.0 x 5.0 (150.0)
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage x 1.0 = Bullet damage)
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 9999999999.0
 			"Fragile Bullet Multiplier"		"5.0"
 
@@ -2584,7 +2585,7 @@
 			// Example: Damage = 30.0 x 5.0 (150.0)
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage x 1.0 = Explosive damage)
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 9999999999.0
 			"Fragile Explosive Multiplier"		"5.0"
 
@@ -2593,7 +2594,7 @@
 			// Example: Damage = 30.0 x 3.0 (90.0)
 			// Note: Use the value "1.0" to disable this setting. (Fire damage x 1.0 = Fire damage)
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 9999999999.0
 			"Fragile Fire Multiplier"		"3.0"
 
@@ -2602,7 +2603,7 @@
 			// Example: Damage = 100.0 x 1.5 (150.0)
 			// Note: Use the value "1.0" to disable this setting. (Melee damage x 1.0 = Melee damage)
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 9999999999.0
 			"Fragile Melee Multiplier"		"1.5"
 		}
@@ -3127,6 +3128,53 @@
 			// Positive numbers: Current health + Health from Tanks
 			// Negative numbers: Current health - Health from Tanks
 			"Health From Tanks"			"500"
+		}
+	}
+}
+```
+
+#### Hit Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank only takes damage in certain parts of its body.
+		// Requires "st_hit.smx" to be installed.
+		"Hit Ability"
+		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// The damage received by the Super Tank is multiplied by this value.
+			// Note: Damage = Damage x Hit damage multiplier
+			// Example: Damage = 30.0 x 1.5 (45.0)
+			// Note: Use the value "1.0" to disable this setting. (Damage x 1.0 = Damage)
+			// --
+			// Minimum: 1.0
+			// Maximum: 9999999999.0
+			"Hit Damage Multiplier"			"1.5"
+
+			// The only part of the Super Tank that can be damage.
+			// --
+			// 1: Headshots only.
+			// 2: Chest shots only.
+			// 3: Stomach shots only.
+			// 4: Left arm shots only.
+			// 5: Right arm shots only.
+			// 6: Left leg shots only.
+			// 7: Right leg shots only.
+			"Hit Group"				"1"
 		}
 	}
 }
@@ -3940,18 +3988,6 @@
 			// 1: ON
 			"Human Ability"				"0"
 
-			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
-			// --
-			// Minimum: 0
-			// Maximum: 9999999999
-			"Human Ammo"				"5"
-
-			// Human-controlled Super Tanks must wait this long before using their abilities again.
-			// --
-			// Minimum: 0.0
-			// Maximum: 9999999999.0
-			"Human Cooldown"			"30.0"
-
 			// Enable this ability.
 			// Note: This setting does not affect the "Kamikaze Hit" setting.
 			// --
@@ -4374,13 +4410,6 @@
 			// Maximum: 9999999999.0
 			"Human Cooldown"			"30.0"
 
-			// The Super Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
-			// --
-			// Minimum: 0.1
-			// Maximum: 9999999999.0
-			"Human Duration"			"5.0"
-
 			// The mode of how human-controlled Super Tanks activate their abilities.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
@@ -4411,6 +4440,13 @@
 			// Minimum: 1.0
 			// Maximum: 9999999999.0
 			"Meteor Damage"				"5.0"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Meteor Duration"			"5.0"
 
 			// The mode of the Super Tank's meteor shower ability.
 			// --
@@ -5020,17 +5056,17 @@
 			// 1: ON
 			"Ability Message"			"0"
 
-			// The Super Tank's speed boost value when on fire.
-			// --
-			// Minimum: 0.1
-			// Maximum: 3.0
-			"Pyro Boost"				"1.0"
-
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pyro Chance"				"33.3"
+
+			// The Super Tank's damage boost value when on fire.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Pyro Damage Boost"			"1.0"
 
 			// The Super Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
@@ -5039,11 +5075,21 @@
 			// Maximum: 9999999999.0
 			"Pyro Duration"				"5.0"
 
-			// The mode of the Super Tank's speed boost.
+			// The mode of the Super Tank's damage and speed boosts.
 			// --
-			// 0: Super Tank's speed = Run speed + Pyro boost
-			// 1: Super Tank's speed = Pyro boost
+			// 0:
+			// Super Tank's damage = Claw/rock damage + Pyro damage boost
+			// Super Tank's speed = Run speed + Pyro speed boost
+			// 1:
+			// Super Tank's damage = Pyro damage boost
+			// Super Tank's speed = Pyro speed boost
 			"Pyro Mode"				"0"
+
+			// The Super Tank's speed boost value when on fire.
+			// --
+			// Minimum: 0.1
+			// Maximum: 3.0
+			"Pyro Speed Boost"			"1.0"
 		}
 	}
 }
@@ -6637,6 +6683,63 @@
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Track Speed"				"500.0"
+		}
+	}
+}
+```
+
+#### Undead Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank cannot die.
+		// Requires "st_undead.smx" to be installed.
+		"Undead Ability"
+		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 0
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Super Tank stays alive up to this many times.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Undead Amount"				"1"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Undead Chance"				"33.3"
 		}
 	}
 }

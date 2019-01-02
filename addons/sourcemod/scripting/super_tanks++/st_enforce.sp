@@ -77,6 +77,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_enforce", cmdEnforceInfo, "View information about the Enforce ability.");
@@ -448,7 +449,7 @@ static void vEnforceAbility(int tank)
 			}
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceAmmo");
 	}
@@ -513,14 +514,11 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, const
 				}
 			}
 		}
-		else
+		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bEnforce5[tank])
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bEnforce5[tank])
-			{
-				g_bEnforce5[tank] = true;
+			g_bEnforce5[tank] = true;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceAmmo");
-			}
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceAmmo");
 		}
 	}
 }
@@ -665,7 +663,7 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bEnforce3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bEnforce3[iTank])
 	{
 		g_bEnforce3[iTank] = false;
 

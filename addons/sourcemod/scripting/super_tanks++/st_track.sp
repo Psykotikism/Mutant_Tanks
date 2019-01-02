@@ -73,6 +73,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_track", cmdTrackInfo, "View information about the Track ability.");
@@ -217,13 +218,10 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public void Think(int rock)
 {
-	if (bIsValidEntity(rock))
+	switch (bIsValidEntity(rock))
 	{
-		vTrack(rock);
-	}
-	else
-	{
-		SDKUnhook(rock, SDKHook_Think, Think);
+		case true: vTrack(rock);
+		case false: SDKUnhook(rock, SDKHook_Think, Think);
 	}
 }
 
@@ -730,7 +728,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bTrack2[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bTrack2[iTank])
 	{
 		g_bTrack2[iTank] = false;
 

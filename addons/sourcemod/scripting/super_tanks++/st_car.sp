@@ -35,11 +35,11 @@ public Plugin myinfo =
 
 #define ST_MENU_CAR "Car Ability"
 
-bool g_bCar[MAXPLAYERS + 1], g_bCar2[MAXPLAYERS + 1], g_bCar3[MAXPLAYERS + 1], g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCar[MAXPLAYERS + 1], g_bCar2[MAXPLAYERS + 1], g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sCarOptions[ST_MAXTYPES + 1][7], g_sCarOptions2[ST_MAXTYPES + 1][7], g_sCarRadius[ST_MAXTYPES + 1][13], g_sCarRadius2[ST_MAXTYPES + 1][13];
 
-float g_flCarChance[ST_MAXTYPES + 1], g_flCarChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flHumanDuration[ST_MAXTYPES + 1], g_flHumanDuration2[ST_MAXTYPES + 1];
+float g_flCarChance[ST_MAXTYPES + 1], g_flCarChance2[ST_MAXTYPES + 1], g_flCarDuration[ST_MAXTYPES + 1], g_flCarDuration2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
 
 int g_iCarAbility[ST_MAXTYPES + 1], g_iCarAbility2[ST_MAXTYPES + 1], g_iCarCount[MAXPLAYERS + 1], g_iCarMessage[ST_MAXTYPES + 1], g_iCarMessage2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1];
 
@@ -78,6 +78,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_car", cmdCarInfo, "View information about the Car ability.");
@@ -157,7 +158,7 @@ public int iCarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanMode(param1) == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "CarDetails");
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flHumanDuration(param1));
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flCarDuration(param1));
 				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
@@ -261,8 +262,6 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
 					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Car Ability/Human Cooldown", 30.0);
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_flHumanDuration[iIndex] = kvSuperTanks.GetFloat("Car Ability/Human Duration", 5.0);
-					g_flHumanDuration[iIndex] = flClamp(g_flHumanDuration[iIndex], 0.1, 9999999999.0);
 					g_iHumanMode[iIndex] = kvSuperTanks.GetNum("Car Ability/Human Mode", 1);
 					g_iHumanMode[iIndex] = iClamp(g_iHumanMode[iIndex], 0, 1);
 					g_iCarAbility[iIndex] = kvSuperTanks.GetNum("Car Ability/Ability Enabled", 0);
@@ -271,6 +270,8 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iCarMessage[iIndex] = iClamp(g_iCarMessage[iIndex], 0, 1);
 					g_flCarChance[iIndex] = kvSuperTanks.GetFloat("Car Ability/Car Chance", 33.3);
 					g_flCarChance[iIndex] = flClamp(g_flCarChance[iIndex], 0.0, 100.0);
+					g_flCarDuration[iIndex] = kvSuperTanks.GetFloat("Car Ability/Car Duration", 5.0);
+					g_flCarDuration[iIndex] = flClamp(g_flCarDuration[iIndex], 0.1, 9999999999.0);
 					kvSuperTanks.GetString("Car Ability/Car Options", g_sCarOptions[iIndex], sizeof(g_sCarOptions[]), "123");
 					kvSuperTanks.GetString("Car Ability/Car Radius", g_sCarRadius[iIndex], sizeof(g_sCarRadius[]), "-180.0,180.0");
 				}
@@ -284,8 +285,6 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
 					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Car Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_flHumanDuration2[iIndex] = kvSuperTanks.GetFloat("Car Ability/Human Duration", g_flHumanDuration[iIndex]);
-					g_flHumanDuration2[iIndex] = flClamp(g_flHumanDuration2[iIndex], 0.1, 9999999999.0);
 					g_iHumanMode2[iIndex] = kvSuperTanks.GetNum("Car Ability/Human Mode", g_iHumanMode[iIndex]);
 					g_iHumanMode2[iIndex] = iClamp(g_iHumanMode2[iIndex], 0, 1);
 					g_iCarAbility2[iIndex] = kvSuperTanks.GetNum("Car Ability/Ability Enabled", g_iCarAbility[iIndex]);
@@ -294,6 +293,8 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_iCarMessage2[iIndex] = iClamp(g_iCarMessage2[iIndex], 0, 1);
 					g_flCarChance2[iIndex] = kvSuperTanks.GetFloat("Car Ability/Car Chance", g_flCarChance[iIndex]);
 					g_flCarChance2[iIndex] = flClamp(g_flCarChance2[iIndex], 0.0, 100.0);
+					g_flCarDuration2[iIndex] = kvSuperTanks.GetFloat("Car Ability/Car Duration", g_flCarDuration[iIndex]);
+					g_flCarDuration2[iIndex] = flClamp(g_flCarDuration2[iIndex], 0.1, 9999999999.0);
 					kvSuperTanks.GetString("Car Ability/Car Options", g_sCarOptions2[iIndex], sizeof(g_sCarOptions2[]), g_sCarOptions[iIndex]);
 					kvSuperTanks.GetString("Car Ability/Car Radius", g_sCarRadius2[iIndex], sizeof(g_sCarRadius2[]), g_sCarRadius[iIndex]);
 				}
@@ -338,15 +339,15 @@ public void ST_OnButtonPressed(int tank, int button)
 				{
 					case 0:
 					{
-						if (!g_bCar2[tank] && !g_bCar3[tank])
+						if (!g_bCar[tank] && !g_bCar2[tank])
 						{
 							vCarAbility(tank);
 						}
-						else if (g_bCar2[tank])
+						else if (g_bCar[tank])
 						{
 							ST_PrintToChat(tank, "%s %t", ST_TAG3, "CarHuman3");
 						}
-						else if (g_bCar3[tank])
+						else if (g_bCar2[tank])
 						{
 							ST_PrintToChat(tank, "%s %t", ST_TAG3, "CarHuman4");
 						}
@@ -355,10 +356,9 @@ public void ST_OnButtonPressed(int tank, int button)
 					{
 						if (g_iCarCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 						{
-							if (!g_bCar2[tank] && !g_bCar3[tank])
+							if (!g_bCar[tank] && !g_bCar2[tank])
 							{
 								g_bCar[tank] = true;
-								g_bCar2[tank] = true;
 								g_iCarCount[tank]++;
 
 								vCar(tank);
@@ -385,8 +385,10 @@ public void ST_OnButtonReleased(int tank, int button)
 		{
 			if (iCarAbility(tank) == 1 && iHumanAbility(tank) == 1)
 			{
-				if (iHumanMode(tank) == 1 && g_bCar2[tank] && !g_bCar3[tank])
+				if (iHumanMode(tank) == 1 && g_bCar[tank] && !g_bCar2[tank])
 				{
+					g_bCar[tank] = false;
+
 					vReset2(tank);
 				}
 			}
@@ -439,7 +441,7 @@ static void vCarAbility(int tank)
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "CarHuman2");
 		}
 	}
-	else
+	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "CarAmmo");
 	}
@@ -449,7 +451,6 @@ static void vRemoveCar(int tank)
 {
 	g_bCar[tank] = false;
 	g_bCar2[tank] = false;
-	g_bCar3[tank] = false;
 	g_iCarCount[tank] = 0;
 }
 
@@ -466,9 +467,7 @@ static void vReset()
 
 static void vReset2(int tank)
 {
-	g_bCar[tank] = false;
-	g_bCar2[tank] = false;
-	g_bCar3[tank] = true;
+	g_bCar2[tank] = true;
 
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "CarHuman5");
 
@@ -478,18 +477,18 @@ static void vReset2(int tank)
 	}
 	else
 	{
-		g_bCar3[tank] = false;
+		g_bCar2[tank] = false;
 	}
+}
+
+static float flCarDuration(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_flCarDuration[ST_TankType(tank)] : g_flCarDuration2[ST_TankType(tank)];
 }
 
 static float flHumanCooldown(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
-}
-
-static float flHumanDuration(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanDuration[ST_TankType(tank)] : g_flHumanDuration2[ST_TankType(tank)];
 }
 
 static int iCarAbility(int tank)
@@ -517,7 +516,7 @@ public Action tTimerCarUpdate(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iCarAbility(iTank) == 0 || !g_bCar2[iTank])
+	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iCarAbility(iTank) == 0 || !g_bCar[iTank])
 	{
 		g_bCar[iTank] = false;
 
@@ -525,9 +524,14 @@ public Action tTimerCarUpdate(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bCar3[iTank])
+	if ((flTime + flCarDuration(iTank)) < GetEngineTime())
 	{
-		vReset2(iTank);
+		g_bCar[iTank] = false;
+
+		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bCar2[iTank])
+		{
+			vReset2(iTank);
+		}
 
 		return Plugin_Stop;
 	}
@@ -622,14 +626,14 @@ public Action tTimerSetCarVelocity(Handle timer, int ref)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bCar3[iTank])
+	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bCar2[iTank])
 	{
-		g_bCar3[iTank] = false;
+		g_bCar2[iTank] = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bCar3[iTank] = false;
+	g_bCar2[iTank] = false;
 
 	ST_PrintToChat(iTank, "%s %t", ST_TAG3, "CarHuman6");
 
