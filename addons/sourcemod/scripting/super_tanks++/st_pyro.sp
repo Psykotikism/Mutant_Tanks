@@ -257,32 +257,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				if (damagetype & DMG_BURN)
 				{
-					char sClassname[32];
-					GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-					int iPyroMode = !g_bTankConfig[ST_TankType(victim)] ? g_iPyroMode[ST_TankType(victim)] : g_iPyroMode2[ST_TankType(victim)];
-					float flPyroDamageBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroDamageBoost[ST_TankType(victim)] : g_flPyroDamageBoost2[ST_TankType(victim)],
-						flPyroSpeedBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroSpeedBoost[ST_TankType(victim)] : g_flPyroSpeedBoost2[ST_TankType(victim)];
-					switch (iPyroMode)
+					float flPyroSpeedBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroSpeedBoost[ST_TankType(victim)] : g_flPyroSpeedBoost2[ST_TankType(victim)];
+					switch (iPyroMode(victim))
 					{
-						case 0:
-						{
-							if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
-							{
-								damage += flPyroDamageBoost;
-							}
-
-							SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(victim) + flPyroSpeedBoost);
-						}
-						case 1:
-						{
-							if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
-							{
-								damage = flPyroDamageBoost;
-							}
-
-							SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flPyroSpeedBoost);
-						}
+						case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(victim) + flPyroSpeedBoost);
+						case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flPyroSpeedBoost);
 					}
 
 					if (!g_bPyro[victim])
@@ -299,6 +278,26 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 							char sTankName[33];
 							ST_TankName(victim, sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro2", sTankName);
+						}
+					}
+				}
+			}
+		}
+		else if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled))
+		{
+			if (iPyroAbility(attacker) == 1)
+			{
+				if (g_bPyro[attacker])
+				{
+					char sClassname[32];
+					GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+					if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+					{
+						float flPyroDamageBoost = !g_bTankConfig[ST_TankType(attacker)] ? g_flPyroDamageBoost[ST_TankType(attacker)] : g_flPyroDamageBoost2[ST_TankType(attacker)];
+						switch (iPyroMode(attacker))
+						{
+							case 0: damage += flPyroDamageBoost;
+							case 1: damage = flPyroDamageBoost;
 						}
 					}
 				}
@@ -608,6 +607,11 @@ static int iPyroAbility(int tank)
 static int iPyroMessage(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iPyroMessage[ST_TankType(tank)] : g_iPyroMessage2[ST_TankType(tank)];
+}
+
+static int iPyroMode(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iPyroMode[ST_TankType(tank)] : g_iPyroMode2[ST_TankType(tank)];
 }
 
 public Action tTimerPyro(Handle timer, DataPack pack)
