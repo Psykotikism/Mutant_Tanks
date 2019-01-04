@@ -9,10 +9,16 @@ Bug fixes:
 3. Fixed the core plugin not detecting all the client buttons.
 4. Fixed the blur effect colliding with the Super Tank it is attached to.
 5. Fixed the plugins not detecting all Tank throw animation sequences.
+6. Fixed the Car and Meteor abilities not resetting properly.
+
+Changes:
+
+1. Removed the feature where the Infected team cannot damage each other.
 
 Files:
 
 1. Updated the `super_tanks++.inc` file.
+2. Updated the `super_tanks++.phrases.txt` file with new phrases.
 
 ## Version 8.52 (January 1, 2019)
 
