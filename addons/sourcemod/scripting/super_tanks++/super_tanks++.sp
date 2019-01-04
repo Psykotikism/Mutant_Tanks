@@ -1126,11 +1126,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			}
 
 			if (attacker == victim || StrEqual(sClassname, "tank_rock") ||
-				((damagetype & DMG_BULLET ||
-				damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA ||
-				damagetype & DMG_BURN ||
-				damagetype & DMG_SLASH || damagetype & DMG_CLUB) &&
-				bIsTank(attacker)))
+				((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA || damagetype & DMG_BURN) && bIsTank(attacker)))
 			{
 				return Plugin_Handled;
 			}
