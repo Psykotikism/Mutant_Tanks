@@ -508,12 +508,16 @@ static void vReset()
 
 static void vResetCooldown(int tank)
 {
-	g_bMinion2[tank] = true;
 	g_iMinionCount[tank] = 0;
 
-	ST_PrintToChat(tank, "%s %t", ST_TAG3, "MinionHuman5");
+	if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	{
+		g_bMinion2[tank] = true;
 
-	CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "MinionHuman5");
+
+		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+	}
 }
 
 static float flHumanCooldown(int tank)

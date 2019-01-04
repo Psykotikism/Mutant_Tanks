@@ -528,10 +528,11 @@ static void vReset()
 
 static void vResetCooldown(int tank)
 {
+	g_iCloneCount[tank] = 0;
+
 	if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		g_bClone2[tank] = true;
-		g_iCloneCount[tank] = 0;
 
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman6");
 

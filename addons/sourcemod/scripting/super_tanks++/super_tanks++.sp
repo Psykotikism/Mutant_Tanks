@@ -1056,7 +1056,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		return Plugin_Continue;
 	}
 
-	for (int iBit = 0; iBit < 25; iBit++)
+	for (int iBit = 0; iBit < 26; iBit++)
 	{
 		int iButton = (1 << iBit);
 
