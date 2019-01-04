@@ -36,7 +36,7 @@ public Plugin myinfo =
 
 #define ST_MENU_SHIELD "Shield Ability"
 
-bool g_bCloneInstalled, g_bLateLoad, g_bShield[MAXPLAYERS + 1], g_bShield2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLateLoad, g_bShield[MAXPLAYERS + 1], g_bShield2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bThirdPerson[MAXPLAYERS + 1];
 
 ConVar g_cvSTTankThrowForce;
 
@@ -116,6 +116,10 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	vReset2(client);
+
+	g_bThirdPerson[client] = false;
+
+	CreateTimer(1.0, tTimerCheckView, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 }
 
 public void OnMapEnd()
@@ -324,7 +328,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 public Action SetTransmit(int entity, int client)
 {
 	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (ST_PluginEnabled() && iOwner == client && !bIsTankThirdPerson(client))
+	if (ST_PluginEnabled() && iOwner == client && !bIsTankThirdPerson(client) && !g_bThirdPerson[client])
 	{
 		return Plugin_Handled;
 	}
@@ -551,6 +555,8 @@ static void vReset()
 		if (bIsValidClient(iPlayer, "24"))
 		{
 			vReset2(iPlayer);
+
+			g_bThirdPerson[iPlayer] = false;
 		}
 	}
 }
@@ -732,6 +738,25 @@ static int iShieldType(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iShieldType[ST_TankType(tank)] : g_iShieldType2[ST_TankType(tank)];
 }
 
+public void vViewQuery(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue)
+{
+	if (result == ConVarQuery_Okay)
+	{
+		if (StrEqual(cvarName, "z_view_distance") && StringToInt(cvarValue) <= -1)
+		{
+			g_bThirdPerson[client] = true;
+		}
+		else
+		{
+			g_bThirdPerson[client] = false;
+		}
+	}
+	else
+	{
+		g_bThirdPerson[client] = false;
+	}
+}
+
 public Action tTimerShield(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -838,6 +863,19 @@ public Action tTimerResetCooldown(Handle timer, int userid)
 	g_bShield2[iTank] = false;
 
 	ST_PrintToChat(iTank, "%s %t", ST_TAG3, "ShieldHuman6");
+
+	return Plugin_Continue;
+}
+
+public Action tTimerCheckView(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank))
+	{
+		return Plugin_Continue;
+	}
+
+	QueryClientConVar(iTank, "z_view_distance", vViewQuery);
 
 	return Plugin_Continue;
 }
