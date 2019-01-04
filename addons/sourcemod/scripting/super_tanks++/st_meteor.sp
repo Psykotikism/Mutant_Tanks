@@ -504,8 +504,7 @@ static void vMeteorAbility(int tank)
 
 			vMeteor2(tank);
 
-			int iMeteorMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorMessage[ST_TankType(tank)] : g_iMeteorMessage2[ST_TankType(tank)];
-			if (iMeteorMessage == 1)
+			if (iMeteorMessage(tank) == 1)
 			{
 				char sTankName[33];
 				ST_TankName(tank, sTankName);
@@ -587,12 +586,17 @@ static int iMeteorAbility(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorAbility[ST_TankType(tank)] : g_iMeteorAbility2[ST_TankType(tank)];
 }
 
+static int iMeteorMessage(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorMessage[ST_TankType(tank)] : g_iMeteorMessage2[ST_TankType(tank)];
+}
+
 public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iMeteorAbility(iTank) == 0 || !g_bMeteor[iTank])
+	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bMeteor[iTank])
 	{
 		g_bMeteor[iTank] = false;
 
@@ -600,13 +604,20 @@ public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if ((flTime + flMeteorDuration(iTank)) < GetEngineTime())
+	if (iMeteorAbility(iTank) == 0 || ((!ST_TankAllowed(iTank, "5") || (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flMeteorDuration(iTank)) < GetEngineTime()))
 	{
 		g_bMeteor[iTank] = false;
 
 		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bMeteor2[iTank])
 		{
 			vReset2(iTank);
+		}
+
+		if (iMeteorMessage(iTank) == 1)
+		{
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Meteor2", sTankName);
 		}
 
 		return Plugin_Stop;
