@@ -14,11 +14,13 @@ Bug fixes:
 Changes:
 
 1. Removed the feature where the Infected team cannot damage each other.
+2. Added better thirdperson detection to properly display props attached to Super Tanks.
 
 Files:
 
-1. Updated the `super_tanks++.inc` file.
-2. Updated the `super_tanks++.phrases.txt` file with new phrases.
+1. Updated the `super_tanks++.cfg` file.
+2. Updated the `super_tanks++.inc` file.
+3. Updated the `super_tanks++.phrases.txt` file with new phrases.
 
 ## Version 8.52 (January 1, 2019)
 
