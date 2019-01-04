@@ -7,6 +7,12 @@ Bug fixes:
 1. Fixed the Clone and Minion abilities' `Replace` settings not working properly. (Thanks to Mi.Cura for reporting!)
 2. Fixed the Pyro ability's `Pyro Damage Boost` setting not working properly.
 3. Fixed the core plugin not detecting all the client buttons.
+4. Fixed the blur effect colliding with the Super Tank it is attached to.
+5. Fixed the plugins not detecting all Tank throw animation sequences.
+
+Files:
+
+1. Updated the `super_tanks++.inc` file.
 
 ## Version 8.52 (January 1, 2019)
 
