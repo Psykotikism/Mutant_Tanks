@@ -1108,45 +1108,23 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Changed;
 			}
 		}
-		else if (bIsInfected(victim, "0234"))
+		else if (bIsTankAllowed(victim))
 		{
-			if (bIsTankAllowed(victim))
-			{
-				int iBulletImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iBulletImmunity[g_iTankType[victim]] : g_iBulletImmunity2[g_iTankType[victim]],
-					iExplosiveImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iExplosiveImmunity[g_iTankType[victim]] : g_iExplosiveImmunity2[g_iTankType[victim]],
-					iMeleeImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iMeleeImmunity[g_iTankType[victim]] : g_iMeleeImmunity2[g_iTankType[victim]];
+			int iBulletImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iBulletImmunity[g_iTankType[victim]] : g_iBulletImmunity2[g_iTankType[victim]],
+				iExplosiveImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iExplosiveImmunity[g_iTankType[victim]] : g_iExplosiveImmunity2[g_iTankType[victim]],
+				iMeleeImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iMeleeImmunity[g_iTankType[victim]] : g_iMeleeImmunity2[g_iTankType[victim]];
 
-				if ((damagetype & DMG_BULLET && iBulletImmunity == 1) ||
-					((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && iExplosiveImmunity == 1) ||
-					(damagetype & DMG_BURN && iFireImmunity(victim) == 1) ||
-					((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && iMeleeImmunity == 1))
-				{
-					return Plugin_Handled;
-				}
-			}
-
-			if ((damagetype & DMG_BURN || damagetype & (DMG_BURN|DMG_PREVENT_PHYSICS_FORCE) || damagetype & (DMG_BURN|DMG_DIRECT)) && (attacker == victim || bIsInfected(attacker, "0234")))
+			if ((damagetype & DMG_BULLET && iBulletImmunity == 1) ||
+				((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && iExplosiveImmunity == 1) ||
+				(damagetype & DMG_BURN && iFireImmunity(victim) == 1) ||
+				((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && iMeleeImmunity == 1))
 			{
 				return Plugin_Handled;
 			}
 
-			if (inflictor != -1)
+			if (attacker == victim || StrEqual(sClassname, "tank_rock"))
 			{
-				int iOwner, iThrower;
-				if (HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity"))
-				{
-					iOwner = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
-				}
-
-				if (HasEntProp(inflictor, Prop_Data, "m_hThrower"))
-				{
-					iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
-				}
-
-				if ((iOwner > 0 && iOwner == victim) || (iThrower > 0 && iThrower == victim) || bIsTank(iOwner) || StrEqual(sClassname, "tank_rock"))
-				{
-					return Plugin_Handled;
-				}
+				return Plugin_Handled;
 			}
 		}
 	}

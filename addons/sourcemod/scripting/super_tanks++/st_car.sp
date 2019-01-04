@@ -428,8 +428,7 @@ static void vCarAbility(int tank)
 
 			vCar(tank);
 
-			int iCarMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iCarMessage[ST_TankType(tank)] : g_iCarMessage2[ST_TankType(tank)];
-			if (iCarMessage == 1)
+			if (iCarMessage(tank) == 1)
 			{
 				char sTankName[33];
 				ST_TankName(tank, sTankName);
@@ -496,6 +495,11 @@ static int iCarAbility(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iCarAbility[ST_TankType(tank)] : g_iCarAbility2[ST_TankType(tank)];
 }
 
+static int iCarMessage(int tank)
+{
+	return !g_bTankConfig[ST_TankType(tank)] ? g_iCarMessage[ST_TankType(tank)] : g_iCarMessage2[ST_TankType(tank)];
+}
+
 static int iHumanAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
@@ -516,7 +520,7 @@ public Action tTimerCarUpdate(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iCarAbility(iTank) == 0 || !g_bCar[iTank])
+	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bCar[iTank])
 	{
 		g_bCar[iTank] = false;
 
@@ -524,13 +528,20 @@ public Action tTimerCarUpdate(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if ((flTime + flCarDuration(iTank)) < GetEngineTime())
+	if (iCarAbility(iTank) == 0 || ((!ST_TankAllowed(iTank, "5") || (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flCarDuration(iTank)) < GetEngineTime()))
 	{
 		g_bCar[iTank] = false;
 
 		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bCar2[iTank])
 		{
 			vReset2(iTank);
+		}
+
+		if (iCarMessage(iTank) == 1)
+		{
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Car2", sTankName);
 		}
 
 		return Plugin_Stop;
