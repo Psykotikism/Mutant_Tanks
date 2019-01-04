@@ -2461,14 +2461,13 @@ public Action tTimerBlurEffect(Handle timer, int userid)
 	GetClientAbsOrigin(iTank, flTankPos);
 	GetClientAbsAngles(iTank, flTankAng);
 
-	int iAnim = GetEntProp(iTank, Prop_Send, "m_nSequence");
 	g_iTankModel[iTank] = CreateEntityByName("prop_dynamic");
 	if (bIsValidEntity(g_iTankModel[iTank]))
 	{
 		SetEntityModel(g_iTankModel[iTank], MODEL_TANK);
 
 		SetEntPropEnt(g_iTankModel[iTank], Prop_Send, "m_hOwnerEntity", iTank);
-		DispatchKeyValue(g_iTankModel[iTank], "solid", "6");
+		DispatchKeyValue(g_iTankModel[iTank], "solid", "0");
 
 		TeleportEntity(g_iTankModel[iTank], flTankPos, flTankAng, NULL_VECTOR);
 		DispatchSpawn(g_iTankModel[iTank]);
@@ -2481,7 +2480,7 @@ public Action tTimerBlurEffect(Handle timer, int userid)
 			iSkinAlpha = !g_bTankConfig[g_iTankType[iTank]] ? g_iSkinAlpha[g_iTankType[iTank]] : g_iSkinAlpha2[g_iTankType[iTank]];
 		SetEntityRenderColor(g_iTankModel[iTank], iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha);
 
-		SetEntProp(g_iTankModel[iTank], Prop_Send, "m_nSequence", iAnim);
+		SetEntProp(g_iTankModel[iTank], Prop_Send, "m_nSequence", GetEntProp(iTank, Prop_Send, "m_nSequence"));
 		SetEntPropFloat(g_iTankModel[iTank], Prop_Send, "m_flPlaybackRate", 5.0);
 
 		SDKHook(g_iTankModel[iTank], SDKHook_SetTransmit, SetTransmit);
