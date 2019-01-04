@@ -593,6 +593,11 @@
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} started a{yellow} car shower{mint}!"
 	}
+	"Car2"
+	{
+		"#format"		"{1:s}"
+		"en"			"{olive}{1}'s{mint} car shower ended!"
+	}
 	"CarAmmo"
 	{
 		"en"			"You've used up all your car showers."
@@ -1992,6 +1997,11 @@
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} started a{yellow} meteor shower{mint}!"
+	}
+	"Meteor2"
+	{
+		"#format"		"{1:s}"
+		"en"			"{olive}{1}'s{mint} meteor shower ended!"
 	}
 	"MeteorAmmo"
 	{
