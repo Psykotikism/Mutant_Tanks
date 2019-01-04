@@ -1108,21 +1108,29 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Changed;
 			}
 		}
-		else if (bIsTankAllowed(victim))
+		else if (bIsInfected(victim, "0234"))
 		{
-			int iBulletImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iBulletImmunity[g_iTankType[victim]] : g_iBulletImmunity2[g_iTankType[victim]],
-				iExplosiveImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iExplosiveImmunity[g_iTankType[victim]] : g_iExplosiveImmunity2[g_iTankType[victim]],
-				iMeleeImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iMeleeImmunity[g_iTankType[victim]] : g_iMeleeImmunity2[g_iTankType[victim]];
-
-			if ((damagetype & DMG_BULLET && iBulletImmunity == 1) ||
-				((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && iExplosiveImmunity == 1) ||
-				(damagetype & DMG_BURN && iFireImmunity(victim) == 1) ||
-				((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && iMeleeImmunity == 1))
+			if (bIsTankAllowed(victim))
 			{
-				return Plugin_Handled;
+				int iBulletImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iBulletImmunity[g_iTankType[victim]] : g_iBulletImmunity2[g_iTankType[victim]],
+					iExplosiveImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iExplosiveImmunity[g_iTankType[victim]] : g_iExplosiveImmunity2[g_iTankType[victim]],
+					iMeleeImmunity = !g_bTankConfig[g_iTankType[victim]] ? g_iMeleeImmunity[g_iTankType[victim]] : g_iMeleeImmunity2[g_iTankType[victim]];
+
+				if ((damagetype & DMG_BULLET && iBulletImmunity == 1) ||
+					((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && iExplosiveImmunity == 1) ||
+					(damagetype & DMG_BURN && iFireImmunity(victim) == 1) ||
+					((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && iMeleeImmunity == 1))
+				{
+					return Plugin_Handled;
+				}
 			}
 
-			if (attacker == victim || StrEqual(sClassname, "tank_rock"))
+			if (attacker == victim || StrEqual(sClassname, "tank_rock") ||
+				((damagetype & DMG_BULLET ||
+				damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA ||
+				damagetype & DMG_BURN ||
+				damagetype & DMG_SLASH || damagetype & DMG_CLUB) &&
+				bIsTank(attacker)))
 			{
 				return Plugin_Handled;
 			}

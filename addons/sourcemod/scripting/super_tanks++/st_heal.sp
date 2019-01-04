@@ -723,6 +723,8 @@ static void vReset2(int tank)
 	g_bHeal[tank] = false;
 	g_bHeal2[tank] = true;
 
+	SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
+
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "HealHuman8");
 
 	if (g_iHealCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
@@ -788,6 +790,8 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iHealAbility(iTank) != 2 && iHealAbility(iTank) != 3) || !g_bHeal[iTank])
 	{
 		g_bHeal[iTank] = false;
+
+		SetEntProp(iTank, Prop_Send, "m_bFlashing", 0);
 
 		char sHealMessage[4];
 		sHealMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sHealMessage[ST_TankType(iTank)] : g_sHealMessage2[ST_TankType(iTank)];
