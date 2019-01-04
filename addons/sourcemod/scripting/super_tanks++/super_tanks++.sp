@@ -48,7 +48,7 @@ public Plugin myinfo =
 #define SOUND_BOSS "items/suitchargeok1.wav"
 
 bool g_bBlood[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1], g_bGeneralConfig, g_bIce[MAXPLAYERS + 1], g_bLateLoad, g_bMeteor[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSmoke[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1],
-	g_bTankConfig[ST_MAXTYPES + 1], g_bTransformed[MAXPLAYERS + 1];
+	g_bTankConfig[ST_MAXTYPES + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1];
 
 char g_sAnnounceArrival[6], g_sAnnounceArrival2[6], g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sFinaleWaves[9],
 	g_sFinaleWaves2[9], g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sRockEffects[ST_MAXTYPES + 1][5],
@@ -407,8 +407,11 @@ public void OnClientPutInServer(int client)
 
 	vReset2(client);
 
+	g_bThirdPerson[client] = false;
 	g_iPlayerCount[0] = iGetPlayerCount();
 	g_iTankType[client] = 0;
+
+	CreateTimer(1.0, tTimerCheckView, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 }
 
 public void OnClientDisconnect_Post(int client)
@@ -1139,7 +1142,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 public Action SetTransmit(int entity, int client)
 {
 	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (ST_PluginEnabled() && iOwner == client && !bIsTankThirdPerson(client))
+	if (ST_PluginEnabled() && iOwner == client && !bIsTankThirdPerson(client) && !g_bThirdPerson[client])
 	{
 		return Plugin_Handled;
 	}
@@ -1723,6 +1726,7 @@ static void vReset()
 		{
 			vReset2(iPlayer);
 
+			g_bThirdPerson[iPlayer] = false;
 			g_iTankType[iPlayer] = 0;
 		}
 	}
@@ -2419,6 +2423,25 @@ public void vSTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 	}
 }
 
+public void vViewQuery(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue)
+{
+	if (result == ConVarQuery_Okay)
+	{
+		if (StrEqual(cvarName, "z_view_distance") && StringToInt(cvarValue) <= -1)
+		{
+			g_bThirdPerson[client] = true;
+		}
+		else
+		{
+			g_bThirdPerson[client] = false;
+		}
+	}
+	else
+	{
+		g_bThirdPerson[client] = false;
+	}
+}
+
 public Action tTimerBloodEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -2506,6 +2529,19 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 		case 2: vBoss(iTank, iBossHealth3, iBossStages, iType3, 3);
 		case 3: vBoss(iTank, iBossHealth4, iBossStages, iType4, 4);
 	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerCheckView(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank))
+	{
+		return Plugin_Continue;
+	}
+
+	QueryClientConVar(iTank, "z_view_distance", vViewQuery);
 
 	return Plugin_Continue;
 }
