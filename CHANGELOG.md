@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 8.53 (January 3, 2019)
+
+Bug fixes:
+
+1. Fixed the Clone and Minion abilities' `Replace` settings not working properly. (Thanks to Mi.Cura for reporting!)
+2. Fixed the Pyro ability's `Pyro Damage Boost` setting not working properly.
+3. Fixed the core plugin not detecting all the client buttons.
+
 ## Version 8.52 (January 1, 2019)
 
 Bug fixes:

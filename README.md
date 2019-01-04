@@ -689,7 +689,7 @@ forward void ST_OnPluginEnd();
 /**
  * Called when the Tank spawns.
  * Use this forward for any on-spawn presets.
- * If you plan on using this to activate an ability, use ST_Ability() instead.
+ * If you plan on using this to activate an ability, use ST_OnAbilityActivated() instead.
  *
  * @param tank			Client index of the Tank.
  **/
