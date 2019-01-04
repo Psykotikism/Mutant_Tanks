@@ -822,7 +822,7 @@ stock bool bIsTankThirdPerson(int tank, const char[] mode = "02345")
 	{
 		switch (GetEntProp(tank, Prop_Send, "m_nSequence"))
 		{
-			case 28, 29, 30, 31, 49, 50, 51, 73, 74, 75, 76, 77: return true;
+			case 28, 29, 30, 31, 47, 48, 49, 50, 51, 73, 74, 75, 76, 77: return true;
 		}
 	}
 	
