@@ -884,7 +884,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 							}
 							else
 							{
-								vNewTankSettings(admin);
+								vNewTankSettings(admin, true);
 								vSetColor(admin, g_iType);
 								vTankSpawn(admin, 5);
 								vExternalView(admin, 1.5);
@@ -908,7 +908,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
 					if (bIsTank(iTarget) && StrEqual(sClassname, "player"))
 					{
-						vNewTankSettings(iTarget);
+						vNewTankSettings(iTarget, true);
 						vSetColor(iTarget, g_iType);
 						vTankSpawn(iTarget, 5);
 
@@ -1643,12 +1643,12 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 	}
 }
 
-static void vNewTankSettings(int tank)
+static void vNewTankSettings(int tank, bool end = false)
 {
 	ExtinguishEntity(tank);
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(SOUND_BOSS, tank);
-	vRemoveProps(tank);
+	vRemoveProps(tank, end);
 	vResetSpeed(tank, true);
 
 	Call_StartForward(g_hChangeTypeForward);
@@ -1792,6 +1792,13 @@ static void vSpawnModes(int tank, bool status)
 
 static void vSetColor(int tank, int value)
 {
+	if (g_iTankType[tank] > 0 && g_iTankType[tank] == value)
+	{
+		g_iTankType[tank] = 0;
+
+		return;
+	}
+
 	int iSkinRed = !g_bTankConfig[value] ? g_iSkinRed[value] : g_iSkinRed2[value],
 		iSkinGreen = !g_bTankConfig[value] ? g_iSkinGreen[value] : g_iSkinGreen2[value],
 		iSkinBlue = !g_bTankConfig[value] ? g_iSkinBlue[value] : g_iSkinBlue2[value],
