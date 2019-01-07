@@ -17,7 +17,7 @@
 #include <sdktools>
 
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.53"
+#define ST_VERSION "8.54"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define ST_TAG "[ST++]"
@@ -150,6 +150,15 @@ forward void ST_OnRockThrow(int tank, int rock);
 
 // Natives
 /**
+ * Hooks/unhooks any entity to/from the core plugin's SetTransmit callback.
+ *
+ * @param entity		Entity index of the entity.
+ * @param mode			True if hooking entity, false otherwise.
+ * @error			Invalid entity index.
+ **/
+native void ST_HideEntity(int entity, bool mode);
+
+/**
  * Returns the maximum value of the "Type Range" setting.
  *
  * @return			The maximum value of the "Type Range" setting.
@@ -271,29 +280,26 @@ native int ST_TankWave();
 native bool ST_TypeEnabled(int type);
 
 // Functions
-stock void vAttachParticle(int player, const char[] particlename, float time = 0.0, float origin = 0.0)
+stock void vAttachParticle(int player, const char[] particlename, float duration = 0.0, float origin = 0.0)
 {
-	if (bIsValidClient(player, "0234"))
+	if (bIsValidClient(player))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
 		{
 			float flPos[3];
-			GetEntPropVector(player, Prop_Send, "m_vecOrigin", flPos);
+			GetClientAbsOrigin(player, flPos);
 			flPos[2] += origin;
-
-			DispatchKeyValue(iParticle, "scale", "");
-			DispatchKeyValue(iParticle, "effect_name", particlename);
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iParticle);
 
-			ActivateEntity(iParticle);
-			AcceptEntityInput(iParticle, "Enable");
-			AcceptEntityInput(iParticle, "Start");
+			DispatchKeyValue(iParticle, "effect_name", particlename);
 			vSetEntityParent(iParticle, player);
+			DispatchSpawn(iParticle);
+			ActivateEntity(iParticle);
+			AcceptEntityInput(iParticle, "Start");
 
 			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteEntity(iParticle, time);
+			vDeleteEntity(iParticle, duration);
 		}
 	}
 }
@@ -333,31 +339,6 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 	}
 }
 
-stock void vCreateParticle(int player, const char[] particlename, float time = 0.0, float origin = 0.0)
-{
-	if (bIsValidClient(player, "0234"))
-	{
-		int iParticle = CreateEntityByName("info_particle_system");
-		if (bIsValidEntity(iParticle))
-		{
-			float flPos[3];
-			GetEntPropVector(player, Prop_Send, "m_vecOrigin", flPos);
-			flPos[2] += origin;
-
-			DispatchKeyValue(iParticle, "effect_name", particlename);
-			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iParticle);
-			ActivateEntity(iParticle);
-
-			AcceptEntityInput(iParticle, "Start");
-			vSetEntityParent(iParticle, player);
-
-			iParticle = EntIndexToEntRef(iParticle);
-			vDeleteEntity(iParticle, time);
-		}
-	}
-}
-
 stock void vDamageEntity(int victim, int attacker, float damage, const char[] damagetype = "0")
 {
 	int iPointHurt = CreateEntityByName("point_hurt");
@@ -378,20 +359,17 @@ stock void vDamageEntity(int victim, int attacker, float damage, const char[] da
 	}
 }
 
-stock void vDeleteEntity(int entity, float time = 0.1)
+stock void vDeleteEntity(int entity, float duration = 0.1)
 {
 	if (bIsValidEntRef(entity))
 	{
 		char sVariant[64];
-
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:ClearParent::%f:1", time);
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:ClearParent::%f:1", duration);
 		SetVariantString(sVariant);
 		AcceptEntityInput(entity, "AddOutput");
-
-		Format(sVariant, sizeof(sVariant), "OnUser1 !self:Kill::%f:1", time + 0.1);
+		Format(sVariant, sizeof(sVariant), "OnUser1 !self:Kill::%f:1", duration + 0.1);
 		SetVariantString(sVariant);
 		AcceptEntityInput(entity, "AddOutput");
-
 		AcceptEntityInput(entity, "FireUser1");
 	}
 }
@@ -485,11 +463,10 @@ stock void vPrecacheParticle(const char[] particlename)
 	if (bIsValidEntity(iParticle))
 	{
 		DispatchKeyValue(iParticle, "effect_name", particlename);
+		vSetEntityParent(iParticle, iParticle);
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
-
 		AcceptEntityInput(iParticle, "Start");
-		vSetEntityParent(iParticle, iParticle);
 
 		iParticle = EntIndexToEntRef(iParticle);
 		vDeleteEntity(iParticle);
@@ -585,7 +562,6 @@ stock bool bHasIdlePlayer(int survivor)
 {
 	char sClassname[32];
 	GetEntityNetClass(survivor, sClassname, sizeof(sClassname));
-
 	if (StrEqual(sClassname, "SurvivorBot"))
 	{
 		int iSpectatorUserId = GetEntProp(survivor, Prop_Send, "m_humanSpectatorUserID");
@@ -646,7 +622,6 @@ stock bool bIsGunWeapon(int survivor)
 {
 	char sWeapon[32];
 	GetClientWeapon(survivor, sWeapon, sizeof(sWeapon));
-
 	if (GetPlayerWeaponSlot(survivor, 0) > 0 || (GetPlayerWeaponSlot(survivor, 1) > 0 && StrContains(sWeapon, "pistol", false) != -1))
 	{
 		return true;
@@ -701,7 +676,6 @@ stock bool bIsPlayerIdle(int survivor)
 
 		char sClassname[32];
 		GetEntityNetClass(iPlayer, sClassname, sizeof(sClassname));
-
 		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iSpectatorUserId = GetEntProp(iPlayer, Prop_Send, "m_humanSpectatorUserID");
@@ -887,7 +861,6 @@ stock bool bIsWitch(int witch)
 	{
 		char sClassname[32];
 		GetEntityClassname(witch, sClassname, sizeof(sClassname));
-
 		if (StrEqual(sClassname, "witch"))
 		{
 			return true;
@@ -1047,7 +1020,6 @@ public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int flag)
 {
 	Handle hTrace;
-
 	switch (flag)
 	{
 		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
@@ -1155,6 +1127,21 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace
 	return GetVectorDistance(pos, flHitPos);
 }
 
+stock float flSpeed(int player, bool mode = false, float value = 1.0)
+{
+	switch (mode)
+	{
+		case true:
+		{
+			SetEntPropFloat(player, Prop_Send, "m_flLaggedMovementValue", value);
+			return value;
+		}
+		case false: return GetEntPropFloat(player, Prop_Send, "m_flLaggedMovementValue");
+	}
+
+	return 0.0;
+}
+
 stock int iClamp(int value, int min, int max)
 {
 	if (value < min)
@@ -1215,7 +1202,6 @@ stock int iGetIdlePlayer(int bot)
 	{
 		char sClassname[32];
 		GetEntityNetClass(bot, sClassname, sizeof(sClassname));
-
 		if (StrEqual(sClassname, "SurvivorBot"))
 		{
 			int iIdler = GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));
@@ -1271,6 +1257,7 @@ stock int iGetRandomTarget(float pos[3], float angle[3])
 			if (flAngle <= flMin)
 			{
 				flMin = flAngle;
+
 				return iSurvivor;
 			}
 		}
@@ -1340,6 +1327,7 @@ public SharedPlugin __pl_supertanksplusplus =
 #if !defined REQUIRE_PLUGIN
 public void __pl_supertanksplusplus_SetNTVOptional()
 {
+	MarkNativeAsOptional("ST_HideEntity");
 	MarkNativeAsOptional("ST_MaxType");
 	MarkNativeAsOptional("ST_MinType");
 	MarkNativeAsOptional("ST_PluginEnabled");

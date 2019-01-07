@@ -323,24 +323,15 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
-		int iUserId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iUserId),
-			iTankId = event.GetInt("attacker"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024") && iKamikazeAbility(iTank) == 1 && bIsSurvivor(iPlayer))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (ST_TankAllowed(iTank, "024"))
 		{
-			int iCorpse = -1;
-			while ((iCorpse = FindEntityByClassname(iCorpse, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iKamikazeAbility(iTank) == 1)
 			{
-				int iOwner = GetEntPropEnt(iCorpse, Prop_Send, "m_hOwnerEntity");
-				if (iPlayer == iOwner)
-				{
-					RemoveEntity(iCorpse);
-				}
+				vKamikaze(iTank, iTank);
 			}
-		}
 
-		if (ST_TankAllowed(iPlayer, "024"))
-		{
-			vRemoveKamikaze(iPlayer);
+			vRemoveKamikaze(iTank);
 		}
 	}
 }
@@ -370,6 +361,13 @@ public void ST_OnButtonPressed(int tank, int button)
 public void ST_OnChangeType(int tank)
 {
 	vRemoveKamikaze(tank);
+}
+
+static void vKamikaze(int survivor, int tank)
+{
+	EmitSoundToAll(SOUND_SMASH, survivor);
+	EmitSoundToAll(SOUND_GROWL, tank);
+	vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
 }
 
 static void vKamikazeAbility(int tank)

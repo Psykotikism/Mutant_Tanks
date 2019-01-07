@@ -34,7 +34,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bPyro[MAXPLAYERS + 1], g_bPyro2[MAXPLAYERS + 1], g_bPyro3[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flPyroChance[ST_MAXTYPES + 1], g_flPyroChance2[ST_MAXTYPES + 1], g_flPyroDamageBoost[ST_MAXTYPES + 1], g_flPyroDamageBoost2[ST_MAXTYPES + 1], g_flPyroDuration[ST_MAXTYPES + 1], g_flPyroDuration2[ST_MAXTYPES + 1], g_flPyroSpeedBoost[ST_MAXTYPES + 1], g_flPyroSpeedBoost2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flOriginalSpeed[MAXPLAYERS + 1] = 1.0, g_flPyroChance[ST_MAXTYPES + 1], g_flPyroChance2[ST_MAXTYPES + 1], g_flPyroDamageBoost[ST_MAXTYPES + 1], g_flPyroDamageBoost2[ST_MAXTYPES + 1], g_flPyroDuration[ST_MAXTYPES + 1], g_flPyroDuration2[ST_MAXTYPES + 1], g_flPyroSpeedBoost[ST_MAXTYPES + 1], g_flPyroSpeedBoost2[ST_MAXTYPES + 1];
 
 int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1], g_iPyroAbility[ST_MAXTYPES + 1], g_iPyroAbility2[ST_MAXTYPES + 1], g_iPyroCount[MAXPLAYERS + 1], g_iPyroMessage[ST_MAXTYPES + 1], g_iPyroMessage2[ST_MAXTYPES + 1], g_iPyroMode[ST_MAXTYPES + 1], g_iPyroMode2[ST_MAXTYPES + 1];
 
@@ -258,10 +258,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				if (damagetype & DMG_BURN)
 				{
 					float flPyroSpeedBoost = !g_bTankConfig[ST_TankType(victim)] ? g_flPyroSpeedBoost[ST_TankType(victim)] : g_flPyroSpeedBoost2[ST_TankType(victim)];
+					g_flOriginalSpeed[victim] = flSpeed(victim);
 					switch (iPyroMode(victim))
 					{
-						case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(victim) + flPyroSpeedBoost);
-						case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flPyroSpeedBoost);
+						case 0: flSpeed(victim, true, g_flOriginalSpeed[victim] + flPyroSpeedBoost);
+						case 1: flSpeed(victim, true, flPyroSpeedBoost);
 					}
 
 					if (!g_bPyro[victim])
@@ -299,11 +300,15 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 							case 0: damage += flPyroDamageBoost;
 							case 1: damage = flPyroDamageBoost;
 						}
+
+						return Plugin_Changed;
 					}
 				}
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public void ST_OnConfigsLoaded(const char[] savepath, bool main)
@@ -322,9 +327,6 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 				case true:
 				{
 					g_bTankConfig[iIndex] = false;
-
-					g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", 1.0);
-					g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], 0.1, 3.0);
 
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
@@ -352,9 +354,6 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 				case false:
 				{
 					g_bTankConfig[iIndex] = true;
-
-					g_flRunSpeed2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", g_flRunSpeed[iIndex]);
-					g_flRunSpeed2[iIndex] = flClamp(g_flRunSpeed2[iIndex], 0.1, 3.0);
 
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
@@ -482,7 +481,7 @@ public void ST_OnButtonReleased(int tank, int button)
 					g_bPyro2[tank] = false;
 
 					ExtinguishEntity(tank);
-					SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(tank));
+					flSpeed(tank, true, g_flOriginalSpeed[tank]);
 
 					vReset2(tank);
 				}
@@ -579,11 +578,6 @@ static float flPyroDuration(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flPyroDuration[ST_TankType(tank)] : g_flPyroDuration2[ST_TankType(tank)];
 }
 
-static float flRunSpeed(int tank)
-{
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flRunSpeed[ST_TankType(tank)] : g_flRunSpeed2[ST_TankType(tank)];
-}
-
 static int iHumanAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
@@ -632,8 +626,7 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 		g_bPyro[iTank] = false;
 
 		ExtinguishEntity(iTank);
-
-		SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(iTank));
+		flSpeed(iTank, true, g_flOriginalSpeed[iTank]);
 
 		if (iPyroMessage(iTank) == 1)
 		{
@@ -675,7 +668,7 @@ public Action tTimerStopPyro(Handle timer, int userid)
 
 	g_bPyro2[iTank] = false;
 
-	SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(iTank));
+	flSpeed(iTank, true, g_flOriginalSpeed[iTank]);
 
 	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bPyro3[iTank])
 	{

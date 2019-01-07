@@ -10,7 +10,6 @@
  **/
 
 #include <sourcemod>
-#include <sdkhooks>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>
@@ -121,7 +120,7 @@ public Plugin myinfo =
 
 #define ST_MENU_DROP "Drop Ability"
 
-bool g_bCloneInstalled, g_bDrop[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bThirdPerson[MAXPLAYERS + 1];
+bool g_bCloneInstalled, g_bDrop[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 char g_sWeaponClass[32][128], g_sWeaponModel[32][128];
 
@@ -322,10 +321,6 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	vReset2(client);
-
-	g_bThirdPerson[client] = false;
-
-	CreateTimer(1.0, tTimerCheckView, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 }
 
 public void OnMapEnd()
@@ -454,17 +449,6 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 	{
 		vDropMenu(client, 0);
 	}
-}
-
-public Action SetTransmit(int entity, int client)
-{
-	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (ST_PluginEnabled() && iOwner == client && !bIsTankThirdPerson(client) && !g_bThirdPerson[client])
-	{
-		return Plugin_Handled;
-	}
-
-	return Plugin_Continue;
 }
 
 public void ST_OnConfigsLoaded(const char[] savepath, bool main)
@@ -686,7 +670,7 @@ static void vRemoveDrop(int tank)
 {
 	if (bIsValidEntity(g_iDrop[tank]))
 	{
-		SDKUnhook(g_iDrop[tank], SDKHook_SetTransmit, SetTransmit);
+		ST_HideEntity(g_iDrop[tank], false);
 		RemoveEntity(g_iDrop[tank]);
 	}
 
@@ -700,8 +684,6 @@ static void vReset()
 		if (bIsValidClient(iPlayer, "24"))
 		{
 			vReset2(iPlayer);
-
-			g_bThirdPerson[iPlayer] = false;
 		}
 	}
 }
@@ -731,25 +713,6 @@ static int iDropMode(int tank)
 static int iHumanAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
-}
-
-public void vViewQuery(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue)
-{
-	if (result == ConVarQuery_Okay)
-	{
-		if (StrEqual(cvarName, "z_view_distance") && StringToInt(cvarValue) <= -1)
-		{
-			g_bThirdPerson[client] = true;
-		}
-		else
-		{
-			g_bThirdPerson[client] = false;
-		}
-	}
-	else
-	{
-		g_bThirdPerson[client] = false;
-	}
 }
 
 public Action tTimerDrop(Handle timer, int userid)
@@ -895,21 +858,8 @@ public Action tTimerDrop(Handle timer, int userid)
 		}
 
 		g_iDropWeapon[iTank] = iWeapon;
-		SDKHook(g_iDrop[iTank], SDKHook_SetTransmit, SetTransmit);
+		ST_HideEntity(g_iDrop[iTank], true);
 	}
-
-	return Plugin_Continue;
-}
-
-public Action tTimerCheckView(Handle timer, int userid)
-{
-	int iTank = GetClientOfUserId(userid);
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank))
-	{
-		return Plugin_Continue;
-	}
-
-	QueryClientConVar(iTank, "z_view_distance", vViewQuery);
 
 	return Plugin_Continue;
 }

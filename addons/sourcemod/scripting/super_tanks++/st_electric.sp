@@ -367,6 +367,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank, "024"))
 		{
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iElectricAbility(iTank) == 1)
+			{
+				vAttachParticle(iTank, PARTICLE_ELECTRICITY, 2.0, 30.0);
+			}
+
 			vRemoveElectric(iTank);
 		}
 	}

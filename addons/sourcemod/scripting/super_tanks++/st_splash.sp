@@ -10,7 +10,6 @@
  **/
 
 #include <sourcemod>
-#include <sdkhooks>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>

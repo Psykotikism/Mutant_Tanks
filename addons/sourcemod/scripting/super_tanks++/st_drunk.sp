@@ -36,7 +36,7 @@ bool g_bCloneInstalled, g_bDrunk[MAXPLAYERS + 1], g_bDrunk2[MAXPLAYERS + 1], g_b
 
 char g_sDrunkEffect[ST_MAXTYPES + 1][4], g_sDrunkEffect2[ST_MAXTYPES + 1][4], g_sDrunkMessage[ST_MAXTYPES + 1][3], g_sDrunkMessage2[ST_MAXTYPES + 1][3];
 
-float g_flDrunkChance[ST_MAXTYPES + 1], g_flDrunkChance2[ST_MAXTYPES + 1], g_flDrunkDuration[ST_MAXTYPES + 1], g_flDrunkDuration2[ST_MAXTYPES + 1], g_flDrunkRange[ST_MAXTYPES + 1], g_flDrunkRange2[ST_MAXTYPES + 1], g_flDrunkRangeChance[ST_MAXTYPES + 1], g_flDrunkRangeChance2[ST_MAXTYPES + 1], g_flDrunkSpeedInterval[ST_MAXTYPES + 1], g_flDrunkSpeedInterval2[ST_MAXTYPES + 1], g_flDrunkTurnInterval[ST_MAXTYPES + 1], g_flDrunkTurnInterval2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+float g_flDrunkChance[ST_MAXTYPES + 1], g_flDrunkChance2[ST_MAXTYPES + 1], g_flDrunkDuration[ST_MAXTYPES + 1], g_flDrunkDuration2[ST_MAXTYPES + 1], g_flDrunkRange[ST_MAXTYPES + 1], g_flDrunkRange2[ST_MAXTYPES + 1], g_flDrunkRangeChance[ST_MAXTYPES + 1], g_flDrunkRangeChance2[ST_MAXTYPES + 1], g_flDrunkSpeedInterval[ST_MAXTYPES + 1], g_flDrunkSpeedInterval2[ST_MAXTYPES + 1], g_flDrunkTurnInterval[ST_MAXTYPES + 1], g_flDrunkTurnInterval2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flOriginalSpeed[MAXPLAYERS + 1] = 1.0;
 
 int g_iDrunkAbility[ST_MAXTYPES + 1], g_iDrunkAbility2[ST_MAXTYPES + 1], g_iDrunkCount[MAXPLAYERS + 1], g_iDrunkHit[ST_MAXTYPES + 1], g_iDrunkHit2[ST_MAXTYPES + 1], g_iDrunkHitMode[ST_MAXTYPES + 1], g_iDrunkHitMode2[ST_MAXTYPES + 1], g_iDrunkOwner[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
 
@@ -356,7 +356,7 @@ public void ST_OnPluginEnd()
 	{
 		if (bIsSurvivor(iSurvivor, "234") && g_bDrunk[iSurvivor])
 		{
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			flSpeed(iSurvivor, true, g_flOriginalSpeed[iSurvivor]);
 		}
 	}
 }
@@ -638,7 +638,8 @@ public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", GetRandomFloat(1.5, 3.0));
+	g_flOriginalSpeed[iSurvivor] = flSpeed(iSurvivor);
+	flSpeed(iSurvivor, true, GetRandomFloat(1.5, 3.0));
 
 	CreateTimer(GetRandomFloat(1.0, 3.0), tTimerStopDrunkSpeed, GetClientUserId(iSurvivor), TIMER_FLAG_NO_MAPCHANGE);
 
@@ -715,7 +716,7 @@ public Action tTimerStopDrunkSpeed(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	flSpeed(iSurvivor, true, g_flOriginalSpeed[iSurvivor]);
 
 	return Plugin_Continue;
 }

@@ -479,10 +479,10 @@ static void vMeteor(int tank, int rock)
 
 static void vMeteor2(int tank)
 {
-	DataPack dpMeteorUpdate;
-	CreateDataTimer(0.6, tTimerMeteorUpdate, dpMeteorUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpMeteorUpdate.WriteCell(GetClientUserId(tank));
-	dpMeteorUpdate.WriteFloat(GetEngineTime());
+	DataPack dpMeteor;
+	CreateDataTimer(0.6, tTimerMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	dpMeteor.WriteCell(GetClientUserId(tank));
+	dpMeteor.WriteFloat(GetEngineTime());
 }
 
 static void vMeteorAbility(int tank)
@@ -591,7 +591,7 @@ static int iMeteorMessage(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iMeteorMessage[ST_TankType(tank)] : g_iMeteorMessage2[ST_TankType(tank)];
 }
 
-public Action tTimerMeteorUpdate(Handle timer, DataPack pack)
+public Action tTimerMeteor(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

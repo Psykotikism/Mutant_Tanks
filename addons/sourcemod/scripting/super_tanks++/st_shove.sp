@@ -376,6 +376,27 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank, "024"))
 		{
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iShoveAbility(iTank) == 1)
+			{
+				float flTankPos[3];
+				GetClientAbsOrigin(iTank, flTankPos);
+
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				{
+					if (bIsSurvivor(iSurvivor, "234"))
+					{
+						float flSurvivorPos[3];
+						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+						float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+						if (flDistance <= 200.0)
+						{
+							SDKCall(g_hSDKShovePlayer, iSurvivor, iSurvivor, flSurvivorPos);
+						}
+					}
+				}
+			}
+
 			vRemoveShove(iTank);
 		}
 	}
