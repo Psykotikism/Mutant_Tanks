@@ -1,7 +1,7 @@
 # Information
 > Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
 
-- Maximum types: 500 (Increase/decrease the value in `super_tanks++.inc` file at your own risk.)
+- Maximum types: 500 (Increase/decrease the value in the `super_tanks++.inc` file at your own risk.)
 - Ability count: 68 (More to come whenever possible; suggest your own abilit(y/ies).)
 
 ## Plugin Settings
@@ -86,6 +86,28 @@
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			"Type Range"				"1-500"
+		}
+		"Human Support"
+		{
+			// Human-controlled Super Tanks must wait this long before changing their current Super Tank type.
+			// --
+			// Minimum: 0
+			// Maximum: 9999999999
+			"Human Cooldown"			"600"
+
+			// Human-controlled Super Tanks are exempted from cooldowns when using the "sm_supertank" command to switch their current Super Tank type.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Master Control"			"0"
+
+			// The mode of how human-controlled Tanks spawn.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: Spawn as a default Tank with access to the "sm_supertank" command.
+			// 1: Spawn as a Super Tank.
+			"Spawn Mode"				"1"
 		}
 		"Waves"
 		{
@@ -270,7 +292,7 @@
 			// --
 			// 0: OFF
 			// 1: ON
-			"Glow Enabled"				"1"
+			"Glow Enabled"				"0"
 
 			// These are the RGB values of the Super Tank's glow outline color.
 			// --
@@ -2494,6 +2516,13 @@
 			// 1: Ability activates when the Super Tank hits a survivor.
 			// 2: Ability activates when the Super Tank is hit by a survivor.
 			"Fling Hit Mode"			"0"
+
+			// The force of the Super Tank's ability.
+			// Note: This setting determines how powerful the force is.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Fling Force"				"300.0"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --

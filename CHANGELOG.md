@@ -1,5 +1,35 @@
 # Changelog
 
+## Version 8.54 (January 15, 2019)
+
+Bug fixes:
+
+1. Fixed the blur effect creating multiple timers.
+2. Fixed the Pyro ability's `Pyro Damage Boost` setting not working properly.
+3. Fixed the Undead ability not working properly.
+
+Changes:
+
+1. Changed some lines on the code for the Warp ability.
+2. Added the `ST_HideEntity()` native which hooks/unhooks any entity to/from the core plugin's SetTransmit callback.
+3. Added the `Fling Force` setting for the Fling ability.
+4. Added death effects for several abilities.
+5. Added the `sm_supertank` command for players to use in versus game modes.
+6. Added the following settings under the `Plugin Settings/Human Support` section for extended human support.
+- `Human Cooldown`: Determines how long human-controlled Tanks need to wait before using the Super Tanks++ menu to change their type.
+- `Master Control`: Determines whether human-controlled Tanks need to have a cooldown when using the Super Tanks++ menu to change their type.
+- `Spawn Mode`: Determines whether human-controlled Tanks spawn as Super Tanks or as default Tanks with access to the `sm_supertank` command.
+7. Added the `st_admin` override command for admins who are exempted from the `Human Cooldown` setting.
+8. Super Tanks that switch to the same type as their current one switch back to a default Tank until their type is changed again.
+9. The core plugin and its modules no longer conflict with other plugins when changing a player's speed.
+10. Super Tanks now revert to default Tanks when incapacitated (about to die).
+
+Files:
+
+1. Updated the `super_tanks++.cfg` file to reflect the above changes.
+2. Updated the `super_tanks++.inc` file to reflect the above changes.
+3. Updated the `super_tanks++.phrases.txt` file with new phrases.
+
 ## Version 8.53 (January 3, 2019)
 
 Bug fixes:
