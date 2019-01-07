@@ -2596,9 +2596,7 @@ public Action tTimerBlurEffect(Handle timer, int userid)
 	if (bIsValidEntity(g_iTankModel[iTank]))
 	{
 		SetEntityModel(g_iTankModel[iTank], MODEL_TANK);
-
 		SetEntPropEnt(g_iTankModel[iTank], Prop_Send, "m_hOwnerEntity", iTank);
-		DispatchKeyValue(g_iTankModel[iTank], "solid", "0");
 
 		TeleportEntity(g_iTankModel[iTank], flTankPos, flTankAng, NULL_VECTOR);
 		DispatchSpawn(g_iTankModel[iTank]);
