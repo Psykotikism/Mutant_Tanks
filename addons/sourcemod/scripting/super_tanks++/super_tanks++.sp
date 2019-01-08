@@ -874,11 +874,13 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				case 0:
 				{
 					ST_PrintToChat(admin, "%s %t", ST_TAG3, "RequestFailed");
+
 					return;
 				}
 				default:
 				{
 					ST_PrintToChat(admin, "%s %t", ST_TAG3, "MultipleMatches");
+
 					g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
 				}
 			}
@@ -1024,7 +1026,6 @@ static void vTankMenu(int admin, int item)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mTankMenu.SetTitle("Super Tanks++ Menu");
-	mTankMenu.AddItem("Default Tank", "Default Tank");
 
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
@@ -1051,27 +1052,20 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			switch (StrEqual(sInfo, "Default Tank"))
+			for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 			{
-				case true: vTank(param1, "-1", false);
-				case false:
+				if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0)
 				{
-					for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
-					{
-						if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0)
-						{
-							continue;
-						}
+					continue;
+				}
 
-						char sTankName[33];
-						sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
-						if (StrEqual(sInfo, sTankName))
-						{
-							char sType[33];
-							IntToString(iIndex, sType, sizeof(sType));
-							vTank(param1, sType, false);
-						}
-					}
+				char sTankName[33];
+				sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
+				if (StrEqual(sInfo, sTankName))
+				{
+					char sType[33];
+					IntToString(iIndex, sType, sizeof(sType));
+					vTank(param1, sType, false);
 				}
 			}
 
@@ -1833,9 +1827,9 @@ static void vSpawnModes(int tank, bool status)
 
 static void vSetColor(int tank, int value = 0)
 {
-	switch (value)
+	if (value == 0)
 	{
-		case -1, 0: return;
+		return;
 	}
 
 	if (g_iTankType[tank] > 0 && g_iTankType[tank] == value)
@@ -2289,7 +2283,7 @@ static void vSuperTank(int tank)
 	int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
 	if (!bIsFinaleMap() || g_iTankWave == 0 || iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
 	{
-		if (g_iType <= 0 && g_iType != -1)
+		if (g_iType <= 0)
 		{
 			int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 			for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
