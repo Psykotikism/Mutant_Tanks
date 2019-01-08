@@ -630,7 +630,7 @@ public void OnPluginEnd()
 	{
 		if (bIsTank(iTank, "234"))
 		{
-			vRemoveProps(iTank, true);
+			vRemoveProps(iTank);
 		}
 	}
 
@@ -880,7 +880,6 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				default:
 				{
 					ST_PrintToChat(admin, "%s %t", ST_TAG3, "MultipleMatches");
-
 					g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
 				}
 			}
@@ -912,7 +911,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 									case true: ST_PrintToChat(admin, "%s %t", ST_TAG3, "HumanCooldown", g_iCooldown[admin]);
 									case false:
 									{
-										vNewTankSettings(admin, true);
+										vNewTankSettings(admin);
 										vSetColor(admin, g_iType);
 
 										switch (g_bNeedHealth[admin])
@@ -971,7 +970,7 @@ static void vChangeTank(int admin, int amount, int mode)
 			GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
 			if (bIsTank(iTarget) && StrEqual(sClassname, "player"))
 			{
-				vNewTankSettings(iTarget, true);
+				vNewTankSettings(iTarget);
 				vSetColor(iTarget, g_iType);
 				vTankSpawn(iTarget, 5);
 
@@ -1289,7 +1288,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			if (bIsTank(iTank, "024"))
 			{
 				CreateTimer(0.5, tTimerKillStuckTank, iTankId, TIMER_FLAG_NO_MAPCHANGE);
-				vNewTankSettings(iTank, true);
+				vNewTankSettings(iTank);
 				vSetColor(iTank);
 			}
 		}
@@ -1688,12 +1687,11 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 	}
 }
 
-static void vNewTankSettings(int tank, bool end = false)
+static void vNewTankSettings(int tank)
 {
 	ExtinguishEntity(tank);
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(SOUND_BOSS, tank);
-	vRemoveProps(tank, end);
 	vResetSpeed(tank, true);
 
 	Call_StartForward(g_hChangeTypeForward);
@@ -1701,7 +1699,7 @@ static void vNewTankSettings(int tank, bool end = false)
 	Call_Finish();
 }
 
-static void vRemoveProps(int tank, bool end = false)
+static void vRemoveProps(int tank)
 {
 	if (bIsValidEntity(g_iTankModel[tank]))
 	{
@@ -1709,9 +1707,9 @@ static void vRemoveProps(int tank, bool end = false)
 		RemoveEntity(g_iTankModel[tank]);
 	}
 
-	g_iTankModel[tank] = 0;
+	g_iTankModel[tank] = INVALID_ENT_REFERENCE;
 
-	for (int iLight = 0; iLight < 4; iLight++)
+	for (int iLight = 0; iLight < 3; iLight++)
 	{
 		if (bIsValidEntity(g_iLight[tank][iLight]))
 		{
@@ -1719,10 +1717,10 @@ static void vRemoveProps(int tank, bool end = false)
 			RemoveEntity(g_iLight[tank][iLight]);
 		}
 
-		g_iLight[tank][iLight] = 0;
+		g_iLight[tank][iLight] = INVALID_ENT_REFERENCE;
 	}
 
-	for (int iOzTank = 0; iOzTank < 3; iOzTank++)
+	for (int iOzTank = 0; iOzTank < 2; iOzTank++)
 	{
 		if (bIsValidEntity(g_iFlame[tank][iOzTank]))
 		{
@@ -1730,7 +1728,7 @@ static void vRemoveProps(int tank, bool end = false)
 			RemoveEntity(g_iFlame[tank][iOzTank]);
 		}
 
-		g_iFlame[tank][iOzTank] = 0;
+		g_iFlame[tank][iOzTank] = INVALID_ENT_REFERENCE;
 
 		if (bIsValidEntity(g_iJetpack[tank][iOzTank]))
 		{
@@ -1738,10 +1736,10 @@ static void vRemoveProps(int tank, bool end = false)
 			RemoveEntity(g_iJetpack[tank][iOzTank]);
 		}
 
-		g_iJetpack[tank][iOzTank] = 0;
+		g_iJetpack[tank][iOzTank] = INVALID_ENT_REFERENCE;
 	}
 
-	for (int iRock = 0; iRock < 17; iRock++)
+	for (int iRock = 0; iRock < 16; iRock++)
 	{
 		if (bIsValidEntity(g_iRock[tank][iRock]))
 		{
@@ -1749,10 +1747,10 @@ static void vRemoveProps(int tank, bool end = false)
 			RemoveEntity(g_iRock[tank][iRock]);
 		}
 
-		g_iRock[tank][iRock] = 0;
+		g_iRock[tank][iRock] = INVALID_ENT_REFERENCE;
 	}
 
-	for (int iTire = 0; iTire < 3; iTire++)
+	for (int iTire = 0; iTire < 2; iTire++)
 	{
 		if (bIsValidEntity(g_iTire[tank][iTire]))
 		{
@@ -1760,7 +1758,7 @@ static void vRemoveProps(int tank, bool end = false)
 			RemoveEntity(g_iTire[tank][iTire]);
 		}
 
-		g_iTire[tank][iTire] = 0;
+		g_iTire[tank][iTire] = INVALID_ENT_REFERENCE;
 	}
 
 	if (bIsValidGame() && iGlowEnabled(g_iTankType[tank]) == 1)
@@ -1769,11 +1767,8 @@ static void vRemoveProps(int tank, bool end = false)
 		SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
 	}
 
-	if (end)
-	{
-		SetEntityRenderMode(tank, RENDER_NORMAL);
-		SetEntityRenderColor(tank, 255, 255, 255, 255);
-	}
+	SetEntityRenderMode(tank, RENDER_NORMAL);
+	SetEntityRenderColor(tank, 255, 255, 255, 255);
 }
 
 static void vReset()
@@ -1844,11 +1839,14 @@ static void vSetColor(int tank, int value = 0)
 {
 	if (value == 0)
 	{
+		vRemoveProps(tank);
+
 		return;
 	}
 
 	if (g_iTankType[tank] > 0 && g_iTankType[tank] == value)
 	{
+		vRemoveProps(tank);
 		g_iTankType[tank] = 0;
 
 		return;
@@ -1909,85 +1907,37 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		}
 
 		float flOrigin[3], flAngles[3];
+
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
-		for (int iLight = 1; iLight <= 3; iLight++)
+		for (int iLight = 0; iLight < 3; iLight++)
 		{
-			if (GetRandomFloat(0.1, 100.0) <= flChance2 && StrContains(sPropsAttached, "2") != -1)
+			if (g_iLight[tank][iLight] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flChance2 && StrContains(sPropsAttached, "2") != -1)
 			{
-				g_iLight[tank][iLight] = CreateEntityByName("beam_spotlight");
-				if (bIsValidEntity(g_iLight[tank][iLight]))
-				{
-					DispatchKeyValueVector(g_iLight[tank][iLight], "origin", flOrigin);
-					DispatchKeyValueVector(g_iLight[tank][iLight], "angles", flAngles);
-
-					DispatchKeyValue(g_iLight[tank][iLight], "spotlightwidth", "10");
-					DispatchKeyValue(g_iLight[tank][iLight], "spotlightlength", "60");
-					DispatchKeyValue(g_iLight[tank][iLight], "spawnflags", "3");
-
-					int iLightRed = !g_bTankConfig[g_iTankType[tank]] ? g_iLightRed[g_iTankType[tank]] : g_iLightRed2[g_iTankType[tank]],
-						iLightGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iLightGreen[g_iTankType[tank]] : g_iLightGreen2[g_iTankType[tank]],
-						iLightBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iLightBlue[g_iTankType[tank]] : g_iLightBlue2[g_iTankType[tank]],
-						iLightAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iLightAlpha[g_iTankType[tank]] : g_iLightAlpha2[g_iTankType[tank]];
-					SetEntityRenderColor(g_iLight[tank][iLight], iLightRed, iLightGreen, iLightBlue, iLightAlpha);
-
-					DispatchKeyValue(g_iLight[tank][iLight], "maxspeed", "100");
-					DispatchKeyValue(g_iLight[tank][iLight], "HDRColorScale", "0.7");
-					DispatchKeyValue(g_iLight[tank][iLight], "fadescale", "1");
-					DispatchKeyValue(g_iLight[tank][iLight], "fademindist", "-1");
-
-					vSetEntityParent(g_iLight[tank][iLight], tank);
-
-					switch (iLight)
-					{
-						case 1:
-						{
-							SetVariantString("mouth");
-							vSetVector(flAngles, -90.0, 0.0, 0.0);
-						}
-						case 2:
-						{
-							SetVariantString("rhand");
-							vSetVector(flAngles, 90.0, 0.0, 0.0);
-						}
-						case 3:
-						{
-							SetVariantString("lhand");
-							vSetVector(flAngles, -90.0, 0.0, 0.0);
-						}
-					}
-
-					AcceptEntityInput(g_iLight[tank][iLight], "SetParentAttachment");
-					AcceptEntityInput(g_iLight[tank][iLight], "Enable");
-					AcceptEntityInput(g_iLight[tank][iLight], "DisableCollision");
-
-					SetEntPropEnt(g_iLight[tank][iLight], Prop_Send, "m_hOwnerEntity", tank);
-					TeleportEntity(g_iLight[tank][iLight], NULL_VECTOR, flAngles, NULL_VECTOR);
-					DispatchSpawn(g_iLight[tank][iLight]);
-
-					SDKHook(g_iLight[tank][iLight], SDKHook_SetTransmit, SetTransmit);
-				}
+				vLightProp(tank, iLight, flOrigin, flAngles);
+			}
+			else if (bIsValidEntity(g_iLight[tank][iLight]))
+			{
+				SDKUnhook(g_iLight[tank][iLight], SDKHook_SetTransmit, SetTransmit);
+				RemoveEntity(g_iLight[tank][iLight]);
+				vLightProp(tank, iLight, flOrigin, flAngles);
 			}
 		}
 
 		GetClientEyePosition(tank, flOrigin);
 		GetClientAbsAngles(tank, flAngles);
 
-		for (int iOzTank = 1; iOzTank <= 2; iOzTank++)
+		for (int iOzTank = 0; iOzTank < 2; iOzTank++)
 		{
-			if (GetRandomFloat(0.1, 100.0) <= flChance3 && StrContains(sPropsAttached, "3") != -1)
+			if (g_iJetpack[tank][iOzTank] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flChance3 && StrContains(sPropsAttached, "3") != -1)
 			{
 				g_iJetpack[tank][iOzTank] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(g_iJetpack[tank][iOzTank]))
 				{
 					SetEntityModel(g_iJetpack[tank][iOzTank], MODEL_JETPACK);
 
-					int iJetpackRed = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackRed[g_iTankType[tank]] : g_iJetpackRed2[g_iTankType[tank]],
-						iJetpackGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackGreen[g_iTankType[tank]] : g_iJetpackGreen2[g_iTankType[tank]],
-						iJetpackBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackBlue[g_iTankType[tank]] : g_iJetpackBlue2[g_iTankType[tank]],
-						iJetpackAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackAlpha[g_iTankType[tank]] : g_iJetpackAlpha2[g_iTankType[tank]];
-					SetEntityRenderColor(g_iJetpack[tank][iOzTank], iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha);
+					vColorOzTanks(tank, iOzTank);
 
 					SetEntProp(g_iJetpack[tank][iOzTank], Prop_Data, "m_takedamage", 0, 1);
 					SetEntProp(g_iJetpack[tank][iOzTank], Prop_Send, "m_CollisionGroup", 2);
@@ -1995,12 +1945,12 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					switch (iOzTank)
 					{
-						case 1:
+						case 0:
 						{
 							SetVariantString("rfoot");
 							vSetVector(flOrigin, 0.0, 30.0, 8.0);
 						}
-						case 2:
+						case 1:
 						{
 							SetVariantString("lfoot");
 							vSetVector(flOrigin, 0.0, 30.0, -8.0);
@@ -2024,16 +1974,12 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					TeleportEntity(g_iJetpack[tank][iOzTank], flOrigin, NULL_VECTOR, flAngles2);
 					DispatchSpawn(g_iJetpack[tank][iOzTank]);
 
-					if (GetRandomFloat(0.1, 100.0) <= flChance4 && StrContains(sPropsAttached, "4") != -1)
+					if (g_iFlame[tank][iOzTank] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flChance4 && StrContains(sPropsAttached, "4") != -1)
 					{
 						g_iFlame[tank][iOzTank] = CreateEntityByName("env_steam");
 						if (bIsValidEntity(g_iFlame[tank][iOzTank]))
 						{
-							int iFlameRed = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameRed[g_iTankType[tank]] : g_iFlameRed2[g_iTankType[tank]],
-								iFlameGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameGreen[g_iTankType[tank]] : g_iFlameGreen2[g_iTankType[tank]],
-								iFlameBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameBlue[g_iTankType[tank]] : g_iFlameBlue2[g_iTankType[tank]],
-								iFlameAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameAlpha[g_iTankType[tank]] : g_iFlameAlpha2[g_iTankType[tank]];
-							SetEntityRenderColor(g_iFlame[tank][iOzTank], iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha);
+							vColorFlames(tank, iOzTank);
 
 							DispatchKeyValue(g_iFlame[tank][iOzTank], "spawnflags", "1");
 							DispatchKeyValue(g_iFlame[tank][iOzTank], "Type", "0");
@@ -2064,25 +2010,30 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					SDKHook(g_iJetpack[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
+			else if (bIsValidEntity(g_iJetpack[tank][iOzTank]))
+			{
+				vColorOzTanks(tank, iOzTank);
+
+				if (bIsValidEntity(g_iFlame[tank][iOzTank]))
+				{
+					vColorFlames(tank, iOzTank);
+				}
+			}
 		}
 
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
-		for (int iRock = 1; iRock <= 16; iRock++)
+		for (int iRock = 0; iRock < 16; iRock++)
 		{
-			if (GetRandomFloat(0.1, 100.0) <= flChance5 && StrContains(sPropsAttached, "5") != -1)
+			if (g_iRock[tank][iRock] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flChance5 && StrContains(sPropsAttached, "5") != -1)
 			{
 				g_iRock[tank][iRock] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(g_iRock[tank][iRock]))
 				{
 					SetEntityModel(g_iRock[tank][iRock], MODEL_CONCRETE);
 
-					int iRockRed = !g_bTankConfig[g_iTankType[tank]] ? g_iRockRed[g_iTankType[tank]] : g_iRockRed2[g_iTankType[tank]],
-						iRockGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iRockGreen[g_iTankType[tank]] : g_iRockGreen2[g_iTankType[tank]],
-						iRockBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iRockBlue[g_iTankType[tank]] : g_iRockBlue2[g_iTankType[tank]],
-						iRockAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iRockAlpha[g_iTankType[tank]] : g_iRockAlpha2[g_iTankType[tank]];
-					SetEntityRenderColor(g_iRock[tank][iRock], iRockRed, iRockGreen, iRockBlue, iRockAlpha);
+					vColorRocks(tank, iRock);
 
 					DispatchKeyValueVector(g_iRock[tank][iRock], "origin", flOrigin);
 					DispatchKeyValueVector(g_iRock[tank][iRock], "angles", flAngles);
@@ -2090,10 +2041,10 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					switch (iRock)
 					{
-						case 1, 5, 9, 13: SetVariantString("rshoulder");
-						case 2, 6, 10, 14: SetVariantString("lshoulder");
-						case 3, 7, 11, 15: SetVariantString("relbow");
-						case 4, 8, 12, 16: SetVariantString("lelbow");
+						case 0, 4, 8, 12: SetVariantString("rshoulder");
+						case 1, 5, 9, 13: SetVariantString("lshoulder");
+						case 2, 6, 10, 14: SetVariantString("relbow");
+						case 3, 7, 11, 15: SetVariantString("lelbow");
 					}
 
 					AcceptEntityInput(g_iRock[tank][iRock], "SetParentAttachment");
@@ -2104,8 +2055,8 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					{
 						switch (iRock)
 						{
-							case 1, 2, 5, 6, 9, 10, 13, 14: SetEntPropFloat(g_iRock[tank][iRock], Prop_Data, "m_flModelScale", 0.4);
-							case 3, 4, 7, 8, 11, 12, 15, 16: SetEntPropFloat(g_iRock[tank][iRock], Prop_Data, "m_flModelScale", 0.5);
+							case 0, 1, 4, 5, 8, 9, 12, 13: SetEntPropFloat(g_iRock[tank][iRock], Prop_Data, "m_flModelScale", 0.4);
+							case 2, 3, 6, 7, 10, 11, 14, 15: SetEntPropFloat(g_iRock[tank][iRock], Prop_Data, "m_flModelScale", 0.5);
 						}
 					}
 
@@ -2121,26 +2072,26 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					SDKHook(g_iRock[tank][iRock], SDKHook_SetTransmit, SetTransmit);
 				}
 			}
+			else if (bIsValidEntity(g_iRock[tank][iRock]))
+			{
+				vColorRocks(tank, iRock);
+			}
 		}
 
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 		flAngles[0] += 90.0;
 
-		for (int iTire = 1; iTire <= 2; iTire++)
+		for (int iTire = 0; iTire < 2; iTire++)
 		{
-			if (GetRandomFloat(0.1, 100.0) <= flChance6 && StrContains(sPropsAttached, "6") != -1)
+			if (g_iTire[tank][iTire] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flChance6 && StrContains(sPropsAttached, "6") != -1)
 			{
 				g_iTire[tank][iTire] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(g_iTire[tank][iTire]))
 				{
 					SetEntityModel(g_iTire[tank][iTire], MODEL_TIRES);
 
-					int iTireRed = !g_bTankConfig[g_iTankType[tank]] ? g_iTireRed[g_iTankType[tank]] : g_iTireRed2[g_iTankType[tank]],
-						iTireGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iTireGreen[g_iTankType[tank]] : g_iTireGreen2[g_iTankType[tank]],
-						iTireBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iTireBlue[g_iTankType[tank]] : g_iTireBlue2[g_iTankType[tank]],
-						iTireAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iTireAlpha[g_iTankType[tank]] : g_iTireAlpha2[g_iTankType[tank]];
-					SetEntityRenderColor(g_iTire[tank][iTire], iTireRed, iTireGreen, iTireBlue, iTireAlpha);
+					vColorTires(tank, iTire);
 
 					DispatchKeyValueVector(g_iTire[tank][iTire], "origin", flOrigin);
 					DispatchKeyValueVector(g_iTire[tank][iTire], "angles", flAngles);
@@ -2148,8 +2099,8 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					switch (iTire)
 					{
-						case 1: SetVariantString("rfoot");
-						case 2: SetVariantString("lfoot");
+						case 0: SetVariantString("rfoot");
+						case 1: SetVariantString("lfoot");
 					}
 
 					AcceptEntityInput(g_iTire[tank][iTire], "SetParentAttachment");
@@ -2167,6 +2118,10 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					SDKHook(g_iTire[tank][iTire], SDKHook_SetTransmit, SetTransmit);
 				}
+			}
+			else if (bIsValidEntity(g_iTire[tank][iTire]))
+			{
+				vColorTires(tank, iTire);
 			}
 		}
 
@@ -2241,6 +2196,98 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			}
 		}
 	}
+}
+
+static void vLightProp(int tank, int light, float origin[3], float angles[3])
+{
+	g_iLight[tank][light] = CreateEntityByName("beam_spotlight");
+	if (bIsValidEntity(g_iLight[tank][light]))
+	{
+		DispatchKeyValueVector(g_iLight[tank][light], "origin", origin);
+		DispatchKeyValueVector(g_iLight[tank][light], "angles", angles);
+
+		DispatchKeyValue(g_iLight[tank][light], "spotlightwidth", "10");
+		DispatchKeyValue(g_iLight[tank][light], "spotlightlength", "60");
+		DispatchKeyValue(g_iLight[tank][light], "spawnflags", "3");
+
+		int iLightRed = !g_bTankConfig[g_iTankType[tank]] ? g_iLightRed[g_iTankType[tank]] : g_iLightRed2[g_iTankType[tank]],
+			iLightGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iLightGreen[g_iTankType[tank]] : g_iLightGreen2[g_iTankType[tank]],
+			iLightBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iLightBlue[g_iTankType[tank]] : g_iLightBlue2[g_iTankType[tank]],
+			iLightAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iLightAlpha[g_iTankType[tank]] : g_iLightAlpha2[g_iTankType[tank]];
+		SetEntityRenderColor(g_iLight[tank][light], iLightRed, iLightGreen, iLightBlue, iLightAlpha);
+
+		DispatchKeyValue(g_iLight[tank][light], "maxspeed", "100");
+		DispatchKeyValue(g_iLight[tank][light], "HDRColorScale", "0.7");
+		DispatchKeyValue(g_iLight[tank][light], "fadescale", "1");
+		DispatchKeyValue(g_iLight[tank][light], "fademindist", "-1");
+
+		vSetEntityParent(g_iLight[tank][light], tank);
+
+		switch (light)
+		{
+			case 0:
+			{
+				SetVariantString("mouth");
+				vSetVector(angles, -90.0, 0.0, 0.0);
+			}
+			case 1:
+			{
+				SetVariantString("rhand");
+				vSetVector(angles, 90.0, 0.0, 0.0);
+			}
+			case 2:
+			{
+				SetVariantString("lhand");
+				vSetVector(angles, -90.0, 0.0, 0.0);
+			}
+		}
+
+		AcceptEntityInput(g_iLight[tank][light], "SetParentAttachment");
+		AcceptEntityInput(g_iLight[tank][light], "Enable");
+		AcceptEntityInput(g_iLight[tank][light], "DisableCollision");
+
+		SetEntPropEnt(g_iLight[tank][light], Prop_Send, "m_hOwnerEntity", tank);
+		TeleportEntity(g_iLight[tank][light], NULL_VECTOR, angles, NULL_VECTOR);
+		DispatchSpawn(g_iLight[tank][light]);
+
+		SDKHook(g_iLight[tank][light], SDKHook_SetTransmit, SetTransmit);
+	}
+}
+
+static void vColorFlames(int tank, int oz)
+{
+	int iFlameRed = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameRed[g_iTankType[tank]] : g_iFlameRed2[g_iTankType[tank]],
+		iFlameGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameGreen[g_iTankType[tank]] : g_iFlameGreen2[g_iTankType[tank]],
+		iFlameBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameBlue[g_iTankType[tank]] : g_iFlameBlue2[g_iTankType[tank]],
+		iFlameAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iFlameAlpha[g_iTankType[tank]] : g_iFlameAlpha2[g_iTankType[tank]];
+	SetEntityRenderColor(g_iFlame[tank][oz], iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha);
+}
+
+static void vColorOzTanks(int tank, int oz)
+{
+	int iJetpackRed = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackRed[g_iTankType[tank]] : g_iJetpackRed2[g_iTankType[tank]],
+		iJetpackGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackGreen[g_iTankType[tank]] : g_iJetpackGreen2[g_iTankType[tank]],
+		iJetpackBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackBlue[g_iTankType[tank]] : g_iJetpackBlue2[g_iTankType[tank]],
+		iJetpackAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iJetpackAlpha[g_iTankType[tank]] : g_iJetpackAlpha2[g_iTankType[tank]];
+	SetEntityRenderColor(g_iJetpack[tank][oz], iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha);
+}
+
+static void vColorRocks(int tank, int rock)
+{
+	int iRockRed = !g_bTankConfig[g_iTankType[tank]] ? g_iRockRed[g_iTankType[tank]] : g_iRockRed2[g_iTankType[tank]],
+		iRockGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iRockGreen[g_iTankType[tank]] : g_iRockGreen2[g_iTankType[tank]],
+		iRockBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iRockBlue[g_iTankType[tank]] : g_iRockBlue2[g_iTankType[tank]],
+		iRockAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iRockAlpha[g_iTankType[tank]] : g_iRockAlpha2[g_iTankType[tank]];
+	SetEntityRenderColor(g_iRock[tank][rock], iRockRed, iRockGreen, iRockBlue, iRockAlpha);
+}
+
+static void vColorTires(int tank, int tire)
+{
+	int iTireRed = !g_bTankConfig[g_iTankType[tank]] ? g_iTireRed[g_iTankType[tank]] : g_iTireRed2[g_iTankType[tank]],
+		iTireGreen = !g_bTankConfig[g_iTankType[tank]] ? g_iTireGreen[g_iTankType[tank]] : g_iTireGreen2[g_iTankType[tank]],
+		iTireBlue = !g_bTankConfig[g_iTankType[tank]] ? g_iTireBlue[g_iTankType[tank]] : g_iTireBlue2[g_iTankType[tank]],
+		iTireAlpha = !g_bTankConfig[g_iTankType[tank]] ? g_iTireAlpha[g_iTankType[tank]] : g_iTireAlpha2[g_iTankType[tank]];
+	SetEntityRenderColor(g_iTire[tank][tire], iTireRed, iTireGreen, iTireBlue, iTireAlpha);
 }
 
 static void vParticleEffects(int tank)
