@@ -1127,21 +1127,6 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace
 	return GetVectorDistance(pos, flHitPos);
 }
 
-stock float flSpeed(int player, bool mode = false, float value = 1.0)
-{
-	switch (mode)
-	{
-		case true:
-		{
-			SetEntPropFloat(player, Prop_Send, "m_flLaggedMovementValue", value);
-			return value;
-		}
-		case false: return GetEntPropFloat(player, Prop_Send, "m_flLaggedMovementValue");
-	}
-
-	return 0.0;
-}
-
 stock int iClamp(int value, int min, int max)
 {
 	if (value < min)

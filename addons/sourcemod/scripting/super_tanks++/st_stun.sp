@@ -36,7 +36,7 @@ bool g_bCloneInstalled, g_bLateLoad, g_bStun[MAXPLAYERS + 1], g_bStun2[MAXPLAYER
 
 char g_sStunEffect[ST_MAXTYPES + 1][4], g_sStunEffect2[ST_MAXTYPES + 1][4], g_sStunMessage[ST_MAXTYPES + 1][3], g_sStunMessage2[ST_MAXTYPES + 1][3];
 
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flOriginalSpeed[MAXPLAYERS + 1] = 1.0, g_flStunChance[ST_MAXTYPES + 1], g_flStunChance2[ST_MAXTYPES + 1], g_flStunDuration[ST_MAXTYPES + 1], g_flStunDuration2[ST_MAXTYPES + 1], g_flStunRange[ST_MAXTYPES + 1], g_flStunRange2[ST_MAXTYPES + 1], g_flStunRangeChance[ST_MAXTYPES + 1], g_flStunRangeChance2[ST_MAXTYPES + 1], g_flStunSpeed[ST_MAXTYPES + 1], g_flStunSpeed2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flStunChance[ST_MAXTYPES + 1], g_flStunChance2[ST_MAXTYPES + 1], g_flStunDuration[ST_MAXTYPES + 1], g_flStunDuration2[ST_MAXTYPES + 1], g_flStunRange[ST_MAXTYPES + 1], g_flStunRange2[ST_MAXTYPES + 1], g_flStunRangeChance[ST_MAXTYPES + 1], g_flStunRangeChance2[ST_MAXTYPES + 1], g_flStunSpeed[ST_MAXTYPES + 1], g_flStunSpeed2[ST_MAXTYPES + 1];
 
 int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iStunAbility[ST_MAXTYPES + 1], g_iStunAbility2[ST_MAXTYPES + 1], g_iStunCount[MAXPLAYERS + 1], g_iStunHit[ST_MAXTYPES + 1], g_iStunHit2[ST_MAXTYPES + 1], g_iStunHitMode[ST_MAXTYPES + 1], g_iStunHitMode2[ST_MAXTYPES + 1], g_iStunOwner[MAXPLAYERS + 1];
 
@@ -416,7 +416,7 @@ static void vRemoveStun(int tank)
 			g_bStun[iSurvivor] = false;
 			g_iStunOwner[iSurvivor] = 0;
 
-			flSpeed(iSurvivor, true, g_flOriginalSpeed[iSurvivor]);
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
 	}
 
@@ -510,8 +510,7 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 
 				float flStunSpeed = !g_bTankConfig[ST_TankType(tank)] ? g_flStunSpeed[ST_TankType(tank)] : g_flStunSpeed2[ST_TankType(tank)];
-				g_flOriginalSpeed[survivor] = flSpeed(survivor);
-				flSpeed(survivor, true, flStunSpeed);
+				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flStunSpeed);
 
 				DataPack dpStopStun;
 				CreateDataTimer(flStunDuration(tank), tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);
@@ -610,7 +609,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 		g_bStun[iSurvivor] = false;
 		g_iStunOwner[iSurvivor] = 0;
 
-		flSpeed(iSurvivor, true, g_flOriginalSpeed[iSurvivor]);
+		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 
 		return Plugin_Stop;
 	}
@@ -619,7 +618,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 	g_bStun2[iTank] = false;
 	g_iStunOwner[iSurvivor] = 0;
 
-	flSpeed(iSurvivor, true, g_flOriginalSpeed[iSurvivor]);
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));

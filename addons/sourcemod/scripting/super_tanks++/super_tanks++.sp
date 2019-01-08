@@ -56,8 +56,8 @@ char g_sAnnounceArrival[6], g_sAnnounceArrival2[6], g_sBossHealthStages[ST_MAXTY
 
 ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 
-float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flOriginalSpeed[MAXPLAYERS + 1] = 1.0, g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRegularInterval, g_flRegularInterval2, g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1],
-	g_flTankChance[ST_MAXTYPES + 1], g_flTankChance2[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1], g_flTransformDelay[ST_MAXTYPES + 1], g_flTransformDelay2[ST_MAXTYPES + 1], g_flTransformDuration[ST_MAXTYPES + 1], g_flTransformDuration2[ST_MAXTYPES + 1];
+float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRandomInterval[ST_MAXTYPES + 1], g_flRandomInterval2[ST_MAXTYPES + 1], g_flRegularInterval, g_flRegularInterval2, g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1], g_flTankChance[ST_MAXTYPES + 1],
+	g_flTankChance2[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[ST_MAXTYPES + 1], g_flTransformDelay[ST_MAXTYPES + 1], g_flTransformDelay2[ST_MAXTYPES + 1], g_flTransformDuration[ST_MAXTYPES + 1], g_flTransformDuration2[ST_MAXTYPES + 1];
 
 Handle g_hAbilityActivatedForward, g_hButtonPressedForward, g_hButtonReleasedForward, g_hChangeTypeForward, g_hConfigsLoadedForward, g_hDisplayMenuForward, g_hEventFiredForward, g_hHookEventForward, g_hMenuItemSelectedForward, g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward;
 
@@ -960,7 +960,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 	}
 }
 
-static void vChangeTank(int admin, int amount = 1, int mode = 0)
+static void vChangeTank(int admin, int amount, int mode)
 {
 	int iTarget = GetClientAimTarget(admin, false);
 	switch (bIsValidEntity(iTarget))
@@ -991,7 +991,7 @@ static void vChangeTank(int admin, int amount = 1, int mode = 0)
 	}
 }
 
-static void vSpawnTank(int admin, int type, int amount = 1, int mode = 0)
+static void vSpawnTank(int admin, int type, int amount, int mode)
 {
 	char sParameter[32];
 	switch (mode)
@@ -1002,7 +1002,6 @@ static void vSpawnTank(int admin, int type, int amount = 1, int mode = 0)
 
 	switch (amount)
 	{
-		case 0: return;
 		case 1: vCheatCommand(admin, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
 		default:
 		{
@@ -1026,6 +1025,11 @@ static void vTankMenu(int admin, int item)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mTankMenu.SetTitle("Super Tanks++ Menu");
+
+	if (g_iTankType[admin] > 0)
+	{
+		mTankMenu.AddItem("Default Tank", "Default Tank");
+	}
 
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
@@ -1052,20 +1056,32 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
+			switch (StrEqual(sInfo, "Default Tank"))
 			{
-				if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0)
-				{
-					continue;
-				}
-
-				char sTankName[33];
-				sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
-				if (StrEqual(sInfo, sTankName))
+				case true:
 				{
 					char sType[33];
-					IntToString(iIndex, sType, sizeof(sType));
+					IntToString(g_iTankType[param1], sType, sizeof(sType));
 					vTank(param1, sType, false);
+				}
+				case false:
+				{
+					for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
+					{
+						if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0)
+						{
+							continue;
+						}
+
+						char sTankName[33];
+						sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
+						if (StrEqual(sInfo, sTankName))
+						{
+							char sType[33];
+							IntToString(iIndex, sType, sizeof(sType));
+							vTank(param1, sType, false);
+						}
+					}
 				}
 			}
 
@@ -1805,14 +1821,13 @@ static void vResetSpeed(int tank, bool mode = false)
 
 	switch (mode)
 	{
-		case true: flSpeed(tank, true, g_flOriginalSpeed[tank]);
+		case true: SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		case false:
 		{
 			float flRunSpeed = !g_bTankConfig[g_iTankType[tank]] ? g_flRunSpeed[g_iTankType[tank]] : g_flRunSpeed2[g_iTankType[tank]];
 			if (flRunSpeed > 0.0)
 			{
-				g_flOriginalSpeed[tank] = flSpeed(tank);
-				flSpeed(tank, true, flRunSpeed);
+				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
 			}
 		}
 	}
