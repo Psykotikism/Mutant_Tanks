@@ -958,7 +958,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 	}
 }
 
-static void vChangeTank(int admin, int amount, int mode)
+static void vChangeTank(int admin, int amount = 1, int mode = 0)
 {
 	int iTarget = GetClientAimTarget(admin, false);
 	switch (bIsValidEntity(iTarget))
@@ -989,7 +989,7 @@ static void vChangeTank(int admin, int amount, int mode)
 	}
 }
 
-static void vSpawnTank(int admin, int type, int amount, int mode = 0)
+static void vSpawnTank(int admin, int type, int amount = 1, int mode = 0)
 {
 	char sParameter[32];
 	switch (mode)
@@ -1024,6 +1024,7 @@ static void vTankMenu(int admin, int item)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
 	mTankMenu.SetTitle("Super Tanks++ Menu");
+	mTankMenu.AddItem("Default Tank", "Default Tank");
 
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
@@ -1050,20 +1051,27 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
+			switch (StrEqual(sInfo, "Default Tank"))
 			{
-				if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0)
+				case true: vTank(param1, "-1", false);
+				case false:
 				{
-					continue;
-				}
+					for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
+					{
+						if (iTankEnabled(iIndex) == 0 || iMenuEnabled(iIndex) == 0)
+						{
+							continue;
+						}
 
-				char sTankName[33];
-				sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
-				if (StrEqual(sInfo, sTankName))
-				{
-					char sType[33];
-					IntToString(iIndex, sType, sizeof(sType));
-					vTank(param1, sType, false);
+						char sTankName[33];
+						sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
+						if (StrEqual(sInfo, sTankName))
+						{
+							char sType[33];
+							IntToString(iIndex, sType, sizeof(sType));
+							vTank(param1, sType, false);
+						}
+					}
 				}
 			}
 
@@ -1825,9 +1833,9 @@ static void vSpawnModes(int tank, bool status)
 
 static void vSetColor(int tank, int value = 0)
 {
-	if (value == 0)
+	switch (value)
 	{
-		return;
+		case -1, 0: return;
 	}
 
 	if (g_iTankType[tank] > 0 && g_iTankType[tank] == value)
@@ -1847,8 +1855,8 @@ static void vSetColor(int tank, int value = 0)
 	if (iGlowEnabled(value) == 1 && bIsValidGame())
 	{
 		int iGlowRed = !g_bTankConfig[value] ? g_iGlowRed[value] : g_iGlowRed2[value],
-			iGlowBlue = !g_bTankConfig[value] ? g_iGlowBlue[value] : g_iGlowBlue2[value],
-			iGlowGreen = !g_bTankConfig[value] ? g_iGlowGreen[value] : g_iGlowGreen2[value];
+			iGlowGreen = !g_bTankConfig[value] ? g_iGlowGreen[value] : g_iGlowGreen2[value],
+			iGlowBlue = !g_bTankConfig[value] ? g_iGlowBlue[value] : g_iGlowBlue2[value];
 		SetEntProp(tank, Prop_Send, "m_iGlowType", 3);
 		SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowRed, iGlowGreen, iGlowBlue));
 	}
@@ -2281,7 +2289,7 @@ static void vSuperTank(int tank)
 	int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
 	if (!bIsFinaleMap() || g_iTankWave == 0 || iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
 	{
-		if (g_iType <= 0)
+		if (g_iType <= 0 && g_iType != -1)
 		{
 			int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 			for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
