@@ -280,20 +280,20 @@ native int ST_TankWave();
 native bool ST_TypeEnabled(int type);
 
 // Functions
-stock void vAttachParticle(int player, const char[] particlename, float duration = 0.0, float origin = 0.0)
+stock void vAttachParticle(int entity, const char[] particlename, float duration = 0.0, float origin = 0.0)
 {
-	if (bIsValidClient(player))
+	if (bIsValidClient(entity) || bIsValidEntity(entity))
 	{
 		int iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
 		{
 			float flPos[3];
-			GetClientAbsOrigin(player, flPos);
+			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 			flPos[2] += origin;
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 
 			DispatchKeyValue(iParticle, "effect_name", particlename);
-			vSetEntityParent(iParticle, player);
+			vSetEntityParent(iParticle, entity);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "Start");
