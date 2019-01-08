@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.54 (January 15, 2019)
+## Version 8.54 (January 10, 2019)
 
 Bug fixes:
 
@@ -21,7 +21,7 @@ Changes:
 - `Spawn Mode`: Determines whether human-controlled Tanks spawn as Super Tanks or as default Tanks with access to the `sm_supertank` command.
 7. Added the `st_admin` override command for admins who are exempted from the `Human Cooldown` setting.
 8. Super Tanks that switch to the same type as their current one switch back to a default Tank until their type is changed again.
-9. The core plugin and its modules no longer conflict with other plugins when changing a player's speed.
+9. Human-controlled Super Tanks can now choose the `Default Tank` option in the Super Tanks menu to revert back to a default Tank.
 10. Super Tanks now revert to default Tanks when incapacitated (about to die).
 
 Files:
