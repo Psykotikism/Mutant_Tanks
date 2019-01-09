@@ -403,10 +403,10 @@ public void ST_OnChangeType(int tank)
 
 static void vCar(int tank)
 {
-	DataPack dpCarUpdate;
-	CreateDataTimer(0.6, tTimerCarUpdate, dpCarUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpCarUpdate.WriteCell(GetClientUserId(tank));
-	dpCarUpdate.WriteFloat(GetEngineTime());
+	DataPack dpCar;
+	CreateDataTimer(0.6, tTimerCar, dpCar, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	dpCar.WriteCell(GetClientUserId(tank));
+	dpCar.WriteFloat(GetEngineTime());
 }
 
 static void vCarAbility(int tank)
@@ -515,7 +515,7 @@ static int iHumanMode(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
 }
 
-public Action tTimerCarUpdate(Handle timer, DataPack pack)
+public Action tTimerCar(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

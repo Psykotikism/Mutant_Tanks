@@ -267,9 +267,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					ST_TankName(victim, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Undead2", sTankName);
 				}
-			}
 
-			return Plugin_Changed;
+				return Plugin_Changed;
+			}
 		}
 	}
 

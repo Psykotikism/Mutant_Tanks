@@ -510,7 +510,7 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 
 				float flStunSpeed = !g_bTankConfig[ST_TankType(tank)] ? g_flStunSpeed[ST_TankType(tank)] : g_flStunSpeed2[ST_TankType(tank)];
-				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", flStunSpeed);
+				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flStunSpeed);
 
 				DataPack dpStopStun;
 				CreateDataTimer(flStunDuration(tank), tTimerStopStun, dpStopStun, TIMER_FLAG_NO_MAPCHANGE);

@@ -36,7 +36,7 @@ bool g_bCloneInstalled, g_bFling[MAXPLAYERS + 1], g_bFling2[MAXPLAYERS + 1], g_b
 
 char g_sFlingEffect[ST_MAXTYPES + 1][4], g_sFlingEffect2[ST_MAXTYPES + 1][4], g_sFlingMessage[ST_MAXTYPES + 1][3], g_sFlingMessage2[ST_MAXTYPES + 1][3];
 
-float g_flFlingChance[ST_MAXTYPES + 1], g_flFlingChance2[ST_MAXTYPES + 1], g_flFlingRange[ST_MAXTYPES + 1], g_flFlingRange2[ST_MAXTYPES + 1], g_flFlingRangeChance[ST_MAXTYPES + 1], g_flFlingRangeChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+float g_flFlingChance[ST_MAXTYPES + 1], g_flFlingChance2[ST_MAXTYPES + 1], g_flFlingForce[ST_MAXTYPES + 1], g_flFlingForce2[ST_MAXTYPES + 1], g_flFlingRange[ST_MAXTYPES + 1], g_flFlingRange2[ST_MAXTYPES + 1], g_flFlingRangeChance[ST_MAXTYPES + 1], g_flFlingRangeChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
 
 Handle g_hSDKFlingPlayer, g_hSDKPukePlayer;
 
@@ -332,6 +332,8 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					kvSuperTanks.GetString("Fling Ability/Ability Message", g_sFlingMessage[iIndex], sizeof(g_sFlingMessage[]), "0");
 					g_flFlingChance[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Chance", 33.3);
 					g_flFlingChance[iIndex] = flClamp(g_flFlingChance[iIndex], 0.0, 100.0);
+					g_flFlingForce[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Force", 300.0);
+					g_flFlingForce[iIndex] = flClamp(g_flFlingForce[iIndex], 1.0, 9999999999.0);
 					g_iFlingHit[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", 0);
 					g_iFlingHit[iIndex] = iClamp(g_iFlingHit[iIndex], 0, 1);
 					g_iFlingHitMode[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", 0);
@@ -357,6 +359,8 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					kvSuperTanks.GetString("Fling Ability/Ability Message", g_sFlingMessage2[iIndex], sizeof(g_sFlingMessage2[]), g_sFlingMessage[iIndex]);
 					g_flFlingChance2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Chance", g_flFlingChance[iIndex]);
 					g_flFlingChance2[iIndex] = flClamp(g_flFlingChance2[iIndex], 0.0, 100.0);
+					g_flFlingForce2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Force", g_flFlingForce[iIndex]);
+					g_flFlingForce2[iIndex] = flClamp(g_flFlingForce2[iIndex], 1.0, 9999999999.0);
 					g_iFlingHit2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", g_iFlingHit[iIndex]);
 					g_iFlingHit2[iIndex] = iClamp(g_iFlingHit2[iIndex], 0, 1);
 					g_iFlingHitMode2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", g_iFlingHitMode[iIndex]);
@@ -382,6 +386,27 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank, "024"))
 		{
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iFlingAbility(iTank) == 1)
+			{
+				float flTankPos[3];
+				GetClientAbsOrigin(iTank, flTankPos);
+
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				{
+					if (bIsSurvivor(iSurvivor, "234"))
+					{
+						float flSurvivorPos[3];
+						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+						float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+						if (flDistance <= 200.0)
+						{
+							vFling(iSurvivor, iTank);
+						}
+					}
+				}
+			}
+
 			vRemoveFling(iTank);
 		}
 	}
@@ -416,6 +441,28 @@ public void ST_OnButtonPressed(int tank, int button)
 public void ST_OnChangeType(int tank)
 {
 	vRemoveFling(tank);
+}
+
+static void vFling(int survivor, int tank)
+{
+	float flSurvivorPos[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3],
+		flFlingForce = !g_bTankConfig[ST_TankType(tank)] ? g_flFlingForce[ST_TankType(tank)] : g_flFlingForce2[ST_TankType(tank)];
+
+	GetClientAbsOrigin(survivor, flSurvivorPos);
+	GetClientAbsOrigin(tank, flTankPos);
+
+	flDistance[0] = (flTankPos[0] - flSurvivorPos[0]);
+	flDistance[1] = (flTankPos[1] - flSurvivorPos[1]);
+	flDistance[2] = (flTankPos[2] - flSurvivorPos[2]);
+
+	flRatio[0] = flDistance[0] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
+	flRatio[1] = flDistance[1] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
+
+	flVelocity[0] = (flRatio[0] * -1) * flFlingForce;
+	flVelocity[1] = (flRatio[1] * -1) * flFlingForce;
+	flVelocity[2] = flFlingForce;
+
+	SDKCall(g_hSDKFlingPlayer, survivor, flVelocity, 76, tank, 3.0);
 }
 
 static void vFlingAbility(int tank)
@@ -497,21 +544,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, const c
 				{
 					case true:
 					{
-						float flSurvivorPos[3], flSurvivorVelocity[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
-						GetClientAbsOrigin(survivor, flSurvivorPos);
-						GetClientAbsOrigin(tank, flTankPos);
-
-						flDistance[0] = (flTankPos[0] - flSurvivorPos[0]);
-						flDistance[1] = (flTankPos[1] - flSurvivorPos[1]);
-						flDistance[2] = (flTankPos[2] - flSurvivorPos[2]);
-						GetEntPropVector(survivor, Prop_Data, "m_vecVelocity", flSurvivorVelocity);
-						flRatio[0] = flDistance[0] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
-						flRatio[1] = flDistance[1] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
-						flVelocity[0] = (flRatio[0] * -1) * 500.0;
-						flVelocity[1] = (flRatio[1] * -1) * 500.0;
-						flVelocity[2] = 500.0;
-
-						SDKCall(g_hSDKFlingPlayer, survivor, flVelocity, 76, tank, 7.0);
+						vFling(survivor, tank);
 
 						if (StrContains(sFlingMessage, message) != -1)
 						{

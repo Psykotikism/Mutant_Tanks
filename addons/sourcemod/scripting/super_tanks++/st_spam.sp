@@ -29,13 +29,15 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+#define SOUND_ROCK "player/tank/attack/thrown_missile_loop_1.wav"
+
 #define ST_MENU_SPAM "Spam Ability"
 
 bool g_bCloneInstalled, g_bSpam[MAXPLAYERS + 1], g_bSpam2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flSpamChance[ST_MAXTYPES + 1], g_flSpamChance2[ST_MAXTYPES + 1], g_flSpamDuration[ST_MAXTYPES + 1], g_flSpamDuration2[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1], g_iSpamAbility[ST_MAXTYPES + 1], g_iSpamAbility2[ST_MAXTYPES + 1], g_iSpamCount[MAXPLAYERS + 1], g_iSpamDamage[ST_MAXTYPES + 1], g_iSpamDamage2[ST_MAXTYPES + 1], g_iSpamMessage[ST_MAXTYPES + 1], g_iSpamMessage2[ST_MAXTYPES + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1], g_iSpam[MAXPLAYERS + 1], g_iSpamAbility[ST_MAXTYPES + 1], g_iSpamAbility2[ST_MAXTYPES + 1], g_iSpamCount[MAXPLAYERS + 1], g_iSpamDamage[ST_MAXTYPES + 1], g_iSpamDamage2[ST_MAXTYPES + 1], g_iSpamMessage[ST_MAXTYPES + 1], g_iSpamMessage2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -80,6 +82,8 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+	PrecacheSound(SOUND_ROCK, true);
+
 	vReset();
 }
 
@@ -348,12 +352,16 @@ public void ST_OnButtonPressed(int tank, int button)
 						{
 							if (!g_bSpam[tank] && !g_bSpam2[tank])
 							{
-								g_bSpam[tank] = true;
-								g_iSpamCount[tank]++;
+								g_iSpam[tank] = CreateEntityByName("env_rock_launcher");
+								if (bIsValidEntity(g_iSpam[tank]))
+								{
+									g_bSpam[tank] = true;
+									g_iSpamCount[tank]++;
 
-								vSpam(tank);
+									vSpam(tank);
 
-								ST_PrintToChat(tank, "%s %t", ST_TAG3, "SpamHuman", g_iSpamCount[tank], iHumanAmmo(tank));
+									ST_PrintToChat(tank, "%s %t", ST_TAG3, "SpamHuman", g_iSpamCount[tank], iHumanAmmo(tank));
+								}
 							}
 						}
 						else
@@ -377,7 +385,7 @@ public void ST_OnButtonReleased(int tank, int button)
 			{
 				if (iHumanMode(tank) == 1 && g_bSpam[tank] && !g_bSpam2[tank])
 				{
-					g_bSpam[tank] = false;
+					vReset2(tank, g_iSpam[tank]);
 
 					vReset3(tank);
 				}
@@ -395,6 +403,7 @@ static void vRemoveSpam(int tank)
 {
 	g_bSpam[tank] = false;
 	g_bSpam2[tank] = false;
+	g_iSpam[tank] = 0;
 	g_iSpamCount[tank] = 0;
 }
 
@@ -409,16 +418,13 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank)
+static void vReset2(int tank, int spam)
 {
 	g_bSpam[tank] = false;
 
-	if (iSpamMessage(tank) == 1)
-	{
-		char sTankName[33];
-		ST_TankName(tank, sTankName);
-		ST_PrintToChatAll("%s %t", ST_TAG2, "Spam2", sTankName);
-	}
+	RemoveEntity(spam);
+
+	CreateTimer(3.0, tTimerStopRockSound, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 static void vReset3(int tank)
@@ -439,8 +445,15 @@ static void vReset3(int tank)
 
 static void vSpam(int tank)
 {
+	char sDamage[11];
+	int iSpamDamage = !g_bTankConfig[ST_TankType(tank)] ? g_iSpamDamage[ST_TankType(tank)] : g_iSpamDamage2[ST_TankType(tank)];
+	IntToString(iSpamDamage, sDamage, sizeof(sDamage));
+	DispatchSpawn(g_iSpam[tank]);
+	DispatchKeyValue(g_iSpam[tank], "rockdamageoverride", sDamage);
+
 	DataPack dpSpam;
 	CreateDataTimer(0.5, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	dpSpam.WriteCell(EntIndexToEntRef(g_iSpam[tank]));
 	dpSpam.WriteCell(GetClientUserId(tank));
 	dpSpam.WriteFloat(GetEngineTime());
 }
@@ -452,6 +465,12 @@ static void vSpamAbility(int tank)
 		float flSpamChance = !g_bTankConfig[ST_TankType(tank)] ? g_flSpamChance[ST_TankType(tank)] : g_flSpamChance2[ST_TankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flSpamChance)
 		{
+			g_iSpam[tank] = CreateEntityByName("env_rock_launcher");
+			if (!bIsValidEntity(g_iSpam[tank]))
+			{
+				return;
+			}
+
 			g_bSpam[tank] = true;
 
 			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
@@ -520,10 +539,17 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iSpam = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
+	if (!ST_PluginEnabled() || iSpam == INVALID_ENT_REFERENCE || !bIsValidEntity(iSpam))
+	{
+		g_bSpam[iTank] = false;
+
+		return Plugin_Stop;
+	}
+
 	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
 	{
-		vReset2(iTank);
+		vReset2(iTank, iSpam);
 
 		return Plugin_Stop;
 	}
@@ -531,37 +557,43 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	float flTime = pack.ReadFloat();
 	if (iSpamAbility(iTank) == 0 || ((!ST_TankAllowed(iTank, "5") || (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flSpamDuration(iTank)) < GetEngineTime()))
 	{
-		vReset2(iTank);
+		vReset2(iTank, iSpam);
 
 		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bSpam2[iTank])
 		{
 			vReset3(iTank);
 		}
 
+		if (iSpamMessage(iTank) == 1)
+		{
+			char sTankName[33];
+			ST_TankName(iTank, sTankName);
+			ST_PrintToChatAll("%s %t", ST_TAG2, "Spam2", sTankName);
+		}
+
 		return Plugin_Stop;
 	}
-
-	char sDamage[11];
-	int iSpamDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_iSpamDamage[ST_TankType(iTank)] : g_iSpamDamage2[ST_TankType(iTank)];
-	IntToString(iSpamDamage, sDamage, sizeof(sDamage));
 
 	float flPos[3], flAngles[3];
 	GetClientEyePosition(iTank, flPos);
 	GetClientEyeAngles(iTank, flAngles);
 	flPos[2] += 80.0;
 
-	int iSpammer = CreateEntityByName("env_rock_launcher");
-	if (bIsValidEntity(iSpammer))
-	{
-		DispatchKeyValue(iSpammer, "rockdamageoverride", sDamage);
-		TeleportEntity(iSpammer, flPos, flAngles, NULL_VECTOR);
-		DispatchSpawn(iSpammer);
-
-		AcceptEntityInput(iSpammer, "LaunchRock");
-		RemoveEntity(iSpammer);
-	}
+	TeleportEntity(iSpam, flPos, flAngles, NULL_VECTOR);
+	AcceptEntityInput(iSpam, "LaunchRock");
 
 	return Plugin_Continue;
+}
+
+public Action tTimerStopRockSound(Handle timer)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, "24"))
+		{
+			StopSound(iPlayer, SNDCHAN_BODY, SOUND_ROCK);
+		}
+	}
 }
 
 public Action tTimerResetCooldown(Handle timer, int userid)

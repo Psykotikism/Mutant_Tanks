@@ -343,24 +343,15 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
-		int iUserId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iUserId),
-			iTankId = event.GetInt("attacker"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024") && iSmiteAbility(iTank) == 1 && bIsSurvivor(iPlayer))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (ST_TankAllowed(iTank, "024"))
 		{
-			int iCorpse = -1;
-			while ((iCorpse = FindEntityByClassname(iCorpse, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iSmiteAbility(iTank) == 1)
 			{
-				int iOwner = GetEntPropEnt(iCorpse, Prop_Send, "m_hOwnerEntity");
-				if (iPlayer == iOwner)
-				{
-					RemoveEntity(iCorpse);
-				}
+				vSmite(iTank);
 			}
-		}
 
-		if (ST_TankAllowed(iPlayer, "024"))
-		{
-			vRemoveSmite(iPlayer);
+			vRemoveSmite(iTank);
 		}
 	}
 }
@@ -413,6 +404,27 @@ static void vReset()
 			vRemoveSmite(iPlayer);
 		}
 	}
+}
+
+static void vSmite(int survivor)
+{
+	float flPosition[3], flStartPosition[3];
+	int iColor[4] = {255, 255, 255, 255};
+
+	GetClientAbsOrigin(survivor, flPosition);
+	flPosition[2] -= 26;
+	flStartPosition[0] = flPosition[0] + GetRandomInt(-500, 500), flStartPosition[1] = flPosition[1] + GetRandomInt(-500, 500), flStartPosition[2] = flPosition[2] + 800;
+
+	TE_SetupBeamPoints(flStartPosition, flPosition, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
+	TE_SendToAll();
+
+	TE_SetupSparks(flPosition, view_as<float>({0.0, 0.0, 0.0}), 5000, 1000);
+	TE_SendToAll();
+
+	TE_SetupEnergySplash(flPosition, view_as<float>({0.0, 0.0, 0.0}), false);
+	TE_SendToAll();
+
+	EmitAmbientSound(SOUND_EXPLOSION, flStartPosition, survivor, SNDLEVEL_RAIDSIREN);
 }
 
 static void vSmiteAbility(int tank)
@@ -486,23 +498,7 @@ static void vSmiteHit(int survivor, int tank, float chance, int enabled, const c
 					}
 				}
 
-				float flPosition[3], flStartPosition[3];
-				int iColor[4] = {255, 255, 255, 255};
-
-				GetClientAbsOrigin(survivor, flPosition);
-				flPosition[2] -= 26;
-				flStartPosition[0] = flPosition[0] + GetRandomInt(-500, 500), flStartPosition[1] = flPosition[1] + GetRandomInt(-500, 500), flStartPosition[2] = flPosition[2] + 800;
-
-				TE_SetupBeamPoints(flStartPosition, flPosition, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
-				TE_SendToAll();
-
-				TE_SetupSparks(flPosition, view_as<float>({0.0, 0.0, 0.0}), 5000, 1000);
-				TE_SendToAll();
-
-				TE_SetupEnergySplash(flPosition, view_as<float>({0.0, 0.0, 0.0}), false);
-				TE_SendToAll();
-
-				EmitAmbientSound(SOUND_EXPLOSION, flStartPosition, survivor, SNDLEVEL_RAIDSIREN);
+				vSmite(survivor);
 				ForcePlayerSuicide(survivor);
 
 				char sSmiteEffect[4];

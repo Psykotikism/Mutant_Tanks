@@ -345,24 +345,15 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death"))
 	{
-		int iUserId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iUserId),
-			iTankId = event.GetInt("attacker"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024") && iSmashAbility(iTank) == 1 && bIsSurvivor(iPlayer))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (ST_TankAllowed(iTank, "024"))
 		{
-			int iCorpse = -1;
-			while ((iCorpse = FindEntityByClassname(iCorpse, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iSmashAbility(iTank) == 1)
 			{
-				int iOwner = GetEntPropEnt(iCorpse, Prop_Send, "m_hOwnerEntity");
-				if (iPlayer == iOwner)
-				{
-					RemoveEntity(iCorpse);
-				}
+				vSmash(iTank, iTank);
 			}
-		}
 
-		if (ST_TankAllowed(iPlayer, "024"))
-		{
-			vRemoveSmash(iPlayer);
+			vRemoveSmash(iTank);
 		}
 	}
 }
@@ -415,6 +406,13 @@ static void vReset()
 			vRemoveSmash(iPlayer);
 		}
 	}
+}
+
+static void vSmash(int survivor, int tank)
+{
+	EmitSoundToAll(SOUND_SMASH, survivor);
+	EmitSoundToAll(SOUND_GROWL, tank);
+	vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
 }
 
 static void vSmashAbility(int tank)
@@ -488,10 +486,7 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, const c
 					}
 				}
 
-				EmitSoundToAll(SOUND_SMASH, survivor);
-				EmitSoundToAll(SOUND_GROWL, tank);
-
-				vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
+				vSmash(survivor, tank);
 				ForcePlayerSuicide(survivor);
 
 				char sSmashEffect[4];

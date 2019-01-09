@@ -386,6 +386,12 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank, "024"))
 		{
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iWarpAbility(iTank) == 1)
+			{
+				vAttachParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
+				EmitSoundToAll(SOUND_ELECTRICITY, iTank);
+			}
+
 			vRemoveWarp(iTank);
 		}
 	}
@@ -764,17 +770,15 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 		GetClientAbsOrigin(iSurvivor, flSurvivorOrigin);
 		GetClientAbsAngles(iSurvivor, flSurvivorAngles);
 
-		vCreateParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
+		vAttachParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
 		EmitSoundToAll(SOUND_ELECTRICITY, iTank);
-
 		TeleportEntity(iTank, flSurvivorOrigin, flSurvivorAngles, NULL_VECTOR);
 
 		int iWarpMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpMode[ST_TankType(iTank)] : g_iWarpMode2[ST_TankType(iTank)];
 		if (iWarpMode == 1)
 		{
-			vCreateParticle(iSurvivor, PARTICLE_ELECTRICITY, 1.0, 0.0);
+			vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 1.0, 0.0);
 			EmitSoundToAll(SOUND_ELECTRICITY2, iSurvivor);
-
 			TeleportEntity(iSurvivor, flTankOrigin, flTankAngles, NULL_VECTOR);
 		}
 

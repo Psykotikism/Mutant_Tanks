@@ -217,6 +217,11 @@
 	{
 		"en"			"Super Tanks++ makes fighting Tanks great again!"
 	}
+	"HumanCooldown"
+	{
+		"#format"		"{1:i}"
+		"en"			"You must wait for{olive} {1}{mint} second(s) before changing into a different Super Tank type."
+	}
 	"MainButton"
 	{
 		"en"			"{yellow}+use (default: E){mint}: Activate your main abilit(y/ies)."
@@ -224,6 +229,10 @@
 	"MultipleMatches"
 	{
 		"en"			"Multiple{olive} Tank types{mint} matched that name. Selecting a random match..."
+	}
+	"NoAccess"
+	{
+		"en"			"You do not have access to this command."
 	}
 	"NoNote"
 	{

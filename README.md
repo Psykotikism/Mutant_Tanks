@@ -717,6 +717,15 @@ forward void ST_OnRockThrow(int tank, int rock);
 Natives:
 ```
 /**
+ * Hooks/unhooks any entity to/from the core plugin's SetTransmit callback.
+ *
+ * @param entity		Entity index of the entity.
+ * @param mode			True if hooking entity, false otherwise.
+ * @error			Invalid entity index.
+ **/
+native void ST_HideEntity(int entity, bool mode);
+
+/**
  * Returns the maximum value of the "Type Range" setting.
  *
  * @return			The maximum value of the "Type Range" setting.
@@ -1095,6 +1104,23 @@ Yes, each ability has a `sm_st_<ability name here>` command that players can use
 The commands will each provide a menu that players can use to display certain information in chat.
 
 The information displayed in chat will be more detailed and accurate when the player is playing as a Super Tank.
+
+11. Is there any way players can change their current Super Tank type in the middle of a fight?
+
+Yes, players can use the `sm_supertank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
+
+12. Is there any way to exempt admins from the cooldown mentioned in question #11?
+
+Yes, assign admins the `st_admin` override.
+
+Example:
+
+```
+Overrides
+{
+	"st_admin"		"z" // All admins with the Root (z) flag are exempted from cooldowns.
+}
+```
 
 ### Configuration
 1. How do I enable the custom configurations features?

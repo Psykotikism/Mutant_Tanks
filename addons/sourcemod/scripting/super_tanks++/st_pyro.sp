@@ -299,11 +299,15 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 							case 0: damage += flPyroDamageBoost;
 							case 1: damage = flPyroDamageBoost;
 						}
+
+						return Plugin_Changed;
 					}
 				}
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public void ST_OnConfigsLoaded(const char[] savepath, bool main)
@@ -323,8 +327,8 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 				{
 					g_bTankConfig[iIndex] = false;
 
-					g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", 1.0);
-					g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], 0.1, 3.0);
+					g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", -1.0);
+					g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], -1.0, 3.0);
 
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
@@ -354,7 +358,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_bTankConfig[iIndex] = true;
 
 					g_flRunSpeed2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", g_flRunSpeed[iIndex]);
-					g_flRunSpeed2[iIndex] = flClamp(g_flRunSpeed2[iIndex], 0.1, 3.0);
+					g_flRunSpeed2[iIndex] = flClamp(g_flRunSpeed2[iIndex], -1.0, 3.0);
 
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
@@ -632,7 +636,6 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 		g_bPyro[iTank] = false;
 
 		ExtinguishEntity(iTank);
-
 		SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(iTank));
 
 		if (iPyroMessage(iTank) == 1)

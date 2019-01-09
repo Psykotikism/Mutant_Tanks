@@ -455,11 +455,11 @@ static void vRock(int tank)
 	DispatchSpawn(g_iRock[tank]);
 	DispatchKeyValue(g_iRock[tank], "rockdamageoverride", sDamage);
 
-	DataPack dpRockUpdate;
-	CreateDataTimer(0.2, tTimerRockUpdate, dpRockUpdate, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpRockUpdate.WriteCell(EntIndexToEntRef(g_iRock[tank]));
-	dpRockUpdate.WriteCell(GetClientUserId(tank));
-	dpRockUpdate.WriteFloat(GetEngineTime());
+	DataPack dpRock;
+	CreateDataTimer(0.2, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	dpRock.WriteCell(EntIndexToEntRef(g_iRock[tank]));
+	dpRock.WriteCell(GetClientUserId(tank));
+	dpRock.WriteFloat(GetEngineTime());
 }
 
 static void vRockAbility(int tank)
@@ -539,7 +539,7 @@ static int iRockMessage(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iRockMessage[ST_TankType(tank)] : g_iRockMessage2[ST_TankType(tank)];
 }
 
-public Action tTimerRockUpdate(Handle timer, DataPack pack)
+public Action tTimerRock(Handle timer, DataPack pack)
 {
 	pack.Reset();
 

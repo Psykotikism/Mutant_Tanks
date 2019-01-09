@@ -353,6 +353,27 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank, "024"))
 		{
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iShakeAbility(iTank) == 1)
+			{
+				float flTankPos[3];
+				GetClientAbsOrigin(iTank, flTankPos);
+
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				{
+					if (bIsSurvivor(iSurvivor, "234"))
+					{
+						float flSurvivorPos[3];
+						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+						float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+						if (flDistance <= 200.0)
+						{
+							vShake(iTank, 2.0);
+						}
+					}
+				}
+			}
+
 			vRemoveShake(iTank);
 		}
 	}
@@ -444,6 +465,20 @@ static void vReset3(int tank)
 	g_bShake4[tank] = false;
 	g_bShake5[tank] = false;
 	g_iShakeCount[tank] = 0;
+}
+
+static void vShake(int survivor, float duration = 1.0)
+{
+	Handle hShakeTarget = StartMessageOne("Shake", survivor);
+	if (hShakeTarget != null)
+	{
+		BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
+		bfWrite.WriteByte(0);
+		bfWrite.WriteFloat(16.0);
+		bfWrite.WriteFloat(0.5);
+		bfWrite.WriteFloat(duration);
+		EndMessage();
+	}
 }
 
 static void vShakeAbility(int tank)
@@ -642,17 +677,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	Handle hShakeTarget = StartMessageOne("Shake", iSurvivor);
-	if (hShakeTarget != null)
-	{
-		BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
-		bfWrite.WriteByte(0);
-		bfWrite.WriteFloat(16.0);
-		bfWrite.WriteFloat(0.5);
-		bfWrite.WriteFloat(1.0);
-
-		EndMessage();
-	}
+	vShake(iSurvivor);
 
 	return Plugin_Continue;
 }

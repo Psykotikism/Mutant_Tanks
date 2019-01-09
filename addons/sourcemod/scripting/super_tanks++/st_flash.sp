@@ -246,8 +246,8 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 				{
 					g_bTankConfig[iIndex] = false;
 
-					g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", 1.0);
-					g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], 0.1, 3.0);
+					g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", -1.0);
+					g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], -1.0, 3.0);
 
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Flash Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
@@ -273,7 +273,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_bTankConfig[iIndex] = true;
 
 					g_flRunSpeed2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", g_flRunSpeed[iIndex]);
-					g_flRunSpeed2[iIndex] = flClamp(g_flRunSpeed2[iIndex], 0.1, 3.0);
+					g_flRunSpeed2[iIndex] = flClamp(g_flRunSpeed2[iIndex], -1.0, 3.0);
 
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Flash Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);

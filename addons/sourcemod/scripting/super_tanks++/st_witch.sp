@@ -333,6 +333,15 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_TankAllowed(iTank, "024"))
 		{
+			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iWitchAbility(iTank) == 1)
+			{
+				float flTankPos[3], flTankAngles[3];
+				GetClientAbsOrigin(iTank, flTankPos);
+				GetClientAbsAngles(iTank, flTankAngles);
+
+				vSpawnWitch(iTank, flTankPos, flTankAngles);
+			}
+
 			vRemoveWitch(iTank);
 		}
 	}
@@ -386,6 +395,18 @@ static void vReset()
 	}
 }
 
+static void vSpawnWitch(int tank, float pos[3], float angles[3])
+{
+	int iWitch = CreateEntityByName("witch");
+	if (bIsValidEntity(iWitch))
+	{
+		TeleportEntity(iWitch, pos, angles, NULL_VECTOR);
+		DispatchSpawn(iWitch);
+		ActivateEntity(iWitch);
+		SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", tank);
+	}
+}
+
 static void vWitchAbility(int tank)
 {
 	if (g_iWitchCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
@@ -416,25 +437,16 @@ static void vWitchAbility(int tank)
 				int iWitchAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchAmount[ST_TankType(tank)] : g_iWitchAmount2[ST_TankType(tank)];
 				if (iGetWitchCount() < iWitchAmount)
 				{
-					float flTankPos[3], flInfectedPos[3], flInfectedAng[3];
+					float flTankPos[3], flInfectedPos[3], flInfectedAngles[3];
 					GetClientAbsOrigin(tank, flTankPos);
 					GetEntPropVector(iInfected, Prop_Send, "m_vecOrigin", flInfectedPos);
-					GetEntPropVector(iInfected, Prop_Send, "m_angRotation", flInfectedAng);
+					GetEntPropVector(iInfected, Prop_Send, "m_angRotation", flInfectedAngles);
 
 					float flWitchRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWitchRange[ST_TankType(tank)] : g_flWitchRange[ST_TankType(tank)], flDistance = GetVectorDistance(flInfectedPos, flTankPos);
 					if (flDistance <= flWitchRange)
 					{
 						RemoveEntity(iInfected);
-
-						int iWitch = CreateEntityByName("witch");
-						if (bIsValidEntity(iWitch))
-						{
-							TeleportEntity(iWitch, flInfectedPos, flInfectedAng, NULL_VECTOR);
-
-							DispatchSpawn(iWitch);
-							ActivateEntity(iWitch);
-							SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", tank);
-						}
+						vSpawnWitch(tank, flInfectedPos, flInfectedAngles);
 					}
 				}
 
