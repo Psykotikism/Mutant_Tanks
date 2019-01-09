@@ -880,6 +880,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				default:
 				{
 					ST_PrintToChat(admin, "%s %t", ST_TAG3, "MultipleMatches");
+
 					g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
 				}
 			}
@@ -2986,6 +2987,11 @@ public Action tTimerTankHealthUpdate(Handle timer)
 						{
 							char sTankName[33];
 							sTankName = !g_bTankConfig[g_iTankType[iTarget]] ? g_sTankName[g_iTankType[iTarget]] : g_sTankName2[g_iTankType[iTarget]];
+							if (StrEqual(sTankName, ""))
+							{
+								sTankName = "Tank";
+							}
+
 							int iHealth = GetClientHealth(iTarget);
 							switch (iDisplayHealth)
 							{
