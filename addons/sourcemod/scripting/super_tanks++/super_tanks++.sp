@@ -1262,6 +1262,10 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				{
 					char sTankName[33];
 					sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
+					if (StrEqual(sTankName, ""))
+					{
+						sTankName = "Tank";
+					}
 
 					switch (GetRandomInt(1, 10))
 					{
@@ -2135,25 +2139,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		sAnnounceArrival = !g_bGeneralConfig ? g_sAnnounceArrival : g_sAnnounceArrival2;
 		switch (mode)
 		{
-			case 0:
-			{
-				if (StrContains(sAnnounceArrival, "1") != -1)
-				{
-					switch (GetRandomInt(1, 10))
-					{
-						case 1: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival1", name);
-						case 2: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival2", name);
-						case 3: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival3", name);
-						case 4: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival4", name);
-						case 5: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival5", name);
-						case 6: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival6", name);
-						case 7: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival7", name);
-						case 8: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival8", name);
-						case 9: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival9", name);
-						case 10: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival10", name);
-					}
-				}
-			}
+			case 0: vAnnounceArrival(sAnnounceArrival, name);
 			case 1:
 			{
 				if (StrContains(sAnnounceArrival, "2") != -1)
@@ -2182,7 +2168,11 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Untransformed", oldname, name);
 				}
 			}
-			case 5: ST_PrintToChat(tank, "%s %t", ST_TAG3, "ChangeType");
+			case 5:
+			{
+				vAnnounceArrival(sAnnounceArrival, name);
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ChangeType");
+			}
 		}
 
 		int iTankNote = !g_bTankConfig[g_iTankType[tank]] ? g_iTankNote[g_iTankType[tank]] : g_iTankNote2[g_iTankType[tank]];
@@ -2195,6 +2185,26 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				case true: ST_PrintToChatAll("%s %t", ST_TAG3, sTankNote);
 				case false: ST_PrintToChatAll("%s %t", ST_TAG3, "NoNote");
 			}
+		}
+	}
+}
+
+static void vAnnounceArrival(const char[] arrival, const char[] name)
+{
+	if (StrContains(arrival, "1") != -1)
+	{
+		switch (GetRandomInt(1, 10))
+		{
+			case 1: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival1", name);
+			case 2: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival2", name);
+			case 3: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival3", name);
+			case 4: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival4", name);
+			case 5: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival5", name);
+			case 6: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival6", name);
+			case 7: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival7", name);
+			case 8: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival8", name);
+			case 9: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival9", name);
+			case 10: ST_PrintToChatAll("%s %t", ST_TAG2, "Arrival10", name);
 		}
 	}
 }
