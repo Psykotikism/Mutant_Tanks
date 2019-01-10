@@ -737,6 +737,28 @@ static void vReset2(int tank)
 	}
 }
 
+static void vResetGlow(int tank)
+{
+	int iGlowEnabled = !g_bTankConfig[ST_TankType(tank)] ? g_iGlowEnabled[ST_TankType(tank)] : g_iGlowEnabled2[ST_TankType(tank)];
+	switch (iGlowEnabled)
+	{
+		case 0:
+		{
+			SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
+			SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
+			SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
+		}
+		case 1:
+		{
+			int iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha;
+			ST_TankColors(tank, 2, iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha);
+			SetEntProp(tank, Prop_Send, "m_iGlowType", 3);
+			SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowRed, iGlowGreen, iGlowBlue));
+			SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
+		}
+	}
+}
+
 static float flHealChance(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flHealChance[ST_TankType(tank)] : g_flHealChance2[ST_TankType(tank)];
@@ -791,7 +813,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 	{
 		g_bHeal[iTank] = false;
 
-		SetEntProp(iTank, Prop_Send, "m_bFlashing", 0);
+		vResetGlow(iTank);
 
 		char sHealMessage[4];
 		sHealMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sHealMessage[ST_TankType(iTank)] : g_sHealMessage2[ST_TankType(iTank)];
@@ -913,15 +935,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 
 	if (iType == 0 && bIsValidGame())
 	{
-		int iGlowEnabled = !g_bTankConfig[ST_TankType(iTank)] ? g_iGlowEnabled[ST_TankType(iTank)] : g_iGlowEnabled2[ST_TankType(iTank)];
-		if (iGlowEnabled == 1 && bIsValidGame())
-		{
-			int iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha;
-			ST_TankColors(iTank, 2, iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha);
-			SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
-			SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowRed, iGlowGreen, iGlowBlue));
-			SetEntProp(iTank, Prop_Send, "m_bFlashing", 0);
-		}
+		vResetGlow(iTank);
 	}
 
 	return Plugin_Continue;

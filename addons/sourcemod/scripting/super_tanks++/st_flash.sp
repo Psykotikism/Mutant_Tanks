@@ -511,7 +511,8 @@ static float flHumanCooldown(int tank)
 
 static float flRunSpeed(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flRunSpeed[ST_TankType(tank)] : g_flRunSpeed2[ST_TankType(tank)];
+	float flSpeed = !g_bTankConfig[ST_TankType(tank)] ? g_flRunSpeed[ST_TankType(tank)] : g_flRunSpeed2[ST_TankType(tank)];
+	return (flSpeed > 0.0) ? flSpeed : 1.0;
 }
 
 static int iFlashAbility(int tank)
