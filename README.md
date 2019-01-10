@@ -717,6 +717,24 @@ forward void ST_OnRockThrow(int tank, int rock);
 Natives:
 ```
 /**
+ * Returns whether the clone can use abilities.
+ *
+ * @param tank				Client index of the Tank.
+ * @param clone				Checks whether "st_clone.smx" is installed.
+ * @return				True if clone can use abilities, false otherwise.
+ **/
+native bool ST_CloneAllowed(int tank, bool clone);
+
+/**
+ * Returns if the Super Tank type has a glow outline.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank has a glow outline, false otherwise.
+ * @error			Invalid client index.
+ **/
+native bool ST_GlowEnabled(int tank);
+
+/**
  * Hooks/unhooks any entity to/from the core plugin's SetTransmit callback.
  *
  * @param entity		Entity index of the entity.
@@ -759,6 +777,15 @@ native void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, 
  * @return			True if core plugin is enabled, false otherwise.
  **/
 native bool ST_PluginEnabled();
+
+/**
+ * Returns the Super Tank's run speed.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			The run speed of the Tank.
+ * @error			Invalid client index.
+ **/
+native float ST_RunSpeed(int tank);
 
 /**
  * Returns if a certain Super Tank type can spawn.
