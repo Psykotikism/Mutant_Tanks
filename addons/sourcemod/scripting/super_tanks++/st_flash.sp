@@ -33,7 +33,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bFlash[MAXPLAYERS + 1], g_bFlash2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-float g_flFlashChance[ST_MAXTYPES + 1], g_flFlashChance2[ST_MAXTYPES + 1], g_flFlashDuration[ST_MAXTYPES + 1], g_flFlashDuration2[ST_MAXTYPES + 1], g_flFlashSpeed[ST_MAXTYPES + 1], g_flFlashSpeed2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[ST_MAXTYPES + 1];
+float g_flFlashChance[ST_MAXTYPES + 1], g_flFlashChance2[ST_MAXTYPES + 1], g_flFlashDuration[ST_MAXTYPES + 1], g_flFlashDuration2[ST_MAXTYPES + 1], g_flFlashSpeed[ST_MAXTYPES + 1], g_flFlashSpeed2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
 
 int g_iFlashAbility[ST_MAXTYPES + 1], g_iFlashAbility2[ST_MAXTYPES + 1], g_iFlashCount[MAXPLAYERS + 1], g_iFlashMessage[ST_MAXTYPES + 1], g_iFlashMessage2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1];
 
@@ -246,9 +246,6 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 				{
 					g_bTankConfig[iIndex] = false;
 
-					g_flRunSpeed[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", -1.0);
-					g_flRunSpeed[iIndex] = flClamp(g_flRunSpeed[iIndex], -1.0, 3.0);
-
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Flash Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
 					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Flash Ability/Human Ammo", 5);
@@ -271,9 +268,6 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 				case false:
 				{
 					g_bTankConfig[iIndex] = true;
-
-					g_flRunSpeed2[iIndex] = kvSuperTanks.GetFloat("Enhancements/Run Speed", g_flRunSpeed[iIndex]);
-					g_flRunSpeed2[iIndex] = flClamp(g_flRunSpeed2[iIndex], -1.0, 3.0);
 
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Flash Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
@@ -396,7 +390,7 @@ public void ST_OnButtonReleased(int tank, int button)
 				{
 					g_bFlash[tank] = false;
 
-					SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(tank));
+					SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", ST_RunSpeed(tank));
 
 					vReset3(tank);
 				}
@@ -509,12 +503,6 @@ static float flHumanCooldown(int tank)
 	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
 }
 
-static float flRunSpeed(int tank)
-{
-	float flSpeed = !g_bTankConfig[ST_TankType(tank)] ? g_flRunSpeed[ST_TankType(tank)] : g_flRunSpeed2[ST_TankType(tank)];
-	return (flSpeed > 0.0) ? flSpeed : 1.0;
-}
-
 static int iFlashAbility(int tank)
 {
 	return !g_bTankConfig[ST_TankType(tank)] ? g_iFlashAbility[ST_TankType(tank)] : g_iFlashAbility2[ST_TankType(tank)];
@@ -557,7 +545,7 @@ public Action tTimerStopFlash(Handle timer, int userid)
 		vReset3(iTank);
 	}
 
-	SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(iTank));
+	SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", ST_RunSpeed(iTank));
 
 	return Plugin_Continue;
 }

@@ -42,7 +42,7 @@ ConVar g_cvSTMaxIncapCount;
 
 float g_flHealHealRange[ST_MAXTYPES + 1], g_flHealHealRange2[ST_MAXTYPES + 1], g_flHealBuffer[ST_MAXTYPES + 1], g_flHealBuffer2[ST_MAXTYPES + 1], g_flHealChance[ST_MAXTYPES + 1], g_flHealChance2[ST_MAXTYPES + 1], g_flHealInterval[ST_MAXTYPES + 1], g_flHealInterval2[ST_MAXTYPES + 1], g_flHealRange[ST_MAXTYPES + 1], g_flHealRange2[ST_MAXTYPES + 1], g_flHealRangeChance[ST_MAXTYPES + 1], g_flHealRangeChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flHumanDuration[ST_MAXTYPES + 1], g_flHumanDuration2[ST_MAXTYPES + 1];
 
-int g_iGlowEnabled[ST_MAXTYPES + 1], g_iGlowEnabled2[ST_MAXTYPES + 1], g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealCount[MAXPLAYERS + 1], g_iHealCount2[MAXPLAYERS + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1];
+int g_iHealAbility[ST_MAXTYPES + 1], g_iHealAbility2[ST_MAXTYPES + 1], g_iHealCommon[ST_MAXTYPES + 1], g_iHealCommon2[ST_MAXTYPES + 1], g_iHealCount[MAXPLAYERS + 1], g_iHealCount2[MAXPLAYERS + 1], g_iHealHit[ST_MAXTYPES + 1], g_iHealHit2[ST_MAXTYPES + 1], g_iHealHitMode[ST_MAXTYPES + 1], g_iHealHitMode2[ST_MAXTYPES + 1], g_iHealSpecial[ST_MAXTYPES + 1], g_iHealSpecial2[ST_MAXTYPES + 1], g_iHealTank[ST_MAXTYPES + 1], g_iHealTank2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -306,9 +306,6 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 				{
 					g_bTankConfig[iIndex] = false;
 
-					g_iGlowEnabled[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", 1);
-					g_iGlowEnabled[iIndex] = iClamp(g_iGlowEnabled[iIndex], 0, 1);
-
 					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Heal Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
 					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Heal Ability/Human Ammo", 5);
@@ -349,9 +346,6 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 				case false:
 				{
 					g_bTankConfig[iIndex] = true;
-
-					g_iGlowEnabled2[iIndex] = kvSuperTanks.GetNum("General/Glow Enabled", g_iGlowEnabled[iIndex]);
-					g_iGlowEnabled2[iIndex] = iClamp(g_iGlowEnabled2[iIndex], 0, 1);
 
 					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Heal Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
@@ -739,21 +733,20 @@ static void vReset2(int tank)
 
 static void vResetGlow(int tank)
 {
-	int iGlowEnabled = !g_bTankConfig[ST_TankType(tank)] ? g_iGlowEnabled[ST_TankType(tank)] : g_iGlowEnabled2[ST_TankType(tank)];
-	switch (iGlowEnabled)
+	switch (ST_GlowEnabled(tank))
 	{
-		case 0:
-		{
-			SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
-			SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
-			SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
-		}
-		case 1:
+		case true:
 		{
 			int iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha;
 			ST_TankColors(tank, 2, iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha);
 			SetEntProp(tank, Prop_Send, "m_iGlowType", 3);
 			SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowRed, iGlowGreen, iGlowBlue));
+			SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
+		}
+		case false:
+		{
+			SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
+			SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
 			SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
 		}
 	}

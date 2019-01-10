@@ -84,11 +84,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 
+	CreateNative("ST_GlowEnabled", aNative_GlowEnabled);
 	CreateNative("ST_HideEntity", aNative_HideEntity);
 	CreateNative("ST_MaxType", aNative_MaxType);
 	CreateNative("ST_MinType", aNative_MinType);
 	CreateNative("ST_PluginEnabled", aNative_PluginEnabled);
 	CreateNative("ST_PropsColors", aNative_PropsColors);
+	CreateNative("ST_RunSpeed", aNative_RunSpeed);
 	CreateNative("ST_SpawnEnabled", aNative_SpawnEnabled);
 	CreateNative("ST_SpawnTank", aNative_SpawnTank);
 	CreateNative("ST_TankAllowed", aNative_TankAllowed);
@@ -104,6 +106,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_bLateLoad = late;
 
 	return APLRes_Success;
+}
+
+public any aNative_GlowEnabled(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	if (bIsTank(iTank, "024") && iGlowEnabled(g_iTankType[iTank]) == 1)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 public any aNative_HideEntity(Handle plugin, int numParams)
@@ -193,6 +206,17 @@ public any aNative_PropsColors(Handle plugin, int numParams)
 		SetNativeCellRef(5, iBlue);
 		SetNativeCellRef(6, iAlpha);
 	}
+}
+
+public any aNative_RunSpeed(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	if (bIsTank(iTank, "024"))
+	{
+		return flRunSpeed(iTank);
+	}
+
+	return 1.0;
 }
 
 public any aNative_SpawnEnabled(Handle plugin, int numParams)
@@ -880,7 +904,6 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				default:
 				{
 					ST_PrintToChat(admin, "%s %t", ST_TAG3, "MultipleMatches");
-
 					g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
 				}
 			}
@@ -1824,10 +1847,9 @@ static void vResetSpeed(int tank, bool mode = false)
 		case true: SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		case false:
 		{
-			float flRunSpeed = !g_bTankConfig[g_iTankType[tank]] ? g_flRunSpeed[g_iTankType[tank]] : g_flRunSpeed2[g_iTankType[tank]];
-			if (flRunSpeed > 0.0)
+			if (flRunSpeed(tank) > 0.0)
 			{
-				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed);
+				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flRunSpeed(tank));
 			}
 		}
 	}
@@ -2504,6 +2526,12 @@ static bool bTankChance(int value)
 	}
 
 	return false;
+}
+
+static float flRunSpeed(int tank)
+{
+	float flSpeed = !g_bTankConfig[g_iTankType[tank]] ? g_flRunSpeed[g_iTankType[tank]] : g_flRunSpeed2[g_iTankType[tank]];
+	return (flSpeed > 0.0) ? flSpeed : 1.0;
 }
 
 static float flThrowInterval(int tank)
