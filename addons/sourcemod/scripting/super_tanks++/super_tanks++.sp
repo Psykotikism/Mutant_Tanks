@@ -211,7 +211,7 @@ public any aNative_PropsColors(Handle plugin, int numParams)
 public any aNative_RunSpeed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank, "024"))
+	if (bIsTank(iTank, "024") && flRunSpeed(iTank) > 0.0)
 	{
 		return flRunSpeed(iTank);
 	}
@@ -904,6 +904,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				default:
 				{
 					ST_PrintToChat(admin, "%s %t", ST_TAG3, "MultipleMatches");
+
 					g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
 				}
 			}
@@ -2530,8 +2531,7 @@ static bool bTankChance(int value)
 
 static float flRunSpeed(int tank)
 {
-	float flSpeed = !g_bTankConfig[g_iTankType[tank]] ? g_flRunSpeed[g_iTankType[tank]] : g_flRunSpeed2[g_iTankType[tank]];
-	return (flSpeed > 0.0) ? flSpeed : 1.0;
+	return !g_bTankConfig[g_iTankType[tank]] ? g_flRunSpeed[g_iTankType[tank]] : g_flRunSpeed2[g_iTankType[tank]];
 }
 
 static float flThrowInterval(int tank)
