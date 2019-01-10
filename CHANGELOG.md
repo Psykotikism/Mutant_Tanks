@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 8.55 (January 15, 2019)
+
+Bug fixes:
+
+1. Fixed the Flash and Pyro abilities glitching out when the `Run Speed` setting is not specified. (It now defaults to `1.0`.)
+2. Fixed the Heal ability breaking the glow outline feature.
+
+Files:
+
+1. Updated the `super_tanks++.cfg` file.
+2. Updated the `super_tanks++.inc` file.
+
 ## Version 8.54 (January 8, 2019)
 
 Bug fixes:
