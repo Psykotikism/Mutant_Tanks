@@ -1926,7 +1926,11 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			{
 				SDKUnhook(g_iLight[tank][iLight], SDKHook_SetTransmit, SetTransmit);
 				RemoveEntity(g_iLight[tank][iLight]);
-				vLightProp(tank, iLight, flOrigin, flAngles);
+
+				if (StrContains(sPropsAttached, "2") != -1)
+				{
+					vLightProp(tank, iLight, flOrigin, flAngles);
+				}
 			}
 		}
 
@@ -2019,9 +2023,21 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			{
 				vColorOzTanks(tank, iOzTank);
 
+				if (StrContains(sPropsAttached, "3") == -1)
+				{
+					SDKUnhook(g_iJetpack[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
+					RemoveEntity(g_iJetpack[tank][iOzTank]);
+				}
+
 				if (bIsValidEntity(g_iFlame[tank][iOzTank]))
 				{
 					vColorFlames(tank, iOzTank);
+
+					if (StrContains(sPropsAttached, "4") == -1)
+					{
+						SDKUnhook(g_iFlame[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
+						RemoveEntity(g_iFlame[tank][iOzTank]);
+					}
 				}
 			}
 		}
@@ -2080,6 +2096,12 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			else if (bIsValidEntity(g_iRock[tank][iRock]))
 			{
 				vColorRocks(tank, iRock);
+
+				if (StrContains(sPropsAttached, "5") == -1)
+				{
+					SDKUnhook(g_iRock[tank][iRock], SDKHook_SetTransmit, SetTransmit);
+					RemoveEntity(g_iRock[tank][iRock]);
+				}
 			}
 		}
 
@@ -2127,6 +2149,12 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			else if (bIsValidEntity(g_iTire[tank][iTire]))
 			{
 				vColorTires(tank, iTire);
+
+				if (StrContains(sPropsAttached, "6") == -1)
+				{
+					SDKUnhook(g_iTire[tank][iTire], SDKHook_SetTransmit, SetTransmit);
+					RemoveEntity(g_iTire[tank][iTire]);
+				}
 			}
 		}
 
