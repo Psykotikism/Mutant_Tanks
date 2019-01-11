@@ -10,8 +10,9 @@ Bug fixes:
 
 Changes:
 
-1. Added the `ST_GlowEnabled` native.
-2. Added the `ST_RunSpeed` native.
+1. Added the `ST_IsGlowEnabled` native.
+2. Added the `ST_GetRunSpeed` native.
+3. Renamed all natives.
 
 Files:
 
