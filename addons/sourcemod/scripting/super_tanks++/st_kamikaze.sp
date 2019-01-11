@@ -125,7 +125,7 @@ public void OnMapEnd()
 
 public Action cmdKamikazeInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -233,19 +233,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && (iKamikazeHitMode(attacker) == 0 || iKamikazeHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iKamikazeHitMode(attacker) == 0 || iKamikazeHitMode(attacker) == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vKamikazeHit(victim, attacker, flKamikazeChance(attacker), iKamikazeHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && (iKamikazeHitMode(victim) == 0 || iKamikazeHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iKamikazeHitMode(victim) == 0 || iKamikazeHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -260,7 +260,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -324,9 +324,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iKamikazeAbility(iTank) == 1)
+			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iKamikazeAbility(iTank) == 1)
 			{
 				vKamikaze(iTank, iTank);
 			}
@@ -338,7 +338,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iKamikazeAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iKamikazeAbility(tank) == 1)
 	{
 		vKamikazeAbility(tank);
 	}
@@ -346,7 +346,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -374,8 +374,8 @@ static void vKamikazeAbility(int tank)
 {
 	g_bKamikaze[tank] = false;
 
-	float flKamikazeRange = !g_bTankConfig[ST_TankType(tank)] ? g_flKamikazeRange[ST_TankType(tank)] : g_flKamikazeRange2[ST_TankType(tank)],
-		flKamikazeRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flKamikazeRangeChance[ST_TankType(tank)] : g_flKamikazeRangeChance2[ST_TankType(tank)],
+	float flKamikazeRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flKamikazeRange[ST_GetTankType(tank)] : g_flKamikazeRange2[ST_GetTankType(tank)],
+		flKamikazeRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flKamikazeRangeChance[ST_GetTankType(tank)] : g_flKamikazeRangeChance2[ST_GetTankType(tank)],
 		flTankPos[3];
 
 	GetClientAbsOrigin(tank, flTankPos);
@@ -401,7 +401,7 @@ static void vKamikazeAbility(int tank)
 
 	if (iSurvivorCount == 0)
 	{
-		if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "KamikazeHuman3");
 		}
@@ -414,7 +414,7 @@ static void vKamikazeHit(int survivor, int tank, float chance, int enabled, cons
 	{
 		if (GetRandomFloat(0.1, 100.0) <= chance)
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3"))
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3"))
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "KamikazeHuman");
 			}
@@ -428,21 +428,21 @@ static void vKamikazeHit(int survivor, int tank, float chance, int enabled, cons
 			ForcePlayerSuicide(tank);
 
 			char sKamikazeEffect[4];
-			sKamikazeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sKamikazeEffect[ST_TankType(tank)] : g_sKamikazeEffect2[ST_TankType(tank)];
+			sKamikazeEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sKamikazeEffect[ST_GetTankType(tank)] : g_sKamikazeEffect2[ST_GetTankType(tank)];
 			vEffect(survivor, tank, sKamikazeEffect, mode);
 
 			char sKamikazeMessage[3];
-			sKamikazeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sKamikazeMessage[ST_TankType(tank)] : g_sKamikazeMessage2[ST_TankType(tank)];
+			sKamikazeMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sKamikazeMessage[ST_GetTankType(tank)] : g_sKamikazeMessage2[ST_GetTankType(tank)];
 			if (StrContains(sKamikazeMessage, message) != -1)
 			{
 				char sTankName[33];
-				ST_TankName(tank, sTankName);
+				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Kamikaze", sTankName, survivor);
 			}
 		}
 		else if (StrEqual(mode, "3"))
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bKamikaze[tank])
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bKamikaze[tank])
 			{
 				g_bKamikaze[tank] = true;
 
@@ -470,25 +470,25 @@ static void vReset()
 
 static float flKamikazeChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flKamikazeChance[ST_TankType(tank)] : g_flKamikazeChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flKamikazeChance[ST_GetTankType(tank)] : g_flKamikazeChance2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iKamikazeAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeAbility[ST_TankType(tank)] : g_iKamikazeAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iKamikazeAbility[ST_GetTankType(tank)] : g_iKamikazeAbility2[ST_GetTankType(tank)];
 }
 
 static int iKamikazeHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeHit[ST_TankType(tank)] : g_iKamikazeHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iKamikazeHit[ST_GetTankType(tank)] : g_iKamikazeHit2[ST_GetTankType(tank)];
 }
 
 static int iKamikazeHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iKamikazeHitMode[ST_TankType(tank)] : g_iKamikazeHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iKamikazeHitMode[ST_GetTankType(tank)] : g_iKamikazeHitMode2[ST_GetTankType(tank)];
 }

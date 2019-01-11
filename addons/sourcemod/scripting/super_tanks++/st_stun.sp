@@ -115,7 +115,7 @@ public void OnMapEnd()
 
 public Action cmdStunInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -244,19 +244,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && (iStunHitMode(attacker) == 0 || iStunHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iStunHitMode(attacker) == 0 || iStunHitMode(attacker) == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vStunHit(victim, attacker, flStunChance(attacker), iStunHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && (iStunHitMode(victim) == 0 || iStunHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iStunHitMode(victim) == 0 || iStunHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -271,7 +271,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -362,7 +362,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveStun(iTank);
 		}
@@ -371,7 +371,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iStunAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iStunAbility(tank) == 1)
 	{
 		vStunAbility(tank);
 	}
@@ -379,7 +379,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -451,8 +451,8 @@ static void vStunAbility(int tank)
 		g_bStun4[tank] = false;
 		g_bStun5[tank] = false;
 
-		float flStunRange = !g_bTankConfig[ST_TankType(tank)] ? g_flStunRange[ST_TankType(tank)] : g_flStunRange2[ST_TankType(tank)],
-			flStunRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flStunRangeChance[ST_TankType(tank)] : g_flStunRangeChance2[ST_TankType(tank)],
+		float flStunRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flStunRange[ST_GetTankType(tank)] : g_flStunRange2[ST_GetTankType(tank)],
+			flStunRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flStunRangeChance[ST_GetTankType(tank)] : g_flStunRangeChance2[ST_GetTankType(tank)],
 			flTankPos[3];
 
 		GetClientAbsOrigin(tank, flTankPos);
@@ -478,13 +478,13 @@ static void vStunAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "StunHuman5");
 			}
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "StunAmmo");
 	}
@@ -501,7 +501,7 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, const ch
 				g_bStun[survivor] = true;
 				g_iStunOwner[survivor] = tank;
 
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bStun2[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bStun2[tank])
 				{
 					g_bStun2[tank] = true;
 					g_iStunCount[tank]++;
@@ -509,7 +509,7 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, const ch
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "StunHuman", g_iStunCount[tank], iHumanAmmo(tank));
 				}
 
-				float flStunSpeed = !g_bTankConfig[ST_TankType(tank)] ? g_flStunSpeed[ST_TankType(tank)] : g_flStunSpeed2[ST_TankType(tank)];
+				float flStunSpeed = !g_bTankConfig[ST_GetTankType(tank)] ? g_flStunSpeed[ST_GetTankType(tank)] : g_flStunSpeed2[ST_GetTankType(tank)];
 				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flStunSpeed);
 
 				DataPack dpStopStun;
@@ -519,21 +519,21 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, const ch
 				dpStopStun.WriteString(message);
 
 				char sStunEffect[4];
-				sStunEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sStunEffect[ST_TankType(tank)] : g_sStunEffect2[ST_TankType(tank)];
+				sStunEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sStunEffect[ST_GetTankType(tank)] : g_sStunEffect2[ST_GetTankType(tank)];
 				vEffect(survivor, tank, sStunEffect, mode);
 
 				char sStunMessage[3];
-				sStunMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sStunMessage[ST_TankType(tank)] : g_sStunMessage2[ST_TankType(tank)];
+				sStunMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sStunMessage[ST_GetTankType(tank)] : g_sStunMessage2[ST_GetTankType(tank)];
 				if (StrContains(sStunMessage, message) != -1)
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Stun", sTankName, survivor, flStunSpeed);
 				}
 			}
 			else if (StrEqual(mode, "3") && !g_bStun2[tank])
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bStun4[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bStun4[tank])
 				{
 					g_bStun4[tank] = true;
 
@@ -541,7 +541,7 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bStun5[tank])
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bStun5[tank])
 		{
 			g_bStun5[tank] = true;
 
@@ -552,42 +552,42 @@ static void vStunHit(int survivor, int tank, float chance, int enabled, const ch
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flStunChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flStunChance[ST_TankType(tank)] : g_flStunChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flStunChance[ST_GetTankType(tank)] : g_flStunChance2[ST_GetTankType(tank)];
 }
 
 static float flStunDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flStunDuration[ST_TankType(tank)] : g_flStunDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flStunDuration[ST_GetTankType(tank)] : g_flStunDuration2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iStunAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iStunAbility[ST_TankType(tank)] : g_iStunAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iStunAbility[ST_GetTankType(tank)] : g_iStunAbility2[ST_GetTankType(tank)];
 }
 
 static int iStunHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iStunHit[ST_TankType(tank)] : g_iStunHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iStunHit[ST_GetTankType(tank)] : g_iStunHit2[ST_GetTankType(tank)];
 }
 
 static int iStunHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iStunHitMode[ST_TankType(tank)] : g_iStunHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iStunHitMode[ST_GetTankType(tank)] : g_iStunHitMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerStopStun(Handle timer, DataPack pack)
@@ -604,7 +604,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bStun[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bStun[iSurvivor])
 	{
 		g_bStun[iSurvivor] = false;
 		g_iStunOwner[iSurvivor] = 0;
@@ -623,7 +623,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
 
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bStun3[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bStun3[iTank])
 	{
 		g_bStun3[iTank] = true;
 
@@ -640,7 +640,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 	}
 
 	char sStunMessage[3];
-	sStunMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sStunMessage[ST_TankType(iTank)] : g_sStunMessage2[ST_TankType(iTank)];
+	sStunMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sStunMessage[ST_GetTankType(iTank)] : g_sStunMessage2[ST_GetTankType(iTank)];
 	if (StrContains(sStunMessage, sMessage) != -1)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Stun2", iSurvivor);
@@ -652,7 +652,7 @@ public Action tTimerStopStun(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bStun3[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bStun3[iTank])
 	{
 		g_bStun3[iTank] = false;
 

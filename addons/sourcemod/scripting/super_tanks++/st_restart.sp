@@ -136,7 +136,7 @@ public void OnMapEnd()
 
 public Action cmdRestartInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -258,19 +258,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && (iRestartHitMode(attacker) == 0 || iRestartHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iRestartHitMode(attacker) == 0 || iRestartHitMode(attacker) == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vRestartHit(victim, attacker, flRestartChance(attacker), iRestartHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && (iRestartHitMode(victim) == 0 || iRestartHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iRestartHitMode(victim) == 0 || iRestartHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -285,7 +285,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -363,7 +363,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveRestart(iTank);
 		}
@@ -387,7 +387,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iRestartAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iRestartAbility(tank) == 1)
 	{
 		vRestartAbility(tank);
 	}
@@ -395,7 +395,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -454,8 +454,8 @@ static void vRestartAbility(int tank)
 		g_bRestart2[tank] = false;
 		g_bRestart3[tank] = false;
 
-		float flRestartRange = !g_bTankConfig[ST_TankType(tank)] ? g_flRestartRange[ST_TankType(tank)] : g_flRestartRange2[ST_TankType(tank)],
-			flRestartRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flRestartRangeChance[ST_TankType(tank)] : g_flRestartRangeChance2[ST_TankType(tank)],
+		float flRestartRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flRestartRange[ST_GetTankType(tank)] : g_flRestartRange2[ST_GetTankType(tank)],
+			flRestartRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flRestartRangeChance[ST_GetTankType(tank)] : g_flRestartRangeChance2[ST_GetTankType(tank)],
 			flTankPos[3];
 
 		GetClientAbsOrigin(tank, flTankPos);
@@ -481,13 +481,13 @@ static void vRestartAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "RestartHuman4");
 			}
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "RestartAmmo");
 	}
@@ -501,7 +501,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bRestart[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bRestart[tank])
 				{
 					g_bRestart[tank] = true;
 					g_iRestartCount[tank]++;
@@ -521,7 +521,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 				SDKCall(g_hSDKRespawnPlayer, survivor);
 
 				char sRestartLoadout[325], sItems[5][64];
-				sRestartLoadout = !g_bTankConfig[ST_TankType(tank)] ? g_sRestartLoadout[ST_TankType(tank)] : g_sRestartLoadout2[ST_TankType(tank)];
+				sRestartLoadout = !g_bTankConfig[ST_GetTankType(tank)] ? g_sRestartLoadout[ST_GetTankType(tank)] : g_sRestartLoadout2[ST_GetTankType(tank)];
 				ReplaceString(sRestartLoadout, sizeof(sRestartLoadout), " ", "");
 				ExplodeString(sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
 
@@ -538,7 +538,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 					}
 				}
 
-				int iRestartMode = !g_bTankConfig[ST_TankType(tank)] ? g_iRestartMode[ST_TankType(tank)] : g_iRestartMode2[ST_TankType(tank)];
+				int iRestartMode = !g_bTankConfig[ST_GetTankType(tank)] ? g_iRestartMode[ST_GetTankType(tank)] : g_iRestartMode2[ST_GetTankType(tank)];
 				if (g_bRestartValid && iRestartMode == 0)
 				{
 					TeleportEntity(survivor, g_flRestartPosition, NULL_VECTOR, NULL_VECTOR);
@@ -561,21 +561,21 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 				}
 
 				char sRestartEffect[4];
-				sRestartEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sRestartEffect[ST_TankType(tank)] : g_sRestartEffect2[ST_TankType(tank)];
+				sRestartEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sRestartEffect[ST_GetTankType(tank)] : g_sRestartEffect2[ST_GetTankType(tank)];
 				vEffect(survivor, tank, sRestartEffect, mode);
 
 				char sRestartMessage[3];
-				sRestartMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sRestartMessage[ST_TankType(tank)] : g_sRestartMessage2[ST_TankType(tank)];
+				sRestartMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sRestartMessage[ST_GetTankType(tank)] : g_sRestartMessage2[ST_GetTankType(tank)];
 				if (StrContains(sRestartMessage, message) != -1)
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Restart", sTankName, survivor);
 				}
 			}
 			else if (StrEqual(mode, "3") && !g_bRestart[tank])
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bRestart2[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bRestart2[tank])
 				{
 					g_bRestart2[tank] = true;
 
@@ -583,7 +583,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bRestart3[tank])
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bRestart3[tank])
 		{
 			g_bRestart3[tank] = true;
 
@@ -594,43 +594,43 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flRestartChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flRestartChance[ST_TankType(tank)] : g_flRestartChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flRestartChance[ST_GetTankType(tank)] : g_flRestartChance2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iRestartAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iRestartAbility[ST_TankType(tank)] : g_iRestartAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRestartAbility[ST_GetTankType(tank)] : g_iRestartAbility2[ST_GetTankType(tank)];
 }
 
 static int iRestartHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iRestartHit[ST_TankType(tank)] : g_iRestartHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRestartHit[ST_GetTankType(tank)] : g_iRestartHit2[ST_GetTankType(tank)];
 }
 
 static int iRestartHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iRestartHitMode[ST_TankType(tank)] : g_iRestartHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRestartHitMode[ST_GetTankType(tank)] : g_iRestartHitMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRestart[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bRestart[iTank])
 	{
 		g_bRestart[iTank] = false;
 

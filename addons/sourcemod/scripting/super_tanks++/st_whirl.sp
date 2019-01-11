@@ -119,7 +119,7 @@ public void OnMapEnd()
 
 public Action cmdWhirlInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -248,19 +248,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iWhirlHitMode(attacker) == 0 || iWhirlHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsHumanSurvivor(victim))
+		if ((iWhirlHitMode(attacker) == 0 || iWhirlHitMode(attacker) == 1) && ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && bIsHumanSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vWhirlHit(victim, attacker, flWhirlChance(attacker), iWhirlHit(attacker), "1", "1");
 			}
 		}
-		else if ((iWhirlHitMode(victim) == 0 || iWhirlHitMode(victim) == 2) && ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsHumanSurvivor(attacker))
+		else if ((iWhirlHitMode(victim) == 0 || iWhirlHitMode(victim) == 2) && ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && bIsHumanSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -275,7 +275,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -368,7 +368,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveWhirl(iTank);
 		}
@@ -377,7 +377,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iWhirlAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iWhirlAbility(tank) == 1)
 	{
 		vWhirlAbility(tank);
 	}
@@ -385,7 +385,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -447,7 +447,7 @@ static void vReset2(int survivor, int tank, int camera, const char[] message)
 	SetClientViewEntity(survivor, survivor);
 
 	char sWhirlMessage[3];
-	sWhirlMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sWhirlMessage[ST_TankType(tank)] : g_sWhirlMessage2[ST_TankType(tank)];
+	sWhirlMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sWhirlMessage[ST_GetTankType(tank)] : g_sWhirlMessage2[ST_GetTankType(tank)];
 	if (StrContains(sWhirlMessage, message) != -1)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Whirl2", survivor);
@@ -479,8 +479,8 @@ static void vWhirlAbility(int tank)
 		g_bWhirl4[tank] = false;
 		g_bWhirl5[tank] = false;
 
-		float flWhirlRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlRange[ST_TankType(tank)] : g_flWhirlRange2[ST_TankType(tank)],
-			flWhirlRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlRangeChance[ST_TankType(tank)] : g_flWhirlRangeChance2[ST_TankType(tank)],
+		float flWhirlRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flWhirlRange[ST_GetTankType(tank)] : g_flWhirlRange2[ST_GetTankType(tank)],
+			flWhirlRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flWhirlRangeChance[ST_GetTankType(tank)] : g_flWhirlRangeChance2[ST_GetTankType(tank)],
 			flTankPos[3];
 
 		GetClientAbsOrigin(tank, flTankPos);
@@ -506,13 +506,13 @@ static void vWhirlAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "WhirlHuman5");
 			}
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "WhirlAmmo");
 	}
@@ -535,7 +535,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 				g_bWhirl[survivor] = true;
 				g_iWhirlOwner[survivor] = tank;
 
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bWhirl2[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bWhirl2[tank])
 				{
 					g_bWhirl2[tank] = true;
 					g_iWhirlCount[tank]++;
@@ -558,7 +558,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 				vSetEntityParent(iCamera, survivor);
 				SetClientViewEntity(survivor, iCamera);
 
-				char sNumbers = !g_bTankConfig[ST_TankType(tank)] ? g_sWhirlAxis[ST_TankType(tank)][GetRandomInt(0, strlen(g_sWhirlAxis[ST_TankType(tank)]) - 1)] : g_sWhirlAxis2[ST_TankType(tank)][GetRandomInt(0, strlen(g_sWhirlAxis2[ST_TankType(tank)]) - 1)];
+				char sNumbers = !g_bTankConfig[ST_GetTankType(tank)] ? g_sWhirlAxis[ST_GetTankType(tank)][GetRandomInt(0, strlen(g_sWhirlAxis[ST_GetTankType(tank)]) - 1)] : g_sWhirlAxis2[ST_GetTankType(tank)][GetRandomInt(0, strlen(g_sWhirlAxis2[ST_GetTankType(tank)]) - 1)];
 				int iAxis;
 				switch (sNumbers)
 				{
@@ -579,21 +579,21 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 				dpWhirl.WriteFloat(GetEngineTime());
 
 				char sWhirlEffect[4];
-				sWhirlEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sWhirlEffect[ST_TankType(tank)] : g_sWhirlEffect2[ST_TankType(tank)];
+				sWhirlEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sWhirlEffect[ST_GetTankType(tank)] : g_sWhirlEffect2[ST_GetTankType(tank)];
 				vEffect(survivor, tank, sWhirlEffect, mode);
 
 				char sWhirlMessage[3];
-				sWhirlMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sWhirlMessage[ST_TankType(tank)] : g_sWhirlMessage2[ST_TankType(tank)];
+				sWhirlMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sWhirlMessage[ST_GetTankType(tank)] : g_sWhirlMessage2[ST_GetTankType(tank)];
 				if (StrContains(sWhirlMessage, message) != -1)
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Whirl", sTankName, survivor);
 				}
 			}
 			else if (StrEqual(mode, "3") && !g_bWhirl2[tank])
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bWhirl4[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bWhirl4[tank])
 				{
 					g_bWhirl4[tank] = true;
 
@@ -601,7 +601,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bWhirl5[tank])
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bWhirl5[tank])
 		{
 			g_bWhirl5[tank] = true;
 
@@ -612,42 +612,42 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flWhirlChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlChance[ST_TankType(tank)] : g_flWhirlChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flWhirlChance[ST_GetTankType(tank)] : g_flWhirlChance2[ST_GetTankType(tank)];
 }
 
 static float flWhirlDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flWhirlDuration[ST_TankType(tank)] : g_flWhirlDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flWhirlDuration[ST_GetTankType(tank)] : g_flWhirlDuration2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iWhirlAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iWhirlAbility[ST_TankType(tank)] : g_iWhirlAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iWhirlAbility[ST_GetTankType(tank)] : g_iWhirlAbility2[ST_GetTankType(tank)];
 }
 
 static int iWhirlHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iWhirlHit[ST_TankType(tank)] : g_iWhirlHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iWhirlHit[ST_GetTankType(tank)] : g_iWhirlHit2[ST_GetTankType(tank)];
 }
 
 static int iWhirlHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iWhirlHitMode[ST_TankType(tank)] : g_iWhirlHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iWhirlHitMode[ST_GetTankType(tank)] : g_iWhirlHitMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerWhirl(Handle timer, DataPack pack)
@@ -655,7 +655,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iCamera = EntRefToEntIndex(pack.ReadCell()), iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || iCamera == INVALID_ENT_REFERENCE || !bIsValidEntity(iCamera))
+	if (!ST_IsCorePluginEnabled() || iCamera == INVALID_ENT_REFERENCE || !bIsValidEntity(iCamera))
 	{
 		g_bWhirl[iSurvivor] = false;
 		g_iWhirlOwner[iSurvivor] = 0;
@@ -675,7 +675,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWhirl[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bWhirl[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, iCamera, sMessage);
 
@@ -690,7 +690,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 
 		vReset2(iSurvivor, iTank, iCamera, sMessage);
 
-		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bWhirl3[iTank])
+		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bWhirl3[iTank])
 		{
 			g_bWhirl3[iTank] = true;
 
@@ -709,7 +709,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	float flWhirlSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flWhirlSpeed[ST_TankType(iTank)] : g_flWhirlSpeed2[ST_TankType(iTank)],
+	float flWhirlSpeed = !g_bTankConfig[ST_GetTankType(iTank)] ? g_flWhirlSpeed[ST_GetTankType(iTank)] : g_flWhirlSpeed2[ST_GetTankType(iTank)],
 		flAngles[3];
 	GetEntPropVector(iCamera, Prop_Send, "m_angRotation", flAngles);
 
@@ -722,7 +722,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWhirl3[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bWhirl3[iTank])
 	{
 		g_bWhirl3[iTank] = false;
 

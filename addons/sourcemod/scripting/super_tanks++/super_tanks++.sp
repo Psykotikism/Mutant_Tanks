@@ -84,22 +84,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 
-	CreateNative("ST_GlowEnabled", aNative_GlowEnabled);
+	CreateNative("ST_CanTankSpawn", aNative_CanTankSpawn);
+	CreateNative("ST_GetCurrentFinaleWave", aNative_GetCurrentFinaleWave);
+	CreateNative("ST_GetMaxType", aNative_GetMaxType);
+	CreateNative("ST_GetMinType", aNative_GetMinType);
+	CreateNative("ST_GetPropColors", aNative_GetPropColors);
+	CreateNative("ST_GetRunSpeed", aNative_GetRunSpeed);
+	CreateNative("ST_GetTankColors", aNative_GetTankColors);
+	CreateNative("ST_GetTankName", aNative_GetTankName);
+	CreateNative("ST_GetTankType", aNative_GetTankType);
+	CreateNative("ST_HasChanceToSpawn", aNative_HasChanceToSpawn);
 	CreateNative("ST_HideEntity", aNative_HideEntity);
-	CreateNative("ST_MaxType", aNative_MaxType);
-	CreateNative("ST_MinType", aNative_MinType);
-	CreateNative("ST_PluginEnabled", aNative_PluginEnabled);
-	CreateNative("ST_PropsColors", aNative_PropsColors);
-	CreateNative("ST_RunSpeed", aNative_RunSpeed);
-	CreateNative("ST_SpawnEnabled", aNative_SpawnEnabled);
+	CreateNative("ST_IsCorePluginEnabled", aNative_IsCorePluginEnabled);
+	CreateNative("ST_IsGlowEnabled", aNative_IsGlowEnabled);
+	CreateNative("ST_IsTankSupported", aNative_IsTankSupported);
+	CreateNative("ST_IsTypeEnabled", aNative_IsTypeEnabled);
 	CreateNative("ST_SpawnTank", aNative_SpawnTank);
-	CreateNative("ST_TankAllowed", aNative_TankAllowed);
-	CreateNative("ST_TankChance", aNative_TankChance);
-	CreateNative("ST_TankColors", aNative_TankColors);
-	CreateNative("ST_TankName", aNative_TankName);
-	CreateNative("ST_TankType", aNative_TankType);
-	CreateNative("ST_TankWave", aNative_TankWave);
-	CreateNative("ST_TypeEnabled", aNative_TypeEnabled);
 
 	RegPluginLibrary("super_tanks++");
 
@@ -108,10 +108,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-public any aNative_GlowEnabled(Handle plugin, int numParams)
+public any aNative_CanTankSpawn(Handle plugin, int numParams)
 {
-	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank, "024") && iGlowEnabled(g_iTankType[iTank]) == 1)
+	int iType = GetNativeCell(1);
+	if (iSpawnEnabled(iType) == 1)
 	{
 		return true;
 	}
@@ -119,41 +119,22 @@ public any aNative_GlowEnabled(Handle plugin, int numParams)
 	return false;
 }
 
-public any aNative_HideEntity(Handle plugin, int numParams)
+public any aNative_GetCurrentFinaleWave(Handle plugin, int numParams)
 {
-	int iEntity = GetNativeCell(1);
-	bool bMode = GetNativeCell(2);
-	if (bIsValidEntity(iEntity))
-	{
-		switch (bMode)
-		{
-			case true: SDKHook(iEntity, SDKHook_SetTransmit, SetTransmit);
-			case false: SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-		}
-	}
+	return g_iTankWave;
 }
 
-public any aNative_MaxType(Handle plugin, int numParams)
+public any aNative_GetMaxType(Handle plugin, int numParams)
 {
 	return iGetMaxType();
 }
 
-public any aNative_MinType(Handle plugin, int numParams)
+public any aNative_GetMinType(Handle plugin, int numParams)
 {
 	return iGetMinType();
 }
 
-public any aNative_PluginEnabled(Handle plugin, int numParams)
-{
-	if (g_bPluginEnabled)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-public any aNative_PropsColors(Handle plugin, int numParams)
+public any aNative_GetPropColors(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	if (bIsTank(iTank, "024"))
@@ -208,7 +189,7 @@ public any aNative_PropsColors(Handle plugin, int numParams)
 	}
 }
 
-public any aNative_RunSpeed(Handle plugin, int numParams)
+public any aNative_GetRunSpeed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	if (bIsTank(iTank, "024") && flRunSpeed(iTank) > 0.0)
@@ -219,53 +200,7 @@ public any aNative_RunSpeed(Handle plugin, int numParams)
 	return 1.0;
 }
 
-public any aNative_SpawnEnabled(Handle plugin, int numParams)
-{
-	int iType = GetNativeCell(1);
-	if (iSpawnEnabled(iType) == 1)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-public any aNative_SpawnTank(Handle plugin, int numParams)
-{
-	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
-	if (bIsValidClient(iTank))
-	{
-		char sTankName[33];
-		IntToString(iType, sTankName, sizeof(sTankName));
-		vTank(iTank, sTankName);
-	}
-}
-
-public any aNative_TankAllowed(Handle plugin, int numParams)
-{
-	int iTank = GetNativeCell(1);
-	char sChecks[7];
-	GetNativeString(2, sChecks, sizeof(sChecks));
-	if (bIsTankAllowed(iTank, sChecks))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-public any aNative_TankChance(Handle plugin, int numParams)
-{
-	int iType = GetNativeCell(1);
-	if (bTankChance(iType))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-public any aNative_TankColors(Handle plugin, int numParams)
+public any aNative_GetTankColors(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	if (bIsTank(iTank, "024"))
@@ -295,7 +230,7 @@ public any aNative_TankColors(Handle plugin, int numParams)
 	}
 }
 
-public any aNative_TankName(Handle plugin, int numParams)
+public any aNative_GetTankName(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	if (bIsTank(iTank, "024"))
@@ -306,7 +241,7 @@ public any aNative_TankName(Handle plugin, int numParams)
 	}
 }
 
-public any aNative_TankType(Handle plugin, int numParams)
+public any aNative_GetTankType(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	if (bIsTank(iTank, "024"))
@@ -317,12 +252,66 @@ public any aNative_TankType(Handle plugin, int numParams)
 	return 0;
 }
 
-public any aNative_TankWave(Handle plugin, int numParams)
+public any aNative_HasChanceToSpawn(Handle plugin, int numParams)
 {
-	return g_iTankWave;
+	int iType = GetNativeCell(1);
+	if (bTankChance(iType))
+	{
+		return true;
+	}
+
+	return false;
 }
 
-public any aNative_TypeEnabled(Handle plugin, int numParams)
+public any aNative_HideEntity(Handle plugin, int numParams)
+{
+	int iEntity = GetNativeCell(1);
+	bool bMode = GetNativeCell(2);
+	if (bIsValidEntity(iEntity))
+	{
+		switch (bMode)
+		{
+			case true: SDKHook(iEntity, SDKHook_SetTransmit, SetTransmit);
+			case false: SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
+		}
+	}
+}
+
+public any aNative_IsCorePluginEnabled(Handle plugin, int numParams)
+{
+	if (g_bPluginEnabled)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+public any aNative_IsGlowEnabled(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	if (bIsTank(iTank, "024") && iGlowEnabled(g_iTankType[iTank]) == 1)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+public any aNative_IsTankSupported(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	char sChecks[7];
+	GetNativeString(2, sChecks, sizeof(sChecks));
+	if (bIsTankAllowed(iTank, sChecks))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+public any aNative_IsTypeEnabled(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
 	if (iTankEnabled(iType) == 1)
@@ -331,6 +320,17 @@ public any aNative_TypeEnabled(Handle plugin, int numParams)
 	}
 
 	return false;
+}
+
+public any aNative_SpawnTank(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
+	if (bIsValidClient(iTank))
+	{
+		char sTankName[33];
+		IntToString(iType, sTankName, sizeof(sTankName));
+		vTank(iTank, sTankName);
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -1244,7 +1244,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 public Action SetTransmit(int entity, int client)
 {
 	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (ST_PluginEnabled() && iOwner == client && !bIsTankThirdPerson(client) && !g_bThirdPerson[client])
+	if (ST_IsCorePluginEnabled() && iOwner == client && !bIsTankThirdPerson(client) && !g_bThirdPerson[client])
 	{
 		return Plugin_Handled;
 	}
@@ -1282,7 +1282,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			if (bIsTankAllowed(iTank, "024"))
 			{
 				int iAnnounceDeath = !g_bGeneralConfig ? g_iAnnounceDeath : g_iAnnounceDeath2;
-				if (iAnnounceDeath == 1 && ST_CloneAllowed(iTank, g_bCloneInstalled))
+				if (iAnnounceDeath == 1 && ST_IsCloneSupported(iTank, g_bCloneInstalled))
 				{
 					char sTankName[33];
 					sTankName = !g_bTankConfig[g_iTankType[iTank]] ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[g_iTankType[iTank]];
@@ -2227,7 +2227,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		}
 
 		int iTankNote = !g_bTankConfig[g_iTankType[tank]] ? g_iTankNote[g_iTankType[tank]] : g_iTankNote2[g_iTankType[tank]];
-		if (iTankNote == 1 && ST_CloneAllowed(tank, g_bCloneInstalled))
+		if (iTankNote == 1 && ST_IsCloneSupported(tank, g_bCloneInstalled))
 		{
 			char sTankNote[32];
 			Format(sTankNote, sizeof(sTankNote), "Tank #%i", g_iTankType[tank]);
@@ -2594,7 +2594,7 @@ static int iGetTypeCount(int type)
 	int iType;
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTankAllowed(iTank, "234") && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_iTankType[iTank] == type)
+		if (bIsTankAllowed(iTank, "234") && ST_IsCloneSupported(iTank, g_bCloneInstalled) && g_iTankType[iTank] == type)
 		{
 			iType++;
 		}
@@ -2757,7 +2757,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
 	{
 		vSpawnModes(iTank, false);
 
@@ -2878,7 +2878,7 @@ public Action tTimerMeteorEffect(Handle timer, int userid)
 public Action tTimerRandomize(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
 	{
 		vSpawnModes(iTank, false);
 
@@ -2948,7 +2948,7 @@ public Action tTimerSpitEffect(Handle timer, int userid)
 public Action tTimerTransform(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
 	{
 		vSpawnModes(iTank, false);
 
@@ -2990,7 +2990,7 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
 	{
 		vSpawnModes(iTank, false);
 
@@ -3086,7 +3086,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTankAllowed(iTank, "234") && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_iTankType[iTank] > 0)
+		if (bIsTankAllowed(iTank, "234") && ST_IsCloneSupported(iTank, g_bCloneInstalled) && g_iTankType[iTank] > 0)
 		{
 			switch (iSpawnMode(g_iTankType[iTank]))
 			{
@@ -3115,7 +3115,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 
 						int iBossStages = !g_bTankConfig[g_iTankType[iTank]] ? g_iBossStages[g_iTankType[iTank]] : g_iBossStages2[g_iTankType[iTank]];
 
-						sBossTypes = !g_bTankConfig[ST_TankType(iTank)] ? g_sBossTypes[ST_TankType(iTank)] : g_sBossTypes2[ST_TankType(iTank)];
+						sBossTypes = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sBossTypes[ST_GetTankType(iTank)] : g_sBossTypes2[ST_GetTankType(iTank)];
 						ReplaceString(sBossTypes, sizeof(sBossTypes), " ", "");
 						ExplodeString(sBossTypes, ",", sSet2, sizeof(sSet2), sizeof(sSet2[]));
 
@@ -3218,7 +3218,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	int iMode = pack.ReadCell();
 	vSetName(iTank, sCurrentName, sTankName, iMode);
 
-	if (iMode == 0 && ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (iMode == 0 && ST_IsCloneSupported(iTank, g_bCloneInstalled))
 	{
 		int iHumanCount = iGetHumanCount(),
 			iHealth = GetClientHealth(iTank),
@@ -3529,7 +3529,7 @@ public Action tTimerReloadConfigs(Handle timer)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bChanged[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bChanged[iTank])
 	{
 		g_bChanged[iTank] = false;
 

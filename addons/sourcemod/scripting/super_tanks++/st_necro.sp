@@ -95,7 +95,7 @@ public void OnMapEnd()
 
 public Action cmdNecroInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -234,7 +234,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -309,11 +309,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 			for (int iTank = 1; iTank <= MaxClients; iTank++)
 			{
-				if (ST_TankAllowed(iTank) && ST_CloneAllowed(iTank, g_bCloneInstalled) && g_bNecro[iTank])
+				if (ST_IsTankSupported(iTank) && ST_IsCloneSupported(iTank, g_bCloneInstalled) && g_bNecro[iTank])
 				{
 					if (iNecroAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flNecroChance(iTank))
 					{
-						float flNecroRange = !g_bTankConfig[ST_TankType(iTank)] ? g_flNecroRange[ST_TankType(iTank)] : g_flNecroRange2[ST_TankType(iTank)],
+						float flNecroRange = !g_bTankConfig[ST_GetTankType(iTank)] ? g_flNecroRange[ST_GetTankType(iTank)] : g_flNecroRange2[ST_GetTankType(iTank)],
 							flTankPos[3];
 						GetClientAbsOrigin(iTank, flTankPos);
 
@@ -335,7 +335,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			}
 		}
 
-		if (ST_TankAllowed(iInfected, "024"))
+		if (ST_IsTankSupported(iInfected, "024"))
 		{
 			vRemoveNecro(iInfected);
 		}
@@ -344,7 +344,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iNecroAbility(tank) == 1 && !g_bNecro[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iNecroAbility(tank) == 1 && !g_bNecro[tank])
 	{
 		vNecroAbility(tank);
 	}
@@ -352,7 +352,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -400,7 +400,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -424,7 +424,7 @@ public void ST_OnChangeType(int tank)
 
 static void vNecro(int tank, float pos[3], const char[] type)
 {
-	int iNecroMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iNecroMessage[ST_TankType(tank)] : g_iNecroMessage2[ST_TankType(tank)];
+	int iNecroMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iNecroMessage[ST_GetTankType(tank)] : g_iNecroMessage2[ST_GetTankType(tank)];
 	bool bExists[MAXPLAYERS + 1];
 
 	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
@@ -456,7 +456,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 		if (iNecroMessage == 1)
 		{
 			char sTankName[33];
-			ST_TankName(tank, sTankName);
+			ST_GetTankName(tank, sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Necro", sTankName);
 		}
 	}
@@ -470,7 +470,7 @@ static void vNecroAbility(int tank)
 		{
 			g_bNecro[tank] = true;
 
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bNecro2[tank])
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bNecro2[tank])
 			{
 				g_iNecroCount[tank]++;
 
@@ -479,12 +479,12 @@ static void vNecroAbility(int tank)
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "NecroHuman", g_iNecroCount[tank], iHumanAmmo(tank));
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "NecroHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "NecroAmmo");
 	}
@@ -526,43 +526,43 @@ static void vReset2(int tank)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flHumanDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanDuration[ST_TankType(tank)] : g_flHumanDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanDuration[ST_GetTankType(tank)] : g_flHumanDuration2[ST_GetTankType(tank)];
 }
 
 static float flNecroChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flNecroChance[ST_TankType(tank)] : g_flNecroChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flNecroChance[ST_GetTankType(tank)] : g_flNecroChance2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 static int iNecroAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iNecroAbility[ST_TankType(tank)] : g_iNecroAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iNecroAbility[ST_GetTankType(tank)] : g_iNecroAbility2[ST_GetTankType(tank)];
 }
 
 public Action tTimerStopNecro(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bNecro[iTank])
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bNecro[iTank])
 	{
 		g_bNecro[iTank] = false;
 
@@ -571,7 +571,7 @@ public Action tTimerStopNecro(Handle timer, int userid)
 
 	g_bNecro[iTank] = false;
 
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bNecro2[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bNecro2[iTank])
 	{
 		vReset2(iTank);
 	}
@@ -582,7 +582,7 @@ public Action tTimerStopNecro(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bNecro2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bNecro2[iTank])
 	{
 		g_bNecro2[iTank] = false;
 

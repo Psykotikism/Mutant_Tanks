@@ -126,7 +126,7 @@ public void OnMapEnd()
 
 public Action cmdGhostInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -270,19 +270,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && (iGhostHitMode(attacker) == 0 || iGhostHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iGhostHitMode(attacker) == 0 || iGhostHitMode(attacker) == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vGhostHit(victim, attacker, flGhostChance(attacker), iGhostHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && (iGhostHitMode(victim) == 0 || iGhostHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iGhostHitMode(victim) == 0 || iGhostHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -297,7 +297,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -395,7 +395,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveGhost(iTank);
 		}
@@ -404,7 +404,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iGhostAbility(tank) > 0)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iGhostAbility(tank) > 0)
 	{
 		vGhostAbility(tank, true);
 		vGhostAbility(tank, false);
@@ -413,7 +413,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -475,7 +475,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -509,7 +509,7 @@ static void vDropWeapon(int survivor, const char[] slots, const char[] number, i
 
 static void vGhost(int tank)
 {
-	float flGhostFadeRate = !g_bTankConfig[ST_TankType(tank)] ? g_flGhostFadeRate[ST_TankType(tank)] : g_flGhostFadeRate2[ST_TankType(tank)];
+	float flGhostFadeRate = !g_bTankConfig[ST_GetTankType(tank)] ? g_flGhostFadeRate[ST_GetTankType(tank)] : g_flGhostFadeRate2[ST_GetTankType(tank)];
 	DataPack dpGhost;
 	CreateDataTimer(flGhostFadeRate, tTimerGhost, dpGhost, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpGhost.WriteCell(GetClientUserId(tank));
@@ -531,8 +531,8 @@ static void vGhostAbility(int tank, bool main)
 					g_bGhost5[tank] = false;
 					g_bGhost6[tank] = false;
 
-					float flGhostRange = !g_bTankConfig[ST_TankType(tank)] ? g_flGhostRange[ST_TankType(tank)] : g_flGhostRange2[ST_TankType(tank)],
-						flGhostRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGhostRangeChance[ST_TankType(tank)] : g_flGhostRangeChance2[ST_TankType(tank)],
+					float flGhostRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flGhostRange[ST_GetTankType(tank)] : g_flGhostRange2[ST_GetTankType(tank)],
+						flGhostRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flGhostRangeChance[ST_GetTankType(tank)] : g_flGhostRangeChance2[ST_GetTankType(tank)],
 						flTankPos[3];
 
 					GetClientAbsOrigin(tank, flTankPos);
@@ -558,13 +558,13 @@ static void vGhostAbility(int tank, bool main)
 
 					if (iSurvivorCount == 0)
 					{
-						if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+						if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 						{
 							ST_PrintToChat(tank, "%s %t", ST_TAG3, "GhostHuman7");
 						}
 					}
 				}
-				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+				else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GhostAmmo2");
 				}
@@ -579,7 +579,7 @@ static void vGhostAbility(int tank, bool main)
 					g_bGhost[tank] = true;
 					g_iGhostAlpha[tank] = 255;
 
-					if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+					if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 					{
 						g_iGhostCount[tank]++;
 
@@ -589,15 +589,15 @@ static void vGhostAbility(int tank, bool main)
 					vGhost(tank);
 
 					char sGhostMessage[4];
-					sGhostMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sGhostMessage[ST_TankType(tank)] : g_sGhostMessage2[ST_TankType(tank)];
+					sGhostMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sGhostMessage[ST_GetTankType(tank)] : g_sGhostMessage2[ST_GetTankType(tank)];
 					if (StrContains(sGhostMessage, "3") != -1)
 					{
 						char sTankName[33];
-						ST_TankName(tank, sTankName);
+						ST_GetTankName(tank, sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
 					}
 				}
-				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+				else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GhostAmmo");
 				}
@@ -614,7 +614,7 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bGhost4[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bGhost4[tank])
 				{
 					g_bGhost4[tank] = true;
 					g_iGhostCount2[tank]++;
@@ -632,7 +632,7 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, const c
 				}
 
 				char sGhostWeaponSlots[6];
-				sGhostWeaponSlots = !g_bTankConfig[ST_TankType(tank)] ? g_sGhostWeaponSlots[ST_TankType(tank)] : g_sGhostWeaponSlots2[ST_TankType(tank)];
+				sGhostWeaponSlots = !g_bTankConfig[ST_GetTankType(tank)] ? g_sGhostWeaponSlots[ST_GetTankType(tank)] : g_sGhostWeaponSlots2[ST_GetTankType(tank)];
 				vDropWeapon(survivor, sGhostWeaponSlots, "1", 0);
 				vDropWeapon(survivor, sGhostWeaponSlots, "2", 1);
 				vDropWeapon(survivor, sGhostWeaponSlots, "3", 2);
@@ -646,21 +646,21 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, const c
 				}
 
 				char sGhostEffect[4];
-				sGhostEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sGhostEffect[ST_TankType(tank)] : g_sGhostEffect2[ST_TankType(tank)];
+				sGhostEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sGhostEffect[ST_GetTankType(tank)] : g_sGhostEffect2[ST_GetTankType(tank)];
 				vEffect(survivor, tank, sGhostEffect, mode);
 
 				char sGhostMessage[4];
-				sGhostMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sGhostMessage[ST_TankType(tank)] : g_sGhostMessage2[ST_TankType(tank)];
+				sGhostMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sGhostMessage[ST_GetTankType(tank)] : g_sGhostMessage2[ST_GetTankType(tank)];
 				if (StrContains(sGhostMessage, message) != -1)
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost", sTankName, survivor);
 				}
 			}
 			else if (StrEqual(mode, "3") && !g_bGhost4[tank])
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bGhost5[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bGhost5[tank])
 				{
 					g_bGhost5[tank] = true;
 
@@ -668,7 +668,7 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bGhost6[tank])
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bGhost6[tank])
 		{
 			g_bGhost6[tank] = true;
 
@@ -692,7 +692,7 @@ static void vGhostRender(int tank, RenderMode mode, int alpha = 255)
 				if (StrEqual(sModel, MODEL_JETPACK, false))
 				{
 					int iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha;
-					ST_PropsColors(tank, 2, iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha);
+					ST_GetPropColors(tank, 2, iJetpackRed, iJetpackGreen, iJetpackBlue, iJetpackAlpha);
 					SetEntityRenderMode(iProp, mode);
 					SetEntityRenderColor(iProp, iJetpackRed, iJetpackGreen, iJetpackBlue, alpha);
 				}
@@ -700,7 +700,7 @@ static void vGhostRender(int tank, RenderMode mode, int alpha = 255)
 				if (StrEqual(sModel, MODEL_CONCRETE, false))
 				{
 					int iRockRed, iRockGreen, iRockBlue, iRockAlpha;
-					ST_PropsColors(tank, 4, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
+					ST_GetPropColors(tank, 4, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
 					SetEntityRenderMode(iProp, mode);
 					SetEntityRenderColor(iProp, iRockRed, iRockGreen, iRockBlue, alpha);
 				}
@@ -708,7 +708,7 @@ static void vGhostRender(int tank, RenderMode mode, int alpha = 255)
 				if (StrEqual(sModel, MODEL_TIRES, false))
 				{
 					int iTireRed, iTireGreen, iTireBlue, iTireAlpha;
-					ST_PropsColors(tank, 5, iTireRed, iTireGreen, iTireBlue, iTireAlpha);
+					ST_GetPropColors(tank, 5, iTireRed, iTireGreen, iTireBlue, iTireAlpha);
 					SetEntityRenderMode(iProp, mode);
 					SetEntityRenderColor(iProp, iTireRed, iTireGreen, iTireBlue, alpha);
 				}
@@ -716,7 +716,7 @@ static void vGhostRender(int tank, RenderMode mode, int alpha = 255)
 				if (StrEqual(sModel, MODEL_TANK, false))
 				{
 					int iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha;
-					ST_TankColors(tank, 1, iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha);
+					ST_GetTankColors(tank, 1, iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha);
 					SetEntityRenderMode(iProp, mode);
 					SetEntityRenderColor(iProp, iSkinRed, iSkinGreen, iSkinBlue, alpha);
 				}
@@ -730,7 +730,7 @@ static void vGhostRender(int tank, RenderMode mode, int alpha = 255)
 		if (iOwner == tank)
 		{
 			int iLightRed, iLightGreen, iLightBlue, iLightAlpha;
-			ST_PropsColors(tank, 1, iLightRed, iLightGreen, iLightBlue, iLightAlpha);
+			ST_GetPropColors(tank, 1, iLightRed, iLightGreen, iLightBlue, iLightAlpha);
 			SetEntityRenderMode(iProp, mode);
 			SetEntityRenderColor(iProp, iLightRed, iLightGreen, iLightBlue, alpha);
 		}
@@ -742,7 +742,7 @@ static void vGhostRender(int tank, RenderMode mode, int alpha = 255)
 		if (iOwner == tank)
 		{
 			int iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha;
-			ST_PropsColors(tank, 3, iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha);
+			ST_GetPropColors(tank, 3, iFlameRed, iFlameGreen, iFlameBlue, iFlameAlpha);
 			SetEntityRenderMode(iProp, mode);
 			SetEntityRenderColor(iProp, iFlameRed, iFlameGreen, iFlameBlue, alpha);
 		}
@@ -793,47 +793,47 @@ static void vReset2(int tank)
 
 static float flGhostChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flGhostChance[ST_TankType(tank)] : g_flGhostChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flGhostChance[ST_GetTankType(tank)] : g_flGhostChance2[ST_GetTankType(tank)];
 }
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flHumanDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanDuration[ST_TankType(tank)] : g_flHumanDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanDuration[ST_GetTankType(tank)] : g_flHumanDuration2[ST_GetTankType(tank)];
 }
 
 static int iGhostAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostAbility[ST_TankType(tank)] : g_iGhostAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iGhostAbility[ST_GetTankType(tank)] : g_iGhostAbility2[ST_GetTankType(tank)];
 }
 
 static int iGhostHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostHit[ST_TankType(tank)] : g_iGhostHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iGhostHit[ST_GetTankType(tank)] : g_iGhostHit2[ST_GetTankType(tank)];
 }
 
 static int iGhostHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iGhostHitMode[ST_TankType(tank)] : g_iGhostHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iGhostHitMode[ST_GetTankType(tank)] : g_iGhostHitMode2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerGhost(Handle timer, DataPack pack)
@@ -841,7 +841,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3) || !g_bGhost[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3) || !g_bGhost[iTank])
 	{
 		g_bGhost[iTank] = false;
 		g_iGhostAlpha[iTank] = 255;
@@ -850,15 +850,15 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bGhost3[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bGhost3[iTank])
 	{
 		vReset2(iTank);
 
 		return Plugin_Stop;
 	}
 
-	int iGhostFadeAlpha = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFadeAlpha[ST_TankType(iTank)] : g_iGhostFadeAlpha2[ST_TankType(iTank)],
-		iGhostFadeLimit = !g_bTankConfig[ST_TankType(iTank)] ? g_iGhostFadeLimit[ST_TankType(iTank)] : g_iGhostFadeLimit2[ST_TankType(iTank)];
+	int iGhostFadeAlpha = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iGhostFadeAlpha[ST_GetTankType(iTank)] : g_iGhostFadeAlpha2[ST_GetTankType(iTank)],
+		iGhostFadeLimit = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iGhostFadeLimit[ST_GetTankType(iTank)] : g_iGhostFadeLimit2[ST_GetTankType(iTank)];
 	g_iGhostAlpha[iTank] -= iGhostFadeAlpha;
 
 	if (g_iGhostAlpha[iTank] < iGhostFadeLimit)
@@ -868,13 +868,13 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 		{
 			g_bGhost2[iTank] = true;
 
-			float flGhostFadeDelay = !g_bTankConfig[ST_TankType(iTank)] ? g_flGhostFadeDelay[ST_TankType(iTank)] : g_flGhostFadeDelay2[ST_TankType(iTank)];
+			float flGhostFadeDelay = !g_bTankConfig[ST_GetTankType(iTank)] ? g_flGhostFadeDelay[ST_GetTankType(iTank)] : g_flGhostFadeDelay2[ST_GetTankType(iTank)];
 			CreateTimer(flGhostFadeDelay, tTimerStopGhost, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 
 	int iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha;
-	ST_TankColors(iTank, 1, iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha);
+	ST_GetTankColors(iTank, 1, iSkinRed, iSkinGreen, iSkinBlue, iSkinAlpha);
 
 	vGhostRender(iTank, RENDER_TRANSCOLOR, g_iGhostAlpha[iTank]);
 
@@ -887,7 +887,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 public Action tTimerStopGhost(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost2[iTank])
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bGhost2[iTank])
 	{
 		g_bGhost2[iTank] = false;
 		g_iGhostAlpha[iTank] = 255;
@@ -899,11 +899,11 @@ public Action tTimerStopGhost(Handle timer, int userid)
 	g_iGhostAlpha[iTank] = 255;
 
 	char sGhostMessage[4];
-	sGhostMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sGhostMessage[ST_TankType(iTank)] : g_sGhostMessage2[ST_TankType(iTank)];
+	sGhostMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sGhostMessage[ST_GetTankType(iTank)] : g_sGhostMessage2[ST_GetTankType(iTank)];
 	if (StrContains(sGhostMessage, "3") != -1)
 	{
 		char sTankName[33];
-		ST_TankName(iTank, sTankName);
+		ST_GetTankName(iTank, sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost3", sTankName);
 	}
 
@@ -913,7 +913,7 @@ public Action tTimerStopGhost(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost3[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bGhost3[iTank])
 	{
 		g_bGhost3[iTank] = false;
 
@@ -930,7 +930,7 @@ public Action tTimerResetCooldown(Handle timer, int userid)
 public Action tTimerResetCooldown2(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGhost4[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bGhost4[iTank])
 	{
 		g_bGhost4[iTank] = false;
 

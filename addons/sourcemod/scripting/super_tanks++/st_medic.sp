@@ -97,7 +97,7 @@ public void OnMapEnd()
 
 public Action cmdMedicInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -240,7 +240,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -314,9 +314,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= flMedicChance(iTank) && g_bMedic3[iTank])
+			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= flMedicChance(iTank) && g_bMedic3[iTank])
 			{
 				vMedicAbility(iTank, true);
 			}
@@ -328,7 +328,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iMedicAbility(tank) > 0 && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank))
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iMedicAbility(tank) > 0 && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank))
 	{
 		g_bMedic3[tank] = true;
 
@@ -338,7 +338,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -405,7 +405,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -422,7 +422,7 @@ public void ST_OnButtonReleased(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && iMedicAbility(tank) > 0 && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank))
+	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iMedicAbility(tank) > 0 && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank))
 	{
 		vMedicAbility(tank, true);
 	}
@@ -443,7 +443,7 @@ static void vHeal(int infected, int health, int extrahealth, int maxhealth)
 
 static void vMedic(int tank)
 {
-	float flMedicInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flMedicInterval[ST_TankType(tank)] : g_flMedicInterval2[ST_TankType(tank)];
+	float flMedicInterval = !g_bTankConfig[ST_GetTankType(tank)] ? g_flMedicInterval[ST_GetTankType(tank)] : g_flMedicInterval2[ST_GetTankType(tank)];
 	DataPack dpMedic;
 	CreateDataTimer(flMedicInterval, tTimerMedic, dpMedic, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpMedic.WriteCell(GetClientUserId(tank));
@@ -473,11 +473,11 @@ static void vMedicAbility(int tank, bool main)
 						{
 							char sHealth[6][6], sMedicHealth[36], sMaxHealth[6][6], sMedicMaxHealth[36];
 
-							sMedicHealth = !g_bTankConfig[ST_TankType(tank)] ? g_sMedicHealth[ST_TankType(tank)] : g_sMedicHealth2[ST_TankType(tank)];
+							sMedicHealth = !g_bTankConfig[ST_GetTankType(tank)] ? g_sMedicHealth[ST_GetTankType(tank)] : g_sMedicHealth2[ST_GetTankType(tank)];
 							ReplaceString(sMedicHealth, sizeof(sMedicHealth), " ", "");
 							ExplodeString(sMedicHealth, ",", sHealth, sizeof(sHealth), sizeof(sHealth[]));
 
-							sMedicMaxHealth = !g_bTankConfig[ST_TankType(tank)] ? g_sMedicMaxHealth[ST_TankType(tank)] : g_sMedicMaxHealth2[ST_TankType(tank)];
+							sMedicMaxHealth = !g_bTankConfig[ST_GetTankType(tank)] ? g_sMedicMaxHealth[ST_GetTankType(tank)] : g_sMedicMaxHealth2[ST_GetTankType(tank)];
 							ReplaceString(sMedicMaxHealth, sizeof(sMedicMaxHealth), " ", "");
 							ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
 
@@ -527,11 +527,11 @@ static void vMedicAbility(int tank, bool main)
 				}
 
 				char sMedicMessage[3];
-				sMedicMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sMedicMessage[ST_TankType(tank)] : g_sMedicMessage2[ST_TankType(tank)];
+				sMedicMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sMedicMessage[ST_GetTankType(tank)] : g_sMedicMessage2[ST_GetTankType(tank)];
 				if (StrContains(sMedicMessage, "1"))
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Medic", sTankName);
 				}
 			}
@@ -544,7 +544,7 @@ static void vMedicAbility(int tank, bool main)
 				{
 					g_bMedic[tank] = true;
 
-					if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+					if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 					{
 						g_iMedicCount[tank]++;
 
@@ -553,11 +553,11 @@ static void vMedicAbility(int tank, bool main)
 						vMedic(tank);
 
 						char sMedicMessage[3];
-						sMedicMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sMedicMessage[ST_TankType(tank)] : g_sMedicMessage2[ST_TankType(tank)];
+						sMedicMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sMedicMessage[ST_GetTankType(tank)] : g_sMedicMessage2[ST_GetTankType(tank)];
 						if (StrContains(sMedicMessage, "2"))
 						{
 							char sTankName[33];
-							ST_TankName(tank, sTankName);
+							ST_GetTankName(tank, sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Medic2", sTankName);
 						}
 					}
@@ -605,42 +605,42 @@ static void vReset2(int tank)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flHumanDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanDuration[ST_TankType(tank)] : g_flHumanDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanDuration[ST_GetTankType(tank)] : g_flHumanDuration2[ST_GetTankType(tank)];
 }
 
 static float flMedicChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flMedicChance[ST_TankType(tank)] : g_flMedicChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flMedicChance[ST_GetTankType(tank)] : g_flMedicChance2[ST_GetTankType(tank)];
 }
 
 static float flMedicRange(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flMedicRange[ST_TankType(tank)] : g_flMedicRange2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flMedicRange[ST_GetTankType(tank)] : g_flMedicRange2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 static int iMedicAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iMedicAbility[ST_TankType(tank)] : g_iMedicAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iMedicAbility[ST_GetTankType(tank)] : g_iMedicAbility2[ST_GetTankType(tank)];
 }
 
 public Action tTimerMedic(Handle timer, DataPack pack)
@@ -648,7 +648,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iMedicAbility(iTank) != 2 && iMedicAbility(iTank) != 3) || !g_bMedic[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || (iMedicAbility(iTank) != 2 && iMedicAbility(iTank) != 3) || !g_bMedic[iTank])
 	{
 		g_bMedic[iTank] = false;
 
@@ -656,7 +656,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bMedic2[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bMedic2[iTank])
 	{
 		vReset2(iTank);
 
@@ -691,7 +691,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bMedic2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bMedic2[iTank])
 	{
 		g_bMedic2[iTank] = false;
 

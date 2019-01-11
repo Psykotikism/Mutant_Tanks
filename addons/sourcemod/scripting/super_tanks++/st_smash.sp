@@ -125,7 +125,7 @@ public void OnMapEnd()
 
 public Action cmdSmashInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -247,19 +247,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && (iSmashHitMode(attacker) == 0 || iSmashHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iSmashHitMode(attacker) == 0 || iSmashHitMode(attacker) == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vSmashHit(victim, attacker, flSmashChance(attacker), iSmashHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && (iSmashHitMode(victim) == 0 || iSmashHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iSmashHitMode(victim) == 0 || iSmashHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -274,7 +274,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -346,9 +346,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iSmashAbility(iTank) == 1)
+			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iSmashAbility(iTank) == 1)
 			{
 				vSmash(iTank, iTank);
 			}
@@ -360,7 +360,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iSmashAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iSmashAbility(tank) == 1)
 	{
 		vSmashAbility(tank);
 	}
@@ -368,7 +368,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -422,8 +422,8 @@ static void vSmashAbility(int tank)
 		g_bSmash2[tank] = false;
 		g_bSmash3[tank] = false;
 
-		float flSmashRange = !g_bTankConfig[ST_TankType(tank)] ? g_flSmashRange[ST_TankType(tank)] : g_flSmashRange2[ST_TankType(tank)],
-			flSmashRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flSmashRangeChance[ST_TankType(tank)] : g_flSmashRangeChance2[ST_TankType(tank)],
+		float flSmashRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flSmashRange[ST_GetTankType(tank)] : g_flSmashRange2[ST_GetTankType(tank)],
+			flSmashRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flSmashRangeChance[ST_GetTankType(tank)] : g_flSmashRangeChance2[ST_GetTankType(tank)],
 			flTankPos[3];
 
 		GetClientAbsOrigin(tank, flTankPos);
@@ -449,13 +449,13 @@ static void vSmashAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "SmashHuman4");
 			}
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "SmashAmmo");
 	}
@@ -469,7 +469,7 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bSmash[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bSmash[tank])
 				{
 					g_bSmash[tank] = true;
 					g_iSmashCount[tank]++;
@@ -490,21 +490,21 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, const c
 				ForcePlayerSuicide(survivor);
 
 				char sSmashEffect[4];
-				sSmashEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sSmashEffect[ST_TankType(tank)] : g_sSmashEffect2[ST_TankType(tank)];
+				sSmashEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sSmashEffect[ST_GetTankType(tank)] : g_sSmashEffect2[ST_GetTankType(tank)];
 				vEffect(survivor, tank, sSmashEffect, mode);
 
 				char sSmashMessage[3];
-				sSmashMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sSmashMessage[ST_TankType(tank)] : g_sSmashMessage2[ST_TankType(tank)];
+				sSmashMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sSmashMessage[ST_GetTankType(tank)] : g_sSmashMessage2[ST_GetTankType(tank)];
 				if (StrContains(sSmashMessage, message) != -1)
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Smash", sTankName, survivor);
 				}
 			}
 			else if (StrEqual(mode, "3") && !g_bSmash[tank])
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bSmash2[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bSmash2[tank])
 				{
 					g_bSmash2[tank] = true;
 
@@ -512,7 +512,7 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bSmash3[tank])
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bSmash3[tank])
 		{
 			g_bSmash3[tank] = true;
 
@@ -523,43 +523,43 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, const c
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flSmashChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flSmashChance[ST_TankType(tank)] : g_flSmashChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flSmashChance[ST_GetTankType(tank)] : g_flSmashChance2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iSmashAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmashAbility[ST_TankType(tank)] : g_iSmashAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iSmashAbility[ST_GetTankType(tank)] : g_iSmashAbility2[ST_GetTankType(tank)];
 }
 
 static int iSmashHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmashHit[ST_TankType(tank)] : g_iSmashHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iSmashHit[ST_GetTankType(tank)] : g_iSmashHit2[ST_GetTankType(tank)];
 }
 
 static int iSmashHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iSmashHitMode[ST_TankType(tank)] : g_iSmashHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iSmashHitMode[ST_GetTankType(tank)] : g_iSmashHitMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSmash[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bSmash[iTank])
 	{
 		g_bSmash[iTank] = false;
 

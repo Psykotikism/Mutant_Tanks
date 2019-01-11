@@ -101,7 +101,7 @@ public void OnMapEnd()
 
 public Action cmdRockInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -240,7 +240,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -310,7 +310,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveRock(iTank);
 		}
@@ -319,7 +319,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iRockAbility(tank) == 1 && !g_bRock[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iRockAbility(tank) == 1 && !g_bRock[tank])
 	{
 		vRockAbility(tank);
 	}
@@ -327,7 +327,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -381,7 +381,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -450,7 +450,7 @@ static void vReset3(int tank)
 static void vRock(int tank)
 {
 	char sDamage[11];
-	int iRockDamage = !g_bTankConfig[ST_TankType(tank)] ? g_iRockDamage[ST_TankType(tank)] : g_iRockDamage2[ST_TankType(tank)];
+	int iRockDamage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iRockDamage[ST_GetTankType(tank)] : g_iRockDamage2[ST_GetTankType(tank)];
 	IntToString(iRockDamage, sDamage, sizeof(sDamage));
 	DispatchSpawn(g_iRock[tank]);
 	DispatchKeyValue(g_iRock[tank], "rockdamageoverride", sDamage);
@@ -466,7 +466,7 @@ static void vRockAbility(int tank)
 {
 	if (g_iRockCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		float flRockChance = !g_bTankConfig[ST_TankType(tank)] ? g_flRockChance[ST_TankType(tank)] : g_flRockChance2[ST_TankType(tank)];
+		float flRockChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flRockChance[ST_GetTankType(tank)] : g_flRockChance2[ST_GetTankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flRockChance)
 		{
 			g_iRock[tank] = CreateEntityByName("env_rock_launcher");
@@ -477,7 +477,7 @@ static void vRockAbility(int tank)
 
 			g_bRock[tank] = true;
 
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				g_iRockCount[tank]++;
 
@@ -489,16 +489,16 @@ static void vRockAbility(int tank)
 			if (iRockMessage(tank) == 1)
 			{
 				char sTankName[33];
-				ST_TankName(tank, sTankName);
+				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Rock", sTankName);
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "RockHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "RockAmmo");
 	}
@@ -506,37 +506,37 @@ static void vRockAbility(int tank)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flRockDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flRockDuration[ST_TankType(tank)] : g_flRockDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flRockDuration[ST_GetTankType(tank)] : g_flRockDuration2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 static int iRockAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iRockAbility[ST_TankType(tank)] : g_iRockAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRockAbility[ST_GetTankType(tank)] : g_iRockAbility2[ST_GetTankType(tank)];
 }
 
 static int iRockMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iRockMessage[ST_TankType(tank)] : g_iRockMessage2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRockMessage[ST_GetTankType(tank)] : g_iRockMessage2[ST_GetTankType(tank)];
 }
 
 public Action tTimerRock(Handle timer, DataPack pack)
@@ -544,14 +544,14 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iRock = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	if (!ST_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		g_bRock[iTank] = false;
 
 		return Plugin_Stop;
 	}
 
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRock[iTank])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bRock[iTank])
 	{
 		vReset2(iTank, iRock);
 
@@ -559,11 +559,11 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (iRockAbility(iTank) == 0 || ((!ST_TankAllowed(iTank, "5") || (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flRockDuration(iTank)) < GetEngineTime()))
+	if (iRockAbility(iTank) == 0 || ((!ST_IsTankSupported(iTank, "5") || (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flRockDuration(iTank)) < GetEngineTime()))
 	{
 		vReset2(iTank, iRock);
 
-		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bRock2[iTank])
+		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bRock2[iTank])
 		{
 			vReset3(iTank);
 		}
@@ -571,7 +571,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 		if (iRockMessage(iTank) == 1)
 		{
 			char sTankName[33];
-			ST_TankName(iTank, sTankName);
+			ST_GetTankName(iTank, sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Rock2", sTankName);
 		}
 
@@ -579,7 +579,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	}
 
 	char sRadius[2][6], sRockRadius[11];
-	sRockRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sRockRadius[ST_TankType(iTank)] : g_sRockRadius2[ST_TankType(iTank)];
+	sRockRadius = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sRockRadius[ST_GetTankType(iTank)] : g_sRockRadius2[ST_GetTankType(iTank)];
 	ReplaceString(sRockRadius, sizeof(sRockRadius), " ", "");
 	ExplodeString(sRockRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
 
@@ -640,7 +640,7 @@ public Action tTimerStopRockSound(Handle timer)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRock2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bRock2[iTank])
 	{
 		g_bRock2[iTank] = false;
 

@@ -150,36 +150,34 @@ forward void ST_OnRockThrow(int tank, int rock);
 
 // Natives
 /**
- * Returns if the Super Tank type has a glow outline.
+ * Returns if a certain Super Tank type can spawn.
  *
- * @param tank			Client index of the Tank.
- * @return			True if the Tank has a glow outline, false otherwise.
- * @error			Invalid client index.
+ * @param type			Super Tank type.
+ * @return			True if the type can spawn, false otherwise.
+ * @error			Type is 0.
  **/
-native bool ST_GlowEnabled(int tank);
+native bool ST_CanTankSpawn(int type);
 
 /**
- * Hooks/unhooks any entity to/from the core plugin's SetTransmit callback.
+ * Returns the current finale wave.
  *
- * @param entity		Entity index of the entity.
- * @param mode			True if hooking entity, false otherwise.
- * @error			Invalid entity index.
+ * @return			The current finale wave.
  **/
-native void ST_HideEntity(int entity, bool mode);
+native int ST_GetCurrentFinaleWave();
 
 /**
  * Returns the maximum value of the "Type Range" setting.
  *
  * @return			The maximum value of the "Type Range" setting.
  **/
-native int ST_MaxType();
+native int ST_GetMaxType();
 
 /**
  * Returns the minimum value of the "Type Range" setting.
  *
  * @return			The minimum value of the "Type Range" setting.
  **/
-native int ST_MinType();
+native int ST_GetMinType();
 
 /**
  * Returns the RGBA colors given to a Tank's props.
@@ -193,14 +191,7 @@ native int ST_MinType();
  * @param alpha			Alpha color reference.
  * @error			Invalid client index.
  **/
-native void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
-
-/**
- * Returns if the core plugin is enabled.
- *
- * @return			True if core plugin is enabled, false otherwise.
- **/
-native bool ST_PluginEnabled();
+native void ST_GetPropColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
  * Returns the Super Tank's run speed.
@@ -209,46 +200,7 @@ native bool ST_PluginEnabled();
  * @return			The run speed of the Tank.
  * @error			Invalid client index.
  **/
-native float ST_RunSpeed(int tank);
-
-/**
- * Returns if a certain Super Tank type can spawn.
- *
- * @param type			Super Tank type.
- * @return			True if the type can spawn, false otherwise.
- * @error			Type is 0.
- **/
-native bool ST_SpawnEnabled(int type);
-
-/**
- * Spawns a Tank with the specified Super Tank type.
- *
- * @param tank			Client index of the Tank.
- * @param type			Super Tank type.
- * @error			Invalid client index or type is 0.
- **/
-native void ST_SpawnTank(int tank, int type);
-
-/**
- * Returns if the Tank is allowed to be a Super Tank.
- *
- * @param tank			Client index of the Tank.
- * @param checks		Checks to run. 0 = client index, 1 = connection, 2 = in-game status,
- *				3 = life state, 4 = kick status, 5 = bot check
- *				Default: "0234"
- * @return			True if Tank is allowed to be a Super Tank, false otherwise.
- * @error			Invalid client index.
- **/
-native bool ST_TankAllowed(int tank, const char[] checks = "0234");
-
-/**
- * Returns if a certain Super Tank type has a chance of spawning.
- *
- * @param type			Super Tank type.
- * @return			True if the type has a chance of spawning, false otherwise.
- * @error			Type is 0.
- **/
-native bool ST_TankChance(int type);
+native float ST_GetRunSpeed(int tank);
 
 /**
  * Returns the RGB colors given to a Tank.
@@ -261,7 +213,7 @@ native bool ST_TankChance(int type);
  * @param alpha			Alpha color reference.
  * @error			Invalid client index.
  **/
-native void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+native void ST_GetTankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
  * Returns the custom name given to a Tank.
@@ -270,7 +222,7 @@ native void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, i
  * @param buffer		Buffer to store the custom name in.
  * @error			Invalid client index.
  **/
-native void ST_TankName(int tank, char[] buffer);
+native void ST_GetTankName(int tank, char[] buffer);
 
 /**
  * Returns the Super Tank type of the Tank.
@@ -279,14 +231,53 @@ native void ST_TankName(int tank, char[] buffer);
  * @return			The Tank's Super Tank type.
  * @error			Invalid client index.
  **/
-native int ST_TankType(int tank);
+native int ST_GetTankType(int tank);
 
 /**
- * Returns the current finale wave.
+ * Returns if a certain Super Tank type has a chance of spawning.
  *
- * @return			The current finale wave.
+ * @param type			Super Tank type.
+ * @return			True if the type has a chance of spawning, false otherwise.
+ * @error			Type is 0.
  **/
-native int ST_TankWave();
+native bool ST_HasChanceToSpawn(int type);
+
+/**
+ * Hooks/unhooks any entity to/from the core plugin's SetTransmit callback.
+ *
+ * @param entity		Entity index of the entity.
+ * @param mode			True if hooking entity, false otherwise.
+ * @error			Invalid entity index.
+ **/
+native void ST_HideEntity(int entity, bool mode);
+
+/**
+ * Returns if the core plugin is enabled.
+ *
+ * @return			True if core plugin is enabled, false otherwise.
+ **/
+native bool ST_IsCorePluginEnabled();
+
+/**
+ * Returns if the Super Tank type has a glow outline.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank has a glow outline, false otherwise.
+ * @error			Invalid client index.
+ **/
+native bool ST_IsGlowEnabled(int tank);
+
+/**
+ * Returns if the Tank is allowed to be a Super Tank.
+ *
+ * @param tank			Client index of the Tank.
+ * @param checks		Checks to run. 0 = client index, 1 = connection, 2 = in-game status,
+ *				3 = life state, 4 = kick status, 5 = bot check
+ *				Default: "0234"
+ * @return			True if Tank is allowed to be a Super Tank, false otherwise.
+ * @error			Invalid client index.
+ **/
+native bool ST_IsTankSupported(int tank, const char[] checks = "0234");
 
 /**
  * Returns if a certain Super Tank type is enabled.
@@ -295,7 +286,16 @@ native int ST_TankWave();
  * @return			True if the type is enabled, false otherwise.
  * @error			Type is 0.
  **/
-native bool ST_TypeEnabled(int type);
+native bool ST_IsTypeEnabled(int type);
+
+/**
+ * Spawns a Tank with the specified Super Tank type.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			Super Tank type.
+ * @error			Invalid client index or type is 0.
+ **/
+native void ST_SpawnTank(int tank, int type);
 
 // Functions
 stock void vAttachParticle(int entity, const char[] particlename, float duration = 0.0, float origin = 0.0)
@@ -397,7 +397,7 @@ stock void vEffect(int survivor, int tank, const char[] enabled, const char[] mo
 	if (StrContains(enabled, mode) != -1)
 	{
 		int iRed, iGreen, iBlue, iAlpha;
-		ST_TankColors(tank, GetRandomInt(1, 2), iRed, iGreen, iBlue, iAlpha);
+		ST_GetTankColors(tank, GetRandomInt(1, 2), iRed, iGreen, iBlue, iAlpha);
 
 		Handle hFadeTarget = StartMessageOne("Fade", survivor);
 		if (hFadeTarget != null)
@@ -1330,21 +1330,21 @@ public SharedPlugin __pl_supertanksplusplus =
 #if !defined REQUIRE_PLUGIN
 public void __pl_supertanksplusplus_SetNTVOptional()
 {
-	MarkNativeAsOptional("ST_GlowEnabled");
+	MarkNativeAsOptional("ST_CanTankSpawn");
+	MarkNativeAsOptional("ST_GetCurrentFinaleWave");
+	MarkNativeAsOptional("ST_GetMaxType");
+	MarkNativeAsOptional("ST_GetMinType");
+	MarkNativeAsOptional("ST_GetPropColors");
+	MarkNativeAsOptional("ST_GetRunSpeed");
+	MarkNativeAsOptional("ST_GetTankColors");
+	MarkNativeAsOptional("ST_GetTankName");
+	MarkNativeAsOptional("ST_GetTankType");
+	MarkNativeAsOptional("ST_HasChanceToSpawn");
 	MarkNativeAsOptional("ST_HideEntity");
-	MarkNativeAsOptional("ST_MaxType");
-	MarkNativeAsOptional("ST_MinType");
-	MarkNativeAsOptional("ST_PluginEnabled");
-	MarkNativeAsOptional("ST_PropsColors");
-	MarkNativeAsOptional("ST_RunSpeed");
-	MarkNativeAsOptional("ST_SpawnEnabled");
+	MarkNativeAsOptional("ST_IsCorePluginEnabled");
+	MarkNativeAsOptional("ST_IsGlowEnabled");
+	MarkNativeAsOptional("ST_IsTankSupported");
+	MarkNativeAsOptional("ST_IsTypeEnabled");
 	MarkNativeAsOptional("ST_SpawnTank");
-	MarkNativeAsOptional("ST_TankAllowed");
-	MarkNativeAsOptional("ST_TankChance");
-	MarkNativeAsOptional("ST_TankColors");
-	MarkNativeAsOptional("ST_TankName");
-	MarkNativeAsOptional("ST_TankType");
-	MarkNativeAsOptional("ST_TankWave");
-	MarkNativeAsOptional("ST_TypeEnabled");
 }
 #endif

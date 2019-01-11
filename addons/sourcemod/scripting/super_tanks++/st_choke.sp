@@ -115,7 +115,7 @@ public void OnMapEnd()
 
 public Action cmdChokeInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -244,19 +244,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && (iChokeHitMode(attacker) == 0 || iChokeHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iChokeHitMode(attacker) == 0 || iChokeHitMode(attacker) == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vChokeHit(victim, attacker, flChokeChance(attacker), iChokeHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && (iChokeHitMode(victim) == 0 || iChokeHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iChokeHitMode(victim) == 0 || iChokeHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -271,7 +271,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -371,7 +371,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveChoke(iTank);
 		}
@@ -380,7 +380,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iChokeAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iChokeAbility(tank) == 1)
 	{
 		vChokeAbility(tank);
 	}
@@ -388,7 +388,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -423,8 +423,8 @@ static void vChokeAbility(int tank)
 		g_bChoke4[tank] = false;
 		g_bChoke5[tank] = false;
 
-		float flChokeRange = !g_bTankConfig[ST_TankType(tank)] ? g_flChokeRange[ST_TankType(tank)] : g_flChokeRange2[ST_TankType(tank)],
-			flChokeRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flChokeRangeChance[ST_TankType(tank)] : g_flChokeRangeChance2[ST_TankType(tank)],
+		float flChokeRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flChokeRange[ST_GetTankType(tank)] : g_flChokeRange2[ST_GetTankType(tank)],
+			flChokeRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flChokeRangeChance[ST_GetTankType(tank)] : g_flChokeRangeChance2[ST_GetTankType(tank)],
 			flTankPos[3];
 
 		GetClientAbsOrigin(tank, flTankPos);
@@ -450,13 +450,13 @@ static void vChokeAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "ChokeHuman5");
 			}
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ChokeAmmo");
 	}
@@ -473,7 +473,7 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, const c
 				g_bChoke[survivor] = true;
 				g_iChokeOwner[survivor] = tank;
 
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bChoke2[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bChoke2[tank])
 				{
 					g_bChoke2[tank] = true;
 					g_iChokeCount[tank]++;
@@ -483,7 +483,7 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, const c
 
 				GetClientEyeAngles(survivor, g_flChokeAngle[survivor]);
 
-				float flChokeDelay = !g_bTankConfig[ST_TankType(tank)] ? g_flChokeDelay[ST_TankType(tank)] : g_flChokeDelay2[ST_TankType(tank)];
+				float flChokeDelay = !g_bTankConfig[ST_GetTankType(tank)] ? g_flChokeDelay[ST_GetTankType(tank)] : g_flChokeDelay2[ST_GetTankType(tank)];
 				DataPack dpChokeLaunch;
 				CreateDataTimer(flChokeDelay, tTimerChokeLaunch, dpChokeLaunch, TIMER_FLAG_NO_MAPCHANGE);
 				dpChokeLaunch.WriteCell(GetClientUserId(survivor));
@@ -492,21 +492,21 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, const c
 				dpChokeLaunch.WriteString(message);
 
 				char sChokeEffect[4];
-				sChokeEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sChokeEffect[ST_TankType(tank)] : g_sChokeEffect2[ST_TankType(tank)];
+				sChokeEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sChokeEffect[ST_GetTankType(tank)] : g_sChokeEffect2[ST_GetTankType(tank)];
 				vEffect(survivor, tank, sChokeEffect, mode);
 
 				char sChokeMessage[3];
-				sChokeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sChokeMessage[ST_TankType(tank)] : g_sChokeMessage2[ST_TankType(tank)];
+				sChokeMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sChokeMessage[ST_GetTankType(tank)] : g_sChokeMessage2[ST_GetTankType(tank)];
 				if (StrContains(sChokeMessage, message) != -1)
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Choke", sTankName, survivor);
 				}
 			}
 			else if (StrEqual(mode, "3") && !g_bChoke2[tank])
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bChoke4[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bChoke4[tank])
 				{
 					g_bChoke4[tank] = true;
 
@@ -514,7 +514,7 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bChoke5[tank])
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bChoke5[tank])
 		{
 			g_bChoke5[tank] = true;
 
@@ -559,7 +559,7 @@ static void vReset2(int survivor, int tank, const char[] message)
 	SetEntityGravity(survivor, 1.0);
 
 	char sChokeMessage[3];
-	sChokeMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sChokeMessage[ST_TankType(tank)] : g_sChokeMessage2[ST_TankType(tank)];
+	sChokeMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sChokeMessage[ST_GetTankType(tank)] : g_sChokeMessage2[ST_GetTankType(tank)];
 	if (StrContains(sChokeMessage, message) != -1)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Choke2", survivor);
@@ -578,42 +578,42 @@ static void vReset3(int tank)
 
 static float flChokeChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flChokeChance[ST_TankType(tank)] : g_flChokeChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flChokeChance[ST_GetTankType(tank)] : g_flChokeChance2[ST_GetTankType(tank)];
 }
 
 static float flChokeDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flChokeDuration[ST_TankType(tank)] : g_flChokeDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flChokeDuration[ST_GetTankType(tank)] : g_flChokeDuration2[ST_GetTankType(tank)];
 }
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static int iChokeAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iChokeAbility[ST_TankType(tank)] : g_iChokeAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iChokeAbility[ST_GetTankType(tank)] : g_iChokeAbility2[ST_GetTankType(tank)];
 }
 
 static int iChokeHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iChokeHit[ST_TankType(tank)] : g_iChokeHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iChokeHit[ST_GetTankType(tank)] : g_iChokeHit2[ST_GetTankType(tank)];
 }
 
 static int iChokeHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iChokeHitMode[ST_TankType(tank)] : g_iChokeHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iChokeHitMode[ST_GetTankType(tank)] : g_iChokeHitMode2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 public Action tTimerChokeLaunch(Handle timer, DataPack pack)
@@ -621,7 +621,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor) || !g_bChoke[iSurvivor])
+	if (!ST_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || !g_bChoke[iSurvivor])
 	{
 		g_bChoke[iSurvivor] = false;
 		g_iChokeOwner[iSurvivor] = 0;
@@ -630,7 +630,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iChokeEnabled = pack.ReadCell();
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iChokeEnabled == 0)
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iChokeEnabled == 0)
 	{
 		g_bChoke[iSurvivor] = false;
 		g_iChokeOwner[iSurvivor] = 0;
@@ -641,7 +641,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
 
-	float flChokeHeight = !g_bTankConfig[ST_TankType(iTank)] ? g_flChokeHeight[ST_TankType(iTank)] : g_flChokeHeight2[ST_TankType(iTank)],
+	float flChokeHeight = !g_bTankConfig[ST_GetTankType(iTank)] ? g_flChokeHeight[ST_GetTankType(iTank)] : g_flChokeHeight2[ST_GetTankType(iTank)],
 		flVelocity[3];
 	flVelocity[0] = 0.0;
 	flVelocity[1] = 0.0;
@@ -666,7 +666,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !bIsSurvivor(iSurvivor))
+	if (!ST_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_bChoke[iSurvivor] = false;
 		g_iChokeOwner[iSurvivor] = 0;
@@ -677,7 +677,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bChoke[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bChoke[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 
@@ -692,7 +692,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 
 		vReset2(iSurvivor, iTank, sMessage);
 
-		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bChoke3[iTank])
+		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bChoke3[iTank])
 		{
 			g_bChoke3[iTank] = true;
 
@@ -716,7 +716,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
 	SetEntityGravity(iSurvivor, 1.0);
 
-	float flChokeDamage = !g_bTankConfig[ST_TankType(iTank)] ? g_flChokeDamage[ST_TankType(iTank)] : g_flChokeDamage2[ST_TankType(iTank)];
+	float flChokeDamage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_flChokeDamage[ST_GetTankType(iTank)] : g_flChokeDamage2[ST_GetTankType(iTank)];
 	vDamageEntity(iSurvivor, iTank, flChokeDamage, "16384");
 
 	return Plugin_Continue;
@@ -725,7 +725,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bChoke3[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bChoke3[iTank])
 	{
 		g_bChoke3[iTank] = false;
 

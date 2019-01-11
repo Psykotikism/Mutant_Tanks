@@ -95,7 +95,7 @@ public void OnMapEnd()
 
 public Action cmdFlashInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -234,7 +234,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -313,7 +313,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveFlash(iTank);
 		}
@@ -322,7 +322,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iFlashAbility(tank) == 1 && !g_bFlash[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iFlashAbility(tank) == 1 && !g_bFlash[tank])
 	{
 		vFlashAbility(tank);
 	}
@@ -330,7 +330,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -380,7 +380,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -390,7 +390,7 @@ public void ST_OnButtonReleased(int tank, int button)
 				{
 					g_bFlash[tank] = false;
 
-					SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", ST_RunSpeed(tank));
+					SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", ST_GetRunSpeed(tank));
 
 					vReset3(tank);
 				}
@@ -408,12 +408,12 @@ static void vFlashAbility(int tank)
 {
 	if (g_iFlashCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		float flFlashChance = !g_bTankConfig[ST_TankType(tank)] ? g_flFlashChance[ST_TankType(tank)] : g_flFlashChance2[ST_TankType(tank)];
+		float flFlashChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flFlashChance[ST_GetTankType(tank)] : g_flFlashChance2[ST_GetTankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flFlashChance)
 		{
 			g_bFlash[tank] = true;
 
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				g_iFlashCount[tank]++;
 
@@ -427,16 +427,16 @@ static void vFlashAbility(int tank)
 			if (iFlashMessage(tank) == 1)
 			{
 				char sTankName[33];
-				ST_TankName(tank, sTankName);
+				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Flash", sTankName);
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "FlashHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "FlashAmmo");
 	}
@@ -467,7 +467,7 @@ static void vReset2(int tank)
 	if (iFlashMessage(tank) == 1)
 	{
 		char sTankName[33];
-		ST_TankName(tank, sTankName);
+		ST_GetTankName(tank, sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Flash2", sTankName);
 	}
 }
@@ -490,48 +490,48 @@ static void vReset3(int tank)
 
 static float flFlashDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flFlashDuration[ST_TankType(tank)] : g_flFlashDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flFlashDuration[ST_GetTankType(tank)] : g_flFlashDuration2[ST_GetTankType(tank)];
 }
 
 static float flFlashSpeed(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flFlashSpeed[ST_TankType(tank)] : g_flFlashSpeed2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flFlashSpeed[ST_GetTankType(tank)] : g_flFlashSpeed2[ST_GetTankType(tank)];
 }
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static int iFlashAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iFlashAbility[ST_TankType(tank)] : g_iFlashAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iFlashAbility[ST_GetTankType(tank)] : g_iFlashAbility2[ST_GetTankType(tank)];
 }
 
 static int iFlashMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iFlashMessage[ST_TankType(tank)] : g_iFlashMessage2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iFlashMessage[ST_GetTankType(tank)] : g_iFlashMessage2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerStopFlash(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
 	{
 		vReset2(iTank);
 
@@ -540,12 +540,12 @@ public Action tTimerStopFlash(Handle timer, int userid)
 
 	vReset2(iTank);
 
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bFlash2[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bFlash2[iTank])
 	{
 		vReset3(iTank);
 	}
 
-	SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", ST_RunSpeed(iTank));
+	SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", ST_GetRunSpeed(iTank));
 
 	return Plugin_Continue;
 }
@@ -553,7 +553,7 @@ public Action tTimerStopFlash(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bFlash2[iTank])
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bFlash2[iTank])
 	{
 		g_bFlash2[iTank] = false;
 

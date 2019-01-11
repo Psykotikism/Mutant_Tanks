@@ -101,7 +101,7 @@ public void OnClientPutInServer(int client)
 
 public Action cmdVampireInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -202,32 +202,32 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
 		if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 		{
-			float flVampireChance = !g_bTankConfig[ST_TankType(attacker)] ? g_flVampireChance[ST_TankType(attacker)] : g_flVampireChance2[ST_TankType(attacker)];
-			if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && iVampireAbility(attacker) == 1 && GetRandomFloat(0.1, 100.0) <= flVampireChance && bIsSurvivor(victim))
+			float flVampireChance = !g_bTankConfig[ST_GetTankType(attacker)] ? g_flVampireChance[ST_GetTankType(attacker)] : g_flVampireChance2[ST_GetTankType(attacker)];
+			if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && iVampireAbility(attacker) == 1 && GetRandomFloat(0.1, 100.0) <= flVampireChance && bIsSurvivor(victim))
 			{
-				if (!ST_TankAllowed(attacker, "5") || (ST_TankAllowed(attacker, "5") && iHumanAbility(attacker) == 1))
+				if (!ST_IsTankSupported(attacker, "5") || (ST_IsTankSupported(attacker, "5") && iHumanAbility(attacker) == 1))
 				{
 					int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
 						iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
 					SetEntityHealth(attacker, iFinalHealth);
 
-					int iVampireEffect = !g_bTankConfig[ST_TankType(attacker)] ? g_iVampireEffect[ST_TankType(attacker)] : g_iVampireEffect2[ST_TankType(attacker)];
+					int iVampireEffect = !g_bTankConfig[ST_GetTankType(attacker)] ? g_iVampireEffect[ST_GetTankType(attacker)] : g_iVampireEffect2[ST_GetTankType(attacker)];
 					char sVampireEffect[2];
 					IntToString(iVampireEffect, sVampireEffect, sizeof(sVampireEffect));
 					vEffect(victim, attacker, sVampireEffect, "1");
 
-					int iVampireMessage = !g_bTankConfig[ST_TankType(attacker)] ? g_iVampireMessage[ST_TankType(attacker)] : g_iVampireMessage2[ST_TankType(attacker)];
+					int iVampireMessage = !g_bTankConfig[ST_GetTankType(attacker)] ? g_iVampireMessage[ST_GetTankType(attacker)] : g_iVampireMessage2[ST_GetTankType(attacker)];
 					if (iVampireMessage == 1)
 					{
 						char sTankName[33];
-						ST_TankName(attacker, sTankName);
+						ST_GetTankName(attacker, sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Vampire", sTankName, victim);
 					}
 				}
@@ -241,7 +241,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -290,10 +290,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iVampireAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iVampireAbility[ST_TankType(tank)] : g_iVampireAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iVampireAbility[ST_GetTankType(tank)] : g_iVampireAbility2[ST_GetTankType(tank)];
 }

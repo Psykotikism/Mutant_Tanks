@@ -125,7 +125,7 @@ public void OnMapEnd()
 
 public Action cmdWarpInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -269,19 +269,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && (iWarpHitMode(attacker) == 0 || iWarpHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iWarpHitMode(attacker) == 0 || iWarpHitMode(attacker) == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vWarpHit(victim, attacker, flWarpChance(attacker), iWarpHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && (iWarpHitMode(victim) == 0 || iWarpHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iWarpHitMode(victim) == 0 || iWarpHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -296,7 +296,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -384,9 +384,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iWarpAbility(iTank) == 1)
+			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iWarpAbility(iTank) == 1)
 			{
 				vAttachParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
 				EmitSoundToAll(SOUND_ELECTRICITY, iTank);
@@ -399,7 +399,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iWarpAbility(tank) > 0)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iWarpAbility(tank) > 0)
 	{
 		vWarpAbility(tank, true);
 		vWarpAbility(tank, false);
@@ -408,7 +408,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -470,7 +470,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -531,7 +531,7 @@ static void vReset2(int tank)
 
 static void vWarp(int tank)
 {
-	float flWarpInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flWarpInterval[ST_TankType(tank)] : g_flWarpInterval2[ST_TankType(tank)];
+	float flWarpInterval = !g_bTankConfig[ST_GetTankType(tank)] ? g_flWarpInterval[ST_GetTankType(tank)] : g_flWarpInterval2[ST_GetTankType(tank)];
 	DataPack dpWarp;
 	CreateDataTimer(flWarpInterval, tTimerWarp, dpWarp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpWarp.WriteCell(GetClientUserId(tank));
@@ -551,8 +551,8 @@ static void vWarpAbility(int tank, bool main)
 					g_bWarp4[tank] = false;
 					g_bWarp5[tank] = false;
 
-					float flWarpRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWarpRange[ST_TankType(tank)] : g_flWarpRange2[ST_TankType(tank)],
-						flWarpRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flWarpRangeChance[ST_TankType(tank)] : g_flWarpRangeChance2[ST_TankType(tank)],
+					float flWarpRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flWarpRange[ST_GetTankType(tank)] : g_flWarpRange2[ST_GetTankType(tank)],
+						flWarpRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flWarpRangeChance[ST_GetTankType(tank)] : g_flWarpRangeChance2[ST_GetTankType(tank)],
 						flTankPos[3];
 
 					GetClientAbsOrigin(tank, flTankPos);
@@ -578,13 +578,13 @@ static void vWarpAbility(int tank, bool main)
 
 					if (iSurvivorCount == 0)
 					{
-						if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+						if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 						{
 							ST_PrintToChat(tank, "%s %t", ST_TAG3, "WarpHuman7");
 						}
 					}
 				}
-				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+				else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "WarpAmmo");
 				}
@@ -598,7 +598,7 @@ static void vWarpAbility(int tank, bool main)
 				{
 					g_bWarp[tank] = true;
 
-					if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+					if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 					{
 						g_iWarpCount[tank]++;
 
@@ -608,15 +608,15 @@ static void vWarpAbility(int tank, bool main)
 					vWarp(tank);
 
 					char sWarpMessage[4];
-					sWarpMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sWarpMessage[ST_TankType(tank)] : g_sWarpMessage2[ST_TankType(tank)];
+					sWarpMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sWarpMessage[ST_GetTankType(tank)] : g_sWarpMessage2[ST_GetTankType(tank)];
 					if (StrContains(sWarpMessage, "3") != -1)
 					{
 						char sTankName[33];
-						ST_TankName(tank, sTankName);
+						ST_GetTankName(tank, sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Warp2", sTankName);
 					}
 				}
-				else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+				else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "WarpAmmo");
 				}
@@ -638,7 +638,7 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, const ch
 				{
 					if (bIsSurvivor(iPlayer) && !bIsPlayerIncapacitated(iPlayer) && iPlayer != survivor)
 					{
-						if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bWarp3[tank])
+						if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bWarp3[tank])
 						{
 							g_bWarp3[tank] = true;
 							g_iWarpCount2[tank]++;
@@ -659,11 +659,11 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, const ch
 						TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
 
 						char sWarpMessage[4];
-						sWarpMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sWarpMessage[ST_TankType(tank)] : g_sWarpMessage2[ST_TankType(tank)];
+						sWarpMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sWarpMessage[ST_GetTankType(tank)] : g_sWarpMessage2[ST_GetTankType(tank)];
 						if (StrContains(sWarpMessage, message) != -1)
 						{
 							char sTankName[33];
-							ST_TankName(tank, sTankName);
+							ST_GetTankName(tank, sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Warp", sTankName, survivor, iPlayer);
 						}
 
@@ -672,12 +672,12 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 
 				char sWarpEffect[4];
-				sWarpEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sWarpEffect[ST_TankType(tank)] : g_sWarpEffect2[ST_TankType(tank)];
+				sWarpEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sWarpEffect[ST_GetTankType(tank)] : g_sWarpEffect2[ST_GetTankType(tank)];
 				vEffect(survivor, tank, sWarpEffect, mode);
 			}
 			else if (StrEqual(mode, "3") && !g_bWarp3[tank])
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bWarp4[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bWarp4[tank])
 				{
 					g_bWarp4[tank] = true;
 
@@ -685,7 +685,7 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bWarp5[tank])
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bWarp5[tank])
 		{
 			g_bWarp5[tank] = true;
 
@@ -696,47 +696,47 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, const ch
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flHumanDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanDuration[ST_TankType(tank)] : g_flHumanDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanDuration[ST_GetTankType(tank)] : g_flHumanDuration2[ST_GetTankType(tank)];
 }
 
 static float flWarpChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flWarpChance[ST_TankType(tank)] : g_flWarpChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flWarpChance[ST_GetTankType(tank)] : g_flWarpChance2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 static int iWarpAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iWarpAbility[ST_TankType(tank)] : g_iWarpAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iWarpAbility[ST_GetTankType(tank)] : g_iWarpAbility2[ST_GetTankType(tank)];
 }
 
 static int iWarpHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iWarpHit[ST_TankType(tank)] : g_iWarpHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iWarpHit[ST_GetTankType(tank)] : g_iWarpHit2[ST_GetTankType(tank)];
 }
 
 static int iWarpHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iWarpHitMode[ST_TankType(tank)] : g_iWarpHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iWarpHitMode[ST_GetTankType(tank)] : g_iWarpHitMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerWarp(Handle timer, DataPack pack)
@@ -744,7 +744,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || (iWarpAbility(iTank) != 2 && iWarpAbility(iTank) != 3) || !g_bWarp[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || (iWarpAbility(iTank) != 2 && iWarpAbility(iTank) != 3) || !g_bWarp[iTank])
 	{
 		g_bWarp[iTank] = false;
 
@@ -752,7 +752,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bWarp2[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bWarp2[iTank])
 	{
 		vReset2(iTank);
 
@@ -774,7 +774,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 		EmitSoundToAll(SOUND_ELECTRICITY, iTank);
 		TeleportEntity(iTank, flSurvivorOrigin, flSurvivorAngles, NULL_VECTOR);
 
-		int iWarpMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iWarpMode[ST_TankType(iTank)] : g_iWarpMode2[ST_TankType(iTank)];
+		int iWarpMode = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iWarpMode[ST_GetTankType(iTank)] : g_iWarpMode2[ST_GetTankType(iTank)];
 		if (iWarpMode == 1)
 		{
 			vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 1.0, 0.0);
@@ -783,11 +783,11 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 		}
 
 		char sWarpMessage[4];
-		sWarpMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sWarpMessage[ST_TankType(iTank)] : g_sWarpMessage2[ST_TankType(iTank)];
+		sWarpMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sWarpMessage[ST_GetTankType(iTank)] : g_sWarpMessage2[ST_GetTankType(iTank)];
 		if (StrContains(sWarpMessage, "3") != -1)
 		{
 			char sTankName[33];
-			ST_TankName(iTank, sTankName);
+			ST_GetTankName(iTank, sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Warp3", sTankName);
 		}
 	}
@@ -798,7 +798,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWarp2[iTank])
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bWarp2[iTank])
 	{
 		g_bWarp2[iTank] = false;
 
@@ -815,7 +815,7 @@ public Action tTimerResetCooldown(Handle timer, int userid)
 public Action tTimerResetCooldown2(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWarp3[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bWarp3[iTank])
 	{
 		g_bWarp3[iTank] = false;
 

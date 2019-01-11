@@ -105,7 +105,7 @@ public void OnMapEnd()
 
 public Action cmdCarInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -244,7 +244,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -312,7 +312,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveCar(iTank);
 		}
@@ -321,7 +321,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iCarAbility(tank) == 1 && !g_bCar[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iCarAbility(tank) == 1 && !g_bCar[tank])
 	{
 		vCarAbility(tank);
 	}
@@ -329,7 +329,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -379,7 +379,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -413,12 +413,12 @@ static void vCarAbility(int tank)
 {
 	if (g_iCarCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		float flCarChance = !g_bTankConfig[ST_TankType(tank)] ? g_flCarChance[ST_TankType(tank)] : g_flCarChance2[ST_TankType(tank)];
+		float flCarChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flCarChance[ST_GetTankType(tank)] : g_flCarChance2[ST_GetTankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flCarChance)
 		{
 			g_bCar[tank] = true;
 
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bCar2[tank])
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bCar2[tank])
 			{
 				g_bCar2[tank] = true;
 				g_iCarCount[tank]++;
@@ -431,16 +431,16 @@ static void vCarAbility(int tank)
 			if (iCarMessage(tank) == 1)
 			{
 				char sTankName[33];
-				ST_TankName(tank, sTankName);
+				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Car", sTankName);
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "CarHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "CarAmmo");
 	}
@@ -482,37 +482,37 @@ static void vReset2(int tank)
 
 static float flCarDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flCarDuration[ST_TankType(tank)] : g_flCarDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flCarDuration[ST_GetTankType(tank)] : g_flCarDuration2[ST_GetTankType(tank)];
 }
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static int iCarAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iCarAbility[ST_TankType(tank)] : g_iCarAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iCarAbility[ST_GetTankType(tank)] : g_iCarAbility2[ST_GetTankType(tank)];
 }
 
 static int iCarMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iCarMessage[ST_TankType(tank)] : g_iCarMessage2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iCarMessage[ST_GetTankType(tank)] : g_iCarMessage2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerCar(Handle timer, DataPack pack)
@@ -520,7 +520,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bCar[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bCar[iTank])
 	{
 		g_bCar[iTank] = false;
 
@@ -528,11 +528,11 @@ public Action tTimerCar(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (iCarAbility(iTank) == 0 || ((!ST_TankAllowed(iTank, "5") || (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flCarDuration(iTank)) < GetEngineTime()))
+	if (iCarAbility(iTank) == 0 || ((!ST_IsTankSupported(iTank, "5") || (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flCarDuration(iTank)) < GetEngineTime()))
 	{
 		g_bCar[iTank] = false;
 
-		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bCar2[iTank])
+		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bCar2[iTank])
 		{
 			vReset2(iTank);
 		}
@@ -540,7 +540,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 		if (iCarMessage(iTank) == 1)
 		{
 			char sTankName[33];
-			ST_TankName(iTank, sTankName);
+			ST_GetTankName(iTank, sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Car2", sTankName);
 		}
 
@@ -548,7 +548,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 	}
 
 	char sRadius[2][7], sCarRadius[13];
-	sCarRadius = !g_bTankConfig[ST_TankType(iTank)] ? g_sCarRadius[ST_TankType(iTank)] : g_sCarRadius2[ST_TankType(iTank)];
+	sCarRadius = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sCarRadius[ST_GetTankType(iTank)] : g_sCarRadius2[ST_GetTankType(iTank)];
 	ReplaceString(sCarRadius, sizeof(sCarRadius), " ", "");
 	ExplodeString(sCarRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
 
@@ -586,7 +586,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 		int iCar = CreateEntityByName("prop_physics");
 		if (bIsValidEntity(iCar))
 		{
-			char sNumbers = !g_bTankConfig[ST_TankType(iTank)] ? g_sCarOptions[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sCarOptions[ST_TankType(iTank)]) - 1)] : g_sCarOptions2[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sCarOptions2[ST_TankType(iTank)]) - 1)];
+			char sNumbers = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sCarOptions[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sCarOptions[ST_GetTankType(iTank)]) - 1)] : g_sCarOptions2[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sCarOptions2[ST_GetTankType(iTank)]) - 1)];
 			switch (sNumbers)
 			{
 				case '1': SetEntityModel(iCar, MODEL_CAR);
@@ -637,7 +637,7 @@ public Action tTimerSetCarVelocity(Handle timer, int ref)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bCar2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bCar2[iTank])
 	{
 		g_bCar2[iTank] = false;
 

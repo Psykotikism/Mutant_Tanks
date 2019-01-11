@@ -97,7 +97,7 @@ public void OnMapEnd()
 
 public Action cmdItemInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -208,7 +208,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -262,7 +262,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && iItemAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flItemChance(iTank) && g_bItem[iTank])
+		if (ST_IsTankSupported(iTank, "024") && ST_IsCloneSupported(iTank, g_bCloneInstalled) && iItemAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flItemChance(iTank) && g_bItem[iTank])
 		{
 			vItemAbility(iTank);
 		}
@@ -271,7 +271,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iItemAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flItemChance(tank) && !g_bItem[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iItemAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flItemChance(tank) && !g_bItem[tank])
 	{
 		g_bItem[tank] = true;
 	}
@@ -279,7 +279,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SPECIAL_KEY2 == ST_SPECIAL_KEY2)
 		{
@@ -302,7 +302,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && iItemAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iItemAbility(tank) == 1)
 	{
 		vItemAbility(tank);
 	}
@@ -313,7 +313,7 @@ static void vItemAbility(int tank)
 	g_bItem[tank] = false;
 
 	char sItems[5][64], sItemLoadout[325];
-	sItemLoadout = !g_bTankConfig[ST_TankType(tank)] ? g_sItemLoadout[ST_TankType(tank)] : g_sItemLoadout2[ST_TankType(tank)];
+	sItemLoadout = !g_bTankConfig[ST_GetTankType(tank)] ? g_sItemLoadout[ST_GetTankType(tank)] : g_sItemLoadout2[ST_GetTankType(tank)];
 	ReplaceString(sItemLoadout, sizeof(sItemLoadout), " ", "");
 	ExplodeString(sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
 
@@ -321,7 +321,7 @@ static void vItemAbility(int tank)
 	{
 		if (bIsSurvivor(iSurvivor, "234"))
 		{
-			int iItemMode = !g_bTankConfig[ST_TankType(tank)] ? g_iItemMode[ST_TankType(tank)] : g_iItemMode2[ST_TankType(tank)];
+			int iItemMode = !g_bTankConfig[ST_GetTankType(tank)] ? g_iItemMode[ST_GetTankType(tank)] : g_iItemMode2[ST_GetTankType(tank)];
 			switch (iItemMode)
 			{
 				case 0:
@@ -349,11 +349,11 @@ static void vItemAbility(int tank)
 		}
 	}
 
-	int iItemMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iItemMessage[ST_TankType(tank)] : g_iItemMessage2[ST_TankType(tank)];
+	int iItemMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iItemMessage[ST_GetTankType(tank)] : g_iItemMessage2[ST_GetTankType(tank)];
 	if (iItemMessage == 1)
 	{
 		char sTankName[33];
-		ST_TankName(tank, sTankName);
+		ST_GetTankName(tank, sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Item", sTankName);
 	}
 }
@@ -371,15 +371,15 @@ static void vReset()
 
 static float flItemChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flItemChance[ST_TankType(tank)] : g_flItemChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flItemChance[ST_GetTankType(tank)] : g_flItemChance2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iItemAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iItemAbility[ST_TankType(tank)] : g_iItemAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iItemAbility[ST_GetTankType(tank)] : g_iItemAbility2[ST_GetTankType(tank)];
 }

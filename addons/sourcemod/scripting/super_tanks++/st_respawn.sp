@@ -95,7 +95,7 @@ public void OnMapEnd()
 
 public Action cmdRespawnInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -213,7 +213,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -283,8 +283,8 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		float flRespawnChance = !g_bTankConfig[ST_TankType(iTank)] ? g_flRespawnChance[ST_TankType(iTank)] : g_flRespawnChance2[ST_TankType(iTank)];
-		if (ST_TankAllowed(iTank, "024") && ST_CloneAllowed(iTank, g_bCloneInstalled) && iRespawnAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flRespawnChance)
+		float flRespawnChance = !g_bTankConfig[ST_GetTankType(iTank)] ? g_flRespawnChance[ST_GetTankType(iTank)] : g_flRespawnChance2[ST_GetTankType(iTank)];
+		if (ST_IsTankSupported(iTank, "024") && ST_IsCloneSupported(iTank, g_bCloneInstalled) && iRespawnAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flRespawnChance)
 		{
 			float flPos[3], flAngles[3];
 			GetEntPropVector(iTank, Prop_Send, "m_vecOrigin", flPos);
@@ -309,7 +309,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SPECIAL_KEY2 == ST_SPECIAL_KEY2)
 		{
@@ -345,10 +345,10 @@ public void ST_OnChangeType(int tank)
 static void vRandomRespawn(int tank)
 {
 	int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		int iFinaleTank = !g_bTankConfig[ST_TankType(iIndex)] ? g_iFinaleTank[ST_TankType(iIndex)] : g_iFinaleTank2[ST_TankType(iIndex)];
-		if (!ST_TypeEnabled(iIndex) || !ST_SpawnEnabled(iIndex) || (iFinaleTank == 1 && (!bIsFinaleMap() || ST_TankWave() <= 0)) || ST_TankType(tank) == iIndex)
+		int iFinaleTank = !g_bTankConfig[ST_GetTankType(iIndex)] ? g_iFinaleTank[ST_GetTankType(iIndex)] : g_iFinaleTank2[ST_GetTankType(iIndex)];
+		if (!ST_IsTypeEnabled(iIndex) || !ST_CanTankSpawn(iIndex) || (iFinaleTank == 1 && (!bIsFinaleMap() || ST_GetCurrentFinaleWave() <= 0)) || ST_GetTankType(tank) == iIndex)
 		{
 			continue;
 		}
@@ -384,17 +384,17 @@ static void vReset()
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iRespawnAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iRespawnAbility[ST_TankType(tank)] : g_iRespawnAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRespawnAbility[ST_GetTankType(tank)] : g_iRespawnAbility2[ST_GetTankType(tank)];
 }
 
 public Action tTimerRespawn(Handle timer, DataPack pack)
@@ -402,14 +402,14 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !bIsPlayerIncapacitated(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRespawnAbility(iTank) == 0)
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsPlayerIncapacitated(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iRespawnAbility(iTank) == 0)
 	{
 		g_iRespawnCount[iTank] = 0;
 
 		return Plugin_Stop;
 	}
 
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bRespawn[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bRespawn[iTank])
 	{
 		g_bRespawn[iTank] = false;
 		g_iRespawnCount[iTank] = 0;
@@ -418,10 +418,10 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	}
 
 	int iFlags = pack.ReadCell(), iSequence = pack.ReadCell(),
-		iRespawnAmount = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnAmount[ST_TankType(iTank)] : g_iRespawnAmount2[ST_TankType(iTank)],
-		iRespawnMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnMessage[ST_TankType(iTank)] : g_iRespawnMessage2[ST_TankType(iTank)],
-		iRespawnMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnMode[ST_TankType(iTank)] : g_iRespawnMode2[ST_TankType(iTank)],
-		iRespawnType = !g_bTankConfig[ST_TankType(iTank)] ? g_iRespawnType[ST_TankType(iTank)] : g_iRespawnType2[ST_TankType(iTank)];
+		iRespawnAmount = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iRespawnAmount[ST_GetTankType(iTank)] : g_iRespawnAmount2[ST_GetTankType(iTank)],
+		iRespawnMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iRespawnMessage[ST_GetTankType(iTank)] : g_iRespawnMessage2[ST_GetTankType(iTank)],
+		iRespawnMode = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iRespawnMode[ST_GetTankType(iTank)] : g_iRespawnMode2[ST_GetTankType(iTank)],
+		iRespawnType = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iRespawnType[ST_GetTankType(iTank)] : g_iRespawnType2[ST_GetTankType(iTank)];
 
 	float flPos[3], flAngles[3];
 	flPos[0] = pack.ReadFloat();
@@ -436,7 +436,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		g_bRespawn[iTank] = false;
 		g_iRespawnCount[iTank]++;
 
-		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1)
+		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1)
 		{
 			g_iRespawnCount2[iTank]++;
 
@@ -447,7 +447,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 		{
 			bExists[iRespawn] = false;
-			if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled))
+			if (ST_IsTankSupported(iRespawn, "234") && ST_IsCloneSupported(iRespawn, g_bCloneInstalled))
 			{
 				bExists[iRespawn] = true;
 			}
@@ -455,7 +455,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 
 		switch (iRespawnMode)
 		{
-			case 0: ST_SpawnTank(iTank, ST_TankType(iTank));
+			case 0: ST_SpawnTank(iTank, ST_GetTankType(iTank));
 			case 1:
 			{
 				switch (iRespawnType)
@@ -470,7 +470,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		int iNewTank;
 		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 		{
-			if (ST_TankAllowed(iRespawn, "234") && ST_CloneAllowed(iRespawn, g_bCloneInstalled) && !bExists[iRespawn])
+			if (ST_IsTankSupported(iRespawn, "234") && ST_IsCloneSupported(iRespawn, g_bCloneInstalled) && !bExists[iRespawn])
 			{
 				iNewTank = iRespawn;
 				g_bRespawn[iNewTank] = false;
@@ -498,7 +498,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			if (iRespawnMessage == 1)
 			{
 				char sTankName[33];
-				ST_TankName(iTank, sTankName);
+				ST_GetTankName(iTank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Respawn", sTankName);
 			}
 		}
@@ -507,7 +507,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	{
 		vRemoveRespawn(iTank);
 
-		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1)
+		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1)
 		{
 			ST_PrintToChat(iTank, "%s %t", ST_TAG3, "RespawnAmmo");
 		}

@@ -96,7 +96,7 @@ public void OnMapEnd()
 
 public Action cmdTrackInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -230,7 +230,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -294,7 +294,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveTrack(iTank);
 		}
@@ -303,7 +303,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
@@ -343,10 +343,10 @@ public void ST_OnChangeType(int tank)
 
 public void ST_OnRockThrow(int tank, int rock)
 {
-	float flTrackChance = !g_bTankConfig[ST_TankType(tank)] ? g_flTrackChance[ST_TankType(tank)] : g_flTrackChance2[ST_TankType(tank)];
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && iTrackAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flTrackChance)
+	float flTrackChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flTrackChance[ST_GetTankType(tank)] : g_flTrackChance2[ST_GetTankType(tank)];
+	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iTrackAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flTrackChance)
 	{
-		if ((!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && !g_bTrack[tank])
+		if ((!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && !g_bTrack[tank])
 		{
 			g_bTrack[tank] = true;
 		}
@@ -356,11 +356,11 @@ public void ST_OnRockThrow(int tank, int rock)
 		dpTrack.WriteCell(EntIndexToEntRef(rock));
 		dpTrack.WriteCell(GetClientUserId(tank));
 
-		int iTrackMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iTrackMessage[ST_TankType(tank)] : g_iTrackMessage2[ST_TankType(tank)];
+		int iTrackMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iTrackMessage[ST_GetTankType(tank)] : g_iTrackMessage2[ST_GetTankType(tank)];
 		if (iTrackMessage == 1)
 		{
 			char sTankName[33];
-			ST_TankName(tank, sTankName);
+			ST_GetTankName(tank, sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Track", sTankName);
 		}
 	}
@@ -387,7 +387,7 @@ static void vReset()
 static void vTrack(int rock)
 {
 	int iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower"),
-		iTrackMode = !g_bTankConfig[ST_TankType(iTank)] ? g_iTrackMode[ST_TankType(iTank)] : g_iTrackMode2[ST_TankType(iTank)];
+		iTrackMode = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iTrackMode[ST_GetTankType(iTank)] : g_iTrackMode2[ST_GetTankType(iTank)];
 	switch (iTrackMode)
 	{
 		case 0:
@@ -639,16 +639,16 @@ static void vTrack(int rock)
 			AddVectors(flVelocity, flFront, flVelocity3);
 			NormalizeVector(flVelocity3, flVelocity3);
 
-			float flTrackSpeed = !g_bTankConfig[ST_TankType(iTank)] ? g_flTrackSpeed[ST_TankType(iTank)] : g_flTrackSpeed2[ST_TankType(iTank)];
+			float flTrackSpeed = !g_bTankConfig[ST_GetTankType(iTank)] ? g_flTrackSpeed[ST_GetTankType(iTank)] : g_flTrackSpeed2[ST_GetTankType(iTank)];
 			ScaleVector(flVelocity3, flTrackSpeed);
 
 			SetEntityGravity(rock, 0.01);
 			TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 
-			if (ST_GlowEnabled(iTank) && bIsValidGame())
+			if (ST_IsGlowEnabled(iTank) && bIsValidGame())
 			{
 				int iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha;
-				ST_TankColors(iTank, 2, iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha);
+				ST_GetTankColors(iTank, 2, iGlowRed, iGlowGreen, iGlowBlue, iGlowAlpha);
 				SetEntProp(rock, Prop_Send, "m_iGlowType", 3);
 				SetEntProp(rock, Prop_Send, "m_nGlowRange", 0);
 				SetEntProp(rock, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowRed, iGlowGreen, iGlowBlue));
@@ -659,22 +659,22 @@ static void vTrack(int rock)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iTrackAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iTrackAbility[ST_TankType(tank)] : g_iTrackAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iTrackAbility[ST_GetTankType(tank)] : g_iTrackAbility2[ST_GetTankType(tank)];
 }
 
 public Action tTimerTrack(Handle timer, DataPack pack)
@@ -682,13 +682,13 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if (!ST_PluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	if (!ST_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iTrackAbility(iTank) == 0 || !g_bTrack[iTank])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iTrackAbility(iTank) == 0 || !g_bTrack[iTank])
 	{
 		g_bTrack[iTank] = false;
 
@@ -698,7 +698,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 	SDKUnhook(iRock, SDKHook_Think, Think);
 	SDKHook(iRock, SDKHook_Think, Think);
 
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bTrack2[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bTrack2[iTank])
 	{
 		g_bTrack[iTank] = false;
 		g_bTrack2[iTank] = true;
@@ -721,7 +721,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bTrack2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bTrack2[iTank])
 	{
 		g_bTrack2[iTank] = false;
 

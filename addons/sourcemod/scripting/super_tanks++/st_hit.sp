@@ -101,7 +101,7 @@ public void OnClientPutInServer(int client)
 
 public Action cmdHitInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -202,14 +202,14 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action TraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
-		if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && iHitAbility(victim) == 1 && bIsSurvivor(attacker))
+		if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && iHitAbility(victim) == 1 && bIsSurvivor(attacker))
 		{
-			int iHitGroup = !g_bTankConfig[ST_TankType(victim)] ? g_iHitGroup[ST_TankType(victim)] : g_iHitGroup2[ST_TankType(victim)];
+			int iHitGroup = !g_bTankConfig[ST_GetTankType(victim)] ? g_iHitGroup[ST_GetTankType(victim)] : g_iHitGroup2[ST_GetTankType(victim)];
 			if (hitgroup == iHitGroup)
 			{
-				float flHitDamageMultiplier = !g_bTankConfig[ST_TankType(victim)] ? g_flHitDamageMultiplier[ST_TankType(victim)] : g_flHitDamageMultiplier2[ST_TankType(victim)];
+				float flHitDamageMultiplier = !g_bTankConfig[ST_GetTankType(victim)] ? g_flHitDamageMultiplier[ST_GetTankType(victim)] : g_flHitDamageMultiplier2[ST_GetTankType(victim)];
 				damage *= flHitDamageMultiplier;
 
 				return Plugin_Changed;
@@ -229,7 +229,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -274,10 +274,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 
 static int iHitAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHitAbility[ST_TankType(tank)] : g_iHitAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHitAbility[ST_GetTankType(tank)] : g_iHitAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }

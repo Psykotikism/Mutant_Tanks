@@ -115,7 +115,7 @@ public void OnMapEnd()
 
 public Action cmdBuryInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -244,19 +244,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && (iBuryHitMode(attacker) == 0 || iBuryHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iBuryHitMode(attacker) == 0 || iBuryHitMode(attacker) == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vBuryHit(victim, attacker, flBuryChance(attacker), iBuryHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && (iBuryHitMode(victim) == 0 || iBuryHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iBuryHitMode(victim) == 0 || iBuryHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -271,7 +271,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -362,7 +362,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveBury(iTank);
 		}
@@ -371,7 +371,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iBuryAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iBuryAbility(tank) == 1)
 	{
 		vBuryAbility(tank);
 	}
@@ -379,7 +379,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -404,7 +404,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		vRemoveBury(tank);
 	}
@@ -417,8 +417,8 @@ static void vBuryAbility(int tank)
 		g_bBury4[tank] = false;
 		g_bBury5[tank] = false;
 
-		float flBuryRange = !g_bTankConfig[ST_TankType(tank)] ? g_flBuryRange[ST_TankType(tank)] : g_flBuryRange2[ST_TankType(tank)],
-			flBuryRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flBuryRangeChance[ST_TankType(tank)] : g_flBuryRangeChance2[ST_TankType(tank)],
+		float flBuryRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flBuryRange[ST_GetTankType(tank)] : g_flBuryRange2[ST_GetTankType(tank)],
+			flBuryRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flBuryRangeChance[ST_GetTankType(tank)] : g_flBuryRangeChance2[ST_GetTankType(tank)],
 			flTankPos[3];
 
 		GetClientAbsOrigin(tank, flTankPos);
@@ -444,13 +444,13 @@ static void vBuryAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "BuryHuman5");
 			}
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "BuryAmmo");
 	}
@@ -467,7 +467,7 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, const ch
 				g_bBury[survivor] = true;
 				g_iBuryOwner[survivor] = tank;
 
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bBury2[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bBury2[tank])
 				{
 					g_bBury2[tank] = true;
 					g_iBuryCount[tank]++;
@@ -500,21 +500,21 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, const ch
 				dpStopBury.WriteString(message);
 
 				char sBuryEffect[4];
-				sBuryEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sBuryEffect[ST_TankType(tank)] : g_sBuryEffect2[ST_TankType(tank)];
+				sBuryEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sBuryEffect[ST_GetTankType(tank)] : g_sBuryEffect2[ST_GetTankType(tank)];
 				vEffect(survivor, tank, sBuryEffect, mode);
 
 				char sBuryMessage[3];
-				sBuryMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sBuryMessage[ST_TankType(tank)] : g_sBuryMessage2[ST_TankType(tank)];
+				sBuryMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sBuryMessage[ST_GetTankType(tank)] : g_sBuryMessage2[ST_GetTankType(tank)];
 				if (StrContains(sBuryMessage, message) != -1)
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Bury", sTankName, survivor, flOrigin);
 				}
 			}
 			else if (StrEqual(mode, "3") && !g_bBury2[tank])
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bBury4[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bBury4[tank])
 				{
 					g_bBury4[tank] = true;
 
@@ -522,7 +522,7 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bBury5[tank])
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bBury5[tank])
 		{
 			g_bBury5[tank] = true;
 
@@ -598,47 +598,47 @@ static void vStopBury(int survivor, int tank)
 
 static float flBuryChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flBuryChance[ST_TankType(tank)] : g_flBuryChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flBuryChance[ST_GetTankType(tank)] : g_flBuryChance2[ST_GetTankType(tank)];
 }
 
 static float flBuryDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flBuryDuration[ST_TankType(tank)] : g_flBuryDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flBuryDuration[ST_GetTankType(tank)] : g_flBuryDuration2[ST_GetTankType(tank)];
 }
 
 static float flBuryHeight(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flBuryHeight[ST_TankType(tank)] : g_flBuryHeight2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flBuryHeight[ST_GetTankType(tank)] : g_flBuryHeight2[ST_GetTankType(tank)];
 }
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static int iBuryAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iBuryAbility[ST_TankType(tank)] : g_iBuryAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBuryAbility[ST_GetTankType(tank)] : g_iBuryAbility2[ST_GetTankType(tank)];
 }
 
 static int iBuryHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iBuryHit[ST_TankType(tank)] : g_iBuryHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBuryHit[ST_GetTankType(tank)] : g_iBuryHit2[ST_GetTankType(tank)];
 }
 
 static int iBuryHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iBuryHitMode[ST_TankType(tank)] : g_iBuryHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBuryHitMode[ST_GetTankType(tank)] : g_iBuryHitMode2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 public Action tTimerStopBury(Handle timer, DataPack pack)
@@ -655,7 +655,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBury[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bBury[iSurvivor])
 	{
 		vStopBury(iSurvivor, iTank);
 
@@ -669,7 +669,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
 
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bBury3[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bBury3[iTank])
 	{
 		g_bBury3[iTank] = true;
 
@@ -686,7 +686,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	}
 
 	char sBuryMessage[3];
-	sBuryMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sBuryMessage[ST_TankType(iTank)] : g_sBuryMessage2[ST_TankType(iTank)];
+	sBuryMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sBuryMessage[ST_GetTankType(iTank)] : g_sBuryMessage2[ST_GetTankType(iTank)];
 	if (StrContains(sBuryMessage, sMessage) != -1)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Bury2", iSurvivor);
@@ -698,7 +698,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bBury3[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bBury3[iTank])
 	{
 		g_bBury3[iTank] = false;
 
