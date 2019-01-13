@@ -311,12 +311,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (g_bGod[iTank])
-			{
-				tTimerStopGod(null, GetClientUserId(iTank));
-			}
-
-			g_iGodCount[iTank] = 0;
+			vRemoveGod(iTank);
 		}
 	}
 }
@@ -402,11 +397,6 @@ public void ST_OnButtonReleased(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
-	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled))
-	{
-		SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
-	}
-
 	vRemoveGod(tank);
 }
 
@@ -453,6 +443,11 @@ static void vRemoveGod(int tank)
 	g_bGod[tank] = false;
 	g_bGod2[tank] = false;
 	g_iGodCount[tank] = 0;
+
+	if (ST_IsTankSupported(tank))
+	{
+		SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
+	}
 }
 
 static void vReset()

@@ -79,6 +79,8 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	vRemoveClone(client);
+
+	g_bClone[client] = false;
 }
 
 public void OnMapEnd()
@@ -490,7 +492,6 @@ static void vCloneAbility(int tank)
 
 static void vRemoveClone(int tank)
 {
-	g_bClone[tank] = false;
 	g_bClone2[tank] = false;
 	g_iCloneCount[tank] = 0;
 	g_iCloneCount2[tank] = 0;
@@ -504,6 +505,7 @@ static void vReset()
 		{
 			vRemoveClone(iPlayer);
 
+			g_bClone[iPlayer] = false;
 			g_iCloneOwner[iPlayer] = 0;
 		}
 	}

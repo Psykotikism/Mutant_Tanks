@@ -86,6 +86,8 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	vRemoveNecro(client);
+
+	g_bNecro[client] = false;
 }
 
 public void OnMapEnd()
@@ -492,7 +494,6 @@ static void vNecroAbility(int tank)
 
 static void vRemoveNecro(int tank)
 {
-	g_bNecro[tank] = false;
 	g_bNecro2[tank] = false;
 	g_iNecroCount[tank] = 0;
 }
@@ -504,6 +505,8 @@ static void vReset()
 		if (bIsValidClient(iPlayer, "24"))
 		{
 			vRemoveNecro(iPlayer);
+
+			g_bNecro[iPlayer] = false;
 		}
 	}
 }

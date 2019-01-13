@@ -88,6 +88,8 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	vRemoveMinion(client);
+
+	g_bMinion[client] = false;
 }
 
 public void OnMapEnd()
@@ -301,7 +303,6 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
 		if (ST_IsTankSupported(iInfected, "024"))
 		{
-			g_bMinion[iInfected] = false;
 			g_bMinion2[iInfected] = false;
 			g_iMinionCount[iInfected] = 0;
 		}
@@ -476,7 +477,6 @@ static void vMinionAbility(int tank)
 
 static void vRemoveMinion(int tank)
 {
-	g_bMinion[tank] = false;
 	g_bMinion2[tank] = false;
 	g_iMinionCount[tank] = 0;
 	g_iMinionCount2[tank] = 0;
@@ -490,6 +490,7 @@ static void vReset()
 		{
 			vRemoveMinion(iPlayer);
 
+			g_bMinion[iPlayer] = false;
 			g_iMinionOwner[iPlayer] = 0;
 		}
 	}

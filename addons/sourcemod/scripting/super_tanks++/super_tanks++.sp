@@ -1306,6 +1306,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					}
 				}
 
+				vNewTankSettings(iTank);
+				vSetColor(iTank);
 				vReset2(iTank);
 
 				CreateTimer(3.0, tTimerTankWave, g_iTankWave, TIMER_FLAG_NO_MAPCHANGE);
