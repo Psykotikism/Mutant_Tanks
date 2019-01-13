@@ -317,29 +317,18 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 					if (iMinionAbility(iOwner) == 1)
 					{
-						int iMinionReplace = !g_bTankConfig[ST_GetTankType(iOwner)] ? g_iMinionReplace[ST_GetTankType(iOwner)] : g_iMinionReplace2[ST_GetTankType(iOwner)];
-						switch (iMinionReplace)
+						switch (g_iMinionCount[iOwner])
 						{
-							case 0:
+							case 0, 1: vResetCooldown(iOwner);
+							default:
 							{
-								switch (g_iMinionCount[iOwner])
+								int iMinionReplace = !g_bTankConfig[ST_GetTankType(iOwner)] ? g_iMinionReplace[ST_GetTankType(iOwner)] : g_iMinionReplace2[ST_GetTankType(iOwner)];
+								if (iMinionReplace == 1)
 								{
-									case 0, 1: vResetCooldown(iOwner);
-									default: ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "MinionHuman4");
+									g_iMinionCount[iOwner]--;
 								}
-							}
-							case 1:
-							{
-								switch (g_iMinionCount[iOwner])
-								{
-									case 0, 1: vResetCooldown(iOwner);
-									default:
-									{
-										g_iMinionCount[iOwner]--;
 
-										ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "MinionHuman4");
-									}
-								}
+								ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "MinionHuman4");
 							}
 						}
 					}

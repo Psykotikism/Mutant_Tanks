@@ -315,37 +315,20 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 								g_bClone[iTank] = false;
 								g_iCloneOwner[iTank] = 0;
 
-								int iCloneReplace = !g_bTankConfig[ST_GetTankType(iOwner)] ? g_iCloneReplace[ST_GetTankType(iOwner)] : g_iCloneReplace2[ST_GetTankType(iOwner)];
-								switch (iCloneReplace)
+								switch (g_iCloneCount[iOwner])
 								{
-									case 0:
+									case 0, 1: vResetCooldown(iOwner);
+									default:
 									{
-										switch (g_iCloneCount[iOwner])
+										int iCloneReplace = !g_bTankConfig[ST_GetTankType(iOwner)] ? g_iCloneReplace[ST_GetTankType(iOwner)] : g_iCloneReplace2[ST_GetTankType(iOwner)];
+										if (iCloneReplace == 1)
 										{
-											case 0, 1: vResetCooldown(iOwner);
-											default:
-											{
-												if (ST_IsTankSupported(iOwner, "5") && iHumanAbility(iOwner) == 1)
-												{
-													ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "CloneHuman5");
-												}
-											}
+											g_iCloneCount[iOwner]--;
 										}
-									}
-									case 1:
-									{
-										switch (g_iCloneCount[iOwner])
-										{
-											case 0, 1: vResetCooldown(iOwner);
-											default:
-											{
-												g_iCloneCount[iOwner]--;
 
-												if (ST_IsTankSupported(iOwner, "5") && iHumanAbility(iOwner) == 1)
-												{
-													ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "CloneHuman5");
-												}
-											}
+										if (ST_IsTankSupported(iOwner, "5") && iHumanAbility(iOwner) == 1)
+										{
+											ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "CloneHuman5");
 										}
 									}
 								}
