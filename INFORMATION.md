@@ -50,6 +50,13 @@
 			// Maximum: 65535
 			"Base Health"				"0"
 
+			// Super Tanks revert back to default Tanks upon death.
+			// Note: This feature is simply for cosmetic purposes. You don't need to worry about this setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Death Revert"				"0"
+
 			// Display Tanks' names and health.
 			// --
 			// 0: OFF
