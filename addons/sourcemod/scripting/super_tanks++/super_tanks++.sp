@@ -61,7 +61,7 @@ float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[ST_MAXTYPES + 1], g_flRan
 
 Handle g_hAbilityActivatedForward, g_hButtonPressedForward, g_hButtonReleasedForward, g_hChangeTypeForward, g_hConfigsLoadedForward, g_hDisplayMenuForward, g_hEventFiredForward, g_hHookEventForward, g_hMenuItemSelectedForward, g_hPluginEndForward, g_hPresetForward, g_hRockBreakForward, g_hRockThrowForward;
 
-int g_iAnnounceDeath, g_iAnnounceDeath2, g_iBaseHealth, g_iBaseHealth2, g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iCooldown[MAXPLAYERS + 1], g_iDisplayHealth, g_iDisplayHealth2,
+int g_iAnnounceDeath, g_iAnnounceDeath2, g_iBaseHealth, g_iBaseHealth2, g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[ST_MAXTYPES + 1], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[ST_MAXTYPES + 1], g_iConfigEnable, g_iCooldown[MAXPLAYERS + 1], g_iDeathRevert, g_iDeathRevert2, g_iDisplayHealth, g_iDisplayHealth2,
 	g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[ST_MAXTYPES + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinalesOnly2, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleTank2[ST_MAXTYPES + 1], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[ST_MAXTYPES + 1],
 	g_iFlame[MAXPLAYERS + 1][3], g_iFlameRed[ST_MAXTYPES + 1], g_iFlameRed2[ST_MAXTYPES + 1], g_iFlameGreen[ST_MAXTYPES + 1], g_iFlameGreen2[ST_MAXTYPES + 1], g_iFlameBlue[ST_MAXTYPES + 1], g_iFlameBlue2[ST_MAXTYPES + 1], g_iFlameAlpha[ST_MAXTYPES + 1], g_iFlameAlpha2[ST_MAXTYPES + 1], g_iGameModeTypes, g_iGlowEnabled[ST_MAXTYPES + 1],
 	g_iGlowEnabled2[ST_MAXTYPES + 1], g_iGlowRed[ST_MAXTYPES + 1], g_iGlowRed2[ST_MAXTYPES + 1], g_iGlowGreen[ST_MAXTYPES + 1], g_iGlowGreen2[ST_MAXTYPES + 1], g_iGlowBlue[ST_MAXTYPES + 1], g_iGlowBlue2[ST_MAXTYPES + 1], g_iHumanCooldown, g_iHumanCooldown2, g_iHumanSupport[ST_MAXTYPES + 1], g_iHumanSupport2[ST_MAXTYPES + 1], g_iJetpack[MAXPLAYERS + 1][3],
@@ -1306,9 +1306,14 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					}
 				}
 
-				vNewTankSettings(iTank);
-				vSetColor(iTank);
-				vReset2(iTank);
+				int iDeathRevert = !g_bGeneralConfig ? g_iDeathRevert : g_iDeathRevert2;
+				if (iDeathRevert == 1)
+				{
+					vNewTankSettings(iTank);
+					vSetColor(iTank);
+				}
+
+				vReset2(iTank, iDeathRevert);
 
 				CreateTimer(3.0, tTimerTankWave, g_iTankWave, TIMER_FLAG_NO_MAPCHANGE);
 			}
@@ -1445,6 +1450,8 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 				g_iAnnounceDeath = iClamp(g_iAnnounceDeath, 0, 1);
 				g_iBaseHealth = kvSuperTanks.GetNum("General/Base Health", 0);
 				g_iBaseHealth = iClamp(g_iBaseHealth, 0, ST_MAXHEALTH);
+				g_iDeathRevert = kvSuperTanks.GetNum("General/Death Revert", 0);
+				g_iDeathRevert = iClamp(g_iDeathRevert, 0, 1);
 				g_iDisplayHealth = kvSuperTanks.GetNum("General/Display Health", 3);
 				g_iDisplayHealth = iClamp(g_iDisplayHealth, 0, 3);
 				g_iFinalesOnly = kvSuperTanks.GetNum("General/Finales Only", 0);
@@ -1489,6 +1496,8 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 				g_iAnnounceDeath2 = iClamp(g_iAnnounceDeath2, 0, 1);
 				g_iBaseHealth2 = kvSuperTanks.GetNum("General/Base Health", g_iBaseHealth);
 				g_iBaseHealth2 = iClamp(g_iBaseHealth2, 0, ST_MAXHEALTH);
+				g_iDeathRevert2 = kvSuperTanks.GetNum("General/Death Revert", g_iDeathRevert);
+				g_iDeathRevert2 = iClamp(g_iDeathRevert2, 0, 1);
 				g_iDisplayHealth2 = kvSuperTanks.GetNum("General/Display Health", g_iDisplayHealth);
 				g_iDisplayHealth2 = iClamp(g_iDisplayHealth2, 0, 3);
 				g_iFinalesOnly2 = kvSuperTanks.GetNum("General/Finales Only", g_iFinalesOnly);
@@ -1728,7 +1737,7 @@ static void vNewTankSettings(int tank)
 	Call_Finish();
 }
 
-static void vRemoveProps(int tank)
+static void vRemoveProps(int tank, int mode = 1)
 {
 	if (bIsValidEntity(g_iTankModel[tank]))
 	{
@@ -1796,8 +1805,11 @@ static void vRemoveProps(int tank)
 		SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
 	}
 
-	SetEntityRenderMode(tank, RENDER_NORMAL);
-	SetEntityRenderColor(tank, 255, 255, 255, 255);
+	if (mode == 1)
+	{
+		SetEntityRenderMode(tank, RENDER_NORMAL);
+		SetEntityRenderColor(tank, 255, 255, 255, 255);
+	}
 }
 
 static void vReset()
@@ -1816,9 +1828,9 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank)
+static void vReset2(int tank, int mode = 1)
 {
-	vRemoveProps(tank);
+	vRemoveProps(tank, mode);
 	vResetSpeed(tank, true);
 	vSpawnModes(tank, false);
 
