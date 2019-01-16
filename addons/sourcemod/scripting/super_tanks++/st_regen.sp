@@ -95,7 +95,7 @@ public void OnMapEnd()
 
 public Action cmdRegenInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -234,7 +234,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -310,7 +310,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveRegen(iTank);
 		}
@@ -319,7 +319,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iRegenAbility(tank) == 1 && !g_bRegen[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iRegenAbility(tank) == 1 && !g_bRegen[tank])
 	{
 		vRegenAbility(tank);
 	}
@@ -327,7 +327,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -377,7 +377,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -411,12 +411,12 @@ static void vRegenAbility(int tank)
 {
 	if (g_iRegenCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		float flRegenChance = !g_bTankConfig[ST_TankType(tank)] ? g_flRegenChance[ST_TankType(tank)] : g_flRegenChance2[ST_TankType(tank)];
+		float flRegenChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flRegenChance[ST_GetTankType(tank)] : g_flRegenChance2[ST_GetTankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flRegenChance)
 		{
 			g_bRegen[tank] = true;
 
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				g_iRegenCount[tank]++;
 
@@ -428,16 +428,16 @@ static void vRegenAbility(int tank)
 			if (iRegenMessage(tank) == 1)
 			{
 				char sTankName[33];
-				ST_TankName(tank, sTankName);
+				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Regen", sTankName, flRegenInterval(tank));
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "RegenHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "RegenAmmo");
 	}
@@ -479,42 +479,42 @@ static void vReset2(int tank)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flHumanDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanDuration[ST_TankType(tank)] : g_flHumanDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanDuration[ST_GetTankType(tank)] : g_flHumanDuration2[ST_GetTankType(tank)];
 }
 
 static float flRegenInterval(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flRegenInterval[ST_TankType(tank)] : g_flRegenInterval2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flRegenInterval[ST_GetTankType(tank)] : g_flRegenInterval2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 static int iRegenAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iRegenAbility[ST_TankType(tank)] : g_iRegenAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRegenAbility[ST_GetTankType(tank)] : g_iRegenAbility2[ST_GetTankType(tank)];
 }
 
 static int iRegenMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iRegenMessage[ST_TankType(tank)] : g_iRegenMessage2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRegenMessage[ST_GetTankType(tank)] : g_iRegenMessage2[ST_GetTankType(tank)];
 }
 
 public Action tTimerRegen(Handle timer, DataPack pack)
@@ -522,14 +522,14 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iRegenAbility(iTank) == 0 || !g_bRegen[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iRegenAbility(iTank) == 0 || !g_bRegen[iTank])
 	{
 		g_bRegen[iTank] = false;
 
 		if (iRegenMessage(iTank) == 1)
 		{
 			char sTankName[33];
-			ST_TankName(iTank, sTankName);
+			ST_GetTankName(iTank, sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Regen2", sTankName);
 		}
 
@@ -537,7 +537,7 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bRegen2[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bRegen2[iTank])
 	{
 		vReset2(iTank);
 
@@ -545,8 +545,8 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 	}
 
 	int iHealth = GetClientHealth(iTank),
-		iRegenHealth = !g_bTankConfig[ST_TankType(iTank)] ? (iHealth + g_iRegenHealth[ST_TankType(iTank)]) : (iHealth + g_iRegenHealth2[ST_TankType(iTank)]),
-		iRegenLimit = !g_bTankConfig[ST_TankType(iTank)] ? g_iRegenLimit[ST_TankType(iTank)] : g_iRegenLimit2[ST_TankType(iTank)],
+		iRegenHealth = !g_bTankConfig[ST_GetTankType(iTank)] ? (iHealth + g_iRegenHealth[ST_GetTankType(iTank)]) : (iHealth + g_iRegenHealth2[ST_GetTankType(iTank)]),
+		iRegenLimit = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iRegenLimit[ST_GetTankType(iTank)] : g_iRegenLimit2[ST_GetTankType(iTank)],
 		iExtraHealth = (iRegenHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iRegenHealth,
 		iExtraHealth2 = (iRegenHealth < iHealth) ? 1 : iRegenHealth,
 		iRealHealth = (iRegenHealth >= 0) ? iExtraHealth : iExtraHealth2,
@@ -562,7 +562,7 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bRegen2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bRegen2[iTank])
 	{
 		g_bRegen2[iTank] = false;
 

@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 8.55 (January 15, 2019)
+
+Bug fixes:
+
+1. Fixed the Clone and Minion abilities not working properly.
+2. Fixed the Flash and Pyro abilities glitching out when the `Run Speed` setting is not specified. (It now defaults to `1.0`.)
+3. Fixed the light prop appearing even when disabled.
+4. Fixed the Heal ability breaking the glow outline feature.
+
+Changes:
+
+1. Added the `ST_IsGlowEnabled` native.
+2. Added the `ST_GetRunSpeed` native.
+3. Added the `Death Revert` setting under `Plugin Settings/General`. (Requested by Mi.Cura.)
+4. Renamed all natives.
+
+Files:
+
+1. Updated the `super_tanks++.cfg` file.
+2. Updated the `super_tanks++.inc` file.
+
 ## Version 8.54 (January 8, 2019)
 
 Bug fixes:

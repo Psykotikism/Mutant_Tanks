@@ -109,7 +109,7 @@ public void OnMapEnd()
 
 public Action cmdThrowInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -157,7 +157,7 @@ public int iThrowMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 0:
 				{
 					char sThrowAbility[9];
-					sThrowAbility = !g_bTankConfig[ST_TankType(param1)] ? g_sThrowAbility[ST_TankType(param1)] : g_sThrowAbility2[ST_TankType(param1)];
+					sThrowAbility = !g_bTankConfig[ST_GetTankType(param1)] ? g_sThrowAbility[ST_GetTankType(param1)] : g_sThrowAbility2[ST_GetTankType(param1)];
 					ST_PrintToChat(param1, "%s %t", ST_TAG3, StrEqual(sThrowAbility, "") ? "AbilityStatus1" : "AbilityStatus2");
 				}
 				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iThrowCount[param1], iHumanAmmo(param1));
@@ -239,7 +239,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -295,7 +295,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveThrow(iTank);
 		}
@@ -304,12 +304,12 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
 			char sThrowAbility[9];
-			sThrowAbility = !g_bTankConfig[ST_TankType(tank)] ? g_sThrowAbility[ST_TankType(tank)] : g_sThrowAbility2[ST_TankType(tank)];
+			sThrowAbility = !g_bTankConfig[ST_GetTankType(tank)] ? g_sThrowAbility[ST_GetTankType(tank)] : g_sThrowAbility2[ST_GetTankType(tank)];
 			if (!StrEqual(sThrowAbility, "") && iHumanAbility(tank) == 1)
 			{
 				if (!g_bThrow[tank] && !g_bThrow2[tank])
@@ -347,9 +347,9 @@ public void ST_OnChangeType(int tank)
 public void ST_OnRockThrow(int tank, int rock)
 {
 	char sThrowAbility[9];
-	sThrowAbility = !g_bTankConfig[ST_TankType(tank)] ? g_sThrowAbility[ST_TankType(tank)] : g_sThrowAbility2[ST_TankType(tank)];
-	float flThrowChance = !g_bTankConfig[ST_TankType(tank)] ? g_flThrowChance[ST_TankType(tank)] : g_flThrowChance2[ST_TankType(tank)];
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled) && !StrEqual(sThrowAbility, "") && GetRandomFloat(0.1, 100.0) <= flThrowChance)
+	sThrowAbility = !g_bTankConfig[ST_GetTankType(tank)] ? g_sThrowAbility[ST_GetTankType(tank)] : g_sThrowAbility2[ST_GetTankType(tank)];
+	float flThrowChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flThrowChance[ST_GetTankType(tank)] : g_flThrowChance2[ST_GetTankType(tank)];
+	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && !StrEqual(sThrowAbility, "") && GetRandomFloat(0.1, 100.0) <= flThrowChance)
 	{
 		DataPack dpThrow;
 		CreateDataTimer(0.1, tTimerThrow, dpThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -378,17 +378,17 @@ static void vReset()
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 public Action tTimerThrow(Handle timer, DataPack pack)
@@ -396,20 +396,20 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iRock = EntRefToEntIndex(pack.ReadCell());
-	if (!ST_PluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	if (!ST_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	char sThrowAbility[9];
-	sThrowAbility = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowAbility[ST_TankType(iTank)] : g_sThrowAbility2[ST_TankType(iTank)];
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || StrEqual(sThrowAbility, ""))
+	sThrowAbility = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowAbility[ST_GetTankType(iTank)] : g_sThrowAbility2[ST_GetTankType(iTank)];
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || StrEqual(sThrowAbility, ""))
 	{
 		return Plugin_Stop;
 	}
 
-	if (!ST_TankAllowed(iTank, "5") || iHumanAbility(iTank) == 0)
+	if (!ST_IsTankSupported(iTank, "5") || iHumanAbility(iTank) == 0)
 	{
 		g_bThrow[iTank] = true;
 	}
@@ -425,7 +425,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	float flVector = GetVectorLength(flVelocity);
 	if (flVector > 500.0)
 	{
-		char sAbilities = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowAbility[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sThrowAbility[ST_TankType(iTank)]) - 1)] : g_sThrowAbility2[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sThrowAbility2[ST_TankType(iTank)]) - 1)];
+		char sAbilities = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowAbility[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowAbility[ST_GetTankType(iTank)]) - 1)] : g_sThrowAbility2[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowAbility2[ST_GetTankType(iTank)]) - 1)];
 		switch (sAbilities)
 		{
 			case '1':
@@ -433,7 +433,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				int iCar = CreateEntityByName("prop_physics");
 				if (bIsValidEntity(iCar))
 				{
-					char sNumbers = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowCarOptions[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sThrowCarOptions[ST_TankType(iTank)]) - 1)] : g_sThrowCarOptions2[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sThrowCarOptions2[ST_TankType(iTank)]) - 1)];
+					char sNumbers = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowCarOptions[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowCarOptions[ST_GetTankType(iTank)]) - 1)] : g_sThrowCarOptions2[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowCarOptions2[ST_GetTankType(iTank)]) - 1)];
 					switch (sNumbers)
 					{
 						case '1': SetEntityModel(iCar, MODEL_CAR);
@@ -461,11 +461,11 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					vDeleteEntity(iCar, 10.0);
 
 					char sThrowMessage[5];
-					sThrowMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowMessage[ST_TankType(iTank)] : g_sThrowMessage2[ST_TankType(iTank)];
+					sThrowMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowMessage[ST_GetTankType(iTank)] : g_sThrowMessage2[ST_GetTankType(iTank)];
 					if (StrContains(sThrowMessage, "1") != -1)
 					{
 						char sTankName[33];
-						ST_TankName(iTank, sTankName);
+						ST_GetTankName(iTank, sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw", sTankName);
 					}
 				}
@@ -475,7 +475,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				int iInfected = CreateFakeClient("Infected");
 				if (iInfected > 0)
 				{
-					char sNumbers = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowInfectedOptions[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sThrowInfectedOptions[ST_TankType(iTank)]) - 1)] : g_sThrowInfectedOptions2[ST_TankType(iTank)][GetRandomInt(0, strlen(g_sThrowInfectedOptions2[ST_TankType(iTank)]) - 1)];
+					char sNumbers = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowInfectedOptions[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowInfectedOptions[ST_GetTankType(iTank)]) - 1)] : g_sThrowInfectedOptions2[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowInfectedOptions2[ST_GetTankType(iTank)]) - 1)];
 					switch (sNumbers)
 					{
 						case '1': vSpawnInfected(iInfected, "smoker");
@@ -519,11 +519,11 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
 
 					char sThrowMessage[5];
-					sThrowMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowMessage[ST_TankType(iTank)] : g_sThrowMessage2[ST_TankType(iTank)];
+					sThrowMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowMessage[ST_GetTankType(iTank)] : g_sThrowMessage2[ST_GetTankType(iTank)];
 					if (StrContains(sThrowMessage, "2") != -1)
 					{
 						char sTankName[33];
-						ST_TankName(iTank, sTankName);
+						ST_GetTankName(iTank, sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw2", sTankName);
 					}
 				}
@@ -540,11 +540,11 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
 
 				char sThrowMessage[5];
-				sThrowMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowMessage[ST_TankType(iTank)] : g_sThrowMessage2[ST_TankType(iTank)];
+				sThrowMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowMessage[ST_GetTankType(iTank)] : g_sThrowMessage2[ST_GetTankType(iTank)];
 				if (StrContains(sThrowMessage, "3") != -1)
 				{
 					char sTankName[33];
-					ST_TankName(iTank, sTankName);
+					ST_GetTankName(iTank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Throw3", sTankName);
 				}
 			}
@@ -568,11 +568,11 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				}
 
 				char sThrowMessage[5];
-				sThrowMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sThrowMessage[ST_TankType(iTank)] : g_sThrowMessage2[ST_TankType(iTank)];
+				sThrowMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowMessage[ST_GetTankType(iTank)] : g_sThrowMessage2[ST_GetTankType(iTank)];
 				if (StrContains(sThrowMessage, "4") != -1)
 				{
 					char sTankName[33];
-					ST_TankName(iTank, sTankName);
+					ST_GetTankName(iTank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Throw4", sTankName);
 				}
 			}
@@ -580,7 +580,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 		g_bThrow[iTank] = false;
 
-		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) && !g_bThrow2[iTank])
+		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) && !g_bThrow2[iTank])
 		{
 			g_bThrow2[iTank] = true;
 
@@ -618,7 +618,7 @@ public Action tTimerSetCarVelocity(Handle timer, int ref)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bThrow2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bThrow2[iTank])
 	{
 		g_bThrow2[iTank] = false;
 

@@ -44,18 +44,18 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 
-	CreateNative("ST_CloneAllowed", aNative_CloneAllowed);
+	CreateNative("ST_IsCloneSupported", aNative_IsCloneSupported);
 
 	RegPluginLibrary("st_clone");
 
 	return APLRes_Success;
 }
 
-public any aNative_CloneAllowed(Handle plugin, int numParams)
+public any aNative_IsCloneSupported(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	bool bCloneInstalled = GetNativeCell(2);
-	if (ST_TankAllowed(iTank, "024") && bIsCloneAllowed(iTank, bCloneInstalled))
+	if (ST_IsTankSupported(iTank, "024") && bIsCloneAllowed(iTank, bCloneInstalled))
 	{
 		return true;
 	}
@@ -79,6 +79,8 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	vRemoveClone(client);
+
+	g_bClone[client] = false;
 }
 
 public void OnMapEnd()
@@ -88,7 +90,7 @@ public void OnMapEnd()
 
 public Action cmdCloneInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -213,7 +215,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -296,7 +298,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			g_bClone2[iTank] = false;
 			g_iCloneCount[iTank] = 0;
@@ -310,42 +312,25 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					{
 						for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 						{
-							if (ST_TankAllowed(iOwner, "24") && g_iCloneOwner[iTank] == iOwner)
+							if (ST_IsTankSupported(iOwner, "24") && g_iCloneOwner[iTank] == iOwner)
 							{
 								g_bClone[iTank] = false;
 								g_iCloneOwner[iTank] = 0;
 
-								int iCloneReplace = !g_bTankConfig[ST_TankType(iOwner)] ? g_iCloneReplace[ST_TankType(iOwner)] : g_iCloneReplace2[ST_TankType(iOwner)];
-								switch (iCloneReplace)
+								switch (g_iCloneCount[iOwner])
 								{
-									case 0:
+									case 0, 1: vResetCooldown(iOwner);
+									default:
 									{
-										switch (g_iCloneCount[iOwner])
+										int iCloneReplace = !g_bTankConfig[ST_GetTankType(iOwner)] ? g_iCloneReplace[ST_GetTankType(iOwner)] : g_iCloneReplace2[ST_GetTankType(iOwner)];
+										if (iCloneReplace == 1)
 										{
-											case 0, 1: vResetCooldown(iOwner);
-											default:
-											{
-												if (ST_TankAllowed(iOwner, "5") && iHumanAbility(iOwner) == 1)
-												{
-													ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "CloneHuman5");
-												}
-											}
+											g_iCloneCount[iOwner]--;
 										}
-									}
-									case 1:
-									{
-										switch (g_iCloneCount[iOwner])
-										{
-											case 0, 1: vResetCooldown(iOwner);
-											default:
-											{
-												g_iCloneCount[iOwner]--;
 
-												if (ST_TankAllowed(iOwner, "5") && iHumanAbility(iOwner) == 1)
-												{
-													ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "CloneHuman5");
-												}
-											}
+										if (ST_IsTankSupported(iOwner, "5") && iHumanAbility(iOwner) == 1)
+										{
+											ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "CloneHuman5");
 										}
 									}
 								}
@@ -358,7 +343,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					{
 						for (int iClone = 1; iClone <= MaxClients; iClone++)
 						{
-							if (ST_TankAllowed(iTank, "24") && g_iCloneOwner[iClone] == iTank)
+							if (ST_IsTankSupported(iTank, "24") && g_iCloneOwner[iClone] == iTank)
 							{
 								g_iCloneOwner[iClone] = 0;
 							}
@@ -372,7 +357,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && iCloneAbility(tank) == 1 && !g_bClone[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && iCloneAbility(tank) == 1 && !g_bClone[tank])
 	{
 		vCloneAbility(tank);
 	}
@@ -380,7 +365,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && !g_bClone[tank])
+	if (ST_IsTankSupported(tank, "02345") && !g_bClone[tank])
 	{
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
@@ -410,10 +395,10 @@ public void ST_OnChangeType(int tank)
 
 static void vCloneAbility(int tank)
 {
-	int iCloneAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneAmount[ST_TankType(tank)] : g_iCloneAmount2[ST_TankType(tank)];
+	int iCloneAmount = !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneAmount[ST_GetTankType(tank)] : g_iCloneAmount2[ST_GetTankType(tank)];
 	if (g_iCloneCount[tank] < iCloneAmount && g_iCloneCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		float flCloneChance = !g_bTankConfig[ST_TankType(tank)] ? g_flCloneChance[ST_TankType(tank)] : g_flCloneChance2[ST_TankType(tank)];
+		float flCloneChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flCloneChance[ST_GetTankType(tank)] : g_flCloneChance2[ST_GetTankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flCloneChance)
 		{
 			float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
@@ -442,18 +427,18 @@ static void vCloneAbility(int tank)
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						bTankBoss[iPlayer] = false;
-						if (ST_TankAllowed(iPlayer, "234"))
+						if (ST_IsTankSupported(iPlayer, "234"))
 						{
 							bTankBoss[iPlayer] = true;
 						}
 					}
 
-					ST_SpawnTank(tank, ST_TankType(tank));
+					ST_SpawnTank(tank, ST_GetTankType(tank));
 
 					int iSelectedType;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (ST_TankAllowed(iPlayer, "234") && !bTankBoss[iPlayer])
+						if (ST_IsTankSupported(iPlayer, "234") && !bTankBoss[iPlayer])
 						{
 							iSelectedType = iPlayer;
 
@@ -467,25 +452,25 @@ static void vCloneAbility(int tank)
 
 						g_bClone[iSelectedType] = true;
 
-						int iCloneHealth = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneHealth[ST_TankType(tank)] : g_iCloneHealth2[ST_TankType(tank)],
+						int iCloneHealth = !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneHealth[ST_GetTankType(tank)] : g_iCloneHealth2[ST_GetTankType(tank)],
 							iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
 						SetEntityHealth(iSelectedType, iNewHealth);
 
 						g_iCloneCount[tank]++;
 						g_iCloneOwner[iSelectedType] = tank;
 
-						if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+						if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 						{
 							g_iCloneCount2[tank]++;
 
 							ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman", g_iCloneCount2[tank], iHumanAmmo(tank));
 						}
 
-						int iCloneMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneMessage[ST_TankType(tank)] : g_iCloneMessage2[ST_TankType(tank)];
+						int iCloneMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneMessage[ST_GetTankType(tank)] : g_iCloneMessage2[ST_GetTankType(tank)];
 						if (iCloneMessage == 1)
 						{
 							char sTankName[33];
-							ST_TankName(tank, sTankName);
+							ST_GetTankName(tank, sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Clone", sTankName);
 						}
 					}
@@ -494,12 +479,12 @@ static void vCloneAbility(int tank)
 
 			delete hTrace;
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneAmmo");
 	}
@@ -507,7 +492,6 @@ static void vCloneAbility(int tank)
 
 static void vRemoveClone(int tank)
 {
-	g_bClone[tank] = false;
 	g_bClone2[tank] = false;
 	g_iCloneCount[tank] = 0;
 	g_iCloneCount2[tank] = 0;
@@ -521,6 +505,7 @@ static void vReset()
 		{
 			vRemoveClone(iPlayer);
 
+			g_bClone[iPlayer] = false;
 			g_iCloneOwner[iPlayer] = 0;
 		}
 	}
@@ -530,7 +515,7 @@ static void vResetCooldown(int tank)
 {
 	g_iCloneCount[tank] = 0;
 
-	if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		g_bClone2[tank] = true;
 
@@ -542,7 +527,7 @@ static void vResetCooldown(int tank)
 
 static bool bIsCloneAllowed(int tank, bool clone)
 {
-	int iCloneMode = !g_bTankConfig[ST_TankType(tank)] ? g_iCloneMode[ST_TankType(tank)] : g_iCloneMode2[ST_TankType(tank)];
+	int iCloneMode = !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneMode[ST_GetTankType(tank)] : g_iCloneMode2[ST_GetTankType(tank)];
 	if (clone && iCloneMode == 0 && g_bClone[tank])
 	{
 		return false;
@@ -553,28 +538,28 @@ static bool bIsCloneAllowed(int tank, bool clone)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static int iCloneAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iCloneAbility[ST_TankType(tank)] : g_iCloneAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneAbility[ST_GetTankType(tank)] : g_iCloneAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || g_bClone[iTank] || !g_bClone2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || g_bClone[iTank] || !g_bClone2[iTank])
 	{
 		g_bClone2[iTank] = false;
 

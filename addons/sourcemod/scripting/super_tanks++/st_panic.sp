@@ -111,7 +111,7 @@ public void OnMapEnd()
 
 public Action cmdPanicInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -250,7 +250,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -318,9 +318,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iPanicAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flPanicChance(iTank))
+			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iPanicAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flPanicChance(iTank))
 			{
 				vCheatCommand(iTank, "director_force_panic_event");
 			}
@@ -332,7 +332,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iPanicAbility(tank) == 1 && !g_bPanic[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iPanicAbility(tank) == 1 && !g_bPanic[tank])
 	{
 		vPanicAbility(tank);
 	}
@@ -340,7 +340,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -390,7 +390,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -412,7 +412,7 @@ public void ST_OnChangeType(int tank)
 
 static void vPanic(int tank)
 {
-	float flPanicInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flPanicInterval[ST_TankType(tank)] : g_flPanicInterval2[ST_TankType(tank)];
+	float flPanicInterval = !g_bTankConfig[ST_GetTankType(tank)] ? g_flPanicInterval[ST_GetTankType(tank)] : g_flPanicInterval2[ST_GetTankType(tank)];
 	DataPack dpPanic;
 	CreateDataTimer(flPanicInterval, tTimerPanic, dpPanic, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpPanic.WriteCell(GetClientUserId(tank));
@@ -427,7 +427,7 @@ static void vPanicAbility(int tank)
 		{
 			g_bPanic[tank] = true;
 
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				g_iPanicCount[tank]++;
 
@@ -439,16 +439,16 @@ static void vPanicAbility(int tank)
 			if (iPanicMessage(tank) == 1)
 			{
 				char sTankName[33];
-				ST_TankName(tank, sTankName);
+				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Panic", sTankName);
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "PanicHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "PanicAmmo");
 	}
@@ -491,42 +491,42 @@ static void vReset2(int tank)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flHumanDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanDuration[ST_TankType(tank)] : g_flHumanDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanDuration[ST_GetTankType(tank)] : g_flHumanDuration2[ST_GetTankType(tank)];
 }
 
 static float flPanicChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flPanicChance[ST_TankType(tank)] : g_flPanicChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flPanicChance[ST_GetTankType(tank)] : g_flPanicChance2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 static int iPanicAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicAbility[ST_TankType(tank)] : g_iPanicAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iPanicAbility[ST_GetTankType(tank)] : g_iPanicAbility2[ST_GetTankType(tank)];
 }
 
 static int iPanicMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iPanicMessage[ST_TankType(tank)] : g_iPanicMessage2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iPanicMessage[ST_GetTankType(tank)] : g_iPanicMessage2[ST_GetTankType(tank)];
 }
 
 public Action tTimerPanic(Handle timer, DataPack pack)
@@ -534,7 +534,7 @@ public Action tTimerPanic(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iPanicAbility(iTank) == 0 || !g_bPanic[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iPanicAbility(iTank) == 0 || !g_bPanic[iTank])
 	{
 		g_bPanic[iTank] = false;
 
@@ -542,7 +542,7 @@ public Action tTimerPanic(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bPanic2[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bPanic2[iTank])
 	{
 		vReset2(iTank);
 
@@ -554,7 +554,7 @@ public Action tTimerPanic(Handle timer, DataPack pack)
 	if (iPanicMessage(iTank) == 1)
 	{
 		char sTankName[33];
-		ST_TankName(iTank, sTankName);
+		ST_GetTankName(iTank, sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Panic2", sTankName);
 	}
 
@@ -564,7 +564,7 @@ public Action tTimerPanic(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bPanic2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bPanic2[iTank])
 	{
 		g_bPanic2[iTank] = false;
 

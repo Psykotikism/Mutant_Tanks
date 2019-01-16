@@ -113,7 +113,7 @@ public void OnMapEnd()
 
 public Action cmdWitchInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -235,7 +235,7 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		if (bIsWitch(attacker) && bIsSurvivor(victim))
 		{
@@ -245,9 +245,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				iOwner = GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity");
 			}
 
-			if (ST_TankAllowed(iOwner) && ST_CloneAllowed(iOwner, g_bCloneInstalled))
+			if (ST_IsTankSupported(iOwner) && ST_IsCloneSupported(iOwner, g_bCloneInstalled))
 			{
-				float flWitchDamage = !g_bTankConfig[ST_TankType(iOwner)] ? g_flWitchDamage[ST_TankType(iOwner)] : g_flWitchDamage2[ST_TankType(iOwner)];
+				float flWitchDamage = !g_bTankConfig[ST_GetTankType(iOwner)] ? g_flWitchDamage[ST_GetTankType(iOwner)] : g_flWitchDamage2[ST_GetTankType(iOwner)];
 				damage = flWitchDamage;
 
 				return Plugin_Changed;
@@ -263,7 +263,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -331,9 +331,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iWitchAbility(iTank) == 1)
+			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iWitchAbility(iTank) == 1)
 			{
 				float flTankPos[3], flTankAngles[3];
 				GetClientAbsOrigin(iTank, flTankPos);
@@ -349,7 +349,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iWitchAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iWitchAbility(tank) == 1)
 	{
 		vWitchAbility(tank);
 	}
@@ -357,7 +357,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
@@ -411,13 +411,13 @@ static void vWitchAbility(int tank)
 {
 	if (g_iWitchCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		float flWitchChance = !g_bTankConfig[ST_TankType(tank)] ? g_flWitchChance[ST_TankType(tank)] : g_flWitchChance2[ST_TankType(tank)];
+		float flWitchChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flWitchChance[ST_GetTankType(tank)] : g_flWitchChance2[ST_GetTankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flWitchChance)
 		{
 			int iInfected = -1;
 			while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bWitch[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bWitch[tank])
 				{
 					g_bWitch[tank] = true;
 					g_iWitchCount[tank]++;
@@ -434,7 +434,7 @@ static void vWitchAbility(int tank)
 					}
 				}
 
-				int iWitchAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchAmount[ST_TankType(tank)] : g_iWitchAmount2[ST_TankType(tank)];
+				int iWitchAmount = !g_bTankConfig[ST_GetTankType(tank)] ? g_iWitchAmount[ST_GetTankType(tank)] : g_iWitchAmount2[ST_GetTankType(tank)];
 				if (iGetWitchCount() < iWitchAmount)
 				{
 					float flTankPos[3], flInfectedPos[3], flInfectedAngles[3];
@@ -442,7 +442,7 @@ static void vWitchAbility(int tank)
 					GetEntPropVector(iInfected, Prop_Send, "m_vecOrigin", flInfectedPos);
 					GetEntPropVector(iInfected, Prop_Send, "m_angRotation", flInfectedAngles);
 
-					float flWitchRange = !g_bTankConfig[ST_TankType(tank)] ? g_flWitchRange[ST_TankType(tank)] : g_flWitchRange[ST_TankType(tank)], flDistance = GetVectorDistance(flInfectedPos, flTankPos);
+					float flWitchRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flWitchRange[ST_GetTankType(tank)] : g_flWitchRange[ST_GetTankType(tank)], flDistance = GetVectorDistance(flInfectedPos, flTankPos);
 					if (flDistance <= flWitchRange)
 					{
 						RemoveEntity(iInfected);
@@ -450,21 +450,21 @@ static void vWitchAbility(int tank)
 					}
 				}
 
-				int iWitchMessage = !g_bTankConfig[ST_TankType(tank)] ? g_iWitchMessage[ST_TankType(tank)] : g_iWitchMessage2[ST_TankType(tank)];
+				int iWitchMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iWitchMessage[ST_GetTankType(tank)] : g_iWitchMessage2[ST_GetTankType(tank)];
 				if (iWitchMessage == 1)
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Witch", sTankName);
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "WitchHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "WitchAmmo");
 	}
@@ -472,28 +472,28 @@ static void vWitchAbility(int tank)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iWitchAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iWitchAbility[ST_TankType(tank)] : g_iWitchAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iWitchAbility[ST_GetTankType(tank)] : g_iWitchAbility2[ST_GetTankType(tank)];
 }
 
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bWitch[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bWitch[iTank])
 	{
 		g_bWitch[iTank] = false;
 

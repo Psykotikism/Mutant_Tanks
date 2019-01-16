@@ -21,7 +21,7 @@
  * @param clone				Checks whether "st_clone.smx" is installed.
  * @return				True if clone can use abilities, false otherwise.
  **/
-native bool ST_CloneAllowed(int tank, bool clone);
+native bool ST_IsCloneSupported(int tank, bool clone);
 
 public SharedPlugin __pl_supertankspluspluscloneability = 
 {
@@ -37,6 +37,6 @@ public SharedPlugin __pl_supertankspluspluscloneability =
 #if !defined REQUIRE_PLUGIN
 public void __pl_supertankspluspluscloneability_SetNTVOptional()
 {
-	MarkNativeAsOptional("ST_CloneAllowed");
+	MarkNativeAsOptional("ST_IsCloneSupported");
 }
 #endif

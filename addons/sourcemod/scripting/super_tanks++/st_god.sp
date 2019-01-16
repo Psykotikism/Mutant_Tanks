@@ -95,7 +95,7 @@ public void OnMapEnd()
 
 public Action cmdGodInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -234,7 +234,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -309,21 +309,16 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (g_bGod[iTank])
-			{
-				tTimerStopGod(null, GetClientUserId(iTank));
-			}
-
-			g_iGodCount[iTank] = 0;
+			vRemoveGod(iTank);
 		}
 	}
 }
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iGodAbility(tank) == 1 && !g_bGod[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iGodAbility(tank) == 1 && !g_bGod[tank])
 	{
 		vGodAbility(tank);
 	}
@@ -331,7 +326,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -381,7 +376,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -402,11 +397,6 @@ public void ST_OnButtonReleased(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
-	if (ST_TankAllowed(tank) && ST_CloneAllowed(tank, g_bCloneInstalled))
-	{
-		SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
-	}
-
 	vRemoveGod(tank);
 }
 
@@ -414,7 +404,7 @@ static void vGodAbility(int tank)
 {
 	if (g_iGodCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		float flGodChance = !g_bTankConfig[ST_TankType(tank)] ? g_flGodChance[ST_TankType(tank)] : g_flGodChance2[ST_TankType(tank)];
+		float flGodChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flGodChance[ST_GetTankType(tank)] : g_flGodChance2[ST_GetTankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flGodChance)
 		{
 			g_bGod[tank] = true;
@@ -423,7 +413,7 @@ static void vGodAbility(int tank)
 
 			CreateTimer(flGodDuration(tank), tTimerStopGod, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				g_iGodCount[tank]++;
 
@@ -433,16 +423,16 @@ static void vGodAbility(int tank)
 			if (iGodMessage(tank) == 1)
 			{
 				char sTankName[33];
-				ST_TankName(tank, sTankName);
+				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "God", sTankName);
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodAmmo");
 	}
@@ -453,6 +443,11 @@ static void vRemoveGod(int tank)
 	g_bGod[tank] = false;
 	g_bGod2[tank] = false;
 	g_iGodCount[tank] = 0;
+
+	if (ST_IsTankSupported(tank))
+	{
+		SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
+	}
 }
 
 static void vReset()
@@ -484,43 +479,43 @@ static void vReset2(int tank)
 
 static float flGodDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flGodDuration[ST_TankType(tank)] : g_flGodDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flGodDuration[ST_GetTankType(tank)] : g_flGodDuration2[ST_GetTankType(tank)];
 }
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static int iGodAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iGodAbility[ST_TankType(tank)] : g_iGodAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iGodAbility[ST_GetTankType(tank)] : g_iGodAbility2[ST_GetTankType(tank)];
 }
 
 static int iGodMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iGodMessage[ST_TankType(tank)] : g_iGodMessage2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iGodMessage[ST_GetTankType(tank)] : g_iGodMessage2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerStopGod(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
 	{
 		g_bGod[iTank] = false;
 
@@ -531,7 +526,7 @@ public Action tTimerStopGod(Handle timer, int userid)
 
 	SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
 
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bGod2[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bGod2[iTank])
 	{
 		vReset2(iTank);
 	}
@@ -539,7 +534,7 @@ public Action tTimerStopGod(Handle timer, int userid)
 	if (iGodMessage(iTank) == 1)
 	{
 		char sTankName[33];
-		ST_TankName(iTank, sTankName);
+		ST_GetTankName(iTank, sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "God2", sTankName);
 	}
 
@@ -549,7 +544,7 @@ public Action tTimerStopGod(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bGod2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bGod2[iTank])
 	{
 		g_bGod2[iTank] = false;
 

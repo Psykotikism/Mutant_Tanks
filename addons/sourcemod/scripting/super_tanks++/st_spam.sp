@@ -99,7 +99,7 @@ public void OnMapEnd()
 
 public Action cmdSpamInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -238,7 +238,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -306,7 +306,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveSpam(iTank);
 		}
@@ -315,7 +315,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iSpamAbility(tank) == 1 && !g_bSpam[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iSpamAbility(tank) == 1 && !g_bSpam[tank])
 	{
 		vSpamAbility(tank);
 	}
@@ -323,7 +323,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -377,7 +377,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -446,7 +446,7 @@ static void vReset3(int tank)
 static void vSpam(int tank)
 {
 	char sDamage[11];
-	int iSpamDamage = !g_bTankConfig[ST_TankType(tank)] ? g_iSpamDamage[ST_TankType(tank)] : g_iSpamDamage2[ST_TankType(tank)];
+	int iSpamDamage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iSpamDamage[ST_GetTankType(tank)] : g_iSpamDamage2[ST_GetTankType(tank)];
 	IntToString(iSpamDamage, sDamage, sizeof(sDamage));
 	DispatchSpawn(g_iSpam[tank]);
 	DispatchKeyValue(g_iSpam[tank], "rockdamageoverride", sDamage);
@@ -462,7 +462,7 @@ static void vSpamAbility(int tank)
 {
 	if (g_iSpamCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		float flSpamChance = !g_bTankConfig[ST_TankType(tank)] ? g_flSpamChance[ST_TankType(tank)] : g_flSpamChance2[ST_TankType(tank)];
+		float flSpamChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flSpamChance[ST_GetTankType(tank)] : g_flSpamChance2[ST_GetTankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flSpamChance)
 		{
 			g_iSpam[tank] = CreateEntityByName("env_rock_launcher");
@@ -473,7 +473,7 @@ static void vSpamAbility(int tank)
 
 			g_bSpam[tank] = true;
 
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				g_iSpamCount[tank]++;
 
@@ -485,16 +485,16 @@ static void vSpamAbility(int tank)
 			if (iSpamMessage(tank) == 1)
 			{
 				char sTankName[33];
-				ST_TankName(tank, sTankName);
+				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Spam", sTankName);
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "SpamHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "SpamAmmo");
 	}
@@ -502,37 +502,37 @@ static void vSpamAbility(int tank)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flSpamDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flSpamDuration[ST_TankType(tank)] : g_flSpamDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flSpamDuration[ST_GetTankType(tank)] : g_flSpamDuration2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 static int iSpamAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iSpamAbility[ST_TankType(tank)] : g_iSpamAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iSpamAbility[ST_GetTankType(tank)] : g_iSpamAbility2[ST_GetTankType(tank)];
 }
 
 static int iSpamMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iSpamMessage[ST_TankType(tank)] : g_iSpamMessage2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iSpamMessage[ST_GetTankType(tank)] : g_iSpamMessage2[ST_GetTankType(tank)];
 }
 
 public Action tTimerSpam(Handle timer, DataPack pack)
@@ -540,14 +540,14 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSpam = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_PluginEnabled() || iSpam == INVALID_ENT_REFERENCE || !bIsValidEntity(iSpam))
+	if (!ST_IsCorePluginEnabled() || iSpam == INVALID_ENT_REFERENCE || !bIsValidEntity(iSpam))
 	{
 		g_bSpam[iTank] = false;
 
 		return Plugin_Stop;
 	}
 
-	if (!ST_PluginEnabled() || !ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
 	{
 		vReset2(iTank, iSpam);
 
@@ -555,11 +555,11 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (iSpamAbility(iTank) == 0 || ((!ST_TankAllowed(iTank, "5") || (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flSpamDuration(iTank)) < GetEngineTime()))
+	if (iSpamAbility(iTank) == 0 || ((!ST_IsTankSupported(iTank, "5") || (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flSpamDuration(iTank)) < GetEngineTime()))
 	{
 		vReset2(iTank, iSpam);
 
-		if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bSpam2[iTank])
+		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bSpam2[iTank])
 		{
 			vReset3(iTank);
 		}
@@ -567,7 +567,7 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 		if (iSpamMessage(iTank) == 1)
 		{
 			char sTankName[33];
-			ST_TankName(iTank, sTankName);
+			ST_GetTankName(iTank, sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Spam2", sTankName);
 		}
 
@@ -599,7 +599,7 @@ public Action tTimerStopRockSound(Handle timer)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bSpam2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bSpam2[iTank])
 	{
 		g_bSpam2[iTank] = false;
 

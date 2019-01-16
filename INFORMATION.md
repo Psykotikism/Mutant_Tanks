@@ -1,8 +1,8 @@
 # Information
 > Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
 
-- Maximum types: 500 (Increase/decrease the value in the `super_tanks++.inc` file at your own risk.)
-- Ability count: 68 (More to come whenever possible; suggest your own abilit(y/ies).)
+- Maximum types: 500 (Increase the value in the `super_tanks++.inc` file at your own risk.)
+- Ability count: 68 (More to come whenever possible; suggest your own abilities.)
 
 ## Plugin Settings
 
@@ -49,6 +49,13 @@
 			// Minimum: 0 (OFF)
 			// Maximum: 65535
 			"Base Health"				"0"
+
+			// Super Tanks revert back to default Tanks upon death.
+			// Note: This feature is simply for cosmetic purposes. You don't need to worry about this setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Death Revert"				"0"
 
 			// Display Tanks' names and health.
 			// --

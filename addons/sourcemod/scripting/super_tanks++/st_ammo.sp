@@ -115,7 +115,7 @@ public void OnMapEnd()
 
 public Action cmdAmmoInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -237,19 +237,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if (ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && (iAmmoHitMode(attacker) == 0 || iAmmoHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iAmmoHitMode(attacker) == 0 || iAmmoHitMode(attacker) == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vAmmoHit(victim, attacker, flAmmoChance(attacker), iAmmoHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && (iAmmoHitMode(victim) == 0 || iAmmoHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iAmmoHitMode(victim) == 0 || iAmmoHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
@@ -264,7 +264,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -340,7 +340,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveAmmo(iTank);
 		}
@@ -349,7 +349,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iAmmoAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iAmmoAbility(tank) == 1)
 	{
 		vAmmoAbility(tank);
 	}
@@ -357,7 +357,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -385,8 +385,8 @@ static void vAmmoAbility(int tank)
 		g_bAmmo2[tank] = false;
 		g_bAmmo3[tank] = false;
 
-		float flAmmoRange = !g_bTankConfig[ST_TankType(tank)] ? g_flAmmoRange[ST_TankType(tank)] : g_flAmmoRange2[ST_TankType(tank)],
-			flAmmoRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flAmmoRangeChance[ST_TankType(tank)] : g_flAmmoRangeChance2[ST_TankType(tank)],
+		float flAmmoRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flAmmoRange[ST_GetTankType(tank)] : g_flAmmoRange2[ST_GetTankType(tank)],
+			flAmmoRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flAmmoRangeChance[ST_GetTankType(tank)] : g_flAmmoRangeChance2[ST_GetTankType(tank)],
 			flTankPos[3];
 
 		GetClientAbsOrigin(tank, flTankPos);
@@ -412,13 +412,13 @@ static void vAmmoAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "AmmoHuman4");
 			}
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "AmmoAmmo");
 	}
@@ -432,7 +432,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bAmmo[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bAmmo[tank])
 				{
 					g_bAmmo[tank] = true;
 					g_iAmmoCount[tank]++;
@@ -451,7 +451,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 
 				char sWeapon[32];
 				int iActiveWeapon = GetEntPropEnt(survivor, Prop_Data, "m_hActiveWeapon"),
-					iAmmoAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoAmount[ST_TankType(tank)] : g_iAmmoAmount2[ST_TankType(tank)];
+					iAmmoAmount = !g_bTankConfig[ST_GetTankType(tank)] ? g_iAmmoAmount[ST_GetTankType(tank)] : g_iAmmoAmount2[ST_GetTankType(tank)];
 				GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
 				if (bIsValidEntity(iActiveWeapon))
 				{
@@ -508,21 +508,21 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 				SetEntProp(GetPlayerWeaponSlot(survivor, 0), Prop_Data, "m_iClip1", iAmmoAmount, 1);
 
 				char sAmmoEffect[4];
-				sAmmoEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sAmmoEffect[ST_TankType(tank)] : g_sAmmoEffect2[ST_TankType(tank)];
+				sAmmoEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sAmmoEffect[ST_GetTankType(tank)] : g_sAmmoEffect2[ST_GetTankType(tank)];
 				vEffect(survivor, tank, sAmmoEffect, mode);
 
 				char sAmmoMessage[3];
-				sAmmoMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sAmmoMessage[ST_TankType(tank)] : g_sAmmoMessage2[ST_TankType(tank)];
+				sAmmoMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sAmmoMessage[ST_GetTankType(tank)] : g_sAmmoMessage2[ST_GetTankType(tank)];
 				if (StrContains(sAmmoMessage, message) != -1)
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Ammo", sTankName, survivor);
 				}
 			}
 			else if (StrEqual(mode, "3") && !g_bAmmo[tank])
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bAmmo2[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bAmmo2[tank])
 				{
 					g_bAmmo2[tank] = true;
 
@@ -530,7 +530,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bAmmo3[tank])
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bAmmo3[tank])
 		{
 			g_bAmmo3[tank] = true;
 
@@ -560,43 +560,43 @@ static void vReset()
 
 static float flAmmoChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flAmmoChance[ST_TankType(tank)] : g_flAmmoChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flAmmoChance[ST_GetTankType(tank)] : g_flAmmoChance2[ST_GetTankType(tank)];
 }
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static int iAmmoAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoAbility[ST_TankType(tank)] : g_iAmmoAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iAmmoAbility[ST_GetTankType(tank)] : g_iAmmoAbility2[ST_GetTankType(tank)];
 }
 
 static int iAmmoHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoHit[ST_TankType(tank)] : g_iAmmoHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iAmmoHit[ST_GetTankType(tank)] : g_iAmmoHit2[ST_GetTankType(tank)];
 }
 
 static int iAmmoHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iAmmoHitMode[ST_TankType(tank)] : g_iAmmoHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iAmmoHitMode[ST_GetTankType(tank)] : g_iAmmoHitMode2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bAmmo[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bAmmo[iTank])
 	{
 		g_bAmmo[iTank] = false;
 

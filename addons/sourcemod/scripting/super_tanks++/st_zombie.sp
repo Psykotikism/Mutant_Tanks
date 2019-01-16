@@ -96,7 +96,7 @@ public void OnMapEnd()
 
 public Action cmdZombieInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -235,7 +235,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -307,9 +307,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (ST_CloneAllowed(iTank, g_bCloneInstalled) && iZombieAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flZombieChance(iTank))
+			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iZombieAbility(iTank) == 1 && GetRandomFloat(0.1, 100.0) <= flZombieChance(iTank))
 			{
 				vZombie(iTank);
 			}
@@ -321,7 +321,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iZombieAbility(tank) == 1 && !g_bZombie[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iZombieAbility(tank) == 1 && !g_bZombie[tank])
 	{
 		vZombieAbility(tank);
 	}
@@ -329,7 +329,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -379,7 +379,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -436,7 +436,7 @@ static void vReset2(int tank)
 
 static void vZombie(int tank)
 {
-	int iZombieAmount = !g_bTankConfig[ST_TankType(tank)] ? g_iZombieAmount[ST_TankType(tank)] : g_iZombieAmount2[ST_TankType(tank)];
+	int iZombieAmount = !g_bTankConfig[ST_GetTankType(tank)] ? g_iZombieAmount[ST_GetTankType(tank)] : g_iZombieAmount2[ST_GetTankType(tank)];
 	for (int iZombie = 1; iZombie <= iZombieAmount; iZombie++)
 	{
 		vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "zombie area");
@@ -445,7 +445,7 @@ static void vZombie(int tank)
 
 static void vZombie2(int tank)
 {
-	float flZombieInterval = !g_bTankConfig[ST_TankType(tank)] ? g_flZombieInterval[ST_TankType(tank)] : g_flZombieInterval2[ST_TankType(tank)];
+	float flZombieInterval = !g_bTankConfig[ST_GetTankType(tank)] ? g_flZombieInterval[ST_GetTankType(tank)] : g_flZombieInterval2[ST_GetTankType(tank)];
 	DataPack dpZombie;
 	CreateDataTimer(flZombieInterval, tTimerZombie, dpZombie, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpZombie.WriteCell(GetClientUserId(tank));
@@ -460,7 +460,7 @@ static void vZombieAbility(int tank)
 		{
 			g_bZombie[tank] = true;
 
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				g_iZombieCount[tank]++;
 
@@ -472,16 +472,16 @@ static void vZombieAbility(int tank)
 			if (iZombieMessage(tank) == 1)
 			{
 				char sTankName[33];
-				ST_TankName(tank, sTankName);
+				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "ZombieHuman2");
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "ZombieAmmo");
 	}
@@ -489,42 +489,42 @@ static void vZombieAbility(int tank)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flHumanDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanDuration[ST_TankType(tank)] : g_flHumanDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanDuration[ST_GetTankType(tank)] : g_flHumanDuration2[ST_GetTankType(tank)];
 }
 
 static float flZombieChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flZombieChance[ST_TankType(tank)] : g_flZombieChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flZombieChance[ST_GetTankType(tank)] : g_flZombieChance2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iHumanMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanMode[ST_TankType(tank)] : g_iHumanMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
 static int iZombieAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iZombieAbility[ST_TankType(tank)] : g_iZombieAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iZombieAbility[ST_GetTankType(tank)] : g_iZombieAbility2[ST_GetTankType(tank)];
 }
 
 static int iZombieMessage(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iZombieMessage[ST_TankType(tank)] : g_iZombieMessage2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iZombieMessage[ST_GetTankType(tank)] : g_iZombieMessage2[ST_GetTankType(tank)];
 }
 
 public Action tTimerZombie(Handle timer, DataPack pack)
@@ -532,7 +532,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_TypeEnabled(ST_TankType(iTank)) || !ST_PluginEnabled() || !ST_CloneAllowed(iTank, g_bCloneInstalled) || iZombieAbility(iTank) == 0 || !g_bZombie[iTank])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCorePluginEnabled() || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iZombieAbility(iTank) == 0 || !g_bZombie[iTank])
 	{
 		g_bZombie[iTank] = false;
 
@@ -540,7 +540,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bZombie2[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bZombie2[iTank])
 	{
 		vReset2(iTank);
 
@@ -552,7 +552,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 	if (iZombieMessage(iTank) == 1)
 	{
 		char sTankName[33];
-		ST_TankName(iTank, sTankName);
+		ST_GetTankName(iTank, sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Zombie2", sTankName);
 	}
 
@@ -562,7 +562,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bZombie2[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bZombie2[iTank])
 	{
 		g_bZombie2[iTank] = false;
 

@@ -115,7 +115,7 @@ public void OnMapEnd()
 
 public Action cmdNullifyInfo(int client, int args)
 {
-	if (!ST_PluginEnabled())
+	if (!ST_IsCorePluginEnabled())
 	{
 		ReplyToCommand(client, "%s Super Tanks++\x01 is disabled.", ST_TAG4);
 
@@ -244,19 +244,19 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_PluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 
-		if ((iNullifyHitMode(attacker) == 0 || iNullifyHitMode(attacker) == 1) && ST_TankAllowed(attacker) && ST_CloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
+		if ((iNullifyHitMode(attacker) == 0 || iNullifyHitMode(attacker) == 1) && ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vNullifyHit(victim, attacker, flNullifyChance(attacker), iNullifyHit(attacker), "1", "1");
 			}
 		}
-		else if (ST_TankAllowed(victim) && ST_CloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if ((iNullifyHitMode(victim) == 0 || iNullifyHitMode(victim) == 2) && StrEqual(sClassname, "weapon_melee"))
 			{
@@ -278,7 +278,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
 	kvSuperTanks.ImportFromFile(savepath);
 
-	for (int iIndex = ST_MinType(); iIndex <= ST_MaxType(); iIndex++)
+	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		char sTankName[33];
 		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
@@ -354,7 +354,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_TankAllowed(iTank, "024"))
+		if (ST_IsTankSupported(iTank, "024"))
 		{
 			vRemoveNullify(iTank);
 		}
@@ -363,7 +363,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_TankAllowed(tank) && (!ST_TankAllowed(tank, "5") || iHumanAbility(tank) == 0) && ST_CloneAllowed(tank, g_bCloneInstalled) && iNullifyAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iNullifyAbility(tank) == 1)
 	{
 		vNullifyAbility(tank);
 	}
@@ -371,7 +371,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_TankAllowed(tank, "02345") && ST_CloneAllowed(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -406,8 +406,8 @@ static void vNullifyAbility(int tank)
 		g_bNullify4[tank] = false;
 		g_bNullify5[tank] = false;
 
-		float flNullifyRange = !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyRange[ST_TankType(tank)] : g_flNullifyRange2[ST_TankType(tank)],
-			flNullifyRangeChance = !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyRangeChance[ST_TankType(tank)] : g_flNullifyRangeChance2[ST_TankType(tank)],
+		float flNullifyRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flNullifyRange[ST_GetTankType(tank)] : g_flNullifyRange2[ST_GetTankType(tank)],
+			flNullifyRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flNullifyRangeChance[ST_GetTankType(tank)] : g_flNullifyRangeChance2[ST_GetTankType(tank)],
 			flTankPos[3];
 
 		GetClientAbsOrigin(tank, flTankPos);
@@ -433,13 +433,13 @@ static void vNullifyAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "NullifyHuman5");
 			}
 		}
 	}
-	else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "NullifyAmmo");
 	}
@@ -456,7 +456,7 @@ static void vNullifyHit(int survivor, int tank, float chance, int enabled, const
 				g_bNullify[survivor] = true;
 				g_iNullifyOwner[survivor] = tank;
 
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bNullify2[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bNullify2[tank])
 				{
 					g_bNullify2[tank] = true;
 					g_iNullifyCount[tank]++;
@@ -471,21 +471,21 @@ static void vNullifyHit(int survivor, int tank, float chance, int enabled, const
 				dpStopNullify.WriteString(message);
 
 				char sNullifyEffect[4];
-				sNullifyEffect = !g_bTankConfig[ST_TankType(tank)] ? g_sNullifyEffect[ST_TankType(tank)] : g_sNullifyEffect2[ST_TankType(tank)];
+				sNullifyEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sNullifyEffect[ST_GetTankType(tank)] : g_sNullifyEffect2[ST_GetTankType(tank)];
 				vEffect(survivor, tank, sNullifyEffect, mode);
 
 				char sNullifyMessage[3];
-				sNullifyMessage = !g_bTankConfig[ST_TankType(tank)] ? g_sNullifyMessage[ST_TankType(tank)] : g_sNullifyMessage2[ST_TankType(tank)];
+				sNullifyMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sNullifyMessage[ST_GetTankType(tank)] : g_sNullifyMessage2[ST_GetTankType(tank)];
 				if (StrContains(sNullifyMessage, message) != -1)
 				{
 					char sTankName[33];
-					ST_TankName(tank, sTankName);
+					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Nullify", sTankName, survivor);
 				}
 			}
 			else if (StrEqual(mode, "3") && !g_bNullify2[tank])
 			{
-				if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bNullify4[tank])
+				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bNullify4[tank])
 				{
 					g_bNullify4[tank] = true;
 
@@ -493,7 +493,7 @@ static void vNullifyHit(int survivor, int tank, float chance, int enabled, const
 				}
 			}
 		}
-		else if (ST_TankAllowed(tank, "5") && iHumanAbility(tank) == 1 && !g_bNullify5[tank])
+		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bNullify5[tank])
 		{
 			g_bNullify5[tank] = true;
 
@@ -541,42 +541,42 @@ static void vReset2(int tank)
 
 static float flHumanCooldown(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flHumanCooldown[ST_TankType(tank)] : g_flHumanCooldown2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
 static float flNullifyChance(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyChance[ST_TankType(tank)] : g_flNullifyChance2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flNullifyChance[ST_GetTankType(tank)] : g_flNullifyChance2[ST_GetTankType(tank)];
 }
 
 static float flNullifyDuration(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_flNullifyDuration[ST_TankType(tank)] : g_flNullifyDuration2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flNullifyDuration[ST_GetTankType(tank)] : g_flNullifyDuration2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAbility[ST_TankType(tank)] : g_iHumanAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 static int iHumanAmmo(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iHumanAmmo[ST_TankType(tank)] : g_iHumanAmmo2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 static int iNullifyAbility(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyAbility[ST_TankType(tank)] : g_iNullifyAbility2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iNullifyAbility[ST_GetTankType(tank)] : g_iNullifyAbility2[ST_GetTankType(tank)];
 }
 
 static int iNullifyHit(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyHit[ST_TankType(tank)] : g_iNullifyHit2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iNullifyHit[ST_GetTankType(tank)] : g_iNullifyHit2[ST_GetTankType(tank)];
 }
 
 static int iNullifyHitMode(int tank)
 {
-	return !g_bTankConfig[ST_TankType(tank)] ? g_iNullifyHitMode[ST_TankType(tank)] : g_iNullifyHitMode2[ST_TankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iNullifyHitMode[ST_GetTankType(tank)] : g_iNullifyHitMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerStopNullify(Handle timer, DataPack pack)
@@ -593,7 +593,7 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_TankAllowed(iTank) || !ST_CloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
 	{
 		g_bNullify[iSurvivor] = false;
 		g_iNullifyOwner[iSurvivor] = 0;
@@ -608,7 +608,7 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
 
-	if (ST_TankAllowed(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bNullify3[iTank])
+	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bNullify3[iTank])
 	{
 		g_bNullify3[iTank] = true;
 
@@ -625,7 +625,7 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 	}
 
 	char sNullifyMessage[3];
-	sNullifyMessage = !g_bTankConfig[ST_TankType(iTank)] ? g_sNullifyMessage[ST_TankType(iTank)] : g_sNullifyMessage2[ST_TankType(iTank)];
+	sNullifyMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sNullifyMessage[ST_GetTankType(iTank)] : g_sNullifyMessage2[ST_GetTankType(iTank)];
 	if (StrContains(sNullifyMessage, sMessage) != -1)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Nullify2", iSurvivor);
@@ -637,7 +637,7 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_TankAllowed(iTank, "02345") || !ST_CloneAllowed(iTank, g_bCloneInstalled) || !g_bNullify3[iTank])
+	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bNullify3[iTank])
 	{
 		g_bNullify3[iTank] = false;
 
