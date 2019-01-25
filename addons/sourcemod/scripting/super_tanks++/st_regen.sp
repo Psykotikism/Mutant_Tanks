@@ -267,7 +267,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flRegenInterval[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Interval", 1.0);
 					g_flRegenInterval[iIndex] = flClamp(g_flRegenInterval[iIndex], 0.1, 9999999999.0);
 					g_iRegenLimit[iIndex] = kvSuperTanks.GetNum("Regen Ability/Regen Limit", ST_MAXHEALTH);
-					g_iRegenLimit[iIndex] = iClamp(g_iRegenLimit[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+					g_iRegenLimit[iIndex] = iClamp(g_iRegenLimit[iIndex], 1, ST_MAXHEALTH);
 				}
 				case false:
 				{
@@ -294,7 +294,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flRegenInterval2[iIndex] = kvSuperTanks.GetFloat("Regen Ability/Regen Interval", g_flRegenInterval[iIndex]);
 					g_flRegenInterval2[iIndex] = flClamp(g_flRegenInterval2[iIndex], 0.1, 9999999999.0);
 					g_iRegenLimit2[iIndex] = kvSuperTanks.GetNum("Regen Ability/Regen Limit", g_iRegenLimit[iIndex]);
-					g_iRegenLimit2[iIndex] = iClamp(g_iRegenLimit2[iIndex], ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+					g_iRegenLimit2[iIndex] = iClamp(g_iRegenLimit2[iIndex], 1, ST_MAXHEALTH);
 				}
 			}
 
