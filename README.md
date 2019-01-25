@@ -717,9 +717,9 @@ forward void ST_OnRockThrow(int tank, int rock);
 Natives:
 ```
 /**
- * Returns if a certain Mutant Tank type can spawn.
+ * Returns if a certain Super Tank type can spawn.
  *
- * @param type			Mutant Tank type.
+ * @param type			Super Tank type.
  * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0.
  **/
@@ -761,7 +761,7 @@ native int ST_GetMinType();
 native void ST_GetPropColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
- * Returns the Mutant Tank's run speed.
+ * Returns the Super Tank's run speed.
  *
  * @param tank			Client index of the Tank.
  * @return			The run speed of the Tank.
@@ -792,18 +792,18 @@ native void ST_GetTankColors(int tank, int mode, int &red, int &green, int &blue
 native void ST_GetTankName(int tank, char[] buffer);
 
 /**
- * Returns the Mutant Tank type of the Tank.
+ * Returns the Super Tank type of the Tank.
  *
  * @param tank			Client index of the Tank.
- * @return			The Tank's Mutant Tank type.
+ * @return			The Tank's Super Tank type.
  * @error			Invalid client index.
  **/
 native int ST_GetTankType(int tank);
 
 /**
- * Returns if a certain Mutant Tank type has a chance of spawning.
+ * Returns if a certain Super Tank type has a chance of spawning.
  *
- * @param type			Mutant Tank type.
+ * @param type			Super Tank type.
  * @return			True if the type has a chance of spawning, false otherwise.
  * @error			Type is 0.
  **/
@@ -835,7 +835,7 @@ native bool ST_IsCloneSupported(int tank, bool clone);
 native bool ST_IsCorePluginEnabled();
 
 /**
- * Returns if the Mutant Tank type has a glow outline.
+ * Returns if the Super Tank type has a glow outline.
  *
  * @param tank			Client index of the Tank.
  * @return			True if the Tank has a glow outline, false otherwise.
@@ -844,31 +844,31 @@ native bool ST_IsCorePluginEnabled();
 native bool ST_IsGlowEnabled(int tank);
 
 /**
- * Returns if the Tank is allowed to be a Mutant Tank.
+ * Returns if the Tank is allowed to be a Super Tank.
  *
  * @param tank			Client index of the Tank.
  * @param checks		Checks to run. 0 = client index, 1 = connection, 2 = in-game status,
  *				3 = life state, 4 = kick status, 5 = bot check
  *				Default: "0234"
- * @return			True if Tank is allowed to be a Mutant Tank, false otherwise.
+ * @return			True if Tank is allowed to be a Super Tank, false otherwise.
  * @error			Invalid client index.
  **/
 native bool ST_IsTankSupported(int tank, const char[] checks = "0234");
 
 /**
- * Returns if a certain Mutant Tank type is enabled.
+ * Returns if a certain Super Tank type is enabled.
  *
- * @param type			Mutant Tank type.
+ * @param type			Super Tank type.
  * @return			True if the type is enabled, false otherwise.
  * @error			Type is 0.
  **/
 native bool ST_IsTypeEnabled(int type);
 
 /**
- * Spawns a Tank with the specified Mutant Tank type.
+ * Spawns a Tank with the specified Super Tank type.
  *
  * @param tank			Client index of the Tank.
- * @param type			Mutant Tank type.
+ * @param type			Super Tank type.
  * @error			Invalid client index or type is 0.
  **/
 native void ST_SpawnTank(int tank, int type);
@@ -1242,6 +1242,10 @@ Examples:
 **ReCreator** - For reporting issues and suggesting ideas.
 
 **Princess LadyRain** - For reporting issues.
+
+**Nekrob** - For reporting issues.
+
+**fig101** - For reporting issues.
 
 **Zytheus** - For reporting issues and suggesting ideas.
 

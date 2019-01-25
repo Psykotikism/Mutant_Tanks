@@ -51,7 +51,8 @@
 			"Base Health"				"0"
 
 			// Super Tanks revert back to default Tanks upon death.
-			// Note: This feature is simply for cosmetic purposes. You don't need to worry about this setting.
+			// Note: This feature is simply for cosmetic purposes.
+			// You don't need to worry about this setting.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -5419,11 +5420,9 @@
 
 			// The Super Tank stops regenerating health at this value.
 			// --
-			// Minimum: -65535
+			// Minimum: 1
 			// Maximum: 65535
 			// --
-			// Positive numbers: The Super Tank will stop regenerating health when it reaches this number.
-			// Negative numbers: The Super Tank will stop losing health when it reaches this number.
 			"Regen Limit"				"65535"
 		}
 	}

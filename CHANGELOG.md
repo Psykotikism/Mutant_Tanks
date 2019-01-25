@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 8.56 (January 25, 2019)
+
+Bug fixes:
+
+1. Fixed several abilities creating multiple timers for each Super Tank.
+2. Fixed the Regen ability not working when using negative values for some settings. (Thanks to Nokreb for reporting!)
+3. Fixed the Shield ability's `Shield Type` setting not working. (Thanks to Nokreb for reporting!)
+4. Fixed the Undead ability making Super Tanks immortal. (Thanks to fig101 for reporting!)
+
+Changes:
+
+1. Added a small option to go back to previous menus when using the admin menu to access the Super Tanks++ menu. (Requested by Marttt.)
+2. Added a different death effect for the L4D1 versions of the Acid and Fling abilities.
+3. The Regen ability's `Regen Limit` no longer accepts negative values.
+4. The initial damage that removes a Super Tank's shield no longer hurts the Super Tank.
+
+Files:
+
+1. Updated the `super_tanks++.cfg` file.
+2. Updated the `super_tanks++.inc` file.
+
 ## Version 8.55 (January 15, 2019)
 
 Bug fixes:
