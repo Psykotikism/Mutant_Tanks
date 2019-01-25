@@ -467,6 +467,7 @@ static void vLagHit(int survivor, int tank, float chance, int enabled, const cha
 				CreateDataTimer(1.0, tTimerLagTeleport, dpLagTeleport, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpLagTeleport.WriteCell(GetClientUserId(survivor));
 				dpLagTeleport.WriteCell(GetClientUserId(tank));
+				dpLagTeleport.WriteCell(ST_GetTankType(tank));
 				dpLagTeleport.WriteString(message);
 				dpLagTeleport.WriteCell(enabled);
 				dpLagTeleport.WriteFloat(GetEngineTime());
@@ -475,6 +476,7 @@ static void vLagHit(int survivor, int tank, float chance, int enabled, const cha
 				CreateDataTimer(0.5, tTimerLagPosition, dpLagPosition, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpLagPosition.WriteCell(GetClientUserId(survivor));
 				dpLagPosition.WriteCell(GetClientUserId(tank));
+				dpLagPosition.WriteCell(ST_GetTankType(tank));
 				dpLagPosition.WriteCell(enabled);
 				dpLagPosition.WriteFloat(GetEngineTime());
 
@@ -613,10 +615,10 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bLag[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bLag[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 
@@ -669,8 +671,8 @@ public Action tTimerLagPosition(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank))
 	{
 		return Plugin_Stop;
 	}

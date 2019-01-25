@@ -535,6 +535,7 @@ static void vWarp(int tank)
 	DataPack dpWarp;
 	CreateDataTimer(flWarpInterval, tTimerWarp, dpWarp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpWarp.WriteCell(GetClientUserId(tank));
+	dpWarp.WriteCell(ST_GetTankType(tank));
 	dpWarp.WriteFloat(GetEngineTime());
 }
 
@@ -743,8 +744,8 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || (iWarpAbility(iTank) != 2 && iWarpAbility(iTank) != 3) || !g_bWarp[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (iWarpAbility(iTank) != 2 && iWarpAbility(iTank) != 3) || !g_bWarp[iTank])
 	{
 		g_bWarp[iTank] = false;
 

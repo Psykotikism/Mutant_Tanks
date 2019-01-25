@@ -551,6 +551,7 @@ static void vShakeHit(int survivor, int tank, float chance, int enabled, const c
 				CreateDataTimer(flShakeInterval, tTimerShake, dpShake, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpShake.WriteCell(GetClientUserId(survivor));
 				dpShake.WriteCell(GetClientUserId(tank));
+				dpShake.WriteCell(ST_GetTankType(tank));
 				dpShake.WriteString(message);
 				dpShake.WriteCell(enabled);
 				dpShake.WriteFloat(GetEngineTime());
@@ -640,10 +641,10 @@ public Action tTimerShake(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bShake[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bShake[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

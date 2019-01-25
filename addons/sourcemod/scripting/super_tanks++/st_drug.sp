@@ -525,6 +525,7 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, const ch
 				CreateDataTimer(flDrugInterval, tTimerDrug, dpDrug, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpDrug.WriteCell(GetClientUserId(survivor));
 				dpDrug.WriteCell(GetClientUserId(tank));
+				dpDrug.WriteCell(ST_GetTankType(tank));
 				dpDrug.WriteString(message);
 				dpDrug.WriteCell(enabled);
 				dpDrug.WriteFloat(GetEngineTime());
@@ -668,10 +669,10 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bDrug[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bDrug[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

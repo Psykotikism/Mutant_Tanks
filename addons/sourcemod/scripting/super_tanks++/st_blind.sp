@@ -514,6 +514,7 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, const c
 				CreateDataTimer(1.0, tTimerBlind, dpBlind, TIMER_FLAG_NO_MAPCHANGE);
 				dpBlind.WriteCell(GetClientUserId(survivor));
 				dpBlind.WriteCell(GetClientUserId(tank));
+				dpBlind.WriteCell(ST_GetTankType(tank));
 				dpBlind.WriteCell(enabled);
 
 				DataPack dpStopBlind;
@@ -646,8 +647,8 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iBlindEnabled = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iBlindEnabled == 0)
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iBlindEnabled = pack.ReadCell();
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iBlindEnabled == 0)
 	{
 		g_bBlind[iSurvivor] = false;
 		g_iBlindOwner[iSurvivor] = 0;

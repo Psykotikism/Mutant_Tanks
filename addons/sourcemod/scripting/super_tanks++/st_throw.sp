@@ -355,6 +355,7 @@ public void ST_OnRockThrow(int tank, int rock)
 		CreateDataTimer(0.1, tTimerThrow, dpThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpThrow.WriteCell(EntIndexToEntRef(rock));
 		dpThrow.WriteCell(GetClientUserId(tank));
+		dpThrow.WriteCell(ST_GetTankType(tank));
 	}
 }
 
@@ -401,10 +402,10 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sThrowAbility[9];
 	sThrowAbility = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowAbility[ST_GetTankType(iTank)] : g_sThrowAbility2[ST_GetTankType(iTank)];
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || StrEqual(sThrowAbility, ""))
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || StrEqual(sThrowAbility, ""))
 	{
 		return Plugin_Stop;
 	}

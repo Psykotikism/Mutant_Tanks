@@ -573,6 +573,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, const c
 				dpWhirl.WriteCell(EntIndexToEntRef(iCamera));
 				dpWhirl.WriteCell(GetClientUserId(survivor));
 				dpWhirl.WriteCell(GetClientUserId(tank));
+				dpWhirl.WriteCell(ST_GetTankType(tank));
 				dpWhirl.WriteString(message);
 				dpWhirl.WriteCell(enabled);
 				dpWhirl.WriteCell(iAxis);
@@ -672,10 +673,10 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bWhirl[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bWhirl[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, iCamera, sMessage);
 

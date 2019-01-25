@@ -560,6 +560,7 @@ static void vShoveHit(int survivor, int tank, float chance, int enabled, const c
 				CreateDataTimer(flShoveInterval, tTimerShove, dpShove, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpShove.WriteCell(GetClientUserId(survivor));
 				dpShove.WriteCell(GetClientUserId(tank));
+				dpShove.WriteCell(ST_GetTankType(tank));
 				dpShove.WriteString(message);
 				dpShove.WriteCell(enabled);
 				dpShove.WriteFloat(GetEngineTime());
@@ -649,10 +650,10 @@ public Action tTimerShove(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bShove[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bShove[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

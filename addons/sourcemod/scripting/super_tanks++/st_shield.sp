@@ -274,6 +274,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						if (damagetype & DMG_BULLET)
 						{
 							vShieldAbility(victim, false);
+
+							return Plugin_Handled;
 						}
 						else
 						{
@@ -285,6 +287,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 						{
 							vShieldAbility(victim, false);
+
+							return Plugin_Handled;
 						}
 						else
 						{
@@ -296,6 +300,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						if (damagetype & DMG_BURN)
 						{
 							vShieldAbility(victim, false);
+
+							return Plugin_Handled;
 						}
 						else
 						{
@@ -307,6 +313,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
 						{
 							vShieldAbility(victim, false);
+
+							return Plugin_Handled;
 						}
 						else
 						{
@@ -357,7 +365,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flShieldChance[iIndex] = flClamp(g_flShieldChance[iIndex], 0.0, 100.0);
 					g_flShieldDelay[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", 5.0);
 					g_flShieldDelay[iIndex] = flClamp(g_flShieldDelay[iIndex], 0.1, 9999999999.0);
-					g_iShieldType[iIndex] = kvSuperTanks.GetNum("Shield Ability/Shield Types", 1);
+					g_iShieldType[iIndex] = kvSuperTanks.GetNum("Shield Ability/Shield Type", 1);
 					g_iShieldType[iIndex] = iClamp(g_iShieldType[iIndex], 0, 3);
 				}
 				case false:
@@ -383,7 +391,7 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flShieldChance2[iIndex] = flClamp(g_flShieldChance2[iIndex], 0.0, 100.0);
 					g_flShieldDelay2[iIndex] = kvSuperTanks.GetFloat("Shield Ability/Shield Delay", g_flShieldDelay[iIndex]);
 					g_flShieldDelay2[iIndex] = flClamp(g_flShieldDelay2[iIndex], 0.1, 9999999999.0);
-					g_iShieldType2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Shield Types", g_iShieldType[iIndex]);
+					g_iShieldType2[iIndex] = kvSuperTanks.GetNum("Shield Ability/Shield Type", g_iShieldType[iIndex]);
 					g_iShieldType2[iIndex] = iClamp(g_iShieldType2[iIndex], 0, 3);
 				}
 			}
@@ -521,6 +529,7 @@ public void ST_OnRockThrow(int tank, int rock)
 		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpShieldThrow.WriteCell(EntIndexToEntRef(rock));
 		dpShieldThrow.WriteCell(GetClientUserId(tank));
+		dpShieldThrow.WriteCell(ST_GetTankType(tank));
 	}
 }
 
@@ -748,8 +757,8 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iShieldAbility(iTank) == 0 || !g_bShield[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iShieldAbility(iTank) == 0 || !g_bShield[iTank])
 	{
 		return Plugin_Stop;
 	}

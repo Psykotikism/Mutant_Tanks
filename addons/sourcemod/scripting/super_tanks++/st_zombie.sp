@@ -449,6 +449,7 @@ static void vZombie2(int tank)
 	DataPack dpZombie;
 	CreateDataTimer(flZombieInterval, tTimerZombie, dpZombie, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpZombie.WriteCell(GetClientUserId(tank));
+	dpZombie.WriteCell(ST_GetTankType(tank));
 	dpZombie.WriteFloat(GetEngineTime());
 }
 
@@ -531,8 +532,8 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCorePluginEnabled() || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iZombieAbility(iTank) == 0 || !g_bZombie[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCorePluginEnabled() || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iZombieAbility(iTank) == 0 || !g_bZombie[iTank])
 	{
 		g_bZombie[iTank] = false;
 

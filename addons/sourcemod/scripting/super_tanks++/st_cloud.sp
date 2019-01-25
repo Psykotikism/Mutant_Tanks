@@ -400,6 +400,7 @@ static void vCloud(int tank)
 	DataPack dpCloud;
 	CreateDataTimer(1.5, tTimerCloud, dpCloud, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpCloud.WriteCell(GetClientUserId(tank));
+	dpCloud.WriteCell(ST_GetTankType(tank));
 	dpCloud.WriteFloat(GetEngineTime());
 }
 
@@ -524,8 +525,8 @@ public Action tTimerCloud(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iCloudAbility(iTank) == 0 || !g_bCloud[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iCloudAbility(iTank) == 0 || !g_bCloud[iTank])
 	{
 		vReset2(iTank);
 

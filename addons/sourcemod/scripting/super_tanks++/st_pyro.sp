@@ -271,6 +271,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						DataPack dpPyro;
 						CreateDataTimer(1.0, tTimerPyro, dpPyro, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 						dpPyro.WriteCell(GetClientUserId(victim));
+						dpPyro.WriteCell(ST_GetTankType(victim));
 						dpPyro.WriteFloat(GetEngineTime());
 
 						if (iPyroMessage(victim) == 1)
@@ -451,7 +452,10 @@ public void ST_OnButtonPressed(int tank, int button)
 								g_bPyro2[tank] = true;
 								g_iPyroCount[tank]++;
 
-								CreateTimer(0.5, tTimerPyro2, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+								DataPack dpPyro2;
+								CreateDataTimer(0.5, tTimerPyro2, dpPyro2, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+								dpPyro2.WriteCell(GetClientUserId(tank));
+								dpPyro2.WriteCell(ST_GetTankType(tank));
 
 								ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroHuman", g_iPyroCount[tank], iHumanAmmo(tank));
 							}
@@ -611,8 +615,8 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank))
 	{
 		g_bPyro[iTank] = false;
 
@@ -640,10 +644,12 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerPyro2(Handle timer, int userid)
+public Action tTimerPyro2(Handle timer, DataPack pack)
 {
-	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iPyroAbility(iTank) == 0 || !g_bPyro2[iTank])
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iPyroAbility(iTank) == 0 || !g_bPyro2[iTank])
 	{
 		g_bPyro2[iTank] = false;
 

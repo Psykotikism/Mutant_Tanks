@@ -459,6 +459,7 @@ static void vRock(int tank)
 	CreateDataTimer(0.2, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpRock.WriteCell(EntIndexToEntRef(g_iRock[tank]));
 	dpRock.WriteCell(GetClientUserId(tank));
+	dpRock.WriteCell(ST_GetTankType(tank));
 	dpRock.WriteFloat(GetEngineTime());
 }
 
@@ -544,14 +545,15 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iRock = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	if (iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		g_bRock[iTank] = false;
 
 		return Plugin_Stop;
 	}
 
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bRock[iTank])
+	int iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bRock[iTank])
 	{
 		vReset2(iTank, iRock);
 

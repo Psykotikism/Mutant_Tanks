@@ -47,8 +47,8 @@ public Plugin myinfo =
 
 #define SOUND_BOSS "items/suitchargeok1.wav"
 
-bool g_bBlood[MAXPLAYERS + 1], g_bBlur[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1], g_bGeneralConfig, g_bIce[MAXPLAYERS + 1], g_bLateLoad, g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1],
-	g_bSmoke[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1];
+bool g_bAdminMenu[MAXPLAYERS + 1], g_bBlood[MAXPLAYERS + 1], g_bBlur[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1], g_bGeneralConfig, g_bIce[MAXPLAYERS + 1], g_bLateLoad, g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled,
+	g_bRandomized[MAXPLAYERS + 1], g_bSmoke[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1];
 
 char g_sAnnounceArrival[6], g_sAnnounceArrival2[6], g_sBossHealthStages[ST_MAXTYPES + 1][25], g_sBossHealthStages2[ST_MAXTYPES + 1][25], g_sBossTypes[ST_MAXTYPES + 1][20], g_sBossTypes2[ST_MAXTYPES + 1][20], g_sConfigCreate[6], g_sConfigExecute[6], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sFinaleWaves[9], g_sFinaleWaves2[9],
 	g_sParticleEffects[ST_MAXTYPES + 1][8], g_sParticleEffects2[ST_MAXTYPES + 1][8], g_sPropsAttached[ST_MAXTYPES + 1][7], g_sPropsAttached2[ST_MAXTYPES + 1][7], g_sPropsChance[ST_MAXTYPES + 1][35], g_sPropsChance2[ST_MAXTYPES + 1][35], g_sRockEffects[ST_MAXTYPES + 1][5], g_sRockEffects2[ST_MAXTYPES + 1][5], g_sSavePath[PLATFORM_MAX_PATH],
@@ -446,6 +446,7 @@ public void OnClientPutInServer(int client)
 
 	vReset2(client);
 
+	g_bAdminMenu[client] = false;
 	g_bThirdPerson[client] = false;
 	g_iPlayerCount[0] = iGetPlayerCount();
 	g_iTankType[client] = 0;
@@ -472,7 +473,6 @@ public void OnConfigsExecuted()
 
 		float flRegularInterval = !g_bGeneralConfig ? g_flRegularInterval : g_flRegularInterval2;
 		CreateTimer(flRegularInterval, tTimerRegularWaves, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-
 		CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(0.1, tTimerTankHealthUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(1.0, tTimerTankTypeUpdate, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -693,7 +693,12 @@ public void vSuperTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "%T", "STMenu", param);
-		case TopMenuAction_SelectOption: vTankMenu(param, 0);
+		case TopMenuAction_SelectOption:
+		{
+			g_bAdminMenu[param] = true;
+
+			vTankMenu(param, 0);
+		}
 	}
 }
 
@@ -702,7 +707,12 @@ public void vSTInfoMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject obj
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "%T", "STInfoMenu", param);
-		case TopMenuAction_SelectOption: vInfoMenu(param, 0);
+		case TopMenuAction_SelectOption:
+		{
+			g_bAdminMenu[param] = true;
+
+			vInfoMenu(param, 0);
+		}
 	}
 }
 
@@ -741,6 +751,7 @@ static void vInfoMenu(int client, int item)
 	Call_StartForward(g_hDisplayMenuForward);
 	Call_PushCell(mInfoMenu);
 	Call_Finish();
+	g_bAdminMenu[client] ? (mInfoMenu.ExitBackButton = true) : (mInfoMenu.ExitBackButton = false);
 	mInfoMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
@@ -749,6 +760,18 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	switch (action)
 	{
 		case MenuAction_End: delete menu;
+		case MenuAction_Cancel:
+		{
+			if (g_bAdminMenu[param1])
+			{
+				g_bAdminMenu[param1] = false;
+
+				if (param2 == MenuCancel_ExitBack && g_tmSTMenu != null)
+				{
+					g_tmSTMenu.Display(param1, TopMenuPosition_LastCategory);
+				}
+			}
+		}
 		case MenuAction_Select:
 		{
 			switch (param2)
@@ -958,7 +981,6 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 											if (g_iCooldown[admin] > 0)
 											{
 												g_bChanged[admin] = true;
-
 												CreateTimer(1.0, tTimerResetCooldown, GetClientOfUserId(admin), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 											}
 										}
@@ -1062,12 +1084,13 @@ static void vTankMenu(int admin, int item)
 			continue;
 		}
 
-		char sTankName[33], sMenuItem[MAX_NAME_LENGTH + 12];
+		char sTankName[33], sMenuItem[46];
 		sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
 		Format(sMenuItem, sizeof(sMenuItem), "%s (Tank #%i)", sTankName, iIndex);
 		mTankMenu.AddItem(sTankName, sMenuItem);
 	}
 
+	g_bAdminMenu[admin] ? (mTankMenu.ExitBackButton = true) : (mTankMenu.ExitBackButton = false);
 	mTankMenu.DisplayAt(admin, item, MENU_TIME_FOREVER);
 }
 
@@ -1076,6 +1099,18 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	switch (action)
 	{
 		case MenuAction_End: delete menu;
+		case MenuAction_Cancel:
+		{
+			if (g_bAdminMenu[param1])
+			{
+				g_bAdminMenu[param1] = false;
+
+				if (param2 == MenuCancel_ExitBack && g_tmSTMenu != null)
+				{
+					g_tmSTMenu.Display(param1, TopMenuPosition_LastCategory);
+				}
+			}
+		}
 		case MenuAction_Select:
 		{
 			char sInfo[33];
@@ -1822,6 +1857,7 @@ static void vReset()
 		{
 			vReset2(iPlayer);
 
+			g_bAdminMenu[iPlayer] = false;
 			g_bThirdPerson[iPlayer] = false;
 			g_iTankType[iPlayer] = 0;
 		}

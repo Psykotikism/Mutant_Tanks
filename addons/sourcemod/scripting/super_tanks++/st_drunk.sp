@@ -481,6 +481,7 @@ static void vDrunkHit(int survivor, int tank, float chance, int enabled, const c
 				CreateDataTimer(flDrunkSpeedInterval, tTimerDrunkSpeed, dpDrunkSpeed, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpDrunkSpeed.WriteCell(GetClientUserId(survivor));
 				dpDrunkSpeed.WriteCell(GetClientUserId(tank));
+				dpDrunkSpeed.WriteCell(ST_GetTankType(tank));
 				dpDrunkSpeed.WriteCell(enabled);
 				dpDrunkSpeed.WriteFloat(GetEngineTime());
 
@@ -489,6 +490,7 @@ static void vDrunkHit(int survivor, int tank, float chance, int enabled, const c
 				CreateDataTimer(flDrunkTurnInterval, tTimerDrunkTurn, dpDrunkTurn, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpDrunkTurn.WriteCell(GetClientUserId(survivor));
 				dpDrunkTurn.WriteCell(GetClientUserId(tank));
+				dpDrunkTurn.WriteCell(ST_GetTankType(tank));
 				dpDrunkTurn.WriteString(message);
 				dpDrunkTurn.WriteCell(enabled);
 				dpDrunkTurn.WriteFloat(GetEngineTime());
@@ -625,8 +627,8 @@ public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -658,10 +660,10 @@ public Action tTimerDrunkTurn(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bDrunk[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bDrunk[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

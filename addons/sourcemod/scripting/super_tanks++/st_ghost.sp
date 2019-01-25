@@ -513,6 +513,7 @@ static void vGhost(int tank)
 	DataPack dpGhost;
 	CreateDataTimer(flGhostFadeRate, tTimerGhost, dpGhost, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpGhost.WriteCell(GetClientUserId(tank));
+	dpGhost.WriteCell(ST_GetTankType(tank));
 	dpGhost.WriteFloat(GetEngineTime());
 
 	SetEntityRenderMode(tank, RENDER_TRANSCOLOR);
@@ -840,8 +841,8 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3) || !g_bGhost[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (iGhostAbility(iTank) != 2 && iGhostAbility(iTank) != 3) || !g_bGhost[iTank])
 	{
 		g_bGhost[iTank] = false;
 		g_iGhostAlpha[iTank] = 255;

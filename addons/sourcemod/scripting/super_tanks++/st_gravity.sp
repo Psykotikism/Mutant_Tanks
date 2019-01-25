@@ -596,6 +596,7 @@ static void vGravityAbility(int tank, bool main)
 						DataPack dpGravity;
 						CreateDataTimer(flGravityDuration(tank), tTimerGravity, dpGravity, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 						dpGravity.WriteCell(GetClientUserId(tank));
+						dpGravity.WriteCell(ST_GetTankType(tank));
 						dpGravity.WriteFloat(GetEngineTime());
 
 						char sGravityMessage[4];
@@ -794,8 +795,8 @@ public Action tTimerGravity(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bGravity[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bGravity[iTank])
 	{
 		g_bGravity[iTank] = false;
 

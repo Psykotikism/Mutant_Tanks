@@ -482,6 +482,7 @@ static void vMeteor2(int tank)
 	DataPack dpMeteor;
 	CreateDataTimer(0.6, tTimerMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpMeteor.WriteCell(GetClientUserId(tank));
+	dpMeteor.WriteCell(ST_GetTankType(tank));
 	dpMeteor.WriteFloat(GetEngineTime());
 }
 
@@ -595,8 +596,8 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bMeteor[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bMeteor[iTank])
 	{
 		g_bMeteor[iTank] = false;
 

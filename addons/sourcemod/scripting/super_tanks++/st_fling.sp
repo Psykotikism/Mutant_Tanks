@@ -30,6 +30,8 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+#define PARTICLE_BLOOD "boomer_explode_D"
+
 #define ST_MENU_FLING "Fling Ability"
 
 bool g_bCloneInstalled, g_bFling[MAXPLAYERS + 1], g_bFling2[MAXPLAYERS + 1], g_bFling3[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
@@ -142,6 +144,8 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+	vPrecacheParticle(PARTICLE_BLOOD);
+
 	vReset();
 }
 
@@ -386,8 +390,13 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iFlingAbility(iTank) == 1 && bIsValidGame())
+			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iFlingAbility(iTank) == 1)
 			{
+				if (!bIsValidGame())
+				{
+					vAttachParticle(iTank, PARTICLE_BLOOD, 0.1, 0.0);
+				}
+
 				float flTankPos[3];
 				GetClientAbsOrigin(iTank, flTankPos);
 
@@ -401,7 +410,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 						float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 						if (flDistance <= 200.0)
 						{
-							vFling(iSurvivor, iTank);
+							switch (bIsValidGame())
+							{
+								case true: vFling(iSurvivor, iTank);
+								case false: SDKCall(g_hSDKPukePlayer, iSurvivor, iTank, true);
+							}
 						}
 					}
 				}

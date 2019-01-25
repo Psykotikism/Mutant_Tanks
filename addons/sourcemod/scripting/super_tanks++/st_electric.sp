@@ -485,6 +485,7 @@ static void vElectricHit(int survivor, int tank, float chance, int enabled, cons
 				CreateDataTimer(flElectricInterval, tTimerElectric, dpElectric, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpElectric.WriteCell(GetClientUserId(survivor));
 				dpElectric.WriteCell(GetClientUserId(tank));
+				dpElectric.WriteCell(ST_GetTankType(tank));
 				dpElectric.WriteString(message);
 				dpElectric.WriteCell(enabled);
 				dpElectric.WriteFloat(GetEngineTime());
@@ -626,10 +627,10 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bElectric[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bElectric[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

@@ -406,6 +406,7 @@ static void vCar(int tank)
 	DataPack dpCar;
 	CreateDataTimer(0.6, tTimerCar, dpCar, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpCar.WriteCell(GetClientUserId(tank));
+	dpCar.WriteCell(ST_GetTankType(tank));
 	dpCar.WriteFloat(GetEngineTime());
 }
 
@@ -519,8 +520,8 @@ public Action tTimerCar(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bCar[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bCar[iTank])
 	{
 		g_bCar[iTank] = false;
 

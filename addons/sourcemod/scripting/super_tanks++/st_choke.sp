@@ -488,6 +488,7 @@ static void vChokeHit(int survivor, int tank, float chance, int enabled, const c
 				CreateDataTimer(flChokeDelay, tTimerChokeLaunch, dpChokeLaunch, TIMER_FLAG_NO_MAPCHANGE);
 				dpChokeLaunch.WriteCell(GetClientUserId(survivor));
 				dpChokeLaunch.WriteCell(GetClientUserId(tank));
+				dpChokeLaunch.WriteCell(ST_GetTankType(tank));
 				dpChokeLaunch.WriteCell(enabled);
 				dpChokeLaunch.WriteString(message);
 
@@ -629,8 +630,8 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iChokeEnabled = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iChokeEnabled == 0)
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iChokeEnabled = pack.ReadCell();
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iChokeEnabled == 0)
 	{
 		g_bChoke[iSurvivor] = false;
 		g_iChokeOwner[iSurvivor] = 0;
@@ -654,6 +655,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	CreateDataTimer(1.0, tTimerChokeDamage, dpChokeDamage, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpChokeDamage.WriteCell(GetClientUserId(iSurvivor));
 	dpChokeDamage.WriteCell(GetClientUserId(iTank));
+	dpChokeDamage.WriteCell(ST_GetTankType(iTank));
 	dpChokeDamage.WriteString(sMessage);
 	dpChokeDamage.WriteCell(iChokeEnabled);
 	dpChokeDamage.WriteFloat(GetEngineTime());
@@ -674,10 +676,10 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bChoke[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bChoke[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

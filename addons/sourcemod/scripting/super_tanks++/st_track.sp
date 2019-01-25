@@ -355,6 +355,7 @@ public void ST_OnRockThrow(int tank, int rock)
 		CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
 		dpTrack.WriteCell(EntIndexToEntRef(rock));
 		dpTrack.WriteCell(GetClientUserId(tank));
+		dpTrack.WriteCell(ST_GetTankType(tank));
 
 		int iTrackMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iTrackMessage[ST_GetTankType(tank)] : g_iTrackMessage2[ST_GetTankType(tank)];
 		if (iTrackMessage == 1)
@@ -687,8 +688,8 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iTrackAbility(iTank) == 0 || !g_bTrack[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iTrackAbility(iTank) == 0 || !g_bTrack[iTank])
 	{
 		g_bTrack[iTank] = false;
 

@@ -404,6 +404,7 @@ static void vRegen(int tank)
 	DataPack dpRegen;
 	CreateDataTimer(flRegenInterval(tank), tTimerRegen, dpRegen, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpRegen.WriteCell(GetClientUserId(tank));
+	dpRegen.WriteCell(ST_GetTankType(tank));
 	dpRegen.WriteFloat(GetEngineTime());
 }
 
@@ -521,8 +522,8 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iRegenAbility(iTank) == 0 || !g_bRegen[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iRegenAbility(iTank) == 0 || !g_bRegen[iTank])
 	{
 		g_bRegen[iTank] = false;
 
@@ -545,14 +546,13 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 	}
 
 	int iHealth = GetClientHealth(iTank),
-		iRegenHealth = !g_bTankConfig[ST_GetTankType(iTank)] ? (iHealth + g_iRegenHealth[ST_GetTankType(iTank)]) : (iHealth + g_iRegenHealth2[ST_GetTankType(iTank)]),
+		iRegenHealth = !g_bTankConfig[ST_GetTankType(iTank)] ? (g_iRegenHealth[ST_GetTankType(iTank)]) : (g_iRegenHealth2[ST_GetTankType(iTank)]),
 		iRegenLimit = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iRegenLimit[ST_GetTankType(iTank)] : g_iRegenLimit2[ST_GetTankType(iTank)],
-		iExtraHealth = (iRegenHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iRegenHealth,
-		iExtraHealth2 = (iRegenHealth < iHealth) ? 1 : iRegenHealth,
-		iRealHealth = (iRegenHealth >= 0) ? iExtraHealth : iExtraHealth2,
-		iLimitHealth = (iRealHealth > iRegenLimit) ? iRegenLimit : iRealHealth,
-		iLimitHealth2 = (iRealHealth < iRegenLimit) ? iRegenLimit : iRealHealth,
-		iFinalHealth = (iRegenLimit >= 0) ? iLimitHealth : iLimitHealth2;
+		iExtraHealth = iHealth + iRegenHealth,
+		iNewHealth = (iExtraHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iExtraHealth,
+		iNewHealth2 = (iExtraHealth <= 1) ? iHealth : iExtraHealth,
+		iRealHealth = (iRegenHealth >= 1) ? iNewHealth : iNewHealth2,
+		iFinalHealth = (iRegenHealth >= 1 && iRealHealth >= iRegenLimit) ? iRegenLimit : iRealHealth;
 
 	SetEntityHealth(iTank, iFinalHealth);
 

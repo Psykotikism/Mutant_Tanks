@@ -30,6 +30,8 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+#define PARTICLE_BLOOD "boomer_explode_D"
+
 #define ST_MENU_ACID "Acid Ability"
 
 bool g_bAcid[MAXPLAYERS + 1], g_bAcid2[MAXPLAYERS + 1], g_bAcid3[MAXPLAYERS + 1], g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
@@ -145,6 +147,8 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+	vPrecacheParticle(PARTICLE_BLOOD);
+
 	vReset();
 }
 
@@ -393,9 +397,34 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, "024"))
 		{
-			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iAcidAbility(iTank) == 1 && bIsValidGame())
+			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iAcidAbility(iTank) == 1)
 			{
-				vAcid(iTank, iTank);
+				switch (bIsValidGame())
+				{
+					case true: vAcid(iTank, iTank);
+					case false:
+					{
+						vAttachParticle(iTank, PARTICLE_BLOOD, 0.1, 0.0);
+
+						float flTankPos[3];
+						GetClientAbsOrigin(iTank, flTankPos);
+
+						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+						{
+							if (bIsSurvivor(iSurvivor, "234"))
+							{
+								float flSurvivorPos[3];
+								GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+								float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+								if (flDistance <= 200.0)
+								{
+									SDKCall(g_hSDKPukePlayer, iSurvivor, iTank, true);
+								}
+							}
+						}
+					}
+				}
 			}
 
 			vRemoveAcid(iTank);

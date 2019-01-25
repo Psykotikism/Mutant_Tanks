@@ -559,12 +559,14 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, const 
 				CreateDataTimer(flRocketDelay, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
 				dpRocketLaunch.WriteCell(GetClientUserId(survivor));
 				dpRocketLaunch.WriteCell(GetClientUserId(tank));
+				dpRocketLaunch.WriteCell(ST_GetTankType(tank));
 				dpRocketLaunch.WriteCell(enabled);
 
 				DataPack dpRocketDetonate;
 				CreateDataTimer(flRocketDelay + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
 				dpRocketDetonate.WriteCell(GetClientUserId(survivor));
 				dpRocketDetonate.WriteCell(GetClientUserId(tank));
+				dpRocketDetonate.WriteCell(ST_GetTankType(tank));
 				dpRocketDetonate.WriteCell(enabled);
 				dpRocketDetonate.WriteString(message);
 
@@ -639,8 +641,8 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iRocketEnabled = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
 	{
 		g_bRocket2[iTank] = false;
 
@@ -676,10 +678,10 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iRocketEnabled = pack.ReadCell();
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
 	{
 		g_bRocket2[iTank] = false;
 

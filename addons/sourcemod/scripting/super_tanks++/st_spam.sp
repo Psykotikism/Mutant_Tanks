@@ -455,6 +455,7 @@ static void vSpam(int tank)
 	CreateDataTimer(0.5, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpSpam.WriteCell(EntIndexToEntRef(g_iSpam[tank]));
 	dpSpam.WriteCell(GetClientUserId(tank));
+	dpSpam.WriteCell(ST_GetTankType(tank));
 	dpSpam.WriteFloat(GetEngineTime());
 }
 
@@ -540,14 +541,15 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSpam = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || iSpam == INVALID_ENT_REFERENCE || !bIsValidEntity(iSpam))
+	if (iSpam == INVALID_ENT_REFERENCE || !bIsValidEntity(iSpam))
 	{
 		g_bSpam[iTank] = false;
 
 		return Plugin_Stop;
 	}
 
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bSpam[iTank])
+	int iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bSpam[iTank])
 	{
 		vReset2(iTank, iSpam);
 

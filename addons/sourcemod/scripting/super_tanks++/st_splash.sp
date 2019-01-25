@@ -445,6 +445,7 @@ static void vSplash(int tank, float time, int flags)
 	DataPack dpSplash;
 	CreateDataTimer(time, tTimerSplash, dpSplash, flags);
 	dpSplash.WriteCell(GetClientUserId(tank));
+	dpSplash.WriteCell(ST_GetTankType(tank));
 	dpSplash.WriteFloat(GetEngineTime());
 }
 
@@ -532,8 +533,8 @@ public Action tTimerSplash(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iSplashAbility(iTank) == 0 || !g_bSplash[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iSplashAbility(iTank) == 0 || !g_bSplash[iTank])
 	{
 		g_bSplash[iTank] = false;
 

@@ -530,6 +530,7 @@ static void vVisionHit(int survivor, int tank, float chance, int enabled, const 
 				CreateDataTimer(0.1, tTimerVision, dpVision, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpVision.WriteCell(GetClientUserId(survivor));
 				dpVision.WriteCell(GetClientUserId(tank));
+				dpVision.WriteCell(ST_GetTankType(tank));
 				dpVision.WriteString(message);
 				dpVision.WriteCell(enabled);
 				dpVision.WriteFloat(GetEngineTime());
@@ -624,10 +625,10 @@ public Action tTimerVision(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bVision[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bVision[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

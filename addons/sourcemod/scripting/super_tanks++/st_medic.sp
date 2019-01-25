@@ -447,6 +447,7 @@ static void vMedic(int tank)
 	DataPack dpMedic;
 	CreateDataTimer(flMedicInterval, tTimerMedic, dpMedic, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpMedic.WriteCell(GetClientUserId(tank));
+	dpMedic.WriteCell(ST_GetTankType(tank));
 	dpMedic.WriteFloat(GetEngineTime());
 }
 
@@ -647,8 +648,8 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || (iMedicAbility(iTank) != 2 && iMedicAbility(iTank) != 3) || !g_bMedic[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (iMedicAbility(iTank) != 2 && iMedicAbility(iTank) != 3) || !g_bMedic[iTank])
 	{
 		g_bMedic[iTank] = false;
 

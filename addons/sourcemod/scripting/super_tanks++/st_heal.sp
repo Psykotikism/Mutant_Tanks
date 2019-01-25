@@ -530,6 +530,7 @@ static void vHeal(int tank)
 	DataPack dpHeal;
 	CreateDataTimer(flHealInterval, tTimerHeal, dpHeal, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpHeal.WriteCell(GetClientUserId(tank));
+	dpHeal.WriteCell(ST_GetTankType(tank));
 	dpHeal.WriteFloat(GetEngineTime());
 }
 
@@ -801,8 +802,8 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || (iHealAbility(iTank) != 2 && iHealAbility(iTank) != 3) || !g_bHeal[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (iHealAbility(iTank) != 2 && iHealAbility(iTank) != 3) || !g_bHeal[iTank])
 	{
 		g_bHeal[iTank] = false;
 
@@ -828,7 +829,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iType, iSpecial = -1;
+	int iHealType, iSpecial = -1;
 	float flHealHealRange = !g_bTankConfig[ST_GetTankType(iTank)] ? g_flHealHealRange[ST_GetTankType(iTank)] : g_flHealHealRange2[ST_GetTankType(iTank)];
 
 	while ((iSpecial = FindEntityByClassname(iSpecial, "infected")) != INVALID_ENT_REFERENCE)
@@ -856,7 +857,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 					SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
 				}
 
-				iType = 1;
+				iHealType = 1;
 			}
 		}
 	}
@@ -881,7 +882,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 				{
 					SetEntityHealth(iTank, iRealHealth);
 
-					if (iType < 2)
+					if (iHealType < 2)
 					{
 						if (bIsValidGame())
 						{
@@ -890,7 +891,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 							SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
 						}
 
-						iType = 1;
+						iHealType = 1;
 					}
 				}
 			}
@@ -920,13 +921,13 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 						SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
 					}
 
-					iType = 2;
+					iHealType = 2;
 				}
 			}
 		}
 	}
 
-	if (iType == 0 && bIsValidGame())
+	if (iHealType == 0 && bIsValidGame())
 	{
 		vResetGlow(iTank);
 	}

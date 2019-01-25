@@ -470,6 +470,7 @@ static void vPimpHit(int survivor, int tank, float chance, int enabled, const ch
 				CreateDataTimer(flPimpInterval, tTimerPimp, dpPimp, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpPimp.WriteCell(GetClientUserId(survivor));
 				dpPimp.WriteCell(GetClientUserId(tank));
+				dpPimp.WriteCell(ST_GetTankType(tank));
 				dpPimp.WriteString(message);
 				dpPimp.WriteCell(enabled);
 				dpPimp.WriteFloat(GetEngineTime());
@@ -609,10 +610,10 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	char sMessage[3];
 	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bPimp[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bPimp[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, sMessage);
 

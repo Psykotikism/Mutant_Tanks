@@ -416,6 +416,7 @@ static void vPanic(int tank)
 	DataPack dpPanic;
 	CreateDataTimer(flPanicInterval, tTimerPanic, dpPanic, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpPanic.WriteCell(GetClientUserId(tank));
+	dpPanic.WriteCell(ST_GetTankType(tank));
 	dpPanic.WriteFloat(GetEngineTime());
 }
 
@@ -533,8 +534,8 @@ public Action tTimerPanic(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iPanicAbility(iTank) == 0 || !g_bPanic[iTank])
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iPanicAbility(iTank) == 0 || !g_bPanic[iTank])
 	{
 		g_bPanic[iTank] = false;
 

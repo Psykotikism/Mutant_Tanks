@@ -239,14 +239,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && g_bUndead[victim])
 		{
-			if (GetClientHealth(victim) <= damage)
+			if (GetClientHealth(victim) - RoundToNearest(damage) <= 0)
 			{
-				damage = 0.0;
+				g_bUndead[victim] = false;
 				SetEntityHealth(victim, g_iUndeadHealth[victim]);
 
 				if (ST_IsTankSupported(victim, "5") && iHumanAbility(victim) == 1 && !g_bUndead2[victim])
 				{
-					g_bUndead[victim] = false;
 					g_bUndead2[victim] = true;
 
 					ST_PrintToChat(victim, "%s %t", ST_TAG3, "UndeadHuman5");
@@ -268,7 +267,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Undead2", sTankName);
 				}
 
-				return Plugin_Changed;
+				return Plugin_Handled;
 			}
 		}
 	}
