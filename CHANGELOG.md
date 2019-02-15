@@ -11,6 +11,7 @@ Bug fixes:
 Changes:
 
 1. Minor code changes.
+2. The core plugin now generates a `super_tanks++.cfg` file inside `cfg/sourcemod`. (Requested by axelnieves2012.)
 
 Files:
 
