@@ -382,7 +382,25 @@ public void ST_OnPluginEnd()
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vRemoveGravity(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vRemoveGravity(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, "024"))
@@ -495,7 +513,7 @@ public void ST_OnButtonReleased(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
-	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank))
 	{
 		vRemoveGravity(tank);
 	}
@@ -516,9 +534,8 @@ static void vGravity(int tank)
 	DispatchKeyValue(g_iGravity[tank], "radius", "750");
 	DispatchKeyValueFloat(g_iGravity[tank], "magnitude", flGravityForce);
 	DispatchKeyValue(g_iGravity[tank], "spawnflags", "8");
-	vSetEntityParent(g_iGravity[tank], tank);
+	vSetEntityParent(g_iGravity[tank], tank, true);
 	AcceptEntityInput(g_iGravity[tank], "Enable");
-	SetEntPropEnt(g_iGravity[tank], Prop_Send, "m_hOwnerEntity", tank);
 }
 
 static void vGravityAbility(int tank, bool main)
@@ -684,6 +701,8 @@ static void vRemoveGravity(int tank)
 	{
 		RemoveEntity(g_iGravity[tank]);
 	}
+
+	g_iGravity[tank] = 0;
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{

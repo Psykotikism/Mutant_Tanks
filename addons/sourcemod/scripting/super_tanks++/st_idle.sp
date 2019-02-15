@@ -366,16 +366,8 @@ public void ST_OnHookEvent(bool mode)
 {
 	switch (mode)
 	{
-		case true:
-		{
-			HookEvent("player_afk", ST_OnEventFired, EventHookMode_Pre);
-			HookEvent("player_bot_replace", ST_OnEventFired);
-		}
-		case false:
-		{
-			UnhookEvent("player_afk", ST_OnEventFired, EventHookMode_Pre);
-			UnhookEvent("player_bot_replace", ST_OnEventFired);
-		}
+		case true: HookEvent("player_afk", ST_OnEventFired, EventHookMode_Pre);
+		case false: UnhookEvent("player_afk", ST_OnEventFired, EventHookMode_Pre);
 	}
 }
 

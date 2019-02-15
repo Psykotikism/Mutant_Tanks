@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 8.57 (February 14, 2019)
+
+Bug fixes:
+
+1. Fixed props staying attached to players after switching teams.
+2. Fixed some entities not resetting properly upon death.
+3. Fixed the `Finales Only` setting not working. (Thanks to AK978 for reporting!)
+
+Changes:
+
+1. Minor code changes.
+
+Files:
+
+1. Updated the `mutant_tanks.inc` file.
+
 ## Version 8.56 (January 25, 2019)
 
 Bug fixes:

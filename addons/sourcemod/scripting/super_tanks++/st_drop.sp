@@ -513,7 +513,25 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vRemoveDrop(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vRemoveDrop(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, "024") && ST_IsCloneSupported(iTank, g_bCloneInstalled) && g_bDrop[iTank])
@@ -751,7 +769,7 @@ public Action tTimerDrop(Handle timer, int userid)
 		SetEntityModel(g_iDrop[iTank], g_sWeaponModel[iWeapon]);
 		TeleportEntity(g_iDrop[iTank], flPos, flAngles, NULL_VECTOR);
 		DispatchSpawn(g_iDrop[iTank]);
-		vSetEntityParent(g_iDrop[iTank], iTank);
+		vSetEntityParent(g_iDrop[iTank], iTank, true);
 
 		char sPosition[32];
 
@@ -850,7 +868,6 @@ public Action tTimerDrop(Handle timer, int userid)
 		}
 
 		SetEntProp(g_iDrop[iTank], Prop_Send, "m_CollisionGroup", 2);
-		SetEntPropEnt(g_iDrop[iTank], Prop_Send, "m_hOwnerEntity", iTank);
 
 		if (bIsValidGame())
 		{

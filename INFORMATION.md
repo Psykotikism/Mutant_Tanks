@@ -1,8 +1,8 @@
 # Information
 > Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
 
-- Maximum types: 500 (Increase the value in the `super_tanks++.inc` file at your own risk.)
-- Ability count: 68 (More to come whenever possible; suggest your own abilities.)
+- Maximum types: 500 (Increase the value in the `mutant_tanks.inc` file and recompile at your own risk.)
+- Ability count: 68
 
 ## Plugin Settings
 
