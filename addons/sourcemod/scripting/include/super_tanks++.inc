@@ -17,7 +17,7 @@
 #include <sdktools>
 
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.56"
+#define ST_VERSION "8.57"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define ST_TAG "[ST++]"
@@ -491,10 +491,15 @@ stock void vPrecacheParticle(const char[] particlename)
 	}
 }
 
-stock void vSetEntityParent(int entity, int parent)
+stock void vSetEntityParent(int entity, int parent, bool owner = false)
 {
 	SetVariantString("!activator");
 	AcceptEntityInput(entity, "SetParent", parent);
+
+	if (owner)
+	{
+		SetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity", parent);
+	}
 }
 
 stock void vSetVector(float target[3], float x, float y, float z)

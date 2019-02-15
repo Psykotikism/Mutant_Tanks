@@ -327,9 +327,7 @@ public any aNative_SpawnTank(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
 	if (bIsValidClient(iTank))
 	{
-		char sTankName[33];
-		IntToString(iType, sTankName, sizeof(sTankName));
-		vTank(iTank, sTankName);
+		vQueueTank(iTank, iType);
 	}
 }
 
@@ -383,7 +381,8 @@ public void OnPluginStart()
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Super Tank.");
 	RegConsoleCmd("sm_supertank", cmdTank, "Choose a Super Tank.");
 
-	CreateConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	CreateConVar("st_pluginversion", ST_VERSION, "Super Tanks++ Version", FCVAR_NOTIFY);
+	AutoExecConfig(true, "super_tanks++");
 
 	g_cvSTDifficulty = FindConVar("z_difficulty");
 	g_cvSTGameMode = FindConVar("mp_gamemode");
@@ -686,6 +685,8 @@ public int iSTAdminMenuHandler(TopMenu topmenu, TopMenuAction action, TopMenuObj
 	{
 		case TopMenuAction_DisplayTitle, TopMenuAction_DisplayOption: Format(buffer, maxlength, "Super Tanks++");
 	}
+
+	return 0;
 }
 
 public void vSuperTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
@@ -972,7 +973,10 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 											case false: vTankSpawn(admin, 5);
 										}
 
-										vExternalView(admin, 1.5);
+										if (bIsTank(admin, "5"))
+										{
+											vExternalView(admin, 1.5);
+										}
 
 										int iMasterControl = !g_bGeneralConfig ? g_iMasterControl : g_iMasterControl2;
 										if (iMasterControl == 0 && !CheckCommandAccess(admin, "st_admin", ADMFLAG_ROOT))
@@ -1035,6 +1039,18 @@ static void vChangeTank(int admin, int amount, int mode)
 		}
 		case false: vSpawnTank(admin, g_iType, amount, mode);
 	}
+}
+
+static void vQueueTank(int admin, int type, bool mode = true, int user = 0)
+{
+	if (user == 0)
+	{
+		user = admin;
+	}
+
+	char sType[32];
+	IntToString(type, sType, sizeof(sType));
+	vTank(admin, sType, mode, user);
 }
 
 static void vSpawnTank(int admin, int type, int amount, int mode)
@@ -1117,12 +1133,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
 			switch (StrEqual(sInfo, "Default Tank"))
 			{
-				case true:
-				{
-					char sType[33];
-					IntToString(g_iTankType[param1], sType, sizeof(sType));
-					vTank(param1, sType, false);
-				}
+				case true: vQueueTank(param1, g_iTankType[param1], false);
 				case false:
 				{
 					for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
@@ -1136,9 +1147,9 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 						sTankName = !g_bTankConfig[iIndex] ? g_sTankName[iIndex] : g_sTankName2[iIndex];
 						if (StrEqual(sInfo, sTankName))
 						{
-							char sType[33];
-							IntToString(iIndex, sType, sizeof(sType));
-							vTank(param1, sType, false);
+							vQueueTank(param1, iIndex, false);
+
+							break;
 						}
 					}
 				}
@@ -1157,6 +1168,8 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			panel.SetTitle(sMenuTitle);
 		}
 	}
+
+	return 0;
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
@@ -1299,6 +1312,15 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				vThrowInterval(iTank, flThrowInterval(iTank));
 			}
 		}
+		else if (StrEqual(name, "bot_player_replace"))
+		{
+			int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+				iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+			if (bIsValidClient(iBot) && bIsTank(iTank))
+			{
+				vReset2(iBot, 0);
+			}
+		}
 		else if (StrEqual(name, "finale_escape_start") || StrEqual(name, "finale_vehicle_ready"))
 		{
 			g_iTankWave = 3;
@@ -1310,6 +1332,15 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "finale_vehicle_leaving"))
 		{
 			g_iTankWave = 4;
+		}
+		else if (StrEqual(name, "player_bot_replace"))
+		{
+			int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+				iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+			if (bIsValidClient(iTank) && bIsTank(iBot))
+			{
+				vReset2(iTank, 0);
+			}
 		}
 		else if (StrEqual(name, "player_death"))
 		{
@@ -1433,10 +1464,12 @@ static void vHookEvents(bool hook)
 	if (hook && !bHooked)
 	{
 		HookEvent("ability_use", vEventHandler);
+		HookEvent("bot_player_replace", vEventHandler);
 		HookEvent("finale_escape_start", vEventHandler);
 		HookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		HookEvent("finale_vehicle_leaving", vEventHandler);
 		HookEvent("finale_vehicle_ready", vEventHandler);
+		HookEvent("player_bot_replace", vEventHandler);
 		HookEvent("player_death", vEventHandler);
 		HookEvent("player_incapacitated", vEventHandler);
 		HookEvent("player_spawn", vEventHandler);
@@ -1446,10 +1479,12 @@ static void vHookEvents(bool hook)
 	else if (!hook && bHooked)
 	{
 		UnhookEvent("ability_use", vEventHandler);
+		UnhookEvent("bot_player_replace", vEventHandler);
 		UnhookEvent("finale_escape_start", vEventHandler);
 		UnhookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("finale_vehicle_leaving", vEventHandler);
 		UnhookEvent("finale_vehicle_ready", vEventHandler);
+		UnhookEvent("player_bot_replace", vEventHandler);
 		UnhookEvent("player_death", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
 		UnhookEvent("player_spawn", vEventHandler);
@@ -2021,7 +2056,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					SetEntProp(g_iJetpack[tank][iOzTank], Prop_Data, "m_takedamage", 0, 1);
 					SetEntProp(g_iJetpack[tank][iOzTank], Prop_Send, "m_CollisionGroup", 2);
-					vSetEntityParent(g_iJetpack[tank][iOzTank], tank);
+					vSetEntityParent(g_iJetpack[tank][iOzTank], tank, true);
 
 					switch (iOzTank)
 					{
@@ -2049,7 +2084,6 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					AcceptEntityInput(g_iJetpack[tank][iOzTank], "Enable");
 					AcceptEntityInput(g_iJetpack[tank][iOzTank], "DisableCollision");
-					SetEntPropEnt(g_iJetpack[tank][iOzTank], Prop_Send, "m_hOwnerEntity", tank);
 
 					TeleportEntity(g_iJetpack[tank][iOzTank], flOrigin, NULL_VECTOR, flAngles2);
 					DispatchSpawn(g_iJetpack[tank][iOzTank]);
@@ -2071,8 +2105,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 							DispatchKeyValue(g_iFlame[tank][iOzTank], "Rate", "555");
 							DispatchKeyValue(g_iFlame[tank][iOzTank], "JetLength", "40");
 
-							vSetEntityParent(g_iFlame[tank][iOzTank], g_iJetpack[tank][iOzTank]);
-							SetEntPropEnt(g_iFlame[tank][iOzTank], Prop_Send, "m_hOwnerEntity", tank);
+							vSetEntityParent(g_iFlame[tank][iOzTank], g_iJetpack[tank][iOzTank], true);
 
 							float flOrigin2[3], flAngles3[3];
 							vSetVector(flOrigin2, -2.0, 0.0, 26.0);
@@ -2092,22 +2125,30 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			}
 			else if (bIsValidEntity(g_iJetpack[tank][iOzTank]))
 			{
-				vColorOzTanks(tank, iOzTank);
-
-				if (StrContains(sPropsAttached, "3") == -1)
+				if (StrContains(sPropsAttached, "3") != -1)
+				{
+					vColorOzTanks(tank, iOzTank);
+				}
+				else
 				{
 					SDKUnhook(g_iJetpack[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
 					RemoveEntity(g_iJetpack[tank][iOzTank]);
+
+					g_iJetpack[tank][iOzTank] = INVALID_ENT_REFERENCE;
 				}
 
 				if (bIsValidEntity(g_iFlame[tank][iOzTank]))
 				{
-					vColorFlames(tank, iOzTank);
-
-					if (StrContains(sPropsAttached, "4") == -1)
+					if (StrContains(sPropsAttached, "4") != -1)
+					{
+						vColorFlames(tank, iOzTank);
+					}
+					else
 					{
 						SDKUnhook(g_iFlame[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
 						RemoveEntity(g_iFlame[tank][iOzTank]);
+
+						g_iFlame[tank][iOzTank] = INVALID_ENT_REFERENCE;
 					}
 				}
 			}
@@ -2129,7 +2170,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					DispatchKeyValueVector(g_iRock[tank][iRock], "origin", flOrigin);
 					DispatchKeyValueVector(g_iRock[tank][iRock], "angles", flAngles);
-					vSetEntityParent(g_iRock[tank][iRock], tank);
+					vSetEntityParent(g_iRock[tank][iRock], tank, true);
 
 					switch (iRock)
 					{
@@ -2152,8 +2193,6 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 						}
 					}
 
-					SetEntPropEnt(g_iRock[tank][iRock], Prop_Send, "m_hOwnerEntity", tank);
-
 					flAngles[0] += GetRandomFloat(-90.0, 90.0);
 					flAngles[1] += GetRandomFloat(-90.0, 90.0);
 					flAngles[2] += GetRandomFloat(-90.0, 90.0);
@@ -2166,12 +2205,16 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			}
 			else if (bIsValidEntity(g_iRock[tank][iRock]))
 			{
-				vColorRocks(tank, iRock);
-
-				if (StrContains(sPropsAttached, "5") == -1)
+				if (StrContains(sPropsAttached, "5") != -1)
+				{
+					vColorRocks(tank, iRock);
+				}
+				else
 				{
 					SDKUnhook(g_iRock[tank][iRock], SDKHook_SetTransmit, SetTransmit);
 					RemoveEntity(g_iRock[tank][iRock]);
+
+					g_iRock[tank][iRock] = INVALID_ENT_REFERENCE;
 				}
 			}
 		}
@@ -2193,7 +2236,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					DispatchKeyValueVector(g_iTire[tank][iTire], "origin", flOrigin);
 					DispatchKeyValueVector(g_iTire[tank][iTire], "angles", flAngles);
-					vSetEntityParent(g_iTire[tank][iTire], tank);
+					vSetEntityParent(g_iTire[tank][iTire], tank, true);
 
 					switch (iTire)
 					{
@@ -2210,7 +2253,6 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 						SetEntPropFloat(g_iTire[tank][iTire], Prop_Data, "m_flModelScale", 1.5);
 					}
 
-					SetEntPropEnt(g_iTire[tank][iTire], Prop_Send, "m_hOwnerEntity", tank);
 					TeleportEntity(g_iTire[tank][iTire], NULL_VECTOR, flAngles, NULL_VECTOR);
 					DispatchSpawn(g_iTire[tank][iTire]);
 
@@ -2219,12 +2261,16 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			}
 			else if (bIsValidEntity(g_iTire[tank][iTire]))
 			{
-				vColorTires(tank, iTire);
-
-				if (StrContains(sPropsAttached, "6") == -1)
+				if (StrContains(sPropsAttached, "6") != -1)
+				{
+					vColorTires(tank, iTire);
+				}
+				else
 				{
 					SDKUnhook(g_iTire[tank][iTire], SDKHook_SetTransmit, SetTransmit);
 					RemoveEntity(g_iTire[tank][iTire]);
+
+					g_iTire[tank][iTire] = INVALID_ENT_REFERENCE;
 				}
 			}
 		}
@@ -2331,7 +2377,7 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		DispatchKeyValue(g_iLight[tank][light], "fadescale", "1");
 		DispatchKeyValue(g_iLight[tank][light], "fademindist", "-1");
 
-		vSetEntityParent(g_iLight[tank][light], tank);
+		vSetEntityParent(g_iLight[tank][light], tank, true);
 
 		switch (light)
 		{
@@ -2356,7 +2402,6 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		AcceptEntityInput(g_iLight[tank][light], "Enable");
 		AcceptEntityInput(g_iLight[tank][light], "DisableCollision");
 
-		SetEntPropEnt(g_iLight[tank][light], Prop_Send, "m_hOwnerEntity", tank);
 		TeleportEntity(g_iLight[tank][light], NULL_VECTOR, angles, NULL_VECTOR);
 		DispatchSpawn(g_iLight[tank][light]);
 
@@ -2453,7 +2498,7 @@ static void vParticleEffects(int tank)
 static void vSuperTank(int tank)
 {
 	int iFinalesOnly = !g_bGeneralConfig ? g_iFinalesOnly : g_iFinalesOnly2;
-	if (!bIsFinaleMap() || g_iTankWave == 0 || iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
+	if (iFinalesOnly == 0 || (iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
 	{
 		if (g_iType <= 0)
 		{
@@ -2805,7 +2850,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bBoss[iTank])
 	{
 		vSpawnModes(iTank, false);
 
@@ -2926,7 +2971,7 @@ public Action tTimerMeteorEffect(Handle timer, int userid)
 public Action tTimerRandomize(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bRandomized[iTank])
 	{
 		vSpawnModes(iTank, false);
 
@@ -2939,7 +2984,7 @@ public Action tTimerRandomize(Handle timer, int userid)
 	for (int iIndex = iGetMinType(); iIndex <= iGetMaxType(); iIndex++)
 	{
 		int iRandomTank = !g_bTankConfig[iIndex] ? g_iRandomTank[iIndex] : g_iRandomTank2[iIndex];
-		if (iTankEnabled(iIndex) == 0 || iSpawnEnabled(iIndex) == 0 || iRandomTank == 0 || g_iTankType[iTank] == iIndex)
+		if (iTankEnabled(iIndex) == 0 || iRandomTank == 0 || g_iTankType[iTank] == iIndex)
 		{
 			continue;
 		}
@@ -2996,7 +3041,7 @@ public Action tTimerSpitEffect(Handle timer, int userid)
 public Action tTimerTransform(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || iTankEnabled(g_iTankType[iTank]) == 0 || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bTransformed[iTank])
 	{
 		vSpawnModes(iTank, false);
 

@@ -416,7 +416,25 @@ public void ST_OnPluginEnd()
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated"))
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vRemoveShield(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vRemoveShield(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, "024"))
@@ -513,12 +531,12 @@ public void ST_OnButtonReleased(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
-	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank))
 	{
 		vRemoveShield(tank);
-
-		vReset2(tank);
 	}
+
+	vReset2(tank);
 }
 
 public void ST_OnRockThrow(int tank, int rock)
@@ -540,6 +558,8 @@ static void vRemoveShield(int tank)
 		ST_HideEntity(g_iShield[tank], false);
 		RemoveEntity(g_iShield[tank]);
 	}
+
+	g_iShield[tank] = 0;
 }
 
 static void vReset()
@@ -590,7 +610,7 @@ static void vShield(int tank)
 
 	DispatchKeyValueVector(g_iShield[tank], "origin", flOrigin);
 	DispatchSpawn(g_iShield[tank]);
-	vSetEntityParent(g_iShield[tank], tank);
+	vSetEntityParent(g_iShield[tank], tank, true);
 
 	int iShieldRed = !g_bTankConfig[ST_GetTankType(tank)] ? g_iShieldRed[ST_GetTankType(tank)] : g_iShieldRed2[ST_GetTankType(tank)],
 		iShieldGreen = !g_bTankConfig[ST_GetTankType(tank)] ? g_iShieldGreen[ST_GetTankType(tank)] : g_iShieldGreen2[ST_GetTankType(tank)],
@@ -600,7 +620,6 @@ static void vShield(int tank)
 	SetEntityRenderColor(g_iShield[tank], iShieldRed, iShieldGreen, iShieldBlue, iShieldAlpha);
 
 	SetEntProp(g_iShield[tank], Prop_Send, "m_CollisionGroup", 1);
-	SetEntPropEnt(g_iShield[tank], Prop_Send, "m_hOwnerEntity", tank);
 
 	ST_HideEntity(g_iShield[tank], true);
 }

@@ -404,7 +404,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
-	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank))
 	{
 		vRemoveBury(tank);
 	}
