@@ -14,7 +14,7 @@ Changes:
 
 Files:
 
-1. Updated the `mutant_tanks.inc` file.
+1. Updated the `super_tanks++.inc` file.
 
 ## Version 8.56 (January 25, 2019)
 
