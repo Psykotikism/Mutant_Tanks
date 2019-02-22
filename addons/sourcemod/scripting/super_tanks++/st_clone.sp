@@ -319,7 +319,19 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 								switch (g_iCloneCount[iOwner])
 								{
-									case 0, 1: vResetCooldown(iOwner);
+									case 0, 1:
+									{
+										g_iCloneCount[iOwner] = 0;
+
+										if (ST_IsTankSupported(iOwner, ST_CHECK_FAKECLIENT) && iHumanAbility(iOwner) == 1)
+										{
+											g_bClone2[iOwner] = true;
+
+											ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "CloneHuman6");
+
+											CreateTimer(flHumanCooldown(iOwner), tTimerResetCooldown, GetClientUserId(iOwner), TIMER_FLAG_NO_MAPCHANGE);
+										}
+									}
 									default:
 									{
 										int iCloneReplace = !g_bTankConfig[ST_GetTankType(iOwner)] ? g_iCloneReplace[ST_GetTankType(iOwner)] : g_iCloneReplace2[ST_GetTankType(iOwner)];
@@ -451,13 +463,12 @@ static void vCloneAbility(int tank)
 						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 
 						g_bClone[iSelectedType] = true;
+						g_iCloneCount[tank]++;
+						g_iCloneOwner[iSelectedType] = tank;
 
 						int iCloneHealth = !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneHealth[ST_GetTankType(tank)] : g_iCloneHealth2[ST_GetTankType(tank)],
 							iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
 						SetEntityHealth(iSelectedType, iNewHealth);
-
-						g_iCloneCount[tank]++;
-						g_iCloneOwner[iSelectedType] = tank;
 
 						if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 						{
@@ -508,20 +519,6 @@ static void vReset()
 			g_bClone[iPlayer] = false;
 			g_iCloneOwner[iPlayer] = 0;
 		}
-	}
-}
-
-static void vResetCooldown(int tank)
-{
-	g_iCloneCount[tank] = 0;
-
-	if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
-	{
-		g_bClone2[tank] = true;
-
-		ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman6");
-
-		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 

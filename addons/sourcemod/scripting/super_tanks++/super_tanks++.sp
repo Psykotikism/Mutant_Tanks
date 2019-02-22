@@ -1085,16 +1085,11 @@ static void vChangeTank(int admin, int amount, int mode)
 	}
 }
 
-static void vQueueTank(int admin, int type, bool mode = true, int user = 0)
+static void vQueueTank(int admin, int type, bool mode = true)
 {
-	if (user == 0)
-	{
-		user = admin;
-	}
-
 	char sType[32];
 	IntToString(type, sType, sizeof(sType));
-	vTank(admin, sType, mode, user);
+	vTank(admin, sType, mode);
 }
 
 static void vSpawnTank(int admin, int type, int amount, int mode)

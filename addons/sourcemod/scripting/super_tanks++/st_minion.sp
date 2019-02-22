@@ -320,7 +320,19 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					{
 						switch (g_iMinionCount[iOwner])
 						{
-							case 0, 1: vResetCooldown(iOwner);
+							case 0, 1:
+							{
+								g_iMinionCount[iOwner] = 0;
+
+								if (ST_IsTankSupported(iOwner, ST_CHECK_FAKECLIENT) && iHumanAbility(iOwner) == 1)
+								{
+									g_bMinion2[iOwner] = true;
+
+									ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "MinionHuman5");
+
+									CreateTimer(flHumanCooldown(iOwner), tTimerResetCooldown, GetClientUserId(iOwner), TIMER_FLAG_NO_MAPCHANGE);
+								}
+							}
 							default:
 							{
 								int iMinionReplace = !g_bTankConfig[ST_GetTankType(iOwner)] ? g_iMinionReplace[ST_GetTankType(iOwner)] : g_iMinionReplace2[ST_GetTankType(iOwner)];
@@ -377,7 +389,8 @@ public void ST_OnChangeType(int tank)
 
 static void vMinionAbility(int tank)
 {
-	if (g_iMinionCount[tank] < iMinionAmount(tank) && g_iMinionCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	int iMinionAmount = !g_bTankConfig[ST_GetTankType(tank)] ? g_iMinionAmount[ST_GetTankType(tank)] : g_iMinionAmount2[ST_GetTankType(tank)];
+	if (g_iMinionCount[tank] < iMinionAmount && g_iMinionCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
 		float flMinionChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flMinionChance[ST_GetTankType(tank)] : g_flMinionChance2[ST_GetTankType(tank)];
 		if (GetRandomFloat(0.1, 100.0) <= flMinionChance)
@@ -519,20 +532,6 @@ static void vReset()
 	}
 }
 
-static void vResetCooldown(int tank)
-{
-	g_iMinionCount[tank] = 0;
-
-	if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
-	{
-		g_bMinion2[tank] = true;
-
-		ST_PrintToChat(tank, "%s %t", ST_TAG3, "MinionHuman5");
-
-		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
-	}
-}
-
 static float flHumanCooldown(int tank)
 {
 	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
@@ -551,11 +550,6 @@ static int iHumanAmmo(int tank)
 static int iMinionAbility(int tank)
 {
 	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iMinionAbility[ST_GetTankType(tank)] : g_iMinionAbility2[ST_GetTankType(tank)];
-}
-
-static int iMinionAmount(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iMinionAmount[ST_GetTankType(tank)] : g_iMinionAmount2[ST_GetTankType(tank)];
 }
 
 public Action tTimerResetCooldown(Handle timer, int userid)
