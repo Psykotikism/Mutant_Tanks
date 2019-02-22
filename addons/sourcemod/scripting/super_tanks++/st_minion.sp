@@ -413,7 +413,7 @@ static void vMinionAbility(int tank)
 						}
 					}
 
-					int iTypes[7], iMinionTypes = !g_bTankConfig[ST_GetTankType(tank)] ? g_iMinionTypes[ST_GetTankType(tank)] : g_iMinionTypes2[ST_GetTankType(tank)];
+					int iTypeCount, iTypes[7], iMinionTypes = !g_bTankConfig[ST_GetTankType(tank)] ? g_iMinionTypes[ST_GetTankType(tank)] : g_iMinionTypes2[ST_GetTankType(tank)];
 					for (int iBit = 0; iBit < 6; iBit++)
 					{
 						int iFlag = (1 << iBit);
@@ -422,10 +422,11 @@ static void vMinionAbility(int tank)
 							continue;
 						}
 
-						iTypes[iBit] = iFlag;
+						iTypes[iTypeCount] = iFlag;
+						iTypeCount++;
 					}
 
-					switch (iTypes[GetRandomInt(0, 5)])
+					switch (iTypes[GetRandomInt(0, iTypeCount)])
 					{
 						case 1: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "smoker");
 						case 2: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "boomer");

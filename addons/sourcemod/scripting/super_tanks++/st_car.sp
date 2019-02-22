@@ -589,7 +589,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 		int iCar = CreateEntityByName("prop_physics");
 		if (bIsValidEntity(iCar))
 		{
-			int iOptions[4], iCarOptions = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iCarOptions[ST_GetTankType(iTank)] : g_iCarOptions2[ST_GetTankType(iTank)];
+			int iOptionCount, iOptions[4], iCarOptions = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iCarOptions[ST_GetTankType(iTank)] : g_iCarOptions2[ST_GetTankType(iTank)];
 			for (int iBit = 0; iBit < 3; iBit++)
 			{
 				int iFlag = (1 << iBit);
@@ -598,10 +598,11 @@ public Action tTimerCar(Handle timer, DataPack pack)
 					continue;
 				}
 
-				iOptions[iBit] = iFlag;
+				iOptions[iOptionCount] = iFlag;
+				iOptionCount++;
 			}
 
-			switch (iOptions[GetRandomInt(0, 2)])
+			switch (iOptions[GetRandomInt(0, iOptionCount)])
 			{
 				case 1: SetEntityModel(iCar, MODEL_CAR);
 				case 2: SetEntityModel(iCar, MODEL_CAR2);

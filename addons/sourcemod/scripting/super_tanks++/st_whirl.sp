@@ -562,7 +562,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, int mes
 				vSetEntityParent(iCamera, survivor);
 				SetClientViewEntity(survivor, iCamera);
 
-				int iAxis, iAxes[4],
+				int iAxis, iAxisCount, iAxes[4],
 					iWhirlAxis = !g_bTankConfig[ST_GetTankType(tank)] ? g_iWhirlAxis[ST_GetTankType(tank)] : g_iWhirlAxis2[ST_GetTankType(tank)];
 				for (int iBit = 0; iBit < 3; iBit++)
 				{
@@ -572,10 +572,11 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, int mes
 						continue;
 					}
 
-					iAxes[iBit] = iFlag;
+					iAxes[iAxisCount] = iFlag;
+					iAxisCount++;
 				}
 
-				switch (iAxes[GetRandomInt(0, 2)])
+				switch (iAxes[GetRandomInt(0, iAxisCount)])
 				{
 					case 1: iAxis = 0;
 					case 2: iAxis = 1;

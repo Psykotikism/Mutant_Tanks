@@ -480,7 +480,7 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, int m
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "EnforceHuman", g_iEnforceCount[tank], iHumanAmmo(tank));
 				}
 
-				int iSlots[6], iEnforceWeaponSlots = !g_bTankConfig[ST_GetTankType(tank)] ? g_iEnforceWeaponSlots[ST_GetTankType(tank)] : g_iEnforceWeaponSlots2[ST_GetTankType(tank)];
+				int iSlotCount, iSlots[6], iEnforceWeaponSlots = !g_bTankConfig[ST_GetTankType(tank)] ? g_iEnforceWeaponSlots[ST_GetTankType(tank)] : g_iEnforceWeaponSlots2[ST_GetTankType(tank)];
 				for (int iBit = 0; iBit < 5; iBit++)
 				{
 					int iFlag = (1 << iBit);
@@ -489,11 +489,12 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, int m
 						continue;
 					}
 
-					iSlots[iBit] = iFlag;
+					iSlots[iSlotCount] = iFlag;
+					iSlotCount++;
 				}
 
 				char sSlotNumber[32];
-				switch (iSlots[GetRandomInt(0, 4)])
+				switch (iSlots[GetRandomInt(0, iSlotCount)])
 				{
 					case 1:
 					{

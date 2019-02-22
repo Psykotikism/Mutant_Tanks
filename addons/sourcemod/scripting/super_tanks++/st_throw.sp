@@ -443,20 +443,20 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				continue;
 			}
 
-			iAbilities[iBit] = iFlag;
+			iAbilities[iAbilityCount] = iFlag;
 			iAbilityCount++;
 		}
 
 		if (iAbilityCount > 0)
 		{
-			switch (iAbilities[GetRandomInt(0, 3)])
+			switch (iAbilities[GetRandomInt(0, iAbilityCount)])
 			{
 				case 1:
 				{
 					int iCar = CreateEntityByName("prop_physics");
 					if (bIsValidEntity(iCar))
 					{
-						int iOptions[4], iThrowCarOptions = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iThrowCarOptions[ST_GetTankType(iTank)] : g_iThrowCarOptions2[ST_GetTankType(iTank)];
+						int iOptionCount, iOptions[4], iThrowCarOptions = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iThrowCarOptions[ST_GetTankType(iTank)] : g_iThrowCarOptions2[ST_GetTankType(iTank)];
 						for (int iBit = 0; iBit < 3; iBit++)
 						{
 							int iFlag = (1 << iBit);
@@ -465,10 +465,11 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 								continue;
 							}
 
-							iOptions[iBit] = iFlag;
+							iOptions[iOptionCount] = iFlag;
+							iOptionCount++;
 						}
 
-						switch (iOptions[GetRandomInt(0, 2)])
+						switch (iOptions[GetRandomInt(0, iOptionCount)])
 						{
 							case 1: SetEntityModel(iCar, MODEL_CAR);
 							case 2: SetEntityModel(iCar, MODEL_CAR2);
@@ -515,7 +516,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					int iInfected = CreateFakeClient("Infected");
 					if (iInfected > 0)
 					{
-						int iOptions[8], iThrowInfectedOptions = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iThrowInfectedOptions[ST_GetTankType(iTank)] : g_iThrowInfectedOptions2[ST_GetTankType(iTank)];
+						int iOptionCount, iOptions[8], iThrowInfectedOptions = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iThrowInfectedOptions[ST_GetTankType(iTank)] : g_iThrowInfectedOptions2[ST_GetTankType(iTank)];
 						for (int iBit = 0; iBit < 7; iBit++)
 						{
 							int iFlag = (1 << iBit);
@@ -524,10 +525,11 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 								continue;
 							}
 
-							iOptions[iBit] = iFlag;
+							iOptions[iOptionCount] = iFlag;
+							iOptionCount++;
 						}
 
-						switch (iOptions[GetRandomInt(0, 6)])
+						switch (iOptions[GetRandomInt(0, iOptionCount)])
 						{
 							case 1: vSpawnInfected(iInfected, "smoker");
 							case 2: vSpawnInfected(iInfected, "boomer");
