@@ -30,14 +30,6 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_TRACK "Track Ability"
-
-bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1], g_bTrack[MAXPLAYERS + 1], g_bTrack2[MAXPLAYERS + 1];
-
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flTrackChance[ST_MAXTYPES + 1], g_flTrackChance2[ST_MAXTYPES + 1], g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackCount[MAXPLAYERS + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
-
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
@@ -49,6 +41,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define ST_MENU_TRACK "Track Ability"
+
+bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1], g_bTrack[MAXPLAYERS + 1], g_bTrack2[MAXPLAYERS + 1];
+
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flTrackChance[ST_MAXTYPES + 1], g_flTrackChance2[ST_MAXTYPES + 1], g_flTrackSpeed[ST_MAXTYPES + 1], g_flTrackSpeed2[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iTrackAbility[ST_MAXTYPES + 1], g_iTrackAbility2[ST_MAXTYPES + 1], g_iTrackCount[MAXPLAYERS + 1], g_iTrackMessage[ST_MAXTYPES + 1], g_iTrackMessage2[ST_MAXTYPES + 1], g_iTrackMode[ST_MAXTYPES + 1], g_iTrackMode2[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -103,7 +103,7 @@ public Action cmdTrackInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -149,7 +149,7 @@ public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vTrackMenu(param1, menu.Selection);
 			}
@@ -294,7 +294,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveTrack(iTank);
 		}
@@ -303,7 +303,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
@@ -346,7 +346,7 @@ public void ST_OnRockThrow(int tank, int rock)
 	float flTrackChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flTrackChance[ST_GetTankType(tank)] : g_flTrackChance2[ST_GetTankType(tank)];
 	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iTrackAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flTrackChance)
 	{
-		if ((!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && !g_bTrack[tank])
+		if ((!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && !g_bTrack[tank])
 		{
 			g_bTrack[tank] = true;
 		}
@@ -378,7 +378,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveTrack(iPlayer);
 		}
@@ -699,7 +699,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 	SDKUnhook(iRock, SDKHook_Think, Think);
 	SDKHook(iRock, SDKHook_Think, Think);
 
-	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && !g_bTrack2[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && !g_bTrack2[iTank])
 	{
 		g_bTrack[iTank] = false;
 		g_bTrack2[iTank] = true;
@@ -722,7 +722,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bTrack2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bTrack2[iTank])
 	{
 		g_bTrack2[iTank] = false;
 

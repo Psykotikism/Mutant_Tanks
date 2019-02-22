@@ -30,13 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_VAMPIRE "Vampire Ability"
-
-bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-
-float g_flVampireChance[ST_MAXTYPES + 1], g_flVampireChance2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iVampireAbility[ST_MAXTYPES + 1], g_iVampireAbility2[ST_MAXTYPES + 1], g_iVampireEffect[ST_MAXTYPES + 1], g_iVampireEffect2[ST_MAXTYPES + 1], g_iVampireMessage[ST_MAXTYPES + 1], g_iVampireMessage2[ST_MAXTYPES + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,6 +45,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define ST_MENU_VAMPIRE "Vampire Ability"
+
+bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+
+float g_flVampireChance[ST_MAXTYPES + 1], g_flVampireChance2[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iVampireAbility[ST_MAXTYPES + 1], g_iVampireAbility2[ST_MAXTYPES + 1], g_iVampireEffect[ST_MAXTYPES + 1], g_iVampireEffect2[ST_MAXTYPES + 1], g_iVampireMessage[ST_MAXTYPES + 1], g_iVampireMessage2[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -84,7 +86,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -108,7 +110,7 @@ public Action cmdVampireInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -148,7 +150,7 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vVampireMenu(param1, menu.Selection);
 			}
@@ -202,7 +204,7 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -212,16 +214,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			float flVampireChance = !g_bTankConfig[ST_GetTankType(attacker)] ? g_flVampireChance[ST_GetTankType(attacker)] : g_flVampireChance2[ST_GetTankType(attacker)];
 			if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && iVampireAbility(attacker) == 1 && GetRandomFloat(0.1, 100.0) <= flVampireChance && bIsSurvivor(victim))
 			{
-				if (!ST_IsTankSupported(attacker, "5") || (ST_IsTankSupported(attacker, "5") && iHumanAbility(attacker) == 1))
+				if (!ST_IsTankSupported(attacker, ST_CHECK_FAKECLIENT) || (ST_IsTankSupported(attacker, ST_CHECK_FAKECLIENT) && iHumanAbility(attacker) == 1))
 				{
 					int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
 						iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
 					SetEntityHealth(attacker, iFinalHealth);
 
 					int iVampireEffect = !g_bTankConfig[ST_GetTankType(attacker)] ? g_iVampireEffect[ST_GetTankType(attacker)] : g_iVampireEffect2[ST_GetTankType(attacker)];
-					char sVampireEffect[2];
-					IntToString(iVampireEffect, sVampireEffect, sizeof(sVampireEffect));
-					vEffect(victim, attacker, sVampireEffect, "1");
+					vEffect(victim, attacker, iVampireEffect, 1);
 
 					int iVampireMessage = !g_bTankConfig[ST_GetTankType(attacker)] ? g_iVampireMessage[ST_GetTankType(attacker)] : g_iVampireMessage2[ST_GetTankType(attacker)];
 					if (iVampireMessage == 1)

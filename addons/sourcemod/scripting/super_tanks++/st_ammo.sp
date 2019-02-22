@@ -30,15 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_AMMO "Ammo Ability"
-
-bool g_bAmmo[MAXPLAYERS + 1], g_bAmmo2[MAXPLAYERS + 1], g_bAmmo3[MAXPLAYERS + 1], g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sAmmoEffect[ST_MAXTYPES + 1][4], g_sAmmoEffect2[ST_MAXTYPES + 1][4], g_sAmmoMessage[ST_MAXTYPES + 1][3], g_sAmmoMessage2[ST_MAXTYPES + 1][3];
-
-float g_flAmmoChance[ST_MAXTYPES + 1], g_flAmmoChance2[ST_MAXTYPES + 1], g_flAmmoRange[ST_MAXTYPES + 1], g_flAmmoRange2[ST_MAXTYPES + 1], g_flAmmoRangeChance[ST_MAXTYPES + 1], g_flAmmoRangeChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
-
-int g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAbility2[ST_MAXTYPES + 1], g_iAmmoAmount[ST_MAXTYPES + 1], g_iAmmoAmount2[ST_MAXTYPES + 1], g_iAmmoCount[MAXPLAYERS + 1], g_iAmmoHit[ST_MAXTYPES + 1], g_iAmmoHit2[ST_MAXTYPES + 1], g_iAmmoHitMode[ST_MAXTYPES + 1], g_iAmmoHitMode2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -53,6 +45,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define ST_MENU_AMMO "Ammo Ability"
+
+bool g_bAmmo[MAXPLAYERS + 1], g_bAmmo2[MAXPLAYERS + 1], g_bAmmo3[MAXPLAYERS + 1], g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+
+float g_flAmmoChance[ST_MAXTYPES + 1], g_flAmmoChance2[ST_MAXTYPES + 1], g_flAmmoRange[ST_MAXTYPES + 1], g_flAmmoRange2[ST_MAXTYPES + 1], g_flAmmoRangeChance[ST_MAXTYPES + 1], g_flAmmoRangeChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+
+int g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAbility2[ST_MAXTYPES + 1], g_iAmmoAmount[ST_MAXTYPES + 1], g_iAmmoAmount2[ST_MAXTYPES + 1], g_iAmmoCount[MAXPLAYERS + 1], g_iAmmoEffect[ST_MAXTYPES + 1], g_iAmmoEffect2[ST_MAXTYPES + 1], g_iAmmoHit[ST_MAXTYPES + 1], g_iAmmoHit2[ST_MAXTYPES + 1], g_iAmmoHitMode[ST_MAXTYPES + 1], g_iAmmoHitMode2[ST_MAXTYPES + 1], g_iAmmoMessage[ST_MAXTYPES + 1], g_iAmmoMessage2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -86,7 +86,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -122,7 +122,7 @@ public Action cmdAmmoInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -168,7 +168,7 @@ public int iAmmoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vAmmoMenu(param1, menu.Selection);
 			}
@@ -237,7 +237,7 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -246,14 +246,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAmmoHit(victim, attacker, flAmmoChance(attacker), iAmmoHit(attacker), "1", "1");
+				vAmmoHit(victim, attacker, flAmmoChance(attacker), iAmmoHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
 		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iAmmoHitMode(victim) == 0 || iAmmoHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vAmmoHit(attacker, victim, flAmmoChance(victim), iAmmoHit(victim), "1", "2");
+				vAmmoHit(attacker, victim, flAmmoChance(victim), iAmmoHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
@@ -284,8 +284,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_iAmmoAbility[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Enabled", 0);
 					g_iAmmoAbility[iIndex] = iClamp(g_iAmmoAbility[iIndex], 0, 1);
-					kvSuperTanks.GetString("Ammo Ability/Ability Effect", g_sAmmoEffect[iIndex], sizeof(g_sAmmoEffect[]), "0");
-					kvSuperTanks.GetString("Ammo Ability/Ability Message", g_sAmmoMessage[iIndex], sizeof(g_sAmmoMessage[]), "0");
+					g_iAmmoEffect[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Effect", 0);
+					g_iAmmoEffect[iIndex] = iClamp(g_iAmmoEffect[iIndex], 0, 7);
+					g_iAmmoMessage[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Message", 0);
+					g_iAmmoMessage[iIndex] = iClamp(g_iAmmoMessage[iIndex], 0, 3);
 					g_flAmmoChance[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Chance", 33.3);
 					g_flAmmoChance[iIndex] = flClamp(g_flAmmoChance[iIndex], 0.0, 100.0);
 					g_iAmmoAmount[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Count", 0);
@@ -311,8 +313,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_iAmmoAbility2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Enabled", g_iAmmoAbility[iIndex]);
 					g_iAmmoAbility2[iIndex] = iClamp(g_iAmmoAbility2[iIndex], 0, 1);
-					kvSuperTanks.GetString("Ammo Ability/Ability Effect", g_sAmmoEffect2[iIndex], sizeof(g_sAmmoEffect2[]), g_sAmmoEffect[iIndex]);
-					kvSuperTanks.GetString("Ammo Ability/Ability Message", g_sAmmoMessage2[iIndex], sizeof(g_sAmmoMessage2[]), g_sAmmoMessage[iIndex]);
+					g_iAmmoEffect2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Effect", g_iAmmoEffect[iIndex]);
+					g_iAmmoEffect2[iIndex] = iClamp(g_iAmmoEffect2[iIndex], 0, 7);
+					g_iAmmoMessage2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ability Message", g_iAmmoMessage[iIndex]);
+					g_iAmmoMessage2[iIndex] = iClamp(g_iAmmoMessage2[iIndex], 0, 3);
 					g_flAmmoChance2[iIndex] = kvSuperTanks.GetFloat("Ammo Ability/Ammo Chance", g_flAmmoChance[iIndex]);
 					g_flAmmoChance2[iIndex] = flClamp(g_flAmmoChance2[iIndex], 0.0, 100.0);
 					g_iAmmoAmount2[iIndex] = kvSuperTanks.GetNum("Ammo Ability/Ammo Count", g_iAmmoAmount[iIndex]);
@@ -340,7 +344,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveAmmo(iTank);
 		}
@@ -349,7 +353,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iAmmoAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iAmmoAbility(tank) == 1)
 	{
 		vAmmoAbility(tank);
 	}
@@ -357,7 +361,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -395,7 +399,7 @@ static void vAmmoAbility(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, "234"))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -403,7 +407,7 @@ static void vAmmoAbility(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flAmmoRange)
 				{
-					vAmmoHit(iSurvivor, tank, flAmmoRangeChance, iAmmoAbility(tank), "2", "3");
+					vAmmoHit(iSurvivor, tank, flAmmoRangeChance, iAmmoAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -412,19 +416,19 @@ static void vAmmoAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "AmmoHuman4");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "AmmoAmmo");
 	}
 }
 
-static void vAmmoHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
+static void vAmmoHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
 	if (enabled == 1 && bIsSurvivor(survivor) && GetPlayerWeaponSlot(survivor, 0) > 0)
 	{
@@ -432,7 +436,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bAmmo[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && (flags & ST_ATTACK_RANGE) && !g_bAmmo[tank])
 				{
 					g_bAmmo[tank] = true;
 					g_iAmmoCount[tank]++;
@@ -507,22 +511,20 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 
 				SetEntProp(GetPlayerWeaponSlot(survivor, 0), Prop_Data, "m_iClip1", iAmmoAmount, 1);
 
-				char sAmmoEffect[4];
-				sAmmoEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sAmmoEffect[ST_GetTankType(tank)] : g_sAmmoEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, sAmmoEffect, mode);
+				int iAmmoEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iAmmoEffect[ST_GetTankType(tank)] : g_iAmmoEffect2[ST_GetTankType(tank)];
+				vEffect(survivor, tank, iAmmoEffect, flags);
 
-				char sAmmoMessage[3];
-				sAmmoMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sAmmoMessage[ST_GetTankType(tank)] : g_sAmmoMessage2[ST_GetTankType(tank)];
-				if (StrContains(sAmmoMessage, message) != -1)
+				int iAmmoMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iAmmoMessage[ST_GetTankType(tank)] : g_iAmmoMessage2[ST_GetTankType(tank)];
+				if (iAmmoMessage & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Ammo", sTankName, survivor);
 				}
 			}
-			else if (StrEqual(mode, "3") && !g_bAmmo[tank])
+			else if ((flags & ST_ATTACK_RANGE) && !g_bAmmo[tank])
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bAmmo2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bAmmo2[tank])
 				{
 					g_bAmmo2[tank] = true;
 
@@ -530,7 +532,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bAmmo3[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bAmmo3[tank])
 		{
 			g_bAmmo3[tank] = true;
 
@@ -551,7 +553,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveAmmo(iPlayer);
 		}
@@ -596,7 +598,7 @@ static int iHumanAmmo(int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bAmmo[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bAmmo[iTank])
 	{
 		g_bAmmo[iTank] = false;
 

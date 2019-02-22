@@ -27,14 +27,6 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_CLONE "Clone Ability"
-
-bool g_bClone[MAXPLAYERS + 1], g_bClone2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-
-float g_flCloneChance[ST_MAXTYPES + 1], g_flCloneChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
-
-int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneCount2[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1], g_iCloneMessage[ST_MAXTYPES + 1], g_iCloneMessage2[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneMode2[ST_MAXTYPES + 1], g_iCloneOwner[MAXPLAYERS + 1], g_iCloneReplace[ST_MAXTYPES + 1], g_iCloneReplace2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
-
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
@@ -51,11 +43,19 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define ST_MENU_CLONE "Clone Ability"
+
+bool g_bClone[MAXPLAYERS + 1], g_bClone2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+
+float g_flCloneChance[ST_MAXTYPES + 1], g_flCloneChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+
+int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneCount2[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1], g_iCloneMessage[ST_MAXTYPES + 1], g_iCloneMessage2[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneMode2[ST_MAXTYPES + 1], g_iCloneOwner[MAXPLAYERS + 1], g_iCloneReplace[ST_MAXTYPES + 1], g_iCloneReplace2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
+
 public any aNative_IsCloneSupported(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	bool bCloneInstalled = GetNativeCell(2);
-	if (ST_IsTankSupported(iTank, "024") && bIsCloneAllowed(iTank, bCloneInstalled))
+	if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && bIsCloneAllowed(iTank, bCloneInstalled))
 	{
 		return true;
 	}
@@ -97,7 +97,7 @@ public Action cmdCloneInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -143,7 +143,7 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vCloneMenu(param1, menu.Selection);
 			}
@@ -286,9 +286,9 @@ public void ST_OnPluginEnd()
 {
 	for (int iClone = 1; iClone <= MaxClients; iClone++)
 	{
-		if (bIsTank(iClone, "234") && g_bClone[iClone])
+		if (bIsTank(iClone, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bClone[iClone])
 		{
-			!bIsValidClient(iClone, "5") ? KickClient(iClone) : ForcePlayerSuicide(iClone);
+			!bIsValidClient(iClone, ST_CHECK_FAKECLIENT) ? KickClient(iClone) : ForcePlayerSuicide(iClone);
 		}
 	}
 }
@@ -298,7 +298,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			g_bClone2[iTank] = false;
 			g_iCloneCount[iTank] = 0;
@@ -312,7 +312,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					{
 						for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 						{
-							if (ST_IsTankSupported(iOwner, "24") && g_iCloneOwner[iTank] == iOwner)
+							if (ST_IsTankSupported(iOwner, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && g_iCloneOwner[iTank] == iOwner)
 							{
 								g_bClone[iTank] = false;
 								g_iCloneOwner[iTank] = 0;
@@ -328,7 +328,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 											g_iCloneCount[iOwner]--;
 										}
 
-										if (ST_IsTankSupported(iOwner, "5") && iHumanAbility(iOwner) == 1)
+										if (ST_IsTankSupported(iOwner, ST_CHECK_FAKECLIENT) && iHumanAbility(iOwner) == 1)
 										{
 											ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "CloneHuman5");
 										}
@@ -343,7 +343,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					{
 						for (int iClone = 1; iClone <= MaxClients; iClone++)
 						{
-							if (ST_IsTankSupported(iTank, "24") && g_iCloneOwner[iClone] == iTank)
+							if (ST_IsTankSupported(iTank, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && g_iCloneOwner[iClone] == iTank)
 							{
 								g_iCloneOwner[iClone] = 0;
 							}
@@ -357,7 +357,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && iCloneAbility(tank) == 1 && !g_bClone[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && iCloneAbility(tank) == 1 && !g_bClone[tank])
 	{
 		vCloneAbility(tank);
 	}
@@ -365,7 +365,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && !g_bClone[tank])
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && !g_bClone[tank])
 	{
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
@@ -427,7 +427,7 @@ static void vCloneAbility(int tank)
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						bTankBoss[iPlayer] = false;
-						if (ST_IsTankSupported(iPlayer, "234"))
+						if (ST_IsTankSupported(iPlayer, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 						{
 							bTankBoss[iPlayer] = true;
 						}
@@ -438,7 +438,7 @@ static void vCloneAbility(int tank)
 					int iSelectedType;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (ST_IsTankSupported(iPlayer, "234") && !bTankBoss[iPlayer])
+						if (ST_IsTankSupported(iPlayer, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && !bTankBoss[iPlayer])
 						{
 							iSelectedType = iPlayer;
 
@@ -459,7 +459,7 @@ static void vCloneAbility(int tank)
 						g_iCloneCount[tank]++;
 						g_iCloneOwner[iSelectedType] = tank;
 
-						if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+						if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 						{
 							g_iCloneCount2[tank]++;
 
@@ -479,12 +479,12 @@ static void vCloneAbility(int tank)
 
 			delete hTrace;
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman2");
 		}
 	}
-	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneAmmo");
 	}
@@ -501,7 +501,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveClone(iPlayer);
 
@@ -515,7 +515,7 @@ static void vResetCooldown(int tank)
 {
 	g_iCloneCount[tank] = 0;
 
-	if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 	{
 		g_bClone2[tank] = true;
 
@@ -559,7 +559,7 @@ static int iHumanAmmo(int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || g_bClone[iTank] || !g_bClone2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || g_bClone[iTank] || !g_bClone2[iTank])
 	{
 		g_bClone2[iTank] = false;
 

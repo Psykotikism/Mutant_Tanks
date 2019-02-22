@@ -30,20 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define PARTICLE_BLOOD "boomer_explode_D"
-
-#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav"
-#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav"
-
-#define ST_MENU_SMASH "Smash Ability"
-
-bool g_bCloneInstalled, g_bLateLoad, g_bSmash[MAXPLAYERS + 1], g_bSmash2[MAXPLAYERS + 1], g_bSmash3[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sSmashEffect[ST_MAXTYPES + 1][4], g_sSmashEffect2[ST_MAXTYPES + 1][4], g_sSmashMessage[ST_MAXTYPES + 1][3], g_sSmashMessage2[ST_MAXTYPES + 1][3];
-
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flSmashChance[ST_MAXTYPES + 1], g_flSmashChance2[ST_MAXTYPES + 1], g_flSmashRange[ST_MAXTYPES + 1], g_flSmashRange2[ST_MAXTYPES + 1], g_flSmashRangeChance[ST_MAXTYPES + 1], g_flSmashRangeChance2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iSmashAbility[ST_MAXTYPES + 1], g_iSmashAbility2[ST_MAXTYPES + 1], g_iSmashCount[MAXPLAYERS + 1], g_iSmashHit[ST_MAXTYPES + 1], g_iSmashHit2[ST_MAXTYPES + 1], g_iSmashHitMode[ST_MAXTYPES + 1], g_iSmashHitMode2[ST_MAXTYPES + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -58,6 +45,19 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_BLOOD "boomer_explode_D"
+
+#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav"
+#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav"
+
+#define ST_MENU_SMASH "Smash Ability"
+
+bool g_bCloneInstalled, g_bSmash[MAXPLAYERS + 1], g_bSmash2[MAXPLAYERS + 1], g_bSmash3[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flSmashChance[ST_MAXTYPES + 1], g_flSmashChance2[ST_MAXTYPES + 1], g_flSmashRange[ST_MAXTYPES + 1], g_flSmashRange2[ST_MAXTYPES + 1], g_flSmashRangeChance[ST_MAXTYPES + 1], g_flSmashRangeChance2[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iSmashAbility[ST_MAXTYPES + 1], g_iSmashAbility2[ST_MAXTYPES + 1], g_iSmashCount[MAXPLAYERS + 1], g_iSmashEffect[ST_MAXTYPES + 1], g_iSmashEffect2[ST_MAXTYPES + 1], g_iSmashHit[ST_MAXTYPES + 1], g_iSmashHit2[ST_MAXTYPES + 1], g_iSmashHitMode[ST_MAXTYPES + 1], g_iSmashHitMode2[ST_MAXTYPES + 1], g_iSmashMessage[ST_MAXTYPES + 1], g_iSmashMessage2[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -91,7 +91,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -132,7 +132,7 @@ public Action cmdSmashInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -178,7 +178,7 @@ public int iSmashMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vSmashMenu(param1, menu.Selection);
 			}
@@ -247,7 +247,7 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -256,14 +256,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vSmashHit(victim, attacker, flSmashChance(attacker), iSmashHit(attacker), "1", "1");
+				vSmashHit(victim, attacker, flSmashChance(attacker), iSmashHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
 		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iSmashHitMode(victim) == 0 || iSmashHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vSmashHit(attacker, victim, flSmashChance(victim), iSmashHit(victim), "1", "2");
+				vSmashHit(attacker, victim, flSmashChance(victim), iSmashHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
@@ -294,8 +294,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_iSmashAbility[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Enabled", 0);
 					g_iSmashAbility[iIndex] = iClamp(g_iSmashAbility[iIndex], 0, 1);
-					kvSuperTanks.GetString("Smash Ability/Ability Effect", g_sSmashEffect[iIndex], sizeof(g_sSmashEffect[]), "0");
-					kvSuperTanks.GetString("Smash Ability/Ability Message", g_sSmashMessage[iIndex], sizeof(g_sSmashMessage[]), "0");
+					g_iSmashEffect[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Effect", 0);
+					g_iSmashEffect[iIndex] = iClamp(g_iSmashEffect[iIndex], 0, 7);
+					g_iSmashMessage[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Message", 0);
+					g_iSmashMessage[iIndex] = iClamp(g_iSmashMessage[iIndex], 0, 3);
 					g_flSmashChance[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Chance", 33.3);
 					g_flSmashChance[iIndex] = flClamp(g_flSmashChance[iIndex], 0.0, 100.0);
 					g_iSmashHit[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit", 0);
@@ -319,8 +321,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_iSmashAbility2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Enabled", g_iSmashAbility[iIndex]);
 					g_iSmashAbility2[iIndex] = iClamp(g_iSmashAbility2[iIndex], 0, 1);
-					kvSuperTanks.GetString("Smash Ability/Ability Effect", g_sSmashEffect2[iIndex], sizeof(g_sSmashEffect2[]), g_sSmashEffect[iIndex]);
-					kvSuperTanks.GetString("Smash Ability/Ability Message", g_sSmashMessage2[iIndex], sizeof(g_sSmashMessage2[]), g_sSmashMessage[iIndex]);
+					g_iSmashEffect2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Effect", g_iSmashEffect[iIndex]);
+					g_iSmashEffect2[iIndex] = iClamp(g_iSmashEffect2[iIndex], 0, 7);
+					g_iSmashMessage2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Ability Message", g_iSmashMessage[iIndex]);
+					g_iSmashMessage2[iIndex] = iClamp(g_iSmashMessage2[iIndex], 0, 3);
 					g_flSmashChance2[iIndex] = kvSuperTanks.GetFloat("Smash Ability/Smash Chance", g_flSmashChance[iIndex]);
 					g_flSmashChance2[iIndex] = flClamp(g_flSmashChance2[iIndex], 0.0, 100.0);
 					g_iSmashHit2[iIndex] = kvSuperTanks.GetNum("Smash Ability/Smash Hit", g_iSmashHit[iIndex]);
@@ -346,7 +350,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iSmashAbility(iTank) == 1)
 			{
@@ -360,7 +364,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iSmashAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iSmashAbility(tank) == 1)
 	{
 		vSmashAbility(tank);
 	}
@@ -368,7 +372,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -401,7 +405,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveSmash(iPlayer);
 		}
@@ -432,7 +436,7 @@ static void vSmashAbility(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, "234"))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -440,7 +444,7 @@ static void vSmashAbility(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flSmashRange)
 				{
-					vSmashHit(iSurvivor, tank, flSmashRangeChance, iSmashAbility(tank), "2", "3");
+					vSmashHit(iSurvivor, tank, flSmashRangeChance, iSmashAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -449,19 +453,19 @@ static void vSmashAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "SmashHuman4");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "SmashAmmo");
 	}
 }
 
-static void vSmashHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
+static void vSmashHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
@@ -469,7 +473,7 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, const c
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bSmash[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && (flags & ST_ATTACK_RANGE) && !g_bSmash[tank])
 				{
 					g_bSmash[tank] = true;
 					g_iSmashCount[tank]++;
@@ -489,22 +493,20 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, const c
 				vSmash(survivor, tank);
 				ForcePlayerSuicide(survivor);
 
-				char sSmashEffect[4];
-				sSmashEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sSmashEffect[ST_GetTankType(tank)] : g_sSmashEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, sSmashEffect, mode);
+				int iSmashEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iSmashEffect[ST_GetTankType(tank)] : g_iSmashEffect2[ST_GetTankType(tank)];
+				vEffect(survivor, tank, iSmashEffect, flags);
 
-				char sSmashMessage[3];
-				sSmashMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sSmashMessage[ST_GetTankType(tank)] : g_sSmashMessage2[ST_GetTankType(tank)];
-				if (StrContains(sSmashMessage, message) != -1)
+				int iSmashMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iSmashMessage[ST_GetTankType(tank)] : g_iSmashMessage2[ST_GetTankType(tank)];
+				if (iSmashMessage & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Smash", sTankName, survivor);
 				}
 			}
-			else if (StrEqual(mode, "3") && !g_bSmash[tank])
+			else if ((flags & ST_ATTACK_RANGE) && !g_bSmash[tank])
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bSmash2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bSmash2[tank])
 				{
 					g_bSmash2[tank] = true;
 
@@ -512,7 +514,7 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bSmash3[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bSmash3[tank])
 		{
 			g_bSmash3[tank] = true;
 
@@ -559,7 +561,7 @@ static int iSmashHitMode(int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bSmash[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bSmash[iTank])
 	{
 		g_bSmash[iTank] = false;
 

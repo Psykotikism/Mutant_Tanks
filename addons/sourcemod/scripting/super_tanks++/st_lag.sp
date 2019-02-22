@@ -30,15 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_LAG "Lag Ability"
-
-bool g_bCloneInstalled, g_bLag[MAXPLAYERS + 1], g_bLag2[MAXPLAYERS + 1], g_bLag3[MAXPLAYERS + 1], g_bLag4[MAXPLAYERS + 1], g_bLag5[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sLagEffect[ST_MAXTYPES + 1][4], g_sLagEffect2[ST_MAXTYPES + 1][4], g_sLagMessage[ST_MAXTYPES + 1][3], g_sLagMessage2[ST_MAXTYPES + 1][3];
-
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flLagChance[ST_MAXTYPES + 1], g_flLagChance2[ST_MAXTYPES + 1], g_flLagDuration[ST_MAXTYPES + 1], g_flLagDuration2[ST_MAXTYPES + 1], g_flLagPosition[MAXPLAYERS + 1][4], g_flLagRange[ST_MAXTYPES + 1], g_flLagRange2[ST_MAXTYPES + 1], g_flLagRangeChance[ST_MAXTYPES + 1], g_flLagRangeChance2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iLagAbility[ST_MAXTYPES + 1], g_iLagAbility2[ST_MAXTYPES + 1], g_iLagCount[MAXPLAYERS + 1], g_iLagHit[ST_MAXTYPES + 1], g_iLagHit2[ST_MAXTYPES + 1], g_iLagHitMode[ST_MAXTYPES + 1], g_iLagHitMode2[ST_MAXTYPES + 1], g_iLagOwner[MAXPLAYERS + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -53,6 +45,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define ST_MENU_LAG "Lag Ability"
+
+bool g_bCloneInstalled, g_bLag[MAXPLAYERS + 1], g_bLag2[MAXPLAYERS + 1], g_bLag3[MAXPLAYERS + 1], g_bLag4[MAXPLAYERS + 1], g_bLag5[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flLagChance[ST_MAXTYPES + 1], g_flLagChance2[ST_MAXTYPES + 1], g_flLagDuration[ST_MAXTYPES + 1], g_flLagDuration2[ST_MAXTYPES + 1], g_flLagPosition[MAXPLAYERS + 1][4], g_flLagRange[ST_MAXTYPES + 1], g_flLagRange2[ST_MAXTYPES + 1], g_flLagRangeChance[ST_MAXTYPES + 1], g_flLagRangeChance2[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iLagAbility[ST_MAXTYPES + 1], g_iLagAbility2[ST_MAXTYPES + 1], g_iLagCount[MAXPLAYERS + 1], g_iLagEffect[ST_MAXTYPES + 1], g_iLagEffect2[ST_MAXTYPES + 1], g_iLagHit[ST_MAXTYPES + 1], g_iLagHit2[ST_MAXTYPES + 1], g_iLagMessage[ST_MAXTYPES + 1], g_iLagMessage2[ST_MAXTYPES + 1], g_iLagHitMode[ST_MAXTYPES + 1], g_iLagHitMode2[ST_MAXTYPES + 1], g_iLagOwner[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -86,7 +86,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -122,7 +122,7 @@ public Action cmdLagInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -170,7 +170,7 @@ public int iLagMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vLagMenu(param1, menu.Selection);
 			}
@@ -244,7 +244,7 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -253,14 +253,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vLagHit(victim, attacker, flLagChance(attacker), iLagHit(attacker), "1", "1");
+				vLagHit(victim, attacker, flLagChance(attacker), iLagHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
 		else if ((iLagHitMode(victim) == 0 || iLagHitMode(victim) == 2) && ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vLagHit(attacker, victim, flLagChance(victim), iLagHit(victim), "1", "2");
+				vLagHit(attacker, victim, flLagChance(victim), iLagHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
@@ -291,8 +291,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_iLagAbility[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Enabled", 0);
 					g_iLagAbility[iIndex] = iClamp(g_iLagAbility[iIndex], 0, 1);
-					kvSuperTanks.GetString("Lag Ability/Ability Effect", g_sLagEffect[iIndex], sizeof(g_sLagEffect[]), "0");
-					kvSuperTanks.GetString("Lag Ability/Ability Message", g_sLagMessage[iIndex], sizeof(g_sLagMessage[]), "0");
+					g_iLagEffect[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Effect", 0);
+					g_iLagEffect[iIndex] = iClamp(g_iLagEffect[iIndex], 0, 7);
+					g_iLagMessage[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Message", 0);
+					g_iLagMessage[iIndex] = iClamp(g_iLagMessage[iIndex], 0, 3);
 					g_flLagChance[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Chance", 33.3);
 					g_flLagChance[iIndex] = flClamp(g_flLagChance[iIndex], 0.0, 100.0);
 					g_flLagDuration[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Duration", 5.0);
@@ -318,8 +320,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_iLagAbility2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Enabled", g_iLagAbility[iIndex]);
 					g_iLagAbility2[iIndex] = iClamp(g_iLagAbility2[iIndex], 0, 1);
-					kvSuperTanks.GetString("Lag Ability/Ability Effect", g_sLagEffect2[iIndex], sizeof(g_sLagEffect2[]), g_sLagEffect[iIndex]);
-					kvSuperTanks.GetString("Lag Ability/Ability Message", g_sLagMessage2[iIndex], sizeof(g_sLagMessage2[]), g_sLagMessage[iIndex]);
+					g_iLagEffect2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Effect", g_iLagEffect[iIndex]);
+					g_iLagEffect2[iIndex] = iClamp(g_iLagEffect2[iIndex], 0, 7);
+					g_iLagMessage2[iIndex] = kvSuperTanks.GetNum("Lag Ability/Ability Message", g_iLagMessage[iIndex]);
+					g_iLagMessage2[iIndex] = iClamp(g_iLagMessage2[iIndex], 0, 3);
 					g_flLagChance2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Chance", g_flLagChance[iIndex]);
 					g_flLagChance2[iIndex] = flClamp(g_flLagChance2[iIndex], 0.0, 100.0);
 					g_flLagDuration2[iIndex] = kvSuperTanks.GetFloat("Lag Ability/Lag Duration", g_flLagDuration[iIndex]);
@@ -347,7 +351,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveLag(iTank);
 		}
@@ -356,7 +360,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iLagAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iLagAbility(tank) == 1)
 	{
 		vLagAbility(tank);
 	}
@@ -364,7 +368,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -409,7 +413,7 @@ static void vLagAbility(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, "234"))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -417,7 +421,7 @@ static void vLagAbility(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flLagRange)
 				{
-					vLagHit(iSurvivor, tank, flLagRangeChance, iLagAbility(tank), "2", "3");
+					vLagHit(iSurvivor, tank, flLagRangeChance, iLagAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -426,19 +430,19 @@ static void vLagAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "LagHuman5");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "LagAmmo");
 	}
 }
 
-static void vLagHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
+static void vLagHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
@@ -449,7 +453,7 @@ static void vLagHit(int survivor, int tank, float chance, int enabled, const cha
 				g_bLag[survivor] = true;
 				g_iLagOwner[survivor] = tank;
 
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bLag2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && (flags & ST_ATTACK_RANGE) && !g_bLag2[tank])
 				{
 					g_bLag2[tank] = true;
 					g_iLagCount[tank]++;
@@ -459,16 +463,17 @@ static void vLagHit(int survivor, int tank, float chance, int enabled, const cha
 
 				float flPos[3];
 				GetClientAbsOrigin(survivor, flPos);
-				g_flLagPosition[survivor][1] = flPos[0];
-				g_flLagPosition[survivor][2] = flPos[1];
-				g_flLagPosition[survivor][3] = flPos[2];
+				for (int iPos = 0; iPos < 3; iPos++)
+				{
+					g_flLagPosition[survivor][iPos + 1] = flPos[iPos];
+				}
 
 				DataPack dpLagTeleport;
 				CreateDataTimer(1.0, tTimerLagTeleport, dpLagTeleport, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpLagTeleport.WriteCell(GetClientUserId(survivor));
 				dpLagTeleport.WriteCell(GetClientUserId(tank));
 				dpLagTeleport.WriteCell(ST_GetTankType(tank));
-				dpLagTeleport.WriteString(message);
+				dpLagTeleport.WriteCell(messages);
 				dpLagTeleport.WriteCell(enabled);
 				dpLagTeleport.WriteFloat(GetEngineTime());
 
@@ -480,22 +485,19 @@ static void vLagHit(int survivor, int tank, float chance, int enabled, const cha
 				dpLagPosition.WriteCell(enabled);
 				dpLagPosition.WriteFloat(GetEngineTime());
 
-				char sLagEffect[4];
-				sLagEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sLagEffect[ST_GetTankType(tank)] : g_sLagEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, sLagEffect, mode);
+				int iLagEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iLagEffect[ST_GetTankType(tank)] : g_iLagEffect2[ST_GetTankType(tank)];
+				vEffect(survivor, tank, iLagEffect, flags);
 
-				char sLagMessage[3];
-				sLagMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sLagMessage[ST_GetTankType(tank)] : g_sLagMessage2[ST_GetTankType(tank)];
-				if (StrContains(sLagMessage, message) != -1)
+				if (iLagMessage(tank) & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Lag", sTankName, survivor);
 				}
 			}
-			else if (StrEqual(mode, "3") && !g_bLag2[tank])
+			else if ((flags & ST_ATTACK_RANGE) && !g_bLag2[tank])
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bLag4[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bLag4[tank])
 				{
 					g_bLag4[tank] = true;
 
@@ -503,7 +505,7 @@ static void vLagHit(int survivor, int tank, float chance, int enabled, const cha
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bLag5[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bLag5[tank])
 		{
 			g_bLag5[tank] = true;
 
@@ -516,7 +518,7 @@ static void vRemoveLag(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor, "234") && g_bLag[iSurvivor] && g_iLagOwner[iSurvivor] == tank)
+		if (bIsHumanSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bLag[iSurvivor] && g_iLagOwner[iSurvivor] == tank)
 		{
 			g_bLag[iSurvivor] = false;
 			g_iLagOwner[iSurvivor] = 0;
@@ -530,7 +532,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vReset3(iPlayer);
 
@@ -539,14 +541,12 @@ static void vReset()
 	}
 }
 
-static void vReset2(int survivor, int tank, const char[] message)
+static void vReset2(int survivor, int tank, int messages)
 {
 	g_bLag[survivor] = false;
 	g_iLagOwner[survivor] = 0;
 
-	char sLagMessage[3];
-	sLagMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sLagMessage[ST_GetTankType(tank)] : g_sLagMessage2[ST_GetTankType(tank)];
-	if (StrContains(sLagMessage, message) != -1)
+	if (iLagMessage(tank) & messages)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Lag2", survivor);
 	}
@@ -602,6 +602,11 @@ static int iLagHitMode(int tank)
 	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iLagHitMode[ST_GetTankType(tank)] : g_iLagHitMode2[ST_GetTankType(tank)];
 }
 
+static int iLagMessage(int tank)
+{
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iLagMessage[ST_GetTankType(tank)] : g_iLagMessage2[ST_GetTankType(tank)];
+}
+
 public Action tTimerLagTeleport(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -615,12 +620,10 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	char sMessage[3];
-	pack.ReadString(sMessage, sizeof(sMessage));
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bLag[iSurvivor])
 	{
-		vReset2(iSurvivor, iTank, sMessage);
+		vReset2(iSurvivor, iTank, iMessage);
 
 		return Plugin_Stop;
 	}
@@ -631,9 +634,9 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 	{
 		g_bLag2[iTank] = false;
 
-		vReset2(iSurvivor, iTank, sMessage);
+		vReset2(iSurvivor, iTank, iMessage);
 
-		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bLag3[iTank])
+		if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bLag3[iTank])
 		{
 			g_bLag3[iTank] = true;
 
@@ -653,9 +656,11 @@ public Action tTimerLagTeleport(Handle timer, DataPack pack)
 	}
 
 	float flPos[3];
-	flPos[0] = g_flLagPosition[iSurvivor][1];
-	flPos[1] = g_flLagPosition[iSurvivor][2];
-	flPos[2] = g_flLagPosition[iSurvivor][3];
+	for (int iPos = 0; iPos < 3; iPos++)
+	{
+		flPos[iPos] = g_flLagPosition[iSurvivor][iPos + 1];
+	}
+
 	TeleportEntity(iSurvivor, flPos, NULL_VECTOR, NULL_VECTOR);
 
 	return Plugin_Continue;
@@ -686,9 +691,10 @@ public Action tTimerLagPosition(Handle timer, DataPack pack)
 
 	float flPos[3];
 	GetClientAbsOrigin(iSurvivor, flPos);
-	g_flLagPosition[iSurvivor][1] = flPos[0];
-	g_flLagPosition[iSurvivor][2] = flPos[1];
-	g_flLagPosition[iSurvivor][3] = flPos[2];
+	for (int iPos = 0; iPos < 3; iPos++)
+	{
+		g_flLagPosition[iSurvivor][iPos + 1] = flPos[iPos];
+	}
 
 	return Plugin_Continue;
 }
@@ -696,7 +702,7 @@ public Action tTimerLagPosition(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bLag3[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bLag3[iTank])
 	{
 		g_bLag3[iTank] = false;
 

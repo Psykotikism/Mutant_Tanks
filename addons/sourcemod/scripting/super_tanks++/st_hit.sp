@@ -30,13 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_HIT "Hit Ability"
-
-bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-
-float g_flHitDamageMultiplier[ST_MAXTYPES + 1], g_flHitDamageMultiplier2[ST_MAXTYPES + 1];
-
-int g_iHitAbility[ST_MAXTYPES + 1], g_iHitAbility2[ST_MAXTYPES + 1], g_iHitGroup[ST_MAXTYPES + 1], g_iHitGroup2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,6 +45,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define ST_MENU_HIT "Hit Ability"
+
+bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+
+float g_flHitDamageMultiplier[ST_MAXTYPES + 1], g_flHitDamageMultiplier2[ST_MAXTYPES + 1];
+
+int g_iHitAbility[ST_MAXTYPES + 1], g_iHitAbility2[ST_MAXTYPES + 1], g_iHitGroup[ST_MAXTYPES + 1], g_iHitGroup2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -84,7 +86,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -108,7 +110,7 @@ public Action cmdHitInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -148,7 +150,7 @@ public int iHitMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vHitMenu(param1, menu.Selection);
 			}
@@ -202,7 +204,7 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action TraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && iHitAbility(victim) == 1 && bIsSurvivor(attacker))
 		{

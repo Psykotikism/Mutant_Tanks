@@ -30,17 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_RESTART "Restart Ability"
-
-bool g_bCloneInstalled, g_bLateLoad, g_bRestart[MAXPLAYERS + 1], g_bRestart2[MAXPLAYERS + 1], g_bRestart3[MAXPLAYERS + 1], g_bRestart4, g_bRestartValid, g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sRestartEffect[ST_MAXTYPES + 1][4], g_sRestartEffect2[ST_MAXTYPES + 1][4], g_sRestartLoadout[ST_MAXTYPES + 1][325], g_sRestartLoadout2[ST_MAXTYPES + 1][325], g_sRestartMessage[ST_MAXTYPES + 1][3], g_sRestartMessage2[ST_MAXTYPES + 1][3];
-
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flRestartChance[ST_MAXTYPES + 1], g_flRestartChance2[ST_MAXTYPES + 1], g_flRestartPosition[3], g_flRestartRange[ST_MAXTYPES + 1], g_flRestartRange2[ST_MAXTYPES + 1], g_flRestartRangeChance[ST_MAXTYPES + 1], g_flRestartRangeChance2[ST_MAXTYPES + 1];
-
-Handle g_hSDKRespawnPlayer;
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1], g_iRestartCount[MAXPLAYERS + 1], g_iRestartHit[ST_MAXTYPES + 1], g_iRestartHit2[ST_MAXTYPES + 1], g_iRestartHitMode[ST_MAXTYPES + 1], g_iRestartHitMode2[ST_MAXTYPES + 1], g_iRestartMode[ST_MAXTYPES + 1], g_iRestartMode2[ST_MAXTYPES + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -55,6 +45,18 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define ST_MENU_RESTART "Restart Ability"
+
+bool g_bCloneInstalled, g_bRestart[MAXPLAYERS + 1], g_bRestart2[MAXPLAYERS + 1], g_bRestart3[MAXPLAYERS + 1], g_bRestart4, g_bRestartValid, g_bTankConfig[ST_MAXTYPES + 1];
+
+char g_sRestartLoadout[ST_MAXTYPES + 1][325], g_sRestartLoadout2[ST_MAXTYPES + 1][325];
+
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flRestartChance[ST_MAXTYPES + 1], g_flRestartChance2[ST_MAXTYPES + 1], g_flRestartPosition[3], g_flRestartRange[ST_MAXTYPES + 1], g_flRestartRange2[ST_MAXTYPES + 1], g_flRestartRangeChance[ST_MAXTYPES + 1], g_flRestartRangeChance2[ST_MAXTYPES + 1];
+
+Handle g_hSDKRespawnPlayer;
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iRestartAbility[ST_MAXTYPES + 1], g_iRestartAbility2[ST_MAXTYPES + 1], g_iRestartCount[MAXPLAYERS + 1], g_iRestartEffect[ST_MAXTYPES + 1], g_iRestartEffect2[ST_MAXTYPES + 1], g_iRestartHit[ST_MAXTYPES + 1], g_iRestartHit2[ST_MAXTYPES + 1], g_iRestartHitMode[ST_MAXTYPES + 1], g_iRestartHitMode2[ST_MAXTYPES + 1], g_iRestartMessage[ST_MAXTYPES + 1], g_iRestartMessage2[ST_MAXTYPES + 1], g_iRestartMode[ST_MAXTYPES + 1], g_iRestartMode2[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -107,7 +109,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -143,7 +145,7 @@ public Action cmdRestartInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -189,7 +191,7 @@ public int iRestartMenuHandler(Menu menu, MenuAction action, int param1, int par
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vRestartMenu(param1, menu.Selection);
 			}
@@ -258,7 +260,7 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -267,14 +269,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRestartHit(victim, attacker, flRestartChance(attacker), iRestartHit(attacker), "1", "1");
+				vRestartHit(victim, attacker, flRestartChance(attacker), iRestartHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
 		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iRestartHitMode(victim) == 0 || iRestartHitMode(victim) == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vRestartHit(attacker, victim, flRestartChance(victim), iRestartHit(victim), "1", "2");
+				vRestartHit(attacker, victim, flRestartChance(victim), iRestartHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
@@ -305,8 +307,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_iRestartAbility[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", 0);
 					g_iRestartAbility[iIndex] = iClamp(g_iRestartAbility[iIndex], 0, 1);
-					kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect[iIndex], sizeof(g_sRestartEffect[]), "0");
-					kvSuperTanks.GetString("Restart Ability/Ability Message", g_sRestartMessage[iIndex], sizeof(g_sRestartMessage[]), "0");
+					g_iRestartEffect[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Effect", 0);
+					g_iRestartEffect[iIndex] = iClamp(g_iRestartEffect[iIndex], 0, 7);
+					g_iRestartMessage[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Message", 0);
+					g_iRestartMessage[iIndex] = iClamp(g_iRestartMessage[iIndex], 0, 3);
 					g_flRestartChance[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Chance", 33.3);
 					g_flRestartChance[iIndex] = flClamp(g_flRestartChance[iIndex], 0.0, 100.0);
 					g_iRestartHit[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", 0);
@@ -333,8 +337,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_iRestartAbility2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Enabled", g_iRestartAbility[iIndex]);
 					g_iRestartAbility2[iIndex] = iClamp(g_iRestartAbility2[iIndex], 0, 1);
-					kvSuperTanks.GetString("Restart Ability/Ability Effect", g_sRestartEffect2[iIndex], sizeof(g_sRestartEffect2[]), g_sRestartEffect[iIndex]);
-					kvSuperTanks.GetString("Restart Ability/Ability Message", g_sRestartMessage2[iIndex], sizeof(g_sRestartMessage2[]), g_sRestartMessage[iIndex]);
+					g_iRestartEffect2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Effect", g_iRestartEffect[iIndex]);
+					g_iRestartEffect2[iIndex] = iClamp(g_iRestartEffect2[iIndex], 0, 7);
+					g_iRestartMessage2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Ability Message", g_iRestartMessage[iIndex]);
+					g_iRestartMessage2[iIndex] = iClamp(g_iRestartMessage2[iIndex], 0, 3);
 					g_flRestartChance2[iIndex] = kvSuperTanks.GetFloat("Restart Ability/Restart Chance", g_flRestartChance[iIndex]);
 					g_flRestartChance2[iIndex] = flClamp(g_flRestartChance2[iIndex], 0.0, 100.0);
 					g_iRestartHit2[iIndex] = kvSuperTanks.GetNum("Restart Ability/Restart Hit", g_iRestartHit[iIndex]);
@@ -363,7 +369,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveRestart(iTank);
 		}
@@ -387,7 +393,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iRestartAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iRestartAbility(tank) == 1)
 	{
 		vRestartAbility(tank);
 	}
@@ -395,7 +401,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -438,7 +444,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveRestart(iPlayer);
 		}
@@ -464,7 +470,7 @@ static void vRestartAbility(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, "234"))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -472,7 +478,7 @@ static void vRestartAbility(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRestartRange)
 				{
-					vRestartHit(iSurvivor, tank, flRestartRangeChance, iRestartAbility(tank), "2", "3");
+					vRestartHit(iSurvivor, tank, flRestartRangeChance, iRestartAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -481,19 +487,19 @@ static void vRestartAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "RestartHuman4");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "RestartAmmo");
 	}
 }
 
-static void vRestartHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
+static void vRestartHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
@@ -501,7 +507,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bRestart[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && (flags & ST_ATTACK_RANGE) && !g_bRestart[tank])
 				{
 					g_bRestart[tank] = true;
 					g_iRestartCount[tank]++;
@@ -548,7 +554,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 					float flCurrentOrigin[3];
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (!bIsSurvivor(iPlayer, "234") || bIsPlayerIncapacitated(iPlayer) || iPlayer == survivor)
+						if (!bIsSurvivor(iPlayer, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) || bIsPlayerIncapacitated(iPlayer) || iPlayer == survivor)
 						{
 							continue;
 						}
@@ -560,22 +566,20 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 					}
 				}
 
-				char sRestartEffect[4];
-				sRestartEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sRestartEffect[ST_GetTankType(tank)] : g_sRestartEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, sRestartEffect, mode);
+				int iRestartEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iRestartEffect[ST_GetTankType(tank)] : g_iRestartEffect2[ST_GetTankType(tank)];
+				vEffect(survivor, tank, iRestartEffect, flags);
 
-				char sRestartMessage[3];
-				sRestartMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sRestartMessage[ST_GetTankType(tank)] : g_sRestartMessage2[ST_GetTankType(tank)];
-				if (StrContains(sRestartMessage, message) != -1)
+				int iRestartMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iRestartMessage[ST_GetTankType(tank)] : g_iRestartMessage2[ST_GetTankType(tank)];
+				if (iRestartMessage & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Restart", sTankName, survivor);
 				}
 			}
-			else if (StrEqual(mode, "3") && !g_bRestart[tank])
+			else if ((flags & ST_ATTACK_RANGE) && !g_bRestart[tank])
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bRestart2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bRestart2[tank])
 				{
 					g_bRestart2[tank] = true;
 
@@ -583,7 +587,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, const
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bRestart3[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bRestart3[tank])
 		{
 			g_bRestart3[tank] = true;
 
@@ -630,7 +634,7 @@ static int iRestartHitMode(int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bRestart[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bRestart[iTank])
 	{
 		g_bRestart[iTank] = false;
 

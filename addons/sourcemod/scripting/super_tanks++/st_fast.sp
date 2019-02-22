@@ -22,9 +22,9 @@
 
 public Plugin myinfo =
 {
-	name = "[ST++] God Ability",
+	name = "[ST++] Fast Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank gains temporary immunity to all types of damage.",
+	description = "The Super Tank runs really fast like the Flash.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -33,7 +33,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "\"[ST++] God Ability\" only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Fast Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -41,13 +41,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-#define ST_MENU_GOD "God Ability"
+#define ST_MENU_FAST "Fast Ability"
 
-bool g_bCloneInstalled, g_bGod[MAXPLAYERS + 1], g_bGod2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bFast[MAXPLAYERS + 1], g_bFast2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
 
-float g_flGodChance[ST_MAXTYPES + 1], g_flGodChance2[ST_MAXTYPES + 1], g_flGodDuration[ST_MAXTYPES + 1], g_flGodDuration2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+float g_flFastChance[ST_MAXTYPES + 1], g_flFastChance2[ST_MAXTYPES + 1], g_flFastDuration[ST_MAXTYPES + 1], g_flFastDuration2[ST_MAXTYPES + 1], g_flFastSpeed[ST_MAXTYPES + 1], g_flFastSpeed2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
 
-int g_iGodAbility[ST_MAXTYPES + 1], g_iGodAbility2[ST_MAXTYPES + 1], g_iGodCount[MAXPLAYERS + 1], g_iGodMessage[ST_MAXTYPES + 1], g_iGodMessage2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1];
+int g_iFastAbility[ST_MAXTYPES + 1], g_iFastAbility2[ST_MAXTYPES + 1], g_iFastCount[MAXPLAYERS + 1], g_iFastMessage[ST_MAXTYPES + 1], g_iFastMessage2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -75,7 +75,7 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
-	RegConsoleCmd("sm_st_god", cmdGodInfo, "View information about the God ability.");
+	RegConsoleCmd("sm_st_fast", cmdFastInfo, "View information about the Fast ability.");
 }
 
 public void OnMapStart()
@@ -85,7 +85,7 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
-	vRemoveGod(client);
+	vRemoveFast(client);
 }
 
 public void OnMapEnd()
@@ -93,7 +93,7 @@ public void OnMapEnd()
 	vReset();
 }
 
-public Action cmdGodInfo(int client, int args)
+public Action cmdFastInfo(int client, int args)
 {
 	if (!ST_IsCorePluginEnabled())
 	{
@@ -112,16 +112,16 @@ public Action cmdGodInfo(int client, int args)
 	switch (IsVoteInProgress())
 	{
 		case true: ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
-		case false: vGodMenu(client, 0);
+		case false: vFastMenu(client, 0);
 	}
 
 	return Plugin_Handled;
 }
 
-static void vGodMenu(int client, int item)
+static void vFastMenu(int client, int item)
 {
-	Menu mAbilityMenu = new Menu(iGodMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
-	mAbilityMenu.SetTitle("God Ability Information");
+	Menu mAbilityMenu = new Menu(iFastMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Fast Ability Information");
 	mAbilityMenu.AddItem("Status", "Status");
 	mAbilityMenu.AddItem("Ammunition", "Ammunition");
 	mAbilityMenu.AddItem("Buttons", "Buttons");
@@ -133,7 +133,7 @@ static void vGodMenu(int client, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iGodMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+public int iFastMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -142,26 +142,26 @@ public int iGodMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iGodAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iGodCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iFastAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iFastCount[param1], iHumanAmmo(param1));
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons");
 				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanMode(param1) == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "GodDetails");
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flGodDuration(param1));
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "FastDetails");
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flFastDuration(param1));
 				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
-				vGodMenu(param1, menu.Selection);
+				vFastMenu(param1, menu.Selection);
 			}
 		}
 		case MenuAction_Display:
 		{
 			char sMenuTitle[255];
 			Panel panel = view_as<Panel>(param2);
-			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "GodMenu", param1);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "FastMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -218,14 +218,14 @@ public int iGodMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 
 public void ST_OnDisplayMenu(Menu menu)
 {
-	menu.AddItem(ST_MENU_GOD, ST_MENU_GOD);
+	menu.AddItem(ST_MENU_FAST, ST_MENU_FAST);
 }
 
 public void ST_OnMenuItemSelected(int client, const char[] info)
 {
-	if (StrEqual(info, ST_MENU_GOD, false))
+	if (StrEqual(info, ST_MENU_FAST, false))
 	{
-		vGodMenu(client, 0);
+		vFastMenu(client, 0);
 	}
 }
 
@@ -246,43 +246,47 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 				{
 					g_bTankConfig[iIndex] = false;
 
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("God Ability/Human Ability", 0);
+					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Fast Ability/Human Ability", 0);
 					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("God Ability/Human Ammo", 5);
+					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Fast Ability/Human Ammo", 5);
 					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("God Ability/Human Cooldown", 30.0);
+					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Fast Ability/Human Cooldown", 30.0);
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iHumanMode[iIndex] = kvSuperTanks.GetNum("God Ability/Human Mode", 1);
+					g_iHumanMode[iIndex] = kvSuperTanks.GetNum("Fast Ability/Human Mode", 1);
 					g_iHumanMode[iIndex] = iClamp(g_iHumanMode[iIndex], 0, 1);
-					g_iGodAbility[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Enabled", 0);
-					g_iGodAbility[iIndex] = iClamp(g_iGodAbility[iIndex], 0, 1);
-					g_iGodMessage[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", 0);
-					g_iGodMessage[iIndex] = iClamp(g_iGodMessage[iIndex], 0, 1);
-					g_flGodChance[iIndex] = kvSuperTanks.GetFloat("God Ability/God Chance", 33.3);
-					g_flGodChance[iIndex] = flClamp(g_flGodChance[iIndex], 0.0, 100.0);
-					g_flGodDuration[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", 5.0);
-					g_flGodDuration[iIndex] = flClamp(g_flGodDuration[iIndex], 0.1, 9999999999.0);
+					g_iFastAbility[iIndex] = kvSuperTanks.GetNum("Fast Ability/Ability Enabled", 0);
+					g_iFastAbility[iIndex] = iClamp(g_iFastAbility[iIndex], 0, 1);
+					g_iFastMessage[iIndex] = kvSuperTanks.GetNum("Fast Ability/Ability Message", 0);
+					g_iFastMessage[iIndex] = iClamp(g_iFastMessage[iIndex], 0, 1);
+					g_flFastChance[iIndex] = kvSuperTanks.GetFloat("Fast Ability/Fast Chance", 33.3);
+					g_flFastChance[iIndex] = flClamp(g_flFastChance[iIndex], 0.0, 100.0);
+					g_flFastDuration[iIndex] = kvSuperTanks.GetFloat("Fast Ability/Fast Duration", 5.0);
+					g_flFastDuration[iIndex] = flClamp(g_flFastDuration[iIndex], 0.1, 9999999999.0);
+					g_flFastSpeed[iIndex] = kvSuperTanks.GetFloat("Fast Ability/Fast Speed", 5.0);
+					g_flFastSpeed[iIndex] = flClamp(g_flFastSpeed[iIndex], 3.0, 10.0);
 				}
 				case false:
 				{
 					g_bTankConfig[iIndex] = true;
 
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("God Ability/Human Ability", g_iHumanAbility[iIndex]);
+					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Fast Ability/Human Ability", g_iHumanAbility[iIndex]);
 					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("God Ability/Human Ammo", g_iHumanAmmo[iIndex]);
+					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Fast Ability/Human Ammo", g_iHumanAmmo[iIndex]);
 					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("God Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
+					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Fast Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iHumanMode2[iIndex] = kvSuperTanks.GetNum("God Ability/Human Mode", g_iHumanMode[iIndex]);
+					g_iHumanMode2[iIndex] = kvSuperTanks.GetNum("Fast Ability/Human Mode", g_iHumanMode[iIndex]);
 					g_iHumanMode2[iIndex] = iClamp(g_iHumanMode2[iIndex], 0, 1);
-					g_iGodAbility2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Enabled", g_iGodAbility[iIndex]);
-					g_iGodAbility2[iIndex] = iClamp(g_iGodAbility2[iIndex], 0, 1);
-					g_iGodMessage2[iIndex] = kvSuperTanks.GetNum("God Ability/Ability Message", g_iGodMessage[iIndex]);
-					g_iGodMessage2[iIndex] = iClamp(g_iGodMessage2[iIndex], 0, 1);
-					g_flGodChance2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Chance", g_flGodChance[iIndex]);
-					g_flGodChance2[iIndex] = flClamp(g_flGodChance2[iIndex], 0.0, 100.0);
-					g_flGodDuration2[iIndex] = kvSuperTanks.GetFloat("God Ability/God Duration", g_flGodDuration[iIndex]);
-					g_flGodDuration2[iIndex] = flClamp(g_flGodDuration2[iIndex], 0.1, 9999999999.0);
+					g_iFastAbility2[iIndex] = kvSuperTanks.GetNum("Fast Ability/Ability Enabled", g_iFastAbility[iIndex]);
+					g_iFastAbility2[iIndex] = iClamp(g_iFastAbility2[iIndex], 0, 1);
+					g_iFastMessage2[iIndex] = kvSuperTanks.GetNum("Fast Ability/Ability Message", g_iFastMessage[iIndex]);
+					g_iFastMessage2[iIndex] = iClamp(g_iFastMessage2[iIndex], 0, 1);
+					g_flFastChance2[iIndex] = kvSuperTanks.GetFloat("Fast Ability/Fast Chance", g_flFastChance[iIndex]);
+					g_flFastChance2[iIndex] = flClamp(g_flFastChance2[iIndex], 0.0, 100.0);
+					g_flFastDuration2[iIndex] = kvSuperTanks.GetFloat("Fast Ability/Fast Duration", g_flFastDuration[iIndex]);
+					g_flFastDuration2[iIndex] = flClamp(g_flFastDuration2[iIndex], 0.1, 9999999999.0);
+					g_flFastSpeed2[iIndex] = kvSuperTanks.GetFloat("Fast Ability/Fast Speed", g_flFastSpeed[iIndex]);
+					g_flFastSpeed2[iIndex] = flClamp(g_flFastSpeed2[iIndex], 3.0, 10.0);
 				}
 			}
 
@@ -297,30 +301,30 @@ public void ST_OnPluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bGod[iTank])
+		if (bIsTank(iTank, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bFast[iTank])
 		{
-			SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
+			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
 	}
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_incapacitated"))
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
-			vRemoveGod(iTank);
+			vRemoveFast(iTank);
 		}
 	}
 }
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iGodAbility(tank) == 1 && !g_bGod[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iFastAbility(tank) == 1 && !g_bFast[tank])
 	{
-		vGodAbility(tank);
+		vFastAbility(tank);
 	}
 }
 
@@ -330,42 +334,42 @@ public void ST_OnButtonPressed(int tank, int button)
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if (iGodAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (iFastAbility(tank) == 1 && iHumanAbility(tank) == 1)
 			{
 				switch (iHumanMode(tank))
 				{
 					case 0:
 					{
-						if (!g_bGod[tank] && !g_bGod2[tank])
+						if (!g_bFast[tank] && !g_bFast2[tank])
 						{
-							vGodAbility(tank);
+							vFastAbility(tank);
 						}
-						else if (g_bGod[tank])
+						else if (g_bFast[tank])
 						{
-							ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman3");
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "FastHuman3");
 						}
-						else if (g_bGod2[tank])
+						else if (g_bFast2[tank])
 						{
-							ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman4");
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "FastHuman4");
 						}
 					}
 					case 1:
 					{
-						if (g_iGodCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+						if (g_iFastCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 						{
-							if (!g_bGod[tank] && !g_bGod2[tank])
+							if (!g_bFast[tank] && !g_bFast2[tank])
 							{
-								g_bGod[tank] = true;
-								g_iGodCount[tank]++;
+								g_bFast[tank] = true;
+								g_iFastCount[tank]++;
 
-								SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
+								SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flFastSpeed(tank));
 
-								ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman", g_iGodCount[tank], iHumanAmmo(tank));
+								ST_PrintToChat(tank, "%s %t", ST_TAG3, "FastHuman", g_iFastCount[tank], iHumanAmmo(tank));
 							}
 						}
 						else
 						{
-							ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodAmmo");
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "FastAmmo");
 						}
 					}
 				}
@@ -380,15 +384,15 @@ public void ST_OnButtonReleased(int tank, int button)
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if (iGodAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (iFastAbility(tank) == 1 && iHumanAbility(tank) == 1)
 			{
-				if (iHumanMode(tank) == 1 && g_bGod[tank] && !g_bGod2[tank])
+				if (iHumanMode(tank) == 1 && g_bFast[tank] && !g_bFast2[tank])
 				{
-					g_bGod[tank] = false;
+					g_bFast[tank] = false;
 
-					SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
+					SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", ST_GetRunSpeed(tank));
 
-					vReset2(tank);
+					vReset3(tank);
 				}
 			}
 		}
@@ -397,57 +401,52 @@ public void ST_OnButtonReleased(int tank, int button)
 
 public void ST_OnChangeType(int tank)
 {
-	vRemoveGod(tank);
+	vRemoveFast(tank);
 }
 
-static void vGodAbility(int tank)
+static void vFastAbility(int tank)
 {
-	if (g_iGodCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iFastCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
-		float flGodChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flGodChance[ST_GetTankType(tank)] : g_flGodChance2[ST_GetTankType(tank)];
-		if (GetRandomFloat(0.1, 100.0) <= flGodChance)
+		float flFastChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flFastChance[ST_GetTankType(tank)] : g_flFastChance2[ST_GetTankType(tank)];
+		if (GetRandomFloat(0.1, 100.0) <= flFastChance)
 		{
-			g_bGod[tank] = true;
-
-			SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
-
-			CreateTimer(flGodDuration(tank), tTimerStopGod, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+			g_bFast[tank] = true;
 
 			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 			{
-				g_iGodCount[tank]++;
+				g_iFastCount[tank]++;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman", g_iGodCount[tank], iHumanAmmo(tank));
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "FastHuman", g_iFastCount[tank], iHumanAmmo(tank));
 			}
 
-			if (iGodMessage(tank) == 1)
+			SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flFastSpeed(tank));
+
+			CreateTimer(flFastDuration(tank), tTimerStopFast, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+
+			if (iFastMessage(tank) == 1)
 			{
 				char sTankName[33];
 				ST_GetTankName(tank, sTankName);
-				ST_PrintToChatAll("%s %t", ST_TAG2, "God", sTankName);
+				ST_PrintToChatAll("%s %t", ST_TAG2, "Fast", sTankName);
 			}
 		}
 		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 		{
-			ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman2");
+			ST_PrintToChat(tank, "%s %t", ST_TAG3, "FastHuman2");
 		}
 	}
 	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 	{
-		ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodAmmo");
+		ST_PrintToChat(tank, "%s %t", ST_TAG3, "FastAmmo");
 	}
 }
 
-static void vRemoveGod(int tank)
+static void vRemoveFast(int tank)
 {
-	g_bGod[tank] = false;
-	g_bGod2[tank] = false;
-	g_iGodCount[tank] = 0;
-
-	if (ST_IsTankSupported(tank))
-	{
-		SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
-	}
+	g_bFast[tank] = false;
+	g_bFast2[tank] = false;
+	g_iFastCount[tank] = 0;
 }
 
 static void vReset()
@@ -456,30 +455,47 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
-			vRemoveGod(iPlayer);
+			vRemoveFast(iPlayer);
 		}
 	}
 }
 
 static void vReset2(int tank)
 {
-	g_bGod2[tank] = true;
+	g_bFast[tank] = false;
 
-	ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman5");
+	if (iFastMessage(tank) == 1)
+	{
+		char sTankName[33];
+		ST_GetTankName(tank, sTankName);
+		ST_PrintToChatAll("%s %t", ST_TAG2, "Fast2", sTankName);
+	}
+}
 
-	if (g_iGodCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+static void vReset3(int tank)
+{
+	g_bFast2[tank] = true;
+
+	ST_PrintToChat(tank, "%s %t", ST_TAG3, "FastHuman5");
+
+	if (g_iFastCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
 	{
 		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
-		g_bGod2[tank] = false;
+		g_bFast2[tank] = false;
 	}
 }
 
-static float flGodDuration(int tank)
+static float flFastDuration(int tank)
 {
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flGodDuration[ST_GetTankType(tank)] : g_flGodDuration2[ST_GetTankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flFastDuration[ST_GetTankType(tank)] : g_flFastDuration2[ST_GetTankType(tank)];
+}
+
+static float flFastSpeed(int tank)
+{
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flFastSpeed[ST_GetTankType(tank)] : g_flFastSpeed2[ST_GetTankType(tank)];
 }
 
 static float flHumanCooldown(int tank)
@@ -487,14 +503,14 @@ static float flHumanCooldown(int tank)
 	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
 }
 
-static int iGodAbility(int tank)
+static int iFastAbility(int tank)
 {
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iGodAbility[ST_GetTankType(tank)] : g_iGodAbility2[ST_GetTankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iFastAbility[ST_GetTankType(tank)] : g_iFastAbility2[ST_GetTankType(tank)];
 }
 
-static int iGodMessage(int tank)
+static int iFastMessage(int tank)
 {
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iGodMessage[ST_GetTankType(tank)] : g_iGodMessage2[ST_GetTankType(tank)];
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iFastMessage[ST_GetTankType(tank)] : g_iFastMessage2[ST_GetTankType(tank)];
 }
 
 static int iHumanAbility(int tank)
@@ -512,31 +528,24 @@ static int iHumanMode(int tank)
 	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
 }
 
-public Action tTimerStopGod(Handle timer, int userid)
+public Action tTimerStopFast(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
 	{
-		g_bGod[iTank] = false;
+		vReset2(iTank);
 
 		return Plugin_Stop;
 	}
 
-	g_bGod[iTank] = false;
+	vReset2(iTank);
 
-	SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
-
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && !g_bGod2[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && !g_bFast2[iTank])
 	{
-		vReset2(iTank);
+		vReset3(iTank);
 	}
 
-	if (iGodMessage(iTank) == 1)
-	{
-		char sTankName[33];
-		ST_GetTankName(iTank, sTankName);
-		ST_PrintToChatAll("%s %t", ST_TAG2, "God2", sTankName);
-	}
+	SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", ST_GetRunSpeed(iTank));
 
 	return Plugin_Continue;
 }
@@ -544,16 +553,16 @@ public Action tTimerStopGod(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bGod2[iTank])
+	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bFast2[iTank])
 	{
-		g_bGod2[iTank] = false;
+		g_bFast2[iTank] = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bGod2[iTank] = false;
+	g_bFast2[iTank] = false;
 
-	ST_PrintToChat(iTank, "%s %t", ST_TAG3, "GodHuman6");
+	ST_PrintToChat(iTank, "%s %t", ST_TAG3, "FastHuman6");
 
 	return Plugin_Continue;
 }

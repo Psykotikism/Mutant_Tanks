@@ -29,6 +29,18 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	if (!bIsValidGame(false) && !bIsValidGame())
+	{
+		strcopy(error, err_max, "\"[ST++] Drop Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	return APLRes_Success;
+}
+
 #define MELEE_AXE_V "models/weapons/melee/v_fireaxe.mdl"
 #define MELEE_AXE_W "models/weapons/melee/w_fireaxe.mdl"
 #define MELEE_BAT_V "models/weapons/melee/v_bat.mdl"
@@ -129,18 +141,6 @@ ConVar g_cvSTAssaultRifleAmmo, g_cvSTAutoShotgunAmmo, g_cvSTGrenadeLauncherAmmo,
 float g_flDropChance[ST_MAXTYPES + 1], g_flDropChance2[ST_MAXTYPES + 1], g_flDropClipChance[ST_MAXTYPES + 1], g_flDropClipChance2[ST_MAXTYPES + 1], g_flDropWeaponScale[ST_MAXTYPES + 1], g_flDropWeaponScale2[ST_MAXTYPES + 1];
 
 int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropAbility2[ST_MAXTYPES + 1], g_iDropMessage[ST_MAXTYPES + 1], g_iDropMessage2[ST_MAXTYPES + 1], g_iDropMode[ST_MAXTYPES + 1], g_iDropMode2[ST_MAXTYPES + 1], g_iDropWeapon[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1];
-
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	if (!bIsValidGame(false) && !bIsValidGame())
-	{
-		strcopy(error, err_max, "\"[ST++] Drop Ability\" only supports Left 4 Dead 1 & 2.");
-
-		return APLRes_SilentFailure;
-	}
-
-	return APLRes_Success;
-}
 
 public void OnAllPluginsLoaded()
 {
@@ -337,7 +337,7 @@ public Action cmdDropInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -379,7 +379,7 @@ public int iDropMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vDropMenu(param1, menu.Selection);
 			}
@@ -534,7 +534,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024") && ST_IsCloneSupported(iTank, g_bCloneInstalled) && g_bDrop[iTank])
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && ST_IsCloneSupported(iTank, g_bCloneInstalled) && g_bDrop[iTank])
 		{
 			vDropWeapon(iTank);
 		}
@@ -543,7 +543,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iDropAbility(tank) == 1 && !g_bDrop[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iDropAbility(tank) == 1 && !g_bDrop[tank])
 	{
 		g_bDrop[tank] = true;
 
@@ -553,7 +553,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SPECIAL_KEY2 == ST_SPECIAL_KEY2)
 		{
@@ -586,7 +586,7 @@ public void ST_OnChangeType(int tank)
 static void vDropWeapon(int tank)
 {
 	float flDropChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flDropChance[ST_GetTankType(tank)] : g_flDropChance2[ST_GetTankType(tank)];
-	if (ST_IsTankSupported(tank, "024") && ST_IsCloneSupported(tank, g_bCloneInstalled) && iDropAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flDropChance && bIsValidEntity(g_iDrop[tank]))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iDropAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flDropChance && bIsValidEntity(g_iDrop[tank]))
 	{
 		float flPos[3], flAngles[3];
 		int iDropMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iDropMessage[ST_GetTankType(tank)] : g_iDropMessage2[ST_GetTankType(tank)];
@@ -699,7 +699,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vReset2(iPlayer);
 		}

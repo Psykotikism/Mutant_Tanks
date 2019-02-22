@@ -29,20 +29,6 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
-#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
-#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
-
-#define ST_MENU_CAR "Car Ability"
-
-bool g_bCar[MAXPLAYERS + 1], g_bCar2[MAXPLAYERS + 1], g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sCarOptions[ST_MAXTYPES + 1][7], g_sCarOptions2[ST_MAXTYPES + 1][7], g_sCarRadius[ST_MAXTYPES + 1][13], g_sCarRadius2[ST_MAXTYPES + 1][13];
-
-float g_flCarChance[ST_MAXTYPES + 1], g_flCarChance2[ST_MAXTYPES + 1], g_flCarDuration[ST_MAXTYPES + 1], g_flCarDuration2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
-
-int g_iCarAbility[ST_MAXTYPES + 1], g_iCarAbility2[ST_MAXTYPES + 1], g_iCarCount[MAXPLAYERS + 1], g_iCarMessage[ST_MAXTYPES + 1], g_iCarMessage2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1];
-
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
@@ -54,6 +40,20 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
+#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
+#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
+
+#define ST_MENU_CAR "Car Ability"
+
+bool g_bCar[MAXPLAYERS + 1], g_bCar2[MAXPLAYERS + 1], g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+
+char g_sCarRadius[ST_MAXTYPES + 1][13], g_sCarRadius2[ST_MAXTYPES + 1][13];
+
+float g_flCarChance[ST_MAXTYPES + 1], g_flCarChance2[ST_MAXTYPES + 1], g_flCarDuration[ST_MAXTYPES + 1], g_flCarDuration2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+
+int g_iCarAbility[ST_MAXTYPES + 1], g_iCarAbility2[ST_MAXTYPES + 1], g_iCarCount[MAXPLAYERS + 1], g_iCarMessage[ST_MAXTYPES + 1], g_iCarMessage2[ST_MAXTYPES + 1], g_iCarOptions[ST_MAXTYPES + 1], g_iCarOptions2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -112,7 +112,7 @@ public Action cmdCarInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -162,7 +162,7 @@ public int iCarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vCarMenu(param1, menu.Selection);
 			}
@@ -272,7 +272,8 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flCarChance[iIndex] = flClamp(g_flCarChance[iIndex], 0.0, 100.0);
 					g_flCarDuration[iIndex] = kvSuperTanks.GetFloat("Car Ability/Car Duration", 5.0);
 					g_flCarDuration[iIndex] = flClamp(g_flCarDuration[iIndex], 0.1, 9999999999.0);
-					kvSuperTanks.GetString("Car Ability/Car Options", g_sCarOptions[iIndex], sizeof(g_sCarOptions[]), "123");
+					g_iCarOptions[iIndex] = kvSuperTanks.GetNum("Car Ability/Car Options", 0);
+					g_iCarOptions[iIndex] = iClamp(g_iCarOptions[iIndex], 0, 7);
 					kvSuperTanks.GetString("Car Ability/Car Radius", g_sCarRadius[iIndex], sizeof(g_sCarRadius[]), "-180.0,180.0");
 				}
 				case false:
@@ -295,7 +296,8 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flCarChance2[iIndex] = flClamp(g_flCarChance2[iIndex], 0.0, 100.0);
 					g_flCarDuration2[iIndex] = kvSuperTanks.GetFloat("Car Ability/Car Duration", g_flCarDuration[iIndex]);
 					g_flCarDuration2[iIndex] = flClamp(g_flCarDuration2[iIndex], 0.1, 9999999999.0);
-					kvSuperTanks.GetString("Car Ability/Car Options", g_sCarOptions2[iIndex], sizeof(g_sCarOptions2[]), g_sCarOptions[iIndex]);
+					g_iCarOptions2[iIndex] = kvSuperTanks.GetNum("Car Ability/Car Options", g_iCarOptions[iIndex]);
+					g_iCarOptions2[iIndex] = iClamp(g_iCarOptions2[iIndex], 0, 7);
 					kvSuperTanks.GetString("Car Ability/Car Radius", g_sCarRadius2[iIndex], sizeof(g_sCarRadius2[]), g_sCarRadius[iIndex]);
 				}
 			}
@@ -312,7 +314,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveCar(iTank);
 		}
@@ -321,7 +323,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iCarAbility(tank) == 1 && !g_bCar[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iCarAbility(tank) == 1 && !g_bCar[tank])
 	{
 		vCarAbility(tank);
 	}
@@ -329,7 +331,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -379,7 +381,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
@@ -419,7 +421,7 @@ static void vCarAbility(int tank)
 		{
 			g_bCar[tank] = true;
 
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bCar2[tank])
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bCar2[tank])
 			{
 				g_bCar2[tank] = true;
 				g_iCarCount[tank]++;
@@ -436,12 +438,12 @@ static void vCarAbility(int tank)
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Car", sTankName);
 			}
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "CarHuman2");
 		}
 	}
-	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "CarAmmo");
 	}
@@ -458,7 +460,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveCar(iPlayer);
 		}
@@ -529,11 +531,11 @@ public Action tTimerCar(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (iCarAbility(iTank) == 0 || ((!ST_IsTankSupported(iTank, "5") || (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flCarDuration(iTank)) < GetEngineTime()))
+	if (iCarAbility(iTank) == 0 || ((!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flCarDuration(iTank)) < GetEngineTime()))
 	{
 		g_bCar[iTank] = false;
 
-		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bCar2[iTank])
+		if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bCar2[iTank])
 		{
 			vReset2(iTank);
 		}
@@ -587,13 +589,32 @@ public Action tTimerCar(Handle timer, DataPack pack)
 		int iCar = CreateEntityByName("prop_physics");
 		if (bIsValidEntity(iCar))
 		{
-			char sNumbers = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sCarOptions[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sCarOptions[ST_GetTankType(iTank)]) - 1)] : g_sCarOptions2[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sCarOptions2[ST_GetTankType(iTank)]) - 1)];
-			switch (sNumbers)
+			int iOptions[4], iCarOptions = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iCarOptions[ST_GetTankType(iTank)] : g_iCarOptions2[ST_GetTankType(iTank)];
+			for (int iBit = 0; iBit < 3; iBit++)
 			{
-				case '1': SetEntityModel(iCar, MODEL_CAR);
-				case '2': SetEntityModel(iCar, MODEL_CAR2);
-				case '3': SetEntityModel(iCar, MODEL_CAR3);
-				default: SetEntityModel(iCar, MODEL_CAR);
+				int iFlag = (1 << iBit);
+				if (!(iCarOptions & iFlag))
+				{
+					continue;
+				}
+
+				iOptions[iBit] = iFlag;
+			}
+
+			switch (iOptions[GetRandomInt(0, 2)])
+			{
+				case 1: SetEntityModel(iCar, MODEL_CAR);
+				case 2: SetEntityModel(iCar, MODEL_CAR2);
+				case 4: SetEntityModel(iCar, MODEL_CAR3);
+				default:
+				{
+					switch (GetRandomInt(1, 3))
+					{
+						case 1: SetEntityModel(iCar, MODEL_CAR);
+						case 2: SetEntityModel(iCar, MODEL_CAR2);
+						case 3: SetEntityModel(iCar, MODEL_CAR3);
+					}
+				}
 			}
 
 			int iRed = GetRandomInt(0, 255), iGreen = GetRandomInt(0, 255), iBlue = GetRandomInt(0, 255);
@@ -638,7 +659,7 @@ public Action tTimerSetCarVelocity(Handle timer, int ref)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bCar2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bCar2[iTank])
 	{
 		g_bCar2[iTank] = false;
 

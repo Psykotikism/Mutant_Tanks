@@ -30,15 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_LEECH "Leech Ability"
-
-bool g_bCloneInstalled, g_bLateLoad, g_bLeech[MAXPLAYERS + 1], g_bLeech2[MAXPLAYERS + 1], g_bLeech3[MAXPLAYERS + 1], g_bLeech4[MAXPLAYERS + 1], g_bLeech5[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sLeechEffect[ST_MAXTYPES + 1][4], g_sLeechEffect2[ST_MAXTYPES + 1][4], g_sLeechMessage[ST_MAXTYPES + 1][3], g_sLeechMessage2[ST_MAXTYPES + 1][3];
-
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flLeechChance[ST_MAXTYPES + 1], g_flLeechChance2[ST_MAXTYPES + 1], g_flLeechDuration[ST_MAXTYPES + 1], g_flLeechDuration2[ST_MAXTYPES + 1], g_flLeechInterval[ST_MAXTYPES + 1], g_flLeechInterval2[ST_MAXTYPES + 1], g_flLeechRange[ST_MAXTYPES + 1], g_flLeechRange2[ST_MAXTYPES + 1], g_flLeechRangeChance[ST_MAXTYPES + 1], g_flLeechRangeChance2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iLeechAbility[ST_MAXTYPES + 1], g_iLeechAbility2[ST_MAXTYPES + 1], g_iLeechCount[MAXPLAYERS + 1], g_iLeechHit[ST_MAXTYPES + 1], g_iLeechHit2[ST_MAXTYPES + 1], g_iLeechHitMode[ST_MAXTYPES + 1], g_iLeechHitMode2[ST_MAXTYPES + 1], g_iLeechOwner[MAXPLAYERS + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -53,6 +45,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define ST_MENU_LEECH "Leech Ability"
+
+bool g_bCloneInstalled, g_bLeech[MAXPLAYERS + 1], g_bLeech2[MAXPLAYERS + 1], g_bLeech3[MAXPLAYERS + 1], g_bLeech4[MAXPLAYERS + 1], g_bLeech5[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flLeechChance[ST_MAXTYPES + 1], g_flLeechChance2[ST_MAXTYPES + 1], g_flLeechDuration[ST_MAXTYPES + 1], g_flLeechDuration2[ST_MAXTYPES + 1], g_flLeechInterval[ST_MAXTYPES + 1], g_flLeechInterval2[ST_MAXTYPES + 1], g_flLeechRange[ST_MAXTYPES + 1], g_flLeechRange2[ST_MAXTYPES + 1], g_flLeechRangeChance[ST_MAXTYPES + 1], g_flLeechRangeChance2[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iLeechAbility[ST_MAXTYPES + 1], g_iLeechAbility2[ST_MAXTYPES + 1], g_iLeechCount[MAXPLAYERS + 1], g_iLeechEffect[ST_MAXTYPES + 1], g_iLeechEffect2[ST_MAXTYPES + 1], g_iLeechHit[ST_MAXTYPES + 1], g_iLeechHit2[ST_MAXTYPES + 1], g_iLeechHitMode[ST_MAXTYPES + 1], g_iLeechHitMode2[ST_MAXTYPES + 1], g_iLeechMessage[ST_MAXTYPES + 1], g_iLeechMessage2[ST_MAXTYPES + 1], g_iLeechOwner[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -86,7 +86,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -122,7 +122,7 @@ public Action cmdLeechInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -170,7 +170,7 @@ public int iLeechMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vLeechMenu(param1, menu.Selection);
 			}
@@ -244,7 +244,7 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -253,14 +253,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vLeechHit(victim, attacker, flLeechChance(attacker), iLeechHit(attacker), "1", "1");
+				vLeechHit(victim, attacker, flLeechChance(attacker), iLeechHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
 		else if ((iLeechHitMode(victim) == 0 || iLeechHitMode(victim) == 2) && ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vLeechHit(attacker, victim, flLeechChance(victim), iLeechHit(victim), "1", "2");
+				vLeechHit(attacker, victim, flLeechChance(victim), iLeechHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
@@ -291,8 +291,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
 					g_iLeechAbility[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Enabled", 0);
 					g_iLeechAbility[iIndex] = iClamp(g_iLeechAbility[iIndex], 0, 1);
-					kvSuperTanks.GetString("Leech Ability/Ability Effect", g_sLeechEffect[iIndex], sizeof(g_sLeechEffect[]), "0");
-					kvSuperTanks.GetString("Leech Ability/Ability Message", g_sLeechMessage[iIndex], sizeof(g_sLeechMessage[]), "0");
+					g_iLeechEffect[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Effect", 0);
+					g_iLeechEffect[iIndex] = iClamp(g_iLeechEffect[iIndex], 0, 7);
+					g_iLeechMessage[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Message", 0);
+					g_iLeechMessage[iIndex] = iClamp(g_iLeechMessage[iIndex], 0, 3);
 					g_flLeechChance[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Chance", 33.3);
 					g_flLeechChance[iIndex] = flClamp(g_flLeechChance[iIndex], 0.0, 100.0);
 					g_flLeechDuration[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Duration", 5.0);
@@ -320,8 +322,10 @@ public void ST_OnConfigsLoaded(const char[] savepath, bool main)
 					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
 					g_iLeechAbility2[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Enabled", g_iLeechAbility[iIndex]);
 					g_iLeechAbility2[iIndex] = iClamp(g_iLeechAbility2[iIndex], 0, 1);
-					kvSuperTanks.GetString("Leech Ability/Ability Effect", g_sLeechEffect2[iIndex], sizeof(g_sLeechEffect2[]), g_sLeechEffect[iIndex]);
-					kvSuperTanks.GetString("Leech Ability/Ability Message", g_sLeechMessage2[iIndex], sizeof(g_sLeechMessage2[]), g_sLeechMessage[iIndex]);
+					g_iLeechEffect2[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Effect", g_iLeechEffect[iIndex]);
+					g_iLeechEffect2[iIndex] = iClamp(g_iLeechEffect2[iIndex], 0, 7);
+					g_iLeechMessage2[iIndex] = kvSuperTanks.GetNum("Leech Ability/Ability Message", g_iLeechMessage[iIndex]);
+					g_iLeechMessage2[iIndex] = iClamp(g_iLeechMessage2[iIndex], 0, 3);
 					g_flLeechChance2[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Chance", g_flLeechChance[iIndex]);
 					g_flLeechChance2[iIndex] = flClamp(g_flLeechChance2[iIndex], 0.0, 100.0);
 					g_flLeechDuration2[iIndex] = kvSuperTanks.GetFloat("Leech Ability/Leech Duration", g_flLeechDuration[iIndex]);
@@ -351,7 +355,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveLeech(iTank);
 		}
@@ -360,7 +364,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iLeechAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iLeechAbility(tank) == 1)
 	{
 		vLeechAbility(tank);
 	}
@@ -368,7 +372,7 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
@@ -413,7 +417,7 @@ static void vLeechAbility(int tank)
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, "234"))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -421,7 +425,7 @@ static void vLeechAbility(int tank)
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flLeechRange)
 				{
-					vLeechHit(iSurvivor, tank, flLeechRangeChance, iLeechAbility(tank), "2", "3");
+					vLeechHit(iSurvivor, tank, flLeechRangeChance, iLeechAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -430,19 +434,19 @@ static void vLeechAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "LeechHuman5");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "LeechAmmo");
 	}
 }
 
-static void vLeechHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
+static void vLeechHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
@@ -459,26 +463,23 @@ static void vLeechHit(int survivor, int tank, float chance, int enabled, const c
 				dpLeech.WriteCell(GetClientUserId(survivor));
 				dpLeech.WriteCell(GetClientUserId(tank));
 				dpLeech.WriteCell(ST_GetTankType(tank));
-				dpLeech.WriteString(message);
+				dpLeech.WriteCell(messages);
 				dpLeech.WriteCell(enabled);
 				dpLeech.WriteFloat(GetEngineTime());
 
-				char sLeechEffect[4];
-				sLeechEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sLeechEffect[ST_GetTankType(tank)] : g_sLeechEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, sLeechEffect, mode);
+				int iLeechEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iLeechEffect[ST_GetTankType(tank)] : g_iLeechEffect2[ST_GetTankType(tank)];
+				vEffect(survivor, tank, iLeechEffect, flags);
 
-				char sLeechMessage[3];
-				sLeechMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sLeechMessage[ST_GetTankType(tank)] : g_sLeechMessage2[ST_GetTankType(tank)];
-				if (StrContains(sLeechMessage, message) != -1)
+				if (iLeechMessage(tank) & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Leech", sTankName, survivor);
 				}
 			}
-			else if (StrEqual(mode, "3") && !g_bLeech2[tank])
+			else if ((flags & ST_ATTACK_RANGE) && !g_bLeech2[tank])
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bLeech4[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bLeech4[tank])
 				{
 					g_bLeech4[tank] = true;
 
@@ -486,7 +487,7 @@ static void vLeechHit(int survivor, int tank, float chance, int enabled, const c
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bLeech5[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bLeech5[tank])
 		{
 			g_bLeech5[tank] = true;
 
@@ -499,7 +500,7 @@ static void vRemoveLeech(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor, "234") && g_bLeech[iSurvivor] && g_iLeechOwner[iSurvivor] == tank)
+		if (bIsHumanSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bLeech[iSurvivor] && g_iLeechOwner[iSurvivor] == tank)
 		{
 			g_bLeech[iSurvivor] = false;
 			g_iLeechOwner[iSurvivor] = 0;
@@ -513,7 +514,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vReset3(iPlayer);
 
@@ -522,14 +523,12 @@ static void vReset()
 	}
 }
 
-static void vReset2(int survivor, int tank, const char[] message)
+static void vReset2(int survivor, int tank, int messages)
 {
 	g_bLeech[survivor] = false;
 	g_iLeechOwner[survivor] = 0;
 
-	char sLeechMessage[3];
-	sLeechMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sLeechMessage[ST_GetTankType(tank)] : g_sLeechMessage2[ST_GetTankType(tank)];
-	if (StrContains(sLeechMessage, message) != -1)
+	if (iLeechMessage(tank) & messages)
 	{
 		char sTankName[33];
 		ST_GetTankName(tank, sTankName);
@@ -587,6 +586,11 @@ static int iLeechHitMode(int tank)
 	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iLeechHitMode[ST_GetTankType(tank)] : g_iLeechHitMode2[ST_GetTankType(tank)];
 }
 
+static int iLeechMessage(int tank)
+{
+	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iLeechMessage[ST_GetTankType(tank)] : g_iLeechMessage2[ST_GetTankType(tank)];
+}
+
 public Action tTimerLeech(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -600,12 +604,10 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	char sMessage[3];
-	pack.ReadString(sMessage, sizeof(sMessage));
+	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
 	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bLeech[iSurvivor])
 	{
-		vReset2(iSurvivor, iTank, sMessage);
+		vReset2(iSurvivor, iTank, iMessage);
 
 		return Plugin_Stop;
 	}
@@ -616,9 +618,9 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 	{
 		g_bLeech2[iTank] = false;
 
-		vReset2(iSurvivor, iTank, sMessage);
+		vReset2(iSurvivor, iTank, iMessage);
 
-		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bLeech3[iTank])
+		if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bLeech3[iTank])
 		{
 			g_bLeech3[iTank] = true;
 
@@ -648,7 +650,7 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bLeech3[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bLeech3[iTank])
 	{
 		g_bLeech3[iTank] = false;
 
