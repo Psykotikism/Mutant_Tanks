@@ -687,13 +687,13 @@ forward void ST_OnMenuItemSelected(int client, const char[] info);
 forward void ST_OnPluginEnd();
 
 /**
- * Called when the Tank spawns.
- * Use this forward for any on-spawn presets.
+ * Called after the Tank spawns.
+ * Use this forward for any post-spawn actions.
  * If you plan on using this to activate an ability, use ST_OnAbilityActivated() instead.
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_OnPreset(int tank);
+forward void ST_OnPostTankSpawn(int tank);
 
 /**
  * Called when the Tank's rock breaks.
@@ -821,9 +821,9 @@ native void ST_HideEntity(int entity, bool mode);
 /**
  * Returns whether the clone can use abilities.
  *
- * @param tank			Client index of the Tank.
- * @param clone			Checks whether "st_clone.smx" is installed.
- * @return			True if clone can use abilities, false otherwise.
+ * @param tank				Client index of the Tank.
+ * @param clone				Checks whether "st_clone.smx" is installed.
+ * @return				True if clone can use abilities, false otherwise.
  **/
 native bool ST_IsCloneSupported(int tank, bool clone);
 
@@ -833,6 +833,15 @@ native bool ST_IsCloneSupported(int tank, bool clone);
  * @return			True if core plugin is enabled, false otherwise.
  **/
 native bool ST_IsCorePluginEnabled();
+
+/**
+ * Returns if a certain Super Tank type is only available on finale maps.
+ *
+ * @param type			Super Tank type.
+ * @return			True if the type is available, false otherwise.
+ * @error			Type is 0.
+ **/
+native bool ST_IsFinaleTank(int type);
 
 /**
  * Returns if the Super Tank type has a glow outline.
@@ -847,13 +856,14 @@ native bool ST_IsGlowEnabled(int tank);
  * Returns if the Tank is allowed to be a Super Tank.
  *
  * @param tank			Client index of the Tank.
- * @param checks		Checks to run. 0 = client index, 1 = connection, 2 = in-game status,
- *				3 = life state, 4 = kick status, 5 = bot check
- *				Default: "0234"
+ * @param flags			Checks to run.
+ *				ST_CHECK_INDEX = client index, ST_CHECK_CONNECTED = connection, ST_CHECK_INGAME = in-game status,
+ *				ST_CHECK_ALIVE = life state, ST_CHECK_KICKQUEUE = kick status, ST_CHECK_FAKECLIENT = bot check
+ *				Default: ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE
  * @return			True if Tank is allowed to be a Super Tank, false otherwise.
  * @error			Invalid client index.
  **/
-native bool ST_IsTankSupported(int tank, const char[] checks = "0234");
+native bool ST_IsTankSupported(int tank, int flags = ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE);
 
 /**
  * Returns if a certain Super Tank type is enabled.
@@ -958,9 +968,6 @@ If you are a Tank:
 
 ```
 sm_st_info - View information about Super Tanks++.
-```
-
-```
 sm_st_absorb - View information about the Absorb ability.
 sm_st_acid - View information about the Acid ability.
 sm_st_aimless - View information about the Aimless ability.
@@ -977,8 +984,8 @@ sm_st_drug - View information about the Drug ability.
 sm_st_drunk - View information about the Drunk ability.
 sm_st_electric - View information about the Electric ability.
 sm_st_enforce - View information about the Enforce ability.
+sm_st_fast - View information about the Fast ability.
 sm_st_fire - View information about the Fire ability.
-sm_st_flash - View information about the Flash ability.
 sm_st_fling - View information about the Fling ability.
 sm_st_fragile - View information about the Fragile ability.
 sm_st_ghost - View information about the Ghost ability.
@@ -1019,9 +1026,10 @@ sm_st_smash - View information about the Smash ability.
 sm_st_smite - View information about the Smite ability.
 sm_st_spam - View information about the Spam ability.
 sm_st_splash - View information about the Splash ability.
-sm_st_stun - View information about the Stun ability.
+sm_st_slow - View information about the Slow ability.
 sm_st_throw - View information about the Throw ability.
 sm_st_track - View information about the Track ability.
+sm_st_ultimate - View information about the Ultimate ability.
 sm_st_undead - View information about the Undead ability.
 sm_st_vampire - View information about the Vampire ability.
 sm_st_vision - View information about the Vision ability.
@@ -1047,7 +1055,7 @@ Example:
 {
 	"Tank #1"
 	{
-		"Flash Ability"
+		"Fast Ability"
 		{
 			"Human Ability"				"1"
 		}
@@ -1087,7 +1095,7 @@ Example:
 {
 	"Tank #1"
 	{
-		"Flash Ability"
+		"Fast Ability"
 		{
 			"Human Ammo"				"1"
 		}
@@ -1106,7 +1114,7 @@ Example:
 {
 	"Tank #1"
 	{
-		"Flash Ability"
+		"Fast Ability"
 		{
 			"Human Cooldown"			"1"
 		}
@@ -1161,9 +1169,9 @@ Set the values in `Create Config Types`.
 Examples:
 
 ```
-"Create Config Types" "123" // Creates the folders and config files for each difficulty, map, and game mode.
-"Create Config Types" "4" // Creates the folder and config files for each day.
-"Create Config Types" "12345" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
+"Create Config Types" "7" // Creates the folders and config files for each difficulty, map, and game mode.
+"Create Config Types" "8" // Creates the folder and config files for each day.
+"Create Config Types" "31" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
 ```
 
 3. How do I tell the plugin to only execute certain custom config files?
@@ -1173,9 +1181,9 @@ Set the values in `Execute Config Types`.
 Examples:
 
 ```
-"Execute Config Types" "123" // Executes the config file for the current difficulty, map, and game mode.
-"Execute Config Types" "4" // Executes the config file for the current day.
-"Execute Config Types" "12345" // Executes the config file for the current difficulty, map, game mode, day, and player count.
+"Execute Config Types" "7" // Executes the config file for the current difficulty, map, and game mode.
+"Execute Config Types" "8" // Executes the config file for the current day.
+"Execute Config Types" "31" // Executes the config file for the current difficulty, map, game mode, day, and player count.
 ```
 
 ## Credits
@@ -1252,6 +1260,10 @@ Examples:
 **Zytheus** - For reporting issues and suggesting ideas.
 
 **huwong** - For reporting issues and suggesting ideas.
+
+**foquaxticity** - For suggesting ideas.
+
+**FatalOE71** - For suggesting ideas.
 
 **AngelAce113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
 

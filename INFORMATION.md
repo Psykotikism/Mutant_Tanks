@@ -1,8 +1,8 @@
 # Information
 > Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
 
-- Maximum types: 500 (Increase the value in the `mutant_tanks.inc` file and recompile at your own risk.)
-- Ability count: 68
+- Maximum types: 500 (Increase the value in the `super_tanks++.inc` file and recompile at your own risk.)
+- Ability count: 69
 
 ## Plugin Settings
 
@@ -25,15 +25,18 @@
 
 			// Announce each Super Tank's arrival.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 5
+			// Add up numbers together for different results.
 			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0: OFF
 			// 1: Announce when a Super Tank spawns.
 			// 2: Announce when a Super Tank evolves. (Only works when "Spawn Mode" is set to 1.)
-			// 3: Announce when a Super Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
-			// 4: Announce when a Super Tank transforms. (Only works when "Spawn Mode" is set to 3.)
-			// 5: Announce when a Super Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
-			"Announce Arrival"			"12345"
+			// 4: Announce when a Super Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
+			// 8: Announce when a Super Tank transforms. (Only works when "Spawn Mode" is set to 3.)
+			// 16: Announce when a Super Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
+			"Announce Arrival"			"31"
 
 			// Announce each Super Tank's death.
 			// --
@@ -156,12 +159,13 @@
 		"Game Modes"
 		{
 			// Enable Super Tanks++ in these game mode types.
+			// --
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
 			// Maximum: 15
 			// --
-			// 0: All game mode types.
+			// 0 OR 15: All game mode types.
 			// 1: Co-Op modes only.
 			// 2: Versus modes only.
 			// 4: Survival modes only.
@@ -198,27 +202,33 @@
 
 			// The type of custom config that Super Tanks++ creates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 5
+			// Add up numbers together for different results.
 			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0: OFF
 			// 1: Difficulties
 			// 2: Maps
-			// 3: Game modes
-			// 4: Days
-			// 5: Player count
-			"Create Config Types"			"12345"
+			// 4: Game modes
+			// 8: Days
+			// 16: Player count
+			"Create Config Types"			"0"
 
 			// The type of custom config that Super Tanks++ executes.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 5
+			// Add up numbers together for different results.
 			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0: OFF
 			// 1: Difficulties
 			// 2: Maps
-			// 3: Game modes
-			// 4: Days
-			// 5: Player count
-			"Execute Config Types"			"1"
+			// 4: Game modes
+			// 8: Days
+			// 16: Player count
+			"Execute Config Types"			"0"
 		}
 	}
 }
@@ -425,16 +435,19 @@
 		{
 			// Props that the Super Tank can spawn with.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 6
+			// Add up numbers together for different results.
 			// --
+			// Minimum: 0
+			// Maximum: 63
+			// --
+			// 0: OFF
 			// 1: Attach a blur effect only.
 			// 2: Attach lights only.
-			// 3: Attach oxygen tanks only.
-			// 4: Attach flames to oxygen tanks.
-			// 5: Attach rocks only.
-			// 6: Attach tires only.
-			"Props Attached"			"23456"
+			// 4: Attach oxygen tanks only.
+			// 8: Attach flames to oxygen tanks.
+			// 16: Attach rocks only.
+			// 32: Attach tires only.
+			"Props Attached"			"62"
 
 			// Each prop has this many chances out of 100.0% to appear when the Super Tank appears.
 			// Separate chances with commas.
@@ -495,42 +508,36 @@
 		}
 		"Particles"
 		{
-			// The Super Tank's body will have a particle effect.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Body Particle"				"0"
-
 			// The particle effects for the Super Tank's body.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 7
+			// Add up numbers together for different results.
 			// --
-			// 1: Blood Explosion
-			// 2: Electric Jolt
-			// 3: Fire Trail
-			// 4: Ice Steam
-			// 5: Meteor Smoke
-			// 6: Smoker Cloud
-			// 7: Acid Trail (Only available in Left 4 Dead 2.)
-			"Body Effects"				"1234567"
-
-			// The Super Tank's rock will have a particle effect.
+			// Minimum: 0
+			// Maximum: 127
 			// --
 			// 0: OFF
-			// 1: ON
-			"Rock Particle"				"0"
+			// 1: Blood Explosion
+			// 2: Electric Jolt
+			// 4: Fire Trail
+			// 8: Ice Steam
+			// 16: Meteor Smoke
+			// 32: Smoker Cloud
+			// 64: Acid Trail (Only available in Left 4 Dead 2.)
+			"Body Effects"				"0"
 
 			// The particle effects for the Super Tank's rock.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 4
+			// Add up numbers together for different results.
 			// --
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0: OFF
 			// 1: Blood Explosion
 			// 2: Electric Jolt
-			// 3: Fire Trail
-			// 4: Acid Trail (Only available in Left 4 Dead 2.)
-			"Rock Effects"				"1234"
+			// 4: Fire Trail
+			// 8: Acid Trail (Only available in Left 4 Dead 2.)
+			"Rock Effects"				"0"
 		}
 		"Enhancements"
 		{
@@ -755,24 +762,28 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Display message only when "Acid Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
-			// 3: Display message only when "Acid Rock Break" is enabled.
+			// 4: Display message only when "Acid Rock Break" is enabled.
 			"Ability Message"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -870,21 +881,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Aimless Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -975,21 +990,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Ammo Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -1081,21 +1100,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Blind Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -1195,24 +1218,28 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Display message only when "Bomb Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
-			// 3: Display message only when "Bomb Rock Break" is enabled.
+			// 4: Display message only when "Bomb Rock Break" is enabled.
 			"Ability Message"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -1309,21 +1336,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Bury Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -1438,15 +1469,16 @@
 
 			// The Super Tank create car showers with these cars.
 			// --
-			// Combine numbers in any order for different results.
-			// Repeat the same number to increase its chances of being chosen.
-			// Character limit: 6
+			// Add up numbers together for different results.
 			// --
-			// Empty: Pick randomly between 1-3.
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0 OR 7: Pick randomly between the 3 cars.
 			// 1: Small car with a big hatchback.
 			// 2: Car that looks like a Chevrolet Impala SS.
-			// 3: Car that looks like a Sixth Generation Chevrolet Impala.
-			"Car Options"				"123"
+			// 4: Car that looks like a Sixth Generation Chevrolet Impala.
+			"Car Options"				"0"
 
 			// The radius of the Super Tank's car shower.
 			// --
@@ -1508,21 +1540,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Choke Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -1836,21 +1872,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Drug Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -1948,21 +1988,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Drunk Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -2065,21 +2109,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Electric Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -2183,21 +2231,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Enforce Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -2241,15 +2293,89 @@
 			"Enforce Range Chance"			"15.0"
 
 			// The Super Tank forces survivors to only use one of the following weapon slots.
-			// Combine numbers in any order for different results.
-			// Character limit: 5
 			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0 OR 31: Pick randomly between the 5 slots.
 			// 1: 1st slot only.
 			// 2: 2nd slot only.
-			// 3: 3rd slot only.
-			// 4: 4th slot only.
-			// 5: 5th slot only.
-			"Enforce Weapon Slots"			"12345"
+			// 4: 3rd slot only.
+			// 8: 4th slot only.
+			// 16: 5th slot only.
+			"Enforce Weapon Slots"			"0"
+		}
+	}
+}
+```
+
+#### Fast Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank runs really fast like the Flash.
+		// Requires "st_fast.smx" to be installed.
+		"Fast Ability"
+		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 0
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Fast Chance"				"33.3"
+
+			// The Super Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Fast Duration"				"5.0"
+
+			// The Super Tank's special speed.
+			// --
+			// Minimum: 3.0
+			// Maximum: 10.0
+			"Fast Speed"				"5.0"
 		}
 	}
 }
@@ -2302,24 +2428,28 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Display message only when "Fire Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
-			// 3: Display message only when "Fire Rock Break" is enabled.
+			// 4: Display message only when "Fire Rock Break" is enabled.
 			"Ability Message"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -2371,76 +2501,6 @@
 }
 ```
 
-#### Flash Ability
-
-```
-"Super Tanks++"
-{
-	"Tank #1"
-	{
-		// The Super Tank runs really fast like the Flash.
-		// Requires "st_flash.smx" to be installed.
-		"Flash Ability"
-		{
-			// Allow human-controlled Super Tanks to use this ability.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Human Ability"				"0"
-
-			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
-			// --
-			// Minimum: 0
-			// Maximum: 9999999999
-			"Human Ammo"				"5"
-
-			// Human-controlled Super Tanks must wait this long before using their abilities again.
-			// --
-			// Minimum: 0.0
-			// Maximum: 9999999999.0
-			"Human Cooldown"			"30.0"
-
-			// The mode of how human-controlled Super Tanks activate their abilities.
-			// --
-			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
-			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
-			"Human Mode"				"1"
-
-			// Enable this ability.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Ability Enabled"			"0"
-
-			// Display a message whenever the ability activates/deactivates.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Ability Message"			"0"
-
-			// The Super Tank has this many chances out of 100.0% to trigger the ability.
-			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
-			"Flash Chance"				"33.3"
-
-			// The Super Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Super Tanks unless the "Human Mode" setting is set to 0.
-			// --
-			// Minimum: 0.1
-			// Maximum: 9999999999.0
-			"Flash Duration"			"5.0"
-
-			// The Super Tank's special speed.
-			// --
-			// Minimum: 3.0
-			// Maximum: 10.0
-			"Flash Speed"				"5.0"
-		}
-	}
-}
-```
-
 #### Fling Ability
 
 ```
@@ -2486,21 +2546,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Fling Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -2714,24 +2778,28 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Display message only when "Ghost Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -2793,15 +2861,18 @@
 
 			// The Super Tank disarms the following weapon slots.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 5
+			// Add up numbers together for different results.
 			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0 OR 31: All 5 slots.
 			// 1: 1st slot only.
 			// 2: 2nd slot only.
-			// 3: 3rd slot only.
-			// 4: 4th slot only.
-			// 5: 5th slot only.
-			"Ghost Weapon Slots"			"12345"
+			// 4: 3rd slot only.
+			// 8: 4th slot only.
+			// 16: 5th slot only.
+			"Ghost Weapon Slots"			"0"
 		}
 	}
 }
@@ -2927,24 +2998,28 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Display message only when "Gravity Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -3069,24 +3144,28 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Display message only when "Heal Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"			"0"
 
 			// The distance between an infected and the Super Tank needed to trigger the ability.
@@ -3262,21 +3341,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Hurt Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -3380,21 +3463,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Hypno Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -3528,21 +3615,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Ice Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -3634,21 +3725,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Idle Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -3734,21 +3829,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Invert Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -3907,24 +4006,28 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Display message only when "Jump Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -4035,21 +4138,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Kamikaze Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -4135,21 +4242,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Lag Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -4240,21 +4351,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Leech Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -4358,10 +4473,12 @@
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Ability Enabled" is set to 1 or 3.
 			// 2: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"			"0"
@@ -4386,7 +4503,8 @@
 			// 4th number = Health given to Spitters.
 			// 5th number = Health given to Jockeys.
 			// 6th number = Health given to Chargers.
-			"Medic Health"				"25,25,25,25,25,25"
+			// 7th number = Health given to Tanks.
+			"Medic Health"				"25,25,25,25,25,25,25"
 
 			// The Super Tank heals nearby special infected every time this many seconds passes.
 			// --
@@ -4395,7 +4513,7 @@
 			"Medic Interval"			"5.0"
 
 			// The special infected's max health.
-			// The Super Tank will not heal special infected if they already have this much health.
+			// Note: The Super Tank will not heal special infected if they already have this much health.
 			// --
 			// Minimum: 1
 			// Maximum: 65535
@@ -4406,7 +4524,8 @@
 			// 4th number = Spitter's maximum health.
 			// 5th number = Jockey's maximum health.
 			// 6th number = Charger's maximum health.
-			"Medic Max Health"			"250,50,250,100,325,600"
+			// 7th number = Tank's maximum health.
+			"Medic Max Health"			"250,50,250,100,325,600,8000"
 
 			// The distance between a survivor and the Super Tank needed to trigger the ability.
 			// --
@@ -4567,17 +4686,19 @@
 
 			// The Super Tank spawns these minions.
 			// --
-			// Combine numbers in any order for different results.
-			// Repeat the same number to increase its chances of being chosen.
-			// Character limit: 12
+			// Add up numbers together for different results.
 			// --
+			// Minimum: 0
+			// Maximum: 63
+			// --
+			// 0 OR 63: Pick randomly between the 6 types.
 			// 1: Smoker
 			// 2: Boomer
-			// 3: Hunter
-			// 4: Spitter (Switches to Boomer in L4D1.)
-			// 5: Jockey (Switches to Hunter in L4D1.)
-			// 6: Charger (Switches to Smoker in L4D1.)
-			"Minion Types"				"123456"
+			// 4: Hunter
+			// 8: Spitter (Switches to Boomer in L4D1.)
+			// 16: Jockey (Switches to Hunter in L4D1.)
+			// 32: Charger (Switches to Smoker in L4D1.)
+			"Minion Types"				"63"
 		}
 	}
 }
@@ -4698,21 +4819,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Nullify Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -4873,21 +4998,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Pimp Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -4991,21 +5120,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Puke Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -5177,21 +5310,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Quiet Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -5283,21 +5420,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Recoil Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -5422,7 +5563,6 @@
 			// --
 			// Minimum: 1
 			// Maximum: 65535
-			// --
 			"Regen Limit"				"65535"
 		}
 	}
@@ -5539,21 +5679,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Restart Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -5734,21 +5878,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Rocket Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -5839,21 +5987,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Shake Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -6037,21 +6189,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Shove Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -6104,6 +6260,122 @@
 }
 ```
 
+#### Slow Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank slows survivors down.
+		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is slowed down.
+		// - "Slow Range"
+		// - "Slow Range Chance"
+		// "Slow Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is slowed down.
+		// - "Slow Chance"
+		// - "Slow Hit Mode"
+		// Requires "st_slow.smx" to be installed.
+		"Slow Ability"
+		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 0
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// Enable this ability.
+			// Note: This setting does not affect the "Slow Hit" setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
+			// 1: Show effect when the Super Tank uses its claw/rock attack.
+			// 2: Show effect when the Super Tank is hit by a melee weapon.
+			// 4: Show effect when the Super Tank uses its range ability.
+			"Ability Effect"			"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
+			// 1: Display message only when "Slow Hit" is enabled.
+			// 2: Display message only when "Ability Enabled" is enabled.
+			"Ability Message"			"0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Slow Chance"				"33.3"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Slow Duration"				"5.0"
+
+			// Enable the Super Tank's claw/rock attack.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Slow Hit"				"0"
+
+			// The mode of the Super Tank's claw/rock attack.
+			// --
+			// 0: Both
+			// 1: Ability activates when the Super Tank hits a survivor.
+			// 2: Ability activates when the Super Tank is hit by a survivor.
+			"Slow Hit Mode"				"0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Slow Range"				"150.0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Slow Range Chance"			"15.0"
+
+			// The Super Tank sets the survivors' run speed to this value.
+			// --
+			// Minimum: 0.1
+			// Maximum: 0.99
+			"Slow Speed"				"0.25"
+		}
+	}
+}
+```
+
 #### Smash Ability
 
 ```
@@ -6149,21 +6421,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Smash Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -6249,21 +6525,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Smite Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -6456,118 +6736,6 @@
 }
 ```
 
-#### Stun Ability
-
-```
-"Super Tanks++"
-{
-	"Tank #1"
-	{
-		// The Super Tank stuns and slows survivors down.
-		// "Ability Enabled" - When a survivor is within range of the Super Tank, the survivor is slowed down.
-		// - "Stun Range"
-		// - "Stun Range Chance"
-		// "Stun Hit" - When a survivor is hit by the Super Tank's claw or rock, or a survivor hits the Super Tank with a melee weapon, the survivor is slowed down.
-		// - "Stun Chance"
-		// - "Stun Hit Mode"
-		// Requires "st_stun.smx" to be installed.
-		"Stun Ability"
-		{
-			// Allow human-controlled Super Tanks to use this ability.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Human Ability"				"0"
-
-			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
-			// --
-			// Minimum: 0
-			// Maximum: 9999999999
-			"Human Ammo"				"5"
-
-			// Human-controlled Super Tanks must wait this long before using their abilities again.
-			// --
-			// Minimum: 0.0
-			// Maximum: 9999999999.0
-			"Human Cooldown"			"30.0"
-
-			// Enable this ability.
-			// Note: This setting does not affect the "Stun Hit" setting.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Ability Enabled"			"0"
-
-			// Show a screen fade effect when the Super Tank uses its abilities.
-			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
-			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
-			// --
-			// Empty: OFF
-			// 1: Show effect when the Super Tank uses its claw/rock attack.
-			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
-			"Ability Effect"			"0"
-
-			// Display a message whenever the ability activates/deactivates.
-			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
-			// --
-			// Empty: OFF
-			// 1: Display message only when "Stun Hit" is enabled.
-			// 2: Display message only when "Ability Enabled" is enabled.
-			"Ability Message"			"0"
-
-			// The Super Tank has this many chances out of 100.0% to trigger the ability.
-			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
-			"Stun Chance"				"33.3"
-
-			// The Super Tank's ability effects last this long.
-			// --
-			// Minimum: 0.1
-			// Maximum: 9999999999.0
-			"Stun Duration"				"5.0"
-
-			// Enable the Super Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Stun Hit"				"0"
-
-			// The mode of the Super Tank's claw/rock attack.
-			// --
-			// 0: Both
-			// 1: Ability activates when the Super Tank hits a survivor.
-			// 2: Ability activates when the Super Tank is hit by a survivor.
-			"Stun Hit Mode"				"0"
-
-			// The distance between a survivor and the Super Tank needed to trigger the ability.
-			// --
-			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
-			"Stun Range"				"150.0"
-
-			// The Super Tank has this many chances out of 100.0% to trigger the range ability.
-			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
-			"Stun Range Chance"			"15.0"
-
-			// The Super Tank sets the survivors' run speed to this value.
-			// --
-			// Minimum: 0.1
-			// Maximum: 0.99
-			"Stun Speed"				"0.25"
-		}
-	}
-}
-```
-
 #### Throw Ability
 
 ```
@@ -6599,40 +6767,44 @@
 
 			// Enable this ability.
 			// --
-			// Combine numbers in any order for different results.
-			// Repeat the same number to increase its chances of being chosen.
-			// Character limit: 8
+			// Add up numbers together for different results.
 			// --
-			// Empty: Pick randomly between 1-4.
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0: OFF
 			// 1: The Super Tank throws cars.
 			// 2: The Super Tank throws special infected.
-			// 3: The Super Tank throws itself.
-			// 4: The Super Tank throws Witches.
+			// 4: The Super Tank throws itself.
+			// 8: The Super Tank throws Witches.
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 4
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0: OFF
 			// 1: Display message only when "Ability Enabled" is set to 1.
 			// 2: Display message only when "Ability Enabled" is set to 2.
-			// 3: Display message only when "Ability Enabled" is set to 3.
-			// 4: Display message only when "Ability Enabled" is set to 4.
+			// 4: Display message only when "Ability Enabled" is set to 3.
+			// 8: Display message only when "Ability Enabled" is set to 4.
 			"Ability Message"			"0"
 
 			// The Super Tank throws these cars.
 			// --
-			// Combine numbers in any order for different results.
-			// Repeat the same number to increase its chances of being chosen.
-			// Character limit: 6
+			// Add up numbers together for different results.
 			// --
-			// Empty: Pick randomly between 1-3.
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0 OR 7: Pick randomly between the 3 cars.
 			// 1: Small car with a big hatchback.
 			// 2: Car that looks like a Chevrolet Impala SS.
-			// 3: Car that looks like a Sixth Generation Chevrolet Impala.
-			"Throw Car Options"			"123"
+			// 4: Car that looks like a Sixth Generation Chevrolet Impala.
+			"Throw Car Options"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --
@@ -6642,18 +6814,20 @@
 
 			// The Super Tank throws these special infected.
 			// --
-			// Combine numbers in any order for different results.
-			// Repeat the same number to increase its chances of being chosen.
-			// Character limit: 14
+			// Add up numbers together for different results.
 			// --
+			// Minimum: 0
+			// Maximum: 127
+			// --
+			// 0 OR 127: Pick randomly between the 7 options.
 			// 1: Smoker
 			// 2: Boomer
-			// 3: Hunter
-			// 4: Spitter (Switches to Boomer in L4D1.)
-			// 5: Jockey (Switches to Hunter in L4D1.)
-			// 6: Charger (Switches to Smoker in L4D1.)
-			// 7: Tank
-			"Throw Infected Options"		"1234567"
+			// 4: Hunter
+			// 8: Spitter (Switches to Boomer in L4D1.)
+			// 16: Jockey (Switches to Hunter in L4D1.)
+			// 32: Charger (Switches to Smoker in L4D1.)
+			// 64: Tank
+			"Throw Infected Options"		"0"
 		}
 	}
 }
@@ -6718,6 +6892,87 @@
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Track Speed"				"500.0"
+		}
+	}
+}
+```
+
+#### Ultimate Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank activates ultimate mode when low on health to gain temporary godmode and damage boost.
+		// Requires "st_ultimate.smx" to be installed.
+		"Ultimate Ability"
+		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 0
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Super Tank can activate ultimate mode up to this many times.
+			// --
+			// Minimum: 1
+			// Maximum: 9999999999
+			"Ultimate Amount"			"1"
+
+			// The Super Tank's damage boost value during ultimate mode.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Ultimate Damage Boost"			"1.2"
+
+			// The Super Tank must deal this much damage to survivors to activate ultimate mode.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Ultimate Damage Required"		"200.0"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Ultimate Duration"			"5.0"
+
+			// The Super Tank can activate ultimate mode when its health is equal to or below this value.
+			// --
+			// Minimum: 1
+			// Maximum: 65535
+			"Ultimate Health Limit"			"100"
+
+			// The Super Tank regenerates up to this much percentage of its original health upon activating ultimate mode.
+			// --
+			// Minimum: 0.1
+			// Maximum: 1.0 (Full health)
+			"Ultimate Health Portion"		"0.5"
 		}
 	}
 }
@@ -6871,21 +7126,25 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Vision Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
@@ -7002,24 +7261,28 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activate/deactivate.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Display message only when "Warp Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 3: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 4: Display message only when "Ability Enabled" is set to 2 or 3.
 			"Ability Message"			"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
@@ -7115,36 +7378,41 @@
 			// Show a screen fade effect when the Super Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 3
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF
 			// 1: Show effect when the Super Tank uses its claw/rock attack.
 			// 2: Show effect when the Super Tank is hit by a melee weapon.
-			// 3: Show effect when the Super Tank uses its range ability.
+			// 4: Show effect when the Super Tank uses its range ability.
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// --
-			// Combine numbers in any order for different results.
-			// Character limit: 2
+			// Add up numbers together for different results.
 			// --
-			// Empty: OFF
+			// Minimum: 0
+			// Maximum: 3
+			// --
+			// 0: OFF
 			// 1: Display message only when "Whirl Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
 
 			// The axis of the Super Tank's whirl effect.
 			// --
-			// Combine numbers in any order for different results.
-			// Repeat the same number to increase its chances of being chosen.
-			// Character limit: 6
+			// Add up numbers together for different results.
 			// --
-			// Empty: Pick randomly between 1-3.
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0 OR 7: Pick randomly between the 3 axes.
 			// 1: X-Axis
 			// 2: Y-Axis
-			// 3: Z-Axis
-			"Whirl Axis"				"123"
+			// 4: Z-Axis
+			"Whirl Axis"				"0"
 
 			// The Super Tank has this many chances out of 100.0% to trigger the ability.
 			// --

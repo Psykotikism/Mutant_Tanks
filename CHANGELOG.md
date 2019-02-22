@@ -1,5 +1,32 @@
 # Changelog
 
+## Version 8.58 (March 1, 2019)
+
+Bug fixes:
+
+1. Fixed the Gravity ability not removing the `point_push` entity when needed.
+2. Fixed the Respawn ability not detecting finale Super Tanks.
+
+Changes:
+
+1. All `Ability Effect` and `Ability Message` settings now take in bit flags instead of strings.
+2. Several settings now take in bit flags instead of strings.
+3. All global variables are now initialized after the `AskPluginLoad2()` forward.
+4. The `ST_IsTankSupported()` native's second argument now takes in bit flags instead of strings.
+5. Renamed the `Flash` ability to `Fast` ability.
+6. Renamed the `Stun` ability to `Slow` ability.
+7. Renamed the `ST_OnPreset()` forward to `ST_OnPostTankSpawn()`.
+8. Added the `ST_IsFinaleTank()` native.
+9. Added the Ultimate ability. (Requested by foquaxticity.)
+10. The Medic ability now allows Super Tanks to heal other Tanks. (Requested by FatalOE71.)
+
+Files:
+
+1. Updated all source codes with the above changes.
+2. Updated the `super_tanks++.cfg` file with new settings.
+3. Updated the `super_tanks++.inc` file with the above changes.
+4. Updated the `super_tanks++.phrases.txt` file with new phrases.
+
 ## Version 8.57 (February 14, 2019)
 
 Bug fixes:
