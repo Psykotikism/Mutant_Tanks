@@ -602,7 +602,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 				iOptionCount++;
 			}
 
-			switch (iOptions[GetRandomInt(0, iOptionCount)])
+			switch (iOptions[GetRandomInt(0, iOptionCount - 1)])
 			{
 				case 1: SetEntityModel(iCar, MODEL_CAR);
 				case 2: SetEntityModel(iCar, MODEL_CAR2);

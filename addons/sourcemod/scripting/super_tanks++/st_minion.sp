@@ -426,7 +426,7 @@ static void vMinionAbility(int tank)
 						iTypeCount++;
 					}
 
-					switch (iTypes[GetRandomInt(0, iTypeCount)])
+					switch (iTypes[GetRandomInt(0, iTypeCount - 1)])
 					{
 						case 1: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "smoker");
 						case 2: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "boomer");

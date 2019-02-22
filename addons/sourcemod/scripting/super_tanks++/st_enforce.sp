@@ -494,7 +494,7 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, int m
 				}
 
 				char sSlotNumber[32];
-				switch (iSlots[GetRandomInt(0, iSlotCount)])
+				switch (iSlots[GetRandomInt(0, iSlotCount - 1)])
 				{
 					case 1:
 					{

@@ -449,7 +449,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 		if (iAbilityCount > 0)
 		{
-			switch (iAbilities[GetRandomInt(0, iAbilityCount)])
+			switch (iAbilities[GetRandomInt(0, iAbilityCount - 1)])
 			{
 				case 1:
 				{
@@ -469,7 +469,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							iOptionCount++;
 						}
 
-						switch (iOptions[GetRandomInt(0, iOptionCount)])
+						switch (iOptions[GetRandomInt(0, iOptionCount - 1)])
 						{
 							case 1: SetEntityModel(iCar, MODEL_CAR);
 							case 2: SetEntityModel(iCar, MODEL_CAR2);
@@ -529,7 +529,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							iOptionCount++;
 						}
 
-						switch (iOptions[GetRandomInt(0, iOptionCount)])
+						switch (iOptions[GetRandomInt(0, iOptionCount - 1)])
 						{
 							case 1: vSpawnInfected(iInfected, "smoker");
 							case 2: vSpawnInfected(iInfected, "boomer");

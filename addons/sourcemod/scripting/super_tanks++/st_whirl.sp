@@ -576,7 +576,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, int mes
 					iAxisCount++;
 				}
 
-				switch (iAxes[GetRandomInt(0, iAxisCount)])
+				switch (iAxes[GetRandomInt(0, iAxisCount - 1)])
 				{
 					case 1: iAxis = 0;
 					case 2: iAxis = 1;
