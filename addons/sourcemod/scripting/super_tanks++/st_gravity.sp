@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -393,6 +393,8 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
 			vRemoveGravity(iBot);
+
+			vReset2(iBot);
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -402,6 +404,8 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
 			vRemoveGravity(iTank);
+
+			vReset2(iTank);
 		}
 	}
 	else if (StrEqual(name, "player_death"))
@@ -515,14 +519,14 @@ public void ST_OnButtonReleased(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	if (ST_IsTankSupported(tank))
 	{
 		vRemoveGravity(tank);
 	}
 
-	vReset2(tank);
+	vReset2(tank, revert);
 }
 
 static void vGravity(int tank)
@@ -616,7 +620,6 @@ static void vGravityAbility(int tank, bool main)
 
 						DataPack dpGravity;
 						CreateDataTimer(flGravityDuration(tank), tTimerGravity, dpGravity, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-						dpGravity.WriteCell(EntIndexToEntRef(g_iGravity[tank]));
 						dpGravity.WriteCell(GetClientUserId(tank));
 						dpGravity.WriteCell(ST_GetTankType(tank));
 						dpGravity.WriteFloat(GetEngineTime());
@@ -702,7 +705,7 @@ static void vRemoveGravity(int tank)
 		RemoveEntity(g_iGravity[tank]);
 	}
 
-	g_iGravity[tank] = 0;
+	g_iGravity[tank] = INVALID_ENT_REFERENCE;
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -729,16 +732,20 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank)
+static void vReset2(int tank, bool revert = false)
 {
-	g_bGravity[tank] = false;
+	if (!revert)
+	{
+		g_bGravity[tank] = false;
+	}
+
 	g_bGravity2[tank] = false;
 	g_bGravity3[tank] = false;
 	g_bGravity4[tank] = false;
 	g_bGravity5[tank] = false;
 	g_bGravity6[tank] = false;
 	g_bGravity7[tank] = false;
-	g_iGravity[tank] = 0;
+	g_iGravity[tank] = INVALID_ENT_REFERENCE;
 	g_iGravityCount[tank] = 0;
 	g_iGravityCount2[tank] = 0;
 }
@@ -753,7 +760,7 @@ static void vReset3(int tank)
 		RemoveEntity(g_iGravity[tank]);
 	}
 
-	g_iGravity[tank] = 0;
+	g_iGravity[tank] = INVALID_ENT_REFERENCE;
 
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityHuman9");
 
@@ -821,18 +828,17 @@ public Action tTimerGravity(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iForce = EntRefToEntIndex(pack.ReadCell());
-	if (iForce == INVALID_ENT_REFERENCE || !bIsValidEntity(iForce))
-	{
-		return Plugin_Stop;
-	}
-
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bGravity[iTank])
 	{
 		g_bGravity[iTank] = false;
 
-		RemoveEntity(iForce);
+		if (bIsValidEntity(g_iGravity[iTank]))
+		{
+			RemoveEntity(g_iGravity[iTank]);
+		}
+
+		g_iGravity[iTank] = INVALID_ENT_REFERENCE;
 
 		if (iGravityMessage(iTank) & ST_MESSAGE_SPECIAL)
 		{

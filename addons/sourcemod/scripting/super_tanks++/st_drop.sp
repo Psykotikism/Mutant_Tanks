@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -520,6 +520,8 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
 			vRemoveDrop(iBot);
+
+			vReset2(iBot);
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -529,6 +531,8 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
 			vRemoveDrop(iTank);
+
+			vReset2(iTank);
 		}
 	}
 	else if (StrEqual(name, "player_death"))
@@ -537,6 +541,8 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && ST_IsCloneSupported(iTank, g_bCloneInstalled) && g_bDrop[iTank])
 		{
 			vDropWeapon(iTank);
+
+			vReset2(iTank);
 		}
 	}
 }
@@ -576,11 +582,14 @@ public void ST_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	vDropWeapon(tank);
 
-	g_bDrop[tank] = false;
+	if (!revert)
+	{
+		g_bDrop[tank] = false;
+	}
 }
 
 static void vDropWeapon(int tank)
@@ -692,7 +701,7 @@ static void vRemoveDrop(int tank)
 		RemoveEntity(g_iDrop[tank]);
 	}
 
-	g_iDrop[tank] = 0;
+	g_iDrop[tank] = INVALID_ENT_REFERENCE;
 }
 
 static void vReset()
@@ -709,7 +718,7 @@ static void vReset()
 static void vReset2(int tank)
 {
 	g_bDrop[tank] = false;
-	g_iDrop[tank] = 0;
+	g_iDrop[tank] = INVALID_ENT_REFERENCE;
 	g_iDropWeapon[tank] = 0;
 }
 

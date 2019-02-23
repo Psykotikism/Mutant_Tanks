@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -86,8 +86,6 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	vRemoveMinion(client);
-
-	g_bMinion[client] = false;
 }
 
 public void OnMapEnd()
@@ -303,8 +301,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
 		if (ST_IsTankSupported(iInfected, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
-			g_bMinion2[iInfected] = false;
-			g_iMinionCount[iInfected] = 0;
+			vRemoveMinion(iInfected);
 		}
 
 		if (bIsSpecialInfected(iInfected) && g_bMinion[iInfected])
@@ -382,9 +379,9 @@ public void ST_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
-	vRemoveMinion(tank);
+	vRemoveMinion(tank, revert);
 }
 
 static void vMinionAbility(int tank)
@@ -511,8 +508,13 @@ static void vMinionAbility(int tank)
 	}
 }
 
-static void vRemoveMinion(int tank)
+static void vRemoveMinion(int tank, bool revert = false)
 {
+	if (!revert)
+	{
+		g_bMinion[tank] = false;
+	}
+
 	g_bMinion2[tank] = false;
 	g_iMinionCount[tank] = 0;
 	g_iMinionCount2[tank] = 0;
@@ -526,7 +528,6 @@ static void vReset()
 		{
 			vRemoveMinion(iPlayer);
 
-			g_bMinion[iPlayer] = false;
 			g_iMinionOwner[iPlayer] = 0;
 		}
 	}

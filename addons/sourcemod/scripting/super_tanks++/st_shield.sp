@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -425,6 +425,8 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
 			vRemoveShield(iBot);
+
+			vReset2(iBot);
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -434,6 +436,8 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
 			vRemoveShield(iTank);
+
+			vReset2(iTank);
 		}
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated"))
@@ -531,14 +535,14 @@ public void ST_OnButtonReleased(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	if (ST_IsTankSupported(tank))
 	{
 		vRemoveShield(tank);
 	}
 
-	vReset2(tank);
+	vReset2(tank, revert);
 }
 
 public void ST_OnRockThrow(int tank, int rock)
@@ -561,7 +565,7 @@ static void vRemoveShield(int tank)
 		RemoveEntity(g_iShield[tank]);
 	}
 
-	g_iShield[tank] = 0;
+	g_iShield[tank] = INVALID_ENT_REFERENCE;
 }
 
 static void vReset()
@@ -575,11 +579,15 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank)
+static void vReset2(int tank, bool revert = false)
 {
-	g_bShield[tank] = false;
+	if (!revert)
+	{
+		g_bShield[tank] = false;
+	}
+
 	g_bShield2[tank] = false;
-	g_iShield[tank] = 0;
+	g_iShield[tank] = INVALID_ENT_REFERENCE;
 	g_iShieldCount[tank] = 0;
 }
 
@@ -649,10 +657,7 @@ static void vShieldAbility(int tank, bool shield)
 						{
 							g_iShieldCount[tank]++;
 
-							DataPack dpStopShield;
-							CreateDataTimer(flHumanDuration(tank), tTimerStopShield, dpStopShield, TIMER_FLAG_NO_MAPCHANGE);
-							dpStopShield.WriteCell(EntIndexToEntRef(g_iShield[tank]));
-							dpStopShield.WriteCell(GetClientUserId(tank));
+							CreateTimer(flHumanDuration(tank), tTimerStopShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 
 							ST_PrintToChat(tank, "%s %t", ST_TAG3, "ShieldHuman", g_iShieldCount[tank], iHumanAmmo(tank));
 						}
@@ -821,17 +826,9 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerStopShield(Handle timer, DataPack pack)
+public Action tTimerStopShield(Handle timer, int userid)
 {
-	pack.Reset();
-
-	int iShield = EntRefToEntIndex(pack.ReadCell());
-	if (iShield == INVALID_ENT_REFERENCE || !bIsValidEntity(iShield))
-	{
-		return Plugin_Stop;
-	}
-
-	int iTank = GetClientOfUserId(pack.ReadCell());
+	int iTank = GetClientOfUserId(userid);
 	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bShield[iTank])
 	{
 		vShieldAbility(iTank, false);

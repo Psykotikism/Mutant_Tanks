@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -79,8 +79,6 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	vRemoveClone(client);
-
-	g_bClone[client] = false;
 }
 
 public void OnMapEnd()
@@ -300,9 +298,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
-			g_bClone2[iTank] = false;
-			g_iCloneCount[iTank] = 0;
-			g_iCloneCount2[iTank] = 0;
+			vRemoveClone(iTank, true);
 
 			if (iCloneAbility(iTank) == 1)
 			{
@@ -400,9 +396,9 @@ public void ST_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
-	vRemoveClone(tank);
+	vRemoveClone(tank, revert);
 }
 
 static void vCloneAbility(int tank)
@@ -501,8 +497,13 @@ static void vCloneAbility(int tank)
 	}
 }
 
-static void vRemoveClone(int tank)
+static void vRemoveClone(int tank, bool revert = false)
 {
+	if (!revert)
+	{
+		g_bClone[tank] = false;
+	}
+
 	g_bClone2[tank] = false;
 	g_iCloneCount[tank] = 0;
 	g_iCloneCount2[tank] = 0;
@@ -516,7 +517,6 @@ static void vReset()
 		{
 			vRemoveClone(iPlayer);
 
-			g_bClone[iPlayer] = false;
 			g_iCloneOwner[iPlayer] = 0;
 		}
 	}

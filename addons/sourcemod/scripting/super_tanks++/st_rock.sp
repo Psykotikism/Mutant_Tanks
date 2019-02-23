@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -389,7 +389,7 @@ public void ST_OnButtonReleased(int tank, int button)
 			{
 				if (iHumanMode(tank) == 1 && g_bRock[tank] && !g_bRock2[tank])
 				{
-					vReset2(tank, g_iRock[tank]);
+					vReset2(tank);
 
 					vReset3(tank);
 				}
@@ -398,7 +398,7 @@ public void ST_OnButtonReleased(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	vRemoveRock(tank);
 }
@@ -407,7 +407,7 @@ static void vRemoveRock(int tank)
 {
 	g_bRock[tank] = false;
 	g_bRock2[tank] = false;
-	g_iRock[tank] = 0;
+	g_iRock[tank] = INVALID_ENT_REFERENCE;
 	g_iRockCount[tank] = 0;
 }
 
@@ -422,11 +422,16 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank, int rock)
+static void vReset2(int tank)
 {
 	g_bRock[tank] = false;
 
-	RemoveEntity(rock);
+	if (bIsValidEntity(g_iRock[tank]))
+	{
+		RemoveEntity(g_iRock[tank]);
+	}
+
+	g_iRock[tank] = INVALID_ENT_REFERENCE;
 
 	CreateTimer(3.0, tTimerStopRockSound, _, TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -555,7 +560,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	int iType = pack.ReadCell();
 	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bRock[iTank])
 	{
-		vReset2(iTank, iRock);
+		vReset2(iTank);
 
 		return Plugin_Stop;
 	}
@@ -563,7 +568,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	float flTime = pack.ReadFloat();
 	if (iRockAbility(iTank) == 0 || ((!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flRockDuration(iTank)) < GetEngineTime()))
 	{
-		vReset2(iTank, iRock);
+		vReset2(iTank);
 
 		if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bRock2[iTank])
 		{

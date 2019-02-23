@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -410,7 +410,7 @@ public void ST_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	vRemoveEnforce(tank);
 }
@@ -597,7 +597,7 @@ static void vRemoveEnforce(int tank)
 		{
 			g_bEnforce[iSurvivor] = false;
 			g_iEnforceOwner[iSurvivor] = 0;
-			g_iEnforceSlot[iSurvivor] = -1;
+			g_iEnforceSlot[iSurvivor] = INVALID_ENT_REFERENCE;
 		}
 	}
 
@@ -613,7 +613,7 @@ static void vReset()
 			vReset2(iPlayer);
 
 			g_iEnforceOwner[iPlayer] = 0;
-			g_iEnforceSlot[iPlayer] = -1;
+			g_iEnforceSlot[iPlayer] = INVALID_ENT_REFERENCE;
 		}
 	}
 }
@@ -626,6 +626,13 @@ static void vReset2(int tank)
 	g_bEnforce4[tank] = false;
 	g_bEnforce5[tank] = false;
 	g_iEnforceCount[tank] = 0;
+}
+
+static void vReset3(int survivor)
+{
+	g_bEnforce[survivor] = false;
+	g_iEnforceOwner[survivor] = 0;
+	g_iEnforceSlot[survivor] = INVALID_ENT_REFERENCE;
 }
 
 static float flEnforceChance(int tank)
@@ -680,9 +687,7 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor) || !g_bEnforce[iSurvivor])
 	{
-		g_bEnforce[iSurvivor] = false;
-		g_iEnforceOwner[iSurvivor] = 0;
-		g_iEnforceSlot[iSurvivor] = -1;
+		vReset3(iSurvivor);
 
 		return Plugin_Stop;
 	}
@@ -690,17 +695,14 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
 	{
-		g_bEnforce[iSurvivor] = false;
-		g_iEnforceOwner[iSurvivor] = 0;
-		g_iEnforceSlot[iSurvivor] = -1;
+		vReset3(iSurvivor);
 
 		return Plugin_Stop;
 	}
 
-	g_bEnforce[iSurvivor] = false;
 	g_bEnforce2[iTank] = false;
-	g_iEnforceOwner[iSurvivor] = 0;
-	g_iEnforceSlot[iSurvivor] = -1;
+
+	vReset3(iSurvivor);
 
 	int iMessage = pack.ReadCell();
 

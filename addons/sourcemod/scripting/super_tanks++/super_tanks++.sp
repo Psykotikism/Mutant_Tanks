@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -405,7 +405,7 @@ public void OnPluginStart()
 	g_hAbilityActivatedForward = CreateGlobalForward("ST_OnAbilityActivated", ET_Ignore, Param_Cell);
 	g_hButtonPressedForward = CreateGlobalForward("ST_OnButtonPressed", ET_Ignore, Param_Cell, Param_Cell);
 	g_hButtonReleasedForward = CreateGlobalForward("ST_OnButtonReleased", ET_Ignore, Param_Cell, Param_Cell);
-	g_hChangeTypeForward = CreateGlobalForward("ST_OnChangeType", ET_Ignore, Param_Cell);
+	g_hChangeTypeForward = CreateGlobalForward("ST_OnChangeType", ET_Ignore, Param_Cell, Param_Cell);
 	g_hConfigsLoadedForward = CreateGlobalForward("ST_OnConfigsLoaded", ET_Ignore, Param_String, Param_Cell);
 	g_hDisplayMenuForward = CreateGlobalForward("ST_OnDisplayMenu", ET_Ignore, Param_Cell);
 	g_hEventFiredForward = CreateGlobalForward("ST_OnEventFired", ET_Ignore, Param_Cell, Param_String, Param_Cell);
@@ -1688,7 +1688,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				int iDeathRevert = !g_bGeneralConfig ? g_iDeathRevert : g_iDeathRevert2;
 				if (iDeathRevert == 1)
 				{
-					vNewTankSettings(iTank);
+					vNewTankSettings(iTank, true);
 					vSetColor(iTank);
 				}
 
@@ -1834,7 +1834,7 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 	}
 }
 
-static void vNewTankSettings(int tank)
+static void vNewTankSettings(int tank, bool revert = false)
 {
 	ExtinguishEntity(tank);
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
@@ -1843,6 +1843,7 @@ static void vNewTankSettings(int tank)
 
 	Call_StartForward(g_hChangeTypeForward);
 	Call_PushCell(tank);
+	Call_PushCell(revert);
 	Call_Finish();
 }
 
@@ -1997,6 +1998,7 @@ static void vSetColor(int tank, int value = 0)
 	if (g_iTankType[tank] > 0 && g_iTankType[tank] == value)
 	{
 		vRemoveProps(tank);
+
 		g_iTankType[tank] = 0;
 
 		return;
@@ -3441,7 +3443,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 public Action tTimerRockThrow(Handle timer, int ref)
 {
 	int iRock = EntRefToEntIndex(ref);
-	if (!g_bPluginEnabled || !bIsValidEntity(iRock))
+	if (!g_bPluginEnabled || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}

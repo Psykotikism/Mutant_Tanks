@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -87,8 +87,9 @@ forward void ST_OnButtonReleased(int tank, int button);
  * Use this forward to trigger any features/abilities/settings when a Super Tank changes types.
  *
  * @param tank			Client index of the Tank.
+ * @param revert		True if reverting to a normal Tank, false otherwise.
  **/
-forward void ST_OnChangeType(int tank);
+forward void ST_OnChangeType(int tank, bool revert);
 
 /**
  * Called when the config file is loaded.
