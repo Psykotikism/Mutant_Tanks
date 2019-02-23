@@ -427,7 +427,7 @@ public void ST_OnChangeType(int tank, bool revert)
 		vMedicAbility(tank, true);
 	}
 
-	vRemoveMedic(tank);
+	vRemoveMedic(tank, revert);
 }
 
 static void vHeal(int infected, int health, int extrahealth, int maxhealth)
@@ -574,11 +574,15 @@ static void vMedicAbility(int tank, bool main)
 	}
 }
 
-static void vRemoveMedic(int tank)
+static void vRemoveMedic(int tank, bool revert = false)
 {
+	if (!revert)
+	{
+		g_bMedic3[tank] = false;
+	}
+
 	g_bMedic[tank] = false;
 	g_bMedic2[tank] = false;
-	g_bMedic3[tank] = false;
 	g_iMedicCount[tank] = 0;
 }
 

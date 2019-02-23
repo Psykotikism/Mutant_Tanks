@@ -521,7 +521,7 @@ public void ST_OnButtonReleased(int tank, int button)
 
 public void ST_OnChangeType(int tank, bool revert)
 {
-	if (ST_IsTankSupported(tank))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 	{
 		vRemoveGravity(tank);
 	}
