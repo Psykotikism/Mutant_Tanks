@@ -1012,6 +1012,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 											case true:
 											{
 												g_bNeedHealth[admin] = false;
+
 												vTankSpawn(admin);
 											}
 											case false: vTankSpawn(admin, 5);
@@ -1029,6 +1030,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 											if (g_iCooldown[admin] > 0)
 											{
 												g_bChanged[admin] = true;
+
 												CreateTimer(1.0, tTimerResetCooldown, GetClientOfUserId(admin), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 											}
 										}
@@ -1688,8 +1690,10 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				int iDeathRevert = !g_bGeneralConfig ? g_iDeathRevert : g_iDeathRevert2;
 				if (iDeathRevert == 1)
 				{
+					int iType = g_iTankType[iTank];
 					vNewTankSettings(iTank, true);
 					vSetColor(iTank);
+					g_iTankType[iTank] = iType;
 				}
 
 				vReset2(iTank, iDeathRevert);
@@ -1725,6 +1729,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 									case 0:
 									{
 										g_bNeedHealth[iTank] = true;
+
 										vTankMenu(iTank, 0);
 									}
 									case 1: vSuperTank(iTank);
@@ -1759,13 +1764,15 @@ static void vPluginStatus()
 		{
 			case true:
 			{
-				vHookEvents(true);
 				g_bPluginEnabled = true;
+
+				vHookEvents(true);
 			}
 			case false:
 			{
-				vHookEvents(false);
 				g_bPluginEnabled = false;
+
+				vHookEvents(false);
 			}
 		}
 	}
@@ -1776,6 +1783,8 @@ static void vHookEvents(bool hook)
 	static bool bHooked;
 	if (hook && !bHooked)
 	{
+		bHooked = true;
+
 		HookEvent("ability_use", vEventHandler);
 		HookEvent("bot_player_replace", vEventHandler);
 		HookEvent("finale_escape_start", vEventHandler);
@@ -1786,11 +1795,13 @@ static void vHookEvents(bool hook)
 		HookEvent("player_death", vEventHandler);
 		HookEvent("player_incapacitated", vEventHandler);
 		HookEvent("player_spawn", vEventHandler);
+
 		vHookEventForward(true);
-		bHooked = true;
 	}
 	else if (!hook && bHooked)
 	{
+		bHooked = false;
+
 		UnhookEvent("ability_use", vEventHandler);
 		UnhookEvent("bot_player_replace", vEventHandler);
 		UnhookEvent("finale_escape_start", vEventHandler);
@@ -1801,8 +1812,8 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_death", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
 		UnhookEvent("player_spawn", vEventHandler);
+
 		vHookEventForward(false);
-		bHooked = false;
 	}
 }
 
@@ -2053,6 +2064,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		if (GetRandomFloat(0.1, 100.0) <= flChance && (iPropsAttached(tank) & ST_PROP_BLUR) && !g_bBlur[tank])
 		{
 			g_bBlur[tank] = true;
+
 			CreateTimer(0.25, tTimerBlurEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
@@ -2489,42 +2501,49 @@ static void vParticleEffects(int tank)
 		if ((iParticleEffects(tank) & ST_PARTICLE_BLOOD) && !g_bBlood[tank])
 		{
 			g_bBlood[tank] = true;
+
 			CreateTimer(0.75, tTimerBloodEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if ((iParticleEffects(tank) & ST_PARTICLE_ELECTRICITY) && !g_bElectric[tank])
 		{
 			g_bElectric[tank] = true;
+
 			CreateTimer(0.75, tTimerElectricEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if ((iParticleEffects(tank) & ST_PARTICLE_FIRE) && !g_bFire[tank])
 		{
 			g_bFire[tank] = true;
+
 			CreateTimer(0.75, tTimerFireEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if ((iParticleEffects(tank) & ST_PARTICLE_ICE) && !g_bIce[tank])
 		{
 			g_bIce[tank] = true;
+
 			CreateTimer(2.0, tTimerIceEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if ((iParticleEffects(tank) & ST_PARTICLE_METEOR) && !g_bMeteor[tank])
 		{
 			g_bMeteor[tank] = true;
+
 			CreateTimer(6.0, tTimerMeteorEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if ((iParticleEffects(tank) & ST_PARTICLE_SMOKE) && !g_bSmoke[tank])
 		{
 			g_bSmoke[tank] = true;
+
 			CreateTimer(1.5, tTimerSmokeEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		if ((iParticleEffects(tank) & ST_PARTICLE_SPIT) && bIsValidGame() && !g_bSpit[tank])
 		{
 			g_bSpit[tank] = true;
+
 			CreateTimer(2.0, tTimerSpitEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 	}
@@ -2553,12 +2572,14 @@ static void vSuperTank(int tank)
 			{
 				int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
 				vSetColor(tank, iChosen);
+
 				g_bSpawned[tank] = false;
 			}
 		}
 		else
 		{
 			vSetColor(tank, g_iType);
+
 			g_bSpawned[tank] = true;
 		}
 
