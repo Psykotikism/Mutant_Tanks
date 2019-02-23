@@ -5,7 +5,7 @@ Super Tanks++ takes the original [[L4D2] Super Tanks](https://forums.alliedmods.
 > The following license is also placed inside the source code of each plugin and include file.
 
 Super Tanks++: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -208,7 +208,7 @@ To make sure that this entry can be chosen, we must change the value in the `Typ
 	{
 		"General"
 		{
-			"Type Range" "1-24" // Determines what entry to start and stop at when reading the entire config file.
+			"Type Range"				"1-24" // Determines what entry to start and stop at when reading the entire config file.
 		}
 	}
 }
@@ -225,7 +225,7 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Type Range" "1-5" // Check "Tank #1" to "Tank #5"
+			"Type Range"				"1-5" // Check "Tank #1" to "Tank #5"
 		}
 	}
 	"Tank #5" // Checked by the plugin.
@@ -263,7 +263,7 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			Type Range "1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
+			"Type Range"				"1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
 		}
 	}
 	"Tank #13" // This will not be checked by the plugin.
@@ -420,7 +420,7 @@ Example:
 	{
 		"General"
 		{
-			"Type Range" "1-69" // The plugin will check for 69 entries when loading the config file.
+			"Type Range"				"1-69" // The plugin will check for 69 entries when loading the config file.
 		}
 	}
 	"Tank #69"
@@ -491,8 +491,8 @@ Example:
 	{
 		"Custom"
 		{
-			"Enable Custom Configs" "1" // Enable custom configs
-			"Execute Config Types" "1" // 1: Difficulty configs (easy, normal, hard, impossible)
+			"Enable Custom Configs"			"1" // Enable custom configs
+			"Execute Config Types"			"1" // 1: Difficulty configs (easy, normal, hard, impossible)
 		}
 	}
 	"Tank #69"
@@ -633,8 +633,9 @@ forward void ST_OnButtonReleased(int tank, int button);
  * Use this forward to trigger any features/abilities/settings when a Super Tank changes types.
  *
  * @param tank			Client index of the Tank.
+ * @param revert		True if reverting to a normal Tank, false otherwise.
  **/
-forward void ST_OnChangeType(int tank);
+forward void ST_OnChangeType(int tank, bool revert);
 
 /**
  * Called when the config file is loaded.

@@ -4,8 +4,9 @@
 
 Bug fixes:
 
-1. Fixed the Gravity ability not removing the `point_push` entity when needed.
-2. Fixed the Respawn ability not detecting finale Super Tanks.
+1. Fixed several abilities not resetting properly when Super Tanks die.
+2. Fixed the Clone ability spam-spawning Tank clones.
+3. Fixed the Respawn ability not detecting finale Super Tanks.
 
 Changes:
 
@@ -16,9 +17,10 @@ Changes:
 5. Renamed the `Flash` ability to `Fast` ability.
 6. Renamed the `Stun` ability to `Slow` ability.
 7. Renamed the `ST_OnPreset()` forward to `ST_OnPostTankSpawn()`.
-8. Added the `ST_IsFinaleTank()` native.
-9. Added the Ultimate ability. (Requested by foquaxticity.)
-10. The Medic ability now allows Super Tanks to heal other Tanks. (Requested by FatalOE71.)
+8. Added a second argument to the `ST_OnChangeType()` forward.
+9. Added the `ST_IsFinaleTank()` native.
+10. Added the Ultimate ability. (Requested by foquaxticity.)
+11. The Medic ability now allows Super Tanks to heal other Tanks. (Requested by FatalOE71.)
 
 Files:
 
