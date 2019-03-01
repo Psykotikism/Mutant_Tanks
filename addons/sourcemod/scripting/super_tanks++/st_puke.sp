@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -30,19 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define PARTICLE_BLOOD "boomer_explode_D"
-
-#define ST_MENU_PUKE "Puke Ability"
-
-bool g_bCloneInstalled, g_bLateLoad, g_bPuke[MAXPLAYERS + 1], g_bPuke2[MAXPLAYERS + 1], g_bPuke3[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sPukeEffect[ST_MAXTYPES + 1][4], g_sPukeEffect2[ST_MAXTYPES + 1][4], g_sPukeMessage[ST_MAXTYPES + 1][3], g_sPukeMessage2[ST_MAXTYPES + 1][3];
-
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flPukeChance[ST_MAXTYPES + 1], g_flPukeChance2[ST_MAXTYPES + 1], g_flPukeRange[ST_MAXTYPES + 1], g_flPukeRange2[ST_MAXTYPES + 1], g_flPukeRangeChance[ST_MAXTYPES + 1], g_flPukeRangeChance2[ST_MAXTYPES + 1];
-
-Handle g_hSDKPukePlayer;
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iPukeAbility[ST_MAXTYPES + 1], g_iPukeAbility2[ST_MAXTYPES + 1], g_iPukeCount[MAXPLAYERS + 1], g_iPukeHit[ST_MAXTYPES + 1], g_iPukeHit2[ST_MAXTYPES + 1], g_iPukeHitMode[ST_MAXTYPES + 1], g_iPukeHitMode2[ST_MAXTYPES + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -57,6 +45,18 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_BLOOD "boomer_explode_D"
+
+#define ST_MENU_PUKE "Puke Ability"
+
+bool g_bCloneInstalled, g_bPuke[MAXPLAYERS + 1], g_bPuke2[MAXPLAYERS + 1], g_bPuke3[MAXPLAYERS + 1];
+
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flPukeChance[ST_MAXTYPES + 1], g_flPukeRange[ST_MAXTYPES + 1], g_flPukeRangeChance[ST_MAXTYPES + 1];
+
+Handle g_hSDKPukePlayer;
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iPukeAbility[ST_MAXTYPES + 1], g_iPukeCount[MAXPLAYERS + 1], g_iPukeEffect[ST_MAXTYPES + 1], g_iPukeHit[ST_MAXTYPES + 1], g_iPukeHitMode[ST_MAXTYPES + 1], g_iPukeMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -111,7 +111,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -149,7 +149,7 @@ public Action cmdPukeInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -187,15 +187,15 @@ public int iPukeMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iPukeAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iPukeCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iPukeAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iPukeCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "PukeDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vPukeMenu(param1, menu.Selection);
 			}
@@ -264,98 +264,58 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iPukeHitMode(attacker) == 0 || iPukeHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iPukeHitMode[ST_GetTankType(attacker)] == 0 || g_iPukeHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vPukeHit(victim, attacker, flPukeChance(attacker), iPukeHit(attacker), "1", "1");
+				vPukeHit(victim, attacker, g_flPukeChance[ST_GetTankType(attacker)], g_iPukeHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iPukeHitMode(victim) == 0 || iPukeHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iPukeHitMode[ST_GetTankType(victim)] == 0 || g_iPukeHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vPukeHit(attacker, victim, flPukeChance(victim), iPukeHit(victim), "1", "2");
+				vPukeHit(attacker, victim, g_flPukeChance[ST_GetTankType(victim)], g_iPukeHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Puke Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Puke Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iPukeAbility[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", 0);
-					g_iPukeAbility[iIndex] = iClamp(g_iPukeAbility[iIndex], 0, 1);
-					kvSuperTanks.GetString("Puke Ability/Ability Effect", g_sPukeEffect[iIndex], sizeof(g_sPukeEffect[]), "0");
-					kvSuperTanks.GetString("Puke Ability/Ability Message", g_sPukeMessage[iIndex], sizeof(g_sPukeMessage[]), "0");
-					g_flPukeChance[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Chance", 33.3);
-					g_flPukeChance[iIndex] = flClamp(g_flPukeChance[iIndex], 0.0, 100.0);
-					g_iPukeHit[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", 0);
-					g_iPukeHit[iIndex] = iClamp(g_iPukeHit[iIndex], 0, 1);
-					g_iPukeHitMode[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit Mode", 0);
-					g_iPukeHitMode[iIndex] = iClamp(g_iPukeHitMode[iIndex], 0, 2);
-					g_flPukeRange[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range", 150.0);
-					g_flPukeRange[iIndex] = flClamp(g_flPukeRange[iIndex], 1.0, 9999999999.0);
-					g_flPukeRangeChance[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range Chance", 15.0);
-					g_flPukeRangeChance[iIndex] = flClamp(g_flPukeRangeChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iPukeAbility2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Ability Enabled", g_iPukeAbility[iIndex]);
-					g_iPukeAbility2[iIndex] = iClamp(g_iPukeAbility2[iIndex], 0, 1);
-					kvSuperTanks.GetString("Puke Ability/Ability Effect", g_sPukeEffect2[iIndex], sizeof(g_sPukeEffect2[]), g_sPukeEffect[iIndex]);
-					kvSuperTanks.GetString("Puke Ability/Ability Message", g_sPukeMessage2[iIndex], sizeof(g_sPukeMessage2[]), g_sPukeMessage[iIndex]);
-					g_flPukeChance2[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Chance", g_flPukeChance[iIndex]);
-					g_flPukeChance2[iIndex] = flClamp(g_flPukeChance2[iIndex], 0.0, 100.0);
-					g_iPukeHit2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit", g_iPukeHit[iIndex]);
-					g_iPukeHit2[iIndex] = iClamp(g_iPukeHit2[iIndex], 0, 1);
-					g_iPukeHitMode2[iIndex] = kvSuperTanks.GetNum("Puke Ability/Puke Hit Mode", g_iPukeHitMode[iIndex]);
-					g_iPukeHitMode2[iIndex] = iClamp(g_iPukeHitMode2[iIndex], 0, 2);
-					g_flPukeRange2[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range", g_flPukeRange[iIndex]);
-					g_flPukeRange2[iIndex] = flClamp(g_flPukeRange2[iIndex], 1.0, 9999999999.0);
-					g_flPukeRangeChance2[iIndex] = kvSuperTanks.GetFloat("Puke Ability/Puke Range Chance", g_flPukeRangeChance[iIndex]);
-					g_flPukeRangeChance2[iIndex] = flClamp(g_flPukeRangeChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iPukeAbility[iIndex] = 0;
+		g_iPukeEffect[iIndex] = 0;
+		g_iPukeMessage[iIndex] = 0;
+		g_flPukeChance[iIndex] = 33.3;
+		g_iPukeHit[iIndex] = 0;
+		g_iPukeHitMode[iIndex] = 0;
+		g_flPukeRange[iIndex] = 150.0;
+		g_flPukeRangeChance[iIndex] = 15.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iPukeAbility[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iPukeAbility[type], value, 0, 0, 1);
+	g_iPukeEffect[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iPukeEffect[type], value, 0, 0, 7);
+	g_iPukeMessage[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iPukeMessage[type], value, 0, 0, 3);
+	g_flPukeChance[type] = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeChance", "Puke Chance", "Puke_Chance", "chance", main, g_flPukeChance[type], value, 33.3, 0.0, 100.0);
+	g_iPukeHit[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHit", "Puke Hit", "Puke_Hit", "hit", main, g_iPukeHit[type], value, 0, 0, 1);
+	g_iPukeHitMode[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHitMode", "Puke Hit Mode", "Puke_Hit_Mode", "hitmode", main, g_iPukeHitMode[type], value, 0, 0, 2);
+	g_flPukeRange[type] = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRange", "Puke Range", "Puke_Range", "range", main, g_flPukeRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flPukeRangeChance[type] = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRangeChance", "Puke Range Chance", "Puke_Range_Chance", "rangechance", main, g_flPukeRangeChance[type], value, 15.0, 0.0, 100.0);
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -363,9 +323,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
-			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iPukeAbility(iTank) == 1)
+			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_iPukeAbility[ST_GetTankType(iTank)] == 1)
 			{
 				vAttachParticle(iTank, PARTICLE_BLOOD, 0.1, 0.0);
 
@@ -374,7 +334,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
-					if (bIsSurvivor(iSurvivor, "234"))
+					if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 					{
 						float flSurvivorPos[3];
 						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -395,7 +355,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iPukeAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iPukeAbility[ST_GetTankType(tank)] == 1)
 	{
 		vPukeAbility(tank);
 	}
@@ -403,11 +363,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iPukeAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iPukeAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				switch (g_bPuke[tank])
 				{
@@ -419,37 +379,34 @@ public void ST_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	vRemovePuke(tank);
 }
 
 static void vPukeAbility(int tank)
 {
-	if (g_iPukeCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iPukeCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bPuke2[tank] = false;
 		g_bPuke3[tank] = false;
 
-		float flPukeRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flPukeRange[ST_GetTankType(tank)] : g_flPukeRange2[ST_GetTankType(tank)],
-			flPukeRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flPukeRangeChance[ST_GetTankType(tank)] : g_flPukeRangeChance2[ST_GetTankType(tank)],
-			flTankPos[3];
-
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, "234"))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flPukeRange)
+				if (flDistance <= g_flPukeRange[ST_GetTankType(tank)])
 				{
-					vPukeHit(iSurvivor, tank, flPukeRangeChance, iPukeAbility(tank), "2", "3");
+					vPukeHit(iSurvivor, tank, g_flPukeRangeChance[ST_GetTankType(tank)], g_iPukeAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -458,36 +415,36 @@ static void vPukeAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "PukeHuman4");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "PukeAmmo");
 	}
 }
 
-static void vPukeHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
+static void vPukeHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iPukeCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iPukeCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bPuke[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE) && !g_bPuke[tank])
 				{
 					g_bPuke[tank] = true;
 					g_iPukeCount[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "PukeHuman", g_iPukeCount[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "PukeHuman", g_iPukeCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 
-					if (g_iPukeCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+					if (g_iPukeCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 					{
-						CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 					}
 					else
 					{
@@ -497,22 +454,18 @@ static void vPukeHit(int survivor, int tank, float chance, int enabled, const ch
 
 				SDKCall(g_hSDKPukePlayer, survivor, tank, true);
 
-				char sPukeEffect[4];
-				sPukeEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sPukeEffect[ST_GetTankType(tank)] : g_sPukeEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, sPukeEffect, mode);
+				vEffect(survivor, tank, g_iPukeEffect[ST_GetTankType(tank)], flags);
 
-				char sPukeMessage[3];
-				sPukeMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sPukeMessage[ST_GetTankType(tank)] : g_sPukeMessage2[ST_GetTankType(tank)];
-				if (StrContains(sPukeMessage, message) != -1)
+				if (g_iPukeMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
 				}
 			}
-			else if (StrEqual(mode, "3") && !g_bPuke[tank])
+			else if ((flags & ST_ATTACK_RANGE) && !g_bPuke[tank])
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bPuke2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bPuke2[tank])
 				{
 					g_bPuke2[tank] = true;
 
@@ -520,7 +473,7 @@ static void vPukeHit(int survivor, int tank, float chance, int enabled, const ch
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bPuke3[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bPuke3[tank])
 		{
 			g_bPuke3[tank] = true;
 
@@ -541,52 +494,17 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemovePuke(iPlayer);
 		}
 	}
 }
 
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static float flPukeChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flPukeChance[ST_GetTankType(tank)] : g_flPukeChance2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iPukeAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iPukeAbility[ST_GetTankType(tank)] : g_iPukeAbility2[ST_GetTankType(tank)];
-}
-
-static int iPukeHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iPukeHit[ST_GetTankType(tank)] : g_iPukeHit2[ST_GetTankType(tank)];
-}
-
-static int iPukeHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iPukeHitMode[ST_GetTankType(tank)] : g_iPukeHitMode2[ST_GetTankType(tank)];
-}
-
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bPuke[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bPuke[iTank])
 	{
 		g_bPuke[iTank] = false;
 

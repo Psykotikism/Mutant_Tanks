@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -30,15 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_GRAVITY "Gravity Ability"
-
-bool g_bCloneInstalled, g_bGravity[MAXPLAYERS + 1], g_bGravity2[MAXPLAYERS + 1], g_bGravity3[MAXPLAYERS + 1], g_bGravity4[MAXPLAYERS + 1], g_bGravity5[MAXPLAYERS + 1], g_bGravity6[MAXPLAYERS + 1], g_bGravity7[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sGravityEffect[ST_MAXTYPES + 1][4], g_sGravityEffect2[ST_MAXTYPES + 1][4], g_sGravityMessage[ST_MAXTYPES + 1][4], g_sGravityMessage2[ST_MAXTYPES + 1][4];
-
-float g_flGravityChance[ST_MAXTYPES + 1], g_flGravityChance2[ST_MAXTYPES + 1], g_flGravityDuration[ST_MAXTYPES + 1], g_flGravityDuration2[ST_MAXTYPES + 1], g_flGravityForce[ST_MAXTYPES + 1], g_flGravityForce2[ST_MAXTYPES + 1], g_flGravityRange[ST_MAXTYPES + 1], g_flGravityRange2[ST_MAXTYPES + 1], g_flGravityRangeChance[ST_MAXTYPES + 1], g_flGravityRangeChance2[ST_MAXTYPES + 1], g_flGravityValue[ST_MAXTYPES + 1], g_flGravityValue2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
-
-int g_iGravity[MAXPLAYERS + 1], g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityAbility2[ST_MAXTYPES + 1], g_iGravityCount[MAXPLAYERS + 1], g_iGravityCount2[MAXPLAYERS + 1], g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHit2[ST_MAXTYPES + 1], g_iGravityHitMode[ST_MAXTYPES + 1], g_iGravityHitMode2[ST_MAXTYPES + 1], g_iGravityOwner[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -53,6 +45,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define ST_MENU_GRAVITY "Gravity Ability"
+
+bool g_bCloneInstalled, g_bGravity[MAXPLAYERS + 1], g_bGravity2[MAXPLAYERS + 1], g_bGravity3[MAXPLAYERS + 1], g_bGravity4[MAXPLAYERS + 1], g_bGravity5[MAXPLAYERS + 1], g_bGravity6[MAXPLAYERS + 1], g_bGravity7[MAXPLAYERS + 1];
+
+float g_flGravityChance[ST_MAXTYPES + 1], g_flGravityDuration[ST_MAXTYPES + 1], g_flGravityForce[ST_MAXTYPES + 1], g_flGravityRange[ST_MAXTYPES + 1], g_flGravityRangeChance[ST_MAXTYPES + 1], g_flGravityValue[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
+
+int g_iGravity[MAXPLAYERS + 1], g_iGravityAbility[ST_MAXTYPES + 1], g_iGravityCount[MAXPLAYERS + 1], g_iGravityCount2[MAXPLAYERS + 1], g_iGravityEffect[ST_MAXTYPES + 1], g_iGravityHit[ST_MAXTYPES + 1], g_iGravityHitMode[ST_MAXTYPES + 1], g_iGravityMessage[ST_MAXTYPES + 1], g_iGravityOwner[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -86,7 +86,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -122,7 +122,7 @@ public Action cmdGravityInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -162,25 +162,25 @@ public int iGravityMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iGravityAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iGravityAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
 				case 1:
 				{
-					ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iGravityCount[param1], iHumanAmmo(param1));
-					ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo2", iHumanAmmo(param1) - g_iGravityCount2[param1], iHumanAmmo(param1));
+					ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iGravityCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
+					ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo2", g_iHumanAmmo[ST_GetTankType(param1)] - g_iGravityCount2[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				}
 				case 2:
 				{
 					ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons");
 					ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
 				}
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanMode(param1) == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanMode[ST_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "GravityDetails");
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flGravityDuration(param1));
-				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", g_flGravityDuration[ST_GetTankType(param1)]);
+				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vGravityMenu(param1, menu.Selection);
 			}
@@ -259,121 +259,73 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iGravityHitMode(attacker) == 0 || iGravityHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iGravityHitMode[ST_GetTankType(attacker)] == 0 || g_iGravityHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vGravityHit(victim, attacker, flGravityChance(attacker), iGravityHit(attacker), "1", "1");
+				vGravityHit(victim, attacker, g_flGravityChance[ST_GetTankType(attacker)], g_iGravityHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iGravityHitMode(victim) == 0 || iGravityHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iGravityHitMode[ST_GetTankType(victim)] == 0 || g_iGravityHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vGravityHit(attacker, victim, flGravityChance(victim), iGravityHit(victim), "1", "2");
+				vGravityHit(attacker, victim, g_flGravityChance[ST_GetTankType(victim)], g_iGravityHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iHumanMode[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Human Mode", 1);
-					g_iHumanMode[iIndex] = iClamp(g_iHumanMode[iIndex], 0, 1);
-					g_iGravityAbility[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Enabled", 0);
-					g_iGravityAbility[iIndex] = iClamp(g_iGravityAbility[iIndex], 0, 3);
-					kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect[iIndex], sizeof(g_sGravityEffect[]), "0");
-					kvSuperTanks.GetString("Gravity Ability/Ability Message", g_sGravityMessage[iIndex], sizeof(g_sGravityMessage[]), "0");
-					g_flGravityChance[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Chance", 33.3);
-					g_flGravityChance[iIndex] = flClamp(g_flGravityChance[iIndex], 0.0, 100.0);
-					g_flGravityDuration[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", 5.0);
-					g_flGravityDuration[iIndex] = flClamp(g_flGravityDuration[iIndex], 0.1, 9999999999.0);
-					g_flGravityForce[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", -50.0);
-					g_flGravityForce[iIndex] = flClamp(g_flGravityForce[iIndex], -100.0, 100.0);
-					g_iGravityHit[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Hit", 0);
-					g_iGravityHit[iIndex] = iClamp(g_iGravityHit[iIndex], 0, 1);
-					g_iGravityHitMode[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Hit Mode", 0);
-					g_iGravityHitMode[iIndex] = iClamp(g_iGravityHitMode[iIndex], 0, 2);
-					g_flGravityRange[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", 150.0);
-					g_flGravityRange[iIndex] = flClamp(g_flGravityRange[iIndex], 1.0, 9999999999.0);
-					g_flGravityRangeChance[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range Chance", 15.0);
-					g_flGravityRangeChance[iIndex] = flClamp(g_flGravityRangeChance[iIndex], 0.0, 100.0);
-					g_flGravityValue[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", 0.3);
-					g_flGravityValue[iIndex] = flClamp(g_flGravityValue[iIndex], 0.1, 9999999999.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iHumanMode2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Human Mode", g_iHumanMode[iIndex]);
-					g_iHumanMode2[iIndex] = iClamp(g_iHumanMode2[iIndex], 0, 1);
-					g_iGravityAbility2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Ability Enabled", g_iGravityAbility[iIndex]);
-					g_iGravityAbility2[iIndex] = iClamp(g_iGravityAbility2[iIndex], 0, 3);
-					kvSuperTanks.GetString("Gravity Ability/Ability Effect", g_sGravityEffect2[iIndex], sizeof(g_sGravityEffect2[]), g_sGravityEffect[iIndex]);
-					kvSuperTanks.GetString("Gravity Ability/Ability Message", g_sGravityMessage2[iIndex], sizeof(g_sGravityMessage2[]), g_sGravityMessage[iIndex]);
-					g_flGravityChance2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Chance", g_flGravityChance[iIndex]);
-					g_flGravityChance2[iIndex] = flClamp(g_flGravityChance2[iIndex], 0.0, 100.0);
-					g_flGravityDuration2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Duration", g_flGravityDuration[iIndex]);
-					g_flGravityDuration2[iIndex] = flClamp(g_flGravityDuration2[iIndex], 0.1, 9999999999.0);
-					g_flGravityForce2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Force", g_flGravityForce[iIndex]);
-					g_flGravityForce2[iIndex] = flClamp(g_flGravityForce2[iIndex], -100.0, 100.0);
-					g_iGravityHit2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Hit", g_iGravityHit[iIndex]);
-					g_iGravityHit2[iIndex] = iClamp(g_iGravityHit2[iIndex], 0, 1);
-					g_iGravityHitMode2[iIndex] = kvSuperTanks.GetNum("Gravity Ability/Gravity Hit Mode", g_iGravityHitMode[iIndex]);
-					g_iGravityHitMode2[iIndex] = iClamp(g_iGravityHitMode2[iIndex], 0, 2);
-					g_flGravityRange2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range", g_flGravityRange[iIndex]);
-					g_flGravityRange2[iIndex] = flClamp(g_flGravityRange2[iIndex], 1.0, 9999999999.0);
-					g_flGravityRangeChance2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Range Chance", g_flGravityRangeChance[iIndex]);
-					g_flGravityRangeChance2[iIndex] = flClamp(g_flGravityRangeChance2[iIndex], 0.0, 100.0);
-					g_flGravityValue2[iIndex] = kvSuperTanks.GetFloat("Gravity Ability/Gravity Value", g_flGravityValue[iIndex]);
-					g_flGravityValue2[iIndex] = flClamp(g_flGravityValue2[iIndex], 0.1, 9999999999.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iHumanMode[iIndex] = 1;
+		g_iGravityAbility[iIndex] = 0;
+		g_iGravityEffect[iIndex] = 0;
+		g_iGravityMessage[iIndex] = 0;
+		g_flGravityChance[iIndex] = 33.3;
+		g_flGravityDuration[iIndex] = 5.0;
+		g_flGravityForce[iIndex] = -50.0;
+		g_flGravityRange[iIndex] = 150.0;
+		g_iGravityHit[iIndex] = 0;
+		g_iGravityHitMode[iIndex] = 0;
+		g_flGravityRangeChance[iIndex] = 15.0;
+		g_flGravityValue[iIndex] = 0.3;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iHumanMode[type] = iGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
+	g_iGravityAbility[type] = iGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iGravityAbility[type], value, 0, 0, 3);
+	g_iGravityEffect[type] = iGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iGravityEffect[type], value, 0, 0, 7);
+	g_iGravityMessage[type] = iGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iGravityMessage[type], value, 0, 0, 7);
+	g_flGravityChance[type] = flGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", main, g_flGravityChance[type], value, 33.3, 0.0, 100.0);
+	g_flGravityDuration[type] = flGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", main, g_flGravityDuration[type], value, 5.0, 0.1, 9999999999.0);
+	g_flGravityForce[type] = flGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityForce", "Gravity Force", "Gravity_Force", "force", main, g_flGravityForce[type], value, -50.0, -100.0, 100.0);
+	g_iGravityHit[type] = iGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", main, g_iGravityHit[type], value, 0, 0, 1);
+	g_iGravityHitMode[type] = iGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", main, g_iGravityHitMode[type], value, 0, 0, 2);
+	g_flGravityRange[type] = flGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityRange", "Gravity Range", "Gravity_Range", "range", main, g_flGravityRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flGravityRangeChance[type] = flGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", main, g_flGravityRangeChance[type], value, 15.0, 0.0, 100.0);
+	g_flGravityValue[type] = flGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityValue", "Gravity Value", "Gravity_Value", "value", main, g_flGravityValue[type], value, 0.3, 0.1, 9999999999.0);
 }
 
 public void ST_OnPluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, "234"))
+		if (bIsTank(iTank, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveGravity(iTank);
 		}
@@ -389,6 +341,8 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
 			vRemoveGravity(iBot);
+
+			vReset2(iBot);
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -398,12 +352,14 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
 			vRemoveGravity(iTank);
+
+			vReset2(iTank);
 		}
 	}
 	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveGravity(iTank);
 
@@ -414,7 +370,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iGravityAbility(tank) > 0)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iGravityAbility[ST_GetTankType(tank)] > 0)
 	{
 		vGravityAbility(tank, true);
 		vGravityAbility(tank, false);
@@ -423,13 +379,13 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if ((iGravityAbility(tank) == 2 || iGravityAbility(tank) == 3) && iHumanAbility(tank) == 1)
+			if ((g_iGravityAbility[ST_GetTankType(tank)] == 2 || g_iGravityAbility[ST_GetTankType(tank)] == 3) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
-				switch (iHumanMode(tank))
+				switch (g_iHumanMode[ST_GetTankType(tank)])
 				{
 					case 0:
 					{
@@ -448,7 +404,7 @@ public void ST_OnButtonPressed(int tank, int button)
 					}
 					case 1:
 					{
-						if (g_iGravityCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+						if (g_iGravityCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 						{
 							if (!g_bGravity[tank] && !g_bGravity3[tank])
 							{
@@ -461,7 +417,7 @@ public void ST_OnButtonPressed(int tank, int button)
 									vGravity(tank);
 								}
 
-								ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityHuman", g_iGravityCount[tank], iHumanAmmo(tank));
+								ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityHuman", g_iGravityCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 							}
 						}
 						else
@@ -475,7 +431,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if ((iGravityAbility(tank) == 1 || iGravityAbility(tank) == 3) && iHumanAbility(tank) == 1)
+			if ((g_iGravityAbility[ST_GetTankType(tank)] == 1 || g_iGravityAbility[ST_GetTankType(tank)] == 3) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				if (!g_bGravity4[tank] && !g_bGravity5[tank])
 				{
@@ -496,13 +452,13 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if ((iGravityAbility(tank) == 2 || iGravityAbility(tank) == 3) && iHumanAbility(tank) == 1)
+			if ((g_iGravityAbility[ST_GetTankType(tank)] == 2 || g_iGravityAbility[ST_GetTankType(tank)] == 3) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
-				if (iHumanMode(tank) == 1 && g_bGravity[tank] && !g_bGravity3[tank])
+				if (g_iHumanMode[ST_GetTankType(tank)] == 1 && g_bGravity[tank] && !g_bGravity3[tank])
 				{
 					vReset3(tank);
 				}
@@ -511,20 +467,19 @@ public void ST_OnButtonReleased(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
-	if (ST_IsTankSupported(tank))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 	{
 		vRemoveGravity(tank);
 	}
 
-	vReset2(tank);
+	vReset2(tank, revert);
 }
 
 static void vGravity(int tank)
 {
-	float flGravityForce = !g_bTankConfig[ST_GetTankType(tank)] ? g_flGravityForce[ST_GetTankType(tank)] : g_flGravityForce2[ST_GetTankType(tank)],
-		flOrigin[3], flAngles[3];
+	float flOrigin[3], flAngles[3];
 	GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 	GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 	flAngles[0] += -90.0;
@@ -532,7 +487,7 @@ static void vGravity(int tank)
 	DispatchKeyValueVector(g_iGravity[tank], "origin", flOrigin);
 	DispatchKeyValueVector(g_iGravity[tank], "angles", flAngles);
 	DispatchKeyValue(g_iGravity[tank], "radius", "750");
-	DispatchKeyValueFloat(g_iGravity[tank], "magnitude", flGravityForce);
+	DispatchKeyValueFloat(g_iGravity[tank], "magnitude", g_flGravityForce[ST_GetTankType(tank)]);
 	DispatchKeyValue(g_iGravity[tank], "spawnflags", "8");
 	vSetEntityParent(g_iGravity[tank], tank, true);
 	AcceptEntityInput(g_iGravity[tank], "Enable");
@@ -544,32 +499,29 @@ static void vGravityAbility(int tank, bool main)
 	{
 		case true:
 		{
-			if (iGravityAbility(tank) == 1 || iGravityAbility(tank) == 3)
+			if (g_iGravityAbility[ST_GetTankType(tank)] == 1 || g_iGravityAbility[ST_GetTankType(tank)] == 3)
 			{
-				if (g_iGravityCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+				if (g_iGravityCount2[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 				{
 					g_bGravity6[tank] = false;
 					g_bGravity7[tank] = false;
 
-					float flGravityRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flGravityRange[ST_GetTankType(tank)] : g_flGravityRange2[ST_GetTankType(tank)],
-						flGravityRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flGravityRangeChance[ST_GetTankType(tank)] : g_flGravityRangeChance2[ST_GetTankType(tank)],
-						flTankPos[3];
-
+					float flTankPos[3];
 					GetClientAbsOrigin(tank, flTankPos);
 
 					int iSurvivorCount;
 
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
-						if (bIsSurvivor(iSurvivor, "234"))
+						if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 						{
 							float flSurvivorPos[3];
 							GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 							float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-							if (flDistance <= flGravityRange)
+							if (flDistance <= g_flGravityRange[ST_GetTankType(tank)])
 							{
-								vGravityHit(iSurvivor, tank, flGravityRangeChance, iGravityAbility(tank), "2", "3");
+								vGravityHit(iSurvivor, tank, g_flGravityRangeChance[ST_GetTankType(tank)], g_iGravityAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 								iSurvivorCount++;
 							}
@@ -578,13 +530,13 @@ static void vGravityAbility(int tank, bool main)
 
 					if (iSurvivorCount == 0)
 					{
-						if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+						if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 						{
 							ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityHuman8");
 						}
 					}
 				}
-				else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+				else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityAmmo2");
 				}
@@ -592,33 +544,31 @@ static void vGravityAbility(int tank, bool main)
 		}
 		case false:
 		{
-			if ((iGravityAbility(tank) == 2 || iGravityAbility(tank) == 3) && !g_bGravity[tank])
+			if ((g_iGravityAbility[ST_GetTankType(tank)] == 2 || g_iGravityAbility[ST_GetTankType(tank)] == 3) && !g_bGravity[tank])
 			{
-				if (g_iGravityCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+				if (g_iGravityCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 				{
 					g_bGravity[tank] = true;
 
 					g_iGravity[tank] = CreateEntityByName("point_push");
 					if (bIsValidEntity(g_iGravity[tank]))
 					{
-						if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+						if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 						{
 							g_iGravityCount[tank]++;
 
-							ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityHuman", g_iGravityCount[tank], iHumanAmmo(tank));
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityHuman", g_iGravityCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 						}
 
 						vGravity(tank);
 
 						DataPack dpGravity;
-						CreateDataTimer(flGravityDuration(tank), tTimerGravity, dpGravity, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+						CreateDataTimer(g_flGravityDuration[ST_GetTankType(tank)], tTimerGravity, dpGravity, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 						dpGravity.WriteCell(GetClientUserId(tank));
 						dpGravity.WriteCell(ST_GetTankType(tank));
 						dpGravity.WriteFloat(GetEngineTime());
 
-						char sGravityMessage[4];
-						sGravityMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sGravityMessage[ST_GetTankType(tank)] : g_sGravityMessage2[ST_GetTankType(tank)];
-						if (StrContains(sGravityMessage, "3") != -1)
+						if (g_iGravityMessage[ST_GetTankType(tank)] & ST_MESSAGE_SPECIAL)
 						{
 							char sTankName[33];
 							ST_GetTankName(tank, sTankName);
@@ -626,7 +576,7 @@ static void vGravityAbility(int tank, bool main)
 						}
 					}
 				}
-				else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+				else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 				{
 					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityAmmo");
 				}
@@ -635,50 +585,45 @@ static void vGravityAbility(int tank, bool main)
 	}
 }
 
-static void vGravityHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
+static void vGravityHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
 	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor))
 	{
-		if (g_iGravityCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iGravityCount2[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bGravity2[survivor])
 			{
 				g_bGravity2[survivor] = true;
 				g_iGravityOwner[survivor] = tank;
 
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bGravity4[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE) && !g_bGravity4[tank])
 				{
 					g_bGravity4[tank] = true;
 					g_iGravityCount2[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityHuman2", g_iGravityCount2[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityHuman2", g_iGravityCount2[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 				}
 
-				float flGravityValue = !g_bTankConfig[ST_GetTankType(tank)] ? g_flGravityValue[ST_GetTankType(tank)] : g_flGravityValue2[ST_GetTankType(tank)];
-				SetEntityGravity(survivor, flGravityValue);
+				SetEntityGravity(survivor, g_flGravityValue[ST_GetTankType(tank)]);
 
 				DataPack dpStopGravity;
-				CreateDataTimer(flGravityDuration(tank), tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer(g_flGravityDuration[ST_GetTankType(tank)], tTimerStopGravity, dpStopGravity, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopGravity.WriteCell(GetClientUserId(survivor));
 				dpStopGravity.WriteCell(GetClientUserId(tank));
-				dpStopGravity.WriteString(message);
+				dpStopGravity.WriteCell(messages);
 
-				char sGravityEffect[4];
-				sGravityEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sGravityEffect[ST_GetTankType(tank)] : g_sGravityEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, sGravityEffect, mode);
+				vEffect(survivor, tank, g_iGravityEffect[ST_GetTankType(tank)], flags);
 
-				char sGravityMessage[4];
-				sGravityMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sGravityMessage[ST_GetTankType(tank)] : g_sGravityMessage2[ST_GetTankType(tank)];
-				if (StrContains(sGravityMessage, message) != -1)
+				if (g_iGravityMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
-					ST_PrintToChatAll("%s %t", ST_TAG2, "Gravity", sTankName, survivor, flGravityValue);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Gravity", sTankName, survivor, g_flGravityValue[ST_GetTankType(tank)]);
 				}
 			}
-			else if (StrEqual(mode, "3") && !g_bGravity4[tank])
+			else if ((flags & ST_ATTACK_RANGE) && !g_bGravity4[tank])
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bGravity6[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bGravity6[tank])
 				{
 					g_bGravity6[tank] = true;
 
@@ -686,7 +631,7 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, const
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bGravity7[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bGravity7[tank])
 		{
 			g_bGravity7[tank] = true;
 
@@ -702,11 +647,11 @@ static void vRemoveGravity(int tank)
 		RemoveEntity(g_iGravity[tank]);
 	}
 
-	g_iGravity[tank] = 0;
+	g_iGravity[tank] = INVALID_ENT_REFERENCE;
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, "234") && g_bGravity2[iSurvivor] && g_iGravityOwner[iSurvivor] == tank)
+		if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bGravity2[iSurvivor] && g_iGravityOwner[iSurvivor] == tank)
 		{
 			g_bGravity2[iSurvivor] = false;
 			g_iGravityOwner[iSurvivor] = 0;
@@ -720,7 +665,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vReset2(iPlayer);
 
@@ -729,16 +674,20 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank)
+static void vReset2(int tank, bool revert = false)
 {
-	g_bGravity[tank] = false;
+	if (!revert)
+	{
+		g_bGravity[tank] = false;
+	}
+
 	g_bGravity2[tank] = false;
 	g_bGravity3[tank] = false;
 	g_bGravity4[tank] = false;
 	g_bGravity5[tank] = false;
 	g_bGravity6[tank] = false;
 	g_bGravity7[tank] = false;
-	g_iGravity[tank] = 0;
+	g_iGravity[tank] = INVALID_ENT_REFERENCE;
 	g_iGravityCount[tank] = 0;
 	g_iGravityCount2[tank] = 0;
 }
@@ -753,11 +702,13 @@ static void vReset3(int tank)
 		RemoveEntity(g_iGravity[tank]);
 	}
 
+	g_iGravity[tank] = INVALID_ENT_REFERENCE;
+
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "GravityHuman9");
 
-	if (g_iGravityCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iGravityCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
@@ -765,63 +716,23 @@ static void vReset3(int tank)
 	}
 }
 
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static float flGravityChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flGravityChance[ST_GetTankType(tank)] : g_flGravityChance2[ST_GetTankType(tank)];
-}
-
-static float flGravityDuration(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flGravityDuration[ST_GetTankType(tank)] : g_flGravityDuration2[ST_GetTankType(tank)];
-}
-
-static int iGravityAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iGravityAbility[ST_GetTankType(tank)] : g_iGravityAbility2[ST_GetTankType(tank)];
-}
-
-static int iGravityHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iGravityHit[ST_GetTankType(tank)] : g_iGravityHit2[ST_GetTankType(tank)];
-}
-
-static int iGravityHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iGravityHitMode[ST_GetTankType(tank)] : g_iGravityHitMode2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iHumanMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
-}
-
 public Action tTimerGravity(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bGravity[iTank])
+	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bGravity[iTank])
 	{
 		g_bGravity[iTank] = false;
 
-		char sGravityMessage[4];
-		sGravityMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sGravityMessage[ST_GetTankType(iTank)] : g_sGravityMessage2[ST_GetTankType(iTank)];
-		if (StrContains(sGravityMessage, "3") != -1)
+		if (bIsValidEntity(g_iGravity[iTank]))
+		{
+			RemoveEntity(g_iGravity[iTank]);
+		}
+
+		g_iGravity[iTank] = INVALID_ENT_REFERENCE;
+
+		if (g_iGravityMessage[ST_GetTankType(iTank)] & ST_MESSAGE_SPECIAL)
 		{
 			char sTankName[33];
 			ST_GetTankName(iTank, sTankName);
@@ -832,7 +743,7 @@ public Action tTimerGravity(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flGravityDuration(iTank)) < GetEngineTime() && !g_bGravity3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && g_iHumanMode[ST_GetTankType(iTank)] == 0 && (flTime + g_flGravityDuration[ST_GetTankType(iTank)]) < GetEngineTime() && !g_bGravity3[iTank])
 	{
 		vReset3(iTank);
 
@@ -856,7 +767,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bGravity2[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity2[iSurvivor])
 	{
 		g_bGravity2[iSurvivor] = false;
 		g_iGravityOwner[iSurvivor] = 0;
@@ -872,18 +783,17 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 
 	SetEntityGravity(iSurvivor, 1.0);
 
-	char sMessage[4];
-	pack.ReadString(sMessage, sizeof(sMessage));
+	int iMessage = pack.ReadCell();
 
-	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bGravity5[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bGravity5[iTank])
 	{
 		g_bGravity5[iTank] = true;
 
 		ST_PrintToChat(iTank, "%s %t", ST_TAG3, "GravityHuman10");
 
-		if (g_iGravityCount2[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
+		if (g_iGravityCount2[iTank] < g_iHumanAmmo[ST_GetTankType(iTank)] && g_iHumanAmmo[ST_GetTankType(iTank)] > 0)
 		{
-			CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown2, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_flHumanCooldown[ST_GetTankType(iTank)], tTimerResetCooldown2, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else
 		{
@@ -891,9 +801,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 		}
 	}
 
-	char sGravityMessage[4];
-	sGravityMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sGravityMessage[ST_GetTankType(iTank)] : g_sGravityMessage2[ST_GetTankType(iTank)];
-	if (StrContains(sGravityMessage, sMessage) != -1)
+	if (g_iGravityMessage[ST_GetTankType(iTank)] & iMessage)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Gravity2", iSurvivor);
 	}
@@ -904,7 +812,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bGravity3[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity3[iTank])
 	{
 		g_bGravity3[iTank] = false;
 
@@ -921,7 +829,7 @@ public Action tTimerResetCooldown(Handle timer, int userid)
 public Action tTimerResetCooldown2(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bGravity5[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bGravity5[iTank])
 	{
 		g_bGravity5[iTank] = false;
 

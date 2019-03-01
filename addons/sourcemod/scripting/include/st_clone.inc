@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -22,6 +22,16 @@
  * @return				True if clone can use abilities, false otherwise.
  **/
 native bool ST_IsCloneSupported(int tank, bool clone);
+
+stock bool bIsCloneAllowed(int tank, bool clone)
+{
+	if (clone && !ST_IsCloneSupported(tank, clone))
+	{
+		return false;
+	}
+
+	return true;
+}
 
 public SharedPlugin __pl_supertankspluspluscloneability = 
 {

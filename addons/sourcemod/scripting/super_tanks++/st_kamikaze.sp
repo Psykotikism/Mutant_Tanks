@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -30,20 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define PARTICLE_BLOOD "boomer_explode_D"
-
-#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav"
-#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav"
-
-#define ST_MENU_KAMIKAZE "Kamikaze Ability"
-
-bool g_bCloneInstalled, g_bKamikaze[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sKamikazeEffect[ST_MAXTYPES + 1][4], g_sKamikazeEffect2[ST_MAXTYPES + 1][4], g_sKamikazeMessage[ST_MAXTYPES + 1][3], g_sKamikazeMessage2[ST_MAXTYPES + 1][3];
-
-float g_flKamikazeChance[ST_MAXTYPES + 1], g_flKamikazeChance2[ST_MAXTYPES + 1], g_flKamikazeRange[ST_MAXTYPES + 1], g_flKamikazeRange2[ST_MAXTYPES + 1], g_flKamikazeRangeChance[ST_MAXTYPES + 1], g_flKamikazeRangeChance2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iKamikazeAbility[ST_MAXTYPES + 1], g_iKamikazeAbility2[ST_MAXTYPES + 1], g_iKamikazeHit[ST_MAXTYPES + 1], g_iKamikazeHit2[ST_MAXTYPES + 1], g_iKamikazeHitMode[ST_MAXTYPES + 1], g_iKamikazeHitMode2[ST_MAXTYPES + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -58,6 +45,19 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define PARTICLE_BLOOD "boomer_explode_D"
+
+#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav"
+#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav"
+
+#define ST_MENU_KAMIKAZE "Kamikaze Ability"
+
+bool g_bCloneInstalled, g_bKamikaze[MAXPLAYERS + 1];
+
+float g_flKamikazeChance[ST_MAXTYPES + 1], g_flKamikazeRange[ST_MAXTYPES + 1], g_flKamikazeRangeChance[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iKamikazeAbility[ST_MAXTYPES + 1], g_iKamikazeEffect[ST_MAXTYPES + 1], g_iKamikazeHit[ST_MAXTYPES + 1], g_iKamikazeHitMode[ST_MAXTYPES + 1], g_iKamikazeMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -91,7 +91,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -132,7 +132,7 @@ public Action cmdKamikazeInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -168,13 +168,13 @@ public int iKamikazeMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iKamikazeAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iKamikazeAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "KamikazeDetails");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vKamikazeMenu(param1, menu.Selection);
 			}
@@ -233,90 +233,54 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iKamikazeHitMode(attacker) == 0 || iKamikazeHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iKamikazeHitMode[ST_GetTankType(attacker)] == 0 || g_iKamikazeHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vKamikazeHit(victim, attacker, flKamikazeChance(attacker), iKamikazeHit(attacker), "1", "1");
+				vKamikazeHit(victim, attacker, g_flKamikazeChance[ST_GetTankType(attacker)], g_iKamikazeHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iKamikazeHitMode(victim) == 0 || iKamikazeHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iKamikazeHitMode[ST_GetTankType(victim)] == 0 || g_iKamikazeHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vKamikazeHit(attacker, victim, flKamikazeChance(victim), iKamikazeHit(victim), "1", "2");
+				vKamikazeHit(attacker, victim, g_flKamikazeChance[ST_GetTankType(victim)], g_iKamikazeHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iKamikazeAbility[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Enabled", 0);
-					g_iKamikazeAbility[iIndex] = iClamp(g_iKamikazeAbility[iIndex], 0, 1);
-					kvSuperTanks.GetString("Kamikaze Ability/Ability Effect", g_sKamikazeEffect[iIndex], sizeof(g_sKamikazeEffect[]), "0");
-					kvSuperTanks.GetString("Kamikaze Ability/Ability Message", g_sKamikazeMessage[iIndex], sizeof(g_sKamikazeMessage[]), "0");
-					g_flKamikazeChance[iIndex] = kvSuperTanks.GetFloat("Kamikaze Ability/Kamikaze Chance", 33.3);
-					g_flKamikazeChance[iIndex] = flClamp(g_flKamikazeChance[iIndex], 0.0, 100.0);
-					g_iKamikazeHit[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit", 0);
-					g_iKamikazeHit[iIndex] = iClamp(g_iKamikazeHit[iIndex], 0, 1);
-					g_iKamikazeHitMode[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit Mode", 0);
-					g_iKamikazeHitMode[iIndex] = iClamp(g_iKamikazeHitMode[iIndex], 0, 2);
-					g_flKamikazeRange[iIndex] = kvSuperTanks.GetFloat("Kamikaze Ability/Kamikaze Range", 150.0);
-					g_flKamikazeRange[iIndex] = flClamp(g_flKamikazeRange[iIndex], 1.0, 9999999999.0);
-					g_flKamikazeRangeChance[iIndex] = kvSuperTanks.GetFloat("Kamikaze Ability/Kamikaze Range Chance", 15.0);
-					g_flKamikazeRangeChance[iIndex] = flClamp(g_flKamikazeRangeChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iKamikazeAbility2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Ability Enabled", g_iKamikazeAbility[iIndex]);
-					g_iKamikazeAbility2[iIndex] = iClamp(g_iKamikazeAbility2[iIndex], 0, 1);
-					kvSuperTanks.GetString("Kamikaze Ability/Ability Effect", g_sKamikazeEffect2[iIndex], sizeof(g_sKamikazeEffect2[]), g_sKamikazeEffect[iIndex]);
-					kvSuperTanks.GetString("Kamikaze Ability/Ability Message", g_sKamikazeMessage2[iIndex], sizeof(g_sKamikazeMessage2[]), g_sKamikazeMessage[iIndex]);
-					g_flKamikazeChance2[iIndex] = kvSuperTanks.GetFloat("Kamikaze Ability/Kamikaze Chance", g_flKamikazeChance[iIndex]);
-					g_flKamikazeChance2[iIndex] = flClamp(g_flKamikazeChance2[iIndex], 0.0, 100.0);
-					g_iKamikazeHit2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit", g_iKamikazeHit[iIndex]);
-					g_iKamikazeHit2[iIndex] = iClamp(g_iKamikazeHit2[iIndex], 0, 1);
-					g_iKamikazeHitMode2[iIndex] = kvSuperTanks.GetNum("Kamikaze Ability/Kamikaze Hit Mode", g_iKamikazeHitMode[iIndex]);
-					g_iKamikazeHitMode2[iIndex] = iClamp(g_iKamikazeHitMode2[iIndex], 0, 2);
-					g_flKamikazeRange2[iIndex] = kvSuperTanks.GetFloat("Kamikaze Ability/Kamikaze Range", g_flKamikazeRange[iIndex]);
-					g_flKamikazeRange2[iIndex] = flClamp(g_flKamikazeRange2[iIndex], 1.0, 9999999999.0);
-					g_flKamikazeRangeChance2[iIndex] = kvSuperTanks.GetFloat("Kamikaze Ability/Kamikaze Range Chance", g_flKamikazeRangeChance[iIndex]);
-					g_flKamikazeRangeChance2[iIndex] = flClamp(g_flKamikazeRangeChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iKamikazeAbility[iIndex] = 0;
+		g_iKamikazeEffect[iIndex] = 0;
+		g_iKamikazeMessage[iIndex] = 0;
+		g_flKamikazeChance[iIndex] = 33.3;
+		g_iKamikazeHit[iIndex] = 0;
+		g_iKamikazeHitMode[iIndex] = 0;
+		g_flKamikazeRange[iIndex] = 150.0;
+		g_flKamikazeRangeChance[iIndex] = 15.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iKamikazeAbility[type] = iGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iKamikazeAbility[type], value, 0, 0, 1);
+	g_iKamikazeEffect[type] = iGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iKamikazeEffect[type], value, 0, 0, 7);
+	g_iKamikazeMessage[type] = iGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iKamikazeMessage[type], value, 0, 0, 3);
+	g_flKamikazeChance[type] = flGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", main, g_flKamikazeChance[type], value, 33.3, 0.0, 100.0);
+	g_iKamikazeHit[type] = iGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", main, g_iKamikazeHit[type], value, 0, 0, 1);
+	g_iKamikazeHitMode[type] = iGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", main, g_iKamikazeHitMode[type], value, 0, 0, 2);
+	g_flKamikazeRange[type] = flGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", main, g_flKamikazeRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flKamikazeRangeChance[type] = flGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", main, g_flKamikazeRangeChance[type], value, 15.0, 0.0, 100.0);
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -324,9 +288,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
-			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iKamikazeAbility(iTank) == 1)
+			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_iKamikazeAbility[ST_GetTankType(iTank)] == 1)
 			{
 				vKamikaze(iTank, iTank);
 			}
@@ -338,7 +302,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iKamikazeAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iKamikazeAbility[ST_GetTankType(tank)] == 1)
 	{
 		vKamikazeAbility(tank);
 	}
@@ -346,11 +310,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iKamikazeAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iKamikazeAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				vKamikazeAbility(tank);
 			}
@@ -358,7 +322,7 @@ public void ST_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	vRemoveKamikaze(tank);
 }
@@ -374,25 +338,22 @@ static void vKamikazeAbility(int tank)
 {
 	g_bKamikaze[tank] = false;
 
-	float flKamikazeRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flKamikazeRange[ST_GetTankType(tank)] : g_flKamikazeRange2[ST_GetTankType(tank)],
-		flKamikazeRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flKamikazeRangeChance[ST_GetTankType(tank)] : g_flKamikazeRangeChance2[ST_GetTankType(tank)],
-		flTankPos[3];
-
+	float flTankPos[3];
 	GetClientAbsOrigin(tank, flTankPos);
 
 	int iSurvivorCount;
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, "234"))
+		if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 		{
 			float flSurvivorPos[3];
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 			float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-			if (flDistance <= flKamikazeRange)
+			if (flDistance <= g_flKamikazeRange[ST_GetTankType(tank)])
 			{
-				vKamikazeHit(iSurvivor, tank, flKamikazeRangeChance, iKamikazeAbility(tank), "2", "3");
+				vKamikazeHit(iSurvivor, tank, g_flKamikazeRangeChance[ST_GetTankType(tank)], g_iKamikazeAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 				iSurvivorCount++;
 			}
@@ -401,20 +362,20 @@ static void vKamikazeAbility(int tank)
 
 	if (iSurvivorCount == 0)
 	{
-		if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+		if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "KamikazeHuman3");
 		}
 	}
 }
 
-static void vKamikazeHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
+static void vKamikazeHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= chance)
 		{
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3"))
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE))
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "KamikazeHuman");
 			}
@@ -427,22 +388,18 @@ static void vKamikazeHit(int survivor, int tank, float chance, int enabled, cons
 			vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
 			ForcePlayerSuicide(tank);
 
-			char sKamikazeEffect[4];
-			sKamikazeEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sKamikazeEffect[ST_GetTankType(tank)] : g_sKamikazeEffect2[ST_GetTankType(tank)];
-			vEffect(survivor, tank, sKamikazeEffect, mode);
+			vEffect(survivor, tank, g_iKamikazeEffect[ST_GetTankType(tank)], flags);
 
-			char sKamikazeMessage[3];
-			sKamikazeMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sKamikazeMessage[ST_GetTankType(tank)] : g_sKamikazeMessage2[ST_GetTankType(tank)];
-			if (StrContains(sKamikazeMessage, message) != -1)
+			if (g_iKamikazeMessage[ST_GetTankType(tank)] & messages)
 			{
 				char sTankName[33];
 				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Kamikaze", sTankName, survivor);
 			}
 		}
-		else if (StrEqual(mode, "3"))
+		else if ((flags & ST_ATTACK_RANGE))
 		{
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bKamikaze[tank])
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bKamikaze[tank])
 			{
 				g_bKamikaze[tank] = true;
 
@@ -461,34 +418,9 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveKamikaze(iPlayer);
 		}
 	}
-}
-
-static float flKamikazeChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flKamikazeChance[ST_GetTankType(tank)] : g_flKamikazeChance2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iKamikazeAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iKamikazeAbility[ST_GetTankType(tank)] : g_iKamikazeAbility2[ST_GetTankType(tank)];
-}
-
-static int iKamikazeHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iKamikazeHit[ST_GetTankType(tank)] : g_iKamikazeHit2[ST_GetTankType(tank)];
-}
-
-static int iKamikazeHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iKamikazeHitMode[ST_GetTankType(tank)] : g_iKamikazeHitMode2[ST_GetTankType(tank)];
 }

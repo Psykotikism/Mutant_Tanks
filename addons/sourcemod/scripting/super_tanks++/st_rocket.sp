@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -30,21 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
-
-#define SOUND_EXPLOSION "ambient/explosions/exp2.wav"
-#define SOUND_FIRE "weapons/rpg/rocketfire1.wav"
-#define SOUND_LAUNCH "npc/env_headcrabcanister/launch.wav"
-
-#define ST_MENU_ROCKET "Rocket Ability"
-
-bool g_bCloneInstalled, g_bLateLoad, g_bRocket[MAXPLAYERS + 1], g_bRocket2[MAXPLAYERS + 1], g_bRocket3[MAXPLAYERS + 1], g_bRocket4[MAXPLAYERS + 1], g_bRocket5[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sRocketEffect[ST_MAXTYPES + 1][4], g_sRocketEffect2[ST_MAXTYPES + 1][4], g_sRocketMessage[ST_MAXTYPES + 1][3], g_sRocketMessage2[ST_MAXTYPES + 1][3];
-
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flRocketChance[ST_MAXTYPES + 1], g_flRocketChance2[ST_MAXTYPES + 1], g_flRocketDelay[ST_MAXTYPES + 1], g_flRocketDelay2[ST_MAXTYPES + 1], g_flRocketRange[ST_MAXTYPES + 1], g_flRocketRange2[ST_MAXTYPES + 1], g_flRocketRangeChance[ST_MAXTYPES + 1], g_flRocketRangeChance2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iRocket[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketAbility2[ST_MAXTYPES + 1], g_iRocketCount[MAXPLAYERS + 1], g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHit2[ST_MAXTYPES + 1], g_iRocketHitMode[ST_MAXTYPES + 1], g_iRocketHitMode2[ST_MAXTYPES + 1], g_iRocketOwner[MAXPLAYERS + 1], g_iRocketSprite = -1;
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -59,6 +45,20 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
+
+#define SOUND_EXPLOSION "ambient/explosions/exp2.wav"
+#define SOUND_FIRE "weapons/rpg/rocketfire1.wav"
+#define SOUND_LAUNCH "npc/env_headcrabcanister/launch.wav"
+
+#define ST_MENU_ROCKET "Rocket Ability"
+
+bool g_bCloneInstalled, g_bRocket[MAXPLAYERS + 1], g_bRocket2[MAXPLAYERS + 1], g_bRocket3[MAXPLAYERS + 1], g_bRocket4[MAXPLAYERS + 1], g_bRocket5[MAXPLAYERS + 1];
+
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flRocketChance[ST_MAXTYPES + 1], g_flRocketDelay[ST_MAXTYPES + 1], g_flRocketRange[ST_MAXTYPES + 1], g_flRocketRangeChance[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketCount[MAXPLAYERS + 1], g_iRocketEffect[ST_MAXTYPES + 1], g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHitMode[ST_MAXTYPES + 1], g_iRocketMessage[ST_MAXTYPES + 1], g_iRocketOwner[MAXPLAYERS + 1], g_iRocketSprite = -1;
 
 public void OnAllPluginsLoaded()
 {
@@ -92,7 +92,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -134,7 +134,7 @@ public Action cmdRocketInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -172,15 +172,15 @@ public int iRocketMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iRocketAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iRocketCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iRocketAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iRocketCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "RocketDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vRocketMenu(param1, menu.Selection);
 			}
@@ -249,109 +249,67 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if ((iRocketHitMode(attacker) == 0 || iRocketHitMode(attacker) == 1) && ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
+		if ((g_iRocketHitMode[ST_GetTankType(attacker)] == 0 || g_iRocketHitMode[ST_GetTankType(attacker)] == 1) && ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRocketHit(victim, attacker, flRocketChance(attacker), iRocketHit(attacker), "1", "1");
+				vRocketHit(victim, attacker, g_flRocketChance[ST_GetTankType(attacker)], g_iRocketHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if ((iRocketHitMode(victim) == 0 || iRocketHitMode(victim) == 2) && ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
+		else if ((g_iRocketHitMode[ST_GetTankType(victim)] == 0 || g_iRocketHitMode[ST_GetTankType(victim)] == 2) && ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vRocketHit(attacker, victim, flRocketChance(victim), iRocketHit(victim), "1", "2");
+				vRocketHit(attacker, victim, g_flRocketChance[ST_GetTankType(victim)], g_iRocketHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iRocketAbility[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", 0);
-					g_iRocketAbility[iIndex] = iClamp(g_iRocketAbility[iIndex], 0, 1);
-					kvSuperTanks.GetString("Rocket Ability/Ability Effect", g_sRocketEffect[iIndex], sizeof(g_sRocketEffect[]), "0");
-					kvSuperTanks.GetString("Rocket Ability/Ability Message", g_sRocketMessage[iIndex], sizeof(g_sRocketMessage[]), "0");
-					g_flRocketChance[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Chance", 33.3);
-					g_flRocketChance[iIndex] = flClamp(g_flRocketChance[iIndex], 0.0, 100.0);
-					g_flRocketDelay[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Delay", 1.0);
-					g_flRocketDelay[iIndex] = flClamp(g_flRocketDelay[iIndex], 0.1, 9999999999.0);
-					g_iRocketHit[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit", 0);
-					g_iRocketHit[iIndex] = iClamp(g_iRocketHit[iIndex], 0, 1);
-					g_iRocketHitMode[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit Mode", 0);
-					g_iRocketHitMode[iIndex] = iClamp(g_iRocketHitMode[iIndex], 0, 2);
-					g_flRocketRange[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range", 150.0);
-					g_flRocketRange[iIndex] = flClamp(g_flRocketRange[iIndex], 1.0, 9999999999.0);
-					g_flRocketRangeChance[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range Chance", 15.0);
-					g_flRocketRangeChance[iIndex] = flClamp(g_flRocketRangeChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iRocketAbility2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Ability Enabled", g_iRocketAbility[iIndex]);
-					g_iRocketAbility2[iIndex] = iClamp(g_iRocketAbility2[iIndex], 0, 1);
-					kvSuperTanks.GetString("Rocket Ability/Ability Effect", g_sRocketEffect2[iIndex], sizeof(g_sRocketEffect2[]), g_sRocketEffect[iIndex]);
-					kvSuperTanks.GetString("Rocket Ability/Ability Message", g_sRocketMessage2[iIndex], sizeof(g_sRocketMessage2[]), g_sRocketMessage[iIndex]);
-					g_flRocketChance2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Chance", g_flRocketChance[iIndex]);
-					g_flRocketChance2[iIndex] = flClamp(g_flRocketChance2[iIndex], 0.0, 100.0);
-					g_flRocketDelay2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Delay", g_flRocketDelay[iIndex]);
-					g_flRocketDelay2[iIndex] = flClamp(g_flRocketDelay2[iIndex], 0.1, 9999999999.0);
-					g_iRocketHit2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit", g_iRocketHit[iIndex]);
-					g_iRocketHit2[iIndex] = iClamp(g_iRocketHit2[iIndex], 0, 1);
-					g_iRocketHitMode2[iIndex] = kvSuperTanks.GetNum("Rocket Ability/Rocket Hit Mode", g_iRocketHitMode[iIndex]);
-					g_iRocketHitMode2[iIndex] = iClamp(g_iRocketHitMode2[iIndex], 0, 2);
-					g_flRocketRange2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range", g_flRocketRange[iIndex]);
-					g_flRocketRange2[iIndex] = flClamp(g_flRocketRange2[iIndex], 1.0, 9999999999.0);
-					g_flRocketRangeChance2[iIndex] = kvSuperTanks.GetFloat("Rocket Ability/Rocket Range Chance", g_flRocketRangeChance[iIndex]);
-					g_flRocketRangeChance2[iIndex] = flClamp(g_flRocketRangeChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iRocketAbility[iIndex] = 0;
+		g_iRocketEffect[iIndex] = 0;
+		g_iRocketMessage[iIndex] = 0;
+		g_flRocketChance[iIndex] = 33.3;
+		g_flRocketDelay[iIndex] = 1.0;
+		g_iRocketHit[iIndex] = 0;
+		g_iRocketHitMode[iIndex] = 0;
+		g_flRocketRange[iIndex] = 150.0;
+		g_flRocketRangeChance[iIndex] = 15.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iRocketAbility[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iRocketAbility[type], value, 0, 0, 1);
+	g_iRocketEffect[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iRocketEffect[type], value, 0, 0, 7);
+	g_iRocketMessage[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iRocketMessage[type], value, 0, 0, 3);
+	g_flRocketChance[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", main, g_flRocketChance[type], value, 33.3, 0.0, 100.0);
+	g_flRocketDelay[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", main, g_flRocketDelay[type], value, 1.0, 0.1, 9999999999.0);
+	g_iRocketHit[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", main, g_iRocketHit[type], value, 0, 0, 1);
+	g_iRocketHitMode[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", main, g_iRocketHitMode[type], value, 0, 0, 2);
+	g_flRocketRange[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketRange", "Rocket Range", "Rocket_Range", "range", main, g_flRocketRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flRocketRangeChance[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", main, g_flRocketRangeChance[type], value, 15.0, 0.0, 100.0);
 }
 
 public void ST_OnPluginEnd()
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, "234") && g_bRocket[iSurvivor])
+		if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bRocket[iSurvivor])
 		{
 			SetEntityGravity(iSurvivor, 1.0);
 		}
@@ -363,7 +321,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveRocket(iTank);
 		}
@@ -372,7 +330,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iRocketAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iRocketAbility[ST_GetTankType(tank)] == 1)
 	{
 		vRocketAbility(tank);
 	}
@@ -380,11 +338,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iRocketAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iRocketAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				if (!g_bRocket2[tank] && !g_bRocket3[tank])
 				{
@@ -403,7 +361,7 @@ public void ST_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	vRemoveRocket(tank);
 }
@@ -412,7 +370,7 @@ static void vRemoveRocket(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor, "234") && g_bRocket[iSurvivor] && g_iRocketOwner[iSurvivor] == tank)
+		if (bIsHumanSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bRocket[iSurvivor] && g_iRocketOwner[iSurvivor] == tank)
 		{
 			g_bRocket[iSurvivor] = false;
 			g_iRocketOwner[iSurvivor] = 0;
@@ -426,7 +384,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vReset3(iPlayer);
 
@@ -455,30 +413,27 @@ static void vReset3(int tank)
 
 static void vRocketAbility(int tank)
 {
-	if (g_iRocketCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iRocketCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bRocket4[tank] = false;
 		g_bRocket5[tank] = false;
 
-		float flRocketRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flRocketRange[ST_GetTankType(tank)] : g_flRocketRange2[ST_GetTankType(tank)],
-			flRocketRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flRocketRangeChance[ST_GetTankType(tank)] : g_flRocketRangeChance2[ST_GetTankType(tank)],
-			flTankPos[3];
-
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, "234"))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flRocketRange)
+				if (flDistance <= g_flRocketRange[ST_GetTankType(tank)])
 				{
-					vRocketHit(iSurvivor, tank, flRocketRangeChance, iRocketAbility(tank), "2", "3");
+					vRocketHit(iSurvivor, tank, g_flRocketRangeChance[ST_GetTankType(tank)], g_iRocketAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -487,23 +442,23 @@ static void vRocketAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketHuman5");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketAmmo");
 	}
 }
 
-static void vRocketHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
+static void vRocketHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iRocketCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iRocketCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bRocket[survivor])
 			{
@@ -516,17 +471,15 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, const 
 				g_bRocket[survivor] = true;
 				g_iRocketOwner[survivor] = tank;
 
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bRocket2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE) && !g_bRocket2[tank])
 				{
 					g_bRocket2[tank] = true;
 					g_iRocketCount[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketHuman", g_iRocketCount[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketHuman", g_iRocketCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 				}
 
-				float flRocketDelay = !g_bTankConfig[ST_GetTankType(tank)] ? g_flRocketDelay[ST_GetTankType(tank)] : g_flRocketDelay2[ST_GetTankType(tank)],
-					flPosition[3], flAngles[3];
-
+				float flPosition[3], flAngles[3];
 				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flPosition);
 				flPosition[2] += 30.0;
 				flAngles[0] = 90.0;
@@ -552,31 +505,28 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, const 
 				iFlame = EntIndexToEntRef(iFlame);
 				vDeleteEntity(iFlame, 3.0);
 
-				g_iRocket[survivor] = iFlame;
 				EmitSoundToAll(SOUND_FIRE, survivor, _, _, _, 1.0);
 
 				DataPack dpRocketLaunch;
-				CreateDataTimer(flRocketDelay, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer(g_flRocketDelay[ST_GetTankType(tank)], tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
 				dpRocketLaunch.WriteCell(GetClientUserId(survivor));
 				dpRocketLaunch.WriteCell(GetClientUserId(tank));
 				dpRocketLaunch.WriteCell(ST_GetTankType(tank));
 				dpRocketLaunch.WriteCell(enabled);
 
 				DataPack dpRocketDetonate;
-				CreateDataTimer(flRocketDelay + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer(g_flRocketDelay[ST_GetTankType(tank)] + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
 				dpRocketDetonate.WriteCell(GetClientUserId(survivor));
 				dpRocketDetonate.WriteCell(GetClientUserId(tank));
 				dpRocketDetonate.WriteCell(ST_GetTankType(tank));
 				dpRocketDetonate.WriteCell(enabled);
-				dpRocketDetonate.WriteString(message);
+				dpRocketDetonate.WriteCell(messages);
 
-				char sRocketEffect[4];
-				sRocketEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sRocketEffect[ST_GetTankType(tank)] : g_sRocketEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, sRocketEffect, mode);
+				vEffect(survivor, tank, g_iRocketEffect[ST_GetTankType(tank)], flags);
 			}
-			else if (StrEqual(mode, "3") && !g_bRocket2[tank])
+			else if ((flags & ST_ATTACK_RANGE) && !g_bRocket2[tank])
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bRocket4[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bRocket4[tank])
 				{
 					g_bRocket4[tank] = true;
 
@@ -584,48 +534,13 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, const 
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bRocket5[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bRocket5[tank])
 		{
 			g_bRocket5[tank] = true;
 
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "RocketAmmo");
 		}
 	}
-}
-
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static float flRocketChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flRocketChance[ST_GetTankType(tank)] : g_flRocketChance2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iRocketAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRocketAbility[ST_GetTankType(tank)] : g_iRocketAbility2[ST_GetTankType(tank)];
-}
-
-static int iRocketHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRocketHit[ST_GetTankType(tank)] : g_iRocketHit2[ST_GetTankType(tank)];
-}
-
-static int iRocketHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRocketHitMode[ST_GetTankType(tank)] : g_iRocketHitMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerRocketLaunch(Handle timer, DataPack pack)
@@ -642,7 +557,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
 	{
 		g_bRocket2[iTank] = false;
 
@@ -679,9 +594,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
-	char sMessage[3];
-	pack.ReadString(sMessage, sizeof(sMessage));
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
 	{
 		g_bRocket2[iTank] = false;
 
@@ -696,14 +609,11 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	TE_SetupExplosion(flPosition, g_iRocketSprite, 10.0, 1, 0, 600, 5000);
 	TE_SendToAll();
 
-	g_iRocket[iSurvivor] = 0;
-
 	ForcePlayerSuicide(iSurvivor);
 	SetEntityGravity(iSurvivor, 1.0);
 
-	char sRocketMessage[3];
-	sRocketMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sRocketMessage[ST_GetTankType(iTank)] : g_sRocketMessage2[ST_GetTankType(iTank)];
-	if (StrContains(sRocketMessage, sMessage) != -1)
+	int iMessage = pack.ReadCell();
+	if (g_iRocketMessage[ST_GetTankType(iTank)] & iMessage)
 	{
 		char sTankName[33];
 		ST_GetTankName(iTank, sTankName);
@@ -714,15 +624,15 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	g_bRocket2[iTank] = false;
 	g_iRocketOwner[iSurvivor] = 0;
 
-	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bRocket3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bRocket3[iTank])
 	{
 		g_bRocket3[iTank] = true;
 
 		ST_PrintToChat(iTank, "%s %t", ST_TAG3, "RocketHuman6");
 
-		if (g_iRocketCount[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
+		if (g_iRocketCount[iTank] < g_iHumanAmmo[ST_GetTankType(iTank)] && g_iHumanAmmo[ST_GetTankType(iTank)] > 0)
 		{
-			CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_flHumanCooldown[ST_GetTankType(iTank)], tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else
 		{
@@ -736,7 +646,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bRocket3[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bRocket3[iTank])
 	{
 		g_bRocket3[iTank] = false;
 

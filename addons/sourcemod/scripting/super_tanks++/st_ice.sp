@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -30,17 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
-
-#define ST_MENU_ICE "Ice Ability"
-
-bool g_bCloneInstalled, g_bIce[MAXPLAYERS + 1], g_bIce2[MAXPLAYERS + 1], g_bIce3[MAXPLAYERS + 1], g_bIce4[MAXPLAYERS + 1], g_bIce5[MAXPLAYERS + 1], g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sIceEffect[ST_MAXTYPES + 1][4], g_sIceEffect2[ST_MAXTYPES + 1][4], g_sIceMessage[ST_MAXTYPES + 1][3], g_sIceMessage2[ST_MAXTYPES + 1][3];
-
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flIceChance[ST_MAXTYPES + 1], g_flIceChance2[ST_MAXTYPES + 1], g_flIceDuration[ST_MAXTYPES + 1], g_flIceDuration2[ST_MAXTYPES + 1], g_flIceRange[ST_MAXTYPES + 1], g_flIceRange2[ST_MAXTYPES + 1], g_flIceRangeChance[ST_MAXTYPES + 1], g_flIceRangeChance2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iIceAbility[ST_MAXTYPES + 1], g_iIceAbility2[ST_MAXTYPES + 1], g_iIceCount[MAXPLAYERS + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHit2[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceHitMode2[ST_MAXTYPES + 1], g_iIceOwner[MAXPLAYERS + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -55,6 +45,16 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
+
+#define ST_MENU_ICE "Ice Ability"
+
+bool g_bCloneInstalled, g_bIce[MAXPLAYERS + 1], g_bIce2[MAXPLAYERS + 1], g_bIce3[MAXPLAYERS + 1], g_bIce4[MAXPLAYERS + 1], g_bIce5[MAXPLAYERS + 1];
+
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flIceChance[ST_MAXTYPES + 1], g_flIceDuration[ST_MAXTYPES + 1], g_flIceRange[ST_MAXTYPES + 1], g_flIceRangeChance[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iIceAbility[ST_MAXTYPES + 1], g_iIceCount[MAXPLAYERS + 1], g_iIceEffect[ST_MAXTYPES + 1], g_iIceHit[ST_MAXTYPES + 1], g_iIceHitMode[ST_MAXTYPES + 1], g_iIceMessage[ST_MAXTYPES + 1], g_iIceOwner[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -88,7 +88,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -126,7 +126,7 @@ public Action cmdIceInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -165,16 +165,16 @@ public int iIceMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iIceAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iIceCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iIceAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iIceCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "IceDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flIceDuration(param1));
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", g_flIceDuration[ST_GetTankType(param1)]);
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vIceMenu(param1, menu.Selection);
 			}
@@ -248,109 +248,67 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if ((iIceHitMode(attacker) == 0 || iIceHitMode(attacker) == 1) && ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
+		if ((g_iIceHitMode[ST_GetTankType(attacker)] == 0 || g_iIceHitMode[ST_GetTankType(attacker)] == 1) && ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIceHit(victim, attacker, flIceChance(attacker), iIceHit(attacker), "1", "1");
+				vIceHit(victim, attacker, g_flIceChance[ST_GetTankType(attacker)], g_iIceHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if ((iIceHitMode(victim) == 0 || iIceHitMode(victim) == 2) && ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
+		else if ((g_iIceHitMode[ST_GetTankType(victim)] == 0 || g_iIceHitMode[ST_GetTankType(victim)] == 2) && ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vIceHit(attacker, victim, flIceChance(victim), iIceHit(victim), "1", "2");
+				vIceHit(attacker, victim, g_flIceChance[ST_GetTankType(victim)], g_iIceHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Ice Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Ice Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iIceAbility[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", 0);
-					g_iIceAbility[iIndex] = iClamp(g_iIceAbility[iIndex], 0, 1);
-					kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect[iIndex], sizeof(g_sIceEffect[]), "0");
-					kvSuperTanks.GetString("Ice Ability/Ability Message", g_sIceMessage[iIndex], sizeof(g_sIceMessage[]), "0");
-					g_flIceChance[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Chance", 33.3);
-					g_flIceChance[iIndex] = flClamp(g_flIceChance[iIndex], 0.0, 100.0);
-					g_flIceDuration[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", 5.0);
-					g_flIceDuration[iIndex] = flClamp(g_flIceDuration[iIndex], 0.1, 9999999999.0);
-					g_iIceHit[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Hit", 0);
-					g_iIceHit[iIndex] = iClamp(g_iIceHit[iIndex], 0, 1);
-					g_iIceHitMode[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Hit Mode", 0);
-					g_iIceHitMode[iIndex] = iClamp(g_iIceHitMode[iIndex], 0, 2);
-					g_flIceRange[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range", 150.0);
-					g_flIceRange[iIndex] = flClamp(g_flIceRange[iIndex], 1.0, 9999999999.0);
-					g_flIceRangeChance[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range Chance", 15.0);
-					g_flIceRangeChance[iIndex] = flClamp(g_flIceRangeChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iIceAbility2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ability Enabled", g_iIceAbility[iIndex]);
-					g_iIceAbility2[iIndex] = iClamp(g_iIceAbility2[iIndex], 0, 1);
-					kvSuperTanks.GetString("Ice Ability/Ability Effect", g_sIceEffect2[iIndex], sizeof(g_sIceEffect2[]), g_sIceEffect[iIndex]);
-					kvSuperTanks.GetString("Ice Ability/Ability Message", g_sIceMessage2[iIndex], sizeof(g_sIceMessage2[]), g_sIceMessage[iIndex]);
-					g_flIceChance2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Chance", g_flIceChance[iIndex]);
-					g_flIceChance2[iIndex] = flClamp(g_flIceChance2[iIndex], 0.0, 100.0);
-					g_flIceDuration2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Duration", g_flIceDuration[iIndex]);
-					g_flIceDuration2[iIndex] = flClamp(g_flIceDuration2[iIndex], 0.1, 9999999999.0);
-					g_iIceHit2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Hit", g_iIceHit[iIndex]);
-					g_iIceHit2[iIndex] = iClamp(g_iIceHit2[iIndex], 0, 1);
-					g_iIceHitMode2[iIndex] = kvSuperTanks.GetNum("Ice Ability/Ice Hit Mode", g_iIceHitMode[iIndex]);
-					g_iIceHitMode2[iIndex] = iClamp(g_iIceHitMode2[iIndex], 0, 2);
-					g_flIceRange2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range", g_flIceRange[iIndex]);
-					g_flIceRange2[iIndex] = flClamp(g_flIceRange2[iIndex], 1.0, 9999999999.0);
-					g_flIceRangeChance2[iIndex] = kvSuperTanks.GetFloat("Ice Ability/Ice Range Chance", g_flIceRangeChance[iIndex]);
-					g_flIceRangeChance2[iIndex] = flClamp(g_flIceRangeChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iIceAbility[iIndex] = 0;
+		g_iIceEffect[iIndex] = 0;
+		g_iIceMessage[iIndex] = 0;
+		g_flIceChance[iIndex] = 33.3;
+		g_flIceDuration[iIndex] = 5.0;
+		g_iIceHit[iIndex] = 0;
+		g_iIceHitMode[iIndex] = 0;
+		g_flIceRange[iIndex] = 150.0;
+		g_flIceRangeChance[iIndex] = 15.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iIceAbility[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iIceAbility[type], value, 0, 0, 1);
+	g_iIceEffect[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iIceEffect[type], value, 0, 0, 7);
+	g_iIceMessage[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iIceMessage[type], value, 0, 0, 3);
+	g_flIceChance[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceChance", "Ice Chance", "Ice_Chance", "chance", main, g_flIceChance[type], value, 33.3, 0.0, 100.0);
+	g_flIceDuration[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", main, g_flIceDuration[type], value, 5.0, 0.1, 9999999999.0);
+	g_iIceHit[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceHit", "Ice Hit", "Ice_Hit", "hit", main, g_iIceHit[type], value, 0, 0, 1);
+	g_iIceHitMode[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", main, g_iIceHitMode[type], value, 0, 0, 2);
+	g_flIceRange[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceRange", "Ice Range", "Ice_Range", "range", main, g_flIceRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flIceRangeChance[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", main, g_flIceRangeChance[type], value, 15.0, 0.0, 100.0);
 }
 
 public void ST_OnPluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, "234"))
+		if (bIsTank(iTank, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveIce(iTank);
 		}
@@ -362,7 +320,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveIce(iTank);
 		}
@@ -371,7 +329,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iIceAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iIceAbility[ST_GetTankType(tank)] == 1)
 	{
 		vIceAbility(tank);
 	}
@@ -379,11 +337,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iIceAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iIceAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				if (!g_bIce2[tank] && !g_bIce3[tank])
 				{
@@ -402,37 +360,34 @@ public void ST_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	vRemoveIce(tank);
 }
 
 static void vIceAbility(int tank)
 {
-	if (g_iIceCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iIceCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bIce4[tank] = false;
 		g_bIce5[tank] = false;
 
-		float flIceRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flIceRange[ST_GetTankType(tank)] : g_flIceRange2[ST_GetTankType(tank)],
-			flIceRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flIceRangeChance[ST_GetTankType(tank)] : g_flIceRangeChance2[ST_GetTankType(tank)],
-			flTankPos[3];
-
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, "234"))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flIceRange)
+				if (flDistance <= g_flIceRange[ST_GetTankType(tank)])
 				{
-					vIceHit(iSurvivor, tank, flIceRangeChance, iIceAbility(tank), "2", "3");
+					vIceHit(iSurvivor, tank, g_flIceRangeChance[ST_GetTankType(tank)], g_iIceAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -441,35 +396,35 @@ static void vIceAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "IceHuman5");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "IceAmmo");
 	}
 }
 
-static void vIceHit(int survivor, int tank, float chance, int enabled, const char[] message, const char[] mode)
+static void vIceHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iIceCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iIceCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bIce[survivor])
 			{
 				g_bIce[survivor] = true;
 				g_iIceOwner[survivor] = tank;
 
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && StrEqual(mode, "3") && !g_bIce2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE) && !g_bIce2[tank])
 				{
 					g_bIce2[tank] = true;
 					g_iIceCount[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "IceHuman", g_iIceCount[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "IceHuman", g_iIceCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 				}
 
 				float flPos[3];
@@ -484,27 +439,23 @@ static void vIceHit(int survivor, int tank, float chance, int enabled, const cha
 				EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
 
 				DataPack dpStopIce;
-				CreateDataTimer(flIceDuration(tank), tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer(g_flIceDuration[ST_GetTankType(tank)], tTimerStopIce, dpStopIce, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopIce.WriteCell(GetClientUserId(survivor));
 				dpStopIce.WriteCell(GetClientUserId(tank));
-				dpStopIce.WriteString(message);
+				dpStopIce.WriteCell(messages);
 
-				char sIceEffect[4];
-				sIceEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_sIceEffect[ST_GetTankType(tank)] : g_sIceEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, sIceEffect, mode);
+				vEffect(survivor, tank, g_iIceEffect[ST_GetTankType(tank)], flags);
 
-				char sIceMessage[3];
-				sIceMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sIceMessage[ST_GetTankType(tank)] : g_sIceMessage2[ST_GetTankType(tank)];
-				if (StrContains(sIceMessage, message) != -1)
+				if (g_iIceMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Ice", sTankName, survivor);
 				}
 			}
-			else if (StrEqual(mode, "3") && !g_bIce2[tank])
+			else if ((flags & ST_ATTACK_RANGE) && !g_bIce2[tank])
 			{
-				if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bIce4[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bIce4[tank])
 				{
 					g_bIce4[tank] = true;
 
@@ -512,7 +463,7 @@ static void vIceHit(int survivor, int tank, float chance, int enabled, const cha
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1 && !g_bIce5[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bIce5[tank])
 		{
 			g_bIce5[tank] = true;
 
@@ -525,7 +476,7 @@ static void vRemoveIce(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, "234") && g_bIce[iSurvivor] && g_iIceOwner[iSurvivor] == tank)
+		if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bIce[iSurvivor] && g_iIceOwner[iSurvivor] == tank)
 		{
 			vStopIce(iSurvivor);
 		}
@@ -538,7 +489,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vReset2(iPlayer);
 
@@ -575,46 +526,6 @@ static void vStopIce(int survivor)
 	EmitAmbientSound(SOUND_BULLET, flPos, survivor, SNDLEVEL_RAIDSIREN);
 }
 
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static float flIceChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flIceChance[ST_GetTankType(tank)] : g_flIceChance2[ST_GetTankType(tank)];
-}
-
-static float flIceDuration(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flIceDuration[ST_GetTankType(tank)] : g_flIceDuration2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iIceAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iIceAbility[ST_GetTankType(tank)] : g_iIceAbility2[ST_GetTankType(tank)];
-}
-
-static int iIceHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iIceHit[ST_GetTankType(tank)] : g_iIceHit2[ST_GetTankType(tank)];
-}
-
-static int iIceHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iIceHitMode[ST_GetTankType(tank)] : g_iIceHitMode2[ST_GetTankType(tank)];
-}
-
 public Action tTimerStopIce(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -629,7 +540,7 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bIce[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bIce[iSurvivor])
 	{
 		vStopIce(iSurvivor);
 
@@ -640,18 +551,17 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 
 	vStopIce(iSurvivor);
 
-	char sMessage[3];
-	pack.ReadString(sMessage, sizeof(sMessage));
+	int iMessage = pack.ReadCell();
 
-	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && StrContains(sMessage, "2") != -1 && !g_bIce3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bIce3[iTank])
 	{
 		g_bIce3[iTank] = true;
 
 		ST_PrintToChat(iTank, "%s %t", ST_TAG3, "IceHuman6");
 
-		if (g_iIceCount[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
+		if (g_iIceCount[iTank] < g_iHumanAmmo[ST_GetTankType(iTank)] && g_iHumanAmmo[ST_GetTankType(iTank)] > 0)
 		{
-			CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_flHumanCooldown[ST_GetTankType(iTank)], tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else
 		{
@@ -659,9 +569,7 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 		}
 	}
 
-	char sIceMessage[3];
-	sIceMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sIceMessage[ST_GetTankType(iTank)] : g_sIceMessage2[ST_GetTankType(iTank)];
-	if (StrContains(sIceMessage, sMessage) != -1)
+	if (g_iIceMessage[ST_GetTankType(iTank)] & iMessage)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Ice2", iSurvivor);
 	}
@@ -672,7 +580,7 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bIce3[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bIce3[iTank])
 	{
 		g_bIce3[iTank] = false;
 

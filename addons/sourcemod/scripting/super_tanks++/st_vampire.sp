@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -30,13 +30,7 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_VAMPIRE "Vampire Ability"
-
-bool g_bCloneInstalled, g_bLateLoad, g_bTankConfig[ST_MAXTYPES + 1];
-
-float g_flVampireChance[ST_MAXTYPES + 1], g_flVampireChance2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iVampireAbility[ST_MAXTYPES + 1], g_iVampireAbility2[ST_MAXTYPES + 1], g_iVampireEffect[ST_MAXTYPES + 1], g_iVampireEffect2[ST_MAXTYPES + 1], g_iVampireMessage[ST_MAXTYPES + 1], g_iVampireMessage2[ST_MAXTYPES + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,6 +45,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define ST_MENU_VAMPIRE "Vampire Ability"
+
+bool g_bCloneInstalled;
+
+float g_flVampireChance[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iVampireAbility[ST_MAXTYPES + 1], g_iVampireEffect[ST_MAXTYPES + 1], g_iVampireMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -84,7 +86,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, "24"))
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -108,7 +110,7 @@ public Action cmdVampireInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -143,12 +145,12 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iVampireAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iVampireAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "VampireDetails");
-				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vVampireMenu(param1, menu.Selection);
 			}
@@ -202,29 +204,23 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, "0234") && damage > 0.0)
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
 		if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 		{
-			float flVampireChance = !g_bTankConfig[ST_GetTankType(attacker)] ? g_flVampireChance[ST_GetTankType(attacker)] : g_flVampireChance2[ST_GetTankType(attacker)];
-			if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && iVampireAbility(attacker) == 1 && GetRandomFloat(0.1, 100.0) <= flVampireChance && bIsSurvivor(victim))
+			if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && g_iVampireAbility[ST_GetTankType(attacker)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flVampireChance[ST_GetTankType(attacker)] && bIsSurvivor(victim))
 			{
-				if (!ST_IsTankSupported(attacker, "5") || (ST_IsTankSupported(attacker, "5") && iHumanAbility(attacker) == 1))
+				if (!ST_IsTankSupported(attacker, ST_CHECK_FAKECLIENT) || (ST_IsTankSupported(attacker, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(attacker)] == 1))
 				{
 					int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
 						iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
 					SetEntityHealth(attacker, iFinalHealth);
 
-					int iVampireEffect = !g_bTankConfig[ST_GetTankType(attacker)] ? g_iVampireEffect[ST_GetTankType(attacker)] : g_iVampireEffect2[ST_GetTankType(attacker)];
-					char sVampireEffect[2];
-					IntToString(iVampireEffect, sVampireEffect, sizeof(sVampireEffect));
-					vEffect(victim, attacker, sVampireEffect, "1");
+					vEffect(victim, attacker, g_iVampireEffect[ST_GetTankType(attacker)], 1);
 
-					int iVampireMessage = !g_bTankConfig[ST_GetTankType(attacker)] ? g_iVampireMessage[ST_GetTankType(attacker)] : g_iVampireMessage2[ST_GetTankType(attacker)];
-					if (iVampireMessage == 1)
+					if (g_iVampireMessage[ST_GetTankType(attacker)] == 1)
 					{
 						char sTankName[33];
 						ST_GetTankName(attacker, sTankName);
@@ -236,64 +232,23 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iVampireAbility[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Enabled", 0);
-					g_iVampireAbility[iIndex] = iClamp(g_iVampireAbility[iIndex], 0, 1);
-					g_iVampireEffect[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Effect", 0);
-					g_iVampireEffect[iIndex] = iClamp(g_iVampireEffect[iIndex], 0, 1);
-					g_iVampireMessage[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Message", 0);
-					g_iVampireMessage[iIndex] = iClamp(g_iVampireMessage[iIndex], 0, 1);
-					g_flVampireChance[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Chance", 33.3);
-					g_flVampireChance[iIndex] = flClamp(g_flVampireChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iVampireAbility2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Enabled", g_iVampireAbility[iIndex]);
-					g_iVampireAbility2[iIndex] = iClamp(g_iVampireAbility2[iIndex], 0, 1);
-					g_iVampireEffect2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Effect", g_iVampireEffect[iIndex]);
-					g_iVampireEffect2[iIndex] = iClamp(g_iVampireEffect2[iIndex], 0, 1);
-					g_iVampireMessage2[iIndex] = kvSuperTanks.GetNum("Vampire Ability/Ability Message", g_iVampireMessage[iIndex]);
-					g_iVampireMessage2[iIndex] = iClamp(g_iVampireMessage2[iIndex], 0, 1);
-					g_flVampireChance2[iIndex] = kvSuperTanks.GetFloat("Vampire Ability/Vampire Chance", g_flVampireChance[iIndex]);
-					g_flVampireChance2[iIndex] = flClamp(g_flVampireChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iVampireAbility[iIndex] = 0;
+		g_iVampireEffect[iIndex] = 0;
+		g_iVampireMessage[iIndex] = 0;
+		g_flVampireChance[iIndex] = 33.3;
 	}
-
-	delete kvSuperTanks;
 }
 
-static int iHumanAbility(int tank)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iVampireAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iVampireAbility[ST_GetTankType(tank)] : g_iVampireAbility2[ST_GetTankType(tank)];
+	g_iHumanAbility[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iVampireAbility[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iVampireAbility[type], value, 0, 0, 1);
+	g_iVampireEffect[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iVampireEffect[type], value, 0, 0, 1);
+	g_iVampireMessage[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iVampireMessage[type], value, 0, 0, 1);
+	g_flVampireChance[type] = flGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", main, g_flVampireChance[type], value, 33.3, 0.0, 100.0);
 }

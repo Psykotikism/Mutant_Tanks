@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -29,16 +29,6 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define ST_MENU_MEDIC "Medic Ability"
-
-bool g_bCloneInstalled, g_bMedic[MAXPLAYERS + 1], g_bMedic2[MAXPLAYERS + 1], g_bMedic3[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
-
-char g_sMedicHealth[ST_MAXTYPES + 1][36], g_sMedicHealth2[ST_MAXTYPES + 1][36], g_sMedicMaxHealth[ST_MAXTYPES + 1][36], g_sMedicMaxHealth2[ST_MAXTYPES + 1][36], g_sMedicMessage[ST_MAXTYPES + 1][3], g_sMedicMessage2[ST_MAXTYPES + 1][3];
-
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flHumanDuration[ST_MAXTYPES + 1], g_flHumanDuration2[ST_MAXTYPES + 1], g_flMedicChance[ST_MAXTYPES + 1], g_flMedicChance2[ST_MAXTYPES + 1], g_flMedicInterval[ST_MAXTYPES + 1], g_flMedicInterval2[ST_MAXTYPES + 1], g_flMedicRange[ST_MAXTYPES + 1], g_flMedicRange2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1], g_iMedicAbility[ST_MAXTYPES + 1], g_iMedicAbility2[ST_MAXTYPES + 1], g_iMedicCount[MAXPLAYERS + 1];
-
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
@@ -50,6 +40,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define ST_MENU_MEDIC "Medic Ability"
+
+bool g_bCloneInstalled, g_bMedic[MAXPLAYERS + 1], g_bMedic2[MAXPLAYERS + 1], g_bMedic3[MAXPLAYERS + 1];
+
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanDuration[ST_MAXTYPES + 1], g_flMedicChance[ST_MAXTYPES + 1], g_flMedicInterval[ST_MAXTYPES + 1], g_flMedicRange[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iMedicAbility[ST_MAXTYPES + 1], g_iMedicCount[MAXPLAYERS + 1], g_iMedicHealth[ST_MAXTYPES + 1][8], g_iMedicMaxHealth[ST_MAXTYPES + 1][8], g_iMedicMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -104,7 +102,7 @@ public Action cmdMedicInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -144,21 +142,21 @@ public int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iMedicAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iMedicCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iMedicAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iMedicCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2:
 				{
 					ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons");
 					ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons4");
 				}
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanMode(param1) == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanMode[ST_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "MedicDetails");
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flHumanDuration(param1));
-				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", g_flHumanDuration[ST_GetTankType(param1)]);
+				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vMedicMenu(param1, menu.Selection);
 			}
@@ -235,78 +233,67 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_flHumanDuration[iIndex] = 5.0;
+		g_iHumanMode[iIndex] = 1;
+		g_iMedicAbility[iIndex] = 0;
+		g_iMedicMessage[iIndex] = 0;
+		g_flMedicChance[iIndex] = 33.3;
+		g_flMedicInterval[iIndex] = 5.0;
+		g_iMedicMaxHealth[iIndex][0] = 250;
+		g_iMedicMaxHealth[iIndex][1] = 50;
+		g_iMedicMaxHealth[iIndex][2] = 250;
+		g_iMedicMaxHealth[iIndex][3] = 100;
+		g_iMedicMaxHealth[iIndex][4] = 325;
+		g_iMedicMaxHealth[iIndex][5] = 600;
+		g_iMedicMaxHealth[iIndex][6] = 8000;
+		g_flMedicRange[iIndex] = 500.0;
+
+		for (int iPos = 0; iPos < 6; iPos++)
 		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Medic Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Medic Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_flHumanDuration[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Human Duration", 5.0);
-					g_flHumanDuration[iIndex] = flClamp(g_flHumanDuration[iIndex], 0.1, 9999999999.0);
-					g_iHumanMode[iIndex] = kvSuperTanks.GetNum("Medic Ability/Human Mode", 1);
-					g_iHumanMode[iIndex] = iClamp(g_iHumanMode[iIndex], 0, 1);
-					g_iMedicAbility[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", 0);
-					g_iMedicAbility[iIndex] = iClamp(g_iMedicAbility[iIndex], 0, 3);
-					kvSuperTanks.GetString("Medic Ability/Ability Message", g_sMedicMessage[iIndex], sizeof(g_sMedicMessage[]), "0");
-					g_flMedicChance[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Chance", 33.3);
-					g_flMedicChance[iIndex] = flClamp(g_flMedicChance[iIndex], 0.0, 100.0);
-					kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth[iIndex], sizeof(g_sMedicHealth[]), "25,25,25,25,25,25");
-					g_flMedicInterval[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Interval", 5.0);
-					g_flMedicInterval[iIndex] = flClamp(g_flMedicInterval[iIndex], 0.1, 9999999999.0);
-					kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth[iIndex], sizeof(g_sMedicMaxHealth[]), "250,50,250,100,325,600");
-					g_flMedicRange[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", 500.0);
-					g_flMedicRange[iIndex] = flClamp(g_flMedicRange[iIndex], 1.0, 9999999999.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_flHumanDuration2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Human Duration", g_flHumanDuration[iIndex]);
-					g_flHumanDuration2[iIndex] = flClamp(g_flHumanDuration2[iIndex], 0.1, 9999999999.0);
-					g_iHumanMode2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Human Mode", g_iHumanMode[iIndex]);
-					g_iHumanMode2[iIndex] = iClamp(g_iHumanMode2[iIndex], 0, 1);
-					g_iMedicAbility2[iIndex] = kvSuperTanks.GetNum("Medic Ability/Ability Enabled", g_iMedicAbility[iIndex]);
-					g_iMedicAbility2[iIndex] = iClamp(g_iMedicAbility2[iIndex], 0, 3);
-					kvSuperTanks.GetString("Medic Ability/Ability Message", g_sMedicMessage2[iIndex], sizeof(g_sMedicMessage2[]), g_sMedicMessage[iIndex]);
-					g_flMedicChance2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Chance", g_flMedicChance[iIndex]);
-					g_flMedicChance2[iIndex] = flClamp(g_flMedicChance2[iIndex], 0.0, 100.0);
-					kvSuperTanks.GetString("Medic Ability/Medic Health", g_sMedicHealth2[iIndex], sizeof(g_sMedicHealth2[]), g_sMedicHealth[iIndex]);
-					g_flMedicInterval2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Interval", g_flMedicInterval[iIndex]);
-					g_flMedicInterval2[iIndex] = flClamp(g_flMedicInterval2[iIndex], 0.1, 9999999999.0);
-					kvSuperTanks.GetString("Medic Ability/Medic Max Health", g_sMedicMaxHealth2[iIndex], sizeof(g_sMedicMaxHealth2[]), g_sMedicMaxHealth[iIndex]);
-					g_flMedicRange2[iIndex] = kvSuperTanks.GetFloat("Medic Ability/Medic Range", g_flMedicRange[iIndex]);
-					g_flMedicRange2[iIndex] = flClamp(g_flMedicRange2[iIndex], 1.0, 9999999999.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
+			g_iMedicHealth[iIndex][iPos] = 25;
 		}
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_flHumanDuration[type] = flGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", main, g_flHumanDuration[type], value, 5.0, 0.1, 9999999999.0);
+	g_iHumanMode[type] = iGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
+	g_iMedicAbility[type] = iGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iMedicAbility[type], value, 0, 0, 3);
+	g_iMedicMessage[type] = iGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iMedicMessage[type], value, 0, 0, 3);
+	g_flMedicChance[type] = flGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "MedicChance", "Medic Chance", "Medic_Chance", "chance", main, g_flMedicChance[type], value, 33.3, 0.0, 100.0);
+	g_flMedicInterval[type] = flGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "MedicInterval", "Medic Interval", "Medic_Interval", "interval", main, g_flMedicInterval[type], value, 5.0, 0.1, 9999999999.0);
+	g_flMedicRange[type] = flGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "MedicRange", "Medic Range", "Medic_Range", "range", main, g_flMedicRange[type], value, 500.0, 1.0, 9999999999.0);
+
+	if ((StrEqual(subsection, "medicability", false) || StrEqual(subsection, "medic ability", false) || StrEqual(subsection, "medic_ability", false) || StrEqual(subsection, "medic", false)) && value[0] != '\0')
+	{
+		char sSet[7][6], sValue[42];
+		strcopy(sValue, sizeof(sValue), value);
+		ReplaceString(sValue, sizeof(sValue), " ", "");
+		ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+		for (int iPos = 0; iPos < 7; iPos++)
+		{
+			if (StrEqual(key, "MedicHealth", false) || StrEqual(key, "Medic Health", false) || StrEqual(key, "Medic_Health", false) || StrEqual(key, "health", false))
+			{
+				g_iMedicHealth[type][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH) : g_iMedicHealth[type][iPos];
+			}
+			else if (StrEqual(key, "MedicMaxHealth", false) || StrEqual(key, "Medic Max Health", false) || StrEqual(key, "Medic_Max_Health", false) || StrEqual(key, "maxhealth", false))
+			{
+				g_iMedicMaxHealth[type][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 1, ST_MAXHEALTH) : g_iMedicMaxHealth[type][iPos];
+			}
+		}
+	}
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -314,9 +301,9 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
-			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= flMedicChance(iTank) && g_bMedic3[iTank])
+			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= g_flMedicChance[ST_GetTankType(iTank)] && g_bMedic3[iTank])
 			{
 				vMedicAbility(iTank, true);
 			}
@@ -328,7 +315,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iMedicAbility(tank) > 0 && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank))
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iMedicAbility[ST_GetTankType(tank)] > 0 && GetRandomFloat(0.1, 100.0) <= g_flMedicChance[ST_GetTankType(tank)])
 	{
 		g_bMedic3[tank] = true;
 
@@ -338,13 +325,13 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if ((iMedicAbility(tank) == 2 || iMedicAbility(tank) == 3) && iHumanAbility(tank) == 1)
+			if ((g_iMedicAbility[ST_GetTankType(tank)] == 2 || g_iMedicAbility[ST_GetTankType(tank)] == 3) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
-				switch (iHumanMode(tank))
+				switch (g_iHumanMode[ST_GetTankType(tank)])
 				{
 					case 0:
 					{
@@ -363,7 +350,7 @@ public void ST_OnButtonPressed(int tank, int button)
 					}
 					case 1:
 					{
-						if (g_iMedicCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+						if (g_iMedicCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 						{
 							if (!g_bMedic[tank] && !g_bMedic2[tank])
 							{
@@ -372,7 +359,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 								vMedic(tank);
 
-								ST_PrintToChat(tank, "%s %t", ST_TAG3, "MedicHuman3", g_iMedicCount[tank], iHumanAmmo(tank));
+								ST_PrintToChat(tank, "%s %t", ST_TAG3, "MedicHuman3", g_iMedicCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 							}
 						}
 						else
@@ -386,7 +373,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 		if (button & ST_SPECIAL_KEY2 == ST_SPECIAL_KEY2)
 		{
-			if ((iMedicAbility(tank) == 1 || iMedicAbility(tank) == 3) && iHumanAbility(tank) == 1)
+			if ((g_iMedicAbility[ST_GetTankType(tank)] == 1 || g_iMedicAbility[ST_GetTankType(tank)] == 3) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				switch (g_bMedic3[tank])
 				{
@@ -405,13 +392,13 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if ((iMedicAbility(tank) == 2 || iMedicAbility(tank) == 3) && iHumanAbility(tank) == 1)
+			if ((g_iMedicAbility[ST_GetTankType(tank)] == 2 || g_iMedicAbility[ST_GetTankType(tank)] == 3) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
-				if (iHumanMode(tank) == 1 && g_bMedic[tank] && !g_bMedic2[tank])
+				if (g_iHumanMode[ST_GetTankType(tank)] == 1 && g_bMedic[tank] && !g_bMedic2[tank])
 				{
 					vReset2(tank);
 				}
@@ -420,32 +407,20 @@ public void ST_OnButtonReleased(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
-	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iMedicAbility(tank) > 0 && GetRandomFloat(0.1, 100.0) <= flMedicChance(tank))
+	if (ST_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iMedicAbility[ST_GetTankType(tank)] > 0 && GetRandomFloat(0.1, 100.0) <= g_flMedicChance[ST_GetTankType(tank)])
 	{
 		vMedicAbility(tank, true);
 	}
 
-	vRemoveMedic(tank);
-}
-
-static void vHeal(int infected, int health, int extrahealth, int maxhealth)
-{
-	maxhealth = iClamp(maxhealth, 1, ST_MAXHEALTH);
-
-	int iExtraHealth = (extrahealth > maxhealth) ? maxhealth : extrahealth,
-		iExtraHealth2 = (extrahealth < health) ? 1 : extrahealth,
-		iRealHealth = (extrahealth >= 0) ? iExtraHealth : iExtraHealth2;
-
-	SetEntityHealth(infected, iRealHealth);
+	vRemoveMedic(tank, revert);
 }
 
 static void vMedic(int tank)
 {
-	float flMedicInterval = !g_bTankConfig[ST_GetTankType(tank)] ? g_flMedicInterval[ST_GetTankType(tank)] : g_flMedicInterval2[ST_GetTankType(tank)];
 	DataPack dpMedic;
-	CreateDataTimer(flMedicInterval, tTimerMedic, dpMedic, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateDataTimer(g_flMedicInterval[ST_GetTankType(tank)], tTimerMedic, dpMedic, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpMedic.WriteCell(GetClientUserId(tank));
 	dpMedic.WriteCell(ST_GetTankType(tank));
 	dpMedic.WriteFloat(GetEngineTime());
@@ -457,79 +432,32 @@ static void vMedicAbility(int tank, bool main)
 	{
 		case true:
 		{
-			if (iMedicAbility(tank) == 1 || iMedicAbility(tank) == 3)
+			if (g_iMedicAbility[ST_GetTankType(tank)] == 1 || g_iMedicAbility[ST_GetTankType(tank)] == 3)
 			{
 				float flTankPos[3];
 				GetClientAbsOrigin(tank, flTankPos);
 
 				for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 				{
-					if (bIsSpecialInfected(iInfected, "234"))
+					if ((ST_IsTankSupported(iInfected, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) || bIsSpecialInfected(iInfected, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE)) && tank != iInfected)
 					{
 						float flInfectedPos[3];
 						GetClientAbsOrigin(iInfected, flInfectedPos);
 
 						float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-						if (flDistance <= flMedicRange(tank))
+						if (flDistance <= g_flMedicRange[ST_GetTankType(tank)])
 						{
-							char sHealth[6][6], sMedicHealth[36], sMaxHealth[6][6], sMedicMaxHealth[36];
-
-							sMedicHealth = !g_bTankConfig[ST_GetTankType(tank)] ? g_sMedicHealth[ST_GetTankType(tank)] : g_sMedicHealth2[ST_GetTankType(tank)];
-							ReplaceString(sMedicHealth, sizeof(sMedicHealth), " ", "");
-							ExplodeString(sMedicHealth, ",", sHealth, sizeof(sHealth), sizeof(sHealth[]));
-
-							sMedicMaxHealth = !g_bTankConfig[ST_GetTankType(tank)] ? g_sMedicMaxHealth[ST_GetTankType(tank)] : g_sMedicMaxHealth2[ST_GetTankType(tank)];
-							ReplaceString(sMedicMaxHealth, sizeof(sMedicMaxHealth), " ", "");
-							ExplodeString(sMedicMaxHealth, ",", sMaxHealth, sizeof(sMaxHealth), sizeof(sMaxHealth[]));
-
 							int iHealth = GetClientHealth(iInfected),
-								iSmokerHealth = (sHealth[0][0] != '\0') ? StringToInt(sHealth[0]) : 25,
-								iSmokerMaxHealth = (sMaxHealth[0][0] != '\0') ? StringToInt(sMaxHealth[0]) : 250,
-								iBoomerHealth = (sHealth[1][0] != '\0') ? StringToInt(sHealth[1]) : 25,
-								iBoomerMaxHealth = (sMaxHealth[1][0] != '\0') ? StringToInt(sMaxHealth[1]) : 50,
-								iHunterHealth = (sHealth[2][0] != '\0') ? StringToInt(sHealth[2]) : 25,
-								iHunterMaxHealth = (sMaxHealth[2][0] != '\0') ? StringToInt(sMaxHealth[2]) : 250,
-								iSpitterHealth = (sHealth[3][0] != '\0') ? StringToInt(sHealth[3]) : 25,
-								iSpitterMaxHealth = (sMaxHealth[3][0] != '\0') ? StringToInt(sMaxHealth[3]) : 100,
-								iJockeyHealth = (sHealth[4][0] != '\0') ? StringToInt(sHealth[4]) : 25,
-								iJockeyMaxHealth = (sMaxHealth[4][0] != '\0') ? StringToInt(sMaxHealth[4]) : 325,
-								iChargerHealth = (sHealth[5][0] != '\0') ? StringToInt(sHealth[5]) : 25,
-								iChargerMaxHealth = (sMaxHealth[5][0] != '\0') ? StringToInt(sMaxHealth[5]) : 600;
-
-							iSmokerHealth = iClamp(iSmokerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-							iSmokerMaxHealth = iClamp(iSmokerMaxHealth, 1, ST_MAXHEALTH);
-
-							iBoomerHealth = iClamp(iBoomerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-							iBoomerMaxHealth = iClamp(iBoomerMaxHealth, 1, ST_MAXHEALTH);
-
-							iHunterHealth = iClamp(iHunterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-							iHunterMaxHealth = iClamp(iHunterMaxHealth, 1, ST_MAXHEALTH);
-
-							iSpitterHealth = iClamp(iSpitterHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-							iSpitterMaxHealth = iClamp(iSpitterMaxHealth, 1, ST_MAXHEALTH);
-
-							iJockeyHealth = iClamp(iJockeyHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-							iJockeyMaxHealth = iClamp(iJockeyMaxHealth, 1, ST_MAXHEALTH);
-
-							iChargerHealth = iClamp(iChargerHealth, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-							iChargerMaxHealth = iClamp(iChargerMaxHealth, 1, ST_MAXHEALTH);
-
-							switch (GetEntProp(tank, Prop_Send, "m_zombieClass"))
-							{
-								case 1: vHeal(iInfected, iHealth, iHealth + iSmokerHealth, iSmokerMaxHealth);
-								case 2: vHeal(iInfected, iHealth, iHealth + iBoomerHealth, iBoomerMaxHealth);
-								case 3: vHeal(iInfected, iHealth, iHealth + iHunterHealth, iHunterMaxHealth);
-								case 4: vHeal(iInfected, iHealth, iHealth + iSpitterHealth, iSpitterMaxHealth);
-								case 5: vHeal(iInfected, iHealth, iHealth + iJockeyHealth, iJockeyMaxHealth);
-								case 6: vHeal(iInfected, iHealth, iHealth + iChargerHealth, iChargerMaxHealth);
-							}
+								iNewHealth = iHealth + iGetHealth(tank, iInfected),
+								iExtraHealth = (iNewHealth > iGetMaxHealth(tank, iInfected)) ? iGetMaxHealth(tank, iInfected) : iNewHealth,
+								iExtraHealth2 = (iNewHealth < iHealth) ? 1 : iNewHealth,
+								iRealHealth = (iNewHealth >= 0) ? iExtraHealth : iExtraHealth2;
+							SetEntityHealth(iInfected, iRealHealth);
 						}
 					}
 				}
 
-				char sMedicMessage[3];
-				sMedicMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sMedicMessage[ST_GetTankType(tank)] : g_sMedicMessage2[ST_GetTankType(tank)];
-				if (StrContains(sMedicMessage, "1"))
+				if (g_iMedicMessage[ST_GetTankType(tank)] & ST_MESSAGE_MELEE)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
@@ -539,28 +467,26 @@ static void vMedicAbility(int tank, bool main)
 		}
 		case false:
 		{
-			if ((iMedicAbility(tank) == 2 || iMedicAbility(tank) == 3) && !g_bMedic[tank])
+			if ((g_iMedicAbility[ST_GetTankType(tank)] == 2 || g_iMedicAbility[ST_GetTankType(tank)] == 3) && !g_bMedic[tank])
 			{
-				if (g_iMedicCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+				if (g_iMedicCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 				{
 					g_bMedic[tank] = true;
 
-					if (ST_IsTankSupported(tank, "5") && iHumanAbility(tank) == 1)
+					if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 					{
 						g_iMedicCount[tank]++;
 
-						ST_PrintToChat(tank, "%s %t", ST_TAG3, "MedicHuman3", g_iMedicCount[tank], iHumanAmmo(tank));
+						ST_PrintToChat(tank, "%s %t", ST_TAG3, "MedicHuman3", g_iMedicCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
+					}
 
-						vMedic(tank);
+					vMedic(tank);
 
-						char sMedicMessage[3];
-						sMedicMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_sMedicMessage[ST_GetTankType(tank)] : g_sMedicMessage2[ST_GetTankType(tank)];
-						if (StrContains(sMedicMessage, "2"))
-						{
-							char sTankName[33];
-							ST_GetTankName(tank, sTankName);
-							ST_PrintToChatAll("%s %t", ST_TAG2, "Medic2", sTankName);
-						}
+					if (g_iMedicMessage[ST_GetTankType(tank)] & ST_MESSAGE_RANGE)
+					{
+						char sTankName[33];
+						ST_GetTankName(tank, sTankName);
+						ST_PrintToChatAll("%s %t", ST_TAG2, "Medic2", sTankName);
 					}
 				}
 			}
@@ -568,11 +494,15 @@ static void vMedicAbility(int tank, bool main)
 	}
 }
 
-static void vRemoveMedic(int tank)
+static void vRemoveMedic(int tank, bool revert = false)
 {
+	if (!revert)
+	{
+		g_bMedic3[tank] = false;
+	}
+
 	g_bMedic[tank] = false;
 	g_bMedic2[tank] = false;
-	g_bMedic3[tank] = false;
 	g_iMedicCount[tank] = 0;
 }
 
@@ -580,7 +510,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveMedic(iPlayer);
 		}
@@ -594,9 +524,9 @@ static void vReset2(int tank)
 
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "MedicHuman6");
 
-	if (g_iMedicCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iMedicCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
@@ -604,44 +534,36 @@ static void vReset2(int tank)
 	}
 }
 
-static float flHumanCooldown(int tank)
+static int iGetHealth(int tank, int infected)
 {
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
+	switch (GetEntProp(infected, Prop_Send, "m_zombieClass"))
+	{
+		case 1: return g_iMedicHealth[ST_GetTankType(tank)][0];
+		case 2: return g_iMedicHealth[ST_GetTankType(tank)][1];
+		case 3: return g_iMedicHealth[ST_GetTankType(tank)][2];
+		case 4: return g_iMedicHealth[ST_GetTankType(tank)][3];
+		case 5: return bIsValidGame() ? g_iMedicHealth[ST_GetTankType(tank)][4] : g_iMedicHealth[ST_GetTankType(tank)][6];
+		case 6: return g_iMedicHealth[ST_GetTankType(tank)][5];
+		case 8: return g_iMedicHealth[ST_GetTankType(tank)][6];
+	}
+
+	return 0;
 }
 
-static float flHumanDuration(int tank)
+static int iGetMaxHealth(int tank, int infected)
 {
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanDuration[ST_GetTankType(tank)] : g_flHumanDuration2[ST_GetTankType(tank)];
-}
+	switch (GetEntProp(infected, Prop_Send, "m_zombieClass"))
+	{
+		case 1: return g_iMedicMaxHealth[ST_GetTankType(tank)][0];
+		case 2: return g_iMedicMaxHealth[ST_GetTankType(tank)][1];
+		case 3: return g_iMedicMaxHealth[ST_GetTankType(tank)][2];
+		case 4: return g_iMedicMaxHealth[ST_GetTankType(tank)][3];
+		case 5: return bIsValidGame() ? g_iMedicMaxHealth[ST_GetTankType(tank)][4] : g_iMedicMaxHealth[ST_GetTankType(tank)][6];
+		case 6: return g_iMedicMaxHealth[ST_GetTankType(tank)][5];
+		case 8: return g_iMedicMaxHealth[ST_GetTankType(tank)][6];
+	}
 
-static float flMedicChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flMedicChance[ST_GetTankType(tank)] : g_flMedicChance2[ST_GetTankType(tank)];
-}
-
-static float flMedicRange(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flMedicRange[ST_GetTankType(tank)] : g_flMedicRange2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iHumanMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
-}
-
-static int iMedicAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iMedicAbility[ST_GetTankType(tank)] : g_iMedicAbility2[ST_GetTankType(tank)];
+	return 0;
 }
 
 public Action tTimerMedic(Handle timer, DataPack pack)
@@ -649,7 +571,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (iMedicAbility(iTank) != 2 && iMedicAbility(iTank) != 3) || !g_bMedic[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (g_iMedicAbility[ST_GetTankType(iTank)] != 2 && g_iMedicAbility[ST_GetTankType(iTank)] != 3) || !g_bMedic[iTank])
 	{
 		g_bMedic[iTank] = false;
 
@@ -657,7 +579,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && (flTime + flHumanDuration(iTank)) < GetEngineTime() && !g_bMedic2[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && g_iHumanMode[ST_GetTankType(iTank)] == 0 && (flTime + g_flHumanDuration[ST_GetTankType(iTank)]) < GetEngineTime() && !g_bMedic2[iTank])
 	{
 		vReset2(iTank);
 
@@ -669,19 +591,20 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
-		if (bIsSpecialInfected(iInfected, "234"))
+		if ((ST_IsTankSupported(iInfected, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) || bIsSpecialInfected(iInfected, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE)) && iTank != iInfected)
 		{
 			float flInfectedPos[3];
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 
 			float flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-			if (flDistance <= flMedicRange(iTank))
+			if (flDistance <= g_flMedicRange[ST_GetTankType(iTank)])
 			{
 				int iHealth = GetClientHealth(iInfected),
-					iNewHealth = iHealth + 1,
-					iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
-
-				SetEntityHealth(iInfected, iFinalHealth);
+					iNewHealth = iHealth + iGetHealth(iTank, iInfected),
+					iExtraHealth = (iNewHealth > iGetMaxHealth(iTank, iInfected)) ? iGetMaxHealth(iTank, iInfected) : iNewHealth,
+					iExtraHealth2 = (iNewHealth < iHealth) ? 1 : iNewHealth,
+					iRealHealth = (iNewHealth >= 0) ? iExtraHealth : iExtraHealth2;
+				SetEntityHealth(iInfected, iRealHealth);
 			}
 		}
 	}
@@ -692,7 +615,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bMedic2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bMedic2[iTank])
 	{
 		g_bMedic2[iTank] = false;
 

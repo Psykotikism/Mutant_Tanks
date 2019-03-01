@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -28,6 +28,18 @@ public Plugin myinfo =
 	version = ST_VERSION,
 	url = ST_URL
 };
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	if (!bIsValidGame(false) && !bIsValidGame())
+	{
+		strcopy(error, err_max, "\"[ST++] Drop Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	return APLRes_Success;
+}
 
 #define MELEE_AXE_V "models/weapons/melee/v_fireaxe.mdl"
 #define MELEE_AXE_W "models/weapons/melee/w_fireaxe.mdl"
@@ -120,27 +132,15 @@ public Plugin myinfo =
 
 #define ST_MENU_DROP "Drop Ability"
 
-bool g_bCloneInstalled, g_bDrop[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bDrop[MAXPLAYERS + 1];
 
 char g_sWeaponClass[32][128], g_sWeaponModel[32][128];
 
 ConVar g_cvSTAssaultRifleAmmo, g_cvSTAutoShotgunAmmo, g_cvSTGrenadeLauncherAmmo, g_cvSTHuntingRifleAmmo, g_cvSTShotgunAmmo, g_cvSTSMGAmmo, g_cvSTSniperRifleAmmo;
 
-float g_flDropChance[ST_MAXTYPES + 1], g_flDropChance2[ST_MAXTYPES + 1], g_flDropClipChance[ST_MAXTYPES + 1], g_flDropClipChance2[ST_MAXTYPES + 1], g_flDropWeaponScale[ST_MAXTYPES + 1], g_flDropWeaponScale2[ST_MAXTYPES + 1];
+float g_flDropChance[ST_MAXTYPES + 1], g_flDropClipChance[ST_MAXTYPES + 1], g_flDropWeaponScale[ST_MAXTYPES + 1];
 
-int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropAbility2[ST_MAXTYPES + 1], g_iDropMessage[ST_MAXTYPES + 1], g_iDropMessage2[ST_MAXTYPES + 1], g_iDropMode[ST_MAXTYPES + 1], g_iDropMode2[ST_MAXTYPES + 1], g_iDropWeapon[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1];
-
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	if (!bIsValidGame(false) && !bIsValidGame())
-	{
-		strcopy(error, err_max, "\"[ST++] Drop Ability\" only supports Left 4 Dead 1 & 2.");
-
-		return APLRes_SilentFailure;
-	}
-
-	return APLRes_Success;
-}
+int g_iDrop[MAXPLAYERS + 1], g_iDropAbility[ST_MAXTYPES + 1], g_iDropMessage[ST_MAXTYPES + 1], g_iDropMode[ST_MAXTYPES + 1], g_iDropWeapon[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -337,7 +337,7 @@ public Action cmdDropInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -373,13 +373,13 @@ public int iDropMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iDropAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iDropAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons4");
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "DropDetails");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vDropMenu(param1, menu.Selection);
 			}
@@ -451,64 +451,29 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Drop Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iDropAbility[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Enabled", 0);
-					g_iDropAbility[iIndex] = iClamp(g_iDropAbility[iIndex], 0, 1);
-					g_iDropMessage[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Message", 0);
-					g_iDropMessage[iIndex] = iClamp(g_iDropMessage[iIndex], 0, 1);
-					g_flDropChance[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Chance", 33.3);
-					g_flDropChance[iIndex] = flClamp(g_flDropChance[iIndex], 0.0, 100.0);
-					g_flDropClipChance[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Clip Chance", 33.3);
-					g_flDropClipChance[iIndex] = flClamp(g_flDropClipChance[iIndex], 0.0, 100.0);
-					g_iDropMode[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", 0);
-					g_iDropMode[iIndex] = iClamp(g_iDropMode[iIndex], 0, 2);
-					g_flDropWeaponScale[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", 1.0);
-					g_flDropWeaponScale[iIndex] = flClamp(g_flDropWeaponScale[iIndex], 1.0, 2.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iDropAbility2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Enabled", g_iDropAbility[iIndex]);
-					g_iDropAbility2[iIndex] = iClamp(g_iDropAbility2[iIndex], 0, 1);
-					g_iDropMessage2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Ability Message", g_iDropMessage[iIndex]);
-					g_iDropMessage2[iIndex] = iClamp(g_iDropMessage2[iIndex], 0, 1);
-					g_flDropChance2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Chance", g_flDropChance[iIndex]);
-					g_flDropChance2[iIndex] = flClamp(g_flDropChance2[iIndex], 0.0, 100.0);
-					g_flDropClipChance2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Clip Chance", g_flDropClipChance[iIndex]);
-					g_flDropClipChance2[iIndex] = flClamp(g_flDropClipChance2[iIndex], 0.0, 100.0);
-					g_iDropMode2[iIndex] = kvSuperTanks.GetNum("Drop Ability/Drop Mode", g_iDropMode[iIndex]);
-					g_iDropMode2[iIndex] = iClamp(g_iDropMode2[iIndex], 0, 2);
-					g_flDropWeaponScale2[iIndex] = kvSuperTanks.GetFloat("Drop Ability/Drop Weapon Scale", g_flDropWeaponScale[iIndex]);
-					g_flDropWeaponScale2[iIndex] = flClamp(g_flDropWeaponScale2[iIndex], 1.0, 2.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iDropAbility[iIndex] = 0;
+		g_iDropMessage[iIndex] = 0;
+		g_flDropChance[iIndex] = 33.3;
+		g_flDropClipChance[iIndex] = 33.3;
+		g_iDropMode[iIndex] = 0;
+		g_flDropWeaponScale[iIndex] = 1.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iDropAbility[type] = iGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iDropAbility[type], value, 0, 0, 1);
+	g_iDropMessage[type] = iGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iDropMessage[type], value, 0, 0, 1);
+	g_flDropChance[type] = flGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropChance", "Drop Chance", "Drop_Chance", "chance", main, g_flDropChance[type], value, 33.3, 0.0, 100.0);
+	g_flDropClipChance[type] = flGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", main, g_flDropClipChance[type], value, 33.3, 0.0, 100.0);
+	g_iDropMode[type] = iGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropMode", "Drop Mode", "Drop_Mode", "mode", main, g_iDropMode[type], value, 0, 0, 2);
+	g_flDropWeaponScale[type] = flGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", main, g_flDropWeaponScale[type], value, 1.0, 1.0, 2.0);
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -520,6 +485,8 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
 			vRemoveDrop(iBot);
+
+			vReset2(iBot);
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -529,21 +496,25 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
 			vRemoveDrop(iTank);
+
+			vReset2(iTank);
 		}
 	}
 	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024") && ST_IsCloneSupported(iTank, g_bCloneInstalled) && g_bDrop[iTank])
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && bIsCloneAllowed(iTank, g_bCloneInstalled) && g_bDrop[iTank])
 		{
 			vDropWeapon(iTank);
+
+			vReset2(iTank);
 		}
 	}
 }
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, "5") || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iDropAbility(tank) == 1 && !g_bDrop[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iDropAbility[ST_GetTankType(tank)] == 1 && !g_bDrop[tank])
 	{
 		g_bDrop[tank] = true;
 
@@ -553,11 +524,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SPECIAL_KEY2 == ST_SPECIAL_KEY2)
 		{
-			if (iDropAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iDropAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				switch (g_bDrop[tank])
 				{
@@ -576,25 +547,25 @@ public void ST_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	vDropWeapon(tank);
 
-	g_bDrop[tank] = false;
+	if (!revert)
+	{
+		g_bDrop[tank] = false;
+	}
 }
 
 static void vDropWeapon(int tank)
 {
-	float flDropChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flDropChance[ST_GetTankType(tank)] : g_flDropChance2[ST_GetTankType(tank)];
-	if (ST_IsTankSupported(tank, "024") && ST_IsCloneSupported(tank, g_bCloneInstalled) && iDropAbility(tank) == 1 && GetRandomFloat(0.1, 100.0) <= flDropChance && bIsValidEntity(g_iDrop[tank]))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iDropAbility[ST_GetTankType(tank)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flDropChance[ST_GetTankType(tank)] && bIsValidEntity(g_iDrop[tank]))
 	{
 		float flPos[3], flAngles[3];
-		int iDropMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iDropMessage[ST_GetTankType(tank)] : g_iDropMessage2[ST_GetTankType(tank)];
-
 		GetClientEyePosition(tank, flPos);
 		GetClientAbsAngles(tank, flAngles);
 
-		if (iDropMode(tank) != 2 && StrContains(g_sWeaponClass[g_iDropWeapon[tank]], "weapon") != -1)
+		if (g_iDropMode[ST_GetTankType(tank)] != 2 && StrContains(g_sWeaponClass[g_iDropWeapon[tank]], "weapon") != -1)
 		{
 			int iDrop = CreateEntityByName(g_sWeaponClass[g_iDropWeapon[tank]]);
 			if (bIsValidEntity(iDrop))
@@ -604,7 +575,7 @@ static void vDropWeapon(int tank)
 
 				if (bIsValidGame())
 				{
-					SetEntPropFloat(iDrop , Prop_Send, "m_flModelScale", flDropWeaponScale(tank));
+					SetEntPropFloat(iDrop , Prop_Send, "m_flModelScale", g_flDropWeaponScale[ST_GetTankType(tank)]);
 				}
 
 				int iAmmo, iClip;
@@ -637,8 +608,7 @@ static void vDropWeapon(int tank)
 					iAmmo = g_cvSTSniperRifleAmmo.IntValue;
 				}
 
-				float flDropClipChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flDropClipChance[ST_GetTankType(tank)] : g_flDropClipChance2[ST_GetTankType(tank)];
-				if (GetRandomFloat(0.1, 100.0) <= flDropClipChance)
+				if (GetRandomFloat(0.1, 100.0) <= g_flDropClipChance[ST_GetTankType(tank)])
 				{
 					iClip = iAmmo;
 				}
@@ -653,7 +623,7 @@ static void vDropWeapon(int tank)
 					SetEntProp(iDrop, Prop_Send, "m_iExtraPrimaryAmmo", iAmmo);
 				}
 
-				if (iDropMessage == 1)
+				if (g_iDropMessage[ST_GetTankType(tank)] == 1)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
@@ -661,7 +631,7 @@ static void vDropWeapon(int tank)
 				}
 			}
 		}
-		else if (iDropMode(tank) != 1 && bIsValidGame())
+		else if (g_iDropMode[ST_GetTankType(tank)] != 1 && bIsValidGame())
 		{
 			int iDrop = CreateEntityByName("weapon_melee");
 			if (bIsValidEntity(iDrop))
@@ -669,9 +639,9 @@ static void vDropWeapon(int tank)
 				DispatchKeyValue(iDrop, "melee_script_name", g_sWeaponClass[g_iDropWeapon[tank]]);
 				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 				DispatchSpawn(iDrop);
-				SetEntPropFloat(iDrop, Prop_Send, "m_flModelScale", flDropWeaponScale(tank));
+				SetEntPropFloat(iDrop, Prop_Send, "m_flModelScale", g_flDropWeaponScale[ST_GetTankType(tank)]);
 
-				if (iDropMessage == 1)
+				if (g_iDropMessage[ST_GetTankType(tank)] == 1)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
@@ -692,14 +662,14 @@ static void vRemoveDrop(int tank)
 		RemoveEntity(g_iDrop[tank]);
 	}
 
-	g_iDrop[tank] = 0;
+	g_iDrop[tank] = INVALID_ENT_REFERENCE;
 }
 
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vReset2(iPlayer);
 		}
@@ -709,34 +679,14 @@ static void vReset()
 static void vReset2(int tank)
 {
 	g_bDrop[tank] = false;
-	g_iDrop[tank] = 0;
+	g_iDrop[tank] = INVALID_ENT_REFERENCE;
 	g_iDropWeapon[tank] = 0;
-}
-
-static float flDropWeaponScale(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flDropWeaponScale[ST_GetTankType(tank)] : g_flDropWeaponScale2[ST_GetTankType(tank)];
-}
-
-static int iDropAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iDropAbility[ST_GetTankType(tank)] : g_iDropAbility2[ST_GetTankType(tank)];
-}
-
-static int iDropMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iDropMode[ST_GetTankType(tank)] : g_iDropMode2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
 }
 
 public Action tTimerDrop(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iDropAbility(iTank) == 0 || !g_bDrop[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || g_iDropAbility[ST_GetTankType(iTank)] == 0 || !g_bDrop[iTank])
 	{
 		g_bDrop[iTank] = false;
 
@@ -747,7 +697,7 @@ public Action tTimerDrop(Handle timer, int userid)
 
 	int iDropValue, iPosition;
 
-	switch (iDropMode(iTank))
+	switch (g_iDropMode[ST_GetTankType(iTank)])
 	{
 		case 0: iDropValue = GetRandomInt(1, 31);
 		case 1: iDropValue = GetRandomInt(1, 19);
@@ -847,7 +797,7 @@ public Action tTimerDrop(Handle timer, int userid)
 					case 27: flScale = 3.5;
 				}
 
-				flScale *= flDropWeaponScale(iTank);
+				flScale *= g_flDropWeaponScale[ST_GetTankType(iTank)];
 			}
 			case false:
 			{

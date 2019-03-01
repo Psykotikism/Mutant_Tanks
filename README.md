@@ -5,7 +5,7 @@ Super Tanks++ takes the original [[L4D2] Super Tanks](https://forums.alliedmods.
 > The following license is also placed inside the source code of each plugin and include file.
 
 Super Tanks++: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License along with thi
 Super Tanks++ will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
 ### What makes Super Tanks++ worth installing?
-Super Tanks++ enhances the experience and fun that players get from Tank fights by 500. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
+Super Tanks++ enhances the experience and fun that players get from Tank fights by 1000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ### Requirements
 1. You must have at least `SourceMod 1.10.0.6352` or higher.
@@ -57,7 +57,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 1. Supports all game modes - Provides the option to enable/disable the plugin in all game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
 3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the config file and user-made Super Tanks.
-4. Create and save up to 500 Super Tank types - Provides the ability to store up to 500 Super Tank types.
+4. Create and save up to 1000 Super Tank types - Provides the ability to store up to 1000 Super Tank types.
 5. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
 6. Optional abilities - Provides the option to choose which abilities to install.
 7. User-friendly API - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
@@ -87,7 +87,47 @@ By default, Super Tanks++ can create and execute the following types of configur
 > If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140).
 
 ### Main Features
-1. How do I make my own Super Tank?
+1. How many config formats are there?
+
+At the moment, there are 4 different formats.
+
+2. Do I need to edit my current config file from version 8.57 and below?
+
+No, all plugins still read the original format properly.
+
+3. Which config format should I use?
+
+Whichever one you want. You are free to combine all of them as well, it doesn't matter. For consistency and to avoid confusion, this file and any other files with config examples will use the original format.
+
+Example:
+
+```
+// Original format
+"Super Tanks++"
+{
+	"Plugin Settings"
+	{
+		"Game Modes"
+		{
+			"Game Mode Types"			"0"
+		}
+	}
+}
+
+// Custom format
+supertanks++ // 2nd format
+{
+	Settings // 4th format
+	{
+		game_modes // 3rd format
+		{
+			"Game Mode Types"			0 // original format
+		}
+	}
+}
+```
+
+4. How do I make my own Super Tank?
 
 - Create an entry.
 
@@ -106,8 +146,8 @@ This is okay:
 			"Tank Chance"				"100.0" // Tank has 100% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can spawn.
 			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255 0 0 255" // Tank has red skin.
-			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
+			"Skin Color"				"255,0,0,255" // Tank has red skin.
+			"Glow Color"				"255,255,0" // Tank has a yellow glow outline.
 		}
 	}
 }
@@ -126,8 +166,8 @@ This is not okay:
 			"Tank Chance"				"47.0" // Tank has 47% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can spawn.
 			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255 0 0 255" // Tank has red skin.
-			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
+			"Skin Color"				"255,0,0,255" // Tank has red skin.
+			"Glow Color"				"255,255,0" // Tank has a yellow glow outline.
 		}
 	}
 }
@@ -146,8 +186,8 @@ This is okay:
 			"Tank Chance"				"12.3" // Tank has 12.3% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can spawn.
 			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255 0 0 255" // Tank has red skin.
-			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
+			"Skin Color"				"255,0,0,255" // Tank has red skin.
+			"Glow Color"				"255,255,0" // Tank has a yellow glow outline.
 		}
 	}
 }
@@ -166,8 +206,8 @@ This is not okay:
 			"Tank Chance"				"59.0" // Tank has 59% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can spawn.
 			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255,0,0,255" // The string should not contain any commas.
-			"Glow Color"				"255,255,0" // The string should not contain any commas.
+			"Skin Color"				"255 0 0 255" // The string should not contain any commas.
+			"Glow Color"				"255 255 0" // The string should not contain any commas.
 		}
 	}
 }
@@ -188,8 +228,8 @@ Here's our final entry:
 			"Tank Chance"				"9.5" // Tank has 9.5% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can spawn.
 			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255 0 0 255" // Tank has red skin.
-			"Glow Color"				"255 255 0" // Tank has a yellow glow outline.
+			"Skin Color"				"255,0,0,255" // Tank has red skin.
+			"Glow Color"				"255,255,0" // Tank has a yellow glow outline.
 		}
 		"Immunities"
 		{
@@ -208,7 +248,7 @@ To make sure that this entry can be chosen, we must change the value in the `Typ
 	{
 		"General"
 		{
-			"Type Range" "1-24" // Determines what entry to start and stop at when reading the entire config file.
+			"Type Range"				"1-24" // Determines what entry to start and stop at when reading the entire config file.
 		}
 	}
 }
@@ -225,7 +265,7 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Type Range" "1-5" // Check "Tank #1" to "Tank #5"
+			"Type Range"				"1-5" // Check "Tank #1" to "Tank #5"
 		}
 	}
 	"Tank #5" // Checked by the plugin.
@@ -237,8 +277,8 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 			"Tank Chance"				"75.2"
 			"Spawn Enabled"				"1"
 			"Menu Enabled"				"1"
-			"Skin Color"				"255 255 0 255"
-			"Glow Color"				"255 255 0"
+			"Skin Color"				"255,255,0,255"
+			"Glow Color"				"255,255,0"
 		}
 		"Enhancements"
 		{
@@ -263,7 +303,7 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			Type Range "1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
+			"Type Range"				"1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
 		}
 	}
 	"Tank #13" // This will not be checked by the plugin.
@@ -275,8 +315,8 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 			"Tank Chance"				"38.2"
 			"Spawn Enabled"				"1"
 			"Menu Enabled"				"1"
-			"Skin Color"				"255 255 255 255"
-			"Glow Color"				"255 255 255"
+			"Skin Color"				"255,255,255,255"
+			"Glow Color"				"255,255,255"
 			"Glow Enabled"				"0" // No glow outline.
 		}
 		"Immunities"
@@ -306,13 +346,13 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 }
 ```
 
-2. Can you add more abilities or features?
+5. Can you add more abilities or features?
 
 - That depends on whether it's doable/possible and if I want to add it.
 - If it's from another plugin, it would depend on whether the code is too long, and if it is, I most likely won't go through all that effort for just 1 ability.
 - Post on the AM thread or PM me.
 
-3. How do I enable/disable the plugin in certain game modes?
+6. How do I enable/disable the plugin in certain game modes?
 
 You have 2 options:
 
@@ -359,7 +399,7 @@ Scenario 3:
 Outcome: The plugin works in every Campaign-based and Survival-based game mode except "coop" mode.
 ```
 
-4. How come some Super Tanks aren't showing up?
+7. How come some Super Tanks aren't showing up?
 
 It may be due to one or more of the following:
 
@@ -370,10 +410,10 @@ It may be due to one or more of the following:
 - You are still using the `Tank Character` setting which is no longer used since v8.16.
 - You didn't set up the Super Tank properly.
 - You are missing quotation marks.
-- You have more than 500 Super Tanks in your config file.
+- You have more than 1000 Super Tanks in your config file.
 - You didn't format your config file properly.
 
-5. How do I kill the Tanks depending on what abilities they have?
+8. How do I kill the Tanks depending on what abilities they have?
 
 The following abilities require different strategies:
 
@@ -386,7 +426,7 @@ The following abilities require different strategies:
 - Nullify Hit: The Super Tank can mark players as useless, which means as long as that player is nullified, they will not do any damage.
 - Shield Ability: Wait for the Tank to throw propane tanks at you and then throw it back at the Tank. Then shoot the propane tank to deactivate the Tank's shield.
 
-6. How can I change the amount of Tanks that spawn on each finale wave?
+9. How can I change the amount of Tanks that spawn on each finale wave?
 
 Here's an example:
 
@@ -394,19 +434,19 @@ Here's an example:
 "Finale Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
 ```
 
-7. How can I decide whether to display each Tank's health?
+10. How can I decide whether to display each Tank's health?
 
 Set the value in `Display Health`.
 
-8. Why do some Tanks spawn with different props?
+11. Why do some Tanks spawn with different props?
 
 Each prop has X out of 100.0% probability to appear on Super Tanks when they spawn. Configure the chances for each prop in the `Props Chance` setting.
 
-9. Why are the Tanks spawning with more than the extra health given to them?
+12. Why are the Tanks spawning with more than the extra health given to them?
 
 Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
-10. How do I add more Super Tanks?
+13. How do I add more Super Tanks?
 
 - Add a new entry in the config file.
 - Raise the maximum value of the `Type Range` setting.
@@ -420,7 +460,7 @@ Example:
 	{
 		"General"
 		{
-			"Type Range" "1-69" // The plugin will check for 69 entries when loading the config file.
+			"Type Range"				"1-69" // The plugin will check for 69 entries when loading the config file.
 		}
 	}
 	"Tank #69"
@@ -433,7 +473,7 @@ Example:
 }
 ```
 
-11. How do I filter out certain Super Tanks that I made without deleting them?
+14. How do I filter out certain Super Tanks that I made without deleting them?
 
 Enable/disable them with the `Tank Enabled` setting.
 
@@ -477,7 +517,7 @@ Example:
 }
 ```
 
-12. Can I create temporary Tanks without removing or replacing them?
+15. Can I create temporary Tanks without removing or replacing them?
 
 Yes, you can do that with custom configs.
 
@@ -491,8 +531,8 @@ Example:
 	{
 		"Custom"
 		{
-			"Enable Custom Configs" "1" // Enable custom configs
-			"Execute Config Types" "1" // 1: Difficulty configs (easy, normal, hard, impossible)
+			"Enable Custom Configs"			"1" // Enable custom configs
+			"Execute Config Types"			"1" // 1: Difficulty configs (easy, normal, hard, impossible)
 		}
 	}
 	"Tank #69"
@@ -504,8 +544,8 @@ Example:
 			"Tank Chance"				"2.53"
 			"Spawn Enabled"				"1"
 			"Menu Enabled"				"1"
-			"Skin Color"				"0 170 255 255"
-			"Glow Color"				"0 170 255"
+			"Skin Color"				"0,170,255,255"
+			"Glow Color"				"0,170,255"
 		}
 		"Enhancements"
 		{
@@ -530,8 +570,8 @@ Example:
 			"Tank Chance"				"1.0"
 			"Spawn Enabled"				"1"
 			"Menu Enabled"				"1"
-			"Skin Color"				"1 1 1 255"
-			"Glow Color"				"1 1 1"
+			"Skin Color"				"1,1,1,255"
+			"Glow Color"				"1,1,1"
 		}
 		"Enhancements"
 		{
@@ -549,7 +589,7 @@ Output: When the current difficulty is Expert mode (impossible), the Idiot Tank 
 These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
 
-13. How can I move the Super Tanks++ category around on the admin menu?
+16. How can I move the Super Tanks++ category around on the admin menu?
 
 - You have to open up addons/sourcemod/configs/adminmenu_sorting.txt.
 - Enter the `SuperTanks++` category.
@@ -596,7 +636,7 @@ Example:
 }
 ```
 
-14. Are there any developer/tester features available in the plugin?
+17. Are there any developer/tester features available in the plugin?
 
 Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Super Tank.
 
@@ -633,17 +673,27 @@ forward void ST_OnButtonReleased(int tank, int button);
  * Use this forward to trigger any features/abilities/settings when a Super Tank changes types.
  *
  * @param tank			Client index of the Tank.
+ * @param revert		True if reverting to a normal Tank, false otherwise.
  **/
-forward void ST_OnChangeType(int tank);
+forward void ST_OnChangeType(int tank, bool revert);
+
+/**
+ * Called when the config file is about to load.
+ * Use this forward to set default values for settings for the plugin.
+ **/
+forward void ST_OnConfigsLoad();
 
 /**
  * Called when the config file is loaded.
  * Use this forward to load settings for the plugin.
  *
- * @param savepath		The savepath of the config.
+ * @param subsection		The subsection the config parser is currently on.
+ * @param key			The key the config parser is currently on.
  * @param main			Checks whether the main config or a custom config is being used.
+ * @param value			The value the config parser is currently on.
+ * @param type			The Super Tank type the config parser is currently on.
  **/
-forward void ST_OnConfigsLoaded(const char[] savepath, bool main);
+forward void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type);
 
 /**
  * Called when a player uses the "sm_st_info" command.
@@ -687,13 +737,13 @@ forward void ST_OnMenuItemSelected(int client, const char[] info);
 forward void ST_OnPluginEnd();
 
 /**
- * Called when the Tank spawns.
- * Use this forward for any on-spawn presets.
+ * Called after the Tank spawns.
+ * Use this forward for any post-spawn actions.
  * If you plan on using this to activate an ability, use ST_OnAbilityActivated() instead.
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_OnPreset(int tank);
+forward void ST_OnPostTankSpawn(int tank);
 
 /**
  * Called when the Tank's rock breaks.
@@ -821,9 +871,9 @@ native void ST_HideEntity(int entity, bool mode);
 /**
  * Returns whether the clone can use abilities.
  *
- * @param tank			Client index of the Tank.
- * @param clone			Checks whether "st_clone.smx" is installed.
- * @return			True if clone can use abilities, false otherwise.
+ * @param tank				Client index of the Tank.
+ * @param clone				Checks whether "st_clone.smx" is installed.
+ * @return				True if clone can use abilities, false otherwise.
  **/
 native bool ST_IsCloneSupported(int tank, bool clone);
 
@@ -833,6 +883,15 @@ native bool ST_IsCloneSupported(int tank, bool clone);
  * @return			True if core plugin is enabled, false otherwise.
  **/
 native bool ST_IsCorePluginEnabled();
+
+/**
+ * Returns if a certain Super Tank type is only available on finale maps.
+ *
+ * @param type			Super Tank type.
+ * @return			True if the type is available, false otherwise.
+ * @error			Type is 0.
+ **/
+native bool ST_IsFinaleTank(int type);
 
 /**
  * Returns if the Super Tank type has a glow outline.
@@ -847,13 +906,14 @@ native bool ST_IsGlowEnabled(int tank);
  * Returns if the Tank is allowed to be a Super Tank.
  *
  * @param tank			Client index of the Tank.
- * @param checks		Checks to run. 0 = client index, 1 = connection, 2 = in-game status,
- *				3 = life state, 4 = kick status, 5 = bot check
- *				Default: "0234"
+ * @param flags			Checks to run.
+ *				ST_CHECK_INDEX = client index, ST_CHECK_CONNECTED = connection, ST_CHECK_INGAME = in-game status,
+ *				ST_CHECK_ALIVE = life state, ST_CHECK_KICKQUEUE = kick status, ST_CHECK_FAKECLIENT = bot check
+ *				Default: ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE
  * @return			True if Tank is allowed to be a Super Tank, false otherwise.
  * @error			Invalid client index.
  **/
-native bool ST_IsTankSupported(int tank, const char[] checks = "0234");
+native bool ST_IsTankSupported(int tank, int flags = ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE);
 
 /**
  * Returns if a certain Super Tank type is enabled.
@@ -940,7 +1000,7 @@ sm_tank - Spawn a Super Tank.
 
 Valid inputs:
 
-1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is 500 though.)
+1. sm_tank <type 1*-1000*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is 1000 though.)
 2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Super Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 
 The command has 4 functions.
@@ -957,10 +1017,8 @@ If you are a Tank:
 ```
 
 ```
+sm_st_config - View a section of the config file.
 sm_st_info - View information about Super Tanks++.
-```
-
-```
 sm_st_absorb - View information about the Absorb ability.
 sm_st_acid - View information about the Acid ability.
 sm_st_aimless - View information about the Aimless ability.
@@ -977,8 +1035,8 @@ sm_st_drug - View information about the Drug ability.
 sm_st_drunk - View information about the Drunk ability.
 sm_st_electric - View information about the Electric ability.
 sm_st_enforce - View information about the Enforce ability.
+sm_st_fast - View information about the Fast ability.
 sm_st_fire - View information about the Fire ability.
-sm_st_flash - View information about the Flash ability.
 sm_st_fling - View information about the Fling ability.
 sm_st_fragile - View information about the Fragile ability.
 sm_st_ghost - View information about the Ghost ability.
@@ -1019,9 +1077,10 @@ sm_st_smash - View information about the Smash ability.
 sm_st_smite - View information about the Smite ability.
 sm_st_spam - View information about the Spam ability.
 sm_st_splash - View information about the Splash ability.
-sm_st_stun - View information about the Stun ability.
+sm_st_slow - View information about the Slow ability.
 sm_st_throw - View information about the Throw ability.
 sm_st_track - View information about the Track ability.
+sm_st_ultimate - View information about the Ultimate ability.
 sm_st_undead - View information about the Undead ability.
 sm_st_vampire - View information about the Vampire ability.
 sm_st_vision - View information about the Vision ability.
@@ -1047,7 +1106,7 @@ Example:
 {
 	"Tank #1"
 	{
-		"Flash Ability"
+		"Fast Ability"
 		{
 			"Human Ability"				"1"
 		}
@@ -1087,7 +1146,7 @@ Example:
 {
 	"Tank #1"
 	{
-		"Flash Ability"
+		"Fast Ability"
 		{
 			"Human Ammo"				"1"
 		}
@@ -1106,7 +1165,7 @@ Example:
 {
 	"Tank #1"
 	{
-		"Flash Ability"
+		"Fast Ability"
 		{
 			"Human Cooldown"			"1"
 		}
@@ -1118,11 +1177,11 @@ Example:
 
 That setting is a special duration for players, but they only apply if the `Human Mode` setting is set to 0.
 
-Furthermore, there are some duration settings for abilities that will also affect players. Read the `INFORMATION.md` for more details.
+Furthermore, there are some duration settings for abilities that will also affect players. Read the `INFORMATION.md` file for more details.
 
 9. What is the `Human Mode` setting for in some of the abilities?
 
-That setting is a special mode setting for players, which can determine how some abilities are activated. Read the `INFORMATION.md` for more details.
+That setting is a special mode setting for players, which can determine how some abilities are activated. Read the `INFORMATION.md` file for more details.
 
 10. Is there any way players can view information about this feature in-game?
 
@@ -1161,9 +1220,9 @@ Set the values in `Create Config Types`.
 Examples:
 
 ```
-"Create Config Types" "123" // Creates the folders and config files for each difficulty, map, and game mode.
-"Create Config Types" "4" // Creates the folder and config files for each day.
-"Create Config Types" "12345" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
+"Create Config Types" "7" // Creates the folders and config files for each difficulty, map, and game mode.
+"Create Config Types" "8" // Creates the folder and config files for each day.
+"Create Config Types" "31" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
 ```
 
 3. How do I tell the plugin to only execute certain custom config files?
@@ -1173,9 +1232,9 @@ Set the values in `Execute Config Types`.
 Examples:
 
 ```
-"Execute Config Types" "123" // Executes the config file for the current difficulty, map, and game mode.
-"Execute Config Types" "4" // Executes the config file for the current day.
-"Execute Config Types" "12345" // Executes the config file for the current difficulty, map, game mode, day, and player count.
+"Execute Config Types" "7" // Executes the config file for the current difficulty, map, and game mode.
+"Execute Config Types" "8" // Executes the config file for the current day.
+"Execute Config Types" "31" // Executes the config file for the current difficulty, map, game mode, day, and player count.
 ```
 
 ## Credits
@@ -1253,6 +1312,10 @@ Examples:
 
 **huwong** - For reporting issues and suggesting ideas.
 
+**foquaxticity** - For suggesting ideas.
+
+**FatalOE71** - For suggesting ideas.
+
 **AngelAce113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
 
 **Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
@@ -1271,6 +1334,7 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
+
 
 
 Thank you very much and have fun! :D

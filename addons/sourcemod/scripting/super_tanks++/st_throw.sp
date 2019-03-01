@@ -1,6 +1,6 @@
 /**
  * Super Tanks++: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2018  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -29,22 +29,6 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
-#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
-#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
-#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
-
-#define ST_MENU_THROW "Throw Ability"
-
-bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1], g_bThrow[MAXPLAYERS + 1], g_bThrow2[MAXPLAYERS + 1];
-
-char g_sThrowAbility[ST_MAXTYPES + 1][9], g_sThrowAbility2[ST_MAXTYPES + 1][9], g_sThrowCarOptions[ST_MAXTYPES + 1][7], g_sThrowCarOptions2[ST_MAXTYPES + 1][7], g_sThrowInfectedOptions[ST_MAXTYPES + 1][15], g_sThrowInfectedOptions2[ST_MAXTYPES + 1][15], g_sThrowMessage[ST_MAXTYPES + 1][5], g_sThrowMessage2[ST_MAXTYPES + 1][5];
-
-ConVar g_cvSTTankThrowForce;
-
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flThrowChance[ST_MAXTYPES + 1], g_flThrowChance2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iThrowCount[MAXPLAYERS + 1];
-
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
@@ -56,6 +40,20 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
+#define MODEL_CAR2 "models/props_vehicles/cara_69sedan.mdl"
+#define MODEL_CAR3 "models/props_vehicles/cara_84sedan.mdl"
+
+#define ST_MENU_THROW "Throw Ability"
+
+bool g_bCloneInstalled, g_bThrow[MAXPLAYERS + 1], g_bThrow2[MAXPLAYERS + 1];
+
+ConVar g_cvSTTankThrowForce;
+
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flThrowChance[ST_MAXTYPES + 1];
+
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowCarOptions[ST_MAXTYPES + 1], g_iThrowCount[MAXPLAYERS + 1], g_iThrowInfectedOptions[ST_MAXTYPES + 1], g_iThrowMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -116,7 +114,7 @@ public Action cmdThrowInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, "0245"))
+	if (!bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", ST_TAG);
 
@@ -156,18 +154,16 @@ public int iThrowMenuHandler(Menu menu, MenuAction action, int param1, int param
 			{
 				case 0:
 				{
-					char sThrowAbility[9];
-					sThrowAbility = !g_bTankConfig[ST_GetTankType(param1)] ? g_sThrowAbility[ST_GetTankType(param1)] : g_sThrowAbility2[ST_GetTankType(param1)];
-					ST_PrintToChat(param1, "%s %t", ST_TAG3, StrEqual(sThrowAbility, "") ? "AbilityStatus1" : "AbilityStatus2");
+					ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iThrowAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
 				}
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iThrowCount[param1], iHumanAmmo(param1));
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iThrowCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons3");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "ThrowDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, "24"))
+			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
 				vThrowMenu(param1, menu.Selection);
 			}
@@ -234,60 +230,31 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Throw Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Throw Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Throw Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					kvSuperTanks.GetString("Throw Ability/Ability Enabled", g_sThrowAbility[iIndex], sizeof(g_sThrowAbility[]), "0");
-					kvSuperTanks.GetString("Throw Ability/Ability Message", g_sThrowMessage[iIndex], sizeof(g_sThrowMessage[]), "0");
-					kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions[iIndex], sizeof(g_sThrowCarOptions[]), "123");
-					g_flThrowChance[iIndex] = kvSuperTanks.GetFloat("Throw Ability/Throw Chance", 33.3);
-					g_flThrowChance[iIndex] = flClamp(g_flThrowChance[iIndex], 0.0, 100.0);
-					kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions[iIndex], sizeof(g_sThrowInfectedOptions[]), "1234567");
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Throw Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Throw Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					kvSuperTanks.GetString("Throw Ability/Ability Enabled", g_sThrowAbility2[iIndex], sizeof(g_sThrowAbility2[]), g_sThrowAbility[iIndex]);
-					kvSuperTanks.GetString("Throw Ability/Ability Message", g_sThrowMessage2[iIndex], sizeof(g_sThrowMessage2[]), g_sThrowMessage[iIndex]);
-					kvSuperTanks.GetString("Throw Ability/Throw Car Options", g_sThrowCarOptions2[iIndex], sizeof(g_sThrowCarOptions2[]), g_sThrowCarOptions[iIndex]);
-					g_flThrowChance2[iIndex] = kvSuperTanks.GetFloat("Throw Ability/Throw Chance", g_flThrowChance[iIndex]);
-					g_flThrowChance2[iIndex] = flClamp(g_flThrowChance2[iIndex], 0.0, 100.0);
-					kvSuperTanks.GetString("Throw Ability/Throw Infected Options", g_sThrowInfectedOptions2[iIndex], sizeof(g_sThrowInfectedOptions2[]), g_sThrowInfectedOptions[iIndex]);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iThrowAbility[iIndex] = 0;
+		g_iThrowMessage[iIndex] = 0;
+		g_iThrowCarOptions[iIndex] = 0;
+		g_flThrowChance[iIndex] = 33.3;
+		g_iThrowInfectedOptions[iIndex] = 0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iThrowAbility[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iThrowAbility[type], value, 0, 0, 15);
+	g_iThrowMessage[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iThrowMessage[type], value, 0, 0, 15);
+	g_iThrowCarOptions[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "car", main, g_iThrowCarOptions[type], value, 0, 0, 7);
+	g_flThrowChance[type] = flGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", main, g_flThrowChance[type], value, 33.3, 0.0, 100.0);
+	g_iThrowInfectedOptions[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infected", main, g_iThrowInfectedOptions[type], value, 0, 0, 127);
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -295,7 +262,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, "024"))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveThrow(iTank);
 		}
@@ -304,22 +271,20 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, "02345") && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
-			char sThrowAbility[9];
-			sThrowAbility = !g_bTankConfig[ST_GetTankType(tank)] ? g_sThrowAbility[ST_GetTankType(tank)] : g_sThrowAbility2[ST_GetTankType(tank)];
-			if (!StrEqual(sThrowAbility, "") && iHumanAbility(tank) == 1)
+			if (g_iThrowAbility[ST_GetTankType(tank)] == 0 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				if (!g_bThrow[tank] && !g_bThrow2[tank])
 				{
-					if (g_iThrowCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+					if (g_iThrowCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 					{
 						g_bThrow[tank] = true;
 						g_iThrowCount[tank]++;
 
-						ST_PrintToChat(tank, "%s %t", ST_TAG3, "ThrowHuman", g_iThrowCount[tank], iHumanAmmo(tank));
+						ST_PrintToChat(tank, "%s %t", ST_TAG3, "ThrowHuman", g_iThrowCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 					}
 					else
 					{
@@ -339,17 +304,14 @@ public void ST_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void ST_OnChangeType(int tank)
+public void ST_OnChangeType(int tank, bool revert)
 {
 	vRemoveThrow(tank);
 }
 
 public void ST_OnRockThrow(int tank, int rock)
 {
-	char sThrowAbility[9];
-	sThrowAbility = !g_bTankConfig[ST_GetTankType(tank)] ? g_sThrowAbility[ST_GetTankType(tank)] : g_sThrowAbility2[ST_GetTankType(tank)];
-	float flThrowChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flThrowChance[ST_GetTankType(tank)] : g_flThrowChance2[ST_GetTankType(tank)];
-	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && !StrEqual(sThrowAbility, "") && GetRandomFloat(0.1, 100.0) <= flThrowChance)
+	if (ST_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iThrowAbility[ST_GetTankType(tank)] > 0 && GetRandomFloat(0.1, 100.0) <= g_flThrowChance[ST_GetTankType(tank)])
 	{
 		DataPack dpThrow;
 		CreateDataTimer(0.1, tTimerThrow, dpThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -370,26 +332,11 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "24"))
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
 			vRemoveThrow(iPlayer);
 		}
 	}
-}
-
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 public Action tTimerThrow(Handle timer, DataPack pack)
@@ -403,14 +350,12 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	char sThrowAbility[9];
-	sThrowAbility = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowAbility[ST_GetTankType(iTank)] : g_sThrowAbility2[ST_GetTankType(iTank)];
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || StrEqual(sThrowAbility, ""))
+	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (g_iThrowAbility[ST_GetTankType(iTank)] == 0))
 	{
 		return Plugin_Stop;
 	}
 
-	if (!ST_IsTankSupported(iTank, "5") || iHumanAbility(iTank) == 0)
+	if (!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(iTank)] == 0)
 	{
 		g_bThrow[iTank] = true;
 	}
@@ -426,26 +371,149 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	float flVector = GetVectorLength(flVelocity);
 	if (flVector > 500.0)
 	{
-		char sAbilities = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowAbility[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowAbility[ST_GetTankType(iTank)]) - 1)] : g_sThrowAbility2[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowAbility2[ST_GetTankType(iTank)]) - 1)];
-		switch (sAbilities)
+		int iAbilityCount, iAbilities[5];
+		for (int iBit = 0; iBit < 4; iBit++)
 		{
-			case '1':
+			int iFlag = (1 << iBit);
+			if (!(g_iThrowAbility[ST_GetTankType(iTank)] & iFlag))
 			{
-				int iCar = CreateEntityByName("prop_physics");
-				if (bIsValidEntity(iCar))
+				continue;
+			}
+
+			iAbilities[iAbilityCount] = iFlag;
+			iAbilityCount++;
+		}
+
+		if (iAbilityCount > 0)
+		{
+			switch (iAbilities[GetRandomInt(0, iAbilityCount - 1)])
+			{
+				case 1:
 				{
-					char sNumbers = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowCarOptions[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowCarOptions[ST_GetTankType(iTank)]) - 1)] : g_sThrowCarOptions2[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowCarOptions2[ST_GetTankType(iTank)]) - 1)];
-					switch (sNumbers)
+					int iCar = CreateEntityByName("prop_physics");
+					if (bIsValidEntity(iCar))
 					{
-						case '1': SetEntityModel(iCar, MODEL_CAR);
-						case '2': SetEntityModel(iCar, MODEL_CAR2);
-						case '3': SetEntityModel(iCar, MODEL_CAR3);
-						default: SetEntityModel(iCar, MODEL_CAR);
+						int iOptionCount, iOptions[4];
+						for (int iBit = 0; iBit < 3; iBit++)
+						{
+							int iFlag = (1 << iBit);
+							if (!(g_iThrowCarOptions[ST_GetTankType(iTank)] & iFlag))
+							{
+								continue;
+							}
+
+							iOptions[iOptionCount] = iFlag;
+							iOptionCount++;
+						}
+
+						switch (iOptions[GetRandomInt(0, iOptionCount - 1)])
+						{
+							case 1: SetEntityModel(iCar, MODEL_CAR);
+							case 2: SetEntityModel(iCar, MODEL_CAR2);
+							case 4: SetEntityModel(iCar, MODEL_CAR3);
+							default:
+							{
+								switch (GetRandomInt(1, 3))
+								{
+									case 1: SetEntityModel(iCar, MODEL_CAR);
+									case 2: SetEntityModel(iCar, MODEL_CAR2);
+									case 3: SetEntityModel(iCar, MODEL_CAR3);
+								}
+							}
+						}
+
+						int iCarColor[3];
+						for (int iPos = 0; iPos < 3; iPos++)
+						{
+							iCarColor[iPos] = GetRandomInt(0, 255);
+						}
+
+						SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
+
+						float flPos[3];
+						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+						RemoveEntity(iRock);
+
+						NormalizeVector(flVelocity, flVelocity);
+						ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
+
+						DispatchSpawn(iCar);
+						TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
+
+						CreateTimer(2.0, tTimerSetCarVelocity, EntIndexToEntRef(iCar), TIMER_FLAG_NO_MAPCHANGE);
+
+						iCar = EntIndexToEntRef(iCar);
+						vDeleteEntity(iCar, 10.0);
+
+						if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_MELEE)
+						{
+							char sTankName[33];
+							ST_GetTankName(iTank, sTankName);
+							ST_PrintToChatAll("%s %t", ST_TAG2, "Throw", sTankName);
+						}
 					}
+				}
+				case 2:
+				{
+					int iInfected = CreateFakeClient("Infected");
+					if (iInfected > 0)
+					{
+						int iOptionCount, iOptions[8];
+						for (int iBit = 0; iBit < 7; iBit++)
+						{
+							int iFlag = (1 << iBit);
+							if (!(g_iThrowInfectedOptions[ST_GetTankType(iTank)] & iFlag))
+							{
+								continue;
+							}
 
-					int iRed = GetRandomInt(0, 255), iGreen = GetRandomInt(0, 255), iBlue = GetRandomInt(0, 255);
-					SetEntityRenderColor(iCar, iRed, iGreen, iBlue, 255);
+							iOptions[iOptionCount] = iFlag;
+							iOptionCount++;
+						}
 
+						switch (iOptions[GetRandomInt(0, iOptionCount - 1)])
+						{
+							case 1: vSpawnInfected(iInfected, "smoker");
+							case 2: vSpawnInfected(iInfected, "boomer");
+							case 4: vSpawnInfected(iInfected, "hunter");
+							case 8: vSpawnInfected(iInfected, bIsValidGame() ? "spitter" : "boomer");
+							case 16: vSpawnInfected(iInfected, bIsValidGame() ? "jockey" : "hunter");
+							case 32: vSpawnInfected(iInfected, bIsValidGame() ? "charger" : "smoker");
+							case 64: vSpawnInfected(iInfected, "tank");
+							default:
+							{
+								switch (GetRandomInt(1, 7))
+								{
+									case 1: vSpawnInfected(iInfected, "smoker");
+									case 2: vSpawnInfected(iInfected, "boomer");
+									case 3: vSpawnInfected(iInfected, "hunter");
+									case 4: vSpawnInfected(iInfected, bIsValidGame() ? "spitter" : "boomer");
+									case 5: vSpawnInfected(iInfected, bIsValidGame() ? "jockey" : "hunter");
+									case 6: vSpawnInfected(iInfected, bIsValidGame() ? "charger" : "smoker");
+									case 7: vSpawnInfected(iInfected, "tank");
+								}
+							}
+						}
+
+						float flPos[3];
+						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+						RemoveEntity(iRock);
+
+						NormalizeVector(flVelocity, flVelocity);
+						ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
+
+						TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
+
+						if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_RANGE)
+						{
+							char sTankName[33];
+							ST_GetTankName(iTank, sTankName);
+							ST_PrintToChatAll("%s %t", ST_TAG2, "Throw2", sTankName);
+						}
+					}
+				}
+				case 4:
+				{
 					float flPos[3];
 					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 					RemoveEntity(iRock);
@@ -453,143 +521,55 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					NormalizeVector(flVelocity, flVelocity);
 					ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
 
-					DispatchSpawn(iCar);
-					TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
+					TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
 
-					CreateTimer(2.0, tTimerSetCarVelocity, EntIndexToEntRef(iCar), TIMER_FLAG_NO_MAPCHANGE);
-
-					iCar = EntIndexToEntRef(iCar);
-					vDeleteEntity(iCar, 10.0);
-
-					char sThrowMessage[5];
-					sThrowMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowMessage[ST_GetTankType(iTank)] : g_sThrowMessage2[ST_GetTankType(iTank)];
-					if (StrContains(sThrowMessage, "1") != -1)
+					if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_SPECIAL)
 					{
 						char sTankName[33];
 						ST_GetTankName(iTank, sTankName);
-						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw", sTankName);
+						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw3", sTankName);
 					}
 				}
-			}
-			case '2':
-			{
-				int iInfected = CreateFakeClient("Infected");
-				if (iInfected > 0)
+				case 8:
 				{
-					char sNumbers = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowInfectedOptions[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowInfectedOptions[ST_GetTankType(iTank)]) - 1)] : g_sThrowInfectedOptions2[ST_GetTankType(iTank)][GetRandomInt(0, strlen(g_sThrowInfectedOptions2[ST_GetTankType(iTank)]) - 1)];
-					switch (sNumbers)
+					int iWitch = CreateEntityByName("witch");
+					if (bIsValidEntity(iWitch))
 					{
-						case '1': vSpawnInfected(iInfected, "smoker");
-						case '2': vSpawnInfected(iInfected, "boomer");
-						case '3': vSpawnInfected(iInfected, "hunter");
-						case '4':
-						{
-							switch (bIsValidGame())
-							{
-								case true: vSpawnInfected(iInfected, "spitter");
-								case false: vSpawnInfected(iInfected, "boomer");
-							}
-						}
-						case '5':
-						{
-							switch (bIsValidGame())
-							{
-								case true: vSpawnInfected(iInfected, "jockey");
-								case false: vSpawnInfected(iInfected, "hunter");
-							}
-						}
-						case '6':
-						{
-							switch (bIsValidGame())
-							{
-								case true: vSpawnInfected(iInfected, "charger");
-								case false: vSpawnInfected(iInfected, "smoker");
-							}
-						}
-						case '7': vSpawnInfected(iInfected, "tank");
-						default: vSpawnInfected(iInfected, "hunter");
+						float flPos[3];
+						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+						RemoveEntity(iRock);
+
+						NormalizeVector(flVelocity, flVelocity);
+						ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
+
+						DispatchSpawn(iWitch);
+						ActivateEntity(iWitch);
+						SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
+
+						TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
 					}
 
-					float flPos[3];
-					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-					RemoveEntity(iRock);
-
-					NormalizeVector(flVelocity, flVelocity);
-					ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
-
-					TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
-
-					char sThrowMessage[5];
-					sThrowMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowMessage[ST_GetTankType(iTank)] : g_sThrowMessage2[ST_GetTankType(iTank)];
-					if (StrContains(sThrowMessage, "2") != -1)
+					if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_SPECIAL2)
 					{
 						char sTankName[33];
 						ST_GetTankName(iTank, sTankName);
-						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw2", sTankName);
+						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw4", sTankName);
 					}
-				}
-			}
-			case '3':
-			{
-				float flPos[3];
-				GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-				RemoveEntity(iRock);
-
-				NormalizeVector(flVelocity, flVelocity);
-				ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
-
-				TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
-
-				char sThrowMessage[5];
-				sThrowMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowMessage[ST_GetTankType(iTank)] : g_sThrowMessage2[ST_GetTankType(iTank)];
-				if (StrContains(sThrowMessage, "3") != -1)
-				{
-					char sTankName[33];
-					ST_GetTankName(iTank, sTankName);
-					ST_PrintToChatAll("%s %t", ST_TAG2, "Throw3", sTankName);
-				}
-			}
-			case '4':
-			{
-				int iWitch = CreateEntityByName("witch");
-				if (bIsValidEntity(iWitch))
-				{
-					float flPos[3];
-					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-					RemoveEntity(iRock);
-
-					NormalizeVector(flVelocity, flVelocity);
-					ScaleVector(flVelocity, g_cvSTTankThrowForce.FloatValue * 1.4);
-
-					DispatchSpawn(iWitch);
-					ActivateEntity(iWitch);
-					SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
-
-					TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
-				}
-
-				char sThrowMessage[5];
-				sThrowMessage = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sThrowMessage[ST_GetTankType(iTank)] : g_sThrowMessage2[ST_GetTankType(iTank)];
-				if (StrContains(sThrowMessage, "4") != -1)
-				{
-					char sTankName[33];
-					ST_GetTankName(iTank, sTankName);
-					ST_PrintToChatAll("%s %t", ST_TAG2, "Throw4", sTankName);
 				}
 			}
 		}
 
 		g_bThrow[iTank] = false;
 
-		if (ST_IsTankSupported(iTank, "5") && iHumanAbility(iTank) && !g_bThrow2[iTank])
+		if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] && !g_bThrow2[iTank])
 		{
 			g_bThrow2[iTank] = true;
 
 			ST_PrintToChat(iTank, "%s %t", ST_TAG3, "ThrowHuman4");
 
-			if (g_iThrowCount[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
+			if (g_iThrowCount[iTank] < g_iHumanAmmo[ST_GetTankType(iTank)] && g_iHumanAmmo[ST_GetTankType(iTank)] > 0)
 			{
-				CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+				CreateTimer(g_flHumanCooldown[ST_GetTankType(iTank)], tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 			}
 			else
 			{
@@ -619,7 +599,7 @@ public Action tTimerSetCarVelocity(Handle timer, int ref)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, "02345") || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bThrow2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bThrow2[iTank])
 	{
 		g_bThrow2[iTank] = false;
 
