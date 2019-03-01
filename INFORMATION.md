@@ -1,8 +1,8 @@
 # Information
 > Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
 
-- Maximum types: 500 (Increase the value in the `super_tanks++.inc` file and recompile at your own risk.)
-- Ability count: 69 (Suggest more if you want; we always needs more.)
+- Maximum types: 1000 (Increase the value in the `super_tanks++.inc` file and recompile at your own risk.)
+- Ability count: 69 (Suggest more if you want; we will always needs more.)
 
 ## Plugin Settings
 
@@ -92,11 +92,11 @@
 			// Character limit for each value: 3
 			// --
 			// Minimum number for each value: 1
-			// Maximum number for each value: 500
+			// Maximum number for each value: 1000
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
-			"Type Range"				"1-500"
+			"Type Range"				"1-1000"
 		}
 		"Human Support"
 		{
@@ -303,7 +303,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Skin Color"				"255 255 255 255"
+			"Skin Color"				"255,255,255,255"
 
 			// The Super Tank will have a glow outline.
 			// Only available in Left 4 Dead 2.
@@ -317,7 +317,7 @@
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
-			"Glow Color"				"255 255 255"
+			"Glow Color"				"255,255,255"
 		}
 		"Spawn"
 		{
@@ -360,7 +360,7 @@
 			// --
 			// Minimum: 1
 			// Maximum: 4
-			"Boss Stages"				"3"
+			"Boss Stages"				"4"
 
 			// The Super Tank types that the boss will evolve into.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
@@ -371,7 +371,7 @@
 			// Character limit for each stage type: 4
 			// --
 			// Minimum: 1
-			// Maximum: 500
+			// Maximum: 1000
 			// --
 			// 1st number = 2nd stage type
 			// 2nd number = 3rd stage type
@@ -420,7 +420,7 @@
 			// Example: "97,98,99,100,101,102,103,104,105,106"
 			// --
 			// Minimum: 1
-			// Maximum: 500
+			// Maximum: 1000
 			"Transform Types"			"1,2,3,4,5,6,7,8,9,10"
 
 			// The mode of the Super Tank's spawn status.
@@ -472,7 +472,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Light Color"				"255 255 255 255"
+			"Light Color"				"255,255,255,255"
 
 			// These are the RGBA values of the Super Tank's oxygen tank prop's color.
 			// --
@@ -480,7 +480,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Oxygen Tank Color"			"255 255 255 255"
+			"Oxygen Tank Color"			"255,255,255,255"
 
 			// These are the RGBA values of the Super Tank's oxygen tank prop's flame's color.
 			// --
@@ -488,7 +488,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Flame Color"				"255 255 255 180"
+			"Flame Color"				"255,255,255,180"
 
 			// These are the RGBA values of the Super Tank's rock prop's color.
 			// --
@@ -496,7 +496,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Rock Color"				"255 255 255 255"
+			"Rock Color"				"255,255,255,255"
 
 			// These are the RGBA values of the Super Tank's tire prop's color.
 			// --
@@ -504,7 +504,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Tire Color"				"255 255 255 255"
+			"Tire Color"				"255,255,255,255"
 		}
 		"Particles"
 		{
@@ -4468,7 +4468,9 @@
 			// Enable this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, the Super Tank can heal nearby special infected upon death.
+			// 2: ON, the Super Tank can heal nearby special infected periodically.
+			// 3: ON, the Super Tank can do both.
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -5627,7 +5629,7 @@
 			// The type that the Super Tank will respawn as.
 			// --
 			// 0: OFF, use the randomization feature.
-			// 1-500: ON, the type to respawn as.
+			// 1-1000: ON, the type to respawn as.
 			"Respawn Type"				"0"
 		}
 	}

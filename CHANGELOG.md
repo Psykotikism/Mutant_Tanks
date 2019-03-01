@@ -7,6 +7,7 @@ Bug fixes:
 1. Fixed several abilities not resetting properly when Super Tanks die.
 2. Fixed the Clone ability spam-spawning Tank clones.
 3. Fixed the Respawn ability not detecting finale Super Tanks.
+4. Fixed all the plugins returning errors when the Clone ability isn't installed.
 
 Changes:
 
@@ -17,16 +18,23 @@ Changes:
 5. Renamed the `Flash` ability to `Fast` ability.
 6. Renamed the `Stun` ability to `Slow` ability.
 7. Renamed the `ST_OnPreset()` forward to `ST_OnPostTankSpawn()`.
-8. Added a second argument to the `ST_OnChangeType()` forward.
-9. Added the `ST_IsFinaleTank()` native.
-10. Added the Ultimate ability. (Requested by foquaxticity.)
-11. The Medic ability now allows Super Tanks to heal other Tanks. (Requested by FatalOE71.)
+8. Added the `sm_st_config` command.
+9. Added a second argument to the `ST_OnChangeType()` forward.
+10. Added the `ST_IsFinaleTank()` native.
+11. Added the Ultimate ability. (Requested by foquaxticity.)
+12. The Medic ability now allows Super Tanks to heal other Tanks. (Requested by FatalOE71.)
+13. The `ST_OnConfigsLoaded()` forward now has different parameters.
+14. Added the `ST_OnConfigsLoad()` forward.
+15. All KeyValues sections and settings no longer need quotation marks around them (unless they contain whitespaces).
+16. The config file now accepts different formats. (See examples in the `addons/sourcemod/data/super_tanks++/backup_config` folder.)
+17. All color settings need commas again as delimiters. (Example: `255,255,255,255`)
+18. Increased Super Tank type limit back to 1000.
 
 Files:
 
-1. Updated all source codes with the above changes.
-2. Updated the `super_tanks++.cfg` file with new settings.
-3. Updated the `super_tanks++.inc` file with the above changes.
+1. Updated the `super_tanks++.cfg` file with new settings.
+2. Updated the `super_tanks++.inc` file with the above changes.
+3. Updated the `st_clone.inc` file with a new stock used by all plugins.
 4. Updated the `super_tanks++.phrases.txt` file with new phrases.
 
 ## Version 8.57 (February 14, 2019)
