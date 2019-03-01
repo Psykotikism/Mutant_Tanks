@@ -55,11 +55,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_ULTIMATE "Ultimate Ability"
 
-bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1], g_bUltimate[MAXPLAYERS + 1], g_bUltimate2[MAXPLAYERS + 1], g_bUltimate3[MAXPLAYERS + 1];
+bool g_bCloneInstalled, g_bUltimate[MAXPLAYERS + 1], g_bUltimate2[MAXPLAYERS + 1], g_bUltimate3[MAXPLAYERS + 1];
 
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flUltimateDamage[MAXPLAYERS + 1], g_flUltimateDamageBoost[ST_MAXTYPES + 1], g_flUltimateDamageBoost2[ST_MAXTYPES + 1], g_flUltimateDamageRequired[ST_MAXTYPES + 1], g_flUltimateDamageRequired2[ST_MAXTYPES + 1], g_flUltimateDuration[ST_MAXTYPES + 1], g_flUltimateDuration2[ST_MAXTYPES + 1], g_flUltimateHealthPortion[ST_MAXTYPES + 1], g_flUltimateHealthPortion2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flUltimateDamage[MAXPLAYERS + 1], g_flUltimateDamageBoost[ST_MAXTYPES + 1], g_flUltimateDamageRequired[ST_MAXTYPES + 1], g_flUltimateDuration[ST_MAXTYPES + 1], g_flUltimateHealthPortion[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iUltimateAbility[ST_MAXTYPES + 1], g_iUltimateAbility2[ST_MAXTYPES + 1], g_iUltimateAmount[ST_MAXTYPES + 1], g_iUltimateAmount2[ST_MAXTYPES + 1], g_iUltimateCount[MAXPLAYERS + 1], g_iUltimateCount2[MAXPLAYERS + 1], g_iUltimateHealth[MAXPLAYERS + 1], g_iUltimateHealthLimit[ST_MAXTYPES + 1], g_iUltimateHealthLimit2[ST_MAXTYPES + 1], g_iUltimateMessage[ST_MAXTYPES + 1], g_iUltimateMessage2[ST_MAXTYPES + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iUltimateAbility[ST_MAXTYPES + 1], g_iUltimateAmount[ST_MAXTYPES + 1], g_iUltimateCount[MAXPLAYERS + 1], g_iUltimateCount2[MAXPLAYERS + 1], g_iUltimateHealth[MAXPLAYERS + 1], g_iUltimateHealthLimit[ST_MAXTYPES + 1], g_iUltimateMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -175,13 +175,13 @@ public int iUltimateMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iUltimateAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iUltimateCount2[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iUltimateAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iUltimateCount2[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "UltimateDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flUltimateDuration(param1));
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", g_flUltimateDuration[ST_GetTankType(param1)]);
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -260,21 +260,20 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
-		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
-			if (iUltimateAbility(attacker) == 1)
+			if (g_iUltimateAbility[ST_GetTankType(attacker)] == 1)
 			{
-				float flUltimateDamageRequired = !g_bTankConfig[ST_GetTankType(attacker)] ? g_flUltimateDamageRequired[ST_GetTankType(attacker)] : g_flUltimateDamageRequired2[ST_GetTankType(attacker)];
 				if (!g_bUltimate[attacker])
 				{
 					g_flUltimateDamage[attacker] += damage;
 
 					if (ST_IsTankSupported(attacker, ST_CHECK_FAKECLIENT))
 					{
-						ST_PrintToChat(attacker, "%s %t", ST_TAG3, "Ultimate3", g_flUltimateDamage[attacker], flUltimateDamageRequired);
+						ST_PrintToChat(attacker, "%s %t", ST_TAG3, "Ultimate3", g_flUltimateDamage[attacker], g_flUltimateDamageRequired[ST_GetTankType(attacker)]);
 					}
 
-					if (g_flUltimateDamage[attacker] >= flUltimateDamageRequired)
+					if (g_flUltimateDamage[attacker] >= g_flUltimateDamageRequired[ST_GetTankType(attacker)])
 					{
 						g_bUltimate[attacker] = true;
 
@@ -287,8 +286,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 				if (g_bUltimate2[attacker] && !g_bUltimate3[attacker])
 				{
-					float flUltimateDamageBoost = !g_bTankConfig[ST_GetTankType(attacker)] ? g_flUltimateDamageBoost[ST_GetTankType(attacker)] : g_flUltimateDamageBoost2[ST_GetTankType(attacker)];
-					damage *= flUltimateDamageBoost;
+					damage *= g_flUltimateDamageBoost[ST_GetTankType(attacker)];
 
 					return Plugin_Changed;
 				}
@@ -299,80 +297,29 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Ultimate Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iUltimateAbility[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Ability Enabled", 0);
-					g_iUltimateAbility[iIndex] = iClamp(g_iUltimateAbility[iIndex], 0, 1);
-					g_iUltimateMessage[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Ability Message", 0);
-					g_iUltimateMessage[iIndex] = iClamp(g_iUltimateMessage[iIndex], 0, 1);
-					g_iUltimateAmount[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Ultimate Amount", 1);
-					g_iUltimateAmount[iIndex] = iClamp(g_iUltimateAmount[iIndex], 1, 9999999999);
-					g_flUltimateDamageBoost[iIndex] = kvSuperTanks.GetFloat("Ultimate Ability/Ultimate Damage Boost", 1.2);
-					g_flUltimateDamageBoost[iIndex] = flClamp(g_flUltimateDamageBoost[iIndex], 0.1, 9999999999.0);
-					g_flUltimateDamageRequired[iIndex] = kvSuperTanks.GetFloat("Ultimate Ability/Ultimate Damage Required", 200.0);
-					g_flUltimateDamageRequired[iIndex] = flClamp(g_flUltimateDamageRequired[iIndex], 0.1, 9999999999.0);
-					g_flUltimateDuration[iIndex] = kvSuperTanks.GetFloat("Ultimate Ability/Ultimate Duration", 5.0);
-					g_flUltimateDuration[iIndex] = flClamp(g_flUltimateDuration[iIndex], 0.1, 9999999999.0);
-					g_iUltimateHealthLimit[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Ultimate Health Limit", 100);
-					g_iUltimateHealthLimit[iIndex] = iClamp(g_iUltimateHealthLimit[iIndex], 1, ST_MAXHEALTH);
-					g_flUltimateHealthPortion[iIndex] = kvSuperTanks.GetFloat("Ultimate Ability/Ultimate Health Portion", 0.5);
-					g_flUltimateHealthPortion[iIndex] = flClamp(g_flUltimateHealthPortion[iIndex], 0.1, 1.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Ultimate Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iUltimateAbility2[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Ability Enabled", g_iUltimateAbility[iIndex]);
-					g_iUltimateAbility2[iIndex] = iClamp(g_iUltimateAbility2[iIndex], 0, 1);
-					g_iUltimateMessage2[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Ability Message", g_iUltimateMessage[iIndex]);
-					g_iUltimateMessage2[iIndex] = iClamp(g_iUltimateMessage2[iIndex], 0, 1);
-					g_iUltimateAmount2[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Ultimate Amount", g_iUltimateAmount[iIndex]);
-					g_iUltimateAmount2[iIndex] = iClamp(g_iUltimateAmount2[iIndex], 1, 9999999999);
-					g_flUltimateDamageBoost2[iIndex] = kvSuperTanks.GetFloat("Ultimate Ability/Ultimate Damage Boost", g_flUltimateDamageBoost[iIndex]);
-					g_flUltimateDamageBoost2[iIndex] = flClamp(g_flUltimateDamageBoost2[iIndex], 0.1, 9999999999.0);
-					g_flUltimateDamageRequired2[iIndex] = kvSuperTanks.GetFloat("Ultimate Ability/Ultimate Damage Required", g_flUltimateDamageRequired[iIndex]);
-					g_flUltimateDamageRequired2[iIndex] = flClamp(g_flUltimateDamageRequired2[iIndex], 0.1, 9999999999.0);
-					g_flUltimateDuration2[iIndex] = kvSuperTanks.GetFloat("Ultimate Ability/Ultimate Duration", g_flUltimateDuration[iIndex]);
-					g_flUltimateDuration2[iIndex] = flClamp(g_flUltimateDuration2[iIndex], 0.1, 9999999999.0);
-					g_iUltimateHealthLimit2[iIndex] = kvSuperTanks.GetNum("Ultimate Ability/Ultimate Health Limit", g_iUltimateHealthLimit[iIndex]);
-					g_iUltimateHealthLimit2[iIndex] = iClamp(g_iUltimateHealthLimit2[iIndex], 1, ST_MAXHEALTH);
-					g_flUltimateHealthPortion2[iIndex] = kvSuperTanks.GetFloat("Ultimate Ability/Ultimate Health Portion", g_flUltimateHealthPortion[iIndex]);
-					g_flUltimateHealthPortion2[iIndex] = flClamp(g_flUltimateHealthPortion2[iIndex], 0.1, 1.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iUltimateAbility[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iUltimateAbility[type], value, 0, 0, 1);
+	g_iUltimateMessage[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iUltimateMessage[type], value, 0, 0, 1);
+	g_iUltimateAmount[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateAmount", "Ultimate Amount", "Ultimate_Amount", "amount", main, g_iUltimateAmount[type], value, 1, 1, 9999999999);
+	g_flUltimateDamageBoost[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDamageBoost", "Ultimate Damage Boost", "Ultimate_Damage_Boost", "dmgboost", main, g_flUltimateDamageBoost[type], value, 1.2, 0.1, 9999999999.0);
+	g_flUltimateDamageRequired[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDamageRequired", "Ultimate Damage Required", "Ultimate_Damage_Required", "dmgrequired", main, g_flUltimateDamageRequired[type], value, 200.0, 0.1, 9999999999.0);
+	g_flUltimateDuration[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDuration", "Ultimate Duration", "Ultimate_Duration", "duration", main, g_flUltimateDuration[type], value, 5.0, 0.1, 9999999999.0);
+	g_iUltimateHealthLimit[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateHealthLimit", "Ultimate Health Limit", "Ultimate_Health_Limit", "healthlimit", main, g_iUltimateHealthLimit[type], value, 100, 1, ST_MAXHEALTH);
+	g_flUltimateHealthPortion[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateHealthPortion", "Ultimate Health Portion", "Ultimate_Health_Portion", "healthportion", main, g_flUltimateHealthPortion[type], value, 0.5, 0.1, 1.0);
 }
 
 public void ST_OnPluginEnd()
@@ -400,7 +347,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iUltimateAbility(tank) == 1 && g_bUltimate[tank] && !g_bUltimate2[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iUltimateAbility[ST_GetTankType(tank)] == 1 && g_bUltimate[tank] && !g_bUltimate2[tank])
 	{
 		vUltimateAbility(tank);
 	}
@@ -408,11 +355,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if (iUltimateAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iUltimateAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				if (!g_bUltimate[tank])
 				{
@@ -453,11 +400,9 @@ public void ST_OnPostTankSpawn(int tank)
 
 static void vUltimateAbility(int tank)
 {
-	int iUltimateHealthLimit = !g_bTankConfig[ST_GetTankType(tank)] ? g_iUltimateHealthLimit[ST_GetTankType(tank)] : g_iUltimateHealthLimit2[ST_GetTankType(tank)];
-	if (GetClientHealth(tank) <= iUltimateHealthLimit)
+	if (GetClientHealth(tank) <= g_iUltimateHealthLimit[ST_GetTankType(tank)])
 	{
-		int iUltimateAmount = !g_bTankConfig[ST_GetTankType(tank)] ? g_iUltimateAmount[ST_GetTankType(tank)] : g_iUltimateAmount2[ST_GetTankType(tank)];
-		if (g_iUltimateCount[tank] < iUltimateAmount && g_iUltimateCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iUltimateCount[tank] < g_iUltimateAmount[ST_GetTankType(tank)] && g_iUltimateCount2[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			g_bUltimate2[tank] = true;
 			g_iUltimateCount[tank]++;
@@ -470,28 +415,27 @@ static void vUltimateAbility(int tank)
 			EmitSoundToAll(SOUND_GROWL, tank);
 			EmitSoundToAll(SOUND_SMASH, tank);
 
-			float flUltimateHealthPortion = !g_bTankConfig[ST_GetTankType(tank)] ? g_flUltimateHealthPortion[ST_GetTankType(tank)] : g_flUltimateHealthPortion2[ST_GetTankType(tank)];
-			SetEntityHealth(tank, RoundToNearest(g_iUltimateHealth[tank] * flUltimateHealthPortion));
+			SetEntityHealth(tank, RoundToNearest(g_iUltimateHealth[tank] * g_flUltimateHealthPortion[ST_GetTankType(tank)]));
 
 			SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
 
-			CreateTimer(flUltimateDuration(tank), tTimerStopUltimate, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_flUltimateDuration[ST_GetTankType(tank)], tTimerStopUltimate, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				g_iUltimateCount2[tank]++;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "UltimateHuman", g_iUltimateCount2[tank], iHumanAmmo(tank));
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "UltimateHuman", g_iUltimateCount2[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 			}
 
-			if (iUltimateMessage(tank) == 1)
+			if (g_iUltimateMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
 				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Ultimate", sTankName);
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "UltimateAmmo");
 		}
@@ -530,9 +474,9 @@ static void vReset2(int tank)
 
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "UltimateHuman5");
 
-	if (g_iUltimateCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iUltimateCount2[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
@@ -540,40 +484,10 @@ static void vReset2(int tank)
 	}
 }
 
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static float flUltimateDuration(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flUltimateDuration[ST_GetTankType(tank)] : g_flUltimateDuration2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iUltimateAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iUltimateAbility[ST_GetTankType(tank)] : g_iUltimateAbility2[ST_GetTankType(tank)];
-}
-
-static int iUltimateMessage(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iUltimateMessage[ST_GetTankType(tank)] : g_iUltimateMessage2[ST_GetTankType(tank)];
-}
-
 public Action tTimerStopUltimate(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
+	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bUltimate[iTank] = false;
 		g_bUltimate2[iTank] = false;
@@ -586,12 +500,12 @@ public Action tTimerStopUltimate(Handle timer, int userid)
 
 	SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && !g_bUltimate3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && !g_bUltimate3[iTank])
 	{
 		vReset2(iTank);
 	}
 
-	if (iUltimateMessage(iTank) == 1)
+	if (g_iUltimateMessage[ST_GetTankType(iTank)] == 1)
 	{
 		char sTankName[33];
 		ST_GetTankName(iTank, sTankName);
@@ -604,7 +518,7 @@ public Action tTimerStopUltimate(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bUltimate3[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bUltimate3[iTank])
 	{
 		g_bUltimate3[iTank] = false;
 

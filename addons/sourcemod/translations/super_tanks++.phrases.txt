@@ -8,6 +8,10 @@
 	{
 		"en"			"Super Tanks++ Menu"
 	}
+	"STConfigMenu"
+	{
+		"en"			"Config Parser Menu"
+	}
 	"STInfoMenu"
 	{
 		"en"			"Super Tanks++ Information"

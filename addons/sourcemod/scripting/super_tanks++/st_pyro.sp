@@ -48,11 +48,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_PYRO "Pyro Ability"
 
-bool g_bCloneInstalled, g_bPyro[MAXPLAYERS + 1], g_bPyro2[MAXPLAYERS + 1], g_bPyro3[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bPyro[MAXPLAYERS + 1], g_bPyro2[MAXPLAYERS + 1], g_bPyro3[MAXPLAYERS + 1];
 
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flPyroChance[ST_MAXTYPES + 1], g_flPyroChance2[ST_MAXTYPES + 1], g_flPyroDamageBoost[ST_MAXTYPES + 1], g_flPyroDamageBoost2[ST_MAXTYPES + 1], g_flPyroDuration[ST_MAXTYPES + 1], g_flPyroDuration2[ST_MAXTYPES + 1], g_flPyroSpeedBoost[ST_MAXTYPES + 1], g_flPyroSpeedBoost2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flPyroChance[ST_MAXTYPES + 1], g_flPyroDamageBoost[ST_MAXTYPES + 1], g_flPyroDuration[ST_MAXTYPES + 1], g_flPyroSpeedBoost[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1], g_iPyroAbility[ST_MAXTYPES + 1], g_iPyroAbility2[ST_MAXTYPES + 1], g_iPyroCount[MAXPLAYERS + 1], g_iPyroMessage[ST_MAXTYPES + 1], g_iPyroMessage2[ST_MAXTYPES + 1], g_iPyroMode[ST_MAXTYPES + 1], g_iPyroMode2[ST_MAXTYPES + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iPyroAbility[ST_MAXTYPES + 1], g_iPyroCount[MAXPLAYERS + 1], g_iPyroMessage[ST_MAXTYPES + 1], g_iPyroMode[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -162,14 +162,14 @@ public int iPyroMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iPyroAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iPyroCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iPyroAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iPyroCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanMode(param1) == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanMode[ST_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "PyroDetails");
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flPyroDuration(param1));
-				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", g_flPyroDuration[ST_GetTankType(param1)]);
+				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -253,17 +253,16 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
-		if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled))
+		if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled))
 		{
-			if (iPyroAbility(victim) == 1)
+			if (g_iPyroAbility[ST_GetTankType(victim)] == 1)
 			{
 				if (damagetype & DMG_BURN)
 				{
-					float flPyroSpeedBoost = !g_bTankConfig[ST_GetTankType(victim)] ? g_flPyroSpeedBoost[ST_GetTankType(victim)] : g_flPyroSpeedBoost2[ST_GetTankType(victim)];
-					switch (iPyroMode(victim))
+					switch (g_iPyroMode[ST_GetTankType(victim)])
 					{
-						case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", ST_GetRunSpeed(victim) + flPyroSpeedBoost);
-						case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", flPyroSpeedBoost);
+						case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", ST_GetRunSpeed(victim) + g_flPyroSpeedBoost[ST_GetTankType(victim)]);
+						case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", g_flPyroSpeedBoost[ST_GetTankType(victim)]);
 					}
 
 					if (!g_bPyro[victim])
@@ -276,7 +275,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						dpPyro.WriteCell(ST_GetTankType(victim));
 						dpPyro.WriteFloat(GetEngineTime());
 
-						if (iPyroMessage(victim) == 1)
+						if (g_iPyroMessage[ST_GetTankType(victim)] == 1)
 						{
 							char sTankName[33];
 							ST_GetTankName(victim, sTankName);
@@ -286,9 +285,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 			}
 		}
-		else if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled))
+		else if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled))
 		{
-			if (iPyroAbility(attacker) == 1)
+			if (g_iPyroAbility[ST_GetTankType(attacker)] == 1)
 			{
 				if (g_bPyro[attacker])
 				{
@@ -296,11 +295,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 					if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 					{
-						float flPyroDamageBoost = !g_bTankConfig[ST_GetTankType(attacker)] ? g_flPyroDamageBoost[ST_GetTankType(attacker)] : g_flPyroDamageBoost2[ST_GetTankType(attacker)];
-						switch (iPyroMode(attacker))
+						switch (g_iPyroMode[ST_GetTankType(attacker)])
 						{
-							case 0: damage += flPyroDamageBoost;
-							case 1: damage = flPyroDamageBoost;
+							case 0: damage += g_flPyroDamageBoost[ST_GetTankType(attacker)];
+							case 1: damage = g_flPyroDamageBoost[ST_GetTankType(attacker)];
 						}
 
 						return Plugin_Changed;
@@ -313,80 +311,37 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iHumanMode[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Mode", 1);
-					g_iHumanMode[iIndex] = iClamp(g_iHumanMode[iIndex], 0, 1);
-					g_iPyroAbility[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Enabled", 0);
-					g_iPyroAbility[iIndex] = iClamp(g_iPyroAbility[iIndex], 0, 1);
-					g_iPyroMessage[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Message", 0);
-					g_iPyroMessage[iIndex] = iClamp(g_iPyroMessage[iIndex], 0, 1);
-					g_flPyroChance[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Chance", 33.3);
-					g_flPyroChance[iIndex] = flClamp(g_flPyroChance[iIndex], 0.0, 100.0);
-					g_flPyroDamageBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Damage Boost", 1.0);
-					g_flPyroDamageBoost[iIndex] = flClamp(g_flPyroDamageBoost[iIndex], 0.1, 9999999999.0);
-					g_flPyroDuration[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Duration", 5.0);
-					g_flPyroDuration[iIndex] = flClamp(g_flPyroDuration[iIndex], 0.1, 9999999999.0);
-					g_iPyroMode[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Pyro Mode", 0);
-					g_iPyroMode[iIndex] = iClamp(g_iPyroMode[iIndex], 0, 1);
-					g_flPyroSpeedBoost[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Speed Boost", 1.0);
-					g_flPyroSpeedBoost[iIndex] = flClamp(g_flPyroSpeedBoost[iIndex], 0.1, 3.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iHumanMode2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Human Mode", g_iHumanMode[iIndex]);
-					g_iHumanMode2[iIndex] = iClamp(g_iHumanMode2[iIndex], 0, 1);
-					g_iPyroAbility2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Enabled", g_iPyroAbility[iIndex]);
-					g_iPyroAbility2[iIndex] = iClamp(g_iPyroAbility2[iIndex], 0, 1);
-					g_iPyroMessage2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Ability Message", g_iPyroMessage[iIndex]);
-					g_iPyroMessage2[iIndex] = iClamp(g_iPyroMessage2[iIndex], 0, 1);
-					g_flPyroChance2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Chance", g_flPyroChance[iIndex]);
-					g_flPyroChance2[iIndex] = flClamp(g_flPyroChance2[iIndex], 0.0, 100.0);
-					g_flPyroDamageBoost2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Damage Boost", g_flPyroDamageBoost[iIndex]);
-					g_flPyroDamageBoost2[iIndex] = flClamp(g_flPyroDamageBoost2[iIndex], 0.1, 9999999999.0);
-					g_flPyroDuration2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Duration", g_flPyroDuration[iIndex]);
-					g_flPyroDuration2[iIndex] = flClamp(g_flPyroDuration2[iIndex], 0.1, 9999999999.0);
-					g_iPyroMode2[iIndex] = kvSuperTanks.GetNum("Pyro Ability/Pyro Mode", g_iPyroMode[iIndex]);
-					g_iPyroMode2[iIndex] = iClamp(g_iPyroMode2[iIndex], 0, 1);
-					g_flPyroSpeedBoost2[iIndex] = kvSuperTanks.GetFloat("Pyro Ability/Pyro Speed Boost", g_flPyroSpeedBoost[iIndex]);
-					g_flPyroSpeedBoost2[iIndex] = flClamp(g_flPyroSpeedBoost2[iIndex], 0.1, 3.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iHumanMode[iIndex] = 1;
+		g_iPyroAbility[iIndex] = 0;
+		g_iPyroMessage[iIndex] = 0;
+		g_flPyroChance[iIndex] = 33.3;
+		g_flPyroDamageBoost[iIndex] = 1.0;
+		g_flPyroDuration[iIndex] = 5.0;
+		g_iPyroMode[iIndex] = 0;
+		g_flPyroSpeedBoost[iIndex] = 1.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iHumanMode[type] = iGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
+	g_iPyroAbility[type] = iGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iPyroAbility[type], value, 0, 0, 1);
+	g_iPyroMessage[type] = iGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iPyroMessage[type], value, 0, 0, 1);
+	g_flPyroChance[type] = flGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "PyroChance", "Pyro Chance", "Pyro_Chance", "chance", main, g_flPyroChance[type], value, 33.3, 0.0, 100.0);
+	g_flPyroDamageBoost[type] = flGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "PyroDamageBoost", "Pyro Damage Boost", "Pyro_Damage_Boost", "dmgboost", main, g_flPyroDamageBoost[type], value, 1.0, 0.1, 9999999999.0);
+	g_flPyroDuration[type] = flGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "PyroDuration", "Pyro Duration", "Pyro_Duration", "duration", main, g_flPyroDuration[type], value, 5.0, 0.1, 9999999999.0);
+	g_iPyroMode[type] = iGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "Pyro Mode", "PyroMode", "Pyro_Mode", "mode", main, g_iPyroMode[type], value, 0, 0, 1);
+	g_flPyroSpeedBoost[type] = flGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "PyroSpeedBoost", "Pyro Speed Boost", "Pyro_Speed_Boost", "speedboost", main, g_flPyroSpeedBoost[type], value, 1.0, 0.1, 3.0);
 }
 
 public void ST_OnPluginEnd()
@@ -414,7 +369,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iPyroAbility(tank) == 1 && !g_bPyro2[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iPyroAbility[ST_GetTankType(tank)] == 1 && !g_bPyro2[tank])
 	{
 		vPyroAbility(tank);
 	}
@@ -422,13 +377,13 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if (iPyroAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iPyroAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
-				switch (iHumanMode(tank))
+				switch (g_iHumanMode[ST_GetTankType(tank)])
 				{
 					case 0:
 					{
@@ -447,7 +402,7 @@ public void ST_OnButtonPressed(int tank, int button)
 					}
 					case 1:
 					{
-						if (g_iPyroCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+						if (g_iPyroCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 						{
 							if (!g_bPyro2[tank] && !g_bPyro3[tank])
 							{
@@ -459,7 +414,7 @@ public void ST_OnButtonPressed(int tank, int button)
 								dpPyro2.WriteCell(GetClientUserId(tank));
 								dpPyro2.WriteCell(ST_GetTankType(tank));
 
-								ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroHuman", g_iPyroCount[tank], iHumanAmmo(tank));
+								ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroHuman", g_iPyroCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 							}
 						}
 						else
@@ -475,13 +430,13 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if (iPyroAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iPyroAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
-				if (iHumanMode(tank) == 1 && g_bPyro2[tank] && !g_bPyro3[tank])
+				if (g_iHumanMode[ST_GetTankType(tank)] == 1 && g_bPyro2[tank] && !g_bPyro3[tank])
 				{
 					g_bPyro2[tank] = false;
 
@@ -502,37 +457,36 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vPyroAbility(int tank)
 {
-	if (g_iPyroCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iPyroCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		float flPyroChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flPyroChance[ST_GetTankType(tank)] : g_flPyroChance2[ST_GetTankType(tank)];
-		if (GetRandomFloat(0.1, 100.0) <= flPyroChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_flPyroChance[ST_GetTankType(tank)])
 		{
 			g_bPyro2[tank] = true;
 
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				g_iPyroCount[tank]++;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroHuman", g_iPyroCount[tank], iHumanAmmo(tank));
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroHuman", g_iPyroCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 			}
 
-			IgniteEntity(tank, flPyroDuration(tank));
+			IgniteEntity(tank, g_flPyroDuration[ST_GetTankType(tank)]);
 
-			CreateTimer(flPyroDuration(tank), tTimerStopPyro, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_flPyroDuration[ST_GetTankType(tank)], tTimerStopPyro, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 
-			if (iPyroMessage(tank) == 1)
+			if (g_iPyroMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
 				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro", sTankName);
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroHuman2");
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroAmmo");
 	}
@@ -563,9 +517,9 @@ static void vReset2(int tank)
 
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "PyroHuman5");
 
-	if (g_iPyroCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iPyroCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
@@ -573,52 +527,12 @@ static void vReset2(int tank)
 	}
 }
 
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static float flPyroDuration(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flPyroDuration[ST_GetTankType(tank)] : g_flPyroDuration2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iHumanMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
-}
-
-static int iPyroAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iPyroAbility[ST_GetTankType(tank)] : g_iPyroAbility2[ST_GetTankType(tank)];
-}
-
-static int iPyroMessage(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iPyroMessage[ST_GetTankType(tank)] : g_iPyroMessage2[ST_GetTankType(tank)];
-}
-
-static int iPyroMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iPyroMode[ST_GetTankType(tank)] : g_iPyroMode2[ST_GetTankType(tank)];
-}
-
 public Action tTimerPyro(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank))
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank))
 	{
 		g_bPyro[iTank] = false;
 
@@ -626,14 +540,14 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (iPyroAbility(iTank) == 0 || !bIsPlayerBurning(iTank) || ((!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flPyroDuration(iTank) < GetEngineTime())) || !g_bPyro[iTank])
+	if (g_iPyroAbility[ST_GetTankType(iTank)] == 0 || !bIsPlayerBurning(iTank) || ((!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && g_iHumanMode[ST_GetTankType(iTank)] == 0)) && (flTime + g_flPyroDuration[ST_GetTankType(iTank)] < GetEngineTime())) || !g_bPyro[iTank])
 	{
 		g_bPyro[iTank] = false;
 
 		ExtinguishEntity(iTank);
 		SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", ST_GetRunSpeed(iTank));
 
-		if (iPyroMessage(iTank) == 1)
+		if (g_iPyroMessage[ST_GetTankType(iTank)] == 1)
 		{
 			char sTankName[33];
 			ST_GetTankName(iTank, sTankName);
@@ -651,7 +565,7 @@ public Action tTimerPyro2(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iPyroAbility(iTank) == 0 || !g_bPyro2[iTank])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || g_iPyroAbility[ST_GetTankType(iTank)] == 0 || !g_bPyro2[iTank])
 	{
 		g_bPyro2[iTank] = false;
 
@@ -666,7 +580,7 @@ public Action tTimerPyro2(Handle timer, DataPack pack)
 public Action tTimerStopPyro(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iPyroAbility(iTank) == 0 || !g_bPyro2[iTank])
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || g_iPyroAbility[ST_GetTankType(iTank)] == 0 || !g_bPyro2[iTank])
 	{
 		g_bPyro2[iTank] = false;
 
@@ -677,7 +591,7 @@ public Action tTimerStopPyro(Handle timer, int userid)
 
 	SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", ST_GetRunSpeed(iTank));
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && !g_bPyro3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && !g_bPyro3[iTank])
 	{
 		vReset2(iTank);
 	}
@@ -688,7 +602,7 @@ public Action tTimerStopPyro(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bPyro3[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bPyro3[iTank])
 	{
 		g_bPyro3[iTank] = false;
 

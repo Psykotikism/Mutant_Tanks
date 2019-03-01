@@ -49,13 +49,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_METEOR "Meteor Ability"
 
-bool g_bCloneInstalled, g_bMeteor[MAXPLAYERS + 1], g_bMeteor2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bMeteor[MAXPLAYERS + 1], g_bMeteor2[MAXPLAYERS + 1];
 
-char g_sMeteorRadius[ST_MAXTYPES + 1][13], g_sMeteorRadius2[ST_MAXTYPES + 1][13];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flMeteorChance[ST_MAXTYPES + 1], g_flMeteorDamage[ST_MAXTYPES + 1], g_flMeteorDuration[ST_MAXTYPES + 1], g_flMeteorRadius[ST_MAXTYPES + 1][2];
 
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flMeteorChance[ST_MAXTYPES + 1], g_flMeteorChance2[ST_MAXTYPES + 1], g_flMeteorDamage[ST_MAXTYPES + 1], g_flMeteorDamage2[ST_MAXTYPES + 1], g_flMeteorDuration[ST_MAXTYPES + 1], g_flMeteorDuration2[ST_MAXTYPES + 1];
-
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1], g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorAbility2[ST_MAXTYPES + 1], g_iMeteorCount[MAXPLAYERS + 1], g_iMeteorMessage[ST_MAXTYPES + 1], g_iMeteorMessage2[ST_MAXTYPES + 1], g_iMeteorMode[ST_MAXTYPES + 1], g_iMeteorMode2[ST_MAXTYPES + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iMeteorAbility[ST_MAXTYPES + 1], g_iMeteorCount[MAXPLAYERS + 1], g_iMeteorMessage[ST_MAXTYPES + 1], g_iMeteorMode[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -155,14 +153,14 @@ public int iMeteorMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iMeteorAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iMeteorCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iMeteorAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iMeteorCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanMode(param1) == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanMode[ST_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "MeteorDetails");
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flMeteorDuration(param1));
-				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", g_flMeteorDuration[ST_GetTankType(param1)]);
+				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -242,78 +240,48 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iHumanMode[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Human Mode", 1);
-					g_iHumanMode[iIndex] = iClamp(g_iHumanMode[iIndex], 0, 1);
-					g_iMeteorAbility[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", 0);
-					g_iMeteorAbility[iIndex] = iClamp(g_iMeteorAbility[iIndex], 0, 1);
-					g_iMeteorMessage[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", 0);
-					g_iMeteorMessage[iIndex] = iClamp(g_iMeteorMessage[iIndex], 0, 1);
-					g_flMeteorChance[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Chance", 33.3);
-					g_flMeteorChance[iIndex] = flClamp(g_flMeteorChance[iIndex], 0.0, 100.0);
-					g_flMeteorDamage[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", 5.0);
-					g_flMeteorDamage[iIndex] = flClamp(g_flMeteorDamage[iIndex], 1.0, 9999999999.0);
-					g_flMeteorDuration[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Duration", 5.0);
-					g_flMeteorDuration[iIndex] = flClamp(g_flMeteorDuration[iIndex], 0.1, 9999999999.0);
-					g_iMeteorMode[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Mode", 0);
-					g_iMeteorMode[iIndex] = iClamp(g_iMeteorMode[iIndex], 0, 1);
-					kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius[iIndex], sizeof(g_sMeteorRadius[]), "-180.0,180.0");
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iHumanMode2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Human Mode", g_iHumanMode[iIndex]);
-					g_iHumanMode2[iIndex] = iClamp(g_iHumanMode2[iIndex], 0, 1);
-					g_iMeteorAbility2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Enabled", g_iMeteorAbility[iIndex]);
-					g_iMeteorAbility2[iIndex] = iClamp(g_iMeteorAbility2[iIndex], 0, 1);
-					g_iMeteorMessage2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Ability Message", g_iMeteorMessage[iIndex]);
-					g_iMeteorMessage2[iIndex] = iClamp(g_iMeteorMessage2[iIndex], 0, 1);
-					g_flMeteorChance2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Chance", g_flMeteorChance[iIndex]);
-					g_flMeteorChance2[iIndex] = flClamp(g_flMeteorChance2[iIndex], 0.0, 100.0);
-					g_flMeteorDamage2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Damage", g_flMeteorDamage[iIndex]);
-					g_flMeteorDamage2[iIndex] = flClamp(g_flMeteorDamage2[iIndex], 1.0, 9999999999.0);
-					g_flMeteorDuration2[iIndex] = kvSuperTanks.GetFloat("Meteor Ability/Meteor Duration", g_flMeteorDuration[iIndex]);
-					g_flMeteorDuration2[iIndex] = flClamp(g_flMeteorDuration2[iIndex], 0.1, 9999999999.0);
-					g_iMeteorMode2[iIndex] = kvSuperTanks.GetNum("Meteor Ability/Meteor Mode", g_iMeteorMode[iIndex]);
-					g_iMeteorMode2[iIndex] = iClamp(g_iMeteorMode2[iIndex], 0, 1);
-					kvSuperTanks.GetString("Meteor Ability/Meteor Radius", g_sMeteorRadius2[iIndex], sizeof(g_sMeteorRadius2[]), g_sMeteorRadius[iIndex]);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iHumanMode[iIndex] = 1;
+		g_iMeteorAbility[iIndex] = 0;
+		g_iMeteorMessage[iIndex] = 0;
+		g_flMeteorChance[iIndex] = 33.3;
+		g_flMeteorDamage[iIndex] = 5.0;
+		g_flMeteorDuration[iIndex] = 5.0;
+		g_iMeteorMode[iIndex] = 0;
+		g_flMeteorRadius[iIndex][0] = -180.0;
+		g_flMeteorRadius[iIndex][1] = 180.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iHumanMode[type] = iGetValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
+	g_iMeteorAbility[type] = iGetValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iMeteorAbility[type], value, 0, 0, 1);
+	g_iMeteorMessage[type] = iGetValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iMeteorMessage[type], value, 0, 0, 1);
+	g_flMeteorChance[type] = flGetValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", main, g_flMeteorChance[type], value, 33.3, 0.0, 100.0);
+	g_flMeteorDamage[type] = flGetValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", main, g_flMeteorDamage[type], value, 5.0, 1.0, 9999999999.0);
+	g_flMeteorDuration[type] = flGetValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", main, g_flMeteorDuration[type], value, 5.0, 0.1, 9999999999.0);
+	g_iMeteorMode[type] = iGetValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", main, g_iMeteorMode[type], value, 0, 0, 1);
+
+	if ((StrEqual(subsection, "meteorability", false) || StrEqual(subsection, "meteor ability", false) || StrEqual(subsection, "meteor_ability", false) || StrEqual(subsection, "meteor", false)) && (StrEqual(key, "MeteorRadius", false) || StrEqual(key, "Meteor Radius", false) || StrEqual(key, "Meteor_Radius", false) || StrEqual(key, "radius", false)) && value[0] != '\0')
+	{
+		char sSet[2][7], sValue[14];
+		strcopy(sValue, sizeof(sValue), value);
+		ReplaceString(sValue, sizeof(sValue), " ", "");
+		ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+		g_flMeteorRadius[type][0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 0.0) : g_flMeteorRadius[type][0];
+		g_flMeteorRadius[type][1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 200.0) : g_flMeteorRadius[type][1];
+	}
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -330,7 +298,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iMeteorAbility(tank) == 1 && !g_bMeteor[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iMeteorAbility[ST_GetTankType(tank)] == 1 && !g_bMeteor[tank])
 	{
 		vMeteorAbility(tank);
 	}
@@ -338,13 +306,13 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if (iMeteorAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iMeteorAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
-				switch (iHumanMode(tank))
+				switch (g_iHumanMode[ST_GetTankType(tank)])
 				{
 					case 0:
 					{
@@ -363,7 +331,7 @@ public void ST_OnButtonPressed(int tank, int button)
 					}
 					case 1:
 					{
-						if (g_iMeteorCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+						if (g_iMeteorCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 						{
 							if (!g_bMeteor[tank] && !g_bMeteor2[tank])
 							{
@@ -372,7 +340,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 								vMeteor2(tank);
 
-								ST_PrintToChat(tank, "%s %t", ST_TAG3, "MeteorHuman", g_iMeteorCount[tank], iHumanAmmo(tank));
+								ST_PrintToChat(tank, "%s %t", ST_TAG3, "MeteorHuman", g_iMeteorCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 							}
 						}
 						else
@@ -388,13 +356,13 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if (iMeteorAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iMeteorAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
-				if (iHumanMode(tank) == 1 && g_bMeteor[tank] && !g_bMeteor2[tank])
+				if (g_iHumanMode[ST_GetTankType(tank)] == 1 && g_bMeteor[tank] && !g_bMeteor2[tank])
 				{
 					g_bMeteor[tank] = false;
 
@@ -412,7 +380,7 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vMeteor(int tank, int rock)
 {
-	if (!ST_IsTankSupported(tank) || !ST_IsCloneSupported(tank, g_bCloneInstalled) || !bIsValidEntity(rock))
+	if (!ST_IsTankSupported(tank) || !bIsCloneAllowed(tank, g_bCloneInstalled) || !bIsValidEntity(rock))
 	{
 		return;
 	}
@@ -421,8 +389,7 @@ static void vMeteor(int tank, int rock)
 
 	CreateTimer(3.0, tTimerStopRockSound, _, TIMER_FLAG_NO_MAPCHANGE);
 
-	int iMeteorMode = !g_bTankConfig[ST_GetTankType(tank)] ? g_iMeteorMode[ST_GetTankType(tank)] : g_iMeteorMode2[ST_GetTankType(tank)];
-	switch (iMeteorMode)
+	switch (g_iMeteorMode[ST_GetTankType(tank)])
 	{
 		case 0:
 		{
@@ -452,8 +419,7 @@ static void vMeteor(int tank, int rock)
 					float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 					if (flDistance < 200.0)
 					{
-						float flMeteorDamage = !g_bTankConfig[ST_GetTankType(tank)] ? g_flMeteorDamage[ST_GetTankType(tank)] : g_flMeteorDamage2[ST_GetTankType(tank)];
-						vDamageEntity(iSurvivor, tank, flMeteorDamage, "16");
+						vDamageEntity(iSurvivor, tank, g_flMeteorDamage[ST_GetTankType(tank)], "16");
 					}
 				}
 			}
@@ -488,36 +454,35 @@ static void vMeteor2(int tank)
 
 static void vMeteorAbility(int tank)
 {
-	if (g_iMeteorCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iMeteorCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		float flMeteorChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flMeteorChance[ST_GetTankType(tank)] : g_flMeteorChance2[ST_GetTankType(tank)];
-		if (GetRandomFloat(0.1, 100.0) <= flMeteorChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_flMeteorChance[ST_GetTankType(tank)])
 		{
 			g_bMeteor[tank] = true;
 
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bMeteor2[tank])
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bMeteor2[tank])
 			{
 				g_bMeteor2[tank] = true;
 				g_iMeteorCount[tank]++;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "MeteorHuman", g_iMeteorCount[tank], iHumanAmmo(tank));
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "MeteorHuman", g_iMeteorCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 			}
 
 			vMeteor2(tank);
 
-			if (iMeteorMessage(tank) == 1)
+			if (g_iMeteorMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
 				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Meteor", sTankName);
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "MeteorHuman2");
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "MeteorAmmo");
 	}
@@ -547,9 +512,9 @@ static void vReset2(int tank)
 
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "MeteorHuman5");
 
-	if (g_iMeteorCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iMeteorCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
@@ -557,47 +522,12 @@ static void vReset2(int tank)
 	}
 }
 
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static float flMeteorDuration(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flMeteorDuration[ST_GetTankType(tank)] : g_flMeteorDuration2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iHumanMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
-}
-
-static int iMeteorAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iMeteorAbility[ST_GetTankType(tank)] : g_iMeteorAbility2[ST_GetTankType(tank)];
-}
-
-static int iMeteorMessage(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iMeteorMessage[ST_GetTankType(tank)] : g_iMeteorMessage2[ST_GetTankType(tank)];
-}
-
 public Action tTimerMeteor(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bMeteor[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bMeteor[iTank])
 	{
 		g_bMeteor[iTank] = false;
 
@@ -605,16 +535,16 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (iMeteorAbility(iTank) == 0 || ((!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0)) && (flTime + flMeteorDuration(iTank)) < GetEngineTime()))
+	if (g_iMeteorAbility[ST_GetTankType(iTank)] == 0 || ((!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && g_iHumanMode[ST_GetTankType(iTank)] == 0)) && (flTime + g_flMeteorDuration[ST_GetTankType(iTank)]) < GetEngineTime()))
 	{
 		g_bMeteor[iTank] = false;
 
-		if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && iHumanMode(iTank) == 0 && !g_bMeteor2[iTank])
+		if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && g_iHumanMode[ST_GetTankType(iTank)] == 0 && !g_bMeteor2[iTank])
 		{
 			vReset2(iTank);
 		}
 
-		if (iMeteorMessage(iTank) == 1)
+		if (g_iMeteorMessage[ST_GetTankType(iTank)] == 1)
 		{
 			char sTankName[33];
 			ST_GetTankName(iTank, sTankName);
@@ -623,16 +553,6 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 
 		return Plugin_Stop;
 	}
-
-	char sRadius[2][7], sMeteorRadius[13];
-	sMeteorRadius = !g_bTankConfig[ST_GetTankType(iTank)] ? g_sMeteorRadius[ST_GetTankType(iTank)] : g_sMeteorRadius2[ST_GetTankType(iTank)];
-	ReplaceString(sMeteorRadius, sizeof(sMeteorRadius), " ", "");
-	ExplodeString(sMeteorRadius, ",", sRadius, sizeof(sRadius), sizeof(sRadius[]));
-
-	float flMin = (sRadius[0][0] != '\0') ? StringToFloat(sRadius[0]) : -200.0,
-		flMax = (sRadius[1][0] != '\0') ? StringToFloat(sRadius[1]) : 200.0;
-	flMin = flClamp(flMin, -200.0, 0.0);
-	flMax = flClamp(flMax, 0.0, 200.0);
 
 	float flPos[3];
 	GetClientEyePosition(iTank, flPos);
@@ -664,14 +584,15 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 		{
 			SetEntityModel(iMeteor, MODEL_CONCRETE);
 
-			int iRockRed, iRockGreen, iRockBlue, iRockAlpha;
-			ST_GetPropColors(iTank, 4, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
-			SetEntityRenderColor(iMeteor, iRockRed, iRockGreen, iRockBlue, iRockAlpha);
+			int iRockColor[4];
+			ST_GetPropColors(iTank, 4, iRockColor[0], iRockColor[1], iRockColor[2], iRockColor[3]);
+			SetEntityRenderColor(iMeteor, iRockColor[0], iRockColor[1], iRockColor[2], iRockColor[3]);
 
 			float flAngles2[3];
-			flAngles2[0] = GetRandomFloat(flMin, flMax);
-			flAngles2[1] = GetRandomFloat(flMin, flMax);
-			flAngles2[2] = GetRandomFloat(flMin, flMax);
+			for (int iPos = 0; iPos < 3; iPos++)
+			{
+				flAngles2[iPos] = GetRandomFloat(g_flMeteorRadius[ST_GetTankType(iTank)][0], g_flMeteorRadius[ST_GetTankType(iTank)][1]);
+			}
 
 			float flVelocity[3];
 			flVelocity[0] = GetRandomFloat(0.0, 350.0);
@@ -720,7 +641,7 @@ public Action tTimerStopRockSound(Handle timer)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bMeteor2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bMeteor2[iTank])
 	{
 		g_bMeteor2[iTank] = false;
 

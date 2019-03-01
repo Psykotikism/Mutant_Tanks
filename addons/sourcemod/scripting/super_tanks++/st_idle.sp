@@ -48,13 +48,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_IDLE "Idle Ability"
 
-bool g_bCloneInstalled, g_bIdle[MAXPLAYERS + 1], g_bIdle2[MAXPLAYERS + 1], g_bIdle3[MAXPLAYERS + 1], g_bIdle4[MAXPLAYERS + 1], g_bIdled[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bIdle[MAXPLAYERS + 1], g_bIdle2[MAXPLAYERS + 1], g_bIdle3[MAXPLAYERS + 1], g_bIdle4[MAXPLAYERS + 1], g_bIdled[MAXPLAYERS + 1];
 
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flIdleChance[ST_MAXTYPES + 1], g_flIdleChance2[ST_MAXTYPES + 1], g_flIdleRange[ST_MAXTYPES + 1], g_flIdleRange2[ST_MAXTYPES + 1], g_flIdleRangeChance[ST_MAXTYPES + 1], g_flIdleRangeChance2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flIdleChance[ST_MAXTYPES + 1], g_flIdleRange[ST_MAXTYPES + 1], g_flIdleRangeChance[ST_MAXTYPES + 1];
 
 Handle g_hSDKIdlePlayer, g_hSDKSpecPlayer;
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iIdleAbility[ST_MAXTYPES + 1], g_iIdleAbility2[ST_MAXTYPES + 1], g_iIdleCount[MAXPLAYERS + 1], g_iIdleEffect[ST_MAXTYPES + 1], g_iIdleEffect2[ST_MAXTYPES + 1], g_iIdleHit[ST_MAXTYPES + 1], g_iIdleHit2[ST_MAXTYPES + 1], g_iIdleHitMode[ST_MAXTYPES + 1], g_iIdleHitMode2[ST_MAXTYPES + 1], g_iIdleMessage[ST_MAXTYPES + 1], g_iIdleMessage2[ST_MAXTYPES + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iIdleAbility[ST_MAXTYPES + 1], g_iIdleCount[MAXPLAYERS + 1], g_iIdleEffect[ST_MAXTYPES + 1], g_iIdleHit[ST_MAXTYPES + 1], g_iIdleHitMode[ST_MAXTYPES + 1], g_iIdleMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -191,12 +191,12 @@ public int iIdleMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iIdleAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iIdleCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iIdleAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iIdleCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "IdleDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -272,98 +272,54 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iIdleHitMode(attacker) == 0 || iIdleHitMode(attacker) == 1) && bIsHumanSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iIdleHitMode[ST_GetTankType(attacker)] == 0 || g_iIdleHitMode[ST_GetTankType(attacker)] == 1) && bIsHumanSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vIdleHit(victim, attacker, flIdleChance(attacker), iIdleHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
+				vIdleHit(victim, attacker, g_flIdleChance[ST_GetTankType(attacker)], g_iIdleHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iIdleHitMode(victim) == 0 || iIdleHitMode(victim) == 2) && bIsHumanSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iIdleHitMode[ST_GetTankType(victim)] == 0 || g_iIdleHitMode[ST_GetTankType(victim)] == 2) && bIsHumanSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vIdleHit(attacker, victim, flIdleChance(victim), iIdleHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
+				vIdleHit(attacker, victim, g_flIdleChance[ST_GetTankType(victim)], g_iIdleHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Idle Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Idle Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iIdleAbility[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Enabled", 0);
-					g_iIdleAbility[iIndex] = iClamp(g_iIdleAbility[iIndex], 0, 1);
-					g_iIdleEffect[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Effect", 0);
-					g_iIdleEffect[iIndex] = iClamp(g_iIdleEffect[iIndex], 0, 7);
-					g_iIdleMessage[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Message", 0);
-					g_iIdleMessage[iIndex] = iClamp(g_iIdleMessage[iIndex], 0, 7);
-					g_flIdleChance[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", 33.3);
-					g_flIdleChance[iIndex] = flClamp(g_flIdleChance[iIndex], 0.0, 100.0);
-					g_iIdleHit[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", 0);
-					g_iIdleHit[iIndex] = iClamp(g_iIdleHit[iIndex], 0, 1);
-					g_iIdleHitMode[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit Mode", 0);
-					g_iIdleHitMode[iIndex] = iClamp(g_iIdleHitMode[iIndex], 0, 2);
-					g_flIdleRange[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", 150.0);
-					g_flIdleRange[iIndex] = flClamp(g_flIdleRange[iIndex], 1.0, 9999999999.0);
-					g_flIdleRangeChance[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range Chance", 15.0);
-					g_flIdleRangeChance[iIndex] = flClamp(g_flIdleRangeChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iIdleAbility2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Enabled", g_iIdleAbility[iIndex]);
-					g_iIdleAbility2[iIndex] = iClamp(g_iIdleAbility2[iIndex], 0, 1);
-					g_iIdleEffect2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Effect", g_iIdleEffect[iIndex]);
-					g_iIdleEffect2[iIndex] = iClamp(g_iIdleEffect2[iIndex], 0, 7);
-					g_iIdleMessage2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Ability Message", g_iIdleMessage[iIndex]);
-					g_iIdleMessage2[iIndex] = iClamp(g_iIdleMessage2[iIndex], 0, 7);
-					g_flIdleChance2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Chance", g_flIdleChance[iIndex]);
-					g_flIdleChance2[iIndex] = flClamp(g_flIdleChance2[iIndex], 0.0, 100.0);
-					g_iIdleHit2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit", g_iIdleHit[iIndex]);
-					g_iIdleHit2[iIndex] = iClamp(g_iIdleHit2[iIndex], 0, 1);
-					g_iIdleHitMode2[iIndex] = kvSuperTanks.GetNum("Idle Ability/Idle Hit Mode", g_iIdleHitMode[iIndex]);
-					g_iIdleHitMode2[iIndex] = iClamp(g_iIdleHitMode2[iIndex], 0, 2);
-					g_flIdleRange2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range", g_flIdleRange[iIndex]);
-					g_flIdleRange2[iIndex] = flClamp(g_flIdleRange2[iIndex], 1.0, 9999999999.0);
-					g_flIdleRangeChance2[iIndex] = kvSuperTanks.GetFloat("Idle Ability/Idle Range Chance", g_flIdleRangeChance[iIndex]);
-					g_flIdleRangeChance2[iIndex] = flClamp(g_flIdleRangeChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iIdleAbility[iIndex] = 0;
+		g_iIdleEffect[iIndex] = 0;
+		g_iIdleMessage[iIndex] = 0;
+		g_flIdleChance[iIndex] = 33.3;
+		g_iIdleHit[iIndex] = 0;
+		g_iIdleHitMode[iIndex] = 0;
+		g_flIdleRange[iIndex] = 150.0;
+		g_flIdleRangeChance[iIndex] = 15.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iIdleAbility[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iIdleAbility[type], value, 0, 0, 1);
+	g_iIdleEffect[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iIdleEffect[type], value, 0, 0, 7);
+	g_iIdleMessage[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iIdleMessage[type], value, 0, 0, 7);
+	g_flIdleChance[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", main, g_flIdleChance[type], value, 33.3, 0.0, 100.0);
+	g_iIdleHit[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", main, g_iIdleHit[type], value, 0, 0, 1);
+	g_iIdleHitMode[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleHitMode", "Idle Hit Mode", "Idle_Hit_Mode", "hitmode", main, g_iIdleHitMode[type], value, 0, 0, 2);
+	g_flIdleRange[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleRange", "Idle Range", "Idle_Range", "range", main, g_flIdleRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flIdleRangeChance[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", main, g_flIdleRangeChance[type], value, 15.0, 0.0, 100.0);
 }
 
 public void ST_OnHookEvent(bool mode)
@@ -402,7 +358,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && ST_IsCloneSupported(iTank, g_bCloneInstalled))
+		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && bIsCloneAllowed(iTank, g_bCloneInstalled))
 		{
 			vRemoveIdle(iTank);
 		}
@@ -411,7 +367,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iIdleAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iIdleAbility[ST_GetTankType(tank)] == 1)
 	{
 		vIdleAbility(tank);
 	}
@@ -419,11 +375,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iIdleAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iIdleAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				switch (g_bIdle2[tank])
 				{
@@ -442,15 +398,12 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vIdleAbility(int tank)
 {
-	if (g_iIdleCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iIdleCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bIdle3[tank] = false;
 		g_bIdle4[tank] = false;
 
-		float flIdleRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flIdleRange[ST_GetTankType(tank)] : g_flIdleRange2[ST_GetTankType(tank)],
-			flIdleRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flIdleRangeChance[ST_GetTankType(tank)] : g_flIdleRangeChance2[ST_GetTankType(tank)],
-			flTankPos[3];
-
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
@@ -463,9 +416,9 @@ static void vIdleAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flIdleRange)
+				if (flDistance <= g_flIdleRange[ST_GetTankType(tank)])
 				{
-					vIdleHit(iSurvivor, tank, flIdleRangeChance, iIdleAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
+					vIdleHit(iSurvivor, tank, g_flIdleRangeChance[ST_GetTankType(tank)], g_iIdleAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -474,13 +427,13 @@ static void vIdleAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "IdleHuman4");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "IdleAmmo");
 	}
@@ -490,20 +443,20 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 {
 	if (enabled == 1 && bIsHumanSurvivor(survivor))
 	{
-		if (g_iIdleCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iIdleCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bIdle[survivor])
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && (flags & ST_ATTACK_RANGE) && !g_bIdle2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE) && !g_bIdle2[tank])
 				{
 					g_bIdle2[tank] = true;
 					g_iIdleCount[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "IdleHuman", g_iIdleCount[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "IdleHuman", g_iIdleCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 
-					if (g_iIdleCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+					if (g_iIdleCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 					{
-						CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 					}
 					else
 					{
@@ -522,11 +475,9 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 					g_bIdle[survivor] = true;
 					g_bIdled[survivor] = true;
 
-					int iIdleEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iIdleEffect[ST_GetTankType(tank)] : g_iIdleEffect2[ST_GetTankType(tank)];
-					vEffect(survivor, tank, iIdleEffect, flags);
+					vEffect(survivor, tank, g_iIdleEffect[ST_GetTankType(tank)], flags);
 
-					int iIdleMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iIdleMessage[ST_GetTankType(tank)] : g_iIdleMessage2[ST_GetTankType(tank)];
-					if (iIdleMessage & messages)
+					if (g_iIdleMessage[ST_GetTankType(tank)] & messages)
 					{
 						char sTankName[33];
 						ST_GetTankName(tank, sTankName);
@@ -536,7 +487,7 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 			}
 			else if ((flags & ST_ATTACK_RANGE) && !g_bIdle2[tank])
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bIdle3[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bIdle3[tank])
 				{
 					g_bIdle3[tank] = true;
 
@@ -544,7 +495,7 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bIdle4[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bIdle4[tank])
 		{
 			g_bIdle4[tank] = true;
 
@@ -572,41 +523,6 @@ static void vReset()
 			vRemoveIdle(iPlayer);
 		}
 	}
-}
-
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static float flIdleChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flIdleChance[ST_GetTankType(tank)] : g_flIdleChance2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iIdleAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iIdleAbility[ST_GetTankType(tank)] : g_iIdleAbility2[ST_GetTankType(tank)];
-}
-
-static int iIdleHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iIdleHit[ST_GetTankType(tank)] : g_iIdleHit2[ST_GetTankType(tank)];
-}
-
-static int iIdleHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iIdleHitMode[ST_GetTankType(tank)] : g_iIdleHitMode2[ST_GetTankType(tank)];
 }
 
 public Action tTimerIdleFix(Handle timer, DataPack pack)
@@ -649,7 +565,7 @@ public Action tTimerIdleFix(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bIdle2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bIdle2[iTank])
 	{
 		g_bIdle2[iTank] = false;
 

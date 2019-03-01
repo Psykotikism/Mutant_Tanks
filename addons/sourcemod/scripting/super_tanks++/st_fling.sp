@@ -50,13 +50,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_FLING "Fling Ability"
 
-bool g_bCloneInstalled, g_bFling[MAXPLAYERS + 1], g_bFling2[MAXPLAYERS + 1], g_bFling3[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bFling[MAXPLAYERS + 1], g_bFling2[MAXPLAYERS + 1], g_bFling3[MAXPLAYERS + 1];
 
-float g_flFlingChance[ST_MAXTYPES + 1], g_flFlingChance2[ST_MAXTYPES + 1], g_flFlingForce[ST_MAXTYPES + 1], g_flFlingForce2[ST_MAXTYPES + 1], g_flFlingRange[ST_MAXTYPES + 1], g_flFlingRange2[ST_MAXTYPES + 1], g_flFlingRangeChance[ST_MAXTYPES + 1], g_flFlingRangeChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+float g_flFlingChance[ST_MAXTYPES + 1], g_flFlingForce[ST_MAXTYPES + 1], g_flFlingRange[ST_MAXTYPES + 1], g_flFlingRangeChance[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
 Handle g_hSDKFlingPlayer, g_hSDKPukePlayer;
 
-int g_iFlingAbility[ST_MAXTYPES + 1], g_iFlingAbility2[ST_MAXTYPES + 1], g_iFlingCount[MAXPLAYERS + 1], g_iFlingEffect[ST_MAXTYPES + 1], g_iFlingEffect2[ST_MAXTYPES + 1], g_iFlingHit[ST_MAXTYPES + 1], g_iFlingHit2[ST_MAXTYPES + 1], g_iFlingHitMode[ST_MAXTYPES + 1], g_iFlingHitMode2[ST_MAXTYPES + 1], g_iFlingMessage[ST_MAXTYPES + 1], g_iFlingMessage2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
+int g_iFlingAbility[ST_MAXTYPES + 1], g_iFlingCount[MAXPLAYERS + 1], g_iFlingEffect[ST_MAXTYPES + 1], g_iFlingHit[ST_MAXTYPES + 1], g_iFlingHitMode[ST_MAXTYPES + 1], g_iFlingMessage[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -208,12 +208,12 @@ public int iFlingMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iFlingAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iFlingCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iFlingAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iFlingCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "FlingDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -289,102 +289,56 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iFlingHitMode(attacker) == 0 || iFlingHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iFlingHitMode[ST_GetTankType(attacker)] == 0 || g_iFlingHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vFlingHit(victim, attacker, flFlingChance(attacker), iFlingHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
+				vFlingHit(victim, attacker, g_flFlingChance[ST_GetTankType(attacker)], g_iFlingHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iFlingHitMode(victim) == 0 || iFlingHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iFlingHitMode[ST_GetTankType(victim)] == 0 || g_iFlingHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vFlingHit(attacker, victim, flFlingChance(victim), iFlingHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
+				vFlingHit(attacker, victim, g_flFlingChance[ST_GetTankType(victim)], g_iFlingHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Fling Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Fling Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iFlingAbility[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", 0);
-					g_iFlingAbility[iIndex] = iClamp(g_iFlingAbility[iIndex], 0, 1);
-					g_iFlingEffect[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Effect", 0);
-					g_iFlingEffect[iIndex] = iClamp(g_iFlingEffect[iIndex], 0, 7);
-					g_iFlingMessage[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Message", 0);
-					g_iFlingMessage[iIndex] = iClamp(g_iFlingMessage[iIndex], 0, 3);
-					g_flFlingChance[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Chance", 33.3);
-					g_flFlingChance[iIndex] = flClamp(g_flFlingChance[iIndex], 0.0, 100.0);
-					g_flFlingForce[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Force", 300.0);
-					g_flFlingForce[iIndex] = flClamp(g_flFlingForce[iIndex], 1.0, 9999999999.0);
-					g_iFlingHit[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", 0);
-					g_iFlingHit[iIndex] = iClamp(g_iFlingHit[iIndex], 0, 1);
-					g_iFlingHitMode[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", 0);
-					g_iFlingHitMode[iIndex] = iClamp(g_iFlingHitMode[iIndex], 0, 2);
-					g_flFlingRange[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", 150.0);
-					g_flFlingRange[iIndex] = flClamp(g_flFlingRange[iIndex], 1.0, 9999999999.0);
-					g_flFlingRangeChance[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range Chance", 15.0);
-					g_flFlingRangeChance[iIndex] = flClamp(g_flFlingRangeChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iFlingAbility2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Enabled", g_iFlingAbility[iIndex]);
-					g_iFlingAbility2[iIndex] = iClamp(g_iFlingAbility2[iIndex], 0, 1);
-					g_iFlingEffect2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Effect", g_iFlingEffect[iIndex]);
-					g_iFlingEffect2[iIndex] = iClamp(g_iFlingEffect2[iIndex], 0, 7);
-					g_iFlingMessage2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Ability Message", g_iFlingMessage[iIndex]);
-					g_iFlingMessage2[iIndex] = iClamp(g_iFlingMessage2[iIndex], 0, 3);
-					g_flFlingChance2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Chance", g_flFlingChance[iIndex]);
-					g_flFlingChance2[iIndex] = flClamp(g_flFlingChance2[iIndex], 0.0, 100.0);
-					g_flFlingForce2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Force", g_flFlingForce[iIndex]);
-					g_flFlingForce2[iIndex] = flClamp(g_flFlingForce2[iIndex], 1.0, 9999999999.0);
-					g_iFlingHit2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit", g_iFlingHit[iIndex]);
-					g_iFlingHit2[iIndex] = iClamp(g_iFlingHit2[iIndex], 0, 1);
-					g_iFlingHitMode2[iIndex] = kvSuperTanks.GetNum("Fling Ability/Fling Hit Mode", g_iFlingHitMode[iIndex]);
-					g_iFlingHitMode2[iIndex] = iClamp(g_iFlingHitMode2[iIndex], 0, 2);
-					g_flFlingRange2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range", g_flFlingRange[iIndex]);
-					g_flFlingRange2[iIndex] = flClamp(g_flFlingRange2[iIndex], 1.0, 9999999999.0);
-					g_flFlingRangeChance2[iIndex] = kvSuperTanks.GetFloat("Fling Ability/Fling Range Chance", g_flFlingRangeChance[iIndex]);
-					g_flFlingRangeChance2[iIndex] = flClamp(g_flFlingRangeChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iFlingAbility[iIndex] = 0;
+		g_iFlingEffect[iIndex] = 0;
+		g_iFlingMessage[iIndex] = 0;
+		g_flFlingChance[iIndex] = 33.3;
+		g_flFlingForce[iIndex] = 300.0;
+		g_iFlingHit[iIndex] = 0;
+		g_iFlingHitMode[iIndex] = 0;
+		g_flFlingRange[iIndex] = 150.0;
+		g_flFlingRangeChance[iIndex] = 15.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iFlingAbility[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iFlingAbility[type], value, 0, 0, 1);
+	g_iFlingEffect[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iFlingEffect[type], value, 0, 0, 7);
+	g_iFlingMessage[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iFlingMessage[type], value, 0, 0, 3);
+	g_flFlingChance[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", main, g_flFlingChance[type], value, 33.3, 0.0, 100.0);
+	g_flFlingForce[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingForce", "Fling Force", "Fling_Force", "force", main, g_flFlingForce[type], value, 300.0, 1.0, 9999999999.0);
+	g_iFlingHit[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingHit", "Fling Hit", "Fling_Hit", "hit", main, g_iFlingHit[type], value, 0, 0, 1);
+	g_iFlingHitMode[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingHitMode", "Fling Hit Mode", "Fling_Hit_Mode", "hitmode", main, g_iFlingHitMode[type], value, 0, 0, 2);
+	g_flFlingRange[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingRange", "Fling Range", "Fling_Range", "range", main, g_flFlingRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flFlingRangeChance[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", main, g_flFlingRangeChance[type], value, 15.0, 0.0, 100.0);
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -394,7 +348,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
-			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iFlingAbility(iTank) == 1)
+			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_iFlingAbility[ST_GetTankType(iTank)] == 1)
 			{
 				if (!bIsValidGame())
 				{
@@ -431,7 +385,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iFlingAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iFlingAbility[ST_GetTankType(tank)] == 1)
 	{
 		vFlingAbility(tank);
 	}
@@ -439,11 +393,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iFlingAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iFlingAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				switch (g_bFling[tank])
 				{
@@ -462,8 +416,7 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vFling(int survivor, int tank)
 {
-	float flSurvivorPos[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3],
-		flFlingForce = !g_bTankConfig[ST_GetTankType(tank)] ? g_flFlingForce[ST_GetTankType(tank)] : g_flFlingForce2[ST_GetTankType(tank)];
+	float flSurvivorPos[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
 
 	GetClientAbsOrigin(survivor, flSurvivorPos);
 	GetClientAbsOrigin(tank, flTankPos);
@@ -475,24 +428,21 @@ static void vFling(int survivor, int tank)
 	flRatio[0] = flDistance[0] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
 	flRatio[1] = flDistance[1] / (SquareRoot((flDistance[1] * flDistance[1]) + (flDistance[0] * flDistance[0])));
 
-	flVelocity[0] = (flRatio[0] * -1) * flFlingForce;
-	flVelocity[1] = (flRatio[1] * -1) * flFlingForce;
-	flVelocity[2] = flFlingForce;
+	flVelocity[0] = (flRatio[0] * -1) * g_flFlingForce[ST_GetTankType(tank)];
+	flVelocity[1] = (flRatio[1] * -1) * g_flFlingForce[ST_GetTankType(tank)];
+	flVelocity[2] = g_flFlingForce[ST_GetTankType(tank)];
 
 	SDKCall(g_hSDKFlingPlayer, survivor, flVelocity, 76, tank, 3.0);
 }
 
 static void vFlingAbility(int tank)
 {
-	if (g_iFlingCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iFlingCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bFling2[tank] = false;
 		g_bFling3[tank] = false;
 
-		float flFlingRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flFlingRange[ST_GetTankType(tank)] : g_flFlingRange2[ST_GetTankType(tank)],
-			flFlingRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flFlingRangeChance[ST_GetTankType(tank)] : g_flFlingRangeChance2[ST_GetTankType(tank)],
-			flTankPos[3];
-
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
@@ -505,9 +455,9 @@ static void vFlingAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flFlingRange)
+				if (flDistance <= g_flFlingRange[ST_GetTankType(tank)])
 				{
-					vFlingHit(iSurvivor, tank, flFlingRangeChance, iFlingAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
+					vFlingHit(iSurvivor, tank, g_flFlingRangeChance[ST_GetTankType(tank)], g_iFlingAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -516,13 +466,13 @@ static void vFlingAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "FlingHuman4");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "FlingAmmo");
 	}
@@ -532,20 +482,20 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iFlingCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iFlingCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && (flags & ST_ATTACK_RANGE) && !g_bFling[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE) && !g_bFling[tank])
 				{
 					g_bFling[tank] = true;
 					g_iFlingCount[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "FlingHuman", g_iFlingCount[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "FlingHuman", g_iFlingCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 
-					if (g_iFlingCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+					if (g_iFlingCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 					{
-						CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 					}
 					else
 					{
@@ -553,12 +503,10 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 					}
 				}
 
-				int iFlingEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iFlingEffect[ST_GetTankType(tank)] : g_iFlingEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, iFlingEffect, flags);
+				vEffect(survivor, tank, g_iFlingEffect[ST_GetTankType(tank)], flags);
 
 				char sTankName[33];
 				ST_GetTankName(tank, sTankName);
-				int iFlingMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iFlingMessage[ST_GetTankType(tank)] : g_iFlingMessage2[ST_GetTankType(tank)];
 
 				switch (bIsValidGame())
 				{
@@ -566,7 +514,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 					{
 						vFling(survivor, tank);
 
-						if (iFlingMessage & messages)
+						if (g_iFlingMessage[ST_GetTankType(tank)] & messages)
 						{
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Fling", sTankName, survivor);
 						}
@@ -575,7 +523,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 					{
 						SDKCall(g_hSDKPukePlayer, survivor, tank, true);
 
-						if (iFlingMessage & messages)
+						if (g_iFlingMessage[ST_GetTankType(tank)] & messages)
 						{
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
 						}
@@ -584,7 +532,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 			}
 			else if ((flags & ST_ATTACK_RANGE) && !g_bFling[tank])
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bFling2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bFling2[tank])
 				{
 					g_bFling2[tank] = true;
 
@@ -592,7 +540,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bFling3[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bFling3[tank])
 		{
 			g_bFling3[tank] = true;
 
@@ -620,45 +568,10 @@ static void vReset()
 	}
 }
 
-static float flFlingChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flFlingChance[ST_GetTankType(tank)] : g_flFlingChance2[ST_GetTankType(tank)];
-}
-
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static int iFlingAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iFlingAbility[ST_GetTankType(tank)] : g_iFlingAbility2[ST_GetTankType(tank)];
-}
-
-static int iFlingHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iFlingHit[ST_GetTankType(tank)] : g_iFlingHit2[ST_GetTankType(tank)];
-}
-
-static int iFlingHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iFlingHitMode[ST_GetTankType(tank)] : g_iFlingHitMode2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bFling[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bFling[iTank])
 	{
 		g_bFling[iTank] = false;
 

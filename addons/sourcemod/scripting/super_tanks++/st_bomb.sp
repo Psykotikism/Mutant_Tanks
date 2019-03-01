@@ -50,11 +50,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_BOMB "Bomb Ability"
 
-bool g_bBomb[MAXPLAYERS + 1], g_bBomb2[MAXPLAYERS + 1], g_bBomb3[MAXPLAYERS + 1], g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bBomb[MAXPLAYERS + 1], g_bBomb2[MAXPLAYERS + 1], g_bBomb3[MAXPLAYERS + 1], g_bCloneInstalled;
 
-float g_flBombChance[ST_MAXTYPES + 1], g_flBombChance2[ST_MAXTYPES + 1], g_flBombRange[ST_MAXTYPES + 1], g_flBombRange2[ST_MAXTYPES + 1], g_flBombRangeChance[ST_MAXTYPES + 1], g_flBombRangeChance2[ST_MAXTYPES + 1], g_flBombRockChance[ST_MAXTYPES + 1], g_flBombRockChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+float g_flBombChance[ST_MAXTYPES + 1], g_flBombRange[ST_MAXTYPES + 1], g_flBombRangeChance[ST_MAXTYPES + 1], g_flBombRockChance[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
-int g_iBombAbility[ST_MAXTYPES + 1], g_iBombAbility2[ST_MAXTYPES + 1], g_iBombCount[MAXPLAYERS + 1], g_iBombEffect[ST_MAXTYPES + 1], g_iBombEffect2[ST_MAXTYPES + 1], g_iBombHit[ST_MAXTYPES + 1], g_iBombHit2[ST_MAXTYPES + 1], g_iBombHitMode[ST_MAXTYPES + 1], g_iBombHitMode2[ST_MAXTYPES + 1], g_iBombMessage[ST_MAXTYPES + 1], g_iBombMessage2[ST_MAXTYPES + 1], g_iBombRockBreak[ST_MAXTYPES + 1], g_iBombRockBreak2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
+int g_iBombAbility[ST_MAXTYPES + 1], g_iBombCount[MAXPLAYERS + 1], g_iBombEffect[ST_MAXTYPES + 1], g_iBombHit[ST_MAXTYPES + 1], g_iBombHitMode[ST_MAXTYPES + 1], g_iBombMessage[ST_MAXTYPES + 1], g_iBombRockBreak[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -164,12 +164,12 @@ public int iBombMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iBombAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iBombCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iBombAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iBombCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "BombDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -245,106 +245,58 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iBombHitMode(attacker) == 0 || iBombHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iBombHitMode[ST_GetTankType(attacker)] == 0 || g_iBombHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vBombHit(victim, attacker, flBombChance(attacker), iBombHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
+				vBombHit(victim, attacker, g_flBombChance[ST_GetTankType(attacker)], g_iBombHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iBombHitMode(victim) == 0 || iBombHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iBombHitMode[ST_GetTankType(victim)] == 0 || g_iBombHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vBombHit(attacker, victim, flBombChance(victim), iBombHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
+				vBombHit(attacker, victim, g_flBombChance[ST_GetTankType(victim)], g_iBombHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iBombAbility[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", 0);
-					g_iBombAbility[iIndex] = iClamp(g_iBombAbility[iIndex], 0, 1);
-					g_iBombEffect[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Effect", 0);
-					g_iBombEffect[iIndex] = iClamp(g_iBombEffect[iIndex], 0, 7);
-					g_iBombMessage[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Message", 0);
-					g_iBombMessage[iIndex] = iClamp(g_iBombMessage[iIndex], 0, 7);
-					g_flBombChance[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Chance", 33.3);
-					g_flBombChance[iIndex] = flClamp(g_flBombChance[iIndex], 0.0, 100.0);
-					g_iBombHit[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit", 0);
-					g_iBombHit[iIndex] = iClamp(g_iBombHit[iIndex], 0, 1);
-					g_iBombHitMode[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit Mode", 0);
-					g_iBombHitMode[iIndex] = iClamp(g_iBombHitMode[iIndex], 0, 2);
-					g_flBombRange[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range", 150.0);
-					g_flBombRange[iIndex] = flClamp(g_flBombRange[iIndex], 1.0, 9999999999.0);
-					g_flBombRangeChance[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range Chance", 15.0);
-					g_flBombRangeChance[iIndex] = flClamp(g_flBombRangeChance[iIndex], 0.0, 100.0);
-					g_iBombRockBreak[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Rock Break", 0);
-					g_iBombRockBreak[iIndex] = iClamp(g_iBombRockBreak[iIndex], 0, 1);
-					g_flBombRockChance[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Rock Chance", 33.3);
-					g_flBombRockChance[iIndex] = flClamp(g_flBombRockChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iBombAbility2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Enabled", g_iBombAbility[iIndex]);
-					g_iBombAbility2[iIndex] = iClamp(g_iBombAbility2[iIndex], 0, 1);
-					g_iBombEffect2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Effect", g_iBombEffect[iIndex]);
-					g_iBombEffect2[iIndex] = iClamp(g_iBombEffect2[iIndex], 0, 7);
-					g_iBombMessage2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Ability Message", g_iBombMessage[iIndex]);
-					g_iBombMessage2[iIndex] = iClamp(g_iBombMessage2[iIndex], 0, 7);
-					g_flBombChance2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Chance", g_flBombChance[iIndex]);
-					g_flBombChance2[iIndex] = flClamp(g_flBombChance2[iIndex], 0.0, 100.0);
-					g_iBombHit2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit", g_iBombHit[iIndex]);
-					g_iBombHit2[iIndex] = iClamp(g_iBombHit2[iIndex], 0, 1);
-					g_iBombHitMode2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Hit Mode", g_iBombHitMode[iIndex]);
-					g_iBombHitMode2[iIndex] = iClamp(g_iBombHitMode2[iIndex], 0, 2);
-					g_flBombRange2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range", g_flBombRange[iIndex]);
-					g_flBombRange2[iIndex] = flClamp(g_flBombRange2[iIndex], 1.0, 9999999999.0);
-					g_flBombRangeChance2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Range Chance", g_flBombRangeChance[iIndex]);
-					g_flBombRangeChance2[iIndex] = flClamp(g_flBombRangeChance2[iIndex], 0.0, 100.0);
-					g_iBombRockBreak2[iIndex] = kvSuperTanks.GetNum("Bomb Ability/Bomb Rock Break", g_iBombRockBreak[iIndex]);
-					g_iBombRockBreak2[iIndex] = iClamp(g_iBombRockBreak2[iIndex], 0, 1);
-					g_flBombRockChance2[iIndex] = kvSuperTanks.GetFloat("Bomb Ability/Bomb Rock Chance", g_flBombRockChance[iIndex]);
-					g_flBombRockChance2[iIndex] = flClamp(g_flBombRockChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iBombAbility[iIndex] = 0;
+		g_iBombEffect[iIndex] = 0;
+		g_iBombMessage[iIndex] = 0;
+		g_flBombChance[iIndex] = 33.3;
+		g_iBombHit[iIndex] = 0;
+		g_iBombHitMode[iIndex] = 0;
+		g_flBombRange[iIndex] = 150.0;
+		g_flBombRangeChance[iIndex] = 15.0;
+		g_iBombRockBreak[iIndex] = 0;
+		g_flBombRockChance[iIndex] = 33.3;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iBombAbility[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iBombAbility[type], value, 0, 0, 1);
+	g_iBombEffect[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iBombEffect[type], value, 0, 0, 7);
+	g_iBombMessage[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iBombMessage[type], value, 0, 0, 7);
+	g_flBombChance[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", main, g_flBombChance[type], value, 33.3, 0.0, 100.0);
+	g_iBombHit[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombHit", "Bomb Hit", "Bomb_Hit", "hit", main, g_iBombHit[type], value, 0, 0, 1);
+	g_iBombHitMode[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombHitMode", "Bomb Hit Mode", "Bomb_Hit_Mode", "hitmode", main, g_iBombHitMode[type], value, 0, 0, 2);
+	g_flBombRange[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRange", "Bomb Range", "Bomb_Range", "range", main, g_flBombRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flBombRangeChance[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRangeChance", "Bomb Range Chance", "Bomb_Range_Chance", "rangechance", main, g_flBombRangeChance[type], value, 15.0, 0.0, 100.0);
+	g_iBombRockBreak[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", main, g_iBombRockBreak[type], value, 0, 0, 1);
+	g_flBombRockChance[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", main, g_flBombRockChance[type], value, 33.3, 0.0, 100.0);
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -354,7 +306,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
-			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iBombAbility(iTank) == 1)
+			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_iBombAbility[ST_GetTankType(iTank)] == 1)
 			{
 				float flPos[3];
 				GetClientAbsOrigin(iTank, flPos);
@@ -368,7 +320,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iBombAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iBombAbility[ST_GetTankType(tank)] == 1)
 	{
 		vBombAbility(tank);
 	}
@@ -376,11 +328,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iBombAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iBombAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				switch (g_bBomb[tank])
 				{
@@ -394,7 +346,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnChangeType(int tank, bool revert)
 {
-	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iBombAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iBombAbility[ST_GetTankType(tank)] == 1)
 	{
 		float flPos[3];
 		GetClientAbsOrigin(tank, flPos);
@@ -406,17 +358,15 @@ public void ST_OnChangeType(int tank, bool revert)
 
 public void ST_OnRockBreak(int tank, int rock)
 {
-	int iBombRockBreak = !g_bTankConfig[ST_GetTankType(tank)] ? g_iBombRockBreak[ST_GetTankType(tank)] : g_iBombRockBreak2[ST_GetTankType(tank)];
-	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iBombRockBreak == 1)
+	if (ST_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iBombRockBreak[ST_GetTankType(tank)] == 1)
 	{
-		float flBombRockChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flBombRockChance[ST_GetTankType(tank)] : g_flBombRockChance2[ST_GetTankType(tank)];
-		if (GetRandomFloat(0.1, 100.0) <= flBombRockChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_flBombRockChance[ST_GetTankType(tank)])
 		{
 			float flPos[3];
 			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
 			vSpecialAttack(tank, flPos, 10.0, MODEL_PROPANETANK);
 
-			if (iBombMessage(tank) & ST_MESSAGE_SPECIAL)
+			if (g_iBombMessage[ST_GetTankType(tank)] & ST_MESSAGE_SPECIAL)
 			{
 				char sTankName[33];
 				ST_GetTankName(tank, sTankName);
@@ -428,15 +378,12 @@ public void ST_OnRockBreak(int tank, int rock)
 
 static void vBombAbility(int tank)
 {
-	if (g_iBombCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iBombCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bBomb2[tank] = false;
 		g_bBomb3[tank] = false;
 
-		float flBombRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flBombRange[ST_GetTankType(tank)] : g_flBombRange2[ST_GetTankType(tank)],
-			flBombRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flBombRangeChance[ST_GetTankType(tank)] : g_flBombRangeChance2[ST_GetTankType(tank)],
-			flTankPos[3];
-
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
@@ -449,9 +396,9 @@ static void vBombAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flBombRange)
+				if (flDistance <= g_flBombRange[ST_GetTankType(tank)])
 				{
-					vBombHit(iSurvivor, tank, flBombRangeChance, iBombAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
+					vBombHit(iSurvivor, tank, g_flBombRangeChance[ST_GetTankType(tank)], g_iBombAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -460,13 +407,13 @@ static void vBombAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "BombHuman4");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "BombAmmo");
 	}
@@ -476,20 +423,20 @@ static void vBombHit(int survivor, int tank, float chance, int enabled, int mess
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iBombCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iBombCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && (flags & ST_ATTACK_RANGE) && !g_bBomb[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE) && !g_bBomb[tank])
 				{
 					g_bBomb[tank] = true;
 					g_iBombCount[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "BombHuman", g_iBombCount[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "BombHuman", g_iBombCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 
-					if (g_iBombCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+					if (g_iBombCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 					{
-						CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 					}
 					else
 					{
@@ -501,10 +448,9 @@ static void vBombHit(int survivor, int tank, float chance, int enabled, int mess
 				GetClientAbsOrigin(survivor, flPos);
 				vSpecialAttack(tank, flPos, 10.0, MODEL_PROPANETANK);
 
-				int iBombEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iBombEffect[ST_GetTankType(tank)] : g_iBombEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, iBombEffect, flags);
+				vEffect(survivor, tank, g_iBombEffect[ST_GetTankType(tank)], flags);
 
-				if (iBombMessage(tank) & messages)
+				if (g_iBombMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
@@ -513,7 +459,7 @@ static void vBombHit(int survivor, int tank, float chance, int enabled, int mess
 			}
 			else if ((flags & ST_ATTACK_RANGE) && !g_bBomb[tank])
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bBomb2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bBomb2[tank])
 				{
 					g_bBomb2[tank] = true;
 
@@ -521,7 +467,7 @@ static void vBombHit(int survivor, int tank, float chance, int enabled, int mess
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bBomb3[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bBomb3[tank])
 		{
 			g_bBomb3[tank] = true;
 
@@ -549,50 +495,10 @@ static void vReset()
 	}
 }
 
-static float flBombChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flBombChance[ST_GetTankType(tank)] : g_flBombChance2[ST_GetTankType(tank)];
-}
-
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static int iBombAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBombAbility[ST_GetTankType(tank)] : g_iBombAbility2[ST_GetTankType(tank)];
-}
-
-static int iBombHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBombHit[ST_GetTankType(tank)] : g_iBombHit2[ST_GetTankType(tank)];
-}
-
-static int iBombHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBombHitMode[ST_GetTankType(tank)] : g_iBombHitMode2[ST_GetTankType(tank)];
-}
-
-static int iBombMessage(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBombMessage[ST_GetTankType(tank)] : g_iBombMessage2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bBomb[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bBomb[iTank])
 	{
 		g_bBomb[iTank] = false;
 

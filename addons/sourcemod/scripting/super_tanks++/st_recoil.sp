@@ -48,11 +48,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_RECOIL "Recoil Ability"
 
-bool g_bCloneInstalled, g_bRecoil[MAXPLAYERS + 1], g_bRecoil2[MAXPLAYERS + 1], g_bRecoil3[MAXPLAYERS + 1], g_bRecoil4[MAXPLAYERS + 1], g_bRecoil5[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bRecoil[MAXPLAYERS + 1], g_bRecoil2[MAXPLAYERS + 1], g_bRecoil3[MAXPLAYERS + 1], g_bRecoil4[MAXPLAYERS + 1], g_bRecoil5[MAXPLAYERS + 1];
 
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flRecoilChance[ST_MAXTYPES + 1], g_flRecoilChance2[ST_MAXTYPES + 1], g_flRecoilDuration[ST_MAXTYPES + 1], g_flRecoilDuration2[ST_MAXTYPES + 1], g_flRecoilRange[ST_MAXTYPES + 1], g_flRecoilRange2[ST_MAXTYPES + 1], g_flRecoilRangeChance[ST_MAXTYPES + 1], g_flRecoilRangeChance2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flRecoilChance[ST_MAXTYPES + 1], g_flRecoilDuration[ST_MAXTYPES + 1], g_flRecoilRange[ST_MAXTYPES + 1], g_flRecoilRangeChance[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iRecoilAbility[ST_MAXTYPES + 1], g_iRecoilAbility2[ST_MAXTYPES + 1], g_iRecoilCount[MAXPLAYERS + 1], g_iRecoilEffect[ST_MAXTYPES + 1], g_iRecoilEffect2[ST_MAXTYPES + 1], g_iRecoilHit[ST_MAXTYPES + 1], g_iRecoilHit2[ST_MAXTYPES + 1], g_iRecoilHitMode[ST_MAXTYPES + 1], g_iRecoilHitMode2[ST_MAXTYPES + 1], g_iRecoilMessage[ST_MAXTYPES + 1], g_iRecoilMessage2[ST_MAXTYPES + 1], g_iRecoilOwner[MAXPLAYERS + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iRecoilAbility[ST_MAXTYPES + 1], g_iRecoilCount[MAXPLAYERS + 1], g_iRecoilEffect[ST_MAXTYPES + 1], g_iRecoilHit[ST_MAXTYPES + 1], g_iRecoilHitMode[ST_MAXTYPES + 1], g_iRecoilMessage[ST_MAXTYPES + 1], g_iRecoilOwner[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -161,13 +161,13 @@ public int iRecoilMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iRecoilAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iRecoilCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iRecoilAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iRecoilCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "RecoilDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flRecoilDuration(param1));
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", g_flRecoilDuration[ST_GetTankType(param1)]);
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -248,102 +248,56 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if ((iRecoilHitMode(attacker) == 0 || iRecoilHitMode(attacker) == 1) && ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
+		if ((g_iRecoilHitMode[ST_GetTankType(attacker)] == 0 || g_iRecoilHitMode[ST_GetTankType(attacker)] == 1) && ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vRecoilHit(victim, attacker, flRecoilChance(attacker), iRecoilHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
+				vRecoilHit(victim, attacker, g_flRecoilChance[ST_GetTankType(attacker)], g_iRecoilHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if ((iRecoilHitMode(victim) == 0 || iRecoilHitMode(victim) == 2) && ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
+		else if ((g_iRecoilHitMode[ST_GetTankType(victim)] == 0 || g_iRecoilHitMode[ST_GetTankType(victim)] == 2) && ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vRecoilHit(attacker, victim, flRecoilChance(victim), iRecoilHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
+				vRecoilHit(attacker, victim, g_flRecoilChance[ST_GetTankType(victim)], g_iRecoilHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iRecoilAbility[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Enabled", 0);
-					g_iRecoilAbility[iIndex] = iClamp(g_iRecoilAbility[iIndex], 0, 1);
-					g_iRecoilEffect[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Effect", 0);
-					g_iRecoilEffect[iIndex] = iClamp(g_iRecoilEffect[iIndex], 0, 7);
-					g_iRecoilMessage[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Message", 0);
-					g_iRecoilMessage[iIndex] = iClamp(g_iRecoilMessage[iIndex], 0, 3);
-					g_flRecoilChance[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Chance", 33.3);
-					g_flRecoilChance[iIndex] = flClamp(g_flRecoilChance[iIndex], 0.0, 100.0);
-					g_flRecoilDuration[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Duration", 5.0);
-					g_flRecoilDuration[iIndex] = flClamp(g_flRecoilDuration[iIndex], 0.1, 9999999999.0);
-					g_iRecoilHit[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Hit", 0);
-					g_iRecoilHit[iIndex] = iClamp(g_iRecoilHit[iIndex], 0, 1);
-					g_iRecoilHitMode[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Hit Mode", 0);
-					g_iRecoilHitMode[iIndex] = iClamp(g_iRecoilHitMode[iIndex], 0, 2);
-					g_flRecoilRange[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range", 150.0);
-					g_flRecoilRange[iIndex] = flClamp(g_flRecoilRange[iIndex], 1.0, 9999999999.0);
-					g_flRecoilRangeChance[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range Chance", 15.0);
-					g_flRecoilRangeChance[iIndex] = flClamp(g_flRecoilRangeChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iRecoilAbility2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Enabled", g_iRecoilAbility[iIndex]);
-					g_iRecoilAbility2[iIndex] = iClamp(g_iRecoilAbility2[iIndex], 0, 1);
-					g_iRecoilEffect2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Effect", g_iRecoilEffect[iIndex]);
-					g_iRecoilEffect2[iIndex] = iClamp(g_iRecoilEffect2[iIndex], 0, 7);
-					g_iRecoilMessage2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Ability Message", g_iRecoilMessage[iIndex]);
-					g_iRecoilMessage2[iIndex] = iClamp(g_iRecoilMessage2[iIndex], 0, 3);
-					g_flRecoilChance2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Chance", g_flRecoilChance[iIndex]);
-					g_flRecoilChance2[iIndex] = flClamp(g_flRecoilChance2[iIndex], 0.0, 100.0);
-					g_flRecoilDuration2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Duration", g_flRecoilDuration[iIndex]);
-					g_flRecoilDuration2[iIndex] = flClamp(g_flRecoilDuration2[iIndex], 0.1, 9999999999.0);
-					g_iRecoilHit2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Hit", g_iRecoilHit[iIndex]);
-					g_iRecoilHit2[iIndex] = iClamp(g_iRecoilHit2[iIndex], 0, 1);
-					g_iRecoilHitMode2[iIndex] = kvSuperTanks.GetNum("Recoil Ability/Recoil Hit Mode", g_iRecoilHitMode[iIndex]);
-					g_iRecoilHitMode2[iIndex] = iClamp(g_iRecoilHitMode2[iIndex], 0, 2);
-					g_flRecoilRange2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range", g_flRecoilRange[iIndex]);
-					g_flRecoilRange2[iIndex] = flClamp(g_flRecoilRange2[iIndex], 1.0, 9999999999.0);
-					g_flRecoilRangeChance2[iIndex] = kvSuperTanks.GetFloat("Recoil Ability/Recoil Range Chance", g_flRecoilRangeChance[iIndex]);
-					g_flRecoilRangeChance2[iIndex] = flClamp(g_flRecoilRangeChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iRecoilAbility[iIndex] = 0;
+		g_iRecoilEffect[iIndex] = 0;
+		g_iRecoilMessage[iIndex] = 0;
+		g_flRecoilChance[iIndex] = 33.3;
+		g_flRecoilDuration[iIndex] = 5.0;
+		g_iRecoilHit[iIndex] = 0;
+		g_iRecoilHitMode[iIndex] = 0;
+		g_flRecoilRange[iIndex] = 150.0;
+		g_flRecoilRangeChance[iIndex] = 15.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iRecoilAbility[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iRecoilAbility[type], value, 0, 0, 1);
+	g_iRecoilEffect[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iRecoilEffect[type], value, 0, 0, 7);
+	g_iRecoilMessage[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iRecoilMessage[type], value, 0, 0, 3);
+	g_flRecoilChance[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", main, g_flRecoilChance[type], value, 33.3, 0.0, 100.0);
+	g_flRecoilDuration[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", main, g_flRecoilDuration[type], value, 5.0, 0.1, 9999999999.0);
+	g_iRecoilHit[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", main, g_iRecoilHit[type], value, 0, 0, 1);
+	g_iRecoilHitMode[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", main, g_iRecoilHitMode[type], value, 0, 0, 2);
+	g_flRecoilRange[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", main, g_flRecoilRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flRecoilRangeChance[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", main, g_flRecoilRangeChance[type], value, 15.0, 0.0, 100.0);
 }
 
 public void ST_OnHookEvent(bool mode)
@@ -381,7 +335,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iRecoilAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iRecoilAbility[ST_GetTankType(tank)] == 1)
 	{
 		vRecoilAbility(tank);
 	}
@@ -389,11 +343,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iRecoilAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iRecoilAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				if (!g_bRecoil2[tank] && !g_bRecoil3[tank])
 				{
@@ -419,15 +373,12 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vRecoilAbility(int tank)
 {
-	if (g_iRecoilCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iRecoilCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bRecoil4[tank] = false;
 		g_bRecoil5[tank] = false;
 
-		float flRecoilRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flRecoilRange[ST_GetTankType(tank)] : g_flRecoilRange2[ST_GetTankType(tank)],
-			flRecoilRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flRecoilRangeChance[ST_GetTankType(tank)] : g_flRecoilRangeChance2[ST_GetTankType(tank)],
-			flTankPos[3];
-
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
@@ -440,9 +391,9 @@ static void vRecoilAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flRecoilRange)
+				if (flDistance <= g_flRecoilRange[ST_GetTankType(tank)])
 				{
-					vRecoilHit(iSurvivor, tank, flRecoilRangeChance, iRecoilAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
+					vRecoilHit(iSurvivor, tank, g_flRecoilRangeChance[ST_GetTankType(tank)], g_iRecoilAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -451,13 +402,13 @@ static void vRecoilAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "RecoilHuman5");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "RecoilAmmo");
 	}
@@ -467,31 +418,30 @@ static void vRecoilHit(int survivor, int tank, float chance, int enabled, int me
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iRecoilCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iRecoilCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bRecoil[survivor])
 			{
 				g_bRecoil[survivor] = true;
 				g_iRecoilOwner[survivor] = tank;
 
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && (flags & ST_ATTACK_RANGE) && !g_bRecoil2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE) && !g_bRecoil2[tank])
 				{
 					g_bRecoil2[tank] = true;
 					g_iRecoilCount[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "RecoilHuman", g_iRecoilCount[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "RecoilHuman", g_iRecoilCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 				}
 
 				DataPack dpStopRecoil;
-				CreateDataTimer(flRecoilDuration(tank), tTimerStopRecoil, dpStopRecoil, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer(g_flRecoilDuration[ST_GetTankType(tank)], tTimerStopRecoil, dpStopRecoil, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopRecoil.WriteCell(GetClientUserId(survivor));
 				dpStopRecoil.WriteCell(GetClientUserId(tank));
 				dpStopRecoil.WriteCell(messages);
 
-				int iRecoilEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iRecoilEffect[ST_GetTankType(tank)] : g_iRecoilEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, iRecoilEffect, flags);
+				vEffect(survivor, tank, g_iRecoilEffect[ST_GetTankType(tank)], flags);
 
-				if (iRecoilMessage(tank) & messages)
+				if (g_iRecoilMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
@@ -500,7 +450,7 @@ static void vRecoilHit(int survivor, int tank, float chance, int enabled, int me
 			}
 			else if ((flags & ST_ATTACK_RANGE) && !g_bRecoil2[tank])
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bRecoil4[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bRecoil4[tank])
 				{
 					g_bRecoil4[tank] = true;
 
@@ -508,7 +458,7 @@ static void vRecoilHit(int survivor, int tank, float chance, int enabled, int me
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bRecoil5[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bRecoil5[tank])
 		{
 			g_bRecoil5[tank] = true;
 
@@ -554,51 +504,6 @@ static void vReset2(int tank)
 	g_iRecoilCount[tank] = 0;
 }
 
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static float flRecoilChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flRecoilChance[ST_GetTankType(tank)] : g_flRecoilChance2[ST_GetTankType(tank)];
-}
-
-static float flRecoilDuration(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flRecoilDuration[ST_GetTankType(tank)] : g_flRecoilDuration2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iRecoilAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRecoilAbility[ST_GetTankType(tank)] : g_iRecoilAbility2[ST_GetTankType(tank)];
-}
-
-static int iRecoilHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRecoilHit[ST_GetTankType(tank)] : g_iRecoilHit2[ST_GetTankType(tank)];
-}
-
-static int iRecoilHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRecoilHitMode[ST_GetTankType(tank)] : g_iRecoilHitMode2[ST_GetTankType(tank)];
-}
-
-static int iRecoilMessage(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iRecoilMessage[ST_GetTankType(tank)] : g_iRecoilMessage2[ST_GetTankType(tank)];
-}
-
 public Action tTimerStopRecoil(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -613,7 +518,7 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled))
+	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_bRecoil[iSurvivor] = false;
 		g_iRecoilOwner[iSurvivor] = 0;
@@ -627,15 +532,15 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 
 	int iMessage = pack.ReadCell();
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bRecoil3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bRecoil3[iTank])
 	{
 		g_bRecoil3[iTank] = true;
 
 		ST_PrintToChat(iTank, "%s %t", ST_TAG3, "RecoilHuman6");
 
-		if (g_iRecoilCount[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
+		if (g_iRecoilCount[iTank] < g_iHumanAmmo[ST_GetTankType(iTank)] && g_iHumanAmmo[ST_GetTankType(iTank)] > 0)
 		{
-			CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_flHumanCooldown[ST_GetTankType(iTank)], tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else
 		{
@@ -643,7 +548,7 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 		}
 	}
 
-	if (iRecoilMessage(iTank) & iMessage)
+	if (g_iRecoilMessage[ST_GetTankType(iTank)] & iMessage)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Recoil2", iSurvivor);
 	}
@@ -654,7 +559,7 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bRecoil3[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bRecoil3[iTank])
 	{
 		g_bRecoil3[iTank] = false;
 

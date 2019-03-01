@@ -25,7 +25,7 @@
 #define ST_TAG3 "\x04[ST++]\x03"
 #define ST_TAG4 "\x04[ST++]\x05"
 
-#define ST_MAXTYPES 500
+#define ST_MAXTYPES 1000
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
 
@@ -92,13 +92,22 @@ forward void ST_OnButtonReleased(int tank, int button);
 forward void ST_OnChangeType(int tank, bool revert);
 
 /**
+ * Called when the config file is about to load.
+ * Use this forward to set default values for settings for the plugin.
+ **/
+forward void ST_OnConfigsLoad();
+
+/**
  * Called when the config file is loaded.
  * Use this forward to load settings for the plugin.
  *
- * @param savepath		The savepath of the config.
+ * @param subsection		The subsection the config parser is currently on.
+ * @param key			The key the config parser is currently on.
  * @param main			Checks whether the main config or a custom config is being used.
+ * @param value			The value the config parser is currently on.
+ * @param type			The Super Tank type the config parser is currently on.
  **/
-forward void ST_OnConfigsLoaded(const char[] savepath, bool main);
+forward void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type);
 
 /**
  * Called when a player uses the "sm_st_info" command.
@@ -393,7 +402,7 @@ stock void vDamageEntity(int victim, int attacker, float damage, const char[] da
 	if (bIsValidEntity(iPointHurt))
 	{
 		char sTargetName[32];
-		Format(sTargetName, sizeof(sTargetName), "target%d", EntIndexToEntRef(victim));
+		Format(sTargetName, sizeof(sTargetName), "target%i", EntIndexToEntRef(victim));
 		DispatchKeyValue(victim, "targetname", sTargetName);
 
 		DispatchKeyValueFloat(iPointHurt, "Damage", damage);
@@ -426,8 +435,8 @@ stock void vEffect(int survivor, int tank, int mode, int flags = ST_ATTACK_MELEE
 {
 	if (mode & flags)
 	{
-		int iRed, iGreen, iBlue, iAlpha;
-		ST_GetTankColors(tank, GetRandomInt(1, 2), iRed, iGreen, iBlue, iAlpha);
+		int iColor[4];
+		ST_GetTankColors(tank, GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
 
 		Handle hFadeTarget = StartMessageOne("Fade", survivor);
 		if (hFadeTarget != null)
@@ -436,9 +445,12 @@ stock void vEffect(int survivor, int tank, int mode, int flags = ST_ATTACK_MELEE
 			bfWrite.WriteShort(800);
 			bfWrite.WriteShort(300);
 			bfWrite.WriteShort((0x0010|0x0001));
-			bfWrite.WriteByte(iRed);
-			bfWrite.WriteByte(iGreen);
-			bfWrite.WriteByte(iBlue);
+
+			for (int iPos = 0; iPos < 3; iPos++)
+			{
+				bfWrite.WriteByte(iColor[iPos]);
+			}
+
 			bfWrite.WriteByte(150);
 
 			EndMessage();
@@ -574,12 +586,12 @@ stock void ST_PrintToChat(int client, char[] message, any ...)
 {
 	if (!bIsValidClient(client, ST_CHECK_INDEX))
 	{
-		ThrowError("Invalid client index %d", client);
+		ThrowError("Invalid client index %i", client);
 	}
 	
 	if (!bIsValidClient(client, ST_CHECK_INGAME))
 	{
-		ThrowError("Client %d is not in game", client);
+		ThrowError("Client %i is not in game", client);
 	}
 
 	char sBuffer[255], sMessage[255];
@@ -1180,6 +1192,23 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace
 	return GetVectorDistance(pos, flHitPos);
 }
 
+stock float flGetValue(const char[] level, const char[] section, const char[] section2, const char[] section3, const char[] section4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, bool main, float curVal, const char[] value, float defVal, float min, float max)
+{
+	if ((StrEqual(level, section, false) || StrEqual(level, section2, false) || StrEqual(level, section3, false) || StrEqual(level, section4, false)) && (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		if (value[0] != '\0')
+		{
+			return flClamp(StringToFloat(value), min, max);
+		}
+		else
+		{
+			return main ? defVal : curVal;
+		}
+	}
+
+	return curVal;
+}
+
 stock int iClamp(int value, int min, int max)
 {
 	if (value < min)
@@ -1338,6 +1367,23 @@ stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entit
 stock int iGetRGBColor(int red, int green, int blue) 
 {
 	return (blue * 65536) + (green * 256) + red;
+}
+
+stock int iGetValue(const char[] level, const char[] section, const char[] section2, const char[] section3, const char[] section4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, bool main, int curVal, const char[] value, int defVal, int min, int max)
+{
+	if ((StrEqual(level, section, false) || StrEqual(level, section2, false) || StrEqual(level, section3, false) || StrEqual(level, section4, false)) && (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		if (value[0] != '\0')
+		{
+			return iClamp(StringToInt(value), min, max);
+		}
+		else
+		{
+			return main ? defVal : curVal;
+		}
+	}
+
+	return curVal;
 }
 
 stock int iGetWitchCount()

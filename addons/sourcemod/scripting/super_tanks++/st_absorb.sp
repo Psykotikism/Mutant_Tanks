@@ -48,11 +48,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_ABSORB "Absorb Ability"
 
-bool g_bAbsorb[MAXPLAYERS + 1], g_bAbsorb2[MAXPLAYERS + 1], g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bAbsorb[MAXPLAYERS + 1], g_bAbsorb2[MAXPLAYERS + 1], g_bCloneInstalled;
 
-float g_flAbsorbBulletDivisor[ST_MAXTYPES + 1], g_flAbsorbBulletDivisor2[ST_MAXTYPES + 1], g_flAbsorbChance[ST_MAXTYPES + 1], g_flAbsorbChance2[ST_MAXTYPES + 1], g_flAbsorbDuration[ST_MAXTYPES + 1], g_flAbsorbDuration2[ST_MAXTYPES + 1], g_flAbsorbExplosiveDivisor[ST_MAXTYPES + 1], g_flAbsorbExplosiveDivisor2[ST_MAXTYPES + 1], g_flAbsorbFireDivisor[ST_MAXTYPES + 1], g_flAbsorbFireDivisor2[ST_MAXTYPES + 1], g_flAbsorbMeleeDivisor[ST_MAXTYPES + 1], g_flAbsorbMeleeDivisor2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+float g_flAbsorbBulletDivisor[ST_MAXTYPES + 1], g_flAbsorbChance[ST_MAXTYPES + 1], g_flAbsorbDuration[ST_MAXTYPES + 1], g_flAbsorbExplosiveDivisor[ST_MAXTYPES + 1], g_flAbsorbFireDivisor[ST_MAXTYPES + 1], g_flAbsorbMeleeDivisor[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
-int g_iAbsorbAbility[ST_MAXTYPES + 1], g_iAbsorbAbility2[ST_MAXTYPES + 1], g_iAbsorbCount[MAXPLAYERS + 1], g_iAbsorbMessage[ST_MAXTYPES + 1], g_iAbsorbMessage2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iHumanMode2[ST_MAXTYPES + 1];
+int g_iAbsorbAbility[ST_MAXTYPES + 1], g_iAbsorbCount[MAXPLAYERS + 1], g_iAbsorbMessage[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -162,14 +162,14 @@ public int iAbsorbMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iAbsorbAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iAbsorbCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iAbsorbAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iAbsorbCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanMode(param1) == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanMode[ST_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbsorbDetails");
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flAbsorbDuration(param1));
-				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", g_flAbsorbDuration[ST_GetTankType(param1)]);
+				case 7: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -253,27 +253,23 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
-		if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && g_bAbsorb[victim])
+		if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && g_bAbsorb[victim])
 		{
-			float flAbsorbBulletDivisor = !g_bTankConfig[ST_GetTankType(victim)] ? g_flAbsorbBulletDivisor[ST_GetTankType(victim)] : g_flAbsorbBulletDivisor2[ST_GetTankType(victim)],
-				flAbsorbExplosiveDivisor = !g_bTankConfig[ST_GetTankType(victim)] ? g_flAbsorbExplosiveDivisor[ST_GetTankType(victim)] : g_flAbsorbExplosiveDivisor2[ST_GetTankType(victim)],
-				flAbsorbFireDivisor = !g_bTankConfig[ST_GetTankType(victim)] ? g_flAbsorbFireDivisor[ST_GetTankType(victim)] : g_flAbsorbFireDivisor2[ST_GetTankType(victim)],
-				flAbsorbMeleeDivisor = !g_bTankConfig[ST_GetTankType(victim)] ? g_flAbsorbMeleeDivisor[ST_GetTankType(victim)] : g_flAbsorbMeleeDivisor2[ST_GetTankType(victim)];
 			if (damagetype & DMG_BULLET)
 			{
-				damage /= flAbsorbBulletDivisor;
+				damage /= g_flAbsorbBulletDivisor[ST_GetTankType(victim)];
 			}
 			else if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 			{
-				damage /= flAbsorbExplosiveDivisor;
+				damage /= g_flAbsorbExplosiveDivisor[ST_GetTankType(victim)];
 			}
 			else if (damagetype & DMG_BURN)
 			{
-				damage /= flAbsorbFireDivisor;
+				damage /= g_flAbsorbFireDivisor[ST_GetTankType(victim)];
 			}
 			else if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
 			{
-				damage /= flAbsorbMeleeDivisor;
+				damage /= g_flAbsorbMeleeDivisor[ST_GetTankType(victim)];
 			}
 
 			return Plugin_Changed;
@@ -283,84 +279,39 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iHumanMode[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Human Mode", 1);
-					g_iHumanMode[iIndex] = iClamp(g_iHumanMode[iIndex], 0, 1);
-					g_iAbsorbAbility[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Enabled", 0);
-					g_iAbsorbAbility[iIndex] = iClamp(g_iAbsorbAbility[iIndex], 0, 1);
-					g_iAbsorbMessage[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Message", 0);
-					g_iAbsorbMessage[iIndex] = iClamp(g_iAbsorbMessage[iIndex], 0, 1);
-					g_flAbsorbBulletDivisor[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Bullet Divisor", 20.0);
-					g_flAbsorbBulletDivisor[iIndex] = flClamp(g_flAbsorbBulletDivisor[iIndex], 0.1, 9999999999.0);
-					g_flAbsorbChance[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Chance", 33.3);
-					g_flAbsorbChance[iIndex] = flClamp(g_flAbsorbChance[iIndex], 0.0, 100.0);
-					g_flAbsorbDuration[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Duration", 5.0);
-					g_flAbsorbDuration[iIndex] = flClamp(g_flAbsorbDuration[iIndex], 0.1, 9999999999.0);
-					g_flAbsorbExplosiveDivisor[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Explosive Divisor", 20.0);
-					g_flAbsorbExplosiveDivisor[iIndex] = flClamp(g_flAbsorbExplosiveDivisor[iIndex], 0.1, 9999999999.0);
-					g_flAbsorbFireDivisor[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Fire Divisor", 200.0);
-					g_flAbsorbFireDivisor[iIndex] = flClamp(g_flAbsorbFireDivisor[iIndex], 0.1, 9999999999.0);
-					g_flAbsorbMeleeDivisor[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Melee Divisor", 200.0);
-					g_flAbsorbMeleeDivisor[iIndex] = flClamp(g_flAbsorbMeleeDivisor[iIndex], 0.1, 9999999999.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iHumanMode2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Human Mode", g_iHumanMode[iIndex]);
-					g_iHumanMode2[iIndex] = iClamp(g_iHumanMode2[iIndex], 0, 1);
-					g_iAbsorbAbility2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Enabled", g_iAbsorbAbility[iIndex]);
-					g_iAbsorbAbility2[iIndex] = iClamp(g_iAbsorbAbility2[iIndex], 0, 1);
-					g_iAbsorbMessage2[iIndex] = kvSuperTanks.GetNum("Absorb Ability/Ability Message", g_iAbsorbMessage[iIndex]);
-					g_iAbsorbMessage2[iIndex] = iClamp(g_iAbsorbMessage2[iIndex], 0, 1);
-					g_flAbsorbBulletDivisor2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Bullet Divisor", g_flAbsorbBulletDivisor[iIndex]);
-					g_flAbsorbBulletDivisor2[iIndex] = flClamp(g_flAbsorbBulletDivisor2[iIndex], 0.1, 9999999999.0);
-					g_flAbsorbChance2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Chance", g_flAbsorbChance[iIndex]);
-					g_flAbsorbChance2[iIndex] = flClamp(g_flAbsorbChance2[iIndex], 0.0, 100.0);
-					g_flAbsorbDuration2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Duration", g_flAbsorbDuration[iIndex]);
-					g_flAbsorbDuration2[iIndex] = flClamp(g_flAbsorbDuration2[iIndex], 0.1, 9999999999.0);
-					g_flAbsorbExplosiveDivisor2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Explosive Divisor", g_flAbsorbExplosiveDivisor[iIndex]);
-					g_flAbsorbExplosiveDivisor2[iIndex] = flClamp(g_flAbsorbExplosiveDivisor2[iIndex], 0.1, 9999999999.0);
-					g_flAbsorbFireDivisor2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Fire Divisor", g_flAbsorbFireDivisor[iIndex]);
-					g_flAbsorbFireDivisor2[iIndex] = flClamp(g_flAbsorbFireDivisor2[iIndex], 0.1, 9999999999.0);
-					g_flAbsorbMeleeDivisor2[iIndex] = kvSuperTanks.GetFloat("Absorb Ability/Absorb Melee Divisor", g_flAbsorbMeleeDivisor[iIndex]);
-					g_flAbsorbMeleeDivisor2[iIndex] = flClamp(g_flAbsorbMeleeDivisor2[iIndex], 0.1, 9999999999.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iHumanMode[iIndex] = 1;
+		g_iAbsorbAbility[iIndex] = 0;
+		g_iAbsorbMessage[iIndex] = 0;
+		g_flAbsorbBulletDivisor[iIndex] = 20.0;
+		g_flAbsorbChance[iIndex] = 33.3;
+		g_flAbsorbDuration[iIndex] = 5.0;
+		g_flAbsorbExplosiveDivisor[iIndex] = 20.0;
+		g_flAbsorbFireDivisor[iIndex] = 200.0;
+		g_flAbsorbMeleeDivisor[iIndex] = 200.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iHumanMode[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
+	g_iAbsorbAbility[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iAbsorbAbility[type], value, 0, 0, 1);
+	g_iAbsorbMessage[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iAbsorbMessage[type], value, 0, 0, 1);
+	g_flAbsorbBulletDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", main, g_flAbsorbBulletDivisor[type], value, 20.0, 0.1, 9999999999.0);
+	g_flAbsorbChance[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbChance", "Absorb Chance", "Absorb_Chance", "chance", main, g_flAbsorbChance[type], value, 33.3, 0.0, 100.0);
+	g_flAbsorbDuration[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", main, g_flAbsorbDuration[type], value, 5.0, 0.1, 9999999999.0);
+	g_flAbsorbExplosiveDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", main, g_flAbsorbExplosiveDivisor[type], value, 20.0, 0.1, 9999999999.0);
+	g_flAbsorbFireDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", main, g_flAbsorbFireDivisor[type], value, 200.0, 0.1, 9999999999.0);
+	g_flAbsorbMeleeDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", main, g_flAbsorbMeleeDivisor[type], value, 200.0, 0.1, 9999999999.0);
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -377,7 +328,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iAbsorbAbility(tank) == 1 && !g_bAbsorb[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iAbsorbAbility[ST_GetTankType(tank)] == 1 && !g_bAbsorb[tank])
 	{
 		vAbsorbAbility(tank);
 	}
@@ -385,13 +336,13 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if (iAbsorbAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iAbsorbAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
-				switch (iHumanMode(tank))
+				switch (g_iHumanMode[ST_GetTankType(tank)])
 				{
 					case 0:
 					{
@@ -410,14 +361,14 @@ public void ST_OnButtonPressed(int tank, int button)
 					}
 					case 1:
 					{
-						if (g_iAbsorbCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+						if (g_iAbsorbCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 						{
 							if (!g_bAbsorb[tank] && !g_bAbsorb2[tank])
 							{
 								g_bAbsorb[tank] = true;
 								g_iAbsorbCount[tank]++;
 
-								ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbHuman", g_iAbsorbCount[tank], iHumanAmmo(tank));
+								ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbHuman", g_iAbsorbCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 							}
 						}
 						else
@@ -433,13 +384,13 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnButtonReleased(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
-			if (iAbsorbAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iAbsorbAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
-				if (iHumanMode(tank) == 1 && g_bAbsorb[tank] && !g_bAbsorb2[tank])
+				if (g_iHumanMode[ST_GetTankType(tank)] == 1 && g_bAbsorb[tank] && !g_bAbsorb2[tank])
 				{
 					g_bAbsorb[tank] = false;
 
@@ -457,35 +408,34 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vAbsorbAbility(int tank)
 {
-	if (g_iAbsorbCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iAbsorbCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		float flAbsorbChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flAbsorbChance[ST_GetTankType(tank)] : g_flAbsorbChance2[ST_GetTankType(tank)];
-		if (GetRandomFloat(0.1, 100.0) <= flAbsorbChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_flAbsorbChance[ST_GetTankType(tank)])
 		{
 			g_bAbsorb[tank] = true;
 
-			CreateTimer(flAbsorbDuration(tank), tTimerStopAbsorb, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_flAbsorbDuration[ST_GetTankType(tank)], tTimerStopAbsorb, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				g_iAbsorbCount[tank]++;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbHuman", g_iAbsorbCount[tank], iHumanAmmo(tank));
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbHuman", g_iAbsorbCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 			}
 
-			if (iAbsorbMessage(tank) == 1)
+			if (g_iAbsorbMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
 				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Absorb", sTankName);
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbHuman2");
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbAmmo");
 	}
@@ -515,9 +465,9 @@ static void vReset2(int tank)
 
 	ST_PrintToChat(tank, "%s %t", ST_TAG3, "AbsorbHuman5");
 
-	if (g_iAbsorbCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iAbsorbCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
@@ -525,45 +475,10 @@ static void vReset2(int tank)
 	}
 }
 
-static float flAbsorbDuration(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flAbsorbDuration[ST_GetTankType(tank)] : g_flAbsorbDuration2[ST_GetTankType(tank)];
-}
-
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static int iAbsorbAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iAbsorbAbility[ST_GetTankType(tank)] : g_iAbsorbAbility2[ST_GetTankType(tank)];
-}
-
-static int iAbsorbMessage(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iAbsorbMessage[ST_GetTankType(tank)] : g_iAbsorbMessage2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iHumanMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanMode[ST_GetTankType(tank)] : g_iHumanMode2[ST_GetTankType(tank)];
-}
-
 public Action tTimerStopAbsorb(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bAbsorb[iTank])
+	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bAbsorb[iTank])
 	{
 		g_bAbsorb[iTank] = false;
 
@@ -572,12 +487,12 @@ public Action tTimerStopAbsorb(Handle timer, int userid)
 
 	g_bAbsorb[iTank] = false;
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && !g_bAbsorb2[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && !g_bAbsorb2[iTank])
 	{
 		vReset2(iTank);
 	}
 
-	if (iAbsorbMessage(iTank) == 1)
+	if (g_iAbsorbMessage[ST_GetTankType(iTank)] == 1)
 	{
 		char sTankName[33];
 		ST_GetTankName(iTank, sTankName);
@@ -590,7 +505,7 @@ public Action tTimerStopAbsorb(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bAbsorb2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bAbsorb2[iTank])
 	{
 		g_bAbsorb2[iTank] = false;
 

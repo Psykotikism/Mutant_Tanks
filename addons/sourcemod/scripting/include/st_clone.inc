@@ -23,6 +23,16 @@
  **/
 native bool ST_IsCloneSupported(int tank, bool clone);
 
+stock bool bIsCloneAllowed(int tank, bool clone)
+{
+	if (clone && !ST_IsCloneSupported(tank, clone))
+	{
+		return false;
+	}
+
+	return true;
+}
+
 public SharedPlugin __pl_supertankspluspluscloneability = 
 {
 	name = "st_clone",

@@ -32,11 +32,11 @@ public Plugin myinfo =
 
 #define ST_MENU_SLOW "Slow Ability"
 
-bool g_bCloneInstalled, g_bLateLoad, g_bSlow[MAXPLAYERS + 1], g_bSlow2[MAXPLAYERS + 1], g_bSlow3[MAXPLAYERS + 1], g_bSlow4[MAXPLAYERS + 1], g_bSlow5[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLateLoad, g_bSlow[MAXPLAYERS + 1], g_bSlow2[MAXPLAYERS + 1], g_bSlow3[MAXPLAYERS + 1], g_bSlow4[MAXPLAYERS + 1], g_bSlow5[MAXPLAYERS + 1];
 
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flSlowChance[ST_MAXTYPES + 1], g_flSlowChance2[ST_MAXTYPES + 1], g_flSlowDuration[ST_MAXTYPES + 1], g_flSlowDuration2[ST_MAXTYPES + 1], g_flSlowRange[ST_MAXTYPES + 1], g_flSlowRange2[ST_MAXTYPES + 1], g_flSlowRangeChance[ST_MAXTYPES + 1], g_flSlowRangeChance2[ST_MAXTYPES + 1], g_flSlowSpeed[ST_MAXTYPES + 1], g_flSlowSpeed2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flSlowChance[ST_MAXTYPES + 1], g_flSlowDuration[ST_MAXTYPES + 1], g_flSlowRange[ST_MAXTYPES + 1], g_flSlowRangeChance[ST_MAXTYPES + 1], g_flSlowSpeed[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iSlowAbility[ST_MAXTYPES + 1], g_iSlowAbility2[ST_MAXTYPES + 1], g_iSlowCount[MAXPLAYERS + 1], g_iSlowEffect[ST_MAXTYPES + 1], g_iSlowEffect2[ST_MAXTYPES + 1], g_iSlowHit[ST_MAXTYPES + 1], g_iSlowHit2[ST_MAXTYPES + 1], g_iSlowHitMode[ST_MAXTYPES + 1], g_iSlowHitMode2[ST_MAXTYPES + 1], g_iSlowMessage[ST_MAXTYPES + 1], g_iSlowMessage2[ST_MAXTYPES + 1], g_iSlowOwner[MAXPLAYERS + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iSlowAbility[ST_MAXTYPES + 1], g_iSlowCount[MAXPLAYERS + 1], g_iSlowEffect[ST_MAXTYPES + 1], g_iSlowHit[ST_MAXTYPES + 1], g_iSlowHitMode[ST_MAXTYPES + 1], g_iSlowMessage[ST_MAXTYPES + 1], g_iSlowOwner[MAXPLAYERS + 1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -159,13 +159,13 @@ public int iSlowMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iSlowAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iSlowCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iSlowAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iSlowCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "SlowDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flSlowDuration(param1));
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", g_flSlowDuration[ST_GetTankType(param1)]);
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -246,106 +246,58 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iSlowHitMode(attacker) == 0 || iSlowHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iSlowHitMode[ST_GetTankType(attacker)] == 0 || g_iSlowHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vSlowHit(victim, attacker, flSlowChance(attacker), iSlowHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
+				vSlowHit(victim, attacker, g_flSlowChance[ST_GetTankType(attacker)], g_iSlowHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iSlowHitMode(victim) == 0 || iSlowHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iSlowHitMode[ST_GetTankType(victim)] == 0 || g_iSlowHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vSlowHit(attacker, victim, flSlowChance(victim), iSlowHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
+				vSlowHit(attacker, victim, g_flSlowChance[ST_GetTankType(victim)], g_iSlowHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Slow Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Slow Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iSlowAbility[iIndex] = kvSuperTanks.GetNum("Slow Ability/Ability Enabled", 0);
-					g_iSlowAbility[iIndex] = iClamp(g_iSlowAbility[iIndex], 0, 1);
-					g_iSlowEffect[iIndex] = kvSuperTanks.GetNum("Slow Ability/Ability Effect", 0);
-					g_iSlowEffect[iIndex] = iClamp(g_iSlowEffect[iIndex], 0, 7);
-					g_iSlowMessage[iIndex] = kvSuperTanks.GetNum("Slow Ability/Ability Message", 0);
-					g_iSlowMessage[iIndex] = iClamp(g_iSlowMessage[iIndex], 0, 7);
-					g_flSlowChance[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Slow Chance", 33.3);
-					g_flSlowChance[iIndex] = flClamp(g_flSlowChance[iIndex], 0.0, 100.0);
-					g_flSlowDuration[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Slow Duration", 5.0);
-					g_flSlowDuration[iIndex] = flClamp(g_flSlowDuration[iIndex], 0.1, 9999999999.0);
-					g_iSlowHit[iIndex] = kvSuperTanks.GetNum("Slow Ability/Slow Hit", 0);
-					g_iSlowHit[iIndex] = iClamp(g_iSlowHit[iIndex], 0, 1);
-					g_iSlowHitMode[iIndex] = kvSuperTanks.GetNum("Slow Ability/Slow Hit Mode", 0);
-					g_iSlowHitMode[iIndex] = iClamp(g_iSlowHitMode[iIndex], 0, 2);
-					g_flSlowRange[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Slow Range", 150.0);
-					g_flSlowRange[iIndex] = flClamp(g_flSlowRange[iIndex], 1.0, 9999999999.0);
-					g_flSlowRangeChance[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Slow Range Chance", 15.0);
-					g_flSlowRangeChance[iIndex] = flClamp(g_flSlowRangeChance[iIndex], 0.0, 100.0);
-					g_flSlowSpeed[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Slow Speed", 0.25);
-					g_flSlowSpeed[iIndex] = flClamp(g_flSlowSpeed[iIndex], 0.1, 0.9);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Slow Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Slow Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iSlowAbility2[iIndex] = kvSuperTanks.GetNum("Slow Ability/Ability Enabled", g_iSlowAbility[iIndex]);
-					g_iSlowAbility2[iIndex] = iClamp(g_iSlowAbility2[iIndex], 0, 1);
-					g_iSlowEffect2[iIndex] = kvSuperTanks.GetNum("Slow Ability/Ability Effect", g_iSlowEffect[iIndex]);
-					g_iSlowEffect2[iIndex] = iClamp(g_iSlowEffect2[iIndex], 0, 7);
-					g_iSlowMessage2[iIndex] = kvSuperTanks.GetNum("Slow Ability/Ability Message", g_iSlowMessage[iIndex]);
-					g_iSlowMessage2[iIndex] = iClamp(g_iSlowMessage2[iIndex], 0, 7);
-					g_flSlowChance2[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Slow Chance", g_flSlowChance[iIndex]);
-					g_flSlowChance2[iIndex] = flClamp(g_flSlowChance2[iIndex], 0.0, 100.0);
-					g_flSlowDuration2[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Slow Duration", g_flSlowDuration[iIndex]);
-					g_flSlowDuration2[iIndex] = flClamp(g_flSlowDuration2[iIndex], 0.1, 9999999999.0);
-					g_iSlowHit2[iIndex] = kvSuperTanks.GetNum("Slow Ability/Slow Hit", g_iSlowHit[iIndex]);
-					g_iSlowHit2[iIndex] = iClamp(g_iSlowHit2[iIndex], 0, 1);
-					g_iSlowHitMode2[iIndex] = kvSuperTanks.GetNum("Slow Ability/Slow Hit Mode", g_iSlowHitMode[iIndex]);
-					g_iSlowHitMode2[iIndex] = iClamp(g_iSlowHitMode2[iIndex], 0, 2);
-					g_flSlowRange2[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Slow Range", g_flSlowRange[iIndex]);
-					g_flSlowRange2[iIndex] = flClamp(g_flSlowRange2[iIndex], 1.0, 9999999999.0);
-					g_flSlowRangeChance2[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Slow Range Chance", g_flSlowRangeChance[iIndex]);
-					g_flSlowRangeChance2[iIndex] = flClamp(g_flSlowRangeChance2[iIndex], 0.0, 100.0);
-					g_flSlowSpeed2[iIndex] = kvSuperTanks.GetFloat("Slow Ability/Slow Speed", g_flSlowSpeed[iIndex]);
-					g_flSlowSpeed2[iIndex] = flClamp(g_flSlowSpeed2[iIndex], 0.1, 0.9);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iSlowAbility[iIndex] = 0;
+		g_iSlowEffect[iIndex] = 0;
+		g_iSlowMessage[iIndex] = 0;
+		g_flSlowChance[iIndex] = 33.3;
+		g_flSlowDuration[iIndex] = 5.0;
+		g_iSlowHit[iIndex] = 0;
+		g_iSlowHitMode[iIndex] = 0;
+		g_flSlowRange[iIndex] = 150.0;
+		g_flSlowRangeChance[iIndex] = 15.0;
+		g_flSlowSpeed[iIndex] = 0.25;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iSlowAbility[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iSlowAbility[type], value, 0, 0, 1);
+	g_iSlowEffect[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iSlowEffect[type], value, 0, 0, 7);
+	g_iSlowMessage[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iSlowMessage[type], value, 0, 0, 7);
+	g_flSlowChance[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", main, g_flSlowChance[type], value, 33.3, 0.0, 100.0);
+	g_flSlowDuration[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", main, g_flSlowDuration[type], value, 5.0, 0.1, 9999999999.0);
+	g_iSlowHit[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowHit", "Slow Hit", "Slow_Hit", "hit", main, g_iSlowHit[type], value, 0, 0, 1);
+	g_iSlowHitMode[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowHitMode", "Slow Hit Mode", "Slow_Hit_Mode", "hitmode", main, g_iSlowHitMode[type], value, 0, 0, 2);
+	g_flSlowRange[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowRange", "Slow Range", "Slow_Range", "range", main, g_flSlowRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flSlowRangeChance[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", main, g_flSlowRangeChance[type], value, 15.0, 0.0, 100.0);
+	g_flSlowSpeed[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", main, g_flSlowSpeed[type], value, 0.25, 0.1, 0.9);
 }
 
 public void ST_OnPluginEnd()
@@ -373,7 +325,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iSlowAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iSlowAbility[ST_GetTankType(tank)] == 1)
 	{
 		vSlowAbility(tank);
 	}
@@ -381,11 +333,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iSlowAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iSlowAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				if (!g_bSlow2[tank] && !g_bSlow3[tank])
 				{
@@ -448,15 +400,12 @@ static void vReset2(int tank)
 
 static void vSlowAbility(int tank)
 {
-	if (g_iSlowCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iSlowCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bSlow4[tank] = false;
 		g_bSlow5[tank] = false;
 
-		float flSlowRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flSlowRange[ST_GetTankType(tank)] : g_flSlowRange2[ST_GetTankType(tank)],
-			flSlowRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flSlowRangeChance[ST_GetTankType(tank)] : g_flSlowRangeChance2[ST_GetTankType(tank)],
-			flTankPos[3];
-
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
@@ -469,9 +418,9 @@ static void vSlowAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flSlowRange)
+				if (flDistance <= g_flSlowRange[ST_GetTankType(tank)])
 				{
-					vSlowHit(iSurvivor, tank, flSlowRangeChance, iSlowAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
+					vSlowHit(iSurvivor, tank, g_flSlowRangeChance[ST_GetTankType(tank)], g_iSlowAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -480,13 +429,13 @@ static void vSlowAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "SlowHuman5");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "SlowAmmo");
 	}
@@ -496,43 +445,41 @@ static void vSlowHit(int survivor, int tank, float chance, int enabled, int mess
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iSlowCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iSlowCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bSlow[survivor])
 			{
 				g_bSlow[survivor] = true;
 				g_iSlowOwner[survivor] = tank;
 
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bSlow2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bSlow2[tank])
 				{
 					g_bSlow2[tank] = true;
 					g_iSlowCount[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "SlowHuman", g_iSlowCount[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "SlowHuman", g_iSlowCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 				}
 
-				float flSlowSpeed = !g_bTankConfig[ST_GetTankType(tank)] ? g_flSlowSpeed[ST_GetTankType(tank)] : g_flSlowSpeed2[ST_GetTankType(tank)];
-				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flSlowSpeed);
+				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", g_flSlowSpeed[ST_GetTankType(tank)]);
 
 				DataPack dpStopSlow;
-				CreateDataTimer(flSlowDuration(tank), tTimerStopSlow, dpStopSlow, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer(g_flSlowDuration[ST_GetTankType(tank)], tTimerStopSlow, dpStopSlow, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopSlow.WriteCell(GetClientUserId(survivor));
 				dpStopSlow.WriteCell(GetClientUserId(tank));
 				dpStopSlow.WriteCell(messages);
 
-				int iSlowEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iSlowEffect[ST_GetTankType(tank)] : g_iSlowEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, iSlowEffect, flags);
+				vEffect(survivor, tank, g_iSlowEffect[ST_GetTankType(tank)], flags);
 
-				if (iSlowMessage(tank) & messages)
+				if (g_iSlowMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
-					ST_PrintToChatAll("%s %t", ST_TAG2, "Slow", sTankName, survivor, flSlowSpeed);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Slow", sTankName, survivor, g_flSlowSpeed[ST_GetTankType(tank)]);
 				}
 			}
 			else if ((flags & ST_ATTACK_RANGE) && !g_bSlow2[tank])
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bSlow4[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bSlow4[tank])
 				{
 					g_bSlow4[tank] = true;
 
@@ -540,58 +487,13 @@ static void vSlowHit(int survivor, int tank, float chance, int enabled, int mess
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bSlow5[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bSlow5[tank])
 		{
 			g_bSlow5[tank] = true;
 
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "SlowAmmo");
 		}
 	}
-}
-
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static float flSlowChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flSlowChance[ST_GetTankType(tank)] : g_flSlowChance2[ST_GetTankType(tank)];
-}
-
-static float flSlowDuration(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flSlowDuration[ST_GetTankType(tank)] : g_flSlowDuration2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iSlowAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iSlowAbility[ST_GetTankType(tank)] : g_iSlowAbility2[ST_GetTankType(tank)];
-}
-
-static int iSlowHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iSlowHit[ST_GetTankType(tank)] : g_iSlowHit2[ST_GetTankType(tank)];
-}
-
-static int iSlowHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iSlowHitMode[ST_GetTankType(tank)] : g_iSlowHitMode2[ST_GetTankType(tank)];
-}
-
-static int iSlowMessage(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iSlowMessage[ST_GetTankType(tank)] : g_iSlowMessage2[ST_GetTankType(tank)];
 }
 
 public Action tTimerStopSlow(Handle timer, DataPack pack)
@@ -608,7 +510,7 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bSlow[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bSlow[iSurvivor])
 	{
 		g_bSlow[iSurvivor] = false;
 		g_iSlowOwner[iSurvivor] = 0;
@@ -626,15 +528,15 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 
 	int iMessage = pack.ReadCell();
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bSlow3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bSlow3[iTank])
 	{
 		g_bSlow3[iTank] = true;
 
 		ST_PrintToChat(iTank, "%s %t", ST_TAG3, "SlowHuman6");
 
-		if (g_iSlowCount[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
+		if (g_iSlowCount[iTank] < g_iHumanAmmo[ST_GetTankType(iTank)] && g_iHumanAmmo[ST_GetTankType(iTank)] > 0)
 		{
-			CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_flHumanCooldown[ST_GetTankType(iTank)], tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else
 		{
@@ -642,7 +544,7 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 		}
 	}
 
-	if (iSlowMessage(iTank) & iMessage)
+	if (g_iSlowMessage[ST_GetTankType(iTank)] & iMessage)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Slow2", iSurvivor);
 	}
@@ -653,7 +555,7 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bSlow3[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bSlow3[iTank])
 	{
 		g_bSlow3[iTank] = false;
 

@@ -45,22 +45,25 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_CLONE "Clone Ability"
 
-bool g_bClone[MAXPLAYERS + 1], g_bClone2[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bClone[MAXPLAYERS + 1], g_bClone2[MAXPLAYERS + 1];
 
-float g_flCloneChance[ST_MAXTYPES + 1], g_flCloneChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+float g_flCloneChance[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
-int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAbility2[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneAmount2[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneCount2[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneHealth2[ST_MAXTYPES + 1], g_iCloneMessage[ST_MAXTYPES + 1], g_iCloneMessage2[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneMode2[ST_MAXTYPES + 1], g_iCloneOwner[MAXPLAYERS + 1], g_iCloneReplace[ST_MAXTYPES + 1], g_iCloneReplace2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
+int g_iCloneAbility[ST_MAXTYPES + 1], g_iCloneAmount[ST_MAXTYPES + 1], g_iCloneCount[MAXPLAYERS + 1], g_iCloneCount2[MAXPLAYERS + 1], g_iCloneHealth[ST_MAXTYPES + 1], g_iCloneMessage[ST_MAXTYPES + 1], g_iCloneMode[ST_MAXTYPES + 1], g_iCloneOwner[MAXPLAYERS + 1], g_iCloneReplace[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1];
 
 public any aNative_IsCloneSupported(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	bool bCloneInstalled = GetNativeCell(2);
-	if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && bIsCloneAllowed(iTank, bCloneInstalled))
+	if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 	{
-		return true;
+		if (bCloneInstalled && g_iCloneMode[ST_GetTankType(iTank)] == 0 && g_bClone[iTank])
+		{
+			return false;
+		}
 	}
 
-	return false;
+	return true;
 }
 
 public void OnPluginStart()
@@ -133,12 +136,12 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iCloneAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iCloneCount2[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iCloneAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iCloneCount2[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons3");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "CloneDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -208,76 +211,35 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Clone Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Clone Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Clone Ability/Human Cooldown", 60.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iCloneAbility[iIndex] = kvSuperTanks.GetNum("Clone Ability/Ability Enabled", 0);
-					g_iCloneAbility[iIndex] = iClamp(g_iCloneAbility[iIndex], 0, 1);
-					g_iCloneMessage[iIndex] = kvSuperTanks.GetNum("Clone Ability/Ability Message", 0);
-					g_iCloneMessage[iIndex] = iClamp(g_iCloneMessage[iIndex], 0, 1);
-					g_iCloneAmount[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Amount", 2);
-					g_iCloneAmount[iIndex] = iClamp(g_iCloneAmount[iIndex], 1, 25);
-					g_flCloneChance[iIndex] = kvSuperTanks.GetFloat("Clone Ability/Clone Chance", 33.3);
-					g_flCloneChance[iIndex] = flClamp(g_flCloneChance[iIndex], 0.0, 100.0);
-					g_iCloneHealth[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", 1000);
-					g_iCloneHealth[iIndex] = iClamp(g_iCloneHealth[iIndex], 1, ST_MAXHEALTH);
-					g_iCloneMode[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", 0);
-					g_iCloneMode[iIndex] = iClamp(g_iCloneMode[iIndex], 0, 1);
-					g_iCloneReplace[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Replace", 1);
-					g_iCloneReplace[iIndex] = iClamp(g_iCloneReplace[iIndex], 0, 1);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Clone Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iCloneAbility2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Ability Enabled", g_iCloneAbility[iIndex]);
-					g_iCloneAbility2[iIndex] = iClamp(g_iCloneAbility2[iIndex], 0, 1);
-					g_iCloneMessage2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Ability Message", g_iCloneMessage[iIndex]);
-					g_iCloneMessage2[iIndex] = iClamp(g_iCloneMessage2[iIndex], 0, 1);
-					g_iCloneAmount2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Amount", g_iCloneAmount[iIndex]);
-					g_iCloneAmount2[iIndex] = iClamp(g_iCloneAmount2[iIndex], 1, 25);
-					g_flCloneChance2[iIndex] = kvSuperTanks.GetFloat("Clone Ability/Clone Chance", g_flCloneChance[iIndex]);
-					g_flCloneChance2[iIndex] = flClamp(g_flCloneChance2[iIndex], 0.0, 100.0);
-					g_iCloneHealth2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Health", g_iCloneHealth[iIndex]);
-					g_iCloneHealth2[iIndex] = iClamp(g_iCloneHealth2[iIndex], 1, ST_MAXHEALTH);
-					g_iCloneMode2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Mode", g_iCloneMode[iIndex]);
-					g_iCloneMode2[iIndex] = iClamp(g_iCloneMode2[iIndex], 0, 1);
-					g_iCloneReplace2[iIndex] = kvSuperTanks.GetNum("Clone Ability/Clone Replace", g_iCloneReplace[iIndex]);
-					g_iCloneReplace2[iIndex] = iClamp(g_iCloneReplace2[iIndex], 0, 1);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 60.0;
+		g_iCloneAbility[iIndex] = 0;
+		g_iCloneMessage[iIndex] = 0;
+		g_iCloneAmount[iIndex] = 2;
+		g_flCloneChance[iIndex] = 33.3;
+		g_iCloneHealth[iIndex] = 1000;
+		g_iCloneMode[iIndex] = 0;
+		g_iCloneReplace[iIndex] = 1;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 60.0, 0.0, 9999999999.0);
+	g_iCloneAbility[type] = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iCloneAbility[type], value, 0, 0, 1);
+	g_iCloneMessage[type] = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iCloneMessage[type], value, 0, 0, 1);
+	g_iCloneAmount[type] = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", main, g_iCloneAmount[type], value, 2, 1, 25);
+	g_flCloneChance[type] = flGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", main, g_flCloneChance[type], value, 33.3, 0.0, 100.0);
+	g_iCloneHealth[type] = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneHealth", "Clone Health", "Clone_Health", "health", main, g_iCloneHealth[type], value, 1000, 1, ST_MAXHEALTH);
+	g_iCloneMode[type] = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", main, g_iCloneMode[type], value, 0, 0, 1);
+	g_iCloneReplace[type] = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", main, g_iCloneReplace[type], value, 1, 0, 1);
 }
 
 public void ST_OnPluginEnd()
@@ -300,7 +262,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveClone(iTank, true);
 
-			if (iCloneAbility(iTank) == 1)
+			if (g_iCloneAbility[ST_GetTankType(iTank)] == 1)
 			{
 				switch (g_bClone[iTank])
 				{
@@ -319,24 +281,23 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 									{
 										g_iCloneCount[iOwner] = 0;
 
-										if (ST_IsTankSupported(iOwner, ST_CHECK_FAKECLIENT) && iHumanAbility(iOwner) == 1)
+										if (ST_IsTankSupported(iOwner, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iOwner)] == 1)
 										{
 											g_bClone2[iOwner] = true;
 
 											ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "CloneHuman6");
 
-											CreateTimer(flHumanCooldown(iOwner), tTimerResetCooldown, GetClientUserId(iOwner), TIMER_FLAG_NO_MAPCHANGE);
+											CreateTimer(g_flHumanCooldown[ST_GetTankType(iOwner)], tTimerResetCooldown, GetClientUserId(iOwner), TIMER_FLAG_NO_MAPCHANGE);
 										}
 									}
 									default:
 									{
-										int iCloneReplace = !g_bTankConfig[ST_GetTankType(iOwner)] ? g_iCloneReplace[ST_GetTankType(iOwner)] : g_iCloneReplace2[ST_GetTankType(iOwner)];
-										if (iCloneReplace == 1)
+										if (g_iCloneReplace[ST_GetTankType(iOwner)] == 1)
 										{
 											g_iCloneCount[iOwner]--;
 										}
 
-										if (ST_IsTankSupported(iOwner, ST_CHECK_FAKECLIENT) && iHumanAbility(iOwner) == 1)
+										if (ST_IsTankSupported(iOwner, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iOwner)] == 1)
 										{
 											ST_PrintToChat(iOwner, "%s %t", ST_TAG3, "CloneHuman5");
 										}
@@ -365,7 +326,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && iCloneAbility(tank) == 1 && !g_bClone[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && g_iCloneAbility[ST_GetTankType(tank)] == 1 && !g_bClone[tank])
 	{
 		vCloneAbility(tank);
 	}
@@ -377,7 +338,7 @@ public void ST_OnButtonPressed(int tank, int button)
 	{
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
-			if (iCloneAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iCloneAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				if (!g_bClone[tank] && !g_bClone2[tank])
 				{
@@ -403,11 +364,9 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vCloneAbility(int tank)
 {
-	int iCloneAmount = !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneAmount[ST_GetTankType(tank)] : g_iCloneAmount2[ST_GetTankType(tank)];
-	if (g_iCloneCount[tank] < iCloneAmount && g_iCloneCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iCloneCount[tank] < g_iCloneAmount[ST_GetTankType(tank)] && g_iCloneCount2[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		float flCloneChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flCloneChance[ST_GetTankType(tank)] : g_flCloneChance2[ST_GetTankType(tank)];
-		if (GetRandomFloat(0.1, 100.0) <= flCloneChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_flCloneChance[ST_GetTankType(tank)])
 		{
 			float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
 			GetClientEyePosition(tank, flPosition);
@@ -462,19 +421,17 @@ static void vCloneAbility(int tank)
 						g_iCloneCount[tank]++;
 						g_iCloneOwner[iSelectedType] = tank;
 
-						int iCloneHealth = !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneHealth[ST_GetTankType(tank)] : g_iCloneHealth2[ST_GetTankType(tank)],
-							iNewHealth = (iCloneHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iCloneHealth;
+						int iNewHealth = (g_iCloneHealth[ST_GetTankType(tank)] > ST_MAXHEALTH) ? ST_MAXHEALTH : g_iCloneHealth[ST_GetTankType(tank)];
 						SetEntityHealth(iSelectedType, iNewHealth);
 
-						if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+						if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 						{
 							g_iCloneCount2[tank]++;
 
-							ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman", g_iCloneCount2[tank], iHumanAmmo(tank));
+							ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman", g_iCloneCount2[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 						}
 
-						int iCloneMessage = !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneMessage[ST_GetTankType(tank)] : g_iCloneMessage2[ST_GetTankType(tank)];
-						if (iCloneMessage == 1)
+						if (g_iCloneMessage[ST_GetTankType(tank)] == 1)
 						{
 							char sTankName[33];
 							ST_GetTankName(tank, sTankName);
@@ -486,12 +443,12 @@ static void vCloneAbility(int tank)
 
 			delete hTrace;
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneHuman2");
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "CloneAmmo");
 	}
@@ -520,37 +477,6 @@ static void vReset()
 			g_iCloneOwner[iPlayer] = 0;
 		}
 	}
-}
-
-static bool bIsCloneAllowed(int tank, bool clone)
-{
-	int iCloneMode = !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneMode[ST_GetTankType(tank)] : g_iCloneMode2[ST_GetTankType(tank)];
-	if (clone && iCloneMode == 0 && g_bClone[tank])
-	{
-		return false;
-	}
-
-	return true;
-}
-
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static int iCloneAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iCloneAbility[ST_GetTankType(tank)] : g_iCloneAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
 }
 
 public Action tTimerResetCooldown(Handle timer, int userid)

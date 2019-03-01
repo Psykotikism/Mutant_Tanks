@@ -50,13 +50,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_ACID "Acid Ability"
 
-bool g_bAcid[MAXPLAYERS + 1], g_bAcid2[MAXPLAYERS + 1], g_bAcid3[MAXPLAYERS + 1], g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bAcid[MAXPLAYERS + 1], g_bAcid2[MAXPLAYERS + 1], g_bAcid3[MAXPLAYERS + 1], g_bCloneInstalled;
 
-float g_flAcidChance[ST_MAXTYPES + 1], g_flAcidChance2[ST_MAXTYPES + 1], g_flAcidRange[ST_MAXTYPES + 1], g_flAcidRange2[ST_MAXTYPES + 1], g_flAcidRangeChance[ST_MAXTYPES + 1], g_flAcidRangeChance2[ST_MAXTYPES + 1], g_flAcidRockChance[ST_MAXTYPES + 1], g_flAcidRockChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+float g_flAcidChance[ST_MAXTYPES + 1], g_flAcidRange[ST_MAXTYPES + 1], g_flAcidRangeChance[ST_MAXTYPES + 1], g_flAcidRockChance[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
 Handle g_hSDKAcidPlayer, g_hSDKPukePlayer;
 
-int g_iAcidAbility[ST_MAXTYPES + 1], g_iAcidAbility2[ST_MAXTYPES + 1], g_iAcidCount[MAXPLAYERS + 1], g_iAcidEffect[ST_MAXTYPES + 1], g_iAcidEffect2[ST_MAXTYPES + 1], g_iAcidHit[ST_MAXTYPES + 1], g_iAcidHit2[ST_MAXTYPES + 1], g_iAcidHitMode[ST_MAXTYPES + 1], g_iAcidHitMode2[ST_MAXTYPES + 1], g_iAcidMessage[ST_MAXTYPES + 1], g_iAcidMessage2[ST_MAXTYPES + 1], g_iAcidRockBreak[ST_MAXTYPES + 1], g_iAcidRockBreak2[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
+int g_iAcidAbility[ST_MAXTYPES + 1], g_iAcidCount[MAXPLAYERS + 1], g_iAcidEffect[ST_MAXTYPES + 1], g_iAcidHit[ST_MAXTYPES + 1], g_iAcidHitMode[ST_MAXTYPES + 1], g_iAcidMessage[ST_MAXTYPES + 1], g_iAcidRockBreak[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -211,12 +211,12 @@ public int iAcidMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iAcidAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iAcidCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iAcidAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iAcidCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AcidDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -292,106 +292,58 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iAcidHitMode(attacker) == 0 || iAcidHitMode(attacker) == 1) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iAcidHitMode[ST_GetTankType(attacker)] == 0 || g_iAcidHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAcidHit(victim, attacker, flAcidChance(attacker), iAcidHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
+				vAcidHit(victim, attacker, g_flAcidChance[ST_GetTankType(attacker)], g_iAcidHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iAcidHitMode(victim) == 0 || iAcidHitMode(victim) == 2) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iAcidHitMode[ST_GetTankType(victim)] == 0 || g_iAcidHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vAcidHit(attacker, victim, flAcidChance(victim), iAcidHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
+				vAcidHit(attacker, victim, g_flAcidChance[ST_GetTankType(victim)], g_iAcidHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Acid Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Acid Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iAcidAbility[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", 0);
-					g_iAcidAbility[iIndex] = iClamp(g_iAcidAbility[iIndex], 0, 1);
-					g_iAcidEffect[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Effect", 0);
-					g_iAcidEffect[iIndex] = iClamp(g_iAcidEffect[iIndex], 0, 7);
-					g_iAcidMessage[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", 0);
-					g_iAcidMessage[iIndex] = iClamp(g_iAcidMessage[iIndex], 0, 7);
-					g_flAcidChance[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Chance", 33.3);
-					g_flAcidChance[iIndex] = flClamp(g_flAcidChance[iIndex], 0.0, 100.0);
-					g_iAcidHit[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", 0);
-					g_iAcidHit[iIndex] = iClamp(g_iAcidHit[iIndex], 0, 1);
-					g_iAcidHitMode[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit Mode", 0);
-					g_iAcidHitMode[iIndex] = iClamp(g_iAcidHitMode[iIndex], 0, 2);
-					g_flAcidRange[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", 150.0);
-					g_flAcidRange[iIndex] = flClamp(g_flAcidRange[iIndex], 1.0, 9999999999.0);
-					g_flAcidRangeChance[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range Chance", 15.0);
-					g_flAcidRangeChance[iIndex] = flClamp(g_flAcidRangeChance[iIndex], 0.0, 100.0);
-					g_iAcidRockBreak[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", 0);
-					g_iAcidRockBreak[iIndex] = iClamp(g_iAcidRockBreak[iIndex], 0, 1);
-					g_flAcidRockChance[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Rock Chance", 33.3);
-					g_flAcidRockChance[iIndex] = flClamp(g_flAcidRockChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iAcidAbility2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Enabled", g_iAcidAbility[iIndex]);
-					g_iAcidAbility2[iIndex] = iClamp(g_iAcidAbility2[iIndex], 0, 1);
-					g_iAcidEffect2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Effect", g_iAcidEffect[iIndex]);
-					g_iAcidEffect2[iIndex] = iClamp(g_iAcidEffect2[iIndex], 0, 7);
-					g_iAcidMessage2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Ability Message", g_iAcidMessage[iIndex]);
-					g_iAcidMessage2[iIndex] = iClamp(g_iAcidMessage2[iIndex], 0, 7);
-					g_flAcidChance2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Chance", g_flAcidChance[iIndex]);
-					g_flAcidChance2[iIndex] = flClamp(g_flAcidChance2[iIndex], 0.0, 100.0);
-					g_iAcidHit2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit", g_iAcidHit[iIndex]);
-					g_iAcidHit2[iIndex] = iClamp(g_iAcidHit2[iIndex], 0, 1);
-					g_iAcidHitMode2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Hit Mode", g_iAcidHitMode[iIndex]);
-					g_iAcidHitMode2[iIndex] = iClamp(g_iAcidHitMode2[iIndex], 0, 2);
-					g_flAcidRange2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range", g_flAcidRange[iIndex]);
-					g_flAcidRange2[iIndex] = flClamp(g_flAcidRange2[iIndex], 1.0, 9999999999.0);
-					g_flAcidRangeChance2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Range Chance", g_flAcidRangeChance[iIndex]);
-					g_flAcidRangeChance2[iIndex] = flClamp(g_flAcidRangeChance2[iIndex], 0.0, 100.0);
-					g_iAcidRockBreak2[iIndex] = kvSuperTanks.GetNum("Acid Ability/Acid Rock Break", g_iAcidRockBreak[iIndex]);
-					g_iAcidRockBreak2[iIndex] = iClamp(g_iAcidRockBreak2[iIndex], 0, 1);
-					g_flAcidRockChance2[iIndex] = kvSuperTanks.GetFloat("Acid Ability/Acid Rock Chance", g_flAcidRockChance[iIndex]);
-					g_flAcidRockChance2[iIndex] = flClamp(g_flAcidRockChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iAcidAbility[iIndex] = 0;
+		g_iAcidEffect[iIndex] = 0;
+		g_iAcidMessage[iIndex] = 0;
+		g_flAcidChance[iIndex] = 33.3;
+		g_iAcidHit[iIndex] = 0;
+		g_iAcidHitMode[iIndex] = 0;
+		g_flAcidRange[iIndex] = 150.0;
+		g_flAcidRangeChance[iIndex] = 15.0;
+		g_iAcidRockBreak[iIndex] = 0;
+		g_flAcidRockChance[iIndex] = 33.3;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iAcidAbility[type] = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iAcidAbility[type], value, 0, 0, 1);
+	g_iAcidEffect[type] = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iAcidEffect[type], value, 0, 0, 7);
+	g_iAcidMessage[type] = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iAcidMessage[type], value, 0, 0, 7);
+	g_flAcidChance[type] = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", main, g_flAcidChance[type], value, 33.3, 0.0, 100.0);
+	g_iAcidHit[type] = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", main, g_iAcidHit[type], value, 0, 0, 1);
+	g_iAcidHitMode[type] = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", main, g_iAcidHitMode[type], value, 0, 0, 2);
+	g_flAcidRange[type] = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRange", "Acid Range", "Acid_Range", "range", main, g_flAcidRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flAcidRangeChance[type] = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", main, g_flAcidRangeChance[type], value, 15.0, 0.0, 100.0);
+	g_iAcidRockBreak[type] = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", main, g_iAcidRockBreak[type], value, 0, 0, 1);
+	g_flAcidRockChance[type] = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", main, g_flAcidRockChance[type], value, 33.3, 0.0, 100.0);
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -401,7 +353,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
-			if (ST_IsCloneSupported(iTank, g_bCloneInstalled) && iAcidAbility(iTank) == 1)
+			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_iAcidAbility[ST_GetTankType(iTank)] == 1)
 			{
 				switch (bIsValidGame())
 				{
@@ -438,7 +390,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iAcidAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iAcidAbility[ST_GetTankType(tank)] == 1)
 	{
 		vAcidAbility(tank);
 	}
@@ -446,11 +398,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iAcidAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iAcidAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				switch (g_bAcid[tank])
 				{
@@ -464,7 +416,7 @@ public void ST_OnButtonPressed(int tank, int button)
 
 public void ST_OnChangeType(int tank, bool revert)
 {
-	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && bIsValidGame() && iAcidAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && bIsValidGame() && g_iAcidAbility[ST_GetTankType(tank)] == 1)
 	{
 		vAcid(tank, tank);
 	}
@@ -474,11 +426,9 @@ public void ST_OnChangeType(int tank, bool revert)
 
 public void ST_OnRockBreak(int tank, int rock)
 {
-	int iAcidRockBreak = !g_bTankConfig[ST_GetTankType(tank)] ? g_iAcidRockBreak[ST_GetTankType(tank)] : g_iAcidRockBreak2[ST_GetTankType(tank)];
-	if (ST_IsTankSupported(tank) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iAcidRockBreak == 1 && bIsValidGame())
+	if (ST_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iAcidRockBreak[ST_GetTankType(tank)] == 1 && bIsValidGame())
 	{
-		float flAcidRockChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flAcidRockChance[ST_GetTankType(tank)] : g_flAcidRockChance2[ST_GetTankType(tank)];
-		if (GetRandomFloat(0.1, 100.0) <= flAcidRockChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_flAcidRockChance[ST_GetTankType(tank)])
 		{
 			float flOrigin[3], flAngles[3];
 			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
@@ -486,7 +436,7 @@ public void ST_OnRockBreak(int tank, int rock)
 
 			SDKCall(g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, tank, 2.0);
 
-			if (iAcidMessage(tank) & ST_MESSAGE_SPECIAL)
+			if (g_iAcidMessage[ST_GetTankType(tank)] & ST_MESSAGE_SPECIAL)
 			{
 				char sTankName[33];
 				ST_GetTankName(tank, sTankName);
@@ -507,15 +457,12 @@ static void vAcid(int survivor, int tank)
 
 static void vAcidAbility(int tank)
 {
-	if (g_iAcidCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iAcidCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bAcid2[tank] = false;
 		g_bAcid3[tank] = false;
 
-		float flAcidRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flAcidRange[ST_GetTankType(tank)] : g_flAcidRange2[ST_GetTankType(tank)],
-			flAcidRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flAcidRangeChance[ST_GetTankType(tank)] : g_flAcidRangeChance2[ST_GetTankType(tank)],
-			flTankPos[3];
-
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
@@ -528,9 +475,9 @@ static void vAcidAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flAcidRange)
+				if (flDistance <= g_flAcidRange[ST_GetTankType(tank)])
 				{
-					vAcidHit(iSurvivor, tank, flAcidRangeChance, iAcidAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
+					vAcidHit(iSurvivor, tank, g_flAcidRangeChance[ST_GetTankType(tank)], g_iAcidAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -539,13 +486,13 @@ static void vAcidAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "AcidHuman4");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "AcidAmmo");
 	}
@@ -555,20 +502,20 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 {
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iAcidCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iAcidCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && (flags & ST_ATTACK_RANGE) && !g_bAcid[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE) && !g_bAcid[tank])
 				{
 					g_bAcid[tank] = true;
 					g_iAcidCount[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "AcidHuman", g_iAcidCount[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "AcidHuman", g_iAcidCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 
-					if (g_iAcidCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+					if (g_iAcidCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 					{
-						CreateTimer(flHumanCooldown(tank), tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(g_flHumanCooldown[ST_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 					}
 					else
 					{
@@ -585,7 +532,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 					{
 						vAcid(survivor, tank);
 
-						if (iAcidMessage(tank) & messages)
+						if (g_iAcidMessage[ST_GetTankType(tank)] & messages)
 						{
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Acid", sTankName, survivor);
 						}
@@ -594,19 +541,18 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 					{
 						SDKCall(g_hSDKPukePlayer, survivor, tank, true);
 
-						if (iAcidMessage(tank) & messages)
+						if (g_iAcidMessage[ST_GetTankType(tank)] & messages)
 						{
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Puke", sTankName, survivor);
 						}
 					}
 				}
 
-				int iAcidEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iAcidEffect[ST_GetTankType(tank)] : g_iAcidEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, iAcidEffect, flags);
+				vEffect(survivor, tank, g_iAcidEffect[ST_GetTankType(tank)], flags);
 			}
 			else if ((flags & ST_ATTACK_RANGE) && !g_bAcid[tank])
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bAcid2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bAcid2[tank])
 				{
 					g_bAcid2[tank] = true;
 
@@ -614,7 +560,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bAcid3[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bAcid3[tank])
 		{
 			g_bAcid3[tank] = true;
 
@@ -642,50 +588,10 @@ static void vReset()
 	}
 }
 
-static float flAcidChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flAcidChance[ST_GetTankType(tank)] : g_flAcidChance2[ST_GetTankType(tank)];
-}
-
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static int iAcidAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iAcidAbility[ST_GetTankType(tank)] : g_iAcidAbility2[ST_GetTankType(tank)];
-}
-
-static int iAcidHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iAcidHit[ST_GetTankType(tank)] : g_iAcidHit2[ST_GetTankType(tank)];
-}
-
-static int iAcidHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iAcidHitMode[ST_GetTankType(tank)] : g_iAcidHitMode2[ST_GetTankType(tank)];
-}
-
-static int iAcidMessage(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iAcidMessage[ST_GetTankType(tank)] : g_iAcidMessage2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bAcid[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bAcid[iTank])
 	{
 		g_bAcid[iTank] = false;
 

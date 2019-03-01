@@ -48,11 +48,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_BLIND "Blind Ability"
 
-bool g_bBlind[MAXPLAYERS + 1], g_bBlind2[MAXPLAYERS + 1], g_bBlind3[MAXPLAYERS + 1], g_bBlind4[MAXPLAYERS + 1], g_bBlind5[MAXPLAYERS + 1], g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1];
+bool g_bBlind[MAXPLAYERS + 1], g_bBlind2[MAXPLAYERS + 1], g_bBlind3[MAXPLAYERS + 1], g_bBlind4[MAXPLAYERS + 1], g_bBlind5[MAXPLAYERS + 1], g_bCloneInstalled;
 
-float g_flBlindChance[ST_MAXTYPES + 1], g_flBlindChance2[ST_MAXTYPES + 1], g_flBlindDuration[ST_MAXTYPES + 1], g_flBlindDuration2[ST_MAXTYPES + 1], g_flBlindRange[ST_MAXTYPES + 1], g_flBlindRange2[ST_MAXTYPES + 1], g_flBlindRangeChance[ST_MAXTYPES + 1], g_flBlindRangeChance2[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1];
+float g_flBlindChance[ST_MAXTYPES + 1], g_flBlindDuration[ST_MAXTYPES + 1], g_flBlindRange[ST_MAXTYPES + 1], g_flBlindRangeChance[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
-int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindAbility2[ST_MAXTYPES + 1], g_iBlindCount[MAXPLAYERS + 1], g_iBlindEffect[ST_MAXTYPES + 1], g_iBlindEffect2[ST_MAXTYPES + 1], g_iBlindHit[ST_MAXTYPES + 1], g_iBlindHit2[ST_MAXTYPES + 1], g_iBlindHitMode[ST_MAXTYPES + 1], g_iBlindHitMode2[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1], g_iBlindIntensity2[ST_MAXTYPES + 1], g_iBlindMessage[ST_MAXTYPES + 1], g_iBlindMessage2[ST_MAXTYPES + 1], g_iBlindOwner[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1];
+int g_iBlindAbility[ST_MAXTYPES + 1], g_iBlindCount[MAXPLAYERS + 1], g_iBlindEffect[ST_MAXTYPES + 1], g_iBlindHit[ST_MAXTYPES + 1], g_iBlindHitMode[ST_MAXTYPES + 1], g_iBlindIntensity[ST_MAXTYPES + 1], g_iBlindMessage[ST_MAXTYPES + 1], g_iBlindOwner[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1];
 
 UserMsg g_umFadeUserMsgId;
 
@@ -165,13 +165,13 @@ public int iBlindMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iBlindAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iBlindCount[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iBlindAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iBlindCount[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons2");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "BlindDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", flBlindDuration(param1));
-				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityDuration", g_flBlindDuration[ST_GetTankType(param1)]);
+				case 6: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -252,106 +252,58 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-
-		if (ST_IsTankSupported(attacker) && ST_IsCloneSupported(attacker, g_bCloneInstalled) && (iBlindHitMode(attacker) == 0 || iBlindHitMode(attacker) == 1) && bIsHumanSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iBlindHitMode[ST_GetTankType(attacker)] == 0 || g_iBlindHitMode[ST_GetTankType(attacker)] == 1) && bIsHumanSurvivor(victim))
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vBlindHit(victim, attacker, flBlindChance(attacker), iBlindHit(attacker), ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
+				vBlindHit(victim, attacker, g_flBlindChance[ST_GetTankType(attacker)], g_iBlindHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && (iBlindHitMode(victim) == 0 || iBlindHitMode(victim) == 2) && bIsHumanSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iBlindHitMode[ST_GetTankType(victim)] == 0 || g_iBlindHitMode[ST_GetTankType(victim)] == 2) && bIsHumanSurvivor(attacker))
 		{
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vBlindHit(attacker, victim, flBlindChance(victim), iBlindHit(victim), ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
+				vBlindHit(attacker, victim, g_flBlindChance[ST_GetTankType(victim)], g_iBlindHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Blind Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Blind Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iBlindAbility[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Enabled", 0);
-					g_iBlindAbility[iIndex] = iClamp(g_iBlindAbility[iIndex], 0, 1);
-					g_iBlindEffect[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Effect", 0);
-					g_iBlindEffect[iIndex] = iClamp(g_iBlindEffect[iIndex], 0, 7);
-					g_iBlindMessage[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Message", 0);
-					g_iBlindMessage[iIndex] = iClamp(g_iBlindMessage[iIndex], 0, 3);
-					g_flBlindChance[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Chance", 33.3);
-					g_flBlindChance[iIndex] = flClamp(g_flBlindChance[iIndex], 0.0, 100.0);
-					g_flBlindDuration[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Duration", 5.0);
-					g_flBlindDuration[iIndex] = flClamp(g_flBlindDuration[iIndex], 0.1, 9999999999.0);
-					g_iBlindHit[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Hit", 0);
-					g_iBlindHit[iIndex] = iClamp(g_iBlindHit[iIndex], 0, 1);
-					g_iBlindHitMode[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Hit Mode", 0);
-					g_iBlindHitMode[iIndex] = iClamp(g_iBlindHitMode[iIndex], 0, 2);
-					g_iBlindIntensity[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Intensity", 255);
-					g_iBlindIntensity[iIndex] = iClamp(g_iBlindIntensity[iIndex], 0, 255);
-					g_flBlindRange[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range", 150.0);
-					g_flBlindRange[iIndex] = flClamp(g_flBlindRange[iIndex], 1.0, 9999999999.0);
-					g_flBlindRangeChance[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range Chance", 15.0);
-					g_flBlindRangeChance[iIndex] = flClamp(g_flBlindRangeChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iBlindAbility2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Enabled", g_iBlindAbility[iIndex]);
-					g_iBlindAbility2[iIndex] = iClamp(g_iBlindAbility2[iIndex], 0, 1);
-					g_iBlindEffect2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Effect", g_iBlindEffect[iIndex]);
-					g_iBlindEffect2[iIndex] = iClamp(g_iBlindEffect2[iIndex], 0, 7);
-					g_iBlindMessage2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Ability Message", g_iBlindMessage[iIndex]);
-					g_iBlindMessage2[iIndex] = iClamp(g_iBlindMessage2[iIndex], 0, 3);
-					g_flBlindChance2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Chance", g_flBlindChance[iIndex]);
-					g_flBlindChance2[iIndex] = flClamp(g_flBlindChance2[iIndex], 0.0, 100.0);
-					g_flBlindDuration2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Duration", g_flBlindDuration[iIndex]);
-					g_flBlindDuration2[iIndex] = flClamp(g_flBlindDuration2[iIndex], 0.1, 9999999999.0);
-					g_iBlindHit2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Hit", g_iBlindHit[iIndex]);
-					g_iBlindHit2[iIndex] = iClamp(g_iBlindHit2[iIndex], 0, 1);
-					g_iBlindHitMode2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Hit Mode", g_iBlindHitMode[iIndex]);
-					g_iBlindHitMode2[iIndex] = iClamp(g_iBlindHitMode2[iIndex], 0, 2);
-					g_iBlindIntensity2[iIndex] = kvSuperTanks.GetNum("Blind Ability/Blind Intensity", g_iBlindIntensity[iIndex]);
-					g_iBlindIntensity2[iIndex] = iClamp(g_iBlindIntensity2[iIndex], 0, 255);
-					g_flBlindRange2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range", g_flBlindRange[iIndex]);
-					g_flBlindRange2[iIndex] = flClamp(g_flBlindRange2[iIndex], 1.0, 9999999999.0);
-					g_flBlindRangeChance2[iIndex] = kvSuperTanks.GetFloat("Blind Ability/Blind Range Chance", g_flBlindRangeChance[iIndex]);
-					g_flBlindRangeChance2[iIndex] = flClamp(g_flBlindRangeChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iBlindAbility[iIndex] = 0;
+		g_iBlindEffect[iIndex] = 0;
+		g_iBlindMessage[iIndex] = 0;
+		g_flBlindChance[iIndex] = 33.3;
+		g_flBlindDuration[iIndex] = 5.0;
+		g_iBlindHit[iIndex] = 0;
+		g_iBlindHitMode[iIndex] = 0;
+		g_iBlindIntensity[iIndex] = 255;
+		g_flBlindRange[iIndex] = 150.0;
+		g_flBlindRangeChance[iIndex] = 15.0;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iBlindAbility[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iBlindAbility[type], value, 0, 0, 1);
+	g_iBlindEffect[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iBlindEffect[type], value, 0, 0, 7);
+	g_iBlindMessage[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iBlindMessage[type], value, 0, 0, 3);
+	g_flBlindChance[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", main, g_flBlindChance[type], value, 33.3, 0.0, 100.0);
+	g_flBlindDuration[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", main, g_flBlindDuration[type], value, 5.0, 0.1, 9999999999.0);
+	g_iBlindHit[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindHit", "Blind Hit", "Blind_Hit", "hit", main, g_iBlindHit[type], value, 0, 0, 1);
+	g_iBlindHitMode[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindHitMode", "Blind Hit Mode", "Blind_Hit_Mode", "hitmode", main, g_iBlindHitMode[type], value, 0, 0, 2);
+	g_iBlindIntensity[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindIntensity", "Blind Intensity", "Blind_Intensity", "intensity", main, g_iBlindIntensity[type], value, 255, 0, 255);
+	g_flBlindRange[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindRange", "Blind Range", "Blind_Range", "range", main, g_flBlindRange[type], value, 150.0, 1.0, 9999999999.0);
+	g_flBlindRangeChance[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindRangeChance", "Blind Range Chance", "Blind_Range_Chance", "rangechance", main, g_flBlindRangeChance[type], value, 15.0, 0.0, 100.0);
 }
 
 public void ST_OnPluginEnd()
@@ -379,7 +331,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iBlindAbility(tank) == 1)
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iBlindAbility[ST_GetTankType(tank)] == 1)
 	{
 		vBlindAbility(tank);
 	}
@@ -387,11 +339,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
-			if (iBlindAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iBlindAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				if (!g_bBlind2[tank] && !g_bBlind3[tank])
 				{
@@ -451,15 +403,12 @@ static void vBlind(int survivor, int intensity)
 
 static void vBlindAbility(int tank)
 {
-	if (g_iBlindCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iBlindCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bBlind4[tank] = false;
 		g_bBlind5[tank] = false;
 
-		float flBlindRange = !g_bTankConfig[ST_GetTankType(tank)] ? g_flBlindRange[ST_GetTankType(tank)] : g_flBlindRange2[ST_GetTankType(tank)],
-			flBlindRangeChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flBlindRangeChance[ST_GetTankType(tank)] : g_flBlindRangeChance2[ST_GetTankType(tank)],
-			flTankPos[3];
-
+		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
@@ -472,9 +421,9 @@ static void vBlindAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flBlindRange)
+				if (flDistance <= g_flBlindRange[ST_GetTankType(tank)])
 				{
-					vBlindHit(iSurvivor, tank, flBlindRangeChance, iBlindAbility(tank), ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
+					vBlindHit(iSurvivor, tank, g_flBlindRangeChance[ST_GetTankType(tank)], g_iBlindAbility[ST_GetTankType(tank)], ST_MESSAGE_RANGE, ST_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -483,13 +432,13 @@ static void vBlindAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				ST_PrintToChat(tank, "%s %t", ST_TAG3, "BlindHuman5");
 			}
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "BlindAmmo");
 	}
@@ -499,19 +448,19 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, int mes
 {
 	if (enabled == 1 && bIsHumanSurvivor(survivor))
 	{
-		if (g_iBlindCount[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+		if (g_iBlindCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bBlind[survivor])
 			{
 				g_bBlind[survivor] = true;
 				g_iBlindOwner[survivor] = tank;
 
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && (flags & ST_ATTACK_RANGE) && !g_bBlind2[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && (flags & ST_ATTACK_RANGE) && !g_bBlind2[tank])
 				{
 					g_bBlind2[tank] = true;
 					g_iBlindCount[tank]++;
 
-					ST_PrintToChat(tank, "%s %t", ST_TAG3, "BlindHuman", g_iBlindCount[tank], iHumanAmmo(tank));
+					ST_PrintToChat(tank, "%s %t", ST_TAG3, "BlindHuman", g_iBlindCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 				}
 
 				DataPack dpBlind;
@@ -522,15 +471,14 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, int mes
 				dpBlind.WriteCell(enabled);
 
 				DataPack dpStopBlind;
-				CreateDataTimer(flBlindDuration(tank) + 1.0, tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer(g_flBlindDuration[ST_GetTankType(tank)] + 1.0, tTimerStopBlind, dpStopBlind, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopBlind.WriteCell(GetClientUserId(survivor));
 				dpStopBlind.WriteCell(GetClientUserId(tank));
 				dpStopBlind.WriteCell(messages);
 
-				int iBlindEffect = !g_bTankConfig[ST_GetTankType(tank)] ? g_iBlindEffect[ST_GetTankType(tank)] : g_iBlindEffect2[ST_GetTankType(tank)];
-				vEffect(survivor, tank, iBlindEffect, flags);
+				vEffect(survivor, tank, g_iBlindEffect[ST_GetTankType(tank)], flags);
 
-				if (iBlindMessage(tank) & messages)
+				if (g_iBlindMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
 					ST_GetTankName(tank, sTankName);
@@ -539,7 +487,7 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, int mes
 			}
 			else if ((flags & ST_ATTACK_RANGE) && !g_bBlind2[tank])
 			{
-				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bBlind4[tank])
+				if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bBlind4[tank])
 				{
 					g_bBlind4[tank] = true;
 
@@ -547,7 +495,7 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, int mes
 				}
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1 && !g_bBlind5[tank])
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1 && !g_bBlind5[tank])
 		{
 			g_bBlind5[tank] = true;
 
@@ -595,51 +543,6 @@ static void vReset2(int tank)
 	g_iBlindCount[tank] = 0;
 }
 
-static float flBlindChance(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flBlindChance[ST_GetTankType(tank)] : g_flBlindChance2[ST_GetTankType(tank)];
-}
-
-static float flBlindDuration(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flBlindDuration[ST_GetTankType(tank)] : g_flBlindDuration2[ST_GetTankType(tank)];
-}
-
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static int iBlindAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBlindAbility[ST_GetTankType(tank)] : g_iBlindAbility2[ST_GetTankType(tank)];
-}
-
-static int iBlindHit(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBlindHit[ST_GetTankType(tank)] : g_iBlindHit2[ST_GetTankType(tank)];
-}
-
-static int iBlindHitMode(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBlindHitMode[ST_GetTankType(tank)] : g_iBlindHitMode2[ST_GetTankType(tank)];
-}
-
-static int iBlindMessage(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iBlindMessage[ST_GetTankType(tank)] : g_iBlindMessage2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
 public Action tTimerBlind(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -654,7 +557,7 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iBlindEnabled = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iBlindEnabled == 0)
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iBlindEnabled == 0)
 	{
 		g_bBlind[iSurvivor] = false;
 		g_iBlindOwner[iSurvivor] = 0;
@@ -662,8 +565,7 @@ public Action tTimerBlind(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iBlindIntensity = !g_bTankConfig[ST_GetTankType(iTank)] ? g_iBlindIntensity[ST_GetTankType(iTank)] : g_iBlindIntensity2[ST_GetTankType(iTank)];
-	vBlind(iSurvivor, iBlindIntensity);
+	vBlind(iSurvivor, g_iBlindIntensity[ST_GetTankType(iTank)]);
 
 	return Plugin_Continue;
 }
@@ -682,7 +584,7 @@ public Action tTimerStopBlind(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!ST_IsTankSupported(iTank) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bBlind[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bBlind[iSurvivor])
 	{
 		g_bBlind[iSurvivor] = false;
 		g_iBlindOwner[iSurvivor] = 0;
@@ -700,15 +602,15 @@ public Action tTimerStopBlind(Handle timer, DataPack pack)
 
 	int iMessage = pack.ReadCell();
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && iHumanAbility(iTank) == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bBlind3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bBlind3[iTank])
 	{
 		g_bBlind3[iTank] = true;
 
 		ST_PrintToChat(iTank, "%s %t", ST_TAG3, "BlindHuman6");
 
-		if (g_iBlindCount[iTank] < iHumanAmmo(iTank) && iHumanAmmo(iTank) > 0)
+		if (g_iBlindCount[iTank] < g_iHumanAmmo[ST_GetTankType(iTank)] && g_iHumanAmmo[ST_GetTankType(iTank)] > 0)
 		{
-			CreateTimer(flHumanCooldown(iTank), tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_flHumanCooldown[ST_GetTankType(iTank)], tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else
 		{
@@ -716,7 +618,7 @@ public Action tTimerStopBlind(Handle timer, DataPack pack)
 		}
 	}
 
-	if (iBlindMessage(iTank) & iMessage)
+	if (g_iBlindMessage[ST_GetTankType(iTank)] & iMessage)
 	{
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Blind2", iSurvivor);
 	}
@@ -727,7 +629,7 @@ public Action tTimerStopBlind(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bBlind3[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bBlind3[iTank])
 	{
 		g_bBlind3[iTank] = false;
 

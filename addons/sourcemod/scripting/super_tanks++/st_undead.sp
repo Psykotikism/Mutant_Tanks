@@ -48,11 +48,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define ST_MENU_UNDEAD "Undead Ability"
 
-bool g_bCloneInstalled, g_bTankConfig[ST_MAXTYPES + 1], g_bUndead[MAXPLAYERS + 1], g_bUndead2[MAXPLAYERS + 1];
+bool g_bCloneInstalled, g_bUndead[MAXPLAYERS + 1], g_bUndead2[MAXPLAYERS + 1];
 
-float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanCooldown2[ST_MAXTYPES + 1], g_flUndeadChance[ST_MAXTYPES + 1], g_flUndeadChance2[ST_MAXTYPES + 1];
+float g_flHumanCooldown[ST_MAXTYPES + 1], g_flUndeadChance[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAbility2[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanAmmo2[ST_MAXTYPES + 1], g_iUndeadAbility[ST_MAXTYPES + 1], g_iUndeadAbility2[ST_MAXTYPES + 1], g_iUndeadAmount[ST_MAXTYPES + 1], g_iUndeadAmount2[ST_MAXTYPES + 1], g_iUndeadCount[MAXPLAYERS + 1], g_iUndeadCount2[MAXPLAYERS + 1], g_iUndeadHealth[MAXPLAYERS + 1], g_iUndeadMessage[ST_MAXTYPES + 1], g_iUndeadMessage2[ST_MAXTYPES + 1];
+int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iUndeadAbility[ST_MAXTYPES + 1], g_iUndeadAmount[ST_MAXTYPES + 1], g_iUndeadCount[MAXPLAYERS + 1], g_iUndeadCount2[MAXPLAYERS + 1], g_iUndeadHealth[MAXPLAYERS + 1], g_iUndeadMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -160,12 +160,12 @@ public int iUndeadMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, iUndeadAbility(param1) == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", iHumanAmmo(param1) - g_iUndeadCount2[param1], iHumanAmmo(param1));
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iUndeadAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityAmmo", g_iHumanAmmo[ST_GetTankType(param1)] - g_iUndeadCount2[param1], g_iHumanAmmo[ST_GetTankType(param1)]);
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityButtons");
-				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", flHumanCooldown(param1));
+				case 3: ST_PrintToChat(param1, "%s %t", ST_TAG3, "AbilityCooldown", g_flHumanCooldown[ST_GetTankType(param1)]);
 				case 4: ST_PrintToChat(param1, "%s %t", ST_TAG3, "UndeadDetails");
-				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, iHumanAbility(param1) == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
@@ -239,7 +239,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
-		if (ST_IsTankSupported(victim) && ST_IsCloneSupported(victim, g_bCloneInstalled) && g_bUndead[victim])
+		if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && g_bUndead[victim])
 		{
 			if (GetClientHealth(victim) - RoundToNearest(damage) <= 0)
 			{
@@ -247,15 +247,15 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 				SetEntityHealth(victim, g_iUndeadHealth[victim]);
 
-				if (ST_IsTankSupported(victim, ST_CHECK_FAKECLIENT) && iHumanAbility(victim) == 1 && !g_bUndead2[victim])
+				if (ST_IsTankSupported(victim, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(victim)] == 1 && !g_bUndead2[victim])
 				{
 					g_bUndead2[victim] = true;
 
 					ST_PrintToChat(victim, "%s %t", ST_TAG3, "UndeadHuman5");
 
-					if (g_iUndeadCount2[victim] < iHumanAmmo(victim) && iHumanAmmo(victim) > 0)
+					if (g_iUndeadCount2[victim] < g_iHumanAmmo[ST_GetTankType(victim)] && g_iHumanAmmo[ST_GetTankType(victim)] > 0)
 					{
-						CreateTimer(flHumanCooldown(victim), tTimerResetCooldown, GetClientUserId(victim), TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(g_flHumanCooldown[ST_GetTankType(victim)], tTimerResetCooldown, GetClientUserId(victim), TIMER_FLAG_NO_MAPCHANGE);
 					}
 					else
 					{
@@ -263,7 +263,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					}
 				}
 
-				if (iUndeadMessage(victim) == 1)
+				if (g_iUndeadMessage[ST_GetTankType(victim)] == 1)
 				{
 					char sTankName[33];
 					ST_GetTankName(victim, sTankName);
@@ -278,64 +278,29 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public void ST_OnConfigsLoaded(const char[] savepath, bool main)
+public void ST_OnConfigsLoad()
 {
-	KeyValues kvSuperTanks = new KeyValues("Super Tanks++");
-	kvSuperTanks.ImportFromFile(savepath);
-
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
-		char sTankName[33];
-		Format(sTankName, sizeof(sTankName), "Tank #%i", iIndex);
-		if (kvSuperTanks.JumpToKey(sTankName))
-		{
-			switch (main)
-			{
-				case true:
-				{
-					g_bTankConfig[iIndex] = false;
-
-					g_iHumanAbility[iIndex] = kvSuperTanks.GetNum("Undead Ability/Human Ability", 0);
-					g_iHumanAbility[iIndex] = iClamp(g_iHumanAbility[iIndex], 0, 1);
-					g_iHumanAmmo[iIndex] = kvSuperTanks.GetNum("Undead Ability/Human Ammo", 5);
-					g_iHumanAmmo[iIndex] = iClamp(g_iHumanAmmo[iIndex], 0, 9999999999);
-					g_flHumanCooldown[iIndex] = kvSuperTanks.GetFloat("Undead Ability/Human Cooldown", 30.0);
-					g_flHumanCooldown[iIndex] = flClamp(g_flHumanCooldown[iIndex], 0.0, 9999999999.0);
-					g_iUndeadAbility[iIndex] = kvSuperTanks.GetNum("Undead Ability/Ability Enabled", 0);
-					g_iUndeadAbility[iIndex] = iClamp(g_iUndeadAbility[iIndex], 0, 1);
-					g_iUndeadMessage[iIndex] = kvSuperTanks.GetNum("Undead Ability/Ability Message", 0);
-					g_iUndeadMessage[iIndex] = iClamp(g_iUndeadMessage[iIndex], 0, 1);
-					g_iUndeadAmount[iIndex] = kvSuperTanks.GetNum("Undead Ability/Undead Amount", 1);
-					g_iUndeadAmount[iIndex] = iClamp(g_iUndeadAmount[iIndex], 1, 9999999999);
-					g_flUndeadChance[iIndex] = kvSuperTanks.GetFloat("Undead Ability/Undead Chance", 33.3);
-					g_flUndeadChance[iIndex] = flClamp(g_flUndeadChance[iIndex], 0.0, 100.0);
-				}
-				case false:
-				{
-					g_bTankConfig[iIndex] = true;
-
-					g_iHumanAbility2[iIndex] = kvSuperTanks.GetNum("Undead Ability/Human Ability", g_iHumanAbility[iIndex]);
-					g_iHumanAbility2[iIndex] = iClamp(g_iHumanAbility2[iIndex], 0, 1);
-					g_iHumanAmmo2[iIndex] = kvSuperTanks.GetNum("Undead Ability/Human Ammo", g_iHumanAmmo[iIndex]);
-					g_iHumanAmmo2[iIndex] = iClamp(g_iHumanAmmo2[iIndex], 0, 9999999999);
-					g_flHumanCooldown2[iIndex] = kvSuperTanks.GetFloat("Undead Ability/Human Cooldown", g_flHumanCooldown[iIndex]);
-					g_flHumanCooldown2[iIndex] = flClamp(g_flHumanCooldown2[iIndex], 0.0, 9999999999.0);
-					g_iUndeadAbility2[iIndex] = kvSuperTanks.GetNum("Undead Ability/Ability Enabled", g_iUndeadAbility[iIndex]);
-					g_iUndeadAbility2[iIndex] = iClamp(g_iUndeadAbility2[iIndex], 0, 1);
-					g_iUndeadMessage2[iIndex] = kvSuperTanks.GetNum("Undead Ability/Ability Message", g_iUndeadMessage[iIndex]);
-					g_iUndeadMessage2[iIndex] = iClamp(g_iUndeadMessage2[iIndex], 0, 1);
-					g_iUndeadAmount2[iIndex] = kvSuperTanks.GetNum("Undead Ability/Undead Amount", g_iUndeadAmount[iIndex]);
-					g_iUndeadAmount2[iIndex] = iClamp(g_iUndeadAmount2[iIndex], 1, 9999999999);
-					g_flUndeadChance2[iIndex] = kvSuperTanks.GetFloat("Undead Ability/Undead Chance", g_flUndeadChance[iIndex]);
-					g_flUndeadChance2[iIndex] = flClamp(g_flUndeadChance2[iIndex], 0.0, 100.0);
-				}
-			}
-
-			kvSuperTanks.Rewind();
-		}
+		g_iHumanAbility[iIndex] = 0;
+		g_iHumanAmmo[iIndex] = 5;
+		g_flHumanCooldown[iIndex] = 30.0;
+		g_iUndeadAbility[iIndex] = 0;
+		g_iUndeadMessage[iIndex] = 0;
+		g_iUndeadAmount[iIndex] = 1;
+		g_flUndeadChance[iIndex] = 33.3;
 	}
+}
 
-	delete kvSuperTanks;
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+{
+	g_iHumanAbility[type] = iGetValue(subsection, "undeadability", "undead ability", "undead_ability", "undead", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
+	g_iHumanAmmo[type] = iGetValue(subsection, "undeadability", "undead ability", "undead_ability", "undead", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
+	g_flHumanCooldown[type] = flGetValue(subsection, "undeadability", "undead ability", "undead_ability", "undead", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
+	g_iUndeadAbility[type] = iGetValue(subsection, "undeadability", "undead ability", "undead_ability", "undead", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iUndeadAbility[type], value, 0, 0, 1);
+	g_iUndeadMessage[type] = iGetValue(subsection, "undeadability", "undead ability", "undead_ability", "undead", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iUndeadMessage[type], value, 0, 0, 1);
+	g_iUndeadAmount[type] = iGetValue(subsection, "undeadability", "undead ability", "undead_ability", "undead", key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", main, g_iUndeadAmount[type], value, 1, 1, 9999999999);
+	g_flUndeadChance[type] = flGetValue(subsection, "undeadability", "undead ability", "undead_ability", "undead", key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", main, g_flUndeadChance[type], value, 33.3, 0.0, 100.0);
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -352,7 +317,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || iHumanAbility(tank) == 0) && ST_IsCloneSupported(tank, g_bCloneInstalled) && iUndeadAbility(tank) == 1 && !g_bUndead[tank])
+	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iUndeadAbility[ST_GetTankType(tank)] == 1 && !g_bUndead[tank])
 	{
 		vUndeadAbility(tank);
 	}
@@ -360,11 +325,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && ST_IsCloneSupported(tank, g_bCloneInstalled))
+	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
-			if (iUndeadAbility(tank) == 1 && iHumanAbility(tank) == 1)
+			if (g_iUndeadAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				if (!g_bUndead[tank] && !g_bUndead2[tank])
 				{
@@ -418,69 +383,42 @@ static void vReset()
 
 static void vUndeadAbility(int tank)
 {
-	int iUndeadAmount = !g_bTankConfig[ST_GetTankType(tank)] ? g_iUndeadAmount[ST_GetTankType(tank)] : g_iUndeadAmount2[ST_GetTankType(tank)];
-	if (g_iUndeadCount[tank] < iUndeadAmount && g_iUndeadCount2[tank] < iHumanAmmo(tank) && iHumanAmmo(tank) > 0)
+	if (g_iUndeadCount[tank] < g_iUndeadAmount[ST_GetTankType(tank)] && g_iUndeadCount2[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
-		float flUndeadChance = !g_bTankConfig[ST_GetTankType(tank)] ? g_flUndeadChance[ST_GetTankType(tank)] : g_flUndeadChance2[ST_GetTankType(tank)];
-		if (GetRandomFloat(0.1, 100.0) <= flUndeadChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_flUndeadChance[ST_GetTankType(tank)])
 		{
 			g_bUndead[tank] = true;
 			g_iUndeadCount[tank]++;
 
-			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+			if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 			{
 				g_iUndeadCount2[tank]++;
 
-				ST_PrintToChat(tank, "%s %t", ST_TAG3, "UndeadHuman", g_iUndeadCount2[tank], iHumanAmmo(tank));
+				ST_PrintToChat(tank, "%s %t", ST_TAG3, "UndeadHuman", g_iUndeadCount2[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 			}
 
-			if (iUndeadMessage(tank) == 1)
+			if (g_iUndeadMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
 				ST_GetTankName(tank, sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Undead", sTankName);
 			}
 		}
-		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+		else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 		{
 			ST_PrintToChat(tank, "%s %t", ST_TAG3, "UndeadHuman2");
 		}
 	}
-	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && iHumanAbility(tank) == 1)
+	else if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "UndeadAmmo");
 	}
 }
 
-static float flHumanCooldown(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_flHumanCooldown[ST_GetTankType(tank)] : g_flHumanCooldown2[ST_GetTankType(tank)];
-}
-
-static int iHumanAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAbility[ST_GetTankType(tank)] : g_iHumanAbility2[ST_GetTankType(tank)];
-}
-
-static int iHumanAmmo(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iHumanAmmo[ST_GetTankType(tank)] : g_iHumanAmmo2[ST_GetTankType(tank)];
-}
-
-static int iUndeadAbility(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iUndeadAbility[ST_GetTankType(tank)] : g_iUndeadAbility2[ST_GetTankType(tank)];
-}
-
-static int iUndeadMessage(int tank)
-{
-	return !g_bTankConfig[ST_GetTankType(tank)] ? g_iUndeadMessage[ST_GetTankType(tank)] : g_iUndeadMessage2[ST_GetTankType(tank)];
-}
-
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsCloneSupported(iTank, g_bCloneInstalled) || !g_bUndead2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bUndead2[iTank])
 	{
 		g_bUndead2[iTank] = false;
 
