@@ -368,7 +368,7 @@ public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool m
 
 	if ((StrEqual(subsection, "shieldability", false) || StrEqual(subsection, "shield ability", false) || StrEqual(subsection, "shield_ability", false) || StrEqual(subsection, "shield", false)) && (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false)) && value[0] != '\0')
 	{
-		char sSet[3][4], sValue[12];
+		char sSet[4][4], sValue[16];
 		strcopy(sValue, sizeof(sValue), value);
 		ReplaceString(sValue, sizeof(sValue), " ", "");
 		ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
