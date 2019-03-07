@@ -237,6 +237,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 24, bHasAbilities(subsection, "hitability", "hit ability", "hit_ability", "hit"));
 	g_iHumanAbility[type] = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHitAbility[type] = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iHitAbility[type], value, 0, 0, 1);
 	g_flHitDamageMultiplier[type] = flGetValue(subsection, "Hit Ability", "Hit Ability", "Hit_Ability", "hit", key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", main, g_flHitDamageMultiplier[type], value, 1.5, 1.0, 9999999999.0);

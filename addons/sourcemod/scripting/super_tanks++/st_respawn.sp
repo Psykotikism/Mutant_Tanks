@@ -225,6 +225,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 48, bHasAbilities(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn"));
 	g_iHumanAbility[type] = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_iRespawnAbility[type] = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iRespawnAbility[type], value, 0, 0, 1);
@@ -434,7 +435,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			if (g_iRespawnMessage[ST_GetTankType(iTank)] == 1)
 			{
 				char sTankName[33];
-				ST_GetTankName(iTank, sTankName);
+				ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Respawn", sTankName);
 			}
 		}

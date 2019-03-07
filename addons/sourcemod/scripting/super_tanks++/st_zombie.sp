@@ -249,6 +249,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 71, bHasAbilities(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie"));
 	g_iHumanAbility[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -430,7 +431,7 @@ static void vZombieAbility(int tank)
 			if (g_iZombieMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Zombie", sTankName);
 			}
 		}
@@ -470,7 +471,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 	if (g_iZombieMessage[ST_GetTankType(iTank)] == 1)
 	{
 		char sTankName[33];
-		ST_GetTankName(iTank, sTankName);
+		ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Zombie2", sTankName);
 	}
 

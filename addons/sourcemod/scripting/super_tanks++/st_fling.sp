@@ -327,6 +327,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 18, bHasAbilities(subsection, "flingability", "fling ability", "fling_ability", "fling"));
 	g_iHumanAbility[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -506,7 +507,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 				vEffect(survivor, tank, g_iFlingEffect[ST_GetTankType(tank)], flags);
 
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 
 				switch (bIsValidGame())
 				{

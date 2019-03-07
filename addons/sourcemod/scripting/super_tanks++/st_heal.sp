@@ -316,6 +316,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 23, bHasAbilities(subsection, "healability", "heal ability", "heal_ability", "heal"));
 	g_iHumanAbility[type] = iGetValue(subsection, "healability", "heal ability", "heal_ability", "heal", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "healability", "heal ability", "heal_ability", "heal", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "healability", "heal ability", "heal_ability", "heal", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -546,7 +547,7 @@ static void vHealAbility(int tank, bool main)
 					if (g_iHealMessage[ST_GetTankType(tank)] & ST_MESSAGE_SPECIAL)
 					{
 						char sTankName[33];
-						ST_GetTankName(tank, sTankName);
+						ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Heal2", sTankName);
 					}
 				}
@@ -599,7 +600,7 @@ static void vHealHit(int survivor, int tank, float chance, int enabled, int mess
 					if (g_iHealMessage[ST_GetTankType(tank)] & messages)
 					{
 						char sTankName[33];
-						ST_GetTankName(tank, sTankName);
+						ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Heal", sTankName, survivor);
 					}
 				}
@@ -700,7 +701,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		if (g_iHealMessage[ST_GetTankType(iTank)] & ST_MESSAGE_SPECIAL)
 		{
 			char sTankName[33];
-			ST_GetTankName(iTank, sTankName);
+			ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Heal3", sTankName);
 		}
 

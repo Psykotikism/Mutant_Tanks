@@ -272,6 +272,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 32, bHasAbilities(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze"));
 	g_iHumanAbility[type] = iGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iKamikazeAbility[type] = iGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iKamikazeAbility[type], value, 0, 0, 1);
 	g_iKamikazeEffect[type] = iGetValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iKamikazeEffect[type], value, 0, 0, 7);
@@ -393,7 +394,7 @@ static void vKamikazeHit(int survivor, int tank, float chance, int enabled, int 
 			if (g_iKamikazeMessage[ST_GetTankType(tank)] & messages)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Kamikaze", sTankName, survivor);
 			}
 		}

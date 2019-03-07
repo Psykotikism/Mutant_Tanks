@@ -314,6 +314,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 66, bHasAbilities(subsection, "warpability", "warp ability", "warp_ability", "warp"));
 	g_iHumanAbility[type] = iGetValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -559,7 +560,7 @@ static void vWarpAbility(int tank, bool main)
 					if (g_iWarpMessage[ST_GetTankType(tank)] & ST_MESSAGE_SPECIAL)
 					{
 						char sTankName[33];
-						ST_GetTankName(tank, sTankName);
+						ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Warp2", sTankName);
 					}
 				}
@@ -608,7 +609,7 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, int mess
 						if (g_iWarpMessage[ST_GetTankType(tank)] & messages)
 						{
 							char sTankName[33];
-							ST_GetTankName(tank, sTankName);
+							ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Warp", sTankName, survivor, iPlayer);
 						}
 
@@ -682,7 +683,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 		if (g_iWarpMessage[ST_GetTankType(iTank)] & ST_MESSAGE_SPECIAL)
 		{
 			char sTankName[33];
-			ST_GetTankName(iTank, sTankName);
+			ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Warp3", sTankName);
 		}
 	}
@@ -693,7 +694,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bWarp2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bWarp2[iTank])
 	{
 		g_bWarp2[iTank] = false;
 

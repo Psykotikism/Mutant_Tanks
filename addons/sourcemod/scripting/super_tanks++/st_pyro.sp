@@ -278,7 +278,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						if (g_iPyroMessage[ST_GetTankType(victim)] == 1)
 						{
 							char sTankName[33];
-							ST_GetTankName(victim, sTankName);
+							ST_GetTankName(victim, ST_GetTankType(victim), sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro2", sTankName);
 						}
 					}
@@ -331,6 +331,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 44, bHasAbilities(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro"));
 	g_iHumanAbility[type] = iGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -477,7 +478,7 @@ static void vPyroAbility(int tank)
 			if (g_iPyroMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro", sTankName);
 			}
 		}
@@ -540,7 +541,7 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (g_iPyroAbility[ST_GetTankType(iTank)] == 0 || !bIsPlayerBurning(iTank) || ((!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && g_iHumanMode[ST_GetTankType(iTank)] == 0)) && (flTime + g_flPyroDuration[ST_GetTankType(iTank)] < GetEngineTime())) || !g_bPyro[iTank])
+	if (g_iPyroAbility[ST_GetTankType(iTank)] == 0 || !bIsPlayerBurning(iTank) || ((!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || (g_iHumanAbility[ST_GetTankType(iTank)] == 1 && g_iHumanMode[ST_GetTankType(iTank)] == 0)) && (flTime + g_flPyroDuration[ST_GetTankType(iTank)] < GetEngineTime())) || !g_bPyro[iTank])
 	{
 		g_bPyro[iTank] = false;
 
@@ -550,7 +551,7 @@ public Action tTimerPyro(Handle timer, DataPack pack)
 		if (g_iPyroMessage[ST_GetTankType(iTank)] == 1)
 		{
 			char sTankName[33];
-			ST_GetTankName(iTank, sTankName);
+			ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Pyro3", sTankName);
 		}
 

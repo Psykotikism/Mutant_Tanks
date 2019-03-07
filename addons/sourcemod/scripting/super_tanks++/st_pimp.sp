@@ -288,6 +288,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 42, bHasAbilities(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp"));
 	g_iHumanAbility[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -430,7 +431,7 @@ static void vPimpHit(int survivor, int tank, float chance, int enabled, int mess
 				if (g_iPimpMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Pimp", sTankName, survivor);
 				}
 			}

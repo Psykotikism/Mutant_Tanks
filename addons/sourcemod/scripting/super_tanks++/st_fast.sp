@@ -247,6 +247,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 16, bHasAbilities(subsection, "fastability", "fast ability", "fast_ability", "fast"));
 	g_iHumanAbility[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -387,7 +388,7 @@ static void vFastAbility(int tank)
 			if (g_iFastMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Fast", sTankName);
 			}
 		}
@@ -427,7 +428,7 @@ static void vReset2(int tank)
 	if (g_iFastMessage[ST_GetTankType(tank)] == 1)
 	{
 		char sTankName[33];
-		ST_GetTankName(tank, sTankName);
+		ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Fast2", sTankName);
 	}
 }
@@ -451,7 +452,7 @@ static void vReset3(int tank)
 public Action tTimerStopFast(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled))
 	{
 		vReset2(iTank);
 
@@ -473,7 +474,7 @@ public Action tTimerStopFast(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bFast2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bFast2[iTank])
 	{
 		g_bFast2[iTank] = false;
 

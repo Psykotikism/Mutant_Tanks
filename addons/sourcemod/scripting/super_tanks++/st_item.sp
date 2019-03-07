@@ -218,6 +218,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 30, bHasAbilities(subsection, "itemability", "item ability", "item_ability", "item"));
 	g_iHumanAbility[type] = iGetValue(subsection, "itemability", "item ability", "item_ability", "item", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iItemAbility[type] = iGetValue(subsection, "itemability", "item ability", "item_ability", "item", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iItemAbility[type], value, 0, 0, 1);
 	g_iItemMessage[type] = iGetValue(subsection, "itemability", "item ability", "item_ability", "item", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iItemMessage[type], value, 0, 0, 1);
@@ -323,7 +324,7 @@ static void vItemAbility(int tank)
 	if (g_iItemMessage[ST_GetTankType(tank)] == 1)
 	{
 		char sTankName[33];
-		ST_GetTankName(tank, sTankName);
+		ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Item", sTankName);
 	}
 }

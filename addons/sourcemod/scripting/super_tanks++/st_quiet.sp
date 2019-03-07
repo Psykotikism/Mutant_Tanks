@@ -275,7 +275,7 @@ public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PL
 	{
 		for (int iSurvivor = 0; iSurvivor < numClients; iSurvivor++)
 		{
-			if (bIsHumanSurvivor(clients[iSurvivor], ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && g_bQuiet[clients[iSurvivor]])
+			if (bIsHumanSurvivor(clients[iSurvivor], ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bQuiet[clients[iSurvivor]])
 			{
 				for (int iPlayers = iSurvivor; iPlayers < numClients - 1; iPlayers++)
 				{
@@ -314,6 +314,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 45, bHasAbilities(subsection, "quietability", "quiet ability", "quiet_ability", "quiet"));
 	g_iHumanAbility[type] = iGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -451,7 +452,7 @@ static void vQuietHit(int survivor, int tank, float chance, int enabled, int mes
 				if (g_iQuietMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Quiet", sTankName, survivor);
 				}
 			}
@@ -558,7 +559,7 @@ public Action tTimerStopQuiet(Handle timer, DataPack pack)
 	if (g_iQuietMessage[ST_GetTankType(iTank)] & iMessage)
 	{
 		char sTankName[33];
-		ST_GetTankName(iTank, sTankName);
+		ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Quiet2", sTankName, iSurvivor);
 	}
 

@@ -318,6 +318,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 20, bHasAbilities(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost"));
 	g_iHumanAbility[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -526,7 +527,7 @@ static void vGhostAbility(int tank, bool main)
 					if (g_iGhostMessage[ST_GetTankType(tank)] & ST_MESSAGE_SPECIAL)
 					{
 						char sTankName[33];
-						ST_GetTankName(tank, sTankName);
+						ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost2", sTankName);
 					}
 				}
@@ -586,7 +587,7 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, int mes
 				if (g_iGhostMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost", sTankName, survivor);
 				}
 			}
@@ -785,7 +786,7 @@ public Action tTimerStopGhost(Handle timer, int userid)
 	if (g_iGhostMessage[ST_GetTankType(iTank)] & ST_MESSAGE_SPECIAL)
 	{
 		char sTankName[33];
-		ST_GetTankName(iTank, sTankName);
+		ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Ghost3", sTankName);
 	}
 

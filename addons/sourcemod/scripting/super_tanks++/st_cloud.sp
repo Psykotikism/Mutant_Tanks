@@ -251,6 +251,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 10, bHasAbilities(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud"));
 	g_iHumanAbility[type] = iGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -385,7 +386,7 @@ static void vCloudAbility(int tank)
 			if (g_iCloudMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Cloud", sTankName);
 			}
 		}
@@ -425,7 +426,7 @@ static void vReset2(int tank)
 	if (g_iCloudMessage[ST_GetTankType(tank)] == 1)
 	{
 		char sTankName[33];
-		ST_GetTankName(tank, sTankName);
+		ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Cloud2", sTankName);
 	}
 }

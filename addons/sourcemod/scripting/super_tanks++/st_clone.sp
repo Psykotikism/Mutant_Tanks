@@ -230,6 +230,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 9, bHasAbilities(subsection, "cloneability", "clone ability", "clone_ability", "clone"));
 	g_iHumanAbility[type] = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 60.0, 0.0, 9999999999.0);
@@ -434,7 +435,7 @@ static void vCloneAbility(int tank)
 						if (g_iCloneMessage[ST_GetTankType(tank)] == 1)
 						{
 							char sTankName[33];
-							ST_GetTankName(tank, sTankName);
+							ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Clone", sTankName);
 						}
 					}

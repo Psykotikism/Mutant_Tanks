@@ -249,6 +249,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 38, bHasAbilities(subsection, "necroability", "necro ability", "necro_ability", "necro"));
 	g_iHumanAbility[type] = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 60.0, 0.0, 9999999999.0);
@@ -417,7 +418,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 		if (g_iNecroMessage[ST_GetTankType(tank)] == 1)
 		{
 			char sTankName[33];
-			ST_GetTankName(tank, sTankName);
+			ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Necro", sTankName);
 		}
 	}

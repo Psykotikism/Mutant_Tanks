@@ -331,6 +331,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 1, bHasAbilities(subsection, "acidability", "acid ability", "acid_ability", "acid"));
 	g_iHumanAbility[type] = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -439,7 +440,7 @@ public void ST_OnRockBreak(int tank, int rock)
 			if (g_iAcidMessage[ST_GetTankType(tank)] & ST_MESSAGE_SPECIAL)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Acid2", sTankName);
 			}
 		}
@@ -524,7 +525,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 				}
 
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 
 				switch (bIsValidGame())
 				{

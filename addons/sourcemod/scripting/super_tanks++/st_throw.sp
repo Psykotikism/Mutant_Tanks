@@ -247,6 +247,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 60, bHasAbilities(subsection, "throwability", "throw ability", "throw_ability", "throw"));
 	g_iHumanAbility[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -448,7 +449,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_MELEE)
 						{
 							char sTankName[33];
-							ST_GetTankName(iTank, sTankName);
+							ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Throw", sTankName);
 						}
 					}
@@ -507,7 +508,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_RANGE)
 						{
 							char sTankName[33];
-							ST_GetTankName(iTank, sTankName);
+							ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Throw2", sTankName);
 						}
 					}
@@ -526,7 +527,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_SPECIAL)
 					{
 						char sTankName[33];
-						ST_GetTankName(iTank, sTankName);
+						ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw3", sTankName);
 					}
 				}
@@ -552,7 +553,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_SPECIAL2)
 					{
 						char sTankName[33];
-						ST_GetTankName(iTank, sTankName);
+						ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw4", sTankName);
 					}
 				}

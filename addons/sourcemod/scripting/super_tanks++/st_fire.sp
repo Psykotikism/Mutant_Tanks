@@ -285,6 +285,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 17, bHasAbilities(subsection, "fireability", "fire ability", "fire_ability", "fire"));
 	g_iHumanAbility[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -370,7 +371,7 @@ public void ST_OnRockBreak(int tank, int rock)
 			if (g_iFireMessage[ST_GetTankType(tank)] & ST_MESSAGE_SPECIAL)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Fire2", sTankName);
 			}
 		}
@@ -454,7 +455,7 @@ static void vFireHit(int survivor, int tank, float chance, int enabled, int mess
 				if (g_iFireMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Fire", sTankName, survivor);
 				}
 			}

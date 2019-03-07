@@ -467,6 +467,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 11, bHasAbilities(subsection, "dropability", "drop ability", "drop_ability", "drop"));
 	g_iHumanAbility[type] = iGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iDropAbility[type] = iGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iDropAbility[type], value, 0, 0, 1);
 	g_iDropMessage[type] = iGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iDropMessage[type], value, 0, 0, 1);
@@ -626,7 +627,7 @@ static void vDropWeapon(int tank)
 				if (g_iDropMessage[ST_GetTankType(tank)] == 1)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Drop", sTankName);
 				}
 			}
@@ -644,7 +645,7 @@ static void vDropWeapon(int tank)
 				if (g_iDropMessage[ST_GetTankType(tank)] == 1)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Drop2", sTankName);
 				}
 			}

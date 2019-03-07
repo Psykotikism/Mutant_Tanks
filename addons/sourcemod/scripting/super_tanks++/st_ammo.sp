@@ -279,6 +279,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 3, bHasAbilities(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo"));
 	g_iHumanAbility[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -466,7 +467,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, int mess
 				if (g_iAmmoMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Ammo", sTankName, survivor);
 				}
 			}

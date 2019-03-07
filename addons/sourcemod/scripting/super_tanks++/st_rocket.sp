@@ -291,6 +291,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 51, bHasAbilities(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket"));
 	g_iHumanAbility[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -616,7 +617,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	if (g_iRocketMessage[ST_GetTankType(iTank)] & iMessage)
 	{
 		char sTankName[33];
-		ST_GetTankName(iTank, sTankName);
+		ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Rocket", sTankName, iSurvivor);
 	}
 

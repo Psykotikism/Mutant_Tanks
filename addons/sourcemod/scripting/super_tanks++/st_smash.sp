@@ -288,6 +288,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 56, bHasAbilities(subsection, "smashability", "smash ability", "smash_ability", "smash"));
 	g_iHumanAbility[type] = iGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -451,7 +452,7 @@ static void vSmashHit(int survivor, int tank, float chance, int enabled, int mes
 				if (g_iSmashMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Smash", sTankName, survivor);
 				}
 			}

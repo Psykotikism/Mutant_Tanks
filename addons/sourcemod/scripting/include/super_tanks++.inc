@@ -17,7 +17,7 @@
 #include <sdktools>
 
 #define ST_AUTHOR "Psyk0tik (Crasher_3637)"
-#define ST_VERSION "8.58"
+#define ST_VERSION "8.59"
 #define ST_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define ST_TAG "[ST++]"
@@ -188,6 +188,15 @@ forward void ST_OnRockThrow(int tank, int rock);
 native bool ST_CanTankSpawn(int type);
 
 /**
+ * Returns the status of an ability for a certain Super Tank type.
+ *
+ * @param type			Super Tank type.
+ * @param order			Ability order starting from 0.
+ * @param status		True if the type has the ability, false otherwise.
+ **/
+native void ST_FindAbility(int type, int order, bool status);
+
+/**
  * Returns the current finale wave.
  *
  * @return			The current finale wave.
@@ -248,10 +257,11 @@ native void ST_GetTankColors(int tank, int mode, int &red, int &green, int &blue
  * Returns the custom name given to a Tank.
  *
  * @param tank			Client index of the Tank.
+ * @param type			Super Tank type.
  * @param buffer		Buffer to store the custom name in.
  * @error			Invalid client index.
  **/
-native void ST_GetTankName(int tank, char[] buffer);
+native void ST_GetTankName(int tank, int type, char[] buffer);
 
 /**
  * Returns the Super Tank type of the Tank.
@@ -326,6 +336,15 @@ native bool ST_IsTankSupported(int tank, int flags = ST_CHECK_INDEX|ST_CHECK_ING
  * @error			Type is 0.
  **/
 native bool ST_IsTypeEnabled(int type);
+
+/**
+ * Sets a Tank's Super Tank type.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			Super Tank type.
+ * @param mode			True if the Tank should transform physically into the new Super Tank type, false otherwise.
+ **/
+native void ST_SetTankType(int tank, int type, bool mode);
 
 /**
  * Spawns a Tank with the specified Super Tank type.
@@ -623,6 +642,16 @@ stock void ST_PrintToChatAll(char[] message, any ...)
 }
 
 // Checks
+stock bool bHasAbilities(const char[] level, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4)
+{
+	if (StrEqual(level, setting, false) || StrEqual(level, setting2, false) || StrEqual(level, setting3, false) || StrEqual(level, setting4, false))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 stock bool bHasIdlePlayer(int survivor)
 {
 	char sClassname[32];
@@ -1412,6 +1441,7 @@ public SharedPlugin __pl_supertanksplusplus =
 public void __pl_supertanksplusplus_SetNTVOptional()
 {
 	MarkNativeAsOptional("ST_CanTankSpawn");
+	MarkNativeAsOptional("ST_FindAbility");
 	MarkNativeAsOptional("ST_GetCurrentFinaleWave");
 	MarkNativeAsOptional("ST_GetMaxType");
 	MarkNativeAsOptional("ST_GetMinType");
@@ -1427,6 +1457,7 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 	MarkNativeAsOptional("ST_IsGlowEnabled");
 	MarkNativeAsOptional("ST_IsTankSupported");
 	MarkNativeAsOptional("ST_IsTypeEnabled");
+	MarkNativeAsOptional("ST_SetTankType");
 	MarkNativeAsOptional("ST_SpawnTank");
 }
 #endif

@@ -300,6 +300,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 0, bHasAbilities(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb"));
 	g_iHumanAbility[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -426,7 +427,7 @@ static void vAbsorbAbility(int tank)
 			if (g_iAbsorbMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Absorb", sTankName);
 			}
 		}
@@ -495,7 +496,7 @@ public Action tTimerStopAbsorb(Handle timer, int userid)
 	if (g_iAbsorbMessage[ST_GetTankType(iTank)] == 1)
 	{
 		char sTankName[33];
-		ST_GetTankName(iTank, sTankName);
+		ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Absorb2", sTankName);
 	}
 

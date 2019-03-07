@@ -287,6 +287,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 6, bHasAbilities(subsection, "buryability", "bury ability", "bury_ability", "bury"));
 	g_iHumanAbility[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -457,7 +458,7 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, int mess
 				if (g_iBuryMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Bury", sTankName, survivor, flOrigin);
 				}
 			}

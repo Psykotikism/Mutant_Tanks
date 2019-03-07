@@ -309,6 +309,7 @@ public void ST_OnConfigsLoad()
 
 public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
 {
+	ST_FindAbility(type, 28, bHasAbilities(subsection, "idleability", "idle ability", "idle_ability", "idle"));
 	g_iHumanAbility[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
 	g_iHumanAmmo[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
 	g_flHumanCooldown[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
@@ -480,7 +481,7 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 					if (g_iIdleMessage[ST_GetTankType(tank)] & messages)
 					{
 						char sTankName[33];
-						ST_GetTankName(tank, sTankName);
+						ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Idle", sTankName, survivor);
 					}
 				}
