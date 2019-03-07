@@ -1,5 +1,29 @@
 # Changelog
 
+## Version 8.59 (March 10, 2019)
+
+Changes:
+
+1. The output of the `sm_st_config` command is now printed in chat instead of console to avoid overloading the buffer.
+2. Added the `Omni`, `Xiphos`, and `Yell` abilities.
+3. The `ST_GetTankName()` native now has a third argument.
+4. Added the `Regular Type` and `Finale Types` settings under the `Plugin Settings/Waves` section.
+5. Added the `Detect Plugins` setting under the `Plugin Settings/General` section.
+6. Added the `ST_FindAbility()` native.
+7. The following settings can now be overridden for individual Super Tanks (View the `INFORMATION.md` file for details):
+- `Announce Arrival`
+- `Announce Death`
+- `Death Revert`
+- `Detect Plugins`
+- `Display Health`
+- `Multiply Health`
+
+Files:
+
+1. Updated the `super_tanks++.cfg` file with the above changes.
+2. Updated the `super_tanks++.inc` file.
+3. Updated the `super_tanks++.phrases.txt` file with new phrases.
+
 ## Version 8.58 (March 1, 2019)
 
 Bug fixes:

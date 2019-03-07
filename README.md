@@ -58,12 +58,13 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
 3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the config file and user-made Super Tanks.
 4. Create and save up to 1000 Super Tank types - Provides the ability to store up to 1000 Super Tank types.
-5. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
-6. Optional abilities - Provides the option to choose which abilities to install.
-7. User-friendly API - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
-8. Target filters - Provides custom target filters for targeting survivors and special infected.
-9. Supports multiple languages - Provides support for translations.
-10. Chat color tags - Provides chat color tags for translation files.
+5. Flexible config formatting - Provides 4 different formats for the config file.
+6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
+7. Optional abilities - Provides the option to choose which abilities to install.
+8. User-friendly API - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
+9. Target filters - Provides custom target filters for targeting survivors and special infected.
+10. Supports multiple languages - Provides support for translations.
+11. Chat color tags - Provides chat color tags for translation files.
 
 ## KeyValues Settings
 > View the INFORMATION.md file for information about each available setting.
@@ -410,8 +411,10 @@ It may be due to one or more of the following:
 - You are still using the `Tank Character` setting which is no longer used since v8.16.
 - You didn't set up the Super Tank properly.
 - You are missing quotation marks.
+- You are missing curly braces.
 - You have more than 1000 Super Tanks in your config file.
 - You didn't format your config file properly.
+- The `Detect Plugins` setting automatically disabled the Super Tank due to not having any of its abilities installed.
 
 8. How do I kill the Tanks depending on what abilities they have?
 
@@ -776,6 +779,15 @@ Natives:
 native bool ST_CanTankSpawn(int type);
 
 /**
+ * Returns the status of an ability for a certain Super Tank type.
+ *
+ * @param type			Super Tank type.
+ * @param order			Ability order starting from 0.
+ * @param status		True if the type has the ability, false otherwise.
+ **/
+native void ST_FindAbility(int type, int order, bool status);
+
+/**
  * Returns the current finale wave.
  *
  * @return			The current finale wave.
@@ -925,6 +937,15 @@ native bool ST_IsTankSupported(int tank, int flags = ST_CHECK_INDEX|ST_CHECK_ING
 native bool ST_IsTypeEnabled(int type);
 
 /**
+ * Sets a Tank's Super Tank type.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			Super Tank type.
+ * @param mode			True if the Tank should transform physically into the new Super Tank type, false otherwise.
+ **/
+native void ST_SetTankType(int tank, int type, bool mode);
+
+/**
  * Spawns a Tank with the specified Super Tank type.
  *
  * @param tank			Client index of the Tank.
@@ -996,6 +1017,7 @@ Target filters:
 Commands:
 
 ```
+// Requires "z" (Root) flag.
 sm_tank - Spawn a Super Tank.
 
 Valid inputs:
@@ -1017,6 +1039,7 @@ If you are a Tank:
 ```
 
 ```
+// Accessible by all players.
 sm_st_config - View a section of the config file.
 sm_st_info - View information about Super Tanks++.
 sm_st_absorb - View information about the Absorb ability.
@@ -1059,6 +1082,7 @@ sm_st_meteor - View information about the Meteor ability.
 sm_st_minion - View information about the Minion ability.
 sm_st_necro - View information about the Necro ability.
 sm_st_nullify - View information about the Nullify ability.
+sm_st_octal - View information about the Octal ability.
 sm_st_panic - View information about the Panic ability.
 sm_st_pimp - View information about the Pimp ability.
 sm_st_puke - View information about the Puke ability.
@@ -1087,6 +1111,8 @@ sm_st_vision - View information about the Vision ability.
 sm_st_warp - View information about the Warp ability.
 sm_st_whirl - View information about the Whirl ability.
 sm_st_witch - View information about the Witch ability.
+sm_st_xiphos - View information about the Xiphos ability.
+sm_st_yell - View information about the Yell ability.
 sm_st_zombie - View information about the Zombie ability.
 ```
 

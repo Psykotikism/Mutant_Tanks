@@ -1,8 +1,9 @@
 # Information
-> Everything you need to know about each ability/setting is below. Don't expect any help from the developer if you don't take the time to read everything below first.
+> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first.
+> This file uses the first (original) config format for examples.
 
 - Maximum types: 1000 (Increase the value in the `super_tanks++.inc` file and recompile at your own risk.)
-- Ability count: 69 (Suggest more if you want; we will always needs more.)
+- Ability count: 72 (Suggest more if you want; we always needs more.)
 
 ## Plugin Settings
 
@@ -24,6 +25,7 @@
 			"Plugin Enabled"			"1"
 
 			// Announce each Super Tank's arrival.
+			// Note: This setting can be overridden for each Super Tank under the "General" section of their settings.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -39,6 +41,7 @@
 			"Announce Arrival"			"31"
 
 			// Announce each Super Tank's death.
+			// Note: This setting can be overridden for each Super Tank under the "General" section of their settings.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -54,14 +57,24 @@
 			"Base Health"				"0"
 
 			// Super Tanks revert back to default Tanks upon death.
-			// Note: This feature is simply for cosmetic purposes.
-			// You don't need to worry about this setting.
+			// Note: This setting can be overridden for each Super Tank under the "General" section of their settings.
+			// Note: This feature is simply for cosmetic purposes. You do not need to worry about this setting.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Death Revert"				"0"
 
-			// Display Tanks' names and health.
+			// The plugin will automatically disable any Super Tank whose abilities are not installed.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for each Super Tank under the "General" section of their settings.
+			// Note: This does not disable Super Tanks that do not have any abilities.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Detect Plugins"			"0"
+
+			// Display Super Tanks' names and health.
+			// Note: This setting can be overridden for each Super Tank under the "General" section of their settings.
 			// --
 			// 0: OFF
 			// 1: ON, show names only.
@@ -75,7 +88,8 @@
 			// 1: ON
 			"Finales Only"				"0"
 
-			// Multiply the Super Tank's health.
+			// Multiply Super Tanks' health.
+			// Note: This setting can be overridden for each Super Tank under the "General" section of their settings.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
 			// --
 			// 0: No changes to health.
@@ -134,11 +148,35 @@
 			// Maximum: 9999999999.0
 			"Regular Interval"			"300.0"
 
+			// The type of Super Tank that will spawn.
+			// --
+			// 0: OFF, use the randomization feature.
+			// 1-1000: ON, the type that will spawn.
+			"Regular Type"				"0"
+
 			// Spawn Tanks on non-finale maps periodically.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Regular Wave"				"0"
+
+			// The type of Super Tank that will spawn in each wave.
+			// --
+			// Separate types with commas.
+			// --
+			// Wave limit: 3
+			// Character limit for each wave: 4
+			// --
+			// Minimum value for each wave: 0
+			// Maximum value for each wave: 1000
+			// --
+			// 1st number = 1st wave
+			// 2nd number = 2nd wave
+			// 3rd number = 3rd wave
+			// --
+			// 0: OFF, use the randomization feature.
+			// 1-1000: ON, the type that will spawn.
+			"Finale Types"				"0,0,0"
 
 			// Number of Tanks to spawn for each finale wave.
 			// Note: This setting does not seem to work on the official L4D1 campaigns' finale maps. They have their own finale scripts which limit the number of Tanks to 1 for each wave.
@@ -291,7 +329,67 @@
 			// 1: ON
 			"Menu Enabled"				"1"
 
-			// Enable support for human-controlled Super Tanks.
+			// Announce the Super Tank's arrival.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0: OFF
+			// 1: Announce when a Super Tank spawns.
+			// 2: Announce when a Super Tank evolves. (Only works when "Spawn Mode" is set to 1.)
+			// 4: Announce when a Super Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
+			// 8: Announce when a Super Tank transforms. (Only works when "Spawn Mode" is set to 3.)
+			// 16: Announce when a Super Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
+			"Announce Arrival"			"31"
+
+			// Announce the Super Tank's death.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Announce Death"			"1"
+
+			// The Super Tank reverts back to default a Tank upon death.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This feature is simply for cosmetic purposes.
+			// You do not need to worry about this setting.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Death Revert"				"0"
+
+			// The plugin will automatically disable the Super Tank if none of its abilities are installed.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This does not disable the Super Tank if it does not have any abilities.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Detect Plugins"			"0"
+
+			// Display the Super Tank's name and health.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// --
+			// 0: OFF
+			// 1: ON, show names only.
+			// 2: ON, show health only.
+			// 3: ON, show both names and health.
+			"Display Health"			"3"
+
+			// Multiply the Super Tank's health.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
+			// --
+			// 0: No changes to health.
+			// 1: Multiply original health only.
+			// 2: Multiply extra health only.
+			// 3: Multiply both.
+			"Multiply Health"			"0"
+
+			// Allow players to play as the Super Tank.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -4885,6 +4983,81 @@
 }
 ```
 
+#### Omni Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank has omni-level access to other nearby Super Tanks' abilities.
+		// Requires "st_omni.smx" to be installed.
+		"Omni Ability"
+		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 0
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activate/deactivate.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Omni Chance"				"33.3"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Omni Duration"				"5.0"
+
+			// The mode of the Super Tank's omni ability.
+			// --
+			// 0: The Super Tank's type becomes the same as the nearby Super Tank's type.
+			// 1: The Super Tank physically transforms into the nearby Super Tank.
+			"Omni Mode"				"0"
+
+			// The distance between another Super Tank and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Omni Range"				"500.0"
+		}
+	}
+}
+```
+
 #### Panic Ability
 
 ```
@@ -7528,6 +7701,128 @@
 			// Minimum: 1.0 (Closest)
 			// Maximum: 9999999999.0 (Farthest)
 			"Witch Range"				"500.0"
+		}
+	}
+}
+```
+
+#### Xiphos Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank can steal health from survivors and vice-versa.
+		// Requires "st_xiphos.smx" to be installed.
+		"Xiphos Ability"
+		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Show a screen fade effect when the Super Tank uses its abilities.
+			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Effect"			"0"
+
+			// Display a message whenever the ability activate/deactivate.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Xiphos Chance"				"33.3"
+
+			// The survivors' max health.
+			// Note: Survivors will not gain health if they already have this much health.
+			// --
+			// Minimum: 1
+			// Maximum: 65535
+			"Xiphos Max Health"			"100"
+		}
+	}
+}
+```
+
+#### Yell Ability
+
+```
+"Super Tanks++"
+{
+	"Tank #1"
+	{
+		// The Super Tank yells to deafen survivors.
+		// Requires "st_yell.smx" to be installed.
+		"Yell Ability"
+		{
+			// Allow human-controlled Super Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Super Tanks can use their abilities in one life.
+			// --
+			// Minimum: 0
+			// Maximum: 9999999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Super Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Super Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activate/deactivate.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Super Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Yell Chance"				"33.3"
+
+			// The Super Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Yell Duration"				"5.0"
+
+			// The distance between a survivor and the Super Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 9999999999.0 (Farthest)
+			"Yell Range"				"500.0"
 		}
 	}
 }
