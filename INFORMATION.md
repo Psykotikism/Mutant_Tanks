@@ -1,9 +1,14 @@
 # Information
-> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first.
-> This file uses the first (original) config format for examples.
+> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
 - Maximum types: 1000 (Increase the value in the `super_tanks++.inc` file and recompile at your own risk.)
 - Ability count: 72 (Suggest more if you want; we always needs more.)
+
+# Sections
+- Plugin Settings
+- Tank Settings
+- Abilities
+- Administration System
 
 ## Plugin Settings
 
@@ -111,6 +116,22 @@
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			"Type Range"				"1-1000"
+		}
+		"Administration"
+		{
+			// Admins with one or more of these access flags have access to all Super Tank types.
+			// Note: This setting can be overridden for each Super Tank under the "Administration" section of their settings.
+			// --
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to all Super Tanks' attacks.
+			// Note: This setting can be overridden for each Super Tank under the "Administration" section of their settings.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
 		}
 		"Human Support"
 		{
@@ -284,6 +305,7 @@
 		"General"
 		{
 			// Name of the Super Tank.
+			// --
 			// Character limit: 32
 			// --
 			// Empty: "Tank"
@@ -396,6 +418,7 @@
 			"Human Support"				"0"
 
 			// These are the RGBA values of the Super Tank's skin color.
+			// Note: Any value less than 0 will output a random color.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -404,18 +427,35 @@
 			"Skin Color"				"255,255,255,255"
 
 			// The Super Tank will have a glow outline.
-			// Only available in Left 4 Dead 2.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Glow Enabled"				"0"
 
 			// These are the RGB values of the Super Tank's glow outline color.
+			// Note: Any value less than 0 will output a random color.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
 			"Glow Color"				"255,255,255"
+		}
+		"Administration"
+		{
+			// Admins with one or more of these access flags has access to the Super Tank type.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Administration" section.
+			// --
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to all of the Super Tank's attacks.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Administration" section.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
 		}
 		"Spawn"
 		{
@@ -548,6 +588,7 @@
 			"Props Attached"			"62"
 
 			// Each prop has this many chances out of 100.0% to appear when the Super Tank appears.
+			// --
 			// Separate chances with commas.
 			// --
 			// Chances limit: 6
@@ -565,6 +606,7 @@
 			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3"
 
 			// These are the RGBA values of the Super Tank's light prop's color.
+			// Note: Any value less than 0 will output a random color.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -573,6 +615,7 @@
 			"Light Color"				"255,255,255,255"
 
 			// These are the RGBA values of the Super Tank's oxygen tank prop's color.
+			// Note: Any value less than 0 will output a random color.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -581,6 +624,7 @@
 			"Oxygen Tank Color"			"255,255,255,255"
 
 			// These are the RGBA values of the Super Tank's oxygen tank prop's flame's color.
+			// Note: Any value less than 0 will output a random color.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -589,6 +633,7 @@
 			"Flame Color"				"255,255,255,180"
 
 			// These are the RGBA values of the Super Tank's rock prop's color.
+			// Note: Any value less than 0 will output a random color.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -597,6 +642,7 @@
 			"Rock Color"				"255,255,255,255"
 
 			// These are the RGBA values of the Super Tank's tire prop's color.
+			// Note: Any value less than 0 will output a random color.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -724,6 +770,12 @@
 		// Requires "st_absorb.smx" to be installed.
 		"Absorb Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -832,6 +884,19 @@
 		// Requires "st_acid.smx" to be installed.
 		"Acid Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -951,6 +1016,19 @@
 		// Requires "st_aimless.smx" to be installed.
 		"Aimless Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -1060,6 +1138,19 @@
 		// Requires "st_ammo.smx" to be installed.
 		"Ammo Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -1170,6 +1261,19 @@
 		// Requires "st_blind.smx" to be installed.
 		"Blind Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -1288,6 +1392,19 @@
 		// Requires "st_bomb.smx" to be installed.
 		"Bomb Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -1406,6 +1523,19 @@
 		// Requires "st_bury.smx" to be installed.
 		"Bury Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -1516,6 +1646,12 @@
 		// Requires "st_car.smx" to be installed.
 		"Car Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -1610,6 +1746,19 @@
 		// Requires "st_choke.smx" to be installed.
 		"Choke Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -1731,6 +1880,12 @@
 		// Requires "st_clone.smx" to be installed.
 		"Clone Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -1807,6 +1962,19 @@
 		// Requires "st_cloud.smx" to be installed.
 		"Cloud Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -1877,6 +2045,12 @@
 		// Requires "st_drop.smx" to be installed.
 		"Drop Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -1942,6 +2116,19 @@
 		// Requires "st_drug.smx" to be installed.
 		"Drug Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -2058,6 +2245,19 @@
 		// Requires "st_drunk.smx" to be installed.
 		"Drunk Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -2179,6 +2379,19 @@
 		// Requires "st_electric.smx" to be installed.
 		"Electric Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -2301,6 +2514,19 @@
 		// Requires "st_enforce.smx" to be installed.
 		"Enforce Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -2420,6 +2646,12 @@
 		// Requires "st_fast.smx" to be installed.
 		"Fast Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -2498,6 +2730,19 @@
 		// Requires "st_fire.smx" to be installed.
 		"Fire Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -2616,6 +2861,19 @@
 		// Requires "st_fling.smx" to be installed.
 		"Fling Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -2721,6 +2979,12 @@
 		// Requires "st_fragile.smx" to be installed.
 		"Fragile Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -2832,6 +3096,19 @@
 		// Requires "st_ghost.smx" to be installed.
 		"Ghost Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -2987,6 +3264,12 @@
 		// Requires "st_god.smx" to be installed.
 		"God Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -3059,6 +3342,19 @@
 		// Requires "st_gravity.smx" to be installed.
 		"Gravity Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -3198,6 +3494,19 @@
 		// Requires "st_heal.smx" to be installed.
 		"Heal Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -3358,6 +3667,19 @@
 		// Requires "st_hit.smx" to be installed.
 		"Hit Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -3411,6 +3733,19 @@
 		// Requires "st_hurt.smx" to be installed.
 		"Hurt Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -3533,6 +3868,19 @@
 		// Requires "st_hypno.smx" to be installed.
 		"Hypno Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -3685,6 +4033,19 @@
 		// Requires "st_ice.smx" to be installed.
 		"Ice Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -3795,6 +4156,19 @@
 		// Requires "st_idle.smx" to be installed.
 		"Idle Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -3899,6 +4273,19 @@
 		// Requires "st_invert.smx" to be installed.
 		"Invert Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4002,6 +4389,19 @@
 		// Requires "st_item.smx" to be installed.
 		"Item Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4027,6 +4427,7 @@
 			"Item Chance"				"33.3"
 
 			// The Super Tank gives survivors this loadout.
+			// --
 			// Item limit: 5
 			// Character limit for each item: 64
 			// --
@@ -4067,6 +4468,19 @@
 		// Requires "st_jump.smx" to be installed.
 		"Jump Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4220,6 +4634,19 @@
 		// Requires "st_kamikaze.smx" to be installed.
 		"Kamikaze Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4312,6 +4739,19 @@
 		// Requires "st_lag.smx" to be installed.
 		"Lag Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4421,6 +4861,19 @@
 		// Requires "st_leech.smx" to be installed.
 		"Leech Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4531,6 +4984,12 @@
 		// Requires "st_medic.smx" to be installed.
 		"Medic Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4648,6 +5107,19 @@
 		// Requires "st_meteor.smx" to be installed.
 		"Meteor Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4736,6 +5208,12 @@
 		// Requires "st_minion.smx" to be installed.
 		"Minion Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4815,6 +5293,12 @@
 		// Requires "st_necro.smx" to be installed.
 		"Necro Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4891,6 +5375,19 @@
 		// Requires "st_nullify.smx" to be installed.
 		"Nullify Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -4994,6 +5491,12 @@
 		// Requires "st_omni.smx" to be installed.
 		"Omni Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -5069,6 +5572,12 @@
 		// Requires "st_panic.smx" to be installed.
 		"Panic Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -5145,6 +5654,19 @@
 		// Requires "st_pimp.smx" to be installed.
 		"Pimp Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -5267,6 +5789,19 @@
 		// Requires "st_puke.smx" to be installed.
 		"Puke Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -5365,6 +5900,12 @@
 		// Requires "st_pyro.smx" to be installed.
 		"Pyro Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -5457,6 +5998,19 @@
 		// Requires "st_quiet.smx" to be installed.
 		"Quiet Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -5567,6 +6121,19 @@
 		// Requires "st_recoil.smx" to be installed.
 		"Recoil Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -5670,6 +6237,12 @@
 		// Requires "st_regen.smx" to be installed.
 		"Regen Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -5755,6 +6328,12 @@
 		// Requires "st_respawn.smx" to be installed.
 		"Respawn Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -5826,6 +6405,19 @@
 		// Requires "st_restart.smx" to be installed.
 		"Restart Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -5897,6 +6489,7 @@
 			"Restart Hit Mode"			"0"
 
 			// The Super Tank makes survivors restart with this loadout.
+			// --
 			// Item limit: 5
 			// Character limit for each item: 64
 			// --
@@ -5938,6 +6531,12 @@
 		// Requires "st_rock.smx" to be installed.
 		"Rock Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -6025,6 +6624,19 @@
 		// Requires "st_rocket.smx" to be installed.
 		"Rocket Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -6134,6 +6746,19 @@
 		// Requires "st_shake.smx" to be installed.
 		"Shake Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -6244,6 +6869,19 @@
 		// Requires "st_shield.smx" to be installed.
 		"Shield Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -6294,6 +6932,7 @@
 			"Shield Chance"				"33.3"
 
 			// These are the RGBA values of the Super Tank's shield prop's color.
+			// Note: Any value less than 0 will output a random color.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -6336,6 +6975,19 @@
 		// Requires "st_shove.smx" to be installed.
 		"Shove Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -6452,6 +7104,19 @@
 		// Requires "st_slow.smx" to be installed.
 		"Slow Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -6568,6 +7233,19 @@
 		// Requires "st_smash.smx" to be installed.
 		"Smash Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -6672,6 +7350,19 @@
 		// Requires "st_smite.smx" to be installed.
 		"Smite Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -6770,6 +7461,12 @@
 		// Requires "st_spam.smx" to be installed.
 		"Spam Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -6840,6 +7537,19 @@
 		// Requires "st_splash.smx" to be installed.
 		"Splash Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -6922,6 +7632,12 @@
 		// Requires "st_throw.smx" to be installed.
 		"Throw Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7019,6 +7735,19 @@
 		// Requires "st_track.smx" to be installed.
 		"Track Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7083,6 +7812,19 @@
 		// Requires "st_ultimate.smx" to be installed.
 		"Ultimate Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7164,6 +7906,12 @@
 		// Requires "st_undead.smx" to be installed.
 		"Undead Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7221,6 +7969,19 @@
 		// Requires "st_vampire.smx" to be installed.
 		"Vampire Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7273,6 +8034,19 @@
 		// Requires "st_vision.smx" to be installed.
 		"Vision Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7392,6 +8166,19 @@
 		// Requires "st_warp.smx" to be installed.
 		"Warp Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7525,6 +8312,19 @@
 		// Requires "st_whirl.smx" to be installed.
 		"Whirl Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7648,6 +8448,19 @@
 		// Requires "st_witch.smx" to be installed.
 		"Witch Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7717,6 +8530,19 @@
 		// Requires "st_xiphos.smx" to be installed.
 		"Xiphos Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7770,6 +8596,19 @@
 		// Requires "st_yell.smx" to be installed.
 		"Yell Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Super Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7839,6 +8678,12 @@
 		// Requires "st_zombie.smx" to be installed.
 		"Zombie Ability"
 		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
 			// Allow human-controlled Super Tanks to use this ability.
 			// --
 			// 0: OFF
@@ -7899,6 +8744,338 @@
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Zombie Interval"			"5.0"
+		}
+	}
+}
+```
+
+## Administration System
+
+```
+"Super Tanks++"
+{
+	// Use the admin's Steam32ID or Steam3ID when making an entry.
+	"STEAM_0:1:23456789" // [U:1:23456789]
+	{
+		"General"
+		{
+			// Name of the Super Tank.
+			// Note: This setting overrides the same setting above.
+			// --
+			// Character limit: 32
+			// --
+			// Empty: "Tank"
+			// Not Empty: Tank's custom name
+			"Tank Name"				"Tank #1"
+
+			// Announce the Super Tank's arrival.
+			// Note: This setting overrides the same settings above.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0: OFF
+			// 1: Announce when a Super Tank spawns.
+			// 2: Announce when a Super Tank evolves. (Only works when "Spawn Mode" is set to 1.)
+			// 4: Announce when a Super Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
+			// 8: Announce when a Super Tank transforms. (Only works when "Spawn Mode" is set to 3.)
+			// 16: Announce when a Super Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
+			"Announce Arrival"			"31"
+
+			// Announce the Super Tank's death.
+			// Note: This setting overrides the same settings above.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Announce Death"			"1"
+
+			// These are the RGBA values of the Super Tank's skin color.
+			// Note: This setting overrides the same setting above.
+			// Note: Any value less than 0 will output a random color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Skin Color"				"255,255,255,255"
+
+			// The Super Tank will have a glow outline.
+			// Note: This setting overrides the same setting above.
+			// Note: Only available in Left 4 Dead 2.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Glow Enabled"				"0"
+
+			// These are the RGB values of the Super Tank's glow outline color.
+			// Note: This setting overrides the same setting above.
+			// Note: Any value less than 0 will output a random color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			"Glow Color"				"255,255,255"
+		}
+		"Administration"
+		{
+			// This is the Super Tank type that the admin will spawn with.
+			// Note: If the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 1, the admin will be prompted a menu asking if the admin wants to use this type.
+			// --
+			// 0: OFF, use the randomization feature.
+			// 1-1000: ON, the type that will be favorited.
+			"Favorite Type"				"0"
+
+			// Admins with one or more of these access flags have access to all Super Tank types.
+			// Note: This setting overrides all other "Access Flags" settings above.
+			// --
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to all Super Tanks' attacks.
+			// Note: This setting overrides all other "Immunity Flags" settings above.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+		}
+		"Props"
+		{
+			// Props that the Super Tank can spawn with.
+			// Note: This setting overrides the same setting above.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 63
+			// --
+			// 0: OFF
+			// 1: Attach a blur effect only.
+			// 2: Attach lights only.
+			// 4: Attach oxygen tanks only.
+			// 8: Attach flames to oxygen tanks.
+			// 16: Attach rocks only.
+			// 32: Attach tires only.
+			"Props Attached"			"62"
+
+			// Each prop has this many chances out of 100.0% to appear when the Super Tank appears.
+			// Note: This setting overrides the same setting above.
+			// --
+			// Separate chances with commas.
+			// --
+			// Chances limit: 6
+			// Character limit for each chance: 6
+			// --
+			// Minimum value for each chance: 0.0 (No chance)
+			// Maximum value for each chance: 100.0 (Highest chance)
+			// --
+			// 1st number = Chance for a blur effect to appear.
+			// 2nd number = Chance for lights to appear.
+			// 3rd number = Chance for oxygen tanks to appear.
+			// 4th number = Chance for oxygen tank flames to appear.
+			// 5th number = Chance for rocks to appear.
+			// 6th number = Chance for tires to appear.
+			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3"
+
+			// These are the RGBA values of the Super Tank's light prop's color.
+			// Note: This setting overrides the same setting above.
+			// Note: Any value less than 0 will output a random color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Light Color"				"255,255,255,255"
+
+			// These are the RGBA values of the Super Tank's oxygen tank prop's color.
+			// Note: This setting overrides the same setting above.
+			// Note: Any value less than 0 will output a random color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Oxygen Tank Color"			"255,255,255,255"
+
+			// These are the RGBA values of the Super Tank's oxygen tank prop's flame's color.
+			// Note: This setting overrides the same setting above.
+			// Note: Any value less than 0 will output a random color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Flame Color"				"255,255,255,180"
+
+			// These are the RGBA values of the Super Tank's rock prop's color.
+			// Note: This setting overrides the same setting above.
+			// Note: Any value less than 0 will output a random color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Rock Color"				"255,255,255,255"
+
+			// These are the RGBA values of the Super Tank's tire prop's color.
+			// Note: This setting overrides the same setting above.
+			// Note: Any value less than 0 will output a random color.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Tire Color"				"255,255,255,255"
+		}
+		"Particles"
+		{
+			// The particle effects for the Super Tank's body.
+			// Note: This setting overrides the same setting above.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 127
+			// --
+			// 0: OFF
+			// 1: Blood Explosion
+			// 2: Electric Jolt
+			// 4: Fire Trail
+			// 8: Ice Steam
+			// 16: Meteor Smoke
+			// 32: Smoker Cloud
+			// 64: Acid Trail (Only available in Left 4 Dead 2.)
+			"Body Effects"				"0"
+
+			// The particle effects for the Super Tank's rock.
+			// Note: This setting overrides the same setting above.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0: OFF
+			// 1: Blood Explosion
+			// 2: Electric Jolt
+			// 4: Fire Trail
+			// 8: Acid Trail (Only available in Left 4 Dead 2.)
+			"Rock Effects"				"0"
+		}
+		"Enhancements"
+		{
+			// The Super Tank's claw attacks do this much damage.
+			// Note: This setting overrides the same setting above.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Claw Damage"				"-1.0"
+
+			// Extra health given to the Super Tank.
+			// Note: This setting overrides the same setting above.
+			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Disable this setting if it conflicts with other plugins.
+			// Note: Depending on the setting for "Multiply Health," the Super Tank's health will be multiplied based on player count.
+			// --
+			// Minimum: -65535
+			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Extra health
+			// Negative numbers: Current health - Extra health
+			"Extra Health"				"0"
+
+			// The Super Tank's rock throws do this much damage.
+			// Note: This setting overrides the same setting above.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 9999999999.0
+			"Rock Damage"				"-1.0"
+
+			// Set the Super Tank's run speed.
+			// Note: This setting overrides the same setting above.
+			// Note: Default run speed is 1.0.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.1
+			// Maximum: 3.0
+			"Run Speed"				"-1.0"
+
+			// The Super Tank throws a rock every time this many seconds passes.
+			// Note: This setting overrides the same setting above.
+			// Note: Default throw interval is 5.0 seconds.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.1
+			// Maximum: 9999999999.0
+			"Throw Interval"			"-1.0"
+		}
+		"Immunities"
+		{
+			// Give the Super Tank bullet immunity.
+			// Note: This setting overrides the same setting above.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Bullet Immunity"			"0"
+
+			// Give the Super Tank explosive immunity.
+			// Note: This setting overrides the same setting above.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Explosive Immunity"			"0"
+
+			// Give the Super Tank fire immunity.
+			// Note: This setting overrides the same setting above.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Fire Immunity"				"0"
+
+			// Give the Super Tank melee immunity.
+			// Note: This setting overrides the same setting above.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Melee Immunity"			"0"
+		}
+		// Each Super Tank type can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
+		"Tank #1"
+		{
+			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting overrides all other "Access Flags" settings above.
+			// --
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability.
+			// Note: This setting overrides all other "Immunity Flags" settings above.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+		}
+		// Each ability can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
+		"Absorb Ability"
+		{
+			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting overrides all other "Access Flags" settings above.
+			// --
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability.
+			// Note: This setting overrides all other "Immunity Flags" settings above.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
 		}
 	}
 }

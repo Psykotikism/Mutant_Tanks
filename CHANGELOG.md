@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.59 (March 10, 2019)
+## Version 8.59 (March 15, 2019)
 
 Changes:
 
@@ -9,19 +9,53 @@ Changes:
 3. The `ST_GetTankName()` native now has a third argument.
 4. Added the `Regular Type` and `Finale Types` settings under the `Plugin Settings/Waves` section.
 5. Added the `Detect Plugins` setting under the `Plugin Settings/General` section.
-6. Added the `ST_FindAbility()` native.
-7. The following settings can now be overridden for individual Super Tanks (View the `INFORMATION.md` file for details):
+6. Added the `Access Flags` and `Immunity Flags` settings under the `Plugin Settings/Administration` section.
+7. Added the `ST_FindAbility()`, `ST_HasAdminAccess()`, and `ST_IsAdminImmune()` natives.
+8. All Color settings now accept values below "0" which will generate random colors.
+9. The following settings can now be overridden for individual Super Tanks (View the `INFORMATION.md` file for details):
+- `Access Flags`
 - `Announce Arrival`
 - `Announce Death`
 - `Death Revert`
 - `Detect Plugins`
 - `Display Health`
+- `Immunity Flags`
 - `Multiply Health`
+
+10. Added `Access Flags` and `Immunity Flags` settings for each ability.
+11. Updated documentation for several natives/forwards.
+12. Added deprecated messages for old/deleted natives/forwards.
+13. Added an administration system designed for the usage and effectiveness of each Super Tank type.
+12. The administration system can now override any Super Tank type for each admin with the following settings (View the `INFORMATION.md` file for details):
+- `Tank Name`
+- `Announce Arrival`
+- `Announce Death`
+- `Skin Color`
+- `Glow Enabled`
+- `Glow Color`
+- `Props Attached`
+- `Props Chance`
+- `Light Color`
+- `Oxygen Tank Color`
+- `Flame Color`
+- `Rock Color`
+- `Tire Color`
+- `Body Effects`
+- `Rock Effects`
+- `Claw Damage`
+- `Extra Health`
+- `Rock Damage`
+- `Run Speed`
+- `Throw Interval`
+- `Bullet Immunity`
+- `Explosive Immunity`
+- `Fire Immunity`
+- `Melee Immunity`
 
 Files:
 
 1. Updated the `super_tanks++.cfg` file with the above changes.
-2. Updated the `super_tanks++.inc` file.
+2. Updated the `super_tanks++.inc` file with the above changes.
 3. Updated the `super_tanks++.phrases.txt` file with new phrases.
 
 ## Version 8.58 (March 1, 2019)

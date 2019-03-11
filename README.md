@@ -21,6 +21,20 @@ Super Tanks++ will enhance and intensify Tank fights by making each Tank that sp
 ### What makes Super Tanks++ worth installing?
 Super Tanks++ enhances the experience and fun that players get from Tank fights by 1000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
 
+## Features
+1. Supports all game modes - Provides the option to enable/disable the plugin in all game modes.
+2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
+3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the config file and user-made Super Tanks.
+4. Create and save up to 1000 Super Tank types - Provides the ability to store up to 1000 Super Tank types.
+5. Flexible config formatting - Provides 4 different formats for the config file.
+6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
+7. Optional abilities - Provides the option to choose which abilities to install.
+8. User-friendly API - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
+9. Target filters - Provides custom target filters for targeting survivors and special infected.
+10. Supports multiple languages - Provides support for translations.
+11. Chat color tags - Provides chat color tags for translation files.
+12. Administration system - Provides an administration system revolved around the usage and effectiveness of each Super Tank type.
+
 ### Requirements
 1. You must have at least `SourceMod 1.10.0.6352` or higher.
 
@@ -53,19 +67,6 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 1. Move `super_tanks++` folder (`super_tanks++.smx` and all of its modules) to `plugins/disabled` folder.
 2. Unload Super Tanks++ by restarting the server.
 
-## Features
-1. Supports all game modes - Provides the option to enable/disable the plugin in all game modes.
-2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
-3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the config file and user-made Super Tanks.
-4. Create and save up to 1000 Super Tank types - Provides the ability to store up to 1000 Super Tank types.
-5. Flexible config formatting - Provides 4 different formats for the config file.
-6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
-7. Optional abilities - Provides the option to choose which abilities to install.
-8. User-friendly API - Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
-9. Target filters - Provides custom target filters for targeting survivors and special infected.
-10. Supports multiple languages - Provides support for translations.
-11. Chat color tags - Provides chat color tags for translation files.
-
 ## KeyValues Settings
 > View the INFORMATION.md file for information about each available setting.
 
@@ -88,47 +89,7 @@ By default, Super Tanks++ can create and execute the following types of configur
 > If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140).
 
 ### Main Features
-1. How many config formats are there?
-
-At the moment, there are 4 different formats.
-
-2. Do I need to edit my current config file from version 8.57 and below?
-
-No, all plugins still read the original format properly.
-
-3. Which config format should I use?
-
-Whichever one you want. You are free to combine all of them as well, it doesn't matter. For consistency and to avoid confusion, this file and any other files with config examples will use the original format.
-
-Example:
-
-```
-// Original format
-"Super Tanks++"
-{
-	"Plugin Settings"
-	{
-		"Game Modes"
-		{
-			"Game Mode Types"			"0"
-		}
-	}
-}
-
-// Custom format
-supertanks++ // 2nd format
-{
-	Settings // 4th format
-	{
-		game_modes // 3rd format
-		{
-			"Game Mode Types"			0 // original format
-		}
-	}
-}
-```
-
-4. How do I make my own Super Tank?
+1. How do I make my own Super Tank?
 
 - Create an entry.
 
@@ -347,13 +308,13 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 }
 ```
 
-5. Can you add more abilities or features?
+2. Can you add more abilities or features?
 
 - That depends on whether it's doable/possible and if I want to add it.
 - If it's from another plugin, it would depend on whether the code is too long, and if it is, I most likely won't go through all that effort for just 1 ability.
 - Post on the AM thread or PM me.
 
-6. How do I enable/disable the plugin in certain game modes?
+3. How do I enable/disable the plugin in certain game modes?
 
 You have 2 options:
 
@@ -400,7 +361,7 @@ Scenario 3:
 Outcome: The plugin works in every Campaign-based and Survival-based game mode except "coop" mode.
 ```
 
-7. How come some Super Tanks aren't showing up?
+4. How come some Super Tanks aren't showing up?
 
 It may be due to one or more of the following:
 
@@ -416,7 +377,7 @@ It may be due to one or more of the following:
 - You didn't format your config file properly.
 - The `Detect Plugins` setting automatically disabled the Super Tank due to not having any of its abilities installed.
 
-8. How do I kill the Tanks depending on what abilities they have?
+5. How do I kill the Tanks depending on what abilities they have?
 
 The following abilities require different strategies:
 
@@ -429,7 +390,7 @@ The following abilities require different strategies:
 - Nullify Hit: The Super Tank can mark players as useless, which means as long as that player is nullified, they will not do any damage.
 - Shield Ability: Wait for the Tank to throw propane tanks at you and then throw it back at the Tank. Then shoot the propane tank to deactivate the Tank's shield.
 
-9. How can I change the amount of Tanks that spawn on each finale wave?
+6. How can I change the amount of Tanks that spawn on each finale wave?
 
 Here's an example:
 
@@ -437,19 +398,19 @@ Here's an example:
 "Finale Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
 ```
 
-10. How can I decide whether to display each Tank's health?
+7. How can I decide whether to display each Tank's health?
 
 Set the value in `Display Health`.
 
-11. Why do some Tanks spawn with different props?
+8. Why do some Tanks spawn with different props?
 
 Each prop has X out of 100.0% probability to appear on Super Tanks when they spawn. Configure the chances for each prop in the `Props Chance` setting.
 
-12. Why are the Tanks spawning with more than the extra health given to them?
+9. Why are the Tanks spawning with more than the extra health given to them?
 
 Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
-13. How do I add more Super Tanks?
+10. How do I add more Super Tanks?
 
 - Add a new entry in the config file.
 - Raise the maximum value of the `Type Range` setting.
@@ -476,7 +437,7 @@ Example:
 }
 ```
 
-14. How do I filter out certain Super Tanks that I made without deleting them?
+11. How do I filter out certain Super Tanks that I made without deleting them?
 
 Enable/disable them with the `Tank Enabled` setting.
 
@@ -520,7 +481,7 @@ Example:
 }
 ```
 
-15. Can I create temporary Tanks without removing or replacing them?
+12. Can I create temporary Tanks without removing or replacing them?
 
 Yes, you can do that with custom configs.
 
@@ -592,7 +553,7 @@ Output: When the current difficulty is Expert mode (impossible), the Idiot Tank 
 These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
 
-16. How can I move the Super Tanks++ category around on the admin menu?
+13. How can I move the Super Tanks++ category around on the admin menu?
 
 - You have to open up addons/sourcemod/configs/adminmenu_sorting.txt.
 - Enter the `SuperTanks++` category.
@@ -639,14 +600,14 @@ Example:
 }
 ```
 
-17. Are there any developer/tester features available in the plugin?
+14. Are there any developer/tester features available in the plugin?
 
 Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Super Tank.
 
 Forwards:
 ```
 /**
- * Called every second to trigger the Super Tank's ability.
+ * Called every second to trigger a Super Tank's ability.
  * Use this forward for any passive abilities.
  *
  * @param tank			Client index of the Tank.
@@ -672,7 +633,7 @@ forward void ST_OnButtonPressed(int tank, int button);
 forward void ST_OnButtonReleased(int tank, int button);
 
 /**
- * Called when the Super Tank changes types.
+ * Called when a Super Tank changes types.
  * Use this forward to trigger any features/abilities/settings when a Super Tank changes types.
  *
  * @param tank			Client index of the Tank.
@@ -692,11 +653,11 @@ forward void ST_OnConfigsLoad();
  *
  * @param subsection		The subsection the config parser is currently on.
  * @param key			The key the config parser is currently on.
- * @param main			Checks whether the main config or a custom config is being used.
  * @param value			The value the config parser is currently on.
- * @param type			The Super Tank type the config parser is currently on.
+ * @param type			The Super Tank type the config parser is currently on. (Used for Super Tank-specific settings.)
+ * @param admin			Client index of an admin. (Used for admin-specific settings.)
  **/
-forward void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type);
+forward void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin);
 
 /**
  * Called when a player uses the "sm_st_info" command.
@@ -740,7 +701,7 @@ forward void ST_OnMenuItemSelected(int client, const char[] info);
 forward void ST_OnPluginEnd();
 
 /**
- * Called after the Tank spawns.
+ * Called after a Super Tank spawns.
  * Use this forward for any post-spawn actions.
  * If you plan on using this to activate an ability, use ST_OnAbilityActivated() instead.
  *
@@ -749,7 +710,7 @@ forward void ST_OnPluginEnd();
 forward void ST_OnPostTankSpawn(int tank);
 
 /**
- * Called when the Tank's rock breaks.
+ * Called when a Super Tank's rock breaks.
  * Use this forward for any after-effects.
  *
  * @param tank			Client index of the Tank.
@@ -758,7 +719,7 @@ forward void ST_OnPostTankSpawn(int tank);
 forward void ST_OnRockBreak(int tank, int rock);
 
 /**
- * Called when the Tank throws a rock.
+ * Called when a Super Tank throws a rock.
  * Use this forward for any throwing abilities.
  *
  * @param tank			Client index of the Tank.
@@ -788,11 +749,33 @@ native bool ST_CanTankSpawn(int type);
 native void ST_FindAbility(int type, int order, bool status);
 
 /**
+ * Returns the current access flags set by the core plugin.
+ *
+ * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
+ * @param type			Super Tank type. (Optional)
+ * @param admin			Client index of an admin. (Optional)
+ * @return			The current access flags.
+ * @error			Invalid client index or type is 0.
+ **/
+native int ST_GetAccessFlags(int mode, int type = 0, int admin = -1);
+
+/**
  * Returns the current finale wave.
  *
  * @return			The current finale wave.
  **/
 native int ST_GetCurrentFinaleWave();
+
+/**
+ * Returns the current immunity flags set by the core plugin.
+ *
+ * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
+ * @param type			Super Tank type. (Optional)
+ * @param admin			Client index of an admin. (Optional)
+ * @return			The current immunity flags.
+ * @error			Invalid client index or type is 0.
+ **/
+native int ST_GetImmunityFlags(int mode, int type = 0, int admin = -1);
 
 /**
  * Returns the maximum value of the "Type Range" setting.
@@ -809,7 +792,7 @@ native int ST_GetMaxType();
 native int ST_GetMinType();
 
 /**
- * Returns the RGBA colors given to a Tank's props.
+ * Returns the RGBA colors given to a Super Tank's props.
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
@@ -823,7 +806,7 @@ native int ST_GetMinType();
 native void ST_GetPropColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
- * Returns the Super Tank's run speed.
+ * Returns a Super Tank's run speed.
  *
  * @param tank			Client index of the Tank.
  * @return			The run speed of the Tank.
@@ -832,7 +815,7 @@ native void ST_GetPropColors(int tank, int mode, int &red, int &green, int &blue
 native float ST_GetRunSpeed(int tank);
 
 /**
- * Returns the RGB colors given to a Tank.
+ * Returns the RGB colors given to a Super Tank.
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Skin color, 2 = Glow outline color
@@ -845,22 +828,31 @@ native float ST_GetRunSpeed(int tank);
 native void ST_GetTankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
- * Returns the custom name given to a Tank.
+ * Returns the custom name given to a Super Tank.
  *
  * @param tank			Client index of the Tank.
+ * @param type			Super Tank type.
  * @param buffer		Buffer to store the custom name in.
  * @error			Invalid client index.
  **/
-native void ST_GetTankName(int tank, char[] buffer);
+native void ST_GetTankName(int tank, int type, char[] buffer);
 
 /**
- * Returns the Super Tank type of the Tank.
+ * Returns the type of a Super Tank.
  *
  * @param tank			Client index of the Tank.
  * @return			The Tank's Super Tank type.
  * @error			Invalid client index.
  **/
 native int ST_GetTankType(int tank);
+
+/**
+ * Returns if a human player has access to a Super Tank type.
+ *
+ * @param admin			Client index of the admin.
+ * @return			True if the human player has access, false otherwise.
+ **/
+native bool ST_HasAdminAccess(int admin);
 
 /**
  * Returns if a certain Super Tank type has a chance of spawning.
@@ -881,7 +873,16 @@ native bool ST_HasChanceToSpawn(int type);
 native void ST_HideEntity(int entity, bool mode);
 
 /**
- * Returns whether the clone can use abilities.
+ * Returns if a human survivor is immune to a Super Tank's attacks.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param tank			Client index of the Tank.
+ * @return			True if the human survivor is immune, false otherwise.
+ **/
+native bool ST_IsAdminImmune(int survivor, int tank);
+
+/**
+ * Returns if the clone can use abilities.
  *
  * @param tank				Client index of the Tank.
  * @param clone				Checks whether "st_clone.smx" is installed.
@@ -906,7 +907,7 @@ native bool ST_IsCorePluginEnabled();
 native bool ST_IsFinaleTank(int type);
 
 /**
- * Returns if the Super Tank type has a glow outline.
+ * Returns if a Super Tank type has a glow outline.
  *
  * @param tank			Client index of the Tank.
  * @return			True if the Tank has a glow outline, false otherwise.
@@ -915,7 +916,7 @@ native bool ST_IsFinaleTank(int type);
 native bool ST_IsGlowEnabled(int tank);
 
 /**
- * Returns if the Tank is allowed to be a Super Tank.
+ * Returns if a Tank is allowed to be a Super Tank.
  *
  * @param tank			Client index of the Tank.
  * @param flags			Checks to run.
@@ -1114,6 +1115,155 @@ sm_st_witch - View information about the Witch ability.
 sm_st_xiphos - View information about the Xiphos ability.
 sm_st_yell - View information about the Yell ability.
 sm_st_zombie - View information about the Zombie ability.
+```
+
+### Configuration Formatting
+1. How many config formats are there?
+
+At the moment, there are 4 different formats.
+
+2. Do I need to edit my current config file from version 8.57 and below?
+
+No, all plugins still read the original format properly.
+
+3. Which config format should I use?
+
+Whichever one you want. You are free to combine all of them as well, it doesn't matter. For consistency and to avoid confusion, this file and any other files with config examples will use the original format.
+
+Example:
+
+```
+// Original format
+"Super Tanks++"
+{
+	"Plugin Settings"
+	{
+		"Game Modes"
+		{
+			"Game Mode Types"			"0"
+		}
+	}
+}
+
+// Custom format
+supertanks++ // 2nd format
+{
+	Settings // 4th format
+	{
+		game_modes // 3rd format
+		{
+			"Game Mode Types"			0 // original format
+		}
+	}
+}
+```
+
+### Administration System
+1. How does the system work?
+
+The administration system is designed for the usage and effectiveness of each Super Tank type. Basically, it controls and determines what kind of Super Tanks players can use or be immune from.
+
+2. Why create an entirely new administration system instead of using SourceMod's own system?
+
+At first, using SM's own system was the goal, but that system has certain limitations that I wanted to get rid of for this project. For example, in SM's system, assigning multiple flags to an override command requires admins to have all of those flags. In this system, admins only need one of those flags, which makes the system flexible for filtering multiple admin flags.
+
+Example:
+
+```
+// SM's system
+"sm_tank"			"abc" // Admins need all three flags to use the command.
+
+// ST++'s system
+"Access Flags"			"abc" // Admins only need one of these flags to access a Super Tank type.
+```
+
+3. What are the admin flags used for?
+
+The flags are used for two things:
+- Accessibility - What Super Tank types admins can access.
+- Immunity - What Super Tank types admins are immune to.
+
+4. What other features does the system have?
+
+Currently, the system allows admins to each have a favorite Super Tank type, custom name, enhancements (health, run speed, etc.), colors, particles, props, and immunities.
+
+Each custom admin setting will override the general settings. This is a powerful feature because each admin can have his/her own custom-made Super Tank type without tampering with the general Super Tank types.
+
+Example:
+
+```
+"Super Tanks++"
+{
+	"STEAM_0:1:23456789"
+	{
+		"General"
+		{
+			"Tank Name"				"Awesome Player" // Admin-controlled Tanks will have this name.
+		}
+	}
+	"Tank #1"
+	{
+		"General"
+		{
+			"Tank Name"				"Awesome AI" // AI Tanks will have this name.
+		}
+	}
+}
+```
+
+5. How does the override feature work?
+
+It will sound complicated but here is the simplest way to explain it:
+
+Ability Overrides
+
+```
+If an ability's access/immunity flags are defined for a player, it must contain a flag that is required by one of the following:
+- If a Super Tank type has the same ability, and that ability has access/immunity flags defined, those flags will be compared to the player's ability flags.
+
+OR ELSE
+
+- If a Super Tank type has access/immunity flags defined, those flags will be compared to the player's ability flags.
+
+OR ELSE
+
+- If the global access/immunity flags are defined, those flags will be compared to the player's ability flags.
+
+Note: If all 3 of these return false, the player will not have access to that ability.
+```
+
+Type Overrides
+
+```
+If a type's access/immunity flags are defined for a player, it must contain a flag that is required by one of the following:
+- If a Super Tank type's ability has access/immunity flags defined, those flags will be compared to the player's type flags.
+
+OR ELSE
+
+- If a Super Tank type has access/immunity flags defined, those flags will be compared to the player's type flags.
+
+OR ELSE
+
+- If the global access/immunity flags are defined, those flags will be compared to the player's type flags.
+
+Note: If all 3 of these return false, the player will not have access to that type.
+```
+
+Global Overrides
+
+```
+If global access/immunity flags are defined for a player, it must contain a flag that is required by one of the following:
+- If a Super Tank type's ability has access/immunity flags defined, those flags will be compared to the player's global flags.
+
+OR ELSE
+
+- If a Super Tank type has access/immunity flags defined, those flags will be compared to the player's global flags.
+
+OR ELSE
+
+- If the global access/immunity flags are defined, those flags will be compared to the player's global flags.
+
+Note: If all 3 of these return false, the player will not have access to that type.
 ```
 
 ### Human Support
@@ -1360,7 +1510,6 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
-
 
 
 Thank you very much and have fun! :D
