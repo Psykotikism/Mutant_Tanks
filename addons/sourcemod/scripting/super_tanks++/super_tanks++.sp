@@ -3463,7 +3463,13 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		DispatchKeyValue(g_iLight[tank][light], "spotlightlength", "60");
 		DispatchKeyValue(g_iLight[tank][light], "spawnflags", "3");
 
-		SetEntityRenderColor(g_iLight[tank][light], g_iLightColor[g_iTankType[tank]][0], g_iLightColor[g_iTankType[tank]][1], g_iLightColor[g_iTankType[tank]][2], g_iLightColor[g_iTankType[tank]][3]);
+		int iLightColor[4];
+		for (int iPos = 0; iPos < 4; iPos++)
+		{
+			iLightColor[iPos] = (g_iLightColor2[tank][iPos] >= -2) ? g_iLightColor2[tank][iPos] : g_iLightColor[g_iTankType[tank]][iPos];
+		}
+
+		SetEntityRenderColor(g_iLight[tank][light], iLightColor[0], iLightColor[1], iLightColor[2], iLightColor[3]);
 
 		DispatchKeyValue(g_iLight[tank][light], "maxspeed", "100");
 		DispatchKeyValue(g_iLight[tank][light], "HDRColorScale", "0.7");
@@ -3628,31 +3634,24 @@ static void vSuperTank(int tank)
 		int iType;
 		if (g_iType <= 0)
 		{
-			if (bIsTank(tank, ST_CHECK_FAKECLIENT) && g_iFavoriteType[tank] > 0)
+			int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
+			for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 			{
-				vSetColor(tank, g_iFavoriteType[tank]);
+				if (g_iTankEnabled[iIndex] == 0 || !bHasAdminAccess(tank, iIndex) || g_iSpawnEnabled[iIndex] == 0 || !bIsTypeAvailable(iIndex) || !bTankChance(iIndex) || (g_iTypeLimit[iIndex] > 0 && iGetTypeCount(iIndex) >= g_iTypeLimit[iIndex]) || (g_iFinaleTank[iIndex] == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[tank] == iIndex)
+				{
+					continue;
+				}
+
+				iTankTypes[iTypeCount + 1] = iIndex;
+				iTypeCount++;
 			}
-			else
+
+			if (iTypeCount > 0)
 			{
-				int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
-				for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
-				{
-					if (g_iTankEnabled[iIndex] == 0 || !bHasAdminAccess(tank, iIndex) || g_iSpawnEnabled[iIndex] == 0 || !bIsTypeAvailable(iIndex) || !bTankChance(iIndex) || (g_iTypeLimit[iIndex] > 0 && iGetTypeCount(iIndex) >= g_iTypeLimit[iIndex]) || (g_iFinaleTank[iIndex] == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[tank] == iIndex)
-					{
-						continue;
-					}
+				int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
+				vSetColor(tank, iChosen);
 
-					iTankTypes[iTypeCount + 1] = iIndex;
-					iTypeCount++;
-				}
-
-				if (iTypeCount > 0)
-				{
-					int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
-					vSetColor(tank, iChosen);
-
-					iType = iChosen;
-				}
+				iType = iChosen;
 			}
 		}
 		else
@@ -4549,7 +4548,13 @@ public Action tTimerRockThrow(Handle timer, int ref)
 		return Plugin_Stop;
 	}
 
-	SetEntityRenderColor(iRock, g_iRockColor[g_iTankType[iThrower]][0], g_iRockColor[g_iTankType[iThrower]][1], g_iRockColor[g_iTankType[iThrower]][2], g_iRockColor[g_iTankType[iThrower]][3]);
+	int iRockColor[4];
+	for (int iPos = 0; iPos < 4; iPos++)
+	{
+		iRockColor[iPos] = (g_iRockColor2[iThrower][iPos] >= -2) ? g_iRockColor2[iThrower][iPos] : g_iRockColor[g_iTankType[iThrower]][iPos];
+	}
+
+	SetEntityRenderColor(iRock, iRockColor[0], iRockColor[1], iRockColor[2], iRockColor[3]);
 
 	if (g_iRockEffects[g_iTankType[iThrower]] > 0)
 	{
