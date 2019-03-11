@@ -47,7 +47,7 @@ bool g_bCloneInstalled, g_bGod[MAXPLAYERS + 1], g_bGod2[MAXPLAYERS + 1];
 
 float g_flGodChance[ST_MAXTYPES + 1], g_flGodDuration[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
-int g_iGodAbility[ST_MAXTYPES + 1], g_iGodCount[MAXPLAYERS + 1], g_iGodMessage[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iGodAbility[ST_MAXTYPES + 1], g_iGodCount[MAXPLAYERS + 1], g_iGodMessage[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -231,8 +231,17 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -244,17 +253,39 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	ST_FindAbility(type, 21, bHasAbilities(subsection, "godability", "god ability", "god_ability", "god"));
-	g_iHumanAbility[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iHumanMode[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
-	g_iGodAbility[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iGodAbility[type], value, 0, 0, 1);
-	g_iGodMessage[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iGodMessage[type], value, 0, 0, 1);
-	g_flGodChance[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "GodChance", "God Chance", "God_Chance", "chance", main, g_flGodChance[type], value, 33.3, 0.0, 100.0);
-	g_flGodDuration[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "GodDuration", "God Duration", "God_Duration", "duration", main, g_flGodDuration[type], value, 5.0, 0.1, 9999999999.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "godability", false) || StrEqual(subsection, "god ability", false) || StrEqual(subsection, "god_ability", false) || StrEqual(subsection, "god", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 21, bHasAbilities(subsection, "godability", "god ability", "god_ability", "god"));
+		g_iHumanAbility[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanMode[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
+		g_iGodAbility[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iGodAbility[type], value, 0, 1);
+		g_iGodMessage[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iGodMessage[type], value, 0, 1);
+		g_flGodChance[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "GodChance", "God Chance", "God_Chance", "chance", g_flGodChance[type], value, 0.0, 100.0);
+		g_flGodDuration[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "GodDuration", "God Duration", "God_Duration", "duration", g_flGodDuration[type], value, 0.1, 9999999999.0);
+
+		if (StrEqual(subsection, "godability", false) || StrEqual(subsection, "god ability", false) || StrEqual(subsection, "god_ability", false) || StrEqual(subsection, "god", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnPluginEnd()
@@ -282,6 +313,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iGodAbility[ST_GetTankType(tank)] == 1 && !g_bGod[tank])
 	{
 		vGodAbility(tank);
@@ -290,6 +326,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
@@ -366,6 +407,11 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vGodAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (g_iGodCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_flGodChance[ST_GetTankType(tank)])
@@ -440,6 +486,61 @@ static void vReset2(int tank)
 	}
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 public Action tTimerStopGod(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -454,7 +555,7 @@ public Action tTimerStopGod(Handle timer, int userid)
 
 	SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && !g_bGod2[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && (ST_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && !g_bGod2[iTank])
 	{
 		vReset2(iTank);
 	}

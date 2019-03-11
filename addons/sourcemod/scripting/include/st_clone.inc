@@ -15,13 +15,16 @@
 #define _supertankspluspluscloneability_included
 
 /**
- * Returns whether the clone can use abilities.
+ * Returns if the clone can use abilities.
  *
  * @param tank				Client index of the Tank.
  * @param clone				Checks whether "st_clone.smx" is installed.
  * @return				True if clone can use abilities, false otherwise.
  **/
 native bool ST_IsCloneSupported(int tank, bool clone);
+
+#pragma deprecated Use ST_IsCloneSupported() instead.
+native bool ST_CloneAllowed(int client, bool clone);
 
 stock bool bIsCloneAllowed(int tank, bool clone)
 {

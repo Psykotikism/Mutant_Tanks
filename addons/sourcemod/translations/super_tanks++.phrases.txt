@@ -12,6 +12,10 @@
 	{
 		"en"			"Config Parser Menu"
 	}
+	"STFavoriteMenu"
+	{
+		"en"			"Use your favorite Super Tank type?"
+	}
 	"STInfoMenu"
 	{
 		"en"			"Super Tanks++ Information"
@@ -217,6 +221,10 @@
 		"#format"		"{1:s},{2:s},{3:i}"
 		"en"			"{olive}{1}{mint} evolved into{olive} {2}{yellow} (Stage {3}){mint}!"
 	}
+	"FavoriteUnused"
+	{
+		"en"			"You chose not to use your favorite Super Tank type."
+	}
 	"GeneralDetails"
 	{
 		"en"			"Super Tanks++ makes fighting Tanks great again!"
@@ -234,13 +242,25 @@
 	{
 		"en"			"Multiple{olive} Tank types{mint} matched that name. Selecting a random match..."
 	}
-	"NoAccess"
+	"NoCommandAccess"
 	{
 		"en"			"You do not have access to this command."
+	}
+	"NoTypeAccess"
+	{
+		"en"			"You do not have access to this Super Tank type."
 	}
 	"NoNote"
 	{
 		"en"			"No note found for this Super Tank."
+	}
+	"OptionNo"
+	{
+		"en"			"No"
+	}
+	"OptionYes"
+	{
+		"en"			"Yes"
 	}
 	"Randomized"
 	{

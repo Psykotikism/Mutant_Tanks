@@ -43,7 +43,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	CreateNative("ST_CanTankSpawn", aNative_CanTankSpawn);
 	CreateNative("ST_FindAbility", aNative_FindAbility);
+	CreateNative("ST_GetAccessFlags", aNative_GetAccessFlags);
 	CreateNative("ST_GetCurrentFinaleWave", aNative_GetCurrentFinaleWave);
+	CreateNative("ST_GetImmunityFlags", aNative_GetImmunityFlags);
 	CreateNative("ST_GetMaxType", aNative_GetMaxType);
 	CreateNative("ST_GetMinType", aNative_GetMinType);
 	CreateNative("ST_GetPropColors", aNative_GetPropColors);
@@ -51,8 +53,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("ST_GetTankColors", aNative_GetTankColors);
 	CreateNative("ST_GetTankName", aNative_GetTankName);
 	CreateNative("ST_GetTankType", aNative_GetTankType);
+	CreateNative("ST_HasAdminAccess", aNative_HasAdminAccess);
 	CreateNative("ST_HasChanceToSpawn", aNative_HasChanceToSpawn);
 	CreateNative("ST_HideEntity", aNative_HideEntity);
+	CreateNative("ST_IsAdminImmune", aNative_IsAdminImmune);
 	CreateNative("ST_IsCorePluginEnabled", aNative_IsCorePluginEnabled);
 	CreateNative("ST_IsFinaleTank", aNative_IsFinaleTank);
 	CreateNative("ST_IsGlowEnabled", aNative_IsGlowEnabled);
@@ -125,29 +129,35 @@ enum ConfigState
 	ConfigState_Start, // reached "Super Tanks++" section
 	ConfigState_Settings, // reached "Plugin Settings" section
 	ConfigState_Type, // reached "Tank #" section
-	ConfigState_Specific, // reached specific sections
+	ConfigState_Admin, // reached "STEAM_" or "[U:" section
+	ConfigState_Specific // reached specific sections
 };
 
-bool g_bAbilityFound[ST_MAXTYPES + 1][ST_MAX_ABILITIES + 1], g_bAbilityPlugin[ST_MAX_ABILITIES + 1], g_bAdminMenu[MAXPLAYERS + 1], g_bBlood[MAXPLAYERS + 1], g_bBlur[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1], g_bGeneralConfig, g_bIce[MAXPLAYERS + 1],
-	g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSettingsFound, g_bSmoke[MAXPLAYERS + 1], g_bSpawned[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bTankConfig[ST_MAXTYPES + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1], g_bUsedParser[MAXPLAYERS + 1];
+ArrayList g_alAdmins;
 
-char g_sCurrentSection[128], g_sCurrentSubSection[128], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sSavePath[PLATFORM_MAX_PATH], g_sSection[MAXPLAYERS + 1][128], g_sTankName[ST_MAXTYPES + 1][33], g_sUsedPath[PLATFORM_MAX_PATH];
+bool g_bAbilityFound[ST_MAXTYPES + 1][ST_MAX_ABILITIES + 1], g_bAbilityPlugin[ST_MAX_ABILITIES + 1], g_bAdminMenu[MAXPLAYERS + 1], g_bBlood[MAXPLAYERS + 1], g_bBlur[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1], g_bGeneralConfig, g_bIce[MAXPLAYERS + 1],
+	g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSettingsFound, g_bSmoke[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1], g_bUsedParser[MAXPLAYERS + 1];
+
+char g_sCurrentSection[128], g_sCurrentSubSection[128], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sSavePath[PLATFORM_MAX_PATH], g_sSection[MAXPLAYERS + 1][128], g_sTankName[ST_MAXTYPES + 1][33], g_sTankName2[MAXPLAYERS + 1][33], g_sUsedPath[PLATFORM_MAX_PATH];
 
 ConfigState g_csState, g_csState2[MAXPLAYERS + 1];
 
 ConVar g_cvSTDifficulty, g_cvSTGameMode, g_cvSTGameTypes, g_cvSTMaxPlayerZombies;
 
-float g_flClawDamage[ST_MAXTYPES + 1], g_flPropChance[ST_MAXTYPES + 1][7], g_flRandomInterval[ST_MAXTYPES + 1], g_flRegularInterval, g_flRockDamage[ST_MAXTYPES + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flTankChance[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flTransformDelay[ST_MAXTYPES + 1], g_flTransformDuration[ST_MAXTYPES + 1];
+float g_flClawDamage[ST_MAXTYPES + 1], g_flClawDamage2[MAXPLAYERS + 1], g_flPropsChance[ST_MAXTYPES + 1][6], g_flPropsChance2[MAXPLAYERS + 1][6], g_flRandomInterval[ST_MAXTYPES + 1], g_flRegularInterval, g_flRockDamage[ST_MAXTYPES + 1], g_flRockDamage2[MAXPLAYERS + 1], g_flRunSpeed[ST_MAXTYPES + 1], g_flRunSpeed2[MAXPLAYERS + 1],
+	g_flTankChance[ST_MAXTYPES + 1], g_flThrowInterval[ST_MAXTYPES + 1], g_flThrowInterval2[MAXPLAYERS + 1], g_flTransformDelay[ST_MAXTYPES + 1], g_flTransformDuration[ST_MAXTYPES + 1];
 
 Handle g_hAbilityActivatedForward, g_hButtonPressedForward, g_hButtonReleasedForward, g_hChangeTypeForward, g_hConfigsLoadForward, g_hConfigsLoadedForward, g_hDisplayMenuForward, g_hEventFiredForward, g_hHookEventForward, g_hMenuItemSelectedForward, g_hPluginEndForward, g_hPostTankSpawnForward, g_hRockBreakForward, g_hRockThrowForward;
 
-int g_iAnnounceArrival, g_iAnnounceArrival2[ST_MAXTYPES + 1], g_iAnnounceDeath, g_iAnnounceDeath2[ST_MAXTYPES + 1], g_iBaseHealth, g_iBodyEffects[ST_MAXTYPES + 1], g_iBossHealth[ST_MAXTYPES + 1][4], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossType[ST_MAXTYPES + 1][4], g_iBulletImmunity[ST_MAXTYPES + 1],
-	g_iConfigCreate, g_iConfigEnable, g_iConfigExecute, g_iCooldown[MAXPLAYERS + 1], g_iDeathRevert, g_iDeathRevert2[ST_MAXTYPES + 1], g_iDetectPlugins, g_iDetectPlugins2[ST_MAXTYPES + 1], g_iDisplayHealth, g_iDisplayHealth2[ST_MAXTYPES + 1], g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iFileTimeOld[7],
-	g_iFileTimeNew[7], g_iFinalesOnly, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleType[4], g_iFinaleWave[4], g_iFireImmunity[ST_MAXTYPES + 1], g_iFlame[MAXPLAYERS + 1][3], g_iFlameColor[ST_MAXTYPES + 1][4], g_iGameModeTypes, g_iGlowEnabled[ST_MAXTYPES + 1], g_iGlowColor[ST_MAXTYPES + 1][3], g_iHumanCooldown, g_iHumanSupport[ST_MAXTYPES + 1],
-	g_iIgnoreLevel, g_iIgnoreLevel2[MAXPLAYERS + 1], g_iLastButtons[MAXPLAYERS + 1], g_iLight[MAXPLAYERS + 1][4], g_iLightColor[ST_MAXTYPES + 1][4], g_iMasterControl, g_iMaxType, g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMenuEnabled[ST_MAXTYPES + 1], g_iMinType, g_iMultiHealth, g_iMultiHealth2[ST_MAXTYPES + 1], g_iOzTank[MAXPLAYERS + 1][3],
-	g_iOzTankColor[ST_MAXTYPES + 1][4], g_iPlayerCount[2], g_iPluginEnabled, g_iPropsAttached[ST_MAXTYPES + 1], g_iRandomTank[ST_MAXTYPES + 1], g_iRegularAmount, g_iRegularType, g_iRegularWave, g_iRockEffects[ST_MAXTYPES + 1], g_iRock[MAXPLAYERS + 1][17], g_iRockColor[ST_MAXTYPES + 1][4], g_iSection[MAXPLAYERS + 1],
-	g_iSkinColor[ST_MAXTYPES + 1][4], g_iSpawnEnabled[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSTMode, g_iTankEnabled[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankModel[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iTire[MAXPLAYERS + 1][3], g_iTireColor[ST_MAXTYPES + 1][4],
-	g_iTransformType[ST_MAXTYPES + 1][10], g_iType, g_iTypeLimit[ST_MAXTYPES + 1];
+int g_iAccessFlags, g_iAccessFlags2[ST_MAXTYPES + 1], g_iAccessFlags3[MAXPLAYERS + 1], g_iAccessFlags4[ST_MAXTYPES + 1][MAXPLAYERS + 1], g_iAnnounceArrival, g_iAnnounceArrival2[ST_MAXTYPES + 1], g_iAnnounceArrival3[MAXPLAYERS + 1], g_iAnnounceDeath, g_iAnnounceDeath2[ST_MAXTYPES + 1], g_iAnnounceDeath3[MAXPLAYERS + 1], g_iBaseHealth,
+	g_iBodyEffects[ST_MAXTYPES + 1], g_iBodyEffects2[MAXPLAYERS + 1], g_iBossHealth[ST_MAXTYPES + 1][4], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossType[ST_MAXTYPES + 1][4], g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[MAXPLAYERS + 1], g_iConfigCreate, g_iConfigEnable, g_iConfigExecute,
+	g_iCooldown[MAXPLAYERS + 1], g_iDeathRevert, g_iDeathRevert2[ST_MAXTYPES + 1], g_iDetectPlugins, g_iDetectPlugins2[ST_MAXTYPES + 1], g_iDisplayHealth, g_iDisplayHealth2[ST_MAXTYPES + 1], g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[MAXPLAYERS + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[MAXPLAYERS + 1],
+	g_iFavoriteType[MAXPLAYERS + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleType[4], g_iFinaleWave[4], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[MAXPLAYERS + 1], g_iFlame[MAXPLAYERS + 1][3], g_iFlameColor[ST_MAXTYPES + 1][4], g_iFlameColor2[MAXPLAYERS + 1][4], g_iGameModeTypes,
+	g_iGlowEnabled[ST_MAXTYPES + 1], g_iGlowEnabled2[MAXPLAYERS + 1], g_iGlowColor[ST_MAXTYPES + 1][3], g_iGlowColor2[MAXPLAYERS + 1][3], g_iHumanCooldown, g_iHumanSupport[ST_MAXTYPES + 1], g_iIgnoreLevel, g_iIgnoreLevel2[MAXPLAYERS + 1], g_iImmunityFlags, g_iImmunityFlags2[ST_MAXTYPES + 1], g_iImmunityFlags3[MAXPLAYERS + 1],
+	g_iImmunityFlags4[ST_MAXTYPES + 1][MAXPLAYERS + 1], g_iLastButtons[MAXPLAYERS + 1], g_iLight[MAXPLAYERS + 1][4], g_iLightColor[ST_MAXTYPES + 1][4], g_iLightColor2[MAXPLAYERS + 1][4], g_iMasterControl, g_iMaxType, g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[MAXPLAYERS + 1], g_iMenuEnabled[ST_MAXTYPES + 1], g_iMinType, g_iMultiHealth,
+	g_iMultiHealth2[ST_MAXTYPES + 1], g_iOzTank[MAXPLAYERS + 1][3], g_iOzTankColor[ST_MAXTYPES + 1][4], g_iOzTankColor2[MAXPLAYERS + 1][4], g_iPlayerCount[2], g_iPluginEnabled, g_iPropsAttached[ST_MAXTYPES + 1], g_iPropsAttached2[MAXPLAYERS + 1], g_iRandomTank[ST_MAXTYPES + 1], g_iRegularAmount, g_iRegularType, g_iRegularWave,
+	g_iRockEffects[ST_MAXTYPES + 1], g_iRockEffects2[MAXPLAYERS + 1], g_iRock[MAXPLAYERS + 1][17], g_iRockColor[ST_MAXTYPES + 1][4], g_iRockColor2[MAXPLAYERS + 1][4], g_iSection[MAXPLAYERS + 1], g_iSkinColor[ST_MAXTYPES + 1][4], g_iSkinColor2[MAXPLAYERS + 1][4], g_iSpawnEnabled[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSTMode,
+	g_iTankEnabled[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankModel[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iTire[MAXPLAYERS + 1][3], g_iTireColor[ST_MAXTYPES + 1][4], g_iTireColor2[MAXPLAYERS + 1][4], g_iTransformType[ST_MAXTYPES + 1][10], g_iType, g_iTypeLimit[ST_MAXTYPES + 1];
 
 TopMenu g_tmSTMenu;
 
@@ -167,9 +177,43 @@ public any aNative_FindAbility(Handle plugin, int numParams)
 	g_bAbilityFound[GetNativeCell(1)][GetNativeCell(2)] = GetNativeCell(3);
 }
 
+public any aNative_GetAccessFlags(Handle plugin, int numParams)
+{
+	int iMode = GetNativeCell(1), iType = GetNativeCell(2), iAdmin = GetNativeCell(3);
+	if (iMode > 0)
+	{
+		switch (iMode)
+		{
+			case 1: return g_iAccessFlags;
+			case 2: return g_iAccessFlags2[iType];
+			case 3: return g_iAccessFlags3[iAdmin];
+			case 4: return g_iAccessFlags4[iType][iAdmin];
+		}
+	}
+
+	return 0;
+}
+
 public any aNative_GetCurrentFinaleWave(Handle plugin, int numParams)
 {
 	return g_iTankWave;
+}
+
+public any aNative_GetImmunityFlags(Handle plugin, int numParams)
+{
+	int iMode = GetNativeCell(1), iType = GetNativeCell(2), iAdmin = GetNativeCell(3);
+	if (iMode > 0)
+	{
+		switch (iMode)
+		{
+			case 1: return g_iImmunityFlags;
+			case 2: return g_iImmunityFlags2[iType];
+			case 3: return g_iImmunityFlags3[iAdmin];
+			case 4: return g_iImmunityFlags4[iType][iAdmin];
+		}
+	}
+
+	return 0;
 }
 
 public any aNative_GetMaxType(Handle plugin, int numParams)
@@ -207,9 +251,9 @@ public any aNative_GetPropColors(Handle plugin, int numParams)
 public any aNative_GetRunSpeed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && g_flRunSpeed[g_iTankType[iTank]] > 0.0)
+	if (bIsTank(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && (g_flRunSpeed[g_iTankType[iTank]] > 0.0 || g_flRunSpeed2[iTank] > 0.0))
 	{
-		return g_flRunSpeed[g_iTankType[iTank]];
+		return (g_flRunSpeed2[iTank] >= -1.0) ? g_flRunSpeed2[iTank] : g_flRunSpeed[g_iTankType[iTank]];
 	}
 
 	return 1.0;
@@ -225,8 +269,8 @@ public any aNative_GetTankColors(Handle plugin, int numParams)
 		{
 			switch (iMode)
 			{
-				case 1: iColor[iPos] = g_iSkinColor[g_iTankType[iTank]][iPos];
-				case 2: iColor[iPos] = (iPos < 3) ? g_iGlowColor[g_iTankType[iTank]][iPos] : 255;
+				case 1: iColor[iPos] = (g_iSkinColor2[iTank][iPos] >= -1) ? g_iSkinColor2[iTank][iPos] : g_iSkinColor[g_iTankType[iTank]][iPos];
+				case 2: iColor[iPos] = (iPos < 3) ? ((g_iGlowColor2[iTank][iPos] >= -1) ? g_iGlowColor2[iTank][iPos] : g_iGlowColor[g_iTankType[iTank]][iPos]) : 255;
 			}
 
 			SetNativeCellRef(iPos + 3, iColor[iPos]);
@@ -239,7 +283,9 @@ public any aNative_GetTankName(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
 	if (bIsTank(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 	{
-		SetNativeString(3, g_sTankName[iType], sizeof(g_sTankName[]));
+		char sTankName[33];
+		sTankName = (g_sTankName2[iTank][0] == '\0') ? g_sTankName[iType] : g_sTankName2[iTank];
+		SetNativeString(3, sTankName, sizeof(sTankName));
 	}
 }
 
@@ -252,6 +298,17 @@ public any aNative_GetTankType(Handle plugin, int numParams)
 	}
 
 	return 0;
+}
+
+public any aNative_HasAdminAccess(Handle plugin, int numParams)
+{
+	int iAdmin = GetNativeCell(1);
+	if (bIsTankAllowed(iAdmin) && bHasAdminAccess(iAdmin))
+	{
+		return true;
+	}
+
+	return false;
 }
 
 public any aNative_HasChanceToSpawn(Handle plugin, int numParams)
@@ -279,6 +336,17 @@ public any aNative_HideEntity(Handle plugin, int numParams)
 	}
 }
 
+public any aNative_IsAdminImmune(Handle plugin, int numParams)
+{
+	int iSurvivor = GetNativeCell(1), iTank = GetNativeCell(2);
+	if (bIsAdminImmune(iSurvivor, iTank))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 public any aNative_IsCorePluginEnabled(Handle plugin, int numParams)
 {
 	if (g_bPluginEnabled)
@@ -303,7 +371,7 @@ public any aNative_IsFinaleTank(Handle plugin, int numParams)
 public any aNative_IsGlowEnabled(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && g_iGlowEnabled[g_iTankType[iTank]] == 1)
+	if (bIsTank(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) && (g_iGlowEnabled[g_iTankType[iTank]] == 1 || g_iGlowEnabled2[iTank] == 1))
 	{
 		return true;
 	}
@@ -400,10 +468,10 @@ public void OnPluginStart()
 	g_hButtonReleasedForward = CreateGlobalForward("ST_OnButtonReleased", ET_Ignore, Param_Cell, Param_Cell);
 	g_hChangeTypeForward = CreateGlobalForward("ST_OnChangeType", ET_Ignore, Param_Cell, Param_Cell);
 	g_hConfigsLoadForward = CreateGlobalForward("ST_OnConfigsLoad", ET_Ignore);
-	g_hConfigsLoadedForward = CreateGlobalForward("ST_OnConfigsLoaded", ET_Ignore, Param_String, Param_String, Param_Cell, Param_String, Param_Cell);
+	g_hConfigsLoadedForward = CreateGlobalForward("ST_OnConfigsLoaded", ET_Ignore, Param_String, Param_String, Param_String, Param_Cell, Param_Cell);
 	g_hDisplayMenuForward = CreateGlobalForward("ST_OnDisplayMenu", ET_Ignore, Param_Cell);
 	g_hEventFiredForward = CreateGlobalForward("ST_OnEventFired", ET_Ignore, Param_Cell, Param_String, Param_Cell);
-	g_hHookEventForward = CreateGlobalForward("ST_OnHookEvent", ET_Ignore, Param_Cell, Param_Cell);
+	g_hHookEventForward = CreateGlobalForward("ST_OnHookEvent", ET_Ignore, Param_Cell);
 	g_hMenuItemSelectedForward = CreateGlobalForward("ST_OnMenuItemSelected", ET_Ignore, Param_Cell, Param_String);
 	g_hPluginEndForward = CreateGlobalForward("ST_OnPluginEnd", ET_Ignore);
 	g_hPostTankSpawnForward = CreateGlobalForward("ST_OnPostTankSpawn", ET_Ignore, Param_Cell);
@@ -490,6 +558,14 @@ public void OnClientPutInServer(int client)
 	g_iTankType[client] = 0;
 
 	CreateTimer(1.0, tTimerCheckView, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	if (bIsValidClient(client, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
+	{
+		vLoadConfigs(g_sSavePath, true);
+	}
 }
 
 public void OnClientDisconnect_Post(int client)
@@ -681,6 +757,12 @@ public void OnConfigsExecuted()
 public void OnMapEnd()
 {
 	vReset();
+
+	if (g_alAdmins != null)
+	{
+		g_alAdmins.Clear();
+		delete g_alAdmins;
+	}
 }
 
 public void OnPluginEnd()
@@ -713,6 +795,7 @@ public void OnAdminMenuReady(Handle topmenu)
 	if (st_commands != INVALID_TOPMENUOBJECT)
 	{
 		g_tmSTMenu.AddItem("sm_tank", vSuperTanksMenu, st_commands, "sm_tank", ADMFLAG_ROOT);
+		g_tmSTMenu.AddItem("sm_st_config", vSTConfigMenu, st_commands, "sm_st_config", ADMFLAG_ROOT);
 		g_tmSTMenu.AddItem("sm_st_info", vSTInfoMenu, st_commands, "sm_st_info", ADMFLAG_GENERIC);
 	}
 }
@@ -737,6 +820,20 @@ public void vSuperTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject
 			g_bAdminMenu[param] = true;
 
 			vTankMenu(param, 0);
+		}
+	}
+}
+
+public void vSTConfigMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
+{
+	switch (action)
+	{
+		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "%T", "STConfigMenu", param);
+		case TopMenuAction_SelectOption:
+		{
+			g_bAdminMenu[param] = true;
+
+			vConfigMenu(param, 0);
 		}
 	}
 }
@@ -771,7 +868,6 @@ public Action cmdSTConfig(int client, int args)
 		return Plugin_Handled;
 	}
 
-	GetCmdArg(1, g_sSection[client], sizeof(g_sSection[]));
 	if (args < 1)
 	{
 		switch (IsVoteInProgress())
@@ -783,10 +879,10 @@ public Action cmdSTConfig(int client, int args)
 		return Plugin_Handled;
 	}
 
-	g_iSection[client] = StringToInt(g_sSection[client]);
-	if (g_iSection[client] == 0)
+	GetCmdArg(1, g_sSection[client], sizeof(g_sSection[]));
+	if (IsCharNumeric(g_sSection[client][0]))
 	{
-		strcopy(g_sSection[client], sizeof(g_sSection[]), "Plugin Settings");
+		g_iSection[client] = StringToInt(g_sSection[client]);
 	}
 
 	vParseConfig(client);
@@ -850,16 +946,13 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 			}
 			else if (g_csState2[iPlayer] == ConfigState_Start)
 			{
-				if (StrEqual(g_sSection[iPlayer], "Plugin Settings", false))
+				if ((StrEqual(g_sSection[iPlayer], "PluginSettings", false) || StrEqual(g_sSection[iPlayer], "Plugin Settings", false) || StrEqual(g_sSection[iPlayer], "Plugin_Settings", false) || StrEqual(g_sSection[iPlayer], "settings", false)) && StrEqual(name, g_sSection[iPlayer], false))
 				{
-					if (StrEqual(name, g_sSection[iPlayer], false) || StrEqual(name, "PluginSettings", false) || StrEqual(name, "Plugin_Settings", false) || StrEqual(name, "settings", false))
-					{
-						g_csState2[iPlayer] = ConfigState_Settings;
+					g_csState2[iPlayer] = ConfigState_Settings;
 
-						ST_PrintToChat(iPlayer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-					}
+					ST_PrintToChat(iPlayer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
 				}
-				else if (g_iSection[iPlayer] > 0 && StrContains(name, g_sSection[iPlayer], false) != -1 && (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0])))
+				else if (g_iSection[iPlayer] > 0 && (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0])))
 				{
 					char sTankName[8][33];
 					Format(sTankName[0], sizeof(sTankName[]), "Tank#%i", g_iSection[iPlayer]);
@@ -883,12 +976,18 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 						}
 					}
 				}
+				else if (StrEqual(name, g_sSection[iPlayer]) && (StrContains(name, "STEAM_") == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')))
+				{
+					g_csState2[iPlayer] = ConfigState_Admin;
+
+					ST_PrintToChat(iPlayer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				}
 				else
 				{
 					g_iIgnoreLevel2[iPlayer]++;
 				}
 			}
-			else if (g_csState2[iPlayer] == ConfigState_Settings || g_csState2[iPlayer] == ConfigState_Type)
+			else if (g_csState2[iPlayer] == ConfigState_Settings || g_csState2[iPlayer] == ConfigState_Type || g_csState2[iPlayer] == ConfigState_Admin)
 			{
 				g_csState2[iPlayer] = ConfigState_Specific;
 
@@ -943,20 +1042,26 @@ public SMCResult SMCEndSection2(SMCParser smc)
 
 			if (g_csState2[iPlayer] == ConfigState_Specific)
 			{
-				if (StrEqual(g_sSection[iPlayer], "Plugin Settings", false))
+				if (StrEqual(g_sSection[iPlayer], "PluginSettings", false) || StrEqual(g_sSection[iPlayer], "Plugin Settings", false) || StrEqual(g_sSection[iPlayer], "Plugin_Settings", false) || StrEqual(g_sSection[iPlayer], "settings", false))
 				{
 					g_csState2[iPlayer] = ConfigState_Settings;
 
 					ST_PrintToChat(iPlayer, "%20s }", "");
 				}
-				else if (g_iSection[iPlayer] > 0)
+				else if (g_iSection[iPlayer] > 0 && (StrContains(g_sSection[iPlayer], "Tank#", false) != -1 || StrContains(g_sSection[iPlayer], "Tank #", false) != -1 || StrContains(g_sSection[iPlayer], "Tank_#", false) != -1 || StrContains(g_sSection[iPlayer], "Tank", false) != -1 || g_sSection[iPlayer][0] == '#' || IsCharNumeric(g_sSection[iPlayer][0])))
 				{
 					g_csState2[iPlayer] = ConfigState_Type;
 
 					ST_PrintToChat(iPlayer, "%20s }", "");
 				}
+				else if (StrContains(g_sSection[iPlayer], "STEAM_") == 0 || strncmp("0:", g_sSection[iPlayer], 2) == 0 || strncmp("1:", g_sSection[iPlayer], 2) == 0 || (!strncmp(g_sSection[iPlayer], "[U:", 3) && g_sSection[iPlayer][strlen(g_sSection[iPlayer]) - 1] == ']'))
+				{
+					g_csState2[iPlayer] = ConfigState_Admin;
+
+					ST_PrintToChat(iPlayer, "%20s }", "");
+				}
 			}
-			else if (g_csState2[iPlayer] == ConfigState_Settings || g_csState2[iPlayer] == ConfigState_Type)
+			else if (g_csState2[iPlayer] == ConfigState_Settings || g_csState2[iPlayer] == ConfigState_Type || g_csState2[iPlayer] == ConfigState_Admin)
 			{
 				g_csState2[iPlayer] = ConfigState_Start;
 
@@ -1009,6 +1114,13 @@ static void vConfigMenu(int admin, int item)
 		mConfigMenu.AddItem(g_sTankName[iIndex], sMenuItem);
 	}
 
+	for (int iPos = 0; iPos < GetArraySize(g_alAdmins); iPos++)
+	{
+		char sAdmins[32];
+		g_alAdmins.GetString(iPos, sAdmins, sizeof(sAdmins));
+		mConfigMenu.AddItem(sAdmins, sAdmins);
+	}
+
 	mConfigMenu.ExitBackButton = g_bAdminMenu[admin];
 	mConfigMenu.DisplayAt(admin, item, MENU_TIME_FOREVER);
 }
@@ -1034,20 +1146,20 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			switch (StrEqual(sInfo, "Plugin Settings", false))
+			if (StrContains(sInfo, "Plugin", false) != -1 || StrContains(sInfo, "settings", false) != -1 || StrContains(sInfo, "STEAM_", false) == 0 || (!strncmp(sInfo, "[U:", 3) && sInfo[strlen(sInfo) - 1] == ']'))
 			{
-				case true: strcopy(g_sSection[param1], sizeof(g_sSection[]), sInfo);
-				case false:
+				strcopy(g_sSection[param1], sizeof(g_sSection[]), sInfo);
+			}
+			else
+			{
+				for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 				{
-					for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
+					if (StrEqual(sInfo, g_sTankName[iIndex], false))
 					{
-						if (StrEqual(sInfo, g_sTankName[iIndex], false))
-						{
-							IntToString(iIndex, g_sSection[param1], sizeof(g_sSection[]));
-							g_iSection[param1] = iIndex;
+						IntToString(iIndex, g_sSection[param1], sizeof(g_sSection[]));
+						g_iSection[param1] = iIndex;
 
-							break;
-						}
+						break;
 					}
 				}
 			}
@@ -1186,7 +1298,7 @@ public Action cmdTank(int client, int args)
 
 	if (g_iSTMode == 1 && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT))
 	{
-		ReplyToCommand(client, "%s %t", ST_TAG2, "NoAccess");
+		ReplyToCommand(client, "%s %t", ST_TAG2, "NoCommandAccess");
 
 		return Plugin_Handled;
 	}
@@ -1252,7 +1364,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 			int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 			for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 			{
-				if (g_iTankEnabled[iIndex] == 0 || g_iMenuEnabled[iIndex] == 0 || !bIsTypeAvailable(iIndex) || StrContains(g_sTankName[iIndex], type, false) == -1)
+				if (g_iTankEnabled[iIndex] == 0 || !bHasAdminAccess(admin, iIndex) || g_iMenuEnabled[iIndex] == 0 || !bIsTypeAvailable(iIndex) || StrContains(g_sTankName[iIndex], type, false) == -1)
 				{
 					continue;
 				}
@@ -1351,7 +1463,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 			switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT))
 			{
 				case true: vChangeTank(admin, amount, mode);
-				case false: ST_PrintToChat(admin, "%s %t", ST_TAG2, "NoAccess");
+				case false: ST_PrintToChat(admin, "%s %t", ST_TAG2, "NoCommandAccess");
 			}
 		}
 	}
@@ -1437,7 +1549,7 @@ static void vTankMenu(int admin, int item)
 
 	for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 	{
-		if (g_iTankEnabled[iIndex] == 0 || g_iMenuEnabled[iIndex] == 0 || !bIsTypeAvailable(iIndex))
+		if (g_iTankEnabled[iIndex] == 0 || !bHasAdminAccess(admin, iIndex) || g_iMenuEnabled[iIndex] == 0 || !bIsTypeAvailable(iIndex))
 		{
 			continue;
 		}
@@ -1479,7 +1591,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				{
 					for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 					{
-						if (g_iTankEnabled[iIndex] == 0 || g_iMenuEnabled[iIndex] == 0 || !bIsTypeAvailable(iIndex))
+						if (g_iTankEnabled[iIndex] == 0 || !bHasAdminAccess(param1, iIndex) || g_iMenuEnabled[iIndex] == 0 || !bIsTypeAvailable(iIndex))
 						{
 							continue;
 						}
@@ -1528,7 +1640,7 @@ public void OnEntityDestroyed(int entity)
 		if (StrEqual(sClassname, "tank_rock"))
 		{
 			int iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-			if (iThrower == 0 || !bIsTankAllowed(iThrower) || g_iTankEnabled[g_iTankType[iThrower]] == 0)
+			if (iThrower == 0 || !bIsTankAllowed(iThrower) || !bHasAdminAccess(iThrower) || g_iTankEnabled[g_iTankType[iThrower]] == 0)
 			{
 				return;
 			}
@@ -1581,29 +1693,29 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (bIsTankAllowed(attacker) && bIsSurvivor(victim))
+		if (bIsTankAllowed(attacker) && bHasAdminAccess(attacker) && bIsSurvivor(victim) && !bIsAdminImmune(victim, attacker))
 		{
-			if (StrEqual(sClassname, "weapon_tank_claw") && g_flClawDamage[g_iTankType[attacker]] >= 0.0)
+			if (StrEqual(sClassname, "weapon_tank_claw") && (g_flClawDamage[g_iTankType[attacker]] >= 0.0 || g_flClawDamage2[attacker] > 0.0))
 			{
-				damage = g_flClawDamage[g_iTankType[attacker]];
+				damage = (g_flClawDamage2[attacker] >= -1.0) ? g_flClawDamage2[attacker] : g_flClawDamage[g_iTankType[attacker]];
 
 				return Plugin_Changed;
 			}
-			else if (StrEqual(sClassname, "tank_rock") && g_flRockDamage[g_iTankType[attacker]] >= 0.0)
+			else if (StrEqual(sClassname, "tank_rock") && (g_flRockDamage[g_iTankType[attacker]] >= 0.0 || g_flRockDamage2[attacker] > 0.0))
 			{
-				damage = g_flRockDamage[g_iTankType[attacker]];
+				damage = (g_flRockDamage2[attacker] >= -1.0) ? g_flRockDamage2[attacker] : g_flRockDamage[g_iTankType[attacker]];
 
 				return Plugin_Changed;
 			}
 		}
 		else if (bIsInfected(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 		{
-			if (bIsTankAllowed(victim))
+			if (bIsTankAllowed(victim) && bHasAdminAccess(victim))
 			{
-				if ((damagetype & DMG_BULLET && g_iBulletImmunity[g_iTankType[victim]] == 1) ||
-					((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && g_iExplosiveImmunity[g_iTankType[victim]] == 1) ||
-					(damagetype & DMG_BURN && g_iFireImmunity[g_iTankType[victim]] == 1) ||
-					((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && g_iMeleeImmunity[g_iTankType[victim]] == 1))
+				if ((damagetype & DMG_BULLET && (g_iBulletImmunity[g_iTankType[victim]] == 1 || g_iBulletImmunity2[victim] == 1)) ||
+					((damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA) && (g_iExplosiveImmunity[g_iTankType[victim]] == 1 || g_iExplosiveImmunity2[victim] == 1)) ||
+					(damagetype & DMG_BURN && (g_iFireImmunity[g_iTankType[victim]] == 1 || g_iFireImmunity2[victim] == 1)) ||
+					((damagetype & DMG_SLASH || damagetype & DMG_CLUB) && (g_iMeleeImmunity[g_iTankType[victim]] == 1 || g_iMeleeImmunity2[victim] == 1)))
 				{
 					return Plugin_Handled;
 				}
@@ -1665,6 +1777,8 @@ public void SMCParseStart(SMCParser smc)
 	g_iMultiHealth = 0;
 	g_iMinType = 1;
 	g_iMaxType = ST_MAXTYPES;
+	g_iAccessFlags = 0;
+	g_iImmunityFlags = 0;
 	g_iHumanCooldown = 600;
 	g_iMasterControl = 0;
 	g_iSTMode = 1;
@@ -1699,6 +1813,8 @@ public void SMCParseStart(SMCParser smc)
 		g_iDisplayHealth2[iIndex] = 3;
 		g_iMultiHealth2[iIndex] = 0;
 		g_iHumanSupport[iIndex] = 0;
+		g_iAccessFlags2[iIndex] = 0;
+		g_iImmunityFlags2[iIndex] = 0;
 		g_iTypeLimit[iIndex] = 32;
 		g_iFinaleTank[iIndex] = 0;
 		g_iBossHealth[iIndex][0] = 5000;
@@ -1733,9 +1849,9 @@ public void SMCParseStart(SMCParser smc)
 		{
 			g_iTransformType[iIndex][iPos] = iPos + 1;
 
-			if (iPos < 7)
+			if (iPos < 6)
 			{
-				g_flPropChance[iIndex][iPos] = 33.3;
+				g_flPropsChance[iIndex][iPos] = 33.3;
 			}
 
 			if (iPos < 4)
@@ -1754,6 +1870,63 @@ public void SMCParseStart(SMCParser smc)
 				g_iGlowColor[iIndex][iPos] = 255;
 			}
 		}
+	}
+
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
+		{
+			g_sTankName2[iPlayer][0] = '\0';
+			g_iAnnounceArrival3[iPlayer] = 0;
+			g_iAnnounceDeath3[iPlayer] = 0;
+			g_iGlowEnabled2[iPlayer] = 0;
+			g_iFavoriteType[iPlayer] = 0;
+			g_iAccessFlags3[iPlayer] = 0;
+			g_iImmunityFlags3[iPlayer] = 0;
+			g_iPropsAttached2[iPlayer] = 0;
+			g_iBodyEffects2[iPlayer] = 0;
+			g_iRockEffects2[iPlayer] = 0;
+			g_flClawDamage2[iPlayer] = -2.0;
+			g_iExtraHealth2[iPlayer] = 0;
+			g_flRockDamage2[iPlayer] = -2.0;
+			g_flRunSpeed2[iPlayer] = -2.0;
+			g_flThrowInterval2[iPlayer] = -2.0;
+			g_iBulletImmunity2[iPlayer] = 0;
+			g_iExplosiveImmunity2[iPlayer] = 0;
+			g_iFireImmunity2[iPlayer] = 0;
+			g_iMeleeImmunity2[iPlayer] = 0;
+
+			for (int iPos = 0; iPos < 6; iPos++)
+			{
+				g_flPropsChance2[iPlayer][iPos] = 0.0;
+
+				if (iPos < 4)
+				{
+					g_iSkinColor2[iPlayer][iPos] = -2;
+					g_iLightColor2[iPlayer][iPos] = -2;
+					g_iOzTankColor2[iPlayer][iPos] = -2;
+					g_iFlameColor2[iPlayer][iPos] = -2;
+					g_iRockColor2[iPlayer][iPos] = -2;
+					g_iTireColor2[iPlayer][iPos] = -2;
+				}
+
+				if (iPos < 3)
+				{
+					g_iGlowColor2[iPlayer][iPos] = -2;
+				}
+			}
+
+			for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
+			{
+				g_iAccessFlags4[iIndex][iPlayer] = 0;
+				g_iImmunityFlags4[iIndex][iPlayer] = 0;
+			}
+		}
+	}
+
+	if (g_alAdmins == null)
+	{
+		g_alAdmins = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 	}
 
 	Call_StartForward(g_hConfigsLoadForward);
@@ -1807,7 +1980,6 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 				{
 					if (StrEqual(name, sTankName[iType], false))
 					{
-						g_bTankConfig[iIndex] = g_bGeneralConfig;
 						g_csState = ConfigState_Type;
 
 						strcopy(g_sCurrentSection, sizeof(g_sCurrentSection), name);
@@ -1815,12 +1987,20 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 				}
 			}
 		}
+		else if (StrContains(name, "STEAM_") == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']'))
+		{
+			g_csState = ConfigState_Admin;
+
+			strcopy(g_sCurrentSection, sizeof(g_sCurrentSection), name);
+
+			g_alAdmins.PushString(name);
+		}
 		else
 		{
 			g_iIgnoreLevel++;
 		}
 	}
-	else if (g_csState == ConfigState_Settings || g_csState == ConfigState_Type)
+	else if (g_csState == ConfigState_Settings || g_csState == ConfigState_Type || g_csState == ConfigState_Admin)
 	{
 		g_csState = ConfigState_Specific;
 
@@ -1845,26 +2025,22 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 	{
 		if (StrEqual(g_sCurrentSection, "PluginSettings", false) || StrEqual(g_sCurrentSection, "Plugin Settings", false) || StrEqual(g_sCurrentSection, "Plugin_Settings", false) || StrEqual(g_sCurrentSection, "settings", false))
 		{
-			g_iPluginEnabled = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "PluginEnabled", "Plugin Enabled", "Plugin_Enabled", "enabled", g_bGeneralConfig, g_iPluginEnabled, value, 0, 0, 1);
-			g_iAnnounceArrival = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_bGeneralConfig, g_iAnnounceArrival, value, 31, 0, 31);
-			g_iAnnounceDeath = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_bGeneralConfig, g_iAnnounceDeath, value, 1, 0, 1);
-			g_iBaseHealth = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "BaseHealth", "Base Health", "Base_Health", "health", g_bGeneralConfig, g_iBaseHealth, value, 0, 0, ST_MAXHEALTH);
-			g_iDeathRevert = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_bGeneralConfig, g_iDeathRevert, value, 0, 0, 1);
-			g_iDetectPlugins = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_bGeneralConfig, g_iDetectPlugins, value, 0, 0, 1);
-			g_iDisplayHealth = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_bGeneralConfig, g_iDisplayHealth, value, 3, 0, 3);
-			g_iFinalesOnly = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_bGeneralConfig, g_iFinalesOnly, value, 0, 0, 1);
-			g_iMultiHealth = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_bGeneralConfig, g_iMultiHealth, value, 0, 0, 3);
-			g_iHumanCooldown = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "cooldown", g_bGeneralConfig, g_iHumanCooldown, value, 600, 0, 9999999999);
-			g_iMasterControl = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "MasterControl", "Master Control", "Master_Control", "master", g_bGeneralConfig, g_iMasterControl, value, 0, 0, 1);
-			g_iSTMode = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_bGeneralConfig, g_iSTMode, value, 1, 0, 1);
-			g_iRegularAmount = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_bGeneralConfig, g_iRegularAmount, value, 2, 1, 64);
-			g_flRegularInterval = flGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularInterval", "Regular Interval", "Regular_Interval", "reginterval", g_bGeneralConfig, g_flRegularInterval, value, 300.0, 0.1, 9999999999.0);
-			g_iRegularType = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularType", "Regular Type", "Regular_Type", "regtype", g_bGeneralConfig, g_iRegularType, value, 0, 0, ST_MAXTYPES);
-			g_iRegularWave = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularWave", "Regular Wave", "Regular_Wave", "regwave", g_bGeneralConfig, g_iRegularWave, value, 0, 0, 1);
-			g_iGameModeTypes = iGetValue(g_sCurrentSubSection, "GameModes", "Game Modes", "Game_Modes", "modes", key, "GameModeTypes", "Game Mode Types", "Game_Mode_Types", "types", g_bGeneralConfig, g_iGameModeTypes, value, 0, 0, 15);
-			g_iConfigEnable = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "EnableCustomConfigs", "Enable Custom Configs", "Enable_Custom_Configs", "enabled", g_bGeneralConfig, g_iConfigEnable, value, 0, 0, 1);
-			g_iConfigCreate = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_bGeneralConfig, g_iConfigCreate, value, 0, 0, 31);
-			g_iConfigExecute = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_bGeneralConfig, g_iConfigExecute, value, 0, 0, 31);
+			g_iPluginEnabled = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "PluginEnabled", "Plugin Enabled", "Plugin_Enabled", "enabled", g_iPluginEnabled, value, 0, 1);
+			g_iAnnounceArrival = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_iAnnounceArrival, value, 0, 31);
+			g_iAnnounceDeath = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_iAnnounceDeath, value, 0, 1);
+			g_iBaseHealth = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "BaseHealth", "Base Health", "Base_Health", "health", g_iBaseHealth, value, 0, ST_MAXHEALTH);
+			g_iDeathRevert = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_iDeathRevert, value, 0, 1);
+			g_iDetectPlugins = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_iDetectPlugins, value, 0, 1);
+			g_iDisplayHealth = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_iDisplayHealth, value, 0, 3);
+			g_iFinalesOnly = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_iFinalesOnly, value, 0, 1);
+			g_iMultiHealth = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_iMultiHealth, value, 0, 3);
+			g_iHumanCooldown = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "cooldown", g_iHumanCooldown, value, 0, 9999999999);
+			g_iMasterControl = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "MasterControl", "Master Control", "Master_Control", "master", g_iMasterControl, value, 0, 1);
+			g_iSTMode = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_iSTMode, value, 0, 1);
+			g_iRegularAmount = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_iRegularAmount, value, 1, 64);
+			g_flRegularInterval = flGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularInterval", "Regular Interval", "Regular_Interval", "reginterval", g_flRegularInterval, value, 0.1, 9999999999.0);
+			g_iRegularType = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularType", "Regular Type", "Regular_Type", "regtype", g_iRegularType, value, 0, g_iMaxType);
+			g_iRegularWave = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularWave", "Regular Wave", "Regular_Wave", "regwave", g_iRegularWave, value, 0, 1);
 
 			if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "TypeRange", false) || StrEqual(key, "Type Range", false) || StrEqual(key, "Type_Range", false) || StrEqual(key, "types", false)) && value[0] != '\0')
 			{
@@ -1873,8 +2049,20 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
-				g_iMinType = iClamp(StringToInt(sRange[0]), 1, ST_MAXTYPES);
-				g_iMaxType = iClamp(StringToInt(sRange[1]), 1, ST_MAXTYPES);
+				g_iMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 1, ST_MAXTYPES) : g_iMinType;
+				g_iMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 1, ST_MAXTYPES) : g_iMaxType;
+			}
+
+			if ((StrEqual(g_sCurrentSubSection, "Administration", false) || StrEqual(g_sCurrentSubSection, "admin", false)) && value[0] != '\0')
+			{
+				if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+				{
+					g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags;
+				}
+				else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+				{
+					g_iImmunityFlags = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags;
+				}
 			}
 
 			if (StrEqual(g_sCurrentSubSection, "Waves", false) && value[0] != '\0')
@@ -1893,7 +2081,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							continue;
 						}
 
-						g_iFinaleType[iPos] = iClamp(StringToInt(sSet[iPos]), 0, ST_MAXTYPES);
+						g_iFinaleType[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, g_iMaxType) : g_iFinaleType[iPos];
 					}
 				}
 				else if (StrEqual(key, "FinaleWaves", false) || StrEqual(key, "Finale Waves", false) || StrEqual(key, "Finale_Waves", false) || StrEqual(key, "finwaves", false))
@@ -1905,29 +2093,36 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							continue;
 						}
 
-						g_iFinaleWave[iPos] = iClamp(StringToInt(sSet[iPos]), 1, 64);
+						g_iFinaleWave[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 1, 64) : g_iFinaleType[iPos];
 					}
 				}
 			}
 
-			if (StrEqual(g_sCurrentSubSection, "GameModes", false) || StrEqual(g_sCurrentSubSection, "Game Modes", false) || StrEqual(g_sCurrentSubSection, "Game_Modes", false) || StrEqual(g_sCurrentSubSection, "modes", false))
+			if (g_bGeneralConfig)
 			{
-				if (StrEqual(key, "EnabledGameModes", false) || StrEqual(key, "Enabled Game Modes", false) || StrEqual(key, "Enabled_Game_Modes", false) || StrEqual(key, "enabled", false))
+				g_iGameModeTypes = iGetValue(g_sCurrentSubSection, "GameModes", "Game Modes", "Game_Modes", "modes", key, "GameModeTypes", "Game Mode Types", "Game_Mode_Types", "types", g_iGameModeTypes, value, 0, 15);
+				g_iConfigEnable = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "EnableCustomConfigs", "Enable Custom Configs", "Enable_Custom_Configs", "enabled", g_iConfigEnable, value, 0, 1);
+				g_iConfigCreate = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_iConfigEnable, value, 0, 31);
+				g_iConfigExecute = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_iConfigExecute, value, 0, 31);
+				if (StrEqual(g_sCurrentSubSection, "GameModes", false) || StrEqual(g_sCurrentSubSection, "Game Modes", false) || StrEqual(g_sCurrentSubSection, "Game_Modes", false) || StrEqual(g_sCurrentSubSection, "modes", false))
 				{
-					strcopy(g_sEnabledGameModes, sizeof(g_sEnabledGameModes), value[0] == '\0' ? (g_bGeneralConfig ? "" : g_sEnabledGameModes) : value);
-				}
-				else if (StrEqual(key, "DisabledGameModes", false) || StrEqual(key, "Disabled Game Modes", false) || StrEqual(key, "Disabled_Game_Modes", false) || StrEqual(key, "disabled", false))
-				{
-					strcopy(g_sDisabledGameModes, sizeof(g_sDisabledGameModes), value[0] == '\0' ? (g_bGeneralConfig ? "" : g_sDisabledGameModes) : value);
+					if (StrEqual(key, "EnabledGameModes", false) || StrEqual(key, "Enabled Game Modes", false) || StrEqual(key, "Enabled_Game_Modes", false) || StrEqual(key, "enabled", false))
+					{
+						strcopy(g_sEnabledGameModes, sizeof(g_sEnabledGameModes), value[0] == '\0' ? "" : value);
+					}
+					else if (StrEqual(key, "DisabledGameModes", false) || StrEqual(key, "Disabled Game Modes", false) || StrEqual(key, "Disabled_Game_Modes", false) || StrEqual(key, "disabled", false))
+					{
+						strcopy(g_sDisabledGameModes, sizeof(g_sDisabledGameModes), value[0] == '\0' ? "" : value);
+					}
 				}
 			}
 
 			Call_StartForward(g_hConfigsLoadedForward);
 			Call_PushString(g_sCurrentSubSection);
 			Call_PushString(key);
-			Call_PushCell(g_bGeneralConfig);
 			Call_PushString(value);
 			Call_PushCell(0);
+			Call_PushCell(-1);
 			Call_Finish();
 		}
 		else if (StrContains(g_sCurrentSection, "Tank#", false) != -1 || StrContains(g_sCurrentSection, "Tank #", false) != -1 || StrContains(g_sCurrentSection, "Tank_#", false) != -1 || StrContains(g_sCurrentSection, "Tank", false) != -1 || g_sCurrentSection[0] == '#' || IsCharNumeric(g_sCurrentSection[0]))
@@ -1948,43 +2143,43 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				{
 					if (StrEqual(g_sCurrentSection, sTankName[iType], false))
 					{
-						g_iTankEnabled[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "TankEnabled", "Tank Enabled", "Tank_Enabled", "enabled", g_bTankConfig[iIndex], g_iTankEnabled[iIndex], value, 0, 0, 1);
-						g_flTankChance[iIndex] = flGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "TankChance", "Tank Chance", "Tank_Chance", "chance", g_bTankConfig[iIndex], g_flTankChance[iIndex], value, 100.0, 0.0, 100.0);
-						g_iTankNote[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "TankNote", "Tank Note", "Tank_Note", "note", g_bTankConfig[iIndex], g_iTankNote[iIndex], value, 0, 0, 1);
-						g_iSpawnEnabled[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_bTankConfig[iIndex], g_iSpawnEnabled[iIndex], value, 1, 0, 1);
-						g_iMenuEnabled[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MenuEnabled", "Menu Enabled", "Menu_Enabled", "menu", g_bTankConfig[iIndex], g_iMenuEnabled[iIndex], value, 1, 0, 1);
-						g_iAnnounceArrival2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_bTankConfig[iIndex], g_iAnnounceArrival2[iIndex], value, 0, 0, 31);
-						g_iAnnounceDeath2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_bTankConfig[iIndex], g_iAnnounceDeath2[iIndex], value, 0, 0, 1);
-						g_iDeathRevert2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_bTankConfig[iIndex], g_iDeathRevert2[iIndex], value, 0, 0, 1);
-						g_iDetectPlugins2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_bTankConfig[iIndex], g_iDetectPlugins2[iIndex], value, 0, 0, 1);
-						g_iDisplayHealth2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_bTankConfig[iIndex], g_iDisplayHealth2[iIndex], value, 3, 0, 3);
-						g_iMultiHealth2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_bTankConfig[iIndex], g_iMultiHealth2[iIndex], value, 0, 0, 3);
-						g_iHumanSupport[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "HumanSupport", "Human Support", "Human_Support", "human", g_bTankConfig[iIndex], g_iHumanSupport[iIndex], value, 0, 0, 1);
-						g_iGlowEnabled[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_bTankConfig[iIndex], g_iGlowEnabled[iIndex], value, 0, 0, 1);
-						g_iTypeLimit[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_bTankConfig[iIndex], g_iTypeLimit[iIndex], value, 32, 0, 64);
-						g_iFinaleTank[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_bTankConfig[iIndex], g_iFinaleTank[iIndex], value, 0, 0, 1);
-						g_iBossStages[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_bTankConfig[iIndex], g_iBossStages[iIndex], value, 4, 1, 4);
-						g_iRandomTank[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_bTankConfig[iIndex], g_iRandomTank[iIndex], value, 1, 0, 1);
-						g_flRandomInterval[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_bTankConfig[iIndex], g_flRandomInterval[iIndex], value, 5.0, 0.1, 9999999999.0);
-						g_flTransformDelay[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDelay", "Transform Delay", "Transform_Delay", "transdelay", g_bTankConfig[iIndex], g_flTransformDelay[iIndex], value, 10.0, 0.1, 9999999999.0);
-						g_flTransformDuration[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_bTankConfig[iIndex], g_flTransformDuration[iIndex], value, 10.0, 0.1, 9999999999.0);
-						g_iSpawnMode[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "mode", g_bTankConfig[iIndex], g_iSpawnMode[iIndex], value, 0, 0, 3);
-						g_iPropsAttached[iIndex] = iGetValue(g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_bTankConfig[iIndex], g_iPropsAttached[iIndex], value, 62, 0, 63);
-						g_iBodyEffects[iIndex] = iGetValue(g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_bTankConfig[iIndex], g_iBodyEffects[iIndex], value, 0, 0, 127);
-						g_iRockEffects[iIndex] = iGetValue(g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_bTankConfig[iIndex], g_iRockEffects[iIndex], value, 0, 0, 15);
-						g_flClawDamage[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "Enhancements", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_bTankConfig[iIndex], g_flClawDamage[iIndex], value, -1.0, -1.0, 9999999999.0);
-						g_iExtraHealth[iIndex] = iGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "Enhancements", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_bTankConfig[iIndex], g_iExtraHealth[iIndex], value, 0, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
-						g_flRockDamage[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "Enhancements", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_bTankConfig[iIndex], g_flRockDamage[iIndex], value, -1.0, -1.0, 9999999999.0);
-						g_flRunSpeed[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "Enhancements", key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_bTankConfig[iIndex], g_flRunSpeed[iIndex], value, -1.0, -1.0, 3.0);
-						g_flThrowInterval[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "Enhancements", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_bTankConfig[iIndex], g_flThrowInterval[iIndex], value, -1.0, -1.0, 9999999999.0);
-						g_iBulletImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_bTankConfig[iIndex], g_iBulletImmunity[iIndex], value, 0, 0, 1);
-						g_iExplosiveImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_bTankConfig[iIndex], g_iExplosiveImmunity[iIndex], value, 0, 0, 1);
-						g_iFireImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_bTankConfig[iIndex], g_iFireImmunity[iIndex], value, 0, 0, 1);
-						g_iMeleeImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_bTankConfig[iIndex], g_iMeleeImmunity[iIndex], value, 0, 0, 1);
+						g_iTankEnabled[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "TankEnabled", "Tank Enabled", "Tank_Enabled", "enabled", g_iTankEnabled[iIndex], value, 0, 1);
+						g_flTankChance[iIndex] = flGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "TankChance", "Tank Chance", "Tank_Chance", "chance", g_flTankChance[iIndex], value, 0.0, 100.0);
+						g_iTankNote[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "TankNote", "Tank Note", "Tank_Note", "note", g_iTankNote[iIndex], value, 0, 1);
+						g_iSpawnEnabled[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_iSpawnEnabled[iIndex], value, 0, 1);
+						g_iMenuEnabled[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MenuEnabled", "Menu Enabled", "Menu_Enabled", "menu", g_iMenuEnabled[iIndex], value, 0, 1);
+						g_iAnnounceArrival2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_iAnnounceArrival2[iIndex], value, 0, 31);
+						g_iAnnounceDeath2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_iAnnounceDeath2[iIndex], value, 0, 1);
+						g_iDeathRevert2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_iDeathRevert2[iIndex], value, 0, 1);
+						g_iDetectPlugins2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_iDetectPlugins2[iIndex], value, 0, 1);
+						g_iDisplayHealth2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_iDisplayHealth2[iIndex], value, 0, 3);
+						g_iMultiHealth2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_iMultiHealth2[iIndex], value, 0, 3);
+						g_iHumanSupport[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "HumanSupport", "Human Support", "Human_Support", "human", g_iHumanSupport[iIndex], value, 0, 1);
+						g_iGlowEnabled[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_iGlowEnabled[iIndex], value, 0, 1);
+						g_iTypeLimit[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_iTypeLimit[iIndex], value, 0, 64);
+						g_iFinaleTank[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_iFinaleTank[iIndex], value, 0, 1);
+						g_iBossStages[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_iBossStages[iIndex], value, 1, 4);
+						g_iRandomTank[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_iRandomTank[iIndex], value, 0, 1);
+						g_flRandomInterval[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_flRandomInterval[iIndex], value, 0.1, 9999999999.0);
+						g_flTransformDelay[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDelay", "Transform Delay", "Transform_Delay", "transdelay", g_flTransformDelay[iIndex], value, 0.1, 9999999999.0);
+						g_flTransformDuration[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_flTransformDuration[iIndex], value, 0.1, 9999999999.0);
+						g_iSpawnMode[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "mode", g_iSpawnMode[iIndex], value, 0, 3);
+						g_iPropsAttached[iIndex] = iGetValue(g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_iPropsAttached[iIndex], value, 0, 63);
+						g_iBodyEffects[iIndex] = iGetValue(g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_iBodyEffects[iIndex], value, 0, 127);
+						g_iRockEffects[iIndex] = iGetValue(g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_iRockEffects[iIndex], value, 0, 15);
+						g_flClawDamage[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_flClawDamage[iIndex], value, -1.0, 9999999999.0);
+						g_iExtraHealth[iIndex] = iGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_iExtraHealth[iIndex], value, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+						g_flRockDamage[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_flRockDamage[iIndex], value, -1.0, 9999999999.0);
+						g_flRunSpeed[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_flRunSpeed[iIndex], value, -1.0, 3.0);
+						g_flThrowInterval[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_flThrowInterval[iIndex], value, -1.0, 9999999999.0);
+						g_iBulletImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_iBulletImmunity[iIndex], value, 0, 1);
+						g_iExplosiveImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_iExplosiveImmunity[iIndex], value, 0, 1);
+						g_iFireImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_iFireImmunity[iIndex], value, 0, 1);
+						g_iMeleeImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_iMeleeImmunity[iIndex], value, 0, 1);
 
 						if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false)))
 						{
-							strcopy(g_sTankName[iIndex], sizeof(g_sTankName[]), value[0] == '\0' ? (g_bTankConfig[iIndex] ? sTankName[iType] : g_sTankName[iIndex]) : value);
+							strcopy(g_sTankName[iIndex], sizeof(g_sTankName[]), value[0] == '\0' ? sTankName[iType] : value);
 						}
 
 						if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false)) && value[0] != '\0')
@@ -1996,7 +2191,12 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 							for (int iPos = 0; iPos < 4; iPos++)
 							{
-								g_iSkinColor[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : g_iSkinColor[iIndex][iPos];
+								if (sSet[iPos][0] == '\0')
+								{
+									continue;
+								}
+
+								g_iSkinColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 							}
 						}
 
@@ -2009,7 +2209,24 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 							for (int iPos = 0; iPos < 3; iPos++)
 							{
-								g_iGlowColor[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : g_iGlowColor[iIndex][iPos];
+								if (sSet[iPos][0] == '\0')
+								{
+									continue;
+								}
+
+								g_iGlowColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+							}
+						}
+
+						if ((StrEqual(g_sCurrentSubSection, "Administration", false) || StrEqual(g_sCurrentSubSection, "admin", false)) && value[0] != '\0')
+						{
+							if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+							{
+								g_iAccessFlags2[iIndex] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[iIndex];
+							}
+							else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+							{
+								g_iImmunityFlags2[iIndex] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[iIndex];
 							}
 						}
 
@@ -2027,7 +2244,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									continue;
 								}
 
-								g_iBossHealth[iIndex][iPos] = iClamp(StringToInt(sSet[iPos]), 1, ST_MAXHEALTH);
+								g_iBossHealth[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 1, ST_MAXHEALTH) : g_iBossHealth[iIndex][iPos];
 							}
 						}
 
@@ -2045,7 +2262,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									continue;
 								}
 
-								g_iBossType[iIndex][iPos] = iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType);
+								g_iBossType[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType) : g_iBossType[iIndex][iPos];
 							}
 						}
 
@@ -2063,7 +2280,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									continue;
 								}
 
-								g_iTransformType[iIndex][iPos] = iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType);
+								g_iTransformType[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType) : g_iTransformType[iIndex][iPos];
 							}
 						}
 
@@ -2076,14 +2293,14 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								ReplaceString(sValue, sizeof(sValue), " ", "");
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-								for (int iPos = 0; iPos < 7; iPos++)
+								for (int iPos = 0; iPos < 6; iPos++)
 								{
 									if (sSet[iPos][0] == '\0')
 									{
 										continue;
 									}
 
-									g_flPropChance[iIndex][iPos] = flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0);
+									g_flPropsChance[iIndex][iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_flPropsChance[iIndex][iPos];
 								}
 							}
 							else
@@ -2095,25 +2312,30 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 								for (int iPos = 0; iPos < 4; iPos++)
 								{
+									if (sSet[iPos][0] == '\0')
+									{
+										continue;
+									}
+
 									if (StrEqual(key, "LightColor", false) || StrEqual(key, "Light Color", false) || StrEqual(key, "Light_Color", false) || StrEqual(key, "light", false))
 									{
-										g_iLightColor[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : g_iLightColor[iIndex][iPos];
+										g_iLightColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 									}
 									else if (StrEqual(key, "OxygenTankColor", false) || StrEqual(key, "Oxygen Tank Color", false) || StrEqual(key, "Oxygen_Tank_Color", false) || StrEqual(key, "oxygen", false))
 									{
-										g_iOzTankColor[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : g_iOzTankColor[iIndex][iPos];
+										g_iOzTankColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 									}
 									else if (StrEqual(key, "FlameColor", false) || StrEqual(key, "Flame Color", false) || StrEqual(key, "Flame_Color", false) || StrEqual(key, "flame", false))
 									{
-										g_iFlameColor[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : g_iFlameColor[iIndex][iPos];
+										g_iFlameColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 									}
 									else if (StrEqual(key, "RockColor", false) || StrEqual(key, "Rock Color", false) || StrEqual(key, "Rock_Color", false) || StrEqual(key, "rock", false))
 									{
-										g_iRockColor[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : g_iRockColor[iIndex][iPos];
+										g_iRockColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 									}
 									else if (StrEqual(key, "TireColor", false) || StrEqual(key, "Tire Color", false) || StrEqual(key, "Tire_Color", false) || StrEqual(key, "tire", false))
 									{
-										g_iTireColor[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : g_iTireColor[iIndex][iPos];
+										g_iTireColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 									}
 								}
 							}
@@ -2122,10 +2344,193 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						Call_StartForward(g_hConfigsLoadedForward);
 						Call_PushString(g_sCurrentSubSection);
 						Call_PushString(key);
-						Call_PushCell(g_bTankConfig[iIndex]);
 						Call_PushString(value);
 						Call_PushCell(iIndex);
+						Call_PushCell(-1);
 						Call_Finish();
+					}
+				}
+			}
+		}
+		else if (StrContains(g_sCurrentSection, "STEAM_") == 0 || strncmp("0:", g_sCurrentSection, 2) == 0 || strncmp("1:", g_sCurrentSection, 2) == 0 || (!strncmp(g_sCurrentSection, "[U:", 3) && g_sCurrentSection[strlen(g_sCurrentSection) - 1] == ']'))
+		{
+			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+			{
+				if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT))
+				{
+					char sSteamID32[32], sSteam3ID[32];
+					if (GetClientAuthId(iPlayer, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(iPlayer, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
+					{
+						if (StrEqual(sSteamID32, g_sCurrentSection) || StrEqual(sSteam3ID, g_sCurrentSection))
+						{
+							g_iAnnounceArrival3[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_iAnnounceArrival3[iPlayer], value, 0, 31);
+							g_iAnnounceDeath3[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_iAnnounceDeath3[iPlayer], value, 0, 1);
+							g_iGlowEnabled2[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_iGlowEnabled2[iPlayer], value, 0, 1);
+							g_iPropsAttached2[iPlayer] = iGetValue(g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_iPropsAttached2[iPlayer], value, 0, 63);
+							g_iBodyEffects2[iPlayer] = iGetValue(g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_iBodyEffects2[iPlayer], value, 0, 127);
+							g_iRockEffects2[iPlayer] = iGetValue(g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_iRockEffects2[iPlayer], value, 0, 15);
+							g_flClawDamage2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_flClawDamage2[iPlayer], value, -1.0, 9999999999.0);
+							g_iExtraHealth2[iPlayer] = iGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_iExtraHealth2[iPlayer], value, ST_MAX_HEALTH_REDUCTION, ST_MAXHEALTH);
+							g_flRockDamage2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_flRockDamage2[iPlayer], value, -1.0, 9999999999.0);
+							g_flRunSpeed2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_flRunSpeed2[iPlayer], value, -1.0, 3.0);
+							g_flThrowInterval2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_flThrowInterval2[iPlayer], value, -1.0, 9999999999.0);
+							g_iBulletImmunity2[iPlayer] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_iBulletImmunity2[iPlayer], value, 0, 1);
+							g_iExplosiveImmunity2[iPlayer] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_iExplosiveImmunity2[iPlayer], value, 0, 1);
+							g_iFireImmunity2[iPlayer] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_iFireImmunity2[iPlayer], value, 0, 1);
+							g_iMeleeImmunity2[iPlayer] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_iMeleeImmunity2[iPlayer], value, 0, 1);
+							g_iFavoriteType[iPlayer] = iGetValue(g_sCurrentSubSection, "Administration", "Administration", "Administration", "admin", key, "FavoriteType", "Favorite Type", "Favorite_Type", "favorite", g_iFavoriteType[iPlayer], value, 0, g_iMaxType);
+
+							if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false)) && value[0] != '\0')
+							{
+								strcopy(g_sTankName2[iPlayer], sizeof(g_sTankName[]), value);
+							}
+
+							if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false)) && value[0] != '\0')
+							{
+								char sSet[4][4], sValue[16];
+								strcopy(sValue, sizeof(sValue), value);
+								ReplaceString(sValue, sizeof(sValue), " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+								for (int iPos = 0; iPos < 4; iPos++)
+								{
+									if (sSet[iPos][0] == '\0')
+									{
+										continue;
+									}
+
+									g_iSkinColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+								}
+							}
+
+							if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false)) && value[0] != '\0')
+							{
+								char sSet[3][4], sValue[12];
+								strcopy(sValue, sizeof(sValue), value);
+								ReplaceString(sValue, sizeof(sValue), " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+								for (int iPos = 0; iPos < 3; iPos++)
+								{
+									if (sSet[iPos][0] == '\0')
+									{
+										continue;
+									}
+
+									g_iGlowColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+								}
+							}
+
+							if ((StrEqual(g_sCurrentSubSection, "Administration", false) || StrEqual(g_sCurrentSubSection, "admin", false)) && value[0] != '\0')
+							{
+								if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+								{
+									g_iAccessFlags3[iPlayer] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags3[iPlayer];
+								}
+								else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+								{
+									g_iImmunityFlags3[iPlayer] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags3[iPlayer];
+								}
+							}
+
+							if (StrEqual(g_sCurrentSubSection, "Props", false) && value[0] != '\0')
+							{
+								if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
+								{
+									char sSet[7][6], sValue[42];
+									strcopy(sValue, sizeof(sValue), value);
+									ReplaceString(sValue, sizeof(sValue), " ", "");
+									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+									for (int iPos = 0; iPos < 6; iPos++)
+									{
+										if (sSet[iPos][0] == '\0')
+										{
+											continue;
+										}
+
+										g_flPropsChance2[iPlayer][iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_flPropsChance2[iPlayer][iPos];
+									}
+								}
+								else
+								{
+									char sSet[4][4], sValue[16];
+									strcopy(sValue, sizeof(sValue), value);
+									ReplaceString(sValue, sizeof(sValue), " ", "");
+									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+									for (int iPos = 0; iPos < 4; iPos++)
+									{
+										if (sSet[iPos][0] == '\0')
+										{
+											continue;
+										}
+
+										if (StrEqual(key, "LightColor", false) || StrEqual(key, "Light Color", false) || StrEqual(key, "Light_Color", false) || StrEqual(key, "light", false))
+										{
+											g_iLightColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										}
+										else if (StrEqual(key, "OxygenTankColor", false) || StrEqual(key, "Oxygen Tank Color", false) || StrEqual(key, "Oxygen_Tank_Color", false) || StrEqual(key, "oxygen", false))
+										{
+											g_iOzTankColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										}
+										else if (StrEqual(key, "FlameColor", false) || StrEqual(key, "Flame Color", false) || StrEqual(key, "Flame_Color", false) || StrEqual(key, "flame", false))
+										{
+											g_iFlameColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										}
+										else if (StrEqual(key, "RockColor", false) || StrEqual(key, "Rock Color", false) || StrEqual(key, "Rock_Color", false) || StrEqual(key, "rock", false))
+										{
+											g_iRockColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										}
+										else if (StrEqual(key, "TireColor", false) || StrEqual(key, "Tire Color", false) || StrEqual(key, "Tire_Color", false) || StrEqual(key, "tire", false))
+										{
+											g_iTireColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										}
+									}
+								}
+							}
+
+							if (StrContains(g_sCurrentSubSection, "Tank#", false) != -1 || StrContains(g_sCurrentSubSection, "Tank #", false) != -1 || StrContains(g_sCurrentSubSection, "Tank_#", false) != -1 || StrContains(g_sCurrentSubSection, "Tank", false) != -1 || g_sCurrentSubSection[0] == '#' || IsCharNumeric(g_sCurrentSubSection[0]))
+							{
+								for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
+								{
+									char sTankName[8][33];
+									Format(sTankName[0], sizeof(sTankName[]), "Tank#%i", iIndex);
+									Format(sTankName[1], sizeof(sTankName[]), "Tank #%i", iIndex);
+									Format(sTankName[2], sizeof(sTankName[]), "Tank_#%i", iIndex);
+									Format(sTankName[3], sizeof(sTankName[]), "Tank%i", iIndex);
+									Format(sTankName[4], sizeof(sTankName[]), "Tank %i", iIndex);
+									Format(sTankName[5], sizeof(sTankName[]), "Tank_%i", iIndex);
+									Format(sTankName[6], sizeof(sTankName[]), "#%i", iIndex);
+									Format(sTankName[7], sizeof(sTankName[]), "%i", iIndex);
+
+									for (int iType = 0; iType < 8; iType++)
+									{
+										if (StrEqual(g_sCurrentSubSection, sTankName[iType], false))
+										{
+											if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+											{
+												g_iAccessFlags4[iIndex][iPlayer] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags4[iIndex][iPlayer];
+											}
+											else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+											{
+												g_iImmunityFlags4[iIndex][iPlayer] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags4[iIndex][iPlayer];
+											}
+										}
+									}
+								}
+							}
+
+							Call_StartForward(g_hConfigsLoadedForward);
+							Call_PushString(g_sCurrentSubSection);
+							Call_PushString(key);
+							Call_PushString(value);
+							Call_PushCell(0);
+							Call_PushCell(iPlayer);
+							Call_Finish();
+
+							break;
+						}
 					}
 				}
 			}
@@ -2150,12 +2555,16 @@ public SMCResult SMCEndSection(SMCParser smc)
 		{
 			g_csState = ConfigState_Settings;
 		}
-		else if (StrContains(g_sCurrentSection, "Tank#", false) != -1 || StrContains(g_sCurrentSection, "Tank #", false) != -1 || StrContains(g_sCurrentSection, "Tank_#", false) != -1 || StrContains(g_sCurrentSection, "Tank", false) != -1 || StrContains(g_sCurrentSection, "#", false) != -1 || g_sCurrentSection[0] == '#' || IsCharNumeric(g_sCurrentSection[0]))
+		else if (StrContains(g_sCurrentSection, "Tank#", false) != -1 || StrContains(g_sCurrentSection, "Tank #", false) != -1 || StrContains(g_sCurrentSection, "Tank_#", false) != -1 || StrContains(g_sCurrentSection, "Tank", false) != -1 || g_sCurrentSection[0] == '#' || IsCharNumeric(g_sCurrentSection[0]))
 		{
 			g_csState = ConfigState_Type;
 		}
+		else if (StrContains(g_sCurrentSection, "STEAM_") == 0 || strncmp("0:", g_sCurrentSection, 2) == 0 || strncmp("1:", g_sCurrentSection, 2) == 0 || (!strncmp(g_sCurrentSection, "[U:", 3) && g_sCurrentSection[strlen(g_sCurrentSection) - 1] == ']'))
+		{
+			g_csState = ConfigState_Admin;
+		}
 	}
-	else if (g_csState == ConfigState_Settings || g_csState == ConfigState_Type)
+	else if (g_csState == ConfigState_Settings || g_csState == ConfigState_Type || g_csState == ConfigState_Admin)
 	{
 		g_csState = ConfigState_Start;
 	}
@@ -2182,9 +2591,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		if (StrEqual(name, "ability_use"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-			if (bIsTankAllowed(iTank))
+			if (bIsTankAllowed(iTank) && bHasAdminAccess(iTank))
 			{
-				vThrowInterval(iTank, g_flThrowInterval[g_iTankType[iTank]]);
+				vThrowInterval(iTank, (g_flThrowInterval2[iTank] > 0.0) ? g_flThrowInterval2[iTank] : g_flThrowInterval[g_iTankType[iTank]]);
 			}
 		}
 		else if (StrEqual(name, "bot_player_replace"))
@@ -2223,9 +2632,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_death"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-			if (bIsTankAllowed(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
+			if (bIsTankAllowed(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) || g_iTankType[iTank] > 0)
 			{
-				if ((g_iAnnounceDeath == 1 || g_iAnnounceDeath2[g_iTankType[iTank]] == 1) && bIsCloneAllowed(iTank, g_bCloneInstalled))
+				if ((g_iAnnounceDeath == 1 || g_iAnnounceDeath2[g_iTankType[iTank]] == 1 || g_iAnnounceDeath3[iTank] == 1) && bIsCloneAllowed(iTank, g_bCloneInstalled))
 				{
 					if (StrEqual(g_sTankName[g_iTankType[iTank]], ""))
 					{
@@ -2234,16 +2643,16 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 					switch (GetRandomInt(1, 10))
 					{
-						case 1: ST_PrintToChatAll("%s %t", ST_TAG2, "Death1", g_sTankName[g_iTankType[iTank]]);
-						case 2: ST_PrintToChatAll("%s %t", ST_TAG2, "Death2", g_sTankName[g_iTankType[iTank]]);
-						case 3: ST_PrintToChatAll("%s %t", ST_TAG2, "Death3", g_sTankName[g_iTankType[iTank]]);
-						case 4: ST_PrintToChatAll("%s %t", ST_TAG2, "Death4", g_sTankName[g_iTankType[iTank]]);
-						case 5: ST_PrintToChatAll("%s %t", ST_TAG2, "Death5", g_sTankName[g_iTankType[iTank]]);
-						case 6: ST_PrintToChatAll("%s %t", ST_TAG2, "Death6", g_sTankName[g_iTankType[iTank]]);
-						case 7: ST_PrintToChatAll("%s %t", ST_TAG2, "Death7", g_sTankName[g_iTankType[iTank]]);
-						case 8: ST_PrintToChatAll("%s %t", ST_TAG2, "Death8", g_sTankName[g_iTankType[iTank]]);
-						case 9: ST_PrintToChatAll("%s %t", ST_TAG2, "Death9", g_sTankName[g_iTankType[iTank]]);
-						case 10: ST_PrintToChatAll("%s %t", ST_TAG2, "Death10", g_sTankName[g_iTankType[iTank]]);
+						case 1: ST_PrintToChatAll("%s %t", ST_TAG2, "Death1", (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank]);
+						case 2: ST_PrintToChatAll("%s %t", ST_TAG2, "Death2", (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank]);
+						case 3: ST_PrintToChatAll("%s %t", ST_TAG2, "Death3", (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank]);
+						case 4: ST_PrintToChatAll("%s %t", ST_TAG2, "Death4", (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank]);
+						case 5: ST_PrintToChatAll("%s %t", ST_TAG2, "Death5", (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank]);
+						case 6: ST_PrintToChatAll("%s %t", ST_TAG2, "Death6", (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank]);
+						case 7: ST_PrintToChatAll("%s %t", ST_TAG2, "Death7", (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank]);
+						case 8: ST_PrintToChatAll("%s %t", ST_TAG2, "Death8", (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank]);
+						case 9: ST_PrintToChatAll("%s %t", ST_TAG2, "Death9", (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank]);
+						case 10: ST_PrintToChatAll("%s %t", ST_TAG2, "Death10", (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank]);
 					}
 				}
 
@@ -2280,7 +2689,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				{
 					case 0:
 					{
-						switch (bIsTank(iTank, ST_CHECK_FAKECLIENT))
+						switch (bIsTankAllowed(iTank, ST_CHECK_FAKECLIENT))
 						{
 							case true:
 							{
@@ -2563,7 +2972,7 @@ static void vRemoveProps(int tank, int mode = 1)
 		g_iTire[tank][iTire] = INVALID_ENT_REFERENCE;
 	}
 
-	if (bIsValidGame() && g_iGlowEnabled[g_iTankType[tank]] == 1)
+	if (bIsValidGame() && (g_iGlowEnabled[g_iTankType[tank]] == 1 || g_iGlowEnabled2[tank] == 1))
 	{
 		SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
 		SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
@@ -2626,9 +3035,9 @@ static void vResetSpeed(int tank, bool mode = false)
 		case true: SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		case false:
 		{
-			if (g_flRunSpeed[g_iTankType[tank]] > 0.0)
+			if (g_flRunSpeed[g_iTankType[tank]] > 0.0 || g_flRunSpeed2[tank] > 0.0)
 			{
-				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", g_flRunSpeed[g_iTankType[tank]]);
+				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", (g_flRunSpeed2[tank] >= -1.0) ? g_flRunSpeed2[tank] : g_flRunSpeed[g_iTankType[tank]]);
 			}
 		}
 	}
@@ -2667,13 +3076,25 @@ static void vSetColor(int tank, int value = 0)
 		return;
 	}
 
-	SetEntityRenderMode(tank, RENDER_NORMAL);
-	SetEntityRenderColor(tank, g_iSkinColor[value][0], g_iSkinColor[value][1], g_iSkinColor[value][2], g_iSkinColor[value][3]);
-
-	if (g_iGlowEnabled[value] == 1 && bIsValidGame())
+	int iSkinColor[4];
+	for (int iPos = 0; iPos < 4; iPos++)
 	{
+		iSkinColor[iPos] = (g_iSkinColor2[tank][iPos] >= -2) ? g_iSkinColor2[tank][iPos] : g_iSkinColor[value][iPos];
+	}
+
+	SetEntityRenderMode(tank, RENDER_NORMAL);
+	SetEntityRenderColor(tank, iSkinColor[0], iSkinColor[1], iSkinColor[2], iSkinColor[3]);
+
+	if ((g_iGlowEnabled[value] == 1 || g_iGlowEnabled2[tank] == 1) && bIsValidGame())
+	{
+		int iGlowColor[3];
+		for (int iPos = 0; iPos < 3; iPos++)
+		{
+			iGlowColor[iPos] = (g_iGlowColor2[tank][iPos] >= -2) ? g_iGlowColor2[tank][iPos] : g_iGlowColor[value][iPos];
+		}
+
 		SetEntProp(tank, Prop_Send, "m_iGlowType", 3);
-		SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(g_iGlowColor[value][0], g_iGlowColor[value][1], g_iGlowColor[value][2]));
+		SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
 	}
 
 	g_iTankType[tank] = value;
@@ -2683,7 +3104,13 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 {
 	if (bIsTank(tank))
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_flPropChance[g_iTankType[tank]][0] && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_BLUR) && !g_bBlur[tank])
+		float flPropsChance[6];
+		for (int iPos = 0; iPos < 6; iPos++)
+		{
+			flPropsChance[iPos] = (g_flPropsChance2[tank][iPos] > 0.0) ? g_flPropsChance2[tank][iPos] : g_flPropsChance[g_iTankType[tank]][iPos];
+		}
+
+		if (GetRandomFloat(0.1, 100.0) <= flPropsChance[0] && ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_BLUR)) || (g_iPropsAttached2[tank] & ST_PROP_BLUR)) && !g_bBlur[tank])
 		{
 			g_bBlur[tank] = true;
 
@@ -2697,7 +3124,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 		for (int iLight = 0; iLight < 3; iLight++)
 		{
-			if (g_iLight[tank][iLight] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= g_flPropChance[g_iTankType[tank]][1] && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_LIGHT))
+			if (g_iLight[tank][iLight] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flPropsChance[1] && ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_LIGHT)) || (g_iPropsAttached2[tank] & ST_PROP_LIGHT)))
 			{
 				vLightProp(tank, iLight, flOrigin, flAngles);
 			}
@@ -2706,7 +3133,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				SDKUnhook(g_iLight[tank][iLight], SDKHook_SetTransmit, SetTransmit);
 				RemoveEntity(g_iLight[tank][iLight]);
 
-				if ((g_iPropsAttached[g_iTankType[tank]] & ST_PROP_LIGHT))
+				if ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_LIGHT)) || (g_iPropsAttached2[tank] & ST_PROP_LIGHT))
 				{
 					vLightProp(tank, iLight, flOrigin, flAngles);
 				}
@@ -2718,7 +3145,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 		for (int iOzTank = 0; iOzTank < 2; iOzTank++)
 		{
-			if (g_iOzTank[tank][iOzTank] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= g_flPropChance[g_iTankType[tank]][2] && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_OXYGENTANK))
+			if (g_iOzTank[tank][iOzTank] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flPropsChance[2] && ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_OXYGENTANK)) || (g_iPropsAttached2[tank] & ST_PROP_OXYGENTANK)))
 			{
 				g_iOzTank[tank][iOzTank] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(g_iOzTank[tank][iOzTank]))
@@ -2761,7 +3188,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					TeleportEntity(g_iOzTank[tank][iOzTank], flOrigin, NULL_VECTOR, flAngles2);
 					DispatchSpawn(g_iOzTank[tank][iOzTank]);
 
-					if (g_iFlame[tank][iOzTank] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= g_flPropChance[g_iTankType[tank]][3] && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_FLAME))
+					if (g_iFlame[tank][iOzTank] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flPropsChance[3] && ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_FLAME)) || (g_iPropsAttached2[tank] & ST_PROP_FLAME)))
 					{
 						g_iFlame[tank][iOzTank] = CreateEntityByName("env_steam");
 						if (bIsValidEntity(g_iFlame[tank][iOzTank]))
@@ -2798,7 +3225,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			}
 			else if (bIsValidEntity(g_iOzTank[tank][iOzTank]))
 			{
-				if ((g_iPropsAttached[g_iTankType[tank]] & ST_PROP_OXYGENTANK))
+				if ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_OXYGENTANK)) || (g_iPropsAttached2[tank] & ST_PROP_OXYGENTANK))
 				{
 					vColorOzTanks(tank, iOzTank);
 				}
@@ -2812,7 +3239,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 				if (bIsValidEntity(g_iFlame[tank][iOzTank]))
 				{
-					if ((g_iPropsAttached[g_iTankType[tank]] & ST_PROP_FLAME))
+					if ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_FLAME)) || (g_iPropsAttached2[tank] & ST_PROP_FLAME))
 					{
 						vColorFlames(tank, iOzTank);
 					}
@@ -2832,7 +3259,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 		for (int iRock = 0; iRock < 16; iRock++)
 		{
-			if (g_iRock[tank][iRock] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= g_flPropChance[g_iTankType[tank]][4] && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_ROCK))
+			if (g_iRock[tank][iRock] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flPropsChance[4] && ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_ROCK)) || (g_iPropsAttached2[tank] & ST_PROP_ROCK)))
 			{
 				g_iRock[tank][iRock] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(g_iRock[tank][iRock]))
@@ -2878,7 +3305,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			}
 			else if (bIsValidEntity(g_iRock[tank][iRock]))
 			{
-				if ((g_iPropsAttached[g_iTankType[tank]] & ST_PROP_ROCK))
+				if ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_ROCK)) || (g_iPropsAttached2[tank] & ST_PROP_ROCK))
 				{
 					vColorRocks(tank, iRock);
 				}
@@ -2898,7 +3325,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 		for (int iTire = 0; iTire < 2; iTire++)
 		{
-			if (g_iTire[tank][iTire] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= g_flPropChance[g_iTankType[tank]][5] && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_TIRE))
+			if (g_iTire[tank][iTire] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flPropsChance[5] && ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_TIRE)) || (g_iPropsAttached2[tank] & ST_PROP_TIRE)))
 			{
 				g_iTire[tank][iTire] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(g_iTire[tank][iTire]))
@@ -2934,7 +3361,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			}
 			else if (bIsValidEntity(g_iTire[tank][iTire]))
 			{
-				if ((g_iPropsAttached[g_iTankType[tank]] & ST_PROP_TIRE))
+				if ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & ST_PROP_TIRE)) || (g_iPropsAttached2[tank] & ST_PROP_TIRE))
 				{
 					vColorTires(tank, iTire);
 				}
@@ -2958,28 +3385,28 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			case 0: vAnnounceArrival(tank, name);
 			case 1:
 			{
-				if ((g_iAnnounceArrival2[g_iTankType[tank]] == 0 && (g_iAnnounceArrival & ST_ARRIVAL_BOSS)) || (g_iAnnounceArrival2[g_iTankType[tank]] & ST_ARRIVAL_BOSS))
+				if ((g_iAnnounceArrival2[g_iTankType[tank]] == 0 && (g_iAnnounceArrival & ST_ARRIVAL_BOSS)) || (g_iAnnounceArrival3[tank] == 0 && (g_iAnnounceArrival2[g_iTankType[tank]] & ST_ARRIVAL_BOSS)) || (g_iAnnounceArrival3[tank] & ST_ARRIVAL_BOSS))
 				{
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Evolved", oldname, name, g_iBossStageCount[tank] + 1);
 				}
 			}
 			case 2:
 			{
-				if ((g_iAnnounceArrival2[g_iTankType[tank]] == 0 && (g_iAnnounceArrival & ST_ARRIVAL_RANDOM)) || (g_iAnnounceArrival2[g_iTankType[tank]] & ST_ARRIVAL_RANDOM))
+				if ((g_iAnnounceArrival2[g_iTankType[tank]] == 0 && (g_iAnnounceArrival & ST_ARRIVAL_RANDOM)) || (g_iAnnounceArrival3[tank] == 0 && (g_iAnnounceArrival2[g_iTankType[tank]] & ST_ARRIVAL_RANDOM)) || (g_iAnnounceArrival3[tank] & ST_ARRIVAL_RANDOM))
 				{
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Randomized", oldname, name);
 				}
 			}
 			case 3:
 			{
-				if ((g_iAnnounceArrival2[g_iTankType[tank]] == 0 && (g_iAnnounceArrival & ST_ARRIVAL_TRANSFORM)) || (g_iAnnounceArrival2[g_iTankType[tank]] & ST_ARRIVAL_TRANSFORM))
+				if ((g_iAnnounceArrival2[g_iTankType[tank]] == 0 && (g_iAnnounceArrival & ST_ARRIVAL_TRANSFORM)) || (g_iAnnounceArrival3[tank] == 0 && (g_iAnnounceArrival2[g_iTankType[tank]] & ST_ARRIVAL_TRANSFORM)) || (g_iAnnounceArrival3[tank] & ST_ARRIVAL_TRANSFORM))
 				{
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Transformed", oldname, name);
 				}
 			}
 			case 4:
 			{
-				if ((g_iAnnounceArrival2[g_iTankType[tank]] == 0 && (g_iAnnounceArrival & ST_ARRIVAL_REVERT)) || (g_iAnnounceArrival2[g_iTankType[tank]] & ST_ARRIVAL_REVERT))
+				if ((g_iAnnounceArrival2[g_iTankType[tank]] == 0 && (g_iAnnounceArrival & ST_ARRIVAL_REVERT)) || (g_iAnnounceArrival3[tank] == 0 && (g_iAnnounceArrival2[g_iTankType[tank]] & ST_ARRIVAL_REVERT)) || (g_iAnnounceArrival3[tank] & ST_ARRIVAL_REVERT))
 				{
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Untransformed", oldname, name);
 				}
@@ -3006,7 +3433,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 static void vAnnounceArrival(int tank, const char[] name)
 {
-	if ((g_iAnnounceArrival2[g_iTankType[tank]] == 0 && (g_iAnnounceArrival & ST_ARRIVAL_SPAWN)) || (g_iAnnounceArrival2[g_iTankType[tank]] & ST_ARRIVAL_SPAWN))
+	if ((g_iAnnounceArrival2[g_iTankType[tank]] == 0 && (g_iAnnounceArrival & ST_ARRIVAL_SPAWN)) || (g_iAnnounceArrival3[tank] == 0 && (g_iAnnounceArrival2[g_iTankType[tank]] & ST_ARRIVAL_SPAWN)) || (g_iAnnounceArrival3[tank] & ST_ARRIVAL_SPAWN))
 	{
 		switch (GetRandomInt(1, 10))
 		{
@@ -3077,71 +3504,95 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 
 static void vColorFlames(int tank, int oz)
 {
-	SetEntityRenderColor(g_iFlame[tank][oz], g_iFlameColor[g_iTankType[tank]][0], g_iFlameColor[g_iTankType[tank]][1], g_iFlameColor[g_iTankType[tank]][2], g_iFlameColor[g_iTankType[tank]][3]);
+	int iFlameColor[4];
+	for (int iPos = 0; iPos < 4; iPos++)
+	{
+		iFlameColor[iPos] = (g_iFlameColor2[tank][iPos] >= -2) ? g_iFlameColor2[tank][iPos] : g_iFlameColor2[g_iTankType[tank]][iPos];
+	}
+
+	SetEntityRenderColor(g_iFlame[tank][oz], iFlameColor[0], iFlameColor[1], iFlameColor[2], iFlameColor[3]);
 }
 
 static void vColorOzTanks(int tank, int oz)
 {
-	SetEntityRenderColor(g_iOzTank[tank][oz], g_iOzTankColor[g_iTankType[tank]][0], g_iOzTankColor[g_iTankType[tank]][1], g_iOzTankColor[g_iTankType[tank]][2], g_iOzTankColor[g_iTankType[tank]][3]);
+	int iOzTankColor[4];
+	for (int iPos = 0; iPos < 4; iPos++)
+	{
+		iOzTankColor[iPos] = (g_iOzTankColor2[tank][iPos] >= -2) ? g_iOzTankColor2[tank][iPos] : g_iOzTankColor2[g_iTankType[tank]][iPos];
+	}
+
+	SetEntityRenderColor(g_iOzTank[tank][oz], iOzTankColor[0], iOzTankColor[1], iOzTankColor[2], iOzTankColor[3]);
 }
 
 static void vColorRocks(int tank, int rock)
 {
-	SetEntityRenderColor(g_iRock[tank][rock], g_iRockColor[g_iTankType[tank]][0], g_iRockColor[g_iTankType[tank]][1], g_iRockColor[g_iTankType[tank]][2], g_iRockColor[g_iTankType[tank]][3]);
+	int iRockColor[4];
+	for (int iPos = 0; iPos < 4; iPos++)
+	{
+		iRockColor[iPos] = (g_iRockColor2[tank][iPos] >= -2) ? g_iRockColor2[tank][iPos] : g_iRockColor2[g_iTankType[tank]][iPos];
+	}
+
+	SetEntityRenderColor(g_iRock[tank][rock], iRockColor[0], iRockColor[1], iRockColor[2], iRockColor[3]);
 }
 
 static void vColorTires(int tank, int tire)
 {
-	SetEntityRenderColor(g_iTire[tank][tire], g_iTireColor[g_iTankType[tank]][0], g_iTireColor[g_iTankType[tank]][1], g_iTireColor[g_iTankType[tank]][2], g_iTireColor[g_iTankType[tank]][3]);
+	int iTireColor[4];
+	for (int iPos = 0; iPos < 4; iPos++)
+	{
+		iTireColor[iPos] = (g_iTireColor2[tank][iPos] >= -2) ? g_iTireColor2[tank][iPos] : g_iTireColor2[g_iTankType[tank]][iPos];
+	}
+
+	SetEntityRenderColor(g_iTire[tank][tire], iTireColor[0], iTireColor[1], iTireColor[2], iTireColor[3]);
 }
 
 static void vParticleEffects(int tank)
 {
-	if (bIsTankAllowed(tank) && g_iBodyEffects[g_iTankType[tank]] > 0)
+	if (bIsTankAllowed(tank) && (g_iBodyEffects[g_iTankType[tank]] > 0 || g_iBodyEffects2[tank] > 0))
 	{
-		if ((g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_BLOOD) && !g_bBlood[tank])
+		if (((g_iBodyEffects2[tank] == 0 && (g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_BLOOD)) || (g_iBodyEffects2[tank] & ST_PARTICLE_BLOOD)) && !g_bBlood[tank])
 		{
 			g_bBlood[tank] = true;
 
 			CreateTimer(0.75, tTimerBloodEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if ((g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_ELECTRICITY) && !g_bElectric[tank])
+		if (((g_iBodyEffects2[tank] == 0 && (g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_ELECTRICITY)) || (g_iBodyEffects2[tank] & ST_PARTICLE_ELECTRICITY)) && !g_bElectric[tank])
 		{
 			g_bElectric[tank] = true;
 
 			CreateTimer(0.75, tTimerElectricEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if ((g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_FIRE) && !g_bFire[tank])
+		if (((g_iBodyEffects2[tank] == 0 && (g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_FIRE)) || (g_iBodyEffects2[tank] & ST_PARTICLE_FIRE)) && !g_bFire[tank])
 		{
 			g_bFire[tank] = true;
 
 			CreateTimer(0.75, tTimerFireEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if ((g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_ICE) && !g_bIce[tank])
+		if (((g_iBodyEffects2[tank] == 0 && (g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_ICE)) || (g_iBodyEffects2[tank] & ST_PARTICLE_ICE)) && !g_bIce[tank])
 		{
 			g_bIce[tank] = true;
 
 			CreateTimer(2.0, tTimerIceEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if ((g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_METEOR) && !g_bMeteor[tank])
+		if (((g_iBodyEffects2[tank] == 0 && (g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_METEOR)) || (g_iBodyEffects2[tank] & ST_PARTICLE_METEOR)) && !g_bMeteor[tank])
 		{
 			g_bMeteor[tank] = true;
 
 			CreateTimer(6.0, tTimerMeteorEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if ((g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_SMOKE) && !g_bSmoke[tank])
+		if (((g_iBodyEffects2[tank] == 0 && (g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_SMOKE)) || (g_iBodyEffects2[tank] & ST_PARTICLE_SMOKE)) && !g_bSmoke[tank])
 		{
 			g_bSmoke[tank] = true;
 
 			CreateTimer(1.5, tTimerSmokeEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if ((g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_SPIT) && bIsValidGame() && !g_bSpit[tank])
+		if (((g_iBodyEffects2[tank] == 0 && (g_iBodyEffects[g_iTankType[tank]] & ST_PARTICLE_SPIT)) || (g_iBodyEffects2[tank] & ST_PARTICLE_SPIT)) && bIsValidGame() && !g_bSpit[tank])
 		{
 			g_bSpit[tank] = true;
 
@@ -3174,33 +3625,41 @@ static void vSuperTank(int tank)
 {
 	if (g_iFinalesOnly == 0 || (g_iFinalesOnly == 1 && (bIsFinaleMap() || g_iTankWave > 0)))
 	{
+		int iType;
 		if (g_iType <= 0)
 		{
-			int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
-			for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
+			if (bIsTank(tank, ST_CHECK_FAKECLIENT) && g_iFavoriteType[tank] > 0)
 			{
-				if (g_iTankEnabled[iIndex] == 0 || g_iSpawnEnabled[iIndex] == 0 || !bIsTypeAvailable(iIndex) || !bTankChance(iIndex) || (g_iTypeLimit[iIndex] > 0 && iGetTypeCount(iIndex) >= g_iTypeLimit[iIndex]) || (g_iFinaleTank[iIndex] == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[tank] == iIndex)
+				vSetColor(tank, g_iFavoriteType[tank]);
+			}
+			else
+			{
+				int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
+				for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 				{
-					continue;
+					if (g_iTankEnabled[iIndex] == 0 || !bHasAdminAccess(tank, iIndex) || g_iSpawnEnabled[iIndex] == 0 || !bIsTypeAvailable(iIndex) || !bTankChance(iIndex) || (g_iTypeLimit[iIndex] > 0 && iGetTypeCount(iIndex) >= g_iTypeLimit[iIndex]) || (g_iFinaleTank[iIndex] == 1 && (!bIsFinaleMap() || g_iTankWave <= 0)) || g_iTankType[tank] == iIndex)
+					{
+						continue;
+					}
+
+					iTankTypes[iTypeCount + 1] = iIndex;
+					iTypeCount++;
 				}
 
-				iTankTypes[iTypeCount + 1] = iIndex;
-				iTypeCount++;
-			}
+				if (iTypeCount > 0)
+				{
+					int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
+					vSetColor(tank, iChosen);
 
-			if (iTypeCount > 0)
-			{
-				int iChosen = iTankTypes[GetRandomInt(1, iTypeCount)];
-				vSetColor(tank, iChosen);
-
-				g_bSpawned[tank] = false;
+					iType = iChosen;
+				}
 			}
 		}
 		else
 		{
 			vSetColor(tank, g_iType);
 
-			g_bSpawned[tank] = true;
+			iType = g_iType;
 		}
 
 		g_iType = 0;
@@ -3213,7 +3672,63 @@ static void vSuperTank(int tank)
 		}
 
 		vTankSpawn(tank);
+
+		if (bIsTank(tank, ST_CHECK_FAKECLIENT) && g_iFavoriteType[tank] > 0 && iType != g_iFavoriteType[tank])
+		{
+			vFavoriteMenu(tank);
+		}
 	}
+}
+
+static void vFavoriteMenu(int admin)
+{
+	Menu mFavoriteMenu = new Menu(iFavoriteMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mFavoriteMenu.SetTitle("Use your favorite Super Tank type?");
+	mFavoriteMenu.AddItem("Yes", "Yes");
+	mFavoriteMenu.AddItem("No", "No");
+	mFavoriteMenu.Display(admin, MENU_TIME_FOREVER);
+}
+
+public int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: vQueueTank(param1, g_iFavoriteType[param1], false);
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "FavoriteUnused");
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[255];
+			Panel panel = view_as<Panel>(param2);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "STFavoriteMenu", param1);
+			panel.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			char sMenuOption[255];
+			switch (param2)
+			{
+				case 0:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "OptionYes", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+				case 1:
+				{
+					Format(sMenuOption, sizeof(sMenuOption), "%T", "OptionNo", param1);
+					return RedrawMenuItem(sMenuOption);
+				}
+			}
+		}
+	}
+
+	return 0;
 }
 
 static void vTankCountCheck(int tank, int wave)
@@ -3247,7 +3762,7 @@ static void vTankSpawn(int tank, int mode = 0)
 
 static void vThrowInterval(int tank, float time)
 {
-	if (bIsTankAllowed(tank) && !bIsTankAllowed(tank, ST_CHECK_FAKECLIENT) && time > 0.0)
+	if (bIsTankAllowed(tank) && time > 0.0)
 	{
 		int iAbility = GetEntPropEnt(tank, Prop_Send, "m_customAbility");
 		if (iAbility > 0)
@@ -3256,6 +3771,78 @@ static void vThrowInterval(int tank, float time)
 			SetEntPropFloat(iAbility, Prop_Send, "m_timestamp", GetGameTime() + time);
 		}
 	}
+}
+
+static bool bHasAdminAccess(int admin, int type = 0)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iTypeFlags = g_iAccessFlags2[type > 0 ? type : g_iTankType[admin]];
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags4[type > 0 ? type : g_iTankType[admin]][admin] != 0 && !(g_iAccessFlags4[type > 0 ? type : g_iTankType[admin]][admin] & iTypeFlags))
+		{
+			return false;
+		}
+		else if (g_iAccessFlags3[admin] != 0 && !(g_iAccessFlags3[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = g_iAccessFlags;
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags4[type > 0 ? type : g_iTankType[admin]][admin] != 0 && !(g_iAccessFlags4[type > 0 ? type : g_iTankType[admin]][admin] & iGlobalFlags))
+		{
+			return false;
+		}
+		else if (g_iAccessFlags3[admin] != 0 && !(g_iAccessFlags3[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsHumanSurvivor(survivor))
+	{
+		return false;
+	}
+
+	int iTypeFlags = g_iImmunityFlags2[g_iTankType[tank]];
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags4[g_iTankType[tank]][survivor] != 0 && (g_iImmunityFlags4[g_iTankType[tank]][survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags4[g_iTankType[tank]][tank] & iTypeFlags) && g_iImmunityFlags4[g_iTankType[tank]][survivor] <= g_iImmunityFlags4[g_iTankType[tank]][tank]) ? false : true;
+		}
+		else if (g_iImmunityFlags3[survivor] != 0 && (g_iImmunityFlags3[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags3[tank] & iTypeFlags) && g_iImmunityFlags3[survivor] <= g_iImmunityFlags3[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = g_iImmunityFlags;
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags4[g_iTankType[tank]][survivor] != 0 && (g_iImmunityFlags4[g_iTankType[tank]][survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags4[g_iTankType[tank]][tank] & iGlobalFlags) && g_iImmunityFlags4[g_iTankType[tank]][survivor] <= g_iImmunityFlags4[g_iTankType[tank]][tank]) ? false : true;
+		}
+		else if (g_iImmunityFlags3[survivor] != 0 && (g_iImmunityFlags3[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags3[tank] & iGlobalFlags) && g_iImmunityFlags3[survivor] <= g_iImmunityFlags3[tank]) ? false : true;
+		}
+	}
+
+	return false;
 }
 
 static bool bIsTankAllowed(int tank, int flags = ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE)
@@ -3387,7 +3974,7 @@ public void vViewQuery(QueryCookie cookie, int client, ConVarQueryResult result,
 public Action tTimerBloodEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || g_iBodyEffects[g_iTankType[iTank]] == 0 || !(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_BLOOD) || !g_bBlood[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || (g_iBodyEffects[g_iTankType[iTank]] == 0 && g_iBodyEffects2[iTank] == 0) || (!(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_BLOOD) && !(g_iBodyEffects2[iTank] & ST_PARTICLE_BLOOD)) || !g_bBlood[iTank])
 	{
 		g_bBlood[iTank] = false;
 
@@ -3402,7 +3989,7 @@ public Action tTimerBloodEffect(Handle timer, int userid)
 public Action tTimerBlurEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || !(g_iPropsAttached[g_iTankType[iTank]] & ST_PROP_BLUR) || !g_bBlur[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || !(g_iPropsAttached[g_iTankType[iTank]] & ST_PROP_BLUR) || !g_bBlur[iTank])
 	{
 		g_bBlur[iTank] = false;
 
@@ -3424,7 +4011,13 @@ public Action tTimerBlurEffect(Handle timer, int userid)
 
 		AcceptEntityInput(g_iTankModel[iTank], "DisableCollision");
 
-		SetEntityRenderColor(g_iTankModel[iTank], g_iSkinColor[g_iTankType[iTank]][0], g_iSkinColor[g_iTankType[iTank]][1], g_iSkinColor[g_iTankType[iTank]][2], g_iSkinColor[g_iTankType[iTank]][3]);
+		int iSkinColor[4];
+		for (int iPos = 0; iPos < 4; iPos++)
+		{
+			iSkinColor[iPos] = (g_iSkinColor2[iTank][iPos] >= -2) ? g_iSkinColor2[iTank][iPos] : g_iSkinColor[g_iTankType[iTank]][iPos];
+		}
+
+		SetEntityRenderColor(g_iTankModel[iTank], iSkinColor[0], iSkinColor[1], iSkinColor[2], iSkinColor[3]);
 
 		SetEntProp(g_iTankModel[iTank], Prop_Send, "m_nSequence", GetEntProp(iTank, Prop_Send, "m_nSequence"));
 		SetEntPropFloat(g_iTankModel[iTank], Prop_Send, "m_flPlaybackRate", 5.0);
@@ -3443,7 +4036,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bBoss[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bBoss[iTank])
 	{
 		vSpawnModes(iTank, false);
 
@@ -3483,7 +4076,7 @@ public Action tTimerCheckView(Handle timer, int userid)
 public Action tTimerElectricEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || g_iBodyEffects[g_iTankType[iTank]] == 0 || !(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_ELECTRICITY) || !g_bElectric[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || (g_iBodyEffects[g_iTankType[iTank]] == 0 && g_iBodyEffects2[iTank] == 0) || (!(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_ELECTRICITY) && !(g_iBodyEffects2[iTank] & ST_PARTICLE_ELECTRICITY)) || !g_bElectric[iTank])
 	{
 		g_bElectric[iTank] = false;
 
@@ -3498,7 +4091,7 @@ public Action tTimerElectricEffect(Handle timer, int userid)
 public Action tTimerFireEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || g_iBodyEffects[g_iTankType[iTank]] == 0 || !(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_FIRE) || !g_bFire[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || (g_iBodyEffects[g_iTankType[iTank]] == 0 && g_iBodyEffects2[iTank] == 0) || (!(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_FIRE) && !(g_iBodyEffects2[iTank] & ST_PARTICLE_FIRE)) || !g_bFire[iTank])
 	{
 		g_bFire[iTank] = false;
 
@@ -3513,7 +4106,7 @@ public Action tTimerFireEffect(Handle timer, int userid)
 public Action tTimerIceEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || g_iBodyEffects[g_iTankType[iTank]] == 0 || !(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_ICE) || !g_bIce[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || (g_iBodyEffects[g_iTankType[iTank]] == 0 && g_iBodyEffects2[iTank] == 0) || (!(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_ICE) && !(g_iBodyEffects2[iTank] & ST_PARTICLE_ICE)) || !g_bIce[iTank])
 	{
 		g_bIce[iTank] = false;
 
@@ -3541,7 +4134,7 @@ public Action tTimerKillStuckTank(Handle timer, int userid)
 public Action tTimerMeteorEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || g_iBodyEffects[g_iTankType[iTank]] == 0 || !(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_METEOR) || !g_bMeteor[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || (g_iBodyEffects[g_iTankType[iTank]] == 0 && g_iBodyEffects2[iTank] == 0) || (!(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_METEOR) && !(g_iBodyEffects2[iTank] & ST_PARTICLE_METEOR)) || !g_bMeteor[iTank])
 	{
 		g_bMeteor[iTank] = false;
 
@@ -3556,7 +4149,7 @@ public Action tTimerMeteorEffect(Handle timer, int userid)
 public Action tTimerRandomize(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bRandomized[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bRandomized[iTank])
 	{
 		vSpawnModes(iTank, false);
 
@@ -3568,7 +4161,7 @@ public Action tTimerRandomize(Handle timer, int userid)
 	int iTypeCount, iTankTypes[ST_MAXTYPES + 1];
 	for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 	{
-		if (g_iTankEnabled[iIndex] == 0 || g_iRandomTank[iIndex] == 0 || !bIsTypeAvailable(iIndex) || g_iTankType[iTank] == iIndex)
+		if (g_iTankEnabled[iIndex] == 0 || !bHasAdminAccess(iTank) || g_iRandomTank[iIndex] == 0 || !bIsTypeAvailable(iIndex) || g_iTankType[iTank] == iIndex)
 		{
 			continue;
 		}
@@ -3591,7 +4184,7 @@ public Action tTimerRandomize(Handle timer, int userid)
 public Action tTimerSmokeEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || g_iBodyEffects[g_iTankType[iTank]] == 0 || !(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_SMOKE) || !g_bSmoke[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || (g_iBodyEffects[g_iTankType[iTank]] == 0 && g_iBodyEffects2[iTank] == 0) || (!(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_SMOKE) && !(g_iBodyEffects2[iTank] & ST_PARTICLE_SMOKE)) || !g_bSmoke[iTank])
 	{
 		g_bSmoke[iTank] = false;
 
@@ -3606,7 +4199,7 @@ public Action tTimerSmokeEffect(Handle timer, int userid)
 public Action tTimerSpitEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || g_iBodyEffects[g_iTankType[iTank]] == 0 || !(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_SPIT) || !g_bSpit[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || (g_iBodyEffects[g_iTankType[iTank]] == 0 && g_iBodyEffects2[iTank] == 0) || (!(g_iBodyEffects[g_iTankType[iTank]] & ST_PARTICLE_SPIT) && !(g_iBodyEffects2[iTank] & ST_PARTICLE_SPIT)) || !g_bSpit[iTank])
 	{
 		g_bSpit[iTank] = false;
 
@@ -3621,7 +4214,7 @@ public Action tTimerSpitEffect(Handle timer, int userid)
 public Action tTimerTransform(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bTransformed[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bTransformed[iTank])
 	{
 		vSpawnModes(iTank, false);
 
@@ -3666,14 +4259,12 @@ public Action tTimerUpdatePlayerCount(Handle timer)
 	}
 
 	g_iPlayerCount[1] = iGetPlayerCount();
-	if (g_iPlayerCount[0] != g_iPlayerCount[1])
-	{
-		char sCountConfig[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/super_tanks++/playercount_configs/%i.cfg", g_iPlayerCount[1]);
-		vLoadConfigs(sCountConfig);
-		vPluginStatus();
-		g_iPlayerCount[0] = g_iPlayerCount[1];
-	}
+
+	char sCountConfig[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/super_tanks++/playercount_configs/%i.cfg", g_iPlayerCount[1]);
+	vLoadConfigs(sCountConfig);
+	vPluginStatus();
+	g_iPlayerCount[0] = g_iPlayerCount[1];
 
 	return Plugin_Continue;
 }
@@ -3708,18 +4299,18 @@ public Action tTimerTankHealthUpdate(Handle timer)
 						{
 							switch (g_iDisplayHealth)
 							{
-								case 1: PrintHintText(iPlayer, "%s", g_sTankName[g_iTankType[iTarget]]);
+								case 1: PrintHintText(iPlayer, "%s", (g_sTankName2[iTarget][0] == '\0') ? g_sTankName[g_iTankType[iTarget]] : g_sTankName2[iTarget]);
 								case 2: PrintHintText(iPlayer, "%i HP", iHealth);
-								case 3: PrintHintText(iPlayer, "%s (%i HP)", g_sTankName[g_iTankType[iTarget]], iHealth);
+								case 3: PrintHintText(iPlayer, "%s (%i HP)", (g_sTankName2[iTarget][0] == '\0') ? g_sTankName[g_iTankType[iTarget]] : g_sTankName2[iTarget], iHealth);
 							}
 						}
 						else if (g_iDisplayHealth2[g_iTankType[iTarget]] > 0)
 						{
 							switch (g_iDisplayHealth2[g_iTankType[iTarget]])
 							{
-								case 1: PrintHintText(iPlayer, "%s", g_sTankName[g_iTankType[iTarget]]);
+								case 1: PrintHintText(iPlayer, "%s", (g_sTankName2[iTarget][0] == '\0') ? g_sTankName[g_iTankType[iTarget]] : g_sTankName2[iTarget]);
 								case 2: PrintHintText(iPlayer, "%i HP", iHealth);
-								case 3: PrintHintText(iPlayer, "%s (%i HP)", g_sTankName[g_iTankType[iTarget]], iHealth);
+								case 3: PrintHintText(iPlayer, "%s (%i HP)", (g_sTankName2[iTarget][0] == '\0') ? g_sTankName[g_iTankType[iTarget]] : g_sTankName2[iTarget], iHealth);
 							}
 						}
 					}
@@ -3791,7 +4382,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 				}
 			}
 
-			if (g_iFireImmunity[g_iTankType[iTank]] == 1 && bIsPlayerBurning(iTank))
+			if ((g_iFireImmunity[g_iTankType[iTank]] == 1 || g_iFireImmunity2[iTank] == 1) && bIsPlayerBurning(iTank))
 			{
 				ExtinguishEntity(iTank);
 				SetEntPropFloat(iTank, Prop_Send, "m_burnPercent", 1.0);
@@ -3811,13 +4402,13 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank))
+	if (!bIsTankAllowed(iTank) || !bHasAdminAccess(iTank))
 	{
 		return Plugin_Stop;
 	}
 
 	vParticleEffects(iTank);
-	vThrowInterval(iTank, g_flThrowInterval[g_iTankType[iTank]]);
+	vThrowInterval(iTank, (g_flThrowInterval2[iTank] > 0.0) ? g_flThrowInterval2[iTank] : g_flThrowInterval[g_iTankType[iTank]]);
 
 	char sCurrentName[33];
 	GetClientName(iTank, sCurrentName, sizeof(sCurrentName));
@@ -3832,17 +4423,18 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	}
 
 	int iMode = pack.ReadCell();
-	vSetName(iTank, sCurrentName, g_sTankName[g_iTankType[iTank]], iMode);
+	vSetName(iTank, sCurrentName, (g_sTankName2[iTank][0] == '\0') ? g_sTankName[g_iTankType[iTank]] : g_sTankName2[iTank], iMode);
 
 	if (iMode == 0 && bIsCloneAllowed(iTank, g_bCloneInstalled))
 	{
 		int iHumanCount = iGetHumanCount(),
 			iHealth = GetClientHealth(iTank),
 			iSpawnHealth = (g_iBaseHealth > 0) ? g_iBaseHealth : iHealth,
-			iExtraHealthNormal = iSpawnHealth + g_iExtraHealth[g_iTankType[iTank]],
-			iExtraHealthBoost = (iHumanCount > 1) ? ((iSpawnHealth * iHumanCount) + g_iExtraHealth[g_iTankType[iTank]]) : iExtraHealthNormal,
-			iExtraHealthBoost2 = (iHumanCount > 1) ? (iSpawnHealth + (iHumanCount * g_iExtraHealth[g_iTankType[iTank]])) : iExtraHealthNormal,
-			iExtraHealthBoost3 = (iHumanCount > 1) ? (iHumanCount * (iSpawnHealth + g_iExtraHealth[g_iTankType[iTank]])) : iExtraHealthNormal,
+			iExtraHealth = (g_iExtraHealth2[iTank] > 0) ? g_iExtraHealth2[iTank] : g_iExtraHealth[g_iTankType[iTank]],
+			iExtraHealthNormal = iSpawnHealth + iExtraHealth,
+			iExtraHealthBoost = (iHumanCount > 1) ? ((iSpawnHealth * iHumanCount) + iExtraHealth) : iExtraHealthNormal,
+			iExtraHealthBoost2 = (iHumanCount > 1) ? (iSpawnHealth + (iHumanCount * iExtraHealth)) : iExtraHealthNormal,
+			iExtraHealthBoost3 = (iHumanCount > 1) ? (iHumanCount * (iSpawnHealth + iExtraHealth)) : iExtraHealthNormal,
 			iNoBoost = (iExtraHealthNormal > ST_MAXHEALTH) ? ST_MAXHEALTH : iExtraHealthNormal,
 			iBoost = (iExtraHealthBoost > ST_MAXHEALTH) ? ST_MAXHEALTH : iExtraHealthBoost,
 			iBoost2 = (iExtraHealthBoost2 > ST_MAXHEALTH) ? ST_MAXHEALTH : iExtraHealthBoost2,
@@ -3878,7 +4470,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 
 		g_iTankHealth[iTank] = iHealth;
 
-		if (bIsTankAllowed(iTank, ST_CHECK_FAKECLIENT))
+		if (bIsTankAllowed(iTank, ST_CHECK_FAKECLIENT) && bHasAdminAccess(iTank))
 		{
 			ST_PrintToChat(iTank, "%s %t", ST_TAG3, "SpawnMessage");
 			ST_PrintToChat(iTank, "%s %t", ST_TAG2, "MainButton");
@@ -3908,7 +4500,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || g_iRockEffects[g_iTankType[iTank]] == 0)
+	if (!bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || (g_iRockEffects[g_iTankType[iTank]] == 0 && g_iRockEffects2[iTank] == 0))
 	{
 		return Plugin_Stop;
 	}
@@ -3917,22 +4509,22 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 	GetEntityClassname(iRock, sClassname, sizeof(sClassname));
 	if (StrEqual(sClassname, "tank_rock"))
 	{
-		if (g_iRockEffects[g_iTankType[iTank]] & ST_ROCK_BLOOD)
+		if ((g_iRockEffects2[iTank] == 0 && (g_iRockEffects[g_iTankType[iTank]] & ST_ROCK_BLOOD)) || (g_iRockEffects2[iTank] & ST_ROCK_BLOOD))
 		{
 			vAttachParticle(iRock, PARTICLE_BLOOD, 0.75);
 		}
 
-		if (g_iRockEffects[g_iTankType[iTank]] & ST_ROCK_ELECTRICITY)
+		if ((g_iRockEffects2[iTank] == 0 && (g_iRockEffects[g_iTankType[iTank]] & ST_ROCK_ELECTRICITY)) || (g_iRockEffects2[iTank] & ST_ROCK_ELECTRICITY))
 		{
 			vAttachParticle(iRock, PARTICLE_ELECTRICITY, 0.75);
 		}
 
-		if (g_iRockEffects[g_iTankType[iTank]] & ST_ROCK_FIRE)
+		if ((g_iRockEffects2[iTank] == 0 && (g_iRockEffects[g_iTankType[iTank]] & ST_ROCK_FIRE)) || (g_iRockEffects2[iTank] & ST_ROCK_FIRE))
 		{
 			IgniteEntity(iRock, 100.0);
 		}
 
-		if (g_iRockEffects[g_iTankType[iTank]] & ST_ROCK_SPIT)
+		if ((g_iRockEffects2[iTank] == 0 && (g_iRockEffects[g_iTankType[iTank]] & ST_ROCK_SPIT)) || (g_iRockEffects2[iTank] & ST_ROCK_SPIT))
 		{
 			vAttachParticle(iRock, PARTICLE_SPIT, 0.75);
 		}
@@ -3952,7 +4544,7 @@ public Action tTimerRockThrow(Handle timer, int ref)
 	}
 
 	int iThrower = GetEntPropEnt(iRock, Prop_Data, "m_hThrower");
-	if (iThrower == 0 || !bIsTankAllowed(iThrower) || g_iTankEnabled[g_iTankType[iThrower]] == 0)
+	if (iThrower == 0 || !bIsTankAllowed(iThrower) || !bHasAdminAccess(iThrower) || g_iTankEnabled[g_iTankType[iThrower]] == 0)
 	{
 		return Plugin_Stop;
 	}

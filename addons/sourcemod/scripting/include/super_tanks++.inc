@@ -26,6 +26,7 @@
 #define ST_TAG4 "\x04[ST++]\x05"
 
 #define ST_MAXTYPES 1000
+
 #define ST_MAXHEALTH 65535
 #define ST_MAX_HEALTH_REDUCTION -65535
 
@@ -57,7 +58,7 @@ static int g_iCurrentMode;
 
 // Forwards
 /**
- * Called every second to trigger the Super Tank's ability.
+ * Called every second to trigger a Super Tank's ability.
  * Use this forward for any passive abilities.
  *
  * @param tank			Client index of the Tank.
@@ -83,7 +84,7 @@ forward void ST_OnButtonPressed(int tank, int button);
 forward void ST_OnButtonReleased(int tank, int button);
 
 /**
- * Called when the Super Tank changes types.
+ * Called when a Super Tank changes types.
  * Use this forward to trigger any features/abilities/settings when a Super Tank changes types.
  *
  * @param tank			Client index of the Tank.
@@ -103,11 +104,11 @@ forward void ST_OnConfigsLoad();
  *
  * @param subsection		The subsection the config parser is currently on.
  * @param key			The key the config parser is currently on.
- * @param main			Checks whether the main config or a custom config is being used.
  * @param value			The value the config parser is currently on.
- * @param type			The Super Tank type the config parser is currently on.
+ * @param type			The Super Tank type the config parser is currently on. (Used for Super Tank-specific settings.)
+ * @param admin			Client index of an admin. (Used for admin-specific settings.)
  **/
-forward void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type);
+forward void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin);
 
 /**
  * Called when a player uses the "sm_st_info" command.
@@ -151,7 +152,7 @@ forward void ST_OnMenuItemSelected(int client, const char[] info);
 forward void ST_OnPluginEnd();
 
 /**
- * Called after the Tank spawns.
+ * Called after a Super Tank spawns.
  * Use this forward for any post-spawn actions.
  * If you plan on using this to activate an ability, use ST_OnAbilityActivated() instead.
  *
@@ -160,7 +161,7 @@ forward void ST_OnPluginEnd();
 forward void ST_OnPostTankSpawn(int tank);
 
 /**
- * Called when the Tank's rock breaks.
+ * Called when a Super Tank's rock breaks.
  * Use this forward for any after-effects.
  *
  * @param tank			Client index of the Tank.
@@ -169,7 +170,7 @@ forward void ST_OnPostTankSpawn(int tank);
 forward void ST_OnRockBreak(int tank, int rock);
 
 /**
- * Called when the Tank throws a rock.
+ * Called when a Super Tank throws a rock.
  * Use this forward for any throwing abilities.
  *
  * @param tank			Client index of the Tank.
@@ -197,11 +198,33 @@ native bool ST_CanTankSpawn(int type);
 native void ST_FindAbility(int type, int order, bool status);
 
 /**
+ * Returns the current access flags set by the core plugin.
+ *
+ * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
+ * @param type			Super Tank type. (Optional)
+ * @param admin			Client index of an admin. (Optional)
+ * @return			The current access flags.
+ * @error			Invalid client index or type is 0.
+ **/
+native int ST_GetAccessFlags(int mode, int type = 0, int admin = -1);
+
+/**
  * Returns the current finale wave.
  *
  * @return			The current finale wave.
  **/
 native int ST_GetCurrentFinaleWave();
+
+/**
+ * Returns the current immunity flags set by the core plugin.
+ *
+ * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
+ * @param type			Super Tank type. (Optional)
+ * @param admin			Client index of an admin. (Optional)
+ * @return			The current immunity flags.
+ * @error			Invalid client index or type is 0.
+ **/
+native int ST_GetImmunityFlags(int mode, int type = 0, int admin = -1);
 
 /**
  * Returns the maximum value of the "Type Range" setting.
@@ -218,11 +241,11 @@ native int ST_GetMaxType();
 native int ST_GetMinType();
 
 /**
- * Returns the RGBA colors given to a Tank's props.
+ * Returns the RGBA colors given to a Super Tank's props.
  *
  * @param tank			Client index of the Tank.
- * @param mode			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
- *				4 = Rock color, 5 = Tire color
+ * @param mode			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color, 4 = Rock color,
+ *				5 = Tire color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
@@ -232,7 +255,7 @@ native int ST_GetMinType();
 native void ST_GetPropColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
- * Returns the Super Tank's run speed.
+ * Returns a Super Tank's run speed.
  *
  * @param tank			Client index of the Tank.
  * @return			The run speed of the Tank.
@@ -241,7 +264,7 @@ native void ST_GetPropColors(int tank, int mode, int &red, int &green, int &blue
 native float ST_GetRunSpeed(int tank);
 
 /**
- * Returns the RGB colors given to a Tank.
+ * Returns the RGB colors given to a Super Tank.
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Skin color, 2 = Glow outline color
@@ -254,7 +277,7 @@ native float ST_GetRunSpeed(int tank);
 native void ST_GetTankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
- * Returns the custom name given to a Tank.
+ * Returns the custom name given to a Super Tank.
  *
  * @param tank			Client index of the Tank.
  * @param type			Super Tank type.
@@ -264,13 +287,21 @@ native void ST_GetTankColors(int tank, int mode, int &red, int &green, int &blue
 native void ST_GetTankName(int tank, int type, char[] buffer);
 
 /**
- * Returns the Super Tank type of the Tank.
+ * Returns the type of a Super Tank.
  *
  * @param tank			Client index of the Tank.
  * @return			The Tank's Super Tank type.
  * @error			Invalid client index.
  **/
 native int ST_GetTankType(int tank);
+
+/**
+ * Returns if a human player has access to a Super Tank type.
+ *
+ * @param admin			Client index of the admin.
+ * @return			True if the human player has access, false otherwise.
+ **/
+native bool ST_HasAdminAccess(int admin);
 
 /**
  * Returns if a certain Super Tank type has a chance of spawning.
@@ -291,6 +322,15 @@ native bool ST_HasChanceToSpawn(int type);
 native void ST_HideEntity(int entity, bool mode);
 
 /**
+ * Returns if a human survivor is immune to a Super Tank's attacks.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param tank			Client index of the Tank.
+ * @return			True if the human survivor is immune, false otherwise.
+ **/
+native bool ST_IsAdminImmune(int survivor, int tank);
+
+/**
  * Returns if the core plugin is enabled.
  *
  * @return			True if core plugin is enabled, false otherwise.
@@ -307,7 +347,7 @@ native bool ST_IsCorePluginEnabled();
 native bool ST_IsFinaleTank(int type);
 
 /**
- * Returns if the Super Tank type has a glow outline.
+ * Returns if a Super Tank type has a glow outline.
  *
  * @param tank			Client index of the Tank.
  * @return			True if the Tank has a glow outline, false otherwise.
@@ -316,7 +356,7 @@ native bool ST_IsFinaleTank(int type);
 native bool ST_IsGlowEnabled(int tank);
 
 /**
- * Returns if the Tank is allowed to be a Super Tank.
+ * Returns if a Tank is allowed to be a Super Tank.
  *
  * @param tank			Client index of the Tank.
  * @param flags			Checks to run.
@@ -354,6 +394,286 @@ native void ST_SetTankType(int tank, int type, bool mode);
  * @error			Invalid client index or type is 0.
  **/
 native void ST_SpawnTank(int tank, int type);
+
+/* Called every second to trigger the Super Tank's ability.
+ * Use this forward for any passive abilities.
+ *
+ * @param client		Client index of the Tank.
+ */
+#pragma deprecated Use ST_OnAbilityActivated() instead.
+forward void ST_Ability(int client);
+
+/* Called when a Tank is about to throw a rock.
+ * Use this forward to trigger anything when
+ * the Tank is gonna throw a rock.
+ *
+ * @param client		Client index of the Tank.
+ */
+#pragma deprecated Use ST_OnRockThrow() instead.
+forward void ST_AbilityThrow(int client);
+
+/* Called when the Super Tank evolves.
+ * Use this forward to trigger any features/abilities/settings
+ * when a Super Tank evolves.
+ *
+ * @param client		Client index of the Tank.
+ */
+#pragma deprecated Use ST_OnChangeType() instead.
+forward void ST_BossStage(int client);
+
+/**
+ * Called when the Super Tank changes types.
+ * Use this forward to trigger any features/abilities/settings when a Super Tank changes types.
+ *
+ * @param tank			Client index of the Tank.
+ **/
+#pragma deprecated Use ST_OnChangeType() instead.
+forward void ST_ChangeType(int tank);
+
+/* Called when the config file is loaded.
+ * Use this forward to load settings for the plugin.
+ *
+ * @param savepath		The savepath of the config.
+ * @param limit			The limit for how many
+ *							Super Tank types' settings
+ *							to check for.
+ * @param main			Checks whether the main config
+ *							or a custom config
+ *							is being used.
+ */
+#pragma deprecated Use ST_OnConfigsLoaded() instead.
+forward void ST_Configs(char[] savepath, int limit, bool main);
+
+/* Called when someone dies.
+ * Use this forward to execute anything when
+ * a survivor or Tank dies.
+ * Use ST_Death2 if you also want to get the attacker's ID.
+ *
+ * @param client		Client index of the victim.
+ */
+#pragma deprecated Use the ST_OnEventFired() forward to catch the death event instead.
+forward void ST_Death(int client);
+
+/* Called when someone dies.
+ * Use this forward to execute anything when
+ * a survivor or Tank dies.
+ * Use ST_Death if you just want to get the victim's ID.
+ *
+ * @param enemy			Client index of the attacker.
+ * @param client		Client index of the victim.
+ */
+#pragma deprecated Use the ST_OnEventFired() forward to catch the death event instead.
+forward void ST_Death2(int enemy, int client);
+
+/* Called when an event hooked by the core plugin is fired.
+ * Use this forward to trigger something on any of those events.
+ *
+ * @param event			Handle to the event.
+ * @param name			String containing the name of the event.
+ */
+#pragma deprecated Use ST_OnEventFired() instead.
+forward void ST_Event(Event event, const char[] name);
+
+/**
+ * Called when an event hooked by the core plugin is fired.
+ * Use this forward to trigger something on any of those events.
+ *
+ * @param event			Handle to the event.
+ * @param name			String containing the name of the event.
+ * @param dontBroadcast		True if event was not broadcast to clients, false otherwise.
+ **/
+#pragma deprecated Use ST_OnEventFired() instead.
+forward void ST_EventHandler(Event event, const char[] name, bool dontBroadcast);
+
+/* Called when a Tank is incapacitated.
+ * Use this forward to execute anything when
+ * a Tank is about to die.
+ *
+ * @param client		Client index of the Tank.
+ */
+#pragma deprecated Use the ST_OnEventFired() forward to catch the incap event instead.
+forward void ST_Incap(int client);
+
+/**
+ * Called when the Tank spawns.
+ * Use this forward for any on-spawn presets.
+ * If you plan on using this to activate an ability, use ST_Ability() instead.
+ *
+ * @param tank			Client index of the Tank.
+ **/
+#pragma deprecated Use the ST_OnPostTankSpawn() instead.
+forward void ST_OnPreset(int tank);
+
+/**
+ * Called when the Tank spawns.
+ * Use this forward for any on-spawn presets.
+ * If you plan on using this to activate an ability, use ST_Ability() instead.
+ *
+ * @param tank			Client index of the Tank.
+ **/
+#pragma deprecated Use the ST_OnPostTankSpawn() instead.
+forward void ST_Preset(int tank);
+
+/* Called when the Tank's rock breaks.
+ * Use this forward for any after-effects.
+ *
+ * @param client		Client index of the Tank.
+ * @param entity		Entity index of the rock.
+ */
+#pragma deprecated Use ST_OnRockBreak() instead.
+forward void ST_RockBreak(int client, int entity);
+
+/* Called when the Tank throws a rock.
+ * Use this forward for any throwing abilities.
+ *
+ * @param client		Client index of the Tank.
+ * @param entity		Entity index of the rock.
+ */
+#pragma deprecated Use ST_OnRockThrow() instead.
+forward void ST_RockThrow(int client, int entity);
+
+/* Called when the round starts.
+ * Use this forward for setting something when
+ * the round starts.
+ */
+#pragma deprecated Use the ST_OnEventFired() forward to catch the round start event instead.
+forward void ST_RoundStart();
+
+/* Called when the Tank spawns.
+ * Use this forward for any one-time abilities
+ * or on-spawn presets.
+ *
+ * @param client		Client index of the Tank.
+ */
+#pragma deprecated Use the ST_OnPostTankSpawn() instead.
+forward void ST_Spawn(int client);
+
+/* Returns the value of the "Maximum Types" setting.
+ *
+ * @return				The value of the
+ *							"Maximum Types" setting.
+ */
+#pragma deprecated Use ST_GetMaxType() instead.
+native int ST_MaxTypes();
+
+/* Returns the maximum value of the "Type Range" setting.
+ *
+ * @return				The maximum value of the
+ *							"Type Range" setting.
+ */
+#pragma deprecated Use ST_GetMaxType() instead.
+native int ST_MaxType();
+
+/* Returns the minimum value of the "Type Range" setting.
+ *
+ * @return				The minimum value of the
+ *							"Type Range" setting.
+ */
+#pragma deprecated Use ST_GetMinType() instead.
+native int ST_MinType();
+
+/* Returns the status of the core plugin.
+ *
+ * @return				True on success, false if
+ *							core plugin is disabled.
+ */
+#pragma deprecated Use ST_IsCorePluginEnabled() instead.
+native bool ST_PluginEnabled();
+
+/**
+ * Returns the RGBA colors given to a Tank's props.
+ *
+ * @param tank			Client index of the Tank.
+ * @param mode			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
+ *				4 = Rock color, 5 = Tire color
+ * @param red			Red color reference.
+ * @param green			Green color reference.
+ * @param blue			Blue color reference.
+ * @param alpha			Alpha color reference.
+ * @error			Invalid client index.
+ **/
+#pragma deprecated Use ST_GetPropColors() instead.
+native void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+
+/**
+ * Returns if a certain Super Tank type can be spawned.
+ *
+ * @param type			Super Tank type.
+ * @return			True if the type can be spawned, false otherwise.
+ * @error			Type is 0.
+ **/
+#pragma deprecated Use ST_CanTankSpawn() instead.
+native bool ST_SpawnEnabled(int type);
+
+/* Returns the status of the "Human Super Tanks" setting.
+ *
+ * @param client		Client index of the Tank.
+ *
+ * @return				True on success, false if
+ *							the setting is disabled.
+ */
+#pragma deprecated Use ST_IsTankSupported() instead.
+native bool ST_TankAllowed(int client);
+
+/**
+ * Returns if a certain Super Tank type has a chance of spawning.
+ *
+ * @param type			Super Tank type.
+ * @return				True if the type has a chance of spawning, false otherwise.
+ * @error				Type is 0.
+ **/
+#pragma deprecated Use ST_HasChanceToSpawn() instead.
+native bool ST_TankChance(int type);
+
+/**
+ * Returns the RGB colors given to a Tank.
+ *
+ * @param tank			Client index of the Tank.
+ * @param mode			1 = Skin color, 2 = Glow outline color
+ * @param red			Red color reference.
+ * @param green			Green color reference.
+ * @param blue			Blue color reference.
+ * @param alpha			Alpha color reference.
+ * @error			Invalid client index.
+ **/
+#pragma deprecated Use ST_GetTankColors() instead.
+native void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+
+/**
+ * Returns the custom name given to a Tank.
+ *
+ * @param tank			Client index of the Tank.
+ * @param buffer		Buffer to store the custom name in.
+ * @error				Invalid client index.
+ **/
+#pragma deprecated Use ST_GetTankName() instead.
+native void ST_TankName(int tank, char[] buffer);
+
+/* Returns the Super Tank type of the Tank.
+ *
+ * @param client		Client index of the Tank.
+ *
+ * @return				The Tank's Super Tank type.
+ */
+#pragma deprecated Use ST_GetTankType() instead.
+native int ST_TankType(int client);
+
+/* Returns the current finale wave.
+ *
+ * @return				The current finale wave.
+ */
+#pragma deprecated Use ST_GetCurrentFinaleWave() instead.
+native int ST_TankWave();
+
+/**
+ * Returns if a certain Super Tank type is enabled.
+ *
+ * @param type			Super Tank type.
+ * @return				True if the type is enabled, false otherwise.
+ * @error				Type is 0.
+ **/
+#pragma deprecated Use ST_IsTypeEnabled() instead.
+native bool ST_TypeEnabled(int type);
 
 // Functions
 stock void vAttachParticle(int entity, const char[] particlename, float duration = 0.0, float origin = 0.0)
@@ -642,9 +962,9 @@ stock void ST_PrintToChatAll(char[] message, any ...)
 }
 
 // Checks
-stock bool bHasAbilities(const char[] level, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4)
+stock bool bHasAbilities(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4)
 {
-	if (StrEqual(level, setting, false) || StrEqual(level, setting2, false) || StrEqual(level, setting3, false) || StrEqual(level, setting4, false))
+	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
 	{
 		return true;
 	}
@@ -934,12 +1254,12 @@ stock bool bIsValidClient(int player, int flags = ST_CHECK_INDEX|ST_CHECK_INGAME
 
 stock bool bIsValidEntity(int entity)
 {
-	return entity > 0 && entity <= 2048 && IsValidEntity(entity);
+	return entity > 0 && IsValidEntity(entity);
 }
 
-stock bool bIsValidEntRef(int entity)
+stock bool bIsValidEntRef(int ref)
 {
-	return entity && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE;
+	return ref && EntRefToEntIndex(ref) != INVALID_ENT_REFERENCE;
 }
 
 stock bool bIsValidGame(bool l4d2 = true)
@@ -1150,7 +1470,7 @@ stock float flGetAngle(float angle1[3], float angle2[3])
 	return ArcCosine(GetVectorDotProduct(angle1, angle2) / (GetVectorLength(angle1) * GetVectorLength(angle2)));
 }
 
-stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int trace) 
+stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int trace)
 {
 	float flAngle[3];
 	vCopyVector(angle, flAngle);
@@ -1188,31 +1508,6 @@ stock float flGetGroundUnits(int entity)
 	return 0.0;
 }
 
-stock float flGetNearestSurvivor(int tank)
-{
-	float flDistance;
-	if (bIsTank(tank))
-	{
-		float flTankPos[3];
-		GetClientAbsOrigin(tank, flTankPos);
-
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
-			{
-				float flSurvivorPos[3];
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-
-				break;
-			}
-		}
-	}
-
-	return flDistance;
-}
-
 stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace)
 {
 	float flHitPos[3];
@@ -1221,17 +1516,13 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace
 	return GetVectorDistance(pos, flHitPos);
 }
 
-stock float flGetValue(const char[] level, const char[] section, const char[] section2, const char[] section3, const char[] section4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, bool main, float curVal, const char[] value, float defVal, float min, float max)
+stock float flGetValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max)
 {
-	if ((StrEqual(level, section, false) || StrEqual(level, section2, false) || StrEqual(level, section3, false) || StrEqual(level, section4, false)) && (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	if ((StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false)) && (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		if (value[0] != '\0')
 		{
 			return flClamp(StringToFloat(value), min, max);
-		}
-		else
-		{
-			return main ? defVal : curVal;
 		}
 	}
 
@@ -1325,41 +1616,23 @@ stock int iGetPlayerCount()
 	return iPlayerCount;
 }
 
-stock int iGetRandomSurvivor(int survivor)
+stock int iGetRandomSurvivor(int tank)
 {
 	int iSurvivorCount, iSurvivors[MAXPLAYERS + 1];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && iSurvivor != survivor)
+		if (ST_IsAdminImmune(iSurvivor, tank))
+		{
+			continue;
+		}
+
+		if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
 		{
 			iSurvivors[iSurvivorCount++] = iSurvivor;
 		}
 	}
 
 	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
-}
-
-stock int iGetRandomTarget(float pos[3], float angle[3])
-{
-	float flMin = 4.0, flPos[3], flAngle;
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
-		{
-			GetClientEyePosition(iSurvivor, flPos);
-			MakeVectorFromPoints(pos, flPos, flPos);
-			flAngle = flGetAngle(angle, flPos);
-
-			if (flAngle <= flMin)
-			{
-				flMin = flAngle;
-
-				return iSurvivor;
-			}
-		}
-	}
-
-	return 0;
 }
 
 stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false, int trace)
@@ -1393,22 +1666,18 @@ stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entit
 	return iHit;
 }
 
-stock int iGetRGBColor(int red, int green, int blue) 
+stock int iGetRGBColor(int red, int green, int blue)
 {
 	return (blue * 65536) + (green * 256) + red;
 }
 
-stock int iGetValue(const char[] level, const char[] section, const char[] section2, const char[] section3, const char[] section4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, bool main, int curVal, const char[] value, int defVal, int min, int max)
+stock int iGetValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
 {
-	if ((StrEqual(level, section, false) || StrEqual(level, section2, false) || StrEqual(level, section3, false) || StrEqual(level, section4, false)) && (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	if ((StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false)) && (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		if (value[0] != '\0')
 		{
 			return iClamp(StringToInt(value), min, max);
-		}
-		else
-		{
-			return main ? defVal : curVal;
 		}
 	}
 
@@ -1442,7 +1711,9 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 {
 	MarkNativeAsOptional("ST_CanTankSpawn");
 	MarkNativeAsOptional("ST_FindAbility");
+	MarkNativeAsOptional("ST_GetAccessFlags");
 	MarkNativeAsOptional("ST_GetCurrentFinaleWave");
+	MarkNativeAsOptional("ST_GetImmunityFlags");
 	MarkNativeAsOptional("ST_GetMaxType");
 	MarkNativeAsOptional("ST_GetMinType");
 	MarkNativeAsOptional("ST_GetPropColors");
@@ -1450,8 +1721,10 @@ public void __pl_supertanksplusplus_SetNTVOptional()
 	MarkNativeAsOptional("ST_GetTankColors");
 	MarkNativeAsOptional("ST_GetTankName");
 	MarkNativeAsOptional("ST_GetTankType");
+	MarkNativeAsOptional("ST_HasAdminAccess");
 	MarkNativeAsOptional("ST_HasChanceToSpawn");
 	MarkNativeAsOptional("ST_HideEntity");
+	MarkNativeAsOptional("ST_IsAdminImmune");
 	MarkNativeAsOptional("ST_IsCorePluginEnabled");
 	MarkNativeAsOptional("ST_IsFinaleTank");
 	MarkNativeAsOptional("ST_IsGlowEnabled");

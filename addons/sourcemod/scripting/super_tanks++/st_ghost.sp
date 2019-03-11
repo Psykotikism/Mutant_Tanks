@@ -60,7 +60,7 @@ bool g_bCloneInstalled, g_bGhost[MAXPLAYERS + 1], g_bGhost2[MAXPLAYERS + 1], g_b
 
 float g_flGhostChance[ST_MAXTYPES + 1], g_flGhostFadeDelay[ST_MAXTYPES + 1], g_flGhostFadeRate[ST_MAXTYPES + 1], g_flGhostRange[ST_MAXTYPES + 1], g_flGhostRangeChance[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanDuration[ST_MAXTYPES + 1];
 
-int g_iGhostAbility[ST_MAXTYPES + 1], g_iGhostAlpha[MAXPLAYERS + 1], g_iGhostCount[MAXPLAYERS + 1], g_iGhostCount2[MAXPLAYERS + 1], g_iGhostEffect[ST_MAXTYPES + 1], g_iGhostFadeAlpha[ST_MAXTYPES + 1], g_iGhostFadeLimit[ST_MAXTYPES + 1], g_iGhostHit[ST_MAXTYPES + 1], g_iGhostHitMode[ST_MAXTYPES + 1], g_iGhostMessage[ST_MAXTYPES + 1], g_iGhostWeaponSlots[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iGhostAbility[ST_MAXTYPES + 1], g_iGhostAlpha[MAXPLAYERS + 1], g_iGhostCount[MAXPLAYERS + 1], g_iGhostCount2[MAXPLAYERS + 1], g_iGhostEffect[ST_MAXTYPES + 1], g_iGhostFadeAlpha[ST_MAXTYPES + 1], g_iGhostFadeLimit[ST_MAXTYPES + 1], g_iGhostHit[ST_MAXTYPES + 1], g_iGhostHitMode[ST_MAXTYPES + 1], g_iGhostMessage[ST_MAXTYPES + 1], g_iGhostWeaponSlots[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -276,6 +276,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iGhostHitMode[ST_GetTankType(attacker)] == 0 || g_iGhostHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
+			if ((!ST_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || ST_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vGhostHit(victim, attacker, g_flGhostChance[ST_GetTankType(attacker)], g_iGhostHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
@@ -283,18 +288,36 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iGhostHitMode[ST_GetTankType(victim)] == 0 || g_iGhostHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
+			if ((!ST_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vGhostHit(attacker, victim, g_flGhostChance[ST_GetTankType(victim)], g_iGhostHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -316,27 +339,57 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	ST_FindAbility(type, 20, bHasAbilities(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost"));
-	g_iHumanAbility[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_flHumanDuration[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", main, g_flHumanDuration[type], value, 5.0, 0.1, 9999999999.0);
-	g_iHumanMode[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
-	g_iGhostAbility[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iGhostAbility[type], value, 0, 0, 3);
-	g_iGhostEffect[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iGhostEffect[type], value, 0, 0, 7);
-	g_iGhostMessage[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iGhostMessage[type], value, 0, 0, 7);
-	g_flGhostChance[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", main, g_flGhostChance[type], value, 33.3, 0.0, 100.0);
-	g_iGhostFadeAlpha[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeAlpha", "Ghost Fade Alpha", "Ghost_Fade_Alpha", "fadealpha", main, g_iGhostFadeAlpha[type], value, 2, 0, 255);
-	g_flGhostFadeDelay[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeDelay", "Ghost Fade Delay", "Ghost_Fade_Delay", "fadedelay", main, g_flGhostFadeDelay[type], value, 5.0, 0.1, 9999999999.0);
-	g_iGhostFadeLimit[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeLimit", "Ghost Fade Limit", "Ghost_Fade_Limit", "fadelimit", main, g_iGhostFadeLimit[type], value, 0, 0, 255);
-	g_flGhostFadeRate[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeRate", "Ghost Fade Rate", "Ghost_Fade_Rate", "faderate", main, g_flGhostFadeRate[type], value, 0.1, 0.1, 9999999999.0);
-	g_iGhostHit[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostHit", "Ghost Hit", "Ghost_Hit", "hit", main, g_iGhostHit[type], value, 0, 0, 1);
-	g_iGhostHitMode[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostHitMode", "Ghost Hit Mode", "Ghost_Hit_Mode", "hitmode", main, g_iGhostHitMode[type], value, 0, 0, 2);
-	g_flGhostRange[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostRange", "Ghost Range", "Ghost_Range", "range", main, g_flGhostRange[type], value, 150.0, 1.0, 9999999999.0);
-	g_flGhostRangeChance[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostRangeChance", "Ghost Range Chance", "Ghost_Range_Chance", "rangechance", main, g_flGhostRangeChance[type], value, 15.0, 0.0, 100.0);
-	g_iGhostWeaponSlots[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghost_Weapon_Slots", "slots", main, g_iGhostWeaponSlots[type], value, 0, 0, 31);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "ghostability", false) || StrEqual(subsection, "ghost ability", false) || StrEqual(subsection, "ghost_ability", false) || StrEqual(subsection, "ghost", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 20, bHasAbilities(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost"));
+		g_iHumanAbility[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_flHumanDuration[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 9999999999.0);
+		g_iHumanMode[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
+		g_iGhostAbility[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iGhostAbility[type], value, 0, 3);
+		g_iGhostEffect[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iGhostEffect[type], value, 0, 7);
+		g_iGhostMessage[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iGhostMessage[type], value, 0, 7);
+		g_flGhostChance[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_flGhostChance[type], value, 0.0, 100.0);
+		g_iGhostFadeAlpha[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeAlpha", "Ghost Fade Alpha", "Ghost_Fade_Alpha", "fadealpha", g_iGhostFadeAlpha[type], value, 0, 255);
+		g_flGhostFadeDelay[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeDelay", "Ghost Fade Delay", "Ghost_Fade_Delay", "fadedelay", g_flGhostFadeDelay[type], value, 0.1, 9999999999.0);
+		g_iGhostFadeLimit[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeLimit", "Ghost Fade Limit", "Ghost_Fade_Limit", "fadelimit", g_iGhostFadeLimit[type], value, 0, 255);
+		g_flGhostFadeRate[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeRate", "Ghost Fade Rate", "Ghost_Fade_Rate", "faderate", g_flGhostFadeRate[type], value, 0.1, 9999999999.0);
+		g_iGhostHit[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostHit", "Ghost Hit", "Ghost_Hit", "hit", g_iGhostHit[type], value, 0, 1);
+		g_iGhostHitMode[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostHitMode", "Ghost Hit Mode", "Ghost_Hit_Mode", "hitmode", g_iGhostHitMode[type], value, 0, 2);
+		g_flGhostRange[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostRange", "Ghost Range", "Ghost_Range", "range", g_flGhostRange[type], value, 1.0, 9999999999.0);
+		g_flGhostRangeChance[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostRangeChance", "Ghost Range Chance", "Ghost_Range_Chance", "rangechance", g_flGhostRangeChance[type], value, 0.0, 100.0);
+		g_iGhostWeaponSlots[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghost_Weapon_Slots", "slots", g_iGhostWeaponSlots[type], value, 0, 31);
+
+		if (StrEqual(subsection, "ghostability", false) || StrEqual(subsection, "ghost ability", false) || StrEqual(subsection, "ghost_ability", false) || StrEqual(subsection, "ghost", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -354,6 +407,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iGhostAbility[ST_GetTankType(tank)] > 0)
 	{
 		vGhostAbility(tank, true);
@@ -363,6 +421,11 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
@@ -448,6 +511,11 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vGhost(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	DataPack dpGhost;
 	CreateDataTimer(g_flGhostFadeRate[ST_GetTankType(tank)], tTimerGhost, dpGhost, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpGhost.WriteCell(GetClientUserId(tank));
@@ -459,6 +527,11 @@ static void vGhost(int tank)
 
 static void vGhostAbility(int tank, bool main)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	switch (main)
 	{
 		case true:
@@ -474,10 +547,9 @@ static void vGhostAbility(int tank, bool main)
 					GetClientAbsOrigin(tank, flTankPos);
 
 					int iSurvivorCount;
-
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
-						if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
+						if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && !ST_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank))
 						{
 							float flSurvivorPos[3];
 							GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -542,6 +614,11 @@ static void vGhostAbility(int tank, bool main)
 
 static void vGhostHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
+	if ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || ST_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, tank))
+	{
+		return;
+	}
+
 	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor))
 	{
 		if (g_iGhostCount2[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
@@ -569,7 +646,7 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, int mes
 				{
 					if ((g_iGhostWeaponSlots[ST_GetTankType(tank)] & (1 << iBit)) || g_iGhostWeaponSlots[ST_GetTankType(tank)] == 0)
 					{
-						if (bIsSurvivor(survivor) && GetPlayerWeaponSlot(survivor, iBit) > 0)
+						if (GetPlayerWeaponSlot(survivor, iBit) > 0)
 						{
 							SDKHooks_DropWeapon(survivor, GetPlayerWeaponSlot(survivor, iBit), NULL_VECTOR, NULL_VECTOR);
 						}
@@ -724,12 +801,124 @@ static void vReset2(int tank)
 	}
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
+}
+
 public Action tTimerGhost(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (g_iGhostAbility[ST_GetTankType(iTank)] != 2 && g_iGhostAbility[ST_GetTankType(iTank)] != 3) || !g_bGhost[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (g_iGhostAbility[ST_GetTankType(iTank)] != 2 && g_iGhostAbility[ST_GetTankType(iTank)] != 3) || !g_bGhost[iTank])
 	{
 		g_bGhost[iTank] = false;
 		g_iGhostAlpha[iTank] = 255;
