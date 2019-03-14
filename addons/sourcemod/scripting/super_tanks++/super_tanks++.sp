@@ -4068,7 +4068,7 @@ public Action tTimerBloodEffect(Handle timer, int userid)
 public Action tTimerBlurEffect(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || !(g_iPropsAttached[g_iTankType[iTank]] & ST_PROP_BLUR) || !g_bBlur[iTank])
+	if (!g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasAdminAccess(iTank) || g_iTankEnabled[g_iTankType[iTank]] == 0 || (!bIsTank(iTank, ST_CHECK_FAKECLIENT) && g_iPropsAttached[g_iTankType[iTank]] == 0) || (bIsTank(iTank, ST_CHECK_FAKECLIENT) && g_iPropsAttached2[iTank] == 0) || (!bIsTank(iTank, ST_CHECK_FAKECLIENT) && !(g_iPropsAttached[g_iTankType[iTank]] & ST_PROP_BLUR)) || (bIsTank(iTank, ST_CHECK_FAKECLIENT) && !(g_iPropsAttached2[iTank] & ST_PROP_BLUR)) || !g_bBlur[iTank])
 	{
 		g_bBlur[iTank] = false;
 
