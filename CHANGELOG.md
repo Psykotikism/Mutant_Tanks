@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.59 (March 15, 2019)
+## Version 8.59 (March 20, 2019)
 
 Changes:
 
@@ -11,7 +11,7 @@ Changes:
 5. Added the `Detect Plugins` setting under the `Plugin Settings/General` section.
 6. Added the `Access Flags` and `Immunity Flags` settings under the `Plugin Settings/Administration` section.
 7. Added the `ST_FindAbility()`, `ST_HasAdminAccess()`, and `ST_IsAdminImmune()` natives.
-8. All Color settings now accept values below "0" which will generate random colors.
+8. All Color settings now accept values below `0` which will generate random colors.
 9. The following settings can now be overridden for individual Super Tanks (View the `INFORMATION.md` file for details):
 - `Access Flags`
 - `Announce Arrival`
@@ -26,31 +26,7 @@ Changes:
 11. Updated documentation for several natives/forwards.
 12. Added deprecated messages for old/deleted natives/forwards.
 13. Added an administration system designed for the usage and effectiveness of each Super Tank type.
-12. The administration system can now override any Super Tank type for each admin with the following settings (View the `INFORMATION.md` file for details):
-- `Tank Name`
-- `Announce Arrival`
-- `Announce Death`
-- `Skin Color`
-- `Glow Enabled`
-- `Glow Color`
-- `Props Attached`
-- `Props Chance`
-- `Light Color`
-- `Oxygen Tank Color`
-- `Flame Color`
-- `Rock Color`
-- `Tire Color`
-- `Body Effects`
-- `Rock Effects`
-- `Claw Damage`
-- `Extra Health`
-- `Rock Damage`
-- `Run Speed`
-- `Throw Interval`
-- `Bullet Immunity`
-- `Explosive Immunity`
-- `Fire Immunity`
-- `Melee Immunity`
+12. The administration system can now override any Super Tank type for each admin (View the `INFORMATION.md` file for details).
 
 Files:
 
@@ -557,8 +533,8 @@ Files:
 Changes:
 
 1. Added support for dynamic loading to the modules. (Thanks Lux!)
-2. Switched RemoveEntity(entity) back to AcceptEntityInput(entity, "Kill") just to be courteous to those who prefer to still use SM 1.8.
-3. Removed IsDedicatedServer() just to be courteous to those who do not have dedicated servers. (Please don't report bugs if you're playing on a local/listen server. :/)
+2. Switched `RemoveEntity(entity)` back to `AcceptEntityInput(entity, "Kill")` just to be courteous to those who prefer to still use SM 1.8.
+3. Removed `IsDedicatedServer()` just to be courteous to those who do not have dedicated servers. (Please don't report bugs if you're playing on a local/listen server. :/)
 
 ## Version 8.36 (August 20, 2018)
 

@@ -1185,9 +1185,11 @@ The flags are used for two things:
 
 4. What other features does the system have?
 
-Currently, the system allows admins to each have a favorite Super Tank type, custom name, enhancements (health, run speed, etc.), colors, particles, props, and immunities.
+Currently, the system allows admins to each have a favorite/custom/personalized Super Tank type.
 
 Each custom admin setting will override the general settings. This is a powerful feature because each admin can have his/her own custom-made Super Tank type without tampering with the general Super Tank types.
+
+The only limitation at the moment is that admins cannot have custom/personalized ability settings. Whatever Super Tank type the admin spawns as, the admin will inherit that type's current abilities.
 
 Example:
 
@@ -1510,6 +1512,7 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
+
 
 
 Thank you very much and have fun! :D
