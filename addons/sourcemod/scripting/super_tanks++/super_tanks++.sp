@@ -135,8 +135,8 @@ enum ConfigState
 
 ArrayList g_alAdmins;
 
-bool g_bAbilityFound[ST_MAXTYPES + 1][ST_MAX_ABILITIES + 1], g_bAbilityPlugin[ST_MAX_ABILITIES + 1], g_bAdminMenu[MAXPLAYERS + 1], g_bBlood[MAXPLAYERS + 1], g_bBlur[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1], g_bGeneralConfig,
-	g_bIce[MAXPLAYERS + 1], g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSettingsFound, g_bSmoke[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1], g_bUsedParser[MAXPLAYERS + 1];
+bool g_bAbilityFound[ST_MAXTYPES + 1][ST_MAX_ABILITIES + 1], g_bAbilityPlugin[ST_MAX_ABILITIES + 1], g_bAdminMenu[MAXPLAYERS + 1], g_bBlood[MAXPLAYERS + 1], g_bBlur[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bDying[MAXPLAYERS + 1], g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1],
+	g_bGeneralConfig, g_bIce[MAXPLAYERS + 1], g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSettingsFound, g_bSmoke[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1], g_bUsedParser[MAXPLAYERS + 1];
 
 char g_sCurrentSection[128], g_sCurrentSubSection[128], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sSavePath[PLATFORM_MAX_PATH], g_sSection[MAXPLAYERS + 1][128], g_sTankName[ST_MAXTYPES + 1][33], g_sTankName2[MAXPLAYERS + 1][33], g_sUsedPath[PLATFORM_MAX_PATH];
 
@@ -2713,6 +2713,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 			if (bIsTankAllowed(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE) || g_iTankType[iTank] > 0)
 			{
+				g_bDying[iTank] = false;
+
 				if ((g_iAnnounceDeath == 1 || g_iAnnounceDeath2[g_iTankType[iTank]] == 1 || (bIsTank(iTank, ST_CHECK_FAKECLIENT) && g_iAnnounceDeath3[iTank] == 1)) && bIsCloneAllowed(iTank, g_bCloneInstalled))
 				{
 					if (StrEqual(g_sTankName[g_iTankType[iTank]], ""))
@@ -2755,6 +2757,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 			if (bIsTank(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
+				g_bDying[iTank] = true;
+
 				CreateTimer(0.5, tTimerKillStuckTank, iTankId, TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
@@ -2763,6 +2767,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 			if (bIsTank(iTank))
 			{
+				g_bDying[iTank] = false;
 				g_iTankType[iTank] = 0;
 
 				switch (g_iType)
@@ -3076,6 +3081,7 @@ static void vReset()
 			vReset2(iPlayer);
 
 			g_bAdminMenu[iPlayer] = false;
+			g_bDying[iPlayer] = false;
 			g_bThirdPerson[iPlayer] = false;
 			g_csState2[iPlayer] = ConfigState_None;
 			g_iTankType[iPlayer] = 0;
@@ -4375,14 +4381,14 @@ public Action tTimerTankHealthUpdate(Handle timer)
 							g_sTankName[g_iTankType[iTarget]] = "Tank";
 						}
 
-						int iHealth = GetClientHealth(iTarget),
+						int iHealth = (g_bDying[iTarget]) ? 0 : GetClientHealth(iTarget),
 							iDisplayHealth = (g_iDisplayHealth2[g_iTankType[iTarget]] > 0) ? g_iDisplayHealth2[g_iTankType[iTarget]] : g_iDisplayHealth;
 						iDisplayHealth = (bIsTank(iTarget, ST_CHECK_FAKECLIENT) && g_iDisplayHealth3[iTarget] > 0) ? g_iDisplayHealth3[iTarget] : iDisplayHealth;
 						switch (iDisplayHealth)
 						{
 							case 1: PrintHintText(iPlayer, "%s", (g_sTankName2[iTarget][0] == '\0') ? g_sTankName[g_iTankType[iTarget]] : g_sTankName2[iTarget]);
-							case 2: PrintHintText(iPlayer, "%i HP", iHealth);
-							case 3: PrintHintText(iPlayer, "%s (%i HP)", (g_sTankName2[iTarget][0] == '\0') ? g_sTankName[g_iTankType[iTarget]] : g_sTankName2[iTarget], iHealth);
+							case 2: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, g_iTankHealth[iTarget], (float(iHealth) / float(g_iTankHealth[iTarget])) * 100, "%%");
+							case 3: PrintHintText(iPlayer, "%s [%i/%i HP (%.0f%s)]", (g_sTankName2[iTarget][0] == '\0') ? g_sTankName[g_iTankType[iTarget]] : g_sTankName2[iTarget], iHealth, g_iTankHealth[iTarget], (float(iHealth) / float(g_iTankHealth[iTarget])) * 100, "%%");
 						}
 					}
 				}
@@ -4486,6 +4492,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 
 	char sCurrentName[33];
 	GetClientName(iTank, sCurrentName, sizeof(sCurrentName));
+
 	if (sCurrentName[0] == '\0')
 	{
 		sCurrentName = "Tank";
@@ -4502,8 +4509,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 	if (iMode == 0 && bIsCloneAllowed(iTank, g_bCloneInstalled))
 	{
 		int iHumanCount = iGetHumanCount(),
-			iHealth = GetClientHealth(iTank),
-			iSpawnHealth = (g_iBaseHealth > 0) ? g_iBaseHealth : iHealth,
+			iSpawnHealth = (g_iBaseHealth > 0) ? g_iBaseHealth : GetClientHealth(iTank),
 			iExtraHealth = (bIsTank(iTank, ST_CHECK_FAKECLIENT) && g_iExtraHealth2[iTank] > 0) ? g_iExtraHealth2[iTank] : g_iExtraHealth[g_iTankType[iTank]],
 			iExtraHealthNormal = iSpawnHealth + iExtraHealth,
 			iExtraHealthBoost = (iHumanCount > 1) ? ((iSpawnHealth * iHumanCount) + iExtraHealth) : iExtraHealthNormal,
@@ -4532,7 +4538,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 			case 3: SetEntityHealth(iTank, iFinalHealth3);
 		}
 
-		g_iTankHealth[iTank] = iHealth;
+		g_iTankHealth[iTank] = GetClientHealth(iTank);
 
 		if (bIsTankAllowed(iTank, ST_CHECK_FAKECLIENT) && bHasAdminAccess(iTank))
 		{
