@@ -27,6 +27,10 @@ Changes:
 12. Added deprecated messages for old/deleted natives/forwards.
 13. Added an administration system designed for the usage and effectiveness of each Super Tank type.
 12. The administration system can now override any Super Tank type for each admin (View the `INFORMATION.md` file for details).
+13. Added the `Allow Developer` setting under `Plugin Settings/Administration`.
+14. Improved health display.
+15. The `sm_tank` and `sm_supertank` commands now use separate callbacks.
+16. Added the `sm_tank2` and `sm_st_list` commands.
 
 Files:
 

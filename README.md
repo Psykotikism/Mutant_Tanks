@@ -1040,6 +1040,10 @@ If you are a Tank:
 ```
 
 ```
+// Accessible by the developer and admins with "z" (Root) flag.
+sm_st_list - View a list of installed abilities.
+sm_tank2 - Spawn a Super Tank.
+
 // Accessible by all players.
 sm_st_config - View a section of the config file.
 sm_st_info - View information about Super Tanks++.
@@ -1267,6 +1271,16 @@ OR ELSE
 
 Note: If all 3 of these return false, the player will not have access to that type.
 ```
+
+6. What is the `Allow Developer` setting for?
+
+The setting allows the developer (Psyk0tik/Crasher_3637) to access certain features of the project on your server. These features include:
+- Access to all Super Tanks. (Allows the developer to see what Super Tanks your config has.)
+- Immunity from all Super Tanks. (Allows the developer to test each Super Tank without having to deal with each ability's effects.)
+- Ability to spawn Super Tanks. (Allows the developer to spawn each Super Tank for testing.)
+- Check which abilities are installed. (Allows the developer to check which abilities to test for.)
+
+In short, this setting does not give the developer access to other features or plugins, thus avoiding the potential to cause trouble on your server. Disable the setting if you are not confident with trusting the developer. This setting was added to help server owners give the developer temporary access in case the developer needs to help server owners debug problems.
 
 ### Human Support
 1. How do I enable human support?

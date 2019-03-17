@@ -81,11 +81,16 @@
 			// Display Super Tanks' names and health.
 			// Note: This setting can be overridden for each Super Tank under the "General" section of their settings.
 			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 7
+			// --
 			// 0: OFF
 			// 1: ON, show names only.
 			// 2: ON, show health only.
-			// 3: ON, show both names and health.
-			"Display Health"			"3"
+			// 4: ON, show both names and health.
+			"Display Health"			"7"
 
 			// Enable Super Tanks++ in finales only.
 			// --
@@ -125,6 +130,12 @@
 			// Empty: No access flags have access.
 			// Not empty: These access flags have access.
 			"Access Flags"				""
+
+			// Allow the developer to access the plugin when joining your server.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Allow Developer"			"1"
 
 			// Admins with one or more of these immunity flags are immune to all Super Tanks' attacks.
 			// Note: This setting can be overridden for each Super Tank under the "Administration" section of their settings.
@@ -395,11 +406,16 @@
 			// Display the Super Tank's name and health.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 7
+			// --
 			// 0: OFF
 			// 1: ON, show names only.
 			// 2: ON, show health only.
-			// 3: ON, show both names and health.
-			"Display Health"			"3"
+			// 4: ON, show health bar only.
+			"Display Health"			"7"
 
 			// Multiply the Super Tank's health.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
