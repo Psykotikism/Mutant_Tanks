@@ -9,28 +9,30 @@ Changes:
 3. The `ST_GetTankName()` native now has a third argument.
 4. Added the `Regular Type` and `Finale Types` settings under the `Plugin Settings/Waves` section.
 5. Added the `Detect Plugins` setting under the `Plugin Settings/General` section.
-6. Added the `Access Flags` and `Immunity Flags` settings under the `Plugin Settings/Administration` section.
-7. Added the `ST_FindAbility()`, `ST_HasAdminAccess()`, and `ST_IsAdminImmune()` natives.
-8. All Color settings now accept values below `0` which will generate random colors.
-9. The following settings can now be overridden for individual Super Tanks (View the `INFORMATION.md` file for details):
+6. Added the `Health Characters` setting under the `Plugin Settings/General` section.
+7. Added the `Access Flags` and `Immunity Flags` settings under the `Plugin Settings/Administration` section.
+8. Added the `ST_FindAbility()`, `ST_HasAdminAccess()`, and `ST_IsAdminImmune()` natives.
+9. All Color settings now accept values below `0` which will generate random colors.
+10. The following settings can now be overridden for individual Super Tanks (View the `INFORMATION.md` file for details):
 - `Access Flags`
 - `Announce Arrival`
 - `Announce Death`
 - `Death Revert`
 - `Detect Plugins`
 - `Display Health`
+- `Health Characters`
 - `Immunity Flags`
 - `Multiply Health`
 
-10. Added `Access Flags` and `Immunity Flags` settings for each ability.
-11. Updated documentation for several natives/forwards.
-12. Added deprecated messages for old/deleted natives/forwards.
-13. Added an administration system designed for the usage and effectiveness of each Super Tank type.
-12. The administration system can now override any Super Tank type for each admin (View the `INFORMATION.md` file for details).
-13. Added the `Allow Developer` setting under `Plugin Settings/Administration`.
-14. Improved health display.
-15. The `sm_tank` and `sm_supertank` commands now use separate callbacks.
-16. Added the `sm_tank2` and `sm_st_list` commands.
+11. Added `Access Flags` and `Immunity Flags` settings for each ability.
+12. Updated documentation for several natives/forwards.
+13. Added deprecated messages for old/deleted natives/forwards.
+14. Added an administration system designed for the usage and effectiveness of each Super Tank type.
+15. The administration system can now override any Super Tank type for each admin (View the `INFORMATION.md` file for details).
+16. Added the `Allow Developer` setting under `Plugin Settings/Administration`.
+17. Improved health display.
+18. The `sm_tank` and `sm_supertank` commands now use separate callbacks.
+19. Added the `sm_tank2` and `sm_st_list` commands.
 
 Files:
 

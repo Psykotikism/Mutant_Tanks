@@ -1472,6 +1472,8 @@ Examples:
 
 **sheo** - For the [[L4D2] Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809) plugin.
 
+**nico-op** - For the [[L4D/L4D2] Infected Health Gauge (Tank & Witch & Special)](https://forums.alliedmods.net/showthread.php?t=125747) plugin.
+
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 
 **Lux** - For helping to optimize/fix various parts of the code and code for detecting thirdperson view.
@@ -1507,6 +1509,8 @@ Examples:
 **foquaxticity** - For suggesting ideas.
 
 **FatalOE71** - For suggesting ideas.
+
+**Marttt** - For convincing me the effectiveness and usefulness of convar flags.
 
 **AngelAce113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
 

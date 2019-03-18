@@ -1,16 +1,19 @@
-# Information
+# Super Tanks++
+> By Psyk0tik (Crasher_3637)
+
+## Information
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
 - Maximum types: 1000 (Increase the value in the `super_tanks++.inc` file and recompile at your own risk.)
 - Ability count: 72 (Suggest more if you want; we always needs more.)
 
-# Sections
+## Sections
 - Plugin Settings
 - Tank Settings
 - Abilities
 - Administration System
 
-## Plugin Settings
+### Plugin Settings
 
 ```
 "Super Tanks++"
@@ -97,6 +100,18 @@
 			// 0: OFF
 			// 1: ON
 			"Finales Only"				"0"
+
+			// The characters used to represent the health bar of Super Tanks.
+			// Note: This setting only takes affect when the "Display Health" setting is enabled.
+			// --
+			// Separate characters with commas.
+			// --
+			// Character limit: 2
+			// Character limit for each character: 1
+			// --
+			// 1st character = Health indicator
+			// 2nd character = Damage indicator
+			"Health Characters"			"|,-"
 
 			// Multiply Super Tanks' health.
 			// Note: This setting can be overridden for each Super Tank under the "General" section of their settings.
@@ -304,9 +319,9 @@
 }
 ```
 
-## Tank Settings
+### Tank Settings
 
-### General, Spawn, Props, Particles, Enhancements, Immunities
+#### General, Administration, Spawn, Props, Particles, Enhancements, Immunities
 
 ```
 "Super Tanks++"
@@ -416,6 +431,19 @@
 			// 2: ON, show health only.
 			// 4: ON, show health bar only.
 			"Display Health"			"7"
+
+			// The characters used to represent the health bar of the Super Tank.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting only takes affect when the "Display Health" setting is enabled.
+			// --
+			// Separate characters with commas.
+			// --
+			// Character limit: 2
+			// Character limit for each character: 1
+			// --
+			// 1st character = Health indicator
+			// 2nd character = Damage indicator
+			"Health Characters"			"|,-"
 
 			// Multiply the Super Tank's health.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -773,9 +801,9 @@
 }
 ```
 
-### Abilities
+#### Abilities
 
-#### Absorb Ability
+##### Absorb Ability
 
 ```
 "Super Tanks++"
@@ -881,7 +909,7 @@
 }
 ```
 
-#### Acid Ability
+##### Acid Ability
 
 ```
 "Super Tanks++"
@@ -1015,7 +1043,7 @@
 }
 ```
 
-#### Aimless Ability
+##### Aimless Ability
 
 ```
 "Super Tanks++"
@@ -1137,7 +1165,7 @@
 }
 ```
 
-#### Ammo Ability
+##### Ammo Ability
 
 ```
 "Super Tanks++"
@@ -1260,7 +1288,7 @@
 }
 ```
 
-#### Blind Ability
+##### Blind Ability
 
 ```
 "Super Tanks++"
@@ -1389,7 +1417,7 @@
 }
 ```
 
-#### Bomb Ability
+##### Bomb Ability
 
 ```
 "Super Tanks++"
@@ -1522,7 +1550,7 @@
 }
 ```
 
-#### Bury Ability
+##### Bury Ability
 
 ```
 "Super Tanks++"
@@ -1651,7 +1679,7 @@
 }
 ```
 
-#### Car Ability
+##### Car Ability
 
 ```
 "Super Tanks++"
@@ -1745,7 +1773,7 @@
 }
 ```
 
-#### Choke Ability
+##### Choke Ability
 
 ```
 "Super Tanks++"
@@ -1885,7 +1913,7 @@
 }
 ```
 
-#### Clone Ability
+##### Clone Ability
 
 ```
 "Super Tanks++"
@@ -1967,7 +1995,7 @@
 }
 ```
 
-#### Cloud Ability
+##### Cloud Ability
 
 ```
 "Super Tanks++"
@@ -2050,7 +2078,7 @@
 }
 ```
 
-#### Drop Ability
+##### Drop Ability
 
 ```
 "Super Tanks++"
@@ -2115,7 +2143,7 @@
 }
 ```
 
-#### Drug Ability
+##### Drug Ability
 
 ```
 "Super Tanks++"
@@ -2244,7 +2272,7 @@
 }
 ```
 
-#### Drunk Ability
+##### Drunk Ability
 
 ```
 "Super Tanks++"
@@ -2378,7 +2406,7 @@
 }
 ```
 
-#### Electric Ability
+##### Electric Ability
 
 ```
 "Super Tanks++"
@@ -2513,7 +2541,7 @@
 }
 ```
 
-#### Enforce Ability
+##### Enforce Ability
 
 ```
 "Super Tanks++"
@@ -2651,7 +2679,7 @@
 }
 ```
 
-#### Fast Ability
+##### Fast Ability
 
 ```
 "Super Tanks++"
@@ -2727,7 +2755,7 @@
 }
 ```
 
-#### Fire Ability
+##### Fire Ability
 
 ```
 "Super Tanks++"
@@ -2860,7 +2888,7 @@
 }
 ```
 
-#### Fling Ability
+##### Fling Ability
 
 ```
 "Super Tanks++"
@@ -2984,7 +3012,7 @@
 }
 ```
 
-#### Fragile Ability
+##### Fragile Ability
 
 ```
 "Super Tanks++"
@@ -3090,7 +3118,7 @@
 }
 ```
 
-#### Ghost Ability
+##### Ghost Ability
 
 ```
 "Super Tanks++"
@@ -3269,7 +3297,7 @@
 }
 ```
 
-#### God Ability
+##### God Ability
 
 ```
 "Super Tanks++"
@@ -3339,7 +3367,7 @@
 }
 ```
 
-#### Gravity Ability
+##### Gravity Ability
 
 ```
 "Super Tanks++"
@@ -3490,7 +3518,7 @@
 }
 ```
 
-#### Heal Ability
+##### Heal Ability
 
 ```
 "Super Tanks++"
@@ -3672,7 +3700,7 @@
 }
 ```
 
-#### Hit Ability
+##### Hit Ability
 
 ```
 "Super Tanks++"
@@ -3732,7 +3760,7 @@
 }
 ```
 
-#### Hurt Ability
+##### Hurt Ability
 
 ```
 "Super Tanks++"
@@ -3867,7 +3895,7 @@
 }
 ```
 
-#### Hypno Ability
+##### Hypno Ability
 
 ```
 "Super Tanks++"
@@ -4032,7 +4060,7 @@
 }
 ```
 
-#### Ice Ability
+##### Ice Ability
 
 ```
 "Super Tanks++"
@@ -4155,7 +4183,7 @@
 }
 ```
 
-#### Idle Ability
+##### Idle Ability
 
 ```
 "Super Tanks++"
@@ -4272,7 +4300,7 @@
 }
 ```
 
-#### Invert Ability
+##### Invert Ability
 
 ```
 "Super Tanks++"
@@ -4394,7 +4422,7 @@
 }
 ```
 
-#### Item Ability
+##### Item Ability
 
 ```
 "Super Tanks++"
@@ -4462,7 +4490,7 @@
 }
 ```
 
-#### Jump Ability
+##### Jump Ability
 
 ```
 "Super Tanks++"
@@ -4633,7 +4661,7 @@
 }
 ```
 
-#### Kamikaze Ability
+##### Kamikaze Ability
 
 ```
 "Super Tanks++"
@@ -4738,7 +4766,7 @@
 }
 ```
 
-#### Lag Ability
+##### Lag Ability
 
 ```
 "Super Tanks++"
@@ -4860,7 +4888,7 @@
 }
 ```
 
-#### Leech Ability
+##### Leech Ability
 
 ```
 "Super Tanks++"
@@ -4989,7 +5017,7 @@
 }
 ```
 
-#### Medic Ability
+##### Medic Ability
 
 ```
 "Super Tanks++"
@@ -5112,7 +5140,7 @@
 }
 ```
 
-#### Meteor Ability
+##### Meteor Ability
 
 ```
 "Super Tanks++"
@@ -5213,7 +5241,7 @@
 }
 ```
 
-#### Minion Ability
+##### Minion Ability
 
 ```
 "Super Tanks++"
@@ -5298,7 +5326,7 @@
 }
 ```
 
-#### Necro Ability
+##### Necro Ability
 
 ```
 "Super Tanks++"
@@ -5374,7 +5402,7 @@
 }
 ```
 
-#### Nullify Ability
+##### Nullify Ability
 
 ```
 "Super Tanks++"
@@ -5496,7 +5524,7 @@
 }
 ```
 
-#### Omni Ability
+##### Omni Ability
 
 ```
 "Super Tanks++"
@@ -5577,7 +5605,7 @@
 }
 ```
 
-#### Panic Ability
+##### Panic Ability
 
 ```
 "Super Tanks++"
@@ -5653,7 +5681,7 @@
 }
 ```
 
-#### Pimp Ability
+##### Pimp Ability
 
 ```
 "Super Tanks++"
@@ -5788,7 +5816,7 @@
 }
 ```
 
-#### Puke Ability
+##### Puke Ability
 
 ```
 "Super Tanks++"
@@ -5905,7 +5933,7 @@
 }
 ```
 
-#### Pyro Ability
+##### Pyro Ability
 
 ```
 "Super Tanks++"
@@ -5997,7 +6025,7 @@
 }
 ```
 
-#### Quiet Ability
+##### Quiet Ability
 
 ```
 "Super Tanks++"
@@ -6120,7 +6148,7 @@
 }
 ```
 
-#### Recoil Ability
+##### Recoil Ability
 
 ```
 "Super Tanks++"
@@ -6242,7 +6270,7 @@
 }
 ```
 
-#### Regen Ability
+##### Regen Ability
 
 ```
 "Super Tanks++"
@@ -6333,7 +6361,7 @@
 }
 ```
 
-#### Respawn Ability
+##### Respawn Ability
 
 ```
 "Super Tanks++"
@@ -6404,7 +6432,7 @@
 }
 ```
 
-#### Restart Ability
+##### Restart Ability
 
 ```
 "Super Tanks++"
@@ -6536,7 +6564,7 @@
 }
 ```
 
-#### Rock Ability
+##### Rock Ability
 
 ```
 "Super Tanks++"
@@ -6623,7 +6651,7 @@
 }
 ```
 
-#### Rocket Ability
+##### Rocket Ability
 
 ```
 "Super Tanks++"
@@ -6745,7 +6773,7 @@
 }
 ```
 
-#### Shake Ability
+##### Shake Ability
 
 ```
 "Super Tanks++"
@@ -6874,7 +6902,7 @@
 }
 ```
 
-#### Shield Ability
+##### Shield Ability
 
 ```
 "Super Tanks++"
@@ -6974,7 +7002,7 @@
 }
 ```
 
-#### Shove Ability
+##### Shove Ability
 
 ```
 "Super Tanks++"
@@ -7103,7 +7131,7 @@
 }
 ```
 
-#### Slow Ability
+##### Slow Ability
 
 ```
 "Super Tanks++"
@@ -7232,7 +7260,7 @@
 }
 ```
 
-#### Smash Ability
+##### Smash Ability
 
 ```
 "Super Tanks++"
@@ -7349,7 +7377,7 @@
 }
 ```
 
-#### Smite Ability
+##### Smite Ability
 
 ```
 "Super Tanks++"
@@ -7466,7 +7494,7 @@
 }
 ```
 
-#### Spam Ability
+##### Spam Ability
 
 ```
 "Super Tanks++"
@@ -7542,7 +7570,7 @@
 }
 ```
 
-#### Splash Ability
+##### Splash Ability
 
 ```
 "Super Tanks++"
@@ -7637,7 +7665,7 @@
 }
 ```
 
-#### Throw Ability
+##### Throw Ability
 
 ```
 "Super Tanks++"
@@ -7740,7 +7768,7 @@
 }
 ```
 
-#### Track Ability
+##### Track Ability
 
 ```
 "Super Tanks++"
@@ -7817,7 +7845,7 @@
 }
 ```
 
-#### Ultimate Ability
+##### Ultimate Ability
 
 ```
 "Super Tanks++"
@@ -7911,7 +7939,7 @@
 }
 ```
 
-#### Undead Ability
+##### Undead Ability
 
 ```
 "Super Tanks++"
@@ -7974,7 +8002,7 @@
 }
 ```
 
-#### Vampire Ability
+##### Vampire Ability
 
 ```
 "Super Tanks++"
@@ -8033,7 +8061,7 @@
 }
 ```
 
-#### Vision Ability
+##### Vision Ability
 
 ```
 "Super Tanks++"
@@ -8162,7 +8190,7 @@
 }
 ```
 
-#### Warp Ability
+##### Warp Ability
 
 ```
 "Super Tanks++"
@@ -8311,7 +8339,7 @@
 }
 ```
 
-#### Whirl Ability
+##### Whirl Ability
 
 ```
 "Super Tanks++"
@@ -8453,7 +8481,7 @@
 }
 ```
 
-#### Witch Ability
+##### Witch Ability
 
 ```
 "Super Tanks++"
@@ -8535,7 +8563,7 @@
 }
 ```
 
-#### Xiphos Ability
+##### Xiphos Ability
 
 ```
 "Super Tanks++"
@@ -8601,7 +8629,7 @@
 }
 ```
 
-#### Yell Ability
+##### Yell Ability
 
 ```
 "Super Tanks++"
@@ -8683,7 +8711,7 @@
 }
 ```
 
-#### Zombie Ability
+##### Zombie Ability
 
 ```
 "Super Tanks++"
@@ -8765,7 +8793,7 @@
 }
 ```
 
-## Administration System
+### Administration System
 
 ```
 "Super Tanks++"
