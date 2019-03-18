@@ -481,7 +481,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
 	{
 		return;
 	}
@@ -494,13 +494,13 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
-	{
-		return;
-	}
-
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
 			if (g_iShieldAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -584,13 +584,13 @@ public void ST_OnChangeType(int tank, bool revert)
 
 public void ST_OnRockThrow(int tank, int rock)
 {
-	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
-	{
-		return;
-	}
-
 	if (ST_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iShieldAbility[ST_GetTankType(tank)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flShieldChance[ST_GetTankType(tank)])
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		DataPack dpShieldThrow;
 		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpShieldThrow.WriteCell(EntIndexToEntRef(rock));
@@ -760,7 +760,7 @@ static void vShieldAbility(int tank, bool shield)
 
 static bool bHasAdminAccess(int admin)
 {
-	if (!bIsValidClient(admin, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
 	{
 		return true;
 	}
@@ -815,7 +815,7 @@ static bool bHasAdminAccess(int admin)
 
 static bool bIsAdminImmune(int survivor, int tank)
 {
-	if (!bIsValidClient(survivor, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
 	{
 		return false;
 	}

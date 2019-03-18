@@ -302,13 +302,13 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
-	{
-		return;
-	}
-
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_SPECIAL_KEY2 == ST_SPECIAL_KEY2)
 		{
 			if (g_iRespawnAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -386,7 +386,7 @@ static void vReset()
 
 static bool bHasAdminAccess(int admin)
 {
-	if (!bIsValidClient(admin, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
 	{
 		return true;
 	}

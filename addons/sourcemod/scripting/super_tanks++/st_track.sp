@@ -308,13 +308,13 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
-	{
-		return;
-	}
-
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
 			if (g_iTrackAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -353,13 +353,13 @@ public void ST_OnChangeType(int tank, bool revert)
 
 public void ST_OnRockThrow(int tank, int rock)
 {
-	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
-	{
-		return;
-	}
-
 	if (ST_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iTrackAbility[ST_GetTankType(tank)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flTrackChance[ST_GetTankType(tank)])
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if ((!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && !g_bTrack[tank])
 		{
 			g_bTrack[tank] = true;
@@ -699,7 +699,7 @@ static int iGetRockTarget(float pos[3], float angle[3], int tank)
 
 static bool bHasAdminAccess(int admin)
 {
-	if (!bIsValidClient(admin, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
 	{
 		return true;
 	}
@@ -754,7 +754,7 @@ static bool bHasAdminAccess(int admin)
 
 static bool bIsAdminImmune(int survivor, int tank)
 {
-	if (!bIsValidClient(survivor, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
 	{
 		return false;
 	}

@@ -303,13 +303,13 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
-	{
-		return;
-	}
-
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
 			if (g_iThrowAbility[ST_GetTankType(tank)] == 0 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -348,13 +348,13 @@ public void ST_OnChangeType(int tank, bool revert)
 
 public void ST_OnRockThrow(int tank, int rock)
 {
-	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
-	{
-		return;
-	}
-
 	if (ST_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iThrowAbility[ST_GetTankType(tank)] > 0 && GetRandomFloat(0.1, 100.0) <= g_flThrowChance[ST_GetTankType(tank)])
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		DataPack dpThrow;
 		CreateDataTimer(0.1, tTimerThrow, dpThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpThrow.WriteCell(EntIndexToEntRef(rock));
@@ -383,7 +383,7 @@ static void vReset()
 
 static bool bHasAdminAccess(int admin)
 {
-	if (!bIsValidClient(admin, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
 	{
 		return true;
 	}

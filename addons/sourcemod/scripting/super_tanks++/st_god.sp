@@ -10,6 +10,7 @@
  **/
 
 #include <sourcemod>
+#include <sdkhooks>
 
 #undef REQUIRE_PLUGIN
 #include <st_clone>
@@ -29,6 +30,8 @@ public Plugin myinfo =
 	url = ST_URL
 };
 
+bool g_bLateLoad;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
@@ -37,6 +40,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 		return APLRes_SilentFailure;
 	}
+
+	g_bLateLoad = late;
 
 	return APLRes_Success;
 }
@@ -47,7 +52,7 @@ bool g_bCloneInstalled, g_bGod[MAXPLAYERS + 1], g_bGod2[MAXPLAYERS + 1];
 
 float g_flGodChance[ST_MAXTYPES + 1], g_flGodDuration[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
-int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iGodAbility[ST_MAXTYPES + 1], g_iGodCount[MAXPLAYERS + 1], g_iGodMessage[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iGodAbility[ST_MAXTYPES + 1], g_iGodCount[MAXPLAYERS + 1], g_iGodMessage[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -76,6 +81,19 @@ public void OnPluginStart()
 	LoadTranslations("super_tanks++.phrases");
 
 	RegConsoleCmd("sm_st_god", cmdGodInfo, "View information about the God ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
 }
 
 public void OnMapStart()
@@ -85,6 +103,8 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+
 	vRemoveGod(client);
 }
 
@@ -229,6 +249,26 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
+	{
+		if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
+		{
+			if ((!bHasAdminAccess(victim) && !ST_HasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			{
+				return Plugin_Continue;
+			}
+			else if (g_bGod[victim])
+			{
+				return Plugin_Handled;
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 public void ST_OnConfigsLoad()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -236,12 +276,14 @@ public void ST_OnConfigsLoad()
 		if (bIsValidClient(iPlayer))
 		{
 			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
 		}
 	}
 
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
 		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -262,6 +304,10 @@ public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
 				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
 			}
 		}
 	}
@@ -284,17 +330,10 @@ public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			{
 				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
 			}
-		}
-	}
-}
-
-public void ST_OnPluginEnd()
-{
-	for (int iTank = 1; iTank <= MaxClients; iTank++)
-	{
-		if (bIsTank(iTank, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bGod[iTank])
-		{
-			SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
 		}
 	}
 }
@@ -313,7 +352,7 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
-	if (ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
 	{
 		return;
 	}
@@ -326,13 +365,13 @@ public void ST_OnAbilityActivated(int tank)
 
 public void ST_OnButtonPressed(int tank, int button)
 {
-	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
-	{
-		return;
-	}
-
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
 			if (g_iGodAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -363,8 +402,6 @@ public void ST_OnButtonPressed(int tank, int button)
 								g_bGod[tank] = true;
 								g_iGodCount[tank]++;
 
-								SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
-
 								ST_PrintToChat(tank, "%s %t", ST_TAG3, "GodHuman", g_iGodCount[tank], g_iHumanAmmo[ST_GetTankType(tank)]);
 							}
 						}
@@ -391,8 +428,6 @@ public void ST_OnButtonReleased(int tank, int button)
 				{
 					g_bGod[tank] = false;
 
-					SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
-
 					vReset2(tank);
 				}
 			}
@@ -417,8 +452,6 @@ static void vGodAbility(int tank)
 		if (GetRandomFloat(0.1, 100.0) <= g_flGodChance[ST_GetTankType(tank)])
 		{
 			g_bGod[tank] = true;
-
-			SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
 
 			CreateTimer(g_flGodDuration[ST_GetTankType(tank)], tTimerStopGod, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 
@@ -452,11 +485,6 @@ static void vRemoveGod(int tank)
 	g_bGod[tank] = false;
 	g_bGod2[tank] = false;
 	g_iGodCount[tank] = 0;
-
-	if (ST_IsTankSupported(tank))
-	{
-		SetEntProp(tank, Prop_Data, "m_takedamage", 2, 1);
-	}
 }
 
 static void vReset()
@@ -488,7 +516,7 @@ static void vReset2(int tank)
 
 static bool bHasAdminAccess(int admin)
 {
-	if (!bIsValidClient(admin, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
 	{
 		return true;
 	}
@@ -541,6 +569,63 @@ static bool bHasAdminAccess(int admin)
 	return true;
 }
 
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
+}
+
 public Action tTimerStopGod(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -552,8 +637,6 @@ public Action tTimerStopGod(Handle timer, int userid)
 	}
 
 	g_bGod[iTank] = false;
-
-	SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
 
 	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && (ST_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && !g_bGod2[iTank])
 	{

@@ -349,7 +349,7 @@ public any aNative_HideEntity(Handle plugin, int numParams)
 public any aNative_IsAdminImmune(Handle plugin, int numParams)
 {
 	int iSurvivor = GetNativeCell(1), iTank = GetNativeCell(2);
-	if (bIsAdminImmune(iSurvivor, iTank))
+	if (bIsHumanSurvivor(iSurvivor) && bIsTank(iTank) && bIsAdminImmune(iSurvivor, iTank))
 	{
 		return true;
 	}
