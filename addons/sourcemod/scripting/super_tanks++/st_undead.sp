@@ -469,7 +469,7 @@ static void vUndeadAbility(int tank)
 
 static bool bHasAdminAccess(int admin)
 {
-	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(admin, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
 	{
 		return true;
 	}

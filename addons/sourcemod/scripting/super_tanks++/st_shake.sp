@@ -614,7 +614,7 @@ static void vShakeHit(int survivor, int tank, float chance, int enabled, int mes
 
 static bool bHasAdminAccess(int admin)
 {
-	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(admin, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
 	{
 		return true;
 	}
@@ -669,7 +669,7 @@ static bool bHasAdminAccess(int admin)
 
 static bool bIsAdminImmune(int survivor, int tank)
 {
-	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(survivor, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
 	{
 		return false;
 	}

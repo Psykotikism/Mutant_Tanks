@@ -4146,7 +4146,7 @@ static void vThrowInterval(int tank, float time)
 
 static bool bHasAdminAccess(int admin, int type = 0)
 {
-	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	if (!bIsValidClient(admin, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT))
 	{
 		return true;
 	}
