@@ -95,6 +95,14 @@
 			// 4: ON, show both names and health.
 			"Display Health"			"7"
 
+			// Display type of Super Tanks' names and health.
+			// Note: This setting can be overridden for each Super Tank under the "General" section of their settings.
+			// --
+			// 0: OFF
+			// 1: ON, show in hint text.
+			// 2: ON, show in center text.
+			"Display Health Type"			"1"
+
 			// Enable Super Tanks++ in finales only.
 			// --
 			// 0: OFF
@@ -431,6 +439,14 @@
 			// 2: ON, show health only.
 			// 4: ON, show health bar only.
 			"Display Health"			"7"
+
+			// Display type of the Super Tank's names and health.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// --
+			// 0: OFF
+			// 1: ON, show in hint text.
+			// 2: ON, show in center text.
+			"Display Health Type"			"1"
 
 			// The characters used to represent the health bar of the Super Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
