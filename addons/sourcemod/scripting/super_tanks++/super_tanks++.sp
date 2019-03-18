@@ -138,15 +138,14 @@ ArrayList g_alAdmins;
 bool g_bAbilityFound[ST_MAXTYPES + 1][ST_MAX_ABILITIES + 1], g_bAbilityPlugin[ST_MAX_ABILITIES + 1], g_bAdminMenu[MAXPLAYERS + 1], g_bBlood[MAXPLAYERS + 1], g_bBlur[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bDying[MAXPLAYERS + 1], g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1],
 	g_bFound[ST_MAX_ABILITIES + 1], g_bGeneralConfig, g_bIce[MAXPLAYERS + 1], g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSettingsFound, g_bSmoke[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1], g_bUsedParser[MAXPLAYERS + 1];
 
-char g_sCurrentSection[128], g_sCurrentSubSection[128], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sHealthCharacters[4], g_sHealthCharacters2[ST_MAXTYPES + 1][4], g_sHealthCharacters3[MAXPLAYERS + 1][4], g_sSavePath[PLATFORM_MAX_PATH], g_sSection[MAXPLAYERS + 1][128], g_sTankName[ST_MAXTYPES + 1][33],
-	g_sTankName2[MAXPLAYERS + 1][33], g_sUsedPath[PLATFORM_MAX_PATH];
 char g_sPluginFilenames[][] =
 {
 	"st_absorb.smx", "st_acid.smx", "st_aimless.smx", "st_ammo.smx", "st_blind.smx", "st_bomb.smx", "st_bury.smx", "st_car.smx", "st_choke.smx", "st_clone.smx", "st_cloud.smx", "st_drop.smx", "st_drug.smx", "st_drunk.smx", "st_electric.smx", "st_enforce.smx", "st_fast.smx", "st_fire.smx", "st_fling.smx", "st_fragile.smx", "st_ghost.smx",
 	"st_god.smx", "st_gravity.smx", "st_heal.smx", "st_hit.smx", "st_hurt.smx", "st_hypno.smx", "st_ice.smx", "st_idle.smx", "st_invert.smx", "st_item.smx", "st_jump.smx", "st_kamikaze.smx", "st_lag.smx", "st_leech.smx", "st_medic.smx", "st_meteor.smx", "st_minion.smx", "st_necro.smx", "st_nullify.smx", "st_omni.smx", "st_panic.smx",
 	"st_pimp.smx", "st_puke.smx", "st_pyro.smx", "st_quiet.smx", "st_recoil.smx", "st_regen.smx", "st_respawn.smx", "st_restart.smx", "st_rock.smx", "st_rocket.smx", "st_shake.smx", "st_shield.smx", "st_shove.smx", "st_slow.smx", "st_smash.smx", "st_smite.smx", "st_spam.smx", "st_splash.smx", "st_throw.smx", "st_track.smx", "st_ultimate.smx",
 	"st_undead.smx", "st_vampire.smx", "st_vision.smx", "st_warp.smx", "st_whirl.smx", "st_witch.smx", "st_xiphos.smx", "st_yell.smx", "st_zombie.smx"
-};
+}, g_sCurrentSection[128], g_sCurrentSubSection[128], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sHealthCharacters[4], g_sHealthCharacters2[ST_MAXTYPES + 1][4], g_sHealthCharacters3[MAXPLAYERS + 1][4], g_sSavePath[PLATFORM_MAX_PATH], g_sSection[MAXPLAYERS + 1][128], g_sTankName[ST_MAXTYPES + 1][33], g_sTankName2[MAXPLAYERS + 1][33],
+	g_sUsedPath[PLATFORM_MAX_PATH];
 
 ConfigState g_csState, g_csState2[MAXPLAYERS + 1];
 
