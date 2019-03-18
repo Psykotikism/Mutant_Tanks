@@ -160,14 +160,14 @@ Handle g_hAbilityActivatedForward, g_hButtonPressedForward, g_hButtonReleasedFor
 int g_iAccessFlags, g_iAccessFlags2[ST_MAXTYPES + 1], g_iAccessFlags3[MAXPLAYERS + 1], g_iAccessFlags4[ST_MAXTYPES + 1][MAXPLAYERS + 1], g_iAllowDeveloper, g_iAnnounceArrival, g_iAnnounceArrival2[ST_MAXTYPES + 1], g_iAnnounceArrival3[MAXPLAYERS + 1], g_iAnnounceDeath, g_iAnnounceDeath2[ST_MAXTYPES + 1], g_iAnnounceDeath3[MAXPLAYERS + 1],
 	g_iBaseHealth, g_iBodyEffects[ST_MAXTYPES + 1], g_iBodyEffects2[MAXPLAYERS + 1], g_iBossHealth[ST_MAXTYPES + 1][4], g_iBossHealth2[MAXPLAYERS + 1][4], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[ST_MAXTYPES + 1], g_iBossStages2[MAXPLAYERS + 1], g_iBossType[ST_MAXTYPES + 1][4], g_iBossType2[MAXPLAYERS + 1][4],
 	g_iBulletImmunity[ST_MAXTYPES + 1], g_iBulletImmunity2[MAXPLAYERS + 1], g_iConfigCreate, g_iConfigEnable, g_iConfigExecute, g_iCooldown[MAXPLAYERS + 1], g_iDeathRevert, g_iDeathRevert2[ST_MAXTYPES + 1], g_iDeathRevert3[MAXPLAYERS + 1], g_iDetectPlugins, g_iDetectPlugins2[ST_MAXTYPES + 1], g_iDetectPlugins3[MAXPLAYERS + 1],
-	g_iDisplayHealth, g_iDisplayHealth2[ST_MAXTYPES + 1], g_iDisplayHealth3[MAXPLAYERS + 1], g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[MAXPLAYERS + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[MAXPLAYERS + 1], g_iFavoriteType[MAXPLAYERS + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly,
-	g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleType[4], g_iFinaleWave[4], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[MAXPLAYERS + 1], g_iFlame[MAXPLAYERS + 1][3], g_iFlameColor[ST_MAXTYPES + 1][4], g_iFlameColor2[MAXPLAYERS + 1][4], g_iGameModeTypes, g_iGlowEnabled[ST_MAXTYPES + 1], g_iGlowEnabled2[MAXPLAYERS + 1],
-	g_iGlowColor[ST_MAXTYPES + 1][3], g_iGlowColor2[MAXPLAYERS + 1][3], g_iHumanCooldown, g_iHumanSupport[ST_MAXTYPES + 1], g_iIgnoreLevel, g_iIgnoreLevel2[MAXPLAYERS + 1], g_iImmunityFlags, g_iImmunityFlags2[ST_MAXTYPES + 1], g_iImmunityFlags3[MAXPLAYERS + 1], g_iImmunityFlags4[ST_MAXTYPES + 1][MAXPLAYERS + 1], g_iLastButtons[MAXPLAYERS + 1],
-	g_iLight[MAXPLAYERS + 1][4], g_iLightColor[ST_MAXTYPES + 1][4], g_iLightColor2[MAXPLAYERS + 1][4], g_iMasterControl, g_iMaxType, g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[MAXPLAYERS + 1], g_iMenuEnabled[ST_MAXTYPES + 1], g_iMinType, g_iMultiHealth, g_iMultiHealth2[ST_MAXTYPES + 1], g_iMultiHealth3[MAXPLAYERS + 1],
-	g_iOzTank[MAXPLAYERS + 1][3], g_iOzTankColor[ST_MAXTYPES + 1][4], g_iOzTankColor2[MAXPLAYERS + 1][4], g_iPlayerCount[2], g_iPluginEnabled, g_iPropsAttached[ST_MAXTYPES + 1], g_iPropsAttached2[MAXPLAYERS + 1], g_iRandomTank[ST_MAXTYPES + 1], g_iRandomTank2[MAXPLAYERS + 1], g_iRegularAmount, g_iRegularType, g_iRegularWave,
-	g_iRockEffects[ST_MAXTYPES + 1], g_iRockEffects2[MAXPLAYERS + 1], g_iRock[MAXPLAYERS + 1][17], g_iRockColor[ST_MAXTYPES + 1][4], g_iRockColor2[MAXPLAYERS + 1][4], g_iSection[MAXPLAYERS + 1], g_iSkinColor[ST_MAXTYPES + 1][4], g_iSkinColor2[MAXPLAYERS + 1][4], g_iSpawnEnabled[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSTMode,
-	g_iTankEnabled[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankModel[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iTire[MAXPLAYERS + 1][3], g_iTireColor[ST_MAXTYPES + 1][4], g_iTireColor2[MAXPLAYERS + 1][4], g_iTransformType[ST_MAXTYPES + 1][10], g_iTransformType2[MAXPLAYERS + 1][10],
-	g_iType, g_iTypeLimit[ST_MAXTYPES + 1];
+	g_iDisplayHealth, g_iDisplayHealth2[ST_MAXTYPES + 1], g_iDisplayHealth3[MAXPLAYERS + 1], g_iDisplayHealthType, g_iDisplayHealthType2[ST_MAXTYPES + 1], g_iDisplayHealthType3[MAXPLAYERS + 1], g_iExplosiveImmunity[ST_MAXTYPES + 1], g_iExplosiveImmunity2[MAXPLAYERS + 1], g_iExtraHealth[ST_MAXTYPES + 1], g_iExtraHealth2[MAXPLAYERS + 1],
+	g_iFavoriteType[MAXPLAYERS + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinaleTank[ST_MAXTYPES + 1], g_iFinaleType[4], g_iFinaleWave[4], g_iFireImmunity[ST_MAXTYPES + 1], g_iFireImmunity2[MAXPLAYERS + 1], g_iFlame[MAXPLAYERS + 1][3], g_iFlameColor[ST_MAXTYPES + 1][4], g_iFlameColor2[MAXPLAYERS + 1][4], g_iGameModeTypes,
+	g_iGlowEnabled[ST_MAXTYPES + 1], g_iGlowEnabled2[MAXPLAYERS + 1], g_iGlowColor[ST_MAXTYPES + 1][3], g_iGlowColor2[MAXPLAYERS + 1][3], g_iHumanCooldown, g_iHumanSupport[ST_MAXTYPES + 1], g_iIgnoreLevel, g_iIgnoreLevel2[MAXPLAYERS + 1], g_iImmunityFlags, g_iImmunityFlags2[ST_MAXTYPES + 1], g_iImmunityFlags3[MAXPLAYERS + 1],
+	g_iImmunityFlags4[ST_MAXTYPES + 1][MAXPLAYERS + 1], g_iLastButtons[MAXPLAYERS + 1], g_iLight[MAXPLAYERS + 1][4], g_iLightColor[ST_MAXTYPES + 1][4], g_iLightColor2[MAXPLAYERS + 1][4], g_iMasterControl, g_iMaxType, g_iMeleeImmunity[ST_MAXTYPES + 1], g_iMeleeImmunity2[MAXPLAYERS + 1], g_iMenuEnabled[ST_MAXTYPES + 1], g_iMinType,
+	g_iMultiHealth, g_iMultiHealth2[ST_MAXTYPES + 1], g_iMultiHealth3[MAXPLAYERS + 1], g_iOzTank[MAXPLAYERS + 1][3], g_iOzTankColor[ST_MAXTYPES + 1][4], g_iOzTankColor2[MAXPLAYERS + 1][4], g_iPlayerCount[2], g_iPluginEnabled, g_iPropsAttached[ST_MAXTYPES + 1], g_iPropsAttached2[MAXPLAYERS + 1], g_iRandomTank[ST_MAXTYPES + 1],
+	g_iRandomTank2[MAXPLAYERS + 1], g_iRegularAmount, g_iRegularType, g_iRegularWave, g_iRockEffects[ST_MAXTYPES + 1], g_iRockEffects2[MAXPLAYERS + 1], g_iRock[MAXPLAYERS + 1][17], g_iRockColor[ST_MAXTYPES + 1][4], g_iRockColor2[MAXPLAYERS + 1][4], g_iSection[MAXPLAYERS + 1], g_iSkinColor[ST_MAXTYPES + 1][4], g_iSkinColor2[MAXPLAYERS + 1][4],
+	g_iSpawnEnabled[ST_MAXTYPES + 1], g_iSpawnMode[ST_MAXTYPES + 1], g_iSTMode, g_iTankEnabled[ST_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankModel[MAXPLAYERS + 1], g_iTankNote[ST_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iTire[MAXPLAYERS + 1][3], g_iTireColor[ST_MAXTYPES + 1][4], g_iTireColor2[MAXPLAYERS + 1][4],
+	g_iTransformType[ST_MAXTYPES + 1][10], g_iTransformType2[MAXPLAYERS + 1][10], g_iType, g_iTypeLimit[ST_MAXTYPES + 1];
 
 TopMenu g_tmSTMenu;
 
@@ -2043,6 +2043,7 @@ public void SMCParseStart(SMCParser smc)
 	g_iDeathRevert = 0;
 	g_iDetectPlugins = 0;
 	g_iDisplayHealth = 7;
+	g_iDisplayHealthType = 1;
 	g_sHealthCharacters = "|,-";
 	g_iFinalesOnly = 0;
 	g_iMultiHealth = 0;
@@ -2082,6 +2083,7 @@ public void SMCParseStart(SMCParser smc)
 		g_iDeathRevert2[iIndex] = 0;
 		g_iDetectPlugins2[iIndex] = 0;
 		g_iDisplayHealth2[iIndex] = 0;
+		g_iDisplayHealthType2[iIndex] = 0;
 		g_sHealthCharacters2[iIndex][0] = '\0';
 		g_iMultiHealth2[iIndex] = 0;
 		g_iHumanSupport[iIndex] = 0;
@@ -2155,6 +2157,7 @@ public void SMCParseStart(SMCParser smc)
 			g_iDeathRevert3[iPlayer] = 0;
 			g_iDetectPlugins3[iPlayer] = 0;
 			g_iDisplayHealth3[iPlayer] = 0;
+			g_iDisplayHealthType3[iPlayer] = 0;
 			g_sHealthCharacters3[iPlayer][0] = '\0';
 			g_iMultiHealth3[iPlayer] = 0;
 			g_iGlowEnabled2[iPlayer] = 0;
@@ -2342,6 +2345,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_iDeathRevert = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_iDeathRevert, value, 0, 1);
 			g_iDetectPlugins = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_iDetectPlugins, value, 0, 1);
 			g_iDisplayHealth = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_iDisplayHealth, value, 0, 7);
+			g_iDisplayHealthType = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_iDisplayHealthType, value, 0, 2);
 			g_iFinalesOnly = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_iFinalesOnly, value, 0, 1);
 			g_iMultiHealth = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_iMultiHealth, value, 0, 3);
 			g_iHumanCooldown = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "cooldown", g_iHumanCooldown, value, 0, 9999999999);
@@ -2473,6 +2477,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_iDeathRevert2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_iDeathRevert2[iIndex], value, 0, 1);
 						g_iDetectPlugins2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_iDetectPlugins2[iIndex], value, 0, 1);
 						g_iDisplayHealth2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_iDisplayHealth2[iIndex], value, 0, 7);
+						g_iDisplayHealthType2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_iDisplayHealthType2[iIndex], value, 0, 2);
 						g_iMultiHealth2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_iMultiHealth2[iIndex], value, 0, 3);
 						g_iHumanSupport[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "HumanSupport", "Human Support", "Human_Support", "human", g_iHumanSupport[iIndex], value, 0, 1);
 						g_iGlowEnabled[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_iGlowEnabled[iIndex], value, 0, 1);
@@ -2684,6 +2689,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_iDeathRevert3[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_iDeathRevert3[iPlayer], value, 0, 1);
 							g_iDetectPlugins3[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_iDetectPlugins3[iPlayer], value, 0, 1);
 							g_iDisplayHealth3[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_iDisplayHealth3[iPlayer], value, 0, 7);
+							g_iDisplayHealthType3[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_iDisplayHealthType3[iPlayer], value, 0, 2);
 							g_iMultiHealth3[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_iMultiHealth3[iPlayer], value, 0, 3);
 							g_iGlowEnabled2[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_iGlowEnabled2[iPlayer], value, 0, 1);
 							g_iBossStages2[iPlayer] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_iBossStages2[iPlayer], value, 1, 4);
@@ -4692,8 +4698,10 @@ public Action tTimerTankHealthUpdate(Handle timer)
 						}
 
 						int iHealth = (g_bDying[iTarget]) ? 0 : GetClientHealth(iTarget),
-							iDisplayHealth = (g_iDisplayHealth2[g_iTankType[iTarget]] > 0) ? g_iDisplayHealth2[g_iTankType[iTarget]] : g_iDisplayHealth;
+							iDisplayHealth = (g_iDisplayHealth2[g_iTankType[iTarget]] > 0) ? g_iDisplayHealth2[g_iTankType[iTarget]] : g_iDisplayHealth,
+							iDisplayHealthType = (g_iDisplayHealthType2[g_iTankType[iTarget]] > 0) ? g_iDisplayHealthType2[g_iTankType[iTarget]] : g_iDisplayHealthType;
 						iDisplayHealth = (bIsTank(iTarget, ST_CHECK_FAKECLIENT) && g_iDisplayHealth3[iTarget] > 0) ? g_iDisplayHealth3[iTarget] : iDisplayHealth;
+						iDisplayHealthType = (bIsTank(iTarget, ST_CHECK_FAKECLIENT) && g_iDisplayHealthType3[iTarget] > 0) ? g_iDisplayHealthType3[iTarget] : iDisplayHealthType;
 						float flPercentage = (float(iHealth) / float(g_iTankHealth[iTarget])) * 100;
 						char sHealthBar[51], sHealthChars[4], sSet[2][2], sTankName[33];
 						sHealthChars = (g_sHealthCharacters2[g_iTankType[iTarget]][0] != '\0') ? g_sHealthCharacters2[g_iTankType[iTarget]] : g_sHealthCharacters;
@@ -4712,15 +4720,34 @@ public Action tTimerTankHealthUpdate(Handle timer)
 							StrCat(sHealthBar, sizeof(sHealthBar), sSet[1]);
 						}
 
-						switch (iDisplayHealth)
+						switch (iDisplayHealthType)
 						{
-							case 1: PrintHintText(iPlayer, "%s", sTankName);
-							case 2: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, g_iTankHealth[iTarget], flPercentage, "%%");
-							case 3: PrintHintText(iPlayer, "%s [%i/%i HP (%.0f%s)]", sTankName, iHealth, g_iTankHealth[iTarget], flPercentage, "%%");
-							case 4: PrintHintText(iPlayer, "HP: |-<%s>-|", sHealthBar);
-							case 5: PrintHintText(iPlayer, "%s\nHP: |-<%s>-|", sTankName, sHealthBar);
-							case 6: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, g_iTankHealth[iTarget], flPercentage, "%%", sHealthBar);
-							case 7: PrintHintText(iPlayer, "%s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, iHealth, g_iTankHealth[iTarget], flPercentage, "%%", sHealthBar);
+							case 1:
+							{
+								switch (iDisplayHealth)
+								{
+									case 1: PrintHintText(iPlayer, "%s", sTankName);
+									case 2: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, g_iTankHealth[iTarget], flPercentage, "%%");
+									case 3: PrintHintText(iPlayer, "%s [%i/%i HP (%.0f%s)]", sTankName, iHealth, g_iTankHealth[iTarget], flPercentage, "%%");
+									case 4: PrintHintText(iPlayer, "HP: |-<%s>-|", sHealthBar);
+									case 5: PrintHintText(iPlayer, "%s\nHP: |-<%s>-|", sTankName, sHealthBar);
+									case 6: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, g_iTankHealth[iTarget], flPercentage, "%%", sHealthBar);
+									case 7: PrintHintText(iPlayer, "%s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, iHealth, g_iTankHealth[iTarget], flPercentage, "%%", sHealthBar);
+								}
+							}
+							case 2:
+							{
+								switch (iDisplayHealth)
+								{
+									case 1: PrintCenterText(iPlayer, "%s", sTankName);
+									case 2: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, g_iTankHealth[iTarget], flPercentage, "%%");
+									case 3: PrintCenterText(iPlayer, "%s [%i/%i HP (%.0f%s)]", sTankName, iHealth, g_iTankHealth[iTarget], flPercentage, "%%");
+									case 4: PrintCenterText(iPlayer, "HP: |-<%s>-|", sHealthBar);
+									case 5: PrintCenterText(iPlayer, "%s\nHP: |-<%s>-|", sTankName, sHealthBar);
+									case 6: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, g_iTankHealth[iTarget], flPercentage, "%%", sHealthBar);
+									case 7: PrintCenterText(iPlayer, "%s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, iHealth, g_iTankHealth[iTarget], flPercentage, "%%", sHealthBar);
+								}
+							}
 						}
 					}
 				}
