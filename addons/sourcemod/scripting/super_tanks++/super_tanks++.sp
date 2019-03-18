@@ -138,7 +138,8 @@ ArrayList g_alAdmins;
 bool g_bAbilityFound[ST_MAXTYPES + 1][ST_MAX_ABILITIES + 1], g_bAbilityPlugin[ST_MAX_ABILITIES + 1], g_bAdminMenu[MAXPLAYERS + 1], g_bBlood[MAXPLAYERS + 1], g_bBlur[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bDying[MAXPLAYERS + 1], g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1],
 	g_bFound[ST_MAX_ABILITIES + 1], g_bGeneralConfig, g_bIce[MAXPLAYERS + 1], g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSettingsFound, g_bSmoke[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1], g_bUsedParser[MAXPLAYERS + 1];
 
-char g_sCurrentSection[128], g_sCurrentSubSection[128], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sSavePath[PLATFORM_MAX_PATH], g_sSection[MAXPLAYERS + 1][128], g_sTankName[ST_MAXTYPES + 1][33], g_sTankName2[MAXPLAYERS + 1][33], g_sUsedPath[PLATFORM_MAX_PATH];
+char g_sCurrentSection[128], g_sCurrentSubSection[128], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sHealthCharacters[4], g_sHealthCharacters2[ST_MAXTYPES + 1][4], g_sHealthCharacters3[MAXPLAYERS + 1][4], g_sSavePath[PLATFORM_MAX_PATH], g_sSection[MAXPLAYERS + 1][128], g_sTankName[ST_MAXTYPES + 1][33],
+	g_sTankName2[MAXPLAYERS + 1][33], g_sUsedPath[PLATFORM_MAX_PATH];
 char g_sPluginFilenames[][] =
 {
 	"st_absorb.smx", "st_acid.smx", "st_aimless.smx", "st_ammo.smx", "st_blind.smx", "st_bomb.smx", "st_bury.smx", "st_car.smx", "st_choke.smx", "st_clone.smx", "st_cloud.smx", "st_drop.smx", "st_drug.smx", "st_drunk.smx", "st_electric.smx", "st_enforce.smx", "st_fast.smx", "st_fire.smx", "st_fling.smx", "st_fragile.smx", "st_ghost.smx",
@@ -2043,6 +2044,7 @@ public void SMCParseStart(SMCParser smc)
 	g_iDeathRevert = 0;
 	g_iDetectPlugins = 0;
 	g_iDisplayHealth = 7;
+	g_sHealthCharacters = "|,-";
 	g_iFinalesOnly = 0;
 	g_iMultiHealth = 0;
 	g_iMinType = 1;
@@ -2081,6 +2083,7 @@ public void SMCParseStart(SMCParser smc)
 		g_iDeathRevert2[iIndex] = 0;
 		g_iDetectPlugins2[iIndex] = 0;
 		g_iDisplayHealth2[iIndex] = 0;
+		g_sHealthCharacters2[iIndex][0] = '\0';
 		g_iMultiHealth2[iIndex] = 0;
 		g_iHumanSupport[iIndex] = 0;
 		g_iGlowEnabled[iIndex] = 0;
@@ -2153,6 +2156,7 @@ public void SMCParseStart(SMCParser smc)
 			g_iDeathRevert3[iPlayer] = 0;
 			g_iDetectPlugins3[iPlayer] = 0;
 			g_iDisplayHealth3[iPlayer] = 0;
+			g_sHealthCharacters3[iPlayer][0] = '\0';
 			g_iMultiHealth3[iPlayer] = 0;
 			g_iGlowEnabled2[iPlayer] = 0;
 			g_iFavoriteType[iPlayer] = 0;
@@ -2349,15 +2353,22 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_iRegularType = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularType", "Regular Type", "Regular_Type", "regtype", g_iRegularType, value, 0, g_iMaxType);
 			g_iRegularWave = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularWave", "Regular Wave", "Regular_Wave", "regwave", g_iRegularWave, value, 0, 1);
 
-			if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "TypeRange", false) || StrEqual(key, "Type Range", false) || StrEqual(key, "Type_Range", false) || StrEqual(key, "types", false)) && value[0] != '\0')
+			if (StrEqual(g_sCurrentSubSection, "General", false) && value[0] != '\0')
 			{
-				char sRange[2][5], sValue[10];
-				strcopy(sValue, sizeof(sValue), value);
-				ReplaceString(sValue, sizeof(sValue), " ", "");
-				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+				if (StrEqual(key, "HealthCharacters", false) || StrEqual(key, "Health Characters", false) || StrEqual(key, "Health_Characters", false) || StrEqual(key, "hpchars", false))
+				{
+					strcopy(g_sHealthCharacters, sizeof(g_sHealthCharacters), value);
+				}
+				else if (StrEqual(key, "TypeRange", false) || StrEqual(key, "Type Range", false) || StrEqual(key, "Type_Range", false) || StrEqual(key, "types", false))
+				{
+					char sRange[2][5], sValue[10];
+					strcopy(sValue, sizeof(sValue), value);
+					ReplaceString(sValue, sizeof(sValue), " ", "");
+					ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
-				g_iMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 1, ST_MAXTYPES) : g_iMinType;
-				g_iMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 1, ST_MAXTYPES) : g_iMaxType;
+					g_iMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 1, ST_MAXTYPES) : g_iMinType;
+					g_iMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 1, ST_MAXTYPES) : g_iMaxType;
+				}
 			}
 
 			if ((StrEqual(g_sCurrentSubSection, "Administration", false) || StrEqual(g_sCurrentSubSection, "admin", false)) && value[0] != '\0')
@@ -2413,6 +2424,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_iConfigEnable = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "EnableCustomConfigs", "Enable Custom Configs", "Enable_Custom_Configs", "enabled", g_iConfigEnable, value, 0, 1);
 				g_iConfigCreate = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_iConfigEnable, value, 0, 31);
 				g_iConfigExecute = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_iConfigExecute, value, 0, 31);
+
 				if (StrEqual(g_sCurrentSubSection, "GameModes", false) || StrEqual(g_sCurrentSubSection, "Game Modes", false) || StrEqual(g_sCurrentSubSection, "Game_Modes", false) || StrEqual(g_sCurrentSubSection, "modes", false))
 				{
 					if (StrEqual(key, "EnabledGameModes", false) || StrEqual(key, "Enabled Game Modes", false) || StrEqual(key, "Enabled_Game_Modes", false) || StrEqual(key, "enabled", false))
@@ -2486,44 +2498,49 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_iFireImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_iFireImmunity[iIndex], value, 0, 1);
 						g_iMeleeImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_iMeleeImmunity[iIndex], value, 0, 1);
 
-						if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false)))
+						if (StrEqual(g_sCurrentSubSection, "General", false) && value[0] != '\0')
 						{
-							strcopy(g_sTankName[iIndex], sizeof(g_sTankName[]), value[0] == '\0' ? sTankName[iType] : value);
-						}
-
-						if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false)) && value[0] != '\0')
-						{
-							char sSet[4][4], sValue[16];
-							strcopy(sValue, sizeof(sValue), value);
-							ReplaceString(sValue, sizeof(sValue), " ", "");
-							ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
-							for (int iPos = 0; iPos < 4; iPos++)
+							if (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false))
 							{
-								if (sSet[iPos][0] == '\0')
-								{
-									continue;
-								}
-
-								g_iSkinColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+								strcopy(g_sTankName[iIndex], sizeof(g_sTankName[]), value);
 							}
-						}
-
-						if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false)) && value[0] != '\0')
-						{
-							char sSet[3][4], sValue[12];
-							strcopy(sValue, sizeof(sValue), value);
-							ReplaceString(sValue, sizeof(sValue), " ", "");
-							ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
-							for (int iPos = 0; iPos < 3; iPos++)
+							else if (StrEqual(key, "HealthCharacters", false) || StrEqual(key, "Health Characters", false) || StrEqual(key, "Health_Characters", false) || StrEqual(key, "hpchars", false))
 							{
-								if (sSet[iPos][0] == '\0')
-								{
-									continue;
-								}
+								strcopy(g_sHealthCharacters2[iIndex], sizeof(g_sHealthCharacters2[]), value);
+							}
+							else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
+							{
+								char sSet[4][4], sValue[16];
+								strcopy(sValue, sizeof(sValue), value);
+								ReplaceString(sValue, sizeof(sValue), " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-								g_iGlowColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+								for (int iPos = 0; iPos < 4; iPos++)
+								{
+									if (sSet[iPos][0] == '\0')
+									{
+										continue;
+									}
+
+									g_iSkinColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+								}
+							}
+							else if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
+							{
+								char sSet[3][4], sValue[12];
+								strcopy(sValue, sizeof(sValue), value);
+								ReplaceString(sValue, sizeof(sValue), " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+								for (int iPos = 0; iPos < 3; iPos++)
+								{
+									if (sSet[iPos][0] == '\0')
+									{
+										continue;
+									}
+
+									g_iGlowColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+								}
 							}
 						}
 
@@ -2541,44 +2558,46 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 						if (StrEqual(g_sCurrentSubSection, "Spawn", false) && value[0] != '\0')
 						{
-							char sSet[4][6], sValue[24];
-							strcopy(sValue, sizeof(sValue), value);
-							ReplaceString(sValue, sizeof(sValue), " ", "");
-							ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
-							for (int iPos = 0; iPos < 4; iPos++)
+							if (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false))
 							{
-								if (sSet[iPos][0] == '\0')
-								{
-									continue;
-								}
+								char sSet[10][5], sValue[50];
+								strcopy(sValue, sizeof(sValue), value);
+								ReplaceString(sValue, sizeof(sValue), " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-								if (StrEqual(key, "BossHealthStages", false) || StrEqual(key, "Boss Health Stages", false) || StrEqual(key, "Boss_Health_Stages", false) || StrEqual(key, "healthstages", false))
+								for (int iPos = 0; iPos < 10; iPos++)
 								{
-									g_iBossHealth[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 1, ST_MAXHEALTH) : g_iBossHealth[iIndex][iPos];
-								}
-								else if (StrEqual(key, "BossTypes", false) || StrEqual(key, "Boss Types", false) || StrEqual(key, "Boss_Types", false))
-								{
-									g_iBossType[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType) : g_iBossType[iIndex][iPos];
+									if (sSet[iPos][0] == '\0')
+									{
+										continue;
+									}
+
+									g_iTransformType[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType) : g_iTransformType[iIndex][iPos];
 								}
 							}
-						}
-
-						if (StrEqual(g_sCurrentSubSection, "Spawn", false) && (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false)) && value[0] != '\0')
-						{
-							char sSet[10][5], sValue[50];
-							strcopy(sValue, sizeof(sValue), value);
-							ReplaceString(sValue, sizeof(sValue), " ", "");
-							ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
-							for (int iPos = 0; iPos < 10; iPos++)
+							else
 							{
-								if (sSet[iPos][0] == '\0')
-								{
-									continue;
-								}
+								char sSet[4][6], sValue[24];
+								strcopy(sValue, sizeof(sValue), value);
+								ReplaceString(sValue, sizeof(sValue), " ", "");
+								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-								g_iTransformType[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType) : g_iTransformType[iIndex][iPos];
+								for (int iPos = 0; iPos < 4; iPos++)
+								{
+									if (sSet[iPos][0] == '\0')
+									{
+										continue;
+									}
+
+									if (StrEqual(key, "BossHealthStages", false) || StrEqual(key, "Boss Health Stages", false) || StrEqual(key, "Boss_Health_Stages", false) || StrEqual(key, "healthstages", false))
+									{
+										g_iBossHealth[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 1, ST_MAXHEALTH) : g_iBossHealth[iIndex][iPos];
+									}
+									else if (StrEqual(key, "BossTypes", false) || StrEqual(key, "Boss Types", false) || StrEqual(key, "Boss_Types", false))
+									{
+										g_iBossType[iIndex][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType) : g_iBossType[iIndex][iPos];
+									}
+								}
 							}
 						}
 
@@ -2687,44 +2706,49 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_iMeleeImmunity2[iPlayer] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_iMeleeImmunity2[iPlayer], value, 0, 1);
 							g_iFavoriteType[iPlayer] = iGetValue(g_sCurrentSubSection, "Administration", "Administration", "Administration", "admin", key, "FavoriteType", "Favorite Type", "Favorite_Type", "favorite", g_iFavoriteType[iPlayer], value, 0, g_iMaxType);
 
-							if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false)) && value[0] != '\0')
+							if (StrEqual(g_sCurrentSubSection, "General", false) && value[0] != '\0')
 							{
-								strcopy(g_sTankName2[iPlayer], sizeof(g_sTankName[]), value);
-							}
-
-							if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false)) && value[0] != '\0')
-							{
-								char sSet[4][4], sValue[16];
-								strcopy(sValue, sizeof(sValue), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
-								for (int iPos = 0; iPos < 4; iPos++)
+								if (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false))
 								{
-									if (sSet[iPos][0] == '\0')
-									{
-										continue;
-									}
-
-									g_iSkinColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+									strcopy(g_sTankName2[iPlayer], sizeof(g_sTankName[]), value);
 								}
-							}
-
-							if (StrEqual(g_sCurrentSubSection, "General", false) && (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false)) && value[0] != '\0')
-							{
-								char sSet[3][4], sValue[12];
-								strcopy(sValue, sizeof(sValue), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
-								for (int iPos = 0; iPos < 3; iPos++)
+								else if (StrEqual(key, "HealthCharacters", false) || StrEqual(key, "Health Characters", false) || StrEqual(key, "Health_Characters", false) || StrEqual(key, "hpchars", false))
 								{
-									if (sSet[iPos][0] == '\0')
-									{
-										continue;
-									}
+									strcopy(g_sHealthCharacters3[iPlayer], sizeof(g_sHealthCharacters3[]), value);
+								}
+								else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
+								{
+									char sSet[4][4], sValue[16];
+									strcopy(sValue, sizeof(sValue), value);
+									ReplaceString(sValue, sizeof(sValue), " ", "");
+									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-									g_iGlowColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+									for (int iPos = 0; iPos < 4; iPos++)
+									{
+										if (sSet[iPos][0] == '\0')
+										{
+											continue;
+										}
+
+										g_iSkinColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+									}
+								}
+								else if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
+								{
+									char sSet[3][4], sValue[12];
+									strcopy(sValue, sizeof(sValue), value);
+									ReplaceString(sValue, sizeof(sValue), " ", "");
+									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+									for (int iPos = 0; iPos < 3; iPos++)
+									{
+										if (sSet[iPos][0] == '\0')
+										{
+											continue;
+										}
+
+										g_iGlowColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+									}
 								}
 							}
 
@@ -2742,44 +2766,46 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 							if (StrEqual(g_sCurrentSubSection, "Spawn", false) && value[0] != '\0')
 							{
-								char sSet[4][6], sValue[24];
-								strcopy(sValue, sizeof(sValue), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
-								for (int iPos = 0; iPos < 4; iPos++)
+								if (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false))
 								{
-									if (sSet[iPos][0] == '\0')
-									{
-										continue;
-									}
+									char sSet[10][5], sValue[50];
+									strcopy(sValue, sizeof(sValue), value);
+									ReplaceString(sValue, sizeof(sValue), " ", "");
+									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-									if (StrEqual(key, "BossHealthStages", false) || StrEqual(key, "Boss Health Stages", false) || StrEqual(key, "Boss_Health_Stages", false) || StrEqual(key, "healthstages", false))
+									for (int iPos = 0; iPos < 10; iPos++)
 									{
-										g_iBossHealth2[iPlayer][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 1, ST_MAXHEALTH) : g_iBossHealth2[iPlayer][iPos];
-									}
-									else if (StrEqual(key, "BossTypes", false) || StrEqual(key, "Boss Types", false) || StrEqual(key, "Boss_Types", false))
-									{
-										g_iBossType2[iPlayer][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType) : g_iBossType2[iPlayer][iPos];
+										if (sSet[iPos][0] == '\0')
+										{
+											continue;
+										}
+
+										g_iTransformType2[iPlayer][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType) : g_iTransformType2[iPlayer][iPos];
 									}
 								}
-							}
-
-							if (StrEqual(g_sCurrentSubSection, "Spawn", false) && (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false)) && value[0] != '\0')
-							{
-								char sSet[10][5], sValue[50];
-								strcopy(sValue, sizeof(sValue), value);
-								ReplaceString(sValue, sizeof(sValue), " ", "");
-								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
-								for (int iPos = 0; iPos < 10; iPos++)
+								else
 								{
-									if (sSet[iPos][0] == '\0')
-									{
-										continue;
-									}
+									char sSet[4][6], sValue[24];
+									strcopy(sValue, sizeof(sValue), value);
+									ReplaceString(sValue, sizeof(sValue), " ", "");
+									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-									g_iTransformType2[iPlayer][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType) : g_iTransformType2[iPlayer][iPos];
+									for (int iPos = 0; iPos < 4; iPos++)
+									{
+										if (sSet[iPos][0] == '\0')
+										{
+											continue;
+										}
+
+										if (StrEqual(key, "BossHealthStages", false) || StrEqual(key, "Boss Health Stages", false) || StrEqual(key, "Boss_Health_Stages", false) || StrEqual(key, "healthstages", false))
+										{
+											g_iBossHealth2[iPlayer][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 1, ST_MAXHEALTH) : g_iBossHealth2[iPlayer][iPos];
+										}
+										else if (StrEqual(key, "BossTypes", false) || StrEqual(key, "Boss Types", false) || StrEqual(key, "Boss_Types", false))
+										{
+											g_iBossType2[iPlayer][iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_iMinType, g_iMaxType) : g_iBossType2[iPlayer][iPos];
+										}
+									}
 								}
 							}
 
@@ -4670,17 +4696,21 @@ public Action tTimerTankHealthUpdate(Handle timer)
 							iDisplayHealth = (g_iDisplayHealth2[g_iTankType[iTarget]] > 0) ? g_iDisplayHealth2[g_iTankType[iTarget]] : g_iDisplayHealth;
 						iDisplayHealth = (bIsTank(iTarget, ST_CHECK_FAKECLIENT) && g_iDisplayHealth3[iTarget] > 0) ? g_iDisplayHealth3[iTarget] : iDisplayHealth;
 						float flPercentage = (float(iHealth) / float(g_iTankHealth[iTarget])) * 100;
-						char sHealthBar[51], sTankName[33];
+						char sHealthBar[51], sHealthChars[4], sSet[2][2], sTankName[33];
+						sHealthChars = (g_sHealthCharacters2[g_iTankType[iTarget]][0] != '\0') ? g_sHealthCharacters2[g_iTankType[iTarget]] : g_sHealthCharacters;
+						sHealthChars = (bIsTank(iTarget, ST_CHECK_FAKECLIENT) && g_sHealthCharacters3[iTarget][0] != '\0') ? g_sHealthCharacters3[iTarget] : sHealthChars;
+						ReplaceString(sHealthChars, sizeof(sHealthChars), " ", "");
+						ExplodeString(sHealthChars, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 						sTankName = (g_sTankName2[iTarget][0] == '\0') ? g_sTankName[g_iTankType[iTarget]] : g_sTankName2[iTarget];
 
 						for (int iCount = 0; iCount < (float(iHealth) / float(g_iTankHealth[iTarget])) * 50 && iCount < 50; iCount++)
 						{
-							StrCat(sHealthBar, sizeof(sHealthBar), "#");
+							StrCat(sHealthBar, sizeof(sHealthBar), sSet[0]);
 						}
 
 						for (int iCount = 0; iCount < 50; iCount++)
 						{
-							StrCat(sHealthBar, sizeof(sHealthBar), "=");
+							StrCat(sHealthBar, sizeof(sHealthBar), sSet[1]);
 						}
 
 						switch (iDisplayHealth)
