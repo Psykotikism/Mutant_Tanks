@@ -1,5 +1,47 @@
 # Changelog
 
+## Version 8.59 (March 20, 2019)
+
+Changes:
+
+1. The output of the `sm_st_config` command is now printed in chat instead of console to avoid overloading the buffer.
+2. Added the `Omni`, `Xiphos`, and `Yell` abilities.
+3. The `ST_GetTankName()` native now has a third argument.
+4. Added the `Regular Type` and `Finale Types` settings under the `Plugin Settings/Waves` section.
+5. Added the `Detect Plugins` setting under the `Plugin Settings/General` section.
+6. Added the `Display Health Type` setting under the `Plugin Settings/General` section.
+7. Added the `Health Characters` setting under the `Plugin Settings/General` section.
+8. Added the `Access Flags` and `Immunity Flags` settings under the `Plugin Settings/Administration` section.
+9. Added the `ST_FindAbility()`, `ST_HasAdminAccess()`, and `ST_IsAdminImmune()` natives.
+10. All Color settings now accept values below `0` which will generate random colors.
+11. The following settings can now be overridden for individual Super Tanks (View the `INFORMATION.md` file for details):
+- `Access Flags`
+- `Announce Arrival`
+- `Announce Death`
+- `Death Revert`
+- `Detect Plugins`
+- `Display Health`
+- `Display Health Type`
+- `Health Characters`
+- `Immunity Flags`
+- `Multiply Health`
+
+12. Added `Access Flags` and `Immunity Flags` settings for each ability.
+13. Updated documentation for several natives/forwards.
+14. Added deprecated messages for old/deleted natives/forwards.
+15. Added an administration system designed for the usage and effectiveness of each Super Tank type.
+16. The administration system can now override any Super Tank type for each admin (View the `INFORMATION.md` file for details).
+17. Added the `Allow Developer` setting under `Plugin Settings/Administration`.
+18. Improved health display.
+19. The `sm_tank` and `sm_supertank` commands now use separate callbacks.
+20. Added the `sm_tank2` and `sm_st_list` commands.
+
+Files:
+
+1. Updated the `super_tanks++.cfg` file with the above changes.
+2. Updated the `super_tanks++.inc` file with the above changes.
+3. Updated the `super_tanks++.phrases.txt` file with new phrases.
+
 ## Version 8.58 (March 1, 2019)
 
 Bug fixes:
@@ -499,8 +541,8 @@ Files:
 Changes:
 
 1. Added support for dynamic loading to the modules. (Thanks Lux!)
-2. Switched RemoveEntity(entity) back to AcceptEntityInput(entity, "Kill") just to be courteous to those who prefer to still use SM 1.8.
-3. Removed IsDedicatedServer() just to be courteous to those who do not have dedicated servers. (Please don't report bugs if you're playing on a local/listen server. :/)
+2. Switched `RemoveEntity(entity)` back to `AcceptEntityInput(entity, "Kill")` just to be courteous to those who prefer to still use SM 1.8.
+3. Removed `IsDedicatedServer()` just to be courteous to those who do not have dedicated servers. (Please don't report bugs if you're playing on a local/listen server. :/)
 
 ## Version 8.36 (August 20, 2018)
 

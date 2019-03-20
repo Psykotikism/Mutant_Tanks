@@ -53,7 +53,7 @@ ConVar g_cvSTTankThrowForce;
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flThrowChance[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowCarOptions[ST_MAXTYPES + 1], g_iThrowCount[MAXPLAYERS + 1], g_iThrowInfectedOptions[ST_MAXTYPES + 1], g_iThrowMessage[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iThrowAbility[ST_MAXTYPES + 1], g_iThrowCarOptions[ST_MAXTYPES + 1], g_iThrowCount[MAXPLAYERS + 1], g_iThrowInfectedOptions[ST_MAXTYPES + 1], g_iThrowMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -232,8 +232,17 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -245,16 +254,39 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iThrowAbility[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iThrowAbility[type], value, 0, 0, 15);
-	g_iThrowMessage[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iThrowMessage[type], value, 0, 0, 15);
-	g_iThrowCarOptions[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "car", main, g_iThrowCarOptions[type], value, 0, 0, 7);
-	g_flThrowChance[type] = flGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", main, g_flThrowChance[type], value, 33.3, 0.0, 100.0);
-	g_iThrowInfectedOptions[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infected", main, g_iThrowInfectedOptions[type], value, 0, 0, 127);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "throwability", false) || StrEqual(subsection, "throw ability", false) || StrEqual(subsection, "throw_ability", false) || StrEqual(subsection, "throw", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 60, bHasAbilities(subsection, "throwability", "throw ability", "throw_ability", "throw"));
+		g_iHumanAbility[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iThrowAbility[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iThrowAbility[type], value, 0, 15);
+		g_iThrowMessage[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iThrowMessage[type], value, 0, 15);
+		g_iThrowCarOptions[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "car", g_iThrowCarOptions[type], value, 0, 7);
+		g_flThrowChance[type] = flGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_flThrowChance[type], value, 0.0, 100.0);
+		g_iThrowInfectedOptions[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infected", g_iThrowInfectedOptions[type], value, 0, 127);
+
+		if (StrEqual(subsection, "throwability", false) || StrEqual(subsection, "throw ability", false) || StrEqual(subsection, "throw_ability", false) || StrEqual(subsection, "throw", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -273,6 +305,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
 			if (g_iThrowAbility[ST_GetTankType(tank)] == 0 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -313,6 +350,11 @@ public void ST_OnRockThrow(int tank, int rock)
 {
 	if (ST_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iThrowAbility[ST_GetTankType(tank)] > 0 && GetRandomFloat(0.1, 100.0) <= g_flThrowChance[ST_GetTankType(tank)])
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		DataPack dpThrow;
 		CreateDataTimer(0.1, tTimerThrow, dpThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpThrow.WriteCell(EntIndexToEntRef(rock));
@@ -339,6 +381,61 @@ static void vReset()
 	}
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 public Action tTimerThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -350,7 +447,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (g_iThrowAbility[ST_GetTankType(iTank)] == 0))
+	if (!ST_IsTankSupported(iTank) || (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (g_iThrowAbility[ST_GetTankType(iTank)] == 0))
 	{
 		return Plugin_Stop;
 	}
@@ -448,7 +545,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_MELEE)
 						{
 							char sTankName[33];
-							ST_GetTankName(iTank, sTankName);
+							ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Throw", sTankName);
 						}
 					}
@@ -507,7 +604,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_RANGE)
 						{
 							char sTankName[33];
-							ST_GetTankName(iTank, sTankName);
+							ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 							ST_PrintToChatAll("%s %t", ST_TAG2, "Throw2", sTankName);
 						}
 					}
@@ -526,7 +623,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_SPECIAL)
 					{
 						char sTankName[33];
-						ST_GetTankName(iTank, sTankName);
+						ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw3", sTankName);
 					}
 				}
@@ -552,7 +649,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					if (g_iThrowMessage[ST_GetTankType(iTank)] & ST_MESSAGE_SPECIAL2)
 					{
 						char sTankName[33];
-						ST_GetTankName(iTank, sTankName);
+						ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Throw4", sTankName);
 					}
 				}

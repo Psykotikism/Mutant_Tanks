@@ -52,7 +52,7 @@ bool g_bCloneInstalled, g_bInvert[MAXPLAYERS + 1], g_bInvert2[MAXPLAYERS + 1], g
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flInvertChance[ST_MAXTYPES + 1], g_flInvertDuration[ST_MAXTYPES + 1], g_flInvertRange[ST_MAXTYPES + 1], g_flInvertRangeChance[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iInvertAbility[ST_MAXTYPES + 1], g_iInvertCount[MAXPLAYERS + 1], g_iInvertEffect[ST_MAXTYPES + 1], g_iInvertHit[ST_MAXTYPES + 1], g_iInvertHitMode[ST_MAXTYPES + 1], g_iInvertMessage[ST_MAXTYPES + 1], g_iInvertOwner[MAXPLAYERS + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iInvertAbility[ST_MAXTYPES + 1], g_iInvertCount[MAXPLAYERS + 1], g_iInvertEffect[ST_MAXTYPES + 1], g_iInvertHit[ST_MAXTYPES + 1], g_iInvertHitMode[ST_MAXTYPES + 1], g_iInvertMessage[ST_MAXTYPES + 1], g_iInvertOwner[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -249,7 +249,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		return Plugin_Continue;
 	}
 
-	if (g_bInvert[client])
+	if (bIsSurvivor(client) && g_bInvert[client])
 	{
 		vel[0] = -vel[0];
 		if (buttons & IN_FORWARD)
@@ -287,27 +287,50 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if ((g_iInvertHitMode[ST_GetTankType(attacker)] == 0 || g_iInvertHitMode[ST_GetTankType(attacker)] == 1) && ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iInvertHitMode[ST_GetTankType(attacker)] == 0 || g_iInvertHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
+			if ((!ST_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || ST_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vInvertHit(victim, attacker, g_flInvertChance[ST_GetTankType(attacker)], g_iInvertHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if ((g_iInvertHitMode[ST_GetTankType(victim)] == 0 || g_iInvertHitMode[ST_GetTankType(victim)] == 2) && ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iInvertHitMode[ST_GetTankType(victim)] == 0 || g_iInvertHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
+			if ((!ST_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vInvertHit(attacker, victim, g_flInvertChance[ST_GetTankType(victim)], g_iInvertHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -323,20 +346,51 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iInvertAbility[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iInvertAbility[type], value, 0, 0, 1);
-	g_iInvertEffect[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iInvertEffect[type], value, 0, 0, 7);
-	g_iInvertMessage[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iInvertMessage[type], value, 0, 0, 7);
-	g_flInvertChance[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", main, g_flInvertChance[type], value, 33.3, 0.0, 100.0);
-	g_flInvertDuration[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", main, g_flInvertDuration[type], value, 5.0, 0.1, 9999999999.0);
-	g_iInvertHit[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertHit", "Invert Hit", "Invert_Hit", "hit", main, g_iInvertHit[type], value, 0, 0, 1);
-	g_iInvertHitMode[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertHitMode", "Invert Hit Mode", "Invert_Hit_Mode", "hitmde", main, g_iInvertHitMode[type], value, 0, 0, 2);
-	g_flInvertRange[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertRange", "Invert Range", "Invert_Range", "range", main, g_flInvertRange[type], value, 150.0, 1.0, 9999999999.0);
-	g_flInvertRangeChance[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", main, g_flInvertRangeChance[type], value, 15.0, 0.0, 100.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "invertability", false) || StrEqual(subsection, "invert ability", false) || StrEqual(subsection, "invert_ability", false) || StrEqual(subsection, "invert", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 29, bHasAbilities(subsection, "invertability", "invert ability", "invert_ability", "invert"));
+		g_iHumanAbility[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iInvertAbility[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iInvertAbility[type], value, 0, 1);
+		g_iInvertEffect[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iInvertEffect[type], value, 0, 7);
+		g_iInvertMessage[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iInvertMessage[type], value, 0, 7);
+		g_flInvertChance[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", g_flInvertChance[type], value, 0.0, 100.0);
+		g_flInvertDuration[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_flInvertDuration[type], value, 0.1, 9999999999.0);
+		g_iInvertHit[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertHit", "Invert Hit", "Invert_Hit", "hit", g_iInvertHit[type], value, 0, 1);
+		g_iInvertHitMode[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertHitMode", "Invert Hit Mode", "Invert_Hit_Mode", "hitmde", g_iInvertHitMode[type], value, 0, 2);
+		g_flInvertRange[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertRange", "Invert Range", "Invert_Range", "range", g_flInvertRange[type], value, 1.0, 9999999999.0);
+		g_flInvertRangeChance[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_flInvertRangeChance[type], value, 0.0, 100.0);
+
+		if (StrEqual(subsection, "invertability", false) || StrEqual(subsection, "invert ability", false) || StrEqual(subsection, "invert_ability", false) || StrEqual(subsection, "invert", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -353,6 +407,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iInvertAbility[ST_GetTankType(tank)] == 1)
 	{
 		vInvertAbility(tank);
@@ -363,6 +422,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
 			if (g_iInvertAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -391,6 +455,11 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vInvertAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (g_iInvertCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bInvert4[tank] = false;
@@ -400,10 +469,9 @@ static void vInvertAbility(int tank)
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
-
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && !ST_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -434,6 +502,11 @@ static void vInvertAbility(int tank)
 
 static void vInvertHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
+	if ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || ST_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, tank))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
 		if (g_iInvertCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
@@ -462,7 +535,7 @@ static void vInvertHit(int survivor, int tank, float chance, int enabled, int me
 				if (g_iInvertMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Invert", sTankName, survivor);
 				}
 			}
@@ -522,6 +595,118 @@ static void vReset2(int tank)
 	g_iInvertCount[tank] = 0;
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
+}
+
 public Action tTimerStopInvert(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -550,7 +735,7 @@ public Action tTimerStopInvert(Handle timer, DataPack pack)
 
 	int iMessage = pack.ReadCell();
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bInvert3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && (ST_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bInvert3[iTank])
 	{
 		g_bInvert3[iTank] = true;
 

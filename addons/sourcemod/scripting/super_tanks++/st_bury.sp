@@ -52,7 +52,7 @@ bool g_bBury[MAXPLAYERS + 1], g_bBury2[MAXPLAYERS + 1], g_bBury3[MAXPLAYERS + 1]
 
 float g_flBuryChance[ST_MAXTYPES + 1], g_flBuryDuration[ST_MAXTYPES + 1], g_flBuryHeight[ST_MAXTYPES + 1], g_flBuryRange[ST_MAXTYPES + 1], g_flBuryRangeChance[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
-int g_iBuryAbility[ST_MAXTYPES + 1], g_iBuryCount[MAXPLAYERS + 1], g_iBuryEffect[ST_MAXTYPES + 1], g_iBuryHit[ST_MAXTYPES + 1], g_iBuryHitMode[ST_MAXTYPES + 1], g_iBuryMessage[ST_MAXTYPES + 1], g_iBuryOwner[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iBuryAbility[ST_MAXTYPES + 1], g_iBuryCount[MAXPLAYERS + 1], g_iBuryEffect[ST_MAXTYPES + 1], g_iBuryHit[ST_MAXTYPES + 1], g_iBuryHitMode[ST_MAXTYPES + 1], g_iBuryMessage[ST_MAXTYPES + 1], g_iBuryOwner[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -250,6 +250,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iBuryHitMode[ST_GetTankType(attacker)] == 0 || g_iBuryHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
+			if ((!ST_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || ST_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vBuryHit(victim, attacker, g_flBuryChance[ST_GetTankType(attacker)], g_iBuryHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
@@ -257,18 +262,36 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iBuryHitMode[ST_GetTankType(victim)] == 0 || g_iBuryHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
+			if ((!ST_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vBuryHit(attacker, victim, g_flBuryChance[ST_GetTankType(victim)], g_iBuryHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -285,21 +308,52 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iBuryAbility[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iBuryAbility[type], value, 0, 0, 1);
-	g_iBuryEffect[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iBuryEffect[type], value, 0, 0, 7);
-	g_iBuryMessage[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iBuryMessage[type], value, 0, 0, 3);
-	g_flBuryChance[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", main, g_flBuryChance[type], value, 33.3, 0.0, 100.0);
-	g_flBuryDuration[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", main, g_flBuryDuration[type], value, 5.0, 0.1, 9999999999.0);
-	g_flBuryHeight[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHeight", "Bury Height", "Bury_Height", "height", main, g_flBuryHeight[type], value, 50.0, 0.1, 9999999999.0);
-	g_iBuryHit[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", main, g_iBuryHit[type], value, 0, 0, 1);
-	g_iBuryHitMode[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", main, g_iBuryHitMode[type], value, 0, 0, 2);
-	g_flBuryRange[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryRange", "Bury Range", "Bury_Range", "range", main, g_flBuryRange[type], value, 150.0, 1.0, 9999999999.0);
-	g_flBuryRangeChance[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", main, g_flBuryRangeChance[type], value, 15.0, 0.0, 100.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "buryability", false) || StrEqual(subsection, "bury ability", false) || StrEqual(subsection, "bury_ability", false) || StrEqual(subsection, "bury", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 6, bHasAbilities(subsection, "buryability", "bury ability", "bury_ability", "bury"));
+		g_iHumanAbility[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iBuryAbility[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iBuryAbility[type], value, 0, 1);
+		g_iBuryEffect[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iBuryEffect[type], value, 0, 7);
+		g_iBuryMessage[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iBuryMessage[type], value, 0, 3);
+		g_flBuryChance[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_flBuryChance[type], value, 0.0, 100.0);
+		g_flBuryDuration[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_flBuryDuration[type], value, 0.1, 9999999999.0);
+		g_flBuryHeight[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_flBuryHeight[type], value, 0.1, 9999999999.0);
+		g_iBuryHit[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_iBuryHit[type], value, 0, 1);
+		g_iBuryHitMode[type] = iGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_iBuryHitMode[type], value, 0, 2);
+		g_flBuryRange[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryRange", "Bury Range", "Bury_Range", "range", g_flBuryRange[type], value, 1.0, 9999999999.0);
+		g_flBuryRangeChance[type] = flGetValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_flBuryRangeChance[type], value, 0.0, 100.0);
+
+		if (StrEqual(subsection, "buryability", false) || StrEqual(subsection, "bury ability", false) || StrEqual(subsection, "bury_ability", false) || StrEqual(subsection, "bury", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnPluginEnd()
@@ -327,6 +381,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iBuryAbility[ST_GetTankType(tank)] == 1)
 	{
 		vBuryAbility(tank);
@@ -337,6 +396,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
 			if (g_iBuryAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -368,6 +432,11 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vBuryAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (g_iBuryCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bBury4[tank] = false;
@@ -377,10 +446,9 @@ static void vBuryAbility(int tank)
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
-
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && !ST_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -411,6 +479,11 @@ static void vBuryAbility(int tank)
 
 static void vBuryHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
+	if ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || ST_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, tank))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor) && bIsEntityGrounded(survivor))
 	{
 		if (g_iBuryCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
@@ -457,7 +530,7 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, int mess
 				if (g_iBuryMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Bury", sTankName, survivor, flOrigin);
 				}
 			}
@@ -545,6 +618,118 @@ static void vStopBury(int survivor, int tank)
 	}
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
+}
+
 public Action tTimerStopBury(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -572,7 +757,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 
 	int iMessage = pack.ReadCell();
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bBury3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && (ST_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && (iMessage & ST_MESSAGE_RANGE) && !g_bBury3[iTank])
 	{
 		g_bBury3[iTank] = true;
 

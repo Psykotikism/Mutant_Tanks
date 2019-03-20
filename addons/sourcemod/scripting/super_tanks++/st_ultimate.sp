@@ -59,7 +59,7 @@ bool g_bCloneInstalled, g_bUltimate[MAXPLAYERS + 1], g_bUltimate2[MAXPLAYERS + 1
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flUltimateDamage[MAXPLAYERS + 1], g_flUltimateDamageBoost[ST_MAXTYPES + 1], g_flUltimateDamageRequired[ST_MAXTYPES + 1], g_flUltimateDuration[ST_MAXTYPES + 1], g_flUltimateHealthPortion[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iUltimateAbility[ST_MAXTYPES + 1], g_iUltimateAmount[ST_MAXTYPES + 1], g_iUltimateCount[MAXPLAYERS + 1], g_iUltimateCount2[MAXPLAYERS + 1], g_iUltimateHealth[MAXPLAYERS + 1], g_iUltimateHealthLimit[ST_MAXTYPES + 1], g_iUltimateMessage[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iUltimateAbility[ST_MAXTYPES + 1], g_iUltimateAmount[ST_MAXTYPES + 1], g_iUltimateCount[MAXPLAYERS + 1], g_iUltimateCount2[MAXPLAYERS + 1], g_iUltimateHealth[MAXPLAYERS + 1], g_iUltimateHealthLimit[ST_MAXTYPES + 1], g_iUltimateMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -262,6 +262,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
 		{
+			if ((!ST_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || ST_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
+			{
+				return Plugin_Continue;
+			}
+
 			if (g_iUltimateAbility[ST_GetTankType(attacker)] == 1)
 			{
 				if (!g_bUltimate[attacker])
@@ -299,27 +304,69 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iUltimateAbility[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iUltimateAbility[type], value, 0, 0, 1);
-	g_iUltimateMessage[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iUltimateMessage[type], value, 0, 0, 1);
-	g_iUltimateAmount[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateAmount", "Ultimate Amount", "Ultimate_Amount", "amount", main, g_iUltimateAmount[type], value, 1, 1, 9999999999);
-	g_flUltimateDamageBoost[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDamageBoost", "Ultimate Damage Boost", "Ultimate_Damage_Boost", "dmgboost", main, g_flUltimateDamageBoost[type], value, 1.2, 0.1, 9999999999.0);
-	g_flUltimateDamageRequired[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDamageRequired", "Ultimate Damage Required", "Ultimate_Damage_Required", "dmgrequired", main, g_flUltimateDamageRequired[type], value, 200.0, 0.1, 9999999999.0);
-	g_flUltimateDuration[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDuration", "Ultimate Duration", "Ultimate_Duration", "duration", main, g_flUltimateDuration[type], value, 5.0, 0.1, 9999999999.0);
-	g_iUltimateHealthLimit[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateHealthLimit", "Ultimate Health Limit", "Ultimate_Health_Limit", "healthlimit", main, g_iUltimateHealthLimit[type], value, 100, 1, ST_MAXHEALTH);
-	g_flUltimateHealthPortion[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateHealthPortion", "Ultimate Health Portion", "Ultimate_Health_Portion", "healthportion", main, g_flUltimateHealthPortion[type], value, 0.5, 0.1, 1.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "ultimateability", false) || StrEqual(subsection, "ultimate ability", false) || StrEqual(subsection, "ultimate_ability", false) || StrEqual(subsection, "ultimate", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 62, bHasAbilities(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate"));
+		g_iHumanAbility[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iUltimateAbility[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iUltimateAbility[type], value, 0, 1);
+		g_iUltimateMessage[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iUltimateMessage[type], value, 0, 1);
+		g_iUltimateAmount[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateAmount", "Ultimate Amount", "Ultimate_Amount", "amount", g_iUltimateAmount[type], value, 1, 9999999999);
+		g_flUltimateDamageBoost[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDamageBoost", "Ultimate Damage Boost", "Ultimate_Damage_Boost", "dmgboost", g_flUltimateDamageBoost[type], value, 0.1, 9999999999.0);
+		g_flUltimateDamageRequired[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDamageRequired", "Ultimate Damage Required", "Ultimate_Damage_Required", "dmgrequired", g_flUltimateDamageRequired[type], value, 0.1, 9999999999.0);
+		g_flUltimateDuration[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDuration", "Ultimate Duration", "Ultimate_Duration", "duration", g_flUltimateDuration[type], value, 0.1, 9999999999.0);
+		g_iUltimateHealthLimit[type] = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateHealthLimit", "Ultimate Health Limit", "Ultimate_Health_Limit", "healthlimit", g_iUltimateHealthLimit[type], value, 1, ST_MAXHEALTH);
+		g_flUltimateHealthPortion[type] = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateHealthPortion", "Ultimate Health Portion", "Ultimate_Health_Portion", "healthportion", g_flUltimateHealthPortion[type], value, 0.1, 1.0);
+
+		if (StrEqual(subsection, "ultimateability", false) || StrEqual(subsection, "ultimate ability", false) || StrEqual(subsection, "ultimate_ability", false) || StrEqual(subsection, "ultimate", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnPluginEnd()
@@ -347,6 +394,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iUltimateAbility[ST_GetTankType(tank)] == 1 && g_bUltimate[tank] && !g_bUltimate2[tank])
 	{
 		vUltimateAbility(tank);
@@ -357,6 +409,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
 			if (g_iUltimateAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -400,6 +457,11 @@ public void ST_OnPostTankSpawn(int tank)
 
 static void vUltimateAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (GetClientHealth(tank) <= g_iUltimateHealthLimit[ST_GetTankType(tank)])
 	{
 		if (g_iUltimateCount[tank] < g_iUltimateAmount[ST_GetTankType(tank)] && g_iUltimateCount2[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
@@ -431,7 +493,7 @@ static void vUltimateAbility(int tank)
 			if (g_iUltimateMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Ultimate", sTankName);
 			}
 		}
@@ -484,6 +546,118 @@ static void vReset2(int tank)
 	}
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
+}
+
 public Action tTimerStopUltimate(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -500,7 +674,7 @@ public Action tTimerStopUltimate(Handle timer, int userid)
 
 	SetEntProp(iTank, Prop_Data, "m_takedamage", 2, 1);
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && !g_bUltimate3[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && (ST_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && !g_bUltimate3[iTank])
 	{
 		vReset2(iTank);
 	}
@@ -508,7 +682,7 @@ public Action tTimerStopUltimate(Handle timer, int userid)
 	if (g_iUltimateMessage[ST_GetTankType(iTank)] == 1)
 	{
 		char sTankName[33];
-		ST_GetTankName(iTank, sTankName);
+		ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Ultimate2", sTankName);
 	}
 

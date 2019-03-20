@@ -47,7 +47,7 @@ bool g_bCloneInstalled, g_bFast[MAXPLAYERS + 1], g_bFast2[MAXPLAYERS + 1];
 
 float g_flFastChance[ST_MAXTYPES + 1], g_flFastDuration[ST_MAXTYPES + 1], g_flFastSpeed[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
-int g_iFastAbility[ST_MAXTYPES + 1], g_iFastCount[MAXPLAYERS + 1], g_iFastMessage[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iFastAbility[ST_MAXTYPES + 1], g_iFastCount[MAXPLAYERS + 1], g_iFastMessage[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -231,8 +231,17 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -245,17 +254,40 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iHumanMode[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
-	g_iFastAbility[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iFastAbility[type], value, 0, 0, 1);
-	g_iFastMessage[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iFastMessage[type], value, 0, 0, 1);
-	g_flFastChance[type] = flGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "FastChance", "Fast Chance", "Fast_Chance", "chance", main, g_flFastChance[type], value, 33.3, 0.0, 100.0);
-	g_flFastDuration[type] = flGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", main, g_flFastDuration[type], value, 5.0, 0.1, 9999999999.0);
-	g_flFastSpeed[type] = flGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", main, g_flFastSpeed[type], value, 5.0, 3.0, 10.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "fastability", false) || StrEqual(subsection, "fast ability", false) || StrEqual(subsection, "fast_ability", false) || StrEqual(subsection, "fast", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 16, bHasAbilities(subsection, "fastability", "fast ability", "fast_ability", "fast"));
+		g_iHumanAbility[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanMode[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
+		g_iFastAbility[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iFastAbility[type], value, 0, 1);
+		g_iFastMessage[type] = iGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iFastMessage[type], value, 0, 1);
+		g_flFastChance[type] = flGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_flFastChance[type], value, 0.0, 100.0);
+		g_flFastDuration[type] = flGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_flFastDuration[type], value, 0.1, 9999999999.0);
+		g_flFastSpeed[type] = flGetValue(subsection, "fastability", "fast ability", "fast_ability", "fast", key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_flFastSpeed[type], value, 3.0, 10.0);
+
+		if (StrEqual(subsection, "fastability", false) || StrEqual(subsection, "fast ability", false) || StrEqual(subsection, "fast_ability", false) || StrEqual(subsection, "fast", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnPluginEnd()
@@ -283,6 +315,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iFastAbility[ST_GetTankType(tank)] == 1 && !g_bFast[tank])
 	{
 		vFastAbility(tank);
@@ -293,6 +330,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
 			if (g_iFastAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -367,6 +409,11 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vFastAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (g_iFastCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_flFastChance[ST_GetTankType(tank)])
@@ -387,7 +434,7 @@ static void vFastAbility(int tank)
 			if (g_iFastMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Fast", sTankName);
 			}
 		}
@@ -427,7 +474,7 @@ static void vReset2(int tank)
 	if (g_iFastMessage[ST_GetTankType(tank)] == 1)
 	{
 		char sTankName[33];
-		ST_GetTankName(tank, sTankName);
+		ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Fast2", sTankName);
 	}
 }
@@ -448,10 +495,65 @@ static void vReset3(int tank)
 	}
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 public Action tTimerStopFast(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled))
+	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled))
 	{
 		vReset2(iTank);
 
@@ -460,7 +562,7 @@ public Action tTimerStopFast(Handle timer, int userid)
 
 	vReset2(iTank);
 
-	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && !g_bFast2[iTank])
+	if (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && (ST_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && !g_bFast2[iTank])
 	{
 		vReset3(iTank);
 	}
@@ -473,7 +575,7 @@ public Action tTimerStopFast(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!ST_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bFast2[iTank])
+	if (!ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bFast2[iTank])
 	{
 		g_bFast2[iTank] = false;
 

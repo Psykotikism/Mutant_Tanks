@@ -52,7 +52,7 @@ bool g_bCloneInstalled;
 
 float g_flHitDamageMultiplier[ST_MAXTYPES + 1];
 
-int g_iHitAbility[ST_MAXTYPES + 1], g_iHitGroup[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHitAbility[ST_MAXTYPES + 1], g_iHitGroup[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -208,6 +208,11 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 	{
 		if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && g_iHitAbility[ST_GetTankType(victim)] == 1 && bIsSurvivor(attacker))
 		{
+			if ((!ST_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			{
+				return Plugin_Continue;
+			}
+
 			if (hitgroup == g_iHitGroup[ST_GetTankType(victim)])
 			{
 				damage *= g_flHitDamageMultiplier[ST_GetTankType(victim)];
@@ -226,8 +231,19 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHitAbility[iIndex] = 0;
 		g_flHitDamageMultiplier[iIndex] = 1.5;
@@ -235,10 +251,153 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHitAbility[type] = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iHitAbility[type], value, 0, 0, 1);
-	g_flHitDamageMultiplier[type] = flGetValue(subsection, "Hit Ability", "Hit Ability", "Hit_Ability", "hit", key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", main, g_flHitDamageMultiplier[type], value, 1.5, 1.0, 9999999999.0);
-	g_iHitGroup[type] = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HitGroup", "Hit Group", "Hit_Group", "group", main, g_iHitGroup[type], value, 1, 1, 7);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "hitability", false) || StrEqual(subsection, "hit ability", false) || StrEqual(subsection, "hit_ability", false) || StrEqual(subsection, "hit", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 24, bHasAbilities(subsection, "hitability", "hit ability", "hit_ability", "hit"));
+		g_iHumanAbility[type] = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHitAbility[type] = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iHitAbility[type], value, 0, 1);
+		g_flHitDamageMultiplier[type] = flGetValue(subsection, "Hit Ability", "Hit Ability", "Hit_Ability", "hit", key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_flHitDamageMultiplier[type], value, 1.0, 9999999999.0);
+		g_iHitGroup[type] = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HitGroup", "Hit Group", "Hit_Group", "group", g_iHitGroup[type], value, 1, 7);
+
+		if (StrEqual(subsection, "hitability", false) || StrEqual(subsection, "hit ability", false) || StrEqual(subsection, "hit_ability", false) || StrEqual(subsection, "hit", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
+		}
+	}
+}
+
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
 }

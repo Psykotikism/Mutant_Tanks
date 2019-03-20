@@ -52,7 +52,7 @@ bool g_bCloneInstalled, g_bWitch[MAXPLAYERS + 1];
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flWitchChance[ST_MAXTYPES + 1], g_flWitchDamage[ST_MAXTYPES + 1], g_flWitchRange[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iWitchAbility[ST_MAXTYPES + 1], g_iWitchAmount[ST_MAXTYPES + 1], g_iWitchCount[MAXPLAYERS + 1], g_iWitchMessage[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iWitchAbility[ST_MAXTYPES + 1], g_iWitchAmount[ST_MAXTYPES + 1], g_iWitchCount[MAXPLAYERS + 1], g_iWitchMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -249,6 +249,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (ST_IsTankSupported(iOwner) && bIsCloneAllowed(iOwner, g_bCloneInstalled))
 			{
+				if ((!ST_HasAdminAccess(iOwner) && !bHasAdminAccess(iOwner)) || ST_IsAdminImmune(victim, iOwner) || bIsAdminImmune(victim, iOwner))
+				{
+					return Plugin_Handled;
+				}
+
 				damage = g_flWitchDamage[ST_GetTankType(iOwner)];
 
 				return Plugin_Changed;
@@ -261,8 +266,19 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -275,17 +291,48 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 60.0, 0.0, 9999999999.0);
-	g_iWitchAbility[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iWitchAbility[type], value, 0, 0, 1);
-	g_iWitchMessage[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iWitchMessage[type], value, 0, 0, 1);
-	g_iWitchAmount[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", main, g_iWitchAmount[type], value, 3, 1, 25);
-	g_flWitchChance[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", main, g_flWitchChance[type], value, 33.3, 0.0, 100.0);
-	g_flWitchDamage[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", main, g_flWitchDamage[type], value, 5.0, 1.0, 9999999999.0);
-	g_flWitchRange[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchRange", "Witch Range", "Witch_Range", "range", main, g_flWitchRange[type], value, 500.0, 1.0, 9999999999.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "witchability", false) || StrEqual(subsection, "witch ability", false) || StrEqual(subsection, "witch_ability", false) || StrEqual(subsection, "witch", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 68, bHasAbilities(subsection, "witchability", "witch ability", "witch_ability", "witch"));
+		g_iHumanAbility[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iWitchAbility[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iWitchAbility[type], value, 0, 1);
+		g_iWitchMessage[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iWitchMessage[type], value, 0, 1);
+		g_iWitchAmount[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_iWitchAmount[type], value, 1, 25);
+		g_flWitchChance[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_flWitchChance[type], value, 0.0, 100.0);
+		g_flWitchDamage[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_flWitchDamage[type], value, 1.0, 9999999999.0);
+		g_flWitchRange[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchRange", "Witch Range", "Witch_Range", "range", g_flWitchRange[type], value, 1.0, 9999999999.0);
+
+		if (StrEqual(subsection, "witchability", false) || StrEqual(subsection, "witch ability", false) || StrEqual(subsection, "witch_ability", false) || StrEqual(subsection, "witch", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -295,22 +342,32 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
+			vRemoveWitch(iTank);
+
 			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_iWitchAbility[ST_GetTankType(iTank)] == 1)
 			{
+				if (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank))
+				{
+					return;
+				}
+
 				float flTankPos[3], flTankAngles[3];
 				GetClientAbsOrigin(iTank, flTankPos);
 				GetClientAbsAngles(iTank, flTankAngles);
 
 				vSpawnWitch(iTank, flTankPos, flTankAngles);
 			}
-
-			vRemoveWitch(iTank);
 		}
 	}
 }
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iWitchAbility[ST_GetTankType(tank)] == 1)
 	{
 		vWitchAbility(tank);
@@ -321,6 +378,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_SPECIAL_KEY == ST_SPECIAL_KEY)
 		{
 			if (g_iWitchAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -371,6 +433,11 @@ static void vSpawnWitch(int tank, float pos[3], float angles[3])
 
 static void vWitchAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (g_iWitchCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_flWitchChance[ST_GetTankType(tank)])
@@ -413,7 +480,7 @@ static void vWitchAbility(int tank)
 				if (g_iWitchMessage[ST_GetTankType(tank)] == 1)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Witch", sTankName);
 				}
 			}
@@ -427,6 +494,118 @@ static void vWitchAbility(int tank)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "WitchAmmo");
 	}
+}
+
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
 }
 
 public Action tTimerResetCooldown(Handle timer, int userid)

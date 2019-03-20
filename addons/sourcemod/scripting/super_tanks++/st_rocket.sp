@@ -58,7 +58,7 @@ bool g_bCloneInstalled, g_bRocket[MAXPLAYERS + 1], g_bRocket2[MAXPLAYERS + 1], g
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flRocketChance[ST_MAXTYPES + 1], g_flRocketDelay[ST_MAXTYPES + 1], g_flRocketRange[ST_MAXTYPES + 1], g_flRocketRangeChance[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketCount[MAXPLAYERS + 1], g_iRocketEffect[ST_MAXTYPES + 1], g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHitMode[ST_MAXTYPES + 1], g_iRocketMessage[ST_MAXTYPES + 1], g_iRocketOwner[MAXPLAYERS + 1], g_iRocketSprite = -1;
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iRocketAbility[ST_MAXTYPES + 1], g_iRocketCount[MAXPLAYERS + 1], g_iRocketEffect[ST_MAXTYPES + 1], g_iRocketHit[ST_MAXTYPES + 1], g_iRocketHitMode[ST_MAXTYPES + 1], g_iRocketMessage[ST_MAXTYPES + 1], g_iRocketOwner[MAXPLAYERS + 1], g_iRocketSprite = -1;
 
 public void OnAllPluginsLoaded()
 {
@@ -253,27 +253,50 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if ((g_iRocketHitMode[ST_GetTankType(attacker)] == 0 || g_iRocketHitMode[ST_GetTankType(attacker)] == 1) && ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && bIsSurvivor(victim))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iRocketHitMode[ST_GetTankType(attacker)] == 0 || g_iRocketHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
+			if ((!ST_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || ST_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vRocketHit(victim, attacker, g_flRocketChance[ST_GetTankType(attacker)], g_iRocketHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
 			}
 		}
-		else if ((g_iRocketHitMode[ST_GetTankType(victim)] == 0 || g_iRocketHitMode[ST_GetTankType(victim)] == 2) && ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iRocketHitMode[ST_GetTankType(victim)] == 0 || g_iRocketHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
+			if ((!ST_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vRocketHit(attacker, victim, g_flRocketChance[ST_GetTankType(victim)], g_iRocketHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -289,20 +312,51 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iRocketAbility[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iRocketAbility[type], value, 0, 0, 1);
-	g_iRocketEffect[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iRocketEffect[type], value, 0, 0, 7);
-	g_iRocketMessage[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iRocketMessage[type], value, 0, 0, 3);
-	g_flRocketChance[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", main, g_flRocketChance[type], value, 33.3, 0.0, 100.0);
-	g_flRocketDelay[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", main, g_flRocketDelay[type], value, 1.0, 0.1, 9999999999.0);
-	g_iRocketHit[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", main, g_iRocketHit[type], value, 0, 0, 1);
-	g_iRocketHitMode[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", main, g_iRocketHitMode[type], value, 0, 0, 2);
-	g_flRocketRange[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketRange", "Rocket Range", "Rocket_Range", "range", main, g_flRocketRange[type], value, 150.0, 1.0, 9999999999.0);
-	g_flRocketRangeChance[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", main, g_flRocketRangeChance[type], value, 15.0, 0.0, 100.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "rocketability", false) || StrEqual(subsection, "rocket ability", false) || StrEqual(subsection, "rocket_ability", false) || StrEqual(subsection, "rocket", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 51, bHasAbilities(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket"));
+		g_iHumanAbility[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iRocketAbility[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iRocketAbility[type], value, 0, 1);
+		g_iRocketEffect[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iRocketEffect[type], value, 0, 7);
+		g_iRocketMessage[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iRocketMessage[type], value, 0, 3);
+		g_flRocketChance[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_flRocketChance[type], value, 0.0, 100.0);
+		g_flRocketDelay[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_flRocketDelay[type], value, 0.1, 9999999999.0);
+		g_iRocketHit[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_iRocketHit[type], value, 0, 1);
+		g_iRocketHitMode[type] = iGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_iRocketHitMode[type], value, 0, 2);
+		g_flRocketRange[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_flRocketRange[type], value, 1.0, 9999999999.0);
+		g_flRocketRangeChance[type] = flGetValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_flRocketRangeChance[type], value, 0.0, 100.0);
+
+		if (StrEqual(subsection, "rocketability", false) || StrEqual(subsection, "rocket ability", false) || StrEqual(subsection, "rocket_ability", false) || StrEqual(subsection, "rocket", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnPluginEnd()
@@ -330,6 +384,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iRocketAbility[ST_GetTankType(tank)] == 1)
 	{
 		vRocketAbility(tank);
@@ -340,6 +399,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
 			if (g_iRocketAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -370,7 +434,7 @@ static void vRemoveRocket(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bRocket[iSurvivor] && g_iRocketOwner[iSurvivor] == tank)
+		if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && g_bRocket[iSurvivor] && g_iRocketOwner[iSurvivor] == tank)
 		{
 			g_bRocket[iSurvivor] = false;
 			g_iRocketOwner[iSurvivor] = 0;
@@ -413,6 +477,11 @@ static void vReset3(int tank)
 
 static void vRocketAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (g_iRocketCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bRocket4[tank] = false;
@@ -422,10 +491,9 @@ static void vRocketAbility(int tank)
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
-
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && !ST_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -456,6 +524,11 @@ static void vRocketAbility(int tank)
 
 static void vRocketHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
+	if ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || ST_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, tank))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
 		if (g_iRocketCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
@@ -543,6 +616,118 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, int me
 	}
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
+}
+
 public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -557,7 +742,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || ST_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, iTank) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
 	{
 		g_bRocket2[iTank] = false;
 
@@ -594,7 +779,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || ST_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, iTank) || iRocketEnabled == 0 || !g_bRocket[iSurvivor])
 	{
 		g_bRocket2[iTank] = false;
 
@@ -616,7 +801,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	if (g_iRocketMessage[ST_GetTankType(iTank)] & iMessage)
 	{
 		char sTankName[33];
-		ST_GetTankName(iTank, sTankName);
+		ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Rocket", sTankName, iSurvivor);
 	}
 

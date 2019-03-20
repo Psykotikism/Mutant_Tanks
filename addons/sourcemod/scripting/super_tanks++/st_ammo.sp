@@ -52,7 +52,7 @@ bool g_bAmmo[MAXPLAYERS + 1], g_bAmmo2[MAXPLAYERS + 1], g_bAmmo3[MAXPLAYERS + 1]
 
 float g_flAmmoChance[ST_MAXTYPES + 1], g_flAmmoRange[ST_MAXTYPES + 1], g_flAmmoRangeChance[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
-int g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAmount[ST_MAXTYPES + 1], g_iAmmoCount[MAXPLAYERS + 1], g_iAmmoEffect[ST_MAXTYPES + 1], g_iAmmoHit[ST_MAXTYPES + 1], g_iAmmoHitMode[ST_MAXTYPES + 1], g_iAmmoMessage[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iAmmoAbility[ST_MAXTYPES + 1], g_iAmmoAmount[ST_MAXTYPES + 1], g_iAmmoCount[MAXPLAYERS + 1], g_iAmmoEffect[ST_MAXTYPES + 1], g_iAmmoHit[ST_MAXTYPES + 1], g_iAmmoHitMode[ST_MAXTYPES + 1], g_iAmmoMessage[ST_MAXTYPES + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -243,6 +243,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iAmmoHitMode[ST_GetTankType(attacker)] == 0 || g_iAmmoHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
+			if ((!ST_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || ST_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vAmmoHit(victim, attacker, g_flAmmoChance[ST_GetTankType(attacker)], g_iAmmoHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
@@ -250,18 +255,36 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iAmmoHitMode[ST_GetTankType(victim)] == 0 || g_iAmmoHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
+			if ((!ST_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vAmmoHit(attacker, victim, g_flAmmoChance[ST_GetTankType(victim)], g_iAmmoHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -277,20 +300,51 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iAmmoAbility[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iAmmoAbility[type], value, 0, 0, 1);
-	g_iAmmoEffect[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iAmmoEffect[type], value, 0, 0, 7);
-	g_iAmmoMessage[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iAmmoMessage[type], value, 0, 0, 3);
-	g_flAmmoChance[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", main, g_flAmmoChance[type], value, 33.3, 0.0, 100.0);
-	g_iAmmoAmount[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", main, g_iAmmoAmount[type], value, 0, 0, 25);
-	g_iAmmoHit[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", main, g_iAmmoHit[type], value, 0, 0, 1);
-	g_iAmmoHitMode[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", main, g_iAmmoHitMode[type], value, 0, 0, 2);
-	g_flAmmoRange[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", main, g_flAmmoRange[type], value, 150.0, 1.0, 9999999999.0);
-	g_flAmmoRangeChance[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", main, g_flAmmoRangeChance[type], value, 15.0, 0.0, 100.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "ammoability", false) || StrEqual(subsection, "ammo ability", false) || StrEqual(subsection, "ammo_ability", false) || StrEqual(subsection, "ammo", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 3, bHasAbilities(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo"));
+		g_iHumanAbility[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iAmmoAbility[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iAmmoAbility[type], value, 0, 1);
+		g_iAmmoEffect[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iAmmoEffect[type], value, 0, 7);
+		g_iAmmoMessage[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iAmmoMessage[type], value, 0, 3);
+		g_flAmmoChance[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_flAmmoChance[type], value, 0.0, 100.0);
+		g_iAmmoAmount[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_iAmmoAmount[type], value, 0, 25);
+		g_iAmmoHit[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_iAmmoHit[type], value, 0, 1);
+		g_iAmmoHitMode[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_iAmmoHitMode[type], value, 0, 2);
+		g_flAmmoRange[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_flAmmoRange[type], value, 1.0, 9999999999.0);
+		g_flAmmoRangeChance[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_flAmmoRangeChance[type], value, 0.0, 100.0);
+
+		if (StrEqual(subsection, "ammoability", false) || StrEqual(subsection, "ammo ability", false) || StrEqual(subsection, "ammo_ability", false) || StrEqual(subsection, "ammo", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -307,6 +361,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iAmmoAbility[ST_GetTankType(tank)] == 1)
 	{
 		vAmmoAbility(tank);
@@ -317,6 +376,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
 			if (g_iAmmoAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -338,6 +402,11 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vAmmoAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (g_iAmmoCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bAmmo2[tank] = false;
@@ -347,10 +416,9 @@ static void vAmmoAbility(int tank)
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
-
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && !ST_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -381,6 +449,11 @@ static void vAmmoAbility(int tank)
 
 static void vAmmoHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
+	if ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || ST_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, tank))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsSurvivor(survivor) && GetPlayerWeaponSlot(survivor, 0) > 0)
 	{
 		if (g_iAmmoCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
@@ -466,7 +539,7 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, int mess
 				if (g_iAmmoMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Ammo", sTankName, survivor);
 				}
 			}
@@ -506,6 +579,118 @@ static void vReset()
 			vRemoveAmmo(iPlayer);
 		}
 	}
+}
+
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
 }
 
 public Action tTimerResetCooldown(Handle timer, int userid)

@@ -48,7 +48,7 @@ bool g_bCloneInstalled, g_bPanic[MAXPLAYERS + 1], g_bPanic2[MAXPLAYERS + 1];
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flHumanDuration[ST_MAXTYPES + 1], g_flPanicChance[ST_MAXTYPES + 1], g_flPanicInterval[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iPanicAbility[ST_MAXTYPES + 1], g_iPanicCount[MAXPLAYERS + 1], g_iPanicMessage[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iPanicAbility[ST_MAXTYPES + 1], g_iPanicCount[MAXPLAYERS + 1], g_iPanicMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -232,8 +232,17 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -246,17 +255,40 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_flHumanDuration[type] = flGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", main, g_flHumanDuration[type], value, 5.0, 0.1, 9999999999.0);
-	g_iHumanMode[type] = iGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
-	g_iPanicAbility[type] = iGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iPanicAbility[type], value, 0, 0, 3);
-	g_iPanicMessage[type] = iGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iPanicMessage[type], value, 0, 0, 1);
-	g_flPanicChance[type] = flGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "PanicChance", "Panic Chance", "Panic_Chance", "chance", main, g_flPanicChance[type], value, 33.3, 0.0, 100.0);
-	g_flPanicInterval[type] = flGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "PanicInterval", "Panic Interval", "Panic_Interval", "interval", main, g_flPanicInterval[type], value, 5.0, 0.1, 9999999999.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "panicability", false) || StrEqual(subsection, "panic ability", false) || StrEqual(subsection, "panic_ability", false) || StrEqual(subsection, "panic", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 41, bHasAbilities(subsection, "panicability", "panic ability", "panic_ability", "panic"));
+		g_iHumanAbility[type] = iGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_flHumanDuration[type] = flGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 9999999999.0);
+		g_iHumanMode[type] = iGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
+		g_iPanicAbility[type] = iGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iPanicAbility[type], value, 0, 3);
+		g_iPanicMessage[type] = iGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iPanicMessage[type], value, 0, 1);
+		g_flPanicChance[type] = flGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "PanicChance", "Panic Chance", "Panic_Chance", "chance", g_flPanicChance[type], value, 0.0, 100.0);
+		g_flPanicInterval[type] = flGetValue(subsection, "panicability", "panic ability", "panic_ability", "panic", key, "PanicInterval", "Panic Interval", "Panic_Interval", "interval", g_flPanicInterval[type], value, 0.1, 9999999999.0);
+
+		if (StrEqual(subsection, "panicability", false) || StrEqual(subsection, "panic ability", false) || StrEqual(subsection, "panic_ability", false) || StrEqual(subsection, "panic", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -266,18 +298,28 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (ST_IsTankSupported(iTank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 		{
+			vRemovePanic(iTank);
+
 			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_iPanicAbility[ST_GetTankType(iTank)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flPanicChance[ST_GetTankType(iTank)])
 			{
+				if (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank))
+				{
+					return;
+				}
+
 				vCheatCommand(iTank, "director_force_panic_event");
 			}
-
-			vRemovePanic(iTank);
 		}
 	}
 }
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iPanicAbility[ST_GetTankType(tank)] == 1 && !g_bPanic[tank])
 	{
 		vPanicAbility(tank);
@@ -288,6 +330,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
 			if (g_iPanicAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -358,6 +405,11 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vPanic(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	DataPack dpPanic;
 	CreateDataTimer(g_flPanicInterval[ST_GetTankType(tank)], tTimerPanic, dpPanic, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpPanic.WriteCell(GetClientUserId(tank));
@@ -367,6 +419,11 @@ static void vPanic(int tank)
 
 static void vPanicAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (g_iPanicCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_flPanicChance[ST_GetTankType(tank)])
@@ -385,7 +442,7 @@ static void vPanicAbility(int tank)
 			if (g_iPanicMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Panic", sTankName);
 			}
 		}
@@ -435,12 +492,67 @@ static void vReset2(int tank)
 	}
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 public Action tTimerPanic(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || g_iPanicAbility[ST_GetTankType(iTank)] == 0 || !g_bPanic[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || g_iPanicAbility[ST_GetTankType(iTank)] == 0 || !g_bPanic[iTank])
 	{
 		g_bPanic[iTank] = false;
 
@@ -460,7 +572,7 @@ public Action tTimerPanic(Handle timer, DataPack pack)
 	if (g_iPanicMessage[ST_GetTankType(iTank)] == 1)
 	{
 		char sTankName[33];
-		ST_GetTankName(iTank, sTankName);
+		ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 		ST_PrintToChatAll("%s %t", ST_TAG2, "Panic2", sTankName);
 	}
 

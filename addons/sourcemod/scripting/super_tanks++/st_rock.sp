@@ -49,7 +49,7 @@ bool g_bCloneInstalled, g_bRock[MAXPLAYERS + 1], g_bRock2[MAXPLAYERS + 1];
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flRockChance[ST_MAXTYPES + 1], g_flRockDuration[ST_MAXTYPES + 1], g_flRockRadius[ST_MAXTYPES + 1][2];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iRock[MAXPLAYERS + 1], g_iRockAbility[ST_MAXTYPES + 1], g_iRockCount[MAXPLAYERS + 1], g_iRockDamage[ST_MAXTYPES + 1], g_iRockMessage[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iRock[MAXPLAYERS + 1], g_iRockAbility[ST_MAXTYPES + 1], g_iRockCount[MAXPLAYERS + 1], g_iRockDamage[ST_MAXTYPES + 1], g_iRockMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -235,8 +235,17 @@ public void ST_OnMenuItemSelected(int client, const char[] info)
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -251,27 +260,50 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iHumanMode[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
-	g_iRockAbility[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iRockAbility[type], value, 0, 0, 1);
-	g_iRockMessage[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iRockMessage[type], value, 0, 0, 1);
-	g_flRockChance[type] = flGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockChance", "Rock Chance", "Rock_Chance", "chance", main, g_flRockChance[type], value, 33.3, 0.0, 100.0);
-	g_iRockDamage[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", main, g_iRockDamage[type], value, 5, 1, 9999999999);
-	g_flRockDuration[type] = flGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", main, g_flRockDuration[type], value, 5.0, 0.1, 9999999999.0);
-
-	if ((StrEqual(subsection, "rockability", false) || StrEqual(subsection, "rock ability", false) || StrEqual(subsection, "rock_ability", false) || StrEqual(subsection, "rock", false)) && (StrEqual(key, "RockRadius", false) || StrEqual(key, "Rock Radius", false) || StrEqual(key, "Rock_Radius", false) || StrEqual(key, "radius", false)) && value[0] != '\0')
+	if (bIsValidClient(admin) && value[0] != '\0')
 	{
-		char sSet[2][6], sValue[12];
-		strcopy(sValue, sizeof(sValue), value);
-		ReplaceString(sValue, sizeof(sValue), " ", "");
-		ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+		if (StrEqual(subsection, "rockability", false) || StrEqual(subsection, "rock ability", false) || StrEqual(subsection, "rock_ability", false) || StrEqual(subsection, "rock", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+		}
+	}
 
-		g_flRockRadius[type][0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -5.0, 0.0) : g_flRockRadius[type][0];
-		g_flRockRadius[type][1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 5.0) : g_flRockRadius[type][1];
+	if (type > 0)
+	{
+		ST_FindAbility(type, 50, bHasAbilities(subsection, "rockability", "rock ability", "rock_ability", "rock"));
+		g_iHumanAbility[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanMode[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
+		g_iRockAbility[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iRockAbility[type], value, 0, 1);
+		g_iRockMessage[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iRockMessage[type], value, 0, 1);
+		g_flRockChance[type] = flGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_flRockChance[type], value, 0.0, 100.0);
+		g_iRockDamage[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_iRockDamage[type], value, 1, 9999999999);
+		g_flRockDuration[type] = flGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_flRockDuration[type], value, 0.1, 9999999999.0);
+
+		if (StrEqual(subsection, "rockability", false) || StrEqual(subsection, "rock ability", false) || StrEqual(subsection, "rock_ability", false) || StrEqual(subsection, "rock", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+		}
+
+		if ((StrEqual(subsection, "rockability", false) || StrEqual(subsection, "rock ability", false) || StrEqual(subsection, "rock_ability", false) || StrEqual(subsection, "rock", false)) && (StrEqual(key, "RockRadius", false) || StrEqual(key, "Rock Radius", false) || StrEqual(key, "Rock_Radius", false) || StrEqual(key, "radius", false)) && value[0] != '\0')
+		{
+			char sSet[2][6], sValue[12];
+			strcopy(sValue, sizeof(sValue), value);
+			ReplaceString(sValue, sizeof(sValue), " ", "");
+			ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+			g_flRockRadius[type][0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -5.0, 0.0) : g_flRockRadius[type][0];
+			g_flRockRadius[type][1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 5.0) : g_flRockRadius[type][1];
+		}
 	}
 }
 
@@ -289,6 +321,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iRockAbility[ST_GetTankType(tank)] == 1 && !g_bRock[tank])
 	{
 		vRockAbility(tank);
@@ -299,6 +336,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
 			if (g_iRockAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -424,6 +466,11 @@ static void vReset3(int tank)
 
 static void vRock(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	char sDamage[11];
 	IntToString(g_iRockDamage[ST_GetTankType(tank)], sDamage, sizeof(sDamage));
 	DispatchSpawn(g_iRock[tank]);
@@ -439,6 +486,11 @@ static void vRock(int tank)
 
 static void vRockAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (g_iRockCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_flRockChance[ST_GetTankType(tank)])
@@ -463,7 +515,7 @@ static void vRockAbility(int tank)
 			if (g_iRockMessage[ST_GetTankType(tank)] == 1)
 			{
 				char sTankName[33];
-				ST_GetTankName(tank, sTankName);
+				ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 				ST_PrintToChatAll("%s %t", ST_TAG2, "Rock", sTankName);
 			}
 		}
@@ -476,6 +528,61 @@ static void vRockAbility(int tank)
 	{
 		ST_PrintToChat(tank, "%s %t", ST_TAG3, "RockAmmo");
 	}
+}
+
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 public Action tTimerRock(Handle timer, DataPack pack)
@@ -491,7 +598,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	}
 
 	int iType = pack.ReadCell();
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bRock[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bRock[iTank])
 	{
 		vReset2(iTank);
 
@@ -499,7 +606,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (g_iRockAbility[ST_GetTankType(iTank)] == 0 || ((!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || (ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) && g_iHumanAbility[ST_GetTankType(iTank)] == 1 && g_iHumanMode[ST_GetTankType(iTank)] == 0)) && (flTime + g_flRockDuration[ST_GetTankType(iTank)]) < GetEngineTime()))
+	if (g_iRockAbility[ST_GetTankType(iTank)] == 0 || ((!ST_IsTankSupported(iTank, ST_CHECK_FAKECLIENT) || (g_iHumanAbility[ST_GetTankType(iTank)] == 1 && g_iHumanMode[ST_GetTankType(iTank)] == 0)) && (flTime + g_flRockDuration[ST_GetTankType(iTank)]) < GetEngineTime()))
 	{
 		vReset2(iTank);
 
@@ -511,7 +618,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 		if (g_iRockMessage[ST_GetTankType(iTank)] == 1)
 		{
 			char sTankName[33];
-			ST_GetTankName(iTank, sTankName);
+			ST_GetTankName(iTank, ST_GetTankType(iTank), sTankName);
 			ST_PrintToChatAll("%s %t", ST_TAG2, "Rock2", sTankName);
 		}
 

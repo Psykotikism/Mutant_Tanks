@@ -23,9 +23,9 @@
 
 public Plugin myinfo =
 {
-	name = "[ST++] Vampire Ability",
+	name = "[ST++] Xiphos Ability",
 	author = ST_AUTHOR,
-	description = "The Super Tank gains health from hurting survivors.",
+	description = "The Super Tank can steal health from survivors and vice-versa.",
 	version = ST_VERSION,
 	url = ST_URL
 };
@@ -36,7 +36,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "\"[ST++] Vampire Ability\" only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[ST++] Xiphos Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -46,13 +46,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-#define ST_MENU_VAMPIRE "Vampire Ability"
+#define ST_MENU_XIPHOS "Xiphos Ability"
 
 bool g_bCloneInstalled;
 
-float g_flVampireChance[ST_MAXTYPES + 1];
+float g_flXiphosChance[ST_MAXTYPES + 1];
 
-int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iVampireAbility[ST_MAXTYPES + 1], g_iVampireEffect[ST_MAXTYPES + 1], g_iVampireMessage[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iXiphosAbility[ST_MAXTYPES + 1], g_iXiphosEffect[ST_MAXTYPES + 1], g_iXiphosMaxHealth[ST_MAXTYPES + 1], g_iXiphosMessage[ST_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -80,7 +80,7 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("super_tanks++.phrases");
 
-	RegConsoleCmd("sm_st_vampire", cmdVampireInfo, "View information about the Vampire ability.");
+	RegConsoleCmd("sm_st_xiphos", cmdXiphosInfo, "View information about the Xiphos ability.");
 
 	if (g_bLateLoad)
 	{
@@ -101,7 +101,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action cmdVampireInfo(int client, int args)
+public Action cmdXiphosInfo(int client, int args)
 {
 	if (!ST_IsCorePluginEnabled())
 	{
@@ -120,23 +120,23 @@ public Action cmdVampireInfo(int client, int args)
 	switch (IsVoteInProgress())
 	{
 		case true: ReplyToCommand(client, "%s %t", ST_TAG2, "Vote in Progress");
-		case false: vVampireMenu(client, 0);
+		case false: vXiphosMenu(client, 0);
 	}
 
 	return Plugin_Handled;
 }
 
-static void vVampireMenu(int client, int item)
+static void vXiphosMenu(int client, int item)
 {
-	Menu mAbilityMenu = new Menu(iVampireMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
-	mAbilityMenu.SetTitle("Vampire Ability Information");
+	Menu mAbilityMenu = new Menu(iXiphosMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Xiphos Ability Information");
 	mAbilityMenu.AddItem("Status", "Status");
 	mAbilityMenu.AddItem("Details", "Details");
 	mAbilityMenu.AddItem("Human Support", "Human Support");
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+public int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -145,21 +145,21 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iVampireAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "VampireDetails");
+				case 0: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iXiphosAbility[ST_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: ST_PrintToChat(param1, "%s %t", ST_TAG3, "XiphosDetails");
 				case 2: ST_PrintToChat(param1, "%s %t", ST_TAG3, g_iHumanAbility[ST_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, ST_CHECK_INGAME|ST_CHECK_KICKQUEUE))
 			{
-				vVampireMenu(param1, menu.Selection);
+				vXiphosMenu(param1, menu.Selection);
 			}
 		}
 		case MenuAction_Display:
 		{
 			char sMenuTitle[255];
 			Panel panel = view_as<Panel>(param2);
-			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "VampireMenu", param1);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "XiphosMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -191,14 +191,14 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 
 public void ST_OnDisplayMenu(Menu menu)
 {
-	menu.AddItem(ST_MENU_VAMPIRE, ST_MENU_VAMPIRE);
+	menu.AddItem(ST_MENU_XIPHOS, ST_MENU_XIPHOS);
 }
 
 public void ST_OnMenuItemSelected(int client, const char[] info)
 {
-	if (StrEqual(info, ST_MENU_VAMPIRE, false))
+	if (StrEqual(info, ST_MENU_XIPHOS, false))
 	{
-		vVampireMenu(client, 0);
+		vXiphosMenu(client, 0);
 	}
 }
 
@@ -206,31 +206,52 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (ST_IsCorePluginEnabled() && bIsValidClient(victim, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && damage > 0.0)
 	{
-		char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && g_iXiphosAbility[ST_GetTankType(attacker)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flXiphosChance[ST_GetTankType(attacker)] && bIsSurvivor(victim))
 		{
-			if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && g_iVampireAbility[ST_GetTankType(attacker)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flVampireChance[ST_GetTankType(attacker)] && bIsSurvivor(victim))
+			if ((!ST_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || ST_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
 			{
-				if ((!ST_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
-				{
-					return Plugin_Continue;
-				}
+				return Plugin_Continue;
+			}
 
+			char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			{
 				if (!ST_IsTankSupported(attacker, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(attacker)] == 1)
 				{
 					int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
 						iFinalHealth = (iNewHealth > ST_MAXHEALTH) ? ST_MAXHEALTH : iNewHealth;
 					SetEntityHealth(attacker, iFinalHealth);
 
-					vEffect(victim, attacker, g_iVampireEffect[ST_GetTankType(attacker)], 1);
+					vEffect(victim, attacker, g_iXiphosEffect[ST_GetTankType(attacker)], 1);
 
-					if (g_iVampireMessage[ST_GetTankType(attacker)] == 1)
+					if (g_iXiphosMessage[ST_GetTankType(attacker)] == 1)
 					{
 						char sTankName[33];
 						ST_GetTankName(attacker, ST_GetTankType(attacker), sTankName);
-						ST_PrintToChatAll("%s %t", ST_TAG2, "Vampire", sTankName, victim);
+						ST_PrintToChatAll("%s %t", ST_TAG2, "Xiphos", sTankName, victim);
 					}
+				}
+			}
+		}
+		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && g_iXiphosAbility[ST_GetTankType(victim)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flXiphosChance[ST_GetTankType(victim)] && bIsSurvivor(attacker))
+		{
+			if ((!ST_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			{
+				return Plugin_Continue;
+			}
+
+			if (!ST_IsTankSupported(victim, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(victim)] == 1)
+			{
+				int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
+					iFinalHealth = (iNewHealth > g_iXiphosMaxHealth[ST_GetTankType(victim)]) ? g_iXiphosMaxHealth[ST_GetTankType(victim)] : iNewHealth;
+				SetEntityHealth(attacker, iFinalHealth);
+
+				if (g_iXiphosMessage[ST_GetTankType(victim)] == 1)
+				{
+					char sTankName[33];
+					ST_GetTankName(victim, ST_GetTankType(victim), sTankName);
+					ST_PrintToChatAll("%s %t", ST_TAG2, "Xiphos2", attacker, sTankName);
 				}
 			}
 		}
@@ -255,10 +276,11 @@ public void ST_OnConfigsLoad()
 		g_iAccessFlags[iIndex] = 0;
 		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
-		g_iVampireAbility[iIndex] = 0;
-		g_iVampireEffect[iIndex] = 0;
-		g_iVampireMessage[iIndex] = 0;
-		g_flVampireChance[iIndex] = 33.3;
+		g_iXiphosAbility[iIndex] = 0;
+		g_iXiphosEffect[iIndex] = 0;
+		g_iXiphosMessage[iIndex] = 0;
+		g_flXiphosChance[iIndex] = 33.3;
+		g_iXiphosMaxHealth[iIndex] = 100;
 	}
 }
 
@@ -266,7 +288,7 @@ public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (bIsValidClient(admin) && value[0] != '\0')
 	{
-		if (StrEqual(subsection, "vampireability", false) || StrEqual(subsection, "vampire ability", false) || StrEqual(subsection, "vampire_ability", false) || StrEqual(subsection, "vampire", false))
+		if (StrEqual(subsection, "xiphosability", false) || StrEqual(subsection, "xiphos ability", false) || StrEqual(subsection, "xiphos_ability", false) || StrEqual(subsection, "xiphos", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -281,14 +303,15 @@ public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (type > 0)
 	{
-		ST_FindAbility(type, 64, bHasAbilities(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire"));
-		g_iHumanAbility[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iVampireAbility[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iVampireAbility[type], value, 0, 1);
-		g_iVampireEffect[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iVampireEffect[type], value, 0, 1);
-		g_iVampireMessage[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iVampireMessage[type], value, 0, 1);
-		g_flVampireChance[type] = flGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_flVampireChance[type], value, 0.0, 100.0);
+		ST_FindAbility(type, 69, bHasAbilities(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos"));
+		g_iHumanAbility[type] = iGetValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iXiphosAbility[type] = iGetValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iXiphosAbility[type], value, 0, 1);
+		g_iXiphosEffect[type] = iGetValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iXiphosEffect[type], value, 0, 1);
+		g_iXiphosMessage[type] = iGetValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iXiphosMessage[type], value, 0, 1);
+		g_flXiphosChance[type] = flGetValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_flXiphosChance[type], value, 0.0, 100.0);
+		g_iXiphosMaxHealth[type] = iGetValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_iXiphosMaxHealth[type], value, 1, ST_MAXHEALTH);
 
-		if (StrEqual(subsection, "vampireability", false) || StrEqual(subsection, "vampire ability", false) || StrEqual(subsection, "vampire_ability", false) || StrEqual(subsection, "vampire", false))
+		if (StrEqual(subsection, "xiphosability", false) || StrEqual(subsection, "xiphos ability", false) || StrEqual(subsection, "xiphos_ability", false) || StrEqual(subsection, "xiphos", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

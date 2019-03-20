@@ -52,7 +52,7 @@ bool g_bCloneInstalled, g_bDrug[MAXPLAYERS + 1], g_bDrug2[MAXPLAYERS + 1], g_bDr
 
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0}, g_flDrugChance[ST_MAXTYPES + 1], g_flDrugDuration[ST_MAXTYPES + 1], g_flDrugInterval[ST_MAXTYPES + 1], g_flDrugRange[ST_MAXTYPES + 1], g_flDrugRangeChance[ST_MAXTYPES + 1], g_flHumanCooldown[ST_MAXTYPES + 1];
 
-int g_iDrugAbility[ST_MAXTYPES + 1], g_iDrugCount[MAXPLAYERS + 1], g_iDrugEffect[ST_MAXTYPES + 1], g_iDrugHit[ST_MAXTYPES + 1], g_iDrugHitMode[ST_MAXTYPES + 1], g_iDrugMessage[ST_MAXTYPES + 1], g_iDrugOwner[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iDrugAbility[ST_MAXTYPES + 1], g_iDrugCount[MAXPLAYERS + 1], g_iDrugEffect[ST_MAXTYPES + 1], g_iDrugHit[ST_MAXTYPES + 1], g_iDrugHitMode[ST_MAXTYPES + 1], g_iDrugMessage[ST_MAXTYPES + 1], g_iDrugOwner[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
 
 UserMsg g_umFadeUserMsgId;
 
@@ -254,6 +254,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iDrugHitMode[ST_GetTankType(attacker)] == 0 || g_iDrugHitMode[ST_GetTankType(attacker)] == 1) && bIsHumanSurvivor(victim))
 		{
+			if ((!ST_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || ST_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vDrugHit(victim, attacker, g_flDrugChance[ST_GetTankType(attacker)], g_iDrugHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
@@ -261,18 +266,36 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iDrugHitMode[ST_GetTankType(victim)] == 0 || g_iDrugHitMode[ST_GetTankType(victim)] == 2) && bIsHumanSurvivor(attacker))
 		{
+			if ((!ST_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vDrugHit(attacker, victim, g_flDrugChance[ST_GetTankType(victim)], g_iDrugHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -289,21 +312,52 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iDrugAbility[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iDrugAbility[type], value, 0, 0, 1);
-	g_iDrugEffect[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iDrugEffect[type], value, 0, 0, 7);
-	g_iDrugMessage[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iDrugMessage[type], value, 0, 0, 3);
-	g_flDrugChance[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugChance", "Drug Chance", "Drug_Chance", "chance", main, g_flDrugChance[type], value, 33.3, 0.0, 100.0);
-	g_flDrugDuration[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugDuration", "Drug Duration", "Drug_Duration", "duration", main, g_flDrugDuration[type], value, 5.0, 0.1, 9999999999.0);
-	g_iDrugHit[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugHit", "Drug Hit", "Drug_Hit", "hit", main, g_iDrugHit[type], value, 0, 0, 1);
-	g_iDrugHitMode[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugHitMode", "Drug Hit Mode", "Drug_Hit_Mode", "hitmode", main, g_iDrugHitMode[type], value, 0, 0, 2);
-	g_flDrugInterval[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugInterval", "Drug Interval", "Drug_Interval", "interval", main, g_flDrugInterval[type], value, 1.0, 0.1, 9999999999.0);
-	g_flDrugRange[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugRange", "Drug Range", "Drug_Range", "range", main, g_flDrugRange[type], value, 150.0, 1.0, 9999999999.0);
-	g_flDrugRangeChance[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugRangeChance", "Drug Range Chance", "Drug_Range_Chance", "rangechance", main, g_flDrugRangeChance[type], value, 15.0, 0.0, 100.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "drugability", false) || StrEqual(subsection, "drug ability", false) || StrEqual(subsection, "drug_ability", false) || StrEqual(subsection, "drug", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 12, bHasAbilities(subsection, "drugability", "drug ability", "drug_ability", "drug"));
+		g_iHumanAbility[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iDrugAbility[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iDrugAbility[type], value, 0, 1);
+		g_iDrugEffect[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iDrugEffect[type], value, 0, 7);
+		g_iDrugMessage[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iDrugMessage[type], value, 0, 3);
+		g_flDrugChance[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugChance", "Drug Chance", "Drug_Chance", "chance", g_flDrugChance[type], value, 0.0, 100.0);
+		g_flDrugDuration[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugDuration", "Drug Duration", "Drug_Duration", "duration", g_flDrugDuration[type], value, 0.1, 9999999999.0);
+		g_iDrugHit[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugHit", "Drug Hit", "Drug_Hit", "hit", g_iDrugHit[type], value, 0, 1);
+		g_iDrugHitMode[type] = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugHitMode", "Drug Hit Mode", "Drug_Hit_Mode", "hitmode", g_iDrugHitMode[type], value, 0, 2);
+		g_flDrugInterval[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugInterval", "Drug Interval", "Drug_Interval", "interval", g_flDrugInterval[type], value, 0.1, 9999999999.0);
+		g_flDrugRange[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugRange", "Drug Range", "Drug_Range", "range", g_flDrugRange[type], value, 1.0, 9999999999.0);
+		g_flDrugRangeChance[type] = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "DrugRangeChance", "Drug Range Chance", "Drug_Range_Chance", "rangechance", g_flDrugRangeChance[type], value, 0.0, 100.0);
+
+		if (StrEqual(subsection, "drugability", false) || StrEqual(subsection, "drug ability", false) || StrEqual(subsection, "drug_ability", false) || StrEqual(subsection, "drug", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnPluginEnd()
@@ -331,6 +385,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iDrugAbility[ST_GetTankType(tank)] == 1)
 	{
 		vDrugAbility(tank);
@@ -341,6 +400,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_SUB_KEY == ST_SUB_KEY)
 		{
 			if (g_iDrugAbility[ST_GetTankType(tank)] == 1 && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -415,6 +479,11 @@ static void vDrug(int survivor, bool toggle, float angles[20])
 
 static void vDrugAbility(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	if (g_iDrugCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
 	{
 		g_bDrug4[tank] = false;
@@ -424,10 +493,9 @@ static void vDrugAbility(int tank)
 		GetClientAbsOrigin(tank, flTankPos);
 
 		int iSurvivorCount;
-
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsHumanSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
+			if (bIsHumanSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && !ST_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank))
 			{
 				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -458,6 +526,11 @@ static void vDrugAbility(int tank)
 
 static void vDrugHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
+	if ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || ST_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, tank))
+	{
+		return;
+	}
+
 	if (enabled == 1 && bIsHumanSurvivor(survivor))
 	{
 		if (g_iDrugCount[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
@@ -489,7 +562,7 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, int mess
 				if (g_iDrugMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Drug", sTankName, survivor);
 				}
 			}
@@ -564,6 +637,118 @@ static void vReset2(int survivor, int tank, int messages)
 	}
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
+}
+
 public Action tTimerDrug(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -578,7 +763,7 @@ public Action tTimerDrug(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bDrug[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || ST_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, iTank) || !g_bDrug[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, iMessage);
 

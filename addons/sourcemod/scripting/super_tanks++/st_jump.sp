@@ -52,7 +52,7 @@ bool g_bCloneInstalled, g_bJump[MAXPLAYERS + 1], g_bJump2[MAXPLAYERS + 1], g_bJu
 
 float g_flHumanCooldown[ST_MAXTYPES + 1], g_flJumpChance[ST_MAXTYPES + 1], g_flJumpDuration[ST_MAXTYPES + 1], g_flJumpHeight[ST_MAXTYPES + 1], g_flJumpInterval[ST_MAXTYPES + 1], g_flJumpRange[ST_MAXTYPES + 1], g_flJumpRangeChance[ST_MAXTYPES + 1], g_flJumpSporadicChance[ST_MAXTYPES + 1], g_flJumpSporadicHeight[ST_MAXTYPES + 1];
 
-int g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpCount[MAXPLAYERS + 1], g_iJumpCount2[MAXPLAYERS + 1], g_iJumpEffect[ST_MAXTYPES + 1], g_iJumpHit[ST_MAXTYPES + 1], g_iJumpHitMode[ST_MAXTYPES + 1], g_iJumpMessage[ST_MAXTYPES + 1], g_iJumpMode[ST_MAXTYPES + 1], g_iJumpOwner[MAXPLAYERS + 1];
+int g_iAccessFlags[ST_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[ST_MAXTYPES + 1], g_iHumanAmmo[ST_MAXTYPES + 1], g_iHumanMode[ST_MAXTYPES + 1], g_iImmunityFlags[ST_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iJumpAbility[ST_MAXTYPES + 1], g_iJumpCount[MAXPLAYERS + 1], g_iJumpCount2[MAXPLAYERS + 1], g_iJumpEffect[ST_MAXTYPES + 1], g_iJumpHit[ST_MAXTYPES + 1], g_iJumpHitMode[ST_MAXTYPES + 1], g_iJumpMessage[ST_MAXTYPES + 1], g_iJumpMode[ST_MAXTYPES + 1], g_iJumpOwner[MAXPLAYERS + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -265,6 +265,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (ST_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iJumpHitMode[ST_GetTankType(attacker)] == 0 || g_iJumpHitMode[ST_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
 		{
+			if ((!ST_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || ST_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
 				vJumpHit(victim, attacker, g_flJumpChance[ST_GetTankType(attacker)], g_iJumpHit[ST_GetTankType(attacker)], ST_MESSAGE_MELEE, ST_ATTACK_CLAW);
@@ -272,18 +277,36 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		else if (ST_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iJumpHitMode[ST_GetTankType(victim)] == 0 || g_iJumpHitMode[ST_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
 		{
+			if ((!ST_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || ST_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			{
+				return Plugin_Continue;
+			}
+
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
 				vJumpHit(attacker, victim, g_flJumpChance[ST_GetTankType(victim)], g_iJumpHit[ST_GetTankType(victim)], ST_MESSAGE_MELEE, ST_ATTACK_MELEE);
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public void ST_OnConfigsLoad()
 {
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer))
+		{
+			g_iAccessFlags2[iPlayer] = 0;
+			g_iImmunityFlags2[iPlayer] = 0;
+		}
+	}
+
 	for (int iIndex = ST_GetMinType(); iIndex <= ST_GetMaxType(); iIndex++)
 	{
+		g_iAccessFlags[iIndex] = 0;
+		g_iImmunityFlags[iIndex] = 0;
 		g_iHumanAbility[iIndex] = 0;
 		g_iHumanAmmo[iIndex] = 5;
 		g_flHumanCooldown[iIndex] = 30.0;
@@ -305,26 +328,57 @@ public void ST_OnConfigsLoad()
 	}
 }
 
-public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, bool main, const char[] value, int type)
+public void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
 {
-	g_iHumanAbility[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanAbility", "Human Ability", "Human_Ability", "human", main, g_iHumanAbility[type], value, 0, 0, 1);
-	g_iHumanAmmo[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", main, g_iHumanAmmo[type], value, 5, 0, 9999999999);
-	g_flHumanCooldown[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", main, g_flHumanCooldown[type], value, 30.0, 0.0, 9999999999.0);
-	g_iHumanMode[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", main, g_iHumanMode[type], value, 1, 0, 1);
-	g_iJumpAbility[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", main, g_iJumpAbility[type], value, 0, 0, 3);
-	g_iJumpEffect[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", main, g_iJumpEffect[type], value, 0, 0, 7);
-	g_iJumpMessage[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", main, g_iJumpMessage[type], value, 0, 0, 7);
-	g_flJumpChance[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", main, g_flJumpChance[type], value, 33.3, 0.0, 100.0);
-	g_flJumpDuration[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", main, g_flJumpDuration[type], value, 5.0, 0.1, 9999999999.0);
-	g_flJumpHeight[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpHeight", "Jump Height", "Jump_Height", "height", main, g_flJumpHeight[type], value, 300.0, 0.1, 9999999999.0);
-	g_iJumpHit[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpHit", "Jump Hit", "Jump_Hit", "hit", main, g_iJumpHit[type], value, 0, 0, 1);
-	g_iJumpHitMode[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpHitMode", "Jump Hit Mode", "Jump_Hit_Mode", "hitmode", main, g_iJumpHitMode[type], value, 0, 0, 2);
-	g_flJumpInterval[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpInterval", "Jump Interval", "Jump_Interval", "interval", main, g_flJumpInterval[type], value, 1.0, 0.1, 9999999999.0);
-	g_iJumpMode[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpMode", "Jump Mode", "Jump_Mode", "mode", main, g_iJumpMode[type], value, 0, 0, 1);
-	g_flJumpRange[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpRange", "Jump Range", "Jump_Range", "range", main, g_flJumpRange[type], value, 150.0, 1.0, 9999999999.0);
-	g_flJumpRangeChance[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpRangeChance", "Jump Range Chance", "Jump_Range_Chance", "rangechance", main, g_flJumpRangeChance[type], value, 15.0, 0.0, 100.0);
-	g_flJumpSporadicChance[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpSporadicChance", "Jump Sporadic Chance", "Jump_Sporadic_Chance", "sporadicchance", main, g_flJumpSporadicChance[type], value, 33.3, 0.0, 100.0);
-	g_flJumpSporadicHeight[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpSporadicHeight", "Jump Sporadic Height", "Jump_Sporadic_Height", "sporadicheight", main, g_flJumpSporadicHeight[type], value, 750.0, 0.1, 9999999999.0);
+	if (bIsValidClient(admin) && value[0] != '\0')
+	{
+		if (StrEqual(subsection, "jumpability", false) || StrEqual(subsection, "jump ability", false) || StrEqual(subsection, "jump_ability", false) || StrEqual(subsection, "jump", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+			}
+		}
+	}
+
+	if (type > 0)
+	{
+		ST_FindAbility(type, 31, bHasAbilities(subsection, "jumpability", "jump ability", "jump_ability", "jump"));
+		g_iHumanAbility[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanMode[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
+		g_iJumpAbility[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iJumpAbility[type], value, 0, 3);
+		g_iJumpEffect[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iJumpEffect[type], value, 0, 7);
+		g_iJumpMessage[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iJumpMessage[type], value, 0, 7);
+		g_flJumpChance[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", g_flJumpChance[type], value, 0.0, 100.0);
+		g_flJumpDuration[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_flJumpDuration[type], value, 0.1, 9999999999.0);
+		g_flJumpHeight[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpHeight", "Jump Height", "Jump_Height", "height", g_flJumpHeight[type], value, 0.1, 9999999999.0);
+		g_iJumpHit[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpHit", "Jump Hit", "Jump_Hit", "hit", g_iJumpHit[type], value, 0, 1);
+		g_iJumpHitMode[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpHitMode", "Jump Hit Mode", "Jump_Hit_Mode", "hitmode", g_iJumpHitMode[type], value, 0, 2);
+		g_flJumpInterval[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpInterval", "Jump Interval", "Jump_Interval", "interval", g_flJumpInterval[type], value, 0.1, 9999999999.0);
+		g_iJumpMode[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpMode", "Jump Mode", "Jump_Mode", "mode", g_iJumpMode[type], value, 0, 1);
+		g_flJumpRange[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpRange", "Jump Range", "Jump_Range", "range", g_flJumpRange[type], value, 1.0, 9999999999.0);
+		g_flJumpRangeChance[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpRangeChance", "Jump Range Chance", "Jump_Range_Chance", "rangechance", g_flJumpRangeChance[type], value, 0.0, 100.0);
+		g_flJumpSporadicChance[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpSporadicChance", "Jump Sporadic Chance", "Jump_Sporadic_Chance", "sporadicchance", g_flJumpSporadicChance[type], value, 0.0, 100.0);
+		g_flJumpSporadicHeight[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpSporadicHeight", "Jump Sporadic Height", "Jump_Sporadic_Height", "sporadicheight", g_flJumpSporadicHeight[type], value, 0.1, 9999999999.0);
+
+		if (StrEqual(subsection, "jumpability", false) || StrEqual(subsection, "jump ability", false) || StrEqual(subsection, "jump_ability", false) || StrEqual(subsection, "jump", false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+			}
+		}
+	}
 }
 
 public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -341,6 +395,11 @@ public void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void ST_OnAbilityActivated(int tank)
 {
+	if (ST_IsTankSupported(tank, ST_CHECK_INGAME|ST_CHECK_FAKECLIENT) && ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[ST_GetTankType(tank)] == 0))
+	{
+		return;
+	}
+
 	if (ST_IsTankSupported(tank) && (!ST_IsTankSupported(tank, ST_CHECK_FAKECLIENT) || g_iHumanAbility[ST_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iJumpAbility[ST_GetTankType(tank)] > 0)
 	{
 		vJumpAbility(tank, true);
@@ -352,6 +411,11 @@ public void ST_OnButtonPressed(int tank, int button)
 {
 	if (ST_IsTankSupported(tank, ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE|ST_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
+		if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		{
+			return;
+		}
+
 		if (button & ST_MAIN_KEY == ST_MAIN_KEY)
 		{
 			if ((g_iJumpAbility[ST_GetTankType(tank)] == 2 || g_iJumpAbility[ST_GetTankType(tank)] == 3) && g_iHumanAbility[ST_GetTankType(tank)] == 1)
@@ -441,6 +505,11 @@ public void ST_OnChangeType(int tank, bool revert)
 
 static void vJump(int survivor, int tank)
 {
+	if ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || ST_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, tank))
+	{
+		return;
+	}
+
 	float flVelocity[3];
 	GetEntPropVector(survivor, Prop_Data, "m_vecVelocity", flVelocity);
 	flVelocity[2] += g_flJumpHeight[ST_GetTankType(tank)];
@@ -450,6 +519,11 @@ static void vJump(int survivor, int tank)
 
 static void vJump2(int tank)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	switch (g_iJumpMode[ST_GetTankType(tank)])
 	{
 		case 0:
@@ -473,6 +547,11 @@ static void vJump2(int tank)
 
 static void vJumpAbility(int tank, bool main)
 {
+	if (!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
 	switch (main)
 	{
 		case true:
@@ -488,10 +567,9 @@ static void vJumpAbility(int tank, bool main)
 					GetClientAbsOrigin(tank, flTankPos);
 
 					int iSurvivorCount;
-
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
-						if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE))
+						if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && !ST_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank))
 						{
 							float flSurvivorPos[3];
 							GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -540,7 +618,7 @@ static void vJumpAbility(int tank, bool main)
 					if (g_iJumpMessage[ST_GetTankType(tank)] & ST_MESSAGE_SPECIAL)
 					{
 						char sTankName[33];
-						ST_GetTankName(tank, sTankName);
+						ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 						ST_PrintToChatAll("%s %t", ST_TAG2, "Jump3", sTankName);
 					}
 				}
@@ -555,6 +633,11 @@ static void vJumpAbility(int tank, bool main)
 
 static void vJumpHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
+	if ((!ST_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || ST_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, tank))
+	{
+		return;
+	}
+
 	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor))
 	{
 		if (g_iJumpCount2[tank] < g_iHumanAmmo[ST_GetTankType(tank)] && g_iHumanAmmo[ST_GetTankType(tank)] > 0)
@@ -586,7 +669,7 @@ static void vJumpHit(int survivor, int tank, float chance, int enabled, int mess
 				if (g_iJumpMessage[ST_GetTankType(tank)] & messages)
 				{
 					char sTankName[33];
-					ST_GetTankName(tank, sTankName);
+					ST_GetTankName(tank, ST_GetTankType(tank), sTankName);
 					ST_PrintToChatAll("%s %t", ST_TAG2, "Jump", sTankName, survivor);
 				}
 			}
@@ -675,12 +758,149 @@ static void vReset4(int tank)
 	g_iJumpCount2[tank] = 0;
 }
 
+static bool bHasAdminAccess(int admin)
+{
+	if (!bIsValidClient(admin, ST_CHECK_FAKECLIENT))
+	{
+		return true;
+	}
+
+	int iAbilityFlags = g_iAccessFlags[ST_GetTankType(admin)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iTypeFlags = ST_GetAccessFlags(2, ST_GetTankType(admin));
+	if (iTypeFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		{
+			return false;
+		}
+	}
+
+	int iGlobalFlags = ST_GetAccessFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetAccessFlags(4, ST_GetTankType(admin), admin);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetAccessFlags(3, 0, admin);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+static bool bIsAdminImmune(int survivor, int tank)
+{
+	if (!bIsValidClient(survivor, ST_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	int iAbilityFlags = g_iImmunityFlags[ST_GetTankType(survivor)];
+	if (iAbilityFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iTypeFlags = ST_GetImmunityFlags(2, ST_GetTankType(survivor));
+	if (iTypeFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iGlobalFlags = ST_GetImmunityFlags(1);
+	if (iGlobalFlags != 0)
+	{
+		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
+		{
+			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
+		}
+	}
+
+	int iClientTypeFlags = ST_GetImmunityFlags(4, ST_GetTankType(tank), survivor),
+		iClientTypeFlags2 = ST_GetImmunityFlags(4, ST_GetTankType(tank), tank);
+	if (iClientTypeFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
+		{
+			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
+		}
+	}
+
+	int iClientGlobalFlags = ST_GetImmunityFlags(3, 0, survivor),
+		iClientGlobalFlags2 = ST_GetImmunityFlags(3, 0, tank);
+	if (iClientGlobalFlags != 0)
+	{
+		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
+		{
+			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
+		}
+	}
+
+	return false;
+}
+
+static float flGetNearestSurvivor(int tank)
+{
+	float flDistance;
+	if (bIsTank(tank))
+	{
+		float flTankPos[3];
+		GetClientAbsOrigin(tank, flTankPos);
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE) && !ST_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank))
+			{
+				float flSurvivorPos[3];
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+
+				break;
+			}
+		}
+	}
+
+	return flDistance;
+}
+
 public Action tTimerJump(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (g_iJumpAbility[ST_GetTankType(iTank)] != 2 && g_iJumpAbility[ST_GetTankType(iTank)] != 3) || !g_bJump[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (g_iJumpAbility[ST_GetTankType(iTank)] != 2 && g_iJumpAbility[ST_GetTankType(iTank)] != 3) || !g_bJump[iTank])
 	{
 		g_bJump[iTank] = false;
 
@@ -710,7 +930,7 @@ public Action tTimerJump2(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (g_iJumpAbility[ST_GetTankType(iTank)] != 2 && g_iJumpAbility[ST_GetTankType(iTank)] != 3) || !g_bJump[iTank])
+	if (!ST_IsCorePluginEnabled() || !ST_IsTankSupported(iTank) || (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || (g_iJumpAbility[ST_GetTankType(iTank)] != 2 && g_iJumpAbility[ST_GetTankType(iTank)] != 3) || !g_bJump[iTank])
 	{
 		g_bJump[iTank] = false;
 
@@ -774,7 +994,7 @@ public Action tTimerJump3(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iMessage = pack.ReadCell();
-	if (!ST_IsTankSupported(iTank) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || !g_bJump2[iSurvivor])
+	if (!ST_IsTankSupported(iTank) || (!ST_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !ST_IsTypeEnabled(ST_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != ST_GetTankType(iTank) || ST_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, iTank) || !g_bJump2[iSurvivor])
 	{
 		vReset2(iSurvivor, iTank, iMessage);
 
