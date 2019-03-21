@@ -2032,205 +2032,204 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 
 public void SMCParseStart(SMCParser smc)
 {
-	g_csState = ConfigState_None;
-	g_iIgnoreLevel = 0;
-	g_sCurrentSection[0] = '\0';
-	g_sCurrentSubSection[0] = '\0';
-	g_iPluginEnabled = 0;
-	g_iAnnounceArrival = 31;
-	g_iAnnounceDeath = 1;
-	g_iBaseHealth = 0;
-	g_iDeathRevert = 0;
-	g_iDetectPlugins = 0;
-	g_iDisplayHealth = 7;
-	g_iDisplayHealthType = 1;
-	g_sHealthCharacters = "|,-";
-	g_iFinalesOnly = 0;
-	g_iMultiHealth = 0;
-	g_iMinType = 1;
-	g_iMaxType = MT_MAXTYPES;
-	g_iAllowDeveloper = 1;
-	g_iAccessFlags = 0;
-	g_iImmunityFlags = 0;
-	g_iHumanCooldown = 600;
-	g_iMasterControl = 0;
-	g_iMTMode = 1;
-	g_iRegularAmount = 2;
-	g_flRegularInterval = 300.0;
-	g_iRegularWave = 0;
-
 	if (g_bGeneralConfig)
 	{
+		g_csState = ConfigState_None;
+		g_iIgnoreLevel = 0;
+		g_sCurrentSection[0] = '\0';
+		g_sCurrentSubSection[0] = '\0';
+		g_iPluginEnabled = 0;
+		g_iAnnounceArrival = 31;
+		g_iAnnounceDeath = 1;
+		g_iBaseHealth = 0;
+		g_iDeathRevert = 0;
+		g_iDetectPlugins = 0;
+		g_iDisplayHealth = 7;
+		g_iDisplayHealthType = 1;
+		g_sHealthCharacters = "|,-";
+		g_iFinalesOnly = 0;
+		g_iMultiHealth = 0;
+		g_iMinType = 1;
+		g_iMaxType = MT_MAXTYPES;
+		g_iAllowDeveloper = 1;
+		g_iAccessFlags = 0;
+		g_iImmunityFlags = 0;
+		g_iHumanCooldown = 600;
+		g_iMasterControl = 0;
+		g_iMTMode = 1;
+		g_iRegularAmount = 2;
+		g_flRegularInterval = 300.0;
+		g_iRegularWave = 0;
 		g_iGameModeTypes = 0;
 		g_sEnabledGameModes[0] = '\0';
 		g_sDisabledGameModes[0] = '\0';
 		g_iConfigEnable = 0;
 		g_iConfigCreate = 0;
 		g_iConfigExecute = 0;
-	}
 
-	for (int iPos = 0; iPos < 3; iPos++)
-	{
-		g_iFinaleWave[iPos] = iPos + 2;
-	}
-
-	for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
-	{
-		Format(g_sTankName[iIndex], sizeof(g_sTankName[]), "Tank #%i", iIndex);
-		g_iTankEnabled[iIndex] = 0;
-		g_flTankChance[iIndex] = 100.0;
-		g_iTankNote[iIndex] = 0;
-		g_iSpawnEnabled[iIndex] = 1;
-		g_iMenuEnabled[iIndex] = 1;
-		g_iAnnounceArrival2[iIndex] = 0;
-		g_iAnnounceDeath2[iIndex] = 0;
-		g_iDeathRevert2[iIndex] = 0;
-		g_iDetectPlugins2[iIndex] = 0;
-		g_iDisplayHealth2[iIndex] = 0;
-		g_iDisplayHealthType2[iIndex] = 0;
-		g_sHealthCharacters2[iIndex][0] = '\0';
-		g_iMultiHealth2[iIndex] = 0;
-		g_iHumanSupport[iIndex] = 0;
-		g_iGlowEnabled[iIndex] = 0;
-		g_iAccessFlags2[iIndex] = 0;
-		g_iImmunityFlags2[iIndex] = 0;
-		g_iTypeLimit[iIndex] = 32;
-		g_iFinaleTank[iIndex] = 0;
-		g_iBossHealth[iIndex][0] = 5000;
-		g_iBossHealth[iIndex][1] = 2500;
-		g_iBossHealth[iIndex][2] = 1500;
-		g_iBossHealth[iIndex][3] = 1000;
-		g_iBossStages[iIndex] = 4;
-		g_iRandomTank[iIndex] = 1;
-		g_flRandomInterval[iIndex] = 5.0;
-		g_flTransformDelay[iIndex] = 10.0;
-		g_flTransformDuration[iIndex] = 10.0;
-		g_iSpawnMode[iIndex] = 0;
-		g_iPropsAttached[iIndex] = 62;
-		g_iBodyEffects[iIndex] = 0;
-		g_iRockEffects[iIndex] = 0;
-		g_flClawDamage[iIndex] = -1.0;
-		g_iExtraHealth[iIndex] = 0;
-		g_flRockDamage[iIndex] = -1.0;
-		g_flRunSpeed[iIndex] = -1.0;
-		g_flThrowInterval[iIndex] = -1.0;
-		g_iBulletImmunity[iIndex] = 0;
-		g_iExplosiveImmunity[iIndex] = 0;
-		g_iFireImmunity[iIndex] = 0;
-		g_iMeleeImmunity[iIndex] = 0;
-
-		for (int iPos = 0; iPos < MT_MAX_ABILITIES; iPos++)
+		for (int iPos = 0; iPos < 3; iPos++)
 		{
-			g_bAbilityFound[iIndex][iPos] = false;
+			g_iFinaleWave[iPos] = iPos + 2;
 		}
 
-		for (int iPos = 0; iPos < 10; iPos++)
+		for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 		{
-			g_iTransformType[iIndex][iPos] = iPos + 1;
+			Format(g_sTankName[iIndex], sizeof(g_sTankName[]), "Tank #%i", iIndex);
+			g_iTankEnabled[iIndex] = 0;
+			g_flTankChance[iIndex] = 100.0;
+			g_iTankNote[iIndex] = 0;
+			g_iSpawnEnabled[iIndex] = 1;
+			g_iMenuEnabled[iIndex] = 1;
+			g_iAnnounceArrival2[iIndex] = 0;
+			g_iAnnounceDeath2[iIndex] = 0;
+			g_iDeathRevert2[iIndex] = 0;
+			g_iDetectPlugins2[iIndex] = 0;
+			g_iDisplayHealth2[iIndex] = 0;
+			g_iDisplayHealthType2[iIndex] = 0;
+			g_sHealthCharacters2[iIndex][0] = '\0';
+			g_iMultiHealth2[iIndex] = 0;
+			g_iHumanSupport[iIndex] = 0;
+			g_iGlowEnabled[iIndex] = 0;
+			g_iAccessFlags2[iIndex] = 0;
+			g_iImmunityFlags2[iIndex] = 0;
+			g_iTypeLimit[iIndex] = 32;
+			g_iFinaleTank[iIndex] = 0;
+			g_iBossHealth[iIndex][0] = 5000;
+			g_iBossHealth[iIndex][1] = 2500;
+			g_iBossHealth[iIndex][2] = 1500;
+			g_iBossHealth[iIndex][3] = 1000;
+			g_iBossStages[iIndex] = 4;
+			g_iRandomTank[iIndex] = 1;
+			g_flRandomInterval[iIndex] = 5.0;
+			g_flTransformDelay[iIndex] = 10.0;
+			g_flTransformDuration[iIndex] = 10.0;
+			g_iSpawnMode[iIndex] = 0;
+			g_iPropsAttached[iIndex] = 62;
+			g_iBodyEffects[iIndex] = 0;
+			g_iRockEffects[iIndex] = 0;
+			g_flClawDamage[iIndex] = -1.0;
+			g_iExtraHealth[iIndex] = 0;
+			g_flRockDamage[iIndex] = -1.0;
+			g_flRunSpeed[iIndex] = -1.0;
+			g_flThrowInterval[iIndex] = -1.0;
+			g_iBulletImmunity[iIndex] = 0;
+			g_iExplosiveImmunity[iIndex] = 0;
+			g_iFireImmunity[iIndex] = 0;
+			g_iMeleeImmunity[iIndex] = 0;
 
-			if (iPos < 6)
+			for (int iPos = 0; iPos < MT_MAX_ABILITIES; iPos++)
 			{
-				g_flPropsChance[iIndex][iPos] = 33.3;
+				g_bAbilityFound[iIndex][iPos] = false;
 			}
-
-			if (iPos < 4)
-			{
-				g_iSkinColor[iIndex][iPos] = 255;
-				g_iBossType[iIndex][iPos] = iPos + 2;
-				g_iLightColor[iIndex][iPos] = 255;
-				g_iOzTankColor[iIndex][iPos] = 255;
-				g_iFlameColor[iIndex][iPos] = 255;
-				g_iRockColor[iIndex][iPos] = 255;
-				g_iTireColor[iIndex][iPos] = 255;
-			}
-
-			if (iPos < 3)
-			{
-				g_iGlowColor[iIndex][iPos] = 255;
-			}
-		}
-	}
-
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
-		{
-			g_sTankName2[iPlayer][0] = '\0';
-			g_iAnnounceArrival3[iPlayer] = 0;
-			g_iAnnounceDeath3[iPlayer] = 0;
-			g_iDeathRevert3[iPlayer] = 0;
-			g_iDetectPlugins3[iPlayer] = 0;
-			g_iDisplayHealth3[iPlayer] = 0;
-			g_iDisplayHealthType3[iPlayer] = 0;
-			g_sHealthCharacters3[iPlayer][0] = '\0';
-			g_iMultiHealth3[iPlayer] = 0;
-			g_iGlowEnabled2[iPlayer] = 0;
-			g_iFavoriteType[iPlayer] = 0;
-			g_iAccessFlags3[iPlayer] = 0;
-			g_iImmunityFlags3[iPlayer] = 0;
-			g_iBossHealth2[iPlayer][0] = 0;
-			g_iBossHealth2[iPlayer][1] = 0;
-			g_iBossHealth2[iPlayer][2] = 0;
-			g_iBossHealth2[iPlayer][3] = 0;
-			g_iBossStages2[iPlayer] = 0;
-			g_iRandomTank2[iPlayer] = 0;
-			g_flRandomInterval2[iPlayer] = 0.0;
-			g_flTransformDelay2[iPlayer] = 0.0;
-			g_flTransformDuration2[iPlayer] = 0.0;
-			g_iPropsAttached2[iPlayer] = 0;
-			g_iBodyEffects2[iPlayer] = 0;
-			g_iRockEffects2[iPlayer] = 0;
-			g_flClawDamage2[iPlayer] = -2.0;
-			g_iExtraHealth2[iPlayer] = 0;
-			g_flRockDamage2[iPlayer] = -2.0;
-			g_flRunSpeed2[iPlayer] = -2.0;
-			g_flThrowInterval2[iPlayer] = -2.0;
-			g_iBulletImmunity2[iPlayer] = 0;
-			g_iExplosiveImmunity2[iPlayer] = 0;
-			g_iFireImmunity2[iPlayer] = 0;
-			g_iMeleeImmunity2[iPlayer] = 0;
 
 			for (int iPos = 0; iPos < 10; iPos++)
 			{
-				g_iTransformType2[iPlayer][iPos] = 0;
+				g_iTransformType[iIndex][iPos] = iPos + 1;
 
 				if (iPos < 6)
 				{
-					g_flPropsChance2[iPlayer][iPos] = 0.0;
+					g_flPropsChance[iIndex][iPos] = 33.3;
 				}
 
 				if (iPos < 4)
 				{
-					g_iSkinColor2[iPlayer][iPos] = -2;
-					g_iBossType2[iPlayer][iPos] = iPos + 2;
-					g_iLightColor2[iPlayer][iPos] = -2;
-					g_iOzTankColor2[iPlayer][iPos] = -2;
-					g_iFlameColor2[iPlayer][iPos] = -2;
-					g_iRockColor2[iPlayer][iPos] = -2;
-					g_iTireColor2[iPlayer][iPos] = -2;
+					g_iSkinColor[iIndex][iPos] = 255;
+					g_iBossType[iIndex][iPos] = iPos + 2;
+					g_iLightColor[iIndex][iPos] = 255;
+					g_iOzTankColor[iIndex][iPos] = 255;
+					g_iFlameColor[iIndex][iPos] = 255;
+					g_iRockColor[iIndex][iPos] = 255;
+					g_iTireColor[iIndex][iPos] = 255;
 				}
 
 				if (iPos < 3)
 				{
-					g_iGlowColor2[iPlayer][iPos] = -2;
+					g_iGlowColor[iIndex][iPos] = 255;
 				}
 			}
+		}
 
-			for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
 			{
-				g_iAccessFlags4[iIndex][iPlayer] = 0;
-				g_iImmunityFlags4[iIndex][iPlayer] = 0;
+				g_sTankName2[iPlayer][0] = '\0';
+				g_iAnnounceArrival3[iPlayer] = 0;
+				g_iAnnounceDeath3[iPlayer] = 0;
+				g_iDeathRevert3[iPlayer] = 0;
+				g_iDetectPlugins3[iPlayer] = 0;
+				g_iDisplayHealth3[iPlayer] = 0;
+				g_iDisplayHealthType3[iPlayer] = 0;
+				g_sHealthCharacters3[iPlayer][0] = '\0';
+				g_iMultiHealth3[iPlayer] = 0;
+				g_iGlowEnabled2[iPlayer] = 0;
+				g_iFavoriteType[iPlayer] = 0;
+				g_iAccessFlags3[iPlayer] = 0;
+				g_iImmunityFlags3[iPlayer] = 0;
+				g_iBossHealth2[iPlayer][0] = 0;
+				g_iBossHealth2[iPlayer][1] = 0;
+				g_iBossHealth2[iPlayer][2] = 0;
+				g_iBossHealth2[iPlayer][3] = 0;
+				g_iBossStages2[iPlayer] = 0;
+				g_iRandomTank2[iPlayer] = 0;
+				g_flRandomInterval2[iPlayer] = 0.0;
+				g_flTransformDelay2[iPlayer] = 0.0;
+				g_flTransformDuration2[iPlayer] = 0.0;
+				g_iPropsAttached2[iPlayer] = 0;
+				g_iBodyEffects2[iPlayer] = 0;
+				g_iRockEffects2[iPlayer] = 0;
+				g_flClawDamage2[iPlayer] = -2.0;
+				g_iExtraHealth2[iPlayer] = 0;
+				g_flRockDamage2[iPlayer] = -2.0;
+				g_flRunSpeed2[iPlayer] = -2.0;
+				g_flThrowInterval2[iPlayer] = -2.0;
+				g_iBulletImmunity2[iPlayer] = 0;
+				g_iExplosiveImmunity2[iPlayer] = 0;
+				g_iFireImmunity2[iPlayer] = 0;
+				g_iMeleeImmunity2[iPlayer] = 0;
+
+				for (int iPos = 0; iPos < 10; iPos++)
+				{
+					g_iTransformType2[iPlayer][iPos] = 0;
+
+					if (iPos < 6)
+					{
+						g_flPropsChance2[iPlayer][iPos] = 0.0;
+					}
+
+					if (iPos < 4)
+					{
+						g_iSkinColor2[iPlayer][iPos] = -2;
+						g_iBossType2[iPlayer][iPos] = iPos + 2;
+						g_iLightColor2[iPlayer][iPos] = -2;
+						g_iOzTankColor2[iPlayer][iPos] = -2;
+						g_iFlameColor2[iPlayer][iPos] = -2;
+						g_iRockColor2[iPlayer][iPos] = -2;
+						g_iTireColor2[iPlayer][iPos] = -2;
+					}
+
+					if (iPos < 3)
+					{
+						g_iGlowColor2[iPlayer][iPos] = -2;
+					}
+				}
+
+				for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
+				{
+					g_iAccessFlags4[iIndex][iPlayer] = 0;
+					g_iImmunityFlags4[iIndex][iPlayer] = 0;
+				}
 			}
 		}
-	}
 
-	if (g_alAdmins == null)
-	{
-		g_alAdmins = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
-	}
+		if (g_alAdmins == null)
+		{
+			g_alAdmins = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+		}
 
-	Call_StartForward(g_hConfigsLoadForward);
-	Call_Finish();
+		Call_StartForward(g_hConfigsLoadForward);
+		Call_Finish();
+	}
 }
 
 public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes)
