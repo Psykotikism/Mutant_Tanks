@@ -1502,6 +1502,8 @@ Examples:
 
 **AK978** - For reporting issues.
 
+**rickfishin** - For reporting issues.
+
 **Zytheus** - For reporting issues and suggesting ideas.
 
 **huwong** - For reporting issues and suggesting ideas.

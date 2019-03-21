@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.60 (April 1, 2019)
+## Version 8.60 (March 21, 2019)
 
 Changes:
 
