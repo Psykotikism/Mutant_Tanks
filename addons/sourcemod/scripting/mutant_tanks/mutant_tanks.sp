@@ -2058,12 +2058,16 @@ public void SMCParseStart(SMCParser smc)
 	g_iRegularAmount = 2;
 	g_flRegularInterval = 300.0;
 	g_iRegularWave = 0;
-	g_iGameModeTypes = 0;
-	g_sEnabledGameModes[0] = '\0';
-	g_sDisabledGameModes[0] = '\0';
-	g_iConfigEnable = 0;
-	g_iConfigCreate = 0;
-	g_iConfigExecute = 0;
+
+	if (g_bGeneralConfig)
+	{
+		g_iGameModeTypes = 0;
+		g_sEnabledGameModes[0] = '\0';
+		g_sDisabledGameModes[0] = '\0';
+		g_iConfigEnable = 0;
+		g_iConfigCreate = 0;
+		g_iConfigExecute = 0;
+	}
 
 	for (int iPos = 0; iPos < 3; iPos++)
 	{
