@@ -1,10 +1,10 @@
-# Super Tanks++
-Super Tanks++ takes the original [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752) to the next level by enabling full customization of Super Tanks to make gameplay more interesting.
+# Mutant Tanks
+Mutant Tanks takes [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752) to the next level by enabling full customization of Mutant Tanks to make gameplay more interesting.
 
 ## License
 > The following license is also placed inside the source code of each plugin and include file.
 
-Super Tanks++: a L4D/L4D2 SourceMod Plugin
+Mutant Tanks: a L4D/L4D2 SourceMod Plugin
 Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -14,18 +14,18 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## About
-> Super Tanks++ makes fighting Tanks great again!
+> Mutant Tanks makes fighting Tanks great again!
 
-Super Tanks++ will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
+Mutant Tanks will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
-### What makes Super Tanks++ worth installing?
-Super Tanks++ enhances the experience and fun that players get from Tank fights by 1000. This plugin gives server owners an arsenal of Super Tanks to test players' skills and create a unique experience in every Tank fight.
+### What makes Mutant Tanks worth installing?
+Mutant Tanks enhances the experience and fun that players get from Tank fights by 1000. This plugin gives server owners an arsenal of Mutant Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ## Features
 1. Supports all game modes - Provides the option to enable/disable the plugin in all game modes.
 2. Custom configurations - Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
-3. Fully customizable Super Tank types - Provides the ability to fully customize all the Super Tanks that come with the config file and user-made Super Tanks.
-4. Create and save up to 1000 Super Tank types - Provides the ability to store up to 1000 Super Tank types.
+3. Fully customizable Mutant Tank types - Provides the ability to fully customize all the Mutant Tanks that come with the config file and user-made Mutant Tanks.
+4. Create and save up to 1000 Mutant Tank types - Provides the ability to store up to 1000 Mutant Tank types.
 5. Flexible config formatting - Provides 4 different formats for the config file.
 6. Config auto-reloader - Provides the feature to auto-reload the config file when users change settings mid-game.
 7. Optional abilities - Provides the option to choose which abilities to install.
@@ -33,7 +33,7 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 9. Target filters - Provides custom target filters for targeting survivors and special infected.
 10. Supports multiple languages - Provides support for translations.
 11. Chat color tags - Provides chat color tags for translation files.
-12. Administration system - Provides an administration system revolved around the usage and effectiveness of each Super Tank type.
+12. Administration system - Provides an administration system revolved around the usage and effectiveness of each Mutant Tank type.
 
 ### Requirements
 1. You must have at least `SourceMod 1.10.0.6352` or higher.
@@ -46,34 +46,34 @@ Super Tanks++ enhances the experience and fun that players get from Tank fights 
 
 ### Installation
 1. Delete files from old versions of the plugin.
-2. Extract the folder inside the `super_tanks++.zip` file.
+2. Extract the folder inside the `mutant_tanks.zip` file.
 3. Place all the contents into their respective folders.
 4. If prompted to replace or merge anything, click yes.
-5. Load up Super Tanks++ by restarting the server.
-6. Customize Super Tanks++ in `addons/sourcemod/data/super_tanks++/super_tanks++.cfg`
+5. Load up Mutant Tanks by restarting the server.
+6. Customize Mutant Tanks in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
 
 ### Uninstalling/Upgrading to Newer Versions
-1. Delete `super_tanks++` folder from:
- - `addons/sourcemod/plugins` folder (`super_tanks++.smx` and all of its modules)
- - `addons/sourcemod/scripting` folder (`super_tanks++.sp` and all of its modules)
-2. Delete `super_tanks++.txt` from `addons/sourcemod/gamedata` folder.
-3. Delete `super_tanks++.inc` from `addons/sourcemod/scripting/include` folder.
-4. Delete `st_clone.inc` from `addons/sourcemod/scripting/include` folder.
-5. Delete `super_tanks++.phrases.txt` from `addons/sourcemod/translations` folder.
-6. Backup `super_tanks++` folder in `addons/sourcemod/data` folder.
+1. Delete `mutant_tanks` folder from:
+ - `addons/sourcemod/plugins` folder (`mutant_tanks.smx` and all of its modules)
+ - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
+2. Delete `mutant_tanks.txt` from `addons/sourcemod/gamedata` folder.
+3. Delete `mutant_tanks.inc` from `addons/sourcemod/scripting/include` folder.
+4. Delete `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
+5. Delete `mutant_tanks.phrases.txt` from `addons/sourcemod/translations` folder.
+6. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
 6. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
 ### Disabling
-1. Move `super_tanks++` folder (`super_tanks++.smx` and all of its modules) to `plugins/disabled` folder.
-2. Unload Super Tanks++ by restarting the server.
+1. Move `mutant_tanks` folder (`mutant_tanks.smx` and all of its modules) to `plugins/disabled` folder.
+2. Unload Mutant Tanks by restarting the server.
 
 ## KeyValues Settings
 > View the INFORMATION.md file for information about each available setting.
 
 ### Custom Configuration Files
-> Super Tanks++ has features that allow for creating and executing custom configuration files.
+> Mutant Tanks has features that allow for creating and executing custom configuration files.
 
-By default, Super Tanks++ can create and execute the following types of configurations:
+By default, Mutant Tanks can create and execute the following types of configurations:
 1. Difficulty - Files are created/executed based on the current game difficulty. (Example: If the current `z_difficulty` is set to Impossible (Expert mode), then `impossible.cfg` is executed (or created if it doesn't exist already).
 2. Map - Files are created/executed based on the current map. (Example: If the current map is `c1m1_hotel`, then `c1m1_hotel.cfg` is executed (or created if it doesn't exist already).
 3. Game mode - Files are created/executed based on the current game mode. (Example: If the current game mode is Versus, then `versus.cfg` is executed (or created if it doesn't exist already).
@@ -89,7 +89,7 @@ By default, Super Tanks++ can create and execute the following types of configur
 > If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140).
 
 ### Main Features
-1. How do I make my own Super Tank?
+1. How do I make my own Mutant Tank?
 
 - Create an entry.
 
@@ -97,7 +97,7 @@ Examples:
 
 This is okay:
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Tank #25"
 	{
@@ -117,7 +117,7 @@ This is okay:
 
 This is not okay:
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Tank #25"
 	{
@@ -137,7 +137,7 @@ This is not okay:
 
 This is okay:
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Tank #25"
 	{
@@ -157,7 +157,7 @@ This is okay:
 
 This is not okay:
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Tank #25"
 	{
@@ -179,7 +179,7 @@ This is not okay:
 
 Here's our final entry:
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Tank #25"
 	{
@@ -204,7 +204,7 @@ Here's our final entry:
 To make sure that this entry can be chosen, we must change the value in the `Type Range` setting.
 
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Plugin Settings"
 	{
@@ -221,7 +221,7 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 - Advanced Entry Examples
 
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Plugin Settings"
 	{
@@ -259,7 +259,7 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 ```
 
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Plugin Settings"
 	{
@@ -361,33 +361,33 @@ Scenario 3:
 Outcome: The plugin works in every Campaign-based and Survival-based game mode except "coop" mode.
 ```
 
-4. How come some Super Tanks aren't showing up?
+4. How come some Mutant Tanks aren't showing up?
 
 It may be due to one or more of the following:
 
-- The `Tank Enabled` setting for that Super Tank may be set to 0 or doesn't exists at all which defaults to 0.
-- The `Spawn Enabled` setting for that Super Tank may be set to 0
-- You have created a new Super Tank and didn't raise the maximum value of `Type Range`.
+- The `Tank Enabled` setting for that Mutant Tank may be set to 0 or doesn't exists at all which defaults to 0.
+- The `Spawn Enabled` setting for that Mutant Tank may be set to 0
+- You have created a new Mutant Tank and didn't raise the maximum value of `Type Range`.
 - You have misspelled one of the settings.
 - You are still using the `Tank Character` setting which is no longer used since v8.16.
-- You didn't set up the Super Tank properly.
+- You didn't set up the Mutant Tank properly.
 - You are missing quotation marks.
 - You are missing curly braces.
-- You have more than 1000 Super Tanks in your config file.
+- You have more than 1000 Mutant Tanks in your config file.
 - You didn't format your config file properly.
-- The `Detect Plugins` setting automatically disabled the Super Tank due to not having any of its abilities installed.
+- The `Detect Plugins` setting automatically disabled the Mutant Tank due to not having any of its abilities installed.
 
 5. How do I kill the Tanks depending on what abilities they have?
 
 The following abilities require different strategies:
 
-- Absorb Ability: The Super Tank takes way less damage. Conserve your ammo and maintain distance between you and the Super Tank.
-- God Ability: The Super Tank will have god mode temporarily and will not take any damage at all until the effect ends. Maintain distance between you and the Super Tank.
+- Absorb Ability: The Mutant Tank takes way less damage. Conserve your ammo and maintain distance between you and the Mutant Tank.
+- God Ability: The Mutant Tank will have god mode temporarily and will not take any damage at all until the effect ends. Maintain distance between you and the Mutant Tank.
 - Bullet Immunity: Forget your guns. Just spam your grenade launcher at it, slash it with an axe or crowbar, or burn it to death.
 - Explosive Immunity: Forget explosives and just focus on gunfire, melee weapons, and molotovs/gascans.
 - Fire Immunity: No more barbecued Tanks.
 - Melee Immunity: No more Gordon Freeman players (immune to melee weapons including crowbar).
-- Nullify Hit: The Super Tank can mark players as useless, which means as long as that player is nullified, they will not do any damage.
+- Nullify Hit: The Mutant Tank can mark players as useless, which means as long as that player is nullified, they will not do any damage.
 - Shield Ability: Wait for the Tank to throw propane tanks at you and then throw it back at the Tank. Then shoot the propane tank to deactivate the Tank's shield.
 
 6. How can I change the amount of Tanks that spawn on each finale wave?
@@ -404,13 +404,13 @@ Set the value in `Display Health`.
 
 8. Why do some Tanks spawn with different props?
 
-Each prop has X out of 100.0% chance to appear on Super Tanks when they spawn. Configure the chances for each prop in the `Props Chance` setting.
+Each prop has X out of 100.0% chance to appear on Mutant Tanks when they spawn. Configure the chances for each prop in the `Props Chance` setting.
 
 9. Why are the Tanks spawning with more than the extra health given to them?
 
 Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
-10. How do I add more Super Tanks?
+10. How do I add more Mutant Tanks?
 
 - Add a new entry in the config file.
 - Raise the maximum value of the `Type Range` setting.
@@ -418,7 +418,7 @@ Since v8.10, extra health given to Tanks is now multiplied by the number of aliv
 Example:
 
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Plugin Settings"
 	{
@@ -437,14 +437,14 @@ Example:
 }
 ```
 
-11. How do I filter out certain Super Tanks that I made without deleting them?
+11. How do I filter out certain Mutant Tanks that I made without deleting them?
 
 Enable/disable them with the `Tank Enabled` setting.
 
 Example:
 
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Tank #1"
 	{
@@ -488,8 +488,8 @@ Yes, you can do that with custom configs.
 Example:
 
 ```
-// Settings for addons/sourcemod/data/super_tanks++/super_tanks++.cfg
-"Super Tanks++"
+// Settings for addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg
+"Mutant Tanks"
 {
 	"Plugin Settings"
 	{
@@ -522,8 +522,8 @@ Example:
 	}
 }
 
-// Settings for addons/sourcemod/data/super_tanks++/difficulty_configs/impossible.cfg
-"Super Tanks++"
+// Settings for addons/sourcemod/data/mutant_tanks/difficulty_configs/impossible.cfg
+"Mutant Tanks"
 {
 	"Tank #69"
 	{
@@ -553,10 +553,10 @@ Output: When the current difficulty is Expert mode (impossible), the Idiot Tank 
 These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
 
-13. How can I move the Super Tanks++ category around on the admin menu?
+13. How can I move the Mutant Tanks category around on the admin menu?
 
 - You have to open up addons/sourcemod/configs/adminmenu_sorting.txt.
-- Enter the `SuperTanks++` category.
+- Enter the `MutantTanks` category.
 
 Example:
 
@@ -593,7 +593,7 @@ Example:
 		"item"		"sm_voteban"
 	}
 
-	"SuperTanks++"
+	"MutantTanks"
 	{
 		"item"		"sm_tank"
 	}
@@ -602,50 +602,50 @@ Example:
 
 14. Are there any developer/tester features available in the plugin?
 
-Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Super Tank.
+Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Mutant Tank.
 
 Forwards:
 ```
 /**
- * Called every second to trigger a Super Tank's ability.
+ * Called every second to trigger a Mutant Tank's ability.
  * Use this forward for any passive abilities.
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_OnAbilityActivated(int tank);
+forward void MT_OnAbilityActivated(int tank);
 
 /**
- * Called when a human-controlled Super Tank presses a button.
+ * Called when a human-controlled Mutant Tank presses a button.
  * Use this forward to trigger abilities manually.
  *
  * @param tank			Client index of the Tank.
  * @param button		Button pressed.
  **/
-forward void ST_OnButtonPressed(int tank, int button);
+forward void MT_OnButtonPressed(int tank, int button);
 
 /**
- * Called when a human-controlled Super Tank releases a button.
+ * Called when a human-controlled Mutant Tank releases a button.
  * Use this forward to trigger abilities manually.
  *
  * @param tank			Client index of the Tank.
  * @param button		Button released.
  **/
-forward void ST_OnButtonReleased(int tank, int button);
+forward void MT_OnButtonReleased(int tank, int button);
 
 /**
- * Called when a Super Tank changes types.
- * Use this forward to trigger any features/abilities/settings when a Super Tank changes types.
+ * Called when a Mutant Tank changes types.
+ * Use this forward to trigger any features/abilities/settings when a Mutant Tank changes types.
  *
  * @param tank			Client index of the Tank.
  * @param revert		True if reverting to a normal Tank, false otherwise.
  **/
-forward void ST_OnChangeType(int tank, bool revert);
+forward void MT_OnChangeType(int tank, bool revert);
 
 /**
  * Called when the config file is about to load.
  * Use this forward to set default values for settings for the plugin.
  **/
-forward void ST_OnConfigsLoad();
+forward void MT_OnConfigsLoad();
 
 /**
  * Called when the config file is loaded.
@@ -654,18 +654,18 @@ forward void ST_OnConfigsLoad();
  * @param subsection		The subsection the config parser is currently on.
  * @param key			The key the config parser is currently on.
  * @param value			The value the config parser is currently on.
- * @param type			The Super Tank type the config parser is currently on. (Used for Super Tank-specific settings.)
+ * @param type			The Mutant Tank type the config parser is currently on. (Used for Mutant Tank-specific settings.)
  * @param admin			Client index of an admin. (Used for admin-specific settings.)
  **/
-forward void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin);
+forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin);
 
 /**
- * Called when a player uses the "sm_st_info" command.
+ * Called when a player uses the "sm_mt_info" command.
  * Use this forward to add menu items.
  *
  * @param menu			Handle to the menu.
  **/
-forward void ST_OnDisplayMenu(Menu menu);
+forward void MT_OnDisplayMenu(Menu menu);
 
 /**
  * Called when an event hooked by the core plugin is fired.
@@ -675,7 +675,7 @@ forward void ST_OnDisplayMenu(Menu menu);
  * @param name			String containing the name of the event.
  * @param dontBroadcast		True if event was not broadcast to clients, false otherwise.
  **/
-forward void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast);
+forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast);
 
 /**
  * Called when the core plugin is hooking/unhooking events.
@@ -683,116 +683,116 @@ forward void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
  *
  * @param mode			True if event was hooked, false otherwise.
  **/
-forward void ST_OnHookEvent(bool mode);
+forward void MT_OnHookEvent(bool mode);
 
 /**
- * Called when a player selects an item from the "Super Tanks++ Information" menu.
+ * Called when a player selects an item from the "Mutant Tanks Information" menu.
  * Use this forward to do anything when an item is selected.
  *
  * @param client		Client index of the player selecting the item.
  * @param info			String containing the name of the item.
  **/
-forward void ST_OnMenuItemSelected(int client, const char[] info);
+forward void MT_OnMenuItemSelected(int client, const char[] info);
 
 /**
  * Called when the core plugin is unloaded/reloaded.
  * Use this forward to get rid of any modifications to Tanks or survivors.
  **/
-forward void ST_OnPluginEnd();
+forward void MT_OnPluginEnd();
 
 /**
- * Called after a Super Tank spawns.
+ * Called after a Mutant Tank spawns.
  * Use this forward for any post-spawn actions.
- * If you plan on using this to activate an ability, use ST_OnAbilityActivated() instead.
+ * If you plan on using this to activate an ability, use MT_OnAbilityActivated() instead.
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_OnPostTankSpawn(int tank);
+forward void MT_OnPostTankSpawn(int tank);
 
 /**
- * Called when a Super Tank's rock breaks.
+ * Called when a Mutant Tank's rock breaks.
  * Use this forward for any after-effects.
  *
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
  **/
-forward void ST_OnRockBreak(int tank, int rock);
+forward void MT_OnRockBreak(int tank, int rock);
 
 /**
- * Called when a Super Tank throws a rock.
+ * Called when a Mutant Tank throws a rock.
  * Use this forward for any throwing abilities.
  *
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
  **/
-forward void ST_OnRockThrow(int tank, int rock);
+forward void MT_OnRockThrow(int tank, int rock);
 ```
 
 Natives:
 ```
 /**
- * Returns if a certain Super Tank type can spawn.
+ * Returns if a certain Mutant Tank type can spawn.
  *
- * @param type			Super Tank type.
+ * @param type			Mutant Tank type.
  * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0.
  **/
-native bool ST_CanTankSpawn(int type);
+native bool MT_CanTankSpawn(int type);
 
 /**
- * Returns the status of an ability for a certain Super Tank type.
+ * Returns the status of an ability for a certain Mutant Tank type.
  *
- * @param type			Super Tank type.
+ * @param type			Mutant Tank type.
  * @param order			Ability order starting from 0.
  * @param status		True if the type has the ability, false otherwise.
  **/
-native void ST_FindAbility(int type, int order, bool status);
+native void MT_FindAbility(int type, int order, bool status);
 
 /**
  * Returns the current access flags set by the core plugin.
  *
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
- * @param type			Super Tank type. (Optional)
+ * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
  * @return			The current access flags.
  * @error			Invalid client index or type is 0.
  **/
-native int ST_GetAccessFlags(int mode, int type = 0, int admin = -1);
+native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
 
 /**
  * Returns the current finale wave.
  *
  * @return			The current finale wave.
  **/
-native int ST_GetCurrentFinaleWave();
+native int MT_GetCurrentFinaleWave();
 
 /**
  * Returns the current immunity flags set by the core plugin.
  *
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
- * @param type			Super Tank type. (Optional)
+ * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
  * @return			The current immunity flags.
  * @error			Invalid client index or type is 0.
  **/
-native int ST_GetImmunityFlags(int mode, int type = 0, int admin = -1);
+native int MT_GetImmunityFlags(int mode, int type = 0, int admin = -1);
 
 /**
  * Returns the maximum value of the "Type Range" setting.
  *
  * @return			The maximum value of the "Type Range" setting.
  **/
-native int ST_GetMaxType();
+native int MT_GetMaxType();
 
 /**
  * Returns the minimum value of the "Type Range" setting.
  *
  * @return			The minimum value of the "Type Range" setting.
  **/
-native int ST_GetMinType();
+native int MT_GetMinType();
 
 /**
- * Returns the RGBA colors given to a Super Tank's props.
+ * Returns the RGBA colors given to a Mutant Tank's props.
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
@@ -803,19 +803,19 @@ native int ST_GetMinType();
  * @param alpha			Alpha color reference.
  * @error			Invalid client index.
  **/
-native void ST_GetPropColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+native void MT_GetPropColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
- * Returns a Super Tank's run speed.
+ * Returns a Mutant Tank's run speed.
  *
  * @param tank			Client index of the Tank.
  * @return			The run speed of the Tank.
  * @error			Invalid client index.
  **/
-native float ST_GetRunSpeed(int tank);
+native float MT_GetRunSpeed(int tank);
 
 /**
- * Returns the RGB colors given to a Super Tank.
+ * Returns the RGB colors given to a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Skin color, 2 = Glow outline color
@@ -825,43 +825,43 @@ native float ST_GetRunSpeed(int tank);
  * @param alpha			Alpha color reference.
  * @error			Invalid client index.
  **/
-native void ST_GetTankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+native void MT_GetTankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
- * Returns the custom name given to a Super Tank.
+ * Returns the custom name given to a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
- * @param type			Super Tank type.
+ * @param type			Mutant Tank type.
  * @param buffer		Buffer to store the custom name in.
  * @error			Invalid client index.
  **/
-native void ST_GetTankName(int tank, int type, char[] buffer);
+native void MT_GetTankName(int tank, int type, char[] buffer);
 
 /**
- * Returns the type of a Super Tank.
+ * Returns the type of a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
- * @return			The Tank's Super Tank type.
+ * @return			The Tank's Mutant Tank type.
  * @error			Invalid client index.
  **/
-native int ST_GetTankType(int tank);
+native int MT_GetTankType(int tank);
 
 /**
- * Returns if a human player has access to a Super Tank type.
+ * Returns if a human player has access to a Mutant Tank type.
  *
  * @param admin			Client index of the admin.
  * @return			True if the human player has access, false otherwise.
  **/
-native bool ST_HasAdminAccess(int admin);
+native bool MT_HasAdminAccess(int admin);
 
 /**
- * Returns if a certain Super Tank type has a chance of spawning.
+ * Returns if a certain Mutant Tank type has a chance of spawning.
  *
- * @param type			Super Tank type.
+ * @param type			Mutant Tank type.
  * @return			True if the type has a chance of spawning, false otherwise.
  * @error			Type is 0.
  **/
-native bool ST_HasChanceToSpawn(int type);
+native bool MT_HasChanceToSpawn(int type);
 
 /**
  * Hooks/unhooks any entity to/from the core plugin's SetTransmit callback.
@@ -870,96 +870,96 @@ native bool ST_HasChanceToSpawn(int type);
  * @param mode			True if hooking entity, false otherwise.
  * @error			Invalid entity index.
  **/
-native void ST_HideEntity(int entity, bool mode);
+native void MT_HideEntity(int entity, bool mode);
 
 /**
- * Returns if a human survivor is immune to a Super Tank's attacks.
+ * Returns if a human survivor is immune to a Mutant Tank's attacks.
  *
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
  * @return			True if the human survivor is immune, false otherwise.
  **/
-native bool ST_IsAdminImmune(int survivor, int tank);
+native bool MT_IsAdminImmune(int survivor, int tank);
 
 /**
  * Returns if the clone can use abilities.
  *
  * @param tank				Client index of the Tank.
- * @param clone				Checks whether "st_clone.smx" is installed.
+ * @param clone				Checks whether "mt_clone.smx" is installed.
  * @return				True if clone can use abilities, false otherwise.
  **/
-native bool ST_IsCloneSupported(int tank, bool clone);
+native bool MT_IsCloneSupported(int tank, bool clone);
 
 /**
  * Returns if the core plugin is enabled.
  *
  * @return			True if core plugin is enabled, false otherwise.
  **/
-native bool ST_IsCorePluginEnabled();
+native bool MT_IsCorePluginEnabled();
 
 /**
- * Returns if a certain Super Tank type is only available on finale maps.
+ * Returns if a certain Mutant Tank type is only available on finale maps.
  *
- * @param type			Super Tank type.
+ * @param type			Mutant Tank type.
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0.
  **/
-native bool ST_IsFinaleTank(int type);
+native bool MT_IsFinaleTank(int type);
 
 /**
- * Returns if a Super Tank type has a glow outline.
+ * Returns if a Mutant Tank type has a glow outline.
  *
  * @param tank			Client index of the Tank.
  * @return			True if the Tank has a glow outline, false otherwise.
  * @error			Invalid client index.
  **/
-native bool ST_IsGlowEnabled(int tank);
+native bool MT_IsGlowEnabled(int tank);
 
 /**
- * Returns if a Tank is allowed to be a Super Tank.
+ * Returns if a Tank is allowed to be a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
  * @param flags			Checks to run.
- *				ST_CHECK_INDEX = client index, ST_CHECK_CONNECTED = connection, ST_CHECK_INGAME = in-game status,
- *				ST_CHECK_ALIVE = life state, ST_CHECK_KICKQUEUE = kick status, ST_CHECK_FAKECLIENT = bot check
- *				Default: ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE
- * @return			True if Tank is allowed to be a Super Tank, false otherwise.
+ *				MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
+ *				MT_CHECK_ALIVE = life state, MT_CHECK_KICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
+ *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE
+ * @return			True if Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index.
  **/
-native bool ST_IsTankSupported(int tank, int flags = ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE);
+native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE);
 
 /**
- * Returns if a certain Super Tank type is enabled.
+ * Returns if a certain Mutant Tank type is enabled.
  *
- * @param type			Super Tank type.
+ * @param type			Mutant Tank type.
  * @return			True if the type is enabled, false otherwise.
  * @error			Type is 0.
  **/
-native bool ST_IsTypeEnabled(int type);
+native bool MT_IsTypeEnabled(int type);
 
 /**
- * Sets a Tank's Super Tank type.
+ * Sets a Tank's Mutant Tank type.
  *
  * @param tank			Client index of the Tank.
- * @param type			Super Tank type.
- * @param mode			True if the Tank should transform physically into the new Super Tank type, false otherwise.
+ * @param type			Mutant Tank type.
+ * @param mode			True if the Tank should transform physically into the new Mutant Tank type, false otherwise.
  **/
-native void ST_SetTankType(int tank, int type, bool mode);
+native void MT_SetTankType(int tank, int type, bool mode);
 
 /**
- * Spawns a Tank with the specified Super Tank type.
+ * Spawns a Tank with the specified Mutant Tank type.
  *
  * @param tank			Client index of the Tank.
- * @param type			Super Tank type.
+ * @param type			Mutant Tank type.
  * @error			Invalid client index or type is 0.
  **/
-native void ST_SpawnTank(int tank, int type);
+native void MT_SpawnTank(int tank, int type);
 ```
 
 Stocks:
 
 ```
-stock void ST_PrintToChat(int client, char[] message, any ...)
+stock void MT_PrintToChat(int client, char[] message, any ...)
 {
 	if (!bIsValidClient(client, "0"))
 	{
@@ -984,7 +984,7 @@ stock void ST_PrintToChat(int client, char[] message, any ...)
 	PrintToChat(client, sMessage);
 }
 
-stock void ST_PrintToChatAll(char[] message, any ...)
+stock void MT_PrintToChatAll(char[] message, any ...)
 {
 	char sBuffer[255];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -994,7 +994,7 @@ stock void ST_PrintToChatAll(char[] message, any ...)
 			SetGlobalTransTarget(iPlayer);
 			VFormat(sBuffer, sizeof(sBuffer), message, 2);
 
-			ST_PrintToChat(iPlayer, sBuffer);
+			MT_PrintToChat(iPlayer, sBuffer);
 		}
 	}
 }
@@ -1019,106 +1019,106 @@ Commands:
 
 ```
 // Requires "z" (Root) flag.
-sm_tank - Spawn a Super Tank.
+sm_tank - Spawn a Mutant Tank.
 
 Valid inputs:
 
 1. sm_tank <type 1*-1000*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is 1000 though.)
-2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Super Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
+2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Mutant Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 
 The command has 4 functions.
 
 If you are not a Tank:
 
-1. When facing a non-Tank entity, a Super Tank will spawn with the chosen type.
+1. When facing a non-Tank entity, a Mutant Tank will spawn with the chosen type.
 2. When facing a Tank, it will switch to the chosen type.
 
 If you are a Tank:
 
-1. When holding down the +speed (default: LSHIFT) button, a Super Tank will spawn into the chosen type.
+1. When holding down the +speed (default: LSHIFT) button, a Mutant Tank will spawn into the chosen type.
 2. When not holding down the +speed button, you will transform into the chosen type.
 ```
 
 ```
 // Accessible by the developer and admins with "z" (Root) flag.
-sm_st_list - View a list of installed abilities.
-sm_tank2 - Spawn a Super Tank.
+sm_mt_list - View a list of installed abilities.
+sm_tank2 - Spawn a Mutant Tank.
 
 // Accessible by all players.
-sm_st_config - View a section of the config file.
-sm_st_info - View information about Super Tanks++.
-sm_st_absorb - View information about the Absorb ability.
-sm_st_acid - View information about the Acid ability.
-sm_st_aimless - View information about the Aimless ability.
-sm_st_ammo - View information about the Ammo ability.
-sm_st_blind - View information about the Blind ability.
-sm_st_bomb - View information about the Bomb ability.
-sm_st_bury - View information about the Bury ability.
-sm_st_car - View information about the Car ability.
-sm_st_choke - View information about the Choke ability.
-sm_st_clone - View information about the Clone ability.
-sm_st_cloud - View information about the Cloud ability.
-sm_st_drop - View information about the Drop ability.
-sm_st_drug - View information about the Drug ability.
-sm_st_drunk - View information about the Drunk ability.
-sm_st_electric - View information about the Electric ability.
-sm_st_enforce - View information about the Enforce ability.
-sm_st_fast - View information about the Fast ability.
-sm_st_fire - View information about the Fire ability.
-sm_st_fling - View information about the Fling ability.
-sm_st_fragile - View information about the Fragile ability.
-sm_st_ghost - View information about the Ghost ability.
-sm_st_god - View information about the God ability.
-sm_st_gravity - View information about the Gravity ability.
-sm_st_heal - View information about the Heal ability.
-sm_st_hit - View information about the Hit ability.
-sm_st_hurt - View information about the Hurt ability.
-sm_st_hypno - View information about the Hypno ability.
-sm_st_ice - View information about the Ice ability.
-sm_st_idle - View information about the Idle ability.
-sm_st_invert - View information about the Invert ability.
-sm_st_item - View information about the Item ability.
-sm_st_jump - View information about the Jump ability.
-sm_st_kamikaze - View information about the Kamikaze ability.
-sm_st_lag - View information about the Lag ability.
-sm_st_leech - View information about the Leech ability.
-sm_st_medic - View information about the Medic ability.
-sm_st_meteor - View information about the Meteor ability.
-sm_st_minion - View information about the Minion ability.
-sm_st_necro - View information about the Necro ability.
-sm_st_nullify - View information about the Nullify ability.
-sm_st_octal - View information about the Octal ability.
-sm_st_panic - View information about the Panic ability.
-sm_st_pimp - View information about the Pimp ability.
-sm_st_puke - View information about the Puke ability.
-sm_st_pyro - View information about the Pyro ability.
-sm_st_quiet - View information about the Quiet ability.
-sm_st_recoil - View information about the Recoil ability.
-sm_st_regen - View information about the Regen ability.
-sm_st_respawn - View information about the Respawn ability.
-sm_st_restart - View information about the Restart ability.
-sm_st_rock - View information about the Rock ability.
-sm_st_rocket - View information about the Rocket ability.
-sm_st_shake - View information about the Shake ability.
-sm_st_shield - View information about the Shield ability.
-sm_st_shove - View information about the Shove ability.
-sm_st_smash - View information about the Smash ability.
-sm_st_smite - View information about the Smite ability.
-sm_st_spam - View information about the Spam ability.
-sm_st_splash - View information about the Splash ability.
-sm_st_slow - View information about the Slow ability.
-sm_st_throw - View information about the Throw ability.
-sm_st_track - View information about the Track ability.
-sm_st_ultimate - View information about the Ultimate ability.
-sm_st_undead - View information about the Undead ability.
-sm_st_vampire - View information about the Vampire ability.
-sm_st_vision - View information about the Vision ability.
-sm_st_warp - View information about the Warp ability.
-sm_st_whirl - View information about the Whirl ability.
-sm_st_witch - View information about the Witch ability.
-sm_st_xiphos - View information about the Xiphos ability.
-sm_st_yell - View information about the Yell ability.
-sm_st_zombie - View information about the Zombie ability.
+sm_mt_config - View a section of the config file.
+sm_mt_info - View information about Mutant Tanks.
+sm_mt_absorb - View information about the Absorb ability.
+sm_mt_acid - View information about the Acid ability.
+sm_mt_aimless - View information about the Aimless ability.
+sm_mt_ammo - View information about the Ammo ability.
+sm_mt_blind - View information about the Blind ability.
+sm_mt_bomb - View information about the Bomb ability.
+sm_mt_bury - View information about the Bury ability.
+sm_mt_car - View information about the Car ability.
+sm_mt_choke - View information about the Choke ability.
+sm_mt_clone - View information about the Clone ability.
+sm_mt_cloud - View information about the Cloud ability.
+sm_mt_drop - View information about the Drop ability.
+sm_mt_drug - View information about the Drug ability.
+sm_mt_drunk - View information about the Drunk ability.
+sm_mt_electric - View information about the Electric ability.
+sm_mt_enforce - View information about the Enforce ability.
+sm_mt_fast - View information about the Fast ability.
+sm_mt_fire - View information about the Fire ability.
+sm_mt_fling - View information about the Fling ability.
+sm_mt_fragile - View information about the Fragile ability.
+sm_mt_ghost - View information about the Ghost ability.
+sm_mt_god - View information about the God ability.
+sm_mt_gravity - View information about the Gravity ability.
+sm_mt_heal - View information about the Heal ability.
+sm_mt_hit - View information about the Hit ability.
+sm_mt_hurt - View information about the Hurt ability.
+sm_mt_hypno - View information about the Hypno ability.
+sm_mt_ice - View information about the Ice ability.
+sm_mt_idle - View information about the Idle ability.
+sm_mt_invert - View information about the Invert ability.
+sm_mt_item - View information about the Item ability.
+sm_mt_jump - View information about the Jump ability.
+sm_mt_kamikaze - View information about the Kamikaze ability.
+sm_mt_lag - View information about the Lag ability.
+sm_mt_leech - View information about the Leech ability.
+sm_mt_medic - View information about the Medic ability.
+sm_mt_meteor - View information about the Meteor ability.
+sm_mt_minion - View information about the Minion ability.
+sm_mt_necro - View information about the Necro ability.
+sm_mt_nullify - View information about the Nullify ability.
+sm_mt_octal - View information about the Octal ability.
+sm_mt_panic - View information about the Panic ability.
+sm_mt_pimp - View information about the Pimp ability.
+sm_mt_puke - View information about the Puke ability.
+sm_mt_pyro - View information about the Pyro ability.
+sm_mt_quiet - View information about the Quiet ability.
+sm_mt_recoil - View information about the Recoil ability.
+sm_mt_regen - View information about the Regen ability.
+sm_mt_respawn - View information about the Respawn ability.
+sm_mt_restart - View information about the Restart ability.
+sm_mt_rock - View information about the Rock ability.
+sm_mt_rocket - View information about the Rocket ability.
+sm_mt_shake - View information about the Shake ability.
+sm_mt_shield - View information about the Shield ability.
+sm_mt_shove - View information about the Shove ability.
+sm_mt_smash - View information about the Smash ability.
+sm_mt_smite - View information about the Smite ability.
+sm_mt_spam - View information about the Spam ability.
+sm_mt_splash - View information about the Splash ability.
+sm_mt_slow - View information about the Slow ability.
+sm_mt_throw - View information about the Throw ability.
+sm_mt_track - View information about the Track ability.
+sm_mt_ultimate - View information about the Ultimate ability.
+sm_mt_undead - View information about the Undead ability.
+sm_mt_vampire - View information about the Vampire ability.
+sm_mt_vision - View information about the Vision ability.
+sm_mt_warp - View information about the Warp ability.
+sm_mt_whirl - View information about the Whirl ability.
+sm_mt_witch - View information about the Witch ability.
+sm_mt_xiphos - View information about the Xiphos ability.
+sm_mt_yell - View information about the Yell ability.
+sm_mt_zombie - View information about the Zombie ability.
 ```
 
 ### Configuration Formatting
@@ -1138,7 +1138,7 @@ Example:
 
 ```
 // Original format
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Plugin Settings"
 	{
@@ -1150,7 +1150,7 @@ Example:
 }
 
 // Custom format
-supertanks++ // 2nd format
+mutanttanks // 2nd format
 {
 	Settings // 4th format
 	{
@@ -1165,7 +1165,7 @@ supertanks++ // 2nd format
 ### Administration System
 1. How does the system work?
 
-The administration system is designed for the usage and effectiveness of each Super Tank type. Basically, it controls and determines what kind of Super Tanks players can use or be immune from.
+The administration system is designed for the usage and effectiveness of each Mutant Tank type. Basically, it controls and determines what kind of Mutant Tanks players can use or be immune from.
 
 2. Why create an entirely new administration system instead of using SourceMod's own system?
 
@@ -1177,28 +1177,28 @@ Example:
 // SM's system
 "sm_tank"			"abc" // Admins need all three flags to use the command.
 
-// ST++'s system
-"Access Flags"			"abc" // Admins only need one of these flags to access a Super Tank type.
+// MT's system
+"Access Flags"			"abc" // Admins only need one of these flags to access a Mutant Tank type.
 ```
 
 3. What are the admin flags used for?
 
 The flags are used for two things:
-- Accessibility - What Super Tank types admins can access.
-- Immunity - What Super Tank types admins are immune to.
+- Accessibility - What Mutant Tank types admins can access.
+- Immunity - What Mutant Tank types admins are immune to.
 
 4. What other features does the system have?
 
-Currently, the system allows admins to each have a favorite/custom/personalized Super Tank type.
+Currently, the system allows admins to each have a favorite/custom/personalized Mutant Tank type.
 
-Each custom admin setting will override the general settings. This is a powerful feature because each admin can have his/her own custom-made Super Tank type without tampering with the general Super Tank types.
+Each custom admin setting will override the general settings. This is a powerful feature because each admin can have his/her own custom-made Mutant Tank type without tampering with the general Mutant Tank types.
 
-The only limitation at the moment is that admins cannot have custom/personalized ability settings. Whatever Super Tank type the admin spawns as, the admin will inherit that type's current abilities.
+The only limitation at the moment is that admins cannot have custom/personalized ability settings. Whatever Mutant Tank type the admin spawns as, the admin will inherit that type's current abilities.
 
 Example:
 
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"STEAM_0:1:23456789"
 	{
@@ -1225,11 +1225,11 @@ Ability Overrides
 
 ```
 If an ability's access/immunity flags are defined for a player, it must contain a flag that is required by one of the following:
-- If a Super Tank type has the same ability, and that ability has access/immunity flags defined, those flags will be compared to the player's ability flags.
+- If a Mutant Tank type has the same ability, and that ability has access/immunity flags defined, those flags will be compared to the player's ability flags.
 
 OR ELSE
 
-- If a Super Tank type has access/immunity flags defined, those flags will be compared to the player's ability flags.
+- If a Mutant Tank type has access/immunity flags defined, those flags will be compared to the player's ability flags.
 
 OR ELSE
 
@@ -1242,11 +1242,11 @@ Type Overrides
 
 ```
 If a type's access/immunity flags are defined for a player, it must contain a flag that is required by one of the following:
-- If a Super Tank type's ability has access/immunity flags defined, those flags will be compared to the player's type flags.
+- If a Mutant Tank type's ability has access/immunity flags defined, those flags will be compared to the player's type flags.
 
 OR ELSE
 
-- If a Super Tank type has access/immunity flags defined, those flags will be compared to the player's type flags.
+- If a Mutant Tank type has access/immunity flags defined, those flags will be compared to the player's type flags.
 
 OR ELSE
 
@@ -1259,11 +1259,11 @@ Global Overrides
 
 ```
 If global access/immunity flags are defined for a player, it must contain a flag that is required by one of the following:
-- If a Super Tank type's ability has access/immunity flags defined, those flags will be compared to the player's global flags.
+- If a Mutant Tank type's ability has access/immunity flags defined, those flags will be compared to the player's global flags.
 
 OR ELSE
 
-- If a Super Tank type has access/immunity flags defined, those flags will be compared to the player's global flags.
+- If a Mutant Tank type has access/immunity flags defined, those flags will be compared to the player's global flags.
 
 OR ELSE
 
@@ -1275,9 +1275,9 @@ Note: If all 3 of these return false, the player will not have access to that ty
 6. What is the `Allow Developer` setting for?
 
 The setting allows the developer (Psyk0tik/Crasher_3637) to access certain features of the project on your server. These features include:
-- Access to all Super Tanks. (Allows the developer to see what Super Tanks your config has.)
-- Immunity from all Super Tanks. (Allows the developer to test each Super Tank without having to deal with each ability's effects.)
-- Ability to spawn Super Tanks. (Allows the developer to spawn each Super Tank for testing.)
+- Access to all Mutant Tanks. (Allows the developer to see what Mutant Tanks your config has.)
+- Immunity from all Mutant Tanks. (Allows the developer to test each Mutant Tank without having to deal with each ability's effects.)
+- Ability to spawn Mutant Tanks. (Allows the developer to spawn each Mutant Tank for testing.)
 - Check which abilities are installed. (Allows the developer to check which abilities to test for.)
 
 In short, this setting does not give the developer access to other features or plugins, thus avoiding the potential to cause trouble on your server. Disable the setting if you are not confident with trusting the developer. This setting was added to help server owners give the developer temporary access in case the developer needs to help server owners debug problems.
@@ -1294,7 +1294,7 @@ Yes, just set `Human Ability` to 1 for EACH ability.
 Example:
 
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Tank #1"
 	{
@@ -1308,7 +1308,7 @@ Example:
 
 3. How can players use the abilities manually?
 
-There are 4 buttons that players can use when they spawn as Super Tanks.
+There are 4 buttons that players can use when they spawn as Mutant Tanks.
 
 ```
 +use (default: E) - Main ability
@@ -1321,11 +1321,11 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 32-35 of the `super_tanks++.inc` file and recompile each ability plugin.
+Edit lines 32-35 of the `mutant_tanks.inc` file and recompile each ability plugin.
 
-5. What happens if a Super Tank has multiple abilities that are all activated by the same button?
+5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
-All related abilities may or may not activate at the same time, depending on your configuration settings. It is recommended to not stack many abilities for human-controlled Super Tanks.
+All related abilities may or may not activate at the same time, depending on your configuration settings. It is recommended to not stack many abilities for human-controlled Mutant Tanks.
 
 6. How do I limit the usage of abilities for each player?
 
@@ -1334,7 +1334,7 @@ Set the `Human Ammo` setting for each ability to whatever value you want.
 Example:
 
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Tank #1"
 	{
@@ -1353,7 +1353,7 @@ Yes, just set the `Human Cooldown` setting for each ability to whatever value yo
 Example:
 
 ```
-"Super Tanks++"
+"Mutant Tanks"
 {
 	"Tank #1"
 	{
@@ -1377,26 +1377,26 @@ That setting is a special mode setting for players, which can determine how some
 
 10. Is there any way players can view information about this feature in-game?
 
-Yes, each ability has a `sm_st_<ability name here>` command that players can use anytime to view information about abilities.
+Yes, each ability has a `sm_mt_<ability name here>` command that players can use anytime to view information about abilities.
 
 The commands will each provide a menu that players can use to display certain information in chat.
 
-The information displayed in chat will be more detailed and accurate when the player is playing as a Super Tank.
+The information displayed in chat will be more detailed and accurate when the player is playing as a Mutant Tank.
 
-11. Is there any way players can change their current Super Tank type in the middle of a fight?
+11. Is there any way players can change their current Mutant Tank type in the middle of a fight?
 
-Yes, players can use the `sm_supertank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
+Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
 
 12. Is there any way to exempt admins from the cooldown mentioned in question #11?
 
-Yes, assign admins the `st_admin` override.
+Yes, assign admins the `mt_admin` override.
 
 Example:
 
 ```
 Overrides
 {
-	"st_admin"		"z" // All admins with the Root (z) flag are exempted from cooldowns.
+	"mt_admin"		"z" // All admins with the Root (z) flag are exempted from cooldowns.
 }
 ```
 
@@ -1430,7 +1430,7 @@ Examples:
 ```
 
 ## Credits
-**Machine** - For the original [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) plugin.
+**Machine** - For the [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) plugin.
 
 **NgBUCKWANGS** - For the mapname.cfg code in his [[L4D2] ABM](https://forums.alliedmods.net/showthread.php?t=291562) plugin.
 
@@ -1501,6 +1501,8 @@ Examples:
 **fig101** - For reporting issues.
 
 **AK978** - For reporting issues.
+
+**rickfishin** - For reporting issues.
 
 **Zytheus** - For reporting issues and suggesting ideas.
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 8.60 (March 21, 2019)
+
+Changes:
+
+1. Renamed the entire project to `Mutant Tanks`.
+
+Files:
+
+1. Renamed all files.
+
 ## Version 8.59 (March 20, 2019)
 
 Changes:
