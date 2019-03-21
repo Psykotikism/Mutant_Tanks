@@ -2032,12 +2032,13 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 
 public void SMCParseStart(SMCParser smc)
 {
+	g_csState = ConfigState_None;
+	g_iIgnoreLevel = 0;
+	g_sCurrentSection[0] = '\0';
+	g_sCurrentSubSection[0] = '\0';
+
 	if (g_bGeneralConfig)
 	{
-		g_csState = ConfigState_None;
-		g_iIgnoreLevel = 0;
-		g_sCurrentSection[0] = '\0';
-		g_sCurrentSubSection[0] = '\0';
 		g_iPluginEnabled = 0;
 		g_iAnnounceArrival = 31;
 		g_iAnnounceDeath = 1;
