@@ -58,7 +58,7 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
  - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
 2. Delete `mutant_tanks.txt` from `addons/sourcemod/gamedata` folder.
 3. Delete `mutant_tanks.inc` from `addons/sourcemod/scripting/include` folder.
-4. Delete `st_clone.inc` from `addons/sourcemod/scripting/include` folder.
+4. Delete `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
 5. Delete `mutant_tanks.phrases.txt` from `addons/sourcemod/translations` folder.
 6. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
 6. Follow the Installation guide above. (Only for upgrading to newer versions.)
@@ -612,7 +612,7 @@ Forwards:
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_OnAbilityActivated(int tank);
+forward void MT_OnAbilityActivated(int tank);
 
 /**
  * Called when a human-controlled Mutant Tank presses a button.
@@ -621,7 +621,7 @@ forward void ST_OnAbilityActivated(int tank);
  * @param tank			Client index of the Tank.
  * @param button		Button pressed.
  **/
-forward void ST_OnButtonPressed(int tank, int button);
+forward void MT_OnButtonPressed(int tank, int button);
 
 /**
  * Called when a human-controlled Mutant Tank releases a button.
@@ -630,7 +630,7 @@ forward void ST_OnButtonPressed(int tank, int button);
  * @param tank			Client index of the Tank.
  * @param button		Button released.
  **/
-forward void ST_OnButtonReleased(int tank, int button);
+forward void MT_OnButtonReleased(int tank, int button);
 
 /**
  * Called when a Mutant Tank changes types.
@@ -639,13 +639,13 @@ forward void ST_OnButtonReleased(int tank, int button);
  * @param tank			Client index of the Tank.
  * @param revert		True if reverting to a normal Tank, false otherwise.
  **/
-forward void ST_OnChangeType(int tank, bool revert);
+forward void MT_OnChangeType(int tank, bool revert);
 
 /**
  * Called when the config file is about to load.
  * Use this forward to set default values for settings for the plugin.
  **/
-forward void ST_OnConfigsLoad();
+forward void MT_OnConfigsLoad();
 
 /**
  * Called when the config file is loaded.
@@ -657,15 +657,15 @@ forward void ST_OnConfigsLoad();
  * @param type			The Mutant Tank type the config parser is currently on. (Used for Mutant Tank-specific settings.)
  * @param admin			Client index of an admin. (Used for admin-specific settings.)
  **/
-forward void ST_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin);
+forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin);
 
 /**
- * Called when a player uses the "sm_st_info" command.
+ * Called when a player uses the "sm_mt_info" command.
  * Use this forward to add menu items.
  *
  * @param menu			Handle to the menu.
  **/
-forward void ST_OnDisplayMenu(Menu menu);
+forward void MT_OnDisplayMenu(Menu menu);
 
 /**
  * Called when an event hooked by the core plugin is fired.
@@ -675,7 +675,7 @@ forward void ST_OnDisplayMenu(Menu menu);
  * @param name			String containing the name of the event.
  * @param dontBroadcast		True if event was not broadcast to clients, false otherwise.
  **/
-forward void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast);
+forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast);
 
 /**
  * Called when the core plugin is hooking/unhooking events.
@@ -683,7 +683,7 @@ forward void ST_OnEventFired(Event event, const char[] name, bool dontBroadcast)
  *
  * @param mode			True if event was hooked, false otherwise.
  **/
-forward void ST_OnHookEvent(bool mode);
+forward void MT_OnHookEvent(bool mode);
 
 /**
  * Called when a player selects an item from the "Mutant Tanks Information" menu.
@@ -692,22 +692,22 @@ forward void ST_OnHookEvent(bool mode);
  * @param client		Client index of the player selecting the item.
  * @param info			String containing the name of the item.
  **/
-forward void ST_OnMenuItemSelected(int client, const char[] info);
+forward void MT_OnMenuItemSelected(int client, const char[] info);
 
 /**
  * Called when the core plugin is unloaded/reloaded.
  * Use this forward to get rid of any modifications to Tanks or survivors.
  **/
-forward void ST_OnPluginEnd();
+forward void MT_OnPluginEnd();
 
 /**
  * Called after a Mutant Tank spawns.
  * Use this forward for any post-spawn actions.
- * If you plan on using this to activate an ability, use ST_OnAbilityActivated() instead.
+ * If you plan on using this to activate an ability, use MT_OnAbilityActivated() instead.
  *
  * @param tank			Client index of the Tank.
  **/
-forward void ST_OnPostTankSpawn(int tank);
+forward void MT_OnPostTankSpawn(int tank);
 
 /**
  * Called when a Mutant Tank's rock breaks.
@@ -716,7 +716,7 @@ forward void ST_OnPostTankSpawn(int tank);
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
  **/
-forward void ST_OnRockBreak(int tank, int rock);
+forward void MT_OnRockBreak(int tank, int rock);
 
 /**
  * Called when a Mutant Tank throws a rock.
@@ -725,7 +725,7 @@ forward void ST_OnRockBreak(int tank, int rock);
  * @param tank			Client index of the Tank.
  * @param rock			Entity index of the rock.
  **/
-forward void ST_OnRockThrow(int tank, int rock);
+forward void MT_OnRockThrow(int tank, int rock);
 ```
 
 Natives:
@@ -737,7 +737,7 @@ Natives:
  * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0.
  **/
-native bool ST_CanTankSpawn(int type);
+native bool MT_CanTankSpawn(int type);
 
 /**
  * Returns the status of an ability for a certain Mutant Tank type.
@@ -746,7 +746,7 @@ native bool ST_CanTankSpawn(int type);
  * @param order			Ability order starting from 0.
  * @param status		True if the type has the ability, false otherwise.
  **/
-native void ST_FindAbility(int type, int order, bool status);
+native void MT_FindAbility(int type, int order, bool status);
 
 /**
  * Returns the current access flags set by the core plugin.
@@ -757,14 +757,14 @@ native void ST_FindAbility(int type, int order, bool status);
  * @return			The current access flags.
  * @error			Invalid client index or type is 0.
  **/
-native int ST_GetAccessFlags(int mode, int type = 0, int admin = -1);
+native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
 
 /**
  * Returns the current finale wave.
  *
  * @return			The current finale wave.
  **/
-native int ST_GetCurrentFinaleWave();
+native int MT_GetCurrentFinaleWave();
 
 /**
  * Returns the current immunity flags set by the core plugin.
@@ -775,21 +775,21 @@ native int ST_GetCurrentFinaleWave();
  * @return			The current immunity flags.
  * @error			Invalid client index or type is 0.
  **/
-native int ST_GetImmunityFlags(int mode, int type = 0, int admin = -1);
+native int MT_GetImmunityFlags(int mode, int type = 0, int admin = -1);
 
 /**
  * Returns the maximum value of the "Type Range" setting.
  *
  * @return			The maximum value of the "Type Range" setting.
  **/
-native int ST_GetMaxType();
+native int MT_GetMaxType();
 
 /**
  * Returns the minimum value of the "Type Range" setting.
  *
  * @return			The minimum value of the "Type Range" setting.
  **/
-native int ST_GetMinType();
+native int MT_GetMinType();
 
 /**
  * Returns the RGBA colors given to a Mutant Tank's props.
@@ -803,7 +803,7 @@ native int ST_GetMinType();
  * @param alpha			Alpha color reference.
  * @error			Invalid client index.
  **/
-native void ST_GetPropColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+native void MT_GetPropColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
  * Returns a Mutant Tank's run speed.
@@ -812,7 +812,7 @@ native void ST_GetPropColors(int tank, int mode, int &red, int &green, int &blue
  * @return			The run speed of the Tank.
  * @error			Invalid client index.
  **/
-native float ST_GetRunSpeed(int tank);
+native float MT_GetRunSpeed(int tank);
 
 /**
  * Returns the RGB colors given to a Mutant Tank.
@@ -825,7 +825,7 @@ native float ST_GetRunSpeed(int tank);
  * @param alpha			Alpha color reference.
  * @error			Invalid client index.
  **/
-native void ST_GetTankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+native void MT_GetTankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
 
 /**
  * Returns the custom name given to a Mutant Tank.
@@ -835,7 +835,7 @@ native void ST_GetTankColors(int tank, int mode, int &red, int &green, int &blue
  * @param buffer		Buffer to store the custom name in.
  * @error			Invalid client index.
  **/
-native void ST_GetTankName(int tank, int type, char[] buffer);
+native void MT_GetTankName(int tank, int type, char[] buffer);
 
 /**
  * Returns the type of a Mutant Tank.
@@ -844,7 +844,7 @@ native void ST_GetTankName(int tank, int type, char[] buffer);
  * @return			The Tank's Mutant Tank type.
  * @error			Invalid client index.
  **/
-native int ST_GetTankType(int tank);
+native int MT_GetTankType(int tank);
 
 /**
  * Returns if a human player has access to a Mutant Tank type.
@@ -852,7 +852,7 @@ native int ST_GetTankType(int tank);
  * @param admin			Client index of the admin.
  * @return			True if the human player has access, false otherwise.
  **/
-native bool ST_HasAdminAccess(int admin);
+native bool MT_HasAdminAccess(int admin);
 
 /**
  * Returns if a certain Mutant Tank type has a chance of spawning.
@@ -861,7 +861,7 @@ native bool ST_HasAdminAccess(int admin);
  * @return			True if the type has a chance of spawning, false otherwise.
  * @error			Type is 0.
  **/
-native bool ST_HasChanceToSpawn(int type);
+native bool MT_HasChanceToSpawn(int type);
 
 /**
  * Hooks/unhooks any entity to/from the core plugin's SetTransmit callback.
@@ -870,7 +870,7 @@ native bool ST_HasChanceToSpawn(int type);
  * @param mode			True if hooking entity, false otherwise.
  * @error			Invalid entity index.
  **/
-native void ST_HideEntity(int entity, bool mode);
+native void MT_HideEntity(int entity, bool mode);
 
 /**
  * Returns if a human survivor is immune to a Mutant Tank's attacks.
@@ -879,23 +879,23 @@ native void ST_HideEntity(int entity, bool mode);
  * @param tank			Client index of the Tank.
  * @return			True if the human survivor is immune, false otherwise.
  **/
-native bool ST_IsAdminImmune(int survivor, int tank);
+native bool MT_IsAdminImmune(int survivor, int tank);
 
 /**
  * Returns if the clone can use abilities.
  *
  * @param tank				Client index of the Tank.
- * @param clone				Checks whether "st_clone.smx" is installed.
+ * @param clone				Checks whether "mt_clone.smx" is installed.
  * @return				True if clone can use abilities, false otherwise.
  **/
-native bool ST_IsCloneSupported(int tank, bool clone);
+native bool MT_IsCloneSupported(int tank, bool clone);
 
 /**
  * Returns if the core plugin is enabled.
  *
  * @return			True if core plugin is enabled, false otherwise.
  **/
-native bool ST_IsCorePluginEnabled();
+native bool MT_IsCorePluginEnabled();
 
 /**
  * Returns if a certain Mutant Tank type is only available on finale maps.
@@ -904,7 +904,7 @@ native bool ST_IsCorePluginEnabled();
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0.
  **/
-native bool ST_IsFinaleTank(int type);
+native bool MT_IsFinaleTank(int type);
 
 /**
  * Returns if a Mutant Tank type has a glow outline.
@@ -913,20 +913,20 @@ native bool ST_IsFinaleTank(int type);
  * @return			True if the Tank has a glow outline, false otherwise.
  * @error			Invalid client index.
  **/
-native bool ST_IsGlowEnabled(int tank);
+native bool MT_IsGlowEnabled(int tank);
 
 /**
  * Returns if a Tank is allowed to be a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
  * @param flags			Checks to run.
- *				ST_CHECK_INDEX = client index, ST_CHECK_CONNECTED = connection, ST_CHECK_INGAME = in-game status,
- *				ST_CHECK_ALIVE = life state, ST_CHECK_KICKQUEUE = kick status, ST_CHECK_FAKECLIENT = bot check
- *				Default: ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE
+ *				MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
+ *				MT_CHECK_ALIVE = life state, MT_CHECK_KICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
+ *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE
  * @return			True if Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index.
  **/
-native bool ST_IsTankSupported(int tank, int flags = ST_CHECK_INDEX|ST_CHECK_INGAME|ST_CHECK_ALIVE|ST_CHECK_KICKQUEUE);
+native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE);
 
 /**
  * Returns if a certain Mutant Tank type is enabled.
@@ -935,7 +935,7 @@ native bool ST_IsTankSupported(int tank, int flags = ST_CHECK_INDEX|ST_CHECK_ING
  * @return			True if the type is enabled, false otherwise.
  * @error			Type is 0.
  **/
-native bool ST_IsTypeEnabled(int type);
+native bool MT_IsTypeEnabled(int type);
 
 /**
  * Sets a Tank's Mutant Tank type.
@@ -944,7 +944,7 @@ native bool ST_IsTypeEnabled(int type);
  * @param type			Mutant Tank type.
  * @param mode			True if the Tank should transform physically into the new Mutant Tank type, false otherwise.
  **/
-native void ST_SetTankType(int tank, int type, bool mode);
+native void MT_SetTankType(int tank, int type, bool mode);
 
 /**
  * Spawns a Tank with the specified Mutant Tank type.
@@ -953,13 +953,13 @@ native void ST_SetTankType(int tank, int type, bool mode);
  * @param type			Mutant Tank type.
  * @error			Invalid client index or type is 0.
  **/
-native void ST_SpawnTank(int tank, int type);
+native void MT_SpawnTank(int tank, int type);
 ```
 
 Stocks:
 
 ```
-stock void ST_PrintToChat(int client, char[] message, any ...)
+stock void MT_PrintToChat(int client, char[] message, any ...)
 {
 	if (!bIsValidClient(client, "0"))
 	{
@@ -984,7 +984,7 @@ stock void ST_PrintToChat(int client, char[] message, any ...)
 	PrintToChat(client, sMessage);
 }
 
-stock void ST_PrintToChatAll(char[] message, any ...)
+stock void MT_PrintToChatAll(char[] message, any ...)
 {
 	char sBuffer[255];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -994,7 +994,7 @@ stock void ST_PrintToChatAll(char[] message, any ...)
 			SetGlobalTransTarget(iPlayer);
 			VFormat(sBuffer, sizeof(sBuffer), message, 2);
 
-			ST_PrintToChat(iPlayer, sBuffer);
+			MT_PrintToChat(iPlayer, sBuffer);
 		}
 	}
 }
@@ -1041,84 +1041,84 @@ If you are a Tank:
 
 ```
 // Accessible by the developer and admins with "z" (Root) flag.
-sm_st_list - View a list of installed abilities.
+sm_mt_list - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.
 
 // Accessible by all players.
-sm_st_config - View a section of the config file.
-sm_st_info - View information about Mutant Tanks.
-sm_st_absorb - View information about the Absorb ability.
-sm_st_acid - View information about the Acid ability.
-sm_st_aimless - View information about the Aimless ability.
-sm_st_ammo - View information about the Ammo ability.
-sm_st_blind - View information about the Blind ability.
-sm_st_bomb - View information about the Bomb ability.
-sm_st_bury - View information about the Bury ability.
-sm_st_car - View information about the Car ability.
-sm_st_choke - View information about the Choke ability.
-sm_st_clone - View information about the Clone ability.
-sm_st_cloud - View information about the Cloud ability.
-sm_st_drop - View information about the Drop ability.
-sm_st_drug - View information about the Drug ability.
-sm_st_drunk - View information about the Drunk ability.
-sm_st_electric - View information about the Electric ability.
-sm_st_enforce - View information about the Enforce ability.
-sm_st_fast - View information about the Fast ability.
-sm_st_fire - View information about the Fire ability.
-sm_st_fling - View information about the Fling ability.
-sm_st_fragile - View information about the Fragile ability.
-sm_st_ghost - View information about the Ghost ability.
-sm_st_god - View information about the God ability.
-sm_st_gravity - View information about the Gravity ability.
-sm_st_heal - View information about the Heal ability.
-sm_st_hit - View information about the Hit ability.
-sm_st_hurt - View information about the Hurt ability.
-sm_st_hypno - View information about the Hypno ability.
-sm_st_ice - View information about the Ice ability.
-sm_st_idle - View information about the Idle ability.
-sm_st_invert - View information about the Invert ability.
-sm_st_item - View information about the Item ability.
-sm_st_jump - View information about the Jump ability.
-sm_st_kamikaze - View information about the Kamikaze ability.
-sm_st_lag - View information about the Lag ability.
-sm_st_leech - View information about the Leech ability.
-sm_st_medic - View information about the Medic ability.
-sm_st_meteor - View information about the Meteor ability.
-sm_st_minion - View information about the Minion ability.
-sm_st_necro - View information about the Necro ability.
-sm_st_nullify - View information about the Nullify ability.
-sm_st_octal - View information about the Octal ability.
-sm_st_panic - View information about the Panic ability.
-sm_st_pimp - View information about the Pimp ability.
-sm_st_puke - View information about the Puke ability.
-sm_st_pyro - View information about the Pyro ability.
-sm_st_quiet - View information about the Quiet ability.
-sm_st_recoil - View information about the Recoil ability.
-sm_st_regen - View information about the Regen ability.
-sm_st_respawn - View information about the Respawn ability.
-sm_st_restart - View information about the Restart ability.
-sm_st_rock - View information about the Rock ability.
-sm_st_rocket - View information about the Rocket ability.
-sm_st_shake - View information about the Shake ability.
-sm_st_shield - View information about the Shield ability.
-sm_st_shove - View information about the Shove ability.
-sm_st_smash - View information about the Smash ability.
-sm_st_smite - View information about the Smite ability.
-sm_st_spam - View information about the Spam ability.
-sm_st_splash - View information about the Splash ability.
-sm_st_slow - View information about the Slow ability.
-sm_st_throw - View information about the Throw ability.
-sm_st_track - View information about the Track ability.
-sm_st_ultimate - View information about the Ultimate ability.
-sm_st_undead - View information about the Undead ability.
-sm_st_vampire - View information about the Vampire ability.
-sm_st_vision - View information about the Vision ability.
-sm_st_warp - View information about the Warp ability.
-sm_st_whirl - View information about the Whirl ability.
-sm_st_witch - View information about the Witch ability.
-sm_st_xiphos - View information about the Xiphos ability.
-sm_st_yell - View information about the Yell ability.
-sm_st_zombie - View information about the Zombie ability.
+sm_mt_config - View a section of the config file.
+sm_mt_info - View information about Mutant Tanks.
+sm_mt_absorb - View information about the Absorb ability.
+sm_mt_acid - View information about the Acid ability.
+sm_mt_aimless - View information about the Aimless ability.
+sm_mt_ammo - View information about the Ammo ability.
+sm_mt_blind - View information about the Blind ability.
+sm_mt_bomb - View information about the Bomb ability.
+sm_mt_bury - View information about the Bury ability.
+sm_mt_car - View information about the Car ability.
+sm_mt_choke - View information about the Choke ability.
+sm_mt_clone - View information about the Clone ability.
+sm_mt_cloud - View information about the Cloud ability.
+sm_mt_drop - View information about the Drop ability.
+sm_mt_drug - View information about the Drug ability.
+sm_mt_drunk - View information about the Drunk ability.
+sm_mt_electric - View information about the Electric ability.
+sm_mt_enforce - View information about the Enforce ability.
+sm_mt_fast - View information about the Fast ability.
+sm_mt_fire - View information about the Fire ability.
+sm_mt_fling - View information about the Fling ability.
+sm_mt_fragile - View information about the Fragile ability.
+sm_mt_ghost - View information about the Ghost ability.
+sm_mt_god - View information about the God ability.
+sm_mt_gravity - View information about the Gravity ability.
+sm_mt_heal - View information about the Heal ability.
+sm_mt_hit - View information about the Hit ability.
+sm_mt_hurt - View information about the Hurt ability.
+sm_mt_hypno - View information about the Hypno ability.
+sm_mt_ice - View information about the Ice ability.
+sm_mt_idle - View information about the Idle ability.
+sm_mt_invert - View information about the Invert ability.
+sm_mt_item - View information about the Item ability.
+sm_mt_jump - View information about the Jump ability.
+sm_mt_kamikaze - View information about the Kamikaze ability.
+sm_mt_lag - View information about the Lag ability.
+sm_mt_leech - View information about the Leech ability.
+sm_mt_medic - View information about the Medic ability.
+sm_mt_meteor - View information about the Meteor ability.
+sm_mt_minion - View information about the Minion ability.
+sm_mt_necro - View information about the Necro ability.
+sm_mt_nullify - View information about the Nullify ability.
+sm_mt_octal - View information about the Octal ability.
+sm_mt_panic - View information about the Panic ability.
+sm_mt_pimp - View information about the Pimp ability.
+sm_mt_puke - View information about the Puke ability.
+sm_mt_pyro - View information about the Pyro ability.
+sm_mt_quiet - View information about the Quiet ability.
+sm_mt_recoil - View information about the Recoil ability.
+sm_mt_regen - View information about the Regen ability.
+sm_mt_respawn - View information about the Respawn ability.
+sm_mt_restart - View information about the Restart ability.
+sm_mt_rock - View information about the Rock ability.
+sm_mt_rocket - View information about the Rocket ability.
+sm_mt_shake - View information about the Shake ability.
+sm_mt_shield - View information about the Shield ability.
+sm_mt_shove - View information about the Shove ability.
+sm_mt_smash - View information about the Smash ability.
+sm_mt_smite - View information about the Smite ability.
+sm_mt_spam - View information about the Spam ability.
+sm_mt_splash - View information about the Splash ability.
+sm_mt_slow - View information about the Slow ability.
+sm_mt_throw - View information about the Throw ability.
+sm_mt_track - View information about the Track ability.
+sm_mt_ultimate - View information about the Ultimate ability.
+sm_mt_undead - View information about the Undead ability.
+sm_mt_vampire - View information about the Vampire ability.
+sm_mt_vision - View information about the Vision ability.
+sm_mt_warp - View information about the Warp ability.
+sm_mt_whirl - View information about the Whirl ability.
+sm_mt_witch - View information about the Witch ability.
+sm_mt_xiphos - View information about the Xiphos ability.
+sm_mt_yell - View information about the Yell ability.
+sm_mt_zombie - View information about the Zombie ability.
 ```
 
 ### Configuration Formatting
@@ -1377,7 +1377,7 @@ That setting is a special mode setting for players, which can determine how some
 
 10. Is there any way players can view information about this feature in-game?
 
-Yes, each ability has a `sm_st_<ability name here>` command that players can use anytime to view information about abilities.
+Yes, each ability has a `sm_mt_<ability name here>` command that players can use anytime to view information about abilities.
 
 The commands will each provide a menu that players can use to display certain information in chat.
 
@@ -1385,18 +1385,18 @@ The information displayed in chat will be more detailed and accurate when the pl
 
 11. Is there any way players can change their current Mutant Tank type in the middle of a fight?
 
-Yes, players can use the `sm_supertank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
+Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
 
 12. Is there any way to exempt admins from the cooldown mentioned in question #11?
 
-Yes, assign admins the `st_admin` override.
+Yes, assign admins the `mt_admin` override.
 
 Example:
 
 ```
 Overrides
 {
-	"st_admin"		"z" // All admins with the Root (z) flag are exempted from cooldowns.
+	"mt_admin"		"z" // All admins with the Root (z) flag are exempted from cooldowns.
 }
 ```
 

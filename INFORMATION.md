@@ -175,7 +175,7 @@
 			// Maximum: 9999999999
 			"Human Cooldown"			"600"
 
-			// Human-controlled Mutant Tanks are exempted from cooldowns when using the "sm_supertank" command to switch their current Mutant Tank type.
+			// Human-controlled Mutant Tanks are exempted from cooldowns when using the "sm_mutanttank" command to switch their current Mutant Tank type.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// 0: OFF
@@ -185,7 +185,7 @@
 			// The mode of how human-controlled Tanks spawn.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// 0: Spawn as a default Tank with access to the "sm_supertank" command.
+			// 0: Spawn as a default Tank with access to the "sm_mutanttank" command.
 			// 1: Spawn as a Mutant Tank.
 			"Spawn Mode"				"1"
 		}
@@ -827,7 +827,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank absorbs most of the damage it receives.
-		// Requires "st_absorb.smx" to be installed.
+		// Requires "mt_absorb.smx" to be installed.
 		"Absorb Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -941,7 +941,7 @@
 		// - "Acid Hit Mode"
 		// "Acid Rock Break" - When the Mutant Tank's rock breaks, it creates an acid puddle.
 		// - "Acid Rock Chance"
-		// Requires "st_acid.smx" to be installed.
+		// Requires "mt_acid.smx" to be installed.
 		"Acid Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -1073,7 +1073,7 @@
 		// "Aimless Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor cannot aim.
 		// - "Aimless Chance"
 		// - "Aimless Hit Mode"
-		// Requires "st_aimless.smx" to be installed.
+		// Requires "mt_aimless.smx" to be installed.
 		"Aimless Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -1195,7 +1195,7 @@
 		// "Ammo Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, their ammunition is taken away.
 		// - "Ammo Chance"
 		// - "Ammo Hit Mode"
-		// Requires "st_ammo.smx" to be installed.
+		// Requires "mt_ammo.smx" to be installed.
 		"Ammo Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -1318,7 +1318,7 @@
 		// "Blind Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is blinded.
 		// - "Blind Chance"
 		// - "Blind Hit Mode"
-		// Requires "st_blind.smx" to be installed.
+		// Requires "mt_blind.smx" to be installed.
 		"Blind Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -1449,7 +1449,7 @@
 		// - "Bomb Hit Mode"
 		// "Bomb Rock Break" - When the Mutant Tank's rock breaks, it creates an explosion.
 		// - "Bomb Rock Chance"
-		// Requires "st_bomb.smx" to be installed.
+		// Requires "mt_bomb.smx" to be installed.
 		"Bomb Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -1580,7 +1580,7 @@
 		// "Bury Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is buried.
 		// - "Bury Chance"
 		// - "Bury Hit Mode"
-		// Requires "st_bury.smx" to be installed.
+		// Requires "mt_bury.smx" to be installed.
 		"Bury Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -1703,7 +1703,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank creates car showers.
-		// Requires "st_car.smx" to be installed.
+		// Requires "mt_car.smx" to be installed.
 		"Car Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -1803,7 +1803,7 @@
 		// "Choke Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is choked in the air.
 		// - "Choke Chance"
 		// - "Choke Hit Mode"
-		// Requires "st_choke.smx" to be installed.
+		// Requires "mt_choke.smx" to be installed.
 		"Choke Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -1937,7 +1937,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank creates clones of itself.
-		// Requires "st_clone.smx" to be installed.
+		// Requires "mt_clone.smx" to be installed.
 		"Clone Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -2019,7 +2019,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank constantly emits clouds of smoke that damage survivors caught in them.
-		// Requires "st_cloud.smx" to be installed.
+		// Requires "mt_cloud.smx" to be installed.
 		"Cloud Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -2102,7 +2102,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank drops weapons upon death.
-		// Requires "st_drop.smx" to be installed.
+		// Requires "mt_drop.smx" to be installed.
 		"Drop Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -2173,7 +2173,7 @@
 		// "Drug Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is drugged.
 		// - "Drug Chance"
 		// - "Drug Hit Mode"
-		// Requires "st_drug.smx" to be installed.
+		// Requires "mt_drug.smx" to be installed.
 		"Drug Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -2302,7 +2302,7 @@
 		// "Drunk Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor gets drunk.
 		// - "Drunk Chance"
 		// - "Drunk Hit Mode"
-		// Requires "st_drunk.smx" to be installed.
+		// Requires "mt_drunk.smx" to be installed.
 		"Drunk Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -2436,7 +2436,7 @@
 		// "Electric Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is electrocuted.
 		// - "Electric Chance"
 		// - "Electric Hit Mode"
-		// Requires "st_electric.smx" to be installed.
+		// Requires "mt_electric.smx" to be installed.
 		"Electric Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -2571,7 +2571,7 @@
 		// "Enforce Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is forced to only use a certain weapon slot.
 		// - "Enforce Chance"
 		// - "Enforce Hit Mode"
-		// Requires "st_enforce.smx" to be installed.
+		// Requires "mt_enforce.smx" to be installed.
 		"Enforce Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -2703,7 +2703,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank runs really fast like the Flash.
-		// Requires "st_fast.smx" to be installed.
+		// Requires "mt_fast.smx" to be installed.
 		"Fast Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -2787,7 +2787,7 @@
 		// - "Fire Hit Mode"
 		// "Fire Rock Break" - When the Mutant Tank's rock breaks, it creates a fire.
 		// - "Fire Rock Chance"
-		// Requires "st_fire.smx" to be installed.
+		// Requires "mt_fire.smx" to be installed.
 		"Fire Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -2918,7 +2918,7 @@
 		// "Fling Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is flung into the air.
 		// - "Fling Chance"
 		// - "Fling Hit Mode"
-		// Requires "st_fling.smx" to be installed.
+		// Requires "mt_fling.smx" to be installed.
 		"Fling Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -3036,7 +3036,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank takes more damage.
-		// Requires "st_fragile.smx" to be installed.
+		// Requires "mt_fragile.smx" to be installed.
 		"Fragile Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -3153,7 +3153,7 @@
 		// "Ghost Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is disarmed.
 		// - "Ghost Chance"
 		// - "Ghost Hit Mode"
-		// Requires "st_ghost.smx" to be installed.
+		// Requires "mt_ghost.smx" to be installed.
 		"Ghost Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -3321,7 +3321,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank gains temporary immunity to all types of damage.
-		// Requires "st_god.smx" to be installed.
+		// Requires "mt_god.smx" to be installed.
 		"God Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -3399,7 +3399,7 @@
 		// "Gravity Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's gravity changes.
 		// - "Gravity Chance"
 		// - "Gravity Hit Mode"
-		// Requires "st_gravity.smx" to be installed.
+		// Requires "mt_gravity.smx" to be installed.
 		"Gravity Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -3551,7 +3551,7 @@
 		// "Heal Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is set to temporary health and will die when they reach 0 HP.
 		// - "Heal Chance"
 		// - "Heal Hit Mode"
-		// Requires "st_heal.smx" to be installed.
+		// Requires "mt_heal.smx" to be installed.
 		"Heal Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -3724,7 +3724,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank only takes damage in certain parts of its body.
-		// Requires "st_hit.smx" to be installed.
+		// Requires "mt_hit.smx" to be installed.
 		"Hit Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -3790,7 +3790,7 @@
 		// "Hurt Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor gets hurt repeatedly.
 		// - "Hurt Chance"
 		// - "Hurt Hit Mode"
-		// Requires "st_hurt.smx" to be installed.
+		// Requires "mt_hurt.smx" to be installed.
 		"Hurt Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -3925,7 +3925,7 @@
 		// "Hypno Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is hypnotized.
 		// - "Hypno Chance"
 		// - "Hypno Hit Mode"
-		// Requires "st_hypno.smx" to be installed.
+		// Requires "mt_hypno.smx" to be installed.
 		"Hypno Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4090,7 +4090,7 @@
 		// "Ice Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is frozen in place.
 		// - "Ice Chance"
 		// - "Ice Hit Mode"
-		// Requires "st_ice.smx" to be installed.
+		// Requires "mt_ice.smx" to be installed.
 		"Ice Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4213,7 +4213,7 @@
 		// "Idle Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor goes idle.
 		// - "Idle Chance"
 		// - "Idle Hit Mode"
-		// Requires "st_idle.smx" to be installed.
+		// Requires "mt_idle.smx" to be installed.
 		"Idle Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4330,7 +4330,7 @@
 		// "Invert Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's movement keys are inverted.
 		// - "Invert Chance"
 		// - "Invert Hit Mode"
-		// Requires "st_invert.smx" to be installed.
+		// Requires "mt_invert.smx" to be installed.
 		"Invert Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4446,7 +4446,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank gives survivors items upon death.
-		// Requires "st_item.smx" to be installed.
+		// Requires "mt_item.smx" to be installed.
 		"Item Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4493,8 +4493,8 @@
 			// --
 			// Example: "rifle_m60,pistol,adrenaline,defibrillator"
 			// Example: "katana,pain_pills,vomitjar"
-			// Example: "first_aid_kit,defibrillator,knife,adrenaline"
-			"Item Loadout"				"rifle,pistol,first_aid_kit,pain_pills"
+			// Example: "firmt_aid_kit,defibrillator,knife,adrenaline"
+			"Item Loadout"				"rifle,pistol,firmt_aid_kit,pain_pills"
 
 			// The mode of the Mutant Tank's item ability.
 			// --
@@ -4525,7 +4525,7 @@
 		// "Jump Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor jumps uncontrollably.
 		// - "Jump Chance"
 		// - "Jump Hit Mode"
-		// Requires "st_jump.smx" to be installed.
+		// Requires "mt_jump.smx" to be installed.
 		"Jump Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4691,7 +4691,7 @@
 		// "Kamikaze Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor dies along with the Mutant Tank.
 		// - "Kamikaze Chance"
 		// - "Kamikaze Hit Mode"
-		// Requires "st_kamikaze.smx" to be installed.
+		// Requires "mt_kamikaze.smx" to be installed.
 		"Kamikaze Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4796,7 +4796,7 @@
 		// "Lag Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor lags.
 		// - "Lag Chance"
 		// - "Lag Hit Mode"
-		// Requires "st_lag.smx" to be installed.
+		// Requires "mt_lag.smx" to be installed.
 		"Lag Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4918,7 +4918,7 @@
 		// "Leech Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the Mutant Tank leeches health off of the survivor.
 		// - "Leech Chance"
 		// - "Leech Hit Mode"
-		// Requires "st_leech.smx" to be installed.
+		// Requires "mt_leech.smx" to be installed.
 		"Leech Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5041,7 +5041,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank heals special infected upon death.
-		// Requires "st_medic.smx" to be installed.
+		// Requires "mt_medic.smx" to be installed.
 		"Medic Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5164,7 +5164,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank creates meteor showers.
-		// Requires "st_meteor.smx" to be installed.
+		// Requires "mt_meteor.smx" to be installed.
 		"Meteor Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5265,7 +5265,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank spawns minions.
-		// Requires "st_minion.smx" to be installed.
+		// Requires "mt_minion.smx" to be installed.
 		"Minion Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5350,7 +5350,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank resurrects nearby special infected that die.
-		// Requires "st_necro.smx" to be installed.
+		// Requires "mt_necro.smx" to be installed.
 		"Necro Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5432,7 +5432,7 @@
 		// "Nullify Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor does not do any damage to the Mutant Tank.
 		// - "Nullify Chance"
 		// - "Nullify Hit Mode"
-		// Requires "st_nullify.smx" to be installed.
+		// Requires "mt_nullify.smx" to be installed.
 		"Nullify Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5548,7 +5548,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank has omni-level access to other nearby Mutant Tanks' abilities.
-		// Requires "st_omni.smx" to be installed.
+		// Requires "mt_omni.smx" to be installed.
 		"Omni Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5629,7 +5629,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank starts panic events.
-		// Requires "st_panic.smx" to be installed.
+		// Requires "mt_panic.smx" to be installed.
 		"Panic Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5711,7 +5711,7 @@
 		// "Pimp Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is repeatedly pimp slapped.
 		// - "Pimp Chance"
 		// - "Pimp Hit Mode"
-		// Requires "st_pimp.smx" to be installed.
+		// Requires "mt_pimp.smx" to be installed.
 		"Pimp Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5846,7 +5846,7 @@
 		// "Puke Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the Mutant Tank pukes on the survivor.
 		// - "Puke Chance"
 		// - "Puke Hit Mode"
-		// Requires "st_puke.smx" to be installed.
+		// Requires "mt_puke.smx" to be installed.
 		"Puke Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5957,7 +5957,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank ignites itself and gains a speed boost when on fire.
-		// Requires "st_pyro.smx" to be installed.
+		// Requires "mt_pyro.smx" to be installed.
 		"Pyro Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6055,7 +6055,7 @@
 		// "Quiet Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor cannot hear the Mutant Tank's sounds.
 		// - "Quiet Chance"
 		// - "Quiet Hit Mode"
-		// Requires "st_quiet.smx" to be installed.
+		// Requires "mt_quiet.smx" to be installed.
 		"Quiet Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6178,7 +6178,7 @@
 		// "Recoil Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor experiences strong recoil.
 		// - "Recoil Chance"
 		// - "Recoil Hit Mode"
-		// Requires "st_recoil.smx" to be installed.
+		// Requires "mt_recoil.smx" to be installed.
 		"Recoil Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6294,7 +6294,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank regenerates health.
-		// Requires "st_regen.smx" to be installed.
+		// Requires "mt_regen.smx" to be installed.
 		"Regen Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6385,7 +6385,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank respawns upon death.
-		// Requires "st_respawn.smx" to be installed.
+		// Requires "mt_respawn.smx" to be installed.
 		"Respawn Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6462,7 +6462,7 @@
 		// "Restart Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor respawns at the start of the map or near a teammate.
 		// - "Restart Chance"
 		// - "Restart Hit Mode"
-		// Requires "st_restart.smx" to be installed.
+		// Requires "mt_restart.smx" to be installed.
 		"Restart Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6555,7 +6555,7 @@
 			// --
 			// Example: "smg_silenced,pistol,adrenaline,defibrillator"
 			// Example: "katana,pain_pills,vomitjar"
-			// Example: "first_aid_kit,defibrillator,knife,adrenaline"
+			// Example: "firmt_aid_kit,defibrillator,knife,adrenaline"
 			"Restart Loadout"			"smg,pistol,pain_pills"
 
 			// The mode of the Mutant Tank's restart ability.
@@ -6588,7 +6588,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank creates rock showers.
-		// Requires "st_rock.smx" to be installed.
+		// Requires "mt_rock.smx" to be installed.
 		"Rock Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6681,7 +6681,7 @@
 		// "Rocket Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is sent into space.
 		// - "Rocket Chance"
 		// - "Rocket Hit Mode"
-		// Requires "st_rocket.smx" to be installed.
+		// Requires "mt_rocket.smx" to be installed.
 		"Rocket Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6803,7 +6803,7 @@
 		// "Shake Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's screen is shaken.
 		// - "Shake Chance"
 		// - "Shake Hit Mode"
-		// Requires "st_shake.smx" to be installed.
+		// Requires "mt_shake.smx" to be installed.
 		"Shake Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6926,7 +6926,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank protects itself with a shield and throws propane tanks or gas cans.
-		// Requires "st_shield.smx" to be installed.
+		// Requires "mt_shield.smx" to be installed.
 		"Shield Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7032,7 +7032,7 @@
 		// "Shove Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is shoved repeatedly.
 		// - "Shove Chance"
 		// - "Shove Hit Mode"
-		// Requires "st_shove.smx" to be installed.
+		// Requires "mt_shove.smx" to be installed.
 		"Shove Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7161,7 +7161,7 @@
 		// "Slow Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is slowed down.
 		// - "Slow Chance"
 		// - "Slow Hit Mode"
-		// Requires "st_slow.smx" to be installed.
+		// Requires "mt_slow.smx" to be installed.
 		"Slow Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7290,7 +7290,7 @@
 		// "Smash Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is smashed to death.
 		// - "Smash Chance"
 		// - "Smash Hit Mode"
-		// Requires "st_smash.smx" to be installed.
+		// Requires "mt_smash.smx" to be installed.
 		"Smash Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7407,7 +7407,7 @@
 		// "Smite Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is smitten.
 		// - "Smite Chance"
 		// - "Smite Hit Mode"
-		// Requires "st_smite.smx" to be installed.
+		// Requires "mt_smite.smx" to be installed.
 		"Smite Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7518,7 +7518,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank spams rocks at survivors.
-		// Requires "st_spam.smx" to be installed.
+		// Requires "mt_spam.smx" to be installed.
 		"Spam Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7594,7 +7594,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank constantly deals splash damage to nearby survivors.
-		// Requires "st_splash.smx" to be installed.
+		// Requires "mt_splash.smx" to be installed.
 		"Splash Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7689,7 +7689,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank throws cars, special infected, Witches, or itself.
-		// Requires "st_throw.smx" to be installed.
+		// Requires "mt_throw.smx" to be installed.
 		"Throw Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7792,7 +7792,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank throws heat-seeking rocks that will track down the nearest survivors.
-		// Requires "st_track.smx" to be installed.
+		// Requires "mt_track.smx" to be installed.
 		"Track Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7869,7 +7869,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank activates ultimate mode when low on health to gain temporary godmode and damage boost.
-		// Requires "st_ultimate.smx" to be installed.
+		// Requires "mt_ultimate.smx" to be installed.
 		"Ultimate Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7963,7 +7963,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank cannot die.
-		// Requires "st_undead.smx" to be installed.
+		// Requires "mt_undead.smx" to be installed.
 		"Undead Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8026,7 +8026,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank gains health from hurting survivors.
-		// Requires "st_vampire.smx" to be installed.
+		// Requires "mt_vampire.smx" to be installed.
 		"Vampire Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8091,7 +8091,7 @@
 		// "Vision Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's vision changes.
 		// - "Vision Chance"
 		// - "Vision Hit Mode"
-		// Requires "st_vision.smx" to be installed.
+		// Requires "mt_vision.smx" to be installed.
 		"Vision Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8223,7 +8223,7 @@
 		// "Warp Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is warped to a random teammate.
 		// - "Warp Chance"
 		// - "Warp Hit Mode"
-		// Requires "st_warp.smx" to be installed.
+		// Requires "mt_warp.smx" to be installed.
 		"Warp Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8369,7 +8369,7 @@
 		// "Whirl Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's screen whirls.
 		// - "Whirl Chance"
 		// - "Whirl Hit Mode"
-		// Requires "st_whirl.smx" to be installed.
+		// Requires "mt_whirl.smx" to be installed.
 		"Whirl Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8505,7 +8505,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank converts nearby common infected into Witch minions.
-		// Requires "st_witch.smx" to be installed.
+		// Requires "mt_witch.smx" to be installed.
 		"Witch Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8587,7 +8587,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank can steal health from survivors and vice-versa.
-		// Requires "st_xiphos.smx" to be installed.
+		// Requires "mt_xiphos.smx" to be installed.
 		"Xiphos Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8653,7 +8653,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank yells to deafen survivors.
-		// Requires "st_yell.smx" to be installed.
+		// Requires "mt_yell.smx" to be installed.
 		"Yell Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8735,7 +8735,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank spawns zombies.
-		// Requires "st_zombie.smx" to be installed.
+		// Requires "mt_zombie.smx" to be installed.
 		"Zombie Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
