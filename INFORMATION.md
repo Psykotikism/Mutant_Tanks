@@ -1,4 +1,6 @@
 # Mutant Tanks
+> Psyk0tik (Crasher_3637)
+
 ## Information
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 

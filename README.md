@@ -1,5 +1,5 @@
 # Mutant Tanks
-Mutant Tanks takes the original [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752) to the next level by enabling full customization of Mutant Tanks to make gameplay more interesting.
+Mutant Tanks takes [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752) to the next level by enabling full customization of Mutant Tanks to make gameplay more interesting.
 
 ## License
 > The following license is also placed inside the source code of each plugin and include file.
@@ -1430,7 +1430,7 @@ Examples:
 ```
 
 ## Credits
-**Machine** - For the original [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) plugin.
+**Machine** - For the [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) plugin.
 
 **NgBUCKWANGS** - For the mapname.cfg code in his [[L4D2] ABM](https://forums.alliedmods.net/showthread.php?t=291562) plugin.
 
