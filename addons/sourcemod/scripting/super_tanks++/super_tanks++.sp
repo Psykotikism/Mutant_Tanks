@@ -2425,7 +2425,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			{
 				g_iGameModeTypes = iGetValue(g_sCurrentSubSection, "GameModes", "Game Modes", "Game_Modes", "modes", key, "GameModeTypes", "Game Mode Types", "Game_Mode_Types", "types", g_iGameModeTypes, value, 0, 15);
 				g_iConfigEnable = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "EnableCustomConfigs", "Enable Custom Configs", "Enable_Custom_Configs", "enabled", g_iConfigEnable, value, 0, 1);
-				g_iConfigCreate = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_iConfigEnable, value, 0, 31);
+				g_iConfigCreate = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_iConfigCreate, value, 0, 31);
 				g_iConfigExecute = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_iConfigExecute, value, 0, 31);
 
 				if (StrEqual(g_sCurrentSubSection, "GameModes", false) || StrEqual(g_sCurrentSubSection, "Game Modes", false) || StrEqual(g_sCurrentSubSection, "Game_Modes", false) || StrEqual(g_sCurrentSubSection, "modes", false))
