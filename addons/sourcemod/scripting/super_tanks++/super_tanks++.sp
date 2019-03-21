@@ -2057,7 +2057,7 @@ public void SMCParseStart(SMCParser smc)
 	g_iSTMode = 1;
 	g_iRegularAmount = 2;
 	g_flRegularInterval = 300.0;
-	g_iRegularWave = 1;
+	g_iRegularWave = 0;
 	g_iGameModeTypes = 0;
 	g_sEnabledGameModes[0] = '\0';
 	g_sDisabledGameModes[0] = '\0';
