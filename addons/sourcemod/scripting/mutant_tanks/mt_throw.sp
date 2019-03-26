@@ -536,10 +536,9 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 						DispatchSpawn(iCar);
 						TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
-
-						CreateTimer(2.0, tTimerSetCarVelocity, EntIndexToEntRef(iCar), TIMER_FLAG_NO_MAPCHANGE);
-
+						
 						iCar = EntIndexToEntRef(iCar);
+						CreateTimer(2.0, tTimerSetCarVelocity, iCar, TIMER_FLAG_NO_MAPCHANGE);
 						vDeleteEntity(iCar, 10.0);
 
 						if (g_iThrowMessage[MT_GetTankType(iTank)] & MT_MESSAGE_MELEE)
