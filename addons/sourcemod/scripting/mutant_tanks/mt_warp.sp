@@ -728,46 +728,51 @@ static bool bHasAdminAccess(int admin)
 	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
 	if (iAbilityFlags != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iAbilityFlags))
+		if (g_iAccessFlags2[admin] != 0)
 		{
-			return false;
+			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
 		}
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
 	if (iTypeFlags != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iTypeFlags))
+		if (g_iAccessFlags2[admin] != 0)
 		{
-			return false;
+			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
 		}
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
 	if (iGlobalFlags != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0 && !(g_iAccessFlags2[admin] & iGlobalFlags))
+		if (g_iAccessFlags2[admin] != 0)
 		{
-			return false;
+			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
 		}
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
 	if (iClientTypeFlags != 0)
 	{
-		if (iAbilityFlags != 0 && !(iClientTypeFlags & iAbilityFlags))
+		if (iAbilityFlags != 0)
 		{
-			return false;
+			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 		}
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
 	if (iClientGlobalFlags != 0)
 	{
-		if (iAbilityFlags != 0 && !(iClientGlobalFlags & iAbilityFlags))
+		if (iAbilityFlags != 0)
 		{
-			return false;
+			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 		}
+	}
+
+	if (iAbilityFlags != 0)
+	{
+		return (!(GetUserFlagBits(admin) & iAbilityFlags)) ? false : true;
 	}
 
 	return true;
@@ -825,6 +830,11 @@ static bool bIsAdminImmune(int survivor, int tank)
 		{
 			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
 		}
+	}
+
+	if (iAbilityFlags != 0)
+	{
+		return ((GetUserFlagBits(tank) & iAbilityFlags) && GetUserFlagBits(survivor) <= GetUserFlagBits(tank)) ? false : true;
 	}
 
 	return false;
