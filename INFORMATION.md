@@ -198,18 +198,30 @@
 			"Regular Amount"			"2"
 
 			// Spawn Tanks on non-finale maps every time this many seconds passes.
+			// Note: This will not work unless "Regular Mode" is set to 1.
 			// --
 			// Minimum: 0.1
 			// Maximum: 9999999999.0
 			"Regular Interval"			"300.0"
 
+			// The mode of the regular wave spawner.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting does not need the "Regular Wave" setting to be enabled.
+			// --
+			// 0: Wait for a Tank to spawn before spawning extra Tanks. (Recommended)
+			// 1: Use "Regular Wave" to spawn Tanks.
+			"Regular Mode"				"0"
+
 			// The type of Mutant Tank that will spawn.
+			// Note: This will not work unless "Regular Mode" is set to 1.
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type that will spawn.
 			"Regular Type"				"0"
 
 			// Spawn Tanks on non-finale maps periodically.
+			// Note: This will not work unless "Regular Mode" is set to 1.
+			// Note: Leave this off if you want a generic spawn rate for Tanks or if you have a Multi-Tanks plugin installed.
 			// --
 			// 0: OFF
 			// 1: ON
