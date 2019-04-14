@@ -3293,7 +3293,7 @@ static void vNewTankSettings(int tank, bool revert = false)
 
 static void vRemoveProps(int tank, int mode = 1)
 {
-	if (bIsValidEntity(g_iTankModel[tank]))
+	if (bIsValidEntRef(g_iTankModel[tank]))
 	{
 		SDKUnhook(g_iTankModel[tank], SDKHook_SetTransmit, SetTransmit);
 		RemoveEntity(g_iTankModel[tank]);
@@ -3303,7 +3303,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 	for (int iLight = 0; iLight < 3; iLight++)
 	{
-		if (bIsValidEntity(g_iLight[tank][iLight]))
+		if (bIsValidEntRef(g_iLight[tank][iLight]))
 		{
 			SDKUnhook(g_iLight[tank][iLight], SDKHook_SetTransmit, SetTransmit);
 			RemoveEntity(g_iLight[tank][iLight]);
@@ -3314,7 +3314,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 	for (int iOzTank = 0; iOzTank < 2; iOzTank++)
 	{
-		if (bIsValidEntity(g_iFlame[tank][iOzTank]))
+		if (bIsValidEntRef(g_iFlame[tank][iOzTank]))
 		{
 			SDKUnhook(g_iFlame[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
 			RemoveEntity(g_iFlame[tank][iOzTank]);
@@ -3322,7 +3322,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 		g_iFlame[tank][iOzTank] = INVALID_ENT_REFERENCE;
 
-		if (bIsValidEntity(g_iOzTank[tank][iOzTank]))
+		if (bIsValidEntRef(g_iOzTank[tank][iOzTank]))
 		{
 			SDKUnhook(g_iOzTank[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
 			RemoveEntity(g_iOzTank[tank][iOzTank]);
@@ -3333,7 +3333,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 	for (int iRock = 0; iRock < 16; iRock++)
 	{
-		if (bIsValidEntity(g_iRock[tank][iRock]))
+		if (bIsValidEntRef(g_iRock[tank][iRock]))
 		{
 			SDKUnhook(g_iRock[tank][iRock], SDKHook_SetTransmit, SetTransmit);
 			RemoveEntity(g_iRock[tank][iRock]);
@@ -3344,7 +3344,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 	for (int iTire = 0; iTire < 2; iTire++)
 	{
-		if (bIsValidEntity(g_iTire[tank][iTire]))
+		if (bIsValidEntRef(g_iTire[tank][iTire]))
 		{
 			SDKUnhook(g_iTire[tank][iTire], SDKHook_SetTransmit, SetTransmit);
 			RemoveEntity(g_iTire[tank][iTire]);
@@ -3510,7 +3510,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			{
 				vLightProp(tank, iLight, flOrigin, flAngles);
 			}
-			else if (bIsValidEntity(g_iLight[tank][iLight]))
+			else if (bIsValidEntRef(g_iLight[tank][iLight]))
 			{
 				SDKUnhook(g_iLight[tank][iLight], SDKHook_SetTransmit, SetTransmit);
 				RemoveEntity(g_iLight[tank][iLight]);
@@ -3569,7 +3569,10 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					TeleportEntity(g_iOzTank[tank][iOzTank], flOrigin, NULL_VECTOR, flAngles2);
 					DispatchSpawn(g_iOzTank[tank][iOzTank]);
-
+					
+					SDKHook(g_iOzTank[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
+					g_iOzTank[tank][iOzTank] = EntIndexToEntRef(g_iOzTank[tank][iOzTank]);
+					
 					if (g_iFlame[tank][iOzTank] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flPropsChance[3] && ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & MT_PROP_FLAME)) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && (g_iPropsAttached2[tank] & MT_PROP_FLAME))))
 					{
 						g_iFlame[tank][iOzTank] = CreateEntityByName("env_steam");
@@ -3599,13 +3602,14 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 							AcceptEntityInput(g_iFlame[tank][iOzTank], "TurnOn");
 
 							SDKHook(g_iFlame[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
+							g_iFlame[tank][iOzTank] = EntIndexToEntRef(g_iFlame[tank][iOzTank]);
 						}
 					}
 
-					SDKHook(g_iOzTank[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
+					
 				}
 			}
-			else if (bIsValidEntity(g_iOzTank[tank][iOzTank]))
+			else if (bIsValidEntRef(g_iOzTank[tank][iOzTank]))
 			{
 				if ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & MT_PROP_OXYGENTANK)) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && (g_iPropsAttached2[tank] & MT_PROP_OXYGENTANK)))
 				{
@@ -3619,7 +3623,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					g_iOzTank[tank][iOzTank] = INVALID_ENT_REFERENCE;
 				}
 
-				if (bIsValidEntity(g_iFlame[tank][iOzTank]))
+				if (bIsValidEntRef(g_iFlame[tank][iOzTank]))
 				{
 					if ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & MT_PROP_FLAME)) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && (g_iPropsAttached2[tank] & MT_PROP_FLAME)))
 					{
@@ -3683,9 +3687,10 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					DispatchSpawn(g_iRock[tank][iRock]);
 
 					SDKHook(g_iRock[tank][iRock], SDKHook_SetTransmit, SetTransmit);
+					g_iRock[tank][iRock] = EntIndexToEntRef(g_iRock[tank][iRock]);
 				}
 			}
-			else if (bIsValidEntity(g_iRock[tank][iRock]))
+			else if (bIsValidEntRef(g_iRock[tank][iRock]))
 			{
 				if ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & MT_PROP_ROCK)) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && (g_iPropsAttached2[tank] & MT_PROP_ROCK)))
 				{
@@ -3739,9 +3744,10 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 					DispatchSpawn(g_iTire[tank][iTire]);
 
 					SDKHook(g_iTire[tank][iTire], SDKHook_SetTransmit, SetTransmit);
+					g_iTire[tank][iTire] = EntIndexToEntRef(g_iTire[tank][iTire]);
 				}
 			}
-			else if (bIsValidEntity(g_iTire[tank][iTire]))
+			else if (bIsValidEntRef(g_iTire[tank][iTire]))
 			{
 				if ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & MT_PROP_TIRE)) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && (g_iPropsAttached2[tank] & MT_PROP_TIRE)))
 				{
@@ -3887,6 +3893,7 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		DispatchSpawn(g_iLight[tank][light]);
 
 		SDKHook(g_iLight[tank][light], SDKHook_SetTransmit, SetTransmit);
+		g_iLight[tank][light] = EntIndexToEntRef(g_iLight[tank][light]);
 	}
 }
 
