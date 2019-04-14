@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 8.61 (April 12, 2019)
+
+Bug fixes:
+
+1. Fixed the Track ability spamming errors.
+2. Fixed the core plugin returning errors when `plugins` directory is not found.
+
+Changes:
+
+1. The administration system now detects SM's admin flags if the plugin's config file doesn't define specific flags for a user.
+2. The `MT_IsTypeEnabled()` native now checks if abilities for Mutant Tanks are available.
+3. Added the `Regular Mode` setting under the `Plugin Settings/Waves` section.
+4. The core plugin now detects custom sourcemod directories when checking for the `plugins` folder.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.60 (March 21, 2019)
 
 Changes:
@@ -59,7 +77,7 @@ Bug fixes:
 1. Fixed several abilities not resetting properly when Super Tanks die.
 2. Fixed the Clone ability spam-spawning Tank clones.
 3. Fixed the Respawn ability not detecting finale Super Tanks.
-4. Fixed all the plugins returning errors when the Clone ability isn't installed.
+4. Fixed all the plugins returning errors when the Clone ability is not installed.
 
 Changes:
 

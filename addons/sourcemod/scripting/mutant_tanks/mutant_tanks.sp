@@ -165,9 +165,9 @@ int g_iAccessFlags, g_iAccessFlags2[MT_MAXTYPES + 1], g_iAccessFlags3[MAXPLAYERS
 	g_iGlowEnabled[MT_MAXTYPES + 1], g_iGlowEnabled2[MAXPLAYERS + 1], g_iGlowColor[MT_MAXTYPES + 1][3], g_iGlowColor2[MAXPLAYERS + 1][3], g_iHumanCooldown, g_iHumanSupport[MT_MAXTYPES + 1], g_iIgnoreLevel, g_iIgnoreLevel2[MAXPLAYERS + 1], g_iImmunityFlags, g_iImmunityFlags2[MT_MAXTYPES + 1], g_iImmunityFlags3[MAXPLAYERS + 1],
 	g_iImmunityFlags4[MT_MAXTYPES + 1][MAXPLAYERS + 1], g_iLastButtons[MAXPLAYERS + 1], g_iLight[MAXPLAYERS + 1][4], g_iLightColor[MT_MAXTYPES + 1][4], g_iLightColor2[MAXPLAYERS + 1][4], g_iMasterControl, g_iMaxType, g_iMeleeImmunity[MT_MAXTYPES + 1], g_iMeleeImmunity2[MAXPLAYERS + 1], g_iMenuEnabled[MT_MAXTYPES + 1], g_iMinType,
 	g_iMultiHealth, g_iMultiHealth2[MT_MAXTYPES + 1], g_iMultiHealth3[MAXPLAYERS + 1], g_iOzTank[MAXPLAYERS + 1][3], g_iOzTankColor[MT_MAXTYPES + 1][4], g_iOzTankColor2[MAXPLAYERS + 1][4], g_iPlayerCount[2], g_iPluginEnabled, g_iPropsAttached[MT_MAXTYPES + 1], g_iPropsAttached2[MAXPLAYERS + 1], g_iRandomTank[MT_MAXTYPES + 1],
-	g_iRandomTank2[MAXPLAYERS + 1], g_iRegularAmount, g_iRegularType, g_iRegularWave, g_iRockEffects[MT_MAXTYPES + 1], g_iRockEffects2[MAXPLAYERS + 1], g_iRock[MAXPLAYERS + 1][17], g_iRockColor[MT_MAXTYPES + 1][4], g_iRockColor2[MAXPLAYERS + 1][4], g_iSection[MAXPLAYERS + 1], g_iSkinColor[MT_MAXTYPES + 1][4], g_iSkinColor2[MAXPLAYERS + 1][4],
-	g_iSpawnEnabled[MT_MAXTYPES + 1], g_iSpawnMode[MT_MAXTYPES + 1], g_iMTMode, g_iTankEnabled[MT_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankModel[MAXPLAYERS + 1], g_iTankNote[MT_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iTire[MAXPLAYERS + 1][3], g_iTireColor[MT_MAXTYPES + 1][4], g_iTireColor2[MAXPLAYERS + 1][4],
-	g_iTransformType[MT_MAXTYPES + 1][10], g_iTransformType2[MAXPLAYERS + 1][10], g_iType, g_iTypeLimit[MT_MAXTYPES + 1];
+	g_iRandomTank2[MAXPLAYERS + 1], g_iRegularAmount, g_iRegularMode, g_iRegularType, g_iRegularWave, g_iRockEffects[MT_MAXTYPES + 1], g_iRockEffects2[MAXPLAYERS + 1], g_iRock[MAXPLAYERS + 1][17], g_iRockColor[MT_MAXTYPES + 1][4], g_iRockColor2[MAXPLAYERS + 1][4], g_iSection[MAXPLAYERS + 1], g_iSkinColor[MT_MAXTYPES + 1][4],
+	g_iSkinColor2[MAXPLAYERS + 1][4], g_iSpawnEnabled[MT_MAXTYPES + 1], g_iSpawnMode[MT_MAXTYPES + 1], g_iMTMode, g_iTankEnabled[MT_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankModel[MAXPLAYERS + 1], g_iTankNote[MT_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iTire[MAXPLAYERS + 1][3], g_iTireColor[MT_MAXTYPES + 1][4],
+	g_iTireColor2[MAXPLAYERS + 1][4], g_iTransformType[MT_MAXTYPES + 1][10], g_iTransformType2[MAXPLAYERS + 1][10], g_iType, g_iTypeLimit[MT_MAXTYPES + 1];
 
 TopMenu g_tmMTMenu;
 
@@ -403,7 +403,7 @@ public any aNative_IsTankSupported(Handle plugin, int numParams)
 public any aNative_IsTypeEnabled(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
-	if (g_iTankEnabled[iType] == 1)
+	if (g_iTankEnabled[iType] == 1 && bIsTypeAvailable(iType))
 	{
 		return true;
 	}
@@ -446,8 +446,10 @@ public void OnAllPluginsLoaded()
 		g_bAbilityPlugin[iPos] = false;
 	}
 
+	char sSMPath[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "plugins");
 	ArrayList alPlugins = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
-	vFindInstalledAbilities(alPlugins);
+	vFindInstalledAbilities(alPlugins, sSMPath);
 	g_bCloneInstalled = LibraryExists("mt_clone");
 }
 
@@ -510,8 +512,10 @@ public void OnPluginStart()
 
 	g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
 
-	CreateDirectory("addons/sourcemod/data/mutant_tanks/", 511);
-	BuildPath(Path_SM, g_sSavePath, sizeof(g_sSavePath), "data/mutant_tanks/mutant_tanks.cfg");
+	char sSMPath[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks");
+	CreateDirectory(sSMPath, 511);
+	BuildPath(Path_SM, g_sSavePath, sizeof(g_sSavePath), "%s/mutant_tanks.cfg", sSMPath);
 	vLoadConfigs(g_sSavePath, true);
 	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 
@@ -606,7 +610,9 @@ public void OnConfigsExecuted()
 
 	if ((g_iConfigCreate & MT_CONFIG_DIFFICULTY) && g_iConfigEnable == 1)
 	{
-		CreateDirectory("addons/sourcemod/data/mutant_tanks/difficulty_configs/", 511);
+		char sSMPath[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/difficulty_configs");
+		CreateDirectory(sSMPath, 511);
 
 		char sDifficulty[32];
 		for (int iDifficulty = 0; iDifficulty <= 3; iDifficulty++)
@@ -625,7 +631,9 @@ public void OnConfigsExecuted()
 
 	if ((g_iConfigCreate & MT_CONFIG_MAP) && g_iConfigEnable == 1)
 	{
-		CreateDirectory((bIsValidGame() ? "addons/sourcemod/data/mutant_tanks/l4d2_map_configs/" : "addons/sourcemod/data/mutant_tanks/l4d_map_configs/"), 511);
+		char sSMPath[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"));
+		CreateDirectory(sSMPath, 511);
 
 		char sMap[128];
 		ArrayList alMaps = new ArrayList(16);
@@ -649,7 +657,9 @@ public void OnConfigsExecuted()
 
 	if ((g_iConfigCreate & MT_CONFIG_GAMEMODE) && g_iConfigEnable == 1)
 	{
-		CreateDirectory((bIsValidGame() ? "addons/sourcemod/data/mutant_tanks/l4d2_gamemode_configs/" : "addons/sourcemod/data/mutant_tanks/l4d_gamemode_configs/"), 511);
+		char sSMPath[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"));
+		CreateDirectory(sSMPath, 511);
 
 		char sGameType[2049], sTypes[64][32];
 		g_cvMTGameTypes.GetString(sGameType, sizeof(sGameType));
@@ -667,7 +677,9 @@ public void OnConfigsExecuted()
 
 	if ((g_iConfigCreate & MT_CONFIG_DAY) && g_iConfigEnable == 1)
 	{
-		CreateDirectory("addons/sourcemod/data/mutant_tanks/daily_configs/", 511);
+		char sSMPath[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/daily_configs");
+		CreateDirectory(sSMPath, 511);
 
 		char sWeekday[32];
 		for (int iDay = 0; iDay <= 6; iDay++)
@@ -689,7 +701,9 @@ public void OnConfigsExecuted()
 
 	if ((g_iConfigCreate & MT_CONFIG_COUNT) && g_iConfigEnable == 1)
 	{
-		CreateDirectory("addons/sourcemod/data/mutant_tanks/playercount_configs/", 511);
+		char sSMPath[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/playercount_configs");
+		CreateDirectory(sSMPath, 511);
 
 		char sPlayerCount[32];
 		for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
@@ -1331,18 +1345,20 @@ public Action cmdMTList(int client, int args)
 		g_bFound[iPos] = false;
 	}
 
+	char sSMPath[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "plugins");
 	ArrayList alPlugins = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
-	vListInstalledAbilities(client, alPlugins);
+	vListInstalledAbilities(client, alPlugins, sSMPath);
 
 	return Plugin_Handled;
 }
 
-static void vListInstalledAbilities(int admin, ArrayList list, const char[] directory = "addons/sourcemod/plugins", bool mode = false)
+static void vListInstalledAbilities(int admin, ArrayList list, const char[] directory, bool mode = false)
 {
 	DirectoryListing dlList = OpenDirectory(directory);
 	char sFilename[PLATFORM_MAX_PATH];
 	bool bNewFile;
-	while (dlList.GetNext(sFilename, sizeof(sFilename)))
+	while (dlList != null && dlList.GetNext(sFilename, sizeof(sFilename)))
 	{
 		if (!mode && StrContains(sFilename, ".smx", false) != -1)
 		{
@@ -2060,6 +2076,7 @@ public void SMCParseStart(SMCParser smc)
 		g_iMTMode = 1;
 		g_iRegularAmount = 2;
 		g_flRegularInterval = 300.0;
+		g_iRegularMode = 0;
 		g_iRegularWave = 0;
 		g_iGameModeTypes = 0;
 		g_sEnabledGameModes[0] = '\0';
@@ -2357,6 +2374,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_iMTMode = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_iMTMode, value, 0, 1);
 			g_iRegularAmount = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_iRegularAmount, value, 1, 64);
 			g_flRegularInterval = flGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularInterval", "Regular Interval", "Regular_Interval", "reginterval", g_flRegularInterval, value, 0.1, 9999999999.0);
+			g_iRegularMode = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularMode", "Regular Mode", "Regular_Mode", "regmode", g_iRegularMode, value, 0, 1);
 			g_iRegularType = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularType", "Regular Type", "Regular_Type", "regtype", g_iRegularType, value, 0, g_iMaxType);
 			g_iRegularWave = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularWave", "Regular Wave", "Regular_Wave", "regwave", g_iRegularWave, value, 0, 1);
 
@@ -3138,12 +3156,12 @@ static void vPluginStatus()
 	}
 }
 
-static void vFindInstalledAbilities(ArrayList list, const char[] directory = "addons/sourcemod/plugins", bool mode = false)
+static void vFindInstalledAbilities(ArrayList list, const char[] directory, bool mode = false)
 {
 	DirectoryListing dlList = OpenDirectory(directory);
 	char sFilename[PLATFORM_MAX_PATH];
 	bool bNewFile;
-	while (dlList.GetNext(sFilename, sizeof(sFilename)))
+	while (dlList != null && dlList.GetNext(sFilename, sizeof(sFilename)))
 	{
 		if (!mode && StrContains(sFilename, ".smx", false) != -1)
 		{
@@ -4054,6 +4072,7 @@ static void vMutantTank(int tank)
 
 		switch (g_iTankWave)
 		{
+			case 0: vTankCountCheck(tank, g_iRegularAmount);
 			case 1: vTankCountCheck(tank, g_iFinaleWave[0]);
 			case 2: vTankCountCheck(tank, g_iFinaleWave[1]);
 			case 3: vTankCountCheck(tank, g_iFinaleWave[2]);
@@ -4121,7 +4140,7 @@ public int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int pa
 
 static void vTankCountCheck(int tank, int wave)
 {
-	if (iGetTankCount() == wave)
+	if (iGetTankCount() == wave || (g_iTankWave == 0 && (g_iRegularMode == 1 || g_iRegularWave == 0)))
 	{
 		return;
 	}
@@ -4191,6 +4210,10 @@ static bool bHasAdminAccess(int admin, int type = 0)
 		{
 			return false;
 		}
+		else if (!(GetUserFlagBits(admin) & iTypeFlags))
+		{
+			return false;
+		}
 	}
 
 	int iGlobalFlags = g_iAccessFlags;
@@ -4201,6 +4224,10 @@ static bool bHasAdminAccess(int admin, int type = 0)
 			return false;
 		}
 		else if (g_iAccessFlags3[admin] != 0 && !(g_iAccessFlags3[admin] & iGlobalFlags))
+		{
+			return false;
+		}
+		else if (!(GetUserFlagBits(admin) & iGlobalFlags))
 		{
 			return false;
 		}
@@ -4239,6 +4266,10 @@ static bool bIsAdminImmune(int survivor, int tank)
 		{
 			return ((g_iImmunityFlags3[tank] & iTypeFlags) && g_iImmunityFlags3[survivor] <= g_iImmunityFlags3[tank]) ? false : true;
 		}
+		else if (GetUserFlagBits(survivor) & iTypeFlags)
+		{
+			return ((GetUserFlagBits(tank) & iTypeFlags) && GetUserFlagBits(survivor) <= GetUserFlagBits(tank)) ? false : true;
+		}
 	}
 
 	int iGlobalFlags = g_iImmunityFlags;
@@ -4251,6 +4282,10 @@ static bool bIsAdminImmune(int survivor, int tank)
 		else if (g_iImmunityFlags3[survivor] != 0 && (g_iImmunityFlags3[survivor] & iGlobalFlags))
 		{
 			return ((g_iImmunityFlags3[tank] & iGlobalFlags) && g_iImmunityFlags3[survivor] <= g_iImmunityFlags3[tank]) ? false : true;
+		}
+		else if (GetUserFlagBits(survivor) & iGlobalFlags)
+		{
+			return ((GetUserFlagBits(tank) & iGlobalFlags) && GetUserFlagBits(survivor) <= GetUserFlagBits(tank)) ? false : true;
 		}
 	}
 
@@ -5023,7 +5058,7 @@ public Action tTimerRegularWaves(Handle timer)
 		return Plugin_Stop;
 	}
 
-	if (!g_bPluginEnabled || g_iRegularWave == 0 || iGetTankCount() >= 1)
+	if (!g_bPluginEnabled || g_iRegularMode == 0 || g_iRegularWave == 0 || iGetTankCount() >= 1)
 	{
 		return Plugin_Continue;
 	}
@@ -5078,7 +5113,11 @@ public Action tTimerSpawnTanks(Handle timer, int wave)
 	{
 		if (bIsValidClient(iTank, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
 		{
-			vFirstTank(g_iTankWave - 1);
+			if (g_iTankWave > 0)
+			{
+				vFirstTank(g_iTankWave - 1);
+			}
+
 			vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank auto");
 
 			break;
