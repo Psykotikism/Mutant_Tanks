@@ -2042,7 +2042,7 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 	smcLoader.OnKeyValue = SMCKeyValues;
 	smcLoader.OnLeaveSection = SMCEndSection;
 	smcLoader.OnEnd = SMCParseEnd;
-	SMCError smcError = smcLoader.ParseFile("savepath");
+	SMCError smcError = smcLoader.ParseFile(savepath);
 	if (smcError != SMCError_Okay)
 	{
 		char sSmcError[64];
