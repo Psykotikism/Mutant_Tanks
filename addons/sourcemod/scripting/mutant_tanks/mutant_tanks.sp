@@ -4346,7 +4346,7 @@ static bool bIsTankAllowed(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 	return true;
 }
 
-static bool bIsTypeAvailable(int type, int tank = -1)
+static bool bIsTypeAvailable(int type, int tank = 0)
 {
 	if (g_iDetectPlugins == 0 && g_iDetectPlugins2[type] == 0 && g_iDetectPlugins3[tank] == 0)
 	{
