@@ -744,6 +744,9 @@ static void vReset2(int tank)
 
 static void vResetGlow(int tank)
 {
+	if (!bIsValidGame())
+		return;
+
 	switch (MT_IsGlowEnabled(tank))
 	{
 		case true:
