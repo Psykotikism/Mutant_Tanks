@@ -49,8 +49,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SPRITE_FIRE "sprites/sprite_fire01.vmt"
 
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
-#define SOUND_FIRE "weapons/rpg/rocketfire1.wav"
-#define SOUND_LAUNCH "npc/env_headcrabcanister/launch.wav"
+#define SOUND_FIRE "weapons/molotov/fire_ignite_1.wav"
+#define SOUND_LAUNCH "player/boomer/explode/explo_medium_14.wav"
 
 #define MT_MENU_ROCKET "Rocket Ability"
 

@@ -48,9 +48,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define PARTICLE_BLOOD "boomer_explode_D"
 
-#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav"
-#define SOUND_GROWL_L4D1 "player/tank/voice/growl/hulk_growl_1.wav"
-#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav"
+#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav" //Only exists on L4D2
+#define SOUND_GROWL_L4D1 "player/tank/voice/growl/hulk_growl_1.wav" //Only exists on L4D1
+#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav" //Only exists on L4D2
 #define SOUND_SMASH_L4D1 "player/tank/hit/hulk_punch_1.wav"
 
 #define MT_MENU_KAMIKAZE "Kamikaze Ability"
