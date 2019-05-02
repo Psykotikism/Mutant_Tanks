@@ -740,15 +740,6 @@ Natives:
 native bool MT_CanTankSpawn(int type);
 
 /**
- * Returns the status of an ability for a certain Mutant Tank type.
- *
- * @param type			Mutant Tank type.
- * @param order			Ability order starting from 0.
- * @param status		True if the type has the ability, false otherwise.
- **/
-native void MT_FindAbility(int type, int order, bool status);
-
-/**
  * Returns the current access flags set by the core plugin.
  *
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
@@ -1512,7 +1503,7 @@ Examples:
 
 **FatalOE71** - For suggesting ideas.
 
-**Marttt** - For convincing me the effectiveness and usefulness of convar flags.
+**Marttt** - For convincing me the effectiveness and usefulness of convar flags, and the pull requests.
 
 **AngelAce113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
 
