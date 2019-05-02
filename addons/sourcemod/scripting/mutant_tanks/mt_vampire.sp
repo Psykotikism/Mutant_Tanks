@@ -281,7 +281,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (type > 0)
 	{
-		MT_FindAbility(type, 64, bHasAbilities(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire"));
 		g_iHumanAbility[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iVampireAbility[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iVampireAbility[type], value, 0, 1);
 		g_iVampireEffect[type] = iGetValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iVampireEffect[type], value, 0, 1);

@@ -303,7 +303,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (type > 0)
 	{
-		MT_FindAbility(type, 69, bHasAbilities(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos"));
 		g_iHumanAbility[type] = iGetValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iXiphosAbility[type] = iGetValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iXiphosAbility[type], value, 0, 1);
 		g_iXiphosEffect[type] = iGetValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iXiphosEffect[type], value, 0, 1);

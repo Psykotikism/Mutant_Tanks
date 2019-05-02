@@ -489,7 +489,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (type > 0)
 	{
-		MT_FindAbility(type, 11, bHasAbilities(subsection, "dropability", "drop ability", "drop_ability", "drop"));
 		g_iHumanAbility[type] = iGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iDropAbility[type] = iGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iDropAbility[type], value, 0, 1);
 		g_iDropMessage[type] = iGetValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iDropMessage[type], value, 0, 1);
@@ -604,7 +603,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 static void vDropWeapon(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iDropAbility[MT_GetTankType(tank)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flDropChance[MT_GetTankType(tank)] && bIsValidEntity(g_iDrop[tank]))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iDropAbility[MT_GetTankType(tank)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flDropChance[MT_GetTankType(tank)] && bIsValidEntRef(g_iDrop[tank]))
 	{
 		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
 		{
@@ -706,7 +705,7 @@ static void vDropWeapon(int tank)
 
 static void vRemoveDrop(int tank)
 {
-	if (bIsValidEntity(g_iDrop[tank]))
+	if (bIsValidEntRef(g_iDrop[tank]))
 	{
 		MT_HideEntity(g_iDrop[tank], false);
 		RemoveEntity(g_iDrop[tank]);
@@ -936,6 +935,7 @@ public Action tTimerDrop(Handle timer, int userid)
 
 		g_iDropWeapon[iTank] = iWeapon;
 		MT_HideEntity(g_iDrop[iTank], true);
+		g_iDrop[iTank] = EntIndexToEntRef(g_iDrop[iTank]);
 	}
 
 	return Plugin_Continue;
