@@ -269,7 +269,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (type > 0)
 	{
-		MT_FindAbility(type, 60, bHasAbilities(subsection, "throwability", "throw ability", "throw_ability", "throw"));
 		g_iHumanAbility[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iHumanAmmo[type] = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
 		g_flHumanCooldown[type] = flGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
@@ -541,9 +540,10 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 						DispatchSpawn(iCar);
 						TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
-						
+
+						CreateTimer(2.0, tTimerSetCarVelocity, EntIndexToEntRef(iCar), TIMER_FLAG_NO_MAPCHANGE);
+
 						iCar = EntIndexToEntRef(iCar);
-						CreateTimer(2.0, tTimerSetCarVelocity, iCar, TIMER_FLAG_NO_MAPCHANGE);
 						vDeleteEntity(iCar, 10.0);
 
 						if (g_iThrowMessage[MT_GetTankType(iTank)] & MT_MESSAGE_MELEE)

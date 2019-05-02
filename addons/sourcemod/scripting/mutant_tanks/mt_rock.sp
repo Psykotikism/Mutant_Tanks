@@ -275,7 +275,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (type > 0)
 	{
-		MT_FindAbility(type, 50, bHasAbilities(subsection, "rockability", "rock ability", "rock_ability", "rock"));
 		g_iHumanAbility[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iHumanAmmo[type] = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
 		g_flHumanCooldown[type] = flGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
@@ -438,7 +437,7 @@ static void vReset2(int tank)
 {
 	g_bRock[tank] = false;
 
-	if (bIsValidEntity(g_iRock[tank]))
+	if (bIsValidEntRef(g_iRock[tank]))
 	{
 		RemoveEntity(g_iRock[tank]);
 	}
@@ -475,10 +474,11 @@ static void vRock(int tank)
 	IntToString(g_iRockDamage[MT_GetTankType(tank)], sDamage, sizeof(sDamage));
 	DispatchSpawn(g_iRock[tank]);
 	DispatchKeyValue(g_iRock[tank], "rockdamageoverride", sDamage);
+	g_iRock[tank] = EntIndexToEntRef(g_iRock[tank]);
 
 	DataPack dpRock;
 	CreateDataTimer(0.2, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpRock.WriteCell(EntIndexToEntRef(g_iRock[tank]));
+	dpRock.WriteCell(g_iRock[tank]);
 	dpRock.WriteCell(GetClientUserId(tank));
 	dpRock.WriteCell(MT_GetTankType(tank));
 	dpRock.WriteFloat(GetEngineTime());

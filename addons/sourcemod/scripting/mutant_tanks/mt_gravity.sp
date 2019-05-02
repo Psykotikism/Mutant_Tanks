@@ -344,7 +344,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (type > 0)
 	{
-		MT_FindAbility(type, 22, bHasAbilities(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity"));
 		g_iHumanAbility[type] = iGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iHumanAmmo[type] = iGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
 		g_flHumanCooldown[type] = flGetValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
@@ -560,6 +559,7 @@ static void vGravity(int tank)
 	DispatchKeyValue(g_iGravity[tank], "spawnflags", "8");
 	vSetEntityParent(g_iGravity[tank], tank, true);
 	AcceptEntityInput(g_iGravity[tank], "Enable");
+	g_iGravity[tank] = EntIndexToEntRef(g_iGravity[tank]);
 }
 
 static void vGravityAbility(int tank, bool main)
@@ -720,7 +720,7 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, int m
 
 static void vRemoveGravity(int tank)
 {
-	if (bIsValidEntity(g_iGravity[tank]))
+	if (bIsValidEntRef(g_iGravity[tank]))
 	{
 		RemoveEntity(g_iGravity[tank]);
 	}
@@ -775,7 +775,7 @@ static void vReset3(int tank)
 	g_bGravity[tank] = false;
 	g_bGravity3[tank] = true;
 
-	if (bIsValidEntity(g_iGravity[tank]))
+	if (bIsValidEntRef(g_iGravity[tank]))
 	{
 		RemoveEntity(g_iGravity[tank]);
 	}
@@ -925,7 +925,7 @@ public Action tTimerGravity(Handle timer, DataPack pack)
 	{
 		g_bGravity[iTank] = false;
 
-		if (bIsValidEntity(g_iGravity[iTank]))
+		if (bIsValidEntRef(g_iGravity[iTank]))
 		{
 			RemoveEntity(g_iGravity[iTank]);
 		}

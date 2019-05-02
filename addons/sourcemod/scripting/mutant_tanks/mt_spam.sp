@@ -273,7 +273,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (type > 0)
 	{
-		MT_FindAbility(type, 58, bHasAbilities(subsection, "spamability", "spam ability", "spam_ability", "spam"));
 		g_iHumanAbility[type] = iGetValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iHumanAmmo[type] = iGetValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
 		g_flHumanCooldown[type] = flGetValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
@@ -425,7 +424,7 @@ static void vReset2(int tank)
 {
 	g_bSpam[tank] = false;
 
-	if (bIsValidEntity(g_iSpam[tank]))
+	if (bIsValidEntRef(g_iSpam[tank]))
 	{
 		RemoveEntity(g_iSpam[tank]);
 	}
@@ -462,10 +461,11 @@ static void vSpam(int tank)
 	IntToString(g_iSpamDamage[MT_GetTankType(tank)], sDamage, sizeof(sDamage));
 	DispatchSpawn(g_iSpam[tank]);
 	DispatchKeyValue(g_iSpam[tank], "rockdamageoverride", sDamage);
+	g_iSpam[tank] = EntIndexToEntRef(g_iSpam[tank]);
 
 	DataPack dpSpam;
 	CreateDataTimer(0.5, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpSpam.WriteCell(EntIndexToEntRef(g_iSpam[tank]));
+	dpSpam.WriteCell(g_iSpam[tank]);
 	dpSpam.WriteCell(GetClientUserId(tank));
 	dpSpam.WriteCell(MT_GetTankType(tank));
 	dpSpam.WriteFloat(GetEngineTime());

@@ -42,7 +42,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 
 	CreateNative("MT_CanTankSpawn", aNative_CanTankSpawn);
-	CreateNative("MT_FindAbility", aNative_FindAbility);
 	CreateNative("MT_GetAccessFlags", aNative_GetAccessFlags);
 	CreateNative("MT_GetCurrentFinaleWave", aNative_GetCurrentFinaleWave);
 	CreateNative("MT_GetImmunityFlags", aNative_GetImmunityFlags);
@@ -136,7 +135,7 @@ enum ConfigState
 ArrayList g_alAdmins;
 
 bool g_bAbilityFound[MT_MAXTYPES + 1][MT_MAX_ABILITIES + 1], g_bAbilityPlugin[MT_MAX_ABILITIES + 1], g_bAdminMenu[MAXPLAYERS + 1], g_bBlood[MAXPLAYERS + 1], g_bBlur[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bDying[MAXPLAYERS + 1], g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1],
-	g_bFound[MT_MAX_ABILITIES + 1], g_bGeneralConfig, g_bIce[MAXPLAYERS + 1], g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSettingsFound, g_bSmoke[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1], g_bUsedParser[MAXPLAYERS + 1];
+	g_bFound[MT_MAX_ABILITIES + 1], g_bIce[MAXPLAYERS + 1], g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSettingsFound, g_bSmoke[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1], g_bUsedParser[MAXPLAYERS + 1];
 
 char g_sPluginFilenames[][] =
 {
@@ -159,7 +158,7 @@ Handle g_hAbilityActivatedForward, g_hButtonPressedForward, g_hButtonReleasedFor
 
 int g_iAccessFlags, g_iAccessFlags2[MT_MAXTYPES + 1], g_iAccessFlags3[MAXPLAYERS + 1], g_iAccessFlags4[MT_MAXTYPES + 1][MAXPLAYERS + 1], g_iAllowDeveloper, g_iAnnounceArrival, g_iAnnounceArrival2[MT_MAXTYPES + 1], g_iAnnounceArrival3[MAXPLAYERS + 1], g_iAnnounceDeath, g_iAnnounceDeath2[MT_MAXTYPES + 1], g_iAnnounceDeath3[MAXPLAYERS + 1],
 	g_iBaseHealth, g_iBodyEffects[MT_MAXTYPES + 1], g_iBodyEffects2[MAXPLAYERS + 1], g_iBossHealth[MT_MAXTYPES + 1][4], g_iBossHealth2[MAXPLAYERS + 1][4], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[MT_MAXTYPES + 1], g_iBossStages2[MAXPLAYERS + 1], g_iBossType[MT_MAXTYPES + 1][4], g_iBossType2[MAXPLAYERS + 1][4],
-	g_iBulletImmunity[MT_MAXTYPES + 1], g_iBulletImmunity2[MAXPLAYERS + 1], g_iConfigCreate, g_iConfigEnable, g_iConfigExecute, g_iCooldown[MAXPLAYERS + 1], g_iDeathRevert, g_iDeathRevert2[MT_MAXTYPES + 1], g_iDeathRevert3[MAXPLAYERS + 1], g_iDetectPlugins, g_iDetectPlugins2[MT_MAXTYPES + 1], g_iDetectPlugins3[MAXPLAYERS + 1],
+	g_iBulletImmunity[MT_MAXTYPES + 1], g_iBulletImmunity2[MAXPLAYERS + 1], g_iConfigCreate, g_iConfigEnable, g_iConfigExecute, g_iConfigMode, g_iCooldown[MAXPLAYERS + 1], g_iDeathRevert, g_iDeathRevert2[MT_MAXTYPES + 1], g_iDeathRevert3[MAXPLAYERS + 1], g_iDetectPlugins, g_iDetectPlugins2[MT_MAXTYPES + 1], g_iDetectPlugins3[MAXPLAYERS + 1],
 	g_iDisplayHealth, g_iDisplayHealth2[MT_MAXTYPES + 1], g_iDisplayHealth3[MAXPLAYERS + 1], g_iDisplayHealthType, g_iDisplayHealthType2[MT_MAXTYPES + 1], g_iDisplayHealthType3[MAXPLAYERS + 1], g_iExplosiveImmunity[MT_MAXTYPES + 1], g_iExplosiveImmunity2[MAXPLAYERS + 1], g_iExtraHealth[MT_MAXTYPES + 1], g_iExtraHealth2[MAXPLAYERS + 1],
 	g_iFavoriteType[MAXPLAYERS + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinaleTank[MT_MAXTYPES + 1], g_iFinaleType[4], g_iFinaleWave[4], g_iFireImmunity[MT_MAXTYPES + 1], g_iFireImmunity2[MAXPLAYERS + 1], g_iFlame[MAXPLAYERS + 1][3], g_iFlameColor[MT_MAXTYPES + 1][4], g_iFlameColor2[MAXPLAYERS + 1][4], g_iGameModeTypes,
 	g_iGlowEnabled[MT_MAXTYPES + 1], g_iGlowEnabled2[MAXPLAYERS + 1], g_iGlowColor[MT_MAXTYPES + 1][3], g_iGlowColor2[MAXPLAYERS + 1][3], g_iHumanCooldown, g_iHumanSupport[MT_MAXTYPES + 1], g_iIgnoreLevel, g_iIgnoreLevel2[MAXPLAYERS + 1], g_iImmunityFlags, g_iImmunityFlags2[MT_MAXTYPES + 1], g_iImmunityFlags3[MAXPLAYERS + 1],
@@ -180,11 +179,6 @@ public any aNative_CanTankSpawn(Handle plugin, int numParams)
 	}
 
 	return false;
-}
-
-public any aNative_FindAbility(Handle plugin, int numParams)
-{
-	g_bAbilityFound[GetNativeCell(1)][GetNativeCell(2)] = GetNativeCell(3);
 }
 
 public any aNative_GetAccessFlags(Handle plugin, int numParams)
@@ -513,10 +507,10 @@ public void OnPluginStart()
 	g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
 
 	char sSMPath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks");
+	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/");
 	CreateDirectory(sSMPath, 511);
-	Format(g_sSavePath, sizeof(g_sSavePath), "%s/mutant_tanks.cfg", sSMPath);
-	vLoadConfigs(g_sSavePath, true);
+	Format(g_sSavePath, sizeof(g_sSavePath), "%smutant_tanks.cfg", sSMPath);
+	vLoadConfigs(g_sSavePath, 1);
 	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 
 	HookEvent("round_start", vEventHandler);
@@ -580,7 +574,7 @@ public void OnClientPostAdminCheck(int client)
 {
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		vLoadConfigs(g_sSavePath, true);
+		vLoadConfigs(g_sSavePath, 3);
 	}
 }
 
@@ -593,7 +587,7 @@ public void OnConfigsExecuted()
 {
 	g_iType = 0;
 
-	vLoadConfigs(g_sSavePath, true);
+	vLoadConfigs(g_sSavePath, 1);
 
 	char sMapName[128];
 	GetCurrentMap(sMapName, sizeof(sMapName));
@@ -611,7 +605,7 @@ public void OnConfigsExecuted()
 	if ((g_iConfigCreate & MT_CONFIG_DIFFICULTY) && g_iConfigEnable == 1)
 	{
 		char sSMPath[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/difficulty_configs");
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/difficulty_configs/");
 		CreateDirectory(sSMPath, 511);
 
 		char sDifficulty[32];
@@ -678,7 +672,7 @@ public void OnConfigsExecuted()
 	if ((g_iConfigCreate & MT_CONFIG_DAY) && g_iConfigEnable == 1)
 	{
 		char sSMPath[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/daily_configs");
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/daily_configs/");
 		CreateDirectory(sSMPath, 511);
 
 		char sWeekday[32];
@@ -702,7 +696,7 @@ public void OnConfigsExecuted()
 	if ((g_iConfigCreate & MT_CONFIG_COUNT) && g_iConfigEnable == 1)
 	{
 		char sSMPath[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/playercount_configs");
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/playercount_configs/");
 		CreateDirectory(sSMPath, 511);
 
 		char sPlayerCount[32];
@@ -719,7 +713,7 @@ public void OnConfigsExecuted()
 		g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
-		vLoadConfigs(sDifficultyConfig);
+		vLoadConfigs(sDifficultyConfig, 2);
 		vPluginStatus();
 		g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 	}
@@ -730,7 +724,7 @@ public void OnConfigsExecuted()
 		GetCurrentMap(sMap, sizeof(sMap));
 
 		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_map_configs/%s.cfg" : "data/mutant_tanks/l4d_map_configs/%s.cfg"), sMap);
-		vLoadConfigs(sMapConfig);
+		vLoadConfigs(sMapConfig, 2);
 		vPluginStatus();
 		g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 	}
@@ -741,7 +735,7 @@ public void OnConfigsExecuted()
 		g_cvMTGameMode.GetString(sMode, sizeof(sMode));
 
 		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_gamemode_configs/%s.cfg" : "data/mutant_tanks/l4d_gamemode_configs/%s.cfg"), sMode);
-		vLoadConfigs(sModeConfig);
+		vLoadConfigs(sModeConfig, 2);
 		vPluginStatus();
 		g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 	}
@@ -764,7 +758,7 @@ public void OnConfigsExecuted()
 		}
 
 		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
-		vLoadConfigs(sDayConfig);
+		vLoadConfigs(sDayConfig, 2);
 		vPluginStatus();
 		g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
 	}
@@ -774,7 +768,7 @@ public void OnConfigsExecuted()
 		char sCountConfig[PLATFORM_MAX_PATH];
 
 		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iGetPlayerCount());
-		vLoadConfigs(sCountConfig);
+		vLoadConfigs(sCountConfig, 2);
 		vPluginStatus();
 		g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
 	}
@@ -1140,11 +1134,14 @@ static void vConfigMenu(int admin, int item)
 		mConfigMenu.AddItem(g_sTankName[iIndex], sMenuItem);
 	}
 
-	for (int iPos = 0; iPos < GetArraySize(g_alAdmins); iPos++)
+	if (GetArraySize(g_alAdmins) > 0)
 	{
-		char sAdmins[32];
-		g_alAdmins.GetString(iPos, sAdmins, sizeof(sAdmins));
-		mConfigMenu.AddItem(sAdmins, sAdmins);
+		for (int iPos = 0; iPos < GetArraySize(g_alAdmins); iPos++)
+		{
+			char sAdmins[32];
+			g_alAdmins.GetString(iPos, sAdmins, sizeof(sAdmins));
+			mConfigMenu.AddItem(sAdmins, sAdmins);
+		}
 	}
 
 	mConfigMenu.ExitBackButton = g_bAdminMenu[admin];
@@ -1322,15 +1319,18 @@ public Action cmdMTList(int client, int args)
 		return Plugin_Handled;
 	}
 
-	char sSteamID32[32], sSteam3ID[32];
-	GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
-	GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-
-	if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && (g_iAllowDeveloper == 1 && !StrEqual(sSteamID32, "STEAM_1:1:48199803", false) && !StrEqual(sSteam3ID, "[U:1:96399607]", false)))
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
+		char sSteamID32[32], sSteam3ID[32];
+		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
+		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
 
-		return Plugin_Handled;
+		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && (g_iAllowDeveloper == 1 && !StrEqual(sSteamID32, "STEAM_1:1:48199803", false) && !StrEqual(sSteam3ID, "[U:1:96399607]", false)))
+		{
+			ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
+
+			return Plugin_Handled;
+		}
 	}
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
@@ -2029,9 +2029,9 @@ public Action SetTransmit(int entity, int client)
 	return Plugin_Continue;
 }
 
-static void vLoadConfigs(const char[] savepath, bool main = false)
+static void vLoadConfigs(const char[] savepath, int mode)
 {
-	g_bGeneralConfig = main;
+	g_iConfigMode = mode;
 	g_bSettingsFound = false;
 
 	strcopy(g_sUsedPath, sizeof(g_sUsedPath), savepath);
@@ -2048,10 +2048,10 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 		char sSmcError[64];
 		smcLoader.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
 
-		PrintToServer("Error while parsing \"%s\" file. Error Message: %s.", savepath, sSmcError);
+ 		PrintToServer("%s Error while parsing \"%s\" file. Error Message: %s.", MT_TAG, savepath, sSmcError);
 		LogError("Error while parsing \"%s\" file. Error Message: %s.", savepath, sSmcError);
 	}
-
+	
 	delete smcLoader;
 }
 
@@ -2062,7 +2062,7 @@ public void SMCParseStart(SMCParser smc)
 	g_sCurrentSection[0] = '\0';
 	g_sCurrentSubSection[0] = '\0';
 
-	if (g_bGeneralConfig)
+	if (g_iConfigMode < 2)
 	{
 		g_iPluginEnabled = 0;
 		g_iAnnounceArrival = 31;
@@ -2366,7 +2366,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 	if (g_csState == ConfigState_Specific)
 	{
-		if (StrEqual(g_sCurrentSection, "PluginSettings", false) || StrEqual(g_sCurrentSection, "Plugin Settings", false) || StrEqual(g_sCurrentSection, "Plugin_Settings", false) || StrEqual(g_sCurrentSection, "settings", false))
+		if (g_iConfigMode < 3 && (StrEqual(g_sCurrentSection, "PluginSettings", false) || StrEqual(g_sCurrentSection, "Plugin Settings", false) || StrEqual(g_sCurrentSection, "Plugin_Settings", false) || StrEqual(g_sCurrentSection, "settings", false)))
 		{
 			g_iPluginEnabled = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "PluginEnabled", "Plugin Enabled", "Plugin_Enabled", "enabled", g_iPluginEnabled, value, 0, 1);
 			g_iAnnounceArrival = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_iAnnounceArrival, value, 0, 31);
@@ -2452,7 +2452,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				}
 			}
 
-			if (g_bGeneralConfig)
+			if (g_iConfigMode < 2)
 			{
 				g_iGameModeTypes = iGetValue(g_sCurrentSubSection, "GameModes", "Game Modes", "Game_Modes", "modes", key, "GameModeTypes", "Game Mode Types", "Game_Mode_Types", "types", g_iGameModeTypes, value, 0, 15);
 				g_iConfigEnable = iGetValue(g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "EnableCustomConfigs", "Enable Custom Configs", "Enable_Custom_Configs", "enabled", g_iConfigEnable, value, 0, 1);
@@ -2480,7 +2480,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			Call_PushCell(-1);
 			Call_Finish();
 		}
-		else if (StrContains(g_sCurrentSection, "Tank#", false) != -1 || StrContains(g_sCurrentSection, "Tank #", false) != -1 || StrContains(g_sCurrentSection, "Tank_#", false) != -1 || StrContains(g_sCurrentSection, "Tank", false) != -1 || g_sCurrentSection[0] == '#' || IsCharNumeric(g_sCurrentSection[0]))
+		else if (g_iConfigMode < 3 && (StrContains(g_sCurrentSection, "Tank#", false) != -1 || StrContains(g_sCurrentSection, "Tank #", false) != -1 || StrContains(g_sCurrentSection, "Tank_#", false) != -1 || StrContains(g_sCurrentSection, "Tank", false) != -1 || g_sCurrentSection[0] == '#' || IsCharNumeric(g_sCurrentSection[0])))
 		{
 			for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 			{
@@ -2691,6 +2691,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									}
 								}
 							}
+						}
+
+						for (int iPos = 0; iPos < MT_MAX_ABILITIES; iPos++)
+						{
+							g_bAbilityFound[iIndex][iPos] = bHasAbility(g_sCurrentSubSection, iPos);
 						}
 
 						Call_StartForward(g_hConfigsLoadedForward);
@@ -3095,6 +3100,30 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				CreateTimer(0.5, tTimerKillStuckTank, iTankId, TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
+		else if (StrEqual(name, "player_now_it"))
+		{
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+ 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+			{
+				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
+				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
+			}
+		}
+		else if (StrEqual(name, "player_no_longer_it"))
+		{
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+ 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+			{
+				int iGlowColor[3];
+				for (int iPos = 0; iPos < 3; iPos++)
+				{
+					iGlowColor[iPos] = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_iGlowColor2[iTank][iPos] >= -2) ? g_iGlowColor2[iTank][iPos] : g_iGlowColor[g_iTankType[iTank]][iPos];
+				}
+
+				SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
+				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
+			}
+		}
 		else if (StrEqual(name, "player_spawn"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
@@ -3132,31 +3161,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "round_start"))
 		{
 			g_iTankWave = 0;
-		}
-		else if (StrEqual(name, "player_now_it"))
-		{
-			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-
-			if (bIsTank(iTank))
-			{
-				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
-				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
-			}
-		}
-		else if (StrEqual(name, "player_no_longer_it"))
-		{
-			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-
-			if (bIsTank(iTank))
-			{
-				int iGlowColor[3];
-				for (int iPos = 0; iPos < 3; iPos++)
-				{
-					iGlowColor[iPos] = g_iGlowColor2[iTank][iPos];
-				}
-				SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
-				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
-			}
 		}
 
 		Call_StartForward(g_hEventFiredForward);
@@ -3205,8 +3209,11 @@ static void vFindInstalledAbilities(ArrayList list, const char[] directory, bool
 		if (StrContains(sFilename, ".smx", false) == -1 && !StrEqual(sFilename, "disabled", false) && !StrEqual(sFilename, ".") && !StrEqual(sFilename, ".."))
 		{
 			Format(sFilename, sizeof(sFilename), "%s/%s", directory, sFilename);
-			if(DirExists(sFilename))
+
+			if (DirExists(sFilename))
+			{
 				vFindInstalledAbilities(list, sFilename, true);
+			}
 		}
 		else
 		{
@@ -3283,9 +3290,9 @@ static void vHookEvents(bool hook)
 		HookEvent("player_bot_replace", vEventHandler);
 		HookEvent("player_death", vEventHandler);
 		HookEvent("player_incapacitated", vEventHandler);
-		HookEvent("player_spawn", vEventHandler);
 		HookEvent("player_now_it", vEventHandler);
 		HookEvent("player_no_longer_it", vEventHandler);
+		HookEvent("player_spawn", vEventHandler);
 
 		vHookEventForward(true);
 	}
@@ -3302,9 +3309,9 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_bot_replace", vEventHandler);
 		UnhookEvent("player_death", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
-		UnhookEvent("player_spawn", vEventHandler);
 		UnhookEvent("player_now_it", vEventHandler);
 		UnhookEvent("player_no_longer_it", vEventHandler);
+		UnhookEvent("player_spawn", vEventHandler);
 
 		vHookEventForward(false);
 	}
@@ -3662,8 +3669,6 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 							g_iFlame[tank][iOzTank] = EntIndexToEntRef(g_iFlame[tank][iOzTank]);
 						}
 					}
-
-
 				}
 			}
 			else if (bIsValidEntRef(g_iOzTank[tank][iOzTank]))
@@ -4275,6 +4280,90 @@ static bool bHasAdminAccess(int admin, int type = 0)
 	return true;
 }
 
+static bool bHasAbility(const char[] subsection, int index = -1)
+{
+	if (index > -1)
+	{
+		switch (index)
+		{
+			case 0: if (StrEqual(subsection, "absorbability", false) || StrEqual(subsection, "absorb ability", false) || StrEqual(subsection, "absorb_ability", false) || StrEqual(subsection, "absorb", false)) return true;
+			case 1: if (StrEqual(subsection, "acidability", false) || StrEqual(subsection, "acid ability", false) || StrEqual(subsection, "acid_ability", false) || StrEqual(subsection, "acid", false)) return true;
+			case 2: if (StrEqual(subsection, "aimlessability", false) || StrEqual(subsection, "aimless ability", false) || StrEqual(subsection, "aimless_ability", false) || StrEqual(subsection, "aimless", false)) return true;
+			case 3: if (StrEqual(subsection, "ammoability", false) || StrEqual(subsection, "ammo ability", false) || StrEqual(subsection, "ammo_ability", false) || StrEqual(subsection, "ammo", false)) return true;
+			case 4: if (StrEqual(subsection, "blindability", false) || StrEqual(subsection, "blind ability", false) || StrEqual(subsection, "blind_ability", false) || StrEqual(subsection, "blind", false)) return true;
+			case 5: if (StrEqual(subsection, "bombability", false) || StrEqual(subsection, "bomb ability", false) || StrEqual(subsection, "bomb_ability", false) || StrEqual(subsection, "bomb", false)) return true;
+			case 6: if (StrEqual(subsection, "buryability", false) || StrEqual(subsection, "bury ability", false) || StrEqual(subsection, "bury_ability", false) || StrEqual(subsection, "bury", false)) return true;
+			case 7: if (StrEqual(subsection, "carability", false) || StrEqual(subsection, "car ability", false) || StrEqual(subsection, "car_ability", false) || StrEqual(subsection, "car", false)) return true;
+			case 8: if (StrEqual(subsection, "chokeability", false) || StrEqual(subsection, "choke ability", false) || StrEqual(subsection, "choke_ability", false) || StrEqual(subsection, "choke", false)) return true;
+			case 9: if (StrEqual(subsection, "cloneability", false) || StrEqual(subsection, "clone ability", false) || StrEqual(subsection, "clone_ability", false) || StrEqual(subsection, "clone", false)) return true;
+			case 10: if (StrEqual(subsection, "cloudability", false) || StrEqual(subsection, "cloud ability", false) || StrEqual(subsection, "cloud_ability", false) || StrEqual(subsection, "cloud", false)) return true;
+			case 11: if (StrEqual(subsection, "dropability", false) || StrEqual(subsection, "drop ability", false) || StrEqual(subsection, "drop_ability", false) || StrEqual(subsection, "drop", false)) return true;
+			case 12: if (StrEqual(subsection, "drugability", false) || StrEqual(subsection, "drug ability", false) || StrEqual(subsection, "drug_ability", false) || StrEqual(subsection, "drug", false)) return true;
+			case 13: if (StrEqual(subsection, "drunkability", false) || StrEqual(subsection, "drunk ability", false) || StrEqual(subsection, "drunk_ability", false) || StrEqual(subsection, "drunk", false)) return true;
+			case 14: if (StrEqual(subsection, "electricability", false) || StrEqual(subsection, "electric ability", false) || StrEqual(subsection, "electric_ability", false) || StrEqual(subsection, "electric", false)) return true;
+			case 15: if (StrEqual(subsection, "enforceability", false) || StrEqual(subsection, "enforce ability", false) || StrEqual(subsection, "enforce_ability", false) || StrEqual(subsection, "enforce", false)) return true;
+			case 16: if (StrEqual(subsection, "fastability", false) || StrEqual(subsection, "fast ability", false) || StrEqual(subsection, "fast_ability", false) || StrEqual(subsection, "fast", false)) return true;
+			case 17: if (StrEqual(subsection, "fireability", false) || StrEqual(subsection, "fire ability", false) || StrEqual(subsection, "fire_ability", false) || StrEqual(subsection, "fire", false)) return true;
+			case 18: if (StrEqual(subsection, "flingability", false) || StrEqual(subsection, "fling ability", false) || StrEqual(subsection, "fling_ability", false) || StrEqual(subsection, "fling", false)) return true;
+			case 19: if (StrEqual(subsection, "fragileability", false) || StrEqual(subsection, "fragile ability", false) || StrEqual(subsection, "fragile_ability", false) || StrEqual(subsection, "fragile", false)) return true;
+			case 20: if (StrEqual(subsection, "ghostability", false) || StrEqual(subsection, "ghost ability", false) || StrEqual(subsection, "ghost_ability", false) || StrEqual(subsection, "ghost", false)) return true;
+			case 21: if (StrEqual(subsection, "godability", false) || StrEqual(subsection, "god ability", false) || StrEqual(subsection, "god_ability", false) || StrEqual(subsection, "god", false)) return true;
+			case 22: if (StrEqual(subsection, "gravityability", false) || StrEqual(subsection, "gravity ability", false) || StrEqual(subsection, "gravity_ability", false) || StrEqual(subsection, "gravity", false)) return true;
+			case 23: if (StrEqual(subsection, "healability", false) || StrEqual(subsection, "heal ability", false) || StrEqual(subsection, "heal_ability", false) || StrEqual(subsection, "heal", false)) return true;
+			case 24: if (StrEqual(subsection, "hitability", false) || StrEqual(subsection, "hit ability", false) || StrEqual(subsection, "hit_ability", false) || StrEqual(subsection, "hit", false)) return true;
+			case 25: if (StrEqual(subsection, "hurtability", false) || StrEqual(subsection, "hurt ability", false) || StrEqual(subsection, "hurt_ability", false) || StrEqual(subsection, "hurt", false)) return true;
+			case 26: if (StrEqual(subsection, "hypnoability", false) || StrEqual(subsection, "hypno ability", false) || StrEqual(subsection, "hypno_ability", false) || StrEqual(subsection, "hypno", false)) return true;
+			case 27: if (StrEqual(subsection, "iceability", false) || StrEqual(subsection, "ice ability", false) || StrEqual(subsection, "ice_ability", false) || StrEqual(subsection, "ice", false)) return true;
+			case 28: if (StrEqual(subsection, "idleability", false) || StrEqual(subsection, "idle ability", false) || StrEqual(subsection, "idle_ability", false) || StrEqual(subsection, "idle", false)) return true;
+			case 29: if (StrEqual(subsection, "invertability", false) || StrEqual(subsection, "invert ability", false) || StrEqual(subsection, "invert_ability", false) || StrEqual(subsection, "invert", false)) return true;
+			case 30: if (StrEqual(subsection, "itemability", false) || StrEqual(subsection, "item ability", false) || StrEqual(subsection, "item_ability", false) || StrEqual(subsection, "item", false)) return true;
+			case 31: if (StrEqual(subsection, "jumpability", false) || StrEqual(subsection, "jump ability", false) || StrEqual(subsection, "jump_ability", false) || StrEqual(subsection, "jump", false)) return true;
+			case 32: if (StrEqual(subsection, "kamikazeability", false) || StrEqual(subsection, "kamikaze ability", false) || StrEqual(subsection, "kamikaze_ability", false) || StrEqual(subsection, "kamikaze", false)) return true;
+			case 33: if (StrEqual(subsection, "lagability", false) || StrEqual(subsection, "lag ability", false) || StrEqual(subsection, "lag_ability", false) || StrEqual(subsection, "lag", false)) return true;
+			case 34: if (StrEqual(subsection, "leechability", false) || StrEqual(subsection, "leech ability", false) || StrEqual(subsection, "leech_ability", false) || StrEqual(subsection, "leech", false)) return true;
+			case 35: if (StrEqual(subsection, "medicability", false) || StrEqual(subsection, "medic ability", false) || StrEqual(subsection, "medic_ability", false) || StrEqual(subsection, "medic", false)) return true;
+			case 36: if (StrEqual(subsection, "meteorability", false) || StrEqual(subsection, "meteor ability", false) || StrEqual(subsection, "meteor_ability", false) || StrEqual(subsection, "meteor", false)) return true;
+			case 37: if (StrEqual(subsection, "minionability", false) || StrEqual(subsection, "minion ability", false) || StrEqual(subsection, "minion_ability", false) || StrEqual(subsection, "minion", false)) return true;
+			case 38: if (StrEqual(subsection, "necroability", false) || StrEqual(subsection, "necro ability", false) || StrEqual(subsection, "necro_ability", false) || StrEqual(subsection, "necro", false)) return true;
+			case 39: if (StrEqual(subsection, "nullifyability", false) || StrEqual(subsection, "nullify ability", false) || StrEqual(subsection, "nullify_ability", false) || StrEqual(subsection, "nullify", false)) return true;
+			case 40: if (StrEqual(subsection, "omniability", false) || StrEqual(subsection, "omni ability", false) || StrEqual(subsection, "omni_ability", false) || StrEqual(subsection, "omni", false)) return true;
+			case 41: if (StrEqual(subsection, "panicability", false) || StrEqual(subsection, "panic ability", false) || StrEqual(subsection, "panic_ability", false) || StrEqual(subsection, "panic", false)) return true;
+			case 42: if (StrEqual(subsection, "pimpability", false) || StrEqual(subsection, "pimp ability", false) || StrEqual(subsection, "pimp_ability", false) || StrEqual(subsection, "pimp", false)) return true;
+			case 43: if (StrEqual(subsection, "pukeability", false) || StrEqual(subsection, "puke ability", false) || StrEqual(subsection, "puke_ability", false) || StrEqual(subsection, "puke", false)) return true;
+			case 44: if (StrEqual(subsection, "pyroability", false) || StrEqual(subsection, "pyro ability", false) || StrEqual(subsection, "pyro_ability", false) || StrEqual(subsection, "pyro", false)) return true;
+			case 45: if (StrEqual(subsection, "quietability", false) || StrEqual(subsection, "quiet ability", false) || StrEqual(subsection, "quiet_ability", false) || StrEqual(subsection, "quiet", false)) return true;
+			case 46: if (StrEqual(subsection, "recoilability", false) || StrEqual(subsection, "recoil ability", false) || StrEqual(subsection, "recoil_ability", false) || StrEqual(subsection, "recoil", false)) return true;
+			case 47: if (StrEqual(subsection, "regenability", false) || StrEqual(subsection, "regen ability", false) || StrEqual(subsection, "regen_ability", false) || StrEqual(subsection, "regen", false)) return true;
+			case 48: if (StrEqual(subsection, "respawnability", false) || StrEqual(subsection, "respawn ability", false) || StrEqual(subsection, "respawn_ability", false) || StrEqual(subsection, "respawn", false)) return true;
+			case 49: if (StrEqual(subsection, "restartability", false) || StrEqual(subsection, "restart ability", false) || StrEqual(subsection, "restart_ability", false) || StrEqual(subsection, "restart", false)) return true;
+			case 50: if (StrEqual(subsection, "rockability", false) || StrEqual(subsection, "rock ability", false) || StrEqual(subsection, "rock_ability", false) || StrEqual(subsection, "rock", false)) return true;
+			case 51: if (StrEqual(subsection, "rocketability", false) || StrEqual(subsection, "rocket ability", false) || StrEqual(subsection, "rocket_ability", false) || StrEqual(subsection, "rocket", false)) return true;
+			case 52: if (StrEqual(subsection, "shakeability", false) || StrEqual(subsection, "shake ability", false) || StrEqual(subsection, "shake_ability", false) || StrEqual(subsection, "shake", false)) return true;
+			case 53: if (StrEqual(subsection, "shieldability", false) || StrEqual(subsection, "shield ability", false) || StrEqual(subsection, "shield_ability", false) || StrEqual(subsection, "shield", false)) return true;
+			case 54: if (StrEqual(subsection, "shoveability", false) || StrEqual(subsection, "shove ability", false) || StrEqual(subsection, "shove_ability", false) || StrEqual(subsection, "shove", false)) return true;
+			case 55: if (StrEqual(subsection, "slowability", false) || StrEqual(subsection, "slow ability", false) || StrEqual(subsection, "slow_ability", false) || StrEqual(subsection, "slow", false)) return true;
+			case 56: if (StrEqual(subsection, "smashability", false) || StrEqual(subsection, "smash ability", false) || StrEqual(subsection, "smash_ability", false) || StrEqual(subsection, "smash", false)) return true;
+			case 57: if (StrEqual(subsection, "smiteability", false) || StrEqual(subsection, "smite ability", false) || StrEqual(subsection, "smite_ability", false) || StrEqual(subsection, "smite", false)) return true;
+			case 58: if (StrEqual(subsection, "spamability", false) || StrEqual(subsection, "spam ability", false) || StrEqual(subsection, "spam_ability", false) || StrEqual(subsection, "spam", false)) return true;
+			case 59: if (StrEqual(subsection, "splashability", false) || StrEqual(subsection, "splash ability", false) || StrEqual(subsection, "splash_ability", false) || StrEqual(subsection, "splash", false)) return true;
+			case 60: if (StrEqual(subsection, "throwability", false) || StrEqual(subsection, "throw ability", false) || StrEqual(subsection, "throw_ability", false) || StrEqual(subsection, "throw", false)) return true;
+			case 61: if (StrEqual(subsection, "trackability", false) || StrEqual(subsection, "track ability", false) || StrEqual(subsection, "track_ability", false) || StrEqual(subsection, "track", false)) return true;
+			case 62: if (StrEqual(subsection, "ultimateability", false) || StrEqual(subsection, "ultimate ability", false) || StrEqual(subsection, "ultimate_ability", false) || StrEqual(subsection, "ultimate", false)) return true;
+			case 63: if (StrEqual(subsection, "undeadability", false) || StrEqual(subsection, "undead ability", false) || StrEqual(subsection, "undead_ability", false) || StrEqual(subsection, "undead", false)) return true;
+			case 64: if (StrEqual(subsection, "vampireability", false) || StrEqual(subsection, "vampire ability", false) || StrEqual(subsection, "vampire_ability", false) || StrEqual(subsection, "vampire", false)) return true;
+			case 65: if (StrEqual(subsection, "visionability", false) || StrEqual(subsection, "vision ability", false) || StrEqual(subsection, "vision_ability", false) || StrEqual(subsection, "vision", false)) return true;
+			case 66: if (StrEqual(subsection, "warpability", false) || StrEqual(subsection, "warp ability", false) || StrEqual(subsection, "warp_ability", false) || StrEqual(subsection, "warp", false)) return true;
+			case 67: if (StrEqual(subsection, "whirlability", false) || StrEqual(subsection, "whirl ability", false) || StrEqual(subsection, "whirl_ability", false) || StrEqual(subsection, "whirl", false)) return true;
+			case 68: if (StrEqual(subsection, "witchability", false) || StrEqual(subsection, "witch ability", false) || StrEqual(subsection, "witch_ability", false) || StrEqual(subsection, "witch", false)) return true;
+			case 69: if (StrEqual(subsection, "xiphosability", false) || StrEqual(subsection, "xiphos ability", false) || StrEqual(subsection, "xiphos_ability", false) || StrEqual(subsection, "xiphos", false)) return true;
+			case 70: if (StrEqual(subsection, "yellability", false) || StrEqual(subsection, "yell ability", false) || StrEqual(subsection, "yell_ability", false) || StrEqual(subsection, "yell", false)) return true;
+			case 71: if (StrEqual(subsection, "zombieability", false) || StrEqual(subsection, "zombie ability", false) || StrEqual(subsection, "zombie_ability", false) || StrEqual(subsection, "zombie", false)) return true;
+		}
+	}
+
+	return false;
+}
+
 static bool bIsAdminImmune(int survivor, int tank)
 {
 	if (!bIsHumanSurvivor(survivor))
@@ -4348,7 +4437,7 @@ static bool bIsTankAllowed(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 
 static bool bIsTypeAvailable(int type, int tank = 0)
 {
-	if (g_iDetectPlugins == 0 && g_iDetectPlugins2[type] == 0 && g_iDetectPlugins3[tank] == 0)
+	if (g_iDetectPlugins == 0 && g_iDetectPlugins2[type] == 0 && bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE) && g_iDetectPlugins3[tank] == 0)
 	{
 		return true;
 	}
@@ -4378,13 +4467,13 @@ static bool bIsTypeAvailable(int type, int tank = 0)
 			iPluginCount++;
 		}
 
-		if (iPluginCount > 0)
+		if (iPluginCount == 0)
 		{
-			return true;
+			return false;
 		}
 	}
 
-	return false;
+	return true;
 }
 
 static bool bTankChance(int value)
@@ -4433,7 +4522,7 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 		g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
-		vLoadConfigs(sDifficultyConfig);
+		vLoadConfigs(sDifficultyConfig, 2);
 		vPluginStatus();
 	}
 }
@@ -4750,7 +4839,7 @@ public Action tTimerUpdatePlayerCount(Handle timer)
 
 	char sCountConfig[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", g_iPlayerCount[1]);
-	vLoadConfigs(sCountConfig);
+	vLoadConfigs(sCountConfig, 2);
 	vPluginStatus();
 	g_iPlayerCount[0] = g_iPlayerCount[1];
 
@@ -5184,8 +5273,8 @@ public Action tTimerReloadConfigs(Handle timer)
 	g_iFileTimeNew[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 	if (g_iFileTimeOld[0] != g_iFileTimeNew[0])
 	{
-		PrintToServer("%s Reloading config file (%s)...", MT_TAG, g_sSavePath);
-		vLoadConfigs(g_sSavePath, true);
+		PrintToServer("%s Reloading config file \"%s\" file...", MT_TAG, g_sSavePath);
+		vLoadConfigs(g_sSavePath, 1);
 		vPluginStatus();
 		g_iFileTimeOld[0] = g_iFileTimeNew[0];
 	}
@@ -5198,8 +5287,8 @@ public Action tTimerReloadConfigs(Handle timer)
 		g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[1] != g_iFileTimeNew[1])
 		{
-			PrintToServer("%s Reloading config file (%s)...", MT_TAG, sDifficultyConfig);
-			vLoadConfigs(sDifficultyConfig);
+			PrintToServer("%s Reloading config file \"%s\" file...", MT_TAG, sDifficultyConfig);
+			vLoadConfigs(sDifficultyConfig, 2);
 			vPluginStatus();
 			g_iFileTimeOld[1] = g_iFileTimeNew[1];
 		}
@@ -5213,8 +5302,8 @@ public Action tTimerReloadConfigs(Handle timer)
 		g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[2] != g_iFileTimeNew[2])
 		{
-			PrintToServer("%s Reloading config file (%s)...", MT_TAG, sMapConfig);
-			vLoadConfigs(sMapConfig);
+			PrintToServer("%s Reloading config file \"%s\" file...", MT_TAG, sMapConfig);
+			vLoadConfigs(sMapConfig, 2);
 			vPluginStatus();
 			g_iFileTimeOld[2] = g_iFileTimeNew[2];
 		}
@@ -5228,8 +5317,8 @@ public Action tTimerReloadConfigs(Handle timer)
 		g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[3] != g_iFileTimeNew[3])
 		{
-			PrintToServer("%s Reloading config file (%s)...", MT_TAG, sModeConfig);
-			vLoadConfigs(sModeConfig);
+			PrintToServer("%s Reloading config file \"%s\" file...", MT_TAG, sModeConfig);
+			vLoadConfigs(sModeConfig, 2);
 			vPluginStatus();
 			g_iFileTimeOld[3] = g_iFileTimeNew[3];
 		}
@@ -5255,8 +5344,8 @@ public Action tTimerReloadConfigs(Handle timer)
 		g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[4] != g_iFileTimeNew[4])
 		{
-			PrintToServer("%s Reloading config file (%s)...", MT_TAG, sDayConfig);
-			vLoadConfigs(sDayConfig);
+			PrintToServer("%s Reloading config file \"%s\" file...", MT_TAG, sDayConfig);
+			vLoadConfigs(sDayConfig, 2);
 			vPluginStatus();
 			g_iFileTimeOld[4] = g_iFileTimeNew[4];
 		}
@@ -5269,8 +5358,8 @@ public Action tTimerReloadConfigs(Handle timer)
 		g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
 		if (g_iFileTimeOld[5] != g_iFileTimeNew[5])
 		{
-			PrintToServer("%s Reloading config file (%s)...", MT_TAG, sCountConfig);
-			vLoadConfigs(sCountConfig);
+			PrintToServer("%s Reloading config file \"%s\" file...", MT_TAG, sCountConfig);
+			vLoadConfigs(sCountConfig, 2);
 			vPluginStatus();
 			g_iFileTimeOld[5] = g_iFileTimeNew[5];
 		}

@@ -325,7 +325,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (type > 0)
 	{
-		MT_FindAbility(type, 55, bHasAbilities(subsection, "slowability", "slow ability", "slow_ability", "slow"));
 		g_iHumanAbility[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iHumanAmmo[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
 		g_flHumanCooldown[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);

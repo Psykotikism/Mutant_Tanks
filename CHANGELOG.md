@@ -1,11 +1,17 @@
 # Changelog
 
-## Version 8.61 (April 12, 2019)
+## Version 8.61 (May 2, 2019)
 
 Bug fixes:
 
 1. Fixed the Track ability spamming errors.
-2. Fixed the core plugin returning errors when `plugins` directory is not found.
+2. Fixed the core plugin returning errors when `plugins` directory is not found. (Thanks to Marttt for pointing them out and making a pull request!)
+3. Fixed the translation file using the wrong phrases for certain Mutant Tanks. (Thanks to Mi.Cura for reporting!)
+4. Fixed some entities by using their references instead of indices. (Thanks to Lux for pointing them out and making a pull request!)
+5. Fixed the custom config files resetting to the main one when admins join.
+6. Fixed the config file not being read when using custom SM folder paths. (Thanks to Marttt for pointing them out and making a pull request!)
+7. Fixed some errors reported by Mi.Cura.
+8. Fixed Mutant Tanks with no abilities not showing up.
 
 Changes:
 
@@ -13,10 +19,12 @@ Changes:
 2. The `MT_IsTypeEnabled()` native now checks if abilities for Mutant Tanks are available.
 3. Added the `Regular Mode` setting under the `Plugin Settings/Waves` section.
 4. The core plugin now detects custom sourcemod directories when checking for the `plugins` folder.
+5. Mutant Tanks no longer have a glow outline when biled. (Thanks to Marttt for the pull request!)
 
 Files:
 
 1. Updated include file.
+2. Updated translation file.
 
 ## Version 8.60 (March 21, 2019)
 

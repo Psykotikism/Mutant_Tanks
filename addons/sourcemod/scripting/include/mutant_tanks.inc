@@ -188,15 +188,6 @@ forward void MT_OnRockThrow(int tank, int rock);
 native bool MT_CanTankSpawn(int type);
 
 /**
- * Returns the status of an ability for a certain Mutant Tank type.
- *
- * @param type			Mutant Tank type.
- * @param order			Ability order starting from 0.
- * @param status		True if the type has the ability, false otherwise.
- **/
-native void MT_FindAbility(int type, int order, bool status);
-
-/**
  * Returns the current access flags set by the core plugin.
  *
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
@@ -952,16 +943,6 @@ stock void MT_PrintToChatAll(char[] message, any ...)
 }
 
 // Checks
-stock bool bHasAbilities(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4)
-{
-	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
-	{
-		return true;
-	}
-
-	return false;
-}
-
 stock bool bHasIdlePlayer(int survivor)
 {
 	char sClassname[32];
@@ -1700,7 +1681,6 @@ public SharedPlugin __pl_mutanttanks =
 public void __pl_mutanttanks_SetNTVOptional()
 {
 	MarkNativeAsOptional("MT_CanTankSpawn");
-	MarkNativeAsOptional("MT_FindAbility");
 	MarkNativeAsOptional("MT_GetAccessFlags");
 	MarkNativeAsOptional("MT_GetCurrentFinaleWave");
 	MarkNativeAsOptional("MT_GetImmunityFlags");
