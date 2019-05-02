@@ -49,7 +49,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 
 #define SOUND_ELECTRICITY "items/suitchargeok1.wav"
-#define SOUND_EXPLOSION "ambient/explosions/exp2.wav"
+#define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 #define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav"
 #define SOUND_SMASH "player/charger/hit/charger_smash_02.wav"
 
